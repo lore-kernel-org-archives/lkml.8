@@ -2,274 +2,113 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE289C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F67C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4284207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="MDfBRknD"
+	by mail.kernel.org (Postfix) with ESMTP id 8653F207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589965534;
+	bh=uokiF6PDW584iXV/J9CVV6qQVSEUGNpLUQwcVT5E3R8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KdMFlO8E4OMiNGWfmzObOP19RHqkBKi+UqameySnenWa6yE5bxC8iS97Jn1aSDOpW
+	 eqGIpT6TjWsc6RP3pG5pTqukhpJ3v4bbPYqxiQWwxVOtZG2fhEgLkauq6LQFB7q5CM
+	 Zfrgro0qDTLp+2a5bV1IYb06xOPql8Fcfwq4M9OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgETJF1 (ORCPT
+        id S1726801AbgETJFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgETJF0 (ORCPT
+        Wed, 20 May 2020 05:05:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37907 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgETJFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:05:26 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8086BC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:05:26 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id w25so2275994iol.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sargun.me; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=k/on5dXOqPPTTiXT6elXTcI6XkJXgcd9gTLZOle0dV4=;
-        b=MDfBRknDn2S/BQFUVM7z6D6T94KFygSDo/kJkICFQue8fXx9Qa2drC4JcszQH+0SqJ
-         rnVDBljeQL6QvXKyM3JJ5qLdcMxL7KScgWzdmvpGeLIUbrcyw7a037GCauyMwR+Qlid6
-         c1gDhAbV+l8eW1qQaipwvyeoXUTXrDtoeonx8=
+        Wed, 20 May 2020 05:05:31 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e1so2330019wrt.5;
+        Wed, 20 May 2020 02:05:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k/on5dXOqPPTTiXT6elXTcI6XkJXgcd9gTLZOle0dV4=;
-        b=QxCgwtFDTvHLANfopiDYU7S+go5Xe2x+FjW3dnaoDfUYiYh0gOox4T5Nl8THVWfZAx
-         alzikNrj3ox8+GwlgTwJbIohAH4Y68roNjSwZUmZeY96F4IQJlm3loEG0iR/iqFZ7orA
-         KO9RNR8xFVkIZAlrnynhTR7uOSqEBbACL2t30fLIMTnu2xA32BurmaqfEqYtnlDfFM5I
-         KIcA7OM4Nl3JSU7nwK1b51p9/0mA1hjPQQ34JRCCIQ1mLYcEeVzkY1I3DFjYqZpslMge
-         lRmQhnaa6T+xgEBfYoAAaJ8HpoT6J4MrU9paK2Z+CWmNqBkUp9AvUPk40FLlDb59ELqg
-         rqTA==
-X-Gm-Message-State: AOAM5310307H4RWO1NYgEfbMmKyxeWIco2y0NRuDbnkLcEleW6HU4NMv
-        BDjwMKekJ/ZkZm3xu6Zr1SbNUg==
-X-Google-Smtp-Source: ABdhPJwZYpjIzIkLLlpmXQDWFkKpC1z3x2FPkXeBEZvoL5ZeTF3tRsMpIlAh31FgNbg3XQj0XOi8yQ==
-X-Received: by 2002:a02:c9d3:: with SMTP id c19mr3504366jap.80.1589965525385;
-        Wed, 20 May 2020 02:05:25 -0700 (PDT)
-Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
-        by smtp.gmail.com with ESMTPSA id s84sm1059046ill.5.2020.05.20.02.05.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 May 2020 02:05:24 -0700 (PDT)
-Date:   Wed, 20 May 2020 09:05:23 +0000
-From:   Sargun Dhillon <sargun@sargun.me>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Chris Palmer <palmer@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: seccomp feature development
-Message-ID: <20200520090522.GA25177@ircssh-2.c.rugged-nimbus-611.internal>
-References: <202005181120.971232B7B@keescook>
+        bh=vtfSRZ5+Mpa+t2H3i2M/rGbjqAT1nghsWbPTQRPMsMw=;
+        b=d5Eoz5FdaSeRO5kqfNEDtNAH/dYSo1Vg0tW6dExIv5PUNWaqXVDDjJVhHGK9NfcLZM
+         C5gN6wXUF7pE5kZZvPAZ6LoIs3TxdVfZ8EngHnTiPwHgc2qBSVvQbDIro8iY+lD7+LAx
+         iXA3tCQcQnKlCeMwjH/Qgt0PeXTIQizifTROIc/7xN6jFJkEr7Pw+6ZabIhWtK4w9Hjw
+         PI49Vb+w+KG+hFbL65QcU4VjxfsgWZVfOKFVrvOQUC7MtiNlDzQw8JdfEcH7ZhLLFCfs
+         INNjdEgYup2HgsOw/mWfciaSVlG5AjBImIwMDNz3l/oxbTIAZTUwXWg55QXQTm1au8kq
+         Z6gg==
+X-Gm-Message-State: AOAM530QkVX6cwhOZElxHUqmZxu7HRg0sIce4TdH8yoeMUGzHL36I8Y+
+        FoVw/QOiZ8UCBsQKDIjC2CcNf/84
+X-Google-Smtp-Source: ABdhPJyzoz8h8MG0oOus3GEacF8QkZaDE2L2XQMW4XNvl8vXP8FFFDpG+5YfhZ9nfMMMlhhuemWlHA==
+X-Received: by 2002:a5d:4e81:: with SMTP id e1mr3253024wru.83.1589965528830;
+        Wed, 20 May 2020 02:05:28 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id n9sm2526625wmj.5.2020.05.20.02.05.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 02:05:28 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:05:26 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH] x86/Hyper-V: Support for free page reporting
+Message-ID: <20200520090526.un3zvgpciy6ptta7@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
+ <87ftbvt21h.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202005181120.971232B7B@keescook>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87ftbvt21h.fsf@vitty.brq.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:04:57PM -0700, Kees Cook wrote:
-> Hi!
+On Wed, May 20, 2020 at 10:59:22AM +0200, Vitaly Kuznetsov wrote:
+> Sunil Muthuswamy <sunilmut@microsoft.com> writes:
+[...]
+> > +EXPORT_SYMBOL_GPL(hv_query_ext_cap);
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> > index ebf34c7bc8bc..2de3f692c8bf 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -224,11 +224,13 @@ static void __init ms_hyperv_init_platform(void)
+> >  	 * Extract the features and hints
+> >  	 */
+> >  	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
+> > +	ms_hyperv.b_features = cpuid_ebx(HYPERV_CPUID_FEATURES);
+> >  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+> >  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+> >  
+> > -	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
+> > -		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+> > +	pr_info("Hyper-V: features 0x%x, additional features: 0x%x, hints 0x%x, misc 0x%x\n",
+> > +		ms_hyperv.features, ms_hyperv.b_features, ms_hyperv.hints,
+> > +		ms_hyperv.misc_features);
 > 
-> This is my attempt at a brain-dump on my plans for nearish-term seccomp
-> features. Welcome to my TED talk... ;)
+> HYPERV_CPUID_FEATURES(0x40000003) EAX and EBX correspond to Partition
+> Privilege Flags (TLFS), I'd suggest to take the opportunity and rename
+> this to something like 'privilege flags low=0x%x high=0x%x'.
 > 
-> These are the things I've been thinking about:
-> 
-> - fd passing
-> - deep argument inspection
-> - changing structure sizes
-> - syscall bitmasks
-> 
-> So, diving right in:
-> 
-> 
-> ## fd passing
-> 
-> Background: seccomp users want to be able to install an fd in a
-> monitored process during a user_notif to emulate "open" calls (or
-> similar), possibly across security boundaries, etc.
-> 
-> On the fd passing front, it seems that gaining pidfd_addfd() is the way
-> to go as it allows for generic use not tied to seccomp in particular.
-> I expect this feature will be developed orthogonally to seccomp (where
-> does this stand, BTW?). However, as Sargun has shown[1], seccomp could
-> be friendlier to help with using it. Things that need to be resolved:
-> 
-> - report pidnr, or pidfd? It seems the consensus is to pass pidnr, but
->   if we're going to step back and make some design choices here, is
->   there a place for pidfds in seccomp user_notif, in order to avoid
->   needing the user_notif cookie? I think probably not: it's a rather lot
->   of overhead for notifications. It seems it's safe to perform an fd
->   installation with these steps:
-> 	- get pidnr from user_notif_recv
-> 	- open pidfd from pidnr
-> 	- re-verify user_notif cookie is still valid
-> 	- send new fd via pidfd
-> 	- reply with user_notif_send
-> 	- close pidfd
-> 
-> - how to deal with changing sizes of the user_notif structures to
->   include a pidnr. (Which will be its own topic below.)
-> 
-> 
-> ## deep argument inspection
-> 
-> Background: seccomp users would like to write filters that traverse
-> the user pointers passed into many syscalls, but seccomp can't do this
-> dereference for a variety of reasons (mostly involving race conditions and
-> rearchitecting the entire kernel syscall and copy_from_user() code flows).
-> 
-> During the last plumbers and in conversations since, the grudging
-> consensus was reached that having seccomp do this for ALL syscalls was
-> likely going to be extremely disruptive for very little gain (i.e.
-> many things, like pathnames, have differing lifetimes, aliases, unstable
-> kernel object references, etc[6]), but that there were a small subset of
-> syscalls for which this WOULD be beneficial, and those are the newly
-> created "Extensible Argument" syscalls (is there a better name for this
-> design? I'm calling it "EA" for the rest of the email), like clone3(),
-> openat2(), etc, which pass a pointer and a size:
-> 
-> long clone3(struct clone_args *cl_args, size_t size);
-> 
-> I think it should be possible to extend seccomp to examine this structure
-> by appending it to seccomp_data, and allowing filters to examine the
-> contents. This means that no BPF language extensions are required for
-> seccomp, as I'd still prefer to avoid making the eBPF jump (I don't think
-> seccomp's design principles work well with maps, kernel helpers, etc,
-> and I think the earlier the examination of using eBPF for user_notif
-> bares this out).
-> 
-> In order for this to work, there are a number of prerequisites:
-> 
-> - argument caching, in two halves: syscall side and seccomp side:
->   - the EA syscalls needs to include awareness of potential seccomp
->     hooking. i.e. seccomp may have done the copy_from_user() already and
->     kept a cached copy.
->   - seccomp needs to potentially DO the copy_from_user() itself when it
->     hits these syscalls for a given filter, and put it somewhere for
->     later use by the syscall.
-> - the sizes of these EA structs are, by design, growable over time.
->   seccomp and its users need to be handle this in a forward and backward
->   compatible way, similar to the design of the EA syscall interface
->   itself.
-> 
-> The argument caching bit is, I think, rather mechanical in nature since
-> it's all "just" internal to the kernel: seccomp can likely adjust how it
-> allocates seccomp_data (maybe going so far as to have it split across two
-> pages with the syscall argument struct always starting on the 2nd page
-> boundary), and copying the EA struct into that page, which will be both
-> used by the filter and by the syscall. I imagine state tracking ("is
-> there a cached EA?", "what is the address of seccomp_data?", "what is
-> the address of the EA?") can be associated with the thread struct.
-> 
-> The growing size of the EA struct will need some API design. For filters
-> to operate on the contiguous seccomp_data+EA struct, the filter will
-> need to know how large seccomp_data is (more on this later), and how
-> large the EA struct is. When the filter is written in userspace, it can
-> do the math, point into the expected offsets, and get what it needs. For
-> this to work correctly in the kernel, though, the seccomp BPF verifier
-> needs to know the size of the EA struct as well, so it can correctly
-> perform the offset checking (as it currently does for just the
-> seccomp_data struct size).
-> 
-> Since there is not really any caller-based "seccomp state" associated
-> across seccomp(2) calls, I don't think we can add a new command to tell
-> the kernel "I'm expecting the EA struct size to be $foo bytes", since
-> the kernel doesn't track who "I" is besides just being "current", which
-> doesn't take into account the thread lifetime -- if a process launcher
-> knows about one size and the child knows about another, things will get
-> confused. The sizes really are just associated with individual filters,
-> based on the syscalls they're examining. So, I have thoughts on possible
-> solutions:
-> 
-> - create a new seccomp command SECCOMP_SET_MODE_FILTER2 which uses the
->   EA style so we can pass in more than a filter and include also an
->   array of syscall to size mappings. (I don't like this...)
-> - create a new filter flag, SECCOMP_FILTER_FLAG_EXTENSIBLE, which changes
->   the meaning of the uarg from "filter" to a EA-style structure with
->   sizes and pointers to the filter and an array of syscall to size
->   mappings. (I like this slightly better, but I still don't like it.)
-> - leverage the EA design and just accept anything <= PAGE_SIZE, record
->   the "max offset" value seen during filter verification, and zero-fill
->   the EA struct with zeros to that size when constructing the
->   seccomp_data + EA struct that the filter will examine. Then the seccomp
->   filter doesn't care what any of the sizes are, and userspace doesn't
->   care what any of the sizes are. (I like this as it makes the problems
->   to solve contained entirely by the seccomp infrastructure and does not
->   touch user API, but I worry I'm missing some gotcha I haven't
->   considered.)
-> 
-I may be ridiculed for suggesting this approach, and maybe it's a bit
-mad-science. I'll be honest, my familiarity with mm is low, and although
-I think what I'm describing can be done, I'm unsure of the complexity,
-and performance impact.
+> Also, I don't quite like 'ms_hyperv.b_features' as I'll always have to
+> look at what it's being assigned to understand what it holds. I'd even
+> suggest to rename ms_hyperv.features to ms_hyperv.priv_low and
+> ms_hyperv.b_features tp ms_hyperv.priv_high. Or maybe even better, pack
+> them to the same 'u64 ms_hyperv.privileges'.
 
-I was playing with userfaultfd a while ago for somewhat related reasons
-and I found a patchset supporting write protection [1]. This got me
-interested in wondering if we could leverage this. What if we had a
-mechanism to read a process's memory, and simultaneously mark it
-as read-only.
++1 for this. :-)
 
-#define memstruct_flag_mark_ro	1
-#define notify_on_mod	2
-struct memstruct {
-	__u32 flags;
-	/* We might even support multiple iovecs... */
-	struct iovec *local_iov;
-	struct iovec *remote_iov;
-}
-Flow:
-1. Supervisor (s1) launches child (c1)
-2. c1 makes syscall that triggers seccomp_notif -- let's say clone3 --
-a call where we can't do injection or such on behalf of the child.
-3. s1 receives notification + seccomp data
-4. s1 calls ioctl(..., SECCOMP_READ_MEM, memstruct) (where memstruct is
-above)
-5. When s1 calls this, the pages which are accessed by the iovec get
-marked as read only, so a fault is triggered if the user process tries
-to change things.
-6. s1 says, continue syscall
-7. Syscall returns, and pages are reverted to pre-notification state.
-
-Upon fault, if the range being changed lies outside of what was copied
-back via the SECCOMP_READ_MEM ioctl, then it is passed through as-is.
-If the range is inside, and notify_on_mod is unset, it will SIGSEGV.
-If the range is inside, and notify_on_mod is set, we will have to do
-a userfaultfd-like notification back down to userspace.
-
-I realize this approach is hacky, and ugly, and potentially goes
-into the same territory as userfaultfd, which has proven to be a security
-thing, but the benefits are that no kernel, cBPF, etc.. need to change.
-
-The only downsides I see are complexity, performance, and potentially
-there may be some userspace programs innocously manipulating memory
-that might get caught in such an iovec.
-
-Thoughts?
- 
-> And then, my age-old concern, that maybe doesn't need a solution... I
-> remain plagued by the lack of pathname inspection. But I think the
-> ToCToU nature of it means we just cannot do it from seccomp. It does
-> make filtering openat2()'s EA struct a bit funny... a filter has no idea
-> what path it applies to... but that doesn't matter because the object
-> the path points to might change[6] during the syscall. Argh.
-> 
-> 
-I have no idea how to solve this if the process can do stuff like move
-files around on disk, or switch out namespaces while in the user notification.
-
-
-[1]: https://lwn.net/Articles/786896/
-
+Wei.
