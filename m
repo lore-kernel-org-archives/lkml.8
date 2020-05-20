@@ -1,92 +1,211 @@
 Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E18FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB12C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E371C207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BE8207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WzbVoL/y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="flAGazfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgETKVi (ORCPT
+        id S1726824AbgETKVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
+        Wed, 20 May 2020 06:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgETKV0 (ORCPT
+        with ESMTP id S1726224AbgETKVY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:21:26 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B21C061A0E;
-        Wed, 20 May 2020 03:21:25 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rpgm1t8fz9sTd;
-        Wed, 20 May 2020 20:21:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589970084;
-        bh=ssWyo9ZQJwmqYStKYRADo5+sDEqCMcXmhdC1gF6qDqM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WzbVoL/yC+Jrcwa7p4qGBgTBgeF4acYHgkbV1TzuKraCxn65F/0bmo57zyti4qA1o
-         1Iw0qqgzwDMtikA0rDL6f5xltAVs/Kk2MjjR1U0zbY6F3zIx3OVIzVrC5NRazX9iqI
-         SvLC/VX0s7mVwaSd/l9P83W2mHqfhujst9p34GXBnMN57QKOD+B/sdUIp84G1EJkcw
-         3+x4oEzwNn218UB381dZd1awE3UutN0znwDAZMEKG9RTFA4JTeWtLOPOvRM30sYMry
-         CBLgkWEmcy30U0B/7f+LngH+OxNDEqVmkm/9Dzi5lCK1EJ8cs1DNGIXEGMzokZxIKH
-         TLuO1kVN2BK+g==
-Date:   Wed, 20 May 2020 20:21:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the imx-mxs tree
-Message-ID: <20200520202115.5409186e@canb.auug.org.au>
+        Wed, 20 May 2020 06:21:24 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E01C061A0E;
+        Wed, 20 May 2020 03:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=byLosyX8OkvGSnd/wUlp1r+QewPCabBxbFeDlkadP7M=; b=flAGazfRzeASVv+VOK57DI2L9r
+        BnZGeYRyRqR/Homc0d9iMHyqn0avvFDpyI0y3bmjV3sVbyBmlBIqf+ZXp5sbRLEAbZgwr0IAoqFBh
+        fhwUH4tahwxDUJKd52fydXH6kbno5GRcBqhw8ipMQ7sT4vZY6beVBDLUu60uID1O3CDBfQbXy3C2V
+        UTX1IPCt9YOa3dU7ziEtloa1FlbteAGVjB06StFvCjkmSokFKp3x5MUQpjlQnzImO0k9pfZXJPoOZ
+        vYmyUK6ezRWlu59XTf1TCSTkSj2Bq/CH9RZjxiKBi9hY5e0jyy7pTfLxV/e1t7moFQkj3Q3vehy38
+        TDZqIlhg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbLqb-0004Zd-CE; Wed, 20 May 2020 10:21:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DA4CB30067C;
+        Wed, 20 May 2020 12:21:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6EDF025D60CB3; Wed, 20 May 2020 12:21:10 +0200 (CEST)
+Date:   Wed, 20 May 2020 12:21:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/8] radix-tree: Use local_lock for protection
+Message-ID: <20200520102110.GE317569@hirez.programming.kicks-ass.net>
+References: <20200519201912.1564477-1-bigeasy@linutronix.de>
+ <20200519201912.1564477-3-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+BnUBuvl01NHTg1FTRfF8Vg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519201912.1564477-3-bigeasy@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+BnUBuvl01NHTg1FTRfF8Vg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 19, 2020 at 10:19:06PM +0200, Sebastian Andrzej Siewior wrote:
+> @@ -64,6 +64,7 @@ struct radix_tree_preload {
+>  	struct radix_tree_node *nodes;
+>  };
+>  static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) = { 0, };
+> +static DEFINE_LOCAL_LOCK(radix_tree_preloads_lock);
+>  
+>  static inline struct radix_tree_node *entry_to_node(void *ptr)
+>  {
 
-Hi all,
+So I'm all with Andrew on the naming and pass-by-pointer thing, but
+also, the above is pretty crap. You want the local_lock to be in the
+structure you're actually protecting, and there really isn't anything
+stopping you from doing that.
 
-Commit
+The below builds just fine and is ever so much more sensible.
 
-  089795766399 ("arm64: dts: ls1028a: sl28: keep switch port names consiste=
-nt")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+BnUBuvl01NHTg1FTRfF8Vg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7FBJsACgkQAVBC80lX
-0GyzIQf6AmglBY/53f0CkeyESbfZ1PXb5miCeortN/6N+7dWscsR42hJs2rseH6y
-vPQSlh6AwXMyrveq66gTPoCWvgNm9djiUmWONuH88AGn0+U+4sUH13S2OHuIRvek
-mPh+dSn4IGE90s9F64jtPMJV7g3ZHmF7TpXXU+63Bp/YLrAqNVerNNGkO5vWYeoM
-p+Kxt3un+Fb6T0vgEsVUu6z6WjENS4NYG8EiqNrgHIyCu2e/RU4Ax1EaA+gHPpC1
-sL2fHjaZpGq29XZxHEaD8zQcUC+KcyEbfVfVJY9acRMzHF4QfMLcMvhsd/YxaH/A
-0y8fKxZPpf7YSdJVDL3OOEybpm1nTQ==
-=UdoQ
------END PGP SIGNATURE-----
-
---Sig_/+BnUBuvl01NHTg1FTRfF8Vg--
+--- a/include/linux/locallock_internal.h
++++ b/include/linux/locallock_internal.h
+@@ -19,7 +19,7 @@ struct local_lock {
+ # define LL_DEP_MAP_INIT(lockname)
+ #endif
+ 
+-#define INIT_LOCAL_LOCK(lockname)	LL_DEP_MAP_INIT(lockname)
++#define INIT_LOCAL_LOCK(lockname)	{ LL_DEP_MAP_INIT(lockname) }
+ 
+ #define local_lock_lockdep_init(lock)				\
+ do {								\
+@@ -63,35 +63,35 @@ static inline void local_lock_release(st
+ #define __local_lock(lock)					\
+ 	do {							\
+ 		preempt_disable();				\
+-		local_lock_acquire(this_cpu_ptr(&(lock)));	\
++		local_lock_acquire(this_cpu_ptr(lock));		\
+ 	} while (0)
+ 
+ #define __local_lock_irq(lock)					\
+ 	do {							\
+ 		local_irq_disable();				\
+-		local_lock_acquire(this_cpu_ptr(&(lock)));	\
++		local_lock_acquire(this_cpu_ptr(lock));		\
+ 	} while (0)
+ 
+ #define __local_lock_irqsave(lock, flags)			\
+ 	do {							\
+ 		local_irq_save(flags);				\
+-		local_lock_acquire(this_cpu_ptr(&(lock)));	\
++		local_lock_acquire(this_cpu_ptr(lock));		\
+ 	} while (0)
+ 
+ #define __local_unlock(lock)					\
+ 	do {							\
+-		local_lock_release(this_cpu_ptr(&lock));	\
++		local_lock_release(this_cpu_ptr(lock));		\
+ 		preempt_enable();				\
+ 	} while (0)
+ 
+ #define __local_unlock_irq(lock)				\
+ 	do {							\
+-		local_lock_release(this_cpu_ptr(&lock));	\
++		local_lock_release(this_cpu_ptr(lock));		\
+ 		local_irq_enable();				\
+ 	} while (0)
+ 
+ #define __local_unlock_irqrestore(lock, flags)			\
+ 	do {							\
+-		local_lock_release(this_cpu_ptr(&lock));	\
++		local_lock_release(this_cpu_ptr(lock));		\
+ 		local_irq_restore(flags);			\
+ 	} while (0)
+--- a/lib/radix-tree.c
++++ b/lib/radix-tree.c
+@@ -59,12 +59,14 @@ struct kmem_cache *radix_tree_node_cache
+  * Per-cpu pool of preloaded nodes
+  */
+ struct radix_tree_preload {
++	struct local_lock lock;
+ 	unsigned nr;
+ 	/* nodes->parent points to next preallocated node */
+ 	struct radix_tree_node *nodes;
+ };
+-static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) = { 0, };
+-static DEFINE_LOCAL_LOCK(radix_tree_preloads_lock);
++static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) =
++	{ .lock = INIT_LOCAL_LOCK(lock),
++	  .nr = 0, };
+ 
+ static inline struct radix_tree_node *entry_to_node(void *ptr)
+ {
+@@ -333,14 +335,14 @@ static __must_check int __radix_tree_pre
+ 	 */
+ 	gfp_mask &= ~__GFP_ACCOUNT;
+ 
+-	local_lock(radix_tree_preloads_lock);
++	local_lock(&radix_tree_preloads.lock);
+ 	rtp = this_cpu_ptr(&radix_tree_preloads);
+ 	while (rtp->nr < nr) {
+-		local_unlock(radix_tree_preloads_lock);
++		local_unlock(&radix_tree_preloads.lock);
+ 		node = kmem_cache_alloc(radix_tree_node_cachep, gfp_mask);
+ 		if (node == NULL)
+ 			goto out;
+-		local_lock(radix_tree_preloads_lock);
++		local_lock(&radix_tree_preloads.lock);
+ 		rtp = this_cpu_ptr(&radix_tree_preloads);
+ 		if (rtp->nr < nr) {
+ 			node->parent = rtp->nodes;
+@@ -382,14 +384,14 @@ int radix_tree_maybe_preload(gfp_t gfp_m
+ 	if (gfpflags_allow_blocking(gfp_mask))
+ 		return __radix_tree_preload(gfp_mask, RADIX_TREE_PRELOAD_SIZE);
+ 	/* Preloading doesn't help anything with this gfp mask, skip it */
+-	local_lock(radix_tree_preloads_lock);
++	local_lock(&radix_tree_preloads.lock);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(radix_tree_maybe_preload);
+ 
+ void radix_tree_preload_end(void)
+ {
+-	local_unlock(radix_tree_preloads_lock);
++	local_unlock(&radix_tree_preloads.lock);
+ }
+ EXPORT_SYMBOL(radix_tree_preload_end);
+ 
+@@ -1477,13 +1479,13 @@ EXPORT_SYMBOL(radix_tree_tagged);
+ void idr_preload(gfp_t gfp_mask)
+ {
+ 	if (__radix_tree_preload(gfp_mask, IDR_PRELOAD_SIZE))
+-		local_lock(radix_tree_preloads_lock);
++		local_lock(&radix_tree_preloads.lock);
+ }
+ EXPORT_SYMBOL(idr_preload);
+ 
+ void idr_preload_end(void)
+ {
+-	local_unlock(radix_tree_preloads_lock);
++	local_unlock(&radix_tree_preloads.lock);
+ }
+ EXPORT_SYMBOL(idr_preload_end);
+ 
