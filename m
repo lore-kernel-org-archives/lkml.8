@@ -2,275 +2,152 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC83C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B73C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE9FE207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D504820823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:33:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HPI0qj9a";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="U1pYvLoD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgETVbO (ORCPT
+        id S1728363AbgETVdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:31:14 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58312 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgETVbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:31:14 -0400
-IronPort-SDR: 42yqDEqiKtv3/6K2Ll0x9RQv3Cr3KUd+DohlWDdUReDaxYfAJqpnjckr69CZ14hRb8GPSgQsEQ
- uPzrGyMOAZeg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 14:31:13 -0700
-IronPort-SDR: yVrPDlzXjifRbjVpx3Gwl2jVP7wcbu/B0KlcKiR8ecrY62zaI4HtIqU+24uM4qUO3uZJfBUinF
- SuXFepU9lXQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
-   d="scan'208";a="289491666"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.255.228.34])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 14:31:12 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [UPDATE][PATCH] ACPI / DPTF: Add additional attributes to power participant driver
-Date:   Wed, 20 May 2020 14:31:08 -0700
-Message-Id: <20200520213108.944764-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 20 May 2020 17:33:43 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:30356 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgETVdm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:33:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1590010421; x=1621546421;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Co7SOBZeBIcC6AaYPGkCwGxunR9+98vMinbo5IPtjf0=;
+  b=HPI0qj9a2MtY/ZEeQjdS1hd8URczJ1T/MINrDNQXB9sSXe/VMJ5Wnxht
+   5ao99vEVI/1oxovN3CvNYnvJ1TujP406u0ro8pnSK9v+Oj4NlQ0fJfetG
+   cvqR7cFMZySDXLnDZbKkQFcVuyTY7vsaezBPpL6i70Prt/Jxr2uK0423/
+   dNmfoiDEWdllgCVs+X0Qid2yDY1WL62ZVCVC/A7lRNAQm4qkC35ngY/qX
+   xii9RoyyJZuNXDArg0ZmOc/NKBr56fFcYw8idgqnMFIzn+rtYaXNSCQ4F
+   Xpv3oK9GKdWV/WTC+VgCRVOfAjC56LNztoAhCngiWEcM7JaZPUHlTeSf2
+   A==;
+IronPort-SDR: X0OgFjqOK4ICUPfq3E/2KX+72ZGUnrEfruHdfrwYZG7q6E34+QtqOjyTOWRgIJXEMpdBTvwVE3
+ M0FC8eWpocrpZjeFLju5UUB84R1H9xGRsLhB5eGl3SqYu/+o21HYg4m1Z/cORNtQLXkfl9Z4j3
+ 0uhsChMabzVdDeE0HRJPfAYInqbgPEJPHVg6l/3sY53HYQmw+bTTP5Mmfs+4BClpXsknfvioqt
+ IZVxr5IDD2+IEaZWd2uCVjlf7Rb0kQFm/6ij+EOZBxf0yBVe1845hH45IOpHEqgV43jnyHIPaQ
+ bZA=
+X-IronPort-AV: E=Sophos;i="5.73,415,1583164800"; 
+   d="scan'208";a="138486720"
+Received: from mail-bn7nam10lp2103.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.103])
+  by ob1.hgst.iphmx.com with ESMTP; 21 May 2020 05:33:40 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bNdv4WZomxjz1qYrH+4/nxjqjshIXvYPKsTWgMvrlqauUjUunuc+BrHFaLiI9gX0AIBBZr8L4ip+XTAtNGIEpBEpB5B/HaTVLgwhudITt68/FlbbpojS7T8WeJq1KYGqROdv1LxGA9tAczRLrF9ikokaQx+z/SooM23j98fUBAlus/S3a1JLPkVW/Azo3istu0XripeA+E/fM0eE41/qt5bjqfH37EfCxG7QlNbnlz0GgOIIqYx+686Op+glBNOCgXyX5J5jyXzKI0L32nHZ+0MhQN7XXS7Ot+3mZoa/T0zq5VjPV0jysV4digtKQnYCHcZu5tT+5kDXBBRwXv0Ddg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Co7SOBZeBIcC6AaYPGkCwGxunR9+98vMinbo5IPtjf0=;
+ b=Slq92VDExhPXvY6ZJWr0dYhfBkVXm2XSaIrrjszNP53aVpiuU3UwrGHyAsBpkdYtqar+I0tNSqVmjuzmB+nutChGdqTX6KUYEDUY25SIy2m4ExNF3SKcsrnkSUCWzCjSM45AzJHzPbA4/6KTN1VfeWzj12jZ1i5WmBbuLLT/lz5Af9iIxclEeeoeijt2aMYZDrn9b8vMN75yYtBDNkkX9Y/MmZH2UN3NYc3EFTamMuCBhSviY9/LmtLb0pEApk7xyUlYc0kwpUTFyl6nrPJRww22KHeHMDUyJnM2+VUYull57YkW5MZM95ODZEgIbbRhanLzNjpclHxOgTm2zTtT8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Co7SOBZeBIcC6AaYPGkCwGxunR9+98vMinbo5IPtjf0=;
+ b=U1pYvLoDJmv4hBuLiGsCAmWHwEDywPYH19XGoudr1gPVQycuoKV6LqMOwUTvZCgXDkqaJdkPMJgvlM3sCamVFjnc4vZ8UxSi9OnVru+rRcYcFPjsO84womkuTYTwkdqfvlhiuDNZiE/41CnVvPQIzsUh07b8zu8jZRzBObRhIwM=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4094.namprd04.prod.outlook.com (2603:10b6:805:4a::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Wed, 20 May
+ 2020 21:33:38 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3000.034; Wed, 20 May 2020
+ 21:33:38 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Asutosh Das <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "PedroM.Sousa@synopsys.com" <PedroM.Sousa@synopsys.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 2/2] scsi: ufs-qcom: enter and exit hibern8 during
+ clock scaling
+Thread-Topic: [PATCH v4 2/2] scsi: ufs-qcom: enter and exit hibern8 during
+ clock scaling
+Thread-Index: AQHWLs+aURSVuu3/rEe19CGhEeTU+aixfJxw
+Date:   Wed, 20 May 2020 21:33:37 +0000
+Message-ID: <SN6PR04MB464071B647084B0EB111992DFCB60@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <186237103353b5a79c3496e619fca894dbc78600.1589997078.git.asutoshd@codeaurora.org>
+ <9b67c25eb7c0bf80075b36660aebdb3788207353.1589997078.git.asutoshd@codeaurora.org>
+In-Reply-To: <9b67c25eb7c0bf80075b36660aebdb3788207353.1589997078.git.asutoshd@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: codeaurora.org; dkim=none (message not signed)
+ header.d=none;codeaurora.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2a00:a040:188:8f6c:2c4a:d7ba:2b72:69e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f5411620-9b86-4e14-8810-08d7fd057546
+x-ms-traffictypediagnostic: SN6PR04MB4094:
+x-microsoft-antispam-prvs: <SN6PR04MB4094F177058F25B294562D88FCB60@SN6PR04MB4094.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 04097B7F7F
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fUUk79Y//9GonvIm6ZDKEO6XwDnWqBHnUDZJ5Ig9CYSxir23wsz0AMaMpocbcs5/fNHDKp6uEfTWv57Npu8b/7YyIIKbpyf5UHMD12YcuwF9MPhICYNwZY9j2mwsHN3hWXpoakH+gb5ZP/nCYL3ZPuLnb+Ofw+LGZu/9wO5JoZvcbAhLCXnUPCcMJYB3vz5pfDH23z5tu2Y21j0LZIEMcqsM7aPR95Lci3bGjeJHUtGcs5UIxE1EPjpTZ4RrBnRrxfCFr/KvFXUslmi4kWddo3w88B4LaqN2868baUwrHHFUJwizilZTal5+/gdQ3fx8Dgej3n57X1PSY0nGyfSxgA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(4326008)(6506007)(7696005)(8676002)(86362001)(8936002)(316002)(66556008)(66446008)(64756008)(478600001)(186003)(33656002)(2906002)(76116006)(66946007)(66476007)(5660300002)(9686003)(52536014)(55016002)(110136005)(54906003)(71200400001)(4744005)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: l4FMCDACgW8ph7Jz1X9wfRSDgZY3w78AY5tvJdp8NQT8heUVhSeeM66CctU8gJuu9RDdZKmQFcyldalh+vkBKRT34Nko2FCnEiraewn1MtQFuWKNCUECu8d51B30Sx9FGV3m7VUMON93qbz63bsmNHrl4vBEkWks4aRIAD+XxyanBnV5t2kSoEBdUuRGuCEBi8gAoIlZ95b0GN6NkmRdQ0tBjuygSDNEap+vfWKemh9bQkGyz9kKIQ7h1KooYcTaSfIWABUtZHsLRIh4sPmve7QQVKsTMhaS6Z5QNCdo7g37bLQsLKle0w3+f7anNPUKbXq/TGbGnhuofPfX2IQ7/6QURk8s7TpOqJGyrdDoG1R7nIVXNEW6OXCr4EF/NokuAnMWyaQya54o8ACXWIUgqg/H2NsVfGcLIQVGQ1TyeNo2/659sHGwNxjXGHEgDZdx7b6y/lRO2RTNTfSI0CTSi+52bfmeFEhgZKzqhnwG4s87ENg3nDXyi76NNNQev4JMXXeudWRnhfiL1d3CMp5bgvsUwaMAJUxu0DYiNBdsvp0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5411620-9b86-4e14-8810-08d7fd057546
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 21:33:37.9425
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dx/cRUF8+Tf13TauzPNthf0Co3DCQhZC45fxzoDQkVBLQiJPg+FHYqqJiwHAlbuItyEgN5UPRtv8t2s3egB4yw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two additional attributes to the existing power participant driver:
-rest_of_platform_power_mw: (RO) Shows the rest of worst case platform
-power in mW. This will help in power distribution to SoC and rest of the
-system. For example on a test system, this value is 2.5W with a 15W TDP
-SoC. Based on the adapter rating (adapter_rating_mw), user space
-software can decide on proper power allocation to SoC to improve
-short term performance via powercap/RAPL interface.
+Hi,
 
-prochot_confirm: (WO) Confirm EC about a prochot notification.
+>=20
+>=20
+> Qualcomm controller needs to be in hibern8 before scaling clocks.
+> This change puts the controller in hibern8 state before scaling
+> and brings it out after scaling of clocks.
+>=20
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
 
-Also userspace is notified via sysfs_notify(), whenever power source or
-rest of the platform power is changed. So user space can use poll()
-system call on those attributes.
+I guess that your previous versions are pretty far back - ,
+I noticed a comment by Pedro, so you might want to resend this series.
 
-The ACPI methods used in this patch are as follows:
+What happens if the pre-change is successful,
+but you are not getting to the post change because, e.g. ufshcd_set_clk_fre=
+q failed?
 
-PROP
-This object evaluates to the rest of worst case platform power in mW.
-Bits:
-23:0 Worst case rest of platform power in mW.
+Also, this piece of code is ~5 years old, so you might want to elaborate on=
+ how come hibernation is now needed.
 
-PBOK
-PBOK is a method designed to provide a mechanism for OSPM to change power
-setting before EC can de-assert a PROCHOT from a device. The EC may
-receive several PROCHOTs, so it has a sequence number attached to PSRC
-(read via existing attribute "platform_power_source"). Once OSPM takes
-action for a PSRC change notification, it can call PBOK method to confirm
-with the sequence number.
-Bits:
-3:0 Power Delivery State Change Sequence number
-30  Reserved
-31  0 – Not OK to de-assert PROCHOT
-    1 – OK to de-assert PROCHOT
-
-PSRC (Platform Power Source): Not new in this patch but for
-documentation for new bits
-This object evaluates to an integer that represents the system power
-source as well as the power delivery state change sequence number.
-Bits:
-3:0 The current power source as an integer for AC, DC, USB, Wireless.
-0 = DC, 1 = AC, 2 = USB, 3 = Wireless Charging
-7:4 Power Delivery State Change Sequence Number. Default value is 0
-
-Notifications:
-0x81: (Power State Change) Used to notify when the power source has
-changed.
-0x84: (PROP change) Used to notify when the platform rest of power has
-changed.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
-Changes:
-	Updated the commit description for rest of the platform power.
-
- Documentation/ABI/testing/sysfs-platform-dptf | 24 +++++--
- drivers/acpi/dptf/dptf_power.c                | 69 ++++++++++++++++++-
- 2 files changed, 88 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentation/ABI/testing/sysfs-platform-dptf
-index 325dc0667dbb..cf4eb5d676de 100644
---- a/Documentation/ABI/testing/sysfs-platform-dptf
-+++ b/Documentation/ABI/testing/sysfs-platform-dptf
-@@ -27,10 +27,12 @@ KernelVersion:	v4.10
- Contact:	linux-acpi@vger.kernel.org
- Description:
- 		(RO) Display the platform power source
--		0x00 = DC
--		0x01 = AC
--		0x02 = USB
--		0x03 = Wireless Charger
-+		bits[3:0] Current power source
-+			0x00 = DC
-+			0x01 = AC
-+			0x02 = USB
-+			0x03 = Wireless Charger
-+		bits[7:4] Power source sequence number
- 
- What:		/sys/bus/platform/devices/INT3407:00/dptf_power/battery_steady_power
- Date:		Jul, 2016
-@@ -38,3 +40,17 @@ KernelVersion:	v4.10
- Contact:	linux-acpi@vger.kernel.org
- Description:
- 		(RO) The maximum sustained power for battery in milliwatts.
-+
-+What:		/sys/bus/platform/devices/INT3407:00/dptf_power/rest_of_platform_power_mw
-+Date:		June, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-acpi@vger.kernel.org
-+Description:
-+		(RO) Shows the rest of worst case platform power in mW.
-+
-+What:		/sys/bus/platform/devices/INT3407:00/dptf_power/prochot_confirm
-+Date:		June, 2020
-+KernelVersion:	v5.8
-+Contact:	linux-acpi@vger.kernel.org
-+Description:
-+		(WO) Confirm embedded controller about a prochot notification.
-diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
-index e4e8b75d39f0..abe99039af74 100644
---- a/drivers/acpi/dptf/dptf_power.c
-+++ b/drivers/acpi/dptf/dptf_power.c
-@@ -16,6 +16,7 @@
-  * ARTG : Adapter rating
-  * CTYP : Charger type
-  * PBSS : Battery steady power
-+ * PROP : Rest of worst case platform Power
-  */
- #define DPTF_POWER_SHOW(name, object) \
- static ssize_t name##_show(struct device *dev,\
-@@ -39,12 +40,34 @@ DPTF_POWER_SHOW(platform_power_source, PSRC)
- DPTF_POWER_SHOW(adapter_rating_mw, ARTG)
- DPTF_POWER_SHOW(battery_steady_power_mw, PBSS)
- DPTF_POWER_SHOW(charger_type, CTYP)
-+DPTF_POWER_SHOW(rest_of_platform_power_mw, PROP)
- 
- static DEVICE_ATTR_RO(max_platform_power_mw);
- static DEVICE_ATTR_RO(platform_power_source);
- static DEVICE_ATTR_RO(adapter_rating_mw);
- static DEVICE_ATTR_RO(battery_steady_power_mw);
- static DEVICE_ATTR_RO(charger_type);
-+static DEVICE_ATTR_RO(rest_of_platform_power_mw);
-+
-+static ssize_t prochot_confirm_store(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t count)
-+{
-+	struct acpi_device *acpi_dev = dev_get_drvdata(dev);
-+	acpi_status status;
-+	int seq_no;
-+
-+	if (kstrtouint(buf, 0, &seq_no) < 0)
-+		return -EINVAL;
-+
-+	status = acpi_execute_simple_method(acpi_dev->handle, "PBOK", seq_no);
-+	if (ACPI_SUCCESS(status))
-+		return count;
-+
-+	return -EINVAL;
-+}
-+
-+static DEVICE_ATTR_WO(prochot_confirm);
- 
- static struct attribute *dptf_power_attrs[] = {
- 	&dev_attr_max_platform_power_mw.attr,
-@@ -52,6 +75,8 @@ static struct attribute *dptf_power_attrs[] = {
- 	&dev_attr_adapter_rating_mw.attr,
- 	&dev_attr_battery_steady_power_mw.attr,
- 	&dev_attr_charger_type.attr,
-+	&dev_attr_rest_of_platform_power_mw.attr,
-+	&dev_attr_prochot_confirm.attr,
- 	NULL
- };
- 
-@@ -60,6 +85,33 @@ static const struct attribute_group dptf_power_attribute_group = {
- 	.name = "dptf_power"
- };
- 
-+#define POWER_STATE_CHANGED		0x81
-+#define POWER_PROP_CHANGE_EVENT	0x84
-+
-+static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
-+{
-+	struct platform_device *pdev = data;
-+	char *attr;
-+
-+	switch (event) {
-+	case POWER_STATE_CHANGED:
-+		attr = "platform_power_source";
-+		break;
-+	case POWER_PROP_CHANGE_EVENT:
-+		attr = "rest_of_platform_power_mw";
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unsupported event [0x%x]\n", event);
-+		return;
-+	}
-+
-+	/*
-+	 * Notify that an attribute is changed, so that user space can read
-+	 * again.
-+	 */
-+	sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
-+}
-+
- static int dptf_power_add(struct platform_device *pdev)
- {
- 	struct acpi_device *acpi_dev;
-@@ -78,10 +130,21 @@ static int dptf_power_add(struct platform_device *pdev)
- 	if (ptype != 0x11)
- 		return -ENODEV;
- 
-+	result = acpi_install_notify_handler(acpi_dev->handle,
-+					     ACPI_DEVICE_NOTIFY,
-+					     dptf_power_notify,
-+					     (void *)pdev);
-+	if (result)
-+		return result;
-+
- 	result = sysfs_create_group(&pdev->dev.kobj,
- 				    &dptf_power_attribute_group);
--	if (result)
-+	if (result) {
-+		acpi_remove_notify_handler(acpi_dev->handle,
-+					   ACPI_DEVICE_NOTIFY,
-+					   dptf_power_notify);
- 		return result;
-+	}
- 
- 	platform_set_drvdata(pdev, acpi_dev);
- 
-@@ -90,7 +153,11 @@ static int dptf_power_add(struct platform_device *pdev)
- 
- static int dptf_power_remove(struct platform_device *pdev)
- {
-+	struct acpi_device *acpi_dev = platform_get_drvdata(pdev);
- 
-+	acpi_remove_notify_handler(acpi_dev->handle,
-+				   ACPI_DEVICE_NOTIFY,
-+				   dptf_power_notify);
- 	sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
- 
- 	return 0;
--- 
-2.25.4
-
+Thanks,
+Avri
