@@ -2,300 +2,149 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C369CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AED0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F96420758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iY3vTkxP"
+	by mail.kernel.org (Postfix) with ESMTP id 63BA820758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgETL1c (ORCPT
+        id S1726747AbgETL2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgETL1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:27:31 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241C4C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:27:31 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id v192so666174vkd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bK70iXgwtoTYU2+kxEkYS2dPmfYEzUvYbO5p+9cOsao=;
-        b=iY3vTkxPVUWFZAoKbgr6fycybDoVLlukU2vKTCC4y0p3egIArgw2DOi3MtEAas4jjd
-         xkKVVRg/NEtDskAHckyfyT9UcFM7q072/qWRCIZ2eGkUij9SxkM37dnegWCBnlnNFokj
-         a+vgg/PlOgZmGgJ0crTeiqkLATt9X3NiPgfKTRP+5MLW+IlSDtQUliwSXsrGF/voQKjh
-         XltAcrvk7xvpiJjR2rvJuhIvQQHMf/+ns8PPIaUGE+IKrp46xJ2DNqjFmSzOIf69qLJr
-         dDQ1fEbYOJuSIMJcPVyUMC2Ivvz6eoVcCAke+qrlSpohIhnD3bC/sshNos6p2bZdelUg
-         JjLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bK70iXgwtoTYU2+kxEkYS2dPmfYEzUvYbO5p+9cOsao=;
-        b=f98Gs54FPgt2U2TQB9s9bfBvXQ4le5EsjCgdtGBCrXrZGocyonxoriuZrYxo0hVydg
-         U+8p1cfM5RXpvXeBNKXG+U3MufQfoZ3pO3nvztX5pKI3Lxc1b5/yi72vAKYnwuYlwyxF
-         BxSXhAexqFRhD8CyrCpLmI02Tpggf4cdbbSxO93BnuWqRUWR0izn9jIqzaeiURd7PCZl
-         oKW7cA6IBDVYtSZgDjvHbI2kT6jq5rbII3Hp9I/8TI+EC3V5kky3jN8C70iFI/OgxYm3
-         a07tI26G/ZWMfhFvOhn+UjofkF7X6M83uHW8nRqqmnt2McPYnvZnMnDm64cGsoObHKB/
-         ocvg==
-X-Gm-Message-State: AOAM530F2/8cwxy8opyRCd3w3f32CEiSNHVRckm3dAR+jGFLp51XqZIA
-        uKrO4furIVPCPab0heuxzl8yQ3WVI6MDIfpB86LKuA==
-X-Google-Smtp-Source: ABdhPJzhsUfJuFtIop+5Vw1e3jma114eZdMV16i3kG0IE4cNpPawoTMqme4OfpFdENFIkCzg2zpGAnz3ium8qwnA960=
-X-Received: by 2002:a1f:4845:: with SMTP id v66mr3370034vka.43.1589974050027;
- Wed, 20 May 2020 04:27:30 -0700 (PDT)
+        Wed, 20 May 2020 07:28:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47278 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbgETL2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:28:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8F94FAD78;
+        Wed, 20 May 2020 11:28:38 +0000 (UTC)
+Message-ID: <2aa6f276085319a5af7a96b3d7bdd0501641a7d7.camel@suse.de>
+Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma
+ offsets
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Date:   Wed, 20 May 2020 13:28:32 +0200
+In-Reply-To: <20200519203419.12369-10-james.quinlan@broadcom.com>
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+         <20200519203419.12369-10-james.quinlan@broadcom.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Ttdr9J6hcKekh9mdkCgm"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-References: <20200516154314.14769-1-digetx@gmail.com> <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
- <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com> <20200519162444.GD2113674@ulmo>
- <b4eb368e-adc2-7b77-3ae9-fefdcfddaf3d@gmail.com> <11c93dac-f5ba-2193-6f44-63af27fdce09@nvidia.com>
- <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com> <c7469c16-f6f1-f9c0-566f-3b1d3774f130@nvidia.com>
- <c712de1d-cfa4-2746-ec6b-54f318aeaac2@nvidia.com> <d2c71267-e696-c459-fbd6-dbb5fd312ed3@gmail.com>
-In-Reply-To: <d2c71267-e696-c459-fbd6-dbb5fd312ed3@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 20 May 2020 13:26:53 +0200
-Message-ID: <CAPDyKFqdeGyQpXpM+xynd_rWbi0S6hCeQS1Dyiy6Hd2E_yfHpg@mail.gmail.com>
-Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
- device-tree properties
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 at 04:00, Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 19.05.2020 23:44, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >
-> > On 5/19/20 12:07 PM, Sowjanya Komatineni wrote:
-> >>
-> >> On 5/19/20 11:41 AM, Sowjanya Komatineni wrote:
-> >>>
-> >>> On 5/19/20 11:34 AM, Sowjanya Komatineni wrote:
-> >>>>
-> >>>> On 5/19/20 9:33 AM, Dmitry Osipenko wrote:
-> >>>>> 19.05.2020 19:24, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>>> On Tue, May 19, 2020 at 05:05:27PM +0300, Dmitry Osipenko wrote:
-> >>>>>>> 19.05.2020 10:28, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>>>>> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com>
-> >>>>>>>> wrote:
-> >>>>>>>>> Several people asked me about the MMC warnings in the KMSG log =
-and
-> >>>>>>>>> I had to tell to ignore them because these warning are
-> >>>>>>>>> irrelevant to
-> >>>>>>>>> pre-Tegra210 SoCs.
-> >>>>>>>> Why are the warnings irrelevant?
-> >>>>>>> That's what the DT binding doc says [1].
-> >>>>>>>
-> >>>>>>> [1]
-> >>>>>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/mmc/=
-nvidia%2Ctegra20-sdhci.txt
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> Although, looking at the driver's code and TRM docs, it seems
-> >>>>>>> that all
-> >>>>>>> those properties are really irrelevant only to the older Terga20
-> >>>>>>> SoC. So
-> >>>>>>> the binding doc is a bit misleading.
-> >>>>>>>
-> >>>>>>> Nevertheless, the binding explicitly says that the properties are
-> >>>>>>> optional, which is correct.
-> >>>>>> Optional only means that drivers must not fail if these properties
-> >>>>>> aren't found, it doesn't mean that the driver can't warn that they
-> >>>>>> are missing.
-> >>>>>>
-> >>>>>> Quite possibly the only reason why they were made optional is beca=
-use
-> >>>>>> they weren't part of the bindings since the beginning. Anything ad=
-ded
-> >>>>>> to a binding after the first public release has to be optional by
-> >>>>>> definition, otherwise DT ABI wouldn't be stable.
-> >>>>>>
-> >>>>>> I think these warnings were added on purpose, though I also see th=
-at
-> >>>>>> there are only values for these in device tree for Tegra186 and
-> >>>>>> Tegra194
-> >>>>>> but not Tegra210 where these should also be necessary.
-> >>>>
-> >>>> dt binding doc we have is common for MMC, SD and SDIO of all Tegras.
-> >>>> Its not mandatory to have both 3v3 and 1v8 in device tree as based
-> >>>> on signal mode.
-> >>>>
-> >>>> As these driver strengths are SoC specific, they are part of Tegra
-> >>>> SoC specific device tree where same values will be applicable to all
-> >>>> Tegra SoC specific platforms.
-> >>>>
-> >>>> Based on interface usage on platform, we use one or both of them
-> >>>> like sdcard supports dual voltage and we use both 3V3 and 1V8 but if
-> >>>> same interface is used for WIFI SD we use 1V8 only.
-> >>>>
-> >>>> So made these dt properties as optional.
-> >>>>
-> >>>> Other reason they are optional is, Tegra210 and prior has drive
-> >>>> strength settings part of apb_misc and Tegra186 and later has driver
-> >>>> strengths part of SDMMC controller. So,
-> >>>>
-> >>>> - Pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" for driver strengths
-> >>>> are applicable for Tegra210 and prior.
-> >>>> - dt properties pad-autocal-pull-up/down-offset-1v8/3v3-timeout are
-> >>>> for T186 onwards for driver strengths
-> >>>>
-> >>>> Looks like dt binding doc need fix to clearly document these based
-> >>>> on SoC or agree with Yaml we can conditionally specify pinctrl or dt
-> >>>> properties based on SoC dependent.
-> >>>>
-> >>>>
-> >>>>>> Adding Sowjanya who wrote this code. Perhaps she can clarify why t=
-he
-> >>>>>> warnings were added. If these values /should/ be there on a subset=
- of
-> >>>>>> Tegra, then I think we should keep them, or add them again, but
-> >>>>>> perhaps
-> >>>>>> add a better way of identifying when they are necessary and when
-> >>>>>> it is
-> >>>>>> safe to work without them.
-> >>>>>>
-> >>>>>> That said, looking at those checks I wonder if they are perhaps ju=
-st
-> >>>>>> wrong. Or at the very least they seem redundant. It looks to me li=
-ke
-> >>>>>> they can just be:
-> >>>>>>
-> >>>>>>     if (tegra_host->pinctrl_state_XYZ =3D=3D NULL) {
-> >>>>>>         ...
-> >>>>>>     }
-> >>>>>>
-> >>>>>> That !IS_ERR(...) doesn't seem to do anything. But in that case, i=
-t's
-> >>>>>> also obvious why we're warning about them on platforms where these
-> >>>>>> properties don't exist in DT.
-> >>>>
-> >>>> As drive strengths are through dt properties for T186 and later and
-> >>>> thru pinctrl for T210 and prior, driver first checks for dt autocal
-> >>>> timeout pull-up/down properties and if they are not found, it then
-> >>>> checks for presence of pinctrl_state_xyx_drv only when valid
-> >>>> pinctrl_state_xyz is present.
-> >>>>
-> >>>> Driver expects either pinctrl or dt properties and shows warning
-> >>>> when neither of them are present as its mandatory to use fixed
-> >>>> driver strengths when auto calibration fails.
-> >>>>
-> >>>>     err =3D device_property_read_u32(host->mmc->parent,
-> >>>>             "nvidia,pad-autocal-pull-down-offset-3v3-timeout",
-> >>>>             &autocal->pull_down_3v3_timeout);
-> >>>>     if (err) {
-> >>>>         if (!IS_ERR(tegra_host->pinctrl_state_3v3) &&
-> >>>>             (tegra_host->pinctrl_state_3v3_drv =3D=3D NULL))
-> >>>>             pr_warn("%s: Missing autocal timeout 3v3-pad drvs\n",
-> >>>>                 mmc_hostname(host->mmc));
-> >>>>         autocal->pull_down_3v3_timeout =3D 0;
-> >>>>     }
-> >>>>
-> >>>>>>
-> >>>>>> So I think we either need to add those values where appropriate so
-> >>>>>> that
-> >>>>>> the warning doesn't show, or we need to narrow down where they are
-> >>>>>> really needed and add a corresponding condition.
-> >>>>>>
-> >>>>>> But again, perhaps Sowjanya can help clarify if these really are o=
-nly
-> >>>>>> needed on Tegra210 and later or if these also apply to older chips=
-.
-> >>>>> Either way will be cleaner to convert the DT binding to YAML rather
-> >>>>> than
-> >>>>> clutter the driver, IMO.
-> >>>>>
-> >>>>
-> >>>>
-> >>>>
-> >>> Auto calibration is present from Tegra30 onward and looking into
-> >>> change where autocalibration was added to sdhci driver somehow it was
-> >>> enabled only for T30/T210/T186/T194.
-> >>>
-> >>> tegra_sdhci_parse_pad_autocal_dt() was added when auto-calibration
-> >>> was added to driver and I see this dt parse is being done
-> >>> irrespective of NVQUIRK_HAS_PADCALIB quirk so even on platforms
-> >>> without auto cal enabled in driver, these messages shows up.
-> >>>
-> >>> This should be fixed in driver to allow
-> >>> tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB is
-> >>> set to avoid dt parsing to happen on platforms that don't have auto
-> >>> cal enabled.
-> >>
-> >> Warning on missing drive strengths when auto cal is enabled should be
-> >> present as we should switch to fixed recommended drive strengths when
-> >> auto cal fails.
-> >>
-> >> So probably proper fix should be
-> >>
-> >> - allow tegra_sdhci_parse_pad_autocal_dt() only when
-> >> NVQUIRK_HAS_PADCALIB is set
-> >>
-> >> - current driver sets NVQUIRK_HAS_PADCALIB for T30 as well so need to
-> >> add pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" to Tegra30 device tre=
-e.
-> > [Correction] T30 has same drive strengths to use irrespective of signal
-> > voltage and it doesn't have pad control. So for T3- we can update devic=
-e
-> > tree to specify "default" pinctrl with drvup/dn settings.
-> >>
-> >> - Keep warning message of missing auto cal timeouts as its mandatory
-> >> to use fixed recommended driver strengths when auto cal fails.
-> >>
-> > Regarding warnings, I guess simpler and easy fix is to remove warning
-> > message on missing 3v3/1v8 drive strengths as pinctrl/dt properties wer=
-e
-> > already added for T210/186/194 where we need and old device tree don't
-> > have them but the case where auto cal can fail is very rare.
-> >
-> > Otherwise should update driver to allow
-> > tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB is se=
+
+--=-Ttdr9J6hcKekh9mdkCgm
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Jim,
+thanks for having a go at this! My two cents.
+
+On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
+> The device variable 'dma_pfn_offset' is used to do a single
+> linear map between cpu addrs and dma addrs.  The variable
+> 'dma_map' is added to struct device to point to an array
+> of multiple offsets which is required for some devices.
+>=20
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+
+[...]
+
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -493,6 +493,8 @@ struct dev_links_info {
+>   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a sm=
+aller
+>   *		DMA limit than the device itself supports.
+>   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+> + * @dma_map:	Like dma_pfn_offset but used when there are multiple
+> + *		pfn offsets for multiple dma-ranges.
+>   * @dma_parms:	A low level driver may set these to teach IOMMU code
+> about
+>   * 		segment limitations.
+>   * @dma_pools:	Dma pools (if dma'ble device).
+> @@ -578,7 +580,12 @@ struct device {
+>  					     allocations such descriptors. */
+>  	u64		bus_dma_limit;	/* upstream dma constraint */
+>  	unsigned long	dma_pfn_offset;
+> -
+> +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> +	const void *dma_offset_map;	/* Like dma_pfn_offset, but for
+> +					 * the unlikely case of multiple
+> +					 * offsets. If non-null, dma_pfn_offset
+> +					 * will be 0. */
+
+I get a bad feeling about separating the DMA offset handling into two disti=
+nct
+variables. Albeit generally frowned upon, there is a fair amount of tricker=
+y
+around dev->dma_pfn_offset all over the kernel. usb_alloc_dev() comes to mi=
+nd
+for example. And this obviously doesn't play well with it. I feel a potenti=
+al
+solution to multiple DMA ranges should completely integrate with the curren=
 t
-> > and also within tegra_sdhci_parse_pad_autocal_dt() show warning of
-> > missing 3v3/1v8 settings only when NVQUIRK_NEEDS_PAD_CONTROL is set.
-> >
-> > Thierry, please suggest if you prefer to removing warnings or fix drive=
-r
-> > to show warning based on PADCALIB and PAD_CONTROL quirks.
->
-> The SDIO PINCTRL drive-strengths are usually a part of the board's
-> default PINCTRL state, which is either preset by bootloader or by
-> PINCTRL driver early at a boot time.
->
-> The SDIO drive-strengths values should be board-specific and not
-> SoC-specific because they should depend on the electrical properties of
-> the board, IIUC.
->
-> If the SDIO PINCTRL states are mandatory for the SDHCI nodes in the
-> device-trees, then the DT binding is wrong since it says that all
-> properties are optional. But I think that the current binding is okay,
-> since today SDHCI PINCTRL drive-strengths are specified implicitly in
-> the device-trees, and thus, there is no real need to emit the noisy
-> warnings in this case.
+device DMA handling code, without special cases, on top of that, be transpa=
+rent
+to the user.
 
-For now I will keep $subject patch applied, but please tell me if I
-should drop it so we can start over.
+In more concrete terms, I'd repackage dev->bus_dma_limit and
+dev->dma_pfn_offset into a list/array of DMA range structures and adapt/cre=
+ate
+the relevant getter/setter functions so as for DMA users not to have to wor=
+ry
+about the specifics of a device's DMA constraints. For example, instead of
+editing dev->dma_pfn_offset, you'd be passing a DMA range structure to the
+device core, and let it take the relevant decisions on how to handle it
+internally (overwrite, add a new entry, merge them, etc...).
 
-In any case, I would appreciate it if someone could have a stab at
-converting sdhci and tegra DT bindings to yaml.
+Easier said than done. :)
 
-Kind regards
-Uffe
+Regards,
+Nicolas
+
+
+--=-Ttdr9J6hcKekh9mdkCgm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7FFGAACgkQlfZmHno8
+x/62Gwf/ZcX0GjUG2kX8dOQj+DmylB81fPXdO67lCfYb36/3AaWub3SgdS6OElwx
+EUkGWiXfQspc2tFLJ9QHVOvKZ4dn1axmHzBdSUxOS3Y7K/5Ui7G7hzbi22njfPOR
+TjQzAlozY8g7HB3GWRHX6ptZwNsk2GgfywpFPTHQzZphJtsqhRkC+1NBVZJqcxUg
+PP0lJ4op3lIusNEoZXTvss0CGvIqPZroj3V6gxMllerV0UGayKnZRijn+VnqKhM0
+kJUKjAA7TXjaIHzJZYfVncgp2eZtNCpmP+WM7/YDKoNbbkJYHBelwCqCq42YEJhk
+50yZpb9YqlD0TwGBilnlPIHc33lp8g==
+=LCl4
+-----END PGP SIGNATURE-----
+
+--=-Ttdr9J6hcKekh9mdkCgm--
+
