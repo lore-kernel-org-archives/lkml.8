@@ -2,156 +2,100 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E35BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD06BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC142084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00F5207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="boZgr2GG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kvz2/Wez"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="kGWFRlz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgETGYO (ORCPT
+        id S1726640AbgETGYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:24:14 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:59685 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725998AbgETGYO (ORCPT
+        Wed, 20 May 2020 02:24:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgETGYO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 02:24:14 -0400
-X-Greylist: delayed 457 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 02:24:13 EDT
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id 4A81EC4E;
-        Wed, 20 May 2020 02:16:35 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 20 May 2020 02:16:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=3XNYaKnp2YGCe91EplwF85srPK8
-        6i5OIm/TZfO+r/A4=; b=boZgr2GGEoSCPOnQyY7adWYwLGs6cKNwB4tPIHroF9Q
-        6nBi0D14HFNTaPEDK3mIToWgpFD/SoE7jIoA7nd1Ehuqfj2nkYSu+jP+xit2P2md
-        XyTPT8i1+WR8EI2wlndxzZ0JCoY2jwiZnEzCWg0NvPuRyoDazEcAnX0KRzebYOeh
-        EVRIWQ0WD1GjnazMVjqf/Ab6PxSId5ikiYxDPAipIlx+4a5HXOeE1cQFGijcK+4Z
-        ro7MyN64kh82CxC5mgEKPkcegXkk23zwMsIVa12ZzhglXUSQa+C08eKEbhYQ3M8h
-        svQd995a84sj/zPAqYjaoID1dZyUcdtTmLgXBJ1n/1g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3XNYaK
-        np2YGCe91EplwF85srPK86i5OIm/TZfO+r/A4=; b=kvz2/WezRA3U7KeAYIoye/
-        GsK/JdQkFZfgnTnjy2U5r+nWxYV6BqcjDpSfSvImK33U8NDqHQjjWgIddB9ItzE5
-        VQoDX9qFU83BCNZmvLoTQJxyRMkt/SBkeuaDt6CGdf22EfiLsSvhWCjXL0WoaOWk
-        G5jP6/vgh7y54m0i6/oDos61fHKztdduCD99IIrEyuVmehl96QhRMEnhO2T+4zxM
-        mrEi/nZR2z10IjvG0j3QEp6j/7Tf+5KyCS0BRWTIBwlN0LIkwsudGJ9r4vB+Kz9F
-        mWRnnA6e+WTUa1SICCmLKb+BxjRygr+OCe+Nvn1RFo54RJDyhj0Q4OjeYX7twCiw
-        ==
-X-ME-Sender: <xms:PMvEXtybO761tUOfUtM1Uqz2bHplKGTEmVGoIF0G3kzcLSXeGp8BQQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtkedguddtvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
-    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
-    hjpheqnecuggftrfgrthhtvghrnheplefhueegvdejgfejgfdukeefudetvddtuddtueei
-    vedttdegteejkedvfeegfefhnecukfhppedukedtrddvfeehrdefrdehgeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhi
-    sehsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:PMvEXtQgL0xVSCOkaJchdgOBsjqZ2eLoEvsuUCzy-o2rOR9gqAeSCg>
-    <xmx:PMvEXnXKX9pr1U5wgNkSMjZe8QCjXPg31XSMjzBCpwtmJubMfnKZXw>
-    <xmx:PMvEXvi9bWn-4QBYxqXPK1RYyfQElyNhwIe9R9yz2xMB1_c_Ji2mjg>
-    <xmx:QsvEXrtMztEFg7yl7BxqGmfpINuyC9xWvXo4xPA7p_oJD80NbveZlEi0-BA>
-Received: from workstation (ad003054.dynamic.ppp.asahi-net.or.jp [180.235.3.54])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 42D9C3066434;
-        Wed, 20 May 2020 02:16:26 -0400 (EDT)
-Date:   Wed, 20 May 2020 15:16:24 +0900
-From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        "Lev R . Oshvang ." <levonshe@gmail.com>
-Subject: Re: [PATCH v2] firewire: Remove function callback casts
-Message-ID: <20200520061624.GA25690@workstation>
-Mail-Followup-To: Oscar Carter <oscar.carter@gmx.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, alsa-devel@alsa-project.org,
-        "Lev R . Oshvang ." <levonshe@gmail.com>
-References: <20200519173425.4724-1-oscar.carter@gmx.com>
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF565C061A0E;
+        Tue, 19 May 2020 23:24:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589955852;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Z4L+tBCvVk7qL7s3FzIU5Gn5ddNv0VVuMlfTJxRK4xo=;
+        b=kGWFRlz9NM8mT6kFmGVT8S1Yq/Vz3WhjmqRIrILy9U6dWCcfapHiF7RPldl9CQtSJT
+        DIo6qIesRXu/1uGG/Egdg5DYB7Ti0idWfekb28itbRmpT0AiExi3tSZqpC2g+GxzsjYq
+        ArQorMYESDJKXWdrE79/2c76XgDHCv/2RuEaQ7e3ZHyLobE/yQ8kRK9IhHN51ujO0/bT
+        ui+Ukqw3Iiy1lP6eP/BQda0Aydbql38tkfdDF6CVqPeMYgIlO3muLtSX6BYtF2Tjta5n
+        ZqAt9h9RZN1RD3FonxbZO8Hbm4UWfpAdRlDQRxb62KHH4SniAgggtUYwA02tf7ryE8Kb
+        aNUg==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbI/Sc5g=="
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.7.0 DYNA|AUTH)
+        with ESMTPSA id k09005w4K6Nx34M
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 20 May 2020 08:23:59 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     =?utf-8?B?xYF1a2Fzeg==?= Stelmach <l.stelmach@samsung.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Wed, 20 May 2020 08:23:59 +0200
+Message-ID: <1748331.j7eDFAdTc1@tauon.chronox.de>
+In-Reply-To: <20200519212552.11671-2-l.stelmach@samsung.com>
+References: <20200514190734.32746-1-l.stelmach@samsung.com> <CGME20200519212619eucas1p22fa5d3db2521096dc4b79f6e53016d17@eucas1p2.samsung.com> <20200519212552.11671-2-l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519173425.4724-1-oscar.carter@gmx.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Am Dienstag, 19. Mai 2020, 23:25:51 CEST schrieb =C5=81ukasz Stelmach:
 
-On Tue, May 19, 2020 at 07:34:25PM +0200, Oscar Carter wrote:
-> In an effort to enable -Wcast-function-type in the top-level Makefile to
-> support Control Flow Integrity builds, remove all the function callback
-> casts.
-> 
-> To do this, modify the "fw_iso_context_create" function prototype adding
-> a new parameter for the multichannel callback. Also, fix all the
-> function calls accordingly.
-> 
-> In the "fw_iso_context_create" function return an error code if both
-> callback parameters are NULL and also set the "ctx->callback.sc"
-> explicity to NULL in this case. It is not necessary set to NULL the
-> "ctx->callback.mc" variable because this and "ctx->callback.sc" are an
-> union and setting one implies setting the other one to the same value.
-> 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
-> Changelog v1->v2
-> -Set explicity to NULL the "ctx->callback.sc" variable and return an error
->  code in "fw_iso_context_create" function if both callback parameters are
->  NULL as Lev R. Oshvang suggested.
-> -Modify the commit changelog accordingly.
-> 
->  drivers/firewire/core-cdev.c        | 12 +++++++-----
->  drivers/firewire/core-iso.c         | 14 ++++++++++++--
->  drivers/firewire/net.c              |  2 +-
->  drivers/media/firewire/firedtv-fw.c |  3 ++-
->  include/linux/firewire.h            |  3 ++-
->  sound/firewire/amdtp-stream.c       |  2 +-
->  sound/firewire/isight.c             |  4 ++--
->  7 files changed, 27 insertions(+), 13 deletions(-)
+Hi =C5=81ukasz,
 
-I'm an author of ALSA firewire stack and thanks for the patch. I agree with
-your intention to remove the cast of function callback toward CFI build.
+> The value was estimaded with ea_iid[1] using on 10485760 bytes read from
+> the RNG via /dev/hwrng. The min-entropy value calculated using the most
+> common value estimate (NIST SP 800-90P[2], section 6.3.1) was 7.964464.
 
-Practically, the isochronous context with FW_ISO_CONTEXT_RECEIVE_MULTICHANNEL
-is never used by in-kernel drivers. Here, I propose to leave current
-kernel API (fw_iso_context_create() with fw_iso_callback_t) as is.
-Alternatively, a new kernel API for the context (e.g.
-fw_iso_mc_context_create() with fw_iso_mc_callback_t). This idea leaves
-current drivers as is and the change is done inner firewire-core driver,
-therefore existent kernel API is not changed.
+I am sorry, but I think I did not make myself clear: testing random numbers=
+=20
+post-processing with the statistical tools does NOT give any idea about the=
+=20
+entropy rate. Thus, all that was calculated is the proper implementation of=
+=20
+the post-processing operation and not the actual noise source.
 
-Later I post two patches for the proposal. I'd like you to review it and
-I'm glad to receive your comments.
+What needs to happen is that we need access to raw, unconditioned data from=
+=20
+the noise source that is analyzed with the statistical methods.
+
+Ciao
+Stephan
 
 
-Regards
-
-Takashi Sakamoto
