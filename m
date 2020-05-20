@@ -2,247 +2,100 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1102DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE1D82075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE44207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RajtxuGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgETJi7 (ORCPT
+        id S1726729AbgETJj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:38:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44332 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETJi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:38:58 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EFB83AC61;
-        Wed, 20 May 2020 09:38:57 +0000 (UTC)
-Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
-To:     rananta@codeaurora.org, Greg KH <gregkh@linuxfoundation.org>
-Cc:     andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200428032601.22127-1-rananta@codeaurora.org>
- <20200506094851.GA2787548@kroah.com>
- <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
- <20200510064819.GB3400311@kroah.com>
- <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
- <20200511073913.GA1347819@kroah.com>
- <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
- <20200512082551.GA3526567@kroah.com>
- <417b1d320bda37410788430979dd708d@codeaurora.org>
- <20200513070403.GB764901@kroah.com>
- <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <cb5bd2b2-f33a-b541-ed3c-70da14c7252d@suse.cz>
-Date:   Wed, 20 May 2020 11:38:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
-Content-Type: multipart/mixed;
- boundary="------------37BE8DE752E63BA265E3EAA7"
-Content-Language: en-US
+        Wed, 20 May 2020 05:39:58 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15335 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726224AbgETJj6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 05:39:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589967597; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=nV13h5PX71gonzpbX+Edt0PcuYoJs3RX9Ta6lg4GJkw=; b=RajtxuGu9B/YcsjfxQMpzk/suwXYXmjLr0tbKth3FIxwGCrpOPTtoBkljKlATCEzCe1oLjBx
+ qEuOLACRIbkM2F8Na1KaSRetn/xi4z7LlRxlMc9S2HEWwfYKbIOjVYVWUJSRVHYMGC00vOdK
+ WYUrN10veI0q6572xpLsyEfXWXE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec4fae9.7f76fd1fd8f0-smtp-out-n01;
+ Wed, 20 May 2020 09:39:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 57526C433C8; Wed, 20 May 2020 09:39:52 +0000 (UTC)
+Received: from aneelaka-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aneela)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A571AC433C6;
+        Wed, 20 May 2020 09:39:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A571AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
+From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
+        sricharan@codeaurora.org
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Arun Kumar Neelakantam <aneela@codeaurora.org>
+Subject: [PATCH V5 0/5] Add chrdev and name query support for GLINK
+Date:   Wed, 20 May 2020 15:09:34 +0530
+Message-Id: <1589967579-15559-1-git-send-email-aneela@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------37BE8DE752E63BA265E3EAA7
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8bit
+Add support for the GLINK rpmsg transport to register a rpmsg chrdev.
+This will create the rpmsg_ctrl nodes for userspace clients to open 
+rpmsg epts. The rpmsg chrdev allocation is done by allocating a local
+channel which also allocates an ept. We need to add some guards against
+edge cases for this chrdev because it will never fully open.
 
-On 15. 05. 20, 1:22, rananta@codeaurora.org wrote:
-> On 2020-05-13 00:04, Greg KH wrote:
->> On Tue, May 12, 2020 at 02:39:50PM -0700, rananta@codeaurora.org wrote:
->>> On 2020-05-12 01:25, Greg KH wrote:
->>> > On Tue, May 12, 2020 at 09:22:15AM +0200, Jiri Slaby wrote:
->>> > > commit bdb498c20040616e94b05c31a0ceb3e134b7e829
->>> > > Author: Jiri Slaby <jslaby@suse.cz>
->>> > > Date:   Tue Aug 7 21:48:04 2012 +0200
->>> > >
->>> > >     TTY: hvc_console, add tty install
->>> > >
->>> > > added hvc_install but did not move 'tty->driver_data = NULL;' from
->>> > > hvc_open's fail path to hvc_cleanup.
->>> > >
->>> > > IOW hvc_open now NULLs tty->driver_data even for another task which
->>> > > opened the tty earlier. The same holds for
->>> > > "tty_port_tty_set(&hp->port,
->>> > > NULL);" there. And actually "tty_port_put(&hp->port);" is also
->>> > > incorrect
->>> > > for the 2nd task opening the tty.
->>> > >
+Changes since v5:
+- Re-orange the completion_done code
 
-...
+Changes since v4:
+- Resending by removing approved patches
 
-> These are the traces you get when the issue happens:
-> [  154.212291] hvc_install called for pid: 666
-> [  154.216705] hvc_open called for pid: 666
-> [  154.233657] hvc_open: request_irq failed with rc -22.
-> [  154.238934] hvc_open called for pid: 678
-> [  154.243012] Unable to handle kernel NULL pointer dereference at
-> virtual address 00000000000000c4
-> # hvc_install isn't called for pid: 678 as the file wasn't closed yet.
+Changes since v3:
+- Change to device_add_group for rpmsg name attr
+- Add patch to unregister the rpmsg device
+- Add patch to support compat ioctl for rpmsg char driver
 
-Nice. Does the attached help?
+Changes since v2:
+- Revert change to make glink attribute table const
 
-I wonder how comes the tty_port_put in hvc_open does not cause a UAF? I
-would say hvc_open fails, tty_port_put is called. It decrements the
-reference taken in hvc_install. So far so good.
+Changes since v1:
+- Add explanation to dt-bindings commit message
+- Add patch complete_all the open_req/ack variables
+- Add patch to prevent null pointer dereference in chrdev channel release
+- Change chrdev allocation to use glink channel allocation
+- Change glink attr struct to const
 
-Now, this should happen IMO:
-tty_open
-  -> hvc_open (fails)
-    -> tty_port_put
-  -> tty_release
-    -> tty_release_struct
-      -> tty_kref_put
-        -> queue_release_one_tty
-SCHEDULED WORKQUEUE
-release_one_tty
-  -> hvc_cleanup
-    -> tty_port_put (should die terrible death now)
+Arun Kumar Neelakantam (1):
+  rpmsg: glink: unregister rpmsg device during endpoint destroy
 
-What am I missing?
+Chris Lew (4):
+  rpmsg: glink: Use complete_all for open states
+  rpmsg: Guard against null endpoint ops in destroy
+  rpmsg: glink: Add support for rpmsg glink chrdev
+  rpmsg: glink: Expose rpmsg name attr for glink
 
-thanks,
+ drivers/rpmsg/qcom_glink_native.c | 79 +++++++++++++++++++++++++++++++++++++--
+ drivers/rpmsg/rpmsg_core.c        |  2 +-
+ 2 files changed, 77 insertions(+), 4 deletions(-)
+
 -- 
-js
-suse labs
-
---------------37BE8DE752E63BA265E3EAA7
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-hvc_console-fix-open.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-hvc_console-fix-open.patch"
-
-From d891cdfcbd3b41eb23ddfc8d9e6cbe038ff8fb72 Mon Sep 17 00:00:00 2001
-From: Jiri Slaby <jslaby@suse.cz>
-Date: Wed, 20 May 2020 11:29:25 +0200
-Subject: [PATCH] hvc_console: fix open
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
----
- drivers/tty/hvc/hvc_console.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
-index 436cc51c92c3..cdcc64ea2554 100644
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -371,15 +371,14 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
- 	 * tty fields and return the kref reference.
- 	 */
- 	if (rc) {
--		tty_port_tty_set(&hp->port, NULL);
--		tty->driver_data = NULL;
--		tty_port_put(&hp->port);
- 		printk(KERN_ERR "hvc_open: request_irq failed with rc %d.\n", rc);
--	} else
-+	} else {
- 		/* We are ready... raise DTR/RTS */
- 		if (C_BAUD(tty))
- 			if (hp->ops->dtr_rts)
- 				hp->ops->dtr_rts(hp, 1);
-+		tty_port_set_initialized(&hp->port, true);
-+	}
- 
- 	/* Force wakeup of the polling thread */
- 	hvc_kick();
-@@ -389,22 +388,12 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
- 
- static void hvc_close(struct tty_struct *tty, struct file * filp)
- {
--	struct hvc_struct *hp;
-+	struct hvc_struct *hp = tty->driver_data;
- 	unsigned long flags;
- 
- 	if (tty_hung_up_p(filp))
- 		return;
- 
--	/*
--	 * No driver_data means that this close was issued after a failed
--	 * hvc_open by the tty layer's release_dev() function and we can just
--	 * exit cleanly because the kref reference wasn't made.
--	 */
--	if (!tty->driver_data)
--		return;
--
--	hp = tty->driver_data;
--
- 	spin_lock_irqsave(&hp->port.lock, flags);
- 
- 	if (--hp->port.count == 0) {
-@@ -412,6 +401,9 @@ static void hvc_close(struct tty_struct *tty, struct file * filp)
- 		/* We are done with the tty pointer now. */
- 		tty_port_tty_set(&hp->port, NULL);
- 
-+		if (!tty_port_initialized(&hp->port))
-+			return;
-+
- 		if (C_HUPCL(tty))
- 			if (hp->ops->dtr_rts)
- 				hp->ops->dtr_rts(hp, 0);
-@@ -428,6 +420,7 @@ static void hvc_close(struct tty_struct *tty, struct file * filp)
- 		 * waking periodically to check chars_in_buffer().
- 		 */
- 		tty_wait_until_sent(tty, HVC_CLOSE_WAIT);
-+		tty_port_set_initialized(&hp->port, false);
- 	} else {
- 		if (hp->port.count < 0)
- 			printk(KERN_ERR "hvc_close %X: oops, count is %d\n",
--- 
-2.26.2
-
-
---------------37BE8DE752E63BA265E3EAA7--
+2.7.4
