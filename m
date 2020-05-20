@@ -2,82 +2,93 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F55C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30F7F205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9729E207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="UXPruK/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgETOZo (ORCPT
+        id S1728384AbgETOZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:44 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32976 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726990AbgETOW1 (ORCPT
+        Wed, 20 May 2020 10:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbgETOZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:27 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-00036u-2v; Wed, 20 May 2020 15:22:22 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-007DWB-Iy; Wed, 20 May 2020 15:22:21 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Wed, 20 May 2020 10:25:41 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBE0C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:25:40 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id b91so3264831edf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=wMA33dnba4I1xySChm1PiZx/HzxTpqEY+2IJD7PaIUo=;
+        b=UXPruK/n94mCL0Cf+r1Ubc53NG+qGqAjJZ3m1rxiheqyt+TgR43B2MZbM3G5oGBvzH
+         AOmqtTnWkh5iqqbiEkcBoF/eGI9s12ijRF5DSEFdXYqldqojRK/RtnCu58WVNOX+2pRm
+         wgliTMuFTtUZrWBUOF9mxC0NFJq5ZwsahXtew=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=wMA33dnba4I1xySChm1PiZx/HzxTpqEY+2IJD7PaIUo=;
+        b=ZwKLMvhS0bhFsJZiENYNb/8LyTufCwBI3AIx23b5chDAC7T8B3ZWU6vP3FXJcNKpGt
+         jRQgDdYFnnJLmKx76Ko5O8artMKsXNh8XdWvqwM/6DyHcxkyZZVCdoOIgAXHAZqmNXWl
+         6YbpAcYDf4iUk1fAdxK574NOg15YRttJEODB21OGe68uWicIrHLvnQjVnnyfBY6xr9hh
+         jc5NT0FSXKsva8jg/nmPvbRbPtVEuYcg5U9r39JHHPfEQEJejwT1hBWCujB8HvimkPTV
+         AqgtbugZcBwf7pItevI2vIv8QNSeW/nmhGpwLT65AAENUFi6yBuOkU8ew34LLrwIBzNq
+         SQng==
+X-Gm-Message-State: AOAM532LVAL5Y82esbFmM6CFe6N+THUp7eOFFOg69h0pgeE8wc49R2di
+        IMQ30seeMDsn9akJNDzS85z09aKq19XKaQ==
+X-Google-Smtp-Source: ABdhPJy10hSN7EIWDkG1mJa1W1U+NkhQqewSXt1VJ7mXWUfgHVHzkudGM39RqPLVe4KIr1tJs9kLSA==
+X-Received: by 2002:aa7:d042:: with SMTP id n2mr1976267edo.226.1589984739557;
+        Wed, 20 May 2020 07:25:39 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id o18sm2029759eji.97.2020.05.20.07.25.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 07:25:38 -0700 (PDT)
+Date:   Wed, 20 May 2020 16:25:37 +0200
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-unionfs@vger.kernel.org
+Subject: [GIT PULL] overlayfs fixes for 5.7-rc7
+Message-ID: <20200520142537.GD13131@miu.piliscsaba.redhat.com>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Wed, 20 May 2020 15:14:58 +0100
-Message-ID: <lsq.1589984009.317015677@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 90/99] ALSA: dummy: Fix PCM format loop in proc output
-In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.84-rc1 review patch.  If anyone has any objections, please let me know.
+Hi Linus,
 
-------------------
+Please pull from:
 
-From: Takashi Iwai <tiwai@suse.de>
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-fixes-5.7-rc7
 
-commit 2acf25f13ebe8beb40e97a1bbe76f36277c64f1e upstream.
+Fix two bugs introduced in this cycle and one introduced in v5.5.
 
-The loop termination for iterating over all formats should contain
-SNDRV_PCM_FORMAT_LAST, not less than it.
+Thanks,
+Miklos
 
-Fixes: 9b151fec139d ("ALSA: dummy - Add debug proc file")
-Link: https://lore.kernel.org/r/20200201080530.22390-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+----------------------------------------------------------------
+Dan Carpenter (1):
+      ovl: potential crash in ovl_fid_to_fh()
+
+Vivek Goyal (2):
+      ovl: clear ATTR_FILE from attr->ia_valid
+      ovl: clear ATTR_OPEN from attr->ia_valid
+
 ---
- sound/drivers/dummy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/sound/drivers/dummy.c
-+++ b/sound/drivers/dummy.c
-@@ -927,7 +927,7 @@ static void print_formats(struct snd_dum
- {
- 	int i;
- 
--	for (i = 0; i < SNDRV_PCM_FORMAT_LAST; i++) {
-+	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
- 		if (dummy->pcm_hw.formats & (1ULL << i))
- 			snd_iprintf(buffer, " %s", snd_pcm_format_name(i));
- 	}
-
+ fs/overlayfs/export.c |  3 +++
+ fs/overlayfs/inode.c  | 18 ++++++++++++++++++
+ 2 files changed, 21 insertions(+)
