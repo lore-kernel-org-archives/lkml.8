@@ -2,280 +2,93 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDADEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 486B9207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BE7207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:38:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hwtd7E49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgETMha (ORCPT
+        id S1726891AbgETMiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:37:30 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9336 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETMh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:37:28 -0400
-IronPort-SDR: k7Y1Pe3kkZeKiDKbKkQMuPtC+ZTtLebrb1dM5Rpi4hgBpX1r3KNEyKNPIJ0uo9ByEBp7tjl7tx
- 0Uy7liME92rw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:37:27 -0700
-IronPort-SDR: D5/HcTSd977KFLxOHQe/HElu2vRfxizSz4HNHvwrYSkd5NtICZkOT9hg2FOQPuV68APxcZxgcg
- vwHJhpKNr74g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="412004419"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga004.jf.intel.com with ESMTP; 20 May 2020 05:37:25 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     robh@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI Controller driver
-Date:   Wed, 20 May 2020 20:36:12 +0800
-Message-Id: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 20 May 2020 08:38:10 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:16374 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726224AbgETMiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:38:09 -0400
+X-UUID: 274d28ae69704d65b2323cbde2ff1810-20200520
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=DbdlJu8vuZUyyQAeAhd6YD50kjTkWp9bEKvDh4VAu5A=;
+        b=hwtd7E49qjyaQZ1xwNX/EPiogC+TOQ0cerQ//A/k5Cwg0kyIYQFTftKM5AbfA+55Nkt4iVL79T1xiFKu9hzwO9hH+UH7iZS5B503FiB4DeDPBeZl3ZCRZzMJpwFPuWEIIv3jkGpYyB1xMzOeRKJ2+HRcq0IsJx4r8i4iQTYYo24=;
+X-UUID: 274d28ae69704d65b2323cbde2ff1810-20200520
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 922761856; Wed, 20 May 2020 20:38:04 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 20 May 2020 20:38:03 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 20 May 2020 20:38:02 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v5 3/4] kasan: add tests for call_rcu stack recording
+Date:   Wed, 20 May 2020 20:37:45 +0800
+Message-ID: <20200520123745.4024-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-
-Add dt-bindings documentation for Cadence-QSPI controller to support
-spi based flash memories.
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
- .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 133 +++++++++++++++++++++
- 2 files changed, 133 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-deleted file mode 100644
-index 945be7d5b236..000000000000
---- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-+++ /dev/null
-@@ -1,67 +0,0 @@
--* Cadence Quad SPI controller
--
--Required properties:
--- compatible : should be one of the following:
--	Generic default - "cdns,qspi-nor".
--	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
--	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
--- reg : Contains two entries, each of which is a tuple consisting of a
--	physical address and length. The first entry is the address and
--	length of the controller register set. The second entry is the
--	address and length of the QSPI Controller data area.
--- interrupts : Unit interrupt specifier for the controller interrupt.
--- clocks : phandle to the Quad SPI clock.
--- cdns,fifo-depth : Size of the data FIFO in words.
--- cdns,fifo-width : Bus width of the data FIFO in bytes.
--- cdns,trigger-address : 32-bit indirect AHB trigger address.
--
--Optional properties:
--- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
--- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
--  the read data rather than the QSPI clock. Make sure that QSPI return
--  clock is populated on the board before using this property.
--
--Optional subnodes:
--Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
--custom properties:
--- cdns,read-delay : Delay for read capture logic, in clock cycles
--- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
--                  mode chip select outputs are de-asserted between
--		  transactions.
--- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
--                  de-activated and the activation of another.
--- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
--                  transaction and deasserting the device chip select
--		  (qspi_n_ss_out).
--- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
--                  and first bit transfer.
--- resets	: Must contain an entry for each entry in reset-names.
--		  See ../reset/reset.txt for details.
--- reset-names	: Must include either "qspi" and/or "qspi-ocp".
--
--Example:
--
--	qspi: spi@ff705000 {
--		compatible = "cdns,qspi-nor";
--		#address-cells = <1>;
--		#size-cells = <0>;
--		reg = <0xff705000 0x1000>,
--		      <0xffa00000 0x1000>;
--		interrupts = <0 151 4>;
--		clocks = <&qspi_clk>;
--		cdns,is-decoded-cs;
--		cdns,fifo-depth = <128>;
--		cdns,fifo-width = <4>;
--		cdns,trigger-address = <0x00000000>;
--		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
--		reset-names = "qspi", "qspi-ocp";
--
--		flash0: n25q00@0 {
--			...
--			cdns,read-delay = <4>;
--			cdns,tshsl-ns = <50>;
--			cdns,tsd2d-ns = <50>;
--			cdns,tchsh-ns = <4>;
--			cdns,tslch-ns = <4>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-new file mode 100644
-index 000000000000..1c15acc184b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-@@ -0,0 +1,133 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Cadence QSPI Flash Controller support
-+
-+maintainers:
-+  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+description: |
-+  Binding Documentation for Cadence QSPI controller,This controller is
-+  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
-+  has been tested On Intel's LGM SoC.
-+
-+properties:
-+  compatible:
-+     enum:
-+       - cdns,qspi-nor
-+       - ti,k2g-qspi
-+       - ti,am654-ospi
-+       - intel,lgm-qspi
-+
-+  reg:
-+    items:
-+      - description:
-+          The first entry is the address and length of
-+          the controller register set.
-+      - description:
-+          The second entry is the address and length of
-+          the QSPI Controller data area.
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  cdns,fifo-depth:
-+    description:
-+     Depth of hardware FIFO in words.
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - enum: [ 128, 256 ]
-+      - default: 128
-+
-+  cdns,fifo-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    multipleOf: 4
-+    description:
-+      4 byte bus width of the data FIFO in bytes.
-+
-+  cdns,trigger-address:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      32-bit indirect AHB trigger address.
-+
-+  cdns,rclk-en:
-+    type: boolean
-+    description: |
-+      Flag to indicate that QSPI return clock is used to latch the read data
-+      rather than the QSPI clock. Make sure that QSPI return clock is populated
-+      on the board before using this property.
-+
-+# subnode's properties
-+patternProperties:
-+  "@[0-9a-f]+$":
-+    type: object
-+    description:
-+      flash device uses the subnodes below defined properties.
-+
-+  cdns,read-delay:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Delay for read capture logic, in clock cycles.
-+
-+  cdns,tshsl-ns:
-+    description: |
-+      Delay in nanoseconds for the length that the master mode chip select
-+      outputs are de-asserted between transactions.
-+
-+  cdns,tsd2d-ns:
-+    description: |
-+      Delay in nanoseconds between one chip select being de-activated
-+      and the activation of another.
-+
-+  cdns,tchsh-ns:
-+    description: |
-+      Delay in nanoseconds between last bit of current transaction and
-+      deasserting the device chip select (qspi_n_ss_out).
-+
-+  cdns,tslch-ns:
-+    description: |
-+      Delay in nanoseconds between setting qspi_n_ss_out low and
-+      first bit transfer.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - cdns,fifo-depth
-+  - cdns,fifo-width
-+  - cdns,trigger-address
-+
-+examples:
-+  - |
-+    spi@ff705000 {
-+          compatible = "cdns,qspi-nor";
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          reg = <0xff705000 0x1000>,
-+                <0xffa00000 0x1000>;
-+          interrupts = <0 151 4>;
-+          clocks = <&qspi_clk>;
-+          cdns,fifo-depth = <128>;
-+          cdns,fifo-width = <4>;
-+          cdns,trigger-address = <0x00000000>;
-+
-+          flash@0 {
-+              compatible = "jedec,spi-nor";
-+              reg = <0x0>;
-+              cdns,read-delay = <4>;
-+              cdns,tshsl-ns = <50>;
-+              cdns,tsd2d-ns = <50>;
-+              cdns,tchsh-ns = <4>;
-+              cdns,tslch-ns = <4>;
-+          };
-+    };
-+
--- 
-2.11.0
+VGVzdCBjYWxsX3JjdSgpIGNhbGwgc3RhY2sgcmVjb3JkaW5nIGFuZCB2ZXJpZnkgd2hldGhlciBp
+dCBjb3JyZWN0bHkNCmlzIHByaW50ZWQgaW4gS0FTQU4gcmVwb3J0Lg0KDQpTaWduZWQtb2ZmLWJ5
+OiBXYWx0ZXIgV3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5jb20+DQpDYzogQW5kcmV5IFJ5YWJp
+bmluIDxhcnlhYmluaW5AdmlydHVvenpvLmNvbT4NCkNjOiBEbWl0cnkgVnl1a292IDxkdnl1a292
+QGdvb2dsZS5jb20+DQpDYzogQWxleGFuZGVyIFBvdGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+
+DQpDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4NCi0tLQ0KIGxp
+Yi90ZXN0X2thc2FuLmMgfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiAxIGZp
+bGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvbGliL3Rlc3Rfa2Fz
+YW4uYyBiL2xpYi90ZXN0X2thc2FuLmMNCmluZGV4IGUzMDg3ZDkwZTAwZC4uNmU1ZmIwNWQ0MmQ4
+IDEwMDY0NA0KLS0tIGEvbGliL3Rlc3Rfa2FzYW4uYw0KKysrIGIvbGliL3Rlc3Rfa2FzYW4uYw0K
+QEAgLTc5Miw2ICs3OTIsMzUgQEAgc3RhdGljIG5vaW5saW5lIHZvaWQgX19pbml0IHZtYWxsb2Nf
+b29iKHZvaWQpDQogc3RhdGljIHZvaWQgX19pbml0IHZtYWxsb2Nfb29iKHZvaWQpIHt9DQogI2Vu
+ZGlmDQogDQorc3RhdGljIHN0cnVjdCBrYXNhbl9yY3VfaW5mbyB7DQorCWludCBpOw0KKwlzdHJ1
+Y3QgcmN1X2hlYWQgcmN1Ow0KK30gKmdsb2JhbF9wdHI7DQorDQorc3RhdGljIG5vaW5saW5lIHZv
+aWQgX19pbml0IGthc2FuX3JjdV9yZWNsYWltKHN0cnVjdCByY3VfaGVhZCAqcnApDQorew0KKwlz
+dHJ1Y3Qga2FzYW5fcmN1X2luZm8gKmZwID0gY29udGFpbmVyX29mKHJwLA0KKwkJCQkJCXN0cnVj
+dCBrYXNhbl9yY3VfaW5mbywgcmN1KTsNCisNCisJa2ZyZWUoZnApOw0KKwlmcC0+aSA9IDE7DQor
+fQ0KKw0KK3N0YXRpYyBub2lubGluZSB2b2lkIF9faW5pdCBrYXNhbl9yY3VfdWFmKHZvaWQpDQor
+ew0KKwlzdHJ1Y3Qga2FzYW5fcmN1X2luZm8gKnB0cjsNCisNCisJcHJfaW5mbygidXNlLWFmdGVy
+LWZyZWUgaW4ga2FzYW5fcmN1X3JlY2xhaW1cbiIpOw0KKwlwdHIgPSBrbWFsbG9jKHNpemVvZihz
+dHJ1Y3Qga2FzYW5fcmN1X2luZm8pLCBHRlBfS0VSTkVMKTsNCisJaWYgKCFwdHIpIHsNCisJCXBy
+X2VycigiQWxsb2NhdGlvbiBmYWlsZWRcbiIpOw0KKwkJcmV0dXJuOw0KKwl9DQorDQorCWdsb2Jh
+bF9wdHIgPSByY3VfZGVyZWZlcmVuY2VfcHJvdGVjdGVkKHB0ciwgTlVMTCk7DQorCWNhbGxfcmN1
+KCZnbG9iYWxfcHRyLT5yY3UsIGthc2FuX3JjdV9yZWNsYWltKTsNCit9DQorDQogc3RhdGljIGlu
+dCBfX2luaXQga21hbGxvY190ZXN0c19pbml0KHZvaWQpDQogew0KIAkvKg0KQEAgLTgzOSw2ICs4
+NjgsNyBAQCBzdGF0aWMgaW50IF9faW5pdCBrbWFsbG9jX3Rlc3RzX2luaXQodm9pZCkNCiAJa2Fz
+YW5fYml0b3BzKCk7DQogCWttYWxsb2NfZG91YmxlX2t6ZnJlZSgpOw0KIAl2bWFsbG9jX29vYigp
+Ow0KKwlrYXNhbl9yY3VfdWFmKCk7DQogDQogCWthc2FuX3Jlc3RvcmVfbXVsdGlfc2hvdChtdWx0
+aXNob3QpOw0KIA0KLS0gDQoyLjE4LjANCg==
 
