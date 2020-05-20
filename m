@@ -2,140 +2,101 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A69C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BE2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2488920758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vSBpiFYh"
+	by mail.kernel.org (Postfix) with ESMTP id B080D20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgETMn6 (ORCPT
+        id S1726859AbgETMom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:43:58 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25053 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726224AbgETMn5 (ORCPT
+        Wed, 20 May 2020 08:44:42 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:55702 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgETMom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:43:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589978637; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=nLaK/ohEQ1OzRdH5EY+kSAjwbEK+2E1W0vY/2r749BI=;
- b=vSBpiFYhyP1w7t8DlT703O7bKqtKvbvGWCbWwiNV/nZPwt2mlk1ualoafEinU1QxXpTgP2xh
- 85h1QkGcF4I7g0SrmiFnvlbjo//LtSdmeIbuYdX5vYq92lyLJB8VMiZtIBJnYFMDoXVJfTbs
- JzOpIvOsSja/8U+Mv7/JZbaV++Q=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ec526044c3faf51e2931685 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 12:43:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 83CE0C433A0; Wed, 20 May 2020 12:43:47 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rananta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5A10C433C8;
-        Wed, 20 May 2020 12:43:46 +0000 (UTC)
+        Wed, 20 May 2020 08:44:42 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbO5F-0003RP-BL; Wed, 20 May 2020 06:44:29 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbO5D-00014Z-VJ; Wed, 20 May 2020 06:44:29 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     James Morris <jmorris@namei.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
+        <alpine.LRH.2.21.2005200750490.30843@namei.org>
+Date:   Wed, 20 May 2020 07:40:45 -0500
+In-Reply-To: <alpine.LRH.2.21.2005200750490.30843@namei.org> (James Morris's
+        message of "Wed, 20 May 2020 07:52:42 +1000 (AEST)")
+Message-ID: <871rnen5iq.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 May 2020 05:43:46 -0700
-From:   rananta@codeaurora.org
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     gregkh@linuxfoundation.org, andrew@daynix.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] tty: hvc: Fix data abort due to race in hvc_open
-In-Reply-To: <f84a9da7-bb0f-7538-fa00-968c9625335b@suse.cz>
-References: <20200520064708.24278-1-rananta@codeaurora.org>
- <f84a9da7-bb0f-7538-fa00-968c9625335b@suse.cz>
-Message-ID: <5895803be5c8fd4c5e7725b57ffe79e4@codeaurora.org>
-X-Sender: rananta@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+X-XM-SPF: eid=1jbO5D-00014Z-VJ;;;mid=<871rnen5iq.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18udNvJx+c1yIl5NydlUzC7C5ZchehH+PU=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 3/8] exec: Convert security_bprm_set_creds into security_bprm_repopulate_creds
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 01:59, Jiri Slaby wrote:
-> On 20. 05. 20, 8:47, Raghavendra Rao Ananta wrote:
->> Potentially, hvc_open() can be called in parallel when two tasks calls
->> open() on /dev/hvcX. In such a scenario, if the 
->> hp->ops->notifier_add()
->> callback in the function fails, where it sets the tty->driver_data to
->> NULL, the parallel hvc_open() can see this NULL and cause a memory 
->> abort.
->> Hence, do a NULL check at the beginning, before proceeding ahead.
->> 
->> The issue can be easily reproduced by launching two tasks 
->> simultaneously
->> that does an open() call on /dev/hvcX.
->> For example:
->> $ cat /dev/hvc0 & cat /dev/hvc0 &
->> 
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
->> ---
->>  drivers/tty/hvc/hvc_console.c | 3 +++
->>  1 file changed, 3 insertions(+)
->> 
->> diff --git a/drivers/tty/hvc/hvc_console.c 
->> b/drivers/tty/hvc/hvc_console.c
->> index 436cc51c92c3..80709f754cc8 100644
->> --- a/drivers/tty/hvc/hvc_console.c
->> +++ b/drivers/tty/hvc/hvc_console.c
->> @@ -350,6 +350,9 @@ static int hvc_open(struct tty_struct *tty, struct 
->> file * filp)
->>  	unsigned long flags;
->>  	int rc = 0;
->> 
->> +	if (!hp)
->> +		return -ENODEV;
->> +
-> 
-> This is still not fixing the bug properly. See:
-> https://lore.kernel.org/linuxppc-dev/0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz/
-> 
-> In particular, the paragraph starting "IOW".
-> 
-You are right. This doesn't fix the problem entirely. There are other 
-parts to it which is
-not handled in a clean way by the driver. Apart from the things you've 
-mentioned, it doesn't
-seem to handle the hp->port.count correctly as well.
+James Morris <jmorris@namei.org> writes:
 
-hvc_open:
-   hp->port.count++
-   hp->ops->notifier_add(hp, hp->data) fails
-   tty->driver_data = NULL
+> On Mon, 18 May 2020, Eric W. Biederman wrote:
+>
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index 9e70da47f8d9..8e3b93d51d31 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1366,7 +1366,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>  	 * the final state of setuid/setgid/fscaps can be merged into the
+>>  	 * secureexec flag.
+>>  	 */
+>> -	bprm->secureexec |= bprm->cap_elevated;
+>> +	bprm->secureexec |= bprm->active_secureexec;
+>
+> Which kernel tree are these patches for? Seems like begin_new_exec() is 
+> from a prerequisite patchset.
 
-hvc_close:
-   returns immediately as tty->driver_data == NULL, without 
-hp->port.count--
+The base is:
+git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-next
 
-This would leave the port in a stale state, and the second caller of 
-hvc_open doesn't get
-a chance to call/retry hp->ops->notifier_add(hp, hp->data);
+I should have mentioned.  I am several round deep in cleaning up exec
+already.
 
-However, the patch is not trying to address the logical issues with 
-hvc_open and hvc_close.
-It's only trying to eliminate the potential NULL pointer dereference, 
-leading to a panic.
- From what I see, the hvc_open is serialized by tty_lock, and adding a 
-NULL check here is
-preventing the second caller.
-> thanks,
+begin_new_exec is essentially forget_old_exec.
 
-Thank you.
-Raghavendra
+Eric
+
+
