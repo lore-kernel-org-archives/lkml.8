@@ -2,104 +2,108 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C349C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC8E20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35E6207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:29:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="faG8a+VJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgETK0l (ORCPT
+        id S1726697AbgETK3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:26:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETK0k (ORCPT
+        Wed, 20 May 2020 06:29:04 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52856 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETK3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:26:40 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7821C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:26:40 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jbLvm-00053v-Dk; Wed, 20 May 2020 12:26:34 +0200
-Date:   Wed, 20 May 2020 12:26:34 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Song Bao Hua <song.bao.hua@hisilicon.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Wed, 20 May 2020 06:29:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Pcnkdhzo7iybmY/3WHM6a4StwuJiDWWOYzMSkFwQnZk=; b=faG8a+VJtLLWswqGM9/4fhymDn
+        ufqqw9OgQjgXYtTDE7nAqGEUdCbbE2Mt/fpp63fk46qu6qX+ljtb8wZ7wboqp/1JE6Q1rPogvGY7E
+        aH+OHEZuBDWr0kx9FKcShW4Vdal8XB6MiwHbYBbwZSSOkSED9YHFeU/e8ovIYSim6E5QyJ6n1ICMI
+        p52jeQShZ7j88YNZ4qqNCH0opOnYjNi5QkG/GSkh8Tupe7O2bax+HUl83cRkhQyjEGQvKlwawZFwR
+        LZ6V1P4+spyRr73FS1hNVmp+QPPDGfrmUQOOTKLfjuTtJpy2VWT6Evp/B1+rON9sujijy0f9drG/r
+        dI/lIRoQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbLtW-0005Q2-Jj; Wed, 20 May 2020 10:24:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A4543300478;
+        Wed, 20 May 2020 12:24:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 06F5325D60CB3; Wed, 20 May 2020 12:24:08 +0200 (CEST)
+Date:   Wed, 20 May 2020 12:24:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH 8/8] mm/zswap: Use local lock to protect per-CPU data
-Message-ID: <20200520102634.pin4mzyytmfqtuo2@linutronix.de>
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
+ access
+Message-ID: <20200520102407.GF317569@hirez.programming.kicks-ass.net>
 References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-9-bigeasy@linutronix.de>
- <B926444035E5E2439431908E3842AFD24AFEC5@DGGEMI525-MBS.china.huawei.com>
+ <20200519201912.1564477-4-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <B926444035E5E2439431908E3842AFD24AFEC5@DGGEMI525-MBS.china.huawei.com>
+In-Reply-To: <20200519201912.1564477-4-bigeasy@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-19 21:46:06 [+0000], Song Bao Hua wrote:
-> Hi Luis,
-> In the below patch, in order to use the acomp APIs to leverage the power of hardware compressors. I have moved to mutex:
-> https://marc.info/?l=linux-crypto-vger&m=158941285830302&w=2
-> https://marc.info/?l=linux-crypto-vger&m=158941287930311&w=2
-> 
-> so once we get some progress on that one, I guess we don't need a special patch for RT any more.
+On Tue, May 19, 2020 at 10:19:07PM +0200, Sebastian Andrzej Siewior wrote:
 
-If you convert this way from the current concept then we could drop it
-from the series.
-The second patch shows the following hunk:
+> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+> index 0c71505f0e19c..8d2b5f75145d7 100644
+> --- a/kernel/rcu/srcutree.c
+> +++ b/kernel/rcu/srcutree.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/module.h>
+>  #include <linux/srcu.h>
+> +#include <linux/locallock.h>
+>  
+>  #include "rcu.h"
+>  #include "rcu_segcblist.h"
+> @@ -735,6 +736,7 @@ static void srcu_flip(struct srcu_struct *ssp)
+>  	smp_mb(); /* D */  /* Pairs with C. */
+>  }
+>  
+> +static DEFINE_LOCAL_LOCK(sda_lock);
+>  /*
+>   * If SRCU is likely idle, return true, otherwise return false.
+>   *
+> @@ -765,13 +767,13 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
+>  	unsigned long tlast;
+>  
+>  	/* If the local srcu_data structure has callbacks, not idle.  */
+> -	local_irq_save(flags);
+> +	local_lock_irqsave(sda_lock, flags);
+>  	sdp = this_cpu_ptr(ssp->sda);
+>  	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
+> -		local_irq_restore(flags);
+> +		local_unlock_irqrestore(sda_lock, flags);
+>  		return false; /* Callbacks already present, so not idle. */
+>  	}
+> -	local_irq_restore(flags);
+> +	local_unlock_irqrestore(sda_lock, flags);
 
-|@@ -1075,11 +1124,20 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
-| 
-| 	/* compress */
-| 	dst = get_cpu_var(zswap_dstmem);
-|	acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-|	put_cpu_var(zswap_dstmem);
-
-So here you get per-CPU version of `dst' and `acomp_ctx' and then allow
-preemption again.
-
-|	mutex_lock(&acomp_ctx->mutex);
-|
-|	src = kmap(page);
-|	sg_init_one(&input, src, PAGE_SIZE);
-|	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
-|	sg_init_one(&output, dst, PAGE_SIZE * 2);
-
-and here you use `dst' and `acomp_ctx' after the preempt_disable() has
-been dropped so I don't understand why you used get_cpu_var(). It is
-either protected by the mutex and doesn't require get_cpu_var() or it
-isn't (and should have additional protection).
-
-|	acomp_request_set_params(acomp_ctx->req, &input, &output, PAGE_SIZE, dlen);
-|	ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->req), &acomp_ctx->wait);
-|	dlen = acomp_ctx->req->dlen;
-|	kunmap(page);
-|
-| 	if (ret) {
-| 		ret = -EINVAL;
-| 		goto put_dstmem;
-|
-
-Sebastian
+Would it perhaps make sense to stick the local_lock in struct srcu_data ?
