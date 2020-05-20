@@ -2,138 +2,108 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2918C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52363C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CE22072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B082072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="b1JgVhbt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LCw4vOF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgETSo2 (ORCPT
+        id S1726831AbgETSqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:44:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgETSo1 (ORCPT
+        Wed, 20 May 2020 14:46:06 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37411 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgETSqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:44:27 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D07EC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:44:27 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id ee19so1829716qvb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qOfQCDp2HCW/1be9NabwoRwd9cyNa6cUtRAtXPrtw2Q=;
-        b=b1JgVhbtcDcRNeATwCgHH5AGRGpf3saVLNB3dDZvn+H/h35zl6CsrNZ+GxBXTR2aeg
-         cVoYL05pM/HKI9vVU2OSY4TmyQA09Zff5DL7CULZseWaFfE213rT0lt98yjN3oqAKEIu
-         MWlW4j4S+ldfXObUm/4Ha8Jij9Ij7PgpI/lhk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qOfQCDp2HCW/1be9NabwoRwd9cyNa6cUtRAtXPrtw2Q=;
-        b=tVY0dKWuSO24jV0EqyAW0Izremv217GUs2vGXTQSzyZaKuKvKxqRXRq+TKXh0gR3jA
-         KXAWDBItHtYxqIAPnHA2AIUEbvCq3xMzRXY5qg0ndb/SFhBduxAruEVvN4Stf5g5bqmG
-         HDoNb4LNi5tgGpuUZg8LkzYVpiZIIvqlZD3klJz/77TH8YM3/skl4i6TuXyXs7TsYpxU
-         Xd8Qevjduszey/jBbgxx2u8wO7KNVOKR7u3YxjNlxcHmhnifYFntFHq6IMWcfYGcIpqQ
-         t+fnzjSUEsiQm1colCRqElNhzSBRBNg85U4/TauWvlOXkqstfEj+SygpY81niPyoVmmI
-         JaWw==
-X-Gm-Message-State: AOAM531ZRZ3AGRppvbr+6D2e1ce6UYgmeKmukXIUqH4D70d35xd9hat+
-        +7HdoyV+KKKS49eWs8BKHddbrg==
-X-Google-Smtp-Source: ABdhPJxNBIVSAm0uep+3KJcPcEhvTbKTZVvSyElPmhQoJlY9o5W1rPI2gSIRz5Z5i7syUzAvNn35+w==
-X-Received: by 2002:a0c:fe88:: with SMTP id d8mr6045164qvs.208.1590000266269;
-        Wed, 20 May 2020 11:44:26 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d196sm2926006qkg.16.2020.05.20.11.44.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 11:44:25 -0700 (PDT)
-Date:   Wed, 20 May 2020 14:44:25 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
- access
-Message-ID: <20200520184425.GA261674@google.com>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-4-bigeasy@linutronix.de>
- <20200520102407.GF317569@hirez.programming.kicks-ass.net>
- <20200520120608.mwros5jurmidxxfv@linutronix.de>
- <20200520174259.GA247557@google.com>
- <20200520182800.sdp6t6bgbhn4kkqk@linutronix.de>
- <20200520183529.GR317569@hirez.programming.kicks-ass.net>
+        Wed, 20 May 2020 14:46:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590000364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JdxlV9+3kfjDDkLUzoqBN4uSPGSE70o1REhWjMzumHk=;
+        b=LCw4vOF9pFXftK6WV4mvhKTkQwa+/KYMltLbA1S8AkWz49E6+2g3f/JIUO4RTsG+W62lFq
+        /8J19n4s+j907a2jBiw4+lm+8qsA+1UxfiFt7xH0QvBA2dSCdTh1k+o142Ap45tgD0RZ6W
+        Lx5UtMSuJQBhm+wMDnPRyFwcPVoteQk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-xp6Y2zEbPDq9VHNA6uRsxg-1; Wed, 20 May 2020 14:46:01 -0400
+X-MC-Unique: xp6Y2zEbPDq9VHNA6uRsxg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12C11100CCC2;
+        Wed, 20 May 2020 18:46:00 +0000 (UTC)
+Received: from starship (unknown [10.35.207.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E495D579A3;
+        Wed, 20 May 2020 18:45:57 +0000 (UTC)
+Message-ID: <cfabdf8a0f21c9c77744f1fd3efd0c9d87c9763f.camel@redhat.com>
+Subject: Re: [PATCH 1/1] thunderbolt: add trivial .shutdown
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Date:   Wed, 20 May 2020 21:45:56 +0300
+In-Reply-To: <20200520181240.118559-2-mlevitsk@redhat.com>
+References: <20200520181240.118559-1-mlevitsk@redhat.com>
+         <20200520181240.118559-2-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200520183529.GR317569@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:35:29PM +0200, Peter Zijlstra wrote:
-> On Wed, May 20, 2020 at 08:28:00PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2020-05-20 13:42:59 [-0400], Joel Fernandes wrote:
-> > > Hi Sebastian,
-> > Hi Joel,
-> > 
-> > > For pointer stability, can we just use get_local_ptr() and put_local_ptr()
-> > > instead of adding an extra lock? This keeps the pointer stable while keeping
-> > > the section preemptible on -rt. And we already have a lock in rcu_data, I
-> > > prefer not to add another lock if possible.
-> > 
-> > What is this get_local_ptr() doing? I can't find it anywhere…
+On Wed, 2020-05-20 at 21:12 +0300, Maxim Levitsky wrote:
+> On my machine, a kexec with this driver loaded in the old kernel
+> causes a very long delay on boot in the kexec'ed kernel,
+> most likely due to unclean shutdown prior to that.
 > 
-> I suspect it is ({ preempt_disable(); this_cpu_ptr(ptr); }), or
-> something along those lines.
+> Unloading thunderbolt driver prior to kexec allows kexec to work as fast
+> as regular kernel boot, as well as adding this .shutdown pointer.
 > 
-> But yeah, I can't find it either.
+> Shutting a device prior to the shutdown completely is always
+> a good idea IMHO to help with kexec,
+> and this one-liner patch implements it.
+> 
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  drivers/thunderbolt/nhi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
+> index 1be491ecbb45..4046642e6aec 100644
+> --- a/drivers/thunderbolt/nhi.c
+> +++ b/drivers/thunderbolt/nhi.c
+> @@ -1285,6 +1285,7 @@ static struct pci_driver nhi_driver = {
+>  	.id_table = nhi_ids,
+>  	.probe = nhi_probe,
+>  	.remove = nhi_remove,
+> +	.shutdown = nhi_remove,
+>  	.driver.pm = &nhi_pm_ops,
+>  };
+>  
+Oops, I see that I posted this little fix on a wrong mailing list.
+I didn't update the script correctly.
+Sorry for the noise!
 
-I actually found it in RT 4.4 kernel, I thought this was also on newer RT
-kernels as well (is that not true anymore?). But yes it was exactly what
-Peter said.
+Best regards,
+	Maxim Levitsky
 
-In 4.4 RT there's code similar to:
-
-#ifdef CONFIG_PREEMPT_RT_FULL
-
-# define get_local_ptr(var) ({          \
-                migrate_disable();      \
-                this_cpu_ptr(var);      })
-
-# define put_local_ptr(var) do {        \
-        (void)(var);                    \
-        migrate_enable();               \
-} while (0)
-
-#else
-
-#define get_local_ptr(var)      get_cpu_ptr(var)
-#define put_local_ptr(var)      put_cpu_ptr(var)
-
-#endif
-
-
-thanks,
-
- - Joel
 
