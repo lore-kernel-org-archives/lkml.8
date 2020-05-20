@@ -2,208 +2,138 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC625C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5562075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74A1207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atLc/iwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgETJke (ORCPT
+        id S1726964AbgETJkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:40:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45036 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbgETJkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:40:32 -0400
-IronPort-SDR: nUK0YTKTiqGRZ0zfcn/GmzD+36O4wEqQLTJUdITupdhoiuCIyUB4HyMdWXQAxbUoV3FbanJXaQ
- 9M8z79g165JA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 02:40:31 -0700
-IronPort-SDR: oNsiOol+UfTCeUBdpw8FcUELr2JoDoZuovpo3UnSJkQha/jEnPeOm37f7KNP7Mu9hxT2Bv+h1w
- 4FTeqSvDyZgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
-   d="scan'208";a="254979466"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 20 May 2020 02:40:29 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jbLDB-000Edw-Ps; Wed, 20 May 2020 17:40:29 +0800
-Date:   Wed, 20 May 2020 17:39:55 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.05.17a] BUILD SUCCESS
- 15f5e34cc82fdac679c19e5d9203d7f921618007
-Message-ID: <5ec4faeb.uyMXUGmCwUJsip3d%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 20 May 2020 05:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgETJko (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 05:40:44 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0631BC061A0F;
+        Wed, 20 May 2020 02:40:38 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id x20so2824505ejb.11;
+        Wed, 20 May 2020 02:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ADjHdTIqQWA2GKdm5wosIbVA7qcZMOsh9pTvjrEbKGc=;
+        b=atLc/iwFND3LI8tpTOAPuRqxkiJzV6Ul7YMqJqhMS5JHWaH6/pwpYhJK4p5Fqciqc3
+         JyneqrVO/Jzd7emLQpiyMycoytfjo3dudeIbwaGujGCcyyroVrx4bjUMdTsAfqpycZlb
+         83jlB7EgroB0rgoDyBLjVTwsveoE1o2UsKao64q+BWESa9vu5HfIsqDI941gx9Scx1rJ
+         hg5RCYVcbjTxYvxaH7QaFaaf0JuhySw1wn9CX06zOGxJzJLL7gtdHeleJyeOnBcfBx42
+         ONiLBtHfAjMxf1X1/PXSBullG7Di+8b/7V3aTh0wXMTYDYsbxyGe8Ma1X/5OrGlILEVI
+         xeAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ADjHdTIqQWA2GKdm5wosIbVA7qcZMOsh9pTvjrEbKGc=;
+        b=OXnCh884hluHyyWF4cv/fRnQ7TenJ6U9FYWJSg6lsY0f/2iwNDkdMeerwM3kz/HvSU
+         +j/Dx4W3woXTE8qVMTq8oselffGVHIrnkETaTevi0IBCwZ2X4E4IKiYnfJ98W7bMM/gj
+         eV1GMNBlEJT8VClI1551ZjvX2YeOAVm3gn2/du2jwb2VBP5QeRoK4j2TENd8yJRdtnT/
+         71hFPRuE6blqPNu3D+pbfgCCDiHPWwBG8K19eiB+JWgJWDqOABAfXbEQ69ue7MZD3drb
+         OVObTtrd335GNrwbNig2HnnKXcQ4z5mbNvPwxWSk66H0i86OWF79tpianEmnpzTVBkTO
+         ynbg==
+X-Gm-Message-State: AOAM530HRDfYbqR1eFCYjALOLKKSjiTlWMReT95CeZeN9c9fbJYirNaa
+        ejm9p03yVbm/A0lG0oWVdHQ=
+X-Google-Smtp-Source: ABdhPJzwBNPfX8wLJBhheOieRefmuo7Yih3L2ox5kOQGM1KQSaz0kDU4d4/OhNLC9RUb/PXkwrCZ/g==
+X-Received: by 2002:a17:906:3095:: with SMTP id 21mr3090796ejv.32.1589967637648;
+        Wed, 20 May 2020 02:40:37 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id u10sm1325154edb.65.2020.05.20.02.40.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 02:40:36 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:40:35 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
+Message-ID: <20200520094035.GC2136208@ulmo>
+References: <20200520084012.30190-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="S1BNGpv0yoYahz37"
+Content-Disposition: inline
+In-Reply-To: <20200520084012.30190-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.05.17a
-branch HEAD: 15f5e34cc82fdac679c19e5d9203d7f921618007  squash! rcutorture: Add races with task-exit processing
 
-i386-tinyconfig vmlinux size:
+--S1BNGpv0yoYahz37
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-========================================================================================================================================
- TOTAL  TEXT  built-in.*  arch/x86/events/zhaoxin/built-in.*                                                                            
-========================================================================================================================================
-  -225  -224                                            -136  f21d375f5014 Merge branch 'kcsan-dev.2020.04.13c' into HEAD               
-     0     0                                            +136  a2dbbcab9f92 Merge branch 'lkmm-dev.2020.05.16a' into HEAD                
-     0     0                                            -136  0ccf50efbcde torture:  Remove qemu dependency on EFI firmware             
-     0     0                                                  68ba178084b7 torture: Add script to smoke-test commits in a branch        
-   +38   +38                                                  1ed85645da6f fork: Annotate a data race in vm_area_dup()                  
-     0     0                                                  9706e500af92 x86/mm/pat: Mark an intentional data race                    
-    +1     0                                                  73143a2756f2 rculist: Add ASSERT_EXCLUSIVE_ACCESS() to __list_splice_init 
-     0     0                                                  df9e0d326c58 locktorture: Use true and false to assign to bool variables  
-     0     0                                                  31836e7f3957 srcu: Fix a typo in comment "amoritized"->"amortized"        
-     0     0                                                  8dc81894e15e rcu: Simplify the calculation of rcu_state.ncpus             
-     0     0                                                  866d35bc4268 docs: RCU: Convert checklist.txt to ReST                     
-     0     0                                                  a5a641694e90 docs: RCU: Convert lockdep-splat.txt to ReST                 
-     0     0                                                  075d262d495a docs: RCU: Convert lockdep.txt to ReST                       
-     0     0                                                  030f202e9320 docs: RCU: Convert rculist_nulls.txt to ReST                 
-     0     0                                                  719a5977c19e docs: RCU: Convert torture.txt to ReST                       
-     0     0                                                  07fda9360cb8 docs: RCU: Convert rcuref.txt to ReST                        
-     0     0                                                  43a6aa111c1b docs: RCU: Convert stallwarn.txt to ReST                     
-     0     0                                                  fb821a0f1ae9 docs: RCU: Don't duplicate chapter names in rculist_nulls.rs 
-     0     0                                                  f684413ca0fe rcutorture: Add races with task-exit processing              
-     0     0                                                  642c60ddf812 torture: Set configfile variable to current scenario         
-     0     0                                                  358b76258c2b rcutorture: Handle non-statistic bang-string error messages  
-     0     0                                                  6b38c8a9e78b rcutorture: NULL rcu_torture_current earlier in cleanup code 
-     0     0                                                  6d9c6773218b kcsan: Add test suite                                        
-     0     0                                                  58a00281305d doc: Timer problems can cause RCU CPU stall warnings         
-     0     0                                                  7286dcd8100f rcu: Add callbacks-invoked counters                          
-     0     0                                                  eee5c02a9c54 rcu: Add comment documenting rcu_callback_map's purpose      
-     0     0                                                  196d069523d7 Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom o 
-     0     0                                                  517213014c07 rcu/tree: Add better tracing for dyntick-idle                
-     0     0                                                  e18e6adf3fb1 rcu/tree: Clean up dynticks counter usage                    
-     0     0                                                  035be4f36ec9 rcu/tree: Remove dynticks_nmi_nesting counter                
-     0     0                                                  cd3a9f7eb268 trace: events: rcu: Change description of rcu_dyntick trace  
-     0     0                                                  15e6274bd8e0 torture: Remove whitespace from identify_qemu_vcpus output   
-     0     0                                                  8e2bb86cf48f torture: Add --allcpus argument to the kvm.sh script         
-     0     0                                                  0e47cb02a13f rcu: Grace-period-kthread related sleeps to idle priority    
-     0     0                                                  de75483d02eb rcu: Priority-boost-related sleeps to idle priority          
-     0     0                                                  0d6fb0eb3c27 rcu: No-CBs-related sleeps to idle priority                  
-     0     0                                                  04172e98fa9a rcu: Expedited grace-period sleeps to idle priority          
-     0     0                                                  4f41f854eff3 rcu-tasks: Convert sleeps to idle priority                   
-     0     0                                                  dae667494ffa fs/btrfs: Add cond_resched() for try_release_extent_mapping( 
-     0     0                                                  b1b2ccd81f39 locking/osq_lock: Annotate a data race in osq_lock           
-     0     0                                                  531c3224d19f doc: Tasks RCU must protect instructions before trampoline   
-     0     0                                                  0fcfee4481c1 ubsan, kcsan: Don't combine sanitizer with kcov on clang     
-     0     0                                                  c2c970dec439 doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq      
-     0     0                                                  68cd9f4e7238 tick/nohz: Narrow down noise while setting current task's ti 
-     0     0     +139278                                      de71843fb726 rcu: fix some kernel-doc warnings                            
-     0     0           0                                      b5b8f9797dfa rcu: Remove initialized but unused rnp from check_slow_task( 
-     0     0           0                                      15f5e34cc82f squash! rcutorture: Add races with task-exit processing      
-  -177  -177     +139278                                -136  0adeeee7dd32..15f5e34cc82f (ALL COMMITS)                                  
-========================================================================================================================================
+On Wed, May 20, 2020 at 04:40:12PM +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> it returns an error code. Thus a pairing decrement is needed on
 
-elapsed time: 545m
+s/even it/even when it/
 
-configs tested: 86
-configs skipped: 1
+> the error handling path to keep the counter balanced.
+>=20
+> Also This driver forgets to call pm_runtime_disable() when
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+s/Also This/Also this/
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-m68k                             allyesconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20200519
-i386                 randconfig-a005-20200519
-i386                 randconfig-a001-20200519
-i386                 randconfig-a003-20200519
-i386                 randconfig-a004-20200519
-i386                 randconfig-a002-20200519
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allmodconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+> pm_runtime_get_sync() returns an error code.
+>=20
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/pci/controller/pci-tegra.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Otherwise looks correct. It's came as somewhat of a surprise to me that
+pm_runtime_get_sync() increments the usage counter even on failure, but
+it does indeed.
+
+With the above fixes to the commit message:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--S1BNGpv0yoYahz37
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7E+xAACgkQ3SOs138+
+s6Ev0A/+LbNyGHEdbiqOD9y5/qaNsNqqMWMlwIt/mWXfZScDeEIpC3QPIsDtD5xU
+ouYqP8sbmo/0Elu56py6NUKPWEC0xDRX9TwopJ7HwSFa8egl1AjR87eHOgjXFXgd
+EuVB7+7TyE2rxp6UBtqQu1y9PDcTWmjQvyLaXBfQMyZqNaSt7e71yTdsz3cMHVa0
+DnNipyvYDrGUzr/cgadt/kN5FrTGQbgEodLebDnkgzOHVuqeJKuCBGpOGUL2eEKS
+r6fg3zb64SNwzQxB8k5hBek6+S+drfyTRcxzJgJOctehCq9xFA/5COUwdZpdzWQr
+7tD8AVEe+GUb1MS1VugJyVdMe3QecRKCuO7fqJPLjLuy54LCHYJVUyMpWBvVYslf
+Sl1e3ClVjUUt65y3Rtuvf0c7WzhRURoVBycKxsGlwM/nWZ+JjF/eejknZsifFZLQ
+FDtEgX+MWIa0XL59NY419YH1ul6xwTIkK6mU7F+gEkK0E0lcsVyX1ItHKPPJWQ0C
+hsRJCuGMqTlYetZorIzkAuOQCY0qR7qtsif1g+k7y2NeGBtDVDFmrsZjJNw52NRE
+6wDjxlZaCGGAXMu38SqDjUCSuXSSBywODU+BJuD3AyzT3CZ6nU/gfBv4K1QsITQi
+M9Q3U4+kFzKGpLHCVngyRhbZG9IYh012GSJeEDY+K+PX+I+/MU0=
+=0vzD
+-----END PGP SIGNATURE-----
+
+--S1BNGpv0yoYahz37--
