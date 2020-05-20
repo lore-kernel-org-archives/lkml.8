@@ -2,142 +2,247 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4734C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434E0207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9839E20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:47:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="I7uLrec0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q53CpEuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgETArb (ORCPT
+        id S1728285AbgETAre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:47:31 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:3458 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgETAra (ORCPT
+        Tue, 19 May 2020 20:47:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbgETArb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:47:30 -0400
+        Tue, 19 May 2020 20:47:31 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2001C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:47:30 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id j21so1244426ejy.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:47:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589935650; x=1621471650;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=X/ckMTm6DagFws+fgX1faFpSPzIF3DucNoEn8weBuyo=;
-  b=I7uLrec0Xalpo4n/NQUlnBc+WmfPpUasx+smBW3pnK4ENF+rZblRF5O0
-   yWTaQs6Zcr3REffrR4GHfrqfk1wJSZk/xsDmarjkmgGnic8EWJgmA+gVE
-   +fVMojPBqy+dG2/PoGtMAVh471UFWU3G6saOUojR3p3qfhN1EEq341g8T
-   8=;
-IronPort-SDR: A0JlgZVp7ZmZCqPbiZNe/UGepZ/OL/GEy6bzxI/M9lhcAjVXFCB7yL6hroJ0+T2ShdGNW4s6IC
- e0lVsBO2RPog==
-X-IronPort-AV: E=Sophos;i="5.73,412,1583193600"; 
-   d="scan'208";a="44534246"
-Subject: Re: [PATCH v2 4/4] arch/x86: Add L1D flushing Documentation
-Thread-Topic: [PATCH v2 4/4] arch/x86: Add L1D flushing Documentation
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 20 May 2020 00:47:26 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id A5014A20D5;
-        Wed, 20 May 2020 00:47:24 +0000 (UTC)
-Received: from EX13D01UWB001.ant.amazon.com (10.43.161.75) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 20 May 2020 00:47:24 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB001.ant.amazon.com (10.43.161.75) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 20 May 2020 00:47:23 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Wed, 20 May 2020 00:47:23 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Thread-Index: AQHWC8KTBtatWwah2kid46QoFKC446ivz/CAgACY/YA=
-Date:   Wed, 20 May 2020 00:47:23 +0000
-Message-ID: <fc9bc2f25fa082865d1b5ec98bfd7d02fe7cf00d.camel@amazon.com>
-References: <20200406031946.11815-1-sblbir@amazon.com>
-         <20200406031946.11815-5-sblbir@amazon.com>
-         <5def424d-c7d5-c6fa-60b9-363f6bca6bc6@infradead.org>
-In-Reply-To: <5def424d-c7d5-c6fa-60b9-363f6bca6bc6@infradead.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.100]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EFBBED2A1FBA17459853E791DB97C90C@amazon.com>
-Content-Transfer-Encoding: base64
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5ATl/YyNFGir4smvEUTlq/KkR2CgcH9y6IS3q99jhLs=;
+        b=Q53CpEuCe5BAQWGjzWeuXrHorlioHrVowYwDVRiGCloTfuif1brMeniDptNuvB9yzj
+         upKasxGIWWovsRAyO3Aoi8vYxGFsUQ9jjjFsAarCnLT0J/MA13Q/+JAiZnrbUHX6YGm9
+         vltH82MgNYHuhHxgfK179xa5qdoWmv0z6EaCI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5ATl/YyNFGir4smvEUTlq/KkR2CgcH9y6IS3q99jhLs=;
+        b=mfD4GJTBdCOi/hPrrLp5FRJFL+ARaP9uS1Zy1pHchkA0R/3ln9vDj3LtBPVVF24da9
+         Iuji71Z0qpaeVJo3LbSV2ZQcdFmTVjVgDPybSIURWFnHazR4VdvB3cl0GbNtzD0wNOFt
+         p+ujKMU74Hs+HvPk7bzeWS9FRi0fUUcZMiv/ku9GeP1alHk0Poaciu58Qzjv5JwKasso
+         mmB17wF7QVkxYwZqn7+1tpY/s8femRPJ4gFn8TNI8ny0hyybSV4u8v4n1Rp725xiKLRZ
+         MMuzYVWO4rn5uGnaN6CdGSp3YddcUGPgsFTMB5gxzFmU4De8//5ZuPDe0cipaIF6FAKR
+         dEfg==
+X-Gm-Message-State: AOAM531blnnRu12St1EcgbmTS+jP5O0o4hhHPqO4cMEhgp3WN8DZdXsR
+        jF1Sgy2o37leIuqXwN1lAqszMD+bghI=
+X-Google-Smtp-Source: ABdhPJymfLAgPTnT9XsxHeifcik608XEdXaqBrOJF3ammwhTfmB7aR8dpHxSEp7B1qKyS6sUYQjM2g==
+X-Received: by 2002:a17:906:c112:: with SMTP id do18mr1547114ejc.231.1589935648343;
+        Tue, 19 May 2020 17:47:28 -0700 (PDT)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
+        by smtp.gmail.com with ESMTPSA id g20sm571810ejx.85.2020.05.19.17.47.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 17:47:25 -0700 (PDT)
+Received: by mail-wr1-f54.google.com with SMTP id v12so1315765wrp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:47:25 -0700 (PDT)
+X-Received: by 2002:ac2:4113:: with SMTP id b19mr930771lfi.143.1589935643824;
+ Tue, 19 May 2020 17:47:23 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200515212846.1347-1-mcgrof@kernel.org> <20200515212846.1347-13-mcgrof@kernel.org>
+ <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+ <7306323c35e6f44d7c569e689b48f380f80da5e5.camel@sipsolutions.net>
+ <CA+ASDXOg9oKeMJP1Mf42oCMMM3sVe0jniaWowbXVuaYZ=ZpDjQ@mail.gmail.com> <20200519140212.GT11244@42.do-not-panic.com>
+In-Reply-To: <20200519140212.GT11244@42.do-not-panic.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 19 May 2020 17:47:12 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMUHOcvJ_7UWgyANMxSz15Ji7TcLDXVCtSPa+fOr=+FGA@mail.gmail.com>
+Message-ID: <CA+ASDXMUHOcvJ_7UWgyANMxSz15Ji7TcLDXVCtSPa+fOr=+FGA@mail.gmail.com>
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        aquini@redhat.com, peterz@infradead.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        mchehab+samsung@kernel.org, will@kernel.org, bhe@redhat.com,
+        ath10k@lists.infradead.org, Takashi Iwai <tiwai@suse.de>,
+        mingo@redhat.com, dyoung@redhat.com, pmladek@suse.com,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, gpiccoli@canonical.com,
+        Steven Rostedt <rostedt@goodmis.org>, cai@lca.pw,
+        tglx@linutronix.de,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        schlad@suse.de, Linux Kernel <linux-kernel@vger.kernel.org>,
+        jeyu@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA1LTE5IGF0IDA4OjM5IC0wNzAwLCBSYW5keSBEdW5sYXAgd3JvdGU6DQo+
-IA0KPiBIaS0tDQo+IA0KPiBDb21tZW50cyBiZWxvdy4gU29ycnkgYWJvdXQgdGhlIGRlbGF5Lg0K
-PiANCj4gT24gNC81LzIwIDg6MTkgUE0sIEJhbGJpciBTaW5naCB3cm90ZToNCj4gPiBBZGQgZG9j
-dW1lbnRhdGlvbiBvZiBsMWQgZmx1c2hpbmcsIGV4cGxhaW4gdGhlIG5lZWQgZm9yIHRoZQ0KPiA+
-IGZlYXR1cmUgYW5kIGhvdyBpdCBjYW4gYmUgdXNlZC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBCYWxiaXIgU2luZ2ggPHNibGJpckBhbWF6b24uY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVu
-dGF0aW9uL2FkbWluLWd1aWRlL2h3LXZ1bG4vaW5kZXgucnN0ICAgfCAgMSArDQo+ID4gIC4uLi9h
-ZG1pbi1ndWlkZS9ody12dWxuL2wxZF9mbHVzaC5yc3QgICAgICAgICB8IDQwICsrKysrKysrKysr
-KysrKysrKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspDQo+ID4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2h3LXZ1bG4vbDFkX2Zs
-dXNoLnJzdA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2h3LXZ1
-bG4vbDFkX2ZsdXNoLnJzdCBiL0RvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUvaHctdnVsbi9sMWRf
-Zmx1c2gucnN0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAw
-MDAuLjczZWU5ZTQ5MWE3NA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2FkbWluLWd1aWRlL2h3LXZ1bG4vbDFkX2ZsdXNoLnJzdA0KPiA+IEBAIC0wLDAgKzEsNDAg
-QEANCj4gPiArTDFEIEZsdXNoaW5nIGZvciB0aGUgcGFyYW5vaWQNCj4gPiArPT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT0NCj4gPiArDQo+ID4gK1dpdGggYW4gaW5jcmVhc2luZyBudW1iZXIg
-b2YgdnVsbmVyYWJpbGl0aWVzIGJlaW5nIHJlcG9ydGVkIGFyb3VuZCBkYXRhDQo+ID4gK2xlYWtz
-IGZyb20gTDFELCBhIG5ldyB1c2VyIHNwYWNlIG1lY2hhbmlzbSB0byBmbHVzaCB0aGUgTDFEIGNh
-Y2hlIG9uDQo+ID4gK2NvbnRleHQgc3dpdGNoIGlzIGFkZGVkIHRvIHRoZSBrZXJuZWwuIFRoaXMg
-c2hvdWxkIGhlbHAgYWRkcmVzcw0KPiA+ICtDVkUtMjAyMC0wNTUwIGFuZCBmb3IgcGFyYW5vaWQg
-YXBwbGljYXRpb25zLCBrZWVwIHRoZW0gc2FmZSBmcm9tIGFueQ0KPiA+ICt5ZXQgdG8gYmUgZGlz
-Y292ZXJlZCB2dWxuZXJhYmlsaXRpZXMsIHJlbGF0ZWQgdG8gbGVha3MgZnJvbSB0aGUgTDFEDQo+
-ID4gK2NhY2hlLg0KPiA+ICsNCj4gPiArVGFza3MgY2FuIG9wdCBpbiB0byB0aGlzIG1lY2hhbmlz
-bSBieSB1c2luZyBhbiBhcmNoaXRlY3R1cmUgc3BlY2lmaWMNCj4gPiArcHJjdGwgKHg4NiBvbmx5
-IGF0IHRoZSBtb21lbnQpLg0KPiA+ICsNCj4gPiArUmVsYXRlZCBDVkVTDQo+IA0KPiAgICAgICAg
-ICAgIENWRXMNCj4gDQo+ID4gKy0tLS0tLS0tLS0tLQ0KPiA+ICtBdCB0aGUgcHJlc2VudCBtb21l
-bnQsIHRoZSBmb2xsb3dpbmcgQ1ZFcyBjYW4gYmUgYWRkcmVzc2VkIGJ5IHRoaXMNCj4gPiArbWVj
-aGFuaXNtDQo+ID4gKw0KPiA+ICsgICAgPT09PT09PT09PT09PSAgICAgICA9PT09PT09PT09PT09
-PT09PT09PT09PT0gICAgID09PT09PT09PT09PT09PT09PQ0KPiA+ICsgICAgQ1ZFLTIwMjAtMDU1
-MCAgICAgICBJbXByb3BlciBEYXRhIEZvcndhcmRpbmcgICAgIE9TIHJlbGF0ZWQgYXNwZWN0cw0K
-PiA+ICsgICAgPT09PT09PT09PT09PSAgICAgICA9PT09PT09PT09PT09PT09PT09PT09PT0gICAg
-ID09PT09PT09PT09PT09PT09PQ0KPiA+ICsNCj4gPiArVXNhZ2UgR3VpZGVsaW5lcw0KPiA+ICst
-LS0tLS0tLS0tLS0tLS0tDQo+ID4gK0FwcGxpY2F0aW9ucyBjYW4gY2FsbCBgYGFyY2hfcHJjdGwo
-MilgYCB3aXRoIG9uZSBvZiB0aGVzZSB0d28gYXJndW1lbnRzDQo+IA0KPiBlbmQgYWJvdmUgc2Vu
-dGVuY2Ugd2l0aCBwZXJpb2Qgb3IgY29sb24gKGNvbG9uIG1pZ2h0IHJlcXVpcmUgdGhlIGZvbGxv
-d2luZw0KPiBidWxsZXQgaXRlbXMgdG8gYmUgaW5kZW50ZWQgLS0gSSdtIG5vdCBzdXJlIGFib3V0
-IHRoYXQpLg0KDQpJJ2xsIHRha2UgYSBsb29rDQoNCj4gDQo+ID4gKw0KPiA+ICsxLiBBUkNIX1NF
-VF9MMURfRkxVU0ggLSBmbHVzaCB0aGUgTDFEIGNhY2hlIG9uIGNvbnRleHQgc3dpdGNoIChvdXQp
-DQo+ID4gKzIuIEFSQ0hfR0VUX0wxRF9GTFVTSCAtIGdldCB0aGUgY3VycmVudCBzdGF0ZSBvZiB0
-aGUgTDFEIGNhY2hlIGZsdXNoLCByZXR1cm5zIDENCj4gPiArICAgaWYgc2V0IGFuZCAwIGlmIG5v
-dCBzZXQuDQo+ID4gKw0KPiA+ICsqKk5PVEUqKjogVGhlIGZlYXR1cmUgaXMgZGlzYWJsZWQgYnkg
-ZGVmYXVsdCwgYXBwbGljYXRpb25zIHRvIG5lZWQgdG8gc3BlY2lmaWNhbGx5DQo+IA0KPiAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGVmYXVsdDsgYXBwbGljYXRpb25z
-IG5lZWQgdG8NCj4gDQo+ID4gK29wdCBpbnRvIHRoZSBmZWF0dXJlIHRvIGVuYWJsZSBpdC4NCj4g
-PiArDQo+ID4gK01pdGlnYXRpb24NCj4gPiArLS0tLS0tLS0tLQ0KPiA+ICtXaGVuIEFSQ0hfU0VU
-X0wxRF9GTFVTSCBpcyBlbmFibGVkIGZvciBhIHRhc2ssIG9uIHN3aXRjaGluZyB0YXNrcyAod2hl
-bg0KPiA+ICt0aGUgYWRkcmVzcyBzcGFjZSBjaGFuZ2VzKSwgYSBmbHVzaCBvZiB0aGUgTDFEIGNh
-Y2hlIGlzIHBlcmZvcm1lZCBmb3INCj4gPiArdGhlIHRhc2sgd2hlbiBpdCBsZWF2ZXMgdGhlIENQ
-VS4gSWYgdGhlIHVuZGVybHlpbmcgQ1BVIHN1cHBvcnRzIEwxRA0KPiA+ICtmbHVzaGluZyBpbiBo
-YXJkd2FyZSwgdGhlIGhhcmR3YXJlIG1lY2hhbmlzbSBpcyB1c2VkLCBvdGhlcndpc2UgYSBzb2Z0
-d2FyZQ0KPiA+ICtmYWxsYmFjaywgc2ltaWxhciB0byB0aGUgbWVjaGFuaXNtIHVzZWQgYnkgTDFU
-RiBpcyB1c2VkLg0KPiA+IA0KPiANCg0KSSdsbCB3b3JrIG9uIHRoZXNlIGFuZCB1cGRhdGUgYmFz
-ZWQgb24gbW9yZSBmZWVkYmFjayBvbiB0aGUgcmVzdCBvZiB0aGUgc2VyaWVzLg0KDQpCYWxiaXIg
-U2luZ2guDQoNCg==
+Hi Luis,
+
+On Tue, May 19, 2020 at 7:02 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> On Mon, May 18, 2020 at 06:23:33PM -0700, Brian Norris wrote:
+> > On Sat, May 16, 2020 at 6:51 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+> > > In addition, look what we have in iwl_trans_pcie_removal_wk(). If we
+> > > detect that the device is really wedged enough that the only way we can
+> > > still try to recover is by completely unbinding the driver from it, then
+> > > we give userspace a uevent for that. I don't remember exactly how and
+> > > where that gets used (ChromeOS) though, but it'd be nice to have that
+> > > sort of thing as part of the infrastructure, in a sort of two-level
+> > > notification?
+> >
+> > <slight side track>
+> > We use this on certain devices where we know the underlying hardware
+> > has design issues that may lead to device failure
+>
+> Ah, after reading below I see you meant for iwlwifi.
+
+Sorry, I was replying to Johannes, who I believe had his "we"="Intel"
+hat (as iwlwifi maintainer) on, and was pointing at
+iwl_trans_pcie_removal_wk().
+
+> If userspace can indeed grow to support this, that would be fantastic.
+
+Well, Chrome OS tailors its user space a bit more to the hardware (and
+kernel/drivers in use) than the average distro might. We already do
+this (for some values of "this") today. Is that "fantastic" to you? :D
+
+> > -- then when we see
+> > this sort of unrecoverable "firmware-death", we remove the
+> > device[*]+driver, force-reset the PCI device (SBR), and try to
+> > reload/reattach the driver. This all happens by way of a udev rule.
+>
+> So you've sprikled your own udev event here as part of your kernel delta?
+
+No kernel delta -- the event is there already:
+iwl_trans_pcie_removal_wk()
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/wireless/intel/iwlwifi/pcie/trans.c?h=v5.6#n2027
+
+And you can see our udev rules and scripts, in all their ugly details
+here, if you really care:
+https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/master/net-wireless/iwlwifi_rescan/files/
+
+> > We
+> > also log this sort of stuff (and metrics around it) for bug reports
+> > and health statistics, since we really hope to not see this happen
+> > often.
+>
+> Assuming perfection is ideal but silly. So, what infrastructure do you
+> use for this sort of issue?
+
+We don't yet log firmware crashes generally, but for all our current
+crash reports (including WARN()), they go through this:
+https://chromium.googlesource.com/chromiumos/platform2/+/master/crash-reporter/README.md
+
+For example, look for "cut here" in:
+https://chromium.googlesource.com/chromiumos/platform2/+/master/crash-reporter/anomaly_detector.cc
+
+For other specific metrics (like counting "EVENT=INACCESSIBLE"), we
+use the Chrome UMA system:
+https://chromium.googlesource.com/chromiumos/platform2/+/master/metrics/README.md
+
+I don't imagine the "infrastructure" side of any of that would be
+useful to you, but maybe the client-side gathering can at least show
+you what we do.
+
+> > [*] "We" (user space) don't actually do this...it happens via the
+> > 'remove_when_gone' module parameter abomination found in iwlwifi.
+>
+> BTW is this likely a place on iwlwifi where the firmware likely crashed?
+
+iwl_trans_pcie_removal_wk() is triggered because HW accesses timed out
+in a way that is likely due to a dead PCIe endpoint. It's not directly
+a firmware crash, although there may be firmware crashes reported
+around the same time.
+
+Intel folks can probably give a more nuanced answer, but their
+firmware crashes usually land in something like iwl_mvm_nic_error() ->
+iwl_mvm_dump_nic_error_log() + iwl_mvm_nic_restart(). If you can make
+your proposal less punishing (e.g., removing the "taint" as Johannes
+requested), maybe iwlwifi would be another good candidate for
+$subject. iwlwifi generally expects to recover seamlessly, but it's
+also good to know if you've seen a hundred of these in a row.
+
+> > A uevent
+> > would suit us very well I think, although it would be nice if drivers
+> > could also supply some small amount of informative text along with it
+>
+> A follow up to this series was to add a uevent to add_taint(), however
+> since a *count* is not considered I think it is correct to seek
+> alternatives at this point. The leaner the solution the better though.
+>
+> Do you have a pointer to what guys use so I can read?
+
+Hopefully the above pointers are useful to you. We don't yet have
+firmware-crash parsing implemented, so I don't have pointers for that
+piece yet.
+
+> > (e.g., a sort of "reason code", in case we can possibly aggregate
+> > certain failure types). We already do this sort of thing for WARN()
+> > and friends (not via uevent, but via log parsing; at least it has nice
+> > "cut here" markers!).
+>
+> Indeed, similar things can indeed be argued about WARN*()... this
+> however can be non-device specific. With panic-on-warn becoming a
+> "thing", the more important it becomes to really tally exactly *why*
+> these WARN*()s may trigger.
+
+panic-on-warn? Yikes. I guess such folks don't run mac80211... I'm
+probably not supposed to publicize information related to how many
+Chromebooks are out there, but we regularly see a scary number of
+non-fatal warnings (WARN(), WARN_ON(), etc.) logged by Chrome OS users
+every day, and a scary number of those are in WiFi drivers...
+
+> > Perhaps
+>
+> Note below.
+
+(My use of "perhaps" is only because I'm not familiar with devlink at all.)
+
+> > devlink (as proposed down-thread) would also fit the bill. I
+> > don't think sysfs alone would fit our needs, as we'd like to process
+> > these things as they happen, not only when a user submits a bug
+> > report.
+>
+> I think we've reached a point where using "*Perhaps*" does not suffice,
+> and if there is already a *user* of similar desired infrastructure I
+> think we should jump on the opportunity to replace what you have with
+> something which could be used by other devices / subsystems which
+> require firmware. And indeed, also even consider in the abstract sense,
+> the possibility to leverage something like this for WARN*()s later too.
+
+To precisely lay out what Chrome OS does today:
+
+* WARN() and similar: implemented, see anomaly_detector.cc above. It's
+just log parsing, and that handy "cut here" stuff -- I'm nearly
+certain there are other distros using this already? A uevent would
+probably be nice, but log parsing is good enough for us today.
+* EVENT=INACCESSIBLE: iwlwifi-specific, but reference code is linked
+above. It's a uevent, and we handle it via udev. Code is linked above.
+* Other firmware crashes: not yet implemented here, but we're looking
+at it. Currently, we plan to do something similar to WARN(), but it
+will be ugly and non-generic. A uevent would be a lovely replacement,
+if it has some basic metadata with it. Stats in sysfs might be icing
+on the cake, but mostly redundant for us, if we can grab it on the fly
+via uevent.
+
+HTH,
+Brian
