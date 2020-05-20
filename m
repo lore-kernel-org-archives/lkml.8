@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4789CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EADEE207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21ADF207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:53:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qbYaLxLB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2uhBzsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgETKxO (ORCPT
+        id S1726819AbgETKxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50560 "EHLO
+        Wed, 20 May 2020 06:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETKxN (ORCPT
+        with ESMTP id S1726403AbgETKxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:53:13 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95494C061A0E;
-        Wed, 20 May 2020 03:53:13 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id o13so2089426otl.5;
-        Wed, 20 May 2020 03:53:13 -0700 (PDT)
+        Wed, 20 May 2020 06:53:44 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E5CC061A0E;
+        Wed, 20 May 2020 03:53:44 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 63so2073959oto.8;
+        Wed, 20 May 2020 03:53:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YYDsvXyN7lKyWvwicAI4oCr345gpOnXVLRGj0aMMolo=;
-        b=qbYaLxLBOhLq5Wzl+yScqKP0rLt0oiZqaE5FvY2agbCmQX7z+gnSlqjpYcKBt/bHe1
-         2HQQsmn8ghBiES8tmXMO0lNNOshYrsytYoeKzcJ4vawIHe/ptqrQ1KO9Klu3osmn7GQc
-         MLXnyMQ7McQ/mj2+GymxWX3k9uOvU/HcjCt5AGs63VobdHPdssWFptMENdIiMtz5/fmn
-         n7NDxdyRdm7aBQyPg4EuO4WPvtF/FXN1zWIHn14BDXEkvCLiS5dyyy0L91C620XPpWpj
-         YfgLFpUQa4so7KjbaeSpDio0fq/wlFHZ+j667eaANqVRGJRNwDZgD8SD3Hmh+8+r+6hl
-         ZZYw==
+        bh=Uo2IvVF99WCeacc6Vvk0OLPGGgAJAoufosXm9+M1IcI=;
+        b=B2uhBzsmyGVsVtF88hh8IoR3qbGAmfEb1EyHXzQ+07LG9CjmeK5aniUJq8r4lDFIZH
+         ReDkh0Z/mWbs/4HxADXFn1QfNryJRNNTMf8wR4HPHwQQmG/xxEHxwOXzFfiOpEXNs5tz
+         rVUCeYPxYXU5w0aOWGHE81T+G1lTRyYQqiQVjbR0Lg6gPBJQ/CrOCE1nwe6WeN3Q6vwK
+         Wp2AV8z1U7VecQXuo6+IFdOCld8OGH3eX4XGdVVWmEpgU/XveXvPsLsLMBCMwpY92Lsy
+         ruW/WQ+rMHcWBIGqgAt4vA0iJU4Xm7oUr/8JA39GAsFa/nUCln2E7Fxk9HwwS36jzlBU
+         M1KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=YYDsvXyN7lKyWvwicAI4oCr345gpOnXVLRGj0aMMolo=;
-        b=afoZNYzknNLnZu99pJCzGH76ZXOZtxc8oGYn5H3iJ+Z4MEg3k2/KZhEasQRemxwUIO
-         Nd0ct5b/EgtkQzDw06avwaMvvSB5ffsIrXHggPa9CDZCCSLD7Iq3H+ahytY7eyL+z5JU
-         xvJBrgDDyYPZEtPeAWElHHCnn1T1fO+ahzToGhhG3VKswC+MeFiYnghgjQ+W+zxub9J5
-         wCQU8YEiDDTDzMUM1MX5uKIlrQleAUVBkrEryKB46plB3Ysu5TA/+DjnxdfCjk7qHdhH
-         wGnWzj2Ei2RY8FJGkNDxhBZPb+rmppnWPyXKKdI9NZoNxb9v1R+lK7Of3FdLYWdwCGh0
-         wKZA==
-X-Gm-Message-State: AOAM531npIrVJ5YL6deeUstWmK2YgEeXgNiuW+7zn2K24d8elqMiwOC1
-        zXXl6lnwalO6WEffcED5SsA=
-X-Google-Smtp-Source: ABdhPJwUU/Av89zm/6GN/mCN+QuXxkgRVLWIQ08D6KuPsFs/3d0j6e8GhmXPXWbLZotFinFxpZl2kg==
-X-Received: by 2002:a05:6830:2305:: with SMTP id u5mr2830737ote.29.1589971992848;
-        Wed, 20 May 2020 03:53:12 -0700 (PDT)
+        bh=Uo2IvVF99WCeacc6Vvk0OLPGGgAJAoufosXm9+M1IcI=;
+        b=NB6y4GTqGp+ISAb1QMTCHLOeU8Bbbdz4v8vrrbTtj0lbBT+fbhHR0YrFDDc443Dcln
+         r1hLQrff0/8sft1Zph1PN6kT+whw8HI8MELNV0OMkdzAIPqnsFNzvxWMkC18eSecbErg
+         NF9AsS+S05FH0y172JhjhtTjuMkqgAWCsfi04kpDTHekoVqrPOJnYbIpOlCIYyjEqyFn
+         yqVCar3M1hAopRg0DZAOg/6xRlJ7erfcZcHqfWqD1WkOCD8QqKR3BYpGg2N3W97Qdna6
+         p9T8sJpaQtmXulhA3Gk+Aqf1JT4GJUi9AvvuFj3zVaCNDwShU/RPayL0bJjpv4qRtdGr
+         +YiQ==
+X-Gm-Message-State: AOAM531u2DD25CRloz0oyDAQ/75UwwtAtxBj/0e1Dv6+EQ46PtcF5JJM
+        +5VAvo0tZTOuVDQQcLPDI20=
+X-Google-Smtp-Source: ABdhPJwPQxKPUzMCI/gGmmDXo+bjGOcdHM3EDYwFCekFxABrLQep52XoiwtttDZ8+O9NZ6vCGxAgxQ==
+X-Received: by 2002:a9d:6557:: with SMTP id q23mr2643750otl.93.1589972023011;
+        Wed, 20 May 2020 03:53:43 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id l204sm688261oia.28.2020.05.20.03.53.09
+        by smtp.gmail.com with ESMTPSA id b17sm708792oop.6.2020.05.20.03.53.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 03:53:12 -0700 (PDT)
-Subject: Re: [PATCH 2/4] clk/soc: mediatek: mt6797: Bind clock driver from
+        Wed, 20 May 2020 03:53:42 -0700 (PDT)
+Subject: Re: [PATCH 1/4] clk/soc: mediatek: mt8183: Bind clock driver from
  platform device
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -72,11 +72,9 @@ Cc:     mtk01761 <wendell.lin@mediatek.com>, devicetree@vger.kernel.org,
         linux-mediatek@lists.infradead.org,
         Kate Stewart <kstewart@linuxfoundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Richard Fontana <rfontana@redhat.com>
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20200518113156.25009-1-matthias.bgg@kernel.org>
- <20200518113156.25009-2-matthias.bgg@kernel.org>
- <158996970679.215346.601357207492478540@swboyd.mtv.corp.google.com>
+ <158996969738.215346.5933135216459465754@swboyd.mtv.corp.google.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -152,12 +150,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <fbdb07df-9b4c-326a-be0f-cf75eb357449@gmail.com>
-Date:   Wed, 20 May 2020 12:53:08 +0200
+Message-ID: <4e163b03-2dac-b731-6302-cac00e82ed5a@gmail.com>
+Date:   Wed, 20 May 2020 12:53:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <158996970679.215346.601357207492478540@swboyd.mtv.corp.google.com>
+In-Reply-To: <158996969738.215346.5933135216459465754@swboyd.mtv.corp.google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -168,8 +166,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 20/05/2020 12:15, Stephen Boyd wrote:
-> Quoting matthias.bgg@kernel.org (2020-05-18 04:31:54)
+On 20/05/2020 12:14, Stephen Boyd wrote:
+> Quoting matthias.bgg@kernel.org (2020-05-18 04:31:53)
 >> From: Matthias Brugger <matthias.bgg@gmail.com>
 >>
 >> The mmsys driver is now the top level entry point for the multimedia
