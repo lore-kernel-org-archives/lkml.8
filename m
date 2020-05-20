@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98039C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74145205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52A4205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgETO0G (ORCPT
+        id S1728441AbgETO0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:26:06 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33114 "EHLO
+        Wed, 20 May 2020 10:26:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33052 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727046AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727024AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-00037q-LQ; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPbw-00036L-8P; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-007DUl-NR; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbv-007DRE-BZ; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Stanislaw Gruszka" <stf_xl@wp.pl>
-Date:   Wed, 20 May 2020 15:14:41 +0100
-Message-ID: <lsq.1589984009.92462289@decadent.org.uk>
+        "Karl =?UTF-8?Q?Rudb=C3=A6k=20?=Olsen" <karl@micro-technic.com>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+Date:   Wed, 20 May 2020 15:14:10 +0100
+Message-ID: <lsq.1589984008.270727852@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 73/99] iwlegacy: ensure loop counter addr does not
- wrap and cause an infinite loop
+Subject: [PATCH 3.16 42/99] ARM: dts: at91: sama5d3: define clock rate
+ range for tcb1
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,36 +56,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 upstream.
+commit a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d upstream.
 
-The loop counter addr is a u16 where as the upper limit of the loop
-is an int. In the unlikely event that the il->cfg->eeprom_size is
-greater than 64K then we end up with an infinite loop since addr will
-wrap around an never reach upper loop limit. Fix this by making addr
-an int.
+The clock rate range for the TCB1 clock is missing. define it in the device
+tree.
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename]
+Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
+Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
+Link: https://lore.kernel.org/r/20200110172007.1253659-2-alexandre.belloni@bootlin.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/iwlegacy/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/iwlegacy/common.c
-+++ b/drivers/net/wireless/iwlegacy/common.c
-@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
- 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
- 	int sz;
- 	int ret;
--	u16 addr;
-+	int addr;
- 
- 	/* allocate eeprom */
- 	sz = il->cfg->eeprom_size;
+--- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
++++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
+@@ -23,6 +23,7 @@
+ 					tcb1_clk: tcb1_clk {
+ 						#clock-cells = <0>;
+ 						reg = <27>;
++						atmel,clk-output-range = <0 166000000>;
+ 					};
+ 				};
+ 			};
 
