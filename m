@@ -2,84 +2,178 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEEDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F087420884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31C2F20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:30:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TUOJcnnd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgETN3Q (ORCPT
+        id S1726801AbgETNa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:29:16 -0400
-Received: from sauhun.de ([88.99.104.3]:37730 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETN3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:29:15 -0400
-Received: from localhost (p5486cd24.dip0.t-ipconnect.de [84.134.205.36])
-        by pokefinder.org (Postfix) with ESMTPSA id 98CC72C1FD1;
-        Wed, 20 May 2020 15:29:13 +0200 (CEST)
-Date:   Wed, 20 May 2020 15:29:13 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     qii.wang@mediatek.com
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        leilk.liu@mediatek.com
-Subject: Re: [next] i2c: mediatek: Use div_u64 for 64-bit division to fix
- 32-bit kernels
-Message-ID: <20200520132913.GB5759@ninjato>
-References: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
+        Wed, 20 May 2020 09:30:27 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35118 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgETNa0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:30:26 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200520133025euoutp0269020d02edb9256cab692d7c6f99fb7c~Qv6677pOF0954509545euoutp02W
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:30:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200520133025euoutp0269020d02edb9256cab692d7c6f99fb7c~Qv6677pOF0954509545euoutp02W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589981425;
+        bh=4/UF8o+qe9FL65I4+IaNyRsam28B7RD7AW5dBESBSjI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=TUOJcnndEl6wkVZcE3RAe8iHXnhUX81NZo7FDy6LoD4l2PyPiJ490etN+t+i85AAJ
+         2v1/SE7qZO7qlRxMUGIn1xfAotpDJdGplD3JDdRoY7b+8Kv295Vj9zYDF4tPlKgEf5
+         iA85aXrAdAiU4eJb3n6YTrWMWhf0ylQ3Yf6IFmGQ=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200520133025eucas1p2241756af2dc10f422ced9ed8458453f4~Qv66v3h5d0434304343eucas1p2W;
+        Wed, 20 May 2020 13:30:25 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 7A.DE.60698.1F035CE5; Wed, 20
+        May 2020 14:30:25 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200520133024eucas1p2a72160b9d7d319b689010a7f25823627~Qv66MdZx92235322353eucas1p2T;
+        Wed, 20 May 2020 13:30:24 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200520133024eusmtrp29f989412c7a0585daf5ece7e13c43c9c~Qv66L1R0a0497304973eusmtrp24;
+        Wed, 20 May 2020 13:30:24 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-8d-5ec530f1abb9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9E.50.07950.0F035CE5; Wed, 20
+        May 2020 14:30:24 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200520133024eusmtip18777fdf60238afc2729db24c3482635a~Qv65ys4vm2732527325eusmtip1O;
+        Wed, 20 May 2020 13:30:24 +0000 (GMT)
+Subject: Re: [PATCH] media: videobuf2-dma-contig: fix bad kfree in
+ vb2_dma_contig_clear_max_seg_size
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <063afbd8-544c-c8c1-c9a0-4e8fe0d5800a@samsung.com>
+Date:   Wed, 20 May 2020 15:30:24 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
-Content-Disposition: inline
-In-Reply-To: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520131558.23009-1-tomi.valkeinen@ti.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjtvdvurqOt16n5YLHRoMTIL+zHSLEEyf3LXxmC1srrNPdhm1oK
+        gS2QnCJmja1hWEqZzi9WbmaxcujWMpyklQ6lIksNRMqKEs223Sz/nfec8zznOfBSLGEzJ4Yq
+        VpfRWrVcKSF5bLv711j8l6SR/KSf3hjpxGAzKa3v6+dI79rWCGlvi5+UerpzjnBkts5aUjbz
+        +jEp80w5CNmKTZTNzuWlFdDK4gpam5h+ilc0/rGRKJ2NvLA8b+FWo85wAwqjAB+Ed29spAHx
+        KCG+h8DhM6GgIMTfEBhdVYywgqCv9hNnc+LZ22E2I7QjqGvVc5jHMoKar+0hVwQuBEfv85AQ
+        iQcQzNa6Q3tZOBbszsmQicTJYFgykEHMx+lg6/Gzg5iN90LLzcaQPwrnwWjbfcR4wsF7Yy7k
+        CcOp0GM0ksxOMTiWmlkMjgb/XAsRDAZs4sLQUyvJ3J0JU3qmHOAI+Ox5wGXwbth4uDlwGcH7
+        sW4u86hHMKE3/51IhZmx1cAmKhARB72DiQydAZes3ShIAxbA1FI4c4QAmuwmFkPz4UqNkHHv
+        A4un51/s0PhLViOSWLZUs2ypY9lSx/I/9xZid6JoulynUtC6FDV9PkEnV+nK1YqEMxqVDQX+
+        zOhvz/cB5Fw77UKYQpLt/D7+SL6QI6/QVapcCCiWJJJ/e0eA4hfIK6toreaktlxJ61xoF8WW
+        RPNTWhfzhFghL6NLaLqU1m6qBBUWU42SUwjvot8vmj9Usn6tCi8WTHg76EyxtXVnxmRuf/71
+        FxzNcAMnLSfOuKA4kS4SdKxHDR0wT4sFZvHqo4tE1pNtr+KPwkJWgs9sctYpun44leGi41dj
+        z7mrY838Y/ZU6Ld+KBnXHt5TqCHc3oENVvaG3tclPuu7Uznd1tAkYeuK5Mn7WVqd/A+4bmWW
+        LwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7ofDI7GGUx5qmtxedccNoueDVtZ
+        LZZt+sNksX7+LTaL42vDHVg9Nq3qZPO4c20Pm8fxG9uZPD5vkgtgidKzKcovLUlVyMgvLrFV
+        ija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLuPB0AlPBXZGK989nsTcwrhLs
+        YuTkkBAwkThx/whLFyMXh5DAUkaJZZ3fWCASMhInpzWwQtjCEn+udbFBFL1llLi5cRYbSEJY
+        IE1i+/pTrCAJEYFdjBKLbl8ESzALqEts23eFFaKjj1Fife80ZpAEm4ChRNfbLrAiXgE7iU3r
+        boGtYxFQlZg/dwIjiC0qECux+lorI0SNoMTJmU/AajgFrCXWTZ0KtcBMYt7mh8wQtrzE9rdz
+        oGxxiVtP5jNNYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMw
+        srYd+7llB2PXu+BDjAIcjEo8vBwCR+OEWBPLiitzDzFKcDArifAu5AcK8aYkVlalFuXHF5Xm
+        pBYfYjQFem4is5Rocj4w6vNK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQx
+        cXBKNTDKFth7P8mKCrA92eDLN/tJ/BH+P689Yz+tiq7Zvnf6j5Pcuu+yJTmzt7D+eMJx9sgl
+        1znvC1PjLu2uqndlEC1U6vFhrkjIvy5rdkyzrGy6zaGVi3Qre243ikSaqp9rjp18tLxAdkl2
+        +3mzp3POzr+nFFZ4L2a7d4jcibtnZKXfzCjr7rrNXanEUpyRaKjFXFScCABIh5HnwgIAAA==
+X-CMS-MailID: 20200520133024eucas1p2a72160b9d7d319b689010a7f25823627
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200520131624eucas1p131198f592ee1009a78e321955c8cae19
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200520131624eucas1p131198f592ee1009a78e321955c8cae19
+References: <CGME20200520131624eucas1p131198f592ee1009a78e321955c8cae19@eucas1p1.samsung.com>
+        <20200520131558.23009-1-tomi.valkeinen@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Tomi,
 
---ZoaI/ZTpAVc4A5k6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 20.05.2020 15:15, Tomi Valkeinen wrote:
+> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
+> Initialize dma_parms for platform devices") in v5.7-rc5 causes
+> vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
+> allocated by vb2_dma_contig_set_max_seg_size().
+>
+> The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
+> dev->dma_parms is always NULL when the driver is probed, and the case
+> where dev->dma_parms has bee initialized by someone else than the driver
+> (by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
+>
+> All the current users of these functions are platform devices, which now
+> always have dma_parms set by the driver core. To fix the issue for v5.7,
+> make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
+> NULL to be on the safe side, and remove the kfree code from
+> vb2_dma_contig_clear_max_seg_size().
+>
+> For v5.8 we should remove the two functions and move the
+> dma_set_max_seg_size() calls into the drivers.
+>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>
+> Note: I have only fully tested this on linux-next, as the capture driver
+> I use doesn't support unloading modules in v5.7.
+>
+>   drivers/media/common/videobuf2/videobuf2-dma-contig.c | 7 ++-----
+>   1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> index d3a3ee5b597b..24f80b62ef94 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> @@ -726,9 +726,8 @@ EXPORT_SYMBOL_GPL(vb2_dma_contig_memops);
+>   int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
+>   {
+>   	if (!dev->dma_parms) {
+> -		dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
+> -		if (!dev->dma_parms)
+> -			return -ENOMEM;
+> +		dev_err(dev, "Failed to set max_seg_size: dma_parms is NULL\n");
+> +		return -ENODEV;
+>   	}
+>   	if (dma_get_max_seg_size(dev) < size)
+>   		return dma_set_max_seg_size(dev, size);
+> @@ -747,8 +746,6 @@ EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
+>    */
+>   void vb2_dma_contig_clear_max_seg_size(struct device *dev)
+>   {
+> -	kfree(dev->dma_parms);
+> -	dev->dma_parms = NULL;
+>   }
+>   EXPORT_SYMBOL_GPL(vb2_dma_contig_clear_max_seg_size);
 
-On Wed, May 20, 2020 at 06:31:53PM +0800, qii.wang@mediatek.com wrote:
-> From: Qii Wang <qii.wang@mediatek.com>
->=20
-> Use div_u64 for 64-bit division, and change sample_ns type to
-> unsigned int. Otherwise, the module will reference __udivdi3
-> under 32-bit kernels, which is not allowed in kernel space.
->=20
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+We don't need to export empty function imho. It can be made an empty 
+static inline in include/media/videobuf2-dma-contig.h.
 
-Applied to for-next by squashing it into the relevant commit, thanks!
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-
---ZoaI/ZTpAVc4A5k6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7FMKkACgkQFA3kzBSg
-KbbynRAAmwCukXP9v4Fs9sjBIrxVil2vgnjXCEmpHgr7IZ37e9uoqxlUndj/oHhs
-YuDiSBGBVXU/ZYFP2VDsUdMRBa11pyoNALMiO0uIThiQ4gkn132Ej4DJ+s9o54cz
-nh74h8be69a0EmvvYY99oBfIFZ7ORRtvL5lIktHUaP9h4YvU1CC/neJ5o97q4bVU
-GBugpXgWfXEBApFPyXr3ShOaUyxnCJKYHAFyHShqoEtgIwXlyurDYG9yzkeI3d6w
-U5jKdhAp97EwNf+b1iLj/2EEOpE0G1wEWke8rTL1mjJMJRVCwUQqzeFzPORfGMK+
-YpphdJtvU6mvl2wjnybBcc4gb9WoQP7wRkb7lEdgW9kmlNIqPgzuds7F6ePHMNRD
-GxdMBnOiLFC6UnTih18N4gMnH9AwjX/1Hz4k8g9riHdF1+BGpcytZsosCXXE7n7C
-9rVPE/9HE9juuEWLBTqdonrOje8DOtOtOqX1b7DwEbHotanakMQY1C5xPbX6Wzr3
-QnKeVyuTbd0nUVkLgMCOJP/d9/1mJWWNvJSKdG/7zRyyz2nhOr4C8lJhLLH14Hub
-XKK5/K8qiufXzdhryt/EmiThF5WbhcRHQ4HH+irt9droO08MkBlZfnuW7NT0NPuY
-uk3OkrWasxCtb9udRSUrM6rGmfcueB//OzLR3xiq8GH/AykuwaM=
-=gKRd
------END PGP SIGNATURE-----
-
---ZoaI/ZTpAVc4A5k6--
