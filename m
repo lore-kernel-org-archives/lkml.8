@@ -2,110 +2,225 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B304FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA599C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9B520671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16CD20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:22:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dhdeCSjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgETSWF (ORCPT
+        id S1726932AbgETSWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:22:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26022 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbgETSWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:22:03 -0400
-IronPort-SDR: k+XpoKoyxS21PqszC+TqRT1jkDUQCHiqxqN5qY5qYJwHAs/pmWZuj3Td1HDkJzkJjuL+ohxKmo
- YsR6/O64aFMw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 11:22:02 -0700
-IronPort-SDR: yjb45754xoVgNIo15aUWz/vwmBtp4gTrIfXSSs1wy6BSvyf2WIW38nF4XRRokl4vtW+O3wUzZy
- sipOY35ZrhGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="268356630"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 20 May 2020 11:22:02 -0700
-Date:   Wed, 20 May 2020 11:22:02 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 21/24] KVM: x86: always update CR3 in VMCB
-Message-ID: <20200520182202.GB18102@linux.intel.com>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
- <20200520172145.23284-22-pbonzini@redhat.com>
+        Wed, 20 May 2020 14:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETSWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:22:50 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A426C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:22:50 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 18so4190157iln.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f/GVZd7ESIzgVNhsrJW5PyE298L4FuKCaYaDMiX7tBc=;
+        b=dhdeCSjRiWfCTgZHaYc5lDpzJhgGmGznip0fO45gjhoi5zhucoXDkbfvGv2brtwixp
+         KdEt3ZgZiavGZdGNv63+iCZwvib0MtVKkON4R8QPVSCxmF2CpJ7gI3ApbefB479r4AU4
+         lsFGV5VdbWc6PK4or0M3sSgcWMxjNGSGe6BUMagaZmhk9W9iJCSW09AWBpe/aaY+Sdql
+         2Y7i7vQ/oA60WvR+pr48dLv+7uLhlYHD6f4GFpfEinWSlo3wuFNbGluENEJGSa4h7oIy
+         LFlkOyJnjYJuktEdan7rhgjrd9RY48nv+6gsYNyAKJSe57aUhbNFZKj22KLxDWmEwugm
+         73pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f/GVZd7ESIzgVNhsrJW5PyE298L4FuKCaYaDMiX7tBc=;
+        b=olViDzlnpOpXLkzdPLj52s4y65mBdkRKuXeTGUQsJs3mw3TaEJWjBQrtRP/e1EgQT8
+         3+mVCrff58mfdpEk609HCzWGqSLmHIsiZkeXa909HxCJQbNPCjMFWOkZjA19qwFk+T/A
+         LiNK4/a/samonepxA98zq/4f9mCNTfaO/1Wi9EnBus8TwX4hfqcUNIYbT7bB3Z6byowk
+         QsU79rmE71CgGPHO1l2WTFsjTeL0mLdwqJIUmvSbFTf0OWVjrsSZUbBIMLtMnqXWXq36
+         /hEF0Gfi8mqPZr7mGZeWds91wLhd1d5mtXM8gYc4RASbc7nHPTf9wRioaSklMB2VwQIU
+         Nm/Q==
+X-Gm-Message-State: AOAM533puKmn+Csn6wcdfWf6Xx8K7m20P4HkFkEdhdEXw4VIZ5PK8C5R
+        U+hryrR1cz5sxXbe1/nI1p6rCmSBjqNc56Eht7mzbw==
+X-Google-Smtp-Source: ABdhPJwJYzklFP1O+ry02hbJTZuRp3l0pIS9xKqKMX71WXe0sCoddPUAuAWbkZyBVf4WMXE/762PZsQB+WOQC/nzEYE=
+X-Received: by 2002:a92:1b17:: with SMTP id b23mr5057619ilb.199.1589998953923;
+ Wed, 20 May 2020 11:22:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520172145.23284-22-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200520072814.128267-1-irogers@google.com> <20200520072814.128267-4-irogers@google.com>
+ <20200520131412.GK157452@krava>
+In-Reply-To: <20200520131412.GK157452@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 20 May 2020 11:22:22 -0700
+Message-ID: <CAP-5=fXHRiahLZjQHcFiWW=zdXc7r+=WdMpzeCj-+xPcqB2khQ@mail.gmail.com>
+Subject: Re: [PATCH 3/7] perf metricgroup: Delay events string creation
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 01:21:42PM -0400, Paolo Bonzini wrote:
-> vmx_load_mmu_pgd is delaying the write of GUEST_CR3 to prepare_vmcs02 as
-> an optimization, but this is only correct before the nested vmentry.
-> If userspace is modifying CR3 with KVM_SET_SREGS after the VM has
-> already been put in guest mode, the value of CR3 will not be updated.
-> Remove the optimization, which almost never triggers anyway.
-> 
-> This also applies to SVM, where the code was added in commit 689f3bf21628
-> ("KVM: x86: unify callbacks to load paging root", 2020-03-16) just to keep the
-> two vendor-specific modules closer.
-> 
-> Fixes: 04f11ef45810 ("KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter")
-> Fixes: 689f3bf21628 ("KVM: x86: unify callbacks to load paging root")
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
+On Wed, May 20, 2020 at 6:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, May 20, 2020 at 12:28:10AM -0700, Ian Rogers wrote:
+> > Currently event groups are placed into groups_list at the same time as
+> > the events string containing the events is built. Separate these two
+> > operations and build the groups_list first, then the event string from
+> > the groups_list. This adds an ability to reorder the groups_list that
+> > will be used in a later patch.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/metricgroup.c | 38 +++++++++++++++++++++++------------
+> >  1 file changed, 25 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index 7a43ee0a2e40..afd960d03a77 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -90,6 +90,7 @@ struct egroup {
+> >       const char *metric_expr;
+> >       const char *metric_unit;
+> >       int runtime;
+> > +     bool has_constraint;
+> >  };
+> >
+> >  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+> > @@ -485,8 +486,8 @@ int __weak arch_get_runtimeparam(void)
+> >       return 1;
+> >  }
+> >
+> > -static int __metricgroup__add_metric(struct strbuf *events,
+> > -             struct list_head *group_list, struct pmu_event *pe, int runtime)
+> > +static int __metricgroup__add_metric(struct list_head *group_list,
+> > +                                  struct pmu_event *pe, int runtime)
+> >  {
+> >       struct egroup *eg;
+> >
+> > @@ -499,6 +500,7 @@ static int __metricgroup__add_metric(struct strbuf *events,
+> >       eg->metric_expr = pe->metric_expr;
+> >       eg->metric_unit = pe->unit;
+> >       eg->runtime = runtime;
+> > +     eg->has_constraint = metricgroup__has_constraint(pe);
+> >
+> >       if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+> >               expr__ctx_clear(&eg->pctx);
+> > @@ -506,14 +508,6 @@ static int __metricgroup__add_metric(struct strbuf *events,
+> >               return -EINVAL;
+> >       }
+> >
+> > -     if (events->len > 0)
+> > -             strbuf_addf(events, ",");
+> > -
+> > -     if (metricgroup__has_constraint(pe))
+> > -             metricgroup__add_metric_non_group(events, &eg->pctx);
+> > -     else
+> > -             metricgroup__add_metric_weak_group(events, &eg->pctx);
+> > -
+> >       list_add_tail(&eg->nd, group_list);
+> >
+> >       return 0;
+> > @@ -524,6 +518,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+> >  {
+> >       struct pmu_events_map *map = perf_pmu__find_map(NULL);
+> >       struct pmu_event *pe;
+> > +     struct egroup *eg;
+> >       int i, ret = -EINVAL;
+> >
+> >       if (!map)
+> > @@ -542,7 +537,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+> >                       pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+> >
+> >                       if (!strstr(pe->metric_expr, "?")) {
+> > -                             ret = __metricgroup__add_metric(events, group_list, pe, 1);
+> > +                             ret = __metricgroup__add_metric(group_list,
+> > +                                                             pe, 1);
+> >                       } else {
+> >                               int j, count;
+> >
+> > @@ -553,13 +549,29 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+> >                                * those events to group_list.
+> >                                */
+> >
+> > -                             for (j = 0; j < count; j++)
+> > -                                     ret = __metricgroup__add_metric(events, group_list, pe, j);
+> > +                             for (j = 0; j < count; j++) {
+> > +                                     ret = __metricgroup__add_metric(
+> > +                                             group_list, pe, j);
+> > +                             }
+> >                       }
+> >                       if (ret == -ENOMEM)
+> >                               break;
+> >               }
+> >       }
+> > +     if (!ret) {
+>
+> could you please do instead:
+>
+>         if (ret)
+>                 return ret;
+>
+> so the code below cuts down one indent level and you
+> don't need to split up the lines
 
-...
+Done, broken out as a separate patch in v2:
+https://lore.kernel.org/lkml/20200520182011.32236-3-irogers@google.com/
 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 55712dd86baf..7daf6a50e774 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -3085,10 +3085,7 @@ void vmx_load_mmu_pgd(struct kvm_vcpu *vcpu, unsigned long pgd)
->  			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
->  		}
->  
-> -		/* Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter. */
-> -		if (is_guest_mode(vcpu))
-> -			update_guest_cr3 = false;
-> -		else if (!enable_unrestricted_guest && !is_paging(vcpu))
-> +		if (!enable_unrestricted_guest && !is_paging(vcpu))
->  			guest_cr3 = to_kvm_vmx(kvm)->ept_identity_map_addr;
->  		else if (test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
+Thanks,
+Ian
 
-As an alternative fix, what about marking VCPU_EXREG_CR3 dirty in
-__set_sregs()?  E.g.
-
-		/*
-		 * Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter, but
-		 * it can be explicitly dirtied by KVM_SET_SREGS.
-		 */
-		if (is_guest_mode(vcpu) &&
-		    !test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_dirty))
-
-There's already a dependency on __set_sregs() doing
-kvm_register_mark_available() before kvm_mmu_reset_context(), i.e. the
-code is already a bit kludgy.  The dirty check would make the kludge less
-subtle and provide explicit documentation.
-
->  			guest_cr3 = vcpu->arch.cr3;
-
-The comment that's just below the context is now stale, e.g. replace
-vmcs01.GUEST_CR3 with vmcs.GUEST_CR3.
-
-> -- 
-> 2.18.2
-> 
-> 
+> thanks,
+> jirka
+>
+> > +             list_for_each_entry(eg, group_list, nd) {
+> > +                     if (events->len > 0)
+> > +                             strbuf_addf(events, ",");
+> > +
+> > +                     if (eg->has_constraint) {
+> > +                             metricgroup__add_metric_non_group(events,
+> > +                                                               &eg->pctx);
+> > +                     } else {
+> > +                             metricgroup__add_metric_weak_group(events,
+> > +                                                                &eg->pctx);
+> > +                     }
+> > +             }
+> > +     }
+> >       return ret;
+> >  }
+> >
+> > --
+> > 2.26.2.761.g0e0b3e54be-goog
+> >
+>
