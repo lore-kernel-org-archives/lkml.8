@@ -7,208 +7,97 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9544CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14583C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EE02075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECD02075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TqlxQ1g2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igLPXI0f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgETRXV (ORCPT
+        id S1728110AbgETRWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:23:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21591 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728102AbgETRWQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 13:22:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22010 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728017AbgETRWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:22:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589995335;
+        s=mimecast20190719; t=1589995327;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=jrWjpTjo0hJ0e6dSEiSVY2FHCSjGptHFhRGJP2ZKJJk=;
-        b=TqlxQ1g2eoRUnDFizmsN6gaC7izqFJAI6bjxC3BnahaXrKvGX0sZjcYvmH9he9WDfkyx8+
-        PIbBq2N6iocMumtoQQLcHiRuBK46k4c9M9hXEe9l1VZGf/1hr4amBTeVd2zguJFSgLwBR5
-        BxP+InJojaODcvSyB/qmzm+0eE8kNIU=
+        bh=Jil/RFj0RTK+aVNqnSvLRnL3kfX+SWb+xHtGZMZ+Xnk=;
+        b=igLPXI0fRUfUtosxZdEsYjS9LVqpwWhUI8LEgXh0VkErLJfR05Y37qzwWvTYY6nbUfw1pm
+        C521lEw0bA2e52vGJViHvITTK6+p2QeDClWiP2qr8ynfuAmKHrnJL63BtzpG5yMK80CG1t
+        WFyEmokcq7TU+h6oYTA15bCdhX6Y9rU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-_SsBqXp-N7eYy7Xf57Uqig-1; Wed, 20 May 2020 13:22:11 -0400
-X-MC-Unique: _SsBqXp-N7eYy7Xf57Uqig-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-143-jDjkQTl3OHaL_WsEyO9qWQ-1; Wed, 20 May 2020 13:22:04 -0400
+X-MC-Unique: jDjkQTl3OHaL_WsEyO9qWQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20C578730A2;
-        Wed, 20 May 2020 17:22:10 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8ABF106B21C;
+        Wed, 20 May 2020 17:21:57 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CF5E79C31;
-        Wed, 20 May 2020 17:22:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 606B160610;
+        Wed, 20 May 2020 17:21:57 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 19/24] KVM: nSVM: extract svm_set_gif
-Date:   Wed, 20 May 2020 13:21:40 -0400
-Message-Id: <20200520172145.23284-20-pbonzini@redhat.com>
+Subject: [PATCH 09/24] KVM: nSVM: clean up tsc_offset update
+Date:   Wed, 20 May 2020 13:21:30 -0400
+Message-Id: <20200520172145.23284-10-pbonzini@redhat.com>
 In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
 References: <20200520172145.23284-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extract the code that is needed to implement CLGI and STGI,
-so that we can run it from VMRUN and vmexit (and in the future,
-KVM_SET_NESTED_STATE).  Skip the request for KVM_REQ_EVENT unless needed,
-subsuming the evaluate_pending_interrupts optimization that is found
-in enter_svm_guest_mode.
+Use l1_tsc_offset to compute svm->vcpu.arch.tsc_offset and
+svm->vmcb->control.tsc_offset, instead of relying on hsave.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/irq.c        |  1 +
- arch/x86/kvm/svm/nested.c | 22 ++------------------
- arch/x86/kvm/svm/svm.c    | 44 +++++++++++++++++++++++----------------
- arch/x86/kvm/svm/svm.h    |  1 +
- 4 files changed, 30 insertions(+), 38 deletions(-)
+ arch/x86/kvm/svm/nested.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
-index 54f7ea68083b..99d118ffc67d 100644
---- a/arch/x86/kvm/irq.c
-+++ b/arch/x86/kvm/irq.c
-@@ -83,6 +83,7 @@ int kvm_cpu_has_injectable_intr(struct kvm_vcpu *v)
- 
- 	return kvm_apic_has_interrupt(v) != -1; /* LAPIC */
- }
-+EXPORT_SYMBOL_GPL(kvm_cpu_has_injectable_intr);
- 
- /*
-  * check if there is pending interrupt without
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 3e37410d0b94..a4a9516ff8b5 100644
+index 4f81c2196bf6..2aaa539482ae 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -312,30 +312,12 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
- void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 			  struct vmcb *nested_vmcb)
- {
--	bool evaluate_pending_interrupts =
--		is_intercept(svm, INTERCEPT_VINTR) ||
--		is_intercept(svm, INTERCEPT_IRET);
+@@ -241,8 +241,6 @@ static void load_nested_vmcb_control(struct vcpu_svm *svm,
+ 	svm->nested.intercept_dr         = control->intercept_dr;
+ 	svm->nested.intercept_exceptions = control->intercept_exceptions;
+ 	svm->nested.intercept            = control->intercept;
 -
- 	svm->nested.vmcb = vmcb_gpa;
- 	load_nested_vmcb_control(svm, &nested_vmcb->control);
- 	nested_prepare_vmcb_save(svm, nested_vmcb);
- 	nested_prepare_vmcb_control(svm);
- 
--	/*
--	 * If L1 had a pending IRQ/NMI before executing VMRUN,
--	 * which wasn't delivered because it was disallowed (e.g.
--	 * interrupts disabled), L0 needs to evaluate if this pending
--	 * event should cause an exit from L2 to L1 or be delivered
--	 * directly to L2.
--	 *
--	 * Usually this would be handled by the processor noticing an
--	 * IRQ/NMI window request.  However, VMRUN can unblock interrupts
--	 * by implicitly setting GIF, so force L0 to perform pending event
--	 * evaluation by requesting a KVM_REQ_EVENT.
--	 */
--	enable_gif(svm);
--	if (unlikely(evaluate_pending_interrupts))
--		kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
-+	svm_set_gif(svm, true);
+-	svm->vcpu.arch.tsc_offset += control->tsc_offset;
  }
  
- int nested_svm_vmrun(struct vcpu_svm *svm)
-@@ -478,7 +460,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 	svm->vcpu.arch.mp_state = KVM_MP_STATE_RUNNABLE;
+ static void nested_prepare_vmcb_save(struct vcpu_svm *svm, struct vmcb *nested_vmcb)
+@@ -292,7 +290,8 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm, struct vmcb *neste
+ 	else
+ 		svm->vcpu.arch.hflags &= ~HF_VINTR_MASK;
  
- 	/* Give the current vmcb to the guest */
--	disable_gif(svm);
-+	svm_set_gif(svm, false);
+-	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset;
++	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset =
++		svm->vcpu.arch.l1_tsc_offset + nested_vmcb->control.tsc_offset;
  
- 	nested_vmcb->save.es     = vmcb->save.es;
- 	nested_vmcb->save.cs     = vmcb->save.cs;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 09b345892fc9..d8187d25fe04 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1977,6 +1977,30 @@ static int vmrun_interception(struct vcpu_svm *svm)
- 	return nested_svm_vmrun(svm);
- }
+ 	svm->vmcb->control.int_ctl = nested_vmcb->control.int_ctl | V_INTR_MASKING_MASK;
+ 	svm->vmcb->control.virt_ext = nested_vmcb->control.virt_ext;
+@@ -557,7 +556,9 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+ 	/* Restore the original control entries */
+ 	copy_vmcb_control_area(vmcb, hsave);
  
-+void svm_set_gif(struct vcpu_svm *svm, bool value)
-+{
-+	if (value) {
-+		/*
-+		 * If VGIF is enabled, the STGI intercept is only added to
-+		 * detect the opening of the SMI/NMI window; remove it now.
-+		 */
-+		if (vgif_enabled(svm))
-+			clr_intercept(svm, INTERCEPT_STGI);
+-	svm->vcpu.arch.tsc_offset = svm->vmcb->control.tsc_offset;
++	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset =
++		svm->vcpu.arch.l1_tsc_offset;
 +
-+		enable_gif(svm);
-+		if (svm->vcpu.arch.smi_pending ||
-+		    svm->vcpu.arch.nmi_pending ||
-+		    kvm_cpu_has_injectable_intr(&svm->vcpu))
-+			kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
-+	} else {
-+		disable_gif(svm);
-+
-+		/* After a CLGI no interrupts should come */
-+		if (!kvm_vcpu_apicv_active(&svm->vcpu))
-+			svm_clear_vintr(svm);
-+	}
-+}
-+
- static int stgi_interception(struct vcpu_svm *svm)
- {
- 	int ret;
-@@ -1984,18 +2008,8 @@ static int stgi_interception(struct vcpu_svm *svm)
- 	if (nested_svm_check_permissions(svm))
- 		return 1;
- 
--	/*
--	 * If VGIF is enabled, the STGI intercept is only added to
--	 * detect the opening of the SMI/NMI window; remove it now.
--	 */
--	if (vgif_enabled(svm))
--		clr_intercept(svm, INTERCEPT_STGI);
--
- 	ret = kvm_skip_emulated_instruction(&svm->vcpu);
--	kvm_make_request(KVM_REQ_EVENT, &svm->vcpu);
--
--	enable_gif(svm);
--
-+	svm_set_gif(svm, true);
- 	return ret;
- }
- 
-@@ -2007,13 +2021,7 @@ static int clgi_interception(struct vcpu_svm *svm)
- 		return 1;
- 
- 	ret = kvm_skip_emulated_instruction(&svm->vcpu);
--
--	disable_gif(svm);
--
--	/* After a CLGI no interrupts should come */
--	if (!kvm_vcpu_apicv_active(&svm->vcpu))
--		svm_clear_vintr(svm);
--
-+	svm_set_gif(svm, false);
- 	return ret;
- }
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 4d57270cac3f..6733f9036499 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -357,6 +357,7 @@ void disable_nmi_singlestep(struct vcpu_svm *svm);
- bool svm_smi_blocked(struct kvm_vcpu *vcpu);
- bool svm_nmi_blocked(struct kvm_vcpu *vcpu);
- bool svm_interrupt_blocked(struct kvm_vcpu *vcpu);
-+void svm_set_gif(struct vcpu_svm *svm, bool value);
- 
- /* nested.c */
+ 	kvm_clear_exception_queue(&svm->vcpu);
+ 	kvm_clear_interrupt_queue(&svm->vcpu);
  
 -- 
 2.18.2
