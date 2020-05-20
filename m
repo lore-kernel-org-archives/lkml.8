@@ -2,95 +2,193 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D261C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA376C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C3320823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590010589;
-	bh=B8AOE3JtwFqfI8heLJhAGRimdEMlgMFaNzfEWB7Gsgw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ukJVR29vhX5CN2I8sXhYI7+0CoTqtO+7nzzzt5Eqjb+EAyW0bMWW9skUd6Tzprae3
-	 ZElFiBwvgZ0Qj16oBysqve6/zGSFMmZ1XUfWePGnxxPxGS6+2Jol01c5tM8WMRQcBW
-	 OdH9lymcVdNAZKXTbCI2euMdEIMCPZdyWLcnST8U=
+	by mail.kernel.org (Postfix) with ESMTP id 910A42084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:36:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="LL290Z2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgETVg2 (ORCPT
+        id S1728482AbgETVgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:36:28 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46712 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgETVg2 (ORCPT
+        Wed, 20 May 2020 17:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgETVgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:36:28 -0400
-Received: by mail-il1-f196.google.com with SMTP id w18so4818142ilm.13;
-        Wed, 20 May 2020 14:36:27 -0700 (PDT)
+        Wed, 20 May 2020 17:36:37 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D83EC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:36:37 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id n15so1964630pjt.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:36:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oEy3KONd3ADgphDGousWSyHD+5c1mt4Xvb33TZ3mihY=;
+        b=LL290Z2h4Q1tCi+X3mjwmJ1EJl1P6WYPOnYCO1tGDHYNhhRCae0EGxIgn/Ddlcgey6
+         zy5CrKXWGd84PkCwGgaFHH6SR+MP8CVFlTJsIaRFLWJT7UFUTR9aDQJHTgixsek0q+ow
+         OL0Mx6F9+fuxUzKc7NlItIp9XEwV+1rmXHLhCh8CV1FLsUa5wbfho/hk9SW0VXjrI9HX
+         s64r+evbEbD7dpow22lLX1xJOOTi05vI43bQrUeyf/lFKFJ+lIe/OznskVc9ETsH9SfK
+         h/iqScJ/ZwVs7WSsV6Ji1gX2wqXDEpWa/vkwNUSCsJ8skVKudn4iiSci/Bn6qodpUOeL
+         5fUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8T4g3GB0lWcH8xbCNMCDr7nb5rGktxITHYP2LXpYD7U=;
-        b=fHp3Rm78Y4sM2pPVFXIH36Be3VSR1LsRH1Qf0LvJU0M6GsnBCFqUvGIa0bSXsYETd9
-         P1yKWp3oTrsqQI8XIrVP8UTh5lfSdR5Sk/3hqZW3dLXMf/frOIubyCHwCTrOqS8c4yci
-         +i+JCc+p1q1z+nf+UquYCbVu+mDxTiCtzrTijv787iavYe2SzvOPx1uNeK2wABRC2Kh4
-         w+Zfohx4I60F3J+3jNPikK7Xek4SE27cXgIT0bSLi6RhTACJrAcOhvuP86XuMjwgjkTn
-         42Q0C83Sl/lSoHfkphLWvEufOIViJLRPF6xCqcOxmfmfN2yuA4ajxQRZFr+je9xo1cJg
-         ofLQ==
-X-Gm-Message-State: AOAM531H88jzM5glLABPHBDAWfeDRfzQxGJFKixfpIVfH8GxFNcRAUJP
-        HV0qi9Qq94Lo1K+r8wO6Mg==
-X-Google-Smtp-Source: ABdhPJzV5M0ADtcekTIkjw5B3x+zFszJSje5GETuQ1ENBcHHP7QvRIraFBSdGvUoBihkMjoJKyqrIw==
-X-Received: by 2002:a92:8989:: with SMTP id w9mr5962127ilk.70.1590010587012;
-        Wed, 20 May 2020 14:36:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c7sm1977822ilf.36.2020.05.20.14.36.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oEy3KONd3ADgphDGousWSyHD+5c1mt4Xvb33TZ3mihY=;
+        b=bSF8zZGQYnDTnYNTRnfzunhXPwFl0yPbxRefOGZeXrB1ea0H7kHcuXC6ST5JLoP//F
+         cTIFWotIGhDEtAV9z0mNslIl9oRIGJvHXR+rzDk2a9Cz+lxtjLnc2Hna+Wxasp6rxSbY
+         KuVghyMRqI9XCNIUVMHg1SJuFPwi3l2HpIPt+9hpiUZk4jsD+9oEZoIi5jwFHKF4WvuS
+         tCb74WuxjQgZzuO0/78Y/hFXHDHApG6GsjGXMHyEPRP3jkxiMRxsPNkNcCm1lol0k6U7
+         gNv8xGhFIiTBeJAPv95LdWyqXguPi5xdaozBcc9+ZUGuHHE0+uZqu1U85eby3LpOSv5T
+         1FZw==
+X-Gm-Message-State: AOAM530xYgAzHcpl8r/DccoSC79Og9SO50VFuJECQiFMkud7uGB2VUd5
+        ASxpPI5kI1tzITygHa7rZ1KEpBz4IChnrw==
+X-Google-Smtp-Source: ABdhPJyUKHAVjK06yBDbJoW20J2Rnz9M38TfcrCfIdpul3TwxJgrhXMdsqq5oAddMtivbLswlTyHJA==
+X-Received: by 2002:a17:902:bf02:: with SMTP id bi2mr6456658plb.330.1590010596676;
+        Wed, 20 May 2020 14:36:36 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id r31sm2942792pjg.2.2020.05.20.14.36.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 14:36:26 -0700 (PDT)
-Received: (nullmailer pid 636061 invoked by uid 1000);
-        Wed, 20 May 2020 21:36:25 -0000
-Date:   Wed, 20 May 2020 15:36:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 08/14] PCI: cadence: Fix updating Vendor ID and
- Subsystem Vendor ID register
-Message-ID: <20200520213625.GA633506@bogus>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-9-kishon@ti.com>
+        Wed, 20 May 2020 14:36:36 -0700 (PDT)
+Date:   Wed, 20 May 2020 14:36:27 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     David Miller <davem@davemloft.net>, a.darwish@linutronix.de,
+        peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        paulmck@kernel.org, bigeasy@linutronix.de, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org, kuba@kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
+ a seqcount
+Message-ID: <20200520143627.047a7eee@hermes.lan>
+In-Reply-To: <87wo56v1nc.fsf@nanos.tec.linutronix.de>
+References: <20200519.195722.1091264300612213554.davem@davemloft.net>
+        <87wo56v1nc.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506151429.12255-9-kishon@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:44:23PM +0530, Kishon Vijay Abraham I wrote:
-> Commit 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe
-> controller") in order to update Vendor ID, directly wrote to
-> PCI_VENDOR_ID register. However PCI_VENDOR_ID in root port configuration
-> space is read-only register and writing to it will have no effect.
-> Use local management register to configure Vendor ID and Subsystem Vendor
-> ID.
+On Wed, 20 May 2020 21:37:11 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> David Miller <davem@davemloft.net> writes:
+> > From: Thomas Gleixner <tglx@linutronix.de>
+> > Date: Wed, 20 May 2020 01:42:30 +0200  
+> >>> Please try, it isn't that hard..
+> >>>
+> >>> # time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
+> >>>
+> >>> real	0m17.002s
+> >>> user	0m1.064s
+> >>> sys	0m0.375s  
+> >> 
+> >> And that solves the incorrectness of the current code in which way?  
+> >
+> > You mentioned that there wasn't a test case, he gave you one to try.  
 > 
-> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+> If it makes you happy to compare incorrrect code with correct code, here
+> you go:
+> 
+> 5 runs of 1000 device add, 1000 device rename and 1000 device del
+> 
+> CONFIG_PREEMPT_NONE=y
+> 
+>          Base      rwsem
+>  add     0:05.01   0:05.28
+> 	 0:05.93   0:06.11
+> 	 0:06.52   0:06.26
+> 	 0:06.06   0:05.74
+> 	 0:05.71   0:06.07
+> 
+>  rename  0:32.57   0:33.04
+> 	 0:32.91   0:32.45
+> 	 0:32.72   0:32.53
+> 	 0:39.65   0:34.18
+> 	 0:34.52   0:32.50
+> 
+>  delete  3:48.65   3:48.91
+> 	 3:49.66   3:49.13
+> 	 3:45.29   3:48.26
+> 	 3:47.56   3:46.60
+> 	 3:50.01   3:48.06
+> 
+>  -------------------------
+> 
+> CONFIG_PREEMPT_VOLUNTARY=y
+> 
+>          Base      rwsem
+>  add     0:06.80   0:06.42
+> 	 0:04.77   0:05.03
+> 	 0:05.74   0:04.62
+> 	 0:05.87   0:04.34
+> 	 0:04.20   0:04.12
+> 
+>  rename  0:33.33   0:42.02
+> 	 0:42.36   0:32.55
+> 	 0:39.58   0:31.60
+> 	 0:33.69   0:35.08
+> 	 0:34.24   0:33.97
+> 
+>  delete  3:47.82   3:44.00
+> 	 3:47.42   3:51.00
+> 	 3:48.52   3:48.88
+> 	 3:48.50   3:48.09
+> 	 3:50.03   3:46.56
+> 
+>  -------------------------
+> 
+> CONFIG_PREEMPT=y
+> 
+>          Base      rwsem
+> 
+>  add     0:07.89   0:07.72
+> 	 0:07.25   0:06.72
+> 	 0:07.42   0:06.51
+> 	 0:06.92   0:06.38
+> 	 0:06.20   0:06.72
+> 
+>  rename  0:41.77   0:32.39
+> 	 0:44.29   0:33.29
+> 	 0:36.19   0:34.86
+> 	 0:33.19   0:35.06
+> 	 0:37.00   0:34.78
+> 
+>  delete  2:36.96   2:39.97
+> 	 2:37.80   2:42.19
+> 	 2:44.66   2:48.40
+> 	 2:39.75   2:41.02
+> 	 2:40.77   2:38.36
+> 
+> The runtime variation is rather large and when running the same in a VM
+> I got complete random numbers for both base and rwsem. The most amazing
+> was delete where the time varies from 30s to 6m20s.
+> 
+> Btw, Sebastian noticed that rename spams dmesg:
+> 
+>   netdev_info(dev, "renamed from %s\n", oldname);
+> 
+> which eats about 50% of the Rename run time.
+> 
+>          Base      netdev_info() removed
+> 
+> Rename   0:34.84   0:17.48
+> 
+> That number at least makes tons of sense
+> 
+> Thanks,
+> 
+>         tglx
 
-Fixes should come first.
-
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Looks good thanks for following through.
