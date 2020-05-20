@@ -2,285 +2,484 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F439C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE0AC2083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163D42081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBsT1tZJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/YKjZkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgETCAI (ORCPT
+        id S1728444AbgETCBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
+        Tue, 19 May 2020 22:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgETCAH (ORCPT
+        with ESMTP id S1726348AbgETCBY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:00:07 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6923C061A0E;
-        Tue, 19 May 2020 19:00:06 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u15so1840642ljd.3;
-        Tue, 19 May 2020 19:00:06 -0700 (PDT)
+        Tue, 19 May 2020 22:01:24 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EA7C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 19:01:24 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id l3so637596qvo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 19:01:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KPB7soD7J+2rNZ3gvE3KrtrvN/sBjcrn52aDdw8Pjws=;
-        b=mBsT1tZJhSt6vxQPZ/BCYzbAhB+3oWe2JwUCennisBBIbqrlaZ5XUgD7VmNKsfjFL6
-         iAAsnPE3CCCBAsIPtkmndKDAe0wJ2Do0xGaPN4iz8jgdHAy56BEBNXoz2Mh2eeVUKQOv
-         l9P8w7AcVftN31qUGAcugNhQW+zlE8gtIsKtvZvG/k0zh3lDOO29AYp52JOsPafRtquR
-         fozygQI3iGh2anWhANFCYNu6C2upG+oAP+Sq2eC4acj7wrEM7Fu6kBSIAF5NdUOYlqhb
-         3B/bWuLfAEo1tdWBl/IJ1dAe9wXEziG/b0Gz111YQzTKK9++PeAupf43VMRCgbW+tCxT
-         neAQ==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qr0VrcadrZtGUXQmAtNco2RCKU/r7qutN37y7b8TqLY=;
+        b=T/YKjZkOxH87aW4EJmQTHTMJH8SrOsCcmYLbNyWjxz5AyXmbMMCJ5fUJNmQLigSWvi
+         ySEpUxh2Yh1fRKbC7ktAtPgEXGLrHje7hvkNul4e3IIYJEC6qXcqlrspUqlsXzi5emJK
+         dYNEGfRPxKmK0hEz7Mwl0uPnJoWYUyvnLeeSKz9OJcQ7fhydd5M0/KFaV9Zp3zReoVxQ
+         /3SSemuirIh5voizKK0GpKrHSTpcvL9kqGPygIL3lmgDOzzFXcs/R/hGNykjI/C9+Rgn
+         ExU8TEVT2S+CJpDMn5EZQOldCsLj+pJufoUN/KmLXqdqHIWOz1YDVRWzy9azZnhAMsAF
+         v5yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KPB7soD7J+2rNZ3gvE3KrtrvN/sBjcrn52aDdw8Pjws=;
-        b=WPyNjZctdFhLpR5hzls9460pt7gDC8njcK5t3yfezWJbaXFv/4Usbt+eApnMBWIahC
-         beuIW0oM83yFBYw6GmdU9dHv99r23y0rmwSMC7z6FAZrP7TpDhn+YuHbtvJ2inOrCpUl
-         Fp51LdaQCfaew88HDCdzXNS+SSXTy3bWhV4QzKUgiG4LzL3BUHESVVW+CuyMsBI5s2G8
-         m2NMR37cgPJw4CSJpXq4H9AsnfVUZt7GBn0l1bvidNaNNLNRGLdHlGEo2V/Cxqk0rMMU
-         2gJ9o4SSfnaCYG5CvpBck4V8Jlmio2ehu2zV7M7AXK1Q9lxdaeaj/Yy3tRLOW8I9jZoN
-         kZdQ==
-X-Gm-Message-State: AOAM533f3mF6lcv1LQP+/bNWrS/Ae6pXiB24ZoIIZ1pWgqNFq2z/B9Bp
-        8cEFNvYq9v+MUoSz/l0pYiP983vA
-X-Google-Smtp-Source: ABdhPJw7F1zfVzCcWq5KARC4R/MmRyVjJpeXXobKBvoPtqXgMtegDEB9vfHS4vdv7o1nuapmY2WkHg==
-X-Received: by 2002:a2e:9586:: with SMTP id w6mr1317046ljh.274.1589940004655;
-        Tue, 19 May 2020 19:00:04 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id i26sm573755lfc.21.2020.05.19.19.00.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 19:00:03 -0700 (PDT)
-Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
- device-tree properties
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200516154314.14769-1-digetx@gmail.com>
- <CAPDyKFo_Xp-zipqE26iMv4CFwUoMCQZy3Zr63Cp=uzePgWX7BA@mail.gmail.com>
- <b634e7a5-9a30-3bd1-126d-be62e4dd73e1@gmail.com>
- <20200519162444.GD2113674@ulmo>
- <b4eb368e-adc2-7b77-3ae9-fefdcfddaf3d@gmail.com>
- <11c93dac-f5ba-2193-6f44-63af27fdce09@nvidia.com>
- <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com>
- <c7469c16-f6f1-f9c0-566f-3b1d3774f130@nvidia.com>
- <c712de1d-cfa4-2746-ec6b-54f318aeaac2@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d2c71267-e696-c459-fbd6-dbb5fd312ed3@gmail.com>
-Date:   Wed, 20 May 2020 05:00:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qr0VrcadrZtGUXQmAtNco2RCKU/r7qutN37y7b8TqLY=;
+        b=kx6XXjzycw4o69u5zeDJqvhJ2k2gRq+o75DJnNkJmFACRx20LugsG55T9O1JJBoNPr
+         hpEsUhx4g9LVCGtsWea4Eud4uW1wMOaabD+HeFHTGuVYO2DAG4yKIYlkd21ATlRIdHMy
+         Kw7Dm5FhkAdueD2+URDR3EULtHUkv4qslnh5pxka+99AvEXC7nlR+839gAa41fTkIXLb
+         6kOUCfF5JtuHwD7GnjCZRGcJgoRmHH2xNkwFKqj4wAJi/lccz7aBD7d2PUCvp4Du+8gy
+         Fh8mhwnwVJVYbBqpNvH82CF785ACxzOlIslHttn+jFjiy6J/VcYtjD5Lp5eXHD4elaJr
+         PBcw==
+X-Gm-Message-State: AOAM530wbpnHFtGbgVLmMy2oRdmMoUmjaWuTtedBydrjKtCde04Men/y
+        T5gtIq1uFY1RCoL05bhBGfHslGr72tAZBA==
+X-Google-Smtp-Source: ABdhPJxr+mJXqHjukwJVOZfYSnxHyRKya4Uci/Mw9hCTr7XMLc5Ke37PVVrkVDm2sHeCwamKSPpOxQ==
+X-Received: by 2002:a0c:e806:: with SMTP id y6mr2771567qvn.177.1589940083638;
+        Tue, 19 May 2020 19:01:23 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id g144sm1098475qke.18.2020.05.19.19.01.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 19:01:23 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1365A40AFD; Tue, 19 May 2020 23:01:21 -0300 (-03)
+Date:   Tue, 19 May 2020 23:01:21 -0300
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.ibm.com, maddy@linux.vnet.ibm.com,
+        anju@linux.vnet.ibm.com, jolsa@kernel.org, mpe@ellerman.id.au
+Subject: Re: [PATCH V2] powerpc/perf: Add support for outputting extended
+ regs in perf intr_regs
+Message-ID: <20200520020121.GD32678@kernel.org>
+References: <1589868937-1537-1-git-send-email-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <c712de1d-cfa4-2746-ec6b-54f318aeaac2@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589868937-1537-1-git-send-email-atrajeev@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.05.2020 23:44, Sowjanya Komatineni пишет:
+Em Tue, May 19, 2020 at 02:15:37AM -0400, Athira Rajeev escreveu:
+> From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
 > 
-> On 5/19/20 12:07 PM, Sowjanya Komatineni wrote:
->>
->> On 5/19/20 11:41 AM, Sowjanya Komatineni wrote:
->>>
->>> On 5/19/20 11:34 AM, Sowjanya Komatineni wrote:
->>>>
->>>> On 5/19/20 9:33 AM, Dmitry Osipenko wrote:
->>>>> 19.05.2020 19:24, Thierry Reding пишет:
->>>>>> On Tue, May 19, 2020 at 05:05:27PM +0300, Dmitry Osipenko wrote:
->>>>>>> 19.05.2020 10:28, Ulf Hansson пишет:
->>>>>>>> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.com>
->>>>>>>> wrote:
->>>>>>>>> Several people asked me about the MMC warnings in the KMSG log and
->>>>>>>>> I had to tell to ignore them because these warning are
->>>>>>>>> irrelevant to
->>>>>>>>> pre-Tegra210 SoCs.
->>>>>>>> Why are the warnings irrelevant?
->>>>>>> That's what the DT binding doc says [1].
->>>>>>>
->>>>>>> [1]
->>>>>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/mmc/nvidia%2Ctegra20-sdhci.txt
->>>>>>>
->>>>>>>
->>>>>>> Although, looking at the driver's code and TRM docs, it seems
->>>>>>> that all
->>>>>>> those properties are really irrelevant only to the older Terga20
->>>>>>> SoC. So
->>>>>>> the binding doc is a bit misleading.
->>>>>>>
->>>>>>> Nevertheless, the binding explicitly says that the properties are
->>>>>>> optional, which is correct.
->>>>>> Optional only means that drivers must not fail if these properties
->>>>>> aren't found, it doesn't mean that the driver can't warn that they
->>>>>> are missing.
->>>>>>
->>>>>> Quite possibly the only reason why they were made optional is because
->>>>>> they weren't part of the bindings since the beginning. Anything added
->>>>>> to a binding after the first public release has to be optional by
->>>>>> definition, otherwise DT ABI wouldn't be stable.
->>>>>>
->>>>>> I think these warnings were added on purpose, though I also see that
->>>>>> there are only values for these in device tree for Tegra186 and
->>>>>> Tegra194
->>>>>> but not Tegra210 where these should also be necessary.
->>>>
->>>> dt binding doc we have is common for MMC, SD and SDIO of all Tegras.
->>>> Its not mandatory to have both 3v3 and 1v8 in device tree as based
->>>> on signal mode.
->>>>
->>>> As these driver strengths are SoC specific, they are part of Tegra
->>>> SoC specific device tree where same values will be applicable to all
->>>> Tegra SoC specific platforms.
->>>>
->>>> Based on interface usage on platform, we use one or both of them
->>>> like sdcard supports dual voltage and we use both 3V3 and 1V8 but if
->>>> same interface is used for WIFI SD we use 1V8 only.
->>>>
->>>> So made these dt properties as optional.
->>>>
->>>> Other reason they are optional is, Tegra210 and prior has drive
->>>> strength settings part of apb_misc and Tegra186 and later has driver
->>>> strengths part of SDMMC controller. So,
->>>>
->>>> - Pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" for driver strengths
->>>> are applicable for Tegra210 and prior.
->>>> - dt properties pad-autocal-pull-up/down-offset-1v8/3v3-timeout are
->>>> for T186 onwards for driver strengths
->>>>
->>>> Looks like dt binding doc need fix to clearly document these based
->>>> on SoC or agree with Yaml we can conditionally specify pinctrl or dt
->>>> properties based on SoC dependent.
->>>>
->>>>
->>>>>> Adding Sowjanya who wrote this code. Perhaps she can clarify why the
->>>>>> warnings were added. If these values /should/ be there on a subset of
->>>>>> Tegra, then I think we should keep them, or add them again, but
->>>>>> perhaps
->>>>>> add a better way of identifying when they are necessary and when
->>>>>> it is
->>>>>> safe to work without them.
->>>>>>
->>>>>> That said, looking at those checks I wonder if they are perhaps just
->>>>>> wrong. Or at the very least they seem redundant. It looks to me like
->>>>>> they can just be:
->>>>>>
->>>>>>     if (tegra_host->pinctrl_state_XYZ == NULL) {
->>>>>>         ...
->>>>>>     }
->>>>>>
->>>>>> That !IS_ERR(...) doesn't seem to do anything. But in that case, it's
->>>>>> also obvious why we're warning about them on platforms where these
->>>>>> properties don't exist in DT.
->>>>
->>>> As drive strengths are through dt properties for T186 and later and
->>>> thru pinctrl for T210 and prior, driver first checks for dt autocal
->>>> timeout pull-up/down properties and if they are not found, it then
->>>> checks for presence of pinctrl_state_xyx_drv only when valid
->>>> pinctrl_state_xyz is present.
->>>>
->>>> Driver expects either pinctrl or dt properties and shows warning
->>>> when neither of them are present as its mandatory to use fixed
->>>> driver strengths when auto calibration fails.
->>>>
->>>>     err = device_property_read_u32(host->mmc->parent,
->>>>             "nvidia,pad-autocal-pull-down-offset-3v3-timeout",
->>>>             &autocal->pull_down_3v3_timeout);
->>>>     if (err) {
->>>>         if (!IS_ERR(tegra_host->pinctrl_state_3v3) &&
->>>>             (tegra_host->pinctrl_state_3v3_drv == NULL))
->>>>             pr_warn("%s: Missing autocal timeout 3v3-pad drvs\n",
->>>>                 mmc_hostname(host->mmc));
->>>>         autocal->pull_down_3v3_timeout = 0;
->>>>     }
->>>>
->>>>>>
->>>>>> So I think we either need to add those values where appropriate so
->>>>>> that
->>>>>> the warning doesn't show, or we need to narrow down where they are
->>>>>> really needed and add a corresponding condition.
->>>>>>
->>>>>> But again, perhaps Sowjanya can help clarify if these really are only
->>>>>> needed on Tegra210 and later or if these also apply to older chips.
->>>>> Either way will be cleaner to convert the DT binding to YAML rather
->>>>> than
->>>>> clutter the driver, IMO.
->>>>>
->>>>
->>>>
->>>>
->>> Auto calibration is present from Tegra30 onward and looking into
->>> change where autocalibration was added to sdhci driver somehow it was
->>> enabled only for T30/T210/T186/T194.
->>>
->>> tegra_sdhci_parse_pad_autocal_dt() was added when auto-calibration
->>> was added to driver and I see this dt parse is being done
->>> irrespective of NVQUIRK_HAS_PADCALIB quirk so even on platforms
->>> without auto cal enabled in driver, these messages shows up.
->>>
->>> This should be fixed in driver to allow
->>> tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB is
->>> set to avoid dt parsing to happen on platforms that don't have auto
->>> cal enabled.
->>
->> Warning on missing drive strengths when auto cal is enabled should be
->> present as we should switch to fixed recommended drive strengths when
->> auto cal fails.
->>
->> So probably proper fix should be
->>
->> - allow tegra_sdhci_parse_pad_autocal_dt() only when
->> NVQUIRK_HAS_PADCALIB is set
->>
->> - current driver sets NVQUIRK_HAS_PADCALIB for T30 as well so need to
->> add pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" to Tegra30 device tree.
-> [Correction] T30 has same drive strengths to use irrespective of signal
-> voltage and it doesn't have pad control. So for T3- we can update device
-> tree to specify "default" pinctrl with drvup/dn settings.
->>
->> - Keep warning message of missing auto cal timeouts as its mandatory
->> to use fixed recommended driver strengths when auto cal fails.
->>
-> Regarding warnings, I guess simpler and easy fix is to remove warning
-> message on missing 3v3/1v8 drive strengths as pinctrl/dt properties were
-> already added for T210/186/194 where we need and old device tree don't
-> have them but the case where auto cal can fail is very rare.
+> Add support for perf extended register capability in powerpc.
+> The capability flag PERF_PMU_CAP_EXTENDED_REGS, is used to indicate the
+> PMU which support extended registers. The generic code define the mask
+> of extended registers as 0 for non supported architectures.
 > 
-> Otherwise should update driver to allow
-> tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB is set
-> and also within tegra_sdhci_parse_pad_autocal_dt() show warning of
-> missing 3v3/1v8 settings only when NVQUIRK_NEEDS_PAD_CONTROL is set.
+> Patch adds extended regs support for power9 platform by
+> exposing MMCR0, MMCR1 and MMCR2 registers.
 > 
-> Thierry, please suggest if you prefer to removing warnings or fix driver
-> to show warning based on PADCALIB and PAD_CONTROL quirks.
+> REG_RESERVED mask needs update to include extended regs.
+> `PERF_REG_EXTENDED_MASK`, contains mask value of the supported registers,
+> is defined at runtime in the kernel based on platform since the supported
+> registers may differ from one processor version to another and hence the
+> MASK value.
+> 
+> Perf tools side uses extended mask to display the platform
+> supported register names (with -I? option) to the user and also
+> send this mask to the kernel to capture the extended registers
+> in each sample. Hence decide the mask value based on the processor
+> version.
+> 
+> with patch
+> ----------
+> 
+> available registers: r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
+> r12 r13 r14 r15 r16 r17 r18 r19 r20 r21 r22 r23 r24 r25 r26
+> r27 r28 r29 r30 r31 nip msr orig_r3 ctr link xer ccr softe
+> trap dar dsisr sier mmcra mmcr0 mmcr1 mmcr2
+> 
+> PERF_RECORD_SAMPLE(IP, 0x1): 4784/4784: 0 period: 1 addr: 0
+> ... intr regs: mask 0xffffffffffff ABI 64-bit
+> .... r0    0xc00000000012b77c
+> .... r1    0xc000003fe5e03930
+> .... r2    0xc000000001b0e000
+> .... r3    0xc000003fdcddf800
+> .... r4    0xc000003fc7880000
+> .... r5    0x9c422724be
+> .... r6    0xc000003fe5e03908
+> .... r7    0xffffff63bddc8706
+> .... r8    0x9e4
+> .... r9    0x0
+> .... r10   0x1
+> .... r11   0x0
+> .... r12   0xc0000000001299c0
+> .... r13   0xc000003ffffc4800
+> .... r14   0x0
+> .... r15   0x7fffdd8b8b00
+> .... r16   0x0
+> .... r17   0x7fffdd8be6b8
+> .... r18   0x7e7076607730
+> .... r19   0x2f
+> .... r20   0xc00000001fc26c68
+> .... r21   0xc0002041e4227e00
+> .... r22   0xc00000002018fb60
+> .... r23   0x1
+> .... r24   0xc000003ffec4d900
+> .... r25   0x80000000
+> .... r26   0x0
+> .... r27   0x1
+> .... r28   0x1
+> .... r29   0xc000000001be1260
+> .... r30   0x6008010
+> .... r31   0xc000003ffebb7218
+> .... nip   0xc00000000012b910
+> .... msr   0x9000000000009033
+> .... orig_r3 0xc00000000012b86c
+> .... ctr   0xc0000000001299c0
+> .... link  0xc00000000012b77c
+> .... xer   0x0
+> .... ccr   0x28002222
+> .... softe 0x1
+> .... trap  0xf00
+> .... dar   0x0
+> .... dsisr 0x80000000000
+> .... sier  0x0
+> .... mmcra 0x80000000000
+> .... mmcr0 0x82008090
+> .... mmcr1 0x1e000000
+> .... mmcr2 0x0
+>  ... thread: perf:4784
+> 
+> Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+> [Defined PERF_REG_EXTENDED_MASK at run time to add support for different platforms ]
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+> Changes from v1 -> v2
+> 
+> - PERF_REG_EXTENDED_MASK` is defined at runtime in the kernel
+> based on platform. This will give flexibility in using extended
+> regs for all processor versions where the supported registers may differ.
+> - removed PERF_REG_EXTENDED_MASK from the perf tools side. Based on the
+> processor version(from PVR value), tool side will return the appropriate
+> extended mask
+> - Since tool changes can handle without a "PERF_REG_EXTENDED_MASK" macro,
+> dropped patch to set NO_AUXTRACE.
+> - Addressed review comments from Ravi Bangoria for V1
+> 
+> ---
+> 
+>  arch/powerpc/include/asm/perf_event_server.h    |  8 ++++
+>  arch/powerpc/include/uapi/asm/perf_regs.h       | 14 ++++++-
+>  arch/powerpc/perf/core-book3s.c                 |  1 +
+>  arch/powerpc/perf/perf_regs.c                   | 34 ++++++++++++++--
+>  arch/powerpc/perf/power9-pmu.c                  |  6 +++
 
-The SDIO PINCTRL drive-strengths are usually a part of the board's
-default PINCTRL state, which is either preset by bootloader or by
-PINCTRL driver early at a boot time.
+Can you please split this patch so that the kernel bits are separate
+from the tooling bits?
 
-The SDIO drive-strengths values should be board-specific and not
-SoC-specific because they should depend on the electrical properties of
-the board, IIUC.
+Thanks,
 
-If the SDIO PINCTRL states are mandatory for the SDHCI nodes in the
-device-trees, then the DT binding is wrong since it says that all
-properties are optional. But I think that the current binding is okay,
-since today SDHCI PINCTRL drive-strengths are specified implicitly in
-the device-trees, and thus, there is no real need to emit the noisy
-warnings in this case.
+- Arnaldo
+
+>  tools/arch/powerpc/include/uapi/asm/perf_regs.h | 14 ++++++-
+>  tools/perf/arch/powerpc/include/perf_regs.h     |  5 ++-
+>  tools/perf/arch/powerpc/util/perf_regs.c        | 54 +++++++++++++++++++++++++
+>  8 files changed, 130 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/perf_event_server.h b/arch/powerpc/include/asm/perf_event_server.h
+> index 3e9703f..1458e1a 100644
+> --- a/arch/powerpc/include/asm/perf_event_server.h
+> +++ b/arch/powerpc/include/asm/perf_event_server.h
+> @@ -15,6 +15,9 @@
+>  #define MAX_EVENT_ALTERNATIVES	8
+>  #define MAX_LIMITED_HWCOUNTERS	2
+>  
+> +extern u64 mask_var;
+> +#define PERF_REG_EXTENDED_MASK          mask_var
+> +
+>  struct perf_event;
+>  
+>  /*
+> @@ -55,6 +58,11 @@ struct power_pmu {
+>  	int 		*blacklist_ev;
+>  	/* BHRB entries in the PMU */
+>  	int		bhrb_nr;
+> +	/*
+> +	 * set this flag with `PERF_PMU_CAP_EXTENDED_REGS` if
+> +	 * the pmu supports extended perf regs capability
+> +	 */
+> +	int		capabilities;
+>  };
+>  
+>  /*
+> diff --git a/arch/powerpc/include/uapi/asm/perf_regs.h b/arch/powerpc/include/uapi/asm/perf_regs.h
+> index f599064..485b1d5 100644
+> --- a/arch/powerpc/include/uapi/asm/perf_regs.h
+> +++ b/arch/powerpc/include/uapi/asm/perf_regs.h
+> @@ -48,6 +48,18 @@ enum perf_event_powerpc_regs {
+>  	PERF_REG_POWERPC_DSISR,
+>  	PERF_REG_POWERPC_SIER,
+>  	PERF_REG_POWERPC_MMCRA,
+> -	PERF_REG_POWERPC_MAX,
+> +	/* Extended registers */
+> +	PERF_REG_POWERPC_MMCR0,
+> +	PERF_REG_POWERPC_MMCR1,
+> +	PERF_REG_POWERPC_MMCR2,
+> +	/* Max regs without the extended regs */
+> +	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
+>  };
+> +
+> +#define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
+> +
+> +/* PERF_REG_EXTENDED_MASK value for CPU_FTR_ARCH_300 */
+> +#define PERF_REG_PMU_MASK_300   (((1ULL << (PERF_REG_POWERPC_MMCR2 + 1)) - 1) \
+> +				- PERF_REG_PMU_MASK)
+> +
+>  #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
+> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+> index 3dcfecf..f56b778 100644
+> --- a/arch/powerpc/perf/core-book3s.c
+> +++ b/arch/powerpc/perf/core-book3s.c
+> @@ -2276,6 +2276,7 @@ int register_power_pmu(struct power_pmu *pmu)
+>  
+>  	power_pmu.attr_groups = ppmu->attr_groups;
+>  
+> +	power_pmu.capabilities |= (ppmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS);
+>  #ifdef MSR_HV
+>  	/*
+>  	 * Use FCHV to ignore kernel events if MSR.HV is set.
+> diff --git a/arch/powerpc/perf/perf_regs.c b/arch/powerpc/perf/perf_regs.c
+> index a213a0a..f1dbbc5 100644
+> --- a/arch/powerpc/perf/perf_regs.c
+> +++ b/arch/powerpc/perf/perf_regs.c
+> @@ -13,9 +13,11 @@
+>  #include <asm/ptrace.h>
+>  #include <asm/perf_regs.h>
+>  
+> +u64 mask_var;
+> +
+>  #define PT_REGS_OFFSET(id, r) [id] = offsetof(struct pt_regs, r)
+>  
+> -#define REG_RESERVED (~((1ULL << PERF_REG_POWERPC_MAX) - 1))
+> +#define REG_RESERVED (~(PERF_REG_EXTENDED_MASK | PERF_REG_PMU_MASK))
+>  
+>  static unsigned int pt_regs_offset[PERF_REG_POWERPC_MAX] = {
+>  	PT_REGS_OFFSET(PERF_REG_POWERPC_R0,  gpr[0]),
+> @@ -69,10 +71,26 @@
+>  	PT_REGS_OFFSET(PERF_REG_POWERPC_MMCRA, dsisr),
+>  };
+>  
+> +/* Function to return the extended register values */
+> +static u64 get_ext_regs_value(int idx)
+> +{
+> +	switch (idx) {
+> +	case PERF_REG_POWERPC_MMCR0:
+> +			return mfspr(SPRN_MMCR0);
+> +	case PERF_REG_POWERPC_MMCR1:
+> +			return mfspr(SPRN_MMCR1);
+> +	case PERF_REG_POWERPC_MMCR2:
+> +			return mfspr(SPRN_MMCR2);
+> +	default: return 0;
+> +	}
+> +}
+> +
+>  u64 perf_reg_value(struct pt_regs *regs, int idx)
+>  {
+> -	if (WARN_ON_ONCE(idx >= PERF_REG_POWERPC_MAX))
+> -		return 0;
+> +	u64 PERF_REG_EXTENDED_MAX;
+> +
+> +	if (cpu_has_feature(CPU_FTR_ARCH_300))
+> +		PERF_REG_EXTENDED_MAX = PERF_REG_POWERPC_MMCR2 + 1;
+>  
+>  	if (idx == PERF_REG_POWERPC_SIER &&
+>  	   (IS_ENABLED(CONFIG_FSL_EMB_PERF_EVENT) ||
+> @@ -85,6 +103,16 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+>  	    IS_ENABLED(CONFIG_PPC32)))
+>  		return 0;
+>  
+> +	if (idx >= PERF_REG_POWERPC_MAX && idx < PERF_REG_EXTENDED_MAX)
+> +		return get_ext_regs_value(idx);
+> +
+> +	/*
+> +	 * If the idx is referring to value beyond the
+> +	 * supported registers, return 0 with a warning
+> +	 */
+> +	if (WARN_ON_ONCE(idx >= PERF_REG_EXTENDED_MAX))
+> +		return 0;
+> +
+>  	return regs_get_register(regs, pt_regs_offset[idx]);
+>  }
+>  
+> diff --git a/arch/powerpc/perf/power9-pmu.c b/arch/powerpc/perf/power9-pmu.c
+> index 08c3ef7..4525090 100644
+> --- a/arch/powerpc/perf/power9-pmu.c
+> +++ b/arch/powerpc/perf/power9-pmu.c
+> @@ -90,6 +90,8 @@ enum {
+>  #define POWER9_MMCRA_IFM3		0x00000000C0000000UL
+>  #define POWER9_MMCRA_BHRB_MASK		0x00000000C0000000UL
+>  
+> +extern u64 mask_var;
+> +
+>  /* Nasty Power9 specific hack */
+>  #define PVR_POWER9_CUMULUS		0x00002000
+>  
+> @@ -434,6 +436,7 @@ static void power9_config_bhrb(u64 pmu_bhrb_filter)
+>  	.cache_events		= &power9_cache_events,
+>  	.attr_groups		= power9_pmu_attr_groups,
+>  	.bhrb_nr		= 32,
+> +	.capabilities           = PERF_PMU_CAP_EXTENDED_REGS,
+>  };
+>  
+>  int init_power9_pmu(void)
+> @@ -457,6 +460,9 @@ int init_power9_pmu(void)
+>  		}
+>  	}
+>  
+> +	/* Set the PERF_REG_EXTENDED_MASK here */
+> +	mask_var = PERF_REG_PMU_MASK_300;
+> +
+>  	rc = register_power_pmu(&power9_pmu);
+>  	if (rc)
+>  		return rc;
+> diff --git a/tools/arch/powerpc/include/uapi/asm/perf_regs.h b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
+> index f599064..485b1d5 100644
+> --- a/tools/arch/powerpc/include/uapi/asm/perf_regs.h
+> +++ b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
+> @@ -48,6 +48,18 @@ enum perf_event_powerpc_regs {
+>  	PERF_REG_POWERPC_DSISR,
+>  	PERF_REG_POWERPC_SIER,
+>  	PERF_REG_POWERPC_MMCRA,
+> -	PERF_REG_POWERPC_MAX,
+> +	/* Extended registers */
+> +	PERF_REG_POWERPC_MMCR0,
+> +	PERF_REG_POWERPC_MMCR1,
+> +	PERF_REG_POWERPC_MMCR2,
+> +	/* Max regs without the extended regs */
+> +	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
+>  };
+> +
+> +#define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
+> +
+> +/* PERF_REG_EXTENDED_MASK value for CPU_FTR_ARCH_300 */
+> +#define PERF_REG_PMU_MASK_300   (((1ULL << (PERF_REG_POWERPC_MMCR2 + 1)) - 1) \
+> +				- PERF_REG_PMU_MASK)
+> +
+>  #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
+> diff --git a/tools/perf/arch/powerpc/include/perf_regs.h b/tools/perf/arch/powerpc/include/perf_regs.h
+> index e18a355..46ed00d 100644
+> --- a/tools/perf/arch/powerpc/include/perf_regs.h
+> +++ b/tools/perf/arch/powerpc/include/perf_regs.h
+> @@ -64,7 +64,10 @@
+>  	[PERF_REG_POWERPC_DAR] = "dar",
+>  	[PERF_REG_POWERPC_DSISR] = "dsisr",
+>  	[PERF_REG_POWERPC_SIER] = "sier",
+> -	[PERF_REG_POWERPC_MMCRA] = "mmcra"
+> +	[PERF_REG_POWERPC_MMCRA] = "mmcra",
+> +	[PERF_REG_POWERPC_MMCR0] = "mmcr0",
+> +	[PERF_REG_POWERPC_MMCR1] = "mmcr1",
+> +	[PERF_REG_POWERPC_MMCR2] = "mmcr2",
+>  };
+>  
+>  static inline const char *perf_reg_name(int id)
+> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
+> index 0a52429..b78f81f 100644
+> --- a/tools/perf/arch/powerpc/util/perf_regs.c
+> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
+> @@ -6,9 +6,15 @@
+>  
+>  #include "../../../util/perf_regs.h"
+>  #include "../../../util/debug.h"
+> +#include "../../../util/event.h"
+> +#include "../../../util/header.h"
+> +#include "../../../perf-sys.h"
+>  
+> +#include <api/fs/fs.h>
+>  #include <linux/kernel.h>
+>  
+> +#define PVR_POWER9		0x004E
+> +
+>  const struct sample_reg sample_reg_masks[] = {
+>  	SMPL_REG(r0, PERF_REG_POWERPC_R0),
+>  	SMPL_REG(r1, PERF_REG_POWERPC_R1),
+> @@ -55,6 +61,9 @@
+>  	SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
+>  	SMPL_REG(sier, PERF_REG_POWERPC_SIER),
+>  	SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
+> +	SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
+> +	SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
+> +	SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
+>  	SMPL_REG_END
+>  };
+>  
+> @@ -163,3 +172,48 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+>  
+>  	return SDT_ARG_VALID;
+>  }
+> +
+> +uint64_t arch__intr_reg_mask(void)
+> +{
+> +	struct perf_event_attr attr = {
+> +		.type                   = PERF_TYPE_HARDWARE,
+> +		.config                 = PERF_COUNT_HW_CPU_CYCLES,
+> +		.sample_type            = PERF_SAMPLE_REGS_INTR,
+> +		.precise_ip             = 1,
+> +		.disabled               = 1,
+> +		.exclude_kernel         = 1,
+> +	};
+> +	int fd, ret;
+> +	char buffer[64];
+> +	u32 version;
+> +	u64 extended_mask = 0;
+> +
+> +	/* Get the PVR value to set the extended
+> +	 * mask specific to platform
+> +	 */
+> +	get_cpuid(buffer, sizeof(buffer));
+> +	ret = sscanf(buffer, "%u,", &version);
+> +
+> +	if (ret != 1) {
+> +		pr_debug("Failed to get the processor version, unable to output extended registers\n");
+> +		return PERF_REGS_MASK;
+> +	}
+> +
+> +	if (version == PVR_POWER9)
+> +		extended_mask = PERF_REG_PMU_MASK_300;
+> +
+> +	attr.sample_regs_intr = extended_mask;
+> +	attr.sample_period = 1;
+> +	event_attr_init(&attr);
+> +
+> +	/*
+> +	 * check if the pmu supports perf extended regs, before
+> +	 * returning the register mask to sample.
+> +	 */
+> +	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+> +	if (fd != -1) {
+> +		close(fd);
+> +		return (extended_mask | PERF_REGS_MASK);
+> +	}
+> +	return PERF_REGS_MASK;
+> +}
+> -- 
+> 1.8.3.1
+> 
+
+-- 
+
+- Arnaldo
