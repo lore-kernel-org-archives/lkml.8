@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCB3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA12C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D68C206D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9275206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgETSkg (ORCPT
+        id S1726840AbgETSkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:40:36 -0400
-Received: from elvis.franken.de ([193.175.24.41]:60592 "EHLO elvis.franken.de"
+        Wed, 20 May 2020 14:40:40 -0400
+Received: from elvis.franken.de ([193.175.24.41]:60593 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgETSkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726548AbgETSkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 14:40:36 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jbTdq-0005JR-01; Wed, 20 May 2020 20:40:34 +0200
+        id 1jbTdq-0005JR-00; Wed, 20 May 2020 20:40:34 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 952F1C0155; Wed, 20 May 2020 20:40:24 +0200 (CEST)
-Date:   Wed, 20 May 2020 20:40:24 +0200
+        id ABE3CC0153; Wed, 20 May 2020 20:30:57 +0200 (CEST)
+Date:   Wed, 20 May 2020 20:30:57 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Serge Semin <fancer.lancer@gmail.com>,
@@ -40,43 +40,47 @@ Cc:     Serge Semin <fancer.lancer@gmail.com>,
         linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
  if CPU_FREQ enabled
-Message-ID: <20200520184024.GB23855@alpha.franken.de>
-References: <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
- <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+Message-ID: <20200520183057.GA23855@alpha.franken.de>
+References: <20200511133121.cz5axbwynhmqkx7x@mobilestation>
  <20200515074827.6p5zx4sb3bmavjih@mobilestation>
  <20200515210647.GA22922@alpha.franken.de>
  <20200518134820.wedoumgbsllvhem6@mobilestation>
  <20200518163206.GA17800@alpha.franken.de>
  <20200518205752.txbylbjt2zkwdwwe@mobilestation>
  <20200519155053.GB15797@alpha.franken.de>
- <20200520115926.lk6ycke75flwzcd2@mobilestation>
+ <20200520121201.wohv6u646rx5otkf@mobilestation>
+ <20200520133827.GA17714@alpha.franken.de>
+ <20200520134826.pc6si3k6boaexp4i@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520115926.lk6ycke75flwzcd2@mobilestation>
+In-Reply-To: <20200520134826.pc6si3k6boaexp4i@mobilestation>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:59:26PM +0300, Serge Semin wrote:
-> I think there is a misunderstanding here. In this patch I am not enabling
-
-you are right, I've missed the fact, that this also needs to be enabled
-in TLB entries. Strange that MIPS added the enable bit while R10k simply
-do uncached acclerated, whenever TLB entry selects it.
-
-> If there is no misunderstanding and you said what you said, that even enabling
-> the feature for utilization might be dangerous, let's at least leave the
-> MIPS_CONF_MM, MIPS_CONF_MM_FULL and MIPS_CONF_MM_SYS_SYSAD fields
-> definition in the "arch/mips/include/asm/mipsregs.h" header. I'll use
-> them to enable the write-merge in my platform code.
+On Wed, May 20, 2020 at 04:48:26PM +0300, Serge Semin wrote:
+> On Wed, May 20, 2020 at 03:38:27PM +0200, Thomas Bogendoerfer wrote:
+> > On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
+> > > Since you don't like the way I initially fixed it, suppose there we don't have
+> > > another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
+> > > parameter to select a proper accessors, like sw in our case, and sb by defaul).
+> > > Right?
+> > 
+> > to be on the safe side it's probably the best thing. But I don't know
+> > enough about CPS_NS16550 to judge whether shift value correlates with
+> > possible access width.
 > 
-> What do you think?
+> The base address passed to the _mips_cps_putc() leaf is UART-base address. It
+> has nothing to do with CPS. See:
 
-I withdraw my concerns and will apply the patch as is.
+ok, I'm confused. So this isn't an uart inside CPS hardware, but an uart used
+by CPS code for debug output, right ? 
+
+To solve the issued please add CONFIG_MIPS_CPS_NS16550_WIDTH to select the
+correct access width.
 
 Thomas.
 
