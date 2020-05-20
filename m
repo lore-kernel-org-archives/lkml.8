@@ -2,88 +2,98 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B21C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61513206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF726206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgEUDAj (ORCPT
+        id S1727999AbgEUDBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:00:39 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:8092 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726861AbgEUDAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:00:39 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 11:00:15
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Thu, 21 May 2020 11:00:15 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     "Thierry Reding" <thierry.reding@gmail.com>, kjlu@umn.edu,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        "Rob Herring" <robh@kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Jonathan Hunter" <jonathanh@nvidia.com>,
-        "Vidya Sagar" <vidyas@nvidia.com>,
-        "Andrew Murray" <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200520163739.GA1100601@bjorn-Precision-5520>
-References: <20200520163739.GA1100601@bjorn-Precision-5520>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Wed, 20 May 2020 23:01:04 -0400
+Received: from 19.mo4.mail-out.ovh.net ([87.98.179.66]:33096 "EHLO
+        19.mo4.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbgEUDBD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:01:03 -0400
+X-Greylist: delayed 32998 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 23:01:02 EDT
+Received: from player732.ha.ovh.net (unknown [10.108.57.150])
+        by mo4.mail-out.ovh.net (Postfix) with ESMTP id 0A5A523673D
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 19:33:09 +0200 (CEST)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player732.ha.ovh.net (Postfix) with ESMTPSA id F18101274FFBC;
+        Wed, 20 May 2020 17:33:01 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-104R00501e830cb-d745-4bc0-ad5d-5f7e91f631ff,D4AE9CB3A4750E3488E7135F1D4D455A9A9A4933) smtp.auth=groug@kaod.org
+Date:   Wed, 20 May 2020 19:32:59 +0200
+From:   Greg Kurz <groug@kaod.org>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, paulus@samba.org, mpe@ellerman.id.au,
+        sukadev@linux.ibm.com, linuxram@us.ibm.com
+Subject: Re: [PATCH] KVM: PPC: Book3S HV: relax check on H_SVM_INIT_ABORT
+Message-ID: <20200520193259.0b66db32@bahia.lan>
+In-Reply-To: <20200520165110.71020-1-ldufour@linux.ibm.com>
+References: <20200520165110.71020-1-ldufour@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Message-ID: <a78d156.b93a0.172352c9b6e.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCXPxy_7sVerkDlAQ--.29844W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwADsh
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtIS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
-        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
-        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
-        v26r106r15MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
-        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r
-        48MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS
-        07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14
-        v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWU
-        tVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r4j6F4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvE
-        x4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-        evJa73U
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 7626001547735570884
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedruddtledgudduvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpefirhgvghcumfhurhiiuceoghhrohhugheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeehkefhtdehgeehheejledufeekhfdvleefvdeihefhkefhudffhfeuuedvffdthfenucfkpheptddrtddrtddrtddpkedvrddvheefrddvtdekrddvgeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefvddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehgrhhouhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmsgeW91IGZvciB5b3VyIGFkdmljZS4gSSB0aGluayB0ZWdyYTE5NCBpcyBhIGdvb2QgY2hv
-aWNlIGFuZCAKSSB3aWxsIHVzZSBpdCBpbiB0aGUgbmV4dCBlZGl0aW9uIG9mIHBhdGNoLgoKJnF1
-b3Q7Qmpvcm4gSGVsZ2FhcyZxdW90OyAmbHQ7aGVsZ2Fhc0BrZXJuZWwub3JnJmd0O+WGmemBk++8
-mgo+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDExOjU5OjA4QU0gKzAyMDAsIFRoaWVycnkgUmVk
-aW5nIHdyb3RlOg0KPiA+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDA0OjUyOjIzUE0gKzA4MDAs
-IERpbmdoYW8gTGl1IHdyb3RlOg0KPiA+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVu
-dHMgdGhlIHJ1bnRpbWUgUE0gdXNhZ2UgY291bnRlciBldmVuDQo+ID4gPiBpdCByZXR1cm5zIGFu
-IGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBuZWVkZWQgb24NCj4gPiAN
-Cj4gPiBzL2V2ZW4gaXQvZXZlbiB3aGVuIGl0Lw0KPiA+IA0KPiA+IE1pZ2h0IGFsc28gYmUgYSBn
-b29kIGlkZWEgdG8gdXNlIGEgZGlmZmVyZW50IHN1YmplY3QgcHJlZml4IGJlY2F1c2UgSQ0KPiA+
-IHdhcyBhbG1vc3Qgbm90IGdvaW5nIHRvIGxvb2sgYXQgdGhlIG90aGVyIHBhdGNoLCB0YWtpbmcg
-dGhpcyB0byBiZSBhDQo+ID4gcmVwbGFjZW1lbnQgZm9yIGl0Lg0KPiANCj4gQW1lbi4gIFRoaXMg
-d291bGQgYmUgYSBnb29kIGNoYW5nZSB0byBzdGFydCB1c2luZyAiUENJOiB0ZWdyYTE5NCIgb3IN
-Cj4gc29tZXRoaW5nIGZvciBwY2llLXRlZ3JhMTk0LmMuICBPciB3aWxsIHRoZXJlIGJlIHRlZ3Jh
-MTk1LCB0ZWdyYSAxOTYsDQo+IGV0YyBhZGRlZCB0byB0aGlzIGRyaXZlcj8NCj4gDQo+IEFsc28s
-IHBsZWFzZSBjYXBpdGFsaXplIHRoZSBmaXJzdCB3b3JkIGFuZCAiUE0iIGluIHRoZSBzdWJqZWN0
-czoNCj4gDQo+ICAgUENJOiB0ZWdyYTE5NDogRml4IHJ1bnRpbWUgUE0gaW1iYWxhbmNlIG9uIGVy
-cm9yDQo+IA0KPiBCam9ybg0K
+On Wed, 20 May 2020 18:51:10 +0200
+Laurent Dufour <ldufour@linux.ibm.com> wrote:
+
+> The commit 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_*
+> Hcalls") added checks of secure bit of SRR1 to filter out the Hcall
+> reserved to the Ultravisor.
+> 
+> However, the Hcall H_SVM_INIT_ABORT is made by the Ultravisor passing the
+> context of the VM calling UV_ESM. This allows the Hypervisor to return to
+> the guest without going through the Ultravisor. Thus the Secure bit of SRR1
+> is not set in that particular case.
+> 
+> In the case a regular VM is calling H_SVM_INIT_ABORT, this hcall will be
+> filtered out in kvmppc_h_svm_init_abort() because kvm->arch.secure_guest is
+> not set in that case.
+> 
+
+Why not checking vcpu->kvm->arch.secure_guest then ?
+
+> Fixes: 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls")
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> ---
+>  arch/powerpc/kvm/book3s_hv.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+> index 93493f0cbfe8..eb1f96cb7b72 100644
+> --- a/arch/powerpc/kvm/book3s_hv.c
+> +++ b/arch/powerpc/kvm/book3s_hv.c
+> @@ -1099,9 +1099,7 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
+>  			ret = kvmppc_h_svm_init_done(vcpu->kvm);
+>  		break;
+>  	case H_SVM_INIT_ABORT:
+> -		ret = H_UNSUPPORTED;
+> -		if (kvmppc_get_srr1(vcpu) & MSR_S)
+> -			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
+
+or at least put a comment to explain why H_SVM_INIT_ABORT
+doesn't have the same sanity check as the other SVM hcalls.
+
+> +		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
+>  		break;
+>  
+>  	default:
+
