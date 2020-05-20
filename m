@@ -2,134 +2,97 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D872120709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589994140;
-	bh=pKI8F0u3oqj9vK9T327Bk0pkG9mPYMPmZF4zagVhXYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pCu1tKafY/SvCNrAiMP3WaqGeza2B40Y98k2zQVJr2QNFMevQtRJip0OAzJXDFkkG
-	 78Nu1k2WT72v3dcNPGzCcRlzd4Z96xDkz4hkCsPuRmaSKPYC6ZgYge4ez0t7p18awb
-	 rH1il4hu02hs8aCxCcvX+/hv3NqMKutOOshdGzp0=
+	by mail.kernel.org (Postfix) with ESMTP id 3280420709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOFVaX5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgETRCU (ORCPT
+        id S1726990AbgETRCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETRCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:02:19 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84DAF20708;
-        Wed, 20 May 2020 17:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589994139;
-        bh=pKI8F0u3oqj9vK9T327Bk0pkG9mPYMPmZF4zagVhXYk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yfpDsdz0pR9Dtpfr9mEFoBX8Y3eUYaZuGtSGbYqOt49a2WhXNGlnpYtNfaYd0Weq0
-         jrE2Ak1ARVTmKKbWmsbWiJUfRea/4LnvY/PUakEpxT1awn5iPxUN65zKPvfT3lXsrC
-         nm2uklgbOBnYzNO5lseCoMMb7G7NdPmtMe0IPswM=
-Date:   Wed, 20 May 2020 19:02:16 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
- is cleared
-Message-ID: <20200520170215.GB8800@lenoir>
-References: <20200520140402.358880-1-juri.lelli@redhat.com>
- <20200520162400.GA8800@lenoir>
- <20200520164925.GM10078@localhost.localdomain>
+        Wed, 20 May 2020 13:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETRCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:02:40 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1264DC061A0E;
+        Wed, 20 May 2020 10:02:39 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id k18so3992288ion.0;
+        Wed, 20 May 2020 10:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RbtzaMFf7pW30QhNWNbIkxxpmi1TRj00OoVA+lD+dhA=;
+        b=mOFVaX5s6qRcKV+xyGlQ+sem0KZHuFDf6yrDBqunG9GQx49qCsmRUnOxqST+G9zs/v
+         dWKZ0Or5tmWZ0DDQ5brjtO8bCgt+6Wnuy+HuauNql4aORz75kO6Q7aBCNi3xyUfSVQ8B
+         DcKZaQlPeRyQrCCQa7sqheRa7UD50evYDZDeDdMYd96YNSYTbIloxqt+GtIIxcH6/df6
+         6krSZioMagemxcgUYvw/KZUNoM19B1W7S6Lk56nh1SEk+e/4WTNHaEOycmxYRQyMVd5L
+         Yet4SJ4g9oijUwKGmSMHD0lbBn+0nJeBJvsvolrdN59x7zEHrKvrWU+ZNf+EuxDozLv7
+         i5EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RbtzaMFf7pW30QhNWNbIkxxpmi1TRj00OoVA+lD+dhA=;
+        b=TsJHGMe6/p4FAlAo21FAZ2mOkZDF9H+KKXK8QA0AYWLJLzXIE3EAHChuUAk16Tkgj8
+         YooolQPOwLrzIGwKza2FngD/ZPZjtk6WKd2nMUQYe9OwOBWPFHDYULVomaB1A0ZLQpyX
+         VojctcgAwR+Z2fLQv2nqsZM1qJFmtRVTdHaKaemeTymBBIT7bRPpGY1GyQH4jU7bYR5b
+         +BlPBVc4X8XqwhzO/A7Uwq//WADumJY91HoVZuNd0sPJm/UOCThzOCruz45Co/MCZmts
+         OAPofzqJ+AN/I9Wl6/h+tkLXUTFvnnhPyxmii6C8NHhFTvgtvTr7yGma8nWmTBOJqjHb
+         Ecvg==
+X-Gm-Message-State: AOAM531Km7S31AI+kE5PPkBxGAdjk9QA7afgo80ZNhHbZeuSUDtQ9UrS
+        +o7xWugfnvLlzhbzQUI5OBt1cAgV4ac05XZLyDQ=
+X-Google-Smtp-Source: ABdhPJxCR1b4ZKgHAom8aTqNjNn7M3DNQKrWMjyk9IkbFxxqQZgfhaAbfsBle2YAKgxNo403mCsuKgoiDSW/Rlun5mc=
+X-Received: by 2002:a5d:824c:: with SMTP id n12mr4275005ioo.15.1589994158239;
+ Wed, 20 May 2020 10:02:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520164925.GM10078@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200520133432.19738-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200520133432.19738-1-dinghao.liu@zju.edu.cn>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Wed, 20 May 2020 10:02:27 -0700
+Message-ID: <CAKdAkRTyVL0uV0dGxHoEgMyB9FP6b0m60CHy7C4QXeR5WTGAJw@mail.gmail.com>
+Subject: Re: [PATCH] Input: omap-keypad - fix runtime pm imbalance on error
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:49:25PM +0200, Juri Lelli wrote:
-> On 20/05/20 18:24, Frederic Weisbecker wrote:
-> 
-> Hummm, so I enabled 'timer:*', anything else you think I should be
-> looking at?
+Hi Dinghao,
 
-Are you sure you also enabled timer_expire_entry?
-Because:
+On Wed, May 20, 2020 at 6:35 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
+>
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> the call returns an error code. Thus a pairing decrement is needed
+> on the error handling path to keep the counter balanced.
 
-> 
-> ...
-> ksoftirqd/13-117   [013]   148.265945: softirq_entry:        vec=1 [action=TIMER]
+This is a very surprising behavior and I wonder if this should be
+fixed in the PM core (or the required cleanup steps need to be called
+out in the function description). I also see that a few drivers that
+handle this situation correctly (?) call pm_runtime_put_noidle()
+instead of pm_runtime_put_sync() in the error path.
 
-...the timer softirq keep triggering without any timer callback executed. If that's the
-case, we may be dealing with an interesting issue.
+Rafael, do you have any guidance here?
 
 Thanks.
 
-> ksoftirqd/13-117   [013]   148.265947: softirq_exit:         vec=1 [action=TIMER]
-> ksoftirqd/13-117   [013]   148.265948: softirq_entry:        vec=7 [action=SCHED]
-> ksoftirqd/13-117   [013]   148.265950: softirq_exit:         vec=7 [action=SCHED]
-> ksoftirqd/13-117   [013]   148.265952: sched_switch:         ksoftirqd/13:117 [120] S ==> sysjitter:2536 [120]
->    sysjitter-2536  [013]   148.266912: local_timer_entry:    vector=236
->    sysjitter-2536  [013]   148.266914: hrtimer_cancel:       hrtimer=0xffff9807df91bee0
->    sysjitter-2536  [013]   148.266916: hrtimer_expire_entry: hrtimer=0xffff9807df91bee0 now=148249107837 function=tick_sched_timer/0x0
->    sysjitter-2536  [013]   148.266918: softirq_raise:        vec=1 [action=TIMER]
->    sysjitter-2536  [013]   148.266920: softirq_raise:        vec=7 [action=SCHED]
->    sysjitter-2536  [013]   148.266922: hrtimer_expire_exit:  hrtimer=0xffff9807df91bee0
->    sysjitter-2536  [013]   148.266924: hrtimer_start:        hrtimer=0xffff9807df91bee0 function=tick_sched_timer/0x0 expires=148250105422 softexpires=148250105422
->    sysjitter-2536  [013]   148.266926: local_timer_exit:     vector=236
->    sysjitter-2536  [013]   148.266930: sched_wakeup:         ksoftirqd/13:117 [120] success=1 CPU:013
->    sysjitter-2536  [013]   148.266932: tick_stop:            success=0 dependency=SCHED
->    sysjitter-2536  [013]   148.266934: irq_work_entry:       vector=246
->    sysjitter-2536  [013]   148.266936: irq_work_exit:        vector=246
->    sysjitter-2536  [013]   148.266937: tick_stop:            success=0 dependency=SCHED
->    sysjitter-2536  [013]   148.266940: sched_switch:         sysjitter:2536 [120] R ==> ksoftirqd/13:117 [120]
-> ksoftirqd/13-117   [013]   148.266943: softirq_entry:        vec=1 [action=TIMER]
-> ksoftirqd/13-117   [013]   148.266946: softirq_exit:         vec=1 [action=TIMER]
-> ksoftirqd/13-117   [013]   148.266946: softirq_entry:        vec=7 [action=SCHED]
-> ksoftirqd/13-117   [013]   148.266948: softirq_exit:         vec=7 [action=SCHED]
-> ksoftirqd/13-117   [013]   148.266950: sched_switch:         ksoftirqd/13:117 [120] S ==> sysjitter:2536 [120]
->    sysjitter-2536  [013]   148.267912: local_timer_entry:    vector=236
->    sysjitter-2536  [013]   148.267914: hrtimer_cancel:       hrtimer=0xffff9807df91bee0
->    sysjitter-2536  [013]   148.267916: hrtimer_expire_entry: hrtimer=0xffff9807df91bee0 now=148250107750 function=tick_sched_timer/0x0
->    sysjitter-2536  [013]   148.267918: softirq_raise:        vec=1 [action=TIMER]
->    sysjitter-2536  [013]   148.267920: softirq_raise:        vec=7 [action=SCHED]
->    sysjitter-2536  [013]   148.267922: hrtimer_expire_exit:  hrtimer=0xffff9807df91bee0
->    sysjitter-2536  [013]   148.267924: hrtimer_start:        hrtimer=0xffff9807df91bee0 function=tick_sched_timer/0x0 expires=148251105422 softexpires=148251105422
->    sysjitter-2536  [013]   148.267926: local_timer_exit:     vector=236
->    sysjitter-2536  [013]   148.267929: sched_wakeup:         ksoftirqd/13:117 [120] success=1 CPU:013
->    sysjitter-2536  [013]   148.267931: tick_stop:            success=0 dependency=SCHED
->    sysjitter-2536  [013]   148.267934: irq_work_entry:       vector=246
->    sysjitter-2536  [013]   148.267936: irq_work_exit:        vector=246
->    sysjitter-2536  [013]   148.267937: tick_stop:            success=0 dependency=SCHED
->    sysjitter-2536  [013]   148.267940: sched_switch:         sysjitter:2536 [120] R ==> ksoftirqd/13:117 [120]
-> ksoftirqd/13-117   [013]   148.267943: softirq_entry:        vec=1 [action=TIMER]
-> ksoftirqd/13-117   [013]   148.267945: softirq_exit:         vec=1 [action=TIMER]
-> ksoftirqd/13-117   [013]   148.267946: softirq_entry:        vec=7 [action=SCHED]
-> ksoftirqd/13-117   [013]   148.267947: softirq_exit:         vec=7 [action=SCHED]
-> ksoftirqd/13-117   [013]   148.267949: sched_switch:         ksoftirqd/13:117 [120] S ==> sysjitter:2536 [120]
->    sysjitter-2536  [013]   148.268865: call_function_single_entry: vector=251
->    sysjitter-2536  [013]   148.268867: call_function_single_exit: vector=251
->    sysjitter-2536  [013]   148.268870: tick_stop:            success=1 dependency=NONE
->    sysjitter-2536  [013]   148.268872: hrtimer_cancel:       hrtimer=0xffff9807df91bee0
->    sysjitter-2536  [013]   148.268876: call_function_single_entry: vector=251
->    sysjitter-2536  [013]   148.268878: call_function_single_exit: vector=251
-> ...
-> 
-> it looks like tick sched timer is kept armed until tick_stop
-> succedes (because of the check performed after _single_exit)?
-> 
-> Thanks for your quick reply!
-> 
+-- 
+Dmitry
