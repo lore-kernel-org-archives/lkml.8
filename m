@@ -2,177 +2,126 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB12C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F66C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2405C2081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F78F2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hNNAVtaM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZgA6oVwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgETDsn (ORCPT
+        id S1728522AbgETD5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 23:48:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728694AbgETDsj (ORCPT
+        Tue, 19 May 2020 23:57:13 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:53179 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728297AbgETD5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 23:48:39 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE90C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:48:39 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id z7so621875ybn.21
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:48:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=BiH7ch5fHybcnoIDBLcuc4z5e2hLWJngfJgPQOT+vX4=;
-        b=hNNAVtaMBVXW5HxIH1NLIoMs3K2lqDkT1olTcYH3WuSYtQ5Aa7ZU1oolWkmMxB5b9U
-         zj+vd1KZKxhW4e/MXNG2Y4UfZ0gz1rpJv7I5QmRYdTMw9PH6sX3Q56X1wM3FVM6Piu2o
-         TVLMNVBj9J6XUGUOkQnItXlHYZAdm6NKwIgcZqUUz/6fc7dt59nKs4h5iI1hZTkULolx
-         SDUWvUpBrTDVGKNwnKhXpfb1/LWRueEX16CiZJpQiCva2p679WZapsF9tLLCbJkmFw98
-         x2SnaGlcgAQRptFsHERfPtyN4bAdxKZC7DcI+K+qWqKQv+TNzL2UdWFAcue8y8TUjfNJ
-         Erzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=BiH7ch5fHybcnoIDBLcuc4z5e2hLWJngfJgPQOT+vX4=;
-        b=pZ32SuLwuASYh2LVLKEO5x2g91PGTpxzIAdG5PYa5tgTepFyCYX3dvL1DRB/TVHyh/
-         qgvK5HznZD7iZwU9GfijgJrmStU3dCp8btH5XzP3t6GZ4GE7XrWPG/JSkJyOo71z3h85
-         qA+xHPjY2+pbO7qQOnncWarqlfOlXf9Ai1eP4y6NOzTozpqC36wTPV3AK1HOeOFkpNgS
-         EAJxMtDBiuTXYCAfV+eXGyYpNfYpka2s0c27AUQwCla7jJ5xJvP/yGvSPYjFaHJR9jyI
-         A2hBu9mxIh0BQ1PTOk9ro84hT7Rs/E/YidFx8udhi3RpFC7OlvEXsMkMVB1lzD2HoeGL
-         AY9Q==
-X-Gm-Message-State: AOAM531MCG5Tvmc4dqRKSs9+PzgUc8nTfqn8aF6+er6S+20Pof34FrsT
-        g8dWXmKTfeEKTLDVLpebPU5f28FT9zrrMg0=
-X-Google-Smtp-Source: ABdhPJx8QBCtvuhyVUSSQyOMhYVO+SzLCZO/nGk/HsZuwYNI0MZWl7pkaJ3nG6b+AGZvqN8N3gpHJtX6Kk8O7qg=
-X-Received: by 2002:a05:6902:725:: with SMTP id l5mr4576712ybt.73.1589946518755;
- Tue, 19 May 2020 20:48:38 -0700 (PDT)
-Date:   Tue, 19 May 2020 20:48:24 -0700
-In-Reply-To: <20200520034824.79049-1-saravanak@google.com>
-Message-Id: <20200520034824.79049-5-saravanak@google.com>
-Mime-Version: 1.0
-References: <20200520034824.79049-1-saravanak@google.com>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v2 4/4] driver core: Add waiting_for_supplier sysfs file for devices
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 19 May 2020 23:57:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589947032; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=oYqkZXvOg2NEoW8d38oiFR6euHSrJZsCm+dRjRv+gVY=; b=ZgA6oVwmaPOgdr/DSLTsZUd45WsG0rrZsUBB7k2LwBfG33stRtsonHOJdEu6PMrRwU/n75Um
+ acCXwpCUHYiiywxH41os0M8wsYg3a9930Ugmj8TnSNNFkFy84Ynmqijo91tpU1v6jecgJnQc
+ tbsSs09AoBTjmKuv5sDdVyqLgwc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec4aa7d.7f7235a1b6f8-smtp-out-n04;
+ Wed, 20 May 2020 03:56:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C08B4C433CA; Wed, 20 May 2020 03:56:44 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 667A5C433C6;
+        Wed, 20 May 2020 03:56:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 667A5C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Wed, 20 May 2020 09:26:36 +0530
+Message-Id: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This would be useful to check if a device is not probing because it's
-waiting for a supplier to be added and then linked to before it can
-probe.
+Add device node for the ath10k SNOC platform driver probe
+and add resources required for WCN3990 on sc7180 soc.
 
-To reduce sysfs clutter, this file is added only if it can ever be 1.
-So, if fw_devlink is disabled or set to permissive, this file is not
-added. Also, this file is removed once the device probes as it's no
-longer relevant.
-
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 ---
- .../sysfs-devices-waiting_for_supplier        | 17 ++++++++++++
- drivers/base/core.c                           | 26 +++++++++++++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-waiting_for_supplier
+Changes from v10:
+- Corrected the position of wifi node, as per address
+- Removed the wlan_fw_mem from reserved memory, since
+  its already added as reserved memory in board DT file.
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 22 ++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-waiting_for_supplier b/Documentation/ABI/testing/sysfs-devices-waiting_for_supplier
-new file mode 100644
-index 000000000000..59d073d20db6
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-devices-waiting_for_supplier
-@@ -0,0 +1,17 @@
-+What:		/sys/devices/.../waiting_for_supplier
-+Date:		May 2020
-+Contact:	Saravana Kannan <saravanak@google.com>
-+Description:
-+		The /sys/devices/.../waiting_for_supplier attribute is only
-+		present when fw_devlink kernel command line option is enabled
-+		and is set to something stricter than "permissive".  It is
-+		removed once a device probes successfully (because the
-+		information is no longer relevant). The number read from it (0
-+		or 1) reflects whether the device is waiting for one or more
-+		suppliers to be added and then linked to using device links
-+		before the device can probe.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 4e9149d..38b102e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -389,6 +389,13 @@
+ 	};
+ };
+ 
++&wifi {
++	status = "okay";
++	wifi-firmware {
++		iommus = <&apps_smmu 0xc2 0x1>;
++	};
++};
 +
-+		A value of 0 means the device is not waiting for any suppliers
-+		to be added before it can probe.  A value of 1 means the device
-+		is waiting for one or more suppliers to be added before it can
-+		probe.
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 3304ea1a2604..83a3e0b62ce3 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1031,6 +1031,22 @@ static void device_link_drop_managed(struct device_link *link)
- 	kref_put(&link->kref, __device_link_del);
- }
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
  
-+static ssize_t waiting_for_supplier_show(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	bool val;
+ &qspi_clk {
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 6b12c60..da79f8f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2811,6 +2811,28 @@
+ 
+ 			#freq-domain-cells = <1>;
+ 		};
 +
-+	device_lock(dev);
-+	mutex_lock(&wfs_lock);
-+	val = !list_empty(&dev->links.needs_suppliers)
-+	      && dev->links.need_for_probe;
-+	mutex_unlock(&wfs_lock);
-+	device_unlock(dev);
-+	return sprintf(buf, "%u\n", val);
-+}
-+static DEVICE_ATTR_RO(waiting_for_supplier);
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -1055,6 +1071,7 @@ void device_links_driver_bound(struct device *dev)
- 	mutex_lock(&wfs_lock);
- 	list_del_init(&dev->links.needs_suppliers);
- 	mutex_unlock(&wfs_lock);
-+	device_remove_file(dev, &dev_attr_waiting_for_supplier);
++		wifi: wifi@18800000 {
++			compatible = "qcom,wcn3990-wifi";
++			reg = <0 0x18800000 0 0x800000>;
++			reg-names = "membase";
++			iommus = <&apps_smmu 0xc0 0x1>;
++			interrupts =
++				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
++				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
++				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
++				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
++				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
++				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
++				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
++				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
++				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
++				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
++				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
++				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
++			memory-region = <&wlan_mem>;
++			status = "disabled";
++		};
+ 	};
  
- 	device_links_write_lock();
- 
-@@ -2124,8 +2141,16 @@ static int device_add_attrs(struct device *dev)
- 			goto err_remove_dev_groups;
- 	}
- 
-+	if (fw_devlink_flags && !fw_devlink_is_permissive()) {
-+		error = device_create_file(dev, &dev_attr_waiting_for_supplier);
-+		if (error)
-+			goto err_remove_dev_online;
-+	}
-+
- 	return 0;
- 
-+ err_remove_dev_online:
-+	device_remove_file(dev, &dev_attr_online);
-  err_remove_dev_groups:
- 	device_remove_groups(dev, dev->groups);
-  err_remove_type_groups:
-@@ -2143,6 +2168,7 @@ static void device_remove_attrs(struct device *dev)
- 	struct class *class = dev->class;
- 	const struct device_type *type = dev->type;
- 
-+	device_remove_file(dev, &dev_attr_waiting_for_supplier);
- 	device_remove_file(dev, &dev_attr_online);
- 	device_remove_groups(dev, dev->groups);
- 
+ 	thermal-zones {
 -- 
-2.26.2.761.g0e0b3e54be-goog
-
+2.7.4
