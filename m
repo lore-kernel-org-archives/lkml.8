@@ -2,93 +2,110 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D59C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9729E207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="UXPruK/n"
+	by mail.kernel.org (Postfix) with ESMTP id DB6AF205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgETOZs (ORCPT
+        id S1728392AbgETOZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbgETOZl (ORCPT
+        Wed, 20 May 2020 10:25:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32994 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727000AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:25:41 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBE0C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:25:40 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b91so3264831edf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=wMA33dnba4I1xySChm1PiZx/HzxTpqEY+2IJD7PaIUo=;
-        b=UXPruK/n94mCL0Cf+r1Ubc53NG+qGqAjJZ3m1rxiheqyt+TgR43B2MZbM3G5oGBvzH
-         AOmqtTnWkh5iqqbiEkcBoF/eGI9s12ijRF5DSEFdXYqldqojRK/RtnCu58WVNOX+2pRm
-         wgliTMuFTtUZrWBUOF9mxC0NFJq5ZwsahXtew=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=wMA33dnba4I1xySChm1PiZx/HzxTpqEY+2IJD7PaIUo=;
-        b=ZwKLMvhS0bhFsJZiENYNb/8LyTufCwBI3AIx23b5chDAC7T8B3ZWU6vP3FXJcNKpGt
-         jRQgDdYFnnJLmKx76Ko5O8artMKsXNh8XdWvqwM/6DyHcxkyZZVCdoOIgAXHAZqmNXWl
-         6YbpAcYDf4iUk1fAdxK574NOg15YRttJEODB21OGe68uWicIrHLvnQjVnnyfBY6xr9hh
-         jc5NT0FSXKsva8jg/nmPvbRbPtVEuYcg5U9r39JHHPfEQEJejwT1hBWCujB8HvimkPTV
-         AqgtbugZcBwf7pItevI2vIv8QNSeW/nmhGpwLT65AAENUFi6yBuOkU8ew34LLrwIBzNq
-         SQng==
-X-Gm-Message-State: AOAM532LVAL5Y82esbFmM6CFe6N+THUp7eOFFOg69h0pgeE8wc49R2di
-        IMQ30seeMDsn9akJNDzS85z09aKq19XKaQ==
-X-Google-Smtp-Source: ABdhPJy10hSN7EIWDkG1mJa1W1U+NkhQqewSXt1VJ7mXWUfgHVHzkudGM39RqPLVe4KIr1tJs9kLSA==
-X-Received: by 2002:aa7:d042:: with SMTP id n2mr1976267edo.226.1589984739557;
-        Wed, 20 May 2020 07:25:39 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id o18sm2029759eji.97.2020.05.20.07.25.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 07:25:38 -0700 (PDT)
-Date:   Wed, 20 May 2020 16:25:37 +0200
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org
-Subject: [GIT PULL] overlayfs fixes for 5.7-rc7
-Message-ID: <20200520142537.GD13131@miu.piliscsaba.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Wed, 20 May 2020 10:22:27 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jbPbv-00035i-RX; Wed, 20 May 2020 15:22:19 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jbPbv-007DS7-Ml; Wed, 20 May 2020 15:22:19 +0100
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Zhihao Cheng" <chengzhihao1@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        "Richard Weinberger" <richard@nod.at>
+Date:   Wed, 20 May 2020 15:14:21 +0100
+Message-ID: <lsq.1589984008.539184755@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 53/99] ubifs: Fix deadlock in concurrent bulk-read
+ and writepage
+In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+3.16.84-rc1 review patch.  If anyone has any objections, please let me know.
 
-Please pull from:
+------------------
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-fixes-5.7-rc7
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-Fix two bugs introduced in this cycle and one introduced in v5.5.
+commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 upstream.
 
-Thanks,
-Miklos
+In ubifs, concurrent execution of writepage and bulk read on the same file
+may cause ABBA deadlock, for example (Reproduce method see Link):
 
-----------------------------------------------------------------
-Dan Carpenter (1):
-      ovl: potential crash in ovl_fid_to_fh()
+Process A(Bulk-read starts from page4)         Process B(write page4 back)
+  vfs_read                                       wb_workfn or fsync
+  ...                                            ...
+  generic_file_buffered_read                     write_cache_pages
+    ubifs_readpage                                 LOCK(page4)
 
-Vivek Goyal (2):
-      ovl: clear ATTR_FILE from attr->ia_valid
-      ovl: clear ATTR_OPEN from attr->ia_valid
+      ubifs_bulk_read                              ubifs_writepage
+        LOCK(ui->ui_mutex)                           ubifs_write_inode
 
+	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
+	    find_or_create_page(alloc page4)                  ↑
+	      LOCK(page4)                   <--     ABBA deadlock occurs!
+
+In order to ensure the serialization execution of bulk read, we can't
+remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
+allow ubifs_do_bulk_read() to lock page failed by replacing
+find_or_create_page(FGP_LOCK) with
+pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
+Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
+Signed-off-by: Richard Weinberger <richard@nod.at>
+[bwh: Backported to 3.16: Keep using constant GFP flags parameter.]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/overlayfs/export.c |  3 +++
- fs/overlayfs/inode.c  | 18 ++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ fs/ubifs/file.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -782,8 +782,9 @@ static int ubifs_do_bulk_read(struct ubi
+ 
+ 		if (page_offset > end_index)
+ 			break;
+-		page = find_or_create_page(mapping, page_offset,
+-					   GFP_NOFS | __GFP_COLD);
++		page = pagecache_get_page(mapping, page_offset,
++				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
++				 GFP_NOFS | __GFP_COLD);
+ 		if (!page)
+ 			break;
+ 		if (!PageUptodate(page))
+
