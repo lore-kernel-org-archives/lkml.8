@@ -2,140 +2,116 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C90C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53E93207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590003764;
-	bh=KGbJj3iv0JepJvFoO4BQuY6MfooRvNl3Qi71fMxvlXA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=wM0D0CZpn6JvjzRAyQ7F5jcVI9xnUoMpslbkGL/RyfHfUEi1VjYigWoZn9jpxCR/V
-	 si4LSTrtdV2cslPykJWcrH7jzLnfN7wAqz56f7nQpy8DK3VWvwHzZU9/swwHSXmbLH
-	 1pPjLn3vVlrzTW1XTkNL6x4CZ73fCtnw9nVV6znE=
+	by mail.kernel.org (Postfix) with ESMTP id 3EC69207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgETTmn (ORCPT
+        id S1726896AbgETToM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgETTmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:42:43 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 344E2207D3;
-        Wed, 20 May 2020 19:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590003762;
-        bh=KGbJj3iv0JepJvFoO4BQuY6MfooRvNl3Qi71fMxvlXA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sCvt0RvySlhyUjQHgHlIv0y27A5p0pdLEh03iac3fa4pk0BIaOrKO9S6G/C+o/zto
-         cXMtk9pvAkyLkCD+JnwuuIF6xtg+576m2JfOBwP6p19xlQe43HQD+dvxImOL4mNEWp
-         MtrgD+5bik7fXt6McnP+RkGS9Y+iTB8FFQAkScz4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 11CEF3522A2B; Wed, 20 May 2020 12:42:42 -0700 (PDT)
-Date:   Wed, 20 May 2020 12:42:42 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V6 12/37] x86/entry: Provide
- idtentry_entry/exit_cond_rcu()
-Message-ID: <20200520194242.GV2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com>
- <87ftbv7nsd.fsf@nanos.tec.linutronix.de>
- <87a7237k3x.fsf@nanos.tec.linutronix.de>
- <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com>
- <874ksb7hbg.fsf@nanos.tec.linutronix.de>
- <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
- <20200520022353.GN2869@paulmck-ThinkPad-P72>
- <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
- <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
- <87y2pmv281.fsf@nanos.tec.linutronix.de>
+        Wed, 20 May 2020 15:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgETToL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:44:11 -0400
+X-Greylist: delayed 425 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 20 May 2020 12:44:11 PDT
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F676C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:44:11 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id C6D98C009; Wed, 20 May 2020 21:37:02 +0200 (CEST)
+Date:   Wed, 20 May 2020 21:36:47 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     jgross@suse.com, lucho@ionkov.net, ericvh@gmail.com,
+        rminnich@sandia.gov, linux-kernel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: Re: [V9fs-developer] [PATCH] 9p/xen: increase XEN_9PFS_RING_ORDER
+Message-ID: <20200520193647.GA17565@nautica>
+References: <20200520184113.24727-1-sstabellini@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87y2pmv281.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200520184113.24727-1-sstabellini@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:24:46PM +0200, Thomas Gleixner wrote:
-> Andy Lutomirski <luto@kernel.org> writes:
-> > On Wed, May 20, 2020 at 8:36 AM Andy Lutomirski <luto@kernel.org> wrote:
-> >     if (user_mode(regs)) {
-> >         enter_from_user_mode();
-> >     } else {
-> >         if (!__rcu_is_watching()) {
-> >             /*
-> >              * If RCU is not watching then the same careful
-> >              * sequence vs. lockdep and tracing is required.
-> >              *
-> >              * This only happens for IRQs that hit the idle loop, and
-> >              * even that only happens if we aren't using the sane
-> >              * MWAIT-while-IF=0 mode.
-> >              */
-> >             lockdep_hardirqs_off(CALLER_ADDR0);
-> >             rcu_irq_enter();
-> >             instrumentation_begin();
-> >             trace_hardirqs_off_prepare();
-> >             instrumentation_end();
-> >             return true;
-> >         } else {
-> >             /*
-> >              * If RCU is watching then the combo function
-> >              * can be used.
-> >              */
-> >             instrumentation_begin();
-> >             trace_hardirqs_off();
-> >             rcu_tickle();
-> >             instrumentation_end();
-> >         }
-> >     }
-> >     return false;
-> >
-> > This is exactly what you have except that the cond_rcu part is gone
-> > and I added rcu_tickle().
-> >
-> > Paul, the major change here is that if an IRQ hits normal kernel code
-> > (i.e. code where RCU is watching and we're not in an EQS), the IRQ
-> > won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
-> > rcu_tickle() on entry and nothing on exit.  Does that cover all the
-> > bases?
+Stefano Stabellini wrote on Wed, May 20, 2020:
+> From: Stefano Stabellini <stefano.stabellini@xilinx.com>
 > 
-> Just chatted with Paul on IRC and he thinks this should work, but he's
-> not sure whether it's actually sane :)
+> Increase XEN_9PFS_RING_ORDER to 9 for performance reason. Order 9 is the
+> max allowed by the protocol.
+> 
+> We can't assume that all backends will support order 9. The xenstore
+> property max-ring-page-order specifies the max order supported by the
+> backend. We'll use max-ring-page-order for the size of the ring.
+> 
+> This means that the size of the ring is not static
+> (XEN_FLEX_RING_SIZE(9)) anymore. Change XEN_9PFS_RING_SIZE to take an
+> argument and base the calculation on the order chosen at setup time.
+> 
+> 
+> Finally, modify p9_xen_trans.maxsize to be divided by 4 compared to the
+> original value. We need to divide it by 2 because we have two rings
+> coming off the same order allocation: the in and out rings. This was a
+> mistake in the original code. Also divide it further by 2 because we
+> don't want a single request/reply to fill up the entire ring. There can
+> be multiple requests/replies outstanding at any given time and if we use
+> the full ring with one, we risk forcing the backend to wait for the
+> client to read back more replies before continuing, which is not
+> performant.
 
-I will have more to say after coding it up.  ;-)
+Sounds good to me overall. A couple of comments inline.
+Also worth noting I need to rebuild myself a test setup so might take a
+bit of time to actually run tests, but I might just trust you on this
+one for now if it builds with no new warning... Looks like it would
+probably work :p
 
-							Thanx, Paul
+> [...]
+> @@ -264,7 +265,7 @@ static irqreturn_t xen_9pfs_front_event_handler(int irq, void *r)
+>  
+>  static struct p9_trans_module p9_xen_trans = {
+>  	.name = "xen",
+> -	.maxsize = 1 << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT),
+> +	.maxsize = 1 << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT - 2),
+>  	.def = 1,
+>  	.create = p9_xen_create,
+>  	.close = p9_xen_close,
+> [...]
+> @@ -401,8 +405,10 @@ static int xen_9pfs_front_probe(struct xenbus_device *dev,
+>  		return -EINVAL;
+>  	max_ring_order = xenbus_read_unsigned(dev->otherend,
+>  					      "max-ring-page-order", 0);
+> -	if (max_ring_order < XEN_9PFS_RING_ORDER)
+> -		return -EINVAL;
+> +	if (max_ring_order > XEN_9PFS_RING_ORDER)
+> +		max_ring_order = XEN_9PFS_RING_ORDER;
+
+(If there are backends with very small max_ring_orders, we no longer
+error out when we encounter one, it might make sense to add a min
+define? Although to be honest 9p works with pretty small maxsizes so I
+don't see much reason to error out, and even order 0 will be one page
+worth.. I hope there is no xenbus that small though :))
+
+> +	if (p9_xen_trans.maxsize > XEN_FLEX_RING_SIZE(max_ring_order))
+> +		p9_xen_trans.maxsize = XEN_FLEX_RING_SIZE(max_ring_order);
+
+So base maxsize initial value is 1 << (order + page_shift - 2) ; but
+this is 1 << (order + page_shift - 1) -- I agree with the logic you gave
+in commit message so would think this needs to be shifted down one more
+like the base value as well.
+What do you think?
+
+-- 
+Dominique
