@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F61DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E998FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1471207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1ED9205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgETOXi (ORCPT
+        id S1728041AbgETOX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:23:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33138 "EHLO
+        Wed, 20 May 2020 10:23:29 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33256 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727055AbgETOW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727115AbgETOW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbz-00036p-SI; Wed, 20 May 2020 15:22:23 +0100
+        id 1jbPby-00036v-Cq; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-007DV1-U3; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbx-007DVj-Au; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marios Pomonis" <pomonis@google.com>,
-        "Nick Finco" <nifi@google.com>,
-        "Jim Mattson" <jmattson@google.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Andrew Honig" <ahonig@google.com>
-Date:   Wed, 20 May 2020 15:14:44 +0100
-Message-ID: <lsq.1589984009.471336821@decadent.org.uk>
+        "Christian Zigotzky" <chzigotzky@xenosoft.de>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Rob Herring" <robh@kernel.org>
+Date:   Wed, 20 May 2020 15:14:53 +0100
+Message-ID: <lsq.1589984009.147114071@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 76/99] KVM: x86: Protect x86_decode_insn from
- Spectre-v1/L1TF attacks
+Subject: [PATCH 3.16 85/99] of: Add OF_DMA_DEFAULT_COHERENT & select it on
+ powerpc
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,54 +58,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marios Pomonis <pomonis@google.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 3c9053a2cae7ba2ba73766a34cea41baa70f57f7 upstream.
+commit dabf6b36b83a18d57e3d4b9d50544ed040d86255 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in x86_decode_insn().
-kvm_emulate_instruction() (an ancestor of x86_decode_insn()) is an exported
-symbol, so KVM should treat it conservatively from a security perspective.
+There's an OF helper called of_dma_is_coherent(), which checks if a
+device has a "dma-coherent" property to see if the device is coherent
+for DMA.
 
-Fixes: 045a282ca415 ("KVM: emulator: implement fninit, fnstsw, fnstcw")
+But on some platforms devices are coherent by default, and on some
+platforms it's not possible to update existing device trees to add the
+"dma-coherent" property.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: Add #include <linux/nospec.h>]
+So add a Kconfig symbol to allow arch code to tell
+of_dma_is_coherent() that devices are coherent by default, regardless
+of the presence of the property.
+
+Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
+when the system has a coherent cache.
+
+Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/emulate.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/powerpc/Kconfig | 1 +
+ drivers/of/Kconfig   | 4 ++++
+ drivers/of/address.c | 6 +++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -26,6 +26,7 @@
- #include <asm/kvm_emulate.h>
- #include <linux/stringify.h>
- #include <asm/nospec-branch.h>
-+#include <linux/nospec.h>
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -89,6 +89,7 @@ config PPC
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
+ 	select BINFMT_ELF
+ 	select OF
++	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
+ 	select OF_EARLY_FLATTREE
+ 	select OF_RESERVED_MEM
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -78,4 +78,8 @@ config OF_RESERVED_MEM
+ 	help
+ 	  Helpers to allow for reservation of memory regions
  
- #include "x86.h"
- #include "tss.h"
-@@ -4487,10 +4488,15 @@ done_prefixes:
- 			}
- 			break;
- 		case Escape:
--			if (ctxt->modrm > 0xbf)
--				opcode = opcode.u.esc->high[ctxt->modrm - 0xc0];
--			else
-+			if (ctxt->modrm > 0xbf) {
-+				size_t size = ARRAY_SIZE(opcode.u.esc->high);
-+				u32 index = array_index_nospec(
-+					ctxt->modrm - 0xc0, size);
++config OF_DMA_DEFAULT_COHERENT
++	# arches should select this if DMA is coherent by default for OF devices
++	bool
 +
-+				opcode = opcode.u.esc->high[index];
-+			} else {
- 				opcode = opcode.u.esc->op[(ctxt->modrm >> 3) & 7];
-+			}
- 			break;
- 		default:
- 			return EMULATION_FAILED;
+ endmenu # OF
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -812,12 +812,16 @@ EXPORT_SYMBOL_GPL(of_dma_get_range);
+  * @np:	device node
+  *
+  * It returns true if "dma-coherent" property was found
+- * for this device in DT.
++ * for this device in the DT, or if DMA is coherent by
++ * default for OF devices on the current platform.
+  */
+ bool of_dma_is_coherent(struct device_node *np)
+ {
+ 	struct device_node *node = of_node_get(np);
+ 
++	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
++		return true;
++
+ 	while (node) {
+ 		if (of_property_read_bool(node, "dma-coherent")) {
+ 			of_node_put(node);
 
