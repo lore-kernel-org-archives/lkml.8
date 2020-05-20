@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C73C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D60C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 402A7205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CBA207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgETOY1 (ORCPT
+        id S1728229AbgETOYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:24:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33196 "EHLO
+        Wed, 20 May 2020 10:24:23 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33226 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727076AbgETOW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727097AbgETOW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-00036r-Mb; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPc0-00037U-0h; Wed, 20 May 2020 15:22:24 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DT0-Uj; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbx-007DWi-SJ; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Jun Nakajima" <jun.nakajima@intel.com>
-Date:   Wed, 20 May 2020 15:14:26 +0100
-Message-ID: <lsq.1589984008.288512231@decadent.org.uk>
+        "Benjamin Coddington" <bcodding@redhat.com>,
+        "Trond Myklebust" <trondmy@gmail.com>,
+        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        "Anna Schumaker" <Anna.Schumaker@Netapp.com>
+Date:   Wed, 20 May 2020 15:15:03 +0100
+Message-ID: <lsq.1589984009.495233844@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 58/99] KVM: x86: Don't let userspace set
- host-reserved cr4 bits
+Subject: [PATCH 3.16 95/99] NFS: Fix memory leaks and corruption in readdir
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,114 +57,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit b11306b53b2540c6ba068c4deddb6a17d9f8d95b upstream.
+commit 4b310319c6a8ce708f1033d57145e2aa027a883c upstream.
 
-Calculate the host-reserved cr4 bits at runtime based on the system's
-capabilities (using logic similar to __do_cpuid_func()), and use the
-dynamically generated mask for the reserved bit check in kvm_set_cr4()
-instead using of the static CR4_RESERVED_BITS define.  This prevents
-userspace from "enabling" features in cr4 that are not supported by the
-system, e.g. by ignoring KVM_GET_SUPPORTED_CPUID and specifying a bogus
-CPUID for the vCPU.
+nfs_readdir_xdr_to_array() must not exit without having initialised
+the array, so that the page cache deletion routines can safely
+call nfs_readdir_clear_array().
+Furthermore, we should ensure that if we exit nfs_readdir_filler()
+with an error, we free up any page contents to prevent a leak
+if we try to fill the page again.
 
-Allowing userspace to set unsupported bits in cr4 can lead to a variety
-of undesirable behavior, e.g. failed VM-Enter, and in general increases
-KVM's attack surface.  A crafty userspace can even abuse CR4.LA57 to
-induce an unchecked #GP on a WRMSR.
-
-On a platform without LA57 support:
-
-  KVM_SET_CPUID2 // CPUID_7_0_ECX.LA57 = 1
-  KVM_SET_SREGS  // CR4.LA57 = 1
-  KVM_SET_MSRS   // KERNEL_GS_BASE = 0x0004000000000000
-  KVM_RUN
-
-leads to a #GP when writing KERNEL_GS_BASE into hardware:
-
-  unchecked MSR access error: WRMSR to 0xc0000102 (tried to write 0x0004000000000000)
-  at rIP: 0xffffffffa00f239a (vmx_prepare_switch_to_guest+0x10a/0x1d0 [kvm_intel])
-  Call Trace:
-   kvm_arch_vcpu_ioctl_run+0x671/0x1c70 [kvm]
-   kvm_vcpu_ioctl+0x36b/0x5d0 [kvm]
-   do_vfs_ioctl+0xa1/0x620
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7fc08133bf47
-
-Note, the above sequence fails VM-Enter due to invalid guest state.
-Userspace can allow VM-Enter to succeed (after the WRMSR #GP) by adding
-a KVM_SET_SREGS w/ CR4.LA57=0 after KVM_SET_MSRS, in which case KVM will
-technically leak the host's KERNEL_GS_BASE into the guest.  But, as
-KERNEL_GS_BASE is a userspace-defined value/address, the leak is largely
-benign as a malicious userspace would simply be exposing its own data to
-the guest, and attacking a benevolent userspace would require multiple
-bugs in the userspace VMM.
-
-Cc: Jun Nakajima <jun.nakajima@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16:
- - PKE, LA57, and UMIP are totally unsupported and already included in
-   CR4_RESERVED_BITS
- - Adjust context]
+Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -82,6 +82,8 @@ u64 __read_mostly efer_reserved_bits = ~
- static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
- #endif
+ fs/nfs/dir.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -169,6 +169,17 @@ typedef struct {
+ 	unsigned int	eof:1;
+ } nfs_readdir_descriptor_t;
  
-+static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
-+
- #define VM_STAT(x) offsetof(struct kvm, stat.x), KVM_STAT_VM
- #define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU
- 
-@@ -660,13 +662,32 @@ int kvm_set_xcr(struct kvm_vcpu *vcpu, u
- }
- EXPORT_SYMBOL_GPL(kvm_set_xcr);
- 
-+static u64 kvm_host_cr4_reserved_bits(struct cpuinfo_x86 *c)
++static
++void nfs_readdir_init_array(struct page *page)
 +{
-+	u64 reserved_bits = CR4_RESERVED_BITS;
++	struct nfs_cache_array *array;
 +
-+	if (!cpu_has(c, X86_FEATURE_XSAVE))
-+		reserved_bits |= X86_CR4_OSXSAVE;
-+
-+	if (!cpu_has(c, X86_FEATURE_SMEP))
-+		reserved_bits |= X86_CR4_SMEP;
-+
-+	if (!cpu_has(c, X86_FEATURE_SMAP))
-+		reserved_bits |= X86_CR4_SMAP;
-+
-+	if (!cpu_has(c, X86_FEATURE_FSGSBASE))
-+		reserved_bits |= X86_CR4_FSGSBASE;
-+
-+	return reserved_bits;
++	array = kmap_atomic(page);
++	memset(array, 0, sizeof(struct nfs_cache_array));
++	array->eof_index = -1;
++	kunmap_atomic(array);
 +}
 +
- int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	unsigned long old_cr4 = kvm_read_cr4(vcpu);
- 	unsigned long pdptr_bits = X86_CR4_PGE | X86_CR4_PSE | X86_CR4_PAE |
- 				   X86_CR4_SMEP | X86_CR4_SMAP;
+ /*
+  * we are freeing strings created by nfs_add_to_readdir_array()
+  */
+@@ -181,6 +192,7 @@ void nfs_readdir_clear_array(struct page
+ 	array = kmap_atomic(page);
+ 	for (i = 0; i < array->size; i++)
+ 		kfree(array->array[i].string.name);
++	array->size = 0;
+ 	kunmap_atomic(array);
+ }
  
--	if (cr4 & CR4_RESERVED_BITS)
-+	if (cr4 & cr4_reserved_bits)
- 		return 1;
+@@ -580,6 +592,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir
+ 	int status = -ENOMEM;
+ 	unsigned int array_size = ARRAY_SIZE(pages);
  
- 	if (!guest_cpuid_has_xsave(vcpu) && (cr4 & X86_CR4_OSXSAVE))
-@@ -7220,6 +7241,8 @@ int kvm_arch_hardware_setup(void)
- 	if (r != 0)
- 		return r;
- 
-+	cr4_reserved_bits = kvm_host_cr4_reserved_bits(&boot_cpu_data);
++	nfs_readdir_init_array(page);
 +
- 	kvm_init_msr_list();
+ 	entry.prev_cookie = 0;
+ 	entry.cookie = desc->last_cookie;
+ 	entry.eof = 0;
+@@ -596,8 +610,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir
+ 	}
+ 
+ 	array = kmap(page);
+-	memset(array, 0, sizeof(struct nfs_cache_array));
+-	array->eof_index = -1;
+ 
+ 	status = nfs_readdir_large_page(pages, array_size);
+ 	if (status < 0)
+@@ -651,6 +663,7 @@ int nfs_readdir_filler(nfs_readdir_descr
+ 	unlock_page(page);
  	return 0;
+  error:
++	nfs_readdir_clear_array(page);
+ 	unlock_page(page);
+ 	return ret;
  }
 
