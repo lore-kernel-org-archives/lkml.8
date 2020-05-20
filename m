@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B34207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DFB2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hMWXYIFb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="beG3vlgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgETJkU (ORCPT
+        id S1726846AbgETJkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:40:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:15335 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726832AbgETJkS (ORCPT
+        Wed, 20 May 2020 05:40:19 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21941 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726821AbgETJkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 05:40:18 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589967618; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1589967617; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=QvCnssNRyOaZbTIUEafb9UtFFPJxVfsGVnlMsbWACNk=; b=hMWXYIFbJe1nR1v8vh2PtNIA3HL1RMO2UcdfPb2pB9+5KW5ecB1lnIL/MM0oYLG+i+OJNNWF
- 82CE8/lQ+rofaC5tjjKcmTt/5hYYaIzWqHkRJnav5jFcIT5+u5OeHPr3AcO9F7tauD60x5Zy
- PTs/ojEG5fQG5B9YCbC138jkJfc=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=fdobeCzI/CD22Nkbsx1/8R3yNurmmcLKoiifkI1dTwM=; b=beG3vlgHoOs7vO/gZPC6vIaB9XR3JyYvfEgp9BD+1UBe2yfn1YT71QXmMh0E+0jrJtgjA+HY
+ kdd8A/bgxqA9oCAVIMIElAhaFqkLwbM2nVrwvmJWgBZ74ODQgPuMZ+g9p48qyvqrwiKG1tHY
+ OChHulskT9l1EI8JhJ1RMlxIPoc=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec4faf3.7fa94ab3d848-smtp-out-n03;
- Wed, 20 May 2020 09:40:03 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ec4faf7.7f8ac7368148-smtp-out-n01;
+ Wed, 20 May 2020 09:40:07 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 976B0C433C8; Wed, 20 May 2020 09:40:02 +0000 (UTC)
+        id A8073C433CA; Wed, 20 May 2020 09:40:06 +0000 (UTC)
 Received: from aneelaka-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: aneela)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6D30C433C9;
-        Wed, 20 May 2020 09:39:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6D30C433C9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D43DC43387;
+        Wed, 20 May 2020 09:40:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D43DC43387
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
 From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
 To:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
         sricharan@codeaurora.org
 Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>
-Subject: [PATCH V6 2/5] rpmsg: Guard against null endpoint ops in destroy
-Date:   Wed, 20 May 2020 15:09:36 +0530
-Message-Id: <1589967579-15559-3-git-send-email-aneela@codeaurora.org>
+        Arun Kumar Neelakantam <aneela@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
+Subject: [PATCH V6 3/5] rpmsg: glink: Add support for rpmsg glink chrdev
+Date:   Wed, 20 May 2020 15:09:37 +0530
+Message-Id: <1589967579-15559-4-git-send-email-aneela@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589967579-15559-1-git-send-email-aneela@codeaurora.org>
 References: <1589967579-15559-1-git-send-email-aneela@codeaurora.org>
@@ -63,29 +65,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chris Lew <clew@codeaurora.org>
 
-In RPMSG GLINK the chrdev device will allocate an ept as part of the
-rpdev creation. This device will not register endpoint ops even though
-it has an allocated ept. Protect against the case where the device is
-being destroyed.
+RPMSG provides a char device interface to userspace. Probe the rpmsg
+chrdev channel to enable the rpmsg_ctrl device creation on glink
+transports.
 
 Signed-off-by: Chris Lew <clew@codeaurora.org>
 Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
 ---
- drivers/rpmsg/rpmsg_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rpmsg/qcom_glink_native.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index e330ec4..d6c3275 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -81,7 +81,7 @@ EXPORT_SYMBOL(rpmsg_create_ept);
-  */
- void rpmsg_destroy_ept(struct rpmsg_endpoint *ept)
- {
--	if (ept)
-+	if (ept && ept->ops)
- 		ept->ops->destroy_ept(ept);
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index ea2f33f..b85433c 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -1574,6 +1574,40 @@ static void qcom_glink_cancel_rx_work(struct qcom_glink *glink)
+ 		kfree(dcmd);
  }
- EXPORT_SYMBOL(rpmsg_destroy_ept);
+ 
++static void qcom_glink_device_release(struct device *dev)
++{
++	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
++	struct glink_channel *channel = to_glink_channel(rpdev->ept);
++
++	/* Release qcom_glink_alloc_channel() reference */
++	kref_put(&channel->refcount, qcom_glink_channel_release);
++	kfree(rpdev);
++}
++
++static int qcom_glink_create_chrdev(struct qcom_glink *glink)
++{
++	struct rpmsg_device *rpdev;
++	struct glink_channel *channel;
++
++	rpdev = kzalloc(sizeof(*rpdev), GFP_KERNEL);
++	if (!rpdev)
++		return -ENOMEM;
++
++	channel = qcom_glink_alloc_channel(glink, "rpmsg_chrdev");
++	if (IS_ERR(channel)) {
++		kfree(rpdev);
++		return PTR_ERR(channel);
++	}
++	channel->rpdev = rpdev;
++
++	rpdev->ept = &channel->ept;
++	rpdev->ops = &glink_device_ops;
++	rpdev->dev.parent = glink->dev;
++	rpdev->dev.release = qcom_glink_device_release;
++
++	return rpmsg_chrdev_register_device(rpdev);
++}
++
+ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 					   unsigned long features,
+ 					   struct qcom_glink_pipe *rx,
+@@ -1633,6 +1667,10 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
++	ret = qcom_glink_create_chrdev(glink);
++	if (ret)
++		dev_err(glink->dev, "failed to register chrdev\n");
++
+ 	return glink;
+ }
+ EXPORT_SYMBOL_GPL(qcom_glink_native_probe);
 -- 
 2.7.4
