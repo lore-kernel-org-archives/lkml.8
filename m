@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD4FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05EAC207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6372207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgETOYk (ORCPT
+        id S1728284AbgETOYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:24:40 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33160 "EHLO
+        Wed, 20 May 2020 10:24:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33144 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727062AbgETOW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727067AbgETOW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbz-00037H-Sy; Wed, 20 May 2020 15:22:23 +0100
+        id 1jbPby-00037i-HS; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-007DVV-7p; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbw-007DUZ-KK; Wed, 20 May 2020 15:22:20 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marios Pomonis" <pomonis@google.com>,
-        "Nick Finco" <nifi@google.com>,
-        "Jim Mattson" <jmattson@google.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Andrew Honig" <ahonig@google.com>
-Date:   Wed, 20 May 2020 15:14:50 +0100
-Message-ID: <lsq.1589984009.180421738@decadent.org.uk>
+        "Jan Kara" <jack@suse.cz>, "zhangyi (F)" <yi.zhang@huawei.com>,
+        "Theodore Ts'o" <tytso@mit.edu>
+Date:   Wed, 20 May 2020 15:14:39 +0100
+Message-ID: <lsq.1589984009.862989987@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 82/99] KVM: x86: Protect MSR-based index computations
- from Spectre-v1/L1TF attacks in x86.c
+Subject: [PATCH 3.16 71/99] jbd2: switch to use jbd2_journal_abort() when
+ failed to submit the commit record
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,57 +56,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marios Pomonis <pomonis@google.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-commit 6ec4c5eee1750d5d17951c4e1960d953376a0dda upstream.
+commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in set_msr_mce() and
-get_msr_mce().
-Both functions contain index computations based on the
-(attacker-controlled) MSR number.
+We invoke jbd2_journal_abort() to abort the journal and record errno
+in the jbd2 superblock when committing journal transaction besides the
+failure on submitting the commit record. But there is no need for the
+case and we can also invoke jbd2_journal_abort() instead of
+__jbd2_journal_abort_hard().
 
-Fixes: 890ca9aefa78 ("KVM: Add MCE support")
-
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: Add #include <linux/nospec.h>]
+Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -48,6 +48,7 @@
- #include <linux/pci.h>
- #include <linux/timekeeper_internal.h>
- #include <linux/pvclock_gtod.h>
-+#include <linux/nospec.h>
- #include <trace/events/kvm.h>
+ fs/jbd2/commit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -802,7 +802,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						 &cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
+ 	}
  
- #define CREATE_TRACE_POINTS
-@@ -1916,7 +1917,10 @@ static int set_msr_mce(struct kvm_vcpu *
- 	default:
- 		if (msr >= MSR_IA32_MC0_CTL &&
- 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
--			u32 offset = msr - MSR_IA32_MC0_CTL;
-+			u32 offset = array_index_nospec(
-+				msr - MSR_IA32_MC0_CTL,
-+				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
-+
- 			/* only 0 or all 1s can be written to IA32_MCi_CTL
- 			 * some Linux kernels though clear bit 10 in bank 4 to
- 			 * workaround a BIOS/GART TBL issue on AMD K8s, ignore
-@@ -2443,7 +2447,10 @@ static int get_msr_mce(struct kvm_vcpu *
- 	default:
- 		if (msr >= MSR_IA32_MC0_CTL &&
- 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
--			u32 offset = msr - MSR_IA32_MC0_CTL;
-+			u32 offset = array_index_nospec(
-+				msr - MSR_IA32_MC0_CTL,
-+				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
-+
- 			data = vcpu->arch.mce_banks[offset];
- 			break;
- 		}
+ 	blk_finish_plug(&plug);
+@@ -894,7 +894,7 @@ start_journal_io:
+ 		err = journal_submit_commit_record(journal, commit_transaction,
+ 						&cbh, crc32_sum);
+ 		if (err)
+-			__jbd2_journal_abort_hard(journal);
++			jbd2_journal_abort(journal, err);
+ 	}
+ 	if (cbh)
+ 		err = journal_wait_on_commit_record(journal, cbh);
 
