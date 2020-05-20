@@ -2,92 +2,110 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E115206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:08:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xbrxSUuT"
+	by mail.kernel.org (Postfix) with ESMTP id 33BAC2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgETQIv (ORCPT
+        id S1726957AbgETQJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgETQIv (ORCPT
+        Wed, 20 May 2020 12:09:18 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:60054 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETQJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:08:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22CEC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:08:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j5so3761572wrq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:08:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=b0xYWh+w/F4qTSH0QTclL7MS2e+5mKVzQgF0NwX1VdA=;
-        b=xbrxSUuTV4VsNXGHpyNiBREQh4CjaWtB9BN3dY9RtRsbQ3q6Wc1c9zuirNc4ZD5/nT
-         Na+uOjpDr1J/5SJkZVH7w3a/7jxWGFfeFYXRkQlbsJuSC+swTEBM7Mihk9eJ9vk8eE1F
-         rmg5VkyVcsfs5z09UB0WfHUjghVCddAtVvIF73rqjLcOJB0vkmJ/hNqUIM5K9bHYtYB2
-         Qk4fB9WSOL3xDfNiYR6N7lAnv/yv1Jpgq+z/7mRt5cEmMc9CjeaaX+kHeO8sPiXuI/BX
-         XKbg13F2pI5vgTw1ZgCCUDSxyFh3ptYp3UEMYTYaVhykHgrjuTAfikxoac2kbplmLjth
-         OYDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b0xYWh+w/F4qTSH0QTclL7MS2e+5mKVzQgF0NwX1VdA=;
-        b=Kdc8jqbsv0+yqtN5UaPWHIxXb53lFuoIHQfZrAahf7tEVNy4VLnE46B3OVvCSkdNfj
-         HGscsKdo9Y7kb+OJce65NjwG4JKnkiI53bVyCGwA2OnpArRnyvooRrvtXGxyzeyXHOsU
-         CZOdmSO1pjzultxOu2vRI/oq0LVzJyhzIlYcK5gbcbQ3T2rfq1jzsKLPLZgUTKQYDnc/
-         zQ1bie+ehwswf+QFVZajb0bPnnfyf1c64dOvEDhk22U00M8GnyHnFNYwLlYi6yxPVCeQ
-         OuyIfyYMCSvkufbEMdkNfQDyYubbCowdT1BcQst5iP55/rfCIuXoLsTZUybYAPmLGI2E
-         6Ctw==
-X-Gm-Message-State: AOAM533QhFGDo+cBUoj5Ts82InEeoIa7Z7E01LWb4sKMaecYLweJgri6
-        o6CGIs2SaZctl4mqzToYv4hQzQ==
-X-Google-Smtp-Source: ABdhPJz93P3tc5SPc/AYro69bXA2d3D8ewi0B2Ij2Ds+zzrwsQ5omOgXlzrtQVfEBTM0udRUP66uEQ==
-X-Received: by 2002:a5d:5751:: with SMTP id q17mr4842701wrw.106.1589990929733;
-        Wed, 20 May 2020 09:08:49 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id z11sm3297731wro.48.2020.05.20.09.08.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:08:49 -0700 (PDT)
-Date:   Wed, 20 May 2020 17:08:47 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>, sumit.garg@linaro.org,
-        Chuhong Yuan <hslester96@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kdb: Cleanup math with KDB_CMD_HISTORY_COUNT
-Message-ID: <20200520160847.dpvut45zjd5msz6w@holly.lan>
-References: <20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid>
+        Wed, 20 May 2020 12:09:17 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbRHM-0002da-JB; Wed, 20 May 2020 10:09:12 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbRHL-00070A-LM; Wed, 20 May 2020 10:09:12 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Rob Landley <rob@landley.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
+        <adaced72-d757-e3e4-cfeb-5512533d0aa5@landley.net>
+Date:   Wed, 20 May 2020 11:05:29 -0500
+In-Reply-To: <adaced72-d757-e3e4-cfeb-5512533d0aa5@landley.net> (Rob Landley's
+        message of "Tue, 19 May 2020 16:59:06 -0500")
+Message-ID: <874ksaioc6.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507161125.1.I2cce9ac66e141230c3644b8174b6c15d4e769232@changeid>
+Content-Type: text/plain
+X-XM-SPF: eid=1jbRHL-00070A-LM;;;mid=<874ksaioc6.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19NAyurH9iGPP/ahHUMxq6hKHYaPv0QJ5Y=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 04:11:46PM -0700, Douglas Anderson wrote:
-> From code inspection the math in handle_ctrl_cmd() looks super sketchy
-> because it subjects -1 from cmdptr and then does a "%
-> KDB_CMD_HISTORY_COUNT".  It turns out that this code works because
-> "cmdptr" is unsigned and KDB_CMD_HISTORY_COUNT is a nice power of 2.
-> Let's make this a little less sketchy.
-> 
-> This patch should be a no-op.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Rob Landley <rob@landley.net> writes:
 
-Applied, thanks!
+> On 5/18/20 7:33 PM, Eric W. Biederman wrote:
+>> 
+>> Most of the support for passing the file descriptor of an executable
+>> to an interpreter already lives in the generic code and in binfmt_elf.
+>> Rework the fields in binfmt_elf that deal with executable file
+>> descriptor passing to make executable file descriptor passing a first
+>> class concept.
+>
+> I was reading this to try to figure out how to do execve(NULL, argv[], envp) to
+> re-exec self after a vfork() in a chroot with no /proc, and hit the most trivial
+> quibble ever:
+
+We have /proc/self/exe today.  If I understand you correctly you would
+like to do the equivalent of 'execve("/proc/self/exe", argv[], envp[])'
+without having proc mounted.
+
+The file descriptor is stored in mm->exe_file.
+
+Probably the most straight forward implementation is to allow
+execveat(AT_EXE_FILE, ...).
+
+You can look at binfmt_misc for how to reopen an open file descriptor.
+
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1323,7 +1323,10 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>  	 */
+>>  	set_mm_exe_file(bprm->mm, bprm->file);
+>>  
+>> +	/* If the binary is not readable than enforce mm->dumpable=0 */
+>
+> then
+
+It took me a minute yes good catch.
+
+Eric
