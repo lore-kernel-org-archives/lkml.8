@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4342BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD78207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213E8207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgETO0s (ORCPT
+        id S1728056AbgETO0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:26:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33066 "EHLO
+        Wed, 20 May 2020 10:26:35 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32986 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727033AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726993AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-00037W-GY; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPbw-00035i-7X; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-007DWS-Ne; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbv-007DRm-Hg; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
-        "Masahiro Yamada" <masahiroy@kernel.org>
-Date:   Wed, 20 May 2020 15:15:01 +0100
-Message-ID: <lsq.1589984009.174312112@decadent.org.uk>
+        "Felipe Balbi" <balbi@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+Date:   Wed, 20 May 2020 15:14:17 +0100
+Message-ID: <lsq.1589984008.506380468@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 93/99] kconfig: fix broken dependency in
- randconfig-generated .config
+Subject: [PATCH 3.16 49/99] usb: gadget: f_ncm: Use atomic_t to track
+ in-flight request
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,40 +57,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-commit c8fb7d7e48d11520ad24808cfce7afb7b9c9f798 upstream.
+commit 5b24c28cfe136597dc3913e1c00b119307a20c7e upstream.
 
-Running randconfig on arm64 using KCONFIG_SEED=0x40C5E904 (e.g. on v5.5)
-produces the .config with CONFIG_EFI=y and CONFIG_CPU_BIG_ENDIAN=y,
-which does not meet the !CONFIG_CPU_BIG_ENDIAN dependency.
+Currently ncm->notify_req is used to flag when a request is in-flight.
+ncm->notify_req is set to NULL and when a request completes it is
+subsequently reset.
 
-This is because the user choice for CONFIG_CPU_LITTLE_ENDIAN vs
-CONFIG_CPU_BIG_ENDIAN is set by randomize_choice_values() after the
-value of CONFIG_EFI is calculated.
+This is fundamentally buggy in that the unbind logic of the NCM driver will
+unconditionally free ncm->notify_req leading to a NULL pointer dereference.
 
-When this happens, the has_changed flag should be set.
-
-Currently, it takes the result from the last iteration. It should
-accumulate all the results of the loop.
-
-Fixes: 3b9a19e08960 ("kconfig: loop as long as we changed some symbols in randconfig")
-Reported-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function interface with backward compatibility")
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- scripts/kconfig/confdata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/f_ncm.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -1231,7 +1231,7 @@ bool conf_set_all_new_symbols(enum conf_
+--- a/drivers/usb/gadget/f_ncm.c
++++ b/drivers/usb/gadget/f_ncm.c
+@@ -57,6 +57,7 @@ struct f_ncm {
+ 	struct usb_ep			*notify;
+ 	struct usb_request		*notify_req;
+ 	u8				notify_state;
++	atomic_t			notify_count;
+ 	bool				is_open;
  
- 		sym_calc_value(csym);
- 		if (mode == def_random)
--			has_changed = randomize_choice_values(csym);
-+			has_changed |= randomize_choice_values(csym);
- 		else {
- 			set_all_choice_values(csym);
- 			has_changed = true;
+ 	const struct ndp_parser_opts	*parser_opts;
+@@ -460,7 +461,7 @@ static void ncm_do_notify(struct f_ncm *
+ 	int				status;
+ 
+ 	/* notification already in flight? */
+-	if (!req)
++	if (atomic_read(&ncm->notify_count))
+ 		return;
+ 
+ 	event = req->buf;
+@@ -500,7 +501,8 @@ static void ncm_do_notify(struct f_ncm *
+ 	event->bmRequestType = 0xA1;
+ 	event->wIndex = cpu_to_le16(ncm->ctrl_id);
+ 
+-	ncm->notify_req = NULL;
++	atomic_inc(&ncm->notify_count);
++
+ 	/*
+ 	 * In double buffering if there is a space in FIFO,
+ 	 * completion callback can be called right after the call,
+@@ -510,7 +512,7 @@ static void ncm_do_notify(struct f_ncm *
+ 	status = usb_ep_queue(ncm->notify, req, GFP_ATOMIC);
+ 	spin_lock(&ncm->lock);
+ 	if (status < 0) {
+-		ncm->notify_req = req;
++		atomic_dec(&ncm->notify_count);
+ 		DBG(cdev, "notify --> %d\n", status);
+ 	}
+ }
+@@ -545,17 +547,19 @@ static void ncm_notify_complete(struct u
+ 	case 0:
+ 		VDBG(cdev, "Notification %02x sent\n",
+ 		     event->bNotificationType);
++		atomic_dec(&ncm->notify_count);
+ 		break;
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
++		atomic_set(&ncm->notify_count, 0);
+ 		ncm->notify_state = NCM_NOTIFY_NONE;
+ 		break;
+ 	default:
+ 		DBG(cdev, "event %02x --> %d\n",
+ 			event->bNotificationType, req->status);
++		atomic_dec(&ncm->notify_count);
+ 		break;
+ 	}
+-	ncm->notify_req = req;
+ 	ncm_do_notify(ncm);
+ 	spin_unlock(&ncm->lock);
+ }
+@@ -1382,6 +1386,11 @@ static void ncm_unbind(struct usb_config
+ 
+ 	usb_free_all_descriptors(f);
+ 
++	if (atomic_read(&ncm->notify_count)) {
++		usb_ep_dequeue(ncm->notify, ncm->notify_req);
++		atomic_set(&ncm->notify_count, 0);
++	}
++
+ 	kfree(ncm->notify_req->buf);
+ 	usb_ep_free_request(ncm->notify, ncm->notify_req);
+ }
 
