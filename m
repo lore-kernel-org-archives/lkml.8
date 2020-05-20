@@ -2,113 +2,173 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F67C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB43C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8653F207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589965534;
-	bh=uokiF6PDW584iXV/J9CVV6qQVSEUGNpLUQwcVT5E3R8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KdMFlO8E4OMiNGWfmzObOP19RHqkBKi+UqameySnenWa6yE5bxC8iS97Jn1aSDOpW
-	 eqGIpT6TjWsc6RP3pG5pTqukhpJ3v4bbPYqxiQWwxVOtZG2fhEgLkauq6LQFB7q5CM
-	 Zfrgro0qDTLp+2a5bV1IYb06xOPql8Fcfwq4M9OI=
+	by mail.kernel.org (Postfix) with ESMTP id EA519206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gsg+Cs7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgETJFd (ORCPT
+        id S1726747AbgETJFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 20 May 2020 05:05:33 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37907 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgETJFb (ORCPT
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgETJFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:05:31 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e1so2330019wrt.5;
-        Wed, 20 May 2020 02:05:29 -0700 (PDT)
+        Wed, 20 May 2020 05:05:30 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2AABC061A0E;
+        Wed, 20 May 2020 02:05:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u5so1137513pgn.5;
+        Wed, 20 May 2020 02:05:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NRHzvHn1j06kdZmHKeAQCTbbxh0DL1ErcnMNWhv1xvs=;
+        b=Gsg+Cs7gs+30dP9JnggONTcLAOA8wf6wkvlxhgkxRKeWPc4dCJuLIQvfMppzpJGK2H
+         rVQNkkzIee+ex5QQ5Qw2cGTnktiGQWvsC4Jz2fljhX+WuIi66GjGp2OuQEQeR+FlaSPZ
+         q+BbtMFA7VwYqH3HAa3aPa+8rnPNB2U9srEu/I2xieOW9EDOlj0tIURrC+khFZNB8iXS
+         KcCTwx30Fxo0gWmwEJ6colhr1fDGM6hsZ+DhE+qoBLc0lrP9kCFFRuhGZV0OxYmDdWZl
+         dBtdlFZ81XLEVHYJ9da5482zQpD/x4Uw2B3ICaiE/iTvFq3PEQXl8JLmn3qEtIMy19Q0
+         foGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vtfSRZ5+Mpa+t2H3i2M/rGbjqAT1nghsWbPTQRPMsMw=;
-        b=d5Eoz5FdaSeRO5kqfNEDtNAH/dYSo1Vg0tW6dExIv5PUNWaqXVDDjJVhHGK9NfcLZM
-         C5gN6wXUF7pE5kZZvPAZ6LoIs3TxdVfZ8EngHnTiPwHgc2qBSVvQbDIro8iY+lD7+LAx
-         iXA3tCQcQnKlCeMwjH/Qgt0PeXTIQizifTROIc/7xN6jFJkEr7Pw+6ZabIhWtK4w9Hjw
-         PI49Vb+w+KG+hFbL65QcU4VjxfsgWZVfOKFVrvOQUC7MtiNlDzQw8JdfEcH7ZhLLFCfs
-         INNjdEgYup2HgsOw/mWfciaSVlG5AjBImIwMDNz3l/oxbTIAZTUwXWg55QXQTm1au8kq
-         Z6gg==
-X-Gm-Message-State: AOAM530QkVX6cwhOZElxHUqmZxu7HRg0sIce4TdH8yoeMUGzHL36I8Y+
-        FoVw/QOiZ8UCBsQKDIjC2CcNf/84
-X-Google-Smtp-Source: ABdhPJyzoz8h8MG0oOus3GEacF8QkZaDE2L2XQMW4XNvl8vXP8FFFDpG+5YfhZ9nfMMMlhhuemWlHA==
-X-Received: by 2002:a5d:4e81:: with SMTP id e1mr3253024wru.83.1589965528830;
-        Wed, 20 May 2020 02:05:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n9sm2526625wmj.5.2020.05.20.02.05.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 02:05:28 -0700 (PDT)
-Date:   Wed, 20 May 2020 09:05:26 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH] x86/Hyper-V: Support for free page reporting
-Message-ID: <20200520090526.un3zvgpciy6ptta7@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
- <87ftbvt21h.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NRHzvHn1j06kdZmHKeAQCTbbxh0DL1ErcnMNWhv1xvs=;
+        b=fUXB3qlwI6j6VxC2jzeMW/zNAk3XkHC69XeeHFyOTGuRzLZ0smLzg2t3JgIArK44OV
+         u2KJsyyHvJL2KwM6fVhgbWbHmnujDwI0Bfqgoj7+5z0iuqgYNyAfiFyi+fK4JXt41DZN
+         laf+jrWYd75LRFtpAsba1DNr6Yt1d/l63uJS22Xvovzv5pIlW1GZK8JQgeT+wMUOOWFs
+         gSSPWhbLV9ZjotbjxFbeJZZFffXiVT6CoEunMc1OJtIBsoLi3hOlzfv5JbCu0sc457wl
+         ptV+5zkAhsG4yG0pa4yrCi7KJB/c1X4PT40xw3dq6tN7NVG3FFxNAQCcIzfrERMypaJZ
+         kgqQ==
+X-Gm-Message-State: AOAM530xTxO3KopSeu/gGPeWQAJ3qIMk/2P4yLvc59RR7m9WCIl+Ck4j
+        9UV2G+e0vH2fZfUnIVCvPN4sbqw16YI3O2/U1Iw=
+X-Google-Smtp-Source: ABdhPJxolDQZpZlKXESKruYZArLxtcIc7XMvXQgU1n42ugJ2tJki5LhCBCCTsnz9Yqutpw7a9rnVg+kwZMjn3W6rhC8=
+X-Received: by 2002:a63:7b4b:: with SMTP id k11mr3147445pgn.411.1589965530404;
+ Wed, 20 May 2020 02:05:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftbvt21h.fsf@vitty.brq.redhat.com>
-User-Agent: NeoMutt/20180716
+References: <20200520083821.9602-1-gengcixi@gmail.com> <20200520085111.GE2837844@kroah.com>
+In-Reply-To: <20200520085111.GE2837844@kroah.com>
+From:   Cixi Geng <gengcixi@gmail.com>
+Date:   Wed, 20 May 2020 17:04:54 +0800
+Message-ID: <CAF12kFsxiBC3sqvHbp1i5HLXxDnvM2ApFSKGpu-hjGW9LBhd0A@mail.gmail.com>
+Subject: Re: [RFC][PATCH V2] GCOV: profile by modules
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     oberpar@linux.ibm.com, linux-serial@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        jslaby@suse.com, Orson Zhai <orsonzhai@gmail.com>,
+        zhang.lyra@gmail.com, Cixi Geng <cixi.geng1@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:59:22AM +0200, Vitaly Kuznetsov wrote:
-> Sunil Muthuswamy <sunilmut@microsoft.com> writes:
-[...]
-> > +EXPORT_SYMBOL_GPL(hv_query_ext_cap);
-> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> > index ebf34c7bc8bc..2de3f692c8bf 100644
-> > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > @@ -224,11 +224,13 @@ static void __init ms_hyperv_init_platform(void)
-> >  	 * Extract the features and hints
-> >  	 */
-> >  	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
-> > +	ms_hyperv.b_features = cpuid_ebx(HYPERV_CPUID_FEATURES);
-> >  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
-> >  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
-> >  
-> > -	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-> > -		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
-> > +	pr_info("Hyper-V: features 0x%x, additional features: 0x%x, hints 0x%x, misc 0x%x\n",
-> > +		ms_hyperv.features, ms_hyperv.b_features, ms_hyperv.hints,
-> > +		ms_hyperv.misc_features);
-> 
-> HYPERV_CPUID_FEATURES(0x40000003) EAX and EBX correspond to Partition
-> Privilege Flags (TLFS), I'd suggest to take the opportunity and rename
-> this to something like 'privilege flags low=0x%x high=0x%x'.
-> 
-> Also, I don't quite like 'ms_hyperv.b_features' as I'll always have to
-> look at what it's being assigned to understand what it holds. I'd even
-> suggest to rename ms_hyperv.features to ms_hyperv.priv_low and
-> ms_hyperv.b_features tp ms_hyperv.priv_high. Or maybe even better, pack
-> them to the same 'u64 ms_hyperv.privileges'.
+Thank you for guidances, I will fix error and upload new patch
 
-+1 for this. :-)
-
-Wei.
+Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2020=E5=B9=B45=E6=9C=8820=E6=
+=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=884:51=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, May 20, 2020 at 04:38:21PM +0800, gengcixi@gmail.com wrote:
+> > From: Cixi Geng <cixi.geng1@unisoc.com>
+> >
+> > ---
+> > Replace symbol GCOV_PROFILE_MODULES with GCOV_PROFILE_PREREQS
+> > ---
+> > The CONFIG_GCOV_PROFILE_ALL will compile kernel by profiling entire
+> > kernel which will lead to kernel run slower.Use GCOV_PROFILE_PREREQS
+> > to control part of the kernel modules to open gcov.
+> >
+> > Only add SERIAL_GCOV for an example.
+> >
+> > Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+> > ---
+> >  drivers/tty/serial/Kconfig  |  6 ++++++
+> >  drivers/tty/serial/Makefile |  1 +
+> >  kernel/gcov/Kconfig         | 14 ++++++++++++++
+> >  3 files changed, 21 insertions(+)
+> >
+> > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> > index adf9e80e7dc9..964df1a2989c 100644
+> > --- a/drivers/tty/serial/Kconfig
+> > +++ b/drivers/tty/serial/Kconfig
+> > @@ -1566,3 +1566,9 @@ endmenu
+> >
+> >  config SERIAL_MCTRL_GPIO
+> >       tristate
+> > +
+> > +config SERIAL_GCOV
+> > +       bool "open gcov for serial"
+>
+> What do you mean by "open"?  And Kconfig entries are usually Upper Case" =
+:)
+>
+> > +       depends on GCOV_PROFILE_PREREQS
+> > +       help
+> > +         Say Y here to enable gcov in serial.
+>
+> I think we need more text here.
+>
+>
+> > diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+> > index d056ee6cca33..7be1202286d2 100644
+> > --- a/drivers/tty/serial/Makefile
+> > +++ b/drivers/tty/serial/Makefile
+> > @@ -2,6 +2,7 @@
+> >  #
+> >  # Makefile for the kernel serial device drivers.
+> >  #
+> > +GCOV_PROFILE :=3D $(CONFIG_SERIAL_GCOV)
+> >
+> >  obj-$(CONFIG_SERIAL_CORE) +=3D serial_core.o
+> >
+> > diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+> > index 3941a9c48f83..91cc8f3c7c43 100644
+> > --- a/kernel/gcov/Kconfig
+> > +++ b/kernel/gcov/Kconfig
+> > @@ -51,6 +51,20 @@ config GCOV_PROFILE_ALL
+> >       larger and run slower. Also be sure to exclude files from profili=
+ng
+> >       which are not linked to the kernel image to prevent linker errors=
+.
+> >
+> > +config GCOV_PROFILE_PREREQS
+> > +     bool "Profile Kernel subsytem"
+> > +     depends on !COMPILE_TEST
+> > +     depends on GCOV_KERNEL
+> > +     default n
+>
+> default is always 'n', no need to list that
+>
+> > +     help
+> > +     This options activates profiling for the specified kernel modules=
+.
+> > +
+> > +     If unsure, say N.
+> > +
+> > +     When some modules need Gcov data, enable this config, then config=
+ure
+> > +     with gcov on the corresponding modules configs.The directories or=
+ files
+>
+> '. '?
+>
+> > +     of these modules will be added profiling flags after kernel compi=
+le.
+>
+> The lines under "help" need to be indented more, right?
+>
+> thanks,
+>
+> greg k-h
