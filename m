@@ -4,287 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A27BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0DF02075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E483207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgETI7B (ORCPT
+        id S1726850AbgETI7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETI7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:59:00 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FCFC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:59:00 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E4E5B2A29CA;
-        Wed, 20 May 2020 09:58:58 +0100 (BST)
-Date:   Wed, 20 May 2020 10:58:55 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>,
-        mparab@cadence.com, praneeth@ti.com, linux-kernel@vger.kernel.org,
-        pgaj@cadence.com, linux-i3c@lists.infradead.org
-Subject: Re: [PATCH] i3c: master: fix for SETDASA and DAA process
-Message-ID: <20200520105855.71db98d1@collabora.com>
-In-Reply-To: <1589473809-16708-1-git-send-email-pthombar@cadence.com>
-References: <1589473809-16708-1-git-send-email-pthombar@cadence.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 20 May 2020 04:59:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45424 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETI7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 04:59:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 34053AB76;
+        Wed, 20 May 2020 08:59:19 +0000 (UTC)
+Subject: Re: [PATCH v2] tty: hvc: Fix data abort due to race in hvc_open
+To:     Raghavendra Rao Ananta <rananta@codeaurora.org>,
+        gregkh@linuxfoundation.org, andrew@daynix.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20200520064708.24278-1-rananta@codeaurora.org>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f84a9da7-bb0f-7538-fa00-968c9625335b@suse.cz>
+Date:   Wed, 20 May 2020 10:59:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200520064708.24278-1-rananta@codeaurora.org>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 18:30:09 +0200
-Parshuram Thombare <pthombar@cadence.com> wrote:
-
-> This patch fix following issues.
-> 1. Controller slots blocked for devices with static_addr
->    but no init_dyn_addr may limit the number of I3C devices
->    on the bus which gets dynamic address in DAA. So
->    instead of attaching all the devices with static_addr,
->    now we only attach the devices which successfully
->    complete SETDASA. Remaining devices are handled in DAA.
-> 2. Since we alreay handled devices with init_dyn_addr, removed
->    it's handling from i3c_master_add_i3c_dev_locked().
->    Now only case handled is devices already with dyn_addr
->    participated in DAA, and again got new dyn_addr with an
->    extra slot in the master controller.
-
-I don't get that one.
-
-> 3. Removed unnecessary i3c_master_reattach_i3c_dev() from
->    i3c_master_add_i3c_dev_locked(), right away after finding
->    if duplicate device exists in the I3C list.
->    In case of different new and old dyn_addr
->    i3c_master_reattach_i3c_dev() will fail which is wrong,
->    and in case of same dyn_addr it doesn't add anything new.
-
-I think we should fix re-attach instead, which is what we discussed
-with Przemek if I remember correctly.
-
+On 20. 05. 20, 8:47, Raghavendra Rao Ananta wrote:
+> Potentially, hvc_open() can be called in parallel when two tasks calls
+> open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
+> callback in the function fails, where it sets the tty->driver_data to
+> NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
+> Hence, do a NULL check at the beginning, before proceeding ahead.
 > 
-
-Can you please split the patch accordingly (one fix per commit)?
-
-> Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
-> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
+> The issue can be easily reproduced by launching two tasks simultaneously
+> that does an open() call on /dev/hvcX.
+> For example:
+> $ cat /dev/hvc0 & cat /dev/hvc0 &
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
 > ---
->  drivers/i3c/master.c | 111 ++++++++++++++++++-------------------------
->  1 file changed, 46 insertions(+), 65 deletions(-)
+>  drivers/tty/hvc/hvc_console.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> index 5f4bd52121fe..f1d929b58549 100644
-> --- a/drivers/i3c/master.c
-> +++ b/drivers/i3c/master.c
-> @@ -1375,6 +1375,11 @@ static int i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
->  		i3c_bus_set_addr_slot_status(&master->bus,
->  					     dev->info.dyn_addr,
->  					     I3C_ADDR_SLOT_I3C_DEV);
+> diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
+> index 436cc51c92c3..80709f754cc8 100644
+> --- a/drivers/tty/hvc/hvc_console.c
+> +++ b/drivers/tty/hvc/hvc_console.c
+> @@ -350,6 +350,9 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
+>  	unsigned long flags;
+>  	int rc = 0;
+> 
+> +	if (!hp)
+> +		return -ENODEV;
 > +
-> +		if (old_dyn_addr)
-> +			i3c_bus_set_addr_slot_status(&master->bus,
-> +						     old_dyn_addr,
-> +						     I3C_ADDR_SLOT_FREE);
->  	}
->  
->  	if (master->ops->reattach_i3c_dev) {
-> @@ -1426,33 +1431,52 @@ static void i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
->  		master->ops->detach_i2c_dev(dev);
->  }
->  
-> -static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
-> +static void i3c_master_pre_assign_dyn_addr(struct i3c_master_controller *master,
-> +					   struct i3c_dev_boardinfo *boardinfo)
->  {
-> -	struct i3c_master_controller *master = i3c_dev_get_master(dev);
-> +	struct i3c_device_info info = {
-> +		.static_addr = boardinfo->static_addr,
-> +	};
-> +	struct i3c_dev_desc *i3cdev;
->  	int ret;
->  
-> -	if (!dev->boardinfo || !dev->boardinfo->init_dyn_addr ||
-> -	    !dev->boardinfo->static_addr)
-> +	/*
-> +	 * We anyway don't attach devices which are not addressable
-> +	 * (no static_addr and dyn_addr) and devices with static_addr
-> +	 * but no init_dyn_addr will participate in DAA.
-> +	 */
-> +	if (!boardinfo->static_addr || !boardinfo->init_dyn_addr)
-> +		return;
-> +
-> +	i3cdev = i3c_master_alloc_i3c_dev(master, &info);
-> +	if (IS_ERR(i3cdev))
->  		return;
->  
-> -	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
-> -					dev->boardinfo->init_dyn_addr);
-> +	i3cdev->boardinfo = boardinfo;
-> +
-> +	ret = i3c_master_attach_i3c_dev(master, i3cdev);
->  	if (ret)
->  		return;
->  
-> -	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
-> -	ret = i3c_master_reattach_i3c_dev(dev, 0);
-> +	ret = i3c_master_setdasa_locked(master, i3cdev->info.static_addr,
-> +					i3cdev->boardinfo->init_dyn_addr);
->  	if (ret)
-> -		goto err_rstdaa;
-> +		goto err_setdasa;
->  
-> -	ret = i3c_master_retrieve_dev_info(dev);
-> +	i3cdev->info.dyn_addr = i3cdev->boardinfo->init_dyn_addr;
-> +	ret = i3c_master_reattach_i3c_dev(i3cdev, 0);
->  	if (ret)
->  		goto err_rstdaa;
->  
-> -	return;
-> +	ret = i3c_master_retrieve_dev_info(i3cdev);
-> +	if (ret)
-> +		goto err_rstdaa;
->  
->  err_rstdaa:
-> -	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
-> +	i3c_master_rstdaa_locked(master, i3cdev->boardinfo->init_dyn_addr);
-> +err_setdasa:
-> +	i3c_master_detach_i3c_dev(i3cdev);
-> +	i3c_master_free_i3c_dev(i3cdev);
->  }
->  
->  static void
-> @@ -1619,8 +1643,8 @@ static void i3c_master_detach_free_devs(struct i3c_master_controller *master)
->   * This function is following all initialisation steps described in the I3C
->   * specification:
->   *
-> - * 1. Attach I2C and statically defined I3C devs to the master so that the
-> - *    master can fill its internal device table appropriately
-> + * 1. Attach I2C devs to the master so that the master can fill its internal
-> + *    device table appropriately
->   *
->   * 2. Call &i3c_master_controller_ops->bus_init() method to initialize
->   *    the master controller. That's usually where the bus mode is selected
-> @@ -1647,7 +1671,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
->  	enum i3c_addr_slot_status status;
->  	struct i2c_dev_boardinfo *i2cboardinfo;
->  	struct i3c_dev_boardinfo *i3cboardinfo;
-> -	struct i3c_dev_desc *i3cdev;
->  	struct i2c_dev_desc *i2cdev;
->  	int ret;
->  
-> @@ -1679,34 +1702,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
->  			goto err_detach_devs;
->  		}
->  	}
-> -	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
-> -		struct i3c_device_info info = {
-> -			.static_addr = i3cboardinfo->static_addr,
-> -		};
-> -
-> -		if (i3cboardinfo->init_dyn_addr) {
-> -			status = i3c_bus_get_addr_slot_status(&master->bus,
-> -						i3cboardinfo->init_dyn_addr);
-> -			if (status != I3C_ADDR_SLOT_FREE) {
-> -				ret = -EBUSY;
-> -				goto err_detach_devs;
-> -			}
-> -		}
-> -
-> -		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
-> -		if (IS_ERR(i3cdev)) {
-> -			ret = PTR_ERR(i3cdev);
-> -			goto err_detach_devs;
-> -		}
-> -
-> -		i3cdev->boardinfo = i3cboardinfo;
-> -
-> -		ret = i3c_master_attach_i3c_dev(master, i3cdev);
-> -		if (ret) {
-> -			i3c_master_free_i3c_dev(i3cdev);
-> -			goto err_detach_devs;
-> -		}
-> -	}
->  
->  	/*
->  	 * Now execute the controller specific ->bus_init() routine, which
-> @@ -1746,8 +1741,8 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
->  	 * Pre-assign dynamic address and retrieve device information if
->  	 * needed.
->  	 */
-> -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
-> -		i3c_master_pre_assign_dyn_addr(i3cdev);
-> +	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node)
-> +		i3c_master_pre_assign_dyn_addr(master, i3cboardinfo);
->  
->  	ret = i3c_master_do_daa(master);
->  	if (ret)
-> @@ -1811,7 +1806,7 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
->  {
->  	struct i3c_device_info info = { .dyn_addr = addr };
->  	struct i3c_dev_desc *newdev, *olddev;
-> -	u8 old_dyn_addr = addr, expected_dyn_addr;
-> +	u8 old_dyn_addr = addr;
->  	struct i3c_ibi_setup ibireq = { };
->  	bool enable_ibi = false;
->  	int ret;
-> @@ -1866,39 +1861,25 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
->  		i3c_master_free_i3c_dev(olddev);
->  	}
->  
-> -	ret = i3c_master_reattach_i3c_dev(newdev, old_dyn_addr);
-> -	if (ret)
-> -		goto err_detach_dev;
-> -
->  	/*
->  	 * Depending on our previous state, the expected dynamic address might
->  	 * differ:
->  	 * - if the device already had a dynamic address assigned, let's try to
-> -	 *   re-apply this one
-> -	 * - if the device did not have a dynamic address and the firmware
-> -	 *   requested a specific address, pick this one
-> +	 *   re-apply this one. Device with dyn_addr participated in DAA ?
->  	 * - in any other case, keep the address automatically assigned by the
->  	 *   master
->  	 */
-> -	if (old_dyn_addr && old_dyn_addr != newdev->info.dyn_addr)
-> -		expected_dyn_addr = old_dyn_addr;
-> -	else if (newdev->boardinfo && newdev->boardinfo->init_dyn_addr)
-> -		expected_dyn_addr = newdev->boardinfo->init_dyn_addr;
-> -	else
-> -		expected_dyn_addr = newdev->info.dyn_addr;
-> -
-> -	if (newdev->info.dyn_addr != expected_dyn_addr) {
-> +	if (old_dyn_addr && old_dyn_addr != newdev->info.dyn_addr) {
->  		/*
->  		 * Try to apply the expected dynamic address. If it fails, keep
->  		 * the address assigned by the master.
->  		 */
->  		ret = i3c_master_setnewda_locked(master,
->  						 newdev->info.dyn_addr,
-> -						 expected_dyn_addr);
-> +						 old_dyn_addr);
->  		if (!ret) {
-> -			old_dyn_addr = newdev->info.dyn_addr;
-> -			newdev->info.dyn_addr = expected_dyn_addr;
-> -			i3c_master_reattach_i3c_dev(newdev, old_dyn_addr);
-> +			newdev->info.dyn_addr = old_dyn_addr;
-> +			i3c_master_reattach_i3c_dev(newdev, addr);
->  		} else {
->  			dev_err(&master->dev,
->  				"Failed to assign reserved/old address to device %d%llx",
 
+This is still not fixing the bug properly. See:
+https://lore.kernel.org/linuxppc-dev/0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz/
+
+In particular, the paragraph starting "IOW".
+
+thanks,
+-- 
+js
+suse labs
