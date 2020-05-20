@@ -2,71 +2,87 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6DFB2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645682065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QUEybOHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgETQp6 (ORCPT
+        id S1726821AbgETQtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:45:58 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:40405 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726545AbgETQp5 (ORCPT
+        Wed, 20 May 2020 12:49:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33142 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726566AbgETQtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:45:57 -0400
-Received: (qmail 13248 invoked by uid 1000); 20 May 2020 12:45:56 -0400
-Date:   Wed, 20 May 2020 12:45:56 -0400
-From:   "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>
-To:     "Sverdlin, Alexander \(Nokia - DE/Ulm\)" 
-        <alexander.sverdlin@nokia.com>
-Cc:     "dinghao.liu@zju.edu.cn" <dinghao.liu@zju.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>, "mpm@selenic.com" <mpm@selenic.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "rfontana@redhat.com" <rfontana@redhat.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: Re: [PATCH] hwrng: ks-sa - fix runtime pm imbalance on error
-Message-ID: <20200520164556.GC11084@rowland.harvard.edu>
-References: <20200520132957.18776-1-dinghao.liu@zju.edu.cn>
- <ab400cba7523e69b15360b0928cb8fa8b9432d86.camel@nokia.com>
+        Wed, 20 May 2020 12:49:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589993356; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=AtZzN9l3Kts69kOEIWpwwKUEDYmTk95ucmsOExLIP9E=; b=QUEybOHU+bZjTw8s6ljHyASKUvy3WrelI3VXSb8nrIpBROY53Gv0CoLjjJ2TDr4e0sYVmMFv
+ 2QWteNXzPvW63BGmGU0sxRZV1ZQrWHw/haEoVNT44eCuN2SfN2DtszgG/Puk3LEmepRWatm4
+ +qKCFRSL9ib3+iHWCB0voEN+3yo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ec55f7e45598550e6112a69 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 16:49:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 17279C433CA; Wed, 20 May 2020 16:49:01 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59946C433C6;
+        Wed, 20 May 2020 16:49:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59946C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v3 1/7] bus: mhi: core: Abort suspends due to outgoing
+ pending packets
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        linux-kernel@vger.kernel.org
+References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
+ <1589832241-13867-2-git-send-email-bbhatt@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <f9badb81-989d-3c7f-63c1-d85a3e875fe7@codeaurora.org>
+Date:   Wed, 20 May 2020 10:48:59 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab400cba7523e69b15360b0928cb8fa8b9432d86.camel@nokia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1589832241-13867-2-git-send-email-bbhatt@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:42:17PM +0000, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
-> Hello Dinghao,
+On 5/18/2020 2:03 PM, Bhaumik Bhatt wrote:
+> Add the missing check to abort suspends if a client has pending outgoing
+> packets to send to the device. This allows better utilization of the MHI
+> bus wherein clients on the host are not left waiting for longer suspend
+> or resume cycles to finish for data transfers.
 > 
-> On Wed, 2020-05-20 at 21:29 +0800, Dinghao Liu wrote:
-> > pm_runtime_get_sync() increments the runtime PM usage counter even
-> > the call returns an error code. Thus a pairing decrement is needed
-> > on the error handling path to keep the counter balanced.
-> 
-> I believe, this is the wrong place for such kind of fix.
-> pm_runtime_get_sync() has obviously a broken semantics with regards to
-> your observation but no other driver does what you propose.
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> ---
 
-Look again.  For example, see what usb_autoresume_device() in 
-drivers/usb/core/driver.c does.
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-You really shouldn't make generalizations such as "no other driver does 
-..." unless you have read the code for every driver in the kernel.
-
-Alan Stern
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
