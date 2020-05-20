@@ -2,233 +2,410 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE714C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923E62072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:54:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcjAoKuY"
+	by mail.kernel.org (Postfix) with ESMTP id B9134207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgETOyL (ORCPT
+        id S1726857AbgETOyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:54:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETOyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:54:10 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FA8C061A0E;
-        Wed, 20 May 2020 07:54:10 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id m185so3181821wme.3;
-        Wed, 20 May 2020 07:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eVboQ/vbhLQ48NyZbNUxNWK6am4qR68FCbQ1gWq93oo=;
-        b=hcjAoKuYNCz3b/BMtse8aODsCZcTPl8ilKNAVQMg2KTXru9sUyn+ADzewnQyixrjG5
-         bTWCgU0wmDUCuXdDMFxCGBUPlxa20qEeKkTuu7TRuGi+eKwlDbYFi1f2+iVaDgoJsCuo
-         +5q6IW4WyNSfq40rmw4s6MaaDDqYAV4P8cY0ZLxhd2KEcteJ0hw7eFiz5AfTTkhldhsP
-         Y+bOJVT4f/Odp8myDqfwtBa2bEoj/72nHgeAqFGSe1vJxjRW5D1Exvl9BPei7t8rlh1f
-         gSCeodt6cVjtVkMzx7nzgsGj9ADb49ocC7Q3NRHhfJ2i5nnaINkZ2Rp4potcrvyfWvzo
-         0YNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=eVboQ/vbhLQ48NyZbNUxNWK6am4qR68FCbQ1gWq93oo=;
-        b=TATf+4Z2lr8UicjNT7/B0HYaTwxD4CEaxaca+RuB/yPTb30jrF7UgqPk5WEeUyG1fD
-         CwCNhC3dc3EVpxsSjzX6azw7qFF2QGHD18trBXgHa8wlMsn7r5crPLv0bnpvhtiEnJ5y
-         U4xMIzysyNePTyha7WgjLdkkmCJOdNyS6LQ4foc5fCsfymp+E0/txhGvadOTyRzFJ49f
-         C2eKNG8372zhTtiA7VfO0QENCuVSV09WBR7OjERW0k4ypxVZpUT1flbeg3jVwf6u6ozx
-         E2Uqr9rrjd5cGtxwO1EdGS67iLAtKFz47kghoECdSsZvex7vpEnMZm9DtdroyYB/RcuC
-         +Bpg==
-X-Gm-Message-State: AOAM5335L6+O13V00XcFfaRGNRdo+n9YEa9V+Gsu/gDxJBLcUtBkTOuL
-        yEbsfDmYKbNrh3eamrWgKTw=
-X-Google-Smtp-Source: ABdhPJxPrwrHkI6ZwMjUmVq2c2tvKeQtjxuidicgri85UBZxYca0OmLPuSuxs/2af7bkhwmNsAPJjA==
-X-Received: by 2002:a1c:7e43:: with SMTP id z64mr4817044wmc.72.1589986448765;
-        Wed, 20 May 2020 07:54:08 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id w18sm3038776wro.33.2020.05.20.07.54.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 07:54:07 -0700 (PDT)
-Subject: Re: [PATCH 01/12] OPP: Allow required-opps even if the device doesn't
- have power-domains
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, Saravana Kannan <saravanak@google.com>
-References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
- <20200520034307.20435-2-andrew-sh.cheng@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b667fff9-50ae-bff2-ae17-1cf0ca1a08a5@gmail.com>
-Date:   Wed, 20 May 2020 16:54:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 10:54:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:27027 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgETOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:54:31 -0400
+IronPort-SDR: jBoO3nFYmWJcJQkZDpofRJQqKKluRoGSnvhIjL66fYDkBx1Pce50mynmc6GQcf9+PcuOr+NKb6
+ H/mk2Trpa0uQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 07:54:31 -0700
+IronPort-SDR: FzX76Gq6r0Mp5WT39XxITd7IMdIN8sA0+4H1/WxoIr3thi1ua91iaTz6omU6HO6l4ZR98VykTN
+ hW9JSOeletGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="308743884"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 May 2020 07:54:31 -0700
+Date:   Wed, 20 May 2020 07:54:31 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RESEND PATCH v7 3/5] powerpc/papr_scm: Fetch nvdimm health
+ information from PHYP
+Message-ID: <20200520145430.GB3660833@iweiny-DESK2.sc.intel.com>
+References: <20200519190058.257981-1-vaibhav@linux.ibm.com>
+ <20200519190058.257981-4-vaibhav@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520034307.20435-2-andrew-sh.cheng@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519190058.257981-4-vaibhav@linux.ibm.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 20/05/2020 05:42, Andrew-sh.Cheng wrote:
-> From: Saravana Kannan <saravanak@google.com>
+On Wed, May 20, 2020 at 12:30:56AM +0530, Vaibhav Jain wrote:
+> Implement support for fetching nvdimm health information via
+> H_SCM_HEALTH hcall as documented in Ref[1]. The hcall returns a pair
+> of 64-bit big-endian integers, bitwise-and of which is then stored in
+> 'struct papr_scm_priv' and subsequently partially exposed to
+> user-space via newly introduced dimm specific attribute
+> 'papr/flags'. Since the hcall is costly, the health information is
+> cached and only re-queried, 60s after the previous successful hcall.
 > 
-> A Device-A can have a (minimum) performance requirement on another
-> Device-B to be able to function correctly. This performance requirement
-> on Device-B can also change based on the current performance level of
-> Device-A.
+> The patch also adds a  documentation text describing flags reported by
+> the the new sysfs attribute 'papr/flags' is also introduced at
+> Documentation/ABI/testing/sysfs-bus-papr-scm.
 > 
-> The existing required-opps feature fits well to describe this need. So,
-> instead of limiting required-opps to point to only PM-domain devices,
-> allow it to point to any device.
+> [1] commit 58b278f568f0 ("powerpc: Provide initial documentation for
+> PAPR hcalls")
 > 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-
-Please check all patches, they are missing your
-Signed-off-by
-
-Regards,
-Matthias
-
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
 > ---
->  drivers/opp/core.c |  2 +-
->  drivers/opp/of.c   | 11 -----------
->  2 files changed, 1 insertion(+), 12 deletions(-)
+> Changelog:
 > 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index ba43e6a3dc0a..51403c1f2481 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -755,7 +755,7 @@ static int _set_required_opps(struct device *dev,
->  		return 0;
->  
->  	/* Single genpd case */
-> -	if (!genpd_virt_devs) {
-> +	if (!genpd_virt_devs && required_opp_tables[0]->is_genpd) {
->  		pstate = likely(opp) ? opp->required_opps[0]->pstate : 0;
->  		ret = dev_pm_genpd_set_performance_state(dev, pstate);
->  		if (ret) {
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 9cd8f0adacae..6d33de668a7b 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -195,17 +195,6 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
->  
->  		if (IS_ERR(required_opp_tables[i]))
->  			goto free_required_tables;
-> -
-> -		/*
-> -		 * We only support genpd's OPPs in the "required-opps" for now,
-> -		 * as we don't know how much about other cases. Error out if the
-> -		 * required OPP doesn't belong to a genpd.
-> -		 */
-> -		if (!required_opp_tables[i]->is_genpd) {
-> -			dev_err(dev, "required-opp doesn't belong to genpd: %pOF\n",
-> -				required_np);
-> -			goto free_required_tables;
-> -		}
->  	}
->  
->  	goto put_np;
+> Resend:
+> * None
 > 
+> v6..v7 :
+> * Used the exported buf_seq_printf() function to generate content for
+>   'papr/flags'
+> * Moved the PAPR_SCM_DIMM_* bit-flags macro definitions to papr_scm.c
+>   and removed the papr_scm.h file [Mpe]
+> * Some minor consistency issued in sysfs-bus-papr-scm
+>   documentation. [Mpe]
+> * s/dimm_mutex/health_mutex/g [Mpe]
+> * Split drc_pmem_query_health() into two function one of which takes
+>   care of caching and locking. [Mpe]
+> * Fixed a local copy creation of dimm health information using
+>   READ_ONCE(). [Mpe]
+> 
+> v5..v6 :
+> * Change the flags sysfs attribute from 'papr_flags' to 'papr/flags'
+>   [Dan Williams]
+> * Include documentation for 'papr/flags' attr [Dan Williams]
+> * Change flag 'save_fail' to 'flush_fail' [Dan Williams]
+> * Caching of health bitmap to reduce expensive hcalls [Dan Williams]
+> * Removed usage of PPC_BIT from 'papr-scm.h' header [Mpe]
+> * Replaced two __be64 integers from papr_scm_priv to a single u64
+>   integer [Mpe]
+> * Updated patch description to reflect the changes made in this
+>   version.
+> * Removed avoidable usage of 'papr_scm_priv.dimm_mutex' from
+>   flags_show() [Dan Williams]
+> 
+> v4..v5 :
+> * None
+> 
+> v3..v4 :
+> * None
+> 
+> v2..v3 :
+> * Removed PAPR_SCM_DIMM_HEALTH_NON_CRITICAL as a condition for
+>        	 NVDIMM unarmed [Aneesh]
+> 
+> v1..v2 :
+> * New patch in the series.
+> ---
+>  Documentation/ABI/testing/sysfs-bus-papr-scm |  27 +++
+>  arch/powerpc/platforms/pseries/papr_scm.c    | 169 ++++++++++++++++++-
+>  2 files changed, 194 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-papr-scm
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-papr-scm b/Documentation/ABI/testing/sysfs-bus-papr-scm
+> new file mode 100644
+> index 000000000000..6143d06072f1
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-papr-scm
+> @@ -0,0 +1,27 @@
+> +What:		/sys/bus/nd/devices/nmemX/papr/flags
+> +Date:		Apr, 2020
+> +KernelVersion:	v5.8
+> +Contact:	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-nvdimm@lists.01.org,
+> +Description:
+> +		(RO) Report flags indicating various states of a
+> +		papr-scm NVDIMM device. Each flag maps to a one or
+> +		more bits set in the dimm-health-bitmap retrieved in
+> +		response to H_SCM_HEALTH hcall. The details of the bit
+> +		flags returned in response to this hcall is available
+> +		at 'Documentation/powerpc/papr_hcalls.rst' . Below are
+> +		the flags reported in this sysfs file:
+> +
+> +		* "not_armed"	: Indicates that NVDIMM contents will not
+> +				  survive a power cycle.
+> +		* "flush_fail"	: Indicates that NVDIMM contents
+> +				  couldn't be flushed during last
+> +				  shut-down event.
+> +		* "restore_fail": Indicates that NVDIMM contents
+> +				  couldn't be restored during NVDIMM
+> +				  initialization.
+> +		* "encrypted"	: NVDIMM contents are encrypted.
+> +		* "smart_notify": There is health event for the NVDIMM.
+> +		* "scrubbed"	: Indicating that contents of the
+> +				  NVDIMM have been scrubbed.
+> +		* "locked"	: Indicating that NVDIMM contents cant
+> +				  be modified until next power cycle.
+> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> index f35592423380..142636e1a59f 100644
+> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/libnvdimm.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/delay.h>
+> +#include <linux/seq_buf.h>
+>  
+>  #include <asm/plpar_wrappers.h>
+>  
+> @@ -22,6 +23,44 @@
+>  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+>  	 (1ul << ND_CMD_SET_CONFIG_DATA))
+>  
+> +/* DIMM health bitmap bitmap indicators */
+> +/* SCM device is unable to persist memory contents */
+> +#define PAPR_SCM_DIMM_UNARMED                   (1ULL << (63 - 0))
+> +/* SCM device failed to persist memory contents */
+> +#define PAPR_SCM_DIMM_SHUTDOWN_DIRTY            (1ULL << (63 - 1))
+> +/* SCM device contents are persisted from previous IPL */
+> +#define PAPR_SCM_DIMM_SHUTDOWN_CLEAN            (1ULL << (63 - 2))
+> +/* SCM device contents are not persisted from previous IPL */
+> +#define PAPR_SCM_DIMM_EMPTY                     (1ULL << (63 - 3))
+> +/* SCM device memory life remaining is critically low */
+> +#define PAPR_SCM_DIMM_HEALTH_CRITICAL           (1ULL << (63 - 4))
+> +/* SCM device will be garded off next IPL due to failure */
+> +#define PAPR_SCM_DIMM_HEALTH_FATAL              (1ULL << (63 - 5))
+> +/* SCM contents cannot persist due to current platform health status */
+> +#define PAPR_SCM_DIMM_HEALTH_UNHEALTHY          (1ULL << (63 - 6))
+> +/* SCM device is unable to persist memory contents in certain conditions */
+> +#define PAPR_SCM_DIMM_HEALTH_NON_CRITICAL       (1ULL << (63 - 7))
+> +/* SCM device is encrypted */
+> +#define PAPR_SCM_DIMM_ENCRYPTED                 (1ULL << (63 - 8))
+> +/* SCM device has been scrubbed and locked */
+> +#define PAPR_SCM_DIMM_SCRUBBED_AND_LOCKED       (1ULL << (63 - 9))
+> +
+> +/* Bits status indicators for health bitmap indicating unarmed dimm */
+> +#define PAPR_SCM_DIMM_UNARMED_MASK (PAPR_SCM_DIMM_UNARMED |		\
+> +				    PAPR_SCM_DIMM_HEALTH_UNHEALTHY)
+> +
+> +/* Bits status indicators for health bitmap indicating unflushed dimm */
+> +#define PAPR_SCM_DIMM_BAD_SHUTDOWN_MASK (PAPR_SCM_DIMM_SHUTDOWN_DIRTY)
+> +
+> +/* Bits status indicators for health bitmap indicating unrestored dimm */
+> +#define PAPR_SCM_DIMM_BAD_RESTORE_MASK  (PAPR_SCM_DIMM_EMPTY)
+> +
+> +/* Bit status indicators for smart event notification */
+> +#define PAPR_SCM_DIMM_SMART_EVENT_MASK (PAPR_SCM_DIMM_HEALTH_CRITICAL | \
+> +					PAPR_SCM_DIMM_HEALTH_FATAL |	\
+> +					PAPR_SCM_DIMM_HEALTH_UNHEALTHY)
+> +
+> +/* private struct associated with each region */
+>  struct papr_scm_priv {
+>  	struct platform_device *pdev;
+>  	struct device_node *dn;
+> @@ -39,6 +78,15 @@ struct papr_scm_priv {
+>  	struct resource res;
+>  	struct nd_region *region;
+>  	struct nd_interleave_set nd_set;
+> +
+> +	/* Protect dimm health data from concurrent read/writes */
+> +	struct mutex health_mutex;
+> +
+> +	/* Last time the health information of the dimm was updated */
+> +	unsigned long lasthealth_jiffies;
+> +
+> +	/* Health information for the dimm */
+> +	u64 health_bitmap;
+
+I wonder if this should be typed big endian as you mention that it is in the
+commit message?
+
+>  };
+>  
+>  static int drc_pmem_bind(struct papr_scm_priv *p)
+> @@ -144,6 +192,62 @@ static int drc_pmem_query_n_bind(struct papr_scm_priv *p)
+>  	return drc_pmem_bind(p);
+>  }
+>  
+> +/*
+> + * Issue hcall to retrieve dimm health info and populate papr_scm_priv with the
+> + * health information.
+> + */
+> +static int __drc_pmem_query_health(struct papr_scm_priv *p)
+> +{
+> +	unsigned long ret[PLPAR_HCALL_BUFSIZE];
+
+Is this exclusive to 64bit?  Why not u64?
+
+> +	s64 rc;
+
+plpar_hcall() returns long and this function returns int and rc is declared
+s64?
+
+Why not have them all be long to follow plpar_hcall?
+
+> +
+> +	/* issue the hcall */
+> +	rc = plpar_hcall(H_SCM_HEALTH, ret, p->drc_index);
+> +	if (rc != H_SUCCESS) {
+> +		dev_err(&p->pdev->dev,
+> +			 "Failed to query health information, Err:%lld\n", rc);
+> +		rc = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	p->lasthealth_jiffies = jiffies;
+> +	p->health_bitmap = ret[0] & ret[1];
+> +
+> +	dev_dbg(&p->pdev->dev,
+> +		"Queried dimm health info. Bitmap:0x%016lx Mask:0x%016lx\n",
+> +		ret[0], ret[1]);
+> +out:
+> +	return rc;
+> +}
+> +
+> +/* Min interval in seconds for assuming stable dimm health */
+> +#define MIN_HEALTH_QUERY_INTERVAL 60
+> +
+> +/* Query cached health info and if needed call drc_pmem_query_health */
+> +static int drc_pmem_query_health(struct papr_scm_priv *p)
+> +{
+> +	unsigned long cache_timeout;
+> +	s64 rc;
+> +
+> +	/* Protect concurrent modifications to papr_scm_priv */
+> +	rc = mutex_lock_interruptible(&p->health_mutex);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Jiffies offset for which the health data is assumed to be same */
+> +	cache_timeout = p->lasthealth_jiffies +
+> +		msecs_to_jiffies(MIN_HEALTH_QUERY_INTERVAL * 1000);
+> +
+> +	/* Fetch new health info is its older than MIN_HEALTH_QUERY_INTERVAL */
+> +	if (time_after(jiffies, cache_timeout))
+> +		rc = __drc_pmem_query_health(p);
+
+And back to s64 after returning int?
+
+> +	else
+> +		/* Assume cached health data is valid */
+> +		rc = 0;
+> +
+> +	mutex_unlock(&p->health_mutex);
+> +	return rc;
+> +}
+>  
+>  static int papr_scm_meta_get(struct papr_scm_priv *p,
+>  			     struct nd_cmd_get_config_data_hdr *hdr)
+> @@ -286,6 +390,64 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>  	return 0;
+>  }
+>  
+> +static ssize_t flags_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct nvdimm *dimm = to_nvdimm(dev);
+> +	struct papr_scm_priv *p = nvdimm_provider_data(dimm);
+> +	struct seq_buf s;
+> +	u64 health;
+> +	int rc;
+> +
+> +	rc = drc_pmem_query_health(p);
+
+and back to int...
+
+Just make them long all through...
+
+Ira
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	/* Copy health_bitmap locally, check masks & update out buffer */
+> +	health = READ_ONCE(p->health_bitmap);
+> +
+> +	seq_buf_init(&s, buf, PAGE_SIZE);
+> +	if (health & PAPR_SCM_DIMM_UNARMED_MASK)
+> +		seq_buf_printf(&s, "not_armed ");
+> +
+> +	if (health & PAPR_SCM_DIMM_BAD_SHUTDOWN_MASK)
+> +		seq_buf_printf(&s, "flush_fail ");
+> +
+> +	if (health & PAPR_SCM_DIMM_BAD_RESTORE_MASK)
+> +		seq_buf_printf(&s, "restore_fail ");
+> +
+> +	if (health & PAPR_SCM_DIMM_ENCRYPTED)
+> +		seq_buf_printf(&s, "encrypted ");
+> +
+> +	if (health & PAPR_SCM_DIMM_SMART_EVENT_MASK)
+> +		seq_buf_printf(&s, "smart_notify ");
+> +
+> +	if (health & PAPR_SCM_DIMM_SCRUBBED_AND_LOCKED)
+> +		seq_buf_printf(&s, "scrubbed locked ");
+> +
+> +	if (seq_buf_used(&s))
+> +		seq_buf_printf(&s, "\n");
+> +
+> +	return seq_buf_used(&s);
+> +}
+> +DEVICE_ATTR_RO(flags);
+> +
+> +/* papr_scm specific dimm attributes */
+> +static struct attribute *papr_scm_nd_attributes[] = {
+> +	&dev_attr_flags.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group papr_scm_nd_attribute_group = {
+> +	.name = "papr",
+> +	.attrs = papr_scm_nd_attributes,
+> +};
+> +
+> +static const struct attribute_group *papr_scm_dimm_attr_groups[] = {
+> +	&papr_scm_nd_attribute_group,
+> +	NULL,
+> +};
+> +
+>  static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+>  {
+>  	struct device *dev = &p->pdev->dev;
+> @@ -312,8 +474,8 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+>  	dimm_flags = 0;
+>  	set_bit(NDD_LABELING, &dimm_flags);
+>  
+> -	p->nvdimm = nvdimm_create(p->bus, p, NULL, dimm_flags,
+> -				  PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
+> +	p->nvdimm = nvdimm_create(p->bus, p, papr_scm_dimm_attr_groups,
+> +				  dimm_flags, PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
+>  	if (!p->nvdimm) {
+>  		dev_err(dev, "Error creating DIMM object for %pOF\n", p->dn);
+>  		goto err;
+> @@ -399,6 +561,9 @@ static int papr_scm_probe(struct platform_device *pdev)
+>  	if (!p)
+>  		return -ENOMEM;
+>  
+> +	/* Initialize the dimm mutex */
+> +	mutex_init(&p->health_mutex);
+> +
+>  	/* optional DT properties */
+>  	of_property_read_u32(dn, "ibm,metadata-size", &metadata_size);
+>  
+> -- 
+> 2.26.2
+> _______________________________________________
+> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
+> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
