@@ -2,119 +2,112 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B68FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27547C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBCF2206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:26:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UmPc6+0i"
+	by mail.kernel.org (Postfix) with ESMTP id EF9C9206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgETP0R (ORCPT
+        id S1726805AbgETP1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:26:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38404 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETP0Q (ORCPT
+        Wed, 20 May 2020 11:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETP1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:26:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KFHG6Q076583;
-        Wed, 20 May 2020 15:26:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=us1UyD3eb7iJfl6Z3bLFPAGiXiDBjSZBmVmqk0QGUNc=;
- b=UmPc6+0inQWEbzaEFKEDNeJN07Gfg3Bdl2wV+TyTbU5NkKVJ6Hx3iAm/EaPnOyR/jOEn
- 76Pfbs1ruJ7tsNc0QBUyziXvPqqsmY8SPpgLiDVq16zOvWY2DX1e9A1ryFnAi2RRgNEN
- m45kXwrhzEg6acq1hoWDsR/KGhgAAoNw70G8rilJCCYOscqDUhdQ4BqOyWB1ddhTGs80
- XROz97K0j3kT2CPv6tUEuthNw2V1VirUGDIxOD50SBWJAtPIIawV6B8/owzeIFYO9IJg
- WOTBz34LwPsGNZrptphJoHlCT9IQOi55XukGq+r0bKv2NgSkzKvhXZPWa+xiGXOXocVd dQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3127krbt8s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 15:26:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KFD8pI058218;
-        Wed, 20 May 2020 15:26:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 312t37xnad-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 15:26:06 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KFQ5bw026329;
-        Wed, 20 May 2020 15:26:05 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 May 2020 08:26:04 -0700
-Date:   Wed, 20 May 2020 18:25:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Evan Quan <evan.quan@amd.com>,
-        Rui Huang <ray.huang@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Yintian Tao <yttao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH v3] drm/amdgpu: off by one in
- amdgpu_device_attr_create_groups() error handling
-Message-ID: <20200520152556.GQ3041@kadam>
+        Wed, 20 May 2020 11:27:41 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B031AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:27:41 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbQcj-0004FE-Bq; Wed, 20 May 2020 17:27:13 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id AF656100C99; Wed, 20 May 2020 17:27:12 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V6 07/37] x86/entry: Provide helpers for execute on irqstack
+In-Reply-To: <CALCETrW5uHQGLRyA8_JZ6Xv95Ui8g4OdrjCViWMVcG2W5B1cWg@mail.gmail.com>
+References: <20200515234547.710474468@linutronix.de> <20200515235125.110889386@linutronix.de> <CALCETrXPDAPtWMS6_KX8_GUsnPs1osmFsLokeGYczJwXZisLvg@mail.gmail.com> <CALCETrWD8qH-P4J3MB6Q9mr1MRLzsR7Fpab+Fk9Ac60qQBZPaA@mail.gmail.com> <87o8qkvm03.fsf@nanos.tec.linutronix.de> <CALCETrX4p71MyQHfUUCBWh8LicewyyVNj7T5mOmZevND2vvqoQ@mail.gmail.com> <871rne6ayr.fsf@nanos.tec.linutronix.de> <CALCETrW5uHQGLRyA8_JZ6Xv95Ui8g4OdrjCViWMVcG2W5B1cWg@mail.gmail.com>
+Date:   Wed, 20 May 2020 17:27:12 +0200
+Message-ID: <87d06ywrsf.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010E2302FA@FMSMSX108.amr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1011 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200126
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This loop in the error handling code should start a "i - 1" and end at
-"i == 0".  Currently it starts a "i" and ends at "i == 1".  The result
-is that it removes one attribute that wasn't created yet, and leaks the
-zeroeth attribute.
+Andy Lutomirski <luto@kernel.org> writes:
+> On Wed, May 20, 2020 at 5:35 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> Andy Lutomirski <luto@kernel.org> writes:
+>> > On Mon, May 18, 2020 at 4:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> >>
+>> >> Andy Lutomirski <luto@kernel.org> writes:
+>> >> > Actually, I revoke my ack.  Can you make one of two changes:
+>> >> >
+>> >> > Option A: Add an assertion to run_on_irqstack to verify that irq_count
+>> >> > was -1 at the beginning?  I suppose this also means you could just
+>> >> > explicitly write 0 instead of adding and subtracting.
+>> >> >
+>> >> > Option B: Make run_on_irqstack() just call the function on the current
+>> >> > stack if we're already on the irq stack.
+>> >> >
+>> >> > Right now, it's too easy to mess up and not verify the right
+>> >> > precondition before calling run_on_irqstack().
+>> >> >
+>> >> > If you choose A, perhaps add a helper to do the if(irq_needs_irqstack)
+>> >> > dance so that users can just do:
+>> >> >
+>> >> > run_on_irqstack_if_needed(...);
+>> >> >
+>> >> > instead of checking everything themselves.
+>> >>
+>> >> I'll have a look tomorrow morning with brain awake.
+>> >
+>> > Also, reading more of the series, I suspect that asm_call_on_stack is
+>> > logically in the wrong section or that the noinstr stuff is otherwise
+>> > not quite right.  I think that objtool should not accept
+>> > run_on_irqstack() from noinstr code.  See followups on patch 10.
+>>
+>> It's in entry.text which is non-instrumentable as well.
+>
+> Hmm.  I suppose we can chalk this up to the noinstr checking not being
+> entirely perfect.
 
-Fixes: 4e01847c38f7 ("drm/amdgpu: optimize amdgpu device attribute code")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-v2: style change
-v3: Fix embarrassing typo in the subject
+objtool considers both entry.text and noinstr.text. We just can't stick
+everything into entry.text for these !%@#45@# reasons.
 
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c           | 3 +--
- 1 files changed, 1 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-index b75362bf0742..e809534fabd4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-@@ -1942,9 +1942,8 @@ static int amdgpu_device_attr_create_groups(struct amdgpu_device *adev,
- 	return 0;
- 
- failed:
--	for (; i > 0; i--) {
-+	while (i--)
- 		amdgpu_device_attr_remove(adev, &attrs[i]);
--	}
- 
- 	return ret;
- }
