@@ -2,204 +2,165 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD833C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEA9A2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0670B207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgETGU5 (ORCPT
+        id S1726595AbgETGWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:20:57 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46235 "EHLO mga03.intel.com"
+        Wed, 20 May 2020 02:22:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61121 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726369AbgETGU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:20:56 -0400
-IronPort-SDR: 3WGr83E05yR+PXCRzPI4nvXNPZba6LsfkqgUG2vOWpFpeCmpS3l7mmm5Iv8N3iR04E+mbQVKxB
- 1YS9f5qvDWRw==
+        id S1726309AbgETGWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:22:20 -0400
+IronPort-SDR: A78DgxbT3IZ+HPaCCo5Fxq3vBn0G48U6TE3UEkVAgucf8hfoqWRQc+Gy0EyHcCzsqlI6jBU5As
+ MNAt9IP0etjw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 23:20:56 -0700
-IronPort-SDR: x2Fdt2xSOHw7YfPmhCxnMFRGeCK3edMifCh80yTjNtpGNXLXkte9VzyvKxcs266zgc0cA436t1
- U8J5oTH25sTw==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 23:22:20 -0700
+IronPort-SDR: AgFQ3zoO/v/a6DhdebjmI0/KlfkiAknW8lWvMi/gsTCWFBTvScqCJ5J7K46u1qdGL+5SeQoGjq
+ NzfTgVar4zYA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
-   d="scan'208";a="373977914"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 19 May 2020 23:20:55 -0700
-Date:   Tue, 19 May 2020 23:20:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 25/75] x86/sev-es: Add support for handling IOIO
- exceptions
-Message-ID: <20200520062055.GA17090@linux.intel.com>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-26-joro@8bytes.org>
+   d="scan'208";a="300347721"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 19 May 2020 23:22:19 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jbI7O-00050n-F3; Wed, 20 May 2020 14:22:18 +0800
+Date:   Wed, 20 May 2020 14:21:39 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:core/kprobes] BUILD SUCCESS
+ 66e9b0717102507e64f638790eaece88765cc9e5
+Message-ID: <5ec4cc73.9rZr1SUiYSBh/t+h%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-26-joro@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:16:35PM +0200, Joerg Roedel wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> Add support for decoding and handling #VC exceptions for IOIO events.
-> 
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> [ jroedel@suse.de: Adapted code to #VC handling framework ]
-> Co-developed-by: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/boot/compressed/sev-es.c |  32 +++++
->  arch/x86/kernel/sev-es-shared.c   | 202 ++++++++++++++++++++++++++++++
->  2 files changed, 234 insertions(+)
-> 
-> diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-> index 1241697dd156..17765e471e28 100644
-> --- a/arch/x86/boot/compressed/sev-es.c
-> +++ b/arch/x86/boot/compressed/sev-es.c
-> @@ -23,6 +23,35 @@
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/kprobes
+branch HEAD: 66e9b0717102507e64f638790eaece88765cc9e5  kprobes: Prevent probes in .noinstr.text section
 
-...
+elapsed time: 491m
 
-> +static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
-> +{
-> +	struct pt_regs *regs = ctxt->regs;
-> +	u64 exit_info_1, exit_info_2;
-> +	enum es_result ret;
-> +
-> +	ret = vc_ioio_exitinfo(ctxt, &exit_info_1);
-> +	if (ret != ES_OK)
-> +		return ret;
-> +
-> +	if (exit_info_1 & IOIO_TYPE_STR) {
-> +		int df = (regs->flags & X86_EFLAGS_DF) ? -1 : 1;
-> +		unsigned int io_bytes, exit_bytes;
-> +		unsigned int ghcb_count, op_count;
-> +		unsigned long es_base;
-> +		u64 sw_scratch;
-> +
-> +		/*
-> +		 * For the string variants with rep prefix the amount of in/out
-> +		 * operations per #VC exception is limited so that the kernel
-> +		 * has a chance to take interrupts an re-schedule while the
-> +		 * instruction is emulated.
+configs tested: 98
+configs skipped: 1
 
-Doesn't this also suppress single-step #DBs?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +		 */
-> +		io_bytes   = (exit_info_1 >> 4) & 0x7;
-> +		ghcb_count = sizeof(ghcb->shared_buffer) / io_bytes;
-> +
-> +		op_count    = (exit_info_1 & IOIO_REP) ? regs->cx : 1;
-> +		exit_info_2 = min(op_count, ghcb_count);
-> +		exit_bytes  = exit_info_2 * io_bytes;
-> +
-> +		es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
-> +
-> +		if (!(exit_info_1 & IOIO_TYPE_IN)) {
-> +			ret = vc_insn_string_read(ctxt,
-> +					       (void *)(es_base + regs->si),
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+m68k                             allyesconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200519
+i386                 randconfig-a005-20200519
+i386                 randconfig-a001-20200519
+i386                 randconfig-a003-20200519
+i386                 randconfig-a004-20200519
+i386                 randconfig-a002-20200519
+x86_64               randconfig-a003-20200519
+x86_64               randconfig-a005-20200519
+x86_64               randconfig-a004-20200519
+x86_64               randconfig-a006-20200519
+x86_64               randconfig-a002-20200519
+x86_64               randconfig-a001-20200519
+i386                 randconfig-a012-20200519
+i386                 randconfig-a014-20200519
+i386                 randconfig-a016-20200519
+i386                 randconfig-a011-20200519
+i386                 randconfig-a015-20200519
+i386                 randconfig-a013-20200519
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-SEV(-ES) is 64-bit only, why bother with the es_base charade?
-
-> +					       ghcb->shared_buffer, io_bytes,
-> +					       exit_info_2, df);
-
-df handling is busted, it's aways non-zero.  Same goes for the SI/DI
-adjustments below.
-
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		sw_scratch = __pa(ghcb) + offsetof(struct ghcb, shared_buffer);
-> +		ghcb_set_sw_scratch(ghcb, sw_scratch);
-> +		ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_IOIO,
-> +				   exit_info_1, exit_info_2);
-> +		if (ret != ES_OK)
-> +			return ret;
-
-Batching the memory accesses and I/O accesses separately is technically
-wrong, e.g. a #DB on a memory access will result in bogus data being shown
-in the debugger.  In practice it seems unlikely to matter, but I'm curious
-as to why string I/O is supported in the first place.  I didn't think there
-was that much string I/O in the kernel?
-
-> +
-> +		/* Everything went well, write back results */
-> +		if (exit_info_1 & IOIO_TYPE_IN) {
-> +			ret = vc_insn_string_write(ctxt,
-> +						(void *)(es_base + regs->di),
-> +						ghcb->shared_buffer, io_bytes,
-> +						exit_info_2, df);
-> +			if (ret)
-> +				return ret;
-> +
-> +			if (df)
-> +				regs->di -= exit_bytes;
-> +			else
-> +				regs->di += exit_bytes;
-> +		} else {
-> +			if (df)
-> +				regs->si -= exit_bytes;
-> +			else
-> +				regs->si += exit_bytes;
-> +		}
-> +
-> +		if (exit_info_1 & IOIO_REP)
-> +			regs->cx -= exit_info_2;
-> +
-> +		ret = regs->cx ? ES_RETRY : ES_OK;
-> +
-> +	} else {
-> +		int bits = (exit_info_1 & 0x70) >> 1;
-> +		u64 rax = 0;
-> +
-> +		if (!(exit_info_1 & IOIO_TYPE_IN))
-> +			rax = lower_bits(regs->ax, bits);
-> +
-> +		ghcb_set_rax(ghcb, rax);
-> +
-> +		ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_IOIO, exit_info_1, 0);
-> +		if (ret != ES_OK)
-> +			return ret;
-> +
-> +		if (exit_info_1 & IOIO_TYPE_IN) {
-> +			if (!ghcb_is_valid_rax(ghcb))
-> +				return ES_VMM_ERROR;
-> +			regs->ax = lower_bits(ghcb->save.rax, bits);
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> -- 
-> 2.17.1
-> 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
