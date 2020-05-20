@@ -2,117 +2,209 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E221C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2D12075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C208C2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gvUZ62Lb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R96242wJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgETIzy (ORCPT
+        id S1726824AbgETI4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:55:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29296 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726224AbgETIzy (ORCPT
+        Wed, 20 May 2020 04:56:03 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37758 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETI4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:55:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589964952;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=akmujYwqV7IKXWS2Az7WtujSNlNlXXC54n9CWBMtkzk=;
-        b=gvUZ62LbvL1BoqRCD2aVKCdgiNREboayyM9tRNCNcGaJBIppp4GajYQEwQNHEQ57W8L86p
-        eCJU4WC3PZ+VJe3FvW295yD386QHRcmYzmQoQaLbBbu38Scsyi3kcF+yS03Da2f8Wot3p+
-        snGM4UtkmxWArUET/fv15msRFZK+hKk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-164-9gpAt7FENdG6Z9DoeKtpWQ-1; Wed, 20 May 2020 04:55:51 -0400
-X-MC-Unique: 9gpAt7FENdG6Z9DoeKtpWQ-1
-Received: by mail-wm1-f71.google.com with SMTP id l26so653075wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:55:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=akmujYwqV7IKXWS2Az7WtujSNlNlXXC54n9CWBMtkzk=;
-        b=sHabzXU/UqH/ebcCLCjUE2xQNkDVVSOv95JxIPL3jlM2vQ5m9p52mX3iVyiH0kPMbV
-         XwHJ8F2GJwuOPPLcTzCM7DVz2Xd6EYMKoPMilI6HkQisdlbPfUvR5x2da9NF2VYF1c6u
-         bU87GjhdsAq4HBO4U6zjUc3HPcHkeUT/1m6x0elTl+htMaVPh6lv5J4J4IxK1Y5FOS2T
-         z+suVsmuFNNX8rgRPGYbiY24M5t7jHCp1SSLCKzUjjgZ5X3zW1YxKXOrg9YHqdSxMiMT
-         NsdjrLx1PaCgKec5aCEIzePsobK2QtW44/NBSHN7dFNxUSVWstJGaddyZN6E+XwsgSgZ
-         D5/g==
-X-Gm-Message-State: AOAM533JGUpR9fijhPzL+QPCzWLLGQLboFQTy5XEaMFJUGIXxNZUvSii
-        FrZlALTuRqT9BmSw4SGPhIR0Uyh3c+nMZ67bzmEjT9vs0QKXw1l1evqiug4XxuS3DaIyuGwRC92
-        8yrDOPfAV4nL+fAIiVG4LKlzh
-X-Received: by 2002:a1c:7d43:: with SMTP id y64mr3854358wmc.46.1589964949961;
-        Wed, 20 May 2020 01:55:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxPuljQ8ACnjmB5WsbRcDo1UAcpbT6hdWx3g2qAjmLnp22LP//Nkfq0hACI7Qm5NJJeVIUT0Q==
-X-Received: by 2002:a1c:7d43:: with SMTP id y64mr3854341wmc.46.1589964949786;
-        Wed, 20 May 2020 01:55:49 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id v24sm2480851wmh.45.2020.05.20.01.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 01:55:49 -0700 (PDT)
-Date:   Wed, 20 May 2020 04:55:47 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     geert@linux-m68k.org, linux-m68k@lists.linux-m68k.org,
-        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] m68k: add missing __user annotation in get_user()
-Message-ID: <20200520045441-mutt-send-email-mst@kernel.org>
-References: <20200520065750.8401-1-jasowang@redhat.com>
+        Wed, 20 May 2020 04:56:02 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04K8tcIM082933;
+        Wed, 20 May 2020 03:55:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589964938;
+        bh=94NnytqBpqUf8R7aIslBZEl7hkdO4TQ/1RS1F+OZnXY=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=R96242wJFEmcM0aj2vJcZbs7z2iJai3xa6+nTl2PNPwCa7dJd+YHwCBDwVk5cVnAB
+         HJ0Q5qttvfiqBtgMjqqLq3b2VsBp64C88XDxyHe/itTNMObzQyPHkUIyD00OmljnrV
+         ilc3aKwnEeUx0GicoDmkcTBerP8SeIo7+gfNYNGo=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04K8tbB8044324
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 03:55:38 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 03:55:37 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 03:55:37 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04K8taiv093353;
+        Wed, 20 May 2020 03:55:37 -0500
+Date:   Wed, 20 May 2020 14:25:36 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     <masonccyang@mxic.com.tw>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v5 09/19] mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+Message-ID: <20200520085534.yra4f5ww5xs23c4j@ti.com>
+References: <20200519142642.24131-1-p.yadav@ti.com>
+ <20200519142642.24131-10-p.yadav@ti.com>
+ <OF83616464.480FA751-ON4825856E.002A4483-4825856E.002BE6AF@mxic.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200520065750.8401-1-jasowang@redhat.com>
+In-Reply-To: <OF83616464.480FA751-ON4825856E.002A4483-4825856E.002BE6AF@mxic.com.tw>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:57:50PM +0800, Jason Wang wrote:
-> The ptr is a pointer to userspace memory. So we need annotate it with
-> __user otherwise we may get sparse warnings like:
+Hi Mason,
+
+On 20/05/20 03:59PM, masonccyang@mxic.com.tw wrote:
 > 
-> drivers/vhost/vhost.c:1603:13: sparse: sparse: incorrect type in initializer (different address spaces) @@    expected void const *__gu_ptr @@    got unsigned int [noderef] [usertypvoid const *__gu_ptr @@
-> drivers/vhost/vhost.c:1603:13: sparse:    expected void const *__gu_ptr
-> drivers/vhost/vhost.c:1603:13: sparse:    got unsigned int [noderef] [usertype] <asn:1> *idxp
+> Hi Pratyush, 
 > 
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: linux-m68k@lists.linux-m68k.org
-> Cc: linux-kernel@vger.kernel.org
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-
-Makes sense:
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
-> ---
->  arch/m68k/include/asm/uaccess_mm.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > +/**
+> > + * spi_nor_parse_profile1() - parse the xSPI Profile 1.0 table
+> > + * @nor:      pointer to a 'struct spi_nor'
+> > + * @param_header:   pointer to the 'struct sfdp_parameter_header' 
+> describing
+> > + *         the 4-Byte Address Instruction Table length and version.
+> > + * @params:      pointer to the 'struct spi_nor_flash_parameter' to be.
+> > + *
+> > + * Return: 0 on success, -errno otherwise.
+> > + */
+> > +static int spi_nor_parse_profile1(struct spi_nor *nor,
+> > +              const struct sfdp_parameter_header *profile1_header,
+> > +              struct spi_nor_flash_parameter *params)
+> > +{
+> > +   u32 *table, opcode, addr;
+> > +   size_t len;
+> > +   int ret, i;
+> > +
+> > +   len = profile1_header->length * sizeof(*table);
+> > +   table = kmalloc(len, GFP_KERNEL);
+> > +   if (!table)
+> > +      return -ENOMEM;
+> > +
+> > +   addr = SFDP_PARAM_HEADER_PTP(profile1_header);
+> > +   ret = spi_nor_read_sfdp(nor, addr, len, table);
+> > +   if (ret)
+> > +      goto out;
+> > +
+> > +   /* Fix endianness of the table DWORDs. */
+> > +   for (i = 0; i < profile1_header->length; i++)
+> > +      table[i] = le32_to_cpu(table[i]);
+> > +
+> > +   /* Get 8D-8D-8D fast read opcode and dummy cycles. */
+> > +   opcode = FIELD_GET(PROFILE1_DWORD1_RD_FAST_CMD, table[0]);
+> > +
+> > +   /*
+> > +    * Update the fast read settings. We set the default dummy cycles to 
+> 20
+> > +    * here. Flashes can change this value if they need to when enabling
+> > +    * octal mode.
+> > +    */
+> > +   spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8_DTR],
+> > +              0, 20, opcode,
+> > +              SNOR_PROTO_8_8_8_DTR);
+> > +
 > 
-> diff --git a/arch/m68k/include/asm/uaccess_mm.h b/arch/m68k/include/asm/uaccess_mm.h
-> index 7e85de984df1..9ae9f8d05925 100644
-> --- a/arch/m68k/include/asm/uaccess_mm.h
-> +++ b/arch/m68k/include/asm/uaccess_mm.h
-> @@ -142,7 +142,7 @@ asm volatile ("\n"					\
->  		__get_user_asm(__gu_err, x, ptr, u32, l, r, -EFAULT);	\
->  		break;							\
->  	case 8: {							\
-> -		const void *__gu_ptr = (ptr);				\
-> +		const void __user *__gu_ptr = (ptr);			\
->  		union {							\
->  			u64 l;						\
->  			__typeof__(*(ptr)) t;				\
-> -- 
-> 2.20.1
+> 
+> I thought we have a agreement that only do parse here, no other read 
+> parameters setting.
 
+Yes, and I considered it. But it didn't make much sense to me to 
+introduce an extra member in struct spi_nor just to make this call in 
+some other function later.
+
+Why exactly do you think doing this here is bad? The way I see it, we 
+avoid carrying around an extra member in spi_nor and this also allows 
+flashes to change the read settings easily in a post-sfdp hook. The 
+4bait parsing function does something similar.
+
+What are the benefits of doing it otherwise?
+
+Note that I did remove HWCAPS selection from here, which did seem like a 
+sane idea.
+ 
+> Driver should get dummy cycles used for various frequencies 
+> from 4th and 5th DWORD of xSPI table.[1]
+>  
+> [1] 
+> https://patchwork.ozlabs.org/project/linux-mtd/patch/1587451187-6889-3-git-send-email-masonccyang@mxic.com.tw/ 
+> 
+> 
+> In addition, 20 dummy cycles is for 200MHz but not for 100MHz, 133MHz and 
+> 166MHz
+> in case of read performance concern.
+> 
+> Given a correct dummy cycles for a specific device. [2] 
+> 
+> [2] 
+> https://patchwork.ozlabs.org/project/linux-mtd/patch/1587451187-6889-5-git-send-email-masonccyang@mxic.com.tw/ 
+
+The problem is that we don't know what speed the controller is driving 
+the flash at, and whether it is using Data Strobe. BFPT tells us the 
+maximum speed of the flash based on if Data Strobe is being used. The 
+controller can also drive it slower than the maximum. And it can drive 
+it with or without DS.
+
+So, we have to be conservative and just use the dummy cycles for the 
+maximum speed so we can at least make sure the flash works, albeit at 
+slightly less efficiency. I hard-coded it to 20 but I suppose we can 
+find it out from the Profile 1.0 table and use that (though we'd have to 
+round it to an even value to avoid tripping up controllers). Will fix in 
+next version (or, Tudor if you're fine with fixup! patches, I can send 
+that too because I suspect it will be a small change).
+ 
+> 
+> > +   /*
+> > +    * Set the Read Status Register dummy cycles and dummy address 
+> bytes.
+> > +    */
+> > +   if (table[0] & PROFILE1_DWORD1_RDSR_DUMMY)
+> > +      params->rdsr_dummy = 8;
+> > +   else
+> > +      params->rdsr_dummy = 4;
+> > +
+> > +   if (table[0] & PROFILE1_DWORD1_RDSR_ADDR_BYTES)
+> > +      params->rdsr_addr_nbytes = 4;
+> > +   else
+> > +      params->rdsr_addr_nbytes = 0;
+> > +
+> > +out:
+> > +   kfree(table);
+> > +   return ret;
+> > +}
+> > +
+> 
+
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments India
