@@ -6,88 +6,93 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6830AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44AD720829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303DF20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590008771;
-	bh=w5pgScQC9IMxAcxRg9tT1fSHc8dCAfMnzhfj/cz82FY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nz6P6XLm3Bu2bZB1kcoOotYV9MQOdQqDwP2t+ALWKAt3bSh5qvAdkQU5/vHVJAF+3
-	 WpcMHC5IjhtOsgc6rijiqvrGH6RX9PK+e5SaszG1qLdaI3DYvS09YVy1mtpBc+1JLr
-	 Sqy8hFoy9uue+CV/xlug+xi1v9V+ov1gwwz9lzHE=
+	s=default; t=1590008781;
+	bh=mktoGDJQC/fAa97P3VOHLea8UoOhJlAvmqvYbVJFscE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cu0xW+cBUrijTTyn61ZQsQC9XbS70tTxb5cWtb2Vnu81XA7uFeew1ScgcJz9XTkMk
+	 bae+GiIQm5JbCRtIAWOt6WxQ0hK6wEIW0OvZ6slbVd/NxvOboEcuoaUgKXN29GSNp6
+	 1lEDTrd7KInGtvHuBA7Dm/4sr3xITa15dbuPN9m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgETVGK (ORCPT
+        id S1728313AbgETVGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:06:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35071 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgETVGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:06:09 -0400
-Received: by mail-io1-f68.google.com with SMTP id 79so4958610iou.2;
-        Wed, 20 May 2020 14:06:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=09WBBiNg8+91WX/1ofp/cbQVZYmY4/wJ7S0gDVoiaZk=;
-        b=fRvpHPjLpveR7b3o/g6KER6z2RT8mpKX+WGNVXPwldKJpm9pSYq5qmmAayHiZAtHk9
-         SsuKs0tyy2tj+p6QK9hp4D+3ovZf8Qy3ap4pn2rLEI+UVlCjSiaazbbkNNhOlSWzMp1h
-         +JgEbYezLHZ07ZimTJcu/TLSb9sX6WHMZ8tnylb0wHppVvIOkCJaucnrEQ+h1aUcEfH2
-         NhfGqpib7KUC0HtNzSFnqSELeCg75pfh0z6mRJJFqjx6Zu57y/TEEutGcNMlg6kbjxly
-         Wy49RBdawLMRBH2LxMqgSGdJSYYTH2YT1nkGargr5LmoPbCHGRX8Rlk03feS8h2V3keM
-         i6Tw==
-X-Gm-Message-State: AOAM532TuZbSA9Ftvw/BwMVo6R0+NraRzrmqyOecmLWniPINdv7Uw/tN
-        x24wyjyx9WlxuEQdMZO4Y3JdMVg=
-X-Google-Smtp-Source: ABdhPJzagkFCHWiZjW5SLGpSt8Lquwvefwmka684NQTnQdAmOG8QYT+tbPEiButaZUh++R9xb/u2hg==
-X-Received: by 2002:a02:c00e:: with SMTP id y14mr938022jai.15.1590008767247;
-        Wed, 20 May 2020 14:06:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t18sm1953577ili.24.2020.05.20.14.06.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 14:06:06 -0700 (PDT)
-Received: (nullmailer pid 583652 invoked by uid 1000);
-        Wed, 20 May 2020 21:06:05 -0000
-Date:   Wed, 20 May 2020 15:06:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        Tom Joseph <tjoseph@cadence.com>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 04/14] PCI: cadence: Add support to start link and
- verify link status
-Message-ID: <20200520210605.GA583572@bogus>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-5-kishon@ti.com>
+        Wed, 20 May 2020 17:06:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgETVGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:06:20 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25925207E8;
+        Wed, 20 May 2020 21:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590008779;
+        bh=mktoGDJQC/fAa97P3VOHLea8UoOhJlAvmqvYbVJFscE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HX47MK5oOBict8yLT59bQJghOiHzwvgpFJdeyaOY3EwTej10p7dzPjGKR3m+XTxKM
+         kc56F/fnmKO4n51HvcIlzFauJcGO+ESvcYSPrMcrc3L+JYBMd9OfGshOg45xBpG9Bp
+         Mc3dMtW1mgo+QDRQSCZBT/ih8W5imzgBrBwzzw04=
+Date:   Wed, 20 May 2020 14:06:17 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Huazhong Tan <tanhuazhong@huawei.com>
+Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        GuoJia Liao <liaoguojia@huawei.com>
+Subject: Re: [PATCH net-next 1/2] net: hns3: adds support for dynamic VLAN
+ mode
+Message-ID: <20200520140617.6d8338bf@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <1589937613-40545-2-git-send-email-tanhuazhong@huawei.com>
+References: <1589937613-40545-1-git-send-email-tanhuazhong@huawei.com>
+        <1589937613-40545-2-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506151429.12255-5-kishon@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 20:44:19 +0530, Kishon Vijay Abraham I wrote:
-> Add cdns_pcie_ops to start link and verify link status. The registers
-> to start link and to check link status is in Platform specific PCIe
-> wrapper. Add support for platform specific drivers to add callback
-> functions for the PCIe Cadence core to start link and verify link status.
+On Wed, 20 May 2020 09:20:12 +0800 Huazhong Tan wrote:
+> From: GuoJia Liao <liaoguojia@huawei.com>
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../pci/controller/cadence/pcie-cadence-ep.c  |  8 +++++
->  .../controller/cadence/pcie-cadence-host.c    | 28 +++++++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h | 30 +++++++++++++++++++
->  3 files changed, 66 insertions(+)
+> There is a scenario which needs vNICs enable the VLAN filter
+> in access port, while disable the VLAN filter in trunk port.
+> Access port and trunk port can switch according to the user's
+> configuration.
 > 
+> This patch adds support for the dynamic VLAN mode. then the
+> HNS3 driver can support two VLAN modes: default VLAN mode and
+> dynamic VLAN mode. User can switch the mode through the
+> configuration file.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+What configuration file? Sounds like you're reimplementing trusted 
+VFs (ndo_set_vf_trust).
+
+> In default VLAN mode, port based VLAN filter and VF VLAN
+> filter should always be enabled.
+> 
+> In dynamic VLAN mode, port based VLAN filter is disabled, and
+> VF VLAN filter is disabled defaultly, and should be enabled
+> when there is a non-zero VLAN ID. In addition, VF VLAN filter
+> is enabled if PVID is enabled for vNIC.
+> 
+> When enable promisc, VLAN filter should be disabled. When disable
+> promisc, VLAN filter's status depends on the value of
+> 'vport->vf_vlan_en', which is used to record the VF VLAN filter
+> status.
+> 
+> In default VLAN mode, 'vport->vf_vlan_en' always be 'true', so
+> VF VLAN filter will set to be enabled after disabling promisc.
+> 
+> In dynamic VLAN mode, 'vport->vf_vlan_en' lies on whether there
+> is a non-zero VLAN ID.
+> 
+> Signed-off-by: GuoJia Liao <liaoguojia@huawei.com>
+> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
