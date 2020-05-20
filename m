@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C79520829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8F420708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589934799;
-	bh=SAzIvB9/KlljR9/+QQM7s6jGk448vsklZKoyBEgSIZw=;
+	s=default; t=1589934878;
+	bh=PzODOPszK7QJGg/Pd4aGE1e041moSgSo4TpWtr4ybCo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FxtJ8HQVJxv+Xpw6FGU3sNT2s6Kh/5BAW07M8lJOogMCLyo5KvhpmflSUYA3moSQ9
-	 iGMVc5u+CjWKEW5c7NWsZVi/a++p7IVVxjaXICaIiSF5eBYL95w6X0TecbsU0c0cRU
-	 uLQXADi6ZYg+lABS4pG+rPm6s08oG6dH7NeXhytY=
+	b=YC0cG+SZRy82u7H/lqcyTjTjvOq5ab0bR3NC6XkMn9xR6pAHMholtZvrYa/C38DSf
+	 mzTqtjh8lCLzExZJL+ctHthUNaDb4HvBjdtpIP2IimN08ttDv7B+aON1nzDqjyttzZ
+	 zisCmghF9JAS6+4QBr9arn3T+94ePZKLNk+j+p2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgETAdS (ORCPT
+        id S1728329AbgETAeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46368 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 20:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbgETAdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:33:18 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        id S1726595AbgETAeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:34:37 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C0FE20884
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:33:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D4FB2088E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589934797;
-        bh=SAzIvB9/KlljR9/+QQM7s6jGk448vsklZKoyBEgSIZw=;
+        s=default; t=1589934876;
+        bh=PzODOPszK7QJGg/Pd4aGE1e041moSgSo4TpWtr4ybCo=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0WIw2M4nB4wFPtK+kKnrRFmZ7QbA5g5mnxWFRQmgp7Lo+M85mtKy+XCAzYaRaKf+c
-         zBwaVvPwXy0u4Z57KYMp7EpqTrw+ahz2vDsPeJcc2ikn3X8ZfFaroEk+Jh/uTAA6fJ
-         ZhruESKjsxJ7aK3gCv/R2/WOgUZe7sdFjj7RcD5E=
-Received: by mail-wm1-f51.google.com with SMTP id z4so976374wmi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:33:17 -0700 (PDT)
-X-Gm-Message-State: AOAM530BTb2uoMCxJijBWtraIpuTjDRiYdIudxG6Ev1qhlf3KNqHHZhC
-        Bna/gitQ9KBq7aKuZhVvWbGwH+OFcrJSnyxyHf7cbg==
-X-Google-Smtp-Source: ABdhPJyjV+47YKc6lyCfMCpB5CyVHHbeGAfAsPauUnNG75r+5QLHXKVDjoYDZmmiBW9oGFBYz+lV9jmJDq3VLVMhLpQ=
-X-Received: by 2002:a1c:8141:: with SMTP id c62mr1930926wmd.21.1589934795733;
- Tue, 19 May 2020 17:33:15 -0700 (PDT)
+        b=trWWJXX8op+fu6pgvYVSw25Z27AYPC5YP+IQyNji+o6E02Y+xAaVhoXXIT83O6JN+
+         Y0+5dza5REnUS+EtfB1j5MjENJPKlH0/vr77ABtk/rsWyw7fRFL1tZRt1tsGaAqkuF
+         qGnVk4PpfThhbrOq1eYJuPSpv9g0eUroy/Yzvkg4=
+Received: by mail-wm1-f46.google.com with SMTP id w64so1107848wmg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:34:36 -0700 (PDT)
+X-Gm-Message-State: AOAM533smvwbOSgK68dzJW2kdlss5SNz0A+Ik7tcuOq0jvzlEKERvxHP
+        qGc4i/+EZoxrd24XR6Ge2ZXWj32MDGkouI4w+RClQA==
+X-Google-Smtp-Source: ABdhPJzOFowFHUsqK6nOJ4QBbMuNarMpQnu3lzAt1u+BATbyGaJZTyGsU+pE5IcZTYy5WwNZd3gx1g/r1gEmrbqBmH0=
+X-Received: by 2002:a1c:2bc2:: with SMTP id r185mr2059578wmr.49.1589934874890;
+ Tue, 19 May 2020 17:34:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235127.607881162@linutronix.de>
-In-Reply-To: <20200515235127.607881162@linutronix.de>
+References: <20200515234547.710474468@linutronix.de> <20200515235127.699422368@linutronix.de>
+In-Reply-To: <20200515235127.699422368@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 May 2020 17:33:04 -0700
-X-Gmail-Original-Message-ID: <CALCETrWm2G_NMKyJ-gPERUyi_WBXmGs8Ct2YwSZcdeL5=ZBu7A@mail.gmail.com>
-Message-ID: <CALCETrWm2G_NMKyJ-gPERUyi_WBXmGs8Ct2YwSZcdeL5=ZBu7A@mail.gmail.com>
-Subject: Re: [patch V6 32/37] x86/entry/64: Remove IRQ stack switching ASM
+Date:   Tue, 19 May 2020 17:34:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrVA9R4aTwtibx5JaMT0wcDDc-S4=_oBwfE5FB7OQhsbXA@mail.gmail.com>
+Message-ID: <CALCETrVA9R4aTwtibx5JaMT0wcDDc-S4=_oBwfE5FB7OQhsbXA@mail.gmail.com>
+Subject: Re: [patch V6 33/37] x86/entry: Make enter_from_user_mode() static
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -85,5 +85,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
+>
+> The ASM users are gone. All callers are local.
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
