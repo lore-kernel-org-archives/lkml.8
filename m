@@ -2,94 +2,141 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53061C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A29320874
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0261A20759
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTWlThUu"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="OELmW9qL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgETX0g (ORCPT
+        id S1728930AbgETX0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55756 "EHLO
+        Wed, 20 May 2020 19:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgETX0b (ORCPT
+        with ESMTP id S1728846AbgETX0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:26:31 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB7DBC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:30 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id i15so4823364wrx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:30 -0700 (PDT)
+        Wed, 20 May 2020 19:26:16 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46126C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:16 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f189so5498381qkd.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=XQj0KuafA6rqxjjwjiH0uiqBGMfrXq9B8u6LHiRahoY=;
-        b=XTWlThUuLFfp0AXcYsOWhbDBsC2jigF2wh06CcO/RNWQ1mPqzq2JV1awnIPu/gMSW4
-         ZrxLpbgThc+NwB7ZZFA2vb8Lu9lTkRtwuU3/+Cftj9C+RtG9gp3DN0kKEox6XYv6Cjgu
-         mRbm/7RL8ZmrGytfmWZQx+awifYXzS2424XwH4I+oa835meQ5zuU8SVOABFNTx8YAiNR
-         yFa0jtiEc3NHKQSyb8TTJZEg4Q3qY4en1q4LpkA8RTrlPLbz/mt0u0ZFyjl/fJiKg7Hb
-         9iD8qt6+LRy9jEEkYOFRw6fg+HokyHwarPaJvkY3wWg2P3kwapYc24/yyi++/YwgDt4X
-         qvcw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cWi8GUMvjXVcjgAmpN1v26MqAhRkGwn3WDFKVSmqebQ=;
+        b=OELmW9qLobpcB8i03ujKYrp+niXe2qkQDDyCEagaV+SP83teno7CkK8mwvctRBTkg1
+         Jn2aAhUzNJaZz9tfP80zhnf138nqWeO0vsvISlzXvS2SGVB93ZvUEVNaN3q2O+GkN7NE
+         bjg8Tg/TDJarAz+t2CHuC3NxYvV30ehHzuIqNk7gjrpRyt3UkikzztTsRkDHEd+njr0f
+         nM8CH+weltbNVSkCzZRV+t3r4RbdHr+Pw5a8Kuz1ujBKDCzLMMOzuAcXrX8etVZiQqlc
+         HFQ0hCpStUibnNrSOGGtuXoKx+Y7Xr81FW+cwTS/uhV6bMLBMl+hCXebE0sLmM8ZmxPZ
+         /01g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XQj0KuafA6rqxjjwjiH0uiqBGMfrXq9B8u6LHiRahoY=;
-        b=V13D6Ku369BhyFcnQ4qS244pyYS8364eT4Ce8Q+9tBnyMowpz3kb4+8IzY4ZHcs5bR
-         D/uisKDZuraVcDoDqWNrDraQJQLUITYNr66SCTY6uLKnLB5TNfDi/3XAEsB8Njj//4cy
-         S5tXCUzPRSCVNJC7cxLbujIjIZXD6jhkCNvquT3l7+tdasc41t1m0h/tO5p7r5zCa9wV
-         /ahXNZPg0Kc3I+2aDeGBRkcglWppGjXNdUM1fKHYe3e+CRSX+85c3QC0FOT97249rY5l
-         DuB4vItklzqMcwJ+HO5dwSpMLGH47UaqM5/Oboj8ywK+pPx1dglhWtKLbzb+UYInUFyJ
-         YrWw==
-X-Gm-Message-State: AOAM533iVEhIp2rIbA/evWnm85vOhQqkWE+Z2Yc4cm9xHUj1uE4/Pyl9
-        DA/C72t/vwfwb2aA17naZA==
-X-Google-Smtp-Source: ABdhPJwS0Oc08++7oTKH4IYWa8YQ4ljm/jdHQ4MxgGfEuLFVwJLFyp9sloQn8AlZ3oJWGJPYc/4+nA==
-X-Received: by 2002:adf:f5c4:: with SMTP id k4mr5707115wrp.23.1590017189567;
-        Wed, 20 May 2020 16:26:29 -0700 (PDT)
-Received: from localhost (42.red-83-37-136.dynamicip.rima-tde.net. [83.37.136.42])
-        by smtp.gmail.com with ESMTPSA id u7sm4398657wmm.8.2020.05.20.16.26.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 16:26:29 -0700 (PDT)
-Subject: Re: [dm-devel] [PATCH v4 0/2] Historical Service Time Path Selector
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>, agk@redhat.com,
-        snitzer@redhat.com
-Cc:     breeves@redhat.com, linux-kernel@vger.kernel.org,
-        khazhy@google.com, song@kernel.org, dm-devel@redhat.com,
-        mpatocka@redhat.com, kernel@collabora.com
-References: <20200511163910.3778467-1-krisman@collabora.com>
-From:   Xose Vazquez Perez <xose.vazquez@gmail.com>
-Message-ID: <ee987451-6d17-b978-809e-e0fe56dc13ce@gmail.com>
-Date:   Thu, 21 May 2020 01:26:27 +0200
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cWi8GUMvjXVcjgAmpN1v26MqAhRkGwn3WDFKVSmqebQ=;
+        b=JAdN8SARWVEmFdi2b+LLiE5WA5lmrPjahPZyXgQlwTa7PV9AEZJkvSP0sv0PAXD+TG
+         5AiwD2hoIRagYNvxW+eNOkqPRK4F10MzajZKlc79VT2jklJ0zLEvf5QgWJnX0pAakLqT
+         a33F6a5dqOmhGhrI/B9ENCPUMWH4LeMDPLnNnP4bm/dIAmd9qq6rEKwJQrrwRRHBReRF
+         wW/tHfMERM99QLiASJgsGWfkC7EgTkF5dB9Wxad+oQDiT5BF2VZPidg2hHccnPPHUN5F
+         h0TZtOdQBLcX3HUnoLadjDzCJZPduxKqbuQY8geOJ/DN4A0suyLgc/rbbhAZYaPoIPRW
+         OXbw==
+X-Gm-Message-State: AOAM533YN0dxHVtJApjVE1PzERn7WhATZOOwqzY5kNqJ0s/5gr9UJePq
+        MYxTGQlHynfT4diKgf4f55aqyQ0ZJbw=
+X-Google-Smtp-Source: ABdhPJw3U94cPbOfdJ5cTZaAWKG+ZGczSAYc2f5W6Y4QceSR5KNnjHRzPv09HTHZ8XUkGYZlDFHjoA==
+X-Received: by 2002:a37:bd81:: with SMTP id n123mr7017392qkf.57.1590017175541;
+        Wed, 20 May 2020 16:26:15 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:4708])
+        by smtp.gmail.com with ESMTPSA id p22sm2693945qkp.109.2020.05.20.16.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 16:26:14 -0700 (PDT)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     linux-mm@kvack.org
+Cc:     Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH 10/14] mm: only count actual rotations as LRU reclaim cost
+Date:   Wed, 20 May 2020 19:25:21 -0400
+Message-Id: <20200520232525.798933-11-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520232525.798933-1-hannes@cmpxchg.org>
+References: <20200520232525.798933-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20200511163910.3778467-1-krisman@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/20 6:39 PM, Gabriel Krisman Bertazi wrote:
+When shrinking the active file list we rotate referenced pages only
+when they're in an executable mapping. The others get deactivated.
+When it comes to balancing scan pressure, though, we count all
+referenced pages as rotated, even the deactivated ones. Yet they do
+not carry the same cost to the system: the deactivated page *might*
+refault later on, but the deactivation is tangible progress toward
+freeing pages; rotations on the other hand cost time and effort
+without getting any closer to freeing memory.
 
-> This fourth version of HST applies the suggestion from Mikulas Patocka
-> to do the ktime_get_ns inside the mpath map_bio instead of generic
-> device-mapper code. This means that struct dm_mpath_io gained another
-> 64bit field.  For the request-based case, we continue to use the block
-> layer start time information.
+Don't treat both events as equal. The following patch will hook up LRU
+balancing to cache and anon refaults, which are a much more concrete
+cost signal for reclaiming one list over the other. Thus, remove the
+maybe-IO cost bias from page references, and only note the CPU cost
+for actual rotations that prevent the pages from getting reclaimed.
 
-You should add some info to the multipath.conf.5 man page ( 
-https://git.opensvc.com/gitweb.cgi?p=multipath-tools/.git;a=blob;f=multipath/multipath.conf.5;h=05a5e8ffeb110d969f3b2381eb3b88d7f28380f6;hb=HEAD#l189 ),
-or none one is going to use it.
+v2: readable changelog (Michal Hocko)
 
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+---
+ mm/vmscan.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Thanks.
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 6ff63906a288..2c3fb8dd1159 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2054,7 +2054,6 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 
+ 		if (page_referenced(page, 0, sc->target_mem_cgroup,
+ 				    &vm_flags)) {
+-			nr_rotated += hpage_nr_pages(page);
+ 			/*
+ 			 * Identify referenced, file-backed active pages and
+ 			 * give them one more trip around the active list. So
+@@ -2065,6 +2064,7 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 			 * so we ignore them here.
+ 			 */
+ 			if ((vm_flags & VM_EXEC) && page_is_file_lru(page)) {
++				nr_rotated += hpage_nr_pages(page);
+ 				list_add(&page->lru, &l_active);
+ 				continue;
+ 			}
+@@ -2080,10 +2080,8 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 	 */
+ 	spin_lock_irq(&pgdat->lru_lock);
+ 	/*
+-	 * Count referenced pages from currently used mappings as rotated,
+-	 * even though only some of them are actually re-activated.  This
+-	 * helps balance scan pressure between file and anonymous pages in
+-	 * get_scan_count.
++	 * Rotating pages costs CPU without actually
++	 * progressing toward the reclaim goal.
+ 	 */
+ 	lru_note_cost(lruvec, file, nr_rotated);
+ 
+-- 
+2.26.2
+
