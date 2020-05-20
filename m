@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C576D205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D413A205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgETO0C (ORCPT
+        id S1728406AbgETOZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:26:02 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33076 "EHLO
+        Wed, 20 May 2020 10:25:56 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33074 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727039AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727040AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-00036J-FW; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPby-00037p-KL; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DR9-AI; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbw-007DUg-Li; Wed, 20 May 2020 15:22:20 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        "Karl =?UTF-8?Q?Rudb=C3=A6k=20?=Olsen" <karl@micro-technic.com>
-Date:   Wed, 20 May 2020 15:14:09 +0100
-Message-ID: <lsq.1589984008.934620045@decadent.org.uk>
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, "Jan Kara" <jack@suse.cz>
+Date:   Wed, 20 May 2020 15:14:40 +0100
+Message-ID: <lsq.1589984009.466041298@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 41/99] ARM: dts: at91: sama5d3: fix maximum
- peripheral clock rates
+Subject: [PATCH 3.16 72/99] ext4, jbd2: ensure panic when aborting with
+ zero errno
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,157 +56,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-commit ee0aa926ddb0bd8ba59e33e3803b3b5804e3f5da upstream.
+commit 51f57b01e4a3c7d7bdceffd84de35144e8c538e7 upstream.
 
-Currently the maximum rate for peripheral clock is calculated based on a
-typical 133MHz MCK. The maximum frequency is defined in the datasheet as a
-ratio to MCK. Some sama5d3 platforms are using a 166MHz MCK. Update the
-device trees to match the maximum rate based on 166MHz.
+JBD2_REC_ERR flag used to indicate the errno has been updated when jbd2
+aborted, and then __ext4_abort() and ext4_handle_error() can invoke
+panic if ERRORS_PANIC is specified. But if the journal has been aborted
+with zero errno, jbd2_journal_abort() didn't set this flag so we can
+no longer panic. Fix this by always record the proper errno in the
+journal superblock.
 
-Reported-by: Karl Rudbæk Olsen <karl@micro-technic.com>
-Fixes: d2e8190b7916 ("ARM: at91/dt: define sama5d3 clocks")
-Link: https://lore.kernel.org/r/20200110172007.1253659-1-alexandre.belloni@bootlin.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-[bwh: Backported to 3.16: uart0_clk is only defined in sama5d3_uart.dtsi]
+Fixes: 4327ba52afd03 ("ext4, jbd2: ensure entering into panic after recording an error in superblock")
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191204124614.45424-3-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1031,43 +1031,43 @@
- 					usart0_clk: usart0_clk {
- 						#clock-cells = <0>;
- 						reg = <12>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ fs/jbd2/checkpoint.c |  2 +-
+ fs/jbd2/journal.c    | 15 ++++-----------
+ 2 files changed, 5 insertions(+), 12 deletions(-)
+
+--- a/fs/jbd2/checkpoint.c
++++ b/fs/jbd2/checkpoint.c
+@@ -173,7 +173,7 @@ void __jbd2_log_wait_for_space(journal_t
+ 				       "journal space in %s\n", __func__,
+ 				       journal->j_devname);
+ 				WARN_ON(1);
+-				jbd2_journal_abort(journal, 0);
++				jbd2_journal_abort(journal, -EIO);
+ 			}
+ 			write_lock(&journal->j_state_lock);
+ 		} else {
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2106,12 +2106,10 @@ static void __journal_abort_soft (journa
  
- 					usart1_clk: usart1_clk {
- 						#clock-cells = <0>;
- 						reg = <13>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ 	__jbd2_journal_abort_hard(journal);
  
- 					usart2_clk: usart2_clk {
- 						#clock-cells = <0>;
- 						reg = <14>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+-	if (errno) {
+-		jbd2_journal_update_sb_errno(journal);
+-		write_lock(&journal->j_state_lock);
+-		journal->j_flags |= JBD2_REC_ERR;
+-		write_unlock(&journal->j_state_lock);
+-	}
++	jbd2_journal_update_sb_errno(journal);
++	write_lock(&journal->j_state_lock);
++	journal->j_flags |= JBD2_REC_ERR;
++	write_unlock(&journal->j_state_lock);
+ }
  
- 					usart3_clk: usart3_clk {
- 						#clock-cells = <0>;
- 						reg = <15>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
+ /**
+@@ -2153,11 +2151,6 @@ static void __journal_abort_soft (journa
+  * failure to disk.  ext3_error, for example, now uses this
+  * functionality.
+  *
+- * Errors which originate from within the journaling layer will NOT
+- * supply an errno; a null errno implies that absolutely no further
+- * writes are done to the journal (unless there are any already in
+- * progress).
+- *
+  */
  
- 					twi0_clk: twi0_clk {
- 						reg = <18>;
- 						#clock-cells = <0>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					twi1_clk: twi1_clk {
- 						#clock-cells = <0>;
- 						reg = <19>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					twi2_clk: twi2_clk {
- 						#clock-cells = <0>;
- 						reg = <20>;
--						atmel,clk-output-range = <0 16625000>;
-+						atmel,clk-output-range = <0 41500000>;
- 					};
- 
- 					mci0_clk: mci0_clk {
-@@ -1083,19 +1083,19 @@
- 					spi0_clk: spi0_clk {
- 						#clock-cells = <0>;
- 						reg = <24>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					spi1_clk: spi1_clk {
- 						#clock-cells = <0>;
- 						reg = <25>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					tcb0_clk: tcb0_clk {
- 						#clock-cells = <0>;
- 						reg = <26>;
--						atmel,clk-output-range = <0 133000000>;
-+						atmel,clk-output-range = <0 166000000>;
- 					};
- 
- 					pwm_clk: pwm_clk {
-@@ -1106,7 +1106,7 @@
- 					adc_clk: adc_clk {
- 						#clock-cells = <0>;
- 						reg = <29>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					dma0_clk: dma0_clk {
-@@ -1137,13 +1137,13 @@
- 					ssc0_clk: ssc0_clk {
- 						#clock-cells = <0>;
- 						reg = <38>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					ssc1_clk: ssc1_clk {
- 						#clock-cells = <0>;
- 						reg = <39>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					sha_clk: sha_clk {
---- a/arch/arm/boot/dts/sama5d3_can.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_can.dtsi
-@@ -37,13 +37,13 @@
- 					can0_clk: can0_clk {
- 						#clock-cells = <0>;
- 						reg = <40>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					can1_clk: can1_clk {
- 						#clock-cells = <0>;
- 						reg = <41>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
---- a/arch/arm/boot/dts/sama5d3_uart.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
-@@ -42,13 +42,13 @@
- 					uart0_clk: uart0_clk {
- 						#clock-cells = <0>;
- 						reg = <16>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 
- 					uart1_clk: uart1_clk {
- 						#clock-cells = <0>;
- 						reg = <17>;
--						atmel,clk-output-range = <0 66000000>;
-+						atmel,clk-output-range = <0 83000000>;
- 					};
- 				};
- 			};
+ void jbd2_journal_abort(journal_t *journal, int errno)
 
