@@ -2,162 +2,116 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D64207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hbw+Sxm7"
+	by mail.kernel.org (Postfix) with ESMTP id 5F2DE207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgETR1i (ORCPT
+        id S1727880AbgETR1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:27:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44022 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgETR1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:27:38 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KHRQnD119589;
-        Wed, 20 May 2020 17:27:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ZI+6TF7yJH53zB2IfHHOio/WtJQNIx/nlTr5nUcwRyo=;
- b=hbw+Sxm7GgFCtoB0oR+J7ScLExUTPpDmgmRf4XRgPt5ZZq0UbNZuo4tNT0gCwCdsgaXf
- Zb3BNbolWjR02A2T8ZkQzrFAFg7O8tHMR6VSc2X0+0PLoQlmQUezlvDWZDiPuIROF4pO
- Rr0//G2s33Tm0KzkAMhfsk/K+S4edYBBOVgqNZ6lbyqdQgXYOZd9x3uf1rGJtzOxTFqX
- ODyILwoByLK6zyHlXqx/PPTEDDtAzcc+BUMxJOBvT67EZN3otvU/CWRSSEXoz8qrc8XU
- W2G24P7P5DeEfq56RBJWtEnCqTM9eUlz/nv9ZRjUC/uCu4kGeCwoyL8xmLEAWclnwjGE cg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 31501raxu9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 17:27:26 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KHMTgo084411;
-        Wed, 20 May 2020 17:27:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 314gm7ej5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 17:27:20 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KHRHeJ023238;
-        Wed, 20 May 2020 17:27:17 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 May 2020 10:27:17 -0700
-Subject: Re: kernel BUG at mm/hugetlb.c:LINE!
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Colin Walters <walters@verbum.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm <linux-mm@kvack.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <000000000000b4684e05a2968ca6@google.com>
- <aa7812b8-60ae-8578-40db-e71ad766b4d3@oracle.com>
- <CAJfpegtVca6H1JPW00OF-7sCwpomMCo=A2qr5K=9uGKEGjEp3w@mail.gmail.com>
- <bb232cfa-5965-42d0-88cf-46d13f7ebda3@www.fastmail.com>
- <9a56a79a-88ed-9ff4-115e-ec169cba5c0b@oracle.com>
- <CAJfpegsNVB12MQ-Jgbb-f=+i3g0Xy52miT3TmUAYL951HVQS_w@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <78313ae9-8596-9cbe-f648-3152660be9b3@oracle.com>
-Date:   Wed, 20 May 2020 10:27:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 13:27:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:60600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgETR1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:27:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE19730E;
+        Wed, 20 May 2020 10:27:44 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D77FB3F305;
+        Wed, 20 May 2020 10:27:42 -0700 (PDT)
+Date:   Wed, 20 May 2020 18:27:36 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Tuan Phan <tuanphan@os.amperecomputing.com>, will@kernel.org
+Cc:     patches@amperecomputing.com, Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] ACPI/IORT: Fix PMCG node single ID mapping handling
+Message-ID: <20200520172736.GA10693@e121166-lin.cambridge.arm.com>
+References: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegsNVB12MQ-Jgbb-f=+i3g0Xy52miT3TmUAYL951HVQS_w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200140
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200141
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 4:20 AM, Miklos Szeredi wrote:
-> On Tue, May 19, 2020 at 2:35 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>
->> On 5/18/20 4:41 PM, Colin Walters wrote:
->>>
->>> On Tue, May 12, 2020, at 11:04 AM, Miklos Szeredi wrote:
->>>
->>>>> However, in this syzbot test case the 'file' is in an overlayfs filesystem
->>>>> created as follows:
->>>>>
->>>>> mkdir("./file0", 000)                   = 0
->>>>> mount(NULL, "./file0", "hugetlbfs", MS_MANDLOCK|MS_POSIXACL, NULL) = 0
->>>>> chdir("./file0")                        = 0
->>>>> mkdir("./file1", 000)                   = 0
->>>>> mkdir("./bus", 000)                     = 0
->>>>> mkdir("./file0", 000)                   = 0
->>>>> mount("\177ELF\2\1\1", "./bus", "overlay", 0, "lowerdir=./bus,workdir=./file1,u"...) = 0
->>>
->>> Is there any actual valid use case for mounting an overlayfs on top of hugetlbfs?  I can't think of one.  Why isn't the response to this to instead only allow mounting overlayfs on top of basically a set of whitelisted filesystems?
->>>
->>
->> I can not think of a use case.  I'll let Miklos comment on adding whitelist
->> capability to overlayfs.
+On Wed, May 20, 2020 at 10:13:07AM -0700, Tuan Phan wrote:
+> An IORT PMCG node can have no ID mapping if its overflow interrupt is
+> wire based therefore the code that parses the PMCG node can not assume
+> the node will always have a single mapping present at index 0.
 > 
-> I've not heard of overlayfs being used over hugetlbfs.
+> Fix iort_get_id_mapping_index() by checking for an overflow interrupt
+> and mapping count.
 > 
-> Overlayfs on tmpfs is definitely used, I guess without hugepages.
-> But if we'd want to allow tmpfs _without_ hugepages but not tmpfs
-> _with_ hugepages, then we can't just whitelist based on filesystem
-> type, but need to look at mount options as well.  Which isn't really a
-> clean solution either.
+> Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
 > 
->> IMO - This BUG/report revealed two issues.  First is the BUG by mmap'ing
->> a hugetlbfs file on overlayfs.  The other is that core mmap code will skip
->> any filesystem specific get_unmapped area routine if on a union/overlay.
->> My patch fixes both, but if we go with a whitelist approach and don't allow
->> hugetlbfs I think we still need to address the filesystem specific
->> get_unmapped area issue.  That is easy enough to do by adding a routine to
->> overlayfs which calls the routine for the underlying fs.
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+> ---
+> v1 -> v2:
+> - Use pmcg node to detect wired base overflow interrupt.
 > 
-> I think the two are strongly related:  get_unmapped_area() adjusts the
-> address alignment, and the is_file_hugepages() call in
-> ksys_mmap_pgoff() adjusts the length alignment.
+> v2 -> v3:
+> - Address Hanjun and Robin's comments.
 > 
-> Is there any other purpose for which  f_op->get_unmapped_area() is
-> used by a filesystem?
+> v3 -> v4:
+> - Update the title and description as mentioned by Lorenzo.
 > 
+> v4 -> v5:
+> - Remove period in the title and commit references.
+> 
+>  drivers/acpi/arm64/iort.c | 5 +++++
 
-I am fairly confident it is all about checking limits and alignment.  The
-filesystem knows if it can/should align to base or huge page size. DAX has
-some interesting additional restrictions, and several 'traditional' filesystems
-check if they are 'on DAX'.
+Hi Will,
 
-In a previous e-mail, you suggested hugetlb_get_unmapped_area could do the
-length adjustment in hugetlb_get_unmapped_area (generic and arch specific).
-I agree, although there may be the need to add length overflow checks in
-these routines (after round up) as this is done in core code now.  However,
-this can be done as a separate cleanup patch.
+is there a chance we can get this patch into v5.8 ? I understand
+we are very late in the cycle but I wanted to ask (it applies cleanly
+to for-next/acpi).
 
-In any case, we need to get the core mmap code to call filesystem specific
-get_unmapped_area if on a union/overlay.  The patch I suggested does this
-by simply calling real_file to determine if there is a filesystem specific
-get_unmapped_area.  The other approach would be to provide an overlayfs
-get_unmapped_area that calls the underlying filesystem get_unmapped_area.
+Thanks !
+Lorenzo
 
--- 
-Mike Kravetz
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index ed3d2d1..12bb70e 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+>  static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+>  {
+>  	struct acpi_iort_smmu_v3 *smmu;
+> +	struct acpi_iort_pmcg *pmcg;
+>  
+>  	switch (node->type) {
+>  	case ACPI_IORT_NODE_SMMU_V3:
+> @@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+>  
+>  		return smmu->id_mapping_index;
+>  	case ACPI_IORT_NODE_PMCG:
+> +		pmcg = (struct acpi_iort_pmcg *)node->node_data;
+> +		if (pmcg->overflow_gsiv || node->mapping_count == 0)
+> +			return -EINVAL;
+> +
+>  		return 0;
+>  	default:
+>  		return -EINVAL;
+> -- 
+> 2.7.4
+> 
