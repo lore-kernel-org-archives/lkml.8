@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3F57205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD66205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgETO2J (ORCPT
+        id S1728328AbgETO2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:28:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32880 "EHLO
+        Wed, 20 May 2020 10:28:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32896 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726933AbgETOWZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726939AbgETOW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:25 -0400
+        Wed, 20 May 2020 10:22:26 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035g-B6; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-00035d-9o; Wed, 20 May 2020 15:22:19 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DQF-QX; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DPm-Ja; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Franky Lin" <franky.lin@broadcom.com>,
         "Kalle Valo" <kvalo@codeaurora.org>,
-        "Navid Emamdoost" <navid.emamdoost@gmail.com>
-Date:   Wed, 20 May 2020 15:13:58 +0100
-Message-ID: <lsq.1589984008.28533969@decadent.org.uk>
+        "Dan Carpenter" <dan.carpenter@oracle.com>
+Date:   Wed, 20 May 2020 15:13:52 +0100
+Message-ID: <lsq.1589984008.366704972@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 30/99] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
+Subject: [PATCH 3.16 24/99] brcmfmac: Fix use after free in
+ brcmf_sdio_readframes()
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,30 +57,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 4282dc057d750c6a7dd92953564b15c26b54c22c upstream.
+commit 216b44000ada87a63891a8214c347e05a4aea8fe upstream.
 
-In the implementation of brcmf_usbdev_qinit() the allocated memory for
-reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
-handling path.
+The brcmu_pkt_buf_free_skb() function frees "pkt" so it leads to a
+static checker warning:
 
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+    drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c:1974 brcmf_sdio_readframes()
+    error: dereferencing freed memory 'pkt'
+
+It looks like there was supposed to be a continue after we free "pkt".
+
+Fixes: 4754fceeb9a6 ("brcmfmac: streamline SDIO read frame routine")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Franky Lin <franky.lin@broadcom.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/usb.c | 1 +
+ drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c | 1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/usb.c
-@@ -365,6 +365,7 @@ fail:
- 			usb_free_urb(req->urb);
- 		list_del(q->next);
- 	}
-+	kfree(reqs);
- 	return NULL;
- 
- }
+--- a/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/dhd_sdio.c
+@@ -1972,6 +1972,7 @@ static uint brcmf_sdio_readframes(struct
+ 					       BRCMF_SDIO_FT_NORMAL)) {
+ 				rd->len = 0;
+ 				brcmu_pkt_buf_free_skb(pkt);
++				continue;
+ 			}
+ 			bus->sdcnt.rx_readahead_cnt++;
+ 			if (rd->len != roundup(rd_new.len, 16)) {
 
