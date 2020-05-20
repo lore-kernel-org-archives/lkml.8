@@ -2,89 +2,239 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B072C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655482075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E12772075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589965325;
+	bh=CKndA2uya4dPuGUsRKbHMPHoXftdxVB4JkmocdLTsQA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=05HaGzWIK12VexFoQ9Kh8z5dRHsGRf+kLQHvJQutRuWecaSKGyP89zRTuT3mdd4dP
+	 fF8TXpJkEsnHsr6KzeqiBqxfFQGK6zAbHCu2WYiw2g7pFZanHp8QuJ4GyT6CUgTUt0
+	 YYKmo+/szXFcVH4kmrlOLxBiAT0rF6JIlqpHs0RE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgETJBf (ORCPT
+        id S1726893AbgETJCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:01:35 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:56431 "HELO
-        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1726403AbgETJBf (ORCPT
+        Wed, 20 May 2020 05:02:05 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50350 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgETJCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:01:35 -0400
-X-Greylist: delayed 1607 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 05:01:33 EDT
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgC3nwrQ78Repl3XAQ--.22776S4;
-        Wed, 20 May 2020 16:52:37 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: tegra: fix runtime pm imbalance on error
-Date:   Wed, 20 May 2020 16:52:23 +0800
-Message-Id: <20200520085231.32552-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgC3nwrQ78Repl3XAQ--.22776S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfZwbE9r
-        1DuFs7Ar4YkFZxZF12y3WfZF9ava47X3WkKayFyF43Aa1Ivwn8Gry8ZFZ0yF43Gwn8JF1k
-        tr4v9F1xC3yjyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-        1UYxBIdaVFxhVjvjDU0xZFpf9x0JUsF4iUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        Wed, 20 May 2020 05:02:04 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m12so1824294wmc.0;
+        Wed, 20 May 2020 02:02:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K+A7ZHlJqfylmUV+J0DL1EtgFEiLTDOYa/1WHcM4PvE=;
+        b=o/qDBgq3Ox5T4j5c8tTCwaPhjQOne0H4JgzrHgezSDYUv5jflRx3xUvKy+7xWjE9DZ
+         +52LCNBLHaTiJQycxKKILL3kFaR2WHCakdDUCM53TU07pj7ZLs4UkfsGyuUqUGQ3alnl
+         HfXp8FihwXyiYE9ZeTanC/UK6kzC93v5X0hmXr84Y21oODkPk9zcjgbwInph7ORQhwvX
+         /SUhT1K6A+h3mily4oA+VWgR5Lj0NicSD/cm4PXATKEgbCV1rhXpD4sFG5pMeUVYY/2p
+         ptxhBiUgRfolRNMuu+JePNe4ZEJ8F4LhU4MPZ8TiJvdq3oIPkveHl5qWR+L7uTiyxRJm
+         itSQ==
+X-Gm-Message-State: AOAM533d16uPw5w/ha8myBXx/+05l4EKJKTWpzy+7ywXZRfGm5iJAEU6
+        fvPSpJCIbeuCnqd4nG+gJFA=
+X-Google-Smtp-Source: ABdhPJxO3A4+TpSC04YOdihWMoYDnXWycqoRzuKdmNMmc1PdVMtNsOn9csLHFzscvWoyAUa6nXDtDg==
+X-Received: by 2002:a1c:e188:: with SMTP id y130mr3957687wmg.105.1589965320923;
+        Wed, 20 May 2020 02:02:00 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id i11sm2212274wrc.35.2020.05.20.02.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 02:02:00 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:01:58 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH] x86/Hyper-V: Support for free page reporting
+Message-ID: <20200520090158.4x4lkbssm7ncirn7@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Tue, May 19, 2020 at 06:37:57PM +0000, Sunil Muthuswamy wrote:
+> Linux has support for free page reporting now (36e66c554b5c) for
+> virtualized environment. On Hyper-V when virtually backed VMs are
+> configured, Hyper-V will advertise cold memory discard capability,
+> when supported. This patch adds the support to hook into the free
+> page reporting infrastructure and leverage the Hyper-V cold memory
+> discard hint hypercall to report/free these pages back to the host.
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+> First patch mail bounced backed. Sending it again with the email
+> addresses fixed.
+> ---
+>  arch/x86/hyperv/hv_init.c         | 24 ++++++++
+>  arch/x86/kernel/cpu/mshyperv.c    |  6 +-
+>  drivers/hv/hv_balloon.c           | 93 +++++++++++++++++++++++++++++++
+>  include/asm-generic/hyperv-tlfs.h | 29 ++++++++++
+>  include/asm-generic/mshyperv.h    |  2 +
+>  5 files changed, 152 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 624f5d9b0f79..925e2f7eb82c 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -506,3 +506,27 @@ bool hv_is_hibernation_supported(void)
+>  	return acpi_sleep_state_supported(ACPI_STATE_S4);
+>  }
+>  EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
+> +
+> +u64 hv_query_ext_cap(void)
+> +{
+> +	u64 *cap;
+> +	unsigned long flags;
+> +	u64 ext_cap = 0;
+> +
+> +	/*
+> +	 * Querying extended capabilities is an extended hypercall. Check if the
+> +	 * partition supports extended hypercall, first.
+> +	 */
+> +	if (!(ms_hyperv.b_features & HV_ENABLE_EXTENDED_HYPERCALLS))
+> +		return 0;
+> +
+> +	local_irq_save(flags);
+> +	cap = *(u64 **)this_cpu_ptr(hyperv_pcpu_input_arg);
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The cast here is not strictly needed.
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index ae30a2fd3716..a69f9e49dcb5 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1651,8 +1651,8 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
- fail_host_init:
- 	tegra_pcie_deinit_controller(pcie);
- fail_pinctrl:
--	pm_runtime_put_sync(dev);
- fail_pm_get_sync:
-+	pm_runtime_put_sync(dev);
- 	pm_runtime_disable(dev);
- 	return ret;
- }
--- 
-2.17.1
+> +	if (hv_do_hypercall(HV_EXT_CALL_QUERY_CAPABILITIES, NULL, cap) ==
+> +	    HV_STATUS_SUCCESS)
 
+You're using the input page as the output parameter. Ideally we should
+introduce hyperv_pcpu_output_arg page, but that would waste one page per
+cpu just for this one call.
+
+So for now I think this setup is fine, but I would like to add the
+following comment.
+
+    /*
+     * Repurpose the input_arg page to accept output from Hyper-V for
+     * now because this is the only call that needs output from the
+     * hypervisor. It should be fixed properly by introducing an
+     * output_arg page once we have more places that require output.
+     */
+
+> +		ext_cap = *cap;
+> +
+> +	local_irq_restore(flags);
+> +	return ext_cap;
+> +}
+> +EXPORT_SYMBOL_GPL(hv_query_ext_cap);
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index ebf34c7bc8bc..2de3f692c8bf 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -224,11 +224,13 @@ static void __init ms_hyperv_init_platform(void)
+>  	 * Extract the features and hints
+>  	 */
+>  	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
+> +	ms_hyperv.b_features = cpuid_ebx(HYPERV_CPUID_FEATURES);
+>  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+>  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+>  
+> -	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
+> -		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+> +	pr_info("Hyper-V: features 0x%x, additional features: 0x%x, hints 0x%x, misc 0x%x\n",
+> +		ms_hyperv.features, ms_hyperv.b_features, ms_hyperv.hints,
+> +		ms_hyperv.misc_features);
+>  
+>  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+>  	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index 32e3bc0aa665..77be31094556 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/memory.h>
+>  #include <linux/notifier.h>
+>  #include <linux/percpu_counter.h>
+> +#include <linux/page_reporting.h>
+>  
+>  #include <linux/hyperv.h>
+>  #include <asm/hyperv-tlfs.h>
+> @@ -563,6 +564,10 @@ struct hv_dynmem_device {
+>  	 * The negotiated version agreed by host.
+>  	 */
+>  	__u32 version;
+> +
+> +#ifdef CONFIG_PAGE_REPORTING
+> +	struct page_reporting_dev_info pr_dev_info;
+> +#endif
+>  };
+>  
+>  static struct hv_dynmem_device dm_device;
+> @@ -1565,6 +1570,83 @@ static void balloon_onchannelcallback(void *context)
+>  
+>  }
+>  
+> +#ifdef CONFIG_PAGE_REPORTING
+> +static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+> +		    struct scatterlist *sgl, unsigned int nents)
+> +{
+> +	unsigned long flags;
+> +	struct hv_memory_hint *hint;
+> +	int i;
+> +	u64 status;
+> +	struct scatterlist *sg;
+> +
+> +	WARN_ON(nents > HV_MAX_GPA_PAGE_RANGES);
+
+Should we return -ENOSPC here?
+
+> +	local_irq_save(flags);
+> +	hint = *(struct hv_memory_hint **)this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	if (!hint) {
+> +		local_irq_restore(flags);
+> +		return -ENOSPC;
+> +	}
+> +
+> +	hint->type = HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD;
+> +	hint->reserved = 0;
+> +	for (i = 0, sg = sgl; sg; sg = sg_next(sg), i++) {
+> +		int order;
+> +		union hv_gpa_page_range *range;
+> +
+
+Unfortunately I can't find the semantics of this hypercall in TLFS 6, so
+I have a few questions here.
+
+> +		order = get_order(sg->length);
+> +		range = &hint->ranges[i];
+> +		range->address_space = 0;
+
+I guess this means all address spaces?
+
+> +		range->page.largepage = 1;
+
+What effect does this have? What if the page is a 4k page?
+
+> +		range->page.additional_pages = (1ull << (order - 9)) - 1;
+
+What is 9 here? Is there a macro name *ORDER that you can use?
+
+Wei.
