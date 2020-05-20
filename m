@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC12AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5308FC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB23920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B97207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XgZ0MYBj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QvaAR/Z1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgETF3j (ORCPT
+        id S1728129AbgETF3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 01:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56468 "EHLO
+        Wed, 20 May 2020 01:29:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbgETF3a (ORCPT
+        with ESMTP id S1727920AbgETF31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 01:29:30 -0400
+        Wed, 20 May 2020 01:29:27 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF460C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:29:30 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k186so793079ybc.19
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:29:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0738DC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:29:26 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id h129so791968ybc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:29:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=baUrqRjT3RvpPQiJbNrpdqbCcCfZQeZzSpidKaRl4yM=;
-        b=XgZ0MYBjp/QQ5RAKRllpCcwYravdKAtbrF5pMXkCUVf2NCm/jXuE1rxMjvK40nn86F
-         DBqDKWi3pmk69dsffz+PyGCYlsCNUn8xFoDFJtM630/9YiCIvg0En7kluix7NcPVTnxc
-         5M8kncj7yYHBYxSf6fjrMpqIY5h3RWdgz6NHEmAH8SS+sHsXvemZvUZkC5DHGZzSX7Vz
-         alNNdWUB7/5QfWcZghaVCMiep/3qn3af4qAXrYIb8747nRYG77iUkvCEXzUycAnqu3vv
-         OGtEbq7oPzUP8zHBnAV62mt1zrq8ygagulTDW7PNy9va3lOGHo8KrHBiIE4WyjrXOnGN
-         8Rbg==
+        bh=l1uoa86T5i4IFuilenMyhOPWP4qckBe++S0EocRcQls=;
+        b=QvaAR/Z1wFWclp2SJqNPyqR+d0jKSmW68eXhKD/5TIJ2urgqSmzVtXTqeojvszjNna
+         zD3dHpNhkNSgq9KY5pNpqM1isqORrzmgBmmBy2t0RKNIvUDiXXVjlHDAbxxwN9kxm5yT
+         EwlMBAvXuBJNOZAaMmCE4rw76wCn+y1ifVSQ1UFZBx0Md6wCB1QuGxrYRaUI/HQVNCfy
+         GNvT5lMosujsnrREDE8eLE3XN6tOiSyfnKLOraUVB0d1FfvbF/Sjilw4KM/gYzHJBdvb
+         FtJ+xmhCwLCSuAp+1RTUXcxGc7oQ1DlV5/m0u0BuNqjtQ4L0fCxtamAwhw/IzEOVLvEd
+         C5nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=baUrqRjT3RvpPQiJbNrpdqbCcCfZQeZzSpidKaRl4yM=;
-        b=TJVIs0WYKsZ4ywPz5e51SwOldAMQdgvagqkogveAHPvfUUhGW5zv3SeGKZkksyyQs1
-         C0C9vDWHuvrOjNn+KLGvBEXsmXrgtumYJhRGYUv/QtX8YQJd5SFcDZjhyi3pEVO84Cpa
-         pVVFVTyFD7vsWfSFTNaQKT8JaTysm+MV/CmkYwvVu+VEivaf7Lb9GcL2Fr73iQl6O59H
-         GnArjSNTNNr27TSxV+NKZkc1m9WJZlFUquqTMHteKLriSpNzZuYPJtAMaz2WoMmO4pri
-         onaZyID6J6VVQ+DkgAVkHBSTL6O0Ur3xFdde4WJLWTkTDq+1zx9og3K8OTVAsAf4R0O4
-         iYFQ==
-X-Gm-Message-State: AOAM531AS7lZdDds1ISEJNYOsjkxIcSkngWhGJDmGYDO0iQV5DcwSBBj
-        Y7Ts/eRPIZ6t2pM019igI/v6v+foJyk=
-X-Google-Smtp-Source: ABdhPJwX7AKolR7rvFLD8FiK5S+rC4975CmSeuOF7aUaBCeim62UAoqyPuR4CPyNCTa4l4lVobVU5TsjgDE=
-X-Received: by 2002:a5b:345:: with SMTP id q5mr4540485ybp.494.1589952569960;
- Tue, 19 May 2020 22:29:29 -0700 (PDT)
-Date:   Tue, 19 May 2020 22:29:04 -0700
+        bh=l1uoa86T5i4IFuilenMyhOPWP4qckBe++S0EocRcQls=;
+        b=n6+cwXtBetLFI2Z1LVsKL49t0OYPAlTduhGxpXKLQ05+3xeTKfaEh5podLXDvl8qhF
+         IIKb1GgdPnxZSc3kUvCIL7eusWKKBiJzwZaDVRd7yzweNGfX9yj6T69gErr00jDKRa6Y
+         caFKORSZXZ07yNbdN7D5W/HzvC1p6yFnsqDNnaMOhpNHnx2jW57TKqLFbtiG7IpZbVxj
+         UWLcseDn8wmIwvF15WIgFQleBPonu6TrGmzEwCn2lOX8gz+R7C+qlP98fm9ueTwgAqdK
+         12jcYerM9lp6JQZoRTgEzMlCtUv350+B5oA2W41Aw6XLfT/IpijuCzKhVzJXS/ZYzqGR
+         hPJA==
+X-Gm-Message-State: AOAM530fneplwPyHbZwkJ28BTI8XYniq/HlsXCaD9Sy/5CMt9cickMEA
+        yyUIz37iUQwgfWpwv1jhLufVDbowbEA=
+X-Google-Smtp-Source: ABdhPJzr214Hi5yAoUaM72rIONWP69vka+unUZbT8FrKYJ/57UOx6B462OyViG4mcaGjpR2gxdg1NB3GA1w=
+X-Received: by 2002:a25:e86:: with SMTP id 128mr4998694ybo.344.1589952565280;
+ Tue, 19 May 2020 22:29:25 -0700 (PDT)
+Date:   Tue, 19 May 2020 22:29:02 -0700
 In-Reply-To: <20200520052908.204642-1-walken@google.com>
-Message-Id: <20200520052908.204642-9-walken@google.com>
+Message-Id: <20200520052908.204642-7-walken@google.com>
 Mime-Version: 1.0
 References: <20200520052908.204642-1-walken@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH v6 08/12] mmap locking API: add MMAP_LOCK_INITIALIZER
+Subject: [PATCH v6 06/12] mmap locking API: convert nested write lock sites
 From:   Michel Lespinasse <walken@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         linux-mm <linux-mm@kvack.org>
@@ -86,73 +86,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define a new initializer for the mmap locking api.
-Initially this just evaluates to __RWSEM_INITIALIZER as the API
-is defined as wrappers around rwsem.
+Add API for nested write locks and convert the few call sites doing that.
 
 Signed-off-by: Michel Lespinasse <walken@google.com>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- arch/x86/kernel/tboot.c    | 2 +-
- drivers/firmware/efi/efi.c | 2 +-
- include/linux/mmap_lock.h  | 3 +++
- mm/init-mm.c               | 2 +-
- 4 files changed, 6 insertions(+), 3 deletions(-)
+ arch/um/include/asm/mmu_context.h | 3 ++-
+ include/linux/mmap_lock.h         | 5 +++++
+ kernel/fork.c                     | 2 +-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
-index b89f6ac6a0c0..885058325c20 100644
---- a/arch/x86/kernel/tboot.c
-+++ b/arch/x86/kernel/tboot.c
-@@ -90,7 +90,7 @@ static struct mm_struct tboot_mm = {
- 	.pgd            = swapper_pg_dir,
- 	.mm_users       = ATOMIC_INIT(2),
- 	.mm_count       = ATOMIC_INIT(1),
--	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
-+	MMAP_LOCK_INITIALIZER(init_mm)
- 	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
- 	.mmlist         = LIST_HEAD_INIT(init_mm.mmlist),
- };
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 911a2bd0f6b7..916313ec8acb 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -54,7 +54,7 @@ struct mm_struct efi_mm = {
- 	.mm_rb			= RB_ROOT,
- 	.mm_users		= ATOMIC_INIT(2),
- 	.mm_count		= ATOMIC_INIT(1),
--	.mmap_sem		= __RWSEM_INITIALIZER(efi_mm.mmap_sem),
-+	MMAP_LOCK_INITIALIZER(efi_mm)
- 	.page_table_lock	= __SPIN_LOCK_UNLOCKED(efi_mm.page_table_lock),
- 	.mmlist			= LIST_HEAD_INIT(efi_mm.mmlist),
- 	.cpu_bitmap		= { [BITS_TO_LONGS(NR_CPUS)] = 0},
+diff --git a/arch/um/include/asm/mmu_context.h b/arch/um/include/asm/mmu_context.h
+index 62262c5c7785..17ddd4edf875 100644
+--- a/arch/um/include/asm/mmu_context.h
++++ b/arch/um/include/asm/mmu_context.h
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/sched.h>
+ #include <linux/mm_types.h>
++#include <linux/mmap_lock.h>
+ 
+ #include <asm/mmu.h>
+ 
+@@ -47,7 +48,7 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+ 	 * when the new ->mm is used for the first time.
+ 	 */
+ 	__switch_mm(&new->context.id);
+-	down_write_nested(&new->mmap_sem, 1);
++	mmap_write_lock_nested(new, SINGLE_DEPTH_NESTING);
+ 	uml_setup_stubs(new);
+ 	mmap_write_unlock(new);
+ }
 diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-index d1826ce42f00..acac1bf5ecd2 100644
+index 97ac53b66052..a757cb30ae77 100644
 --- a/include/linux/mmap_lock.h
 +++ b/include/linux/mmap_lock.h
-@@ -1,6 +1,9 @@
- #ifndef _LINUX_MMAP_LOCK_H
- #define _LINUX_MMAP_LOCK_H
+@@ -11,6 +11,11 @@ static inline void mmap_write_lock(struct mm_struct *mm)
+ 	down_write(&mm->mmap_sem);
+ }
  
-+#define MMAP_LOCK_INITIALIZER(name) \
-+	.mmap_sem = __RWSEM_INITIALIZER((name).mmap_sem),
++static inline void mmap_write_lock_nested(struct mm_struct *mm, int subclass)
++{
++	down_write_nested(&mm->mmap_sem, subclass);
++}
 +
- static inline void mmap_init_lock(struct mm_struct *mm)
+ static inline int mmap_write_lock_killable(struct mm_struct *mm)
  {
- 	init_rwsem(&mm->mmap_sem);
-diff --git a/mm/init-mm.c b/mm/init-mm.c
-index 19603302a77f..fe9c03d8e07b 100644
---- a/mm/init-mm.c
-+++ b/mm/init-mm.c
-@@ -31,7 +31,7 @@ struct mm_struct init_mm = {
- 	.pgd		= swapper_pg_dir,
- 	.mm_users	= ATOMIC_INIT(2),
- 	.mm_count	= ATOMIC_INIT(1),
--	.mmap_sem	= __RWSEM_INITIALIZER(init_mm.mmap_sem),
-+	MMAP_LOCK_INITIALIZER(init_mm)
- 	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
- 	.arg_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
- 	.mmlist		= LIST_HEAD_INIT(init_mm.mmlist),
+ 	return down_write_killable(&mm->mmap_sem);
+diff --git a/kernel/fork.c b/kernel/fork.c
+index a4db6bc952c6..e702e84897fa 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -499,7 +499,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+ 	/*
+ 	 * Not linked in yet - no deadlock potential:
+ 	 */
+-	down_write_nested(&mm->mmap_sem, SINGLE_DEPTH_NESTING);
++	mmap_write_lock_nested(mm, SINGLE_DEPTH_NESTING);
+ 
+ 	/* No ordering required: file already has been exposed. */
+ 	RCU_INIT_POINTER(mm->exe_file, get_mm_exe_file(oldmm));
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
