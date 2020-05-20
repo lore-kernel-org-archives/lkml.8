@@ -2,446 +2,348 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCD7120671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A65F207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:40:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaFt4nV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgETLjK (ORCPT
+        id S1726831AbgETLkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:39:10 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51090 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETLjJ (ORCPT
+        Wed, 20 May 2020 07:40:18 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42866 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726443AbgETLkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:39:09 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BC4A41C028F; Wed, 20 May 2020 13:39:06 +0200 (CEST)
-Date:   Wed, 20 May 2020 13:39:06 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     kernel list <linux-kernel@vger.kernel.org>, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com
-Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
-Message-ID: <20200520113906.GB22856@duo.ucw.cz>
-References: <20200520111136.GA3802@amd>
- <s5h5zcq25y9.wl-tiwai@suse.de>
+        Wed, 20 May 2020 07:40:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589974814;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ELjO0rPwtfdpBvjL9XPR01jYDS6j/xovbDiD9cxEBFs=;
+        b=ZaFt4nV0NyO8pinKW/tzzGRJALqXQJaJX4v9S6K9+QtnPw9wDnDlWplArvvzsYXhq3koGu
+        CAj8x48cim38xrr7FzZdMsbokhdNn307kZ/BTny9WFGvNbVJKdoq3HVYoXzwwZYfpNdXoP
+        GToiGeqQ/GiJJdeHFXDhT4I2haRvAts=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-HvthDmKXPGutwaYud4ksvA-1; Wed, 20 May 2020 07:40:08 -0400
+X-MC-Unique: HvthDmKXPGutwaYud4ksvA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A57498014D7;
+        Wed, 20 May 2020 11:40:06 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-191.ams2.redhat.com [10.36.113.191])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D7A46E9EA;
+        Wed, 20 May 2020 11:40:03 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers via Libc-alpha <libc-alpha@sourceware.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Rich Felker <dalias@libc.org>, linux-api@vger.kernel.org,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup and thread creation (v19)
+References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com>
+        <20200501021439.2456-2-mathieu.desnoyers@efficios.com>
+Date:   Wed, 20 May 2020 13:40:01 +0200
+In-Reply-To: <20200501021439.2456-2-mathieu.desnoyers@efficios.com> (Mathieu
+        Desnoyers via Libc-alpha's message of "Thu, 30 Apr 2020 22:14:37
+        -0400")
+Message-ID: <87v9kqbzse.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
-Content-Disposition: inline
-In-Reply-To: <s5h5zcq25y9.wl-tiwai@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Mathieu Desnoyers via Libc-alpha:
 
---A6N2fC+uXW/VQSAv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/NEWS b/NEWS
+> index 141078c319..c4e0370fc4 100644
+> --- a/NEWS
+> +++ b/NEWS
+> @@ -23,6 +23,16 @@ Major new features:
+>    toolchains.  It is recommended to use GCC 8 or newer when testing
+>    this option.
+>=20=20
+> +* Support for automatically registering threads with the Linux rseq
+> +  system call has been added.  This system call is implemented starting
+> +  from Linux 4.18.  The Restartable Sequences ABI accelerates user-space
+> +  operations on per-cpu data.  It allows user-space to perform updates
+> +  on per-cpu data without requiring heavy-weight atomic operations.
+> +  Automatically registering threads allows all libraries, including libc,
+> +  to make immediate use of the rseq(2) support by using the documented A=
+BI.
+> +  The GNU C Library manual has details on integration of Restartable
+> +  Sequences.
 
-On Wed 2020-05-20 13:37:02, Takashi Iwai wrote:
-> On Wed, 20 May 2020 13:11:37 +0200,
-> Pavel Machek wrote:
-> >=20
-> > Hi!
-> >=20
-> > My window manager stopped responding. I was able to recover machine
-> > using sysrq-k.
-> >=20
-> > I started writing nice report, when session failed second time. And
-> > then third time on next attempt.
-> >=20
-> > Any ideas?
->=20
-> Do you know when the regression started?
-> There have been significant code changes regarding the sound buffer
-> management, and it's merged in 5.6-rc1.  Other than that, I have no
-> idea yet.
+=E2=80=9Crseq=E2=80=9D instead =E2=80=9Crseq(2)=E2=80=9D.
 
-It is first time I seen this. I may have missed the oops in the logs,
-but I would not miss marco dying.
+> diff --git a/elf/libc_early_init.c b/elf/libc_early_init.c
+> index e6c64fb526..f0fcf6448e 100644
+> --- a/elf/libc_early_init.c
+> +++ b/elf/libc_early_init.c
+> @@ -18,10 +18,14 @@
+>=20=20
+>  #include <ctype.h>
+>  #include <libc-early-init.h>
+> +#include <rseq-internal.h>
+>=20=20
+>  void
+>  __libc_early_init (_Bool initial)
+>  {
+>    /* Initialize ctype data.  */
+>    __ctype_init ();
+> +  /* Register rseq ABI to the kernel for the main program's libc.   */
+> +  if (initial)
+> +    rseq_register_current_thread ();
+>  }
 
-So... AFAICT this was not there in -next20200505 or so.
+Okay.
 
-Best regard,
-								Pavel
-							=09
+> diff --git a/manual/threads.texi b/manual/threads.texi
+> index 0858ef8f92..a565095c43 100644
+> --- a/manual/threads.texi
+> +++ b/manual/threads.texi
+> @@ -9,8 +9,10 @@ This chapter describes functions used for managing threa=
+ds.
+>  POSIX threads.
+>=20=20
+>  @menu
+> -* ISO C Threads::	Threads based on the ISO C specification.
+> -* POSIX Threads::	Threads based on the POSIX specification.
+> +* ISO C Threads::		Threads based on the ISO C specification.
+> +* POSIX Threads::		Threads based on the POSIX specification.
+> +* Restartable Sequences::	Linux-specific Restartable Sequences
+> +				integration.
+>  @end menu
 
-> > [ 3730.016148] perf: interrupt took too long (3135 > 3133), lowering ke=
-rnel.perf_event_max_sample_rate to 63750
-> > [ 4274.984810] BUG: unable to handle page fault for address: f8600000
-> > [ 4274.984821] #PF: supervisor write access in kernel mode
-> > [ 4274.984827] #PF: error_code(0x0002) - not-present page
-> > [ 4274.984833] *pdpt =3D 000000002c0b2001 *pde =3D 0000000000000000=20
-> > [ 4274.984843] Oops: 0002 [#1] PREEMPT SMP PTI
-> > [ 4274.984853] CPU: 1 PID: 3351 Comm: marco Not tainted 5.7.0-rc6-next-=
-20200519+ #115
-> > [ 4274.984859] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.=
-19 ) 03/31/2011
-> > [ 4274.984871] EIP: memset+0xb/0x20
-> > [ 4274.984878] Code: f9 01 72 0b 8a 0e 88 0f 8d b4 26 00 00 00 00 8b 45=
- f0 83 c4 04 5b 5e 5f 5d c3 8d 74 26 00 90 55 89 e5 57 89 c7 53 89 c3 89 d0=
- <f3> aa 89 d8 5b 5f 5d c3 cc cc cc cc cc cc cc cc cc cc cc cc cc 89
-> > [ 4274.984885] EAX: 00000000 EBX: f85fe000 ECX: 0001e000 EDX: 00000000
-> > [ 4274.984892] ESI: ed158400 EDI: f8600000 EBP: edcc9e6c ESP: edcc9e64
-> > [ 4274.984898] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 002=
-10246
-> > [ 4274.984905] CR0: 80050033 CR2: f8600000 CR3: 2c114000 CR4: 000006b0
-> > [ 4274.984910] Call Trace:
-> > [ 4274.984923]  snd_pcm_hw_params+0x38d/0x400
-> > [ 4274.984930]  snd_pcm_ioctl+0x187/0xe80
-> > [ 4274.984940]  ? __fget_files+0x86/0xc0
-> > [ 4274.984947]  ? __fget_light+0x6b/0x80
-> > [ 4274.984954]  ? snd_pcm_status_user64+0x90/0x90
-> > [ 4274.984962]  ksys_ioctl+0x1cd/0x880
-> > [ 4274.984971]  ? ksys_mmap_pgoff+0x81/0xc0
-> > [ 4274.984978]  ? fput+0xd/0x10
-> > [ 4274.984984]  ? ksys_mmap_pgoff+0x8d/0xc0
-> > [ 4274.984991]  __ia32_sys_ioctl+0x10/0x12
-> > [ 4274.985000]  do_int80_syscall_32+0x3c/0x100
-> > [ 4274.985010]  entry_INT80_32+0x116/0x116
-> > [ 4274.985016] EIP: 0xb7f17092
-> > [ 4274.985023] Code: 00 00 00 e9 90 ff ff ff ff a3 24 00 00 00 68 30 00=
- 00 00 e9 80 ff ff ff ff a3 e8 ff ff ff 66 90 00 00 00 00 00 00 00 00 cd 80=
- <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-> > [ 4274.985030] EAX: ffffffda EBX: 00000011 ECX: c25c4111 EDX: bf8d5280
-> > [ 4274.985036] ESI: 08250880 EDI: bf8d5280 EBP: 082a4150 ESP: bf8d50a4
-> > [ 4274.985042] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 002=
-00292
-> > [ 4274.985051]  ? nmi+0xcc/0x2bc
-> > [ 4274.985055] Modules linked in:
-> > [ 4274.985063] CR2: 00000000f8600000
-> > [ 4274.985072] ---[ end trace 61b0852711d6de1d ]---
-> > [ 4274.985079] EIP: memset+0xb/0x20
-> > [ 4274.985086] Code: f9 01 72 0b 8a 0e 88 0f 8d b4 26 00 00 00 00 8b 45=
- f0 83 c4 04 5b 5e 5f 5d c3 8d 74 26 00 90 55 89 e5 57 89 c7 53 89 c3 89 d0=
- <f3> aa 89 d8 5b 5f 5d c3 cc cc cc cc cc cc cc cc cc cc cc cc cc 89
-> > [ 4274.985092] EAX: 00000000 EBX: f85fe000 ECX: 0001e000 EDX: 00000000
-> > [ 4274.985099] ESI: ed158400 EDI: f8600000 EBP: edcc9e6c ESP: edcc9e64
-> > [ 4274.985105] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 002=
-10246
-> > [ 4274.985112] CR0: 80050033 CR2: f8600000 CR3: 2c114000 CR4: 000006b0
-> > [ 4337.396551] sysrq: SAK
-> > [ 4337.397010] tty tty7: SAK: killed process 2963 (Xorg): by session
-> > [ 4337.397282] tty tty7: SAK: killed process 2963 (Xorg): by controllin=
-g tty
-> > [ 4337.397621] tty tty7: SAK: killed process 3484 (console-kit-dae): by=
- fd#9
-> > [ 4337.397934] tty tty7: SAK: killed process 3485 (console-kit-dae): by=
- fd#9
-> > [ 4337.397940] tty tty7: SAK: killed process 3486 (console-kit-dae): by=
- fd#9
-> > [ 4337.397945] tty tty7: SAK: killed process 3487 (console-kit-dae): by=
- fd#9
-> > [ 4337.397951] tty tty7: SAK: killed process 3488 (console-kit-dae): by=
- fd#9
-> > [ 4337.397956] tty tty7: SAK: killed process 3489 (console-kit-dae): by=
- fd#9
-> > [ 4337.397961] tty tty7: SAK: killed process 3490 (console-kit-dae): by=
- fd#9
-> > [ 4337.397967] tty tty7: SAK: killed process 3491 (console-kit-dae): by=
- fd#9
-> > [ 4337.397972] tty tty7: SAK: killed process 3492 (console-kit-dae): by=
- fd#9
-> > [ 4337.397978] tty tty7: SAK: killed process 3493 (console-kit-dae): by=
- fd#9
-> > [ 4337.397983] tty tty7: SAK: killed process 3494 (console-kit-dae): by=
- fd#9
-> > [ 4337.397989] tty tty7: SAK: killed process 3495 (console-kit-dae): by=
- fd#9
-> > [ 4337.397994] tty tty7: SAK: killed process 3496 (console-kit-dae): by=
- fd#9
-> > [ 4337.397999] tty tty7: SAK: killed process 3497 (console-kit-dae): by=
- fd#9
-> > [ 4337.398005] tty tty7: SAK: killed process 3498 (console-kit-dae): by=
- fd#9
-> > [ 4337.398010] tty tty7: SAK: killed process 3499 (console-kit-dae): by=
- fd#9
-> > [ 4337.398015] tty tty7: SAK: killed process 3500 (console-kit-dae): by=
- fd#9
-> > [ 4337.398021] tty tty7: SAK: killed process 3501 (console-kit-dae): by=
- fd#9
-> > [ 4337.398026] tty tty7: SAK: killed process 3502 (console-kit-dae): by=
- fd#9
-> > [ 4337.398032] tty tty7: SAK: killed process 3503 (console-kit-dae): by=
- fd#9
-> > [ 4337.398037] tty tty7: SAK: killed process 3504 (console-kit-dae): by=
- fd#9
-> > [ 4337.398042] tty tty7: SAK: killed process 3505 (console-kit-dae): by=
- fd#9
-> > [ 4337.398048] tty tty7: SAK: killed process 3506 (console-kit-dae): by=
- fd#9
-> > [ 4337.398053] tty tty7: SAK: killed process 3507 (console-kit-dae): by=
- fd#9
-> > [ 4337.398059] tty tty7: SAK: killed process 3508 (console-kit-dae): by=
- fd#9
-> > [ 4337.398064] tty tty7: SAK: killed process 3509 (console-kit-dae): by=
- fd#9
-> > [ 4337.398070] tty tty7: SAK: killed process 3510 (console-kit-dae): by=
- fd#9
-> > [ 4337.398075] tty tty7: SAK: killed process 3511 (console-kit-dae): by=
- fd#9
-> > [ 4337.398080] tty tty7: SAK: killed process 3512 (console-kit-dae): by=
- fd#9
-> > [ 4337.398086] tty tty7: SAK: killed process 3513 (console-kit-dae): by=
- fd#9
-> > [ 4337.398091] tty tty7: SAK: killed process 3514 (console-kit-dae): by=
- fd#9
-> > [ 4337.398097] tty tty7: SAK: killed process 3515 (console-kit-dae): by=
- fd#9
-> > [ 4337.398102] tty tty7: SAK: killed process 3516 (console-kit-dae): by=
- fd#9
-> > [ 4337.398107] tty tty7: SAK: killed process 3517 (console-kit-dae): by=
- fd#9
-> > [ 4337.398113] tty tty7: SAK: killed process 3518 (console-kit-dae): by=
- fd#9
-> > [ 4337.398118] tty tty7: SAK: killed process 3519 (console-kit-dae): by=
- fd#9
-> > [ 4337.398124] tty tty7: SAK: killed process 3520 (console-kit-dae): by=
- fd#9
-> > [ 4337.398129] tty tty7: SAK: killed process 3521 (console-kit-dae): by=
- fd#9
-> > [ 4337.398135] tty tty7: SAK: killed process 3522 (console-kit-dae): by=
- fd#9
-> > [ 4337.398141] tty tty7: SAK: killed process 3523 (console-kit-dae): by=
- fd#9
-> > [ 4337.398146] tty tty7: SAK: killed process 3524 (console-kit-dae): by=
- fd#9
-> > [ 4337.398151] tty tty7: SAK: killed process 3525 (console-kit-dae): by=
- fd#9
-> > [ 4337.398157] tty tty7: SAK: killed process 3526 (console-kit-dae): by=
- fd#9
-> > [ 4337.398162] tty tty7: SAK: killed process 3527 (console-kit-dae): by=
- fd#9
-> > [ 4337.398168] tty tty7: SAK: killed process 3528 (console-kit-dae): by=
- fd#9
-> > [ 4337.398173] tty tty7: SAK: killed process 3529 (console-kit-dae): by=
- fd#9
-> > [ 4337.398178] tty tty7: SAK: killed process 3530 (console-kit-dae): by=
- fd#9
-> > [ 4337.398184] tty tty7: SAK: killed process 3531 (console-kit-dae): by=
- fd#9
-> > [ 4337.398189] tty tty7: SAK: killed process 3532 (console-kit-dae): by=
- fd#9
-> > [ 4337.398194] tty tty7: SAK: killed process 3533 (console-kit-dae): by=
- fd#9
-> > [ 4337.398200] tty tty7: SAK: killed process 3534 (console-kit-dae): by=
- fd#9
-> > [ 4337.398205] tty tty7: SAK: killed process 3535 (console-kit-dae): by=
- fd#9
-> > [ 4337.398210] tty tty7: SAK: killed process 3536 (console-kit-dae): by=
- fd#9
-> > [ 4337.398216] tty tty7: SAK: killed process 3537 (console-kit-dae): by=
- fd#9
-> > [ 4337.398221] tty tty7: SAK: killed process 3538 (console-kit-dae): by=
- fd#9
-> > [ 4337.398227] tty tty7: SAK: killed process 3539 (console-kit-dae): by=
- fd#9
-> > [ 4337.398232] tty tty7: SAK: killed process 3540 (console-kit-dae): by=
- fd#9
-> > [ 4337.398237] tty tty7: SAK: killed process 3541 (console-kit-dae): by=
- fd#9
-> > [ 4337.398243] tty tty7: SAK: killed process 3542 (console-kit-dae): by=
- fd#9
-> > [ 4337.398248] tty tty7: SAK: killed process 3543 (console-kit-dae): by=
- fd#9
-> > [ 4337.398253] tty tty7: SAK: killed process 3544 (console-kit-dae): by=
- fd#9
-> > [ 4337.398260] tty tty7: SAK: killed process 3545 (console-kit-dae): by=
- fd#9
-> > [ 4337.398265] tty tty7: SAK: killed process 3546 (console-kit-dae): by=
- fd#9
-> > [ 4337.398270] tty tty7: SAK: killed process 3548 (gmain): by fd#9
-> > [ 4337.398276] tty tty7: SAK: killed process 3549 (gdbus): by fd#9
-> > [ 4337.743402] wlan0: deauthenticating from 5c:f4:ab:10:d2:bb by local =
-choice (Reason: 3=3DDEAUTH_LEAVING)
-> > [ 4349.750345] traps: clock-applet[7160] trap int3 ip:b71bafc0 sp:bffdd=
-3b0 error:0 in libglib-2.0.so.0.5000.3[b716e000+12a000]
-> > [ 4349.751834] traps: mateweather-app[7164] trap int3 ip:b729ffc0 sp:bf=
-c45bf0 error:0 in libglib-2.0.so.0.5000.3[b7253000+12a000]
-> > [ 4352.181317] wlan0: authenticate with 5c:f4:ab:10:d2:bb
-> > [ 4352.183330] wlan0: send auth to 5c:f4:ab:10:d2:bb (try 1/3)
-> > [ 4352.187927] wlan0: authenticated
-> > [ 4352.192203] wlan0: associate with 5c:f4:ab:10:d2:bb (try 1/3)
-> > [ 4352.194932] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=3D0x41=
-1 status=3D0 aid=3D2)
-> > [ 4352.199395] wlan0: associated
-> > [ 4688.523006] sysrq: SAK
-> > [ 4688.523318] tty tty7: SAK: killed process 6791 (Xorg): by session
-> > [ 4688.523683] tty tty7: SAK: killed process 6791 (Xorg): by controllin=
-g tty
-> > [ 4688.523930] tty tty7: SAK: killed process 7017 (console-kit-dae): by=
- fd#9
-> > [ 4688.524330] tty tty7: SAK: killed process 7018 (console-kit-dae): by=
- fd#9
-> > [ 4688.524337] tty tty7: SAK: killed process 7019 (console-kit-dae): by=
- fd#9
-> > [ 4688.524342] tty tty7: SAK: killed process 7020 (console-kit-dae): by=
- fd#9
-> > [ 4688.524347] tty tty7: SAK: killed process 7021 (console-kit-dae): by=
- fd#9
-> > [ 4688.524353] tty tty7: SAK: killed process 7022 (console-kit-dae): by=
- fd#9
-> > [ 4688.524358] tty tty7: SAK: killed process 7023 (console-kit-dae): by=
- fd#9
-> > [ 4688.524363] tty tty7: SAK: killed process 7024 (console-kit-dae): by=
- fd#9
-> > [ 4688.524369] tty tty7: SAK: killed process 7025 (console-kit-dae): by=
- fd#9
-> > [ 4688.524374] tty tty7: SAK: killed process 7026 (console-kit-dae): by=
- fd#9
-> > [ 4688.524380] tty tty7: SAK: killed process 7027 (console-kit-dae): by=
- fd#9
-> > [ 4688.524385] tty tty7: SAK: killed process 7028 (console-kit-dae): by=
- fd#9
-> > [ 4688.524391] tty tty7: SAK: killed process 7029 (console-kit-dae): by=
- fd#9
-> > [ 4688.524396] tty tty7: SAK: killed process 7030 (console-kit-dae): by=
- fd#9
-> > [ 4688.524402] tty tty7: SAK: killed process 7031 (console-kit-dae): by=
- fd#9
-> > [ 4688.524407] tty tty7: SAK: killed process 7032 (console-kit-dae): by=
- fd#9
-> > [ 4688.524412] tty tty7: SAK: killed process 7033 (console-kit-dae): by=
- fd#9
-> > [ 4688.524419] tty tty7: SAK: killed process 7034 (console-kit-dae): by=
- fd#9
-> > [ 4688.524424] tty tty7: SAK: killed process 7035 (console-kit-dae): by=
- fd#9
-> > [ 4688.524429] tty tty7: SAK: killed process 7036 (console-kit-dae): by=
- fd#9
-> > [ 4688.524435] tty tty7: SAK: killed process 7037 (console-kit-dae): by=
- fd#9
-> > [ 4688.524440] tty tty7: SAK: killed process 7038 (console-kit-dae): by=
- fd#9
-> > [ 4688.524446] tty tty7: SAK: killed process 7039 (console-kit-dae): by=
- fd#9
-> > [ 4688.524451] tty tty7: SAK: killed process 7040 (console-kit-dae): by=
- fd#9
-> > [ 4688.524456] tty tty7: SAK: killed process 7041 (console-kit-dae): by=
- fd#9
-> > [ 4688.524462] tty tty7: SAK: killed process 7042 (console-kit-dae): by=
- fd#9
-> > [ 4688.524467] tty tty7: SAK: killed process 7043 (console-kit-dae): by=
- fd#9
-> > [ 4688.524473] tty tty7: SAK: killed process 7044 (console-kit-dae): by=
- fd#9
-> > [ 4688.524478] tty tty7: SAK: killed process 7045 (console-kit-dae): by=
- fd#9
-> > [ 4688.524483] tty tty7: SAK: killed process 7046 (console-kit-dae): by=
- fd#9
-> > [ 4688.524489] tty tty7: SAK: killed process 7047 (console-kit-dae): by=
- fd#9
-> > [ 4688.524494] tty tty7: SAK: killed process 7048 (console-kit-dae): by=
- fd#9
-> > [ 4688.524500] tty tty7: SAK: killed process 7049 (console-kit-dae): by=
- fd#9
-> > [ 4688.524505] tty tty7: SAK: killed process 7050 (console-kit-dae): by=
- fd#9
-> > [ 4688.524511] tty tty7: SAK: killed process 7051 (console-kit-dae): by=
- fd#9
-> > [ 4688.524516] tty tty7: SAK: killed process 7052 (console-kit-dae): by=
- fd#9
-> > [ 4688.524521] tty tty7: SAK: killed process 7053 (console-kit-dae): by=
- fd#9
-> > [ 4688.524527] tty tty7: SAK: killed process 7054 (console-kit-dae): by=
- fd#9
-> > [ 4688.524532] tty tty7: SAK: killed process 7055 (console-kit-dae): by=
- fd#9
-> > [ 4688.524538] tty tty7: SAK: killed process 7056 (console-kit-dae): by=
- fd#9
-> > [ 4688.524543] tty tty7: SAK: killed process 7057 (console-kit-dae): by=
- fd#9
-> > [ 4688.524549] tty tty7: SAK: killed process 7058 (console-kit-dae): by=
- fd#9
-> > [ 4688.524554] tty tty7: SAK: killed process 7059 (console-kit-dae): by=
- fd#9
-> > [ 4688.524560] tty tty7: SAK: killed process 7060 (console-kit-dae): by=
- fd#9
-> > [ 4688.524565] tty tty7: SAK: killed process 7061 (console-kit-dae): by=
- fd#9
-> > [ 4688.524570] tty tty7: SAK: killed process 7062 (console-kit-dae): by=
- fd#9
-> > [ 4688.524576] tty tty7: SAK: killed process 7063 (console-kit-dae): by=
- fd#9
-> > [ 4688.524581] tty tty7: SAK: killed process 7064 (console-kit-dae): by=
- fd#9
-> > [ 4688.524587] tty tty7: SAK: killed process 7065 (console-kit-dae): by=
- fd#9
-> > [ 4688.524593] tty tty7: SAK: killed process 7066 (console-kit-dae): by=
- fd#9
-> > [ 4688.524598] tty tty7: SAK: killed process 7067 (console-kit-dae): by=
- fd#9
-> > [ 4688.524603] tty tty7: SAK: killed process 7068 (console-kit-dae): by=
- fd#9
-> > [ 4688.524609] tty tty7: SAK: killed process 7069 (console-kit-dae): by=
- fd#9
-> > [ 4688.524614] tty tty7: SAK: killed process 7070 (console-kit-dae): by=
- fd#9
-> > [ 4688.524620] tty tty7: SAK: killed process 7071 (console-kit-dae): by=
- fd#9
-> > [ 4688.524625] tty tty7: SAK: killed process 7072 (console-kit-dae): by=
- fd#9
-> > [ 4688.524631] tty tty7: SAK: killed process 7073 (console-kit-dae): by=
- fd#9
-> > [ 4688.524636] tty tty7: SAK: killed process 7074 (console-kit-dae): by=
- fd#9
-> > [ 4688.524642] tty tty7: SAK: killed process 7075 (console-kit-dae): by=
- fd#9
-> > [ 4688.524648] tty tty7: SAK: killed process 7076 (console-kit-dae): by=
- fd#9
-> > [ 4688.524653] tty tty7: SAK: killed process 7077 (console-kit-dae): by=
- fd#9
-> > [ 4688.524659] tty tty7: SAK: killed process 7078 (console-kit-dae): by=
- fd#9
-> > [ 4688.524664] tty tty7: SAK: killed process 7079 (console-kit-dae): by=
- fd#9
-> > [ 4688.524670] tty tty7: SAK: killed process 7083 (gmain): by fd#9
-> > [ 4688.524675] tty tty7: SAK: killed process 7085 (gdbus): by fd#9
-> > [ 4688.780517] wlan0: deauthenticating from 5c:f4:ab:10:d2:bb by local =
-choice (Reason: 3=3DDEAUTH_LEAVING)
-> > [ 4698.601308] traps: clock-applet[7813] trap int3 ip:b71e9fc0 sp:bf901=
-050 error:0 in libglib-2.0.so.0.5000.3[b719d000+12a000]
-> > [ 4698.676549] traps: mateweather-app[7814] trap int3 ip:b7260fc0 sp:bf=
-cfb9d0 error:0 in libglib-2.0.so.0.5000.3[b7214000+12a000]
-> > [ 4700.456620] wlan0: authenticate with 5c:f4:ab:10:d2:bb
-> > [ 4700.456710] wlan0: send auth to 5c:f4:ab:10:d2:bb (try 1/3)
-> > [ 4700.459606] wlan0: authenticated
-> > [ 4700.460449] wlan0: associate with 5c:f4:ab:10:d2:bb (try 1/3)
-> > [ 4700.463153] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=3D0x41=
-1 status=3D0 aid=3D2)
-> > [ 4700.465007] wlan0: associated
-> >=20
-> > --=20
-> > (english) http://www.livejournal.com/~pavelmachek
-> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
-> > [2 Digital signature <application/pgp-signature (7bit)>]
-> >=20
+This should go into the extensions menu (@node Non-POSIX Extensions).
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+General comment: Please wrap the lines around 72 or so characters.
+Thanks.
 
---A6N2fC+uXW/VQSAv
-Content-Type: application/pgp-signature; name="signature.asc"
+> @@ -881,3 +883,63 @@ Behaves like @code{pthread_timedjoin_np} except that=
+ the absolute time in
+>  @c pthread_spin_unlock
+>  @c pthread_testcancel
+>  @c pthread_yield
+> +
+> +@node Restartable Sequences
+> +@section Restartable Sequences
+> +@cindex Restartable Sequences
+> +
+> +This section describes Restartable Sequences integration for
+> +@theglibc{}.
 
------BEGIN PGP SIGNATURE-----
+=E2=80=9CThis functionality is only available on Linux.=E2=80=9D  (The @sta=
+ndards parts
+are not visible to readers.)
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXsUW2gAKCRAw5/Bqldv6
-8idnAJ93dzGkcvITAGF2FKPqai7e9X4/mgCgwN6YX4pKd6nAEt5DY+QEgck/G5Y=
-=6gLe
------END PGP SIGNATURE-----
+> +
+> +@deftypevar {struct rseq} __rseq_abi
+> +@standards{Linux, sys/rseq.h}
+> +@Theglibc{} implements a @code{__rseq_abi} TLS symbol to interact with t=
+he
+> +Restartable Sequences system call (Linux-specific).  The layout of this
+> +structure is defined by the @file{sys/rseq.h} header.  Registration of e=
+ach
+> +thread's @code{__rseq_abi} is performed by @theglibc{} at library
+> +initialization and thread creation.
 
---A6N2fC+uXW/VQSAv--
+Can drop =E2=80=9C(Linux-specific)=E2=80=9D here.
+
+> diff --git a/sysdeps/unix/sysv/linux/aarch64/bits/rseq.h b/sysdeps/unix/s=
+ysv/linux/aarch64/bits/rseq.h
+> new file mode 100644
+> index 0000000000..37d83fcb4a
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/aarch64/bits/rseq.h
+
+> +#ifdef __AARCH64EB__
+> +#define RSEQ_SIG_DATA	0x00bc28d4	/* BRK #0x45E0.  */
+> +#else
+> +#define RSEQ_SIG_DATA	RSEQ_SIG_CODE
+> +#endif
+
+Missing indentation on the #defines (sorry!).
+
+> diff --git a/sysdeps/unix/sysv/linux/arm/bits/rseq.h b/sysdeps/unix/sysv/=
+linux/arm/bits/rseq.h
+> new file mode 100644
+> index 0000000000..c132f0327c
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/arm/bits/rseq.h
+
+> +#ifdef __ARMEB__
+> +#define RSEQ_SIG    0xf3def5e7      /* udf    #24035    ; 0x5de3 (ARMv6+=
+) */
+> +#else
+> +#define RSEQ_SIG    0xe7f5def3      /* udf    #24035    ; 0x5de3 */
+> +#endif
+
+Likewise, missing indentation.
+
+> diff --git a/sysdeps/unix/sysv/linux/bits/rseq.h b/sysdeps/unix/sysv/linu=
+x/bits/rseq.h
+> new file mode 100644
+> index 0000000000..014c08fe0f
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/bits/rseq.h
+> @@ -0,0 +1,29 @@
+
+> +/* RSEQ_SIG is a signature required before each abort handler code.
+> +
+> +   It is a 32-bit value that maps to actual architecture code compiled
+> +   into applications and libraries.  It needs to be defined for each
+> +   architecture.  When choosing this value, it needs to be taken into
+> +   account that generating invalid instructions may have ill effects on
+> +   tools like objdump, and may also have impact on the CPU speculative
+> +   execution efficiency in some cases.  */
+
+I wonder if we should say something somewhere that the correct way to
+check for compile-time rseq support in glibc is something like this?
+
+#if __has_include (<sys/rseq.h>)
+# include <sys/rseq.h>
+#endif
+#ifdef RSEQ_SIG
+=E2=80=A6
+#endif
+
+Or perhaps we should suppress installation of the headers if we only
+have support for the stub.
+
+(I think this fine tuning can be deferred to later patch.)
+
+> diff --git a/sysdeps/unix/sysv/linux/mips/bits/rseq.h b/sysdeps/unix/sysv=
+/linux/mips/bits/rseq.h
+> new file mode 100644
+> index 0000000000..cbad4290cc
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/mips/bits/rseq.h
+> @@ -0,0 +1,62 @@
+
+> +#if defined(__nanomips__)
+> +# ifdef __MIPSEL__
+> +#  define RSEQ_SIG	0x03500010
+> +# else
+> +#  define RSEQ_SIG	0x00100350
+> +# endif
+> +#elif defined(__mips_micromips)
+> +# ifdef __MIPSEL__
+> +#  define RSEQ_SIG	0xd4070000
+> +# else
+> +#  define RSEQ_SIG	0x0000d407
+> +# endif
+> +#elif defined(__mips__)
+> +# define RSEQ_SIG	0x0350000d
+> +#else
+> +/* Unknown MIPS architecture.  */
+> +#endif
+
+Please use =E2=80=9Cdefined (=E2=80=9D, with a space.
+
+> diff --git a/sysdeps/unix/sysv/linux/rseq-internal.h b/sysdeps/unix/sysv/=
+linux/rseq-internal.h
+> new file mode 100644
+> index 0000000000..6583691285
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/rseq-internal.h
+
+> +#ifdef RSEQ_SIG
+> +static inline void
+> +rseq_register_current_thread (void)
+
+> +      if (msg)
+> +        __libc_fatal (msg);
+> +    }
+
+=E2=80=9Cif (msg !=3D NULL)=E2=80=9D, please.
+
+> +#else
+> +static inline void
+> +rseq_register_current_thread (void)
+> +{
+> +}
+> +#endif
+
+Maybe add /* RSEQ_SIG */ comments to #else/#endif here as well.
+
+> diff --git a/sysdeps/unix/sysv/linux/sys/rseq.h b/sysdeps/unix/sysv/linux=
+/sys/rseq.h
+> new file mode 100644
+> index 0000000000..ea51194bf8
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/sys/rseq.h
+
+> +#ifdef __has_include
+> +# if __has_include ("linux/rseq.h")
+> +#   define __GLIBC_HAVE_KERNEL_RSEQ
+> +# endif
+> +#else
+> +# include <linux/version.h>
+> +# if LINUX_VERSION_CODE >=3D KERNEL_VERSION (4, 18, 0)
+> +#   define __GLIBC_HAVE_KERNEL_RSEQ
+> +# endif
+> +#endif
+
+Too much indentation on the define line, I think.
+
+Still missing: #ifdef __ASSEMBLER__.  .S files should be able to include
+<sys/rseq.h> to get the definition of RSEQ_SIG.  But I think this can be
+deferred to a follow-up.
+
+> +#ifdef __GLIBC_HAVE_KERNEL_RSEQ
+> +/* We use the structures declarations from the kernel headers.  */
+> +# include <linux/rseq.h>
+> +#else
+> +/* We use a copy of the include/uapi/linux/rseq.h kernel header.  */
+
+This comment is not true, the kernel headers do not have uptr support.
+
+If we revert the uptr change, we also need to update the manual, I
+think.
+
+> +/* Ensure the compiler supports __attribute__ ((aligned)).  */
+> +_Static_assert (__alignof__ (struct rseq_cs) >=3D 32, "alignment");
+> +_Static_assert (__alignof__ (struct rseq) >=3D 32, "alignment");
+
+This needs #ifndef __cplusplus or something like that.  I'm surprised
+that this passes the installed header tests.
+
+> +/* Allocations of struct rseq and struct rseq_cs on the heap need to
+> +   be aligned on 32 bytes.  Therefore, use of malloc is discouraged
+> +   because it does not guarantee alignment.  posix_memalign should be
+> +   used instead.  */
+> +
+> +extern __thread struct rseq __rseq_abi
+> +  __attribute__ ((tls_model ("initial-exec")));
+
+Should be __tls_model__.
+
+We're getting really close now. 8-)
+
+Thanks,
+Florian
+
