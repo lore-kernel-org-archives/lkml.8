@@ -2,81 +2,175 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5F7207FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806E8207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CsYMkHaV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZNC1J5y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgETKde (ORCPT
+        id S1726748AbgETKeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:33:34 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:42511 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726224AbgETKde (ORCPT
+        Wed, 20 May 2020 06:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgETKeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:33:34 -0400
-X-UUID: 3de7439d6daf48d7a894be21cd30af4d-20200520
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=HfMRe5GvWTMoSjJho2QVFn7+uU1oZw2rKqKzYM8kbw8=;
-        b=CsYMkHaV/YWUmJ+CGZVffs2aeo35GtyfEDEt0YrxwqU7ePpMqx1rWkKVeZeJogPzMiaLV6OdmQ1p2xKVkMBCsLV+XdY182O+1ovxF5YPemseaj5gAB0o9iHCDb/wytWMr6iicwLEMjNhfdiYgWaQSWJJ+Xu6VxQKTt0m3c0pjvc=;
-X-UUID: 3de7439d6daf48d7a894be21cd30af4d-20200520
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1810491927; Wed, 20 May 2020 18:33:30 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 20 May 2020 18:33:27 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 20 May 2020 18:33:27 +0800
-From:   <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <qii.wang@mediatek.com>
-Subject: [next] i2c: mediatek: Use div_u64 for 64-bit division to fix 32-bit kernels
-Date:   Wed, 20 May 2020 18:31:53 +0800
-Message-ID: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 20 May 2020 06:34:19 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34577C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:34:18 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f134so2073350wmf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wHwuK554VhbEDUoapI14azPz8Hgjvi50lBlxsWiVKX8=;
+        b=dZNC1J5ypymn1jU6Byg8EPaBtx0iN/1DIHceCLtkm5ZN62pZaAM6qLFo69H93K051w
+         nEFHjWsNPV4ljKXRdpDRbIC2GxHPUuneGdFOqCabJABeFbEy0qZNxTyUZWuFZXtPhR99
+         wwdZQtudQd/cHlInsliGMRW2QUx7CzktPvTf+BuhU4jurkcIzEs5qbRiHA8AWZAEjp6C
+         tUBhEENQN3hN8Ob/5r+eI+wuJ+/MghjTgXBB8HkB7aqzL8wuv8QiRuRJ3494heAyIw0a
+         WPD4KXjtaKv/JogXTODnC/Ip+MHz5vriC1ArcAq5dOXkzYPPdHABKpYeRBZMRq57iYHR
+         lgIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wHwuK554VhbEDUoapI14azPz8Hgjvi50lBlxsWiVKX8=;
+        b=bdKQMs3lx77nAF26iEqnS4aw2YX8w4Y/mAXaNX31DmSHCkCM6Z0Yv4ciiQz9d6Hngl
+         qevdaSjzrPdfwbKHGz3fxXJi9SF5wwEZvube0O2mIle6W2m1JNjxQEDaqsNlahM5ORaV
+         7lpu8JLHfiFMHjuSHxMJPcvGOBPPY52SRISSzoJM3eAs1Oi4PWpU04MUtAL+k9WHdESq
+         z7tDECjlZGfStAkDlWY8d/intLufWBEvfs9RX1KBBbXMwCe2boKZP2UeDRmMkggArnYf
+         8SSszM+nKGlXJLLdbyJtJwRdyJuisneiuCJ/TYsfD56hH4XdLIgTq2Twce4kpoq76iHz
+         ejVg==
+X-Gm-Message-State: AOAM532+7iEnQ7S2p+IFY1B2RLLyAiGW6lmvkLxGrnmJZAri9T32tPNG
+        txIQ7QyxUrQANWw4c7F3gVy6uQ==
+X-Google-Smtp-Source: ABdhPJxo5njsQyNYOEuPCeVVUlNTJmBhexBhhghXeVryIeeckAHJiBoMUenYHQrPUA509KHduFahjg==
+X-Received: by 2002:a7b:ce08:: with SMTP id m8mr3869535wmc.97.1589970856782;
+        Wed, 20 May 2020 03:34:16 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id f8sm2314536wrm.8.2020.05.20.03.34.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 03:34:16 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:34:14 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        linux-next@vger.kernel.org, sumit.garg@linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH] kgdboc: Disable all the early code when kgdboc is a
+ module
+Message-ID: <20200520103414.bejflo3s4exrcyzk@holly.lan>
+References: <20200519084345.1.I91670accc8a5ddabab227eb63bb4ad3e2e9d2b58@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519084345.1.I91670accc8a5ddabab227eb63bb4ad3e2e9d2b58@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUWlpIFdhbmcgPHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCg0KVXNlIGRpdl91NjQgZm9y
-IDY0LWJpdCBkaXZpc2lvbiwgYW5kIGNoYW5nZSBzYW1wbGVfbnMgdHlwZSB0bw0KdW5zaWduZWQg
-aW50LiBPdGhlcndpc2UsIHRoZSBtb2R1bGUgd2lsbCByZWZlcmVuY2UgX191ZGl2ZGkzDQp1bmRl
-ciAzMi1iaXQga2VybmVscywgd2hpY2ggaXMgbm90IGFsbG93ZWQgaW4ga2VybmVsIHNwYWNlLg0K
-DQpTaWduZWQtb2ZmLWJ5OiBRaWkgV2FuZyA8cWlpLndhbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQog
-ZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyB8IDMgKystDQogMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
-MmMvYnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMN
-CmluZGV4IDcwMjA2MTguLmRlZWY2OWUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMv
-aTJjLW10NjV4eC5jDQorKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQpAQCAt
-NTUxLDcgKzU1MSw4IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19jaGVja19hY190aW1pbmcoc3RydWN0
-IG10a19pMmMgKmkyYywNCiAJY29uc3Qgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyAqc3BlYzsNCiAJ
-dW5zaWduZWQgaW50IHN1X3N0YV9jbnQsIGxvd19jbnQsIGhpZ2hfY250LCBtYXhfc3RlcF9jbnQ7
-DQogCXVuc2lnbmVkIGludCBzZGFfbWF4LCBzZGFfbWluLCBjbGtfbnMsIG1heF9zdGFfY250ID0g
-MHgzZjsNCi0JbG9uZyBsb25nIHNhbXBsZV9ucyA9ICgxMDAwMDAwMDAwICogKHNhbXBsZV9jbnQg
-KyAxKSkgLyBjbGtfc3JjOw0KKwl1bnNpZ25lZCBpbnQgc2FtcGxlX25zID0gZGl2X3U2NCgxMDAw
-MDAwMDAwVUxMICogKHNhbXBsZV9jbnQgKyAxKSwNCisJCQkJCSBjbGtfc3JjKTsNCiANCiAJaWYg
-KCFpMmMtPmRldl9jb21wLT50aW1pbmdfYWRqdXN0KQ0KIAkJcmV0dXJuIDA7DQotLSANCjEuOS4x
-DQo=
+On Tue, May 19, 2020 at 08:44:02AM -0700, Douglas Anderson wrote:
+> When kgdboc is compiled as a module all of the "ekgdboc" and
+> "kgdb_earlycon" code isn't useful and, in fact, breaks compilation.
+> This is because early_param() isn't defined for modules and that's how
+> this code gets configured.
+> 
+> It turns out that this was broken by commit eae3e19ca930 ("kgdboc:
+> Remove useless #ifdef CONFIG_KGDB_SERIAL_CONSOLE in kgdboc") and then
+> made worse by commit 220995622da5 ("kgdboc: Add kgdboc_earlycon to
+> support early kgdb using boot consoles").  I guess the #ifdef wasn't
+> so useless, even if it wasn't obvious why it was useful.  When kgdboc
+> was compiled as a module only "CONFIG_KGDB_SERIAL_CONSOLE_MODULE" was
+> defined, not "CONFIG_KGDB_SERIAL_CONSOLE".  That meant that the old
+> module.
+> 
+> Let's basically do the same thing that the old code (pre-removal of
+> the #ifdef) did but use "IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)" to
+> make it more obvious what the point of the check is.  We'll fix
+> kgdboc_earlycon in a similar way.
+> 
+> Fixes: 220995622da5 ("kgdboc: Add kgdboc_earlycon to support early kgdb using boot consoles")
+> Fixes: eae3e19ca930 ("kgdboc: Remove useless #ifdef CONFIG_KGDB_SERIAL_CONSOLE in kgdboc")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
+Applied, thanks!
+
+
+Daniel.
+
+
+> ---
+> 
+>  drivers/tty/serial/kgdboc.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+> index 34b5e91dd245..fa6f7a3e73b9 100644
+> --- a/drivers/tty/serial/kgdboc.c
+> +++ b/drivers/tty/serial/kgdboc.c
+> @@ -43,9 +43,11 @@ static int			kgdb_tty_line;
+>  
+>  static struct platform_device *kgdboc_pdev;
+>  
+> +#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
+>  static struct kgdb_io		kgdboc_earlycon_io_ops;
+>  static struct console		*earlycon;
+>  static int                      (*earlycon_orig_exit)(struct console *con);
+> +#endif /* IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
+>  
+>  #ifdef CONFIG_KDB_KEYBOARD
+>  static int kgdboc_reset_connect(struct input_handler *handler,
+> @@ -140,10 +142,19 @@ static void kgdboc_unregister_kbd(void)
+>  #define kgdboc_restore_input()
+>  #endif /* ! CONFIG_KDB_KEYBOARD */
+>  
+> -static void cleanup_kgdboc(void)
+> +#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
+> +static void cleanup_earlycon(void)
+>  {
+>  	if (earlycon)
+>  		kgdb_unregister_io_module(&kgdboc_earlycon_io_ops);
+> +}
+> +#else /* !IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
+> +static inline void cleanup_earlycon(void) { }
+> +#endif /* !IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
+> +
+> +static void cleanup_kgdboc(void)
+> +{
+> +	cleanup_earlycon();
+>  
+>  	if (configured != 1)
+>  		return;
+> @@ -388,6 +399,7 @@ static struct kgdb_io kgdboc_io_ops = {
+>  	.post_exception		= kgdboc_post_exp_handler,
+>  };
+>  
+> +#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
+>  static int kgdboc_option_setup(char *opt)
+>  {
+>  	if (!opt) {
+> @@ -544,6 +556,7 @@ static int __init kgdboc_earlycon_init(char *opt)
+>  }
+>  
+>  early_param("kgdboc_earlycon", kgdboc_earlycon_init);
+> +#endif /* IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
+>  
+>  module_init(init_kgdboc);
+>  module_exit(exit_kgdboc);
+> -- 
+> 2.26.2.761.g0e0b3e54be-goog
+> 
