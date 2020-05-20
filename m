@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4612C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA5E207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7F0207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgETOWh (ORCPT
+        id S1726729AbgETOWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:22:37 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60992 "EHLO
+        Wed, 20 May 2020 10:22:39 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32790 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726845AbgETOWX (ORCPT
+        by vger.kernel.org with ESMTP id S1726859AbgETOWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:23 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-00035B-Iv; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbv-00035S-67; Wed, 20 May 2020 15:22:19 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DOn-33; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DPR-CZ; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Steffen Klassert" <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Daniel Jordan" <daniel.m.jordan@oracle.com>
-Date:   Wed, 20 May 2020 15:13:40 +0100
-Message-ID: <lsq.1589984008.991014456@decadent.org.uk>
+        syzbot+1c6756baf4b16b94d2a6@syzkaller.appspotmail.com,
+        "Jan Kara" <jack@suse.cz>
+Date:   Wed, 20 May 2020 15:13:48 +0100
+Message-ID: <lsq.1589984008.645965190@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 12/99] padata: purge get_cpu and reorder_via_wq from
- padata_do_serial
+Subject: [PATCH 3.16 20/99] reiserfs: Fix memory leak of journal device string
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,61 +55,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 065cf577135a4977931c7a1e1edf442bfd9773dd upstream.
+commit 5474ca7da6f34fa95e82edc747d5faa19cbdfb5c upstream.
 
-With the removal of the padata timer, padata_do_serial no longer
-needs special CPU handling, so remove it.
+When a filesystem is mounted with jdev mount option, we store the
+journal device name in an allocated string in superblock. However we
+fail to ever free that string. Fix it.
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reported-by: syzbot+1c6756baf4b16b94d2a6@syzkaller.appspotmail.com
+Fixes: c3aa077648e1 ("reiserfs: Properly display mount options in /proc/mounts")
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/padata.c | 23 +++--------------------
- 1 file changed, 3 insertions(+), 20 deletions(-)
+ fs/reiserfs/super.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -322,24 +322,9 @@ static void padata_serial_worker(struct
-  */
- void padata_do_serial(struct padata_priv *padata)
- {
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct parallel_data *pd;
--	int reorder_via_wq = 0;
--
--	pd = padata->pd;
--
--	cpu = get_cpu();
--
--	/* We need to enqueue the padata object into the correct
--	 * per-cpu queue.
--	 */
--	if (cpu != padata->cpu) {
--		reorder_via_wq = 1;
--		cpu = padata->cpu;
--	}
--
--	pqueue = per_cpu_ptr(pd->pqueue, cpu);
-+	struct parallel_data *pd = padata->pd;
-+	struct padata_parallel_queue *pqueue = per_cpu_ptr(pd->pqueue,
-+							   padata->cpu);
- 
- 	spin_lock(&pqueue->reorder.lock);
- 	list_add_tail(&padata->list, &pqueue->reorder.list);
-@@ -353,8 +338,6 @@ void padata_do_serial(struct padata_priv
- 	 */
- 	smp_mb__after_atomic();
- 
--	put_cpu();
--
- 	padata_reorder(pd);
+--- a/fs/reiserfs/super.c
++++ b/fs/reiserfs/super.c
+@@ -589,6 +589,7 @@ static void reiserfs_put_super(struct su
+ 	reiserfs_write_unlock(s);
+ 	mutex_destroy(&REISERFS_SB(s)->lock);
+ 	destroy_workqueue(REISERFS_SB(s)->commit_wq);
++	kfree(REISERFS_SB(s)->s_jdev);
+ 	kfree(s->s_fs_info);
+ 	s->s_fs_info = NULL;
  }
- EXPORT_SYMBOL(padata_do_serial);
+@@ -2188,6 +2189,7 @@ error_unlocked:
+ 			kfree(qf_names[j]);
+ 	}
+ #endif
++	kfree(sbi->s_jdev);
+ 	kfree(sbi);
+ 
+ 	s->s_fs_info = NULL;
 
