@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F38C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB474C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082E720884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B303020873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgETW4g (ORCPT
+        id S1728800AbgETW4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:56:36 -0400
+        Wed, 20 May 2020 18:56:41 -0400
 Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:18672 "EHLO
         alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728666AbgETW4I (ORCPT
+        by vger.kernel.org with ESMTP id S1728648AbgETW4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 18:56:08 -0400
 Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 20 May 2020 15:56:07 -0700
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 20 May 2020 15:56:06 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
   by ironmsg02-sd.qualcomm.com with ESMTP; 20 May 2020 15:56:06 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 872B04DD3; Wed, 20 May 2020 15:56:06 -0700 (PDT)
+        id AEBDD4D8D; Wed, 20 May 2020 15:56:06 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -43,9 +43,9 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-arm-kernel@lists.infradead.org,
         Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [RESEND PATCH v14 04/11] pwm: clps711x: Cast period to u32 before use as divisor
-Date:   Wed, 20 May 2020 15:55:57 -0700
-Message-ID: <1d6918c3fc2976bdbdb687bf54a2ef09fc1558db.1589330178.git.gurus@codeaurora.org>
+Subject: [RESEND PATCH v14 07/11] pwm: sifive: Use 64-bit division macro
+Date:   Wed, 20 May 2020 15:56:00 -0700
+Message-ID: <63d1a5f93e792c6eea2040a91980ec3d7f39eeca.1589330178.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
 References: <cover.1589330178.git.gurus@codeaurora.org>
@@ -55,36 +55,31 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200520225557.bcYv7fTyggcghZXJ5LnuoQ7ytS10Pb7DNRri1nQws8o@z>
+Message-ID: <20200520225600.2Lo4XvW9o3JTnHAqOmQdNjT9Orw5RPWU6rIDfbVfvSA@z>
 
 Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by typecasting it to u32.
-
-Also, since the dividend is still a 32-bit number, any divisor greater
-than the numerator will cause the quotient to be zero, so return 0 in
-that case to efficiently skip the division.
+to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+handle a 64-bit divisor.
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 ---
- drivers/pwm/pwm-clps711x.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-sifive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-index 924d39a..da771b1 100644
---- a/drivers/pwm/pwm-clps711x.c
-+++ b/drivers/pwm/pwm-clps711x.c
-@@ -43,7 +43,10 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
- static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
- {
- 	/* Duty cycle 0..15 max */
--	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-+	if (pwm->args.period > (v * 0xf))
-+		return 0;
-+
-+	return DIV_ROUND_CLOSEST(v * 0xf, (u32)pwm->args.period);
- }
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index cc63f9b..62de0bb 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * consecutively
+ 	 */
+ 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+-	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
++	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
+ 	/* The hardware cannot generate a 100% duty cycle */
+ 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
  
- static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
