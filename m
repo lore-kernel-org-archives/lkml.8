@@ -2,86 +2,133 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ED7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB9E920671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D31420671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgETSG4 (ORCPT
+        id S1726999AbgETSGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:06:56 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46824 "EHLO mga14.intel.com"
+        Wed, 20 May 2020 14:06:55 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47203 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgETSGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:06:46 -0400
-IronPort-SDR: KZu2UvqZH44iNEdPDd+u+w2j5QFYrBQSBcnzKtcty5dhXspVI1mMYw+RPzyDhTZWd+6JLyZ7W2
- kai0YI7XL1cA==
+        id S1726964AbgETSGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:06:54 -0400
+IronPort-SDR: CYh3q2d11wKl5AfaRMqB3l8bSMmjXNbKahiHqHB2GFd+3QzrubrCjl2zlhE5jBRgeg3vlRSgLL
+ MFApj09NAN9w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 11:06:45 -0700
-IronPort-SDR: LezuK/BIDnBntPn+DzPG2NCkDGtAklXtxkgwdb0fO07rcWaojInjP3ZCa7ZGVOUZizptkEleJq
- UnnfbJ5dQX7g==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 11:06:53 -0700
+IronPort-SDR: y4TAj5LuH/3XDp/qr/BXcqJuuf3jzmX8mc87XEewhYq9zb08w8kkZbOUihK3Msf4wb8K7inFvA
+ nUWpA3oj1dRg==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="289442239"
-Received: from ydandeka-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.5.7])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 11:06:45 -0700
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH V3 1/3] PCI: Add defines for Designated Vendor-Specific Capability
-Date:   Wed, 20 May 2020 11:06:38 -0700
-Message-Id: <20200520180640.1911202-2-sean.v.kelley@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520180640.1911202-1-sean.v.kelley@linux.intel.com>
-References: <20200520180640.1911202-1-sean.v.kelley@linux.intel.com>
+   d="scan'208";a="268351859"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 20 May 2020 11:06:53 -0700
+Received: from [10.249.231.6] (abudanko-mobl.ccr.corp.intel.com [10.249.231.6])
+        by linux.intel.com (Postfix) with ESMTP id CD19B580100;
+        Wed, 20 May 2020 11:06:50 -0700 (PDT)
+Subject: Re: [PATCH v3 8/9] perf record: implement control commands handling
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
+ <25f98682-5ef2-4257-f302-93b29da707a9@linux.intel.com>
+ <20200520123833.GG157452@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <df2cd76d-a9ae-7092-1ee2-83fee8f557c8@linux.intel.com>
+Date:   Wed, 20 May 2020 21:06:49 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200520123833.GG157452@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "David E. Box" <david.e.box@linux.intel.com>
 
-Add PCIe DVSEC extended capability ID and defines for the header offsets.
-Defined in PCIe r5.0, sec 7.9.6.
+On 20.05.2020 15:38, Jiri Olsa wrote:
+> On Wed, May 13, 2020 at 11:04:25AM +0300, Alexey Budankov wrote:
+>>
+>> Implement handling of 'enable' and 'disable' control commands
+>> coming from control file descriptor.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/perf/builtin-record.c | 18 +++++++++++++++++-
+>>  1 file changed, 17 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index 50dc2fe626e5..72f388623364 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -1505,6 +1505,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>  	bool disabled = false, draining = false;
+>>  	int fd;
+>>  	float ratio = 0;
+>> +	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
+>>  
+>>  	atexit(record__sig_exit);
+>>  	signal(SIGCHLD, sig_handler);
+>> @@ -1802,8 +1803,23 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>  			 * Propagate error, only if there's any. Ignore positive
+>>  			 * number of returned events and interrupt error.
+>>  			 */
+>> -			if (err > 0 || (err < 0 && errno == EINTR))
+>> +			if (err > 0 || (err < 0 && errno == EINTR)) {
+>>  				err = 0;
+>> +				if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
+>> +					switch (cmd) {
+>> +					case EVLIST_CTL_CMD_ENABLE:
+>> +						pr_info(EVLIST_ENABLED_MSG);
+>> +						break;
+>> +					case EVLIST_CTL_CMD_DISABLE:
+>> +						pr_info(EVLIST_DISABLED_MSG);
+>> +						break;
+>> +					case EVLIST_CTL_CMD_ACK:
+>> +					case EVLIST_CTL_CMD_UNSUPPORTED:
+>> +					default:
+>> +						break;
+>> +					}
+>> +				}
+>> +			}
+> 
+> so this will be processed only when:
+> 
+> 	if (hits == rec->samples) {
+> 
+> what if there's always somethign in the buffer? will this stall?
+> 
+>>  			waking++;
+>>  
+>>  			if (evlist__filter_pollfd(rec->evlist, POLLERR | POLLHUP) == 0)
+> 
+> evlist__filter_pollfd will trigger draining if all the maps are closed,
+> but there's one more fd in pollfd now, will this prevent draining?
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- include/uapi/linux/pci_regs.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Good catch. This needs redesign to notice pending commands during 
+active trace streaming. The same is regarding draining.
 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f9701410d3b5..09daa9f07b6b 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -720,6 +720,7 @@
- #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
- #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
- #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
-+#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
- #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
- #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
- #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
-@@ -1062,6 +1063,10 @@
- #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
- #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
- 
-+/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
-+#define PCI_DVSEC_HEADER1		0x4 /* Vendor-Specific Header1 */
-+#define PCI_DVSEC_HEADER2		0x8 /* Vendor-Specific Header2 */
-+
- /* Data Link Feature */
- #define PCI_DLF_CAP		0x04	/* Capabilities Register */
- #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
--- 
-2.26.2
+> 
+> I wonder this would fit better to the sideband thread (util/sideband_evlist.c)
+> so we don't disturb the main thread with another check
+
+~Alexey
 
