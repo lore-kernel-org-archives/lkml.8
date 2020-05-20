@@ -2,121 +2,164 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923AA207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3961207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrWi5oHJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="b/Rf6crt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgETLRt (ORCPT
+        id S1726853AbgETLTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
+        Wed, 20 May 2020 07:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETLRt (ORCPT
+        with ESMTP id S1726403AbgETLS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:17:49 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3646EC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:17:49 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 23so1390020pfy.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=G9jhMLSlbbRWBPFkiGcwNA69qHZJzJ0AW02rtZSNSek=;
-        b=HrWi5oHJs6KG0TnjQSTOJ04Qm8KbWmxtVcZBF5c3JhUMZljPumg7wlWtu1EQ2ff2ht
-         THAOlS5+DB9E9yy2+PSvNvTVKUbHSGfzo07tr2CCCE8heT/cQUrLzll+kvrKdclThJIL
-         q2LtnI5Cj81ZgJXMwt28k3gfzCenwzUr0nNrBr2J5LoUsLsdhaq6ziDgdo+E47vhGEi7
-         AAOUewCCwVkCtQ7tWlDu4NWo6Wl03kRXAVcRfv0IAwjaIyQSOPPsjXTeasjYVs1N1cYg
-         PLJ3+lB5K4RMqHe0Md7C9BYx7xGQr2bJo2m3eOl+aTdqd97v9Sr5cLMNj/TriqWwpY0Z
-         PPYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=G9jhMLSlbbRWBPFkiGcwNA69qHZJzJ0AW02rtZSNSek=;
-        b=N5mt299/i8kKob/wgY8REyCfoKIYCkA0W/Uh/KmClE9cqgYGGd+qRgWK+wJyjO5GPq
-         sKYoAZGDu/hlkraMLJj6Zt3LfcuJkAyceYeLU/BCZkjQsMowxVk2j244iJDyW5LEgs+O
-         uDJCWW2cm+CHK/wEK0W1S3q2XRmgy2s0YTbbbPOBIr0c9YAw4n2WE7R5W+5GOtw14HKZ
-         qIVTrYq5V7imc1h6wBy+XFXBVph/ZRjPHPg6YGVQ5ebDGq44/XR89btdk+wEwIzNEwhI
-         2ceY8wo6RkKhJDN8HaDvxL3+3bR0Cb0/8YYZbuUe3fpdPJqs5QgiavWGm6keOudBaUDQ
-         BU7w==
-X-Gm-Message-State: AOAM532Td5eACNBUIszsVdV9cQg+N6nylP36ICy4I2m/dmHv/lN0rlFA
-        3r73eEJLjT1q6ARXg7ZEsA0=
-X-Google-Smtp-Source: ABdhPJyX44rVAqEouWz5zdqFz0iyoiBYEjg0TYxUEUAoXZr9buZWGPmsQvjC9HGlkPRy7cTN8md9Bw==
-X-Received: by 2002:a63:7d58:: with SMTP id m24mr3500311pgn.81.1589973468726;
-        Wed, 20 May 2020 04:17:48 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id q7sm1709586pgs.13.2020.05.20.04.17.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 04:17:48 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Wed, 20 May 2020 20:17:46 +0900
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v2] printk/kdb: Redirect printk messages into kdb in any
- context
-Message-ID: <20200520111746.GB520@jagdpanzerIV.localdomain>
-References: <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
- <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
- <20200515085021.GS17734@linux-b0ei>
- <20200515103308.GD42471@jagdpanzerIV.localdomain>
- <20200515134806.5cw4xxnxw7k3223l@holly.lan>
- <20200518092139.GK7340@linux-b0ei>
- <20200520042102.GA938@jagdpanzerIV.localdomain>
- <20200520093557.lwwxnhvgmacipdce@holly.lan>
- <20200520102233.GC3464@linux-b0ei>
+        Wed, 20 May 2020 07:18:59 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C636FC061A0E;
+        Wed, 20 May 2020 04:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hhlHkN1kByydnEQWyR3TLw/SDjYVkMwsfp32OLQh57w=; b=b/Rf6crtBrbP3SO1KMLW4j7P/
+        1ln9lmZQherbT15oFm9GwUfUPH3isrOQ4HyLxU1wMNPn8+43TkHLHEeH7NQqeHrpdJ8VojCBHhto3
+        XIE8bNbe4K6YTdOJoMlK8L1HdHHgTEn9B0/dBtfVegdyXahpN0ftWujW8vFNCwI+DbwNUjpgM1OpU
+        LJRQYXgkrgGDeObQuTNmtgupE+VyR6nLsj7e2ip0Ryb0vQEgRjT8o/u4ESl/CJJPKwmiq9rA0OKTy
+        yyuYLe7PvoDB8ta97fOOoZqBBWphzDAEy3duy7tY2mTfEnFHsgN6QBPfnfQFqC0rwNynHIwsIPGOu
+        m3fISKySw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34586)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jbMkO-00085W-2L; Wed, 20 May 2020 12:18:52 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jbMkM-0006m8-DD; Wed, 20 May 2020 12:18:50 +0100
+Date:   Wed, 20 May 2020 12:18:50 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+Message-ID: <20200520111850.GL1551@shell.armlinux.org.uk>
+References: <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <20200509114518.GB1551@shell.armlinux.org.uk>
+ <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+ <20200509195246.GJ1551@shell.armlinux.org.uk>
+ <20200509202050.GK1551@shell.armlinux.org.uk>
+ <20200519095330.GA1551@shell.armlinux.org.uk>
+ <CAGnkfhzuyxJDo-DXPHPiNtP4RbRpry+3M9eoiTknGR0zvgPuoA@mail.gmail.com>
+ <20200519190534.78bb8389@turbo.teknoraver.net>
+ <20200520111043.GK1551@shell.armlinux.org.uk>
+ <CAGnkfhx2qHVSBNTRQf+RQiRWBHxF5hPE=5m+YVKBv6C97P=BOw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520102233.GC3464@linux-b0ei>
+In-Reply-To: <CAGnkfhx2qHVSBNTRQf+RQiRWBHxF5hPE=5m+YVKBv6C97P=BOw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/05/20 12:22), Petr Mladek wrote:
-> kdb has to get messages on consoles even when the system is stopped.
-> It uses kdb_printf() internally and calls console drivers on its own.
+On Wed, May 20, 2020 at 01:16:25PM +0200, Matteo Croce wrote:
+> On Wed, May 20, 2020 at 1:11 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Tue, May 19, 2020 at 07:05:34PM +0200, Matteo Croce wrote:
+> > > On Tue, 19 May 2020 12:05:20 +0200
+> > > Matteo Croce <mcroce@redhat.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > The patch seems to work. I'm generating traffic with random MAC and IP
+> > > addresses, to have many flows:
+> > >
+> > > # tcpdump -tenni eth2
+> > > 9a:a9:b1:3a:b1:6b > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.4.0 > 192.168.0.4.0: UDP, length 12
+> > > 9e:92:fd:f8:7f:0a > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.4.0 > 192.168.0.4.0: UDP, length 12
+> > > 66:b7:11:8a:c2:1f > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.1.0 > 192.168.0.1.0: UDP, length 12
+> > > 7a:ba:58:bd:9a:62 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.1.0 > 192.168.0.1.0: UDP, length 12
+> > > 7e:78:a9:97:70:3a > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.2.0 > 192.168.0.2.0: UDP, length 12
+> > > b2:81:91:34:ce:42 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.2.0 > 192.168.0.2.0: UDP, length 12
+> > > 2a:05:52:d0:d9:3f > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.3.0 > 192.168.0.3.0: UDP, length 12
+> > > ee:ee:47:35:fa:81 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.3.0 > 192.168.0.3.0: UDP, length 12
+> > >
+> > > This is the default rate, with rxhash off:
+> > >
+> > > # utraf eth2
+> > > tx: 0 bps 0 pps rx: 397.4 Mbps 827.9 Kpps
+> > > tx: 0 bps 0 pps rx: 396.3 Mbps 825.7 Kpps
+> > > tx: 0 bps 0 pps rx: 396.6 Mbps 826.3 Kpps
+> > > tx: 0 bps 0 pps rx: 396.5 Mbps 826.1 Kpps
+> > >
+> > >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+> > >       9 root      20   0       0      0      0 R  99.7   0.0   7:02.58 ksoftirqd/0
+> > >      15 root      20   0       0      0      0 S   0.0   0.0   0:00.00 ksoftirqd/1
+> > >      20 root      20   0       0      0      0 S   0.0   0.0   2:01.48 ksoftirqd/2
+> > >      25 root      20   0       0      0      0 S   0.0   0.0   0:32.86 ksoftirqd/3
+> > >
+> > > and this with rx hashing enabled:
+> > >
+> > > # ethtool -K eth2 rxhash on
+> > > # utraf eth2
+> > > tx: 0 bps 0 pps rx: 456.4 Mbps 950.8 Kpps
+> > > tx: 0 bps 0 pps rx: 458.4 Mbps 955.0 Kpps
+> > > tx: 0 bps 0 pps rx: 457.6 Mbps 953.3 Kpps
+> > > tx: 0 bps 0 pps rx: 462.2 Mbps 962.9 Kpps
+> > >
+> > >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+> > >      20 root      20   0       0      0      0 R   0.7   0.0   2:02.34 ksoftirqd/2
+> > >      25 root      20   0       0      0      0 S   0.3   0.0   0:33.25 ksoftirqd/3
+> > >       9 root      20   0       0      0      0 S   0.0   0.0   7:52.57 ksoftirqd/0
+> > >      15 root      20   0       0      0      0 S   0.0   0.0   0:00.00 ksoftirqd/1
+> > >
+> > >
+> > > The throughput doesn't increase so much, maybe we hit an HW limit of
+> > > the gigabit port. The interesting thing is how the global CPU usage
+> > > drops from 25% to 1%.
+> > > I can't explain this, it could be due to the reduced contention?
+> >
+> > Hi Matteo,
+> >
+> > Can I take that as a Tested-by ?
+> >
+> > Thanks.
+> >
+> > --
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+> >
 > 
-> It uses a hack to reuse an existing code. It sets "kdb_trap_printk"
-> global variable to redirect even the normal printk() into the
-> kdb_printf() variant.
+> Tested-by: Matteo Croce <mcroce@redhat.com>
 > 
-> The variable "kdb_trap_printk" is checked in printk_default() and
-> it is ignored when printk is redirected to printk_safe in NMI context.
-> Solve this by moving the check into printk_func().
+> probably also:
 > 
-> It is obvious that it is not fully safe. But it does not make things
-> worse. The console drivers are already called in this context by
-> db_printf() direct calls.
-> 
-> Reported-by: Sumit Garg <sumit.garg@linaro.org>
-> Tested-by: Sumit Garg <sumit.garg@linaro.org>
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> Reported-by: Matteo Croce <mcroce@redhat.com>
 
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Thanks!
 
-	-ss
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
