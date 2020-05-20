@@ -2,156 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4942C206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6C42070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="I4eSfLbl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQ8ZueCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgETRN3 (ORCPT
+        id S1727123AbgETRNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:13:29 -0400
-Received: from mail-mw2nam10on2131.outbound.protection.outlook.com ([40.107.94.131]:52672
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726691AbgETRNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:13:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AdRjfK0SuYZQn1T/0d38O3urrLDl8q33jrJq0v1A36d2XaoKc1eQEVZEYH0wpXTWZlhc29ciPp34hrP23tSEdrgeV8XD4FjFI/xuvQipg1EjXai/552nuTQuPpQOH51o+Hw768e8VnR2PK3TLDJNXtU8jQFWL+UHpCjVmWpUVT/LjC3CTrUIl9QUxbrVTu4LeEay56oGl/vXt51B3oHsTE+y2AUMOIzpWnn1D/FjM6NhrGaUNZkyAxWxinebSGHOF4jxoIZW4DLIDlQ52VmApO6+RBmwaFZ0I9EKadw7W7KdraOoudg7CKAybQBbLeBZjpZg0pDuj5qSE9MgkKiToA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WENrl9nfjP9FJdafxG3aKM2i7jya30XQF8Yj/HGtyWk=;
- b=PgypsH6FKmevzGaGsK87F/SC4LRF+AniecGwwAQjZU9vru4lIb9SvcBtNKwgXBKABxl+TS3tzHYS17crLQOEjT0u8lU8IahZRACP/UFiJw74F9MHxT4SENuE2mA1mozeAcOpnvsOUHj6zbY3titgDXtWfttmlduyvATW6qdCDNuxb49UdkF8PFbrMx+ruZO+jmHmqW2u+wjv3qRWYG9U0R1xIqfGeVq5VS+RZD7NhWQmn13xOclTMLIgL7UZRKXVQx4ey1G8WmT3x9uLQPjlTKJBgFDAFsWeiKVRYdz71xuIb9k0B87x8dqP1i3CS+L9M/fAOARz+QKoNrkq2Ym2nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+        Wed, 20 May 2020 13:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgETRN2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:13:28 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBEEC061A0E;
+        Wed, 20 May 2020 10:13:28 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 23so1866245pfy.8;
+        Wed, 20 May 2020 10:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WENrl9nfjP9FJdafxG3aKM2i7jya30XQF8Yj/HGtyWk=;
- b=I4eSfLbl8s//QLDLZWumiNb84hwghk4mvgdWkyUaTPrLFr/JgwmJYU7y3MlXMOORWigbl9JQCLMk8JgOJ1+BRoW+bX6J3RFsmifUSGzxgAlwKEeOjO1GKSHpLhfRehgD/Xle9ul30qlhjdgvGwE1/TRTMlgD6BB7bYwfLBqWYYk=
-Authentication-Results: amperecomputing.com; dkim=none (message not signed)
- header.d=none;amperecomputing.com; dmarc=none action=none
- header.from=os.amperecomputing.com;
-Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
- BYAPR01MB5333.prod.exchangelabs.com (2603:10b6:a03:127::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.24; Wed, 20 May 2020 17:13:15 +0000
-Received: from BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.3021.020; Wed, 20 May 2020
- 17:13:15 +0000
-From:   Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     patches@amperecomputing.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] ACPI/IORT: Fix PMCG node single ID mapping handling
-Date:   Wed, 20 May 2020 10:13:07 -0700
-Message-Id: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR05CA0008.namprd05.prod.outlook.com
- (2603:10b6:a03:254::13) To BYAPR01MB4598.prod.exchangelabs.com
- (2603:10b6:a03:8a::18)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=arFxXWIilJc8yilr6THATlL+mM94NJsqQ+xYHRPI28o=;
+        b=eQ8ZueCAAmKF481dSsTzEfptXR3E56PhUUH9kEaE5lcwybZBOx13OC+Xi9wkqf8yJl
+         eMd1L2e88OjzLZqUwjft5kT4q1ykz42UQV6MVOEia2NuXW7QNNZ7A34YWkJl2fTeKnXd
+         x57lOvCSMymfWq5CIUCMSTFmCQ+QTFXWfQxGIl0MyJIAsxvIWaGoYNiaL9FYDbjjsASH
+         yrczDke/1e9q5QAzunll1NsU34AZd3fkwQAvuZ8SyOMsHhrXwdE+C5ocxHRWMG94nAuo
+         mFEYgVnx+pQB6bpLbpXdPCQm3xxHlbpl8IjeNyIIG5xyCXVHShY2DHAh3VorO1Fq2dCg
+         0CDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=arFxXWIilJc8yilr6THATlL+mM94NJsqQ+xYHRPI28o=;
+        b=P2vjEHQ9VpwPhDtvoFr5CY/Z/Uil7iUvKz0eU+UOO48q1oM+iWteBSQmDqzBOjIBw1
+         dxLbmqEBWWJsa6b7Psk+5GkQcGk4dY9m6wZIFDNFd2XmgxShF21VXw27C9ioXh6ZWFYn
+         iCFeuV2ykQXQE+mM9AieND7fQizRm+xX5NY1BUSxKeCS4h7GRdLwDBVO/kvGGPQpSUyk
+         tuL2Zp0AJuuREaoS34pnFB5jXBX8JXjZsYh8Uk6olVG0G5tKt+wzUep4PgDtGMmgjhqt
+         KrqVYd8ck39aj2OyQ9ZDhMEHQDF+agPPKw+fuNCt+nazZ121qIf7PDZSh6v669KPr9Aw
+         uOxA==
+X-Gm-Message-State: AOAM530wd0LcDgNuhXOoeRM0JhTm/wO5pLtGEA2sU4I34Z5465jafcO7
+        dXsO/xO0pAt8WLLqQyZ3sJg=
+X-Google-Smtp-Source: ABdhPJzPAJW/ATUYvu+6WYxM82y1cMxLnDMGV4gQ97nd84re0gsoxcS0Os/XSLxbUD3hZDiX3Ghrxw==
+X-Received: by 2002:a05:6a00:150e:: with SMTP id q14mr5106146pfu.325.1589994807327;
+        Wed, 20 May 2020 10:13:27 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id e1sm2512647pjv.54.2020.05.20.10.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 10:13:26 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:13:24 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg
+ property
+Message-ID: <20200520171324.GS89269@dtor-ws>
+References: <20200520073327.6016-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BY3PR05CA0008.namprd05.prod.outlook.com (2603:10b6:a03:254::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3045.8 via Frontend Transport; Wed, 20 May 2020 17:13:15 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [4.28.12.214]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 58b8a3b5-99d9-46da-7b96-08d7fce1156a
-X-MS-TrafficTypeDiagnostic: BYAPR01MB5333:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR01MB5333A5ADD9B14CDA31B803E8E0B60@BYAPR01MB5333.prod.exchangelabs.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:913;
-X-Forefront-PRVS: 04097B7F7F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9/KqEewnTk2P8hKH4FZRdKQokBQbYC2EDWUMBaU73wntm1ELJ6epWdHWQsrcFm+q69HPfImiuIK0rins/xeOEr2j6xUTP2YvEPR60FG8tC+LAOTlV4gInTOEUlWd/FlGlpwAl4E5hJsUIqhFoOnmcvOjuFxTQojKc1VqCKq7Bbaw7smou1YvSYyfQB9FCgkslQYCYW5jVkcW9obNtbGU5sKf0zkLSX/bk9sBkaNygcdxu97WqlmDfoizlaIPiYm0CZFsRxvu/4qpHvwqpIH6nLanCX2x7CEuuHW6kfECILBvkAn5wF+UVeTPWL71rX6l3T3DrmG4l/2810R8xdF9OlCqG02I8EITEN7geJuOyFLd9qpVmaEzXCpVgtHSCxII
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39840400004)(136003)(396003)(376002)(366004)(346002)(66556008)(66476007)(66946007)(5660300002)(52116002)(86362001)(109986005)(4326008)(478600001)(2616005)(956004)(2906002)(6666004)(26005)(7416002)(16526019)(6512007)(8676002)(186003)(6486002)(6506007)(54906003)(8936002)(316002)(266003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: sR89Fbdc94eFdHBahJ/6b860c6HfWhup5sNa0R7InerdYaafAW8Dpk72//504qn6VmDqAYUDFHV+yXHQFFvKErcCUH7cyznoXfuHC3nrCGrodzWNda0dRHWisswtz2zZ1zM8C/J1YvayyE3WPaMuXleiwWs/cJwV0KRRAmqjTyOVVFIJbGaxM7D0YE9OjzYkwxE8LZQM/WwMXkRIMWsGnCXLITJdRpHOE83hWVjLEjoEGcjpPRTb2m0xillOWzQcbbi2NkTJQ+DFOh9/KkZoZDV8z2xNf+QR07PELwQl4ur5dMtVJDcI9kMS/nsETWMI0qFUvRuUNPuAQk4VgDU4ASpYPNVgkt27mAQ0frefa9IJIv09tiUXSTatmRCqgrWbG9a2wc44XHUKqvAdJe6oZsxQRbCjKsjizX1XW+062Tcglb27MJoLtxEFRl1j8eo997NuUMUMrcUl+TzUFW/qK8TXTVpMH0bnacLlLVzFxsM=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58b8a3b5-99d9-46da-7b96-08d7fce1156a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 17:13:15.7553
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V78J6wMR8LocacTieVbsvR81AMi1z25U9Sps6cM4+ySKcT9j90rpcbBrjO8vUpcSXnXmc7+SGPRe9vHAXl45iTdmNC6/eynqZVuka8lIGsSy1QrRCJpY+oiSj8fCsEpv
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5333
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520073327.6016-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An IORT PMCG node can have no ID mapping if its overflow interrupt is
-wire based therefore the code that parses the PMCG node can not assume
-the node will always have a single mapping present at index 0.
+Hi Johan,
 
-Fix iort_get_id_mapping_index() by checking for an overflow interrupt
-and mapping count.
+On Wed, May 20, 2020 at 09:33:27AM +0200, Johan Jonker wrote:
+> A test with the command below gives this error:
+> 
+> arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
+> touchscreen@3e: reg:0:0: 56 was expected
+> 
+> The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
+> was shipped with different addresses then the binding currently allows.
+> Change the reg property that any address will pass.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
+> edt-ft5x06.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> index 383d64a91..baa8e8f7e 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> @@ -42,7 +42,7 @@ properties:
+>        - focaltech,ft6236
+>  
+>    reg:
+> -    const: 0x38
+> +    maxItems: 1
 
-Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
+Should we have a list of valid addresses instead of allowing any
+address? Controllers usually have only a couple of addresses that they
+support.
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
-Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
----
-v1 -> v2:
-- Use pmcg node to detect wired base overflow interrupt.
+Thanks.
 
-v2 -> v3:
-- Address Hanjun and Robin's comments.
-
-v3 -> v4:
-- Update the title and description as mentioned by Lorenzo.
-
-v4 -> v5:
-- Remove period in the title and commit references.
-
- drivers/acpi/arm64/iort.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ed3d2d1..12bb70e 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
- static int iort_get_id_mapping_index(struct acpi_iort_node *node)
- {
- 	struct acpi_iort_smmu_v3 *smmu;
-+	struct acpi_iort_pmcg *pmcg;
- 
- 	switch (node->type) {
- 	case ACPI_IORT_NODE_SMMU_V3:
-@@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
- 
- 		return smmu->id_mapping_index;
- 	case ACPI_IORT_NODE_PMCG:
-+		pmcg = (struct acpi_iort_pmcg *)node->node_data;
-+		if (pmcg->overflow_gsiv || node->mapping_count == 0)
-+			return -EINVAL;
-+
- 		return 0;
- 	default:
- 		return -EINVAL;
 -- 
-2.7.4
-
+Dmitry
