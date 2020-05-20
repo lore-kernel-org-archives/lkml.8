@@ -2,291 +2,183 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BDDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB0AC205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA226205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgETGkI (ORCPT
+        id S1726595AbgETGlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:40:08 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39850 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETGkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:40:06 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 446571A02DF;
-        Wed, 20 May 2020 08:40:04 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F71C1A02D9;
-        Wed, 20 May 2020 08:40:00 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 181F4402B3;
-        Wed, 20 May 2020 14:39:54 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx: Make tempmon node as child of anatop node
-Date:   Wed, 20 May 2020 14:30:16 +0800
-Message-Id: <1589956216-22499-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 20 May 2020 02:41:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2610 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726369AbgETGlG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:41:06 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K6WW2x075620;
+        Wed, 20 May 2020 02:41:01 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 314rxd24xk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 02:41:01 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04K6eqTe003282;
+        Wed, 20 May 2020 06:40:59 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 313xehk2qw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 06:40:58 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04K6euGd65470584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 06:40:56 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 337DFA4060;
+        Wed, 20 May 2020 06:40:56 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E01AA4054;
+        Wed, 20 May 2020 06:40:54 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.79.188.115])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 May 2020 06:40:54 +0000 (GMT)
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+To:     linux-ext4@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.com>,
+        tytso@mit.edu, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: [PATCHv5 0/5] Improve ext4 handling of ENOSPC with multi-threaded use-case
+Date:   Wed, 20 May 2020 12:10:31 +0530
+Message-Id: <cover.1589955723.git.riteshh@linux.ibm.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_02:2020-05-19,2020-05-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 cotscore=-2147483648 malwarescore=0
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
+ mlxlogscore=999 adultscore=0 suspectscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX6/7 SoCs' temperature sensor is inside anatop module from HW
-perspective, so it should be a child node of anatop.
+Hello All,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 22 +++++++++++-----------
- arch/arm/boot/dts/imx6sl.dtsi  | 20 ++++++++++----------
- arch/arm/boot/dts/imx6sll.dtsi | 20 ++++++++++----------
- arch/arm/boot/dts/imx6sx.dtsi  | 20 ++++++++++----------
- arch/arm/boot/dts/imx6ul.dtsi  | 20 ++++++++++----------
- arch/arm/boot/dts/imx7s.dtsi   | 20 ++++++++++----------
- 6 files changed, 61 insertions(+), 61 deletions(-)
+Please note that these patches are based on top of mballoc cleanup series [2]
+which is also pending review. :)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 39d4afd..43d44d5 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -69,17 +69,6 @@
- 		};
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6q-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--		#thermal-sensor-cells = <0>;
--	};
--
- 	ldb: ldb {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -795,6 +784,17 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6q-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
-+					#thermal-sensor-cells = <0>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 911d8cf..d8efc0a 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -93,16 +93,6 @@
- 		};
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6q-tempmon";
--		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-parent = <&gpc>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
--	};
--
- 	pmu {
- 		compatible = "arm,cortex-a9-pmu";
- 		interrupt-parent = <&gpc>;
-@@ -628,6 +618,16 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6q-tempmon";
-+					interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-parent = <&gpc>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index edd3abb..bf7f048 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -105,16 +105,6 @@
- 		clock-output-names = "ipp_di1";
- 	};
- 
--	tempmon: temperature-sensor {
--		compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-parent = <&gpc>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
--	};
--
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -531,6 +521,16 @@
- 					anatop-max-voltage = <3400000>;
- 					anatop-enable-bit = <0>;
- 				};
-+
-+				tempmon: temperature-sensor {
-+					compatible = "fsl,imx6sll-tempmon", "fsl,imx6sx-tempmon";
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-parent = <&gpc>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6SLL_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usb-phy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index e031337..8c4473b 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -134,16 +134,6 @@
- 		clock-output-names = "anaclk2";
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
--	};
--
- 	pmu {
- 		compatible = "arm,cortex-a9-pmu";
- 		interrupt-parent = <&gpc>;
-@@ -696,6 +686,16 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 35e7301..505fd4f 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -131,16 +131,6 @@
- 		clock-output-names = "ipp_di1";
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
--	};
--
- 	pmu {
- 		compatible = "arm,cortex-a7-pmu";
- 		interrupt-parent = <&gpc>;
-@@ -611,6 +601,16 @@
- 					anatop-min-voltage = <725000>;
- 					anatop-max-voltage = <1450000>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
-+				};
- 			};
- 
- 			usbphy1: usbphy@20c9000 {
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 8bac491..3904558 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -147,16 +147,6 @@
- 		};
- 	};
- 
--	tempmon: tempmon {
--		compatible = "fsl,imx7d-tempmon";
--		interrupt-parent = <&gpc>;
--		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--		fsl,tempmon = <&anatop>;
--		nvmem-cells = <&tempmon_calib>,	<&fuse_grade>;
--		nvmem-cell-names = "calib", "temp_grade";
--		clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
--	};
--
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupt-parent = <&intc>;
-@@ -586,6 +576,16 @@
- 					anatop-max-voltage = <1300000>;
- 					anatop-enable-bit = <0>;
- 				};
-+
-+				tempmon: tempmon {
-+					compatible = "fsl,imx7d-tempmon";
-+					interrupt-parent = <&gpc>;
-+					interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+					fsl,tempmon = <&anatop>;
-+					nvmem-cells = <&tempmon_calib>,	<&fuse_grade>;
-+					nvmem-cell-names = "calib", "temp_grade";
-+					clocks = <&clks IMX7D_PLL_SYS_MAIN_CLK>;
-+				};
- 			};
- 
- 			snvs: snvs@30370000 {
+v4 -> v5:
+1. Removed ext4_lock_group() from fastpath and added that in the retry attempt,
+so that the performance of fastpath is not affected.
+
+v3 -> v4:
+1. Splitted code cleanups and debug improvements as a separate patch series.
+2. Dropped rcu_barrier() approach since it did cause some latency
+in my testing of ENOSPC handling.
+3. This patch series takes a different approach to improve the multi-threaded
+ENOSPC handling in ext4 mballoc code. Below mail gives more details.
+
+
+Background
+==========
+Consider a case where your disk is close to full but still enough space
+remains for your multi-threaded application to run. Now when this application
+threads tries to write (e.g. sparse file followed by mmap write or
+even fallocate multiple files) in parallel, then with current code of
+ext4 multi-block allocator, the application may get an ENOSPC error in some
+cases. Examining disk space at this time, we see there is sufficient space
+remaining for your application to continue to run.
+
+Additional info:
+============================
+1. Our internal test team was easily able to reproduce this ENOSPC error on 
+   an upstream kernel with 2GB ext4 image, with 64K blocksize. They didn't try
+   above 2GB and reprorted this issue directly to dev team. On examining the
+   free space when the application gets ENOSPC, the free space left was more
+   then 50% of filesystem size in some cases.
+
+2. For debugging/development of these patches, I used below script [1] to
+   trigger this issue quite frequently on a 64K blocksize setup with 240MB
+   ext4 image.
+
+
+Summary of patches and problem with current design
+==================================================
+There were 3 main problems which these patches tries to address and hence
+improve the ENOSPC handling in ext4's multi-block allocator code.
+
+1. Patch-2: Earlier we were considering the group is good or not (means
+   checking if it has enough free blocks to serve your request) without taking
+   the group's lock. This could result into a race where, if another thread is
+   discarding the group's prealloc list, then the allocation thread will not
+   consider those about to be free blocks and will fail will return that group
+   is not fit for allocation thus eventually fails with ENOSPC error.
+
+2. Patch-4: Discard PA algoritm only scans the PA list to free up the
+   additional blocks which got added to PA. This is done by the same thread-A
+   which at 1st couldn't allocate any blocks. But there is a window where,
+   once the blocks were allocated (say by some other thread-B previously) we
+   drop the group's lock and then checks to see if some of these blocks could
+   be added to prealloc list of the group from where we allocated some blocks.
+   After that we take the lock and add these additional blocks allocated by
+   thread-B to the PA list. But say if thread-A tries to scan the PA list
+   between this time interval then there is possibilty that it won't find any
+   blocks added to the PA list and hence may return ENOSPC error.
+   Hence this patch tries to add those additional blocks to the PA list just
+   after the blocks are marked as used with the same group's spinlock held.
+   
+3. Patch-3: Introduces a per cpu discard_pa_seq counter which is increased
+   whenever there is block allocation/freeing or when the discarding of any
+   group's PA list has started. With this we could know when to stop the
+   retrying logic and return ENOSPC error if there is actually no free space
+   left.
+   There is an optimization done in the block allocation fast path with this
+   approach that, before starting the block allocation, we only sample the
+   percpu seq count on that cpu. Only when the allocation fails and discard
+   couldn't free up any of the blocks in all of the group's PA list, that is
+   when we sample the percpu seq counter sum over all possible cpus to check
+   if we need to retry.
+
+
+Testing:
+=========
+Tested fstests with default bs of 4K and bs == PAGESIZE ("-g auto")
+No new failures were reported with this patch series in this testing.
+
+NOTE:
+1. This patch series is based on top of mballoc code cleanup patch series
+posted at [2].
+
+References:
+===========
+[v3]: https://lkml.kernel.org/linux-ext4/cover.1588313626.git.riteshh@linux.ibm.com/
+[1]: https://github.com/riteshharjani/LinuxStudy/blob/master/tools/test_mballoc.sh
+[2]: https://lkml.kernel.org/linux-ext4/cover.1589086800.git.riteshh@linux.ibm.com/
+
+
+Ritesh Harjani (5):
+  ext4: mballoc: Add blocks to PA list under same spinlock after allocating blocks
+  ext4: mballoc: Refactor ext4_mb_discard_preallocations()
+  ext4: mballoc: Introduce pcpu seqcnt for freeing PA to improve ENOSPC handling
+  ext4: mballoc: Refactor ext4_mb_good_group()
+  ext4: mballoc: Use lock for checking free blocks while retrying
+
+ fs/ext4/ext4.h              |   2 +
+ fs/ext4/mballoc.c           | 247 ++++++++++++++++++++++++++----------
+ include/trace/events/ext4.h |   3 +-
+ 3 files changed, 185 insertions(+), 67 deletions(-)
+
 -- 
-2.7.4
+2.21.0
 
