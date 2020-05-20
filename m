@@ -6,68 +6,68 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC452C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED01C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB6CD20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27892083E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WVsgcgCN"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Y+UE5guH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgETAH7 (ORCPT
+        id S1728444AbgETAIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34768 "EHLO
+        Tue, 19 May 2020 20:08:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbgETAHy (ORCPT
+        with ESMTP id S1728407AbgETAHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:07:54 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BD2C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:54 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k19so580867pll.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:54 -0700 (PDT)
+        Tue, 19 May 2020 20:07:55 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B4FC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:55 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ci23so437375pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2OA6qojCM4dL1ZDG6HQpUSV9SSGjjyRfMb9hw1jALO0=;
-        b=WVsgcgCNQtJKJlbMEdp7w81j7Nm4YgeKnV3hBNnr2syOwz5DeApI1RIoXsQ59LoX63
-         UY2V0GnOOpscuwrDUIKdjfOccPjKFYNBrx6WwinSe0uALV9xqI4hb32/gERjn6v03kT9
-         88RMzTiz2P6Kc5j6b9eSUdiiITnenAyFko0xZuusJ9PKBv+22iSTpQwetNCnQ2mXLQrl
-         gEcW6QAiB8RA+CWjieoN2uYCT65WXXbdXyjnLNVcWQCkulr5kwSMoopJ7fXaQkP4u97h
-         bT2iGKpFMCaPXKBUV7vdESsycvExKYcPZijw21Lp42FW2IB3AC8AfUzMhIdMk7uGC54E
-         TPDA==
+        bh=7+DomKPOv1yE5ESFBkQ8ud9ihgskj98nGfYMrpZrFiM=;
+        b=Y+UE5guHV5/L0b0srWJiFebv61WLr8NQyvWXiq7/hoWAmuxvU+BiDdDJstV5EiD1wJ
+         jtu7ikRXv0voVZPUKIDXZ7B7+tHOxVVlnNeUvCM/Q0Ce+G5B13h9o6rVJt8WGvgF7/0Q
+         BbaJzcfEifhz+nObg1SXlEOSOOWuHpsiW1WhnO0L4NTEEVNW2BL9GTRhlxu2tyPiX25O
+         BrImsHgtj5OTLVzqFOZAAjyeAnX9aFuPMpHhuKwhu/Su44sd9e2AeFx/Ow2ydEaiuWDp
+         xEGKbFTyn0UaHKZzDlbLToadjznoL506wIT+MoMugLhhFH9pc4+RS+Cgha3wi1Gr1lTu
+         JkbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2OA6qojCM4dL1ZDG6HQpUSV9SSGjjyRfMb9hw1jALO0=;
-        b=fPOzj2QIQIpWAjAuXtGgt2ZrxQ3+zaN/qV5b7+IYuexYD7/Nh7XtxkuCCGkxPF4Jqb
-         I1sTERjhopgf+b7iwX0tlJLMXG1hJO9bgKpbwtMdWRV+jfHxyg2LLKMdTL+GpeYAJXyo
-         ne96qXmVuo0lV45tM6Lyx2bSOvUoYBS6OmQuc2K6ea3HHQFETMSGphgv1XCSXJMh5+2G
-         oz5HN/ydNapEmD73lOtX6UUjhSljjiAnltbwdtxhV+xe9Kz/PUQ3GNZ9xgCIf5iUx8Be
-         Cvw2YbDSl2uvnOKFe5vj0STlhNkk2fF4z/SWuUOjCL+WUECrMfk+VXBBCO9Pp8cIahNM
-         HT1Q==
-X-Gm-Message-State: AOAM532whMrUcLhMcuj2/1mijhXkSYN+6hgAkraTdODQdxGwEwqpPzFG
-        LjB/RfHVMavpEgtqnGZ2GzX3Cw==
-X-Google-Smtp-Source: ABdhPJwtCswXSbkUSw9C97SOK8vFMtT5eKKDm0rsNrlGrcNSvzzkVB3d8v+6JdpLRZlhXKPaZGOWpg==
-X-Received: by 2002:a17:90a:3201:: with SMTP id k1mr2111805pjb.202.1589933273730;
-        Tue, 19 May 2020 17:07:53 -0700 (PDT)
+        bh=7+DomKPOv1yE5ESFBkQ8ud9ihgskj98nGfYMrpZrFiM=;
+        b=cCEItkTADDroOTi0DJDq1p1XfDiyyF+0CGEJRm/dJ1XiYnMmqVH5mWp7vrcQtrEbLu
+         A+UbNMDCANRy+/SboKOIvtxQzKzbY3+zQvi3HxH56WIdAifFgodrgjAWSqGr4+K1/3ST
+         dtI9ixyp2CX4kovfxIgSygZfMLXtz9HN1tFMzCjcSoX2ZtBBCYfe0on7pPAa5pWHmCB7
+         rTwVQPU8383XfAVnwlwYlyPsuRDdAB9LiseUjpNce94kZ29GxzvDT+JuvDXxAE4gfdsA
+         d4Gj/1tpYafokrd8iVX7jdNiO0BTNVfD4EyhyUyyAumyN/mYmfw6tRTv9psSTuh5tGyX
+         ANgQ==
+X-Gm-Message-State: AOAM533oj/SGweeTu1mK/pdu40RhFyIfm47J7aC11fljEZrFZ/4uh8ot
+        MT4NeFGl7mnUfDyxWmwSp9s0/g==
+X-Google-Smtp-Source: ABdhPJwE9FiCv3g5zVYgc8Z9qAKSS+WbDh+SIgfGNnxYbx9qLd+gBy+NviN0qWa6eFC+ZUcHtHRuVQ==
+X-Received: by 2002:a17:90b:3c7:: with SMTP id go7mr2258358pjb.67.1589933274893;
+        Tue, 19 May 2020 17:07:54 -0700 (PDT)
 Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id w19sm490543pfc.95.2020.05.19.17.07.53
+        by smtp.gmail.com with ESMTPSA id z6sm502190pfb.87.2020.05.19.17.07.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 17:07:53 -0700 (PDT)
+        Tue, 19 May 2020 17:07:54 -0700 (PDT)
 From:   Kevin Hilman <khilman@baylibre.com>
-To:     linux-amlogic@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH for-5.8 v1 1/1] ARM: dts: meson8m2: Use the Meson8m2 specific USB2 PHY compatible
-Date:   Tue, 19 May 2020 17:07:47 -0700
-Message-Id: <158993320300.34448.17484160743878386596.b4-ty@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 0/2] arm64: meson-sm1: add support for Hardkernel ODROID-C4
+Date:   Tue, 19 May 2020 17:07:48 -0700
+Message-Id: <158993320300.34448.14860271730266890592.b4-ty@baylibre.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200515202520.1487514-1-martin.blumenstingl@googlemail.com>
-References: <20200515202520.1487514-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200506080702.6645-1-narmstrong@baylibre.com>
+References: <20200506080702.6645-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,15 +75,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 22:25:20 +0200, Martin Blumenstingl wrote:
-> Use the Meson8m2 specific USB2 PHY compatible string. The 3.10 vendor
-> kernel has at least one known difference between Meson8 and Meson8m2:
-> Meson8m2 sets the ACA_ENABLE bit while Meson8 doesn't.
+On Wed, 6 May 2020 10:07:00 +0200, Neil Armstrong wrote:
+> This serie adds support for the Hardkernel Odroid-C4 single board computer.
+> 
+> The Odroid-C4 is the Odroid-C2 successor with same form factor, but using
+> a modern Amlogic S905X3 (SM1) SoC and 4x USB3 ports.
+> 
+> Fully functionnal:
+> - USB2+USB3
+> - USB2 OTG
+> - eMMC
+> - SDCard
+> - HDMI
+> - DVFS
+> - Gigabit Ethernet with RTL8211F PHY
+> - ADC
+> - Debug UART
+> - Infrared Receiver
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] ARM: dts: meson8m2: Use the Meson8m2 specific USB2 PHY compatible
-      commit: f5a7382d6f176e29e4fd9d733b93d5b93771a7e4
+[1/2] dt-bindings: arm: amlogic: add odroid-c4 bindings
+      commit: 838f0905aaeefce443eca124b27e6474e6862aa3
+[2/2] arm64: dts: meson-sm1: add support for Hardkernel ODROID-C4
+      commit: 326e57518b0dc8789d78e59563afbb3f4107e6e1
 
 Best regards,
 -- 
