@@ -2,136 +2,120 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B301C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E17206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE179207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589994797;
+	bh=aBnQahn6Rx4syCQPw6nXrqo1bJDUJ1S1WtEdZT9KUVU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qnKRwpwwU0UENtTTLuooBnHTkFEzn4JbbiFnjSvs6Rk5PQRbUMOiclcw/zVpsNsIS
+	 3aiQydvt32E11AfvPrA+6y6PwerdPG4SHL587iivbk60GKBfJYqE6GW/wpr9sTb/0S
+	 kqsLRAtbbt6aaRWM4nlU42b07Fahw1gDzHhzi84o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgETRM1 (ORCPT
+        id S1726957AbgETRNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:12:27 -0400
-Received: from mailoutvs21.siol.net ([185.57.226.212]:35666 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726436AbgETRM1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:12:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 7177252262E;
-        Wed, 20 May 2020 19:12:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Zb2kWSo0VfZD; Wed, 20 May 2020 19:12:23 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 0DB3E5227F4;
-        Wed, 20 May 2020 19:12:23 +0200 (CEST)
-Received: from kista.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Zimbra) with ESMTPSA id 1D040522746;
-        Wed, 20 May 2020 19:12:17 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, paul.kocialkowski@bootlin.com
-Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org, wens@csie.org,
-        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: cedrus: Add support for additional output formats
-Date:   Wed, 20 May 2020 19:14:57 +0200
-Message-Id: <20200520171457.11937-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.26.2
+        Wed, 20 May 2020 13:13:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgETRNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:13:16 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7E162070A
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589994796;
+        bh=aBnQahn6Rx4syCQPw6nXrqo1bJDUJ1S1WtEdZT9KUVU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rn6dTu/QCsIPsOlSXLkiFei4+NqNuuqFItyUj6DdLTF34ZlAaZDFIkQOMJQA7U+Nk
+         oqNXL0qad5AFDjx7MV0m86sudtZbzrhw+JDDLoPLfl2W1um0wYcfyZR72QRKOzs63a
+         HwcCIMSjA6Bram1Uq1Y2yu4M6c5cm0GG6pnDXEoI=
+Received: by mail-wm1-f42.google.com with SMTP id g14so483614wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:13:15 -0700 (PDT)
+X-Gm-Message-State: AOAM533kyldfMU3mEyYOpGnolM+fIFCPwUHrSp8hpIinXoLFWTDzygA1
+        Rw5Z2qsLtfo+HadusBe8IotuUJDVTVo3M/bnmB++fw==
+X-Google-Smtp-Source: ABdhPJyqE73tj45GgRcuRENdcBFo/oFYikprLfZkfLqP5QSlvVEuV3i4EoHFUJ9qCHMejxr93zIxieuEnsbiXY8vsqs=
+X-Received: by 2002:a1c:9893:: with SMTP id a141mr3075808wme.176.1589994794103;
+ Wed, 20 May 2020 10:13:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20200515234547.710474468@linutronix.de> <20200515235127.996226788@linutronix.de>
+ <CALCETrVwTZA6OwrMDhhaNgpkvwsn9ajfuwrfH6xYExvCsFcXjQ@mail.gmail.com> <87lflm4owm.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87lflm4owm.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 20 May 2020 10:13:02 -0700
+X-Gmail-Original-Message-ID: <CALCETrVCBMjEZmohRmJ0=F26LjYxyxP0L_x=c68ExGUampVk3g@mail.gmail.com>
+Message-ID: <CALCETrVCBMjEZmohRmJ0=F26LjYxyxP0L_x=c68ExGUampVk3g@mail.gmail.com>
+Subject: Re: [patch V6 36/37] x86/entry: Move paranoid irq tracing out of ASM code
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If VPU supports untiled output, it actually supports several different
-YUV 4:2:0 layouts, namely NV12, NV21, YUV420 and YVU420.
+On Wed, May 20, 2020 at 8:17 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+>
+> > On Fri, May 15, 2020 at 5:11 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > I think something's missing here.  With this patch applied, don't we
+> > get to exc_debug_kernel() -> handle_debug() without doing
+> > idtentry_enter() or equivalent?  And that can even enable IRQs.
+> >
+> > Maybe exc_debug_kernel() should wrap handle_debug() in some
+> > appropriate _enter() / _exit() pair?
+>
+> I'm the one who is missing something here, i.e. the connection of this
+> patch to #DB. exc_debug_kernel() still looks like this:
+>
+>         nmi_enter_notrace();
+>         handle_debug(regs, dr6, false);
+>         nmi_exit_notrace();
+>
+> Confused.
+>
 
-Add support for all of them.
+Hmm.  I guess the code is correct-ish or at least as correct as it
+ever was.  But $SUBJECT says "Move paranoid irq tracing out of ASM
+code" but you didn't move it into all the users.  So now the NMI code
+does trace_hardirqs_on_prepare() but the #DB code doesn't.  Perhaps
+the changelog should mention this.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 18 +++++++++++++++++-
- .../staging/media/sunxi/cedrus/cedrus_video.c  | 18 ++++++++++++++++++
- 2 files changed, 35 insertions(+), 1 deletion(-)
+exc_kernel_debug() is an atrocity.  Every now and then I get started
+on cleanup it up and so far I always get mired in the giant amount of
+indirection.
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/sta=
-ging/media/sunxi/cedrus/cedrus_hw.c
-index daf5f244f93b..c119fd8c4b92 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-@@ -83,9 +83,25 @@ void cedrus_dst_format_set(struct cedrus_dev *dev,
-=20
- 	switch (fmt->pixelformat) {
- 	case V4L2_PIX_FMT_NV12:
-+	case V4L2_PIX_FMT_NV21:
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YVU420:
- 		chroma_size =3D ALIGN(width, 16) * ALIGN(height, 16) / 2;
-=20
--		reg =3D VE_PRIMARY_OUT_FMT_NV12;
-+		switch (fmt->pixelformat) {
-+		case V4L2_PIX_FMT_NV12:
-+			reg =3D VE_PRIMARY_OUT_FMT_NV12;
-+			break;
-+		case V4L2_PIX_FMT_NV21:
-+			reg =3D VE_PRIMARY_OUT_FMT_NV21;
-+			break;
-+		case V4L2_PIX_FMT_YUV420:
-+			reg =3D VE_PRIMARY_OUT_FMT_YU12;
-+			break;
-+		case V4L2_PIX_FMT_YVU420:
-+			reg =3D VE_PRIMARY_OUT_FMT_YV12;
-+			break;
-+		}
- 		cedrus_write(dev, VE_PRIMARY_OUT_FMT, reg);
-=20
- 		reg =3D chroma_size / 2;
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/=
-staging/media/sunxi/cedrus/cedrus_video.c
-index 15cf1f10221b..016021d71df2 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-@@ -55,6 +55,21 @@ static struct cedrus_format cedrus_formats[] =3D {
- 		.directions	=3D CEDRUS_DECODE_DST,
- 		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
- 	},
-+	{
-+		.pixelformat	=3D V4L2_PIX_FMT_NV21,
-+		.directions	=3D CEDRUS_DECODE_DST,
-+		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
-+	},
-+	{
-+		.pixelformat	=3D V4L2_PIX_FMT_YUV420,
-+		.directions	=3D CEDRUS_DECODE_DST,
-+		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
-+	},
-+	{
-+		.pixelformat	=3D V4L2_PIX_FMT_YVU420,
-+		.directions	=3D CEDRUS_DECODE_DST,
-+		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
-+	},
- };
-=20
- #define CEDRUS_FORMATS_COUNT	ARRAY_SIZE(cedrus_formats)
-@@ -130,6 +145,9 @@ void cedrus_prepare_format(struct v4l2_pix_format *pi=
-x_fmt)
- 		break;
-=20
- 	case V4L2_PIX_FMT_NV12:
-+	case V4L2_PIX_FMT_NV21:
-+	case V4L2_PIX_FMT_YUV420:
-+	case V4L2_PIX_FMT_YVU420:
- 		/* 16-aligned stride. */
- 		bytesperline =3D ALIGN(width, 16);
-=20
---=20
-2.26.2
-
+So Acked-by: Andy Lutomirski <luto@kernel.org> if you write a credible
+changelog.
