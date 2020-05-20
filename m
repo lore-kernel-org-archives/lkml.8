@@ -3,45 +3,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01B0C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F5CC433DF
 	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8A6206BE
+	by mail.kernel.org (Postfix) with ESMTP id 92255207C4
 	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgETFwD (ORCPT
+        id S1727016AbgETFwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 01:52:03 -0400
-Received: from mga02.intel.com ([134.134.136.20]:10150 "EHLO mga02.intel.com"
+        Wed, 20 May 2020 01:52:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50453 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgETFwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 01:52:03 -0400
-IronPort-SDR: lrdCaAdTkJua9hqLRrQq0L0TMqrmqyz5+POZhsYZkBfkk+dYXrqC7ORTHpRabuNjTJBOxIV6ks
- JwTGStossQcA==
+        id S1726650AbgETFwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 01:52:04 -0400
+IronPort-SDR: haZydlc9YcJTqhdvtxNFn+BKBA3Q1ZiBu+U0TXswybznaLUm86KUaoZ9yRxRgrqDmJpItZNpNL
+ fEjXqI9UXciA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 22:52:02 -0700
-IronPort-SDR: r5a21e1UGa8uvQwbOrgxwRYa9n9yJ6VYUDSjaXU4SsFvqwDC3OcmMaeyPGmSNBUylXvoCFtS7v
- Qv5ujDnITHGw==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 22:52:03 -0700
+IronPort-SDR: UqobXSmEwRTjlptyugyavpbdTWpj1ZhPLIJjNN1KtkVe7cqWqZH3AOOCQL2FrBwAP0N8H8NYOA
+ QUKnztn5vTHw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
-   d="scan'208";a="308623157"
+   d="scan'208";a="282569337"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 May 2020 22:52:01 -0700
+  by orsmga002.jf.intel.com with ESMTP; 19 May 2020 22:52:01 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jbHe4-00061m-SD; Wed, 20 May 2020 13:52:00 +0800
-Date:   Wed, 20 May 2020 13:51:11 +0800
+        id 1jbHe5-00063D-02; Wed, 20 May 2020 13:52:00 +0800
+Date:   Wed, 20 May 2020 13:51:32 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- d7110a26e5905ec2fe3fc88bc6a538901accb72b
-Message-ID: <5ec4c54f.QZq357Y/t/W47Pmt%lkp@intel.com>
+Subject: [tip:sched/core] BUILD SUCCESS
+ d505b8af58912ae1e1a211fabc9995b19bd40828
+Message-ID: <5ec4c564.tEoeFobhBZzwk409%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,13 +51,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  x86/urgent
-branch HEAD: d7110a26e5905ec2fe3fc88bc6a538901accb72b  x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/core
+branch HEAD: d505b8af58912ae1e1a211fabc9995b19bd40828  sched: Defend cfs and rt bandwidth quota against overflow
 
-elapsed time: 486m
+i386-tinyconfig vmlinux size:
+
++-------+------------------------------------+------------------------------------------+
+| DELTA |               SYMBOL               |                  COMMIT                  |
++-------+------------------------------------+------------------------------------------+
+|  +485 | TOTAL                              | 2a0a24ebb499..d505b8af5891 (ALL COMMITS) |
+|  +466 | TOTAL                              | 9013196a467e Merge branch 'sched/urgent' |
+|  +410 | TEXT                               | 2a0a24ebb499..d505b8af5891 (ALL COMMITS) |
+|  +391 | TEXT                               | 9013196a467e Merge branch 'sched/urgent' |
+|   +72 | DATA                               | 9013196a467e Merge branch 'sched/urgent' |
+| +1355 | balance_dirty_pages()              | 9013196a467e Merge branch 'sched/urgent' |
+|  +615 | __setup_rt_frame()                 | 9013196a467e Merge branch 'sched/urgent' |
+|  +113 | klist_release()                    | 9013196a467e Merge branch 'sched/urgent' |
+|   +93 | change_clocksource()               | 9013196a467e Merge branch 'sched/urgent' |
+|   +86 | release_bdi()                      | 9013196a467e Merge branch 'sched/urgent' |
+|   +84 | kobject_release()                  | 9013196a467e Merge branch 'sched/urgent' |
+|   +64 | noop_backing_dev_info              | 9013196a467e Merge branch 'sched/urgent' |
+|   -68 | bdi_put()                          | 9013196a467e Merge branch 'sched/urgent' |
+|   -77 | kobject_put()                      | 9013196a467e Merge branch 'sched/urgent' |
+|   -79 | timekeeping_notify()               | 9013196a467e Merge branch 'sched/urgent' |
+|   -99 | klist_dec_and_del()                | 9013196a467e Merge branch 'sched/urgent' |
+|  -136 | arch/x86/events/zhaoxin/built-in.* | 9013196a467e Merge branch 'sched/urgent' |
+|  -555 | do_signal()                        | 9013196a467e Merge branch 'sched/urgent' |
+| -1383 | balance_dirty_pages_ratelimited()  | 9013196a467e Merge branch 'sched/urgent' |
++-------+------------------------------------+------------------------------------------+
+
+elapsed time: 487m
 
 configs tested: 98
-configs skipped: 74
+configs skipped: 1
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
