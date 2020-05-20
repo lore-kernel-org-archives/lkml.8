@@ -2,243 +2,149 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26978C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7651C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D87CF2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589998305;
-	bh=ek3KhzLc8X7QN6g57cL4zEjCQ0Txu4ih+K3d4JdZ8Ug=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=wKHUZAuEqzYZvJpVii30GkO4mr1mGLAMWyUZhAUrTwMWicG7CKebLdPXX3bi42hbd
-	 3zjGxN+frR+VHF1+PEF72DqP/+3vF7IBmzKVaeyqEv3pYwjvMmQ6erqMXQ9UMW3gk1
-	 BMW9mZq/NfViRtrA3tDSVch/Qg65qRynflf8sLlU=
+	by mail.kernel.org (Postfix) with ESMTP id C332C20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgETSLp (ORCPT
+        id S1726907AbgETSMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgETSLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:11:43 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF51C20671;
-        Wed, 20 May 2020 18:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589998302;
-        bh=ek3KhzLc8X7QN6g57cL4zEjCQ0Txu4ih+K3d4JdZ8Ug=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=leG5zfushLZr48VQi45u9lL0NzLdGDG4n4U0Qwb0PKDYuy1JKp3olb0BDle6UFzH7
-         e+T0bFOxVK0n1samMwvbPC54WepZqk16vawX+3D8g6BmVYpM8qR1oWZKkVJkya7AeZ
-         yWSlIOZjyitT7JD1TP2FDwDiK898+uUHBiZeLFJ0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 887B53522A2B; Wed, 20 May 2020 11:11:42 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:11:42 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V6 12/37] x86/entry: Provide
- idtentry_entry/exit_cond_rcu()
-Message-ID: <20200520181142.GS2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com>
- <87ftbv7nsd.fsf@nanos.tec.linutronix.de>
- <87a7237k3x.fsf@nanos.tec.linutronix.de>
- <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com>
- <874ksb7hbg.fsf@nanos.tec.linutronix.de>
- <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
- <20200520022353.GN2869@paulmck-ThinkPad-P72>
- <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
- <20200520173806.GP2869@paulmck-ThinkPad-P72>
- <CALCETrWy7==Lo22o87QCb5XANRqX8ZuE_bfvaKMViA_0eSS1ew@mail.gmail.com>
+        Wed, 20 May 2020 14:12:22 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:48196 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbgETSMS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:12:18 -0400
+Received: by mail-io1-f72.google.com with SMTP id c15so2817348iom.15
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:12:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=+ftmxr79gDcB9k8pr/AIQ9vrfM5009Yqd32Ubdl2t9g=;
+        b=mF1sHwkGi9kj5/Cc1If8mZ8Vl3D2rvhZSq7bhZnzXkBMPR8htqLVGFotBzI6SNX5MT
+         1eQ3TmY3wI9AYBD1MX99A5RPQ1DKFujlorsPjjEn7J+3uGOyAgbEeysZHdTS7FY2PpQR
+         i7Xv5mHgmxLpgcwb3oeDKXJrC0JjsBsTPIIyR7GmMBCtg6n0Lndw2zETshP1r30MNnL7
+         C1gh/8f80gDLgO9xMtzUOjovorakoBnawj3gPRn5Qfw4FXRCvK1Hv7rsgmemV7JS8t5n
+         OqqVKMXJ/vLLzFLs+/9/uG0dkBiYy9SIInkd0YDApulRHpgASugMnia2caIoHImnOsOt
+         2E7A==
+X-Gm-Message-State: AOAM5313u3e5zXktwWgM8wP5z9RYKTfRQ7S5J+LoFla0XhhCXZHhX+Uh
+        aMKyKvMV3/V5JAso6rv4BBfZyNRBnMXuKnjeickczw+vTeZw
+X-Google-Smtp-Source: ABdhPJzXSZ/EqbcKubHsOn2N59N7VYkouBS+q85pvXnoAF9hczJOPQFJMSNbnH6SCiHnOONuuEfDC4j+bzVTnG4BgLqkvmmC/T2T
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWy7==Lo22o87QCb5XANRqX8ZuE_bfvaKMViA_0eSS1ew@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a05:6602:1616:: with SMTP id x22mr4594960iow.70.1589998335872;
+ Wed, 20 May 2020 11:12:15 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:12:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000000d71e05a6185662@google.com>
+Subject: general protection fault in unpin_user_pages
+From:   syzbot <syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, davem@davemloft.net,
+        jhubbard@nvidia.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        santosh.shilimkar@oracle.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:47:29AM -0700, Andy Lutomirski wrote:
-> On Wed, May 20, 2020 at 10:38 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Wed, May 20, 2020 at 08:36:06AM -0700, Andy Lutomirski wrote:
-> > > On Tue, May 19, 2020 at 7:23 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > On Tue, May 19, 2020 at 05:26:58PM -0700, Andy Lutomirski wrote:
-> > > > > On Tue, May 19, 2020 at 2:20 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > > > > Andy Lutomirski <luto@kernel.org> writes:
-> > > > > > > On Tue, May 19, 2020 at 1:20 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > > > > >> Thomas Gleixner <tglx@linutronix.de> writes:
-> > > > > > >> It's about this:
-> > > > > > >>
-> > > > > > >> rcu_nmi_enter()
-> > > > > > >> {
-> > > > > > >>         if (!rcu_is_watching()) {
-> > > > > > >>             make it watch;
-> > > > > > >>         } else if (!in_nmi()) {
-> > > > > > >>             do_magic_nohz_dyntick_muck();
-> > > > > > >>         }
-> > > > > > >>
-> > > > > > >> So if we do all irq/system vector entries conditional then the
-> > > > > > >> do_magic() gets never executed. After that I got lost...
-> > > > > > >
-> > > > > > > I'm also baffled by that magic, but I'm also not suggesting doing this
-> > > > > > > to *all* entries -- just the not-super-magic ones that use
-> > > > > > > idtentry_enter().
-> > > > > > >
-> > > > > > > Paul, what is this code actually trying to do?
-> > > > > >
-> > > > > > Citing Paul from IRC:
-> > > > > >
-> > > > > >   "The way things are right now, you can leave out the rcu_irq_enter()
-> > > > > >    if this is not a nohz_full CPU.
-> > > > > >
-> > > > > >    Or if this is a nohz_full CPU, and the tick is already
-> > > > > >    enabled, in that case you could also leave out the rcu_irq_enter().
-> > > > > >
-> > > > > >    Or even if this is a nohz_full CPU and it does not have the tick
-> > > > > >    enabled, if it has been in the kernel less than a few tens of
-> > > > > >    milliseconds, still OK to avoid invoking rcu_irq_enter()
-> > > > > >
-> > > > > >    But my guess is that it would be a lot simpler to just always call
-> > > > > >    it.
-> > > > > >
-> > > > > > Hope that helps.
-> > > > >
-> > > > > Maybe?
-> > > > >
-> > > > > Unless I've missed something, the effect here is that #PF hitting in
-> > > > > an RCU-watching context will skip rcu_irq_enter(), whereas all IRQs
-> > > > > (because you converted them) as well as other faults and traps will
-> > > > > call rcu_irq_enter().
-> > > > >
-> > > > > Once upon a time, we did this horrible thing where, on entry from user
-> > > > > mode, we would turn on interrupts while still in CONTEXT_USER, which
-> > > > > means we could get an IRQ in an extended quiescent state.  This means
-> > > > > that the IRQ code had to end the EQS so that IRQ handlers could use
-> > > > > RCU.  But I killed this a few years ago -- x86 Linux now has a rule
-> > > > > that, if IF=1, we are *not* in an EQS with the sole exception of the
-> > > > > idle code.
-> > > > >
-> > > > > In my dream world, we would never ever get IRQs while in an EQS -- we
-> > > > > would do MWAIT with IF=0 and we would exit the EQS before taking the
-> > > > > interrupt.  But I guess we still need to support HLT, which means we
-> > > > > have this mess.
-> > > > >
-> > > > > But I still think we can plausibly get rid of the conditional.
-> > > >
-> > > > You mean the conditional in rcu_nmi_enter()?  In a NO_HZ_FULL=n system,
-> > > > this becomes:
-> > >
-> > > So, I meant the conditional in tglx's patch that makes page faults special.
-> >
-> > OK.
-> >
-> > > > >                                                                 If we
-> > > > > get an IRQ or (egads!) a fault in idle context, we'll have
-> > > > > !__rcu_is_watching(), but, AFAICT, we also have preemption off.
-> > > >
-> > > > Or we could be early in the kernel-entry code or late in the kernel-exit
-> > > > code, but as far as I know, preemption is disabled on those code paths.
-> > > > As are interrupts, right?  And interrupts are disabled on the portions
-> > > > of the CPU-hotplug code where RCU is not watching, if I recall correctly.
-> > >
-> > > Interrupts are off in the parts of the entry/exit that RCU considers
-> > > to be user mode.  We can get various faults, although these should be
-> > > either NMI-like or events that genuinely or effectively happened in
-> > > user mode.
-> >
-> > Fair enough!
-> >
-> > > > A nohz_full CPU does not enable the scheduling-clock interrupt upon
-> > > > entry to the kernel.  Normally, this is fine because that CPU will very
-> > > > quickly exit back to nohz_full userspace execution, so that RCU will
-> > > > see the quiescent state, either by sampling it directly or by deducing
-> > > > the CPU's passage through that quiescent state by comparing with state
-> > > > that was captured earlier.  The grace-period kthread notices the lack
-> > > > of a quiescent state and will eventually set ->rcu_urgent_qs to
-> > > > trigger this code.
-> > > >
-> > > > But if the nohz_full CPU stays in the kernel for an extended time,
-> > > > perhaps due to OOM handling or due to processing of some huge I/O that
-> > > > hits in-memory buffers/cache, then RCU needs some way of detecting
-> > > > quiescent states on that CPU.  This requires the scheduling-clock
-> > > > interrupt to be alive and well.
-> > > >
-> > > > Are there other ways to get this done?  But of course!  RCU could
-> > > > for example use smp_call_function_single() or use workqueues to force
-> > > > execution onto that CPU and enable the tick that way.  This gets a
-> > > > little involved in order to avoid deadlock, but if the added check
-> > > > in rcu_nmi_enter() is causing trouble, something can be arranged.
-> > > > Though that something would cause more latency excursions than
-> > > > does the current code.
-> > > >
-> > > > Or did you have something else in mind?
-> > >
-> > > I'm trying to understand when we actually need to call the function.
-> > > Is it just the scheduling interrupt that's supposed to call
-> > > rcu_irq_enter()?  But the scheduling interrupt is off, so I'm
-> > > confused.
-> >
-> > The scheduling-clock interrupt is indeed off, but if execution remains
-> > in the kernel for an extended time period, this becomes a problem.
-> > RCU quiescent states don't happen, or if they do, they are not reported
-> > to RCU.  Grace periods never end, and the system eventually OOMs.
-> >
-> > And it is not all that hard to make a CPU stay in the kernel for minutes
-> > at a time on a large system.
-> >
-> > So what happens is that if RCU notices that a given CPU has not responded
-> > in a reasonable time period, it sets that CPU's ->rcu_urgent_qs.  This
-> > flag plays various roles in various configurations, but on nohz_full CPUs
-> > it causes that CPU's next rcu_nmi_enter() invocation to turn that CPU's
-> > tick on.  It also sets that CPU's ->rcu_forced_tick flag, which prevents
-> > redundant turning on of the tick and also causes the quiescent-state
-> > detection code to turn off the tick for this CPU.
-> >
-> > As you say, the scheduling-clock tick cannot turn itself on, but
-> > there might be other interrupts, exceptions, and so on that could.
-> > And if nothing like that happens (as might well be the case on a
-> > well-isolated CPU), RCU will eventually force one.  But it waits a few
-> > hundred milliseconds in order to take advantage of whatever naturally
-> > occurring interrupt might appear in the meantime.
-> >
-> > Does that help?
-> 
-> Yes, I think.  Could this go in a comment in the new function?
+Hello,
 
-Even if we don't go with the new function, evidence indicates that this
-commentary should go somewhere.  ;-)
+syzbot found the following crash on:
 
-							Thanx, Paul
+HEAD commit:    dbfe7d74 rds: convert get_user_pages() --> pin_user_pages()
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10218e6e100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3df83be5e281f34b
+dashboard link: https://syzkaller.appspot.com/bug?extid=118ac0af4ac7f785a45b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117ca33a100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a9044a100000
+
+The bug was bisected to:
+
+commit dbfe7d74376e187f3c6eaff822e85176bc2cd06e
+Author: John Hubbard <jhubbard@nvidia.com>
+Date:   Sun May 17 01:23:36 2020 +0000
+
+    rds: convert get_user_pages() --> pin_user_pages()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10e3d84a100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12e3d84a100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e3d84a100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com
+Fixes: dbfe7d74376e ("rds: convert get_user_pages() --> pin_user_pages()")
+
+RBP: 0000000000000004 R08: 0000000020000000 R09: 00007ffcb8e40031
+R10: 0000000020c35fff R11: 0000000000000246 R12: 0000000000401e40
+R13: 0000000000401ed0 R14: 0000000000000000 R15: 0000000000000000
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 PID: 7038 Comm: syz-executor593 Not tainted 5.7.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:unpin_user_pages+0x38/0x80 mm/gup.c:338
+Code: 56 d3 ff 31 ff 4c 89 e6 e8 a5 57 d3 ff 4d 85 e4 74 3f 49 bd 00 00 00 00 00 fc ff df 31 ed e8 ff 55 d3 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 75 2b 48 8b 3b 48 83 c5 01 48 83 c3 08 e8 51 f8 ff
+RSP: 0018:ffffc90002537cc8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff819fdc9b
+RDX: 0000000000000000 RSI: ffffffff819fdcb1 RDI: 0000000000000007
+RBP: 0000000000000000 R08: ffff88809ff6e0c0 R09: ffffed1015ce7164
+R10: ffff8880ae738b1b R11: ffffed1015ce7163 R12: 0000000000000011
+R13: dffffc0000000000 R14: 0000000000000011 R15: 0000000020c35fff
+FS:  0000000000d95880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6870abd000 CR3: 000000009a8e7000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ rds_info_getsockopt+0x291/0x410 net/rds/info.c:237
+ rds_getsockopt+0x172/0x2d0 net/rds/af_rds.c:502
+ __sys_getsockopt+0x14b/0x2e0 net/socket.c:2172
+ __do_sys_getsockopt net/socket.c:2187 [inline]
+ __se_sys_getsockopt net/socket.c:2184 [inline]
+ __x64_sys_getsockopt+0xba/0x150 net/socket.c:2184
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x440559
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcb8e48ea8 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
+RAX: ffffffffffffffda RBX: 00007ffcb8e48eb0 RCX: 0000000000440559
+RDX: 0000000000002710 RSI: 0000000000000114 RDI: 0000000000000003
+RBP: 0000000000000004 R08: 0000000020000000 R09: 00007ffcb8e40031
+R10: 0000000020c35fff R11: 0000000000000246 R12: 0000000000401e40
+R13: 0000000000401ed0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace c9d832ffc8da59ec ]---
+RIP: 0010:unpin_user_pages+0x38/0x80 mm/gup.c:338
+Code: 56 d3 ff 31 ff 4c 89 e6 e8 a5 57 d3 ff 4d 85 e4 74 3f 49 bd 00 00 00 00 00 fc ff df 31 ed e8 ff 55 d3 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 75 2b 48 8b 3b 48 83 c5 01 48 83 c3 08 e8 51 f8 ff
+RSP: 0018:ffffc90002537cc8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff819fdc9b
+RDX: 0000000000000000 RSI: ffffffff819fdcb1 RDI: 0000000000000007
+RBP: 0000000000000000 R08: ffff88809ff6e0c0 R09: ffffed1015ce7164
+R10: ffff8880ae738b1b R11: ffffed1015ce7163 R12: 0000000000000011
+R13: dffffc0000000000 R14: 0000000000000011 R15: 0000000020c35fff
+FS:  0000000000d95880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fbc58039178 CR3: 000000009a8e7000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
