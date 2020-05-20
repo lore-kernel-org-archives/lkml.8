@@ -2,150 +2,95 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B704C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ECAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09096207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qTxpeKo+"
+	by mail.kernel.org (Postfix) with ESMTP id AB0332075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgETJ7e (ORCPT
+        id S1726812AbgETKBx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:59:34 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46576 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETJ7d (ORCPT
+        Wed, 20 May 2020 06:01:53 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:33174 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETKBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:59:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04K9xNsT081005;
-        Wed, 20 May 2020 04:59:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589968763;
-        bh=z8fCduaUOqT6TsM+KISLgzvniK8e7DBe4mfv09EOZ2Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qTxpeKo+KcDdF0d0RmKtT2gCLT5tXvJI2mvqPcTL1Npx9ajK4kzZI8/vf1xlM1bIK
-         lj63HtgQwosvYura1gznbc16z4o8yLe/bgwaleSrkgtVXVJaryHmEZOUUx7FJu2kyJ
-         hu2Qk3SH0cH6CDskEWCb/LK4pYYwkwSpiCPeP/IE=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04K9xNHt008071
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 04:59:23 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 04:59:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 04:59:23 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04K9xLuv105835;
-        Wed, 20 May 2020 04:59:21 -0500
-Subject: Re: [PATCH v2 2/3] bindings: sound: Add documentation for TI j721e
- EVM (CPB and IVI)
-To:     Rob Herring <robh@kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200512131633.32668-1-peter.ujfalusi@ti.com>
- <20200512131633.32668-3-peter.ujfalusi@ti.com>
- <20200519224215.GB488519@bogus>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <d0496765-918c-766b-825c-76eb2f76c274@ti.com>
-Date:   Wed, 20 May 2020 12:59:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 06:01:53 -0400
+Received: by mail-ej1-f65.google.com with SMTP id n24so3029234ejd.0;
+        Wed, 20 May 2020 03:01:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=v8EDRqZtXtnh/hEmyxqDkZdYj8yN54lWYsJ0qEqpF+c=;
+        b=q3Av2KcQKLfM8FcPKMb1krPXMRzDrxZyeSl/fuSlyfFu0TEc84+XdQ/5YzwnJb1+zB
+         Y8jw433zvAYHxFU59htqTNd5Puy13H1oKfPvb393N8RLd96EGiSsCsySzQSgJWSGM8bB
+         LzJPBUwy0TfjcpZKq+6JyhaFF4/WTzqgfWlr+hMrZffxa6KJEqeCJZE8uPxJWQcEJ3a3
+         YjK52l6rQ4Vy3JcRQZjNQ/+6A3qu2vHV/2u2TtT6p7vvtcFxDz77yuFuSPwxX5zxInk+
+         Ego2NOdtr5miCEIlqWTrVjH7kvKHPl1PkhIczKcaGhSlQcEb/aMO6YRNDd2vAg313Hbv
+         k+2w==
+X-Gm-Message-State: AOAM532mjR0UOtV2rczK6u5jpiPZfTNoS404LQqNjV0qiIXEgAz8vtU/
+        BmrzIGfp3JxHVfnxrXHSGM/tbJAS/p+A8KUnLBwrST2b
+X-Google-Smtp-Source: ABdhPJyNMixBtXdsQ4k57fw3AEyBZlSv9U9g0emO85Y2ome8aOFC6N6r+KX70ZONLl/mh44PO3rHaqf1AN3ao0AZz7s=
+X-Received: by 2002:a17:907:9492:: with SMTP id dm18mr3116869ejc.328.1589968911424;
+ Wed, 20 May 2020 03:01:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200519224215.GB488519@bogus>
-Content-Type: multipart/mixed;
-        boundary="------------B17804B71D9C95B8A8C1439A"
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200519212230.313365-1-paul@crapouillou.net> <20200520064520.GB7630@alpha.franken.de>
+ <CAAdtpL4cZ4==07=kNJf6Xkhnzy6jiqgMc1XzG0NV6RZi1KqgXA@mail.gmail.com> <20200520092757.GA12701@alpha.franken.de>
+In-Reply-To: <20200520092757.GA12701@alpha.franken.de>
+From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
+Date:   Wed, 20 May 2020 12:01:39 +0200
+Message-ID: <CAAdtpL76AOoc+cLOP+khtLGOx6j81Ss3uqDKkuZXjeoqsdE72g@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: ingenic: Add missing include
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Paul Cercueil <paul@crapouillou.net>, od@zcrc.me,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------B17804B71D9C95B8A8C1439A
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 20, 2020 at 11:28 AM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+>
+> On Wed, May 20, 2020 at 11:19:49AM +0200, Philippe Mathieu-Daudé wrote:
+> > Hi Thomas,
+> >
+> > On Wed, May 20, 2020 at 8:50 AM Thomas Bogendoerfer
+> > <tsbogend@alpha.franken.de> wrote:
+> > >
+> > > On Tue, May 19, 2020 at 11:22:30PM +0200, Paul Cercueil wrote:
+> > > > Add missing include which adds the prototype to plat_time_init().
+> > > >
+> > > > Fixes: f932449c11da ("MIPS: ingenic: Drop obsolete code, merge the rest in setup.c")
+> > > > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > ---
+> > > >  arch/mips/jz4740/setup.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > >
+> > > applied to mips-next.
+> >
+> > Since mips-next is not merged, can you simply squash the fix to the
+> > incomplete f932449c11da please?
+>
+> no, I don't rebase mips-next.
 
-Hi Rob,
+OK. I had the understanding that mips-fixes was the stable branch not rebased,
+and mips-next was not considered stable until merged in mainstream.
+I took note of the changes, thanks.
 
-On 20/05/2020 1.42, Rob Herring wrote:
-> On Tue, May 12, 2020 at 04:16:32PM +0300, Peter Ujfalusi wrote:
->> The audio support on the Common Processor Board board is using
->> pcm3168a codec connected to McASP10 serializers in parallel setup.
->>
->> The Infotainment board plugs into the Common Processor Board, the supp=
-ort
->> of the extension board is extending the CPB audio support by adding
->> the two codecs on the expansion board.
->>
->> The audio support on the Infotainment Expansion Board consists of McAS=
-P0
->> connected to two pcm3168a codecs with dedicated set of serializers to =
-each.
->> The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
->=20
-> Would the audio graph card work for you on this?
-
-Unfortunately not.
-The CPB and IVI while using different McASP (10 for CPB, 0 for IVI) and
-different clock pin is used for the SCKI of the codecs on CPB and IVI,
-they are actually coming from the same source from within the SoC.
-The inter-dependency between the two audio domains are fragile and I
-have spent countless hours to figure out a way to masquerade the unique
-setup as generic. Did not worked out, it needs a custom machine driver
-to be able to handle the setup.
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
---------------B17804B71D9C95B8A8C1439A
-Content-Type: application/pgp-keys; name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQENBFki4nsBCAD3BM+Ogt951JlaDloruEjoZk/Z+/37CjP0fY2mqLhBOzkpx95u
-X1Fquf0KfVk+ZzCd25XGOZEtpZNlXfbxRr2iRWPS5RW2FeLYGvg2TTJCpSr+ugKu
-OOec6KECCUotGbGhpYwBrbarJNEwDcAzPK7UJYa1rhWOmkpZJ1hXF1hUghB84q35
-8DmN4sGLcsIbVdRFZ1tWFh4vGBFV9LsoDZIrnnANb6/XMX78s+tr3RG3GZBaFPl8
-jO5IIv0UIGNUKaYlNVFYthjGCzOqtstHchWuK9eQkR7m1+Vc+ezh1qK0VJydIcjn
-OtoMZZL7RAz13LB9vmcJjbQPnI7dJojz/M7zABEBAAG0JlBldGVyIFVqZmFsdXNp
-IDxwZXRlci51amZhbHVzaUB0aS5jb20+iQFOBBMBCAA4FiEE+dBcpRFvJjZw+uta
-LCayis85LN4FAlki4nsCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQLCay
-is85LN4QjggAzxxxXqiWpA3vuj9yrlGLft3BeGKWqF8+RzdeRvshtNdpGeIFf+r5
-AJVR71R1w89Qeb4DGXus7qsKiafdFGG7yxbuhw8a5wUm+ZncBXA+ETn3OyVtl8g8
-r/ZcPX420jClBNTVuL0sSnyqDFDrt5f+uAFOIwsnHdpns174Zu9QhgYxdvdZ+jMh
-Psb745O9EVeNvdfUIRdrVjb4IhJKNIzkb0Tulsz5xeCJReUYpxZU1jzEq3YZqIou
-+fi+oS4wlJuSoxKKTmIXtSeEy/weStF1XHMo6vLYqzaK4FyIuclqeuYUYSVy2425
-7TMXugaI+O85AEI6KW8MCcu1NucSfAWUabkBDQRZIuJ7AQgAypKq8iIugpHxWA2c
-Ck6MQdPBT6cOEVK0tjeHaHAVOUPiw9Pq+ssMifdIkDdqXNZ3RLH/X2svYvd8c81C
-egqshfB8nkJ5EKmQc9d7s0EwnYT8OwsoVb3c2WXnsdcKEyu2nHgyeJEUpPpMPyLc
-+PWhoREifttab4sOPktepdnUbvrDK/gkjHmiG6+L2owSn637N+Apo3/eQuDajfEu
-kybxK19ReRcp6dbqWSBGSeNB32c/zv1ka37bTMNVUY39Rl+/8lA/utLfrMeACHRO
-FGO1BexMASKUdmlB0v9n4BaJFGrAJYAFJBNHLCDemqkU7gjaiimuHSjwuP0Wk7Ct
-KQJfVQARAQABiQE2BBgBCAAgFiEE+dBcpRFvJjZw+utaLCayis85LN4FAlki4nsC
-GwwACgkQLCayis85LN7kCwgAoy9r3ZQfJNOXO1q/YQfpEELHn0p8LpwliSDUS1xL
-sswyxtZS8LlW8PjlTXuBLu38Vfr0vGav7oyV7TkhnKT3oBOLXanyZqwgyZSKNEGB
-PB4v3Fo7YTzpfSofiwuz03uyfjTxiMGjonxSb+YxM7HBHfzjrOKKlg02fK+lWNZo
-m5lXugeWD7U6JJguNdYfr+U4zYIblelUImcIE+wnR0oLzUEVDIWSpVrl/OqS3Rzo
-mw8wBsHksTHrbgUnKL0SCzYc90BTeKbyjEBnVDr+dlfbxRxkB8h9RMPMdjodvXzS
-Gfsa9V/k4XAsh7iX9EUVBbnmjA61ySxU/w98h96jMuteTg=3D=3D
-=3DeQmw
------END PGP PUBLIC KEY BLOCK-----
-
---------------B17804B71D9C95B8A8C1439A--
+>
+> Thomas.
+>
+> --
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
