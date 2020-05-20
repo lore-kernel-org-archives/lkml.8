@@ -2,97 +2,143 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3280420709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOFVaX5s"
+	by mail.kernel.org (Postfix) with ESMTP id 8D17F20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589994199;
+	bh=ONZaSMeLX8fRQJPENnjkYE5Bn+Jf4NeirGru2bBXRDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ARd7gGQ6ed6YupSKMyH4q9KwxVpHt8o4ynp5noHbTY/A4afp6gD3fcU/82FN/cW8d
+	 /7S8TIftc2ZGunyUot5xAnaoAoCaw80pSM0/fAAsniER1AiULn5tzge91NA2YEUd3I
+	 jjKjJcf/5pnsnyER8SOvR9SazDCUGLhd1P9QH3NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgETRCk (ORCPT
+        id S1727044AbgETRDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETRCk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:02:40 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1264DC061A0E;
-        Wed, 20 May 2020 10:02:39 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id k18so3992288ion.0;
-        Wed, 20 May 2020 10:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RbtzaMFf7pW30QhNWNbIkxxpmi1TRj00OoVA+lD+dhA=;
-        b=mOFVaX5s6qRcKV+xyGlQ+sem0KZHuFDf6yrDBqunG9GQx49qCsmRUnOxqST+G9zs/v
-         dWKZ0Or5tmWZ0DDQ5brjtO8bCgt+6Wnuy+HuauNql4aORz75kO6Q7aBCNi3xyUfSVQ8B
-         DcKZaQlPeRyQrCCQa7sqheRa7UD50evYDZDeDdMYd96YNSYTbIloxqt+GtIIxcH6/df6
-         6krSZioMagemxcgUYvw/KZUNoM19B1W7S6Lk56nh1SEk+e/4WTNHaEOycmxYRQyMVd5L
-         Yet4SJ4g9oijUwKGmSMHD0lbBn+0nJeBJvsvolrdN59x7zEHrKvrWU+ZNf+EuxDozLv7
-         i5EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RbtzaMFf7pW30QhNWNbIkxxpmi1TRj00OoVA+lD+dhA=;
-        b=TsJHGMe6/p4FAlAo21FAZ2mOkZDF9H+KKXK8QA0AYWLJLzXIE3EAHChuUAk16Tkgj8
-         YooolQPOwLrzIGwKza2FngD/ZPZjtk6WKd2nMUQYe9OwOBWPFHDYULVomaB1A0ZLQpyX
-         VojctcgAwR+Z2fLQv2nqsZM1qJFmtRVTdHaKaemeTymBBIT7bRPpGY1GyQH4jU7bYR5b
-         +BlPBVc4X8XqwhzO/A7Uwq//WADumJY91HoVZuNd0sPJm/UOCThzOCruz45Co/MCZmts
-         OAPofzqJ+AN/I9Wl6/h+tkLXUTFvnnhPyxmii6C8NHhFTvgtvTr7yGma8nWmTBOJqjHb
-         Ecvg==
-X-Gm-Message-State: AOAM531Km7S31AI+kE5PPkBxGAdjk9QA7afgo80ZNhHbZeuSUDtQ9UrS
-        +o7xWugfnvLlzhbzQUI5OBt1cAgV4ac05XZLyDQ=
-X-Google-Smtp-Source: ABdhPJxCR1b4ZKgHAom8aTqNjNn7M3DNQKrWMjyk9IkbFxxqQZgfhaAbfsBle2YAKgxNo403mCsuKgoiDSW/Rlun5mc=
-X-Received: by 2002:a5d:824c:: with SMTP id n12mr4275005ioo.15.1589994158239;
- Wed, 20 May 2020 10:02:38 -0700 (PDT)
+        Wed, 20 May 2020 13:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgETRDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:03:18 -0400
+Received: from kernel.org (unknown [87.71.47.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35106206B6;
+        Wed, 20 May 2020 17:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589994197;
+        bh=ONZaSMeLX8fRQJPENnjkYE5Bn+Jf4NeirGru2bBXRDg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EUrSJV5xKXVV0s1fYwg9cGFegeLkEHaM6d0aFvOI8hlVIOiXsWJYaqjOS7cc1eEKS
+         EXSzhmWWo8pysh77dAM6KaAIr3jnafUN5Kw/Duo81bTHugKYDwkUR7OICd2g48gW6S
+         txl0SbSQHMjT6doCtjC1WTb7rMFq8+9eg1u/1HF0=
+Date:   Wed, 20 May 2020 20:03:06 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        elver@google.com, tglx@linutronix.de, paulmck@kernel.org,
+        mingo@kernel.org, peterz@infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
+ PTE tables
+Message-ID: <20200520170306.GG1118872@kernel.org>
+References: <20200511204150.27858-1-will@kernel.org>
+ <20200511204150.27858-5-will@kernel.org>
+ <20200517000050.GA87467@roeck-us.net>
+ <20200517000750.GA157503@roeck-us.net>
+ <20200518083715.GA31383@willie-the-truck>
 MIME-Version: 1.0
-References: <20200520133432.19738-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200520133432.19738-1-dinghao.liu@zju.edu.cn>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Wed, 20 May 2020 10:02:27 -0700
-Message-ID: <CAKdAkRTyVL0uV0dGxHoEgMyB9FP6b0m60CHy7C4QXeR5WTGAJw@mail.gmail.com>
-Subject: Re: [PATCH] Input: omap-keypad - fix runtime pm imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Kangjie Lu <kjlu@umn.edu>, Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518083715.GA31383@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dinghao,
+On Mon, May 18, 2020 at 09:37:15AM +0100, Will Deacon wrote:
+> On Sat, May 16, 2020 at 05:07:50PM -0700, Guenter Roeck wrote:
+> > On Sat, May 16, 2020 at 05:00:50PM -0700, Guenter Roeck wrote:
+> > > On Mon, May 11, 2020 at 09:41:36PM +0100, Will Deacon wrote:
+> > > > Now that the page table allocator can free page table allocations
+> > > > smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
+> > > > to avoid needlessly wasting memory.
+> > > > 
+> > > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > 
+> > > Something in the sparc32 patches in linux-next causes all my sparc32 emulations
+> > > to crash. bisect points to this patch, but reverting it doesn't help, and neither
+> > > does reverting the rest of the series.
+> > > 
+> > Actually, turns out I see the same pattern (lots of scheduling while atomic
+> > followed by 'killing interrupt handler' in cryptomgr_test) with several
+> > powerpc boot tests.  I am currently bisecting those crashes. I'll report
+> > the results here as well as soon as I have it.
+> 
+> FWIW, I retested my sparc32 patches with PREEMPT=y and I don't see any
+> issues. However, linux-next is a different story, where I don't get very far
+> at all:
+> 
+> BUG: Bad page state in process swapper  pfn:005b4
+ 
+This is caused by c03584e30534 ("mm: memmap_init: iterate over memblock
+regions rather that check each PFN"). The commit sha is valid for
+v5.7-rc6-mmots-2020-05-19-21-52, so it will change in a day or so :)
 
-On Wed, May 20, 2020 at 6:35 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> the call returns an error code. Thus a pairing decrement is needed
-> on the error handling path to keep the counter balanced.
+As it seems, sparc32 never registered the memory occupied by the kernel
+image with memblock_add() and it only reserves this memory with
+meblock_reserve(). 
 
-This is a very surprising behavior and I wonder if this should be
-fixed in the PM core (or the required cleanup steps need to be called
-out in the function description). I also see that a few drivers that
-handle this situation correctly (?) call pm_runtime_put_noidle()
-instead of pm_runtime_put_sync() in the error path.
+I don't know what would happen on real HW, but with 
 
-Rafael, do you have any guidance here?
+qemu-system-sparc -kernel /path/to/kernel
 
-Thanks.
+the memory occupied by the kernel is reserved in openbios and removed
+from mem.available. The prom setup code in the kernel used mem.available
+to set up the memory banks and essentially there is a hole for the
+memory occupied by the kernel.
+
+Later in bootmem_init() this memory is memblock_reserve()d.
+
+Before the problematic commit, memmap initialization would call
+__init_single_page() for the pages in that hole, the
+free_low_memory_core_early() would mark them as resrved and everything
+would be Ok.
+
+After the change in memmap initialization, the hole is skipped and the
+page structs for it are not inited. And when they are passed from
+memblock to page allocator as reserved it gets confused.
+
+Simply registering the memory occupied by the kernel with memblock_add()
+resolves this issue, at least for qemu-system-arm and I cannot see how
+it can harm any other setup.
+
+If all that makes sense I'll send a proper patch :)
+
+diff --git a/arch/sparc/mm/init_32.c b/arch/sparc/mm/init_32.c
+index 906eda1158b4..3cb3dffcbcdc 100644
+--- a/arch/sparc/mm/init_32.c
++++ b/arch/sparc/mm/init_32.c
+@@ -193,6 +193,7 @@ unsigned long __init bootmem_init(unsigned long *pages_avail)
+ 	/* Reserve the kernel text/data/bss. */
+ 	size = (start_pfn << PAGE_SHIFT) - phys_base;
+ 	memblock_reserve(phys_base, size);
++	memblock_add(phys_base, size);
+ 
+ 	size = memblock_phys_mem_size() - memblock_reserved_size();
+ 	*pages_avail = (size >> PAGE_SHIFT) - high_pages;
+
+> Will
 
 -- 
-Dmitry
+Sincerely yours,
+Mike.
