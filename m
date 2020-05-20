@@ -2,116 +2,99 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9037C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA13C20756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589980088;
-	bh=wi/+NOBq+bd+eIhLEuGblfHafXUqce5vURv0gARXUtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ygO7XQBnCFHtF5L2XLKPVCWj3cq7uVIKfi9L9skHZ80/4ztEOIJ5F+Lk27UyZ1DuQ
-	 PaXks0KK2Z0P5nVgZcZAQD4LqJtC7woiJaC+alEV+aXNhRnlaYUx9xtU19f4d9ZmtB
-	 vs5zHeRZigd7xde1vp5dpNu9kcOEQU/PhURPLNQc=
+	by mail.kernel.org (Postfix) with ESMTP id B966220756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgETNII (ORCPT
+        id S1726859AbgETNIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:08:08 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34468 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgETNIG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:08:06 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f6so1421001pgm.1;
-        Wed, 20 May 2020 06:08:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oC3CO1dbSoIbsRb/LeuNNuvbNSOpiNXf/liPEnpy158=;
-        b=LpB2UG6PNkXlYBbS+rnwrYdal+waUizlpU1kD3u2YnZkE1yKjFFE1QfURoEq1AH0VJ
-         dEVaeh9rsWL1qWlygeutMsqXCTQMelvReCtm2XwuOX3dWxBuM2hTAyJNe4mzSFgaiRyJ
-         zs51MBW0MhC8HW7COufXv3luLVM8pQtqOXdVqkiXeW8OSD41iGpB3DJ1WVOxET6g+gih
-         AhBNFmre98pRK/SYtp4hIfBk1reWNlRKmM+/2E1reKGdf8ebZflYZk5NQz78XVXTKr0H
-         h0Rm6YbQqeoxxguuIaiOqb0KoNpzQadkETA13UVi6Gk2gY07t4R37pAA1Aa2X8yUhmK3
-         /peA==
-X-Gm-Message-State: AOAM533tpcXoMxEnmGCL45bDaBZR819JWiJQqQqzkz0uWvl4Dw2Qd9gD
-        hZ4nJApsqNTCh0SWTcswMNz1er6D4yQ=
-X-Google-Smtp-Source: ABdhPJxyuQadFi/BPczL9wi1UixCiN30Jo1EXPFYckrbfa3pjL31XvU1Kw4ZvnRcyfwd/dTCpWqcAA==
-X-Received: by 2002:a63:b904:: with SMTP id z4mr4117050pge.25.1589980085715;
-        Wed, 20 May 2020 06:08:05 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id d4sm1899478pgk.2.2020.05.20.06.08.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 06:08:04 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 460F74088B; Wed, 20 May 2020 13:08:03 +0000 (UTC)
-Date:   Wed, 20 May 2020 13:08:03 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, keescook@chromium.org,
-        yzaikin@google.com, adobriyan@gmail.com, mingo@kernel.org,
-        gpiccoli@canonical.com, rdna@fb.com, patrick.bellasi@arm.com,
-        sfr@canb.auug.org.au, mhocko@suse.com,
-        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
-        tglx@linutronix.de, peterz@infradead.org,
-        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
-        bigeasy@linutronix.de, pmladek@suse.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        wangle6@huawei.com, alex.huangjianhui@huawei.com
-Subject: Re: [PATCH v4 0/4] cleaning up the sysctls table (hung_task watchdog)
-Message-ID: <20200520130802.GW11244@42.do-not-panic.com>
-References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
- <20200519203141.f3152a41dce4bc848c5dded7@linux-foundation.org>
- <5574b304-e890-76a9-8190-f705eba8082d@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5574b304-e890-76a9-8190-f705eba8082d@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 20 May 2020 09:08:42 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:12684 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726525AbgETNIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:08:42 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgCnHr63K8VezDqOAQ--.14485S4;
+        Wed, 20 May 2020 21:08:12 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Maital Hahn <maitalm@ti.com>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] wlcore: fix runtime pm imbalance in __wl1271_op_remove_interface
+Date:   Wed, 20 May 2020 21:08:04 +0800
+Message-Id: <20200520130806.14789-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgCnHr63K8VezDqOAQ--.14485S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7JrWfWFyDZrW5ury3AF48Xrb_yoWDCFb_Gr
+        s7ZF1kur4kC34Ikr4UCan8XrW09ryDu3Z5urWIvF9xJayj9rZ5tr1rZ3sxZr4fC3yUuF13
+        Jwn8AF15Aa4DujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb6AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW5GwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWU
+        GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI4
+        8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4U
+        MIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42
+        IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUb_gA7UUUUU=
+        =
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:02:26PM +0800, Xiaoming Ni wrote:
-> On 2020/5/20 11:31, Andrew Morton wrote:
-> > On Tue, 19 May 2020 11:31:07 +0800 Xiaoming Ni <nixiaoming@huawei.com> wrote:
-> > 
-> > > Kernel/sysctl.c
-> > 
-> > eek!
-> > 
-> > > 
-> > >   fs/proc/proc_sysctl.c        |   2 +-
-> > >   include/linux/sched/sysctl.h |  14 +--
-> > >   include/linux/sysctl.h       |  13 ++-
-> > >   kernel/hung_task.c           |  77 +++++++++++++++-
-> > >   kernel/sysctl.c              | 214 +++++++------------------------------------
-> > >   kernel/watchdog.c            | 101 ++++++++++++++++++++
-> > >   6 files changed, 224 insertions(+), 197 deletions(-)
-> > 
-> > Here's what we presently have happening in linux-next's kernel/sysctl.c:
-> > 
-> >   sysctl.c | 3109 ++++++++++++++++++++++++++++++---------------------------------
-> >   1 file changed, 1521 insertions(+), 1588 deletions(-)
-> > 
-> > 
-> > So this is not a good time for your patch!
-> > 
-> > Can I suggest that you set the idea aside and take a look after 5.8-rc1
-> > is released?
-> > 
-> 
-> ok, I will make v5 patch based on 5.8-rc1 after 5.8-rc1 is released,
-> And add more sysctl table cleanup.
+When wl12xx_cmd_role_disable() returns an error code,
+a pairing runtime PM usage counter decrement is needed to
+keep the counter balanced.
 
-Xiaoming, I'll coordinate with you on this offline as I have the fs
-kernel/sysctl.c stuff out of the way as well.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/net/wireless/ti/wlcore/main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-  Luis
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index f140f7d7f553..e6c299efbc2e 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -2698,12 +2698,16 @@ static void __wl1271_op_remove_interface(struct wl1271 *wl,
+ 
+ 		if (!wlcore_is_p2p_mgmt(wlvif)) {
+ 			ret = wl12xx_cmd_role_disable(wl, &wlvif->role_id);
+-			if (ret < 0)
++			if (ret < 0) {
++				pm_runtime_put_noidle(wl->dev);
+ 				goto deinit;
++			}
+ 		} else {
+ 			ret = wl12xx_cmd_role_disable(wl, &wlvif->dev_role_id);
+-			if (ret < 0)
++			if (ret < 0) {
++				pm_runtime_put_noidle(wl->dev);
+ 				goto deinit;
++			}
+ 		}
+ 
+ 		pm_runtime_mark_last_busy(wl->dev);
+-- 
+2.17.1
+
