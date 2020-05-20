@@ -2,53 +2,51 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB88CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD5A20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A75D20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgETSX0 (ORCPT
+        id S1727041AbgETSXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:23:26 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:51735 "EHLO
+        Wed, 20 May 2020 14:23:25 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:52636 "EHLO
         mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbgETSXU (ORCPT
+        with ESMTP id S1726823AbgETSXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 14:23:20 -0400
-Received: by mail-il1-f199.google.com with SMTP id h19so3404022ilo.18
+Received: by mail-il1-f199.google.com with SMTP id m7so3430329ill.19
         for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:23:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=eNV/gcvohQYiWw7CuSofKZfplESLdrwFUzrwQcxhix4=;
-        b=Ye6fxe7arp+GI0ae4nWVQBfDU8SUqWewKqAr5xewlxoOgsHswaLuyZiBkON18zBTTv
-         pnjnDuYPGY33f9cCNa8O2LMRv3VXKyAlW+UZ2KrTQXjEff1Xtaddo+VtlHlnLKsXQgAC
-         mruJyKB2bmr7z/qz8M+eJZc971s+LlvmEKF8vguzqrMlnVezr0fgwfL8x+kGIGlIzHui
-         MaP+wwCKn8l9/5WORzhBhaAiVPGdN5Wtqu2q35tK5Gx+ccWb25o4JfVft4KcTyLnwESF
-         ctPTZszTg48cFtArGtwEzEtDcrqaRNOQaSoZl42d8VmC/hISW3B7ga6WPMuRRi5WhMuL
-         ChxA==
-X-Gm-Message-State: AOAM530biqP1+Ns045xxB9UpLYNtlVGW6KCbACe+1/unUNq0p6kSC0k/
-        7Bl6Fxi48m6oqOZ2qMlRvwdxPrxL5kgm7jF6bg0bOCUwRlkg
-X-Google-Smtp-Source: ABdhPJy0f1uR3u/nCL98sxbemLWlycv9b/Flaa1EtG80uoOcStu5iWGKPnWugtydu1PTLBdOusCylbMfsn1TzCYptBX+MFjNQbDE
+        bh=js33CUT4XnRIZOm90eNZcjQKW6NWOvJIuehYuO//P8o=;
+        b=NuHhr59VRmj6zVUGSbn3UPOw5T2ZlxxlJ8OkCP7SN+1rxA/ToI8bJuE5RHtLQ25XMS
+         P6oCzYIEs3D6fYATS4iOLNI6xvJhx8Q0+v5fAyMJfg+NdsPGUH85ggSA5TcZTcRLxI3W
+         EdMXW4J4lr2P6sK6xBGRQ4LJUvckPh0Nb93tfJ2T8nV+8tjEAMlloNNwh9spTixsobcR
+         AqgwGME2akkZUr3krnvuIIravAJpg8akvwqsTCK/Tb8KpGh3e2mEYz6U6f13j/JpJ+FA
+         l8gCry2QJf7Gdky9T0CMhCojcPyn7ohQlhaWW0peoN/DDl2hyU8wGVxSV0HOUp9ryz0C
+         jQAg==
+X-Gm-Message-State: AOAM530PJatD8ZKnhcWjXwfbE7+zzHf87j5wNtbyBA/xV9TjOLrEbL+J
+        E38SFgyFYPpsseV2NTu0dOKq5Bx9Mb/6w/2TMKFkb2yXKhYL
+X-Google-Smtp-Source: ABdhPJz4zPiUSFpJk91dEYRih4mjctRv2kKa+VSCIYraXxlXbfOFj3dM1oy1fFmaZmbS6reJLRRj+DisYui10qKw7Ig+rxwsPDx4
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2c88:: with SMTP id i8mr2439676iow.74.1589998998198;
- Wed, 20 May 2020 11:23:18 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:23:18 -0700
+X-Received: by 2002:a02:a904:: with SMTP id n4mr319666jam.105.1589998997373;
+ Wed, 20 May 2020 11:23:17 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:23:17 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007b211005a6187dc9@google.com>
-Subject: KASAN: slab-out-of-bounds Read in br_mrp_parse
-From:   syzbot <syzbot+9c6f0f1f8e32223df9a4@syzkaller.appspotmail.com>
-To:     bridge@lists.linux-foundation.org, davem@davemloft.net,
-        horatiu.vultur@microchip.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000006e87c405a6187d76@google.com>
+Subject: KMSAN: uninit-value in get_block
+From:   syzbot <syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com>
+To:     aeb@cwi.nl, akpm@linux-foundation.org, danarag@gmail.com,
+        glider@google.com, jack@suse.cz, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,118 +57,137 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    dda18a5c selftests/bpf: Convert bpf_iter_test_kern{3, 4}.c..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10c4e63c100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=668983fd3dd1087e
-dashboard link: https://syzkaller.appspot.com/bug?extid=9c6f0f1f8e32223df9a4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17eaba3c100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128598f6100000
-
-The bug was bisected to:
-
-commit 6536993371fab3de4e8379649b60e94d03e6ff37
-Author: Horatiu Vultur <horatiu.vultur@microchip.com>
-Date:   Sun Apr 26 13:22:07 2020 +0000
-
-    bridge: mrp: Integrate MRP into the bridge
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1187c352100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1387c352100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1587c352100000
+HEAD commit:    8b97c627 kmsan: drop the opportunity to ignore pages
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=17f2e73a100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6f048d804e1a47a0
+dashboard link: https://syzkaller.appspot.com/bug?extid=6e056ee473568865f3e6
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13cd424a100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1213334e100000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9c6f0f1f8e32223df9a4@syzkaller.appspotmail.com
-Fixes: 6536993371fa ("bridge: mrp: Integrate MRP into the bridge")
+Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
 
-batman_adv: batadv0: Interface activated: batadv_slave_1
-==================================================================
-BUG: KASAN: slab-out-of-bounds in br_mrp_parse+0x362/0x450 net/bridge/br_mrp_netlink.c:30
-Read of size 4 at addr ffff888094d96f24 by task syz-executor481/7028
-
-CPU: 0 PID: 7028 Comm: syz-executor481 Not tainted 5.7.0-rc5-syzkaller #0
+Process accounting resumed
+=====================================================
+BUG: KMSAN: uninit-value in get_branch fs/minix/itree_common.c:54 [inline]
+BUG: KMSAN: uninit-value in get_block+0xa00/0x1f80 fs/minix/itree_common.c:160
+CPU: 0 PID: 8783 Comm: syz-executor148 Not tainted 5.7.0-rc4-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:382
- __kasan_report.cold+0x20/0x38 mm/kasan/report.c:511
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- br_mrp_parse+0x362/0x450 net/bridge/br_mrp_netlink.c:30
- br_afspec+0x328/0x490 net/bridge/br_netlink.c:677
- br_setlink+0x363/0x610 net/bridge/br_netlink.c:934
- rtnl_bridge_setlink+0x279/0x6d0 net/core/rtnetlink.c:4803
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
- ___sys_sendmsg+0x100/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x4438f9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 6b 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc8cfd2528 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004438f9
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 00007ffc8cfd2540 R08: 00000000bb1414ac R09: 00000000bb1414ac
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc8cfd2570
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ get_branch fs/minix/itree_common.c:54 [inline]
+ get_block+0xa00/0x1f80 fs/minix/itree_common.c:160
+ V1_minix_get_block+0xb5/0xd0 fs/minix/itree_v1.c:56
+ minix_get_block+0x13e/0x1f0 fs/minix/inode.c:376
+ __block_write_begin_int+0xb05/0x2ad0 fs/buffer.c:2013
+ __block_write_begin fs/buffer.c:2063 [inline]
+ block_write_begin+0x16c/0x340 fs/buffer.c:2122
+ minix_write_begin+0x119/0x3d0 fs/minix/inode.c:412
+ generic_perform_write+0x3d4/0x9a0 mm/filemap.c:3302
+ __generic_file_write_iter+0x44e/0xa50 mm/filemap.c:3431
+ generic_file_write_iter+0x770/0xad0 mm/filemap.c:3463
+ call_write_iter include/linux/fs.h:1907 [inline]
+ new_sync_write fs/read_write.c:484 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:497
+ __kernel_write+0x205/0x600 fs/read_write.c:516
+ do_acct_process+0x1b6a/0x1fb0 kernel/acct.c:522
+ acct_pin_kill+0x54/0x250 kernel/acct.c:174
+ pin_kill+0x1c8/0x5d0 fs/fs_pin.c:44
+ acct_on kernel/acct.c:254 [inline]
+ __do_sys_acct kernel/acct.c:286 [inline]
+ __se_sys_acct+0xbcd/0xdd0 kernel/acct.c:273
+ __ia32_sys_acct+0x32/0x50 kernel/acct.c:273
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7fb7dd9
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f7f9112c EFLAGS: 00000292 ORIG_RAX: 0000000000000033
+RAX: ffffffffffffffda RBX: 0000000020000480 RCX: 0000000000000081
+RDX: 00000000000f4240 RSI: 0000000000000000 RDI: 00000000080fbff0
+RBP: 00000000080fbffc R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
 R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-Allocated by task 7028:
- save_stack+0x1b/0x40 mm/kasan/common.c:49
- set_track mm/kasan/common.c:57 [inline]
- __kasan_kmalloc mm/kasan/common.c:495 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
- kmalloc_node include/linux/slab.h:578 [inline]
- kvmalloc_node+0x61/0xf0 mm/util.c:574
- kvmalloc include/linux/mm.h:757 [inline]
- kvzalloc include/linux/mm.h:765 [inline]
- alloc_netdev_mqs+0x97/0xdc0 net/core/dev.c:9899
- rtnl_create_link+0x219/0xac0 net/core/rtnetlink.c:3068
- __rtnl_newlink+0xe2e/0x1590 net/core/rtnetlink.c:3330
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- __sys_sendto+0x219/0x330 net/socket.c:1995
- __do_sys_sendto net/socket.c:2007 [inline]
- __se_sys_sendto net/socket.c:2003 [inline]
- __x64_sys_sendto+0xdd/0x1b0 net/socket.c:2003
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ __msan_chain_origin+0x50/0x90 mm/kmsan/kmsan_instr.c:165
+ add_chain fs/minix/itree_common.c:14 [inline]
+ get_branch fs/minix/itree_common.c:52 [inline]
+ get_block+0xa4d/0x1f80 fs/minix/itree_common.c:160
+ V1_minix_get_block+0xb5/0xd0 fs/minix/itree_v1.c:56
+ minix_get_block+0x13e/0x1f0 fs/minix/inode.c:376
+ __block_write_begin_int+0xb05/0x2ad0 fs/buffer.c:2013
+ __block_write_begin fs/buffer.c:2063 [inline]
+ block_write_begin+0x16c/0x340 fs/buffer.c:2122
+ minix_write_begin+0x119/0x3d0 fs/minix/inode.c:412
+ generic_perform_write+0x3d4/0x9a0 mm/filemap.c:3302
+ __generic_file_write_iter+0x44e/0xa50 mm/filemap.c:3431
+ generic_file_write_iter+0x770/0xad0 mm/filemap.c:3463
+ call_write_iter include/linux/fs.h:1907 [inline]
+ new_sync_write fs/read_write.c:484 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:497
+ __kernel_write+0x205/0x600 fs/read_write.c:516
+ do_acct_process+0x1b6a/0x1fb0 kernel/acct.c:522
+ acct_pin_kill+0x54/0x250 kernel/acct.c:174
+ pin_kill+0x1c8/0x5d0 fs/fs_pin.c:44
+ acct_on kernel/acct.c:254 [inline]
+ __do_sys_acct kernel/acct.c:286 [inline]
+ __se_sys_acct+0xbcd/0xdd0 kernel/acct.c:273
+ __ia32_sys_acct+0x32/0x50 kernel/acct.c:273
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
 
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff888094d96000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 3876 bytes inside of
- 4096-byte region [ffff888094d96000, ffff888094d97000)
-The buggy address belongs to the page:
-page:ffffea0002536580 refcount:1 mapcount:0 mapping:00000000c278d3e1 index:0x0 head:ffffea0002536580 order:1 compound_mapcount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea00024d5088 ffffea0002a47788 ffff8880aa002000
-raw: 0000000000000000 ffff888094d96000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888094d96e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888094d96e80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888094d96f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                               ^
- ffff888094d96f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888094d97000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+Uninit was created at:
+ kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
+ kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
+ kmsan_alloc_page+0xb9/0x180 mm/kmsan/kmsan_shadow.c:293
+ __alloc_pages_nodemask+0x56a2/0x5dc0 mm/page_alloc.c:4848
+ alloc_pages_current+0x67d/0x990 mm/mempolicy.c:2295
+ alloc_pages include/linux/gfp.h:540 [inline]
+ __page_cache_alloc+0x95/0x310 mm/filemap.c:959
+ pagecache_get_page+0xab7/0x1250 mm/filemap.c:1645
+ find_or_create_page include/linux/pagemap.h:308 [inline]
+ grow_dev_page fs/buffer.c:983 [inline]
+ grow_buffers fs/buffer.c:1052 [inline]
+ __getblk_slow fs/buffer.c:1079 [inline]
+ __getblk_gfp+0x4bb/0xfc0 fs/buffer.c:1356
+ __bread_gfp+0xb9/0x670 fs/buffer.c:1401
+ sb_bread include/linux/buffer_head.h:309 [inline]
+ get_branch fs/minix/itree_common.c:46 [inline]
+ get_block+0x73e/0x1f80 fs/minix/itree_common.c:160
+ V1_minix_get_block+0xb5/0xd0 fs/minix/itree_v1.c:56
+ minix_get_block+0x13e/0x1f0 fs/minix/inode.c:376
+ __block_write_begin_int+0xb05/0x2ad0 fs/buffer.c:2013
+ __block_write_begin fs/buffer.c:2063 [inline]
+ block_write_begin+0x16c/0x340 fs/buffer.c:2122
+ minix_write_begin+0x119/0x3d0 fs/minix/inode.c:412
+ generic_perform_write+0x3d4/0x9a0 mm/filemap.c:3302
+ __generic_file_write_iter+0x44e/0xa50 mm/filemap.c:3431
+ generic_file_write_iter+0x770/0xad0 mm/filemap.c:3463
+ call_write_iter include/linux/fs.h:1907 [inline]
+ new_sync_write fs/read_write.c:484 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:497
+ __kernel_write+0x205/0x600 fs/read_write.c:516
+ do_acct_process+0x1b6a/0x1fb0 kernel/acct.c:522
+ acct_pin_kill+0x54/0x250 kernel/acct.c:174
+ pin_kill+0x1c8/0x5d0 fs/fs_pin.c:44
+ acct_on kernel/acct.c:254 [inline]
+ __do_sys_acct kernel/acct.c:286 [inline]
+ __se_sys_acct+0xbcd/0xdd0 kernel/acct.c:273
+ __ia32_sys_acct+0x32/0x50 kernel/acct.c:273
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3bf/0x6d0 arch/x86/entry/common.c:398
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+=====================================================
 
 
 ---
@@ -180,6 +197,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
