@@ -2,108 +2,129 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C990FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F53BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9704720709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7020320709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lop/y0Dk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzmLpPEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgETQc6 (ORCPT
+        id S1727966AbgETQdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgETQcz (ORCPT
+        Wed, 20 May 2020 12:33:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39576 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726548AbgETQdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:32:55 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28152C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:32:55 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y198so1815657pfb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:32:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yx+SO7MaZlAD9vie5x6QfkffO8b6beNlaHDdml9CWsM=;
-        b=Lop/y0Dk/PKz4/TytS22NKD43pau7LZ+Fme380JvbUlJTAhjKp0xU5ZbSauz5iBBby
-         8FsNQuISGXT6xReynlqdGwOru/n8HVgF9PpzEuE3Op3eNzVDIVdKHuUEsB/JTI8/kg8o
-         0AKf9ceni4CrSkZfXCzguuqYuKuFtk3BpElBIVrClAx+T8PyGFAtGvqUAyVctmXw+XGt
-         4tYMLf3bHsSqSlDXngMSdaPIZkjiFyCqLz10LeG47GZIf0OFqDJOlTkVieltDdtYXeXQ
-         fyUbZ2HU9s1mSUDjTSw0eUVfXST8kD8Mt0rL+0zF/jNiiTJhECsa/ADDdbKs5Wv1CRYR
-         5NXg==
+        Wed, 20 May 2020 12:33:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589992425;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bAZr9JpGFpcuu3XfWQIxwcbd9+r9VJYRanbh/qrJCdA=;
+        b=PzmLpPEy9Ms7KFQ4McaMei57TrQcdmyLdDh7WL5pYwhCVRWBV+hBl3BGg1Wse2voaZcvc3
+        ygg0ReAhIOnYLxYvbpAuJyNfcZ+Z+dfAeoBedmkCio3j5ovcY3c5U72zunV6ZdjwtqMab1
+        DuXxK2inNKleTV/m4mYAHyUQxd13HBg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-73-Nf2LA8oPOnKIaQdlIAnrig-1; Wed, 20 May 2020 12:33:43 -0400
+X-MC-Unique: Nf2LA8oPOnKIaQdlIAnrig-1
+Received: by mail-ej1-f71.google.com with SMTP id t26so1557348ejs.19
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:33:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yx+SO7MaZlAD9vie5x6QfkffO8b6beNlaHDdml9CWsM=;
-        b=Sx28FJ9BbpuTSAtpVAohDaNYkizxhhxEC5kTxp+AedLHVK9kIz1nlKmPQPIHybcV8/
-         IiRdJbf4+fC4uI1ZFgLcuXPVwIpOY4nN2g04ZA6TU3xoSCEsZ46V8h1FqdcU8f/sML7n
-         Seqh1ivl+pqphrp4F5Y20Mi5sdS0NOn2ngdVXa7Y8xTb05fkQ6s1PdY/L/CCj2PynwmV
-         s7OzTWNBaBWK5ahbZ2bxb86ha9r1+sFILWy3bi1wKt51LePB2Qa0w0ned2hHvTAjOo/h
-         P5H/ijN35RmKImocQbkXPERBqKEBew2tvGRClBvj5t4oUgfq58kRB0QQ5+g+A+EtfKM2
-         18qg==
-X-Gm-Message-State: AOAM5304iDFDwAybhZ2ZXq3nrzjmyQN0rjfRb3E9TeDaA2+bfbh06SLa
-        KU2FJHfz/BlLcf1PT/AYrnXlRpKycRjYmS2z3n+3eg==
-X-Google-Smtp-Source: ABdhPJzgLDlNilfBZKmbbH8H2Uk2UVDjvBIrQsW0+oLdeyZRHKrR5jlzW/kUKD8yBXXhCpILuvveGrj5ub9Jg+5NS9U=
-X-Received: by 2002:aa7:8084:: with SMTP id v4mr5089195pff.39.1589992374419;
- Wed, 20 May 2020 09:32:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=bAZr9JpGFpcuu3XfWQIxwcbd9+r9VJYRanbh/qrJCdA=;
+        b=QtmsB9V0Oe9UO+jxZAtwOwTfOsodhhNbYrt825x7YNjNaoAT3xjX8P8csczTf3uOmP
+         a2PbOcay1kkO2pMt+n/O+32Xmg3mUmjRmXYT6bxzQaYNMuZrdQ0JS+fqvdBl1TmPz7V0
+         x9tI1bIzcK5P9obZCwU6T1BuuDmsqk+pCOBmFd00a/Qh942f1hvgzvSJsAm6A66NGh3B
+         8rP2keSUpSExf8YCA3JqTx+qZoOurWrS13BqNoMPX/ZqBMXpqEH2W4AsPd5obCowYmZP
+         rtdkQWn/2X8ELA4TWMCAyeyBEmUyG4oGk1kHnyK+SoPmDskgYXQjHaP3hPKyiyOTogar
+         BI5A==
+X-Gm-Message-State: AOAM533v87CeViGeVFub5GhXS3LQWGUDpbncyAISYhovAcvyWo9UOiF4
+        RQyX+LVDfGGD3r5KvzcxEwxwsCOsFpJPOQi83BAUPxVNLxIHpcau4wxIjJittbyGZ3mhtOBGr4K
+        0nHPGlPeFHqWwCNIBpbUFkCk9
+X-Received: by 2002:a17:906:6bc5:: with SMTP id t5mr4270295ejs.459.1589992422409;
+        Wed, 20 May 2020 09:33:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx7yvH7d/edQcZjZSz0U8YMWI3hpcZy/hW1aUOvFSWb9mTe9xQ9+gEka1tRNCnBYytolrP33w==
+X-Received: by 2002:a17:906:6bc5:: with SMTP id t5mr4270277ejs.459.1589992422203;
+        Wed, 20 May 2020 09:33:42 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 13sm2347728ejw.88.2020.05.20.09.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 09:33:41 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>
+Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL unconditionally
+In-Reply-To: <20200520160740.6144-3-mlevitsk@redhat.com>
+References: <20200520160740.6144-1-mlevitsk@redhat.com> <20200520160740.6144-3-mlevitsk@redhat.com>
+Date:   Wed, 20 May 2020 18:33:40 +0200
+Message-ID: <874ksatvkr.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200517011732.GE24705@shao2-debian> <20200517034739.GO2869@paulmck-ThinkPad-P72>
- <CANpmjNNj37=mgrZpzX7joAwnYk-GsuiE8oOm13r48FYAK0gSQw@mail.gmail.com>
- <CANpmjNMx0+=Cac=WvHuzKb2zJvgNVvVxjo_W1wYWztywxDKeCQ@mail.gmail.com>
- <CANpmjNPcOHAE5d=gaD327HqxTBegf75qeN_pjoszahdk6_i5=Q@mail.gmail.com>
- <CAKwvOd=Gi2z_NjRfpTigCCcV5kUWU7Bm7h1eHLeQ6DZCmrsR8w@mail.gmail.com>
- <20200518180513.GA114619@google.com> <CANpmjNMTRO0TxxTQxFt8EaRLggcPXKLJL2+G2WFL+vakgd2OUg@mail.gmail.com>
- <CANpmjNO0kDVW4uaLcOF95L3FKc8WjawJqXKQtYbCad+W2r=75g@mail.gmail.com> <CANpmjNOeXmD5E3O50Z3MjkiuCYaYOPyi+1rq=GZvEKwBvLR0Ug@mail.gmail.com>
-In-Reply-To: <CANpmjNOeXmD5E3O50Z3MjkiuCYaYOPyi+1rq=GZvEKwBvLR0Ug@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 20 May 2020 09:32:43 -0700
-Message-ID: <CAKwvOd=ga4cjJCQASVH=Vwjkk5_Qh7b_TtoTSBBoLiMENL8hOQ@mail.gmail.com>
-Subject: Re: [rcu] 2f08469563: BUG:kernel_reboot-without-warning_in_boot_stage
-To:     Marco Elver <elver@google.com>
-Cc:     george.burgess.iv@gmail.com, Kan Liang <kan.liang@linux.intel.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 11:32 AM Marco Elver <elver@google.com> wrote:
->
-> This fixes the problem:
-> https://lkml.kernel.org/r/20200519182459.87166-1-elver@google.com
->
-> I suppose there are several things that happened that caused the above
-> bisected changes to trigger this. Hard to say how exactly the above
-> bisected changes caused this to manifest, because during early boot
-> (while uninitialized) KASAN may just randomly enter kasan_report()
-> before the branch (annotated with likely(), which is caught by the
-> branch tracer) prevents it from actually generating a report. However,
-> if it goes branch tracer -> KASAN -> branch tracers -> KASAN ..., then
-> we crash. If I had to guess some combination of different code gen,
-> different stack and/or data usage. So all the above bisected changes
-> (AFAIK) were red herrings. :-)
+Maxim Levitsky <mlevitsk@redhat.com> writes:
 
-Thanks for chasing to resolution.  Consider using a variable to store
-a list of flags, as that code (before your patch) invokes the compiler
-multiple times to answer the same question.
+> This msr is only available when the host supports WAITPKG feature.
+>
+> This breaks a nested guest, if the L1 hypervisor is set to ignore
+> unknown msrs, because the only other safety check that the
+> kernel does is that it attempts to read the msr and
+> rejects it if it gets an exception.
+>
+> Fixes: 6e3ba4abce KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fe3a24fd6b263..9c507b32b1b77 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5314,6 +5314,10 @@ static void kvm_init_msr_list(void)
+>  			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
+>  			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+>  				continue;
+> +			break;
+> +		case MSR_IA32_UMWAIT_CONTROL:
+> +			if (!kvm_cpu_cap_has(X86_FEATURE_WAITPKG))
+> +				continue;
+
+I'm probably missing something but (if I understand correctly) the only
+effect of dropping MSR_IA32_UMWAIT_CONTROL from msrs_to_save would be
+that KVM userspace won't see it in e.g. KVM_GET_MSR_INDEX_LIST. But why
+is this causing an issue? I see both vmx_get_msr()/vmx_set_msr() have
+'host_initiated' check:
+
+       case MSR_IA32_UMWAIT_CONTROL:
+                if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
+                        return 1;
+
+so KVM userspace should be able to read/write this MSR even when there's
+no hardware support for it. Or who's trying to read/write it?
+
+Also, kvm_cpu_cap_has() check is not equal to vmx_has_waitpkg() which
+checks secondary execution controls.
+
+>  		default:
+>  			break;
+>  		}
+
 -- 
-Thanks,
-~Nick Desaulniers
+Vitaly
+
