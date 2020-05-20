@@ -2,167 +2,216 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05C3F2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590016934;
-	bh=AsSVm6NLAAijnxZcRLGgoFhfjji3z54uqps3wBlWm/Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YamRVEpohcNpBsLKFJ13twHzwd3hOS9P7uiTmdaepDi2DG0h7FkYmObsVLWb+1HUT
-	 hitmquqahhZam9DYn0kF44oJoolZ/9FZmp8oXhe/ktVTX85vBbjn9DrxBeHypKaAFB
-	 PHpRKwNwWtz8fwWOP3X8iWXYOGTFtLCpLytnN+vQ=
+	by mail.kernel.org (Postfix) with ESMTP id E6D7F20759
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dx9edPWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgETXWJ (ORCPT
+        id S1728811AbgETXWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgETXWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:22:04 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 20 May 2020 19:22:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36311 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728772AbgETXWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 19:22:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590016927;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9+Mv5i8MSKtHCvpHZZreAZlo0OINtZUjUsAoIOF5LUM=;
+        b=Dx9edPWaNFKRa/43+X5Qz842Zimz/r1ApEf4A+wC/UINBtx9NLqa0dJ//XQ483qJmcXaR9
+        zSjkmGR05PZRa8FmYIT69xdYUBCn8+KjUXAMQ9GJokh7hXhlgCPgXxHbYg2+kpl0n+8yoO
+        g8AO437cZeH1VL6DoEXJ3SWim6gUnnw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-8fUOUOb2Oyi-IJNDdaVw5w-1; Wed, 20 May 2020 19:22:06 -0400
+X-MC-Unique: 8fUOUOb2Oyi-IJNDdaVw5w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56BB52070A;
-        Wed, 20 May 2020 23:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590016922;
-        bh=AsSVm6NLAAijnxZcRLGgoFhfjji3z54uqps3wBlWm/Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lLOeQzkh+QC8uwlwZLPY1lfaxSrGob0cJXqpDGWwnj6ZI10Lk4vmWj7uTli2UBhgc
-         1AxRyHJwQfkIb3BFg90Pn2rNvQn5c1Z0x9FrQ+oRTz8gg/n71dkcUfIcVtn/XZqELr
-         rVWygvDl1iHE14aCtpzhZ4w3LZ8ao8D+y9B7N4go=
-Date:   Wed, 20 May 2020 16:22:01 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Clifton <nickc@redhat.com>,
-        David Blaikie <blakie@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] Makefile: support compressed debug info
-Message-Id: <20200520162201.0d18667c12c144c09112cdfc@linux-foundation.org>
-In-Reply-To: <20200520193637.6015-1-ndesaulniers@google.com>
-References: <10f4fb0b-1012-b0e6-af05-0aa5a906de21@redhat.com>
-        <20200520193637.6015-1-ndesaulniers@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BB54835B40;
+        Wed, 20 May 2020 23:22:05 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 18D1D6EA26;
+        Wed, 20 May 2020 23:22:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net 3/3] rxrpc: Fix ack discard
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 May 2020 00:22:03 +0100
+Message-ID: <159001692327.18663.7422193729175092836.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159001690181.18663.663730118645460940.stgit@warthog.procyon.org.uk>
+References: <159001690181.18663.663730118645460940.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 12:36:36 -0700 Nick Desaulniers <ndesaulniers@google.com> wrote:
+The Rx protocol has a "previousPacket" field in it that is not handled in
+the same way by all protocol implementations.  Sometimes it contains the
+serial number of the last DATA packet received, sometimes the sequence
+number of the last DATA packet received and sometimes the highest sequence
+number so far received.
 
-> As debug information gets larger and larger, it helps significantly save
-> the size of vmlinux images to compress the information in the debug
-> information sections. Note: this debug info is typically split off from
-> the final compressed kernel image, which is why vmlinux is what's used
-> in conjunction with GDB. Minimizing the debug info size should have no
-> impact on boot times, or final compressed kernel image size.
-> 
-> All of the debug sections will have a `C` flag set.
-> $ readelf -S <object file>
-> 
-> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
->     vmlinux.gcc75.uncompressed.dwarf4
-> 
->     FILE SIZE        VM SIZE
->  --------------  --------------
->   +0.0%     +18  [ = ]       0    [Unmapped]
->  -73.3%  -114Ki  [ = ]       0    .debug_aranges
->  -76.2% -2.01Mi  [ = ]       0    .debug_frame
->  -73.6% -2.89Mi  [ = ]       0    .debug_str
->  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
->  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
->  -70.5% -9.04Mi  [ = ]       0    .debug_line
->  -79.3% -10.9Mi  [ = ]       0    .debug_loc
->  -39.5% -88.6Mi  [ = ]       0    .debug_info
->  -18.2%  -123Mi  [ = ]       0    TOTAL
-> 
-> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
->     vmlinux.clang11.uncompressed.dwarf4
-> 
->     FILE SIZE        VM SIZE
->  --------------  --------------
->   +0.0%     +23  [ = ]       0    [Unmapped]
->  -65.6%    -871  [ = ]       0    .debug_aranges
->  -77.4% -1.84Mi  [ = ]       0    .debug_frame
->  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
->  -73.1% -2.43Mi  [ = ]       0    .debug_str
->  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
->  -65.9% -8.62Mi  [ = ]       0    .debug_line
->  -86.2% -40.0Mi  [ = ]       0    .debug_loc
->  -42.0% -64.1Mi  [ = ]       0    .debug_info
->  -22.1%  -122Mi  [ = ]       0    TOTAL
-> 
-> For x86_64 defconfig + LLVM=1 (before):
-> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
-> Maximum resident set size (kbytes): 43856
-> 
-> For x86_64 defconfig + LLVM=1 (after):
-> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
-> Maximum resident set size (kbytes): 1566776
+AF_RXRPC is using this to weed out ACKs that are out of date (it's possible
+for ACK packets to get reordered on the wire), but this does not work with
+OpenAFS which will just stick the sequence number of the last packet seen
+into previousPacket.
 
-I'm not sure who we're expecting to merge this, but I like shiny things ;)
+The issue being seen is that big AFS FS.StoreData RPC (eg. of ~256MiB) are
+timing out when partly sent.  A trace was captured, with an additional
+tracepoint to show ACKs being discarded in rxrpc_input_ack().  Here's an
+excerpt showing the problem.
 
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -822,6 +822,12 @@ DEBUG_CFLAGS	+= $(call cc-option, -femit-struct-debug-baseonly) \
->  		   $(call cc-option,-fno-var-tracking)
->  endif
->  
-> +ifdef CONFIG_DEBUG_INFO_COMPRESSED
-> +DEBUG_CFLAGS	+= -gz=zlib
-> +KBUILD_AFLAGS	+= -Wa,--compress-debug-sections=zlib
-> +KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
-> +endif
-> +
->  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
->  export DEBUG_CFLAGS
->  
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index b8f023e054b9..5a423cbfaea4 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -225,6 +225,21 @@ config DEBUG_INFO_REDUCED
->  	  DEBUG_INFO build and compile times are reduced too.
->  	  Only works with newer gcc versions.
->  
-> +config DEBUG_INFO_COMPRESSED
-> +	bool "Compressed debugging information"
-> +	depends on DEBUG_INFO
-> +	depends on $(cc-option,-gz=zlib)
-> +	depends on $(as-option,-Wa,--compress-debug-sections=zlib)
-> +	depends on $(ld-option,--compress-debug-sections=zlib)
+ 52873.203230: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 0002449c q=00024499 fl=09
 
-huh, I didn't know kbuild/kconfig could do this.  Does it all work as
-expected when cross-compiling?
+A DATA packet with sequence number 00024499 has been transmitted (the "q="
+field).
 
-> +	help
-> +	  Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-> +	  5.0+, binutils 2.26+, and zlib.
-> +
-> +	  Users of dpkg-deb via scripts/package/builddeb may
-> +	  wish to set the $KDEB_COMPRESS env var to "none" to avoid recompressing
-> +	  the debug info again with a different compression scheme, which can
-> +	  result in larger binaries.
-> +
+ ...
+ 52873.243296: rxrpc_rx_ack: c=000004ae 00012a2b DLY r=00024499 f=00024497 p=00024496 n=0
+ 52873.243376: rxrpc_rx_ack: c=000004ae 00012a2c IDL r=0002449b f=00024499 p=00024498 n=0
+ 52873.243383: rxrpc_rx_ack: c=000004ae 00012a2d OOS r=0002449d f=00024499 p=0002449a n=2
+
+The Out-Of-Sequence ACK indicates that the server didn't see DATA sequence
+number 00024499, but did see seq 0002449a (previousPacket, shown as "p=",
+skipped the number, but firstPacket, "f=", which shows the bottom of the
+window is set at that point).
+
+ 52873.252663: rxrpc_retransmit: c=000004ae q=24499 a=02 xp=14581537
+ 52873.252664: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 000244bc q=00024499 fl=0b *RETRANS*
+
+The packet has been retransmitted.  Retransmission recurs until the peer
+says it got the packet.
+
+ 52873.271013: rxrpc_rx_ack: c=000004ae 00012a31 OOS r=000244a1 f=00024499 p=0002449e n=6
+
+More OOS ACKs indicate that the other packets that are already in the
+transmission pipeline are being received.  The specific-ACK list is up to 6
+ACKs and NAKs.
+
+ ...
+ 52873.284792: rxrpc_rx_ack: c=000004ae 00012a49 OOS r=000244b9 f=00024499 p=000244b6 n=30
+ 52873.284802: rxrpc_retransmit: c=000004ae q=24499 a=0a xp=63505500
+ 52873.284804: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 000244c2 q=00024499 fl=0b *RETRANS*
+ 52873.287468: rxrpc_rx_ack: c=000004ae 00012a4a OOS r=000244ba f=00024499 p=000244b7 n=31
+ 52873.287478: rxrpc_rx_ack: c=000004ae 00012a4b OOS r=000244bb f=00024499 p=000244b8 n=32
+
+At this point, the server's receive window is full (n=32) with presumably 1
+NAK'd packet and 31 ACK'd packets.  We can't transmit any more packets.
+
+ 52873.287488: rxrpc_retransmit: c=000004ae q=24499 a=0a xp=61327980
+ 52873.287489: rxrpc_tx_data: c=000004ae DATA ed1a3584:00000002 000244c3 q=00024499 fl=0b *RETRANS*
+ 52873.293850: rxrpc_rx_ack: c=000004ae 00012a4c DLY r=000244bc f=000244a0 p=00024499 n=25
+
+And now we've received an ACK indicating that a DATA retransmission was
+received.  7 packets have been processed (the occupied part of the window
+moved, as indicated by f= and n=).
+
+ 52873.293853: rxrpc_rx_discard_ack: c=000004ae r=00012a4c 000244a0<00024499 00024499<000244b8
+
+However, the DLY ACK gets discarded because its previousPacket has gone
+backwards (from p=000244b8, in the ACK at 52873.287478 to p=00024499 in the
+ACK at 52873.293850).
+
+We then end up in a continuous cycle of retransmit/discard.  kafs fails to
+update its window because it's discarding the ACKs and can't transmit an
+extra packet that would clear the issue because the window is full.
+OpenAFS doesn't change the previousPacket value in the ACKs because no new
+DATA packets are received with a different previousPacket number.
+
+Fix this by altering the discard check to only discard an ACK based on
+previousPacket if there was no advance in the firstPacket.  This allows us
+to transmit a new packet which will cause previousPacket to advance in the
+next ACK.
+
+The check, however, needs to allow for the possibility that previousPacket
+may actually have had the serial number placed in it instead - in which
+case it will go outside the window and we should ignore it.
+
+Fixes: 1a2391c30c0b ("rxrpc: Fix detection of out of order acks")
+Reported-by: Dave Botsch <botsch@cnf.cornell.edu>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ net/rxrpc/input.c |   30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
+
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 2f22f082a66c..3be4177baf70 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -802,6 +802,30 @@ static void rxrpc_input_soft_acks(struct rxrpc_call *call, u8 *acks,
+ 	}
+ }
+ 
++/*
++ * Return true if the ACK is valid - ie. it doesn't appear to have regressed
++ * with respect to the ack state conveyed by preceding ACKs.
++ */
++static bool rxrpc_is_ack_valid(struct rxrpc_call *call,
++			       rxrpc_seq_t first_pkt, rxrpc_seq_t prev_pkt)
++{
++	rxrpc_seq_t base = READ_ONCE(call->ackr_first_seq);
++
++	if (after(first_pkt, base))
++		return true; /* The window advanced */
++
++	if (before(first_pkt, base))
++		return false; /* firstPacket regressed */
++
++	if (after_eq(prev_pkt, call->ackr_prev_seq))
++		return true; /* previousPacket hasn't regressed. */
++
++	/* Some rx implementations put a serial number in previousPacket. */
++	if (after_eq(prev_pkt, base + call->tx_winsize))
++		return false;
++	return true;
++}
++
+ /*
+  * Process an ACK packet.
+  *
+@@ -865,8 +889,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	}
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+-	if (before(first_soft_ack, call->ackr_first_seq) ||
+-	    before(prev_pkt, call->ackr_prev_seq)) {
++	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+ 		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+@@ -882,8 +905,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	spin_lock(&call->input_lock);
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+-	if (before(first_soft_ack, call->ackr_first_seq) ||
+-	    before(prev_pkt, call->ackr_prev_seq)) {
++	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+ 		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+
 
