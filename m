@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42475C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42431C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8CF205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB71207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgETOYE (ORCPT
+        id S1728179AbgETOYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:24:04 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33210 "EHLO
+        Wed, 20 May 2020 10:24:07 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33180 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727080AbgETOW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727072AbgETOW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:28 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-000362-A2; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPby-00036u-H8; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DRT-E6; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbx-007DVe-9h; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Logan Gunthorpe" <logang@deltatee.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Kit Chow" <kchow@gigaio.com>
-Date:   Wed, 20 May 2020 15:14:13 +0100
-Message-ID: <lsq.1589984008.826530386@decadent.org.uk>
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        "Jim Mattson" <jmattson@google.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Andrew Honig" <ahonig@google.com>
+Date:   Wed, 20 May 2020 15:14:52 +0100
+Message-ID: <lsq.1589984009.983393284@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 45/99] PCI: Don't disable bridge BARs when assigning
- bus resources
+Subject: [PATCH 3.16 84/99] KVM: Check for a bad hva before dropping into
+ the ghc slow path
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,109 +58,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 9db8dc6d0785225c42a37be7b44d1b07b31b8957 upstream.
+commit fcfbc617547fc6d9552cb6c1c563b6a90ee98085 upstream.
 
-Some PCI bridges implement BARs in addition to bridge windows.  For
-example, here's a PLX switch:
+When reading/writing using the guest/host cache, check for a bad hva
+before checking for a NULL memslot, which triggers the slow path for
+handing cross-page accesses.  Because the memslot is nullified on error
+by __kvm_gfn_to_hva_cache_init(), if the bad hva is encountered after
+crossing into a new page, then the kvm_{read,write}_guest() slow path
+could potentially write/access the first chunk prior to detecting the
+bad hva.
 
-  04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
-            Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-	    (prog-if 00 [Normal decode])
-      Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
-      Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
-      Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
-      I/O behind bridge: 00002000-00003fff
-      Memory behind bridge: 90000000-909fffff
-      Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
+Arguably, performing a partial access is semantically correct from an
+architectural perspective, but that behavior is certainly not intended.
+In the original implementation, memslot was not explicitly nullified
+and therefore the partial access behavior varied based on whether the
+memslot itself was null, or if the hva was simply bad.  The current
+behavior was introduced as a seemingly unintentional side effect in
+commit f1b9dd5eb86c ("kvm: Disallow wraparound in
+kvm_gfn_to_hva_cache_init"), which justified the change with "since some
+callers don't check the return code from this function, it sit seems
+prudent to clear ghc->memslot in the event of an error".
 
-Previously, when the kernel assigned resource addresses (with the
-pci=realloc command line parameter, for example) it could clear the struct
-resource corresponding to the BAR.  When this happened, lspci would report
-this BAR as "ignored":
+Regardless of intent, the partial access is dependent on _not_ checking
+the result of the cache initialization, which is arguably a bug in its
+own right, at best simply weird.
 
-   Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-This is because the kernel reports a zero start address and zero flags
-in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-Investigation with 'lspci -x', however, shows the BIOS-assigned address
-will still be programmed in the device's BAR registers.
-
-It's clearly a bug that the kernel lost track of the BAR value, but in most
-cases, this still won't result in a visible issue because nothing uses the
-memory, so nothing is affected.  However, when an IOMMU is in use, it will
-not reserve this space in the IOVA because the kernel no longer thinks the
-range is valid.  (See dmar_init_reserved_ranges() for the Intel
-implementation of this.)
-
-Without the proper reserved range, a DMA mapping may allocate an IOVA that
-matches a bridge BAR, which results in DMA accesses going to the BAR
-instead of the intended RAM.
-
-The problem was in pci_assign_unassigned_root_bus_resources().  When any
-resource from a bridge device fails to get assigned, the code set the
-resource's flags to zero.  This makes sense for bridge windows, as they
-will be re-enabled later, but for regular BARs, it makes the kernel
-permanently lose track of the fact that they decode address space.
-
-Change pci_assign_unassigned_root_bus_resources() and
-pci_assign_unassigned_bridge_resources() so they only clear "res->flags"
-for bridge *windows*, not bridge BARs.
-
-Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-Link: https://lore.kernel.org/r/20200108213208.4612-1-logang@deltatee.com
-[bhelgaas: commit log, check for pci_is_bridge()]
-Reported-by: Kit Chow <kchow@gigaio.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 8f964525a121 ("KVM: Allow cross page reads and writes from cached translations.")
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Andrew Honig <ahonig@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pci/setup-bus.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ virt/kvm/kvm_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1650,12 +1650,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1596,12 +1596,12 @@ int kvm_write_guest_cached(struct kvm *k
+ 	if (slots->generation != ghc->generation)
+ 		kvm_gfn_to_hva_cache_init(kvm, ghc, ghc->gpa, ghc->len);
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
+-	if (unlikely(!ghc->memslot))
+-		return kvm_write_guest(kvm, ghc->gpa, data, len);
+-
+ 	if (kvm_is_error_hva(ghc->hva))
+ 		return -EFAULT;
+ 
++	if (unlikely(!ghc->memslot))
++		return kvm_write_guest(kvm, ghc->gpa, data, len);
 +
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
+ 	r = __copy_to_user((void __user *)ghc->hva, data, len);
+ 	if (r)
+ 		return -EFAULT;
+@@ -1622,12 +1622,12 @@ int kvm_read_guest_cached(struct kvm *kv
+ 	if (slots->generation != ghc->generation)
+ 		kvm_gfn_to_hva_cache_init(kvm, ghc, ghc->gpa, ghc->len);
  
-@@ -1716,12 +1722,18 @@ again:
- 	/* restore size and flags */
- 	list_for_each_entry(fail_res, &fail_head, list) {
- 		struct resource *res = fail_res->res;
-+		int idx;
+-	if (unlikely(!ghc->memslot))
+-		return kvm_read_guest(kvm, ghc->gpa, data, len);
+-
+ 	if (kvm_is_error_hva(ghc->hva))
+ 		return -EFAULT;
  
- 		res->start = fail_res->start;
- 		res->end = fail_res->end;
- 		res->flags = fail_res->flags;
--		if (fail_res->dev->subordinate)
--			res->flags = 0;
++	if (unlikely(!ghc->memslot))
++		return kvm_read_guest(kvm, ghc->gpa, data, len);
 +
-+		if (pci_is_bridge(fail_res->dev)) {
-+			idx = res - &fail_res->dev->resource[0];
-+			if (idx >= PCI_BRIDGE_RESOURCES &&
-+			    idx <= PCI_BRIDGE_RESOURCE_END)
-+				res->flags = 0;
-+		}
- 	}
- 	free_list(&fail_head);
- 
+ 	r = __copy_from_user(data, (void __user *)ghc->hva, len);
+ 	if (r)
+ 		return -EFAULT;
 
