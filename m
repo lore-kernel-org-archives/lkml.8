@@ -2,47 +2,47 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88487C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6933BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B54520748
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473FA20748
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgETGLE (ORCPT
+        id S1726501AbgETGMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:11:04 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37561 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgETGLE (ORCPT
+        Wed, 20 May 2020 02:12:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36253 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgETGMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:11:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id o14so2252340ljp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 23:11:02 -0700 (PDT)
+        Wed, 20 May 2020 02:12:10 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u15so2249243ljd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 23:12:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=bnICOn/Ls9L7VkdJqYNqQPYwFGnRPfcq5kfoLGIdoVs=;
-        b=ejmrwQlEqzpvyVXkrvCc6Dax3TVszjZT71gMNjPbEqiYgUZXufBGX7I8i/Hq0GPchp
-         LrXA5OrNPU8etL3t3dG6TNW32lal/9V1B3uR0U4rynB52gP4fK0MA4ZhueCL6SLlFufc
-         YTKc1Wi+Q2yEFtddrXQIP3BV8Gg/Wtgnd6akXa3huk4ThQlohyHNKN/gecQ7yImWfln0
-         EKd2g6O1spW4yc6uw/arRGd/Y/fs7am6eiI5eJ2Z3zH6Yr4ruRMquol90HlrQFjVAUYD
-         C69afgB/jkLJsrnd32/Su8MNKI71NnJNUbQoUK995sNcE4tkBvgffLDrAj0CO/ORMHZy
-         q3pQ==
-X-Gm-Message-State: AOAM532SJgyPTX5cPBRaYckqLY29x5wvQv9n10JeYsmVjkRijuxAjLRG
-        WLTv0svoQAWMkVhkXUx9tr6UcmTExN4=
-X-Google-Smtp-Source: ABdhPJz3c5S+JD5sGw2mH6VDFQM/mqWWFCmL0T7a3eZhn6reEZD3evimiGFq4sFKXR7RZPHonOjchw==
-X-Received: by 2002:a2e:8347:: with SMTP id l7mr1897381ljh.243.1589955062203;
-        Tue, 19 May 2020 23:11:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+ghJ7YD5IKfP3MQ40D3G+jaGxHwF3RHwj0WPAFD2ZV8=;
+        b=Dd2xAIh27pOkyIrthZWkmc9+7wbz5hMyRnTcn5HhFcJ0cP9yW/Sk8pQRpn5nH/o4dm
+         78vUAYi/V8HpO1XtXRCS+lv7FlLyc/avuew7we6zB0MIFp5UzG7IaXeafeOpkoz1pmjt
+         /RRsGQcR7StEG08ochuj3idOYFh2RVudQK4gA+El+7QFhn6n6FoglF/XUtWeenl7FPR6
+         fnec/cM6XaLmdfAJkQut4w6mQdGhQJk0DMzQDptYB0qJ7pS/L8CTBoqdMHplnYcqL5R4
+         x8WPShY1iU9rjqmqQAvCEXW+369M4f0Ckaor7XUFN9dpL8zOOxWwek8D/8Y9fzvNO3ZD
+         3oNQ==
+X-Gm-Message-State: AOAM530/BL0sD0Sxla9nGcfB609B8RicC39VGUoGbofUpze7rLCmT569
+        OeUhOG/oK1A3CEcreoGRItU=
+X-Google-Smtp-Source: ABdhPJyv/Nq0OWXLumQiNzZqonAnmvwioyJ6M5G5V0B7+wtfc0ATfT6NGqGNJyYErwAAHf3AyyU7+Q==
+X-Received: by 2002:a05:651c:1211:: with SMTP id i17mr1766008lja.56.1589955126784;
+        Tue, 19 May 2020 23:12:06 -0700 (PDT)
 Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
-        by smtp.gmail.com with ESMTPSA id t22sm786928ljk.11.2020.05.19.23.10.59
+        by smtp.gmail.com with ESMTPSA id r15sm789162lfp.34.2020.05.19.23.12.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 23:11:01 -0700 (PDT)
-Date:   Wed, 20 May 2020 09:10:22 +0300
+        Tue, 19 May 2020 23:12:06 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:11:28 +0300
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Michael Turquette <mturquette@baylibre.com>,
@@ -58,44 +58,75 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] MAINTAINER entries for few ROHM power devices
-Message-ID: <cover.1589866137.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 1/2] MAINTAINERS: Add entry for ROHM power management ICs
+Message-ID: <e11366fd280736844ae63791b6193bb84d6205bf.1589866138.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1589866137.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1589866137.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add maintainer entries to a few ROHM devices and Linear Ranges
+Add entry for maintaining power management IC drivers for ROHM
+BD71837, BD71847, BD71850, BD71828, BD71878, BD70528 and BD99954.
 
-Linear Ranges helpers were refactored out of regulator core to lib so
-that other drivers could utilize them too. (I guess power/supply drivers 
-and possibly clk drivers can benefit from them). As regulators is
-currently the main user it makes sense the changes to linear_ranges go
-through Mark's tree.
-
-During past two years few ROHM PMIC drivers have been added to
-mainstream. They deserve a supporter from ROHM side too :)
-
-Patch 1:
-	Maintainer entries for few ROHM IC drivers
-Patch 2:
-	Maintainer entry for linear ranges helpers
-
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
+ MAINTAINERS | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Matti Vaittinen (2):
-  MAINTAINERS: Add entry for ROHM power management ICs
-  MAINTAINERS: Add maintainer entry for linear ranges helper
-
- MAINTAINERS | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-
-base-commit: b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ecc0749810b0..63a2ca70540e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14490,6 +14490,12 @@ L:	linux-serial@vger.kernel.org
+ S:	Odd Fixes
+ F:	drivers/tty/serial/rp2.*
+ 
++ROHM BD99954 CHARGER IC
++R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++S:	Supported
++F:	drivers/power/supply/bd99954-charger.c
++F:	drivers/power/supply/bd99954-charger.h
++
+ ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
+ M:	Tomasz Duszynski <tduszyns@gmail.com>
+ S:	Maintained
+@@ -14507,6 +14513,30 @@ F:	drivers/mfd/bd9571mwv.c
+ F:	drivers/regulator/bd9571mwv-regulator.c
+ F:	include/linux/mfd/bd9571mwv.h
+ 
++ROHM POWER MANAGEMENT IC DEVICE DRIVERS
++R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++S:	Supported
++F:	Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
++F:	Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
++F:	drivers/clk/clk-bd718x7.c
++F:	drivers/gpio/gpio-bd70528.c
++F:	drivers/gpio/gpio-bd71828.c
++F:	drivers/mfd/rohm-bd70528.c
++F:	drivers/mfd/rohm-bd71828.c
++F:	drivers/mfd/rohm-bd718x7.c
++F:	drivers/power/supply/bd70528-charger.c
++F:	drivers/regulator/bd70528-regulator.c
++F:	drivers/regulator/bd71828-regulator.c
++F:	drivers/regulator/bd718x7-regulator.c
++F:	drivers/regulator/rohm-regulator.c
++F:	drivers/rtc/rtc-bd70528.c
++F:	drivers/watchdog/bd70528_wdt.c
++F:	include/linux/mfd/rohm-shared.h
++F:	include/linux/mfd/rohm-bd71828.h
++F:	include/linux/mfd/rohm-bd70528.h
++F:	include/linux/mfd/rohm-generic.h
++F:	include/linux/mfd/rohm-bd718x7.h
++
+ ROSE NETWORK LAYER
+ M:	Ralf Baechle <ralf@linux-mips.org>
+ L:	linux-hams@vger.kernel.org
 -- 
 2.21.0
 
