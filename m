@@ -2,162 +2,153 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C00C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEAC20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C708206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iS75Jwd/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJmZATl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgETQz4 (ORCPT
+        id S1726881AbgETQ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:55:56 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46942 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726436AbgETQzz (ORCPT
+        Wed, 20 May 2020 12:56:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42139 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726548AbgETQ4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:55:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589993755; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=fPU9FrcmOGKQPbx+xpLCEeVLHsVWTWvsU+CO+NzO6BM=; b=iS75Jwd/Gi6/fkg2xgecLo2hO7Z2pWuzaq12M0jhh5WdXXLNutyazruLoWgSOnqRSXAN8q5G
- XPdmHxb53KJAMWIBYz0SntGIL+XIObfamb5b6jNxK6q0ciE2SwUjyQtIz8zPLNS/eoqyctMf
- XFBF+goVe/cnQCtFfe9rcaR+X/w=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec56112.7f64ed020f48-smtp-out-n02;
- Wed, 20 May 2020 16:55:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6C3C7C43391; Wed, 20 May 2020 16:55:46 +0000 (UTC)
-Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 20 May 2020 12:56:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589993810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QaZb1dScaBd+ZKT5FJJNAu4zg30y7sIbqMztcEcLgo4=;
+        b=NJmZATl7RI35wLZFIyNWR31qRXP80q1smB9lOVz9jH1hyM3X0FL6+TCm1293d8hOr/mIfz
+        eOzn7sLxO4yVKdWZfvuL6qMxhZxVx/rERj3bd5x/YQwhVVpHz0k6Wg5+SHLFGFB4VxsNFh
+        BK69v4uOh2S5yZYxty8p+cOZeyQ20pc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-NywVvRHRMOe8vsWxjz5dnA-1; Wed, 20 May 2020 12:56:48 -0400
+X-MC-Unique: NywVvRHRMOe8vsWxjz5dnA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5BE96C433C6;
-        Wed, 20 May 2020 16:55:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5BE96C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v3 2/2] scsi: ufs-qcom: enter and exit hibern8 during
- clock scaling
-To:     Pedro Sousa <PedroM.Sousa@synopsys.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "vinholikatti@gmail.com" <vinholikatti@gmail.com>,
-        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1571849351-819-1-git-send-email-asutoshd@codeaurora.org>
- <1571849351-819-2-git-send-email-asutoshd@codeaurora.org>
- <MN2PR12MB31675521623C9AFEA87B6076CC740@MN2PR12MB3167.namprd12.prod.outlook.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <06fbd425-3815-690a-22bc-a362c5deca6d@codeaurora.org>
-Date:   Wed, 20 May 2020 09:55:43 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D603E81A3FF;
+        Wed, 20 May 2020 16:56:47 +0000 (UTC)
+Received: from starship (unknown [10.35.207.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3FFD5D994;
+        Wed, 20 May 2020 16:56:44 +0000 (UTC)
+Message-ID: <0c1a0c81bbdcfaf4ae9af545f4a38439b1a56d11.camel@redhat.com>
+Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL
+ unconditionally
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 20 May 2020 19:56:43 +0300
+In-Reply-To: <874ksatvkr.fsf@vitty.brq.redhat.com>
+References: <20200520160740.6144-1-mlevitsk@redhat.com>
+         <20200520160740.6144-3-mlevitsk@redhat.com>
+         <874ksatvkr.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <MN2PR12MB31675521623C9AFEA87B6076CC740@MN2PR12MB3167.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pedro,
+On Wed, 2020-05-20 at 18:33 +0200, Vitaly Kuznetsov wrote:
+> Maxim Levitsky <mlevitsk@redhat.com> writes:
+> 
+> > This msr is only available when the host supports WAITPKG feature.
+> > 
+> > This breaks a nested guest, if the L1 hypervisor is set to ignore
+> > unknown msrs, because the only other safety check that the
+> > kernel does is that it attempts to read the msr and
+> > rejects it if it gets an exception.
+> > 
+> > Fixes: 6e3ba4abce KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+> > 
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> >  arch/x86/kvm/x86.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index fe3a24fd6b263..9c507b32b1b77 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -5314,6 +5314,10 @@ static void kvm_init_msr_list(void)
+> >  			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
+> >  			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+> >  				continue;
+> > +			break;
+> > +		case MSR_IA32_UMWAIT_CONTROL:
+> > +			if (!kvm_cpu_cap_has(X86_FEATURE_WAITPKG))
+> > +				continue;
+> 
+> I'm probably missing something but (if I understand correctly) the only
+> effect of dropping MSR_IA32_UMWAIT_CONTROL from msrs_to_save would be
+> that KVM userspace won't see it in e.g. KVM_GET_MSR_INDEX_LIST. But why
+> is this causing an issue? I see both vmx_get_msr()/vmx_set_msr() have
+> 'host_initiated' check:
+> 
+>        case MSR_IA32_UMWAIT_CONTROL:
+>                 if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
+>                         return 1;
 
-On 11/11/2019 7:54 AM, Pedro Sousa wrote:
-> Hi Asutosh,
-> 
-> Please check comments.
-Sorry for missing out on this and thanks for your review.
+Here it fails like that:
 
-> 
-> -----Original Message-----
-> From: Asutosh Das <asutoshd@codeaurora.org>
-> Sent: Wednesday, October 23, 2019 5:49 PM
-> To: cang@codeaurora.org; rnayak@codeaurora.org; vinholikatti@gmail.com; jejb@linux.vnet.ibm.com; martin.petersen@oracle.com
-> Cc: linux-scsi@vger.kernel.org; kernel-team@android.com; saravanak@google.com; salyzyn@google.com; Asutosh Das <asutoshd@codeaurora.org>; Andy Gross <agross@kernel.org>; Alim Akhtar <alim.akhtar@samsung.com>; Avri Altman <avri.altman@wdc.com>; Pedro Sousa <pedrom.sousa@synopsys.com>; James E.J. Bottomley <jejb@linux.ibm.com>; open list:ARM/QUALCOMM SUPPORT <linux-arm-msm@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
-> Subject: [PATCH v3 2/2] scsi: ufs-qcom: enter and exit hibern8 during clock scaling
-> 
-> Qualcomm controller needs to be in hibern8 before scaling clocks.
-> This change puts the controller in hibern8 state before scaling
-> and brings it out after scaling of clocks.
-> 
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> ---
->   drivers/scsi/ufs/ufs-qcom.c | 12 +++++++++++-
->   1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index a5b7148..55b1de5 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -1305,18 +1305,27 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
->   	int err = 0;
->   
->   	if (status == PRE_CHANGE) {
-> +		err = ufshcd_uic_hibern8_enter(hba);
-> +		if (err)
-> +			return err;
->   		if (scale_up)
->   			err = ufs_qcom_clk_scale_up_pre_change(hba);
->   		else
->   			err = ufs_qcom_clk_scale_down_pre_change(hba);
-> +		if (err)
-> +			ufshcd_uic_hibern8_exit(hba);
-> +
->   	} else {
->   		if (scale_up)
->   			err = ufs_qcom_clk_scale_up_post_change(hba);
->   		else
->   			err = ufs_qcom_clk_scale_down_post_change(hba);
->   
-> -		if (err || !dev_req_params)
-> +
-> +		if (err || !dev_req_params) {
-> +			ufshcd_uic_hibern8_exit(hba);
->   			goto out;
-> +		}
->   
->   		ufs_qcom_cfg_timers(hba,
->   				    dev_req_params->gear_rx,
-> @@ -1324,6 +1333,7 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
->   				    dev_req_params->hs_rate,
->   				    false);
->   		ufs_qcom_update_bus_bw_vote(host);
-> +		ufshcd_uic_hibern8_exit(hba);
-> 
-> Here you are creating the possibility of returning a success even if hibern8 exit fails.
-> If hibern8 exit fails the ufs recovery will be triggered and "err" variable will not get updated
-> in this function, how is this handled? Did you tested this possibility?
-> 
->   	}
->   
->   out:
-> 
+1. KVM_GET_MSR_INDEX_LIST returns this msrs, and qemu notes that
+   it is supported in 'has_msr_umwait' global var
+
+2. Qemu does kvm_arch_get/put_registers->kvm_get/put_msrs->ioctl(KVM_GET_MSRS)
+   and while doing this it adds MSR_IA32_UMWAIT_CONTROL to that msr list.
+   That reaches 'svm_get_msr', and this one knows nothing about MSR_IA32_UMWAIT_CONTROL.
+
+So the difference here is that vmx_get_msr not called at all.
+I can add this msr to svm_get_msr instead but that feels wrong since this feature
+is not yet supported on AMD.
+When AMD adds support for this feature, then the VMX specific code can be moved to
+kvm_get_msr_common I guess.
 
 
-Yes - I agree with your comment. The error should be propagated from 
-this function correctly to the caller. I'll push another version.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+> 
+> so KVM userspace should be able to read/write this MSR even when there's
+> no hardware support for it. Or who's trying to read/write it?
+> 
+> Also, kvm_cpu_cap_has() check is not equal to vmx_has_waitpkg() which
+> checks secondary execution controls.
+
+I was afraid that something like that will happen, but in this particular
+case we can only check CPUID support and if supported, the then it means
+we are dealing with intel system and thus vmx_get_msr will be called and
+ignore that msr.
+
+Calling vmx_has_waitpkg from the common code doesn't seem right, and besides,
+it checks the secondary controls which are set by the host and can change,
+at least in theory during runtime (I don't know if KVM does this).
+
+Note that if I now understand correctly, the 'host_initiated' means that MSR read/write
+is done by the host itself and not on behalf of the guest.
+
+
+Best regards,
+	Maxim Levitsky
+
+> 
+> >  		default:
+> >  			break;
+> >  		}
+
+
