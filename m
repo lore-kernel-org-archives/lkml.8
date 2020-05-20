@@ -2,97 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82748C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCAF320708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:30:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589934658;
-	bh=IdKlOjcnp7gTR0MZGzUExPCTFZFEUt8s/UCERCdITGs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DLN9rq/2cbu90Jo7V2+mAA4FcyczrVcojyWCj+palOvo9KbQkqfENmOVqFUD6v3If
-	 Hhy/CAmYs9KjrIJ5zbR/mChDjm3aMe9D2lbbkikQRMiPOMxOXjX4z0ZbK5nmm/8Q0O
-	 fa4uJKc+2wWj7lOp6dm7i2eXFs3eQ+ok5s7e7ca0=
+	by mail.kernel.org (Postfix) with ESMTP id 5F22120708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:31:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="V3Pn8/In"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgETAa6 (ORCPT
+        id S1728483AbgETAbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbgETAav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:30:51 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 19 May 2020 20:31:06 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:48058 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728371AbgETAbF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:31:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589934664; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=nYdqJl/+cJjw0ASKWTqA2nWiG8fIOftxbKtxBp4bd1w=; b=V3Pn8/InmG7e7IApScMQs/NOyj08w7S5oS7uMJhkSYe1v9XsCPbrVYq1e7coMJjH8ZE6y/cY
+ zKJOQpR9zMZeApgjOgcAqBd/ZpUosmgKK2pO9uSDl5iJ/x4tTcyJxDHjJeynlfA6nJV1TA/o
+ NJYfDSszXA8eWZEJRzKpKoKnA14=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec47a30.7f1286f18340-smtp-out-n05;
+ Wed, 20 May 2020 00:30:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 21EE6C43391; Wed, 20 May 2020 00:30:40 +0000 (UTC)
+Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A0D20873
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589934651;
-        bh=IdKlOjcnp7gTR0MZGzUExPCTFZFEUt8s/UCERCdITGs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JX874BmGZAM6sq3Jy8T6kJcVyduKrKeFsEDJjle2fiVIRQsrwySWEvYs/8ExrgrU9
-         GBzdA0eakOcBHgqCJwN+PsM5Wa/mCz573a9QZPxSzKMVy7xJ8aChCcNeXCr3B4ygL7
-         Na1X/M2y/y/PTGQRS2ln21T2acH8ZDQvaNhElftA=
-Received: by mail-wr1-f45.google.com with SMTP id v12so1288179wrp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:30:51 -0700 (PDT)
-X-Gm-Message-State: AOAM532/uLjoIC6v/B5YSJ8Dg2t6M+vDdR3eNymROXRQ1+8iwX+HXbL3
-        vZUoSNuDZ6/BYdNw9gR5sPZSxtpnoqaBF3IsSiqnmg==
-X-Google-Smtp-Source: ABdhPJz4SScRClG9+FY2bdUwrH/CT8Xfngef2cn9NrEmrWVCgU07Mg4YFEOVXkx9MZElnCTDh4UFQEwNs40GWJ96Ylw=
-X-Received: by 2002:adf:fe45:: with SMTP id m5mr1411855wrs.257.1589934649517;
- Tue, 19 May 2020 17:30:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235127.007113214@linutronix.de>
-In-Reply-To: <20200515235127.007113214@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 May 2020 17:30:38 -0700
-X-Gmail-Original-Message-ID: <CALCETrU4fu-GokwC5jUshwQ2e84qAj_+HJc7gKsdA7Ra=-iTGw@mail.gmail.com>
-Message-ID: <CALCETrU4fu-GokwC5jUshwQ2e84qAj_+HJc7gKsdA7Ra=-iTGw@mail.gmail.com>
-Subject: Re: [patch V6 26/37] x86/entry: Convert various system vectors
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33F46C433C8;
+        Wed, 20 May 2020 00:30:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33F46C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v1 4/6] bus: mhi: core: Use common name for BHI firmware load function
+Date:   Tue, 19 May 2020 17:30:29 -0700
+Message-Id: <1589934631-22752-5-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1589934631-22752-1-git-send-email-bbhatt@codeaurora.org>
+References: <1589934631-22752-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
->
-> Convert various system vectors to IDTENTRY_SYSVEC
->   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
->   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
->   - Remove the ASM idtentries in 64bit
->   - Remove the BUILD_INTERRUPT entries in 32bit
->   - Remove the old prototypes
->
-> No functional change.
+mhi_fw_load_sbl() function is currently used to transfer SBL or EDL
+images over BHI (Boot Host Interface). Moreover, its contents do not
+indicate anything regarding support for a specific set of images. Since
+it can be used for any image download over BHI, it can be appropriately
+renamed mhi_fw_load_bhi() instead.
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+---
+ drivers/bus/mhi/core/boot.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+index 24422f5..34ce102 100644
+--- a/drivers/bus/mhi/core/boot.c
++++ b/drivers/bus/mhi/core/boot.c
+@@ -218,7 +218,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+ 	return (!ret) ? -ETIMEDOUT : 0;
+ }
+ 
+-static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
++static int mhi_fw_load_bhi(struct mhi_controller *mhi_cntrl,
+ 			   dma_addr_t dma_addr,
+ 			   size_t size)
+ {
+@@ -245,7 +245,7 @@ static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
+ 	}
+ 
+ 	session_id = MHI_RANDOM_U32_NONZERO(BHI_TXDB_SEQNUM_BMSK);
+-	dev_dbg(dev, "Starting SBL download via BHI. Session ID:%u\n",
++	dev_dbg(dev, "Starting SBL/EDL download via BHI. Session ID:%u\n",
+ 		session_id);
+ 	mhi_write_reg(mhi_cntrl, base, BHI_STATUS, 0);
+ 	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_HIGH,
+@@ -446,9 +446,9 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 		return;
+ 	}
+ 
+-	/* Download SBL image */
++	/* Download SBL or EDL image using BHI */
+ 	memcpy(buf, firmware->data, size);
+-	ret = mhi_fw_load_sbl(mhi_cntrl, dma_addr, size);
++	ret = mhi_fw_load_bhi(mhi_cntrl, dma_addr, size);
+ 	mhi_free_coherent(mhi_cntrl, size, buf, dma_addr);
+ 
+ 	if (!mhi_cntrl->fbc_download || ret || mhi_cntrl->ee == MHI_EE_EDL)
+@@ -456,7 +456,7 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 
+ 	/* Error or in EDL mode, we're done */
+ 	if (ret) {
+-		dev_err(dev, "MHI did not load SBL, ret:%d\n", ret);
++		dev_err(dev, "MHI did not load SBL/EDL image, ret:%d\n", ret);
+ 		return;
+ 	}
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
