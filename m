@@ -2,109 +2,123 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBD7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4429FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44421207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203C0207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YjXyudE9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Dt2BB6xU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgETUmS (ORCPT
+        id S1728007AbgETUob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:42:18 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37167 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727018AbgETUmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:42:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590007335;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o8obcu4RJyJ5SsFoPKEalBasJOWg/UMge1/Qyw2g7H4=;
-        b=YjXyudE9MlSR0s+O6udRASvrie77Yofg97s3sFuVbPmklhIGrhyaZIEwZ9KVYhIgdLsU74
-        2sMXhnC5H6lRIQE9e2Mmqp5F5vfeTylP4neFqoq4jIQFQVHYL607YiMt8sCzlnsaIFuIke
-        LHE3mFiFfWXSrzG7qzyxi0jtzcE27nU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-BpCPt0jQOxOxfXT_1nXr7Q-1; Wed, 20 May 2020 16:42:14 -0400
-X-MC-Unique: BpCPt0jQOxOxfXT_1nXr7Q-1
-Received: by mail-ed1-f70.google.com with SMTP id o7so1773547edq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:42:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o8obcu4RJyJ5SsFoPKEalBasJOWg/UMge1/Qyw2g7H4=;
-        b=JAhQSHI8vyZkECk3Lw8TmhuGWWxhUd3xksocLyqhaPZg6To7RMHqq1l70nDmejajbS
-         K/jPmeq5U+z7VNYwebPK35qoZ1olHwsl/L3ynvpoZcDmB0068SRQbas/bOQ69yDKm+tf
-         YJzqy5RP6kFva/8TKLeRISt+xssCTlOf+6pALhSMpCaOJo0nAANkyN+yRPqOtTveLXo1
-         GJCDWY9Pg7DI3KuLmCNOktR9hhZT7VwFhXQb+jBjXh/b6Ef0hxI0sWjFrUpwcFr/UxUM
-         VLZkz9o005iUyZV1MXWGY11R3kKKP7qMZ8wzknIFL90/L1bvS66JTNsyaACu05N+wiaA
-         /l6g==
-X-Gm-Message-State: AOAM530AqkzEwW0KImKnyavzbkBRb77ytB2LOkK18XPWRtskaZQM2Ita
-        f3aoeLJLiq0ZrmdnfGrlT/VDMGrbGLdCsONlCYjkosacLD0KbBcy+zcqHQ3YbM4c3/qvnN/Pgvg
-        jpUgi5rzVhhR569VDEZS4RU+y
-X-Received: by 2002:a50:ee15:: with SMTP id g21mr4962373eds.170.1590007333148;
-        Wed, 20 May 2020 13:42:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxwelCdht1h/DJBFh9VXKA7BJoRU8H9J+/uLAg+4Euypi4HeaOVE1BVWG7K28wnyTkiFiv/gg==
-X-Received: by 2002:a50:ee15:: with SMTP id g21mr4962360eds.170.1590007332892;
-        Wed, 20 May 2020 13:42:12 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:1c48:1dd8:fe63:e3da? ([2001:b07:6468:f312:1c48:1dd8:fe63:e3da])
-        by smtp.gmail.com with ESMTPSA id qp13sm2900842ejb.8.2020.05.20.13.42.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 13:42:12 -0700 (PDT)
-Subject: Re: [PATCH 00/24] KVM: nSVM: event fixes and migration support
-To:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
- <6b8674fa647d3b80125477dc344581ba7adfb931.camel@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <cecf6c64-6828-5a3f-642a-11aac4cefa75@redhat.com>
-Date:   Wed, 20 May 2020 22:42:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 20 May 2020 16:44:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42046 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbgETUob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 16:44:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=a6QPITVk+6xXi5kvcJS5iU8GxNuNEtzpnALCwBE2+sA=; b=Dt2BB6xUa2vA74dYY4QxCZ1CYt
+        0inLbZVVBkuw+cf0YPBypgCvHZcj2uc83iAS6HwHOaJIFIQfSHdUOc7krH7JjgIH3jh+NDasWuL1V
+        wHRylaQpP3C7rBxXP5/wk6klOxNfRu/j5nDyQv0XZvJew7Wd0kVh787H9FmpRvLqOckA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jbVZf-002qGB-CY; Wed, 20 May 2020 22:44:23 +0200
+Date:   Wed, 20 May 2020 22:44:23 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, hkallweit1@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+Message-ID: <20200520204423.GA677363@lunn.ch>
+References: <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+ <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+ <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+ <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
+ <20200520192719.GK652285@lunn.ch>
+ <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <6b8674fa647d3b80125477dc344581ba7adfb931.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/20 21:24, Maxim Levitsky wrote:
-> Patch 24 doesn't apply cleanly on top of kvm/queue, I appplied it manually,
-> due to missing KVM_STATE_NESTED_MTF_PENDING bit
-> 
-> Also patch 22 needes ALIGN_UP which is not on mainline.
-> Probably in linux-next?
+> I think adding it in the core would be a bit of a challenge.  I think each
+> PHY driver needs to handle parsing and validating this property on its own
+> (like fifo-depth).  It is a PHY specific setting.
 
-Just replace it with ALIGN.  (I tested it with memzero_user in
-arch/x86/kvm/ for convenience, and the lib/ patch ended up out of sync
-with the actual code).
+fifo-depth yes. But some delays follow a common pattern.
 
-> With these fixes, I don't see #DE exceptions on a nested guest I try to run
-> however it still hangs, right around the time it tries to access PS/2 keyboard/mouse.
+e.g.
+Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
 
-IIRC you said that the bug appeared with the vintr rework, and then went
-from hang to #DE and now back to hang?  And the hang is reported by L2,
-not L1?
+Device Tree Value     Delay   Pad Skew Register Value
+  -----------------------------------------------------
+        0               -840ps          0000
+        200             -720ps          0001
+        400             -600ps          0010
+        600             -480ps          0011
+        800             -360ps          0100
+        1000            -240ps          0101
+        1200            -120ps          0110
+        1400               0ps          0111
+        1600             120ps          1000
+        1800             240ps          1001
+        2000             360ps          1010
+        2200             480ps          1011
+        2400             600ps          1100
+        2600             720ps          1101
+        2800             840ps          1110
+        3000             960ps          1111
 
-In order to debug the hang, a good start would be to understand if it
-also happens with vgif=0.  This is because with vgif=1 we use VINTR
-intercepts even while GIF=0, so the whole thing is a bit more complicated.
+Documentation/devicetree/bindings/net/adi,adin.yaml
 
-Paolo
+ adi,rx-internal-delay-ps:
+    description: |
+      RGMII RX Clock Delay used only when PHY operates in RGMII mode with
+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
+    default: 2000
 
+  adi,tx-internal-delay-ps:
+    description: |
+      RGMII TX Clock Delay used only when PHY operates in RGMII mode with
+      internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
+    enum: [ 1600, 1800, 2000, 2200, 2400 ]
+    default: 2000
+
+Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+
+- tx-delay: Delay value for RGMII bridge TX clock.
+            Valid values are between 0 to 7, that maps to
+            417, 717, 1020, 1321, 1611, 1913, 2215, 2514 ps
+            Default value is 4, which corresponds to 1611 ps
+- rx-delay: Delay value for RGMII bridge RX clock.
+            Valid values are between 0 to 7, that maps to
+            273, 589, 899, 1222, 1480, 1806, 2147, 2464 ps
+            Default value is 2, which corresponds to 899 ps
+
+You could implement checking against a table of valid values, which is
+something you need for your PHY. You could even consider making it a
+2D table, and return the register value, not the delay?
+
+	  Andrew
