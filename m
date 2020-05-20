@@ -2,108 +2,92 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC85CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD11A20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AAD2081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589945504;
+	bh=xgjmAbinfDSoCTxkb9giIOWRyJP7B6MDWh7oghCmOlQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yDN1zwkQLx/9XuBnAUwkhMC1DSAPir8bnHPcsb3U7B0fwWZ9m3dT9S2V13Tg9fIUw
+	 q72TphdC772/s3pVodr2+7NDbb8p1k+nAnwX/DN3PcadLxyGjbEJ5n4NpbEdv1aTs5
+	 JKSmEfIr/T133gEkmN+GI72cWyyHyC1FWKZXw6uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgETDav (ORCPT
+        id S1728594AbgETDbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 23:30:51 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42586 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727029AbgETDau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 23:30:50 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BF96A762C7016041C142;
-        Wed, 20 May 2020 11:30:48 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.90) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 20 May 2020
- 11:30:45 +0800
-Subject: Re: [PATCH v7 0/4] support reserving crashkernel above 4G on arm64
- kdump
-To:     Arnd Bergmann <arnd@arndb.de>
-References: <20191223152349.180172-1-chenzhou10@huawei.com>
- <a57d46bc-881e-3526-91ca-558bf64e2aa8@huawei.com>
- <CAK8P3a2VrAqefPYF2JqRjwdhgTDtORUgWgVuYxRYWqKxE3+5pA@mail.gmail.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Dave Young <dyoung@redhat.com>,
-        "Bhupesh Sharma" <bhsharma@redhat.com>,
-        <john.p.donnelly@oracle.com>, <pkushwaha@marvell.com>,
-        Simon Horman <horms@verge.net.au>, <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <e35e37f2-bcb3-cc19-d506-18f576dcbfb9@huawei.com>
-Date:   Wed, 20 May 2020 11:30:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
-MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2VrAqefPYF2JqRjwdhgTDtORUgWgVuYxRYWqKxE3+5pA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 19 May 2020 23:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726432AbgETDbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 23:31:43 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B8AA207E8;
+        Wed, 20 May 2020 03:31:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589945503;
+        bh=xgjmAbinfDSoCTxkb9giIOWRyJP7B6MDWh7oghCmOlQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2N1qoMb88ufl9xF8wieppgQDWMSoQrpe15LOVgWDT/Bmu8uNvcG1M/d5LT8/xajMG
+         liOV2ScdOV9JsDIv7NH6UmL9oU2ZXvz3YgrKe+sOv/g6YlbiwbhiHb8cDXXslpUzK0
+         o1IpKRvF737IbbmSxIcJFuuZiB+nq0aj2szDXTFQ=
+Date:   Tue, 19 May 2020 20:31:41 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
+        <adobriyan@gmail.com>, <mingo@kernel.org>,
+        <gpiccoli@canonical.com>, <rdna@fb.com>, <patrick.bellasi@arm.com>,
+        <sfr@canb.auug.org.au>, <mhocko@suse.com>,
+        <penguin-kernel@i-love.sakura.ne.jp>, <vbabka@suse.cz>,
+        <tglx@linutronix.de>, <peterz@infradead.org>,
+        <Jisheng.Zhang@synaptics.com>, <khlebnikov@yandex-team.ru>,
+        <bigeasy@linutronix.de>, <pmladek@suse.com>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <wangle6@huawei.com>, <alex.huangjianhui@huawei.com>
+Subject: Re: [PATCH v4 0/4] cleaning up the sysctls table (hung_task
+ watchdog)
+Message-Id: <20200519203141.f3152a41dce4bc848c5dded7@linux-foundation.org>
+In-Reply-To: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
+References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.213.90]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Tue, 19 May 2020 11:31:07 +0800 Xiaoming Ni <nixiaoming@huawei.com> wrote:
 
-On 2020/5/19 18:21, Arnd Bergmann wrote:
-> On Thu, Mar 26, 2020 at 4:10 AM Chen Zhou <chenzhou10@huawei.com> wrote:
->> Hi all,
->>
->> Friendly ping...
-> I was asked about this patch series, and see that you last posted it in
-> December. I think you should rebase it to linux-5.7-rc6 and post the
-> entire series again to make progress, as it's unlikely that any maintainer
-> would pick up the patches from last year.
->
-> For the contents, everything seems reasonable to me, but I noticed that
-> you are adding a property to the /chosen node without adding the
-> corresponding documentation to
-> Documentation/devicetree/bindings/chosen.txt
->
-> Please add that, and Cc the devicetree maintainers on the updated
-> patch.
->
->          Arnd
+> Kernel/sysctl.c
 
-Thanks for your review and comments, i will rebase it to linux-5.7-rc6 and add the
-corresponding documentation.
+eek!
 
-Thanks,
-Chen Zhou
+> 
+>  fs/proc/proc_sysctl.c        |   2 +-
+>  include/linux/sched/sysctl.h |  14 +--
+>  include/linux/sysctl.h       |  13 ++-
+>  kernel/hung_task.c           |  77 +++++++++++++++-
+>  kernel/sysctl.c              | 214 +++++++------------------------------------
+>  kernel/watchdog.c            | 101 ++++++++++++++++++++
+>  6 files changed, 224 insertions(+), 197 deletions(-)
 
->> On 2019/12/23 23:23, Chen Zhou wrote:
->>> This patch series enable reserving crashkernel above 4G in arm64.
->>>
->>> There are following issues in arm64 kdump:
->>> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
->>> when there is no enough low memory.
->>> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
->>> in this case, if swiotlb or DMA buffers are required, crash dump kernel
->>> will boot failure because there is no low memory available for allocation.
->>>
->>> The previous changes and discussions can be retrieved from:
->>>
->>> Changes since [v6]
->>> - Fix build errors reported by kbuild test robot.
-> ...
->
-> .
->
+Here's what we presently have happening in linux-next's kernel/sysctl.c:
 
+ sysctl.c | 3109 ++++++++++++++++++++++++++++++---------------------------------
+ 1 file changed, 1521 insertions(+), 1588 deletions(-)
+
+
+So this is not a good time for your patch!
+
+Can I suggest that you set the idea aside and take a look after 5.8-rc1
+is released?
 
