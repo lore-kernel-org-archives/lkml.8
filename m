@@ -2,313 +2,108 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E01DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B8420709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B01792065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGvYAbun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgETQxr (ORCPT
+        id S1726881AbgETQyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:53:47 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39474 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgETQxr (ORCPT
+        Wed, 20 May 2020 12:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETQyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:53:47 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5E27A2A0632
-Subject: Re: [PATCHv3 4/5] Input: EXC3000: Add support to query model and
- fw_version
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
- <20200520153936.46869-5-sebastian.reichel@collabora.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <d2cde5c1-c6b1-7e05-5b32-74b3fcc4a1bb@collabora.com>
-Date:   Wed, 20 May 2020 18:53:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 12:54:25 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D747C061A0E;
+        Wed, 20 May 2020 09:54:24 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id i22so3533050oik.10;
+        Wed, 20 May 2020 09:54:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nyBlTohT+p4Cct9XzKg6h0d1HJz/Pvm7IIF5Q+qFbBI=;
+        b=KGvYAbunqzVh76KHN0n0y/hW65M0h2OTc2Q07Cl2IKbnUH3U3+oGricYMLuRmZE0nX
+         kZRJ//VnXy+NJwy/0DpTNOwERPjfgMH7bluNkPZEAyThIt51mMn/kIoIfHpnlKPK8Lf0
+         EXhi8uMdx2nphLKQyQg3L+VqgxuP4/vG22JzyTakC7cspd7V+mlOxck/yvx29c0RdfGa
+         88uIlvLJoHQsqkcWsZ/m5mTT/DXhQ9QjsVoZqU+7tz9Lbl4JLmiUjea3isU7xj6wEMSx
+         2Fhfb9CzSlniAFv6sRQiENk33wPqXM1tSruFF3WZo3n86rgjErZlO57OZoZ8kC13VWaL
+         4jLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nyBlTohT+p4Cct9XzKg6h0d1HJz/Pvm7IIF5Q+qFbBI=;
+        b=Ek7IBPmPlKe/VpSI1qa8ObosrCnnkLSQK63RS09nZ9NDKi0GVZJQ6D8kJodan9DUgU
+         lx2fvgO0iaba7j7vKXTr831Mub+8Ga0+Gu22v/zbdYfXMmZgjq2QdzqmV7TYs814Z0om
+         oA8B8N/oUKPI2xEl45H1vVI3ykGQEoILpTKxgsXAOVIRQQRmwpsvfwGHusYEO52b3YC6
+         qB6AY9UagAZI44+8WFq0+bWjbpQfQTMKytRSYOBehfeMTsGxY2leiXrbS3Rk6B9e26yX
+         YymcgnjJtXovfpE0wgWsIeOsT9vh0rjKe9aU1d5SB4CW2Yl9vzpjmJRuAedxvdUjwQpA
+         DHXw==
+X-Gm-Message-State: AOAM531A6s3R+Cz++ByVzPaq7aUHTul932DkEMbEQ9NpgYamOtQpeFyH
+        1pWVJO8hkp9wm10VFF0B7OcQxZhX
+X-Google-Smtp-Source: ABdhPJyqZxQli28p0gpsBxZr8df4TLQgts08Q70/zRlEG277Z2MdtkdEh7HuNUdUYDH0nyR76eLmKA==
+X-Received: by 2002:aca:aa91:: with SMTP id t139mr3995498oie.176.1589993663525;
+        Wed, 20 May 2020 09:54:23 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:d5aa:9958:3110:547b? ([2601:282:803:7700:d5aa:9958:3110:547b])
+        by smtp.googlemail.com with ESMTPSA id v24sm851366otn.59.2020.05.20.09.54.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 09:54:23 -0700 (PDT)
+Subject: Re: [PATCH net-next] ipv6/route: inherit max_sizes from current netns
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200520145806.3746944-1-christian.brauner@ubuntu.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <4b22a3bc-9dae-3f49-6748-ec45deb09a01@gmail.com>
+Date:   Wed, 20 May 2020 10:54:21 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200520153936.46869-5-sebastian.reichel@collabora.com>
+In-Reply-To: <20200520145806.3746944-1-christian.brauner@ubuntu.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+On 5/20/20 8:58 AM, Christian Brauner wrote:
+> During NorthSec (cf. [1]) a very large number of unprivileged
+> containers and nested containers are run during the competition to
+> provide a safe environment for the various teams during the event. Every
+> year a range of feature requests or bug reports come out of this and
+> this year's no different.
+> One of the containers was running a simple VPN server. There were about
+> 1.5k users connected to this VPN over ipv6 and the container was setup
+> with about 100 custom routing tables when it hit the max_sizes routing
+> limit. After this no new connections could be established anymore,
+> pinging didn't work anymore; you get the idea.
+> 
 
-On 20/5/20 17:39, Sebastian Reichel wrote:
-> Expose model and fw_version via sysfs. Also query the model
-> in probe to make sure, that the I2C communication with the
-> device works before successfully probing the driver.
-> 
-> This is a bit complicated, since EETI devices do not have
-> a sync interface. Sending the commands and directly reading
-> does not work. Sending the command and waiting for some time
-> is also not an option, since there might be touch events in
-> the mean time.
-> 
-> Last but not least we do not cache the results, since this
-> interface can be used to check the I2C communication is still
-> working as expected.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+should have been addressed by:
 
-I went through the code and understood the reasoning to implement that way, if
-it helps:
+commit d8882935fcae28bceb5f6f56f09cded8d36d85e6
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Fri May 8 07:34:14 2020 -0700
+    ipv6: use DST_NOCOUNT in ip6_rt_pcpu_alloc()
+    We currently have to adjust ipv6 route gc_thresh/max_size depending
+    on number of cpus on a server, this makes very little sense.
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-> ---
->  .../ABI/testing/sysfs-driver-input-exc3000    |  15 ++
->  drivers/input/touchscreen/exc3000.c           | 145 +++++++++++++++++-
->  2 files changed, 159 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-input-exc3000
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-input-exc3000 b/Documentation/ABI/testing/sysfs-driver-input-exc3000
-> new file mode 100644
-> index 000000000000..d79da4f869af
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-input-exc3000
-> @@ -0,0 +1,15 @@
-> +What:		/sys/class/input/inputX/fw_version
-> +Date:		May 2020
-> +Contact:	linux-input@vger.kernel.org
-> +Description:	Reports the firmware version provided by the touchscreen, for example "00_T6" on a EXC80H60
-> +
-> +		Access: Read
-> +		Valid values: Represented as string
-> +
-> +What:		/sys/class/input/inputX/model
-> +Date:		May 2020
-> +Contact:	linux-input@vger.kernel.org
-> +Description:	Reports the model identification provided by the touchscreen, for example "Orion_1320" on a EXC80H60
-> +
-> +		Access: Read
-> +		Valid values: Represented as string
-> diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
-> index b497bd2ae41d..b5a3bbb63504 100644
-> --- a/drivers/input/touchscreen/exc3000.c
-> +++ b/drivers/input/touchscreen/exc3000.c
-> @@ -25,6 +25,9 @@
->  #define EXC3000_LEN_FRAME		66
->  #define EXC3000_LEN_POINT		10
->  
-> +#define EXC3000_LEN_MODEL_NAME		16
-> +#define EXC3000_LEN_FW_VERSION		16
-> +
->  #define EXC3000_MT1_EVENT		0x06
->  #define EXC3000_MT2_EVENT		0x18
->  
-> @@ -65,6 +68,11 @@ struct exc3000_data {
->  	struct touchscreen_properties prop;
->  	struct timer_list timer;
->  	u8 buf[2 * EXC3000_LEN_FRAME];
-> +	struct completion wait_event;
-> +	struct mutex query_lock;
-> +	int query_result;
-> +	char model[EXC3000_LEN_MODEL_NAME];
-> +	char fw_version[EXC3000_LEN_FW_VERSION];
->  };
->  
->  static void exc3000_report_slots(struct input_dev *input,
-> @@ -150,6 +158,28 @@ static int exc3000_read_data(struct exc3000_data *data,
->  	return 0;
->  }
->  
-> +static int exc3000_query_interrupt(struct exc3000_data *data)
-> +{
-> +	u8 *buf = data->buf;
-> +	int err;
-> +
-> +	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	if (buf[0] != 0x42)
-> +		return -EPROTO;
-> +
-> +	if (buf[4] == 'E')
-> +		strlcpy(data->model, buf+5, sizeof(data->model));
-> +	else if (buf[4] == 'D')
-> +		strlcpy(data->fw_version, buf+5, sizeof(data->fw_version));
-> +	else
-> +		return -EPROTO;
-> +
-> +	return 0;
-> +}
-> +
->  static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
->  {
->  	struct exc3000_data *data = dev_id;
-> @@ -158,6 +188,12 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
->  	int slots, total_slots;
->  	int error;
->  
-> +	if (mutex_is_locked(&data->query_lock)) {
-> +		data->query_result = exc3000_query_interrupt(data);
-> +		complete(&data->wait_event);
-> +		goto out;
-> +	}
-> +
->  	error = exc3000_read_data(data, buf, &total_slots);
->  	if (error) {
->  		/* Schedule a timer to release "stuck" contacts */
-> @@ -185,11 +221,94 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> +static ssize_t fw_version_show(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	struct exc3000_data *data = dev_get_drvdata(dev);
-> +	static const u8 request[68] = {
-> +		0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'D', 0x00
-> +	};
-> +	struct i2c_client *client = data->client;
-> +	int err;
-> +
-> +	mutex_lock(&data->query_lock);
-> +
-> +	data->query_result = -ETIMEDOUT;
-> +	reinit_completion(&data->wait_event);
-> +
-> +	err = i2c_master_send(client, request, sizeof(request));
-> +	if (err < 0) {
-> +		mutex_unlock(&data->query_lock);
-> +		return err;
-> +	}
-> +
-> +	wait_for_completion_interruptible_timeout(&data->wait_event, 1*HZ);
-> +	mutex_unlock(&data->query_lock);
-> +
-> +	if (data->query_result < 0)
-> +		return data->query_result;
-> +
-> +	return sprintf(buf, "%s\n", data->fw_version);
-> +}
-> +static DEVICE_ATTR_RO(fw_version);
-> +
-> +static ssize_t exc3000_get_model(struct exc3000_data *data)
-> +{
-> +	static const u8 request[68] = {
-> +		0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'E', 0x00
-> +	};
-> +	struct i2c_client *client = data->client;
-> +	int err;
-> +
-> +	mutex_lock(&data->query_lock);
-> +	data->query_result = -ETIMEDOUT;
-> +	reinit_completion(&data->wait_event);
-> +
-> +	err = i2c_master_send(client, request, sizeof(request));
-> +	if (err < 0) {
-> +		mutex_unlock(&data->query_lock);
-> +		return err;
-> +	}
-> +
-> +	wait_for_completion_interruptible_timeout(&data->wait_event, 1 * HZ);
-> +	mutex_unlock(&data->query_lock);
-> +
-> +	return data->query_result;
-> +}
-> +
-> +static ssize_t model_show(struct device *dev,
-> +			  struct device_attribute *attr, char *buf)
-> +{
-> +	struct exc3000_data *data = dev_get_drvdata(dev);
-> +	int err = exc3000_get_model(data);
-> +
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return sprintf(buf, "%s\n", data->model);
-> +}
-> +static DEVICE_ATTR_RO(model);
-> +
-> +static struct attribute *sysfs_attrs[] = {
-> +	&dev_attr_fw_version.attr,
-> +	&dev_attr_model.attr,
-> +	NULL
-> +};
-> +
-> +static struct attribute_group exc3000_attribute_group = {
-> +	.attrs = sysfs_attrs
-> +};
-> +
-> +static const struct attribute_group *exc3000_attribute_groups[] = {
-> +	&exc3000_attribute_group,
-> +	NULL
-> +};
-> +
->  static int exc3000_probe(struct i2c_client *client)
->  {
->  	struct exc3000_data *data;
->  	struct input_dev *input;
-> -	int error, max_xy;
-> +	int error, max_xy, retry;
->  
->  	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
->  	if (!data)
-> @@ -203,15 +322,19 @@ static int exc3000_probe(struct i2c_client *client)
->  		data->info = &exc3000_info[eeti_dev_id];
->  	}
->  	timer_setup(&data->timer, exc3000_timer, 0);
-> +	init_completion(&data->wait_event);
-> +	mutex_init(&data->query_lock);
->  
->  	input = devm_input_allocate_device(&client->dev);
->  	if (!input)
->  		return -ENOMEM;
->  
->  	data->input = input;
-> +	input_set_drvdata(input, data);
->  
->  	input->name = data->info->name;
->  	input->id.bustype = BUS_I2C;
-> +	input->dev.groups = exc3000_attribute_groups;
->  
->  	max_xy = data->info->max_xy;
->  	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_xy, 0, 0);
-> @@ -234,6 +357,26 @@ static int exc3000_probe(struct i2c_client *client)
->  	if (error)
->  		return error;
->  
-> +	/*
-> +	 * I²C does not have built-in recovery, so retry on failure. This ensures,
-> +	 * that the device probe will not fail for temporary issues on the bus.
-> +	 * This is not needed for the sysfs calls (userspace will receive the error
-> +	 * code and can start another query) and cannot be done for touch events
-> +	 * (but that only means loosing one or two touch events anyways).
-> +	 */
-> +	for (retry = 0; retry < 3; ++retry) {
-> +		error = exc3000_get_model(data);
-> +		if (!error)
-> +			break;
-> +		dev_warn(&client->dev, "Retry %d get EETI EXC3000 model: %d\n",
-> +			 retry + 1, error);
-> +	}
-> +
-> +	if (error)
-> +		return error;
-> +
-> +	dev_dbg(&client->dev, "TS Model: %s", data->model);
-> +
->  	return 0;
->  }
->  
-> 
+Did your tests include this patch?
