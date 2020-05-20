@@ -6,69 +6,68 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F295FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC452C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0DB520826
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6CD20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Gqo34c3m"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WVsgcgCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgETAHz (ORCPT
+        id S1728427AbgETAH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34762 "EHLO
+        Tue, 19 May 2020 20:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728375AbgETAHx (ORCPT
+        with ESMTP id S1728380AbgETAHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:07:53 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A7FC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:53 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z1so705128pfn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:53 -0700 (PDT)
+        Tue, 19 May 2020 20:07:54 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BD2C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:54 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k19so580867pll.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nLMfwQbrlF1iv4LcSoROIabrcfKs0/jUzCRJPsjpM/g=;
-        b=Gqo34c3m0MlNoFL+YXBmISvMCjL1uAr1dCIk+C2xcHpi/NSgJAkMkbIB54SVo3iPr2
-         HaZgzNyTF1lmEeD7MvMTZmyASk+yYU+KRNjjuLz/gkNyajNTTMpy+westprggwgYHgeu
-         H18O/XFDeMrrZ83+TekriuOSfUOKTYo0bQjBP5XEEJhAzPLW0eDyNm1lAycXCLgPH4my
-         5OkzNS9XRiDor39MYDWxeHHIJeNebLJIzM8O/UVe8sZHS6hWPl2jBe+/MjLVYqVeFwWD
-         C1Qm8oJgZQMAeE32cJMZ0614HbLkp4WCrD4CJKa70EWir5uchhrv0+WONADhNEGNEUXk
-         QOog==
+        bh=2OA6qojCM4dL1ZDG6HQpUSV9SSGjjyRfMb9hw1jALO0=;
+        b=WVsgcgCNQtJKJlbMEdp7w81j7Nm4YgeKnV3hBNnr2syOwz5DeApI1RIoXsQ59LoX63
+         UY2V0GnOOpscuwrDUIKdjfOccPjKFYNBrx6WwinSe0uALV9xqI4hb32/gERjn6v03kT9
+         88RMzTiz2P6Kc5j6b9eSUdiiITnenAyFko0xZuusJ9PKBv+22iSTpQwetNCnQ2mXLQrl
+         gEcW6QAiB8RA+CWjieoN2uYCT65WXXbdXyjnLNVcWQCkulr5kwSMoopJ7fXaQkP4u97h
+         bT2iGKpFMCaPXKBUV7vdESsycvExKYcPZijw21Lp42FW2IB3AC8AfUzMhIdMk7uGC54E
+         TPDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nLMfwQbrlF1iv4LcSoROIabrcfKs0/jUzCRJPsjpM/g=;
-        b=NyJFCWnqLhJldjvyr6HdrhtL+8pKX66cH547IVYfR+1XiBB8Vd7pbSmMdQGWErKYyK
-         38V051OD4mfSbJDO4jC6nm9JjPRu6umFhdQtHO/nIdRVJMvlkLb2sJQbYyGpOO4vuYb7
-         +KCh69ZCPG0cEKp2CvolUyZkMLRoINaI44Nt//cS81jJj95zrOVHebIUrB8GN0QOirFu
-         CcsWo2Yy3P998nqcWkNPhiCSK3QpZPQxaCURMlJeBt2IVS6WHYO+4aesR9n9D9i8E7tg
-         xLnM0ITnXiACLWLmyryMvlDcgFkx0bZvh8rb3Uniisrn6o615Xg4G97MeF1CjKnE5K9m
-         8jhQ==
-X-Gm-Message-State: AOAM53030Zw+XO6lJ9Fq661VtM7SDhj8GhJSklF5u4jQ0iNtBkty/Nz5
-        o6XWoBrn/aGxb1S85/w3qLpcEmP//x2Qzw==
-X-Google-Smtp-Source: ABdhPJzsFZRQ9C+8oILR+S4MtBFIKYd2qCmva0PiBVlgTEiaWCLW5r8plQBhSkfJpMmL9SFle7gCyA==
-X-Received: by 2002:a63:7519:: with SMTP id q25mr1555590pgc.224.1589933272730;
-        Tue, 19 May 2020 17:07:52 -0700 (PDT)
+        bh=2OA6qojCM4dL1ZDG6HQpUSV9SSGjjyRfMb9hw1jALO0=;
+        b=fPOzj2QIQIpWAjAuXtGgt2ZrxQ3+zaN/qV5b7+IYuexYD7/Nh7XtxkuCCGkxPF4Jqb
+         I1sTERjhopgf+b7iwX0tlJLMXG1hJO9bgKpbwtMdWRV+jfHxyg2LLKMdTL+GpeYAJXyo
+         ne96qXmVuo0lV45tM6Lyx2bSOvUoYBS6OmQuc2K6ea3HHQFETMSGphgv1XCSXJMh5+2G
+         oz5HN/ydNapEmD73lOtX6UUjhSljjiAnltbwdtxhV+xe9Kz/PUQ3GNZ9xgCIf5iUx8Be
+         Cvw2YbDSl2uvnOKFe5vj0STlhNkk2fF4z/SWuUOjCL+WUECrMfk+VXBBCO9Pp8cIahNM
+         HT1Q==
+X-Gm-Message-State: AOAM532whMrUcLhMcuj2/1mijhXkSYN+6hgAkraTdODQdxGwEwqpPzFG
+        LjB/RfHVMavpEgtqnGZ2GzX3Cw==
+X-Google-Smtp-Source: ABdhPJwtCswXSbkUSw9C97SOK8vFMtT5eKKDm0rsNrlGrcNSvzzkVB3d8v+6JdpLRZlhXKPaZGOWpg==
+X-Received: by 2002:a17:90a:3201:: with SMTP id k1mr2111805pjb.202.1589933273730;
+        Tue, 19 May 2020 17:07:53 -0700 (PDT)
 Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id go14sm504705pjb.42.2020.05.19.17.07.52
+        by smtp.gmail.com with ESMTPSA id w19sm490543pfc.95.2020.05.19.17.07.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 17:07:52 -0700 (PDT)
+        Tue, 19 May 2020 17:07:53 -0700 (PDT)
 From:   Kevin Hilman <khilman@baylibre.com>
 To:     linux-amlogic@lists.infradead.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     andrew@lunn.ch, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] ARM: dts: meson8b/m2: RGMII improvements
-Date:   Tue, 19 May 2020 17:07:46 -0700
-Message-Id: <158993320300.34448.6005768486014716103.b4-ty@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH for-5.8 v1 1/1] ARM: dts: meson8m2: Use the Meson8m2 specific USB2 PHY compatible
+Date:   Tue, 19 May 2020 17:07:47 -0700
+Message-Id: <158993320300.34448.17484160743878386596.b4-ty@baylibre.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200512215148.540322-1-martin.blumenstingl@googlemail.com>
-References: <20200512215148.540322-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200515202520.1487514-1-martin.blumenstingl@googlemail.com>
+References: <20200515202520.1487514-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,37 +75,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 23:51:46 +0200, Martin Blumenstingl wrote:
-> the fist patch in this series connects FCLK_DIV2 to the PRG_ETH
-> "additional" registers for the dwmac Ethernet controller.
-> Now that we know how RGMII and FCLK_DIV2 are connected we can
-> add this dependency to get rid of CLK_IS_CRITICAL for FCLK_DIV2
-> at some point.
-> 
-> The second patch fixes the RX and TX delay. The 4ns TX delay which
-> we have used so far is incorrect and only worked because we were
-> using an unsupported clock divider in the PRG_ETH registers. That
-> divider has been fixed with commit bd6f48546b9c ("net: stmmac:
-> dwmac-meson8b: Fix the RGMII TX delay on Meson8b/8m2 SoCs").
-> Instead of "just" fixing the TX delay we can even do better and
-> switch to phy-mode = "rgmii-id" to let the PHY generate the RX
-> and TX delay. However, previously we didn't know that there was
-> an RX delay applied by the MAC on these boards. Only the additional
-> information from Jianxin in the other series [0] made us aware
-> of this. Without the other series there will be a 4ns RX delay
-> (2ns from the MAC and additional 2ns from the PHY). Due to this
-> dependency I did not add a Fixes tag, because backporting these
-> .dts patches without their runtime dependency will break stable
-> kernels.
-> 
-> [...]
+On Fri, 15 May 2020 22:25:20 +0200, Martin Blumenstingl wrote:
+> Use the Meson8m2 specific USB2 PHY compatible string. The 3.10 vendor
+> kernel has at least one known difference between Meson8 and Meson8m2:
+> Meson8m2 sets the ACA_ENABLE bit while Meson8 doesn't.
 
 Applied, thanks!
 
-[1/2] ARM: dts: meson: Add the Ethernet "timing-adjustment" clock
-      commit: b632506c5af22a9a7c63674fc605d24cf94d585b
-[2/2] ARM: dts: meson: Switch existing boards with RGMII PHY to "rgmii-id"
-      commit: 005231128e9e97461e81fa32421957a7664317ca
+[1/1] ARM: dts: meson8m2: Use the Meson8m2 specific USB2 PHY compatible
+      commit: f5a7382d6f176e29e4fd9d733b93d5b93771a7e4
 
 Best regards,
 -- 
