@@ -2,133 +2,185 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43463C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57713C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8F320823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326E5207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ilGfguO8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8AEIbJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgETKyP (ORCPT
+        id S1726907AbgETKy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:54:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42383 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726403AbgETKyO (ORCPT
+        Wed, 20 May 2020 06:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgETKy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:54:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589972053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ljb9uYn19Zb7PHGQwBgUJYiH+xerA6KnBpc1W2jqFTo=;
-        b=ilGfguO8kcdLDk5xj4YzAqyXLzoDd4I1qa4dt/DYir19M9jCqXUW0KG7J5KuMT/HTaH4bz
-        PNsOWzrxdmvT5I6CgSVbvxlhs9dzqM4Jhdr/DvasgwRN1tpr2EzbMkQX8ER6Lix7m/zTnI
-        MNs4jUDUUCi3ir53WZklyP8ZSRLvl9o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-56-RiRqYzHaPFGzDoaP4MAyrA-1; Wed, 20 May 2020 06:54:11 -0400
-X-MC-Unique: RiRqYzHaPFGzDoaP4MAyrA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F833800053;
-        Wed, 20 May 2020 10:54:10 +0000 (UTC)
-Received: from krava (unknown [10.40.193.10])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0B3135C1D0;
-        Wed, 20 May 2020 10:54:06 +0000 (UTC)
-Date:   Wed, 20 May 2020 12:54:06 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v6 0/5] perf stat: Support overall statistics for
- interval mode
-Message-ID: <20200520105406.GB157452@krava>
-References: <20200520042737.24160-1-yao.jin@linux.intel.com>
+        Wed, 20 May 2020 06:54:26 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4E9C061A0E;
+        Wed, 20 May 2020 03:54:26 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id g25so2041499otp.13;
+        Wed, 20 May 2020 03:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nqXCwIldH4FavBD4hykx1Fj0fxifKXNdT/BTK4Kwo7U=;
+        b=X8AEIbJLA3DQIY2HkUAkUgsmWfo6rqFMqRLgjKDaWiVM+UzqRC+Z6Xp+kwXPubaEyo
+         JVvy3wM9oouI9BsPwcP52prWe6PHN+2hEAO+Ai74K48KuEKRORSMGLCq+bySouQ0bSeT
+         LblIHgoIycnEnNztT9f1y5byfGJC4e/ikHzFYQRLowPeRklqdIw6i3U18DUQNDH40WEW
+         CY+mlju/lyBdrUwN0EC09PSg9g+hFh6MjGZaaUmlplvb3b7A2bsMmQ09LsB7gvtSz/XG
+         r8V85gmEDHalvISie4Rijec3w6lMnbFP8rzoxGTT2rfphrJU+h2XF8POod4u8SZP4FFG
+         L3Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nqXCwIldH4FavBD4hykx1Fj0fxifKXNdT/BTK4Kwo7U=;
+        b=LwWnLzKIc3fi+gPu+4FsoNb17DF+I07FIjUHtGFpoTduEiOQ41I3a3fdah640+Zcax
+         l5GT3EOUlY/++fzMXgI4ufq2y1zj2LU2WPF43/T3vRzERAavkTsM60azG+VLX9jMfczz
+         LWhSS5XuaVfkeUl585KM42ImqAS997qsvHHSmPZZt7gTx2wV8aNkrPTCpVKo13VLQARp
+         7q06x4pvlIY/Nq9aVp9rbQGAZw8yeYmXPv44nG4sA/t+XTrcvLQ5facwYjQhl9ZydLqp
+         xk2BDXwGeUngRESd9isB8E9kudpNbS+Q6Z0CZ9GcAxgQcXHtpXEZL3anmbOOJTmnX9p6
+         q++A==
+X-Gm-Message-State: AOAM533Hx1pT8u7qF6zr52D5QbaonERGk83KAMlXqnRwWfqZMe4sC4aO
+        oQCfxO5In642LjQshjz+kY8=
+X-Google-Smtp-Source: ABdhPJxfcLMFpOQOl9GprTyZ1tlz6Lk0/vLJSwLGeeX5CKxL+3yEWsvZXmHiK7XoC4kFsyKfeSiLEw==
+X-Received: by 2002:a9d:2041:: with SMTP id n59mr2525764ota.252.1589972062788;
+        Wed, 20 May 2020 03:54:22 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id u45sm677233ooi.41.2020.05.20.03.54.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 03:54:22 -0700 (PDT)
+Subject: Re: [PATCH 3/4] clk/soc: mediatek: mt6779: Bind clock driver from
+ platform device
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, matthias.bgg@kernel.org
+Cc:     mtk01761 <wendell.lin@mediatek.com>, devicetree@vger.kernel.org,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        linux-mediatek@lists.infradead.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200518113156.25009-1-matthias.bgg@kernel.org>
+ <20200518113156.25009-3-matthias.bgg@kernel.org>
+ <158996971719.215346.12802870863066637932@swboyd.mtv.corp.google.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <45fcf31f-918b-fbc6-5c55-5fa74e3a7002@gmail.com>
+Date:   Wed, 20 May 2020 12:54:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520042737.24160-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <158996971719.215346.12802870863066637932@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:27:32PM +0800, Jin Yao wrote:
-> Currently perf-stat supports to print counts at regular interval (-I),
-> but it's not very easy for user to get the overall statistics.
-> 
-> With this patchset, it supports to report the summary at the end of
-> interval output.
-> 
-> For example,
-> 
->  root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
->  #           time             counts unit events
->       1.000412064          2,281,114      cycles
->       2.001383658          2,547,880      cycles
-> 
->   Performance counter stats for 'system wide':
-> 
->           4,828,994      cycles
-> 
->         2.002860349 seconds time elapsed
-> 
->  root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
->  #           time             counts unit events
->       1.000389902          1,536,093      cycles
->       1.000389902            420,226      instructions              #    0.27  insn per cycle
->       2.001433453          2,213,952      cycles
->       2.001433453            735,465      instructions              #    0.33  insn per cycle
-> 
->   Performance counter stats for 'system wide':
-> 
->           3,750,045      cycles
->           1,155,691      instructions              #    0.31  insn per cycle
-> 
->         2.003023361 seconds time elapsed
-> 
->  root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
->  #           time             counts unit events
->       1.000435121            905,303      inst_retired.any          #      2.9 CPI
->       1.000435121          2,663,333      cycles
->       1.000435121            914,702      inst_retired.any          #      0.3 IPC
->       1.000435121          2,676,559      cpu_clk_unhalted.thread
->       2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
->       2.001615941          3,551,357      cycles
->       2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
->       2.001615941          3,551,044      cpu_clk_unhalted.thread
-> 
->   Performance counter stats for 'system wide':
-> 
->           2,856,395      inst_retired.any          #      2.2 CPI
->           6,214,690      cycles
->           2,865,539      inst_retired.any          #      0.5 IPC
->           6,227,603      cpu_clk_unhalted.thread
-> 
->         2.003403078 seconds time elapsed
-> 
->  v6:
->  ---
->  1. Add comments in perf_evlist__save_aggr_prev_raw_counts.
->  2. Move init_stats(&walltime_nsecs_stats) under interval condition check.
-> 
->  Following patches are changed in v6.
->     perf stat: Save aggr value to first member of prev_raw_counts
->     perf stat: Report summary for interval mode
 
-Reviewed-by: Jiri Olsa <jolsa@redhat.com>
 
-thanks,
-jirka
+On 20/05/2020 12:15, Stephen Boyd wrote:
+> Quoting matthias.bgg@kernel.org (2020-05-18 04:31:55)
+>> From: Matthias Brugger <matthias.bgg@gmail.com>
+>>
+>> The mmsys driver is now the top level entry point for the multimedia
+>> system (mmsys), we bind the clock driver by creating a platform device.
+>> We also bind the MediaTek DRM driver which is not yet implement and
+>> therefor will errror out for now.
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> ---
+> 
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> 
+
+Now queued for v5.7-next/soc
 
