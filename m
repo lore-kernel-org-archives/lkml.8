@@ -2,246 +2,810 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9665C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3CB2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:41:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wC92kDdT";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="wC92kDdT"
+	by mail.kernel.org (Postfix) with ESMTP id 890742075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgETPlo (ORCPT
+        id S1727825AbgETPlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:41:44 -0400
-Received: from mail-eopbgr140040.outbound.protection.outlook.com ([40.107.14.40]:4744
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727122AbgETPln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:41:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EDWduqOXEVUvS4UUUn0Rvt0fjfR/eJGOgsPIVpoDnSw=;
- b=wC92kDdTyWYYMrhR+NOfCA1UQMY9U2xEPpVunFUO9MllfUHl9Bd8gjMaa2wRf7dAc9Q3KntU/jC2VKZ466HtfJ416TRXdTQEcQ2kLOOjGoYKTqSEJsfcY1epwX2CHWqcPCSQ63j67I3g1BOGGYFMasY7adFIUHVhsYvX8b79exE=
-Received: from AM5PR0101CA0024.eurprd01.prod.exchangelabs.com
- (2603:10a6:206:16::37) by DB7PR08MB3257.eurprd08.prod.outlook.com
- (2603:10a6:5:19::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Wed, 20 May
- 2020 15:41:38 +0000
-Received: from VE1EUR03FT045.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:206:16:cafe::1e) by AM5PR0101CA0024.outlook.office365.com
- (2603:10a6:206:16::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
- Transport; Wed, 20 May 2020 15:41:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT045.mail.protection.outlook.com (10.152.19.51) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.23 via Frontend Transport; Wed, 20 May 2020 15:41:38 +0000
-Received: ("Tessian outbound d078647f4174:v57"); Wed, 20 May 2020 15:41:37 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 07d3f17abcde4edb
-X-CR-MTA-TID: 64aa7808
-Received: from 5637a3b20d5e.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id D4E000B8-5320-4A60-80FD-4B494E0C2EC8.1;
-        Wed, 20 May 2020 15:41:32 +0000
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 5637a3b20d5e.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 20 May 2020 15:41:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YyuPI6m8o4yb9wJrgiIQ6UmUmmISFsHCpG7a7uB83Z/EAFbK4wZTWSRW/tQuL7lCrP7uJwcKeq9xp8vYkt+1TS9kzFRmD13QV/T9zgrl6dE3ZBwOCgLo066LvIvyfiR+W8SXqFvpLx6jkCwD0kTPNIUkHv8rOhoIzOmI+AbfIBfA0TDH8O56sVIEFXVrS5ZfwE4bUehCU7yGjmV/E2nqKI62QEBrEVdU3X28fTDdU3j139ngQ+4J/Hi8fN4su3b6uQlTwX9+PuVuGoXg9daw5jJQgc7yjDqpU9fqsJcS/roGYMTRf9OkMrDgplqDNVccHxD5fsGHR2OtIewdCdvbrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EDWduqOXEVUvS4UUUn0Rvt0fjfR/eJGOgsPIVpoDnSw=;
- b=KmPQqiAxGlLvfdRH0gqRlchV/dWu0D89lZHIm+937+g/o2skI8QLbPssQ+Yhs00pn0pY3/qrh+M8aX3J8s7HQ82YhYOyaunTiNcQDbPnnb09CJnPxvL+vCBpM+DQ5HV9WRoxPEAinDy087LUbdKwZWlQrA+A3YlHSCdqZRoJ1F8I0VbdrWhOjxEg5aQ2I2l+LPodanU85JSuRedKvbPXh119Wu1yU41QdkNLqfw2jbuYf3SQsHXS0AqhvEMn1AVECmgV3M+X/Rrp1d2xJ9vvhIllb4s+222MnTv+N5EAIjF6zFsipluu46NbiKUwXxEDLuxJSSMB5ksZbB74KkWdUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EDWduqOXEVUvS4UUUn0Rvt0fjfR/eJGOgsPIVpoDnSw=;
- b=wC92kDdTyWYYMrhR+NOfCA1UQMY9U2xEPpVunFUO9MllfUHl9Bd8gjMaa2wRf7dAc9Q3KntU/jC2VKZ466HtfJ416TRXdTQEcQ2kLOOjGoYKTqSEJsfcY1epwX2CHWqcPCSQ63j67I3g1BOGGYFMasY7adFIUHVhsYvX8b79exE=
-Authentication-Results-Original: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=arm.com;
-Received: from AM6PR08MB3047.eurprd08.prod.outlook.com (2603:10a6:209:4c::23)
- by AM6PR08MB4216.eurprd08.prod.outlook.com (2603:10a6:20b:89::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Wed, 20 May
- 2020 15:41:31 +0000
-Received: from AM6PR08MB3047.eurprd08.prod.outlook.com
- ([fe80::49fd:6ded:4da7:8862]) by AM6PR08MB3047.eurprd08.prod.outlook.com
- ([fe80::49fd:6ded:4da7:8862%7]) with mapi id 15.20.3021.020; Wed, 20 May 2020
- 15:41:31 +0000
-Date:   Wed, 20 May 2020 16:41:29 +0100
-From:   Szabolcs Nagy <szabolcs.nagy@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Will Deacon <will@kernel.org>, Rich Felker <dalias@libc.org>,
-        Jack Schmidt <jack.schmidt@uky.edu>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>, nd@arm.com
-Subject: Re: clock_gettime64 vdso bug on 32-bit arm, rpi-4
-Message-ID: <20200520154128.GA24483@arm.com>
-References: <CAK8P3a2Tw2w73ZkK-W6AA9veMK4-miLUx-TL1EuOdP7EdW-AmQ@mail.gmail.com>
- <0c2abcd1-7da8-2559-1e93-4c3bdd38dec1@linaro.org>
- <CAK8P3a3fxs+14ZdCRmt_GwJGv3Aipm1r9sAHH6aVj2UrWBNuQQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3fxs+14ZdCRmt_GwJGv3Aipm1r9sAHH6aVj2UrWBNuQQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: LNXP265CA0063.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5d::27) To AM6PR08MB3047.eurprd08.prod.outlook.com
- (2603:10a6:209:4c::23)
+        Wed, 20 May 2020 11:41:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETPlv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 11:41:51 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A9EC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:41:51 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jbQqM-0008V1-GO; Wed, 20 May 2020 17:41:18 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jbQqL-0003hu-Fw; Wed, 20 May 2020 17:41:17 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: [PATCH v8 1/5] ARM: dts: add Protonic PRTI6Q board
+Date:   Wed, 20 May 2020 17:41:12 +0200
+Message-Id: <20200520154116.12909-2-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520154116.12909-1-o.rempel@pengutronix.de>
+References: <20200520154116.12909-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from arm.com (217.140.106.55) by LNXP265CA0063.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5d::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Wed, 20 May 2020 15:41:30 +0000
-X-Originating-IP: [217.140.106.55]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a3f561eb-9ef1-4d23-4dae-08d7fcd44904
-X-MS-TrafficTypeDiagnostic: AM6PR08MB4216:|DB7PR08MB3257:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB7PR08MB32574645ADFD036DE46AEA90EDB60@DB7PR08MB3257.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;OLM:10000;
-X-Forefront-PRVS: 04097B7F7F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: PDABmmGJzZyWj+HXbv5bzHCF1kFCHJlYC4KXmM9SdHdGvN40zV9ItjCvAKibJsnp64NvN9mREnA/MAhEi27Q40vlfKAHfKj5cODZ3KvAgHPBvFlDHh9Sz14plC59e70IkRv8Q2gi7dlKxfESc0inkHu1E9cfEGBioJeYlH4RSCHNKIf3HoyGkdooOQNAw6X1di6NcGvxOmm+vyERFQfpuXftBKYjexxUcRRygGrG8hiCTC9sD8D0b9PlQ/cE1H+RC8KqxuNUuLm7FiogeVJDONuYRGrJHlGmcWp1bcz7iiZoCTMrmVZpPceO/Co9eaFzxclv2rAr1aCMYCFwJMGAA/PUMb6jiUg8mD4NVQaDMKjS7+Xq/nuQ84qmBcjMd7Sj1sbqPXB3ofDhmJ6GEvbMOSzHAT1g+pEdd2QYB9jFgJsYhssJIbvWphbqg1hPlmk3TfKVl09/K3oIeiTo1zVjYprab6hB2577RxJIpYzoU1IWyTdzRG+EPaGGgWRsIEXJrfDhgzoLMCJwxPn5Oy0KHw==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3047.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(136003)(39860400002)(366004)(376002)(36756003)(5660300002)(7696005)(54906003)(66556008)(478600001)(33656002)(7416002)(6916009)(66946007)(52116002)(966005)(86362001)(2616005)(8886007)(956004)(53546011)(4326008)(1076003)(44832011)(16526019)(66476007)(2906002)(316002)(8936002)(8676002)(26005)(55016002)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Y6fuyXmh3eBpA7lGtKtTsYYrADjD4qEcF1utA+5YDWzhvWImxp+NaMKD+fXYr3sqfGhnlEPy4KIthKczNBtTrY7dR5SgcTnSQIzrY8Z2JxePt7Q4VwbxKyrQwCAocLs80dahGZyF/NWCbCOCnGxTqBN+ZIgp1gblwQP3ltX54bCqYEvcujG9e1b0UCJJaQDrjQ4+FGa7vsoJpatZtexe+cEEDtVZu5BxQCLHh+GppzlMqtOzLoIAZF29sgAqmCfgjjSrfZE11TkA1Qz/L9KKiwDWoRn8XELn1XsKPYrheB1jvGreqMO+o6OO5n3Z9TU6dQx7MD3ylu2eHrq6CXqr/hm8wlKH502komeube+zmrHBr3fqz7HJgyWi65TCpSK2ynf7+gqxdUh5iYp96eksqrI4tBT3lVWUS7yORgo/FRzn6iLpRLZLqrO3eGt1U6N+0ZNgIUQMSO+t5lrIkDuFXatmK7v49C0ejEubfv/u+uJKpbmybaCfBzZMi0dLGAMT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4216
-Original-Authentication-Results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT045.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(396003)(376002)(46966005)(7696005)(44832011)(36756003)(2616005)(53546011)(55016002)(54906003)(8886007)(956004)(8676002)(8936002)(966005)(478600001)(70206006)(316002)(36906005)(86362001)(336012)(70586007)(16526019)(4326008)(186003)(47076004)(6862004)(2906002)(26005)(5660300002)(1076003)(82310400002)(81166007)(82740400003)(356005)(33656002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: a9d1e9e0-8d48-4a05-7bde-08d7fcd4447b
-X-Forefront-PRVS: 04097B7F7F
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yA+h8r2BT5H6OMBYxTKpWbbjRKdWzmKEa7/TLo35rGqAt8Ar5tTZfhwHtRuWdfQe5Uak5WzJgD39vxXNpLQqi8XoaVIb5M7CSxl/RiVLMUy8jRPqmIFyvTP1ExI/I3xXYyRXKxM+PI3tG38QxiG8j+w9t7CmbqahNr127axu4trH9gBg0PFtdc6EPwgHEwzc9rcKKQZ9VamygjOfhe0bpBhuU115SDdckSJleZACkUy7WK5bms0+1/0O6CdINIRz29wFBrIrEVNgPIgPP0iG/kRpsN/Um2i+ILWXhEysyKeT+2pDc9/BmbWrQ+2zEgj8VbynAANSW25WukLo2JCR0tEkxOut5wOZ/U4ciP9wI1BjErCZmXgL83qIpxhoWGPvTT19xl8MagK34PVTXOc6K2fUVtI9naMGxqt8GzetzxOlGXAB3NRSjMA2NAljUY7fBoC87b9aaRGS67tQMqoSNWk9Si8SulzRdRplGeqwmxS/887Vlm9TDFVOmQd9ufqpWvKGQhLxBRyepUKCFkCWU/AejqUR12UsMxyuh/tSfiBQMJncWH+GIW8Lv1QYBywzBd9x1TwiLDJuozWu+r7yYg==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 15:41:38.3340
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3f561eb-9ef1-4d23-4dae-08d7fcd44904
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3257
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 05/19/2020 22:31, Arnd Bergmann wrote:
-> On Tue, May 19, 2020 at 10:24 PM Adhemerval Zanella
-> <adhemerval.zanella@linaro.org> wrote:
-> > On 19/05/2020 16:54, Arnd Bergmann wrote:
-> > > Jack Schmidt reported a bug for the arm32 clock_gettimeofday64 vdso call last
-> > > month: https://github.com/richfelker/musl-cross-make/issues/96 and
-> > > https://github.com/raspberrypi/linux/issues/3579
-> > >
-> > > As Will Deacon pointed out, this was never reported on the mailing list,
-> > > so I'll try to summarize what we know, so this can hopefully be resolved soon.
-> > >
-> > > - This happened reproducibly on Linux-5.6 on a 32-bit Raspberry Pi patched
-> > >    kernel running on a 64-bit Raspberry Pi 4b (bcm2711) when calling
-> > >    clock_gettime64(CLOCK_REALTIME)
-> >
-> > Does it happen with other clocks as well?
-> 
-> Unclear.
-> 
-> > > - The kernel tree is at https://github.com/raspberrypi/linux/, but I could
-> > >   see no relevant changes compared to a mainline kernel.
-> >
-> > Is this bug reproducible with mainline kernel or mainline kernel can't be
-> > booted on bcm2711?
-> 
-> Mainline linux-5.6 should boot on that machine but might not have
-> all the other features, so I think users tend to use the raspberry pi
-> kernel sources for now.
-> 
-> > > - From the report, I see that the returned time value is larger than the
-> > >   expected time, by 3.4 to 14.5 million seconds in four samples, my
-> > >   guess is that a random number gets added in at some point.
-> >
-> > What kind code are you using to reproduce it? It is threaded or issue
-> > clock_gettime from signal handlers?
-> 
-> The reproducer is very simple without threads or signals,
-> see the start of https://github.com/richfelker/musl-cross-make/issues/96
-> 
-> It does rely on calling into the musl wrapper, not the direct vdso
-> call.
-> 
-> > > - From other sources, I found that the Raspberry Pi clocksource runs
-> > >   at 54 MHz, with a mask value of 0xffffffffffffff. From these numbers
-> > >   I would expect that reading a completely random hardware register
-> > >   value would result in an offset up to 1.33 billion seconds, which is
-> > >   around factor 100 more than the error we see, though similar.
-> > >
-> > > - The test case calls the musl clock_gettime() function, which falls back to
-> > >   the clock_gettime64() syscall on kernels prior to 5.5, or to the 32-bit
-> > >   clock_gettime() prior to Linux-5.1. As reported in the bug, Linux-4.19 does
-> > >   not show the bug.
-> > >
-> > > - The behavior was not reproduced on the same user space in qemu,
-> > >   though I cannot tell whether the exact same kernel binary was used.
-> > >
-> > > - glibc-2.31 calls the same clock_gettime64() vdso function on arm to
-> > >   implement clock_gettime(), but earlier versions did not. I have not
-> > >   seen any reports of this bug, which could be explained by users
-> > >   generally being on older versions.
-> > >
-> > > - As far as I can tell, there are no reports of this bug from other users,
-> > >   and so far nobody could reproduce it.
+Protonic PRTI6Q is a development board and a base class for different
+specific customer application boards based on the i.MX6 family of SoCs,
+developed by Protonic Holland.
 
-note: i could not reproduce it in qemu-system with these configs:
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: David Jander <david@protonic.nl>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/boot/dts/Makefile            |   1 +
+ arch/arm/boot/dts/imx6q-prti6q.dts    | 541 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-prti6q.dtsi | 165 ++++++++
+ 3 files changed, 707 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-prti6q.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-prti6q.dtsi
 
-qemu-system-aarch64 + arm64 kernel + compat vdso
-qemu-system-aarch64 + kvm accel (on cortex-a72) + 32bit arm kernel
-qemu-system-arm + cpu max + 32bit arm kernel
-
-so i think it's something specific to that user's setup
-(maybe rpi hw bug or gcc miscompiled the vdso or something
-with that particular linux, i built my own linux 5.6 because
-i did not know the exact kernel version where the bug was seen)
-
-i don't have access to rpi (or other cortex-a53 where i
-can install my own kernel) so this is as far as i got.
-
-> > >
-> > > - The current musl git tree has been patched to not call clock_gettime64
-> > >    on ARM because of this problem, so it cannot be used for reproducing it.
-> >
-> > So should glibc follow musl and remove arm clock_gettime6y4 vDSO support
-> > or this bug is localized to an specific kernel version running on an
-> > specific hardware?
-> 
-> I hope we can figure out what is actually going on soon, there is probably
-> no need to change glibc before we have.
-> 
->           Arnd
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd992013973..206a36a50575e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -538,6 +538,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-pico-nymph.dtb \
+ 	imx6q-pico-pi.dtb \
+ 	imx6q-pistachio.dtb \
++	imx6q-prti6q.dtb \
+ 	imx6q-rex-pro.dtb \
+ 	imx6q-sabreauto.dtb \
+ 	imx6q-sabrelite.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-prti6q.dts b/arch/arm/boot/dts/imx6q-prti6q.dts
+new file mode 100644
+index 0000000000000..d8ea9a3f415a8
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-prti6q.dts
+@@ -0,0 +1,541 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Copyright (c) 2014 Protonic Holland
++ */
++
++/dts-v1/;
++#include "imx6q.dtsi"
++#include "imx6qdl-prti6q.dtsi"
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/sound/fsl-imx-audmux.h>
++
++/ {
++	model = "Protonic PRTI6Q board";
++	compatible = "prt,prti6q", "fsl,imx6q";
++
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0xf0000000>;
++	};
++
++	backlight_lcd: backlight-lcd {
++		compatible = "pwm-backlight";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_backlight>;
++		pwms = <&pwm1 0 5000000>;
++		brightness-levels = <0 16 64 255>;
++		num-interpolated-steps = <16>;
++		default-brightness-level = <16>;
++		power-supply = <&reg_3v3>;
++		enable-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
++	};
++
++	can_osc: can-osc {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_leds>;
++
++		led-debug0 {
++			function = LED_FUNCTION_STATUS;
++			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		led-debug1 {
++			function = LED_FUNCTION_SD;
++			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "disk-activity";
++		};
++	};
++
++	panel {
++		compatible = "kyo,tcg121xglp";
++		backlight = <&backlight_lcd>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++
++	reg_1v8: regulator-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	reg_wifi: regulator-wifi {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_wifi_npd>;
++		enable-active-high;
++		gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++		regulator-max-microvolt = <1800000>;
++		regulator-min-microvolt = <1800000>;
++		regulator-name = "regulator-WL12xx";
++		startup-delay-us = <70000>;
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "prti6q-sgtl5000";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Line", "Line In Jack",
++			"Headphone", "Headphone Jack",
++			"Speaker", "External Speaker";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"External Speaker", "LINE_OUT";
++
++		simple-audio-card,cpu {
++			sound-dai = <&ssi1>;
++			system-clock-frequency = <0>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++			bitclock-master;
++			frame-master;
++		};
++	};
++
++	sound-spdif {
++		compatible = "fsl,imx-audio-spdif";
++		model = "imx-spdif";
++		spdif-controller = <&spdif>;
++		spdif-in;
++		spdif-out;
++	};
++};
++
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
++
++	mux_ssi1 {
++		fsl,audmux-port = <0>;
++		fsl,port-config = <
++			IMX_AUDMUX_V2_PTCR_SYN		0
++			IMX_AUDMUX_V2_PTCR_TFSEL(2)	0
++			IMX_AUDMUX_V2_PTCR_TCSEL(2)	0
++			IMX_AUDMUX_V2_PTCR_TFSDIR	0
++			IMX_AUDMUX_V2_PTCR_TCLKDIR IMX_AUDMUX_V2_PDCR_RXDSEL(2)
++		>;
++	};
++
++	mux_pins3 {
++		fsl,audmux-port = <2>;
++		fsl,port-config = <
++			IMX_AUDMUX_V2_PTCR_SYN IMX_AUDMUX_V2_PDCR_RXDSEL(0)
++			0		       IMX_AUDMUX_V2_PDCR_TXRXEN
++		>;
++	};
++};
++
++&can2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_can2>;
++	status = "okay";
++};
++
++&ecspi1 {
++	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <20000000>;
++	};
++};
++
++&ecspi2 {
++	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>, <&gpio4 25 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi2 &pinctrl_ecspi2_cs>;
++	status = "okay";
++
++	can@0 {
++		compatible = "microchip,mcp2515";
++		reg = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_can3>;
++		clocks = <&can_osc>;
++		interrupts-extended = <&gpio3 20 IRQ_TYPE_LEVEL_LOW>;
++		spi-max-frequency = <5000000>;
++	};
++
++	adc@1 {
++		compatible = "ti,adc128s052";
++		reg = <1>;
++		spi-max-frequency = <2000000>;
++		vref-supply = <&reg_3v3>;
++	};
++};
++
++&ecspi3 {
++	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3>;
++	status = "okay";
++};
++
++&can1 {
++	pinctrl-0 = <&pinctrl_can1>;
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii-id";
++	phy-handle = <&rgmii_phy>;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* Microchip KSZ9031RNX PHY */
++		rgmii_phy: ethernet-phy@0 {
++			reg = <0>;
++			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
++			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <300>;
++		};
++	};
++};
++
++&hdmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hdmi>;
++	ddc-i2c-bus = <&i2c2>;
++	status = "okay";
++};
++
++&i2c1 {
++	sgtl5000: audio-codec@a {
++		compatible = "fsl,sgtl5000";
++		reg = <0xa>;
++		#sound-dai-cells = <0>;
++		clocks = <&clks 201>;
++		VDDA-supply = <&reg_3v3>;
++		VDDIO-supply = <&reg_3v3>;
++		VDDD-supply = <&reg_1v8>;
++	};
++};
++
++/* DDC */
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&i2c3 {
++	adc@49 {
++		compatible = "ti,ads1015";
++		reg = <0x49>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* can2_l */
++		channel@4 {
++			reg = <4>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* can2_h */
++		channel@5 {
++			reg = <5>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* can1_l */
++		channel@6 {
++			reg = <6>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++
++		/* can1_h */
++		channel@7 {
++			reg = <7>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++	};
++};
++
++&pcie {
++	status = "okay";
++};
++
++&pwm1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm1>;
++	status = "okay";
++};
++
++&ldb {
++	status = "okay";
++
++	lvds-channel@0 {
++		status = "okay";
++
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
++
++&sata {
++	status = "okay";
++};
++
++&snvs_poweroff {
++	status = "okay";
++};
++
++&spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spdif>;
++	status = "okay";
++};
++
++&ssi1 {
++	#sound-dai-cells = <0>;
++	fsl,mode = "ac97-slave";
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	status = "okay";
++};
++
++&usbotg {
++	pinctrl-0 = <&pinctrl_usbotg &pinctrl_usbotg_id>;
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	non-removable;
++	vmmc-supply = <&reg_wifi>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++	status = "okay";
++
++	wifi {
++		compatible = "ti,wl1271";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_wifi>;
++		interrupts-extended = <&gpio1 30 IRQ_TYPE_LEVEL_HIGH>;
++		ref-clock-frequency = "38400000";
++		tcxo-clock-frequency = "19200000";
++	};
++};
++
++&iomuxc {
++	pinctrl_audmux: audmuxgrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1		0x030b0
++			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
++			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
++			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
++			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
++		>;
++	};
++
++	pinctrl_backlight: backlightgrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT7__GPIO4_IO28	0x1b0b0
++		>;
++	};
++
++	pinctrl_can2: can2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x80000000
++			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x80000000
++		>;
++	};
++
++	pinctrl_can3: can3grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b1
++		>;
++	};
++
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
++			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
++			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
++			/* CS */
++			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x000b1
++		>;
++	};
++
++	pinctrl_ecspi2: ecspi2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
++			MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
++			MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
++			MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
++		>;
++	};
++
++	pinctrl_ecspi2_cs: ecspi2csgrp {
++		fsl,pins = <
++			/* ADC128S022 CS */
++			MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25	0x1b0b1
++		>;
++	};
++
++	pinctrl_ecspi3: ecspi3grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
++			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
++			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
++			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x000b1
++		>;
++	};
++
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x10030
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x10030
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x10030
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x10030
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x10030
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x10030
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x10030
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
++
++			/* Phy reset */
++			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x1b0b0
++			MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x1b0b1
++		>;
++	};
++
++	pinctrl_hdmi: hdmigrp {
++		fsl,pins = <
++			/* NOTE: DDC is done via I2C2, so DON'T
++			 * configure DDC pins for HDMI!
++			 */
++			MX6QDL_PAD_EIM_A25__HDMI_TX_CEC_LINE	0x1f8b0
++		>;
++	};
++
++	/* DDC */
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
++		>;
++	};
++
++	pinctrl_leds: ledsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
++			MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x1b0b0
++		>;
++	};
++
++	pinctrl_pwm1: pwm1grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b0
++		>;
++	};
++
++	pinctrl_spdif: spdifgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_16__SPDIF_IN		0x1b0b0
++			MX6QDL_PAD_GPIO_19__SPDIF_OUT		0x1b0b0
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D26__UART2_RX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D27__UART2_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D28__UART2_DTE_CTS_B	0x1b0b1
++			MX6QDL_PAD_EIM_D29__UART2_DTE_RTS_B	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usbotg_id: usbotgidgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x1f058
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
++			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
++			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
++			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
++			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
++			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
++		>;
++	};
++
++	pinctrl_wifi: wifigrp {
++		fsl,pins = <
++			/* WL12xx IRQ */
++			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x10880
++		>;
++	};
++
++	pinctrl_wifi_npd: wifinpd {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b8b0
++		>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-prti6q.dtsi b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+new file mode 100644
+index 0000000000000..b9ac70b9a4513
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+@@ -0,0 +1,165 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Copyright (c) 2014 Protonic Holland
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	chosen {
++		stdout-path = &uart4;
++	};
++
++	reg_3v3: regulator-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_usb_h1_vbus: regulator-h1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "h1-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_usb_otg_vbus: regulator-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "otg-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++};
++
++&can1 {
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	temperature-sensor@70 {
++		compatible = "ti,tmp103";
++		reg = <0x70>;
++	};
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	phy_type = "utmi";
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	phy_type = "utmi";
++	dr_mode = "host";
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_can1: can1grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x80000000
++			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x80000000
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001f8b1
++			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001f8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__I2C3_SCL		0x4001b8b1
++			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD		0x170f9
++			MX6QDL_PAD_SD1_CLK__SD1_CLK		0x100f9
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0		0x170f9
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1		0x170f9
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2		0x170f9
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3		0x170f9
++			MX6QDL_PAD_GPIO_1__GPIO1_IO01		0x1b0b0
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17099
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10099
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17099
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17099
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17099
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17099
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17099
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17099
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17099
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17099
++			MX6QDL_PAD_SD3_RST__SD3_RESET		0x1b0b1
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__USB_OTG_OC	0x1b0b0
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22	0x1b0b0
++		>;
++	};
++};
 -- 
+2.26.2
+
