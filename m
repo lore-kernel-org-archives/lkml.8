@@ -2,194 +2,279 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D39C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB07C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31EC820C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="T+hxgGBR"
+	by mail.kernel.org (Postfix) with ESMTP id B7CE3208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgETJx6 (ORCPT
+        id S1726733AbgETJyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:53:58 -0400
-Received: from ozlabs.org ([203.11.71.1]:57879 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgETJx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:53:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rp402YYWz9sT8;
-        Wed, 20 May 2020 19:53:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1589968435;
-        bh=/SF1u7fw4ywQyV8P7dpLPnWaV4yJIIqpzxqUzkg8c6Y=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=T+hxgGBRSUegBTRkzKQh78Jwhd7vM/gf+Td+YjdjpgwMKJLsSXIB9lVyMSzWh8a/L
-         UagqkLU5AXOT2G1Ha9EMwJ59WmTfO0P1DILDzLkTXuLBsvclv2ca8SH8PUbyKw9q2/
-         f1YmVf9PvcpG6a+wAfpJAQl0X5Sz8nFsc4gWWB2tfHCo+MbFobpvEOrilpEW30EgaP
-         HJlZtCvstHE1IxZwaWKX04MPB3uH+9GpBaVVhSlkzoln59HTISkw12E2rekiLabeHN
-         6sOXFVjT5H3ZRaxqZDS0h2Dorh7kpPJNe8xqd+7HJiMh+7BPWpmuBw/xq+/qGEju2C
-         DwodaOymHjJLw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Dan Williams <dan.j.williams@intel.com>, tglx@linutronix.de,
-        mingo@redhat.com
-Cc:     x86@kernel.org, stable@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH v3 1/2] x86, powerpc: Rename memcpy_mcsafe() to copy_mc_to_{user, kernel}()
-In-Reply-To: <158992635697.403910.6957168747147028694.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158992635164.403910.2616621400995359522.stgit@dwillia2-desk3.amr.corp.intel.com> <158992635697.403910.6957168747147028694.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Wed, 20 May 2020 19:53:05 +1000
-Message-ID: <87d06z7x1a.fsf@mpe.ellerman.id.au>
+        Wed, 20 May 2020 05:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgETJys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 05:54:48 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DAADC061A0E;
+        Wed, 20 May 2020 02:54:48 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 33A912A2A94
+Subject: Re: next/master bisection: baseline.login on panda
+To:     Joerg Roedel <jroedel@suse.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+References: <5ec4eb8e.1c69fb81.19b63.0b07@mx.google.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>, linux-next@vger.kernel.org
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <d30e5ea4-85ae-75c2-2334-f9f951026afd@collabora.com>
+Date:   Wed, 20 May 2020 10:54:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <5ec4eb8e.1c69fb81.19b63.0b07@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+Please see the bisection report below about a boot failure.
 
-Just a couple of minor things ...
+Reports aren't automatically sent to the public while we're
+trialing new bisection features on kernelci.org but this one
+looks valid.
 
-Dan Williams <dan.j.williams@intel.com> writes:
-> In reaction to a proposal to introduce a memcpy_mcsafe_fast()
-> implementation Linus points out that memcpy_mcsafe() is poorly named
-> relative to communicating the scope of the interface. Specifically what
-> addresses are valid to pass as source, destination, and what faults /
-> exceptions are handled. Of particular concern is that even though x86
-> might be able to handle the semantics of copy_mc_to_user() with its
-> common copy_user_generic() implementation other archs likely need / want
-> an explicit path for this case:
-...
+Unfortunately there isn't anything in the kernel log, it's
+probably crashing very early on.  The bisection was run on
+omap4-panda, and there seems to be the same issue on
+omap3-beagle-xm as it's also failing to boot.
 
-> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-> index 0969285996cb..dcbbcbf3552c 100644
-> --- a/arch/powerpc/include/asm/uaccess.h
-> +++ b/arch/powerpc/include/asm/uaccess.h
-> @@ -348,6 +348,32 @@ do {								\
->  extern unsigned long __copy_tofrom_user(void __user *to,
->  		const void __user *from, unsigned long size);
+Please let us know if anyone is able to debug the issue or if we
+need to rerun the KernelCI job with earlyprintk enabled or any
+debug config option.
+
+Thanks,
+Guillaume
+
+On 20/05/2020 09:34, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> 
+> next/master bisection: baseline.login on panda
+> 
+> Summary:
+>   Start:      fb57b1fabcb28 Add linux-next specific files for 20200519
+>   Plain log:  https://storage.kernelci.org/next/master/next-20200519/arm/omap2plus_defconfig/gcc-8/lab-baylibre/baseline-omap4-panda.txt
+>   HTML log:   https://storage.kernelci.org/next/master/next-20200519/arm/omap2plus_defconfig/gcc-8/lab-baylibre/baseline-omap4-panda.html
+>   Result:     ce574c27ae275 iommu: Move iommu_group_create_direct_mappings() out of iommu_group_add_device()
+> 
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
+> 
+> Parameters:
+>   Tree:       next
+>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>   Branch:     master
+>   Target:     panda
+>   CPU arch:   arm
+>   Lab:        lab-baylibre
+>   Compiler:   gcc-8
+>   Config:     omap2plus_defconfig
+>   Test case:  baseline.login
+> 
+> Breaking commit found:
+> 
+> -------------------------------------------------------------------------------
+> commit ce574c27ae275bc51b6437883fc9cd1c46b498e5
+> Author: Joerg Roedel <jroedel@suse.de>
+> Date:   Wed Apr 29 15:36:50 2020 +0200
+> 
+>     iommu: Move iommu_group_create_direct_mappings() out of iommu_group_add_device()
+>     
+>     After the previous changes the iommu group may not have a default
+>     domain when iommu_group_add_device() is called. With no default domain
+>     iommu_group_create_direct_mappings() will do nothing and no direct
+>     mappings will be created.
+>     
+>     Rename iommu_group_create_direct_mappings() to
+>     iommu_create_device_direct_mappings() to better reflect that the
+>     function creates direct mappings only for one device and not for all
+>     devices in the group. Then move the call to the places where a default
+>     domain actually exists.
+>     
+>     Signed-off-by: Joerg Roedel <jroedel@suse.de>
+>     Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>     Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>     Link: https://lore.kernel.org/r/20200429133712.31431-13-joro@8bytes.org
+>     Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 7de0e29db3338..834a45da0ed0f 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -89,6 +89,8 @@ static int __iommu_attach_group(struct iommu_domain *domain,
+>  				struct iommu_group *group);
+>  static void __iommu_detach_group(struct iommu_domain *domain,
+>  				 struct iommu_group *group);
+> +static int iommu_create_device_direct_mappings(struct iommu_group *group,
+> +					       struct device *dev);
 >  
-> +#ifdef CONFIG_ARCH_HAS_COPY_MC
-> +extern unsigned long __must_check
-
-We try not to add extern in headers anymore.
-
-> +copy_mc_generic(void *to, const void *from, unsigned long size);
+>  #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
+>  struct iommu_group_attribute iommu_group_attr_##_name =		\
+> @@ -243,6 +245,8 @@ static int __iommu_probe_device_helper(struct device *dev)
+>  	if (group->default_domain)
+>  		ret = __iommu_attach_device(group->default_domain, dev);
+>  
+> +	iommu_create_device_direct_mappings(group, dev);
 > +
-> +static inline unsigned long __must_check
-> +copy_mc_to_kernel(void *to, const void *from, unsigned long size)
+>  	iommu_group_put(group);
+>  
+>  	if (ret)
+> @@ -263,6 +267,7 @@ static int __iommu_probe_device_helper(struct device *dev)
+>  int iommu_probe_device(struct device *dev)
+>  {
+>  	const struct iommu_ops *ops = dev->bus->iommu_ops;
+> +	struct iommu_group *group;
+>  	int ret;
+>  
+>  	WARN_ON(dev->iommu_group);
+> @@ -285,6 +290,10 @@ int iommu_probe_device(struct device *dev)
+>  	if (ret)
+>  		goto err_module_put;
+>  
+> +	group = iommu_group_get(dev);
+> +	iommu_create_device_direct_mappings(group, dev);
+> +	iommu_group_put(group);
+> +
+>  	if (ops->probe_finalize)
+>  		ops->probe_finalize(dev);
+>  
+> @@ -736,8 +745,8 @@ int iommu_group_set_name(struct iommu_group *group, const char *name)
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_group_set_name);
+>  
+> -static int iommu_group_create_direct_mappings(struct iommu_group *group,
+> -					      struct device *dev)
+> +static int iommu_create_device_direct_mappings(struct iommu_group *group,
+> +					       struct device *dev)
+>  {
+>  	struct iommu_domain *domain = group->default_domain;
+>  	struct iommu_resv_region *entry;
+> @@ -841,8 +850,6 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
+>  
+>  	dev->iommu_group = group;
+>  
+> -	iommu_group_create_direct_mappings(group, dev);
+> -
+>  	mutex_lock(&group->mutex);
+>  	list_add_tail(&device->list, &group->devices);
+>  	if (group->domain)
+> @@ -1736,6 +1743,7 @@ static void probe_alloc_default_domain(struct bus_type *bus,
+>  		gtype.type = iommu_def_domain_type;
+>  
+>  	iommu_group_alloc_default_domain(bus, group, gtype.type);
+> +
+>  }
+>  
+>  static int iommu_group_do_dma_attach(struct device *dev, void *data)
+> @@ -1760,6 +1768,21 @@ static int __iommu_group_dma_attach(struct iommu_group *group)
+>  					  iommu_group_do_dma_attach);
+>  }
+>  
+> +static int iommu_do_create_direct_mappings(struct device *dev, void *data)
 > +{
-> +	return copy_mc_generic(to, from, size);
-> +}
-> +#define copy_mc_to_kernel copy_mc_to_kernel
+> +	struct iommu_group *group = data;
 > +
-> +static inline unsigned long __must_check
-> +copy_mc_to_user(void __user *to, const void *from, unsigned long n)
+> +	iommu_create_device_direct_mappings(group, dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int iommu_group_create_direct_mappings(struct iommu_group *group)
 > +{
-> +	if (likely(check_copy_size(from, n, true))) {
-> +		if (access_ok(to, n)) {
-> +			allow_write_to_user(to, n);
-> +			n = copy_mc_generic((void *)to, from, n);
-> +			prevent_write_to_user(to, n);
-> +		}
-> +	}
-> +
-> +	return n;
+> +	return __iommu_group_for_each_dev(group, group,
+> +					  iommu_do_create_direct_mappings);
 > +}
-> +#endif
-
-Otherwise that looks fine.
-
-...
-
-> diff --git a/tools/testing/selftests/powerpc/copyloops/Makefile b/tools/testing/selftests/powerpc/copyloops/Makefile
-> index 0917983a1c78..959817e7567c 100644
-> --- a/tools/testing/selftests/powerpc/copyloops/Makefile
-> +++ b/tools/testing/selftests/powerpc/copyloops/Makefile
-> @@ -45,9 +45,9 @@ $(OUTPUT)/memcpy_p7_t%:	memcpy_power7.S $(EXTRA_SOURCES)
->  		-D SELFTEST_CASE=$(subst memcpy_p7_t,,$(notdir $@)) \
->  		-o $@ $^
+> +
+>  static int bus_iommu_probe(struct bus_type *bus)
+>  {
+>  	const struct iommu_ops *ops = bus->iommu_ops;
+> @@ -1792,6 +1815,8 @@ static int bus_iommu_probe(struct bus_type *bus)
+>  				continue;
+>  			}
 >  
-> -$(OUTPUT)/memcpy_mcsafe_64: memcpy_mcsafe_64.S $(EXTRA_SOURCES)
-> +$(OUTPUT)/copy_mc: copy_mc.S $(EXTRA_SOURCES)
->  	$(CC) $(CPPFLAGS) $(CFLAGS) \
-> -		-D COPY_LOOP=test_memcpy_mcsafe \
-> +		-D COPY_LOOP=test_copy_mc \
-
-This needs a fixup:
-
-diff --git a/tools/testing/selftests/powerpc/copyloops/Makefile b/tools/testing/selftests/powerpc/copyloops/Makefile
-index 959817e7567c..b4eb5c4c6858 100644
---- a/tools/testing/selftests/powerpc/copyloops/Makefile
-+++ b/tools/testing/selftests/powerpc/copyloops/Makefile
-@@ -47,7 +47,7 @@ $(OUTPUT)/memcpy_p7_t%:	memcpy_power7.S $(EXTRA_SOURCES)
- 
- $(OUTPUT)/copy_mc: copy_mc.S $(EXTRA_SOURCES)
- 	$(CC) $(CPPFLAGS) $(CFLAGS) \
--		-D COPY_LOOP=test_copy_mc \
-+		-D COPY_LOOP=test_copy_mc_generic \
- 		-o $@ $^
- 
- $(OUTPUT)/copyuser_64_exc_t%: copyuser_64.S exc_validate.c ../harness.c \
-
-
->  		-o $@ $^
+> +			iommu_group_create_direct_mappings(group);
+> +
+>  			ret = __iommu_group_dma_attach(group);
 >  
->  $(OUTPUT)/copyuser_64_exc_t%: copyuser_64.S exc_validate.c ../harness.c \
-> diff --git a/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S b/tools/testing/selftests/powerpc/copyloops/copy_mc.S
-> similarity index 100%
-> rename from tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
-> rename to tools/testing/selftests/powerpc/copyloops/copy_mc.S
-
-This file is a symlink to the file in arch/powerpc/lib, so the name of
-the link needs updating, as well as the target.
-
-Also is there a reason you dropped the "_64"? It would make most sense
-to keep it I think, as then the file in selftests and the file in arch/
-have the same name.
-
-If you want to keep the copy_mc.S name it needs the diff below. Though
-as I said I think it would be better to use copy_mc_64.S.
-
-cheers
-
-
-diff --git a/tools/testing/selftests/powerpc/copyloops/copy_mc.S b/tools/testing/selftests/powerpc/copyloops/copy_mc.S
-new file mode 120000
-index 000000000000..dcbe06d500fb
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/copyloops/copy_mc.S
-@@ -0,0 +1 @@
-+../../../../../arch/powerpc/lib/copy_mc_64.S
-\ No newline at end of file
-diff --git a/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S b/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
-deleted file mode 120000
-index f0feef3062f6..000000000000
---- a/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../../arch/powerpc/lib/memcpy_mcsafe_64.S
-\ No newline at end of file
--- 
-2.25.1
-
+>  			mutex_unlock(&group->mutex);
+> @@ -2632,7 +2657,7 @@ request_default_domain_for_dev(struct device *dev, unsigned long type)
+>  		iommu_domain_free(group->default_domain);
+>  	group->default_domain = domain;
+>  
+> -	iommu_group_create_direct_mappings(group, dev);
+> +	iommu_create_device_direct_mappings(group, dev);
+>  
+>  	dev_info(dev, "Using iommu %s mapping\n",
+>  		 type == IOMMU_DOMAIN_DMA ? "dma" : "direct");
+> -------------------------------------------------------------------------------
+> 
+> 
+> Git bisection log:
+> 
+> -------------------------------------------------------------------------------
+> git bisect start
+> # good: [642b151f45dd54809ea00ecd3976a56c1ec9b53d] Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity
+> git bisect good 642b151f45dd54809ea00ecd3976a56c1ec9b53d
+> # bad: [fb57b1fabcb28f358901b2df90abd2b48abc1ca8] Add linux-next specific files for 20200519
+> git bisect bad fb57b1fabcb28f358901b2df90abd2b48abc1ca8
+> # good: [8b3dd8b61115d665572dcac44bc6b3e95c8f34f2] Merge remote-tracking branch 'crypto/master'
+> git bisect good 8b3dd8b61115d665572dcac44bc6b3e95c8f34f2
+> # bad: [144c0fb86d53982ba156b518e7b3fbee71f56655] Merge remote-tracking branch 'spi/for-next'
+> git bisect bad 144c0fb86d53982ba156b518e7b3fbee71f56655
+> # good: [1a90af6b9ad8a56d9929e69a28b21aa1132fc42c] Merge remote-tracking branch 'amdgpu/drm-next'
+> git bisect good 1a90af6b9ad8a56d9929e69a28b21aa1132fc42c
+> # good: [a27ba83aed2e6a01f16fd56dd322839c9c179c38] Merge remote-tracking branch 'block/for-next'
+> git bisect good a27ba83aed2e6a01f16fd56dd322839c9c179c38
+> # good: [7f58fc25a6c6c9ac84701be427c477d4a09f197e] Merge remote-tracking branch 'integrity/next-integrity'
+> git bisect good 7f58fc25a6c6c9ac84701be427c477d4a09f197e
+> # good: [59ffe4ed0725de96f4710013c34de387fbeac90c] dt-bindings: ehci/ohci: Allow iommus property
+> git bisect good 59ffe4ed0725de96f4710013c34de387fbeac90c
+> # bad: [f74794b89196349ad42fce396d3537672b4db157] Merge remote-tracking branch 'iommu/next'
+> git bisect bad f74794b89196349ad42fce396d3537672b4db157
+> # bad: [14b3526d5909f01e1d1baa05f50952788bb7418e] iommu/vt-d: Allow PCI sub-hierarchy to use DMA domain
+> git bisect bad 14b3526d5909f01e1d1baa05f50952788bb7418e
+> # bad: [21acf6599cfb4407e9745b36f69c93cf99a3d189] iommu/virtio: Convert to probe/release_device() call-backs
+> git bisect bad 21acf6599cfb4407e9745b36f69c93cf99a3d189
+> # good: [cf193888bfbd3d57e03a511e49d26f7d9c6f76df] iommu: Move new probe_device path to separate function
+> git bisect good cf193888bfbd3d57e03a511e49d26f7d9c6f76df
+> # bad: [dce8d6964ebdb333383bacf5e7ab8c27df151218] iommu/amd: Convert to probe/release_device() call-backs
+> git bisect bad dce8d6964ebdb333383bacf5e7ab8c27df151218
+> # bad: [ce574c27ae275bc51b6437883fc9cd1c46b498e5] iommu: Move iommu_group_create_direct_mappings() out of iommu_group_add_device()
+> git bisect bad ce574c27ae275bc51b6437883fc9cd1c46b498e5
+> # good: [deac0b3bed26bb5d04486696b1071d8ec3851100] iommu: Split off default domain allocation from group assignment
+> git bisect good deac0b3bed26bb5d04486696b1071d8ec3851100
+> # first bad commit: [ce574c27ae275bc51b6437883fc9cd1c46b498e5] iommu: Move iommu_group_create_direct_mappings() out of iommu_group_add_device()
+> -------------------------------------------------------------------------------
+> 
 
