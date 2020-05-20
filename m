@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4128DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693F5C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9F6207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46ED3207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AlaMSmKN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K2oWWvnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgETT5G (ORCPT
+        id S1728474AbgETT5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51256 "EHLO
+        Wed, 20 May 2020 15:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgETT5B (ORCPT
+        with ESMTP id S1727113AbgETT5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:57:01 -0400
+        Wed, 20 May 2020 15:57:12 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CDEC061A0F;
-        Wed, 20 May 2020 12:57:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DBB3C061A0F;
+        Wed, 20 May 2020 12:57:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=SoJc1/taCxcgg46E3sLXJ5D5ViTmiGYbfa508lCrHhc=; b=AlaMSmKNBl9B3h77xS5EiL/hIh
-        qmaKy56Aklm4VLghXIci6rqsKi6hMSwFjBNIhmFkfG0CbJps0saMeOApZ+prdcU/RP6Vcq46ZUlrS
-        wzEVnCkfyrCiJXfuSfjrkBuJRj6ejyssc0/H+Tol3dR6M+UozFLSBMO7ODlD4hgnx/pBBLyAv8xqF
-        g7lcRGV8yI6Fj5l1EHKKXlohTDDByTr7JXbKVEIDNnjcPFqlG8m/ubYaD2yuoE3A8WhjwDk+VhUc6
-        3iBW0NQUaiHXon+6MPNYbbyPUVe5ISzsY3UpHxhhIYPl16gM1zglD82vs5+OKCN5cfqWq2MmXnh97
-        LtxjadaA==;
+        bh=fQB1MoUY1DoFW/LCHHPWdcIToW6X3yYHVE9OqGHCLRE=; b=K2oWWvnRH0bAH7t3M/NnCWXcm6
+        ijivdECtWhaXVJ9Ypm89bAnX4whjcAd817MKj9/1duM88xuNoIJYmMK5lAa983D4SQdlcoKgkDaZt
+        A8bUfDx6BggU+nIWrVPichd+qhQxBHbSFUSNG6MCTMqhIFJTalznNkB8DGfUEzNlEYZfzGVfVfTt4
+        sHW2HR+w0ZhzZArJKVNNv7/R34a9K+uwHatVrlcvBH09MPGxyNG9BbR9WwV0maBao/a9dTcwW5eTe
+        BJgMzLjSgJ94TZm1sr4vNSSwrl62C0W8o7xQl3iB80GeJaa6yc+kAwOFqITPFjdx6GkORG0M0bhw5
+        La8oZZPg==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbUpN-0003Qz-8p; Wed, 20 May 2020 19:56:33 +0000
+        id 1jbUph-0003bo-G7; Wed, 20 May 2020 19:56:53 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
         ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
         linux-nfs@vger.kernel.org
-Subject: [PATCH 29/33] rxrpc: add rxrpc_sock_set_min_security_level
-Date:   Wed, 20 May 2020 21:55:05 +0200
-Message-Id: <20200520195509.2215098-30-hch@lst.de>
+Subject: [PATCH 32/33] net: add a new bind_add method
+Date:   Wed, 20 May 2020 21:55:08 +0200
+Message-Id: <20200520195509.2215098-33-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200520195509.2215098-1-hch@lst.de>
 References: <20200520195509.2215098-1-hch@lst.de>
@@ -71,116 +71,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the RXRPC_MIN_SECURITY_LEVEL sockopt from
-kernel space without going through a fake uaccess.
-
-Thanks to David Howells for the documentation updates.
+The SCTP protocol allows to bind multiple address to a socket.  That
+feature is currently only exposed as a socket option.  Add a bind_add
+method struct proto that allows to bind additional addresses, and
+switch the dlm code to use the method instead of going through the
+socket option from kernel space.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- Documentation/networking/rxrpc.rst | 13 +++++++++++--
- fs/afs/rxrpc.c                     |  6 ++----
- include/net/af_rxrpc.h             |  2 ++
- net/rxrpc/af_rxrpc.c               | 13 +++++++++++++
- 4 files changed, 28 insertions(+), 6 deletions(-)
+ fs/dlm/lowcomms.c  |  9 +++------
+ include/net/sock.h |  6 +++++-
+ net/core/sock.c    |  8 ++++++++
+ net/sctp/socket.c  | 23 +++++++++++++++++++++++
+ 4 files changed, 39 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/networking/rxrpc.rst b/Documentation/networking/rxrpc.rst
-index 5ad35113d0f46..68552b92dc442 100644
---- a/Documentation/networking/rxrpc.rst
-+++ b/Documentation/networking/rxrpc.rst
-@@ -477,7 +477,7 @@ AF_RXRPC sockets support a few socket options at the SOL_RXRPC level:
- 	 Encrypted checksum plus packet padded and first eight bytes of packet
- 	 encrypted - which includes the actual packet length.
- 
--     (c) RXRPC_SECURITY_ENCRYPTED
-+     (c) RXRPC_SECURITY_ENCRYPT
- 
- 	 Encrypted checksum plus entire packet padded and encrypted, including
- 	 actual packet length.
-@@ -578,7 +578,7 @@ A client would issue an operation by:
-      This issues a request_key() to get the key representing the security
-      context.  The minimum security level can be set::
- 
--	unsigned int sec = RXRPC_SECURITY_ENCRYPTED;
-+	unsigned int sec = RXRPC_SECURITY_ENCRYPT;
- 	setsockopt(client, SOL_RXRPC, RXRPC_MIN_SECURITY_LEVEL,
- 		   &sec, sizeof(sec));
- 
-@@ -1090,6 +1090,15 @@ The kernel interface functions are as follows:
-      jiffies).  In the event of the timeout occurring, the call will be
-      aborted and -ETIME or -ETIMEDOUT will be returned.
- 
-+ (#) Apply the RXRPC_MIN_SECURITY_LEVEL sockopt to a socket from within in the
-+     kernel::
-+
-+       int rxrpc_sock_set_min_security_level(struct sock *sk,
-+					     unsigned int val);
-+
-+     This specifies the minimum security level required for calls on this
-+     socket.
-+
- 
- Configurable Parameters
- =======================
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index 1ecc67da6c1a4..e313dae01674f 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -37,7 +37,6 @@ int afs_open_socket(struct afs_net *net)
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index 9f1c3cdc9d653..3543a8fec9075 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -882,6 +882,7 @@ static void writequeue_entry_complete(struct writequeue_entry *e, int completed)
+ static int sctp_bind_addrs(struct connection *con, uint16_t port)
  {
- 	struct sockaddr_rxrpc srx;
- 	struct socket *socket;
--	unsigned int min_level;
- 	int ret;
+ 	struct sockaddr_storage localaddr;
++	struct sockaddr *addr = (struct sockaddr *)&localaddr;
+ 	int i, addr_len, result = 0;
  
- 	_enter("");
-@@ -57,9 +56,8 @@ int afs_open_socket(struct afs_net *net)
- 	srx.transport.sin6.sin6_family	= AF_INET6;
- 	srx.transport.sin6.sin6_port	= htons(AFS_CM_PORT);
+ 	for (i = 0; i < dlm_local_count; i++) {
+@@ -889,13 +890,9 @@ static int sctp_bind_addrs(struct connection *con, uint16_t port)
+ 		make_sockaddr(&localaddr, port, &addr_len);
  
--	min_level = RXRPC_SECURITY_ENCRYPT;
--	ret = kernel_setsockopt(socket, SOL_RXRPC, RXRPC_MIN_SECURITY_LEVEL,
--				(void *)&min_level, sizeof(min_level));
-+	ret = rxrpc_sock_set_min_security_level(socket->sk,
-+						RXRPC_SECURITY_ENCRYPT);
- 	if (ret < 0)
- 		goto error_2;
+ 		if (!i)
+-			result = kernel_bind(con->sock,
+-					     (struct sockaddr *)&localaddr,
+-					     addr_len);
++			result = kernel_bind(con->sock, addr, addr_len);
+ 		else
+-			result = kernel_setsockopt(con->sock, SOL_SCTP,
+-						   SCTP_SOCKOPT_BINDX_ADD,
+-						   (char *)&localaddr, addr_len);
++			result = sock_bind_add(con->sock->sk, addr, addr_len);
  
-diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
-index 04e97bab6f28b..8d7b469453bda 100644
---- a/include/net/af_rxrpc.h
-+++ b/include/net/af_rxrpc.h
-@@ -72,4 +72,6 @@ bool rxrpc_kernel_call_is_complete(struct rxrpc_call *);
- void rxrpc_kernel_set_max_life(struct socket *, struct rxrpc_call *,
- 			       unsigned long);
+ 		if (result < 0) {
+ 			log_print("Can't bind to %d addr number %d, %d.\n",
+diff --git a/include/net/sock.h b/include/net/sock.h
+index d994daa418ec2..6e9f713a78607 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1156,7 +1156,9 @@ struct proto {
+ 	int			(*sendpage)(struct sock *sk, struct page *page,
+ 					int offset, size_t size, int flags);
+ 	int			(*bind)(struct sock *sk,
+-					struct sockaddr *uaddr, int addr_len);
++					struct sockaddr *addr, int addr_len);
++	int			(*bind_add)(struct sock *sk,
++					struct sockaddr *addr, int addr_len);
  
-+int rxrpc_sock_set_min_security_level(struct sock *sk, unsigned int val);
+ 	int			(*backlog_rcv) (struct sock *sk,
+ 						struct sk_buff *skb);
+@@ -2698,4 +2700,6 @@ void sock_set_reuseaddr(struct sock *sk);
+ void sock_set_reuseport(struct sock *sk);
+ void sock_set_sndtimeo(struct sock *sk, s64 secs);
+ 
++int sock_bind_add(struct sock *sk, struct sockaddr *addr, int addr_len);
 +
- #endif /* _NET_RXRPC_H */
-diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
-index 15ee92d795815..394189b81849f 100644
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -571,6 +571,19 @@ static int rxrpc_sendmsg(struct socket *sock, struct msghdr *m, size_t len)
- 	return ret;
+ #endif	/* _SOCK_H */
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 2ca3425b519c0..61ec573221a60 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3712,3 +3712,11 @@ bool sk_busy_loop_end(void *p, unsigned long start_time)
+ }
+ EXPORT_SYMBOL(sk_busy_loop_end);
+ #endif /* CONFIG_NET_RX_BUSY_POLL */
++
++int sock_bind_add(struct sock *sk, struct sockaddr *addr, int addr_len)
++{
++	if (!sk->sk_prot->bind_add)
++		return -EOPNOTSUPP;
++	return sk->sk_prot->bind_add(sk, addr, addr_len);
++}
++EXPORT_SYMBOL(sock_bind_add);
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index 827a9903ee288..8a0b9258f65c0 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -1057,6 +1057,27 @@ static int sctp_setsockopt_bindx(struct sock *sk,
+ 	return err;
  }
  
-+int rxrpc_sock_set_min_security_level(struct sock *sk, unsigned int val)
++static int sctp_bind_add(struct sock *sk, struct sockaddr *addr,
++		int addrlen)
 +{
-+	if (sk->sk_state != RXRPC_UNBOUND)
-+		return -EISCONN;
-+	if (val > RXRPC_SECURITY_MAX)
-+		return -EINVAL;
-+	lock_sock(sk);
-+	rxrpc_sk(sk)->min_sec_level = val;
-+	release_sock(sk);
-+	return 0;
-+}
-+EXPORT_SYMBOL(rxrpc_sock_set_min_security_level);
++	struct sctp_af *af = sctp_get_af_specific(addr->sa_family);
++	int err;
 +
- /*
-  * set RxRPC socket options
-  */
++	if (!af || af->sockaddr_len > addrlen)
++		return -EINVAL;
++	err = security_sctp_bind_connect(sk, SCTP_SOCKOPT_BINDX_ADD, addr,
++			addrlen);
++	if (err)
++		return err;
++
++	lock_sock(sk);
++	err = sctp_do_bind(sk, (union sctp_addr *)addr, af->sockaddr_len);
++	if (!err)
++		err = sctp_send_asconf_add_ip(sk, addr, 1);
++	release_sock(sk);
++	return err;
++}
++
+ static int sctp_connect_new_asoc(struct sctp_endpoint *ep,
+ 				 const union sctp_addr *daddr,
+ 				 const struct sctp_initmsg *init,
+@@ -9625,6 +9646,7 @@ struct proto sctp_prot = {
+ 	.sendmsg     =	sctp_sendmsg,
+ 	.recvmsg     =	sctp_recvmsg,
+ 	.bind        =	sctp_bind,
++	.bind_add    =  sctp_bind_add,
+ 	.backlog_rcv =	sctp_backlog_rcv,
+ 	.hash        =	sctp_hash,
+ 	.unhash      =	sctp_unhash,
+@@ -9667,6 +9689,7 @@ struct proto sctpv6_prot = {
+ 	.sendmsg	= sctp_sendmsg,
+ 	.recvmsg	= sctp_recvmsg,
+ 	.bind		= sctp_bind,
++	.bind_add	= sctp_bind_add,
+ 	.backlog_rcv	= sctp_backlog_rcv,
+ 	.hash		= sctp_hash,
+ 	.unhash		= sctp_unhash,
 -- 
 2.26.2
 
