@@ -2,152 +2,184 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E02C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0F0520758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8307D20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QnDgj2c7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgETTV5 (ORCPT
+        id S1727086AbgETTWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:21:57 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:56038 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgETTV4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:21:56 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1jbUHh-0005vw-19; Wed, 20 May 2020 15:21:45 -0400
-Message-ID: <667d8d156fa5d8420ef1c3b1d08b94a10d2398cc.camel@surriel.com>
-Subject: Re: XHCI vs PCM2903B/PCM2904 part 2
-From:   Rik van Riel <riel@surriel.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-usb <linux-usb@vger.kernel.org>, alsa-devel@alsa-project.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Date:   Wed, 20 May 2020 15:21:44 -0400
-In-Reply-To: <20200520163840.GA11084@rowland.harvard.edu>
-References: <273cc1c074cc4a4058f31afe487fb233f5cf0351.camel@surriel.com>
-         <20200520163840.GA11084@rowland.harvard.edu>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-kor7JAH8v80RgB55+Ksv"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 20 May 2020 15:22:40 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36860 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726560AbgETTWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:22:38 -0400
+Received: from zn.tnic (p200300ec2f0bab0028d24a65f02999fe.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:28d2:4a65:f029:99fe])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 729681EC0350;
+        Wed, 20 May 2020 21:22:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590002556;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YoNcQo6x1W8TxzWUCk2SRnUEN6+ujdV8K1zMMMM7K9w=;
+        b=QnDgj2c7erKXF3m48N2kXaCZYdPDB5MWID4LlHGbzp/0OLMhpPWVLM4Ckuu+4FzqSymM2b
+        Tn1sEI7aI7cqIuJQ5hI/AOTJELuDaDwk+EATRLjvONMnutf0FLFVVYGLQ8g9ONbAl0jE49
+        jCzdAiOusfz1gfqvMpn9h0w2u4PG2Po=
+Date:   Wed, 20 May 2020 21:22:30 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 42/75] x86/sev-es: Setup GHCB based boot #VC handler
+Message-ID: <20200520192230.GK1457@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-43-joro@8bytes.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-43-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 28, 2020 at 05:16:52PM +0200, Joerg Roedel wrote:
+> diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+> index b2cbcd40b52e..e1ed963a57ec 100644
+> --- a/arch/x86/include/asm/sev-es.h
+> +++ b/arch/x86/include/asm/sev-es.h
+> @@ -74,5 +74,6 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
+>  }
+>  
+>  extern void vc_no_ghcb(void);
+> +extern bool vc_boot_ghcb(struct pt_regs *regs);
 
---=-kor7JAH8v80RgB55+Ksv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Those function names need verbs:
 
-On Wed, 2020-05-20 at 12:38 -0400, Alan Stern wrote:
-> On Wed, May 20, 2020 at 07:26:57AM -0400, Rik van Riel wrote:
-> > After a few more weeks of digging, I have come to the tentative
-> > conclusion that either the XHCI driver, or the USB sound driver,
-> > or both, fail to handle USB errors correctly.
-> >=20
-> > I have some questions at the bottom, after a (brief-ish)
-> > explanation
-> > of exactly what seems to go wrong.
-> >=20
-> > TL;DR: arecord from a misbehaving device can hang forever
-> > after a USB error, due to poll on /dev/snd/timer never returning.
-> >=20
-> > The details: under some mysterious circumstances, the PCM290x
-> > family sound chips can send more data than expected during an
-> > isochronous transfer, leading to a babble error. Those
->=20
-> Do these chips connect as USB-3 devices or as USB-2?  (I wouldn't
-> expect=20
-> an audio device to use USB-3; it shouldn't need the higher
-> bandwidth.)
+	handle_vc_no_ghcb
+	handle_vc_boot_ghcb
 
-USB-2
+> @@ -161,3 +176,104 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+>  
+>  /* Include code shared with pre-decompression boot stage */
+>  #include "sev-es-shared.c"
+> +
+> +/*
+> + * This function runs on the first #VC exception after the kernel
+> + * switched to virtual addresses.
+> + */
+> +static bool __init sev_es_setup_ghcb(void)
 
-> In general, errors such as babble are not supposed to stop
-> isochronous=20
-> endpoints.
+There's already another sev_es_setup_ghcb() in compressed/. All those
+functions with the same name are just confusion waiting to happen. Let's
+prepend the ones in compressed/ with "early_" or so, so that their names
+are at least different even if they're in two different files with the
+same name.
 
-However, it seems that they do. The urb never
-gets an answer after snd_complete_urb refiles
-it with usb_submit_urb.
+This way you know at least which function is used in which boot stages.
 
-> > However, the USB sound driver seems to have no idea that this
-> > error happened. The function retire_capture_urb looks at the
-> > status of each isochronous frame, but seems to be under the
-> > assumption that the sound device just keeps on running.
->=20
-> This is appropriate, for the reason mentioned above.
+> +{
+> +	/* First make sure the hypervisor talks a supported protocol. */
+> +	if (!sev_es_negotiate_protocol())
+> +		return false;
 
-Having arecord get stuck forever does not seem like
-the right behavior, though :)
+<---- newline here.
 
-> > This leads me to a few questions:
-> > - should retire_capture_urb call snd_pcm_stop_xrun,
-> >   or another function like it, if it sees certain
-> >   errors in the iso frame in the URB?
->=20
-> No.  Isochronous endpoints are expected to encounter errors from time
-> to=20
-> time; that is the nature of isochronous communications.  You're
-> supposed=20
-> to ignore the errors (skip over any bad data) and keep going.
+> +	/*
+> +	 * Clear the boot_ghcb. The first exception comes in before the bss
+> +	 * section is cleared.
+> +	 */
+> +	memset(&boot_ghcb_page, 0, PAGE_SIZE);
+> +
+> +	/* Alright - Make the boot-ghcb public */
+> +	boot_ghcb = &boot_ghcb_page;
+> +
+> +	return true;
+> +}
+> +
+> +static void __init vc_early_vc_forward_exception(struct es_em_ctxt *ctxt)
+
+That second "vc" looks redundant.
+
+> +{
+> +	int trapnr = ctxt->fi.vector;
+> +
+> +	if (trapnr == X86_TRAP_PF)
+> +		native_write_cr2(ctxt->fi.cr2);
+> +
+> +	ctxt->regs->orig_ax = ctxt->fi.error_code;
+> +	do_early_exception(ctxt->regs, trapnr);
+> +}
+> +
+> +static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+> +					 struct ghcb *ghcb,
+> +					 unsigned long exit_code)
+> +{
+> +	enum es_result result;
+> +
+> +	switch (exit_code) {
+> +	default:
+> +		/*
+> +		 * Unexpected #VC exception
+> +		 */
+> +		result = ES_UNSUPPORTED;
+> +	}
+> +
+> +	return result;
+> +}
+> +
+> +bool __init vc_boot_ghcb(struct pt_regs *regs)
+> +{
+> +	unsigned long exit_code = regs->orig_ax;
+> +	struct es_em_ctxt ctxt;
+> +	enum es_result result;
+> +
+> +	/* Do initial setup or terminate the guest */
+> +	if (unlikely(boot_ghcb == NULL && !sev_es_setup_ghcb()))
+> +		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
+> +
+> +	vc_ghcb_invalidate(boot_ghcb);
+
+Newline here...
+
+> +	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
+> +
+
+... remove that one here.
+
+> +	if (result == ES_OK)
+> +		result = vc_handle_exitcode(&ctxt, boot_ghcb, exit_code);
 
 ...
 
-> The notion of "stopped state" is not part of USB-2.  As a result, it=20
-> should be handled entirely within the xhci-hcd driver.
+-- 
+Regards/Gruss,
+    Boris.
 
-Interesting. That makes me really curious why things are
-getting stuck, now...
-
-> > - how should the USB sound driver recover from these
-> >   occasional and/or one-off errors? stop the sound
-> >   stream, or try to reinitialize the device and start
-> >   recording again?
->=20
-> As far as I know, it should do its best to continue (perhaps fill in=20
-> missing data with zeros).
-
-That was my first intuition as well, given the documented
-behavior of isochronous frames.
-
-However, given that the device appears to stop sending
-frames after that error, at least usbmon is not seeing
-any, I am not sure what needs to happen in order to get
-that behavior.
-
---=20
-All Rights Reversed.
-
---=-kor7JAH8v80RgB55+Ksv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl7Fg0gACgkQznnekoTE
-3oP6nAf/ela41PoyQHGOBVNUyLcwbl0jNWe/6JBUdk+jwh0wI/tP+dy5CLR6IOzG
-Fu1aDqLgUXF/gGLcFvNUl9LBz5kf9UDRrCflmFEAEgeViLuO1eIV+DOoaoogdclh
-X8L/tL4rv3fpK7lIRdx14Knwtpy2wTkmvFGyiTBQAtKs1FG00t+jRuYjYNKs6KNA
-o8MyPBYtp4QE0XMua9pEBvVRm+fjh8bJCXcFYYJw88e4o+MhBkfnZWA6Xrnl5YGw
-jwyfCSGWvNWCi8zKuJfkSWhsSOJk5a+TCGhIY7yhHNT3tUacLORRNEJ+8cbucpQ9
-mdwQnjU9EBX+UB+99OwQCSlzTECYAQ==
-=4YvF
------END PGP SIGNATURE-----
-
---=-kor7JAH8v80RgB55+Ksv--
-
+https://people.kernel.org/tglx/notes-about-netiquette
