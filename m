@@ -2,174 +2,105 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C325CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D04C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC27207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A877D207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Qn5uiJsI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SQ8tNiZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgETIec (ORCPT
+        id S1726748AbgETIfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:34:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57094 "EHLO
+        Wed, 20 May 2020 04:35:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgETIeb (ORCPT
+        with ESMTP id S1726224AbgETIfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:34:31 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB5FC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:34:31 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id w4so2271801oia.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:34:31 -0700 (PDT)
+        Wed, 20 May 2020 04:35:04 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA23C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:35:02 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id k4so963660uaq.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:35:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1L1JOS2/7OGTnjyzE28TzRr49jWHnoSPZa2y83NoajY=;
-        b=Qn5uiJsI1CiTUY1rMY/hdjYr4HiyDhfSz/K8IUT9Ct0Li9bZDcjTdmeeXfA+hvr4ye
-         La4sGIwutRbBBmkURH52DondGQmalrdmlRIin7Ill0HhbtbF6vFYpxeVZtTbZ9uc0pM2
-         QzWq0FNBS5CUP5cJj0ELZ9iBqOymG/dGQAeYg=
+        bh=dWNedqNnVtkL4N7byTSlokMrFbSA5zwuR7gFzJJl128=;
+        b=SQ8tNiZzYxLY/RgB9wgZbKb9kRZtd7l6++VUIpcM7KSkiCnFJ6rOUTbB9+JNqDalyg
+         VtT5pVWvDD24RyAcVlcmk8Swttc3W2dUxQ8kZgts7obn7g/tusrN8OAzxH3dG1zT7AmH
+         LhoM3a3xh01QnBJixtvWvWuQK+7yZ8vNPcn8ba6+GCz8JZBzhS+rMN5Gier5m9WMSMUO
+         eLK9YgwO3BV4fQcHA3cpOwMbIUY7xoCH5uc5un8zMDshWkfr1ViBBKbOsbkoSIXBtVLf
+         IlgoGYbnnz2+tFDnenBXwoF+t6aD8HydHUZnQYW005nbx3FTBWC6EINrMuwQnochqcTT
+         Ychw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1L1JOS2/7OGTnjyzE28TzRr49jWHnoSPZa2y83NoajY=;
-        b=MC9V2aI8JHIPFki+c5+k3XbZxPM1lf9ITH4svwfmJNS1rCGoStPww8KNIE75NIbyXV
-         jBo5lA5yQjqnnpvgFk4+cYGVXmv1uO3e33pQuQCrnQwx6GvFBSRghMecRJC5P9Df+kq2
-         z/ONMkSU6r/POYcYgbWLD/PJloBDpASA973KvdO7R0At+CyelaXRPIl/K8AH6tT1pZOQ
-         hf9caq3B3uOiJtRF8clEy4bkHk+PXmoXiV75hMaJXTQ8btB+4I20NYtu1gdmRXvp9+bw
-         XEV2tPyJ/bLEycSIs+V5cPjItD8GhroJYszXJX4GBE89ZRlqSa5TWGUvFw03TuxLZP1Q
-         9AQQ==
-X-Gm-Message-State: AOAM533vHBxXr0ohLbtVhMnMecBujR8yKS9tG2VakvS/SfsEGH/osEaU
-        izDMc42rfEL5bD3IaJHF/5aDJhlSv+qrK05ousGVTg==
-X-Google-Smtp-Source: ABdhPJzRbDLGTxxiGJOBqDYbay1jUZRZiOz0ftQQbB6lk0Qs5tbLJUocvqI+dvatbwDgQkZMRCmeij1RrgUlJ6saFTg=
-X-Received: by 2002:a05:6808:282:: with SMTP id z2mr2215511oic.101.1589963670477;
- Wed, 20 May 2020 01:34:30 -0700 (PDT)
+        bh=dWNedqNnVtkL4N7byTSlokMrFbSA5zwuR7gFzJJl128=;
+        b=F5MI6BGE3pLHel4WCqb4AUwuoWTusyipgKClh8K3g+tEfd6yF92cD1Nn4cfAKKUu03
+         xAQBHI2ULmu+sCq1PqNDbTsiblcYW8hSoVGzMCRq/iCYZRo4FLHCt83ebdckp4BuQ2xm
+         ISnt8DbnYItbxqxcrzWmYFBcVFGu8SIf4umtdkdzCpm3LO5PEu3xryyavK6/8cqljDEL
+         4ixIPQehwzMQjyKl5mQLIBDCO/yINB+IyNORKyQAsamvi5ZjQgBLcixARLFMlxlfTpd6
+         tJdbCOfPi2UY/pj7k9ox8SaNxMSQFrhR2AoXlI2XulqRUZBKOSWgdXLyQmWWZe4iOqzd
+         We7Q==
+X-Gm-Message-State: AOAM533yeEq8wCPmyXCSzUPBtdAtUWxvPxfUht8Ipkf1aBcudZS3eJxQ
+        fB2WBYFsluG5qqNiSlsgWRCwXIZcRZoAfBX5fAZhXKyI
+X-Google-Smtp-Source: ABdhPJyI3Gn+nNzHHNK2zZ1fNR0XMFLxv+NLCld5BRYpbCwQGl+JYwXpI0IDp4BL1sE21fuCNpU1mkctdqGnFSMUP8Q=
+X-Received: by 2002:ab0:53d5:: with SMTP id l21mr2532776uaa.134.1589963701780;
+ Wed, 20 May 2020 01:35:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
- <20200520051536.GA2141566@kroah.com>
-In-Reply-To: <20200520051536.GA2141566@kroah.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 20 May 2020 10:34:19 +0200
-Message-ID: <CAKMK7uEbwTK68sxhf452fPHzAreQqRbRc7=RLGX-9SesXnJnLQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Olof Johansson <olof.johansson@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200515215733.20647-1-eranian@google.com> <20200515215733.20647-4-eranian@google.com>
+ <20200518093402.GB277222@hirez.programming.kicks-ass.net> <CABPqkBQt0a7Pi7X2cLz601TJEqasDXrOZcwuBhDCjcZ+ishPMw@mail.gmail.com>
+In-Reply-To: <CABPqkBQt0a7Pi7X2cLz601TJEqasDXrOZcwuBhDCjcZ+ishPMw@mail.gmail.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Wed, 20 May 2020 01:34:50 -0700
+Message-ID: <CABPqkBQ8esgB1QiLGi68YM6CNxwY-78E7MHNtrxDjZNAhiSw0g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf/x86/rapl: add AMD Fam17h RAPL support
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, mingo@elte.hu,
+        Ian Rogers <irogers@google.com>,
+        "Phillips, Kim" <kim.phillips@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 7:15 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
-> > On Tue, May 19, 2020 at 07:41:20PM +0200, Greg Kroah-Hartman wrote:
-> > > On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
-> > > > On 5/18/2020 11:08 PM, Dave Airlie wrote:
-> > > > > On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> > > > > >
-> > > > > > Introduction:
-> > > > > > Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
-> > > > > > SoC ASIC for the purpose of efficently running Deep Learning inference
-> > > > > > workloads in a data center environment.
-> > > > > >
-> > > > > > The offical press release can be found at -
-> > > > > > https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
-> > > > > >
-> > > > > > The offical product website is -
-> > > > > > https://www.qualcomm.com/products/datacenter-artificial-intelligence
-> > > > > >
-> > > > > > At the time of the offical press release, numerious technology news sites
-> > > > > > also covered the product.  Doing a search of your favorite site is likely
-> > > > > > to find their coverage of it.
-> > > > > >
-> > > > > > It is our goal to have the kernel driver for the product fully upstream.
-> > > > > > The purpose of this RFC is to start that process.  We are still doing
-> > > > > > development (see below), and thus not quite looking to gain acceptance quite
-> > > > > > yet, but now that we have a working driver we beleive we are at the stage
-> > > > > > where meaningful conversation with the community can occur.
-> > > > >
-> > > > >
-> > > > > Hi Jeffery,
-> > > > >
-> > > > > Just wondering what the userspace/testing plans for this driver.
-> > > > >
-> > > > > This introduces a new user facing API for a device without pointers to
-> > > > > users or tests for that API.
-> > > >
-> > > > We have daily internal testing, although I don't expect you to take my word
-> > > > for that.
-> > > >
-> > > > I would like to get one of these devices into the hands of Linaro, so that
-> > > > it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
-> > > > to convince the powers that be to make this happen.
-> > > >
-> > > > Regarding what the community could do on its own, everything but the Linux
-> > > > driver is considered proprietary - that includes the on device firmware and
-> > > > the entire userspace stack.  This is a decision above my pay grade.
-> > >
-> > > Ok, that's a decision you are going to have to push upward on, as we
-> > > really can't take this without a working, open, userspace.
-> >
-> > Uh wut.
-> >
-> > So the merge criteria for drivers/accel (atm still drivers/misc but I
-> > thought that was interim until more drivers showed up) isn't actually
-> > "totally-not-a-gpu accel driver without open source userspace".
-> >
-> > Instead it's "totally-not-a-gpu accel driver without open source
-> > userspace" _and_ you have to be best buddies with Greg. Or at least
-> > not be on the naughty company list. Since for habanalabs all you
-> > wanted is a few test cases to exercise the ioctls. Not the entire
-> > userspace.
->
-> Also, to be fair, I have changed my mind after seeing the mess of
-> complexity that these "ioctls for everyone!" type of pass-through
-> these kinds of drivers are creating.  You were right, we need open
-> userspace code in order to be able to properly evaluate and figure out
-> what they are doing is right or not and be able to maintain things over
-> time correctly.
->
-> So I was wrong, and you were right, my apologies for my previous
-> stubbornness.
+Hi,
 
-Awesome and don't worry, I'm pretty sure we've all been stubborn
-occasionally :-)
+On Mon, May 18, 2020 at 1:16 PM Stephane Eranian <eranian@google.com> wrote:
+>
+> On Mon, May 18, 2020 at 2:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, May 15, 2020 at 02:57:33PM -0700, Stephane Eranian wrote:
+> >
+> > > +static struct perf_msr amd_rapl_msrs[] = {
+> > > +     [PERF_RAPL_PP0]  = { 0, &rapl_events_cores_group, NULL},
+> > > +     [PERF_RAPL_PKG]  = { MSR_AMD_PKG_ENERGY_STATUS,  &rapl_events_pkg_group,   test_msr },
+> > > +     [PERF_RAPL_RAM]  = { 0, &rapl_events_ram_group,   NULL},
+> > > +     [PERF_RAPL_PP1]  = { 0, &rapl_events_gpu_group,   NULL},
+> > > +     [PERF_RAPL_PSYS] = { 0, &rapl_events_psys_group,  NULL},
+> > > +};
+> >
+> > Why have those !PKG things initialized? Wouldn't they default to 0
+> > anyway? If not, surely { 0, } is sufficient.
+>
+> Yes, but that assumes that perf_msr_probe() is fixed to not expect a grp.
+> I think it is best to fix perf_msr_probe(). I already fixed one
+> problem, I'll fix this one as well.
 
-From a drivers/gpu pov I think still not quite there since we also
-want to see the compiler for these programmable accelerator thingies.
-But just having a fairly good consensus that "userspace library with
-all the runtime stuff excluding compiler must be open" is a huge step
-forward. Next step may be that we (kernel overall, drivers/gpu will
-still ask for the full thing) have ISA docs for these programmable
-things, so that we can also evaluate that aspect and gauge how many
-security issues there might be. Plus have a fighting chance to fix up
-the security leaks when (post smeltdown I don't really want to
-consider this an if) someone finds a hole in the hw security wall. At
-least in drivers/gpu we historically have a ton of drivers with
-command checkers to validate what userspace wants to run on the
-accelerator thingie. Both in cases where the hw was accidentally too
-strict, and not strict enough.
-
-Cheers, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Well, now I remember what I did it the way it is in the patch. This
+grp is going to sysfs, i.e., visible vs. not_visible callback.
+Even if I fix the handling of NULL grp in perf_msr_probe(), the rest
+of the rapl code pushes every event to sysfs and if the visible
+callback is set to NULL this means the event is visible for sysfs! We
+can fix that in init_rapl_pmus() but that is not pretty or leave it
+as is, your call.
