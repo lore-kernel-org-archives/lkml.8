@@ -2,107 +2,122 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9133FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77397C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A58207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589977899;
-	bh=rL8WkukpYlQE2FvyEL1Ca998vF4yjcYjdKtcskbOga4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A4GNHiFrke6EVpy6xOVc9OpPxVL14mXClJ6OGpx7wP+vN/8LxMxfoR9z2iidoVsan
-	 Cg94lgbKodE9aF0NB48e5l5l83oXj0wnCYyu8+8Y0YF2p6sWQ06F+PCSam4VG2I42k
-	 SRhZb6WkT1nTHxJPHOPPkOnj1ooFsbcy8s9yzrYA=
+	by mail.kernel.org (Postfix) with ESMTP id 518A820756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:33:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kbDEy74i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgETMbi (ORCPT
+        id S1726925AbgETMdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgETMbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:31:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 191D320756;
-        Wed, 20 May 2020 12:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589977897;
-        bh=rL8WkukpYlQE2FvyEL1Ca998vF4yjcYjdKtcskbOga4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LoxEWlrzY++Y0BFWiabgMwjNGX/nvadbakyFaRZq89IjX/nhET64+AAldhU56uv4y
-         /N2F8Ge6zCrPiaYs24N4AeJZ8C+ZXyDCJWLD1XynAuUuEF6n7NdU/UlXGv8qQP01VQ
-         yNqJhM8BUg7QoFPleCnp2BaLZ0B5zDCzVNny15Vs=
-Date:   Wed, 20 May 2020 13:31:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 20 May 2020 08:33:03 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7895 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726937AbgETMdD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:33:03 -0400
+X-UUID: 6e711db97bcf455184bca1c019ad3e79-20200520
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=BeLeJJH5ofgcw6vUjWiYK26OxvqDsbWroYEUdxA+t8A=;
+        b=kbDEy74iV27cIkJJSXEyR5Cgj6e/0mmb+LYzFWtIMhRa5IbD21zzDjE7FKpWgcjyCsyFeRfDw380a9UdkIzCtEEItK/HeAhNYeU3oqhWKWe51DmU++Qbh2DRlOVfqpOgHBgT8wu4rRa8IEmacymIpPosvKwpzgWJKLjq6OjxkxU=;
+X-UUID: 6e711db97bcf455184bca1c019ad3e79-20200520
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 185924271; Wed, 20 May 2020 20:32:58 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 20 May 2020 20:32:55 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 20 May 2020 20:32:55 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH 09/12] devfreq: add mediatek cci devfreq
-Message-ID: <20200520123135.GD4823@sirena.org.uk>
-References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
- <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH v5 0/4] kasan: memorize and print call_rcu stack
+Date:   Wed, 20 May 2020 20:32:55 +0800
+Message-ID: <20200520123255.3839-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2iBwrppp/7QCDedR"
-Content-Disposition: inline
-In-Reply-To: <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
-X-Cookie: You can't get there from here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: DF741B473EA238CE2AE57D1C416BCAEDDD57C2833C3B4D2DA18BAD5A08D8623E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VGhpcyBwYXRjaHNldCBpbXByb3ZlcyBLQVNBTiByZXBvcnRzIGJ5IG1ha2luZyB0aGVtIHRvIGhh
+dmUNCmNhbGxfcmN1KCkgY2FsbCBzdGFjayBpbmZvcm1hdGlvbi4gSXQgaXMgdXNlZnVsIGZvciBw
+cm9ncmFtbWVycw0KdG8gc29sdmUgdXNlLWFmdGVyLWZyZWUgb3IgZG91YmxlLWZyZWUgbWVtb3J5
+IGlzc3VlLg0KDQpUaGUgS0FTQU4gcmVwb3J0IHdhcyBhcyBmb2xsb3dzKGNsZWFuZWQgdXAgc2xp
+Z2h0bHkpOg0KDQpCVUc6IEtBU0FOOiB1c2UtYWZ0ZXItZnJlZSBpbiBrYXNhbl9yY3VfcmVjbGFp
+bSsweDU4LzB4NjANCg0KRnJlZWQgYnkgdGFzayAwOg0KIGthc2FuX3NhdmVfc3RhY2srMHgyNC8w
+eDUwDQoga2FzYW5fc2V0X3RyYWNrKzB4MjQvMHgzOA0KIGthc2FuX3NldF9mcmVlX2luZm8rMHgx
+OC8weDIwDQogX19rYXNhbl9zbGFiX2ZyZWUrMHgxMGMvMHgxNzANCiBrYXNhbl9zbGFiX2ZyZWUr
+MHgxMC8weDE4DQoga2ZyZWUrMHg5OC8weDI3MA0KIGthc2FuX3JjdV9yZWNsYWltKzB4MWMvMHg2
+MA0KDQpMYXN0IG9uZSBjYWxsX3JjdSgpIGNhbGwgc3RhY2s6DQoga2FzYW5fc2F2ZV9zdGFjaysw
+eDI0LzB4NTANCiBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKzB4YmMvMHhkMA0KIGNhbGxfcmN1KzB4
+OGMvMHg1ODANCiBrYXNhbl9yY3VfdWFmKzB4ZjQvMHhmOA0KDQpHZW5lcmljIEtBU0FOIHdpbGwg
+cmVjb3JkIHRoZSBsYXN0IHR3byBjYWxsX3JjdSgpIGNhbGwgc3RhY2tzIGFuZA0KcHJpbnQgdXAg
+dG8gMiBjYWxsX3JjdSgpIGNhbGwgc3RhY2tzIGluIEtBU0FOIHJlcG9ydC4gaXQgaXMgb25seQ0K
+c3VpdGFibGUgZm9yIGdlbmVyaWMgS0FTQU4uDQoNClRoaXMgZmVhdHVyZSBjb25zaWRlcnMgdGhl
+IHNpemUgb2Ygc3RydWN0IGthc2FuX2FsbG9jX21ldGEgYW5kDQprYXNhbl9mcmVlX21ldGEsIHdl
+IHRyeSB0byBvcHRpbWl6ZSB0aGUgc3RydWN0dXJlIGxheW91dCBhbmQgc2l6ZQ0KLCBsZXQgaXQg
+Z2V0IGJldHRlciBtZW1vcnkgY29uc3VtcHRpb24uDQoNClsxXWh0dHBzOi8vYnVnemlsbGEua2Vy
+bmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTk4NDM3DQpbMl1odHRwczovL2dyb3Vwcy5nb29nbGUu
+Y29tL2ZvcnVtLyMhc2VhcmNoaW4va2FzYW4tZGV2L2JldHRlciQyMHN0YWNrJDIwdHJhY2VzJDIw
+Zm9yJDIwcmN1JTdDc29ydDpkYXRlL2thc2FuLWRldi9LUXNqVF84OGhERS83ck5VWnByUkJnQUoN
+Cg0KQ2hhbmdlcyBzaW5jZSB2MjoNCi0gcmVtb3ZlIG5ldyBjb25maWcgb3B0aW9uLCBkZWZhdWx0
+IGVuYWJsZSBpdCBpbiBnZW5lcmljIEtBU0FODQotIHRlc3QgdGhpcyBmZWF0dXJlIGluIFNMQUIv
+U0xVQiwgaXQgaXMgcGFzcy4NCi0gbW9kaWZ5IG1hY3JvIHRvIGJlIG1vcmUgY2xlYXJseQ0KLSBt
+b2RpZnkgZG9jdW1lbnRhdGlvbg0KDQpDaGFuZ2VzIHNpbmNlIHYzOg0KLSBjaGFuZ2UgcmVjb3Jk
+aW5nIGZyb20gZmlyc3QvbGFzdCB0byB0aGUgbGFzdCB0d28gY2FsbCBzdGFja3MNCi0gbW92ZSBm
+cmVlIHRyYWNrIGludG8ga2FzYW4gZnJlZSBtZXRhDQotIGluaXQgc2xhYl9mcmVlX21ldGEgb24g
+b2JqZWN0IHNsb3QgY3JlYXRpb24NCi0gbW9kaWZ5IGRvY3VtZW50YXRpb24NCg0KQ2hhbmdlcyBz
+aW5jZSB2NDoNCi0gY2hhbmdlIHZhcmlhYmxlIG5hbWUgdG8gYmUgbW9yZSBjbGVhcmx5DQotIHJl
+bW92ZSB0aGUgcmVkdW5kYW50IGNvbmRpdGlvbg0KLSByZW1vdmUgaW5pdCBmcmVlIG1ldGEtZGF0
+YSBhbmQgaW5jcmVhc2luZyBvYmplY3QgY29uZGl0aW9uDQoNCkNoYW5nZXMgc2luY2UgdjU6DQot
+IGFkZCBhIG1hY3JvIEtBU0FOX0tNQUxMT0NfRlJFRVRSQUNLIGluIG9yZGVyIHRvIGNoZWNrIHdo
+ZXRoZXINCiAgcHJpbnQgZnJlZSBzdGFjaw0KLSBjaGFuZ2UgcHJpbnRpbmcgbWVzc2FnZQ0KLSBy
+ZW1vdmUgZGVzY3JpcHRpb25zIGluIEtvY29uZy5rYXNhbg0KDQpXYWx0ZXIgV3UgKDQpOg0KcmN1
+L2thc2FuOiByZWNvcmQgYW5kIHByaW50IGNhbGxfcmN1KCkgY2FsbCBzdGFjaw0Ka2FzYW46IHJl
+Y29yZCBhbmQgcHJpbnQgdGhlIGZyZWUgdHJhY2sNCmthc2FuOiBhZGQgdGVzdHMgZm9yIGNhbGxf
+cmN1IHN0YWNrIHJlY29yZGluZw0Ka2FzYW46IHVwZGF0ZSBkb2N1bWVudGF0aW9uIGZvciBnZW5l
+cmljIGthc2FuDQoNCkRvY3VtZW50YXRpb24vZGV2LXRvb2xzL2thc2FuLnJzdCB8ICAzICsrKw0K
+aW5jbHVkZS9saW51eC9rYXNhbi5oICAgICAgICAgICAgIHwgIDIgKysNCmtlcm5lbC9yY3UvdHJl
+ZS5jICAgICAgICAgICAgICAgICB8ICAyICsrDQpsaWIvdGVzdF9rYXNhbi5jICAgICAgICAgICAg
+ICAgICAgfCAzMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCm1tL2thc2FuL2NvbW1v
+bi5jICAgICAgICAgICAgICAgICB8IDI2ICsrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQptbS9r
+YXNhbi9nZW5lcmljLmMgICAgICAgICAgICAgICAgfCA0MyArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrDQptbS9rYXNhbi9nZW5lcmljX3JlcG9ydC5jICAgICAgICAg
+fCAgMSArDQptbS9rYXNhbi9rYXNhbi5oICAgICAgICAgICAgICAgICAgfCAyMyArKysrKysrKysr
+KysrKysrKysrKystLQ0KbW0va2FzYW4vcXVhcmFudGluZS5jICAgICAgICAgICAgIHwgIDEgKw0K
+bW0va2FzYW4vcmVwb3J0LmMgICAgICAgICAgICAgICAgIHwgNTAgKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCm1tL2thc2FuL3RhZ3MuYyAgICAgICAg
+ICAgICAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCjEx
+IGZpbGVzIGNoYW5nZWQsIDE3MiBpbnNlcnRpb25zKCspLCA0NiBkZWxldGlvbnMoLSkNCg==
 
---2iBwrppp/7QCDedR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, May 20, 2020 at 11:43:04AM +0800, Andrew-sh.Cheng wrote:
-
-> +	cci_df->proc_reg = devm_regulator_get_optional(cci_dev, "proc");
-> +	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
-> +				ret);
-> +		return ret;
-> +	}
-> +	ret = regulator_enable(cci_df->proc_reg);
-
-The code appears to require a regulator (and I'm guessing the device
-needs power) so why is this using regulator_get_optional()?
-
---2iBwrppp/7QCDedR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7FIyYACgkQJNaLcl1U
-h9D0kAf/f2yyGL/KhJ2Y+J/Xvk72EFz2UdjxlDjJo9wXYf3J4HWB9sgTXydoZoRj
-bPlZzQtBeUPNmvX60Nczzt1V0KYNXns6mOfBOTueIAlSLeOnWBLV2+IUedCAVOJw
-NX2i3pZdZ2p7yOO9QGU2s8hxc3uwCHKETMa5U/B6ENwkQkkOlJCNkjVYYiuoAJn+
-9mIq1Ko2yfPHqJPyh/wP/CTC7AqXyPnQmO+rAlua+v8ua7RXRqAlkI/LpWhhpe1U
-PAdhYsvKa9TiyafrrUPW1TPbTBRnWpHd1s2gjhpiGuuDhJyEaGjxsm0dz82gs5ml
-aut3SlENmvhhRkfxSKh8LBYpjvJ0hA==
-=vHQ8
------END PGP SIGNATURE-----
-
---2iBwrppp/7QCDedR--
