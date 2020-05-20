@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F55C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 635D9207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F7F205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgETOZl (ORCPT
+        id S1728379AbgETOZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:41 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33108 "EHLO
+        Wed, 20 May 2020 10:25:44 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32976 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727042AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726990AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-00037U-D9; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPby-00036u-2v; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-007DVF-31; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbx-007DWB-Iy; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andrew Honig" <ahonig@google.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Jim Mattson" <jmattson@google.com>,
-        "Marios Pomonis" <pomonis@google.com>,
-        "Nick Finco" <nifi@google.com>
-Date:   Wed, 20 May 2020 15:14:47 +0100
-Message-ID: <lsq.1589984009.163041687@decadent.org.uk>
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Wed, 20 May 2020 15:14:58 +0100
+Message-ID: <lsq.1589984009.317015677@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 79/99] KVM: x86: Protect ioapic_write_indirect() from
- Spectre-v1/L1TF attacks
+Subject: [PATCH 3.16 90/99] ALSA: dummy: Fix PCM format loop in proc output
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,38 +54,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marios Pomonis <pomonis@google.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 670564559ca35b439c8d8861fc399451ddf95137 upstream.
+commit 2acf25f13ebe8beb40e97a1bbe76f36277c64f1e upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in ioapic_write_indirect().
-This function contains index computations based on the
-(attacker-controlled) IOREGSEL register.
+The loop termination for iterating over all formats should contain
+SNDRV_PCM_FORMAT_LAST, not less than it.
 
-This patch depends on patch
-"KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks".
-
-Fixes: 70f93dae32ac ("KVM: Use temporary variable to shorten lines.")
-
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: adjust filename]
+Fixes: 9b151fec139d ("ALSA: dummy - Add debug proc file")
+Link: https://lore.kernel.org/r/20200201080530.22390-3-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- virt/kvm/ioapic.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/drivers/dummy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/virt/kvm/ioapic.c
-+++ b/virt/kvm/ioapic.c
-@@ -312,6 +312,7 @@ static void ioapic_write_indirect(struct
- 		ioapic_debug("change redir index %x val %x\n", index, val);
- 		if (index >= IOAPIC_NUM_PINS)
- 			return;
-+		index = array_index_nospec(index, IOAPIC_NUM_PINS);
- 		e = &ioapic->redirtbl[index];
- 		mask_before = e->fields.mask;
- 		if (ioapic->ioregsel & 1) {
+--- a/sound/drivers/dummy.c
++++ b/sound/drivers/dummy.c
+@@ -927,7 +927,7 @@ static void print_formats(struct snd_dum
+ {
+ 	int i;
+ 
+-	for (i = 0; i < SNDRV_PCM_FORMAT_LAST; i++) {
++	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
+ 		if (dummy->pcm_hw.formats & (1ULL << i))
+ 			snd_iprintf(buffer, " %s", snd_pcm_format_name(i));
+ 	}
 
