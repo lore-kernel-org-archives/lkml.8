@@ -2,119 +2,146 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19527C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22077C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3E9207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:11:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590001886;
-	bh=xy+F+Xk6Eh27TpQwycM8KVFcBwkkldw7VDh+CKoRc4U=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=m0RFfyo7DFOzfhW0F6p8IEB29DgZC7VFCYRf8QoEE7/bKIwA4lvHjA3Hvlxp3bT15
-	 ZlHLCZr9oAanEKQriWSpZ95Y6ez1H9w8gok3tMFUi92EGusYa5MqHqkfPy4v5b4Y3W
-	 Z4ciZft3BMjngHpPbDCfrtBqRlTRiWl1Nqvd1gAI=
+	by mail.kernel.org (Postfix) with ESMTP id F1861206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZntZSa1a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgETTL0 (ORCPT
+        id S1726822AbgETTN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgETTLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:11:25 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 20 May 2020 15:13:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44629 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726566AbgETTN3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:13:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590002007;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uVj+MsI3l6KMi5hkuPwd7L6S2NyrXRTHPrxS0K9UsOs=;
+        b=ZntZSa1aATOrGrEaFf5WIOPm4vh0Z3DSsq8k4b8/fBfwnp0zSK7YWLpO+JKWPxwfUHtkPd
+        1xIHlbkAh9beAREc6hhM7GfDT32O9n/kLmB9SOe0jwVoDThmT14LpZsOekw16K7OR9Vk/9
+        B86JmXaTWU4fdS9AMToEkfNAmOMHCcE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-248-TUkh5LkHMQm8KIdAbJot0w-1; Wed, 20 May 2020 15:13:23 -0400
+X-MC-Unique: TUkh5LkHMQm8KIdAbJot0w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB1D206B6;
-        Wed, 20 May 2020 19:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590001885;
-        bh=xy+F+Xk6Eh27TpQwycM8KVFcBwkkldw7VDh+CKoRc4U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KeoSit7FEot91Av1rOcj3Y6AZne6zDmV1+pKSeffKQzno+1EiIAnhhGWSISar8/Pa
-         iyW9G2sGEdej30zDTh+qWDjG+s1ZHjb0qpaBvJb5JrGH6zvJFw3U556+wlYe3qWca+
-         qTTiWm7UY5NJeeWD2hRKxSRFH0Yxz5Zt5AaXvxys=
-Date:   Wed, 20 May 2020 14:16:13 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH perf/core] perf branch: Replace zero-length array with
- flexible-array
-Message-ID: <20200520191613.GA26869@embeddedor>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCBBB461;
+        Wed, 20 May 2020 19:13:21 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-114-121.rdu2.redhat.com [10.10.114.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 476375C1BE;
+        Wed, 20 May 2020 19:13:21 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id C16CD22036E; Wed, 20 May 2020 15:13:20 -0400 (EDT)
+Date:   Wed, 20 May 2020 15:13:20 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
+        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH v3 2/2] x86/copy_mc: Introduce copy_mc_generic()
+Message-ID: <20200520191320.GA3255@redhat.com>
+References: <158992635164.403910.2616621400995359522.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158992636214.403910.12184670538732959406.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <158992636214.403910.12184670538732959406.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, May 19, 2020 at 03:12:42PM -0700, Dan Williams wrote:
+> The original copy_mc_fragile() implementation had negative performance
+> implications since it did not use the fast-string instruction sequence
+> to perform copies. For this reason copy_mc_to_kernel() fell back to
+> plain memcpy() to preserve performance on platform that did not indicate
+> the capability to recover from machine check exceptions. However, that
+> capability detection was not architectural and now that some platforms
+> can recover from fast-string consumption of memory errors the memcpy()
+> fallback now causes these more capable platforms to fail.
+> 
+> Introduce copy_mc_generic() as the fast default implementation of
+> copy_mc_to_kernel() and finalize the transition of copy_mc_fragile() to
+> be a platform quirk to indicate 'fragility'. With this in place
+> copy_mc_to_kernel() is fast and recovery-ready by default regardless of
+> hardware capability.
+> 
+> Thanks to Vivek for identifying that copy_user_generic() is not suitable
+> as the copy_mc_to_user() backend since the #MC handler explicitly checks
+> ex_has_fault_handler().
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+/me is curious to know why #MC handler mandates use of _ASM_EXTABLE_FAULT().
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+[..]
+> +/*
+> + * copy_mc_generic - memory copy with exception handling
+> + *
+> + * Fast string copy + fault / exception handling. If the CPU does
+> + * support machine check exception recovery, but does not support
+> + * recovering from fast-string exceptions then this CPU needs to be
+> + * added to the copy_mc_fragile_key set of quirks. Otherwise, absent any
+> + * machine check recovery support this version should be no slower than
+> + * standard memcpy.
+> + */
+> +SYM_FUNC_START(copy_mc_generic)
+> +	ALTERNATIVE "jmp copy_mc_fragile", "", X86_FEATURE_ERMS
+> +	movq %rdi, %rax
+> +	movq %rdx, %rcx
+> +.L_copy:
+> +	rep movsb
+> +	/* Copy successful. Return zero */
+> +	xorl %eax, %eax
+> +	ret
+> +SYM_FUNC_END(copy_mc_generic)
+> +EXPORT_SYMBOL_GPL(copy_mc_generic)
+> +
+> +	.section .fixup, "ax"
+> +.E_copy:
+> +	/*
+> +	 * On fault %rcx is updated such that the copy instruction could
+> +	 * optionally be restarted at the fault position, i.e. it
+> +	 * contains 'bytes remaining'. A non-zero return indicates error
+> +	 * to copy_safe() users, or indicate short transfers to
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+copy_safe() is vestige of terminology of previous patches?
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+> +	 * user-copy routines.
+> +	 */
+> +	movq %rcx, %rax
+> +	ret
+> +
+> +	.previous
+> +
+> +	_ASM_EXTABLE_FAULT(.L_copy, .E_copy)
 
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
+A question for my education purposes.
 
-This issue was found with the help of Coccinelle and audited _manually_.
+So copy_mc_generic() can handle MCE both on source and destination
+addresses? (Assuming some device can generate MCE on stores too).
+On the other hand copy_mc_fragile() handles MCE recovery only on
+source and non-MCE recovery on destination.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- tools/perf/util/branch.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
-index 4d3f02fa223df..17b2ccc61094b 100644
---- a/tools/perf/util/branch.h
-+++ b/tools/perf/util/branch.h
-@@ -46,7 +46,7 @@ struct branch_entry {
- struct branch_stack {
- 	u64			nr;
- 	u64			hw_idx;
--	struct branch_entry	entries[0];
-+	struct branch_entry	entries[];
- };
- 
- /*
--- 
-2.26.2
+Thanks
+Vivek
 
