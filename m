@@ -2,38 +2,39 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A28C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C70EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99BC2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EF42070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgETMQH (ORCPT
+        id S1726824AbgETMQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:16:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24808 "EHLO mga17.intel.com"
+        Wed, 20 May 2020 08:16:20 -0400
+Received: from mga14.intel.com ([192.55.52.115]:13523 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETMQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:16:06 -0400
-IronPort-SDR: UIncpspnrRRBHG00Xtx/I/fIv60vW8L/LDzl8q/VaFFNwmiPn7bJsGfUVzWxqsAnF5zSH0yKBo
- idTRxmMhbglg==
+        id S1726224AbgETMQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:16:20 -0400
+IronPort-SDR: m9huFEVMkEmIPc19tVgswYKdttrZur4KRF8Lmwf8xZh4UVAlSaZ43RYTxpnpgNaI6fyG2LWClD
+ Xtxh9vddIrSw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:16:06 -0700
-IronPort-SDR: pv17pbgS2GGtmInTpjcd5g8rVRY56BtISvGSwa76r48JnssIR1JDoIxqq2cJJcJ6WHAUbJSHTf
- z4ZsADvZ4Iow==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:16:19 -0700
+IronPort-SDR: Vgq6EvUZSLrYOM+TGYQRhgTntrBOElNfAhhEb31HYHhF0Zqas6ic3cpfdRyIo5D+X3m2vOYtVR
+ UdKXrcjnWYAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
-   d="scan'208";a="289330835"
+   d="scan'208";a="289330903"
 Received: from mylly.fi.intel.com (HELO [10.237.72.161]) ([10.237.72.161])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 05:16:00 -0700
-Subject: Re: [PATCH v2 05/12] i2c: designware: Use `-y` to build multi-object
- modules
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 05:16:15 -0700
+Subject: Re: [PATCH v2 07/12] i2c: designware: Move Baytrail sem config to the
+ platform if-clause
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -47,19 +48,20 @@ Cc:     Serge Semin <fancer.lancer@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>,
         linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>, Max Staudt <max@enpas.org>,
-        Stefan Roese <sr@denx.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Jean Delvare <jdelvare@suse.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Max Staudt <max@enpas.org>, Stefan Roese <sr@denx.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
  <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-6-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-8-Sergey.Semin@baikalelectronics.ru>
 From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <a28c29d6-76d5-4029-cee6-6b82ccc5ab9d@linux.intel.com>
-Date:   Wed, 20 May 2020 15:16:00 +0300
+Message-ID: <da6d8b18-b808-fd86-bbd2-13e7a90b2a5e@linux.intel.com>
+Date:   Wed, 20 May 2020 15:16:14 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200510095019.20981-6-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200510095019.20981-8-Sergey.Semin@baikalelectronics.ru>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,12 +71,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 5/10/20 12:50 PM, Serge Semin wrote:
-> Since commit 4f8272802739 ("Documentation: update kbuild loadable modules
-> goals & examples") `-objs` is fitted for building host programs, lets
-> change DW I2C core, platform and PCI driver kbuild directives to using
-> `-y`, which more straightforward for device drivers. By doing so we can
-> discard the ifeq construction in favor to the more natural and less bulky
-> `<module>-$(CONFIG_X) += x.o`
+> Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
+> platform driver. It's a bit confusing to see it's config in the menu at
+> some separated place with no reference to the platform code. Lets move the
+> config definition under the if-I2C_DESIGNWARE_PLATFORM clause. By doing so
+> the config menu will display the feature right below the DW I2C platform
+> driver item and will indent it to the right so signifying its belonging.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -89,7 +91,45 @@ On 5/10/20 12:50 PM, Serge Semin wrote:
 > Cc: linux-mips@vger.kernel.org
 > Cc: devicetree@vger.kernel.org
 > ---
->   drivers/i2c/busses/Makefile | 17 ++++++++---------
->   1 file changed, 8 insertions(+), 9 deletions(-)
+>   drivers/i2c/busses/Kconfig | 30 +++++++++++++++++-------------
+>   1 file changed, 17 insertions(+), 13 deletions(-)
 > 
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 368aa64e9266..ed6927c4c540 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -530,8 +530,8 @@ config I2C_DESIGNWARE_CORE
+>   
+>   config I2C_DESIGNWARE_PLATFORM
+>   	tristate "Synopsys DesignWare Platform"
+> -	select I2C_DESIGNWARE_CORE
+>   	depends on (ACPI && COMMON_CLK) || !ACPI
+> +	select I2C_DESIGNWARE_CORE
+>   	help
+>   	  If you say yes to this option, support will be included for the
+>   	  Synopsys DesignWare I2C adapter.
+> @@ -539,6 +539,22 @@ config I2C_DESIGNWARE_PLATFORM
+>   	  This driver can also be built as a module.  If so, the module
+>   	  will be called i2c-designware-platform.
+>   
+> +if I2C_DESIGNWARE_PLATFORM
+> +
+> +config I2C_DESIGNWARE_BAYTRAIL
+> +	bool "Intel Baytrail I2C semaphore support"
+> +	depends on ACPI
+> +	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
+> +		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
+> +	help
+> +	  This driver enables managed host access to the PMIC I2C bus on select
+> +	  Intel BayTrail platforms using the X-Powers AXP288 PMIC. It allows
+> +	  the host to request uninterrupted access to the PMIC's I2C bus from
+> +	  the platform firmware controlling it. You should say Y if running on
+> +	  a BayTrail system using the AXP288.
+> +
+> +endif # I2C_DESIGNWARE_PLATFORM
+> +
+
+Is the added "if I2C_DESIGNWARE_PLATFORM" needed here? Should the 
+"depends on" be enough?
+
+Jarkko
