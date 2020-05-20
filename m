@@ -2,164 +2,154 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFEDB20759
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9495207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="ToruOqWt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hh4F36Q7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgETQbw (ORCPT
+        id S1727018AbgETQbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgETQbq (ORCPT
+        Wed, 20 May 2020 12:31:55 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58746 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726966AbgETQbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:31:46 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF1FAC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:31:44 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id f13so3135457edr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=17jQ1Ah04oBToqJwXezLZCoVZLFH+XvWoWdyyqn9mN4=;
-        b=ToruOqWtIPegGVdd3B6jTVoD/jM+3Af1McEs8wIdfzwADuzejeup3xOJQYdm11S4EZ
-         65f5gLqFmKnxcngv/RXN+x6KKrFXbF2QNkJJEO/INc/RjX4WvlQPN+Bi7MjzN0mt+0WH
-         8YSuiL7L4Tj+3phhD1zTvajIoimjSyRefUirY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=17jQ1Ah04oBToqJwXezLZCoVZLFH+XvWoWdyyqn9mN4=;
-        b=obYwGdQPK23l0r1fCwSX9aJb9i6fZic1MF87/nfMRQlIPh7djf90vEZ1+Q9CKLL9/Q
-         bSQxxbtLBM+c3WmpMNCV6gtjeclVaOW9oWaF8hGEBiLOaf9/EpoJfIdLqwWPxXRi19sc
-         07HvhzIASuG66DHLUIDg/d4Ootcic63D+gecl0lcFS+lvO6DjeVj6M7dS/3pMy/6VcCI
-         +kWWwPUjFxMDn1Fci9kWFJ6rfZb8e6g0knaHEh4/IWlYpVB3dEh3V41lhLQeEGnOCLWb
-         L3LIcgdNm08h40U/7p0mLzX/hJ6q23oZoFtkhJs765YrLWZTBJvkHYUk7XQVasKPc6Ve
-         XaLw==
-X-Gm-Message-State: AOAM531d44mQVbHWv6q2eRGuNc4zrkyfZIOWpN5joMYQr13FSLL3Sw4U
-        mJK6wYgX/fHEUZzxylb5V+oxVg==
-X-Google-Smtp-Source: ABdhPJy4Y8SAoa9B33qnxj6nB4l/32rU1XrBuIH6bGgBO5u/ZSRq37k2+8ilcS54Hv60sCMxDciDKg==
-X-Received: by 2002:a50:9b19:: with SMTP id o25mr4312664edi.141.1589992303655;
-        Wed, 20 May 2020 09:31:43 -0700 (PDT)
-Received: from localhost ([2620:10d:c093:400::5:758d])
-        by smtp.gmail.com with ESMTPSA id gx25sm2279074ejb.63.2020.05.20.09.31.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:31:43 -0700 (PDT)
-Date:   Wed, 20 May 2020 17:31:42 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] mm, memcg: unify reclaim retry limits with page allocator
-Message-ID: <20200520163142.GA808793@chrisdown.name>
+        Wed, 20 May 2020 12:31:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KGVZh4064141;
+        Wed, 20 May 2020 11:31:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589992295;
+        bh=oMN/iHiwQjDWS2EDa3kGydbVWyIjwSamwfacAnOEz7U=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=hh4F36Q7OsGVmi/LSi5GBtXZzNfWM9JzgvMZjSBMsEEe0Wl3h4VQYQw1rGvYhqQOW
+         ugP7Nhe56OxfvXjEfiABmDoQa0d4NMdDOiYcosysh2hBXSo42sR0ZOXvlBghTha+9F
+         7QDMW72MylUw0vS11mvdAfPHyzBvUK7LEKc/LO3Y=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KGVZ69052455
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 11:31:35 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 11:31:34 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 11:31:34 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KGUsxW001551;
+        Wed, 20 May 2020 11:31:30 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v6 07/19] mtd: spi-nor: sfdp: prepare BFPT parsing for JESD216 rev D
+Date:   Wed, 20 May 2020 22:00:41 +0530
+Message-ID: <20200520163053.24357-8-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200520163053.24357-1-p.yadav@ti.com>
+References: <20200520163053.24357-1-p.yadav@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reclaim retries have been set to 5 since the beginning of time in
-66e1707bc346 ("Memory controller: add per cgroup LRU and reclaim").
-However, we now have a generally agreed-upon standard for page reclaim:
-MAX_RECLAIM_RETRIES (currently 16), added many years later in
-0a0337e0d1d1 ("mm, oom: rework oom detection").
+JESD216 rev D makes BFPT 20 DWORDs. Update the BFPT size define to
+reflect that.
 
-In the absence of a compelling reason to declare an OOM earlier in memcg
-context than page allocator context, it seems reasonable to supplant
-MEM_CGROUP_RECLAIM_RETRIES with MAX_RECLAIM_RETRIES, making the page
-allocator and memcg internals more similar in semantics when reclaim
-fails to produce results, avoiding premature OOMs or throttling.
+The check for rev A or later compared the BFPT header length with the
+maximum BFPT length, BFPT_DWORD_MAX. Since BFPT_DWORD_MAX was 16, and so
+was the BFPT length for both rev A and B, this check worked fine. But
+now, since BFPT_DWORD_MAX is 20, it means this check will also stop BFPT
+parsing for rev A or B, since their length is 16.
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
+So, instead check for BFPT_DWORD_MAX_JESD216 to stop BFPT parsing for
+the first JESD216 version, and check for BFPT_DWORD_MAX_JESD216B for the
+next two versions.
+
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- mm/memcontrol.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/mtd/spi-nor/sfdp.c | 7 ++++++-
+ drivers/mtd/spi-nor/sfdp.h | 5 +++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index b040951ccd6b..d3b23c57bed4 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -73,9 +73,6 @@ EXPORT_SYMBOL(memory_cgrp_subsys);
+diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+index 5cecc4ba2141..96960f2f3d7a 100644
+--- a/drivers/mtd/spi-nor/sfdp.c
++++ b/drivers/mtd/spi-nor/sfdp.c
+@@ -549,7 +549,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 				  SNOR_ERASE_TYPE_MASK;
  
- struct mem_cgroup *root_mem_cgroup __read_mostly;
+ 	/* Stop here if not JESD216 rev A or later. */
+-	if (bfpt_header->length < BFPT_DWORD_MAX)
++	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216)
+ 		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
+ 						params);
  
--/* The number of times we should retry reclaim failures before giving up. */
--#define MEM_CGROUP_RECLAIM_RETRIES	5
--
- /* Socket memory accounting disabled? */
- static bool cgroup_memory_nosocket;
+@@ -605,6 +605,11 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 		return -EINVAL;
+ 	}
  
-@@ -2386,7 +2383,7 @@ void mem_cgroup_handle_over_high(void)
- 	unsigned long pflags;
- 	unsigned long nr_reclaimed;
- 	unsigned int nr_pages = current->memcg_nr_pages_over_high;
--	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-+	int nr_retries = MAX_RECLAIM_RETRIES;
- 	struct mem_cgroup *memcg;
++	/* Stop here if JESD216 rev B. */
++	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216B)
++		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
++						params);
++
+ 	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
+ }
  
- 	if (likely(!nr_pages))
-@@ -2438,7 +2435,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 		      unsigned int nr_pages)
- {
- 	unsigned int batch = max(MEMCG_CHARGE_BATCH, nr_pages);
--	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-+	int nr_retries = MAX_RECLAIM_RETRIES;
- 	struct mem_cgroup *mem_over_limit;
- 	struct page_counter *counter;
- 	unsigned long nr_reclaimed;
-@@ -2557,7 +2554,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 		       get_order(nr_pages * PAGE_SIZE));
- 	switch (oom_status) {
- 	case OOM_SUCCESS:
--		nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-+		nr_retries = MAX_RECLAIM_RETRIES;
- 		goto retry;
- 	case OOM_FAILED:
- 		goto force;
-@@ -3168,7 +3165,7 @@ static inline bool memcg_has_children(struct mem_cgroup *memcg)
+diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
+index e0a8ded04890..f8198af43a63 100644
+--- a/drivers/mtd/spi-nor/sfdp.h
++++ b/drivers/mtd/spi-nor/sfdp.h
+@@ -10,11 +10,11 @@
+ /* Basic Flash Parameter Table */
+ 
+ /*
+- * JESD216 rev B defines a Basic Flash Parameter Table of 16 DWORDs.
++ * JESD216 rev D defines a Basic Flash Parameter Table of 20 DWORDs.
+  * They are indexed from 1 but C arrays are indexed from 0.
   */
- static int mem_cgroup_force_empty(struct mem_cgroup *memcg)
- {
--	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-+	int nr_retries = MAX_RECLAIM_RETRIES;
+ #define BFPT_DWORD(i)		((i) - 1)
+-#define BFPT_DWORD_MAX		16
++#define BFPT_DWORD_MAX		20
  
- 	/* we call try-to-free pages for make this cgroup empty */
- 	lru_add_drain_all();
-@@ -6001,7 +5998,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
- 				 char *buf, size_t nbytes, loff_t off)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
--	unsigned int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-+	unsigned int nr_retries = MAX_RECLAIM_RETRIES;
- 	bool drained = false;
- 	unsigned long high;
- 	int err;
-@@ -6049,7 +6046,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
- 				char *buf, size_t nbytes, loff_t off)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
--	unsigned int nr_reclaims = MEM_CGROUP_RECLAIM_RETRIES;
-+	unsigned int nr_reclaims = MAX_RECLAIM_RETRIES;
- 	bool drained = false;
- 	unsigned long max;
- 	int err;
+ struct sfdp_bfpt {
+ 	u32	dwords[BFPT_DWORD_MAX];
+@@ -22,6 +22,7 @@ struct sfdp_bfpt {
+ 
+ /* The first version of JESD216 defined only 9 DWORDs. */
+ #define BFPT_DWORD_MAX_JESD216			9
++#define BFPT_DWORD_MAX_JESD216B			16
+ 
+ /* 1st DWORD. */
+ #define BFPT_DWORD1_FAST_READ_1_1_2		BIT(16)
 -- 
 2.26.2
 
