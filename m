@@ -2,136 +2,90 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E830207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273EB20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nlMkxRsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgETLy3 (ORCPT
+        id S1726943AbgETLzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:54:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:54358 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgETLy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:54:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E65230E;
-        Wed, 20 May 2020 04:54:28 -0700 (PDT)
-Received: from [10.37.8.50] (unknown [10.37.8.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E4853F52E;
-        Wed, 20 May 2020 04:54:27 -0700 (PDT)
-Subject: Re: [PATCH] selftests/timens: handle a case when alarm clocks are not
- supported
-To:     Andrei Vagin <avagin@gmail.com>, Shuah Khan <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kselftest@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200415061802.722485-1-avagin@gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <5c9d2f75-d20a-d74a-f72a-94f3fa69bc16@arm.com>
-Date:   Wed, 20 May 2020 12:55:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 07:55:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETLzF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:55:05 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01D2C061A0E;
+        Wed, 20 May 2020 04:55:03 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rrlm0MDlz9sT1;
+        Wed, 20 May 2020 21:55:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589975700;
+        bh=yDiiTAInSxyK1/TTzPLx+2xpNCn5L5xGDKCbAxG0qYE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nlMkxRsYAgPWReiVmkDR3EsF1GexJ7l4Hd+kQAF9FYnDcGXLSX53zlVYDXNfiHiqT
+         i22+JGO578gIhFlbhbvbiJ+ZzZBAWmz/eU3LOe2PC0TtkdhptZjJQrgxbR4+qQjS3x
+         gaRMPoYrExnpy7X9LlXydkQMHfoHAFGBSXerH7e7OqO5xSoZoH4Wd2cK3Yk64RJzhA
+         oZPucsiJGLjSMyJPzYou17fI8cFBZM2QoPJZeuF+9GKe+PmcFn9aHgqOBR/tBjKQ9j
+         KkLsHY8E9aK9jIaj2wAs+NMNQHTNemnsY0eYV7wo0YPEenuAPptfTDGE+4JzCoa3Rk
+         2MQJCR6f3/Xcg==
+Date:   Wed, 20 May 2020 21:54:59 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the v4l-dvb tree
+Message-ID: <20200520215459.4e921042@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200415061802.722485-1-avagin@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/Sf4G2MbesCFRkAcAW=pjY6X";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrei,
+--Sig_/Sf4G2MbesCFRkAcAW=pjY6X
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-thanks for this.
+Hi all,
 
-On 4/15/20 7:18 AM, Andrei Vagin wrote:
-> This can happen if a testing node doesn't have RTC (real time clock)
-> hardware or it doesn't support alarms.
-> 
+Commit
 
-Could you please add the "Reported-by:" tag and the "Fixes:" one?
+  21abaf06e4b8 ("media: atomisp: improve device detection code")
 
-With this:
+is missing a Signed-off-by from its author and committer.
 
-Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+--=20
+Cheers,
+Stephen Rothwell
 
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Signed-off-by: Andrei Vagin <avagin@gmail.com>
-> ---
->  tools/testing/selftests/timens/clock_nanosleep.c |  2 +-
->  tools/testing/selftests/timens/timens.c          |  2 +-
->  tools/testing/selftests/timens/timens.h          | 13 ++++++++++++-
->  3 files changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
-> index 8e7b7c72ef65..72d41b955fb2 100644
-> --- a/tools/testing/selftests/timens/clock_nanosleep.c
-> +++ b/tools/testing/selftests/timens/clock_nanosleep.c
-> @@ -119,7 +119,7 @@ int main(int argc, char *argv[])
->  
->  	ksft_set_plan(4);
->  
-> -	check_config_posix_timers();
-> +	check_supported_timers();
->  
->  	if (unshare_timens())
->  		return 1;
-> diff --git a/tools/testing/selftests/timens/timens.c b/tools/testing/selftests/timens/timens.c
-> index 559d26e21ba0..07feebe8e53e 100644
-> --- a/tools/testing/selftests/timens/timens.c
-> +++ b/tools/testing/selftests/timens/timens.c
-> @@ -156,7 +156,7 @@ int main(int argc, char *argv[])
->  
->  	nscheck();
->  
-> -	check_config_posix_timers();
-> +	check_supported_timers();
->  
->  	ksft_set_plan(ARRAY_SIZE(clocks) * 2);
->  
-> diff --git a/tools/testing/selftests/timens/timens.h b/tools/testing/selftests/timens/timens.h
-> index e09e7e39bc52..d4fc52d47146 100644
-> --- a/tools/testing/selftests/timens/timens.h
-> +++ b/tools/testing/selftests/timens/timens.h
-> @@ -14,15 +14,26 @@
->  #endif
->  
->  static int config_posix_timers = true;
-> +static int config_alarm_timers = true;
->  
-> -static inline void check_config_posix_timers(void)
-> +static inline void check_supported_timers(void)
->  {
-> +	struct timespec ts;
-> +
->  	if (timer_create(-1, 0, 0) == -1 && errno == ENOSYS)
->  		config_posix_timers = false;
-> +
-> +	if (clock_gettime(CLOCK_BOOTTIME_ALARM, &ts) == -1 && errno == EINVAL)
-> +		config_alarm_timers = false;
->  }
->  
->  static inline bool check_skip(int clockid)
->  {
-> +	if (!config_alarm_timers && clockid == CLOCK_BOOTTIME_ALARM) {
-> +		ksft_test_result_skip("CLOCK_BOOTTIME_ALARM isn't supported\n");
-> +		return true;
-> +	}
-> +
->  	if (config_posix_timers)
->  		return false;
->  
-> 
+--Sig_/Sf4G2MbesCFRkAcAW=pjY6X
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-Regards,
-Vincenzo
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7FGpMACgkQAVBC80lX
+0GyzdQgAn804dgQsuHo/zaLStzBlnW6hP1q0pWf+52tJ3S8jg/3O82SArxDJThBE
+uPe33OZaovPQ1SZTWmWwdQkv/MS+ybLLf4PTxVcQNCdQeKMXJiARsfW0SGJ0ainM
++VVjwS0mk5MYRnuu7G0yiGCUjRG3fYZ4gTHc8W89wP2bls6te/R10b7sRCulGoPI
+9Ud8r9IMK+2ZSgfID4YQIxltHhMzZxuGtRs2HPKCGSst1q3C0X6uUqp6vD18H/Cb
+HWJXPZWj3Tont7m4FnX6HtTOevl86Qopy5YCDLQsad5hegrK7zvsMTQ3hkkED/hW
+8Ggm1lQL+VlcnUivi0mZulMhQ9Dy7A==
+=Faog
+-----END PGP SIGNATURE-----
+
+--Sig_/Sf4G2MbesCFRkAcAW=pjY6X--
