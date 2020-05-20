@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F89BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB01207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D8A7207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgETOZM (ORCPT
+        id S1728357AbgETOZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:12 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33078 "EHLO
+        Wed, 20 May 2020 10:25:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33000 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727027AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727006AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPby-000376-D9; Wed, 20 May 2020 15:22:22 +0100
+        id 1jbPbv-00035l-Qt; Wed, 20 May 2020 15:22:19 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-007DVJ-4A; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbv-007DS2-Ki; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marios Pomonis" <pomonis@google.com>,
-        "Nick Finco" <nifi@google.com>,
-        "Jim Mattson" <jmattson@google.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Andrew Honig" <ahonig@google.com>
-Date:   Wed, 20 May 2020 15:14:48 +0100
-Message-ID: <lsq.1589984009.472690034@decadent.org.uk>
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Anna Schumaker" <Anna.Schumaker@Netapp.com>
+Date:   Wed, 20 May 2020 15:14:20 +0100
+Message-ID: <lsq.1589984008.335231193@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 80/99] KVM: x86: Protect kvm_lapic_reg_write() from
- Spectre-v1/L1TF attacks
+Subject: [PATCH 3.16 52/99] nfs: NFS_SWAP should depend on SWAP
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,59 +55,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marios Pomonis <pomonis@google.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 4bf79cb089f6b1c6c632492c0271054ce52ad766 upstream.
+commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in kvm_lapic_reg_write().
-This function contains index computations based on the
-(attacker-controlled) MSR number.
+If CONFIG_SWAP=n, it does not make much sense to offer the user the
+option to enable support for swapping over NFS, as that will still fail
+at run time:
 
-Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
+    # swapon /swap
+    swapon: /swap: swapon failed: Function not implemented
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16:
- - Add #include <linux/nospec.h>
- - Adjust context]
+Fix this by adding a dependency on CONFIG_SWAP.
+
+Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -35,6 +35,7 @@
- #include <asm/apicdef.h>
- #include <linux/atomic.h>
- #include <linux/jump_label.h>
-+#include <linux/nospec.h>
- #include "kvm_cache_regs.h"
- #include "irq.h"
- #include "trace.h"
-@@ -1196,15 +1197,20 @@ static int apic_reg_write(struct kvm_lap
- 	case APIC_LVTTHMR:
- 	case APIC_LVTPC:
- 	case APIC_LVT1:
--	case APIC_LVTERR:
-+	case APIC_LVTERR: {
- 		/* TODO: Check vector */
-+		size_t size;
-+		u32 index;
-+
- 		if (!kvm_apic_sw_enabled(apic))
- 			val |= APIC_LVT_MASKED;
--
--		val &= apic_lvt_mask[(reg - APIC_LVTT) >> 4];
-+		size = ARRAY_SIZE(apic_lvt_mask);
-+		index = array_index_nospec(
-+				(reg - APIC_LVTT) >> 4, size);
-+		val &= apic_lvt_mask[index];
- 		apic_set_reg(apic, reg, val);
--
- 		break;
-+	}
- 
- 	case APIC_LVTT:
- 		if ((kvm_apic_get_reg(apic, APIC_LVTT) &
+ fs/nfs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -89,7 +89,7 @@ config NFS_V4
+ config NFS_SWAP
+ 	bool "Provide swap over NFS support"
+ 	default n
+-	depends on NFS_FS
++	depends on NFS_FS && SWAP
+ 	select SUNRPC_SWAP
+ 	help
+ 	  This option enables swapon to work on files located on NFS mounts.
 
