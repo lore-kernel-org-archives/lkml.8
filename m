@@ -2,164 +2,158 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92324C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF66C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E01320756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D461920885
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:55:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aPbnHWV+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PdzXTFni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgETUx0 (ORCPT
+        id S1728056AbgETUzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:53:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728003AbgETUxV (ORCPT
+        Wed, 20 May 2020 16:55:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35262 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgETUzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:53:21 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC93C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:53:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a5so1873558pjh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fja1DANsh1Dd+F7/qBgWbRzdM+vuuOGWY8oeqn+8/aU=;
-        b=aPbnHWV+DrbPPSsrBqaBDyyFjXZ0cF7oE0GCeKbrs+bc/z3niL1RWVkhjjlu4L3KaM
-         95/x7L+8CS4PeocMrSQ6ORl5nsdI7xeCqNPcJ9rkVL6s3c59wsIqQBw0/IjaxlvRkB9i
-         je9S68nV1hWzhPKREBxg3/ry9g/27wIsqgwts=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fja1DANsh1Dd+F7/qBgWbRzdM+vuuOGWY8oeqn+8/aU=;
-        b=mLNZMJIPE03DIsU0YFGGa6TKGdn2+tI61JmhaCzmijMeONApsG5GEowmprgTmfo05/
-         OShY3p7Qok6/IXoDuNssL1S5gUe3i2FHsnCb8s06UfgwpIkL+JhScUDBsee8bqaM4Fr4
-         TSS9A0t/xk7ooz05zt8cJ1kATga8hyW/JB+XrwBLWnw266qJbzBH7Go8/JWCAhakupR7
-         Zr/p4141nDH78I1ou8zwdgmHb1tDDRAJDllKRachvRF9T02uxSBY8F/X17AdZRri2db5
-         ZEl7eIHyT67eSvszl/pkcUmEKJnNZRR92b1ExFYYUIsVQcWMLt+r1l5KR755fSJrQC/5
-         OPuw==
-X-Gm-Message-State: AOAM530LugIzPIJWpHgsRGu/iIhFQFYulxmZcVUHIWXSiEKDVSKHpJnX
-        NWGKpra7JWWDE4sVGoKrhBrn+s0HXR/3Mg==
-X-Google-Smtp-Source: ABdhPJxh3ms0KdO5Xo719QvxDHhSD6ey31fVUe6JmpxdSjo/5/PhFLNfx/A+SVUMZLqTFGj256i4Hg==
-X-Received: by 2002:a17:902:7c81:: with SMTP id y1mr6573886pll.236.1590008000758;
-        Wed, 20 May 2020 13:53:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n10sm2902329pfd.192.2020.05.20.13.53.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 13:53:19 -0700 (PDT)
-Date:   Wed, 20 May 2020 13:53:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v2 3/8] exec: Convert security_bprm_set_creds into
- security_bprm_repopulate_creds
-Message-ID: <202005201353.6D3B1FD0BF@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
- <202005191111.9B389D33@keescook>
- <875zcrpx1g.fsf@x220.int.ebiederm.org>
- <202005191211.97BCF9DA@keescook>
- <87wo56gxv5.fsf@x220.int.ebiederm.org>
+        Wed, 20 May 2020 16:55:24 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KKtFwp073115;
+        Wed, 20 May 2020 15:55:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590008115;
+        bh=BmoSOnBCrUW4xWm9dGNe0tiNDhi185y+fKxf8IEICwc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PdzXTFniGDCKX9FwR6EU3H0fF+l+s4SZgO1uM37Qy2jCiiKmGEWSrRCfuqP5sdQ25
+         QVlwa/KnHuXNrGJHw2frEMzH2g+w22sJGTyOAGJr6UaYs0U1NHoOL1TVL2z+6TfQb8
+         eQWW7hGuwLzXBwuPuSSX15KDhonnck5mUhXD4T5A=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KKtFte031224
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 15:55:15 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 15:55:15 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 15:55:15 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KKtENm084063;
+        Wed, 20 May 2020 15:55:14 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+ <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+ <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+ <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
+ <20200520192719.GK652285@lunn.ch>
+ <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
+ <20200520204423.GA677363@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ecee51d5-a69e-4f7e-2a33-ae7aae63fec8@ti.com>
+Date:   Wed, 20 May 2020 15:55:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wo56gxv5.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200520204423.GA677363@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:22:38PM -0500, Eric W. Biederman wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> 
-> > On Tue, May 19, 2020 at 02:03:23PM -0500, Eric W. Biederman wrote:
-> >> Kees Cook <keescook@chromium.org> writes:
-> >> 
-> >> > On Mon, May 18, 2020 at 07:31:14PM -0500, Eric W. Biederman wrote:
-> >> >> [...]
-> >> >> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> >> >> index d1217fcdedea..8605ab4a0f89 100644
-> >> >> --- a/include/linux/binfmts.h
-> >> >> +++ b/include/linux/binfmts.h
-> >> >> @@ -27,10 +27,10 @@ struct linux_binprm {
-> >> >>  	unsigned long argmin; /* rlimit marker for copy_strings() */
-> >> >>  	unsigned int
-> >> >>  		/*
-> >> >> -		 * True if most recent call to cap_bprm_set_creds
-> >> >> +		 * True if most recent call to security_bprm_set_creds
-> >> >>  		 * resulted in elevated privileges.
-> >> >>  		 */
-> >> >> -		cap_elevated:1,
-> >> >> +		active_secureexec:1,
-> >> >
-> >> > Also, I'd like it if this comment could be made more verbose as well, for
-> >> > anyone trying to understand the binfmt execution flow for the first time.
-> >> > Perhaps:
-> >> >
-> >> > 		/*
-> >> > 		 * Must be set True during the any call to
-> >> > 		 * bprm_set_creds hook where the execution would
-> >> > 		 * reuslt in elevated privileges. (The hook can be
-> >> > 		 * called multiple times during nested interpreter
-> >> > 		 * resolution across binfmt_script, binfmt_misc, etc).
-> >> > 		 */
-> >> Well it is not during but after the call that it becomes true.
-> >> I think most recent covers the case of multiple calls.
-> >
-> > I'm thinking of an LSM writing reading these comments to decide what
-> > they need to do to the flags, so it's a direction to them to set it to
-> > true if they have determined that privilege was gained. (Though in
-> > theory, this is all moot since only the commoncap hook cares.)
-> 
-> The comments for an LSM writer are in include/linux/lsm_hooks.h
-> 
->  * @bprm_repopulate_creds:
->  *	Assuming that the relevant bits of @bprm->cred->security have been
->  *	previously set, examine @bprm->file and regenerate them.  This is
->  *	so that the credentials derived from the interpreter the code is
->  *	actually going to run are used rather than credentials derived
->  *	from a script.  This done because the interpreter binary needs to
->  *	reopen script, and may end up opening something completely different.
->  *	This hook may also optionally check permissions (e.g. for
->  *	transitions between security domains).
->  *	The hook must set @bprm->active_secureexec to 1 if AT_SECURE should be set to
->  *	request libc enable secure mode.
->  *	@bprm contains the linux_binprm structure.
->  *	Return 0 if the hook is successful and permission is granted.
-> 
-> I hope that is detailed enough.
-> 
-> I will leave the rest of the comments for the maintainer of the code.
-> 
-> I really don't think we should duplicate the prescriptive comments in
-> multiple locations.
+Andrew
 
-Okay, that's fair enough. Thanks!
+On 5/20/20 3:44 PM, Andrew Lunn wrote:
+>> I think adding it in the core would be a bit of a challenge.  I think each
+>> PHY driver needs to handle parsing and validating this property on its own
+>> (like fifo-depth).  It is a PHY specific setting.
+> fifo-depth yes. But some delays follow a common pattern.
+>
+> e.g.
+> Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+>
+> Device Tree Value     Delay   Pad Skew Register Value
+>    -----------------------------------------------------
+>          0               -840ps          0000
+>          200             -720ps          0001
+>          400             -600ps          0010
+>          600             -480ps          0011
+>          800             -360ps          0100
+>          1000            -240ps          0101
+>          1200            -120ps          0110
+>          1400               0ps          0111
+>          1600             120ps          1000
+>          1800             240ps          1001
+>          2000             360ps          1010
+>          2200             480ps          1011
+>          2400             600ps          1100
+>          2600             720ps          1101
+>          2800             840ps          1110
+>          3000             960ps          1111
+>
+> Documentation/devicetree/bindings/net/adi,adin.yaml
+>
+>   adi,rx-internal-delay-ps:
+>      description: |
+>        RGMII RX Clock Delay used only when PHY operates in RGMII mode with
+>        internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
+>      enum: [ 1600, 1800, 2000, 2200, 2400 ]
+>      default: 2000
+>
+>    adi,tx-internal-delay-ps:
+>      description: |
+>        RGMII TX Clock Delay used only when PHY operates in RGMII mode with
+>        internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
+>      enum: [ 1600, 1800, 2000, 2200, 2400 ]
+>      default: 2000
+>
+> Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+>
+> - tx-delay: Delay value for RGMII bridge TX clock.
+>              Valid values are between 0 to 7, that maps to
+>              417, 717, 1020, 1321, 1611, 1913, 2215, 2514 ps
+>              Default value is 4, which corresponds to 1611 ps
+> - rx-delay: Delay value for RGMII bridge RX clock.
+>              Valid values are between 0 to 7, that maps to
+>              273, 589, 899, 1222, 1480, 1806, 2147, 2464 ps
+>              Default value is 2, which corresponds to 899 ps
+>
+> You could implement checking against a table of valid values, which is
+> something you need for your PHY. You could even consider making it a
+> 2D table, and return the register value, not the delay?
 
--- 
-Kees Cook
+So provide a helper function that will just basically parse an array and 
+return the indexed value.
+
+The outlier here is the AD device since the index to value is not 1-1 
+mapping.  Not sure we need a 2D table like the AD driver.
+
+I actually implemented this in the dp83869 a bit ago and have done this 
+in a few other non-PHY drivers.
+
+I guess I can look at making it a utility function in the networking space.
+
+Dan
+
+>
+> 	  Andrew
