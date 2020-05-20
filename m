@@ -2,114 +2,142 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D18DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0922072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AD02072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgETO43 (ORCPT
+        id S1726957AbgETO6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:56:29 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30095 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbgETO42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:56:28 -0400
-IronPort-SDR: wxiIDAoZ4m6hb5vTYNX1bedkJEjNHqIH4Wt2T/FNKrka7FHta6QXU0Lvb3RQ/5v7rqDVkgGY8V
- xiW7V6KjCQWA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 07:56:28 -0700
-IronPort-SDR: Rh6lb+FSju5UaS+4nFzb30lu/Hb4am82atJLR48s10oGeGNSERWVWza7PZvMwhaQFA4zCngZ1w
- cd681tCEA0+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="308744482"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 May 2020 07:56:27 -0700
-Received: from [10.249.231.6] (abudanko-mobl.ccr.corp.intel.com [10.249.231.6])
-        by linux.intel.com (Postfix) with ESMTP id E2B91580100;
-        Wed, 20 May 2020 07:56:25 -0700 (PDT)
-Subject: Re: [PATCH v3 2/9] perf evlist: implement control command handling
- functions
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
- <ffcdb43a-8f7d-b16f-d59b-19293037af84@linux.intel.com>
- <20200520123807.GD157452@krava>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <630cdfa9-3eed-ddb2-d3b9-0ec008fa0e68@linux.intel.com>
-Date:   Wed, 20 May 2020 17:56:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 10:58:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37802 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETO6a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:58:30 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jbQAi-00064e-MU; Wed, 20 May 2020 14:58:16 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH net-next] ipv6/route: inherit max_sizes from current netns
+Date:   Wed, 20 May 2020 16:58:06 +0200
+Message-Id: <20200520145806.3746944-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200520123807.GD157452@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+During NorthSec (cf. [1]) a very large number of unprivileged
+containers and nested containers are run during the competition to
+provide a safe environment for the various teams during the event. Every
+year a range of feature requests or bug reports come out of this and
+this year's no different.
+One of the containers was running a simple VPN server. There were about
+1.5k users connected to this VPN over ipv6 and the container was setup
+with about 100 custom routing tables when it hit the max_sizes routing
+limit. After this no new connections could be established anymore,
+pinging didn't work anymore; you get the idea.
 
-On 20.05.2020 15:38, Jiri Olsa wrote:
-> On Wed, May 13, 2020 at 11:00:02AM +0300, Alexey Budankov wrote:
-> 
-> SNIP
-> 
->> +
->> +static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
->> +			      char *cmd_data, size_t data_size)
->> +{
->> +	int err;
->> +	char c;
->> +	size_t bytes_read = 0;
->> +
->> +	memset(cmd_data, 0, data_size--);
->> +
->> +	do {
->> +		err = read(evlist->ctl_fd, &c, 1);
->> +		if (err > 0) {
->> +			if (c == '\n' || c == '\0')
->> +				break;
->> +			cmd_data[bytes_read++] = c;
->> +			if (bytes_read == data_size)
->> +				break;
->> +		} else {
->> +			if (err == -1)
->> +				pr_err("Failed to read from ctlfd %d: %m\n", evlist->ctl_fd);
->> +			break;
->> +		}
->> +	} while (1);
->> +
->> +	pr_debug("Message from ctl_fd: \"%s%s\"\n", cmd_data,
->> +		 bytes_read == data_size ? "" : c == '\n' ? "\\n" : "\\0");
->> +
->> +	if (err > 0) {
->> +		if (!strncmp(cmd_data, EVLIST_CTL_CMD_ENABLE_TAG,
->> +			     strlen(EVLIST_CTL_CMD_ENABLE_TAG))) {
->> +			*cmd = EVLIST_CTL_CMD_ENABLE;
->> +		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
->> +				    strlen(EVLIST_CTL_CMD_DISABLE_TAG))) {
->> +			*cmd = EVLIST_CTL_CMD_DISABLE;
->> +		}
-> 
-> are there more comands comming?
+The kernel helpfully logs a message pointing out that bumping max_sizes
+should be considered to fix that problem. Here's where it gets tricky.
+Routing tables are namespaced and as such max_sizes along with the other
+sysctls is a per-netns limit, not a global limit. Each network namespace
+by default gets a limit of 4096 routes. Network namespaces owned by the
+initial user namespace can change this limit afterwards but network
+namespaces owned by non-initial user namespaces can't.
 
-Currently no.
+The workload outlined is not an uncommon one. Running VPNs in
+unprivileged containers for a large number of users is something people
+do and in general large routing tables in unprivileged containers are
+pretty common.
 
-~Alexey 
+There are multiple ways to fix or at least alleviate the problem:
+1. Fully namespace at least max_sizes. Right now the max_sizes sysctl
+   doesn't show up in network namespaces owned by non-initial user
+   namespaces and hence, can't be written to by user namespace root. We
+   could simply expose it to non-initial network namespaces owned by
+   non-initial user namespaces.
+   This solution is the cleanest one conceptually: each container
+   already has a separate routing table regardless if privileged or
+   unprivileged so allow them to determine the size of it too. The issue
+   I see with this solution is that it would potentially make it easier
+   to dos the system or even exceed kernel memory. If I'm not mistaken,
+   a container could bump max_sizes to INT_MAX(2147483647) and keep
+   allocating routes.
+   An argument against this worry is that this is technically already
+   possible by simply creating a huge number of network namespaces, each
+   with a 4096 route limit and allocating 4096 routes in each of them.
+   An unprivileged user could for example create at least
+   /proc/sys/user/max_net_namespaces network namespaces. The limit on
+   the number of network namespaces on my host is e.g. 62690 which means
+   256778240 routes. So by exposing max_sizes we don't really add a new
+   attack surface.
+2. Namespace max_sizes but limiting it to init_net.sysctl.max_sizes. This
+   would mean that a container would start with the 4096 limit but if
+   the initial network namespace bumps max_sizes later the container
+   could bump it too. This has two problems, first the container doesn't
+   know what the host bumped max_sizes too and would need to guess by
+   trying to write a larger value. Second, this would break network
+   namespaces owned by the initial user namespace as they would suddenly
+   be limited by the initial network namespace.
+3. Inherit the limit from the initial network namespace at
+   container/network namespace creation time. This would mean we don't
+   fully namespace max_sizes but allow the host to set a limit that it
+   is fine with each container to inherit.
+   That sounds acceptable but will mean that a nested container can e.g.
+   get a larger max_sizes value than the container it was created in.
+4. Inherit the limit from the current network namespace. This to means
+   we don't fully namespace max_sizes but allow the current network
+   namespace to choose a limit it is comfortable with inheriting.
+
+[1]: https://nsec.io/
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ net/ipv6/route.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index a52ec1b86432..cf951d147e3a 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -6246,6 +6246,7 @@ struct ctl_table * __net_init ipv6_route_sysctl_init(struct net *net)
+ static int __net_init ip6_route_net_init(struct net *net)
+ {
+ 	int ret = -ENOMEM;
++	struct net *current_net = current->nsproxy->net_ns;
+ 
+ 	memcpy(&net->ipv6.ip6_dst_ops, &ip6_dst_ops_template,
+ 	       sizeof(net->ipv6.ip6_dst_ops));
+@@ -6294,9 +6295,9 @@ static int __net_init ip6_route_net_init(struct net *net)
+ 	net->ipv6.fib6_routes_require_src = 0;
+ #endif
+ #endif
+-
+ 	net->ipv6.sysctl.flush_delay = 0;
+-	net->ipv6.sysctl.ip6_rt_max_size = 4096;
++	net->ipv6.sysctl.ip6_rt_max_size =
++		READ_ONCE(current_net->ipv6.sysctl.ip6_rt_max_size);
+ 	net->ipv6.sysctl.ip6_rt_gc_min_interval = HZ / 2;
+ 	net->ipv6.sysctl.ip6_rt_gc_timeout = 60*HZ;
+ 	net->ipv6.sysctl.ip6_rt_gc_interval = 30*HZ;
+
+base-commit: 4f65e2f483b6f764c15094d14dd53dda048a4048
+-- 
+2.26.2
 
