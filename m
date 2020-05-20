@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD82C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D7EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54A27205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE57205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgETO16 (ORCPT
+        id S1728573AbgETO2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:27:58 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32902 "EHLO
+        Wed, 20 May 2020 10:28:02 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32912 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726946AbgETOW0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726948AbgETOW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:26 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035x-Sm; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbv-00035j-M8; Wed, 20 May 2020 15:22:19 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DQL-RA; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DPv-LX; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Chuhong Yuan" <hslester96@gmail.com>
-Date:   Wed, 20 May 2020 15:13:59 +0100
-Message-ID: <lsq.1589984008.761639691@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Arend van Spriel" <arend@broadcom.com>,
+        "Kalle Valo" <kvalo@codeaurora.org>
+Date:   Wed, 20 May 2020 15:13:54 +0100
+Message-ID: <lsq.1589984008.243525296@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 31/99] crypto: picoxcell - adjust the position of
- tasklet_init and fix missed tasklet_kill
+Subject: [PATCH 3.16 26/99] brcmfmac: fix interface sanity check
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,60 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 7f8c36fe9be46862c4f3c5302f769378028a34fa upstream.
+commit 3428fbcd6e6c0850b1a8b2a12082b7b2aabb3da3 upstream.
 
-Since tasklet is needed to be initialized before registering IRQ
-handler, adjust the position of tasklet_init to fix the wrong order.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid binding to an invalid interface.
 
-Besides, to fix the missed tasklet_kill, this patch adds a helper
-function and uses devm_add_action to kill the tasklet automatically.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Cc: Arend van Spriel <arend@broadcom.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 3.16:
+ - Altsetting lookup is done by the IFALTS() macro
+ - Adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/crypto/picoxcell_crypto.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
---- a/drivers/crypto/picoxcell_crypto.c
-+++ b/drivers/crypto/picoxcell_crypto.c
-@@ -1690,6 +1690,11 @@ static bool spacc_is_compatible(struct p
- 	return false;
- }
+--- a/drivers/net/wireless/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/brcm80211/brcmfmac/usb.c
+@@ -41,7 +41,7 @@
  
-+static void spacc_tasklet_kill(void *data)
-+{
-+	tasklet_kill(data);
-+}
-+
- static int spacc_probe(struct platform_device *pdev)
- {
- 	int i, err, ret = -EINVAL;
-@@ -1730,6 +1735,14 @@ static int spacc_probe(struct platform_d
- 		return -ENXIO;
- 	}
- 
-+	tasklet_init(&engine->complete, spacc_spacc_complete,
-+		     (unsigned long)engine);
-+
-+	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
-+			      &engine->complete);
-+	if (ret)
-+		return ret;
-+
- 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
- 			     engine->name, engine)) {
- 		dev_err(engine->dev, "failed to request IRQ\n");
-@@ -1792,8 +1805,6 @@ static int spacc_probe(struct platform_d
- 	INIT_LIST_HEAD(&engine->completed);
- 	INIT_LIST_HEAD(&engine->in_progress);
- 	engine->in_flight = 0;
--	tasklet_init(&engine->complete, spacc_spacc_complete,
--		     (unsigned long)engine);
- 
- 	platform_set_drvdata(pdev, engine);
+ #define CONFIGDESC(usb)         (&((usb)->actconfig)->desc)
+ #define IFPTR(usb, idx)         ((usb)->actconfig->interface[(idx)])
+-#define IFALTS(usb, idx)        (IFPTR((usb), (idx))->altsetting[0])
++#define IFALTS(usb, idx)        (*IFPTR((usb), (idx))->cur_altsetting)
+ #define IFDESC(usb, idx)        IFALTS((usb), (idx)).desc
+ #define IFEPDESC(usb, idx, ep)  (IFALTS((usb), (idx)).endpoint[(ep)]).desc
  
 
