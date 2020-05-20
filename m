@@ -2,201 +2,270 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADE9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B27207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5E7207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589970290;
+	bh=GheeTGjiLe1IPOBp+w8GYrlAmjgEw0f7bU9jylZPl5w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k8yraAg4ffDusSJgYTMOf5n8kIdkgg6kMj+rh034+uz9H1rHSe+E/0pQ1T4tfqUTt
+	 wTKwB96N2tQPtXBis1+D5GTJosl9SrSU8IC1ivCWAgvB7XgFMrXEK6raPaBtSgoT24
+	 yYjogktMh2FSCvbpO1Y1Hzp2O9/sUkUWkQ+RnppA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgETKXt (ORCPT
+        id S1726733AbgETKYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:23:49 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14698 "EHLO pegase1.c-s.fr"
+        Wed, 20 May 2020 06:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETKXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:23:48 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49RpkS2nC5z9tyrh;
-        Wed, 20 May 2020 12:23:44 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id o0EE-i3VuAXH; Wed, 20 May 2020 12:23:44 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49RpkS232pz9tyrd;
-        Wed, 20 May 2020 12:23:44 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E73658B7BC;
-        Wed, 20 May 2020 12:23:45 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 3pGrT1tspxue; Wed, 20 May 2020 12:23:45 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 96EB28B7BB;
-        Wed, 20 May 2020 12:23:45 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 56DD165A4A; Wed, 20 May 2020 10:23:45 +0000 (UTC)
-Message-Id: <b34706f8de87f84d135abb5f3ede6b6f16fb1f41.1589969799.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH] Revert "powerpc/32s: reorder Linux PTE bits to better match
- Hash PTE bits."
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Rui Salvaterra <rsalvaterra@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 20 May 2020 10:23:45 +0000 (UTC)
+        id S1726224AbgETKYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:24:49 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41DEE207C4;
+        Wed, 20 May 2020 10:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589970288;
+        bh=GheeTGjiLe1IPOBp+w8GYrlAmjgEw0f7bU9jylZPl5w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lkfh1JWV+lM6xWtB1S3oQkp5KEoCJ4sjMPQcGNDWULlg9Eatu8LoykJol9EFB2z/P
+         FHHyivjSNKYu73etNcNUUORmFHhx9BITpQ3GksrsppuHaYbGF1k6nAVntit2NO+F2P
+         L9Pho1QBB1OEyzl4jQbOOkwWQotNwjMhFybRjehA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jbLu1-00DtCe-Ub; Wed, 20 May 2020 11:24:46 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 20 May 2020 11:24:45 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>, kernel-team@android.com
+Subject: Re: [PATCH 06/11] irqchip/gic-v3: Configure SGIs as standard
+ interrupts
+In-Reply-To: <CAFA6WYNfZKpQMTX8qP0eFHwyzJK4HK8z59G3OVLN8h0Uuc7P7w@mail.gmail.com>
+References: <20200519161755.209565-1-maz@kernel.org>
+ <20200519161755.209565-7-maz@kernel.org>
+ <CAFA6WYNfZKpQMTX8qP0eFHwyzJK4HK8z59G3OVLN8h0Uuc7P7w@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <93b0ddc83439f24d30db9ea77c831ae6@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sumit.garg@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 697ece78f8f749aeea40f2711389901f0974017a.
+Hi Sumit,
 
-The implementation of SWAP on powerpc requires page protection
-bits to not be one of the least significant PTE bits.
+On 2020-05-20 10:52, Sumit Garg wrote:
+> Hi Marc,
+> 
+> On Tue, 19 May 2020 at 21:48, Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> Change the way we deal with GICv3 SGIs by turning them into proper
+>> IRQs, and calling into the arch code to register the interrupt range
+>> instead of a callback.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/irqchip/irq-gic-v3.c | 91 
+>> +++++++++++++++++++++---------------
+>>  1 file changed, 53 insertions(+), 38 deletions(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-gic-v3.c 
+>> b/drivers/irqchip/irq-gic-v3.c
+>> index 23d7c87da407..d57289057b75 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -36,6 +36,9 @@
+>>  #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996    (1ULL << 0)
+>>  #define FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539  (1ULL << 1)
+>> 
+>> +#define GIC_IRQ_TYPE_PARTITION (GIC_IRQ_TYPE_LPI + 1)
+>> +#define GIC_IRQ_TYPE_SGI       (GIC_IRQ_TYPE_LPI + 2)
+>> +
+>>  struct redist_region {
+>>         void __iomem            *redist_base;
+>>         phys_addr_t             phys_base;
+>> @@ -657,38 +660,14 @@ static asmlinkage void __exception_irq_entry 
+>> gic_handle_irq(struct pt_regs *regs
+>>         if ((irqnr >= 1020 && irqnr <= 1023))
+>>                 return;
+>> 
+>> -       /* Treat anything but SGIs in a uniform way */
+>> -       if (likely(irqnr > 15)) {
+>> -               int err;
+>> -
+>> -               if (static_branch_likely(&supports_deactivate_key))
+>> -                       gic_write_eoir(irqnr);
+>> -               else
+>> -                       isb();
+>> -
+>> -               err = handle_domain_irq(gic_data.domain, irqnr, regs);
+>> -               if (err) {
+>> -                       WARN_ONCE(true, "Unexpected interrupt 
+>> received!\n");
+>> -                       gic_deactivate_unhandled(irqnr);
+>> -               }
+>> -               return;
+>> -       }
+>> -       if (irqnr < 16) {
+>> +       if (static_branch_likely(&supports_deactivate_key))
+>>                 gic_write_eoir(irqnr);
+>> -               if (static_branch_likely(&supports_deactivate_key))
+>> -                       gic_write_dir(irqnr);
+>> -#ifdef CONFIG_SMP
+>> -               /*
+>> -                * Unlike GICv2, we don't need an smp_rmb() here.
+>> -                * The control dependency from gic_read_iar to
+>> -                * the ISB in gic_write_eoir is enough to ensure
+>> -                * that any shared data read by handle_IPI will
+>> -                * be read after the ACK.
+>> -                */
+>> -               handle_IPI(irqnr, regs);
+>> -#else
+>> -               WARN_ONCE(true, "Unexpected SGI received!\n");
+>> -#endif
+>> +       else
+>> +               isb();
+>> +
+>> +       if (handle_domain_irq(gic_data.domain, irqnr, regs)) {
+>> +               WARN_ONCE(true, "Unexpected interrupt received!\n");
+>> +               gic_deactivate_unhandled(irqnr);
+>>         }
+>>  }
+>> 
+>> @@ -1136,11 +1115,11 @@ static void gic_send_sgi(u64 cluster_id, u16 
+>> tlist, unsigned int irq)
+>>         gic_write_sgi1r(val);
+>>  }
+>> 
+>> -static void gic_raise_softirq(const struct cpumask *mask, unsigned 
+>> int irq)
+>> +static void gic_ipi_send_mask(struct irq_data *d, const struct 
+>> cpumask *mask)
+>>  {
+>>         int cpu;
+>> 
+>> -       if (WARN_ON(irq >= 16))
+>> +       if (WARN_ON(d->hwirq >= 16))
+>>                 return;
+>> 
+>>         /*
+>> @@ -1154,7 +1133,7 @@ static void gic_raise_softirq(const struct 
+>> cpumask *mask, unsigned int irq)
+>>                 u16 tlist;
+>> 
+>>                 tlist = gic_compute_target_list(&cpu, mask, 
+>> cluster_id);
+>> -               gic_send_sgi(cluster_id, tlist, irq);
+>> +               gic_send_sgi(cluster_id, tlist, d->hwirq);
+>>         }
+>> 
+>>         /* Force the above writes to ICC_SGI1R_EL1 to be executed */
+>> @@ -1163,10 +1142,36 @@ static void gic_raise_softirq(const struct 
+>> cpumask *mask, unsigned int irq)
+>> 
+>>  static void gic_smp_init(void)
+>>  {
+>> -       set_smp_cross_call(gic_raise_softirq);
+>> +       struct irq_fwspec sgi_fwspec = {
+>> +               .fwnode         = gic_data.fwnode,
+>> +       };
+>> +       int base_sgi;
+>> +
+>>         cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
+>>                                   "irqchip/arm/gicv3:starting",
+>>                                   gic_starting_cpu, NULL);
+>> +
+>> +       if (is_of_node(gic_data.fwnode)) {
+>> +               /* DT */
+>> +               sgi_fwspec.param_count = 3;
+>> +               sgi_fwspec.param[0] = GIC_IRQ_TYPE_SGI;
+>> +               sgi_fwspec.param[1] = 0;
+>> +               sgi_fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
+>> +       } else {
+>> +               /* ACPI */
+>> +               sgi_fwspec.param_count = 2;
+>> +               sgi_fwspec.param[0] = 0;
+>> +               sgi_fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+>> +       }
+>> +
+>> +       /* Register all 8 non-secure SGIs */
+>> +       base_sgi = __irq_domain_alloc_irqs(gic_data.domain, -1, 8,
+>> +                                          NUMA_NO_NODE, &sgi_fwspec,
+>> +                                          false, NULL);
+>> +       if (WARN_ON(base_sgi <= 0))
+>> +               return;
+>> +
+>> +       set_smp_ipi_range(base_sgi, 8);
+>>  }
+>> 
+>>  static int gic_set_affinity(struct irq_data *d, const struct cpumask 
+>> *mask_val,
+>> @@ -1215,6 +1220,7 @@ static int gic_set_affinity(struct irq_data *d, 
+>> const struct cpumask *mask_val,
+>>  }
+>>  #else
+>>  #define gic_set_affinity       NULL
+>> +#define gic_ipi_send_mask      NULL
+>>  #define gic_smp_init()         do { } while(0)
+>>  #endif
+>> 
+>> @@ -1257,6 +1263,7 @@ static struct irq_chip gic_chip = {
+>>         .irq_set_irqchip_state  = gic_irq_set_irqchip_state,
+>>         .irq_nmi_setup          = gic_irq_nmi_setup,
+>>         .irq_nmi_teardown       = gic_irq_nmi_teardown,
+>> +       .ipi_send_mask          = gic_ipi_send_mask,
+>>         .flags                  = IRQCHIP_SET_TYPE_MASKED |
+>>                                   IRQCHIP_SKIP_SET_WAKE |
+>>                                   IRQCHIP_MASK_ON_SUSPEND,
+> 
+> It looks like you missed to update "struct irq_chip gic_eoimode1_chip"
+> with similar change as follows:
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3.c 
+> b/drivers/irqchip/irq-gic-v3.c
+> index 2a09634..ceef63b 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1291,6 +1291,7 @@ static struct irq_chip gic_eoimode1_chip = {
+>         .irq_set_vcpu_affinity  = gic_irq_set_vcpu_affinity,
+>         .irq_nmi_setup          = gic_irq_nmi_setup,
+>         .irq_nmi_teardown       = gic_irq_nmi_teardown,
+> +       .ipi_send_mask          = gic_ipi_send_mask,
+>         .flags                  = IRQCHIP_SET_TYPE_MASKED |
+>                                   IRQCHIP_SKIP_SET_WAKE |
+>                                   IRQCHIP_MASK_ON_SUSPEND,
+> 
+> After incorporating this change, your patch-set works fine on my
+> Developerbox machine.
 
-Until the SWAP implementation is changed and this requirement voids,
-we have to keep at least _PAGE_RW outside of the 3 last bits.
+Huh, well spotted. As I said, it has only been tested as guests,
+hence not hitting this path. Time to throw it at the bigger stuff.
 
-For now, revert to previous PTE bits order. A further rework
-may come later.
+Thanks,
 
-Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
-Fixes: 697ece78f8f7 ("powerpc/32s: reorder Linux PTE bits to better match Hash PTE bits.")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/book3s/32/hash.h |  8 ++++----
- arch/powerpc/kernel/head_32.S             |  9 ++++++---
- arch/powerpc/mm/book3s32/hash_low.S       | 14 ++++++++------
- 3 files changed, 18 insertions(+), 13 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/book3s/32/hash.h b/arch/powerpc/include/asm/book3s/32/hash.h
-index 34a7215ae81e..2a0a467d2985 100644
---- a/arch/powerpc/include/asm/book3s/32/hash.h
-+++ b/arch/powerpc/include/asm/book3s/32/hash.h
-@@ -17,9 +17,9 @@
-  * updating the accessed and modified bits in the page table tree.
-  */
- 
--#define _PAGE_USER	0x001	/* usermode access allowed */
--#define _PAGE_RW	0x002	/* software: user write access allowed */
--#define _PAGE_PRESENT	0x004	/* software: pte contains a translation */
-+#define _PAGE_PRESENT	0x001	/* software: pte contains a translation */
-+#define _PAGE_HASHPTE	0x002	/* hash_page has made an HPTE for this pte */
-+#define _PAGE_USER	0x004	/* usermode access allowed */
- #define _PAGE_GUARDED	0x008	/* G: prohibit speculative access */
- #define _PAGE_COHERENT	0x010	/* M: enforce memory coherence (SMP systems) */
- #define _PAGE_NO_CACHE	0x020	/* I: cache inhibit */
-@@ -27,7 +27,7 @@
- #define _PAGE_DIRTY	0x080	/* C: page changed */
- #define _PAGE_ACCESSED	0x100	/* R: page referenced */
- #define _PAGE_EXEC	0x200	/* software: exec allowed */
--#define _PAGE_HASHPTE	0x400	/* hash_page has made an HPTE for this pte */
-+#define _PAGE_RW	0x400	/* software: user write access allowed */
- #define _PAGE_SPECIAL	0x800	/* software: Special page */
- 
- #ifdef CONFIG_PTE_64BIT
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index daaa153950c2..97c887950c3c 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -348,7 +348,7 @@ BEGIN_MMU_FTR_SECTION
- 	andis.	r0, r5, (DSISR_BAD_FAULT_32S | DSISR_DABRMATCH)@h
- #endif
- 	bne	handle_page_fault_tramp_2	/* if not, try to put a PTE */
--	rlwinm	r3, r5, 32 - 24, 30, 30		/* DSISR_STORE -> _PAGE_RW */
-+	rlwinm	r3, r5, 32 - 15, 21, 21		/* DSISR_STORE -> _PAGE_RW */
- 	bl	hash_page
- 	b	handle_page_fault_tramp_1
- FTR_SECTION_ELSE
-@@ -497,6 +497,7 @@ InstructionTLBMiss:
- 	andc.	r1,r1,r0		/* check access & ~permission */
- 	bne-	InstructionAddressInvalid /* return if access not permitted */
- 	/* Convert linux-style PTE to low word of PPC-style PTE */
-+	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
- 	ori	r1, r1, 0xe06		/* clear out reserved bits */
- 	andc	r1, r0, r1		/* PP = user? 1 : 0 */
- BEGIN_FTR_SECTION
-@@ -564,8 +565,9 @@ DataLoadTLBMiss:
- 	 * we would need to update the pte atomically with lwarx/stwcx.
- 	 */
- 	/* Convert linux-style PTE to low word of PPC-style PTE */
--	rlwinm	r1,r0,0,30,30		/* _PAGE_RW -> PP msb */
--	rlwimi	r0,r0,1,30,30		/* _PAGE_USER -> PP msb */
-+	rlwinm	r1,r0,32-9,30,30	/* _PAGE_RW -> PP msb */
-+	rlwimi	r0,r0,32-1,30,30	/* _PAGE_USER -> PP msb */
-+	rlwimi	r0,r0,32-1,31,31	/* _PAGE_USER -> PP lsb */
- 	ori	r1,r1,0xe04		/* clear out reserved bits */
- 	andc	r1,r0,r1		/* PP = user? rw? 1: 3: 0 */
- BEGIN_FTR_SECTION
-@@ -643,6 +645,7 @@ DataStoreTLBMiss:
- 	 * we would need to update the pte atomically with lwarx/stwcx.
- 	 */
- 	/* Convert linux-style PTE to low word of PPC-style PTE */
-+	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
- 	li	r1,0xe06		/* clear out reserved bits & PP msb */
- 	andc	r1,r0,r1		/* PP = user? 1: 0 */
- BEGIN_FTR_SECTION
-diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
-index 6d236080cb1a..877d880890fe 100644
---- a/arch/powerpc/mm/book3s32/hash_low.S
-+++ b/arch/powerpc/mm/book3s32/hash_low.S
-@@ -35,7 +35,7 @@ mmu_hash_lock:
- /*
-  * Load a PTE into the hash table, if possible.
-  * The address is in r4, and r3 contains an access flag:
-- * _PAGE_RW (0x002) if a write.
-+ * _PAGE_RW (0x400) if a write.
-  * r9 contains the SRR1 value, from which we use the MSR_PR bit.
-  * SPRG_THREAD contains the physical address of the current task's thread.
-  *
-@@ -69,7 +69,7 @@ _GLOBAL(hash_page)
- 	blt+	112f			/* assume user more likely */
- 	lis	r5, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
- 	addi	r5 ,r5 ,(swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
--	rlwimi	r3,r9,32-14,31,31	/* MSR_PR -> _PAGE_USER */
-+	rlwimi	r3,r9,32-12,29,29	/* MSR_PR -> _PAGE_USER */
- 112:
- #ifndef CONFIG_PTE_64BIT
- 	rlwimi	r5,r4,12,20,29		/* insert top 10 bits of address */
-@@ -94,7 +94,7 @@ _GLOBAL(hash_page)
- #else
- 	rlwimi	r8,r4,23,20,28		/* compute pte address */
- #endif
--	rlwinm	r0,r3,6,24,24		/* _PAGE_RW access -> _PAGE_DIRTY */
-+	rlwinm	r0,r3,32-3,24,24	/* _PAGE_RW access -> _PAGE_DIRTY */
- 	ori	r0,r0,_PAGE_ACCESSED|_PAGE_HASHPTE
- 
- 	/*
-@@ -310,9 +310,11 @@ Hash_msk = (((1 << Hash_bits) - 1) * 64)
- 
- _GLOBAL(create_hpte)
- 	/* Convert linux-style PTE (r5) to low word of PPC-style PTE (r8) */
-+	rlwinm	r8,r5,32-9,30,30	/* _PAGE_RW -> PP msb */
- 	rlwinm	r0,r5,32-6,30,30	/* _PAGE_DIRTY -> PP msb */
--	and	r8,r5,r0		/* writable if _RW & _DIRTY */
--	rlwimi	r5,r5,1,30,30		/* _PAGE_USER -> PP msb */
-+	and	r8,r8,r0		/* writable if _RW & _DIRTY */
-+	rlwimi	r5,r5,32-1,30,30	/* _PAGE_USER -> PP msb */
-+	rlwimi	r5,r5,32-2,31,31	/* _PAGE_USER -> PP lsb */
- 	ori	r8,r8,0xe04		/* clear out reserved bits */
- 	andc	r8,r5,r8		/* PP = user? (rw&dirty? 1: 3): 0 */
- BEGIN_FTR_SECTION
-@@ -564,7 +566,7 @@ _GLOBAL(flush_hash_pages)
- 33:	lwarx	r8,0,r5			/* fetch the pte flags word */
- 	andi.	r0,r8,_PAGE_HASHPTE
- 	beq	8f			/* done if HASHPTE is already clear */
--	rlwinm	r8,r8,0,~_PAGE_HASHPTE	/* clear HASHPTE bit */
-+	rlwinm	r8,r8,0,31,29		/* clear HASHPTE bit */
- 	stwcx.	r8,0,r5			/* update the pte */
- 	bne-	33b
- 
+         M.
 -- 
-2.25.0
-
+Jazz is not dead. It just smells funny...
