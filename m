@@ -2,446 +2,216 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579E520884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9380520884
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aunVW1ux"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="maeJMRB/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgETWhe (ORCPT
+        id S1728605AbgETWmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48064 "EHLO
+        Wed, 20 May 2020 18:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbgETWhd (ORCPT
+        with ESMTP id S1728566AbgETWmQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:37:33 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD3DC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:37:33 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id f83so5306550qke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:37:33 -0700 (PDT)
+        Wed, 20 May 2020 18:42:16 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A742DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:42:15 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id d10so382091ybk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=baqNmHJmJaRAolWweU9v8hhZaehFJfxBPfuFN53EiNg=;
-        b=aunVW1uxj64uPndcDiMOZxCVc61M7dNBGrdTg9a58oWkD7RYYVfUEapZHZH4oSp+m1
-         5Zbkdizo7qR+xOBJh7QbttXHpS0h9WU4QjPtDEOvK1Fg9Z9fY1Af49SHHIgkekT9RXaM
-         fQmId4G75V14D1Q2fDgIBb6S9ro6D0qXIBuOs=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dvtn9Vcw9Mu98E89DI4uU9zUHcPKNAC6K0uYrY5V7wY=;
+        b=maeJMRB/Bw0/93huxTAw8NYf3nSth3kkbZ9jMF+IJqT2fe0A1xTTw4sEh4NoG95aLe
+         Po+q2bJp4eS3oJEc2sXJ28TdPUqHJomesT1sCV/yvkD5m2S/y+tyufRNDIthIIJSW7A7
+         4R74ipSexjHgkb5kBTwWB0n//Uv7rtfY+XcPhEdVvWr6PMUKImP+vDaym8neM/m/akuJ
+         x/ZIZragkSbzTAAi7cgYW+o7RWmwH7edNLhOggQ0iO1loGe/bCbX128N/G5Fp73Gojzp
+         4bQjoHC+yDjmPHbFXbQs4Rn9HfWdBHyr/2fLKdDeBB7OWbY00I7QzxbFcrtG1pesDBJG
+         jWXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=baqNmHJmJaRAolWweU9v8hhZaehFJfxBPfuFN53EiNg=;
-        b=p88jF74pxFXzcNgR8nOoS+E7UpdBy2lqz6AO6tVEw40GGRAG5kM4g3vMvnwf4X9nnW
-         350b57Z1i9+DdNYfR4lts/X3GEonY5saBDLqzM3QTlS6k8oJEkGGoqyDgLirIYi01YPI
-         IvEm3PEQvjhMt2/xSNsX93AlSK9+QhcRzerge0A9LrMw7qu2xWo0cPDua3SwY9KankCs
-         7Icg4OTyzXpa8J4M4afTSjXojTmi5JLid6dBaTVmJUz4vao9g8znIQhd938kFfIspr9D
-         ykrLkhvFLTDIwGPBNeeWjNaMnVDPHnZRp7eVZcKGhIoCjTaFLQs3ZrosFqywDmFmXzX1
-         iqeQ==
-X-Gm-Message-State: AOAM530rxRVBZtVmMD/QvVw/2WXRlyY00d0ze8pqlNZZaFvHR6yn4op+
-        Oy1KvRs0yzCjxGpKsjtiNeJuJg==
-X-Google-Smtp-Source: ABdhPJzBiIsTkEY5uq8gfWGuwCIuaOozEkoslTHJH+BaULmvJ4gWTrDgnPaytdQyflW3AU0VXt8bsw==
-X-Received: by 2002:a05:620a:792:: with SMTP id 18mr6441706qka.181.1590014252828;
-        Wed, 20 May 2020 15:37:32 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g26sm3662672qtk.76.2020.05.20.15.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 15:37:32 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC v2] Add support for core-wide protection of IRQ and softirq
-Date:   Wed, 20 May 2020 18:37:21 -0400
-Message-Id: <20200520223721.74447-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-In-Reply-To: <cover.1583332764.git.vpillai@digitalocean.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dvtn9Vcw9Mu98E89DI4uU9zUHcPKNAC6K0uYrY5V7wY=;
+        b=P701173ENgb03QjRhfQXnV8sD7+57/PIvg1GLUnMfs8HLIIr//ii7BsvT6IsnnLoxM
+         ya54jjrO4xDWzfeFFmHOAePYcyvkTCT9tHbcGrapx4NFtzNmGIFd+y86kwlxUo5vEy87
+         kOKRVuC1UZj9W+xpDrF1NLkLJGuDq+iYSxxHQNaZwaqeLMPSpT5yTGs+miEIIgIYssyo
+         ZiGSaw0zq+wbFbq4QJj3hN/krBf4AkKny2ji51j9vkEYMc/Rgk4pBW+R7aXflh+Kelrl
+         dAsI38kfTreaPWHR4V8Uc+FH1Q6gyhtQZQVpKj+lKG7kphgutI85GPte/R8xClDb2bvn
+         h9Pw==
+X-Gm-Message-State: AOAM530L9wBeyOr7S+zjdhYD6H1BRaz7vSugmEhGL27HIOifV33lKNvu
+        Gf3tffcFK+RLXwMe/wmvo0wTFMqEd/LZ62Ke3iXwVw==
+X-Google-Smtp-Source: ABdhPJzs+ERhRHgOSK3Jl85Xe9DI8Tn03w4ppBuvTG+XjaVacohus9qdYiAG5C64Y7dMx6LihN2Z+owKtQ2E0CUdUUI=
+X-Received: by 2002:a25:790e:: with SMTP id u14mr10909068ybc.324.1590014534392;
+ Wed, 20 May 2020 15:42:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200520072814.128267-1-irogers@google.com> <20200520072814.128267-6-irogers@google.com>
+ <20200520134847.GM157452@krava> <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
+ <20200520220912.GP157452@krava>
+In-Reply-To: <20200520220912.GP157452@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 20 May 2020 15:42:02 -0700
+Message-ID: <CAP-5=fU12vP45Sg3uRSuz-xoceTPTKw9-XZieKv1PaTnREMdrw@mail.gmail.com>
+Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With current core scheduling patchset, non-threaded IRQ and softirq
-victims can leak data from its hyperthread to a sibling hyperthread
-running an attacker.
+On Wed, May 20, 2020 at 3:09 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, May 20, 2020 at 09:50:13AM -0700, Ian Rogers wrote:
+>
+> SNIP
+>
+> > > > +             }
+> > >
+> > > is the groupping still enabled when we merge groups? could part
+> > > of the metric (events) be now computed in different groups?
+> >
+> > By default the change will take two metrics and allow the shorter
+> > metric (in terms of number of events) to share the events of the
+> > longer metric. If the events for the shorter metric aren't in the
+> > longer metric then the shorter metric must use its own group of
+> > events. If sharing has occurred then the bitmap is used to work out
+> > which events and groups are no longer in use.
+> >
+> > With --metric-no-group then any event can be used for a metric as
+> > there is no grouping. This is why more events can be eliminated.
+> >
+> > With --metric-no-merge then the logic to share events between
+> > different metrics is disabled and every metric is in a group. This
+> > allows the current behavior to be had.
+> >
+> > There are some corner cases, such as metrics with constraints (that
+> > don't group) and duration_time that is never placed into a group.
+> >
+> > Partial sharing, with one event in 1 weak event group and 1 in another
+> > is never performed. Using --metric-no-group allows something similar.
+> > Given multiplexing, I'd be concerned about accuracy problems if events
+> > between groups were shared - say for IPC, were you measuring
+> > instructions and cycles at the same moment?
+>
+> hum, I think that's also concern if you are multiplexing 2 groups and one
+> metric getting events from both groups that were not meassured together
+>
+> it makes sense to me put all the merged events into single weak group
+> anything else will have the issue you described above, no?
+>
+> and perhaps add command line option for merging that to make sure it's
+> what user actuly wants
 
-For MDS, it is possible for the IRQ and softirq handlers to leak data to
-either host or guest attackers. For L1TF, it is possible to leak to
-guest attackers. There is no possible mitigation involving flushing of
-buffers to avoid this since the execution of attacker and victims happen
-concurrently on 2 or more HTs.
+I'm not sure I'm following. With the patch set if we have 3 metrics
+with the event groups shown:
+M1: {A,B,C}:W
+M2: {A,B}:W
+M3: {A,B,D}:W
 
-The solution in this patch is to monitor the outer-most core-wide
-irq_enter() and irq_exit() executed by any sibling. In between these
-two, we mark the core to be in a special core-wide IRQ state.
+then what happens is we sort the metrics in to M1, M3, M2 then when we
+come to match the events:
 
-In the IRQ entry, if we detect that the sibling is running untrusted
-code, we send a reschedule IPI so that the sibling transitions through
-the sibling's irq_exit() to do any waiting there, till the IRQ being
-protected finishes.
+ - by default: match events allowing sharing if all events come from
+the same group. So in the example M1 will first match with {A,B,C}
+then M3 will fail to match the group {A,B,C} but match {A,B,D}; M2
+will succeed with matching {A,B} from M1. The events/group for M2 can
+be removed as they are no longer used. This kind of sharing is
+opportunistic and respects existing groupings. While it may mean a
+metric is computed from a group that now multiplexes, that group will
+run for more of the time as there are fewer groups to multiplex with.
+In this example we've gone from 3 groups down to 2, 8 events down to
+6. An improvement would be to realize that A,B is in both M1 and M3,
+so when we print the stat we could combine these values.
 
-We also monitor the per-CPU outer-most irq_exit(). If during the per-cpu
-outer-most irq_exit(), the core is still in the special core-wide IRQ
-state, we perform a busy-wait till the core exits this state. This
-combination of per-cpu and core-wide IRQ states helps to handle any
-combination of irq_entry()s and irq_exit()s happening on all of the
-siblings of the core in any order.
+ - with --metric-no-merge: no events are shared by metrics M1, M2 and
+M3 have their events and computation as things currently are. There
+are 3 groups and 8 events.
 
-Lastly, we also check in the schedule loop if we are about to schedule
-an untrusted process while the core is in such a state. This is possible
-if a trusted thread enters the scheduler by way of yielding CPU. This
-would involve no transitions through the irq_exit() point to do any
-waiting, so we have to explicitly do the waiting there.
+ - with --metric-no-group: all groups are removed and so the evlist
+has A,B,C,A,B,A,B,D in it. The matching will now match M1 to A,B,C at
+the beginning of the list, M2 to the first A,B and M3 to the same A,B
+and D at the end of the list. We've got no groups and the events have
+gone from 8 down to 4.
 
-Every attempt is made to prevent a busy-wait unnecessarily, and in
-testing on real-world ChromeOS usecases, it has not shown a performance
-drop. In ChromeOS, with this and the rest of the core scheduling
-patchset, we see around a 300% improvement in key press latencies into
-Google docs when Camera streaming is running simulatenously (90th
-percentile latency of ~150ms drops to ~50ms).
+It is difficult to reason about which grouping is most accurate. If we
+have 4 counters (no NMI watchdog) then this example will fit with no
+multiplexing. The default above should achieve less multiplexing, in
+the same way merging PMU events currently does - this patch is trying
+to mirror the --no-merge functionality to a degree. Considering
+TopDownL1 then we go from metrics that never sum to 100%, to metrics
+that do in either the default or --metric-no-group cases.
 
-Cc: Julien Desfossez <jdesfossez@digitalocean.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Aaron Lu <aaron.lwe@gmail.com>
-Cc: Aubrey Li <aubrey.li@linux.intel.com>
-Cc: Tim Chen <tim.c.chen@intel.com>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Co-developed-by: Vineeth Pillai <vpillai@digitalocean.com>
-Signed-off-by: Vineeth Pillai <vpillai@digitalocean.com>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+I'm not sure what user option is missing with these combinations? The
+default is trying to strike a compromise and I think user interaction
+is unnecessary, just as --no-merge doesn't cause interaction. If the
+existing behavior is wanted using --metric-no-merge will give that.
+The new default and --metric-no-group are hopefully going to reduce
+the number of groups and events. I'm somewhat agnostic as to what the
+flag functionality should be as what I'm working with needs either the
+default or --metric-no-group, I can use whatever flag is agreed upon.
 
----
-If you like some pictures of the cases handled by this patch, please
-see the OSPM slide deck (the below link jumps straight to relevant
-slides - about 6-7 of them in total): https://bit.ly/2zvzxWk
+Thanks,
+Ian
 
-v1->v2:
-  Fixed a bug where softirq was causing deadlock (thanks Vineeth/Julien)
-
-The issue was because of the following flow:
-
-On CPU0:
-local_bh_enable()
-  ->  Enter softirq
-   -> Softirq takes a lock.
-   -> <new Interrupt received during softirq>
-   -> New interrupt's irq_exit() : Wait since it is not outermost
-                                   core-wide irq_exit().
-
-On CPU1:
- <interrupt received>
-irq_enter()  -> Enter the core wide IRQ state.
-    <ISR raises a softirq which will run from irq_exit().
-irq_exit()   ->
-    -> enters softirq
-         -> softirq tries to take a lock and blocks.
-
-So it is an A->B and B->A deadlock.
-A  = Enter the core-wide IRQ state or wait for it to end.
-B =  Acquire a lock during softirq or wait for it to be released.
-
-The fix is to enter the core-wide IRQ state even when entering through
-the local_bh_enable -> softirq path (When there is no hardirq
-context). which basically becomes:
-
-On CPU0:
-local_bh_enable()
-    (Fix: Call sched_core_irq_enter() --> similar to irq_enter()).
-  ->  Enter softirq
-   -> Softirq takes a lock.
-     -> <new Interrupt received during softirq> -> irq_enter()
-     -> New interrupt's irq_exit()   (Will not wait since we are inner
-        irq_exit()).
-
- include/linux/sched.h |   8 +++
- kernel/sched/core.c   | 159 ++++++++++++++++++++++++++++++++++++++++++
- kernel/sched/sched.h  |   3 +
- kernel/softirq.c      |  12 ++++
- 4 files changed, 182 insertions(+)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 710e9a8956007..fe6ae59fcadbe 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2018,4 +2018,12 @@ int sched_trace_rq_cpu(struct rq *rq);
- 
- const struct cpumask *sched_trace_rd_span(struct root_domain *rd);
- 
-+#ifdef CONFIG_SCHED_CORE
-+void sched_core_irq_enter(void);
-+void sched_core_irq_exit(void);
-+#else
-+static void sched_core_irq_enter(void) { }
-+static void sched_core_irq_exit(void) { }
-+#endif
-+
- #endif
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 21c640170323b..684359ff357e7 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4391,6 +4391,153 @@ static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
- 	return a->core_cookie == b->core_cookie;
- }
- 
-+/*
-+ * Helper function to pause the caller's hyperthread until the core exits the
-+ * core-wide IRQ state. Obviously the CPU calling this function should not be
-+ * responsible for the core being in the core-wide IRQ state otherwise it will
-+ * deadlock. This function should be called from irq_exit() and from schedule().
-+ * It is upto the callers to decide if calling here is necessary.
-+ */
-+static inline void sched_core_sibling_irq_pause(struct rq *rq)
-+{
-+	/*
-+	 * Wait till the core of this HT is not in a core-wide IRQ state.
-+	 *
-+	 * Pair with smp_store_release() in sched_core_irq_exit().
-+	 */
-+	while (smp_load_acquire(&rq->core->core_irq_nest) > 0)
-+		cpu_relax();
-+}
-+
-+/*
-+ * Enter the core-wide IRQ state. Sibling will be paused if it is running
-+ * 'untrusted' code, until sched_core_irq_exit() is called. Every attempt to
-+ * avoid sending useless IPIs is made. Must be called only from hard IRQ
-+ * context.
-+ */
-+void sched_core_irq_enter(void)
-+{
-+	int i, cpu = smp_processor_id();
-+	struct rq *rq = cpu_rq(cpu);
-+	const struct cpumask *smt_mask;
-+
-+	if (!sched_core_enabled(rq))
-+		return;
-+
-+	/* Count irq_enter() calls received without irq_exit() on this CPU. */
-+	rq->core_this_irq_nest++;
-+
-+	/* If not outermost irq_enter(), do nothing. */
-+	if (WARN_ON_ONCE(rq->core->core_this_irq_nest == UINT_MAX) ||
-+	    rq->core_this_irq_nest != 1)
-+		return;
-+
-+	raw_spin_lock(rq_lockp(rq));
-+	smt_mask = cpu_smt_mask(cpu);
-+
-+	/* Contribute this CPU's irq_enter() to core-wide irq_enter() count. */
-+	WRITE_ONCE(rq->core->core_irq_nest, rq->core->core_irq_nest + 1);
-+	if (WARN_ON_ONCE(rq->core->core_irq_nest == UINT_MAX))
-+		goto unlock;
-+
-+	if (rq->core_pause_pending) {
-+		/*
-+		 * Do nothing more since we are in a 'reschedule IPI' sent from
-+		 * another sibling. That sibling would have sent IPIs to all of
-+		 * the HTs.
-+		 */
-+		goto unlock;
-+	}
-+
-+	/*
-+	 * If we are not the first ones on the core to enter core-wide IRQ
-+	 * state, do nothing.
-+	 */
-+	if (rq->core->core_irq_nest > 1)
-+		goto unlock;
-+
-+	/* Do nothing more if the core is not tagged. */
-+	if (!rq->core->core_cookie)
-+		goto unlock;
-+
-+	for_each_cpu(i, smt_mask) {
-+		struct rq *srq = cpu_rq(i);
-+
-+		if (i == cpu || cpu_is_offline(i))
-+			continue;
-+
-+		if (!srq->curr->mm || is_idle_task(srq->curr))
-+			continue;
-+
-+		/* Skip if HT is not running a tagged task. */
-+		if (!srq->curr->core_cookie && !srq->core_pick)
-+			continue;
-+
-+		/* IPI only if previous IPI was not pending. */
-+		if (!srq->core_pause_pending) {
-+			srq->core_pause_pending = 1;
-+			smp_send_reschedule(i);
-+		}
-+	}
-+unlock:
-+	raw_spin_unlock(rq_lockp(rq));
-+}
-+
-+/*
-+ * Process any work need for either exiting the core-wide IRQ state, or for
-+ * waiting on this hyperthread if the core is still in this state.
-+ */
-+void sched_core_irq_exit(void)
-+{
-+	int cpu = smp_processor_id();
-+	struct rq *rq = cpu_rq(cpu);
-+	bool wait_here = false;
-+	unsigned int nest;
-+
-+	/* Do nothing if core-sched disabled. */
-+	if (!sched_core_enabled(rq))
-+		return;
-+
-+	rq->core_this_irq_nest--;
-+
-+	/* If not outermost on this CPU, do nothing. */
-+	if (WARN_ON_ONCE(rq->core_this_irq_nest == UINT_MAX) ||
-+	    rq->core_this_irq_nest > 0)
-+		return;
-+
-+	raw_spin_lock(rq_lockp(rq));
-+	/*
-+	 * Core-wide nesting counter can never be 0 because we are
-+	 * still in it on this CPU.
-+	 */
-+	nest = rq->core->core_irq_nest;
-+	WARN_ON_ONCE(!nest);
-+
-+	/*
-+	 * If we still have other CPUs in IRQs, we have to wait for them.
-+	 * Either here, or in the scheduler.
-+	 */
-+	if (rq->core->core_cookie && nest > 1) {
-+		/*
-+		 * If we are entering the scheduler anyway, we can just wait
-+		 * there for ->core_irq_nest to reach 0. If not, just wait here.
-+		 */
-+		if (!tif_need_resched()) {
-+			wait_here = true;
-+		}
-+	}
-+
-+	if (rq->core_pause_pending)
-+		rq->core_pause_pending = 0;
-+
-+	/* Pair with smp_load_acquire() in sched_core_sibling_irq_pause(). */
-+	smp_store_release(&rq->core->core_irq_nest, nest - 1);
-+	raw_spin_unlock(rq_lockp(rq));
-+
-+	if (wait_here)
-+		sched_core_sibling_irq_pause(rq);
-+}
-+
- // XXX fairness/fwd progress conditions
- /*
-  * Returns
-@@ -4910,6 +5057,18 @@ static void __sched notrace __schedule(bool preempt)
- 		rq_unlock_irq(rq, &rf);
- 	}
- 
-+#ifdef CONFIG_SCHED_CORE
-+	/*
-+	 * If a CPU  that was running a trusted task entered the scheduler, and
-+	 * the next task is untrusted, then check if waiting for core-wide IRQ
-+	 * state to cease is needed since we would not have been able to get
-+	 * the services of irq_exit() to do that waiting.
-+	 */
-+	if (sched_core_enabled(rq) &&
-+	    !is_idle_task(next) && next->mm && next->core_cookie)
-+		sched_core_sibling_irq_pause(rq);
-+#endif
-+
- 	balance_callback(rq);
- }
- 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index a7d9f156242e2..3a065d133ef51 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1018,11 +1018,14 @@ struct rq {
- 	unsigned int		core_sched_seq;
- 	struct rb_root		core_tree;
- 	unsigned char		core_forceidle;
-+	unsigned char		core_pause_pending;
-+	unsigned int		core_this_irq_nest;
- 
- 	/* shared state */
- 	unsigned int		core_task_seq;
- 	unsigned int		core_pick_seq;
- 	unsigned long		core_cookie;
-+	unsigned int		core_irq_nest;
- #endif
- };
- 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index 0427a86743a46..147abd6d82599 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -273,6 +273,13 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 	/* Reset the pending bitmask before enabling irqs */
- 	set_softirq_pending(0);
- 
-+	/*
-+	 * Core scheduling mitigations require entry into softirq to send stall
-+	 * IPIs to sibling hyperthreads if needed (ex, sibling is running
-+	 * untrusted task). If we are here from irq_exit(), no IPIs are sent.
-+	 */
-+	sched_core_irq_enter();
-+
- 	local_irq_enable();
- 
- 	h = softirq_vec;
-@@ -305,6 +312,9 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 		rcu_softirq_qs();
- 	local_irq_disable();
- 
-+	/* Inform the scheduler about exit from softirq. */
-+	sched_core_irq_exit();
-+
- 	pending = local_softirq_pending();
- 	if (pending) {
- 		if (time_before(jiffies, end) && !need_resched() &&
-@@ -345,6 +355,7 @@ asmlinkage __visible void do_softirq(void)
- void irq_enter(void)
- {
- 	rcu_irq_enter();
-+	sched_core_irq_enter();
- 	if (is_idle_task(current) && !in_interrupt()) {
- 		/*
- 		 * Prevent raise_softirq from needlessly waking up ksoftirqd
-@@ -413,6 +424,7 @@ void irq_exit(void)
- 		invoke_softirq();
- 
- 	tick_irq_exit();
-+	sched_core_irq_exit();
- 	rcu_irq_exit();
- 	trace_hardirq_exit(); /* must be last! */
- }
--- 
-2.26.2.761.g0e0b3e54be-goog
-
+> thanks,
+> jirka
+>
+>
+> >
+> > > I was wondering if we could merge all the hasmaps into single
+> > > one before the parse the evlist.. this way we won't need removing
+> > > later.. but I did not thought this through completely, so it
+> > > might not work at some point
+> >
+> > This could be done in the --metric-no-group case reasonably easily
+> > like the current hashmap. For groups you'd want something like a set
+> > of sets of events, but then you'd only be able to share events if the
+> > sets were the same. A directed acyclic graph could capture the events
+> > and the sharing relationships, it may be possible to optimize cases
+> > like {A,B,C}, {A,B,D}, {A,B} so that the small group on the end shares
+> > events with both the {A,B,C} and {A,B,D} group. This may be good
+> > follow up work. We could also solve this in the json, for example
+> > create a "phony" group of {A,B,C,D} that all three metrics share from.
+> > You could also use --metric-no-group to achieve that sharing now.
+> >
+> > Thanks,
+> > Ian
+> >
+> > > jirka
+> > >
+> >
+>
