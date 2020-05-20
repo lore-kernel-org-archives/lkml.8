@@ -2,174 +2,97 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EBFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9414120708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mZFB9Xkz"
+	by mail.kernel.org (Postfix) with ESMTP id 47C8D20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589934701;
+	bh=6+agXW4zenIC/HJ/Zp4vlFlE90oquxkrfOuA8MnRMbg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sBvmZmLmg1MBYLJfyJ3LhzOp7iHx3oHD+SXAhEw+uupGM++GbK0xykweD4A8m23qB
+	 73ZohTxf1NI0nmYn3wPJlc8Bfjtspix6mZe6MxKNkCVmOQUK8i68jI0PTbl0YKJdaC
+	 zHQUziF+YDm8A/QQ2di62PJxcD5xZbrpxQ/jCkAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgETAbP (ORCPT
+        id S1728533AbgETAbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:31:15 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:45534 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728468AbgETAbO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:31:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589934673; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=4dZM/JYeoA487Rk8Sj4yrYwS43HKgRGST+5m/uOSDi0=; b=mZFB9XkzZhqiBZbGCoICfEiwRf/OfM+jOGZ8hKECNHGU1W7dWrMp6G+FJuHKFFVRBU4GxeN/
- yGvSxgxpHPSvJDTg//HO9JqTIUqHG5PS4t7KcSjEJ8xZpqnCjb3njQeB8//xm4Awyr4dMEcx
- X8ye6TIjmjt+YRFaRWuFGtH7PN8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec47a2f.7f1e2800a110-smtp-out-n04;
- Wed, 20 May 2020 00:30:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D8DACC433CB; Wed, 20 May 2020 00:30:39 +0000 (UTC)
-Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 19 May 2020 20:31:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgETAbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:31:40 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1966C433CA;
-        Wed, 20 May 2020 00:30:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D1966C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v1 1/6] bus: mhi: core: Improve shutdown handling after link down detection
-Date:   Tue, 19 May 2020 17:30:26 -0700
-Message-Id: <1589934631-22752-2-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1589934631-22752-1-git-send-email-bbhatt@codeaurora.org>
-References: <1589934631-22752-1-git-send-email-bbhatt@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DD822088E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:31:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589934699;
+        bh=6+agXW4zenIC/HJ/Zp4vlFlE90oquxkrfOuA8MnRMbg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tzmy3tXGTRIFG4hidXwsx5NlPpY7RQUWDhgEH9Sg9/+0wzENwOswgfoKum/GY+7L3
+         o3eYOilR8QgdXfNnrzHq66vZ0F3iE7QO7VGt0dAW4O9A8CwswH+ZMvah/GqVvucKeO
+         uX5Hly11Ma3LomzOy1pdL7ZJZwQ/9M3HxogScWTw=
+Received: by mail-wr1-f53.google.com with SMTP id v12so1289632wrp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:31:39 -0700 (PDT)
+X-Gm-Message-State: AOAM531611THSaYmDMA8mlmlu1jbmlJJXb/7dk59sJxYHAOSuLEv94sf
+        gXWVO/cPEBtHBHmBlCmG3Uxhn7o/Z6QtCFUPxCOs4Q==
+X-Google-Smtp-Source: ABdhPJxV1KoPs65Fz1IP88n6YQGZ0w97Ca3JTWU0ZbvBvyaaboIOZRpNFMD9EAqOJuyY3WxdZa7LGxhw/4Y4VpXeBtg=
+X-Received: by 2002:adf:a389:: with SMTP id l9mr1522509wrb.18.1589934697658;
+ Tue, 19 May 2020 17:31:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200515234547.710474468@linutronix.de> <20200515235127.198194779@linutronix.de>
+In-Reply-To: <20200515235127.198194779@linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 19 May 2020 17:31:26 -0700
+X-Gmail-Original-Message-ID: <CALCETrVXEYxp3=E8u=uWTfbpCEvspMe+oRT+YAHcQOLx0OOggQ@mail.gmail.com>
+Message-ID: <CALCETrVXEYxp3=E8u=uWTfbpCEvspMe+oRT+YAHcQOLx0OOggQ@mail.gmail.com>
+Subject: Re: [patch V6 28/37] x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If MHI were to attempt a device shutdown following an assumption
-that the device is inaccessible, the host currently moves to a state
-where device register accesses are allowed when they should not be.
-This would end up allowing accesses to device register space when the
-link is inaccessible which can result in NOC errors to be observed on
-the host. Improve shutdown handling so as to prevent these outcomes
-and do not move the MHI PM state to a register accessible state after
-device is assumed to be inaccessible.
+On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>
+> Convert various hypervisor vectors to IDTENTRY_SYSVEC
+>   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
+>   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
+>   - Remove the ASM idtentries in 64bit
+>   - Remove the BUILD_INTERRUPT entries in 32bit
+>   - Remove the old prototypes
+>
+> No functional change.
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
----
- drivers/bus/mhi/core/init.c     |  1 +
- drivers/bus/mhi/core/internal.h |  1 +
- drivers/bus/mhi/core/pm.c       | 20 ++++++++++++++------
- 3 files changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index 9b6a5173..0ae4c34 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -37,6 +37,7 @@
- 	[DEV_ST_TRANSITION_MISSION_MODE] = "MISSION_MODE",
- 	[DEV_ST_TRANSITION_SYS_ERR] = "SYS_ERR",
- 	[DEV_ST_TRANSITION_DISABLE] = "DISABLE",
-+	[DEV_ST_TRANSITION_FATAL] = "FATAL SHUTDOWN",
- };
- 
- const char * const mhi_state_str[MHI_STATE_MAX] = {
-diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-index 798aa483..a7203c2 100644
---- a/drivers/bus/mhi/core/internal.h
-+++ b/drivers/bus/mhi/core/internal.h
-@@ -388,6 +388,7 @@ enum dev_st_transition {
- 	DEV_ST_TRANSITION_MISSION_MODE,
- 	DEV_ST_TRANSITION_SYS_ERR,
- 	DEV_ST_TRANSITION_DISABLE,
-+	DEV_ST_TRANSITION_FATAL,
- 	DEV_ST_TRANSITION_MAX,
- };
- 
-diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-index 783e3d5..b2b3de7 100644
---- a/drivers/bus/mhi/core/pm.c
-+++ b/drivers/bus/mhi/core/pm.c
-@@ -37,9 +37,10 @@
-  *     M0 -> FW_DL_ERR
-  *     M0 -> M3_ENTER -> M3 -> M3_EXIT --> M0
-  * L1: SYS_ERR_DETECT -> SYS_ERR_PROCESS --> POR
-- * L2: SHUTDOWN_PROCESS -> DISABLE
-+ * L2: SHUTDOWN_PROCESS -> LD_ERR_FATAL_DETECT
-+ *     SHUTDOWN_PROCESS -> DISABLE
-  * L3: LD_ERR_FATAL_DETECT <--> LD_ERR_FATAL_DETECT
-- *     LD_ERR_FATAL_DETECT -> SHUTDOWN_PROCESS
-+ *     LD_ERR_FATAL_DETECT -> DISABLE
-  */
- static struct mhi_pm_transitions const dev_state_transitions[] = {
- 	/* L0 States */
-@@ -72,7 +73,7 @@
- 	{
- 		MHI_PM_M3,
- 		MHI_PM_M3_EXIT | MHI_PM_SYS_ERR_DETECT |
--		MHI_PM_SHUTDOWN_PROCESS | MHI_PM_LD_ERR_FATAL_DETECT
-+		MHI_PM_LD_ERR_FATAL_DETECT
- 	},
- 	{
- 		MHI_PM_M3_EXIT,
-@@ -103,7 +104,7 @@
- 	/* L3 States */
- 	{
- 		MHI_PM_LD_ERR_FATAL_DETECT,
--		MHI_PM_LD_ERR_FATAL_DETECT | MHI_PM_SHUTDOWN_PROCESS
-+		MHI_PM_LD_ERR_FATAL_DETECT | MHI_PM_DISABLE
- 	},
- };
- 
-@@ -667,7 +668,11 @@ void mhi_pm_st_worker(struct work_struct *work)
- 			break;
- 		case DEV_ST_TRANSITION_DISABLE:
- 			mhi_pm_disable_transition
--				(mhi_cntrl, MHI_PM_SHUTDOWN_PROCESS);
-+					(mhi_cntrl, MHI_PM_SHUTDOWN_PROCESS);
-+			break;
-+		case DEV_ST_TRANSITION_FATAL:
-+			mhi_pm_disable_transition
-+					(mhi_cntrl, MHI_PM_LD_ERR_FATAL_DETECT);
- 			break;
- 		default:
- 			break;
-@@ -1040,6 +1045,7 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
- void mhi_power_down(struct mhi_controller *mhi_cntrl, bool graceful)
- {
- 	enum mhi_pm_state cur_state;
-+	enum dev_st_transition next_state = DEV_ST_TRANSITION_DISABLE;
- 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
- 
- 	/* If it's not a graceful shutdown, force MHI to linkdown state */
-@@ -1054,9 +1060,11 @@ void mhi_power_down(struct mhi_controller *mhi_cntrl, bool graceful)
- 			dev_dbg(dev, "Failed to move to state: %s from: %s\n",
- 				to_mhi_pm_state_str(MHI_PM_LD_ERR_FATAL_DETECT),
- 				to_mhi_pm_state_str(mhi_cntrl->pm_state));
-+		else
-+			next_state = DEV_ST_TRANSITION_FATAL;
- 	}
- 
--	mhi_queue_state_transition(mhi_cntrl, DEV_ST_TRANSITION_DISABLE);
-+	mhi_queue_state_transition(mhi_cntrl, next_state);
- 
- 	/* Wait for shutdown to complete */
- 	flush_work(&mhi_cntrl->st_worker);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Acked-by: Andy Lutomirski <luto@kernel.org>
