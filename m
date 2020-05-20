@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6488C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E880DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C421E205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB62205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgETO2m (ORCPT
+        id S1728614AbgETO2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:28:42 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60980 "EHLO
+        Wed, 20 May 2020 10:28:48 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60950 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726833AbgETOWW (ORCPT
+        by vger.kernel.org with ESMTP id S1726824AbgETOWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:22 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-00035C-On; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-000358-JK; Wed, 20 May 2020 15:22:18 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DOs-45; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DOi-1g; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>
-Date:   Wed, 20 May 2020 15:13:41 +0100
-Message-ID: <lsq.1589984008.387874454@decadent.org.uk>
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Daniel Jordan" <daniel.m.jordan@oracle.com>
+Date:   Wed, 20 May 2020 15:13:39 +0100
+Message-ID: <lsq.1589984008.865998157@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 13/99] crypto: pcrypt - Fix user-after-free on module
- unload
+Subject: [PATCH 3.16 11/99] padata: Remove broken queue flushing
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,35 +57,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 07bfd9bdf568a38d9440c607b72342036011f727 upstream.
+commit 07928d9bfc81640bab36f5190e8725894d93b659 upstream.
 
-On module unload of pcrypt we must unregister the crypto algorithms
-first and then tear down the padata structure.  As otherwise the
-crypto algorithms are still alive and can be used while the padata
-structure is being freed.
+The function padata_flush_queues is fundamentally broken because
+it cannot force padata users to complete the request that is
+underway.  IOW padata has to passively wait for the completion
+of any outstanding work.
 
-Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
+As it stands flushing is used in two places.  Its use in padata_stop
+is simply unnecessary because nothing depends on the queues to
+be flushed afterwards.
+
+The other use in padata_replace is more substantial as we depend
+on it to free the old pd structure.  This patch instead uses the
+pd->refcnt to dynamically free the pd structure once all requests
+are complete.
+
+Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-[bwh: Backported to 3.16: adjust context]
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/pcrypt.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -552,11 +552,12 @@ err:
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -33,6 +33,8 @@
  
- static void __exit pcrypt_exit(void)
- {
-+	crypto_unregister_template(&pcrypt_tmpl);
+ #define MAX_OBJ_NUM 1000
+ 
++static void padata_free_pd(struct parallel_data *pd);
 +
- 	pcrypt_fini_padata(&pencrypt);
- 	pcrypt_fini_padata(&pdecrypt);
+ static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ {
+ 	int cpu, target_cpu;
+@@ -281,6 +283,7 @@ static void padata_serial_worker(struct
+ 	struct padata_serial_queue *squeue;
+ 	struct parallel_data *pd;
+ 	LIST_HEAD(local_list);
++	int cnt;
  
- 	kset_unregister(pcrypt_kset);
--	crypto_unregister_template(&pcrypt_tmpl);
+ 	local_bh_disable();
+ 	squeue = container_of(serial_work, struct padata_serial_queue, work);
+@@ -290,6 +293,8 @@ static void padata_serial_worker(struct
+ 	list_replace_init(&squeue->serial.list, &local_list);
+ 	spin_unlock(&squeue->serial.lock);
+ 
++	cnt = 0;
++
+ 	while (!list_empty(&local_list)) {
+ 		struct padata_priv *padata;
+ 
+@@ -299,9 +304,12 @@ static void padata_serial_worker(struct
+ 		list_del_init(&padata->list);
+ 
+ 		padata->serial(padata);
+-		atomic_dec(&pd->refcnt);
++		cnt++;
+ 	}
+ 	local_bh_enable();
++
++	if (atomic_sub_and_test(cnt, &pd->refcnt))
++		padata_free_pd(pd);
  }
  
- module_init(pcrypt_init);
+ /**
+@@ -432,7 +440,7 @@ static struct parallel_data *padata_allo
+ 	padata_init_squeues(pd);
+ 	atomic_set(&pd->seq_nr, -1);
+ 	atomic_set(&pd->reorder_objects, 0);
+-	atomic_set(&pd->refcnt, 0);
++	atomic_set(&pd->refcnt, 1);
+ 	pd->pinst = pinst;
+ 	spin_lock_init(&pd->lock);
+ 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
+@@ -459,29 +467,6 @@ static void padata_free_pd(struct parall
+ 	kfree(pd);
+ }
+ 
+-/* Flush all objects out of the padata queues. */
+-static void padata_flush_queues(struct parallel_data *pd)
+-{
+-	int cpu;
+-	struct padata_parallel_queue *pqueue;
+-	struct padata_serial_queue *squeue;
+-
+-	for_each_cpu(cpu, pd->cpumask.pcpu) {
+-		pqueue = per_cpu_ptr(pd->pqueue, cpu);
+-		flush_work(&pqueue->work);
+-	}
+-
+-	if (atomic_read(&pd->reorder_objects))
+-		padata_reorder(pd);
+-
+-	for_each_cpu(cpu, pd->cpumask.cbcpu) {
+-		squeue = per_cpu_ptr(pd->squeue, cpu);
+-		flush_work(&squeue->work);
+-	}
+-
+-	BUG_ON(atomic_read(&pd->refcnt) != 0);
+-}
+-
+ static void __padata_start(struct padata_instance *pinst)
+ {
+ 	pinst->flags |= PADATA_INIT;
+@@ -495,10 +480,6 @@ static void __padata_stop(struct padata_
+ 	pinst->flags &= ~PADATA_INIT;
+ 
+ 	synchronize_rcu();
+-
+-	get_online_cpus();
+-	padata_flush_queues(pinst->pd);
+-	put_online_cpus();
+ }
+ 
+ /* Replace the internal control structure with a new one. */
+@@ -519,8 +500,8 @@ static void padata_replace(struct padata
+ 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
+ 		notification_mask |= PADATA_CPU_SERIAL;
+ 
+-	padata_flush_queues(pd_old);
+-	padata_free_pd(pd_old);
++	if (atomic_dec_and_test(&pd_old->refcnt))
++		padata_free_pd(pd_old);
+ 
+ 	if (notification_mask)
+ 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
 
