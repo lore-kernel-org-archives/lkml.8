@@ -2,126 +2,141 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE95C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4138DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9821D207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F329205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXLUJwYx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Xj4cuDUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgETNtB (ORCPT
+        id S1727016AbgETNtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:49:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53588 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726747AbgETNtB (ORCPT
+        Wed, 20 May 2020 09:49:17 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12024 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbgETNtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:49:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589982540;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=a816W8Z5hp9K0nG+dy2LJ94rdDDToT47/ru3WqNRsNQ=;
-        b=iXLUJwYxYGP/SkkPVywn7SleB/SImDDE7f5MlyAugUmXwJydPQj7YQowJLBM6S9TX3jbg5
-        d90uCmewab+pxDHd5bxI6HtdBF9p8BNFCIPZ2dzlsIKCdllUO38GQ/MyozFRtD78dzQ6O2
-        WFE72Ys2vTEVLUxrlcQ6baE6lZqEPYQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-Of_ePFwOOx-1njuz7CnsEg-1; Wed, 20 May 2020 09:48:56 -0400
-X-MC-Unique: Of_ePFwOOx-1njuz7CnsEg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 09:49:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589982556; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=bdYxlleaBZjdmGcxkdFhFiwkox4BqXbXIZrOHd6Ou20=;
+ b=Xj4cuDUe6ojzPIKgdLSkniQiWHdzH/19LFRVCBhxFAeGi2MIUmirwyys2XH6MnU9UQkQP7wC
+ ZUadADORAFB3YthSLaMyLnSWBo9iFdkVWtSfJuvMk8CJw5x91ucYZOYXKkCzjz8Vma+NJ4XK
+ 0YLRpT3YvrwyQWUSmsER8U3QXTg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec53551.7feb22d25848-smtp-out-n02;
+ Wed, 20 May 2020 13:49:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E54FBC433C6; Wed, 20 May 2020 13:49:04 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3300E80B71E;
-        Wed, 20 May 2020 13:48:53 +0000 (UTC)
-Received: from krava (unknown [10.40.193.10])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 373567958D;
-        Wed, 20 May 2020 13:48:48 +0000 (UTC)
-Date:   Wed, 20 May 2020 15:48:47 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
-Message-ID: <20200520134847.GM157452@krava>
-References: <20200520072814.128267-1-irogers@google.com>
- <20200520072814.128267-6-irogers@google.com>
+        (Authenticated sender: rananta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 432AFC433C8;
+        Wed, 20 May 2020 13:49:04 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520072814.128267-6-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 20 May 2020 06:49:04 -0700
+From:   rananta@codeaurora.org
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, andrew@daynix.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
+In-Reply-To: <cb5bd2b2-f33a-b541-ed3c-70da14c7252d@suse.cz>
+References: <20200428032601.22127-1-rananta@codeaurora.org>
+ <20200506094851.GA2787548@kroah.com>
+ <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
+ <20200510064819.GB3400311@kroah.com>
+ <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
+ <20200511073913.GA1347819@kroah.com>
+ <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
+ <20200512082551.GA3526567@kroah.com>
+ <417b1d320bda37410788430979dd708d@codeaurora.org>
+ <20200513070403.GB764901@kroah.com>
+ <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
+ <cb5bd2b2-f33a-b541-ed3c-70da14c7252d@suse.cz>
+Message-ID: <bf168752b8808182f07764fb6194775e@codeaurora.org>
+X-Sender: rananta@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:28:12AM -0700, Ian Rogers wrote:
+On 2020-05-20 02:38, Jiri Slaby wrote:
+> On 15. 05. 20, 1:22, rananta@codeaurora.org wrote:
+>> On 2020-05-13 00:04, Greg KH wrote:
+>>> On Tue, May 12, 2020 at 02:39:50PM -0700, rananta@codeaurora.org 
+>>> wrote:
+>>>> On 2020-05-12 01:25, Greg KH wrote:
+>>>> > On Tue, May 12, 2020 at 09:22:15AM +0200, Jiri Slaby wrote:
+>>>> > > commit bdb498c20040616e94b05c31a0ceb3e134b7e829
+>>>> > > Author: Jiri Slaby <jslaby@suse.cz>
+>>>> > > Date:   Tue Aug 7 21:48:04 2012 +0200
+>>>> > >
+>>>> > >     TTY: hvc_console, add tty install
+>>>> > >
+>>>> > > added hvc_install but did not move 'tty->driver_data = NULL;' from
+>>>> > > hvc_open's fail path to hvc_cleanup.
+>>>> > >
+>>>> > > IOW hvc_open now NULLs tty->driver_data even for another task which
+>>>> > > opened the tty earlier. The same holds for
+>>>> > > "tty_port_tty_set(&hp->port,
+>>>> > > NULL);" there. And actually "tty_port_put(&hp->port);" is also
+>>>> > > incorrect
+>>>> > > for the 2nd task opening the tty.
+>>>> > >
+> 
+> ...
+> 
+>> These are the traces you get when the issue happens:
+>> [  154.212291] hvc_install called for pid: 666
+>> [  154.216705] hvc_open called for pid: 666
+>> [  154.233657] hvc_open: request_irq failed with rc -22.
+>> [  154.238934] hvc_open called for pid: 678
+>> [  154.243012] Unable to handle kernel NULL pointer dereference at
+>> virtual address 00000000000000c4
+>> # hvc_install isn't called for pid: 678 as the file wasn't closed yet.
+> 
+> Nice. Does the attached help?
+Yeah, it looks good. I think it also eliminates the port.count reference
+issue discussed on the v2 patch. Are you planning to mainline this?
+> 
+> I wonder how comes the tty_port_put in hvc_open does not cause a UAF? I
+> would say hvc_open fails, tty_port_put is called. It decrements the
+> reference taken in hvc_install. So far so good.
+> 
+> Now, this should happen IMO:
+> tty_open
+>   -> hvc_open (fails)
+>     -> tty_port_put
+hvc_console driver defines port->ops->destruct(). Upon tty_port_put(), 
+the
+tty_port_destructor() calls port->ops->destruct(), rather than 
+kfree(port).
+>   -> tty_release
+>     -> tty_release_struct
+>       -> tty_kref_put
+>         -> queue_release_one_tty
+> SCHEDULED WORKQUEUE
+> release_one_tty
+>   -> hvc_cleanup
+>     -> tty_port_put (should die terrible death now)
+Since port is not free'd, I think we should be good.
+> 
+> What am I missing?
+> 
+> thanks,
 
-SNIP
-
->  
-> @@ -157,7 +183,7 @@ static int metricgroup__setup_events(struct list_head *groups,
->  	int i = 0;
->  	int ret = 0;
->  	struct egroup *eg;
-> -	struct evsel *evsel;
-> +	struct evsel *evsel, *tmp;
->  	unsigned long *evlist_used;
->  
->  	evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
-> @@ -173,7 +199,8 @@ static int metricgroup__setup_events(struct list_head *groups,
->  			ret = -ENOMEM;
->  			break;
->  		}
-> -		evsel = find_evsel_group(perf_evlist, &eg->pctx, metric_events,
-> +		evsel = find_evsel_group(perf_evlist, &eg->pctx,
-> +					eg->has_constraint, metric_events,
->  					evlist_used);
->  		if (!evsel) {
->  			pr_debug("Cannot resolve %s: %s\n",
-> @@ -200,6 +227,12 @@ static int metricgroup__setup_events(struct list_head *groups,
->  		list_add(&expr->nd, &me->head);
->  	}
->  
-> +	evlist__for_each_entry_safe(perf_evlist, tmp, evsel) {
-> +		if (!test_bit(evsel->idx, evlist_used)) {
-> +			evlist__remove(perf_evlist, evsel);
-> +			evsel__delete(evsel);
-> +		}
-
-is the groupping still enabled when we merge groups? could part
-of the metric (events) be now computed in different groups?
-
-I was wondering if we could merge all the hasmaps into single
-one before the parse the evlist.. this way we won't need removing
-later.. but I did not thought this through completely, so it
-might not work at some point
-
-jirka
-
+Thank you.
+Raghavendra
