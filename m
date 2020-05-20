@@ -2,141 +2,134 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4138DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8973C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F329205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D16620874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Xj4cuDUe"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CjbbxN8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgETNtR (ORCPT
+        id S1726785AbgETNuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:49:17 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:12024 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726436AbgETNtQ (ORCPT
+        Wed, 20 May 2020 09:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETNuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:49:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589982556; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=bdYxlleaBZjdmGcxkdFhFiwkox4BqXbXIZrOHd6Ou20=;
- b=Xj4cuDUe6ojzPIKgdLSkniQiWHdzH/19LFRVCBhxFAeGi2MIUmirwyys2XH6MnU9UQkQP7wC
- ZUadADORAFB3YthSLaMyLnSWBo9iFdkVWtSfJuvMk8CJw5x91ucYZOYXKkCzjz8Vma+NJ4XK
- 0YLRpT3YvrwyQWUSmsER8U3QXTg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec53551.7feb22d25848-smtp-out-n02;
- Wed, 20 May 2020 13:49:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E54FBC433C6; Wed, 20 May 2020 13:49:04 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rananta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 432AFC433C8;
-        Wed, 20 May 2020 13:49:04 +0000 (UTC)
+        Wed, 20 May 2020 09:50:51 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A6B4C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 06:50:51 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f134so2613459wmf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 06:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lTWjeswxH0l98lyAxNqRNJAIOGggfbasSyUWJF3O/mI=;
+        b=CjbbxN8hygEVQLVlGrH7l+/V/HdHKau/Ebvqwk35rM13T4gaQNRQy7FepGskwmW3na
+         +RHf7e1uuO7h0fovTB5z0nEvtSTAPxYrR+kFXWhjKT9xQIyhn1hzLCv7DYoGzBdAU2cy
+         /DVgXsWaQCgLoKd3OHE1X0o8+YbdAu18dWgfo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lTWjeswxH0l98lyAxNqRNJAIOGggfbasSyUWJF3O/mI=;
+        b=rKfvJsvJMuaDUTlHbi+edvFnck5gATG7h6o5FndzOk9oUPun6U25CgUUtJh87jCB/l
+         UW29prKGfzLyrf56N2JHMZaK2gtmGI2i93s2eorjIVs269d/PkCxqd2M3OGmZ7ykLtOF
+         PPd2EFSclK69VQpBex39UH+lAFtNIihWdi6jYE2GDzvveZYvXQyX0rJqkFpk23WLodxD
+         EKuzRlhzGEAaoLxxIszWK/tR12P+XwNZjs7IQbQSQPrpK0lgPcZhW++QaBXJp73W/tan
+         3K/TzF0kAsKosoN/KmChA1MCrpqiGGMhs78qm+ERsBCXHBrtZ19cpjXXMuAtdCQrcnl0
+         i0fw==
+X-Gm-Message-State: AOAM532X4xx5hwR0lpQdDaAn+HbX8wMOJ5o/QchwYqQnpAyMjm8tyTCL
+        3mYFAy+ZH4lUugvuioFxzyAl5pNR3d/y+B/gE7BLUw==
+X-Google-Smtp-Source: ABdhPJyaXGaSNp9tyc7HR3h1s5MPA9ExbrcjOq9FSNfXd4CqVCIoj7d0aI/ZbycoUGoC9EKycGOKogZNdnICVdwHSus=
+X-Received: by 2002:a05:600c:d6:: with SMTP id u22mr4468679wmm.45.1589982649690;
+ Wed, 20 May 2020 06:50:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 20 May 2020 06:49:04 -0700
-From:   rananta@codeaurora.org
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, andrew@daynix.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
-In-Reply-To: <cb5bd2b2-f33a-b541-ed3c-70da14c7252d@suse.cz>
-References: <20200428032601.22127-1-rananta@codeaurora.org>
- <20200506094851.GA2787548@kroah.com>
- <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
- <20200510064819.GB3400311@kroah.com>
- <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
- <20200511073913.GA1347819@kroah.com>
- <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
- <20200512082551.GA3526567@kroah.com>
- <417b1d320bda37410788430979dd708d@codeaurora.org>
- <20200513070403.GB764901@kroah.com>
- <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
- <cb5bd2b2-f33a-b541-ed3c-70da14c7252d@suse.cz>
-Message-ID: <bf168752b8808182f07764fb6194775e@codeaurora.org>
-X-Sender: rananta@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+ <20200519203419.12369-10-james.quinlan@broadcom.com> <20200520054349.GB2180554@kroah.com>
+In-Reply-To: <20200520054349.GB2180554@kroah.com>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Wed, 20 May 2020 09:50:36 -0400
+Message-ID: <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
+Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma offsets
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 02:38, Jiri Slaby wrote:
-> On 15. 05. 20, 1:22, rananta@codeaurora.org wrote:
->> On 2020-05-13 00:04, Greg KH wrote:
->>> On Tue, May 12, 2020 at 02:39:50PM -0700, rananta@codeaurora.org 
->>> wrote:
->>>> On 2020-05-12 01:25, Greg KH wrote:
->>>> > On Tue, May 12, 2020 at 09:22:15AM +0200, Jiri Slaby wrote:
->>>> > > commit bdb498c20040616e94b05c31a0ceb3e134b7e829
->>>> > > Author: Jiri Slaby <jslaby@suse.cz>
->>>> > > Date:   Tue Aug 7 21:48:04 2012 +0200
->>>> > >
->>>> > >     TTY: hvc_console, add tty install
->>>> > >
->>>> > > added hvc_install but did not move 'tty->driver_data = NULL;' from
->>>> > > hvc_open's fail path to hvc_cleanup.
->>>> > >
->>>> > > IOW hvc_open now NULLs tty->driver_data even for another task which
->>>> > > opened the tty earlier. The same holds for
->>>> > > "tty_port_tty_set(&hp->port,
->>>> > > NULL);" there. And actually "tty_port_put(&hp->port);" is also
->>>> > > incorrect
->>>> > > for the 2nd task opening the tty.
->>>> > >
-> 
-> ...
-> 
->> These are the traces you get when the issue happens:
->> [  154.212291] hvc_install called for pid: 666
->> [  154.216705] hvc_open called for pid: 666
->> [  154.233657] hvc_open: request_irq failed with rc -22.
->> [  154.238934] hvc_open called for pid: 678
->> [  154.243012] Unable to handle kernel NULL pointer dereference at
->> virtual address 00000000000000c4
->> # hvc_install isn't called for pid: 678 as the file wasn't closed yet.
-> 
-> Nice. Does the attached help?
-Yeah, it looks good. I think it also eliminates the port.count reference
-issue discussed on the v2 patch. Are you planning to mainline this?
-> 
-> I wonder how comes the tty_port_put in hvc_open does not cause a UAF? I
-> would say hvc_open fails, tty_port_put is called. It decrements the
-> reference taken in hvc_install. So far so good.
-> 
-> Now, this should happen IMO:
-> tty_open
->   -> hvc_open (fails)
->     -> tty_port_put
-hvc_console driver defines port->ops->destruct(). Upon tty_port_put(), 
-the
-tty_port_destructor() calls port->ops->destruct(), rather than 
-kfree(port).
->   -> tty_release
->     -> tty_release_struct
->       -> tty_kref_put
->         -> queue_release_one_tty
-> SCHEDULED WORKQUEUE
-> release_one_tty
->   -> hvc_cleanup
->     -> tty_port_put (should die terrible death now)
-Since port is not free'd, I think we should be good.
-> 
-> What am I missing?
-> 
-> thanks,
+On Wed, May 20, 2020 at 1:43 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
+> > diff --git a/include/linux/device.h b/include/linux/device.h
+> > index ac8e37cd716a..6cd916860b5f 100644
+> > --- a/include/linux/device.h
+> > +++ b/include/linux/device.h
+> > @@ -493,6 +493,8 @@ struct dev_links_info {
+> >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
+> >   *           DMA limit than the device itself supports.
+> >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+> > + * @dma_map: Like dma_pfn_offset but used when there are multiple
+> > + *           pfn offsets for multiple dma-ranges.
+> >   * @dma_parms:       A low level driver may set these to teach IOMMU code about
+> >   *           segment limitations.
+> >   * @dma_pools:       Dma pools (if dma'ble device).
+> > @@ -578,7 +580,12 @@ struct device {
+> >                                            allocations such descriptors. */
+> >       u64             bus_dma_limit;  /* upstream dma constraint */
+> >       unsigned long   dma_pfn_offset;
+> > -
+> > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > +     const void *dma_offset_map;     /* Like dma_pfn_offset, but for
+> > +                                      * the unlikely case of multiple
+> > +                                      * offsets. If non-null, dma_pfn_offset
+> > +                                      * will be 0. */
+> > +#endif
+> >       struct device_dma_parameters *dma_parms;
+> >
+> >       struct list_head        dma_pools;      /* dma pools (if dma'ble) */
+>
+> I'll defer to Christoph here, but I thought we were trying to get rid of
+> stuff like this from struct device, not add new things to it for dma
+Hi Greg,
 
-Thank you.
-Raghavendra
+I wasn't aware of this policy.  I put it in 'struct device' because
+just like the existing dma_pfn_offset; it seemed to be the only way to
+pull this off.  I'll certainly follow any ideas on alternative
+strategies from Christoph et al.
+
+> apis.  And why is it a void *?
+Just wanted to minimize the number of lines I've added to device.h, no
+other reason.
+
+Thanks,
+Jim
+>
+> thanks,
+>
+> greg k-h
