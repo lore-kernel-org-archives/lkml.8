@@ -2,798 +2,194 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D39C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B040A2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EC820C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="T+hxgGBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgETJwp (ORCPT
+        id S1726875AbgETJx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:52:45 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:49180 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726435AbgETJwn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:52:43 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04K9pZLp016027;
-        Wed, 20 May 2020 12:51:35 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
-        id 039F7639BE; Wed, 20 May 2020 12:51:34 +0300 (IDT)
-From:   Tali Perry <tali.perry1@gmail.com>
-To:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, wsa@the-dreams.de,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v11 3/3] i2c: npcm7xx: Add support for slave mode for Nuvoton
-Date:   Wed, 20 May 2020 12:51:13 +0300
-Message-Id: <20200520095113.185414-4-tali.perry1@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200520095113.185414-1-tali.perry1@gmail.com>
-References: <20200520095113.185414-1-tali.perry1@gmail.com>
+        Wed, 20 May 2020 05:53:58 -0400
+Received: from ozlabs.org ([203.11.71.1]:57879 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgETJx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 05:53:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rp402YYWz9sT8;
+        Wed, 20 May 2020 19:53:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1589968435;
+        bh=/SF1u7fw4ywQyV8P7dpLPnWaV4yJIIqpzxqUzkg8c6Y=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=T+hxgGBRSUegBTRkzKQh78Jwhd7vM/gf+Td+YjdjpgwMKJLsSXIB9lVyMSzWh8a/L
+         UagqkLU5AXOT2G1Ha9EMwJ59WmTfO0P1DILDzLkTXuLBsvclv2ca8SH8PUbyKw9q2/
+         f1YmVf9PvcpG6a+wAfpJAQl0X5Sz8nFsc4gWWB2tfHCo+MbFobpvEOrilpEW30EgaP
+         HJlZtCvstHE1IxZwaWKX04MPB3uH+9GpBaVVhSlkzoln59HTISkw12E2rekiLabeHN
+         6sOXFVjT5H3ZRaxqZDS0h2Dorh7kpPJNe8xqd+7HJiMh+7BPWpmuBw/xq+/qGEju2C
+         DwodaOymHjJLw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Dan Williams <dan.j.williams@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com
+Cc:     x86@kernel.org, stable@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH v3 1/2] x86, powerpc: Rename memcpy_mcsafe() to copy_mc_to_{user, kernel}()
+In-Reply-To: <158992635697.403910.6957168747147028694.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <158992635164.403910.2616621400995359522.stgit@dwillia2-desk3.amr.corp.intel.com> <158992635697.403910.6957168747147028694.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 20 May 2020 19:53:05 +1000
+Message-ID: <87d06z7x1a.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for slave mode for Nuvoton
-NPCM BMC I2C controller driver.
+Hi Dan,
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
----
- drivers/i2c/busses/i2c-npcm7xx.c | 622 +++++++++++++++++++++++++++++++
- 1 file changed, 622 insertions(+)
+Just a couple of minor things ...
 
-diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-index 62aba7897365..721be2bc3e15 100644
---- a/drivers/i2c/busses/i2c-npcm7xx.c
-+++ b/drivers/i2c/busses/i2c-npcm7xx.c
-@@ -73,6 +73,24 @@ enum i2c_state {
- 	I2C_STOP_PENDING,
- };
+Dan Williams <dan.j.williams@intel.com> writes:
+> In reaction to a proposal to introduce a memcpy_mcsafe_fast()
+> implementation Linus points out that memcpy_mcsafe() is poorly named
+> relative to communicating the scope of the interface. Specifically what
+> addresses are valid to pass as source, destination, and what faults /
+> exceptions are handled. Of particular concern is that even though x86
+> might be able to handle the semantics of copy_mc_to_user() with its
+> common copy_user_generic() implementation other archs likely need / want
+> an explicit path for this case:
+...
+
+> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
+> index 0969285996cb..dcbbcbf3552c 100644
+> --- a/arch/powerpc/include/asm/uaccess.h
+> +++ b/arch/powerpc/include/asm/uaccess.h
+> @@ -348,6 +348,32 @@ do {								\
+>  extern unsigned long __copy_tofrom_user(void __user *to,
+>  		const void __user *from, unsigned long size);
+>  
+> +#ifdef CONFIG_ARCH_HAS_COPY_MC
+> +extern unsigned long __must_check
+
+We try not to add extern in headers anymore.
+
+> +copy_mc_generic(void *to, const void *from, unsigned long size);
+> +
+> +static inline unsigned long __must_check
+> +copy_mc_to_kernel(void *to, const void *from, unsigned long size)
+> +{
+> +	return copy_mc_generic(to, from, size);
+> +}
+> +#define copy_mc_to_kernel copy_mc_to_kernel
+> +
+> +static inline unsigned long __must_check
+> +copy_mc_to_user(void __user *to, const void *from, unsigned long n)
+> +{
+> +	if (likely(check_copy_size(from, n, true))) {
+> +		if (access_ok(to, n)) {
+> +			allow_write_to_user(to, n);
+> +			n = copy_mc_generic((void *)to, from, n);
+> +			prevent_write_to_user(to, n);
+> +		}
+> +	}
+> +
+> +	return n;
+> +}
+> +#endif
+
+Otherwise that looks fine.
+
+...
+
+> diff --git a/tools/testing/selftests/powerpc/copyloops/Makefile b/tools/testing/selftests/powerpc/copyloops/Makefile
+> index 0917983a1c78..959817e7567c 100644
+> --- a/tools/testing/selftests/powerpc/copyloops/Makefile
+> +++ b/tools/testing/selftests/powerpc/copyloops/Makefile
+> @@ -45,9 +45,9 @@ $(OUTPUT)/memcpy_p7_t%:	memcpy_power7.S $(EXTRA_SOURCES)
+>  		-D SELFTEST_CASE=$(subst memcpy_p7_t,,$(notdir $@)) \
+>  		-o $@ $^
+>  
+> -$(OUTPUT)/memcpy_mcsafe_64: memcpy_mcsafe_64.S $(EXTRA_SOURCES)
+> +$(OUTPUT)/copy_mc: copy_mc.S $(EXTRA_SOURCES)
+>  	$(CC) $(CPPFLAGS) $(CFLAGS) \
+> -		-D COPY_LOOP=test_memcpy_mcsafe \
+> +		-D COPY_LOOP=test_copy_mc \
+
+This needs a fixup:
+
+diff --git a/tools/testing/selftests/powerpc/copyloops/Makefile b/tools/testing/selftests/powerpc/copyloops/Makefile
+index 959817e7567c..b4eb5c4c6858 100644
+--- a/tools/testing/selftests/powerpc/copyloops/Makefile
++++ b/tools/testing/selftests/powerpc/copyloops/Makefile
+@@ -47,7 +47,7 @@ $(OUTPUT)/memcpy_p7_t%:	memcpy_power7.S $(EXTRA_SOURCES)
  
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+/* Module supports setting multiple own slave addresses */
-+enum i2c_addr {
-+	I2C_SLAVE_ADDR1 = 0,
-+	I2C_SLAVE_ADDR2,
-+	I2C_SLAVE_ADDR3,
-+	I2C_SLAVE_ADDR4,
-+	I2C_SLAVE_ADDR5,
-+	I2C_SLAVE_ADDR6,
-+	I2C_SLAVE_ADDR7,
-+	I2C_SLAVE_ADDR8,
-+	I2C_SLAVE_ADDR9,
-+	I2C_SLAVE_ADDR10,
-+	I2C_GC_ADDR,
-+	I2C_ARP_ADDR,
-+};
-+#endif
-+
- /* init register and default value required to enable module */
- #define NPCM_I2CSEGCTL			0xE4
- #define NPCM_I2CSEGCTL_INIT_VAL		0x0333F000
-@@ -100,6 +118,21 @@ enum i2c_state {
- #define NPCM_I2CADDR6			0x16
- #define NPCM_I2CADDR10			0x17
+ $(OUTPUT)/copy_mc: copy_mc.S $(EXTRA_SOURCES)
+ 	$(CC) $(CPPFLAGS) $(CFLAGS) \
+-		-D COPY_LOOP=test_copy_mc \
++		-D COPY_LOOP=test_copy_mc_generic \
+ 		-o $@ $^
  
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+/*
-+ * npcm_i2caddr array:
-+ * The module supports having multiple own slave addresses.
-+ * Since the addr regs are sprinkled all over the address space,
-+ * use this array to get the address or each register.
-+ */
-+#define I2C_NUM_OWN_ADDR 10
-+const int  npcm_i2caddr[I2C_NUM_OWN_ADDR] = {NPCM_I2CADDR1, NPCM_I2CADDR2,
-+					     NPCM_I2CADDR3, NPCM_I2CADDR4,
-+					     NPCM_I2CADDR5, NPCM_I2CADDR6,
-+					     NPCM_I2CADDR7, NPCM_I2CADDR8,
-+					     NPCM_I2CADDR9, NPCM_I2CADDR10};
-+#endif
-+
- #define NPCM_I2CCTL4			0x1A
- #define NPCM_I2CCTL5			0x1B
- #define NPCM_I2CSCLLT			0x1C /* SCL Low Time */
-@@ -271,6 +304,16 @@ struct npcm_i2c {
- 	unsigned long int_time_stamp;
- 	unsigned long bus_freq; /* in kHz */
- 	u32 xmits;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	u8 own_slave_addr;
-+	struct i2c_client *slave;
-+	int slv_rd_size;
-+	int slv_rd_ind;
-+	int slv_wr_size;
-+	int slv_wr_ind;
-+	u8 slv_rd_buf[I2C_HW_FIFO_SIZE];
-+	u8 slv_wr_buf[I2C_HW_FIFO_SIZE];
-+#endif
- #ifdef CONFIG_DEBUG_FS
- 	struct dentry *debugfs; /* debugfs device directory */
- 	u64 ber_count;
-@@ -305,6 +348,10 @@ static void npcm_i2c_init_params(struct npcm_i2c *bus)
- 	bus->int_time_stamp = 0;
- 	bus->PEC_use = false;
- 	bus->PEC_mask = 0;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	if (bus->slave)
-+		bus->master_or_slave = I2C_SLAVE;
-+#endif
- }
- 
- static inline void npcm_i2c_wr_byte(struct npcm_i2c *bus, u8 data)
-@@ -350,6 +397,18 @@ static void npcm_i2c_disable(struct npcm_i2c *bus)
- {
- 	u8 i2cctl2;
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	int i;
-+
-+	/* select bank 0 for I2C addresses */
-+	npcm_i2c_select_bank(bus, I2C_BANK_0);
-+
-+	/* Slave addresses removal */
-+	for (i = I2C_SLAVE_ADDR1; i < I2C_NUM_OWN_ADDR; i++)
-+		iowrite8(0, bus->reg + npcm_i2caddr[i]);
-+
-+	npcm_i2c_select_bank(bus, I2C_BANK_1);
-+#endif
- 	/* Disable module */
- 	i2cctl2 = ioread8(bus->reg + NPCM_I2CCTL2);
- 	i2cctl2 = i2cctl2 & ~I2CCTL2_ENABLE;
-@@ -513,6 +572,62 @@ static inline void npcm_i2c_nack(struct npcm_i2c *bus)
- 	iowrite8(val, bus->reg + NPCM_I2CCTL1);
- }
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static void npcm_i2c_slave_int_enable(struct npcm_i2c *bus, bool enable)
-+{
-+	u8 i2cctl1;
-+
-+	/* enable interrupt on slave match: */
-+	i2cctl1 = ioread8(bus->reg + NPCM_I2CCTL1);
-+	i2cctl1 &= ~NPCM_I2CCTL1_RWS;
-+	if (enable)
-+		i2cctl1 |= NPCM_I2CCTL1_NMINTE;
-+	else
-+		i2cctl1 &= ~NPCM_I2CCTL1_NMINTE;
-+	iowrite8(i2cctl1, bus->reg + NPCM_I2CCTL1);
-+}
-+
-+static int  npcm_i2c_slave_enable_l(struct npcm_i2c *bus,
-+				    enum i2c_addr addr_type, u8 addr,
-+				    bool enable)
-+{
-+	u8 i2cctl1;
-+	u8 i2cctl3;
-+	u8 sa_reg;
-+
-+	sa_reg = (addr & 0x7F) | FIELD_PREP(NPCM_I2CADDR_SAEN, enable);
-+	if (addr_type == I2C_GC_ADDR) {
-+		i2cctl1 = ioread8(bus->reg + NPCM_I2CCTL1);
-+		if (enable)
-+			i2cctl1 |= NPCM_I2CCTL1_GCMEN;
-+		else
-+			i2cctl1 &= ~NPCM_I2CCTL1_GCMEN;
-+		iowrite8(i2cctl1, bus->reg + NPCM_I2CCTL1);
-+		return 0;
-+	}
-+	if (addr_type == I2C_ARP_ADDR) {
-+		i2cctl3 = ioread8(bus->reg + NPCM_I2CCTL3);
-+		if (enable)
-+			i2cctl3 |= I2CCTL3_ARPMEN;
-+		else
-+			i2cctl3 &= ~I2CCTL3_ARPMEN;
-+		iowrite8(i2cctl3, bus->reg + NPCM_I2CCTL3);
-+		return 0;
-+	}
-+	if (addr_type >= I2C_ARP_ADDR)
-+		return -EFAULT;
-+	/* select bank 0 for address 3 to 10 */
-+	if (addr_type > I2C_SLAVE_ADDR2)
-+		npcm_i2c_select_bank(bus, I2C_BANK_0);
-+	/* Set and enable the address */
-+	iowrite8(sa_reg, bus->reg + npcm_i2caddr[(int)addr_type]);
-+	npcm_i2c_slave_int_enable(bus, enable);
-+	if (addr_type > I2C_SLAVE_ADDR2)
-+		npcm_i2c_select_bank(bus, I2C_BANK_1);
-+	return 0;
-+}
-+#endif
-+
- static void npcm_i2c_reset(struct npcm_i2c *bus)
- {
- 	/*
-@@ -542,6 +657,12 @@ static void npcm_i2c_reset(struct npcm_i2c *bus)
- 	/* Clear all fifo bits: */
- 	iowrite8(NPCM_I2CFIF_CTS_CLR_FIFO, bus->reg + NPCM_I2CFIF_CTS);
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	if (bus->slave)
-+		npcm_i2c_slave_enable_l(bus, I2C_SLAVE_ADDR1, bus->slave->addr,
-+					true);
-+#endif
-+
- 	bus->state = I2C_IDLE;
- }
- 
-@@ -607,6 +728,10 @@ static void npcm_i2c_callback(struct npcm_i2c *bus,
- 	}
- 
- 	bus->operation = I2C_NO_OPER;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	if (bus->slave)
-+		bus->master_or_slave = I2C_SLAVE;
-+#endif
- }
- 
- static u8 npcm_i2c_fifo_usage(struct npcm_i2c *bus)
-@@ -639,6 +764,35 @@ static void npcm_i2c_write_to_fifo_master(struct npcm_i2c *bus,
- 	}
- }
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static void npcm_i2c_write_to_fifo_slave(struct npcm_i2c *bus,
-+					 u16 max_bytes_to_send)
-+{
-+	u8 size_free_fifo;
-+	/*
-+	 * Fill the FIFO, while the FIFO is not full and there are more bytes
-+	 * to write
-+	 */
-+	npcm_i2c_clear_fifo_int(bus);
-+	npcm_i2c_clear_tx_fifo(bus);
-+	iowrite8(0, bus->reg + NPCM_I2CTXF_CTL);
-+	size_free_fifo = I2C_HW_FIFO_SIZE - npcm_i2c_fifo_usage(bus);
-+	while (max_bytes_to_send-- && size_free_fifo) {
-+		if (bus->slv_wr_size > 0) {
-+			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
-+			npcm_i2c_wr_byte(bus,
-+					 bus->slv_wr_buf[bus->slv_wr_ind]);
-+			bus->slv_wr_ind++;
-+			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
-+			bus->slv_wr_size--;
-+			size_free_fifo = I2C_HW_FIFO_SIZE -
-+					 npcm_i2c_fifo_usage(bus);
-+		} else {
-+			break;
-+		}
-+	}
-+}
-+#endif
- /*
-  * npcm_i2c_set_fifo:
-  * configure the FIFO before using it. If nread is -1 RX FIFO will not be
-@@ -697,6 +851,21 @@ static void npcm_i2c_read_from_fifo(struct npcm_i2c *bus, u8 bytes_in_fifo)
- 		if (bus->master_or_slave == I2C_MASTER) {
- 			if (bus->rd_ind < bus->rd_size)
- 				bus->rd_buf[bus->rd_ind++] = data;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+		} else {
-+			if (bus->slave) {
-+				bus->slv_rd_ind = bus->slv_rd_ind %
-+						  I2C_HW_FIFO_SIZE;
-+				bus->slv_rd_buf[bus->slv_rd_ind] = data;
-+				bus->slv_rd_ind++;
-+
-+				/* 1st byte is length in block protocol: */
-+				if (bus->slv_rd_ind == 1 && bus->read_block_use)
-+					bus->slv_rd_size = data +
-+							   (u8)bus->PEC_use +
-+							(u8)bus->read_block_use;
-+			}
-+#endif
- 		}
- 	}
- }
-@@ -720,6 +889,435 @@ static void npcm_i2c_master_abort(struct npcm_i2c *bus)
- 	}
- }
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static u8 npcm_i2c_get_slave_addr(struct npcm_i2c *bus, enum i2c_addr addr_type)
-+{
-+	u8 slave_add;
-+
-+	/* select bank 0 for address 3 to 10 */
-+	if (addr_type > I2C_SLAVE_ADDR2)
-+		npcm_i2c_select_bank(bus, I2C_BANK_0);
-+
-+	slave_add = ioread8(bus->reg + npcm_i2caddr[(int)addr_type]);
-+
-+	if (addr_type > I2C_SLAVE_ADDR2)
-+		npcm_i2c_select_bank(bus, I2C_BANK_1);
-+
-+	return  slave_add;
-+}
-+
-+static int  npcm_i2c_remove_slave_addr(struct npcm_i2c *bus, u8 slave_add)
-+{
-+	int i;
-+
-+	/* Set the enable bit */
-+	slave_add |= 0x80;
-+	npcm_i2c_select_bank(bus, I2C_BANK_0);
-+	for (i = I2C_SLAVE_ADDR1; i < I2C_NUM_OWN_ADDR; i++) {
-+		if (ioread8(bus->reg + npcm_i2caddr[i]) == slave_add)
-+			iowrite8(0, bus->reg + npcm_i2caddr[i]);
-+	}
-+	npcm_i2c_select_bank(bus, I2C_BANK_1);
-+	return 0;
-+}
-+
-+static int npcm_i2c_slave_get_wr_buf(struct npcm_i2c *bus)
-+{
-+	int i;
-+	u8 value = 0;
-+	int ret = bus->slv_wr_ind;
-+
-+	/* fill a cyclic buffer */
-+	for (i = 0; i < I2C_HW_FIFO_SIZE; i++) {
-+		if (bus->slv_wr_size >= I2C_HW_FIFO_SIZE)
-+			break;
-+		i2c_slave_event(bus->slave, I2C_SLAVE_READ_REQUESTED, &value);
-+		bus->slv_wr_buf[(bus->slv_wr_ind + bus->slv_wr_size) %
-+				 I2C_HW_FIFO_SIZE] = value;
-+		bus->slv_wr_size++;
-+		i2c_slave_event(bus->slave, I2C_SLAVE_READ_PROCESSED, &value);
-+	}
-+	return I2C_HW_FIFO_SIZE - ret;
-+}
-+
-+static void npcm_i2c_slave_send_rd_buf(struct npcm_i2c *bus)
-+{
-+	int i;
-+
-+	for (i = 0; i < bus->slv_rd_ind; i++)
-+		i2c_slave_event(bus->slave, I2C_SLAVE_WRITE_RECEIVED,
-+				&bus->slv_rd_buf[i]);
-+	/*
-+	 * once we send bytes up, need to reset the counter of the wr buf
-+	 * got data from master (new offset in device), ignore wr fifo:
-+	 */
-+	if (bus->slv_rd_ind) {
-+		bus->slv_wr_size = 0;
-+		bus->slv_wr_ind = 0;
-+	}
-+
-+	bus->slv_rd_ind = 0;
-+	bus->slv_rd_size = bus->adap.quirks->max_read_len;
-+
-+	npcm_i2c_clear_fifo_int(bus);
-+	npcm_i2c_clear_rx_fifo(bus);
-+}
-+
-+static bool npcm_i2c_slave_receive(struct npcm_i2c *bus, u16 nread,
-+				   u8 *read_data)
-+{
-+	bus->state = I2C_OPER_STARTED;
-+	bus->operation	 = I2C_READ_OPER;
-+	bus->slv_rd_size = nread;
-+	bus->slv_rd_ind	= 0;
-+
-+	iowrite8(0, bus->reg + NPCM_I2CTXF_CTL);
-+	iowrite8(I2C_HW_FIFO_SIZE, bus->reg + NPCM_I2CRXF_CTL);
-+
-+	npcm_i2c_clear_tx_fifo(bus);
-+	npcm_i2c_clear_rx_fifo(bus);
-+
-+	return true;
-+}
-+
-+static bool npcm_i2c_slave_xmit(struct npcm_i2c *bus, u16 nwrite,
-+				u8 *write_data)
-+{
-+	if (nwrite == 0)
-+		return false;
-+
-+	bus->state = I2C_OPER_STARTED;
-+	bus->operation = I2C_WRITE_OPER;
-+
-+	/* get the next buffer */
-+	npcm_i2c_slave_get_wr_buf(bus);
-+
-+	if (nwrite > 0)
-+		npcm_i2c_write_to_fifo_slave(bus, nwrite);
-+
-+	return true;
-+}
-+
-+/*
-+ * npcm_i2c_slave_wr_buf_sync:
-+ * currently slave IF only supports single byte operations.
-+ * in order to utilyze the npcm HW FIFO, the driver will ask for 16 bytes
-+ * at a time, pack them in buffer, and then transmit them all together
-+ * to the FIFO and onward to the bus.
-+ * NACK on read will be once reached to bus->adap->quirks->max_read_len.
-+ * sending a NACK wherever the backend requests for it is not supported.
-+ * the next two functions allow reading to local buffer before writing it all
-+ * to the HW FIFO.
-+ * ret val: number of bytes read from the IF:
-+ */
-+static int npcm_i2c_slave_wr_buf_sync(struct npcm_i2c *bus)
-+{
-+	int left_in_fifo;
-+
-+	left_in_fifo = FIELD_GET(NPCM_I2CTXF_STS_TX_BYTES,
-+				 ioread8(bus->reg + NPCM_I2CTXF_STS));
-+	if (left_in_fifo >= I2C_HW_FIFO_SIZE)
-+		return left_in_fifo;
-+
-+	/* fifo already full: */
-+	if (bus->slv_wr_size >= I2C_HW_FIFO_SIZE)
-+		return left_in_fifo;
-+
-+	/* update the wr fifo ind, back to the untransmitted bytes: */
-+	bus->slv_wr_ind = bus->slv_wr_ind - left_in_fifo;
-+	bus->slv_wr_size = bus->slv_wr_size + left_in_fifo;
-+
-+	if (bus->slv_wr_ind < 0)
-+		bus->slv_wr_ind += I2C_HW_FIFO_SIZE;
-+
-+	return left_in_fifo;
-+}
-+
-+static void npcm_i2c_slave_rd_wr(struct npcm_i2c *bus)
-+{
-+	if (FIELD_GET(NPCM_I2CST_XMIT, ioread8(bus->reg + NPCM_I2CST))) {
-+		/*
-+		 * Slave got an address match with direction bit 1 so
-+		 * it should transmit data
-+		 * Write till the master will NACK
-+		 */
-+		bus->operation = I2C_WRITE_OPER;
-+		npcm_i2c_slave_xmit(bus,
-+				    bus->adap.quirks->max_write_len,
-+				    bus->slv_wr_buf);
-+	} else {
-+		/*
-+		 * Slave got an address match with direction bit 0
-+		 * so it should receive data.
-+		 * this module does not support saying no to bytes.
-+		 * it will always ACK.
-+		 */
-+		bus->operation = I2C_READ_OPER;
-+		npcm_i2c_read_from_fifo(bus, npcm_i2c_fifo_usage(bus));
-+		bus->stop_ind = I2C_SLAVE_RCV_IND;
-+		npcm_i2c_slave_send_rd_buf(bus);
-+		npcm_i2c_slave_receive(bus,
-+				       bus->adap.quirks->max_read_len,
-+				       bus->slv_rd_buf);
-+	}
-+}
-+
-+static irqreturn_t npcm_i2c_int_slave_handler(struct npcm_i2c *bus)
-+{
-+	u8 val;
-+	irqreturn_t ret = IRQ_NONE;
-+	u8 i2cst = ioread8(bus->reg + NPCM_I2CST);
-+
-+	/* Slave: A NACK has occurred */
-+	if (FIELD_GET(NPCM_I2CST_NEGACK, i2cst)) {
-+		bus->stop_ind = I2C_NACK_IND;
-+		npcm_i2c_slave_wr_buf_sync(bus);
-+		if (bus->fifo_use)
-+			/* clear the FIFO */
-+			iowrite8(NPCM_I2CFIF_CTS_CLR_FIFO,
-+				 bus->reg + NPCM_I2CFIF_CTS);
-+
-+		/* In slave write, NACK is OK, otherwise it is a problem */
-+		bus->stop_ind = I2C_NO_STATUS_IND;
-+		bus->operation = I2C_NO_OPER;
-+		bus->own_slave_addr = 0xFF;
-+
-+		/*
-+		 * Slave has to wait for I2C_STOP to decide this is the end
-+		 * of the transaction.
-+		 * Therefore transaction is not yet considered as done
-+		 */
-+		iowrite8(NPCM_I2CST_NEGACK, bus->reg + NPCM_I2CST);
-+
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* Slave mode: a Bus Error (BER) has been identified */
-+	if (FIELD_GET(NPCM_I2CST_BER, i2cst)) {
-+		/*
-+		 * Check whether bus arbitration or Start or Stop during data
-+		 * xfer bus arbitration problem should not result in recovery
-+		 */
-+		bus->stop_ind = I2C_BUS_ERR_IND;
-+
-+		/* wait for bus busy before clear fifo */
-+		iowrite8(NPCM_I2CFIF_CTS_CLR_FIFO, bus->reg + NPCM_I2CFIF_CTS);
-+
-+		bus->state = I2C_IDLE;
-+
-+		/*
-+		 * in BER case we might get 2 interrupts: one for slave one for
-+		 * master ( for a channel which is master\slave switching)
-+		 */
-+		if (completion_done(&bus->cmd_complete) == false) {
-+			bus->cmd_err = -EIO;
-+			complete(&bus->cmd_complete);
-+		}
-+		bus->own_slave_addr = 0xFF;
-+		iowrite8(NPCM_I2CST_BER, bus->reg + NPCM_I2CST);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* A Slave Stop Condition has been identified */
-+	if (FIELD_GET(NPCM_I2CST_SLVSTP, i2cst)) {
-+		u8 bytes_in_fifo = npcm_i2c_fifo_usage(bus);
-+
-+		bus->stop_ind = I2C_SLAVE_DONE_IND;
-+
-+		if (bus->operation == I2C_READ_OPER)
-+			npcm_i2c_read_from_fifo(bus, bytes_in_fifo);
-+
-+		/* if the buffer is empty nothing will be sent */
-+		npcm_i2c_slave_send_rd_buf(bus);
-+
-+		/* Slave done transmitting or receiving */
-+		bus->stop_ind = I2C_NO_STATUS_IND;
-+
-+		/*
-+		 * Note, just because we got here, it doesn't mean we through
-+		 * away the wr buffer.
-+		 * we keep it until the next received offset.
-+		 */
-+		bus->operation = I2C_NO_OPER;
-+		bus->int_cnt = 0;
-+		bus->own_slave_addr = 0xFF;
-+		i2c_slave_event(bus->slave, I2C_SLAVE_STOP, 0);
-+		iowrite8(NPCM_I2CST_SLVSTP, bus->reg + NPCM_I2CST);
-+		if (bus->fifo_use) {
-+			npcm_i2c_clear_fifo_int(bus);
-+			npcm_i2c_clear_rx_fifo(bus);
-+			npcm_i2c_clear_tx_fifo(bus);
-+
-+			iowrite8(NPCM_I2CFIF_CTS_CLR_FIFO,
-+				 bus->reg + NPCM_I2CFIF_CTS);
-+		}
-+		bus->state = I2C_IDLE;
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* restart condition occurred and Rx-FIFO was not empty */
-+	if (bus->fifo_use && FIELD_GET(NPCM_I2CFIF_CTS_SLVRSTR,
-+				       ioread8(bus->reg + NPCM_I2CFIF_CTS))) {
-+		bus->stop_ind = I2C_SLAVE_RESTART_IND;
-+		bus->master_or_slave = I2C_SLAVE;
-+		if (bus->operation == I2C_READ_OPER)
-+			npcm_i2c_read_from_fifo(bus, npcm_i2c_fifo_usage(bus));
-+		bus->operation = I2C_WRITE_OPER;
-+		iowrite8(0, bus->reg + NPCM_I2CRXF_CTL);
-+		val = NPCM_I2CFIF_CTS_CLR_FIFO | NPCM_I2CFIF_CTS_SLVRSTR |
-+			 NPCM_I2CFIF_CTS_RXF_TXE;
-+		iowrite8(val, bus->reg + NPCM_I2CFIF_CTS);
-+		npcm_i2c_slave_rd_wr(bus);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* A Slave Address Match has been identified */
-+	if (FIELD_GET(NPCM_I2CST_NMATCH, i2cst)) {
-+		u8 info = 0;
-+
-+		/* Address match automatically implies slave mode */
-+		bus->master_or_slave = I2C_SLAVE;
-+		npcm_i2c_clear_fifo_int(bus);
-+		npcm_i2c_clear_rx_fifo(bus);
-+		npcm_i2c_clear_tx_fifo(bus);
-+		iowrite8(0, bus->reg + NPCM_I2CTXF_CTL);
-+		iowrite8(I2C_HW_FIFO_SIZE, bus->reg + NPCM_I2CRXF_CTL);
-+		if (FIELD_GET(NPCM_I2CST_XMIT, i2cst)) {
-+			bus->operation = I2C_WRITE_OPER;
-+		} else {
-+			i2c_slave_event(bus->slave, I2C_SLAVE_WRITE_REQUESTED,
-+					&info);
-+			bus->operation = I2C_READ_OPER;
-+		}
-+		if (bus->own_slave_addr == 0xFF) {
-+			/* Check which type of address match */
-+			val = ioread8(bus->reg + NPCM_I2CCST);
-+			if (!!(NPCM_I2CCST_MATCH & val)) {
-+				u16 addr;
-+				enum i2c_addr eaddr;
-+				u8 i2ccst2;
-+				u8 i2ccst3;
-+
-+				i2ccst3 = ioread8(bus->reg + NPCM_I2CCST3);
-+				i2ccst2 = ioread8(bus->reg + NPCM_I2CCST2);
-+
-+				/*
-+				 * the i2c module can response to 10 own SA.
-+				 * check which one was addressed by the master.
-+				 * repond to the first one.
-+				 */
-+				addr = ((i2ccst3 & 0x07) << 7) |
-+					(i2ccst2 & 0x7F);
-+				info = ffs(addr);
-+				eaddr = (enum i2c_addr)info;
-+				addr = npcm_i2c_get_slave_addr(bus, eaddr);
-+				addr &= 0x7F;
-+				bus->own_slave_addr = addr;
-+				if (bus->PEC_mask & BIT(info))
-+					bus->PEC_use = true;
-+				else
-+					bus->PEC_use = false;
-+			} else {
-+				val = ioread8(bus->reg + NPCM_I2CCST);
-+				if (!!(NPCM_I2CCST_GCMATCH & val))
-+					bus->own_slave_addr = 0;
-+				if (!!(NPCM_I2CCST_ARPMATCH & val))
-+					bus->own_slave_addr = 0x61;
-+			}
-+		} else {
-+			/*
-+			 *  Slave match can happen in two options:
-+			 *  1. Start, SA, read (slave read without further ado)
-+			 *  2. Start, SA, read, data, restart, SA, read,  ...
-+			 *     (slave read in fragmented mode)
-+			 *  3. Start, SA, write, data, restart, SA, read, ..
-+			 *     (regular write-read mode)
-+			 */
-+			if ((bus->state == I2C_OPER_STARTED &&
-+			     bus->operation == I2C_READ_OPER &&
-+			     bus->stop_ind == I2C_SLAVE_XMIT_IND) ||
-+			     bus->stop_ind == I2C_SLAVE_RCV_IND) {
-+				/* slave tx after slave rx w/o STOP */
-+				bus->stop_ind = I2C_SLAVE_RESTART_IND;
-+			}
-+		}
-+
-+		if (FIELD_GET(NPCM_I2CST_XMIT, i2cst))
-+			bus->stop_ind = I2C_SLAVE_XMIT_IND;
-+		else
-+			bus->stop_ind = I2C_SLAVE_RCV_IND;
-+		bus->state = I2C_SLAVE_MATCH;
-+		npcm_i2c_slave_rd_wr(bus);
-+		iowrite8(NPCM_I2CST_NMATCH, bus->reg + NPCM_I2CST);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	/* Slave SDA status is set - tx or rx */
-+	if (FIELD_GET(NPCM_I2CST_SDAST, i2cst) ||
-+	    (bus->fifo_use   &&
-+	    (npcm_i2c_tx_fifo_empty(bus) || npcm_i2c_rx_fifo_full(bus)))) {
-+		npcm_i2c_slave_rd_wr(bus);
-+		iowrite8(NPCM_I2CST_SDAST, bus->reg + NPCM_I2CST);
-+		ret = IRQ_HANDLED;
-+	} /* SDAST */
-+
-+	return ret;
-+}
-+
-+static int  npcm_i2c_reg_slave(struct i2c_client *client)
-+{
-+	unsigned long lock_flags;
-+	struct npcm_i2c *bus = i2c_get_adapdata(client->adapter);
-+
-+	bus->slave = client;
-+
-+	if (!bus->slave)
-+		return -EINVAL;
-+
-+	if (client->flags & I2C_CLIENT_TEN)
-+		return -EAFNOSUPPORT;
-+
-+	spin_lock_irqsave(&bus->lock, lock_flags);
-+
-+	npcm_i2c_init_params(bus);
-+	bus->slv_rd_size = 0;
-+	bus->slv_wr_size = 0;
-+	bus->slv_rd_ind = 0;
-+	bus->slv_wr_ind = 0;
-+	if (client->flags & I2C_CLIENT_PEC)
-+		bus->PEC_use = true;
-+
-+	dev_info(bus->dev, "i2c%d register slave SA=0x%x, PEC=%d\n", bus->num,
-+		 client->addr, bus->PEC_use);
-+
-+	npcm_i2c_slave_enable_l(bus, I2C_SLAVE_ADDR1, client->addr, true);
-+	npcm_i2c_clear_fifo_int(bus);
-+	npcm_i2c_clear_rx_fifo(bus);
-+	npcm_i2c_clear_tx_fifo(bus);
-+	npcm_i2c_slave_int_enable(bus, true);
-+
-+	spin_unlock_irqrestore(&bus->lock, lock_flags);
-+	return 0;
-+}
-+
-+static int  npcm_i2c_unreg_slave(struct i2c_client *client)
-+{
-+	struct npcm_i2c *bus = client->adapter->algo_data;
-+	unsigned long lock_flags;
-+
-+	spin_lock_irqsave(&bus->lock, lock_flags);
-+	if (!bus->slave) {
-+		spin_unlock_irqrestore(&bus->lock, lock_flags);
-+		return -EINVAL;
-+	}
-+	npcm_i2c_slave_int_enable(bus, false);
-+	npcm_i2c_remove_slave_addr(bus, client->addr);
-+	bus->slave = NULL;
-+	spin_unlock_irqrestore(&bus->lock, lock_flags);
-+	return 0;
-+}
-+#endif /* CONFIG_I2C_SLAVE */
-+
- static void npcm_i2c_master_fifo_read(struct npcm_i2c *bus)
- {
- 	int rcount;
-@@ -1415,6 +2013,9 @@ static int __npcm_i2c_init(struct npcm_i2c *bus, struct platform_device *pdev)
- 	bus->master_or_slave = I2C_SLAVE;
- 	bus->int_time_stamp = 0;
- 	bus->xmits = 0;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	bus->slave = NULL;
-+#endif
- 
- 	ret = device_property_read_u32(&pdev->dev, "bus-frequency",
- 				       &clk_freq_hz);
-@@ -1446,6 +2047,12 @@ static irqreturn_t npcm_i2c_bus_irq(int irq, void *dev_id)
- 		if (!npcm_i2c_int_master_handler(bus))
- 			return IRQ_HANDLED;
- 	}
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	if (bus->slave) {
-+		bus->master_or_slave = I2C_SLAVE;
-+		return npcm_i2c_int_slave_handler(bus);
-+	}
-+#endif
- 	return IRQ_NONE;
- }
- 
-@@ -1587,6 +2194,11 @@ static int npcm_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 		 */
- 		spin_lock_irqsave(&bus->lock, flags);
- 		bus_busy = ioread8(bus->reg + NPCM_I2CCST) & NPCM_I2CCST_BB;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+		if (!bus_busy && bus->slave)
-+			iowrite8((bus->slave->addr & 0x7F),
-+				 bus->reg + NPCM_I2CADDR1);
-+#endif
- 		spin_unlock_irqrestore(&bus->lock, flags);
- 
- 	} while (time_is_after_jiffies(time_left) && bus_busy);
-@@ -1638,6 +2250,12 @@ static int npcm_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 	if (bus->cmd_err == -EAGAIN)
- 		ret = i2c_recover_bus(adap);
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	/* reenable slave if it was enabled */
-+	if (bus->slave)
-+		iowrite8((bus->slave->addr & 0x7F) | NPCM_I2CADDR_SAEN,
-+			 bus->reg + NPCM_I2CADDR1);
-+#endif
- 	return bus->cmd_err;
- }
- 
-@@ -1660,6 +2278,10 @@ static const struct i2c_adapter_quirks npcm_i2c_quirks = {
- static const struct i2c_algorithm npcm_i2c_algo = {
- 	.master_xfer = npcm_i2c_master_xfer,
- 	.functionality = npcm_i2c_functionality,
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	.reg_slave	= npcm_i2c_reg_slave,
-+	.unreg_slave	= npcm_i2c_unreg_slave,
-+#endif
- };
- 
- #ifdef CONFIG_DEBUG_FS
+ $(OUTPUT)/copyuser_64_exc_t%: copyuser_64.S exc_validate.c ../harness.c \
+
+
+>  		-o $@ $^
+>  
+>  $(OUTPUT)/copyuser_64_exc_t%: copyuser_64.S exc_validate.c ../harness.c \
+> diff --git a/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S b/tools/testing/selftests/powerpc/copyloops/copy_mc.S
+> similarity index 100%
+> rename from tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
+> rename to tools/testing/selftests/powerpc/copyloops/copy_mc.S
+
+This file is a symlink to the file in arch/powerpc/lib, so the name of
+the link needs updating, as well as the target.
+
+Also is there a reason you dropped the "_64"? It would make most sense
+to keep it I think, as then the file in selftests and the file in arch/
+have the same name.
+
+If you want to keep the copy_mc.S name it needs the diff below. Though
+as I said I think it would be better to use copy_mc_64.S.
+
+cheers
+
+
+diff --git a/tools/testing/selftests/powerpc/copyloops/copy_mc.S b/tools/testing/selftests/powerpc/copyloops/copy_mc.S
+new file mode 120000
+index 000000000000..dcbe06d500fb
+--- /dev/null
++++ b/tools/testing/selftests/powerpc/copyloops/copy_mc.S
+@@ -0,0 +1 @@
++../../../../../arch/powerpc/lib/copy_mc_64.S
+\ No newline at end of file
+diff --git a/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S b/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
+deleted file mode 120000
+index f0feef3062f6..000000000000
+--- a/tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
++++ /dev/null
+@@ -1 +0,0 @@
+-../../../../../arch/powerpc/lib/memcpy_mcsafe_64.S
+\ No newline at end of file
 -- 
-2.22.0
+2.25.1
+
 
