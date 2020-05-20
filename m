@@ -2,98 +2,136 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ADEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 419CE207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E830207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgETLx5 (ORCPT
+        id S1726932AbgETLy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:53:57 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6511 "EHLO mga03.intel.com"
+        Wed, 20 May 2020 07:54:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:54358 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETLx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:53:57 -0400
-IronPort-SDR: 2Q6KF0zM7oCQ7Cuhk4bea9hAkvWF8x6gijcn3jHbD0dUMJ1VSmQtw+WKuN2/UWroNhlMzFKNIs
- tCCM6OQjrLOQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 04:53:56 -0700
-IronPort-SDR: Ha5zD3laV6o6XFZYhWw8ndkMbWYYlNTcIchXsfMJrlnFuYqUX5+saQTwOkdfN8iFGdmQb0YEzw
- KArFU+r+Krjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
-   d="scan'208";a="282661455"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 20 May 2020 04:53:55 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jbNIM-007par-CV; Wed, 20 May 2020 14:53:58 +0300
-Date:   Wed, 20 May 2020 14:53:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-Cc:     rui.zhang@intel.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com
-Subject: Re: [PATCH] powercap: remove unused local MSR define
-Message-ID: <20200520115358.GR1634618@smile.fi.intel.com>
-References: <1589974578-26791-1-git-send-email-sumeet.r.pawnikar@intel.com>
+        id S1726560AbgETLy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:54:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E65230E;
+        Wed, 20 May 2020 04:54:28 -0700 (PDT)
+Received: from [10.37.8.50] (unknown [10.37.8.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E4853F52E;
+        Wed, 20 May 2020 04:54:27 -0700 (PDT)
+Subject: Re: [PATCH] selftests/timens: handle a case when alarm clocks are not
+ supported
+To:     Andrei Vagin <avagin@gmail.com>, Shuah Khan <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kselftest@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200415061802.722485-1-avagin@gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <5c9d2f75-d20a-d74a-f72a-94f3fa69bc16@arm.com>
+Date:   Wed, 20 May 2020 12:55:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589974578-26791-1-git-send-email-sumeet.r.pawnikar@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200415061802.722485-1-avagin@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:06:18PM +0530, Sumeet Pawnikar wrote:
-> From: "Pawnikar, Sumeet" <sumeet.r.pawnikar@intel.com>
+Hi Andrei,
+
+thanks for this.
+
+On 4/15/20 7:18 AM, Andrei Vagin wrote:
+> This can happen if a testing node doesn't have RTC (real time clock)
+> hardware or it doesn't support alarms.
 > 
-> Remove unused PLATFORM_POWER_LIMIT MSR local definition from file
-> intel_rapl_common.c. This was missed while splitting old RAPL code
-> intel_rapl.c file into two new files intel_rapl_msr.c and
-> intel_rapl_common.c as per the commit 3382388d7148
-> ("intel_rapl: abstract RAPL common code"). Currently, this #define
-> entry is being used only in intel_rapl_msr.c file and local definition
-> present in this file.
 
-> Signed-off-by: Pawnikar, Sumeet <sumeet.r.pawnikar@intel.com>
+Could you please add the "Reported-by:" tag and the "Fixes:" one?
 
-Reorganize this to avoid comma (this also should make From: gone in the top of
-this message). After addressing,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+With this:
 
+Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Signed-off-by: Andrei Vagin <avagin@gmail.com>
 > ---
->  drivers/powercap/intel_rapl_common.c |    3 ---
->  1 file changed, 3 deletions(-)
+>  tools/testing/selftests/timens/clock_nanosleep.c |  2 +-
+>  tools/testing/selftests/timens/timens.c          |  2 +-
+>  tools/testing/selftests/timens/timens.h          | 13 ++++++++++++-
+>  3 files changed, 14 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-> index eb328655bc01..5527a7c76309 100644
-> --- a/drivers/powercap/intel_rapl_common.c
-> +++ b/drivers/powercap/intel_rapl_common.c
-> @@ -26,9 +26,6 @@
->  #include <asm/cpu_device_id.h>
->  #include <asm/intel-family.h>
+> diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
+> index 8e7b7c72ef65..72d41b955fb2 100644
+> --- a/tools/testing/selftests/timens/clock_nanosleep.c
+> +++ b/tools/testing/selftests/timens/clock_nanosleep.c
+> @@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 >  
-> -/* Local defines */
-> -#define MSR_PLATFORM_POWER_LIMIT	0x0000065C
-> -
->  /* bitmasks for RAPL MSRs, used by primitive access functions */
->  #define ENERGY_STATUS_MASK      0xffffffff
+>  	ksft_set_plan(4);
 >  
-> -- 
-> 1.7.9.5
+> -	check_config_posix_timers();
+> +	check_supported_timers();
+>  
+>  	if (unshare_timens())
+>  		return 1;
+> diff --git a/tools/testing/selftests/timens/timens.c b/tools/testing/selftests/timens/timens.c
+> index 559d26e21ba0..07feebe8e53e 100644
+> --- a/tools/testing/selftests/timens/timens.c
+> +++ b/tools/testing/selftests/timens/timens.c
+> @@ -156,7 +156,7 @@ int main(int argc, char *argv[])
+>  
+>  	nscheck();
+>  
+> -	check_config_posix_timers();
+> +	check_supported_timers();
+>  
+>  	ksft_set_plan(ARRAY_SIZE(clocks) * 2);
+>  
+> diff --git a/tools/testing/selftests/timens/timens.h b/tools/testing/selftests/timens/timens.h
+> index e09e7e39bc52..d4fc52d47146 100644
+> --- a/tools/testing/selftests/timens/timens.h
+> +++ b/tools/testing/selftests/timens/timens.h
+> @@ -14,15 +14,26 @@
+>  #endif
+>  
+>  static int config_posix_timers = true;
+> +static int config_alarm_timers = true;
+>  
+> -static inline void check_config_posix_timers(void)
+> +static inline void check_supported_timers(void)
+>  {
+> +	struct timespec ts;
+> +
+>  	if (timer_create(-1, 0, 0) == -1 && errno == ENOSYS)
+>  		config_posix_timers = false;
+> +
+> +	if (clock_gettime(CLOCK_BOOTTIME_ALARM, &ts) == -1 && errno == EINVAL)
+> +		config_alarm_timers = false;
+>  }
+>  
+>  static inline bool check_skip(int clockid)
+>  {
+> +	if (!config_alarm_timers && clockid == CLOCK_BOOTTIME_ALARM) {
+> +		ksft_test_result_skip("CLOCK_BOOTTIME_ALARM isn't supported\n");
+> +		return true;
+> +	}
+> +
+>  	if (config_posix_timers)
+>  		return false;
+>  
 > 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Vincenzo
