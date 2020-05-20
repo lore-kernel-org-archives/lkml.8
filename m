@@ -2,86 +2,80 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01860C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8982075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W3yYSNzh"
+	by mail.kernel.org (Postfix) with ESMTP id BD0E62075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgETRYI (ORCPT
+        id S1728159AbgETRYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:24:08 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50802 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727944AbgETRWC (ORCPT
+        Wed, 20 May 2020 13:24:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43260 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbgETRYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:22:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589995321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=Q+b6NQYzxi9xQtxvdZVxdcLNZ7D1Hncrtt81Kk0DSak=;
-        b=W3yYSNzhzd6OIIMlj2Nin5504P5jfxNnYqh/UXBwRc0vX9BsZDtWXg+ZOW8unSj9Upke0O
-        2eEG4SImsIlV+Jrk7fVdgSAhzvBkUpdaJk2ApeAkUkO0+3DoHSkNFwBKSb9gNwtQA1aNWV
-        tGs96kNxEnDiwFiDLnK6XgIBR82ejEM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-DG15L6McMBqg3yiYId3LCw-1; Wed, 20 May 2020 13:21:59 -0400
-X-MC-Unique: DG15L6McMBqg3yiYId3LCw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20CD019200F7;
-        Wed, 20 May 2020 17:21:48 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CA6560C20;
-        Wed, 20 May 2020 17:21:47 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>,
-        stable@vger.kernel.org
-Subject: [PATCH 02/24] KVM: nSVM: leave ASID aside in copy_vmcb_control_area
-Date:   Wed, 20 May 2020 13:21:23 -0400
-Message-Id: <20200520172145.23284-3-pbonzini@redhat.com>
-In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Wed, 20 May 2020 13:24:32 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jbSS2-0008VV-JD; Wed, 20 May 2020 17:24:18 +0000
+Date:   Wed, 20 May 2020 19:24:17 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     David Ahern <dsahern@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] ipv6/route: inherit max_sizes from current netns
+Message-ID: <20200520172417.4m7pyalpftdd2xrm@wittgenstein>
+References: <20200520145806.3746944-1-christian.brauner@ubuntu.com>
+ <4b22a3bc-9dae-3f49-6748-ec45deb09a01@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4b22a3bc-9dae-3f49-6748-ec45deb09a01@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Restoring the ASID from the hsave area on VMEXIT is wrong, because its
-value depends on the handling of TLB flushes.  Just skipping the field in
-copy_vmcb_control_area will do.
+On Wed, May 20, 2020 at 10:54:21AM -0600, David Ahern wrote:
+> On 5/20/20 8:58 AM, Christian Brauner wrote:
+> > During NorthSec (cf. [1]) a very large number of unprivileged
+> > containers and nested containers are run during the competition to
+> > provide a safe environment for the various teams during the event. Every
+> > year a range of feature requests or bug reports come out of this and
+> > this year's no different.
+> > One of the containers was running a simple VPN server. There were about
+> > 1.5k users connected to this VPN over ipv6 and the container was setup
+> > with about 100 custom routing tables when it hit the max_sizes routing
+> > limit. After this no new connections could be established anymore,
+> > pinging didn't work anymore; you get the idea.
+> > 
+> 
+> should have been addressed by:
+> 
+> commit d8882935fcae28bceb5f6f56f09cded8d36d85e6
+> Author: Eric Dumazet <edumazet@google.com>
+> Date:   Fri May 8 07:34:14 2020 -0700
+>     ipv6: use DST_NOCOUNT in ip6_rt_pcpu_alloc()
+>     We currently have to adjust ipv6 route gc_thresh/max_size depending
+>     on number of cpus on a server, this makes very little sense.
+> 
+> 
+> Did your tests include this patch?
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/nested.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No, it's also pretty hard to trigger. The conference was pretty good for
+this.
+I tested on top of rc6. I'm probably missing the big picture here, could
+you briefy explain how this commit fixes the problem we ran into?
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index f4cd2d0cc360..d544cce4f964 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -150,7 +150,7 @@ static void copy_vmcb_control_area(struct vmcb *dst_vmcb, struct vmcb *from_vmcb
- 	dst->iopm_base_pa         = from->iopm_base_pa;
- 	dst->msrpm_base_pa        = from->msrpm_base_pa;
- 	dst->tsc_offset           = from->tsc_offset;
--	dst->asid                 = from->asid;
-+	/* asid not copied, it is handled manually for svm->vmcb.  */
- 	dst->tlb_ctl              = from->tlb_ctl;
- 	dst->int_ctl              = from->int_ctl;
- 	dst->int_vector           = from->int_vector;
--- 
-2.18.2
-
-
+Thanks!
+Christian
