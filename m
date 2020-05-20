@@ -2,86 +2,98 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A338CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A55320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:08:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=notmuch.email header.i=@notmuch.email header.b="kACaUp8r"
+	by mail.kernel.org (Postfix) with ESMTP id 6ED8E20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589937036;
+	bh=DuIRGWpmRLK4Gvn27f6R1NXMTUEFp+oebvCIa14JEGM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CiX1ZjX7nm4zn7YUSFkr3VdPHBPUR7jRkHxKAJuXN19P+AYTiX6QUMJgFvpe85Kak
+	 1BngEzXNe/nc6PDQG0m7AmgyFhsXai3zvjIefs6O3VUHeNRzRdYJ9mY5gWy+id3oIX
+	 dLK0ZFNhwviki14fc5CbkxvHpo8TNbMU+BFwJQi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgETBI4 (ORCPT
+        id S1728287AbgETBKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 21:08:56 -0400
-Received: from mx.h4ck.space ([159.69.146.50]:58828 "EHLO mx.h4ck.space"
+        Tue, 19 May 2020 21:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbgETBIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 21:08:55 -0400
-Date:   Wed, 20 May 2020 03:08:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=notmuch.email;
-        s=mail; t=1589936933;
-        bh=eD1JwKxV0IM6VPh2p6kr6Xs6kEAiC5RCKFBXJxQjb4A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=kACaUp8rFsWqT+WvaE/embZRx2TrgrMj05jZLSFPC2E6wqVW+NSUYDl6D5UsSdxl5
-         D9BYIyjLWIFczonYdLbGwxFAz6M4m0NJc3MBxwjqmy7WXxSzQDlQoP0hchZd/nGrHn
-         fYbyQeUFkONBUHaHqwVLOMNs070TXS3WD5O02VV0=
-From:   andi@notmuch.email
-To:     Brendan Shanks <bshanks@codeweavers.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: umip: AMD Ryzen 3900X, pagefault after emulate SLDT/SIDT
- instruction
-Message-ID: <20200520010853.635wep2ewq4zpn2y@wrt>
-References: <20200519143815.cpsd2xfx2kl3khsq@wrt>
- <2330FAB4-A6CE-49E7-921C-B7D55763BDED@codeweavers.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2330FAB4-A6CE-49E7-921C-B7D55763BDED@codeweavers.com>
+        id S1726318AbgETBKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 21:10:35 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE51204EA;
+        Wed, 20 May 2020 01:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589937034;
+        bh=DuIRGWpmRLK4Gvn27f6R1NXMTUEFp+oebvCIa14JEGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JFAKfzMKamKtRyjemuWdUz1jRN4K4CWk5OVvuONLFLBrKQqQ8L7NQPAaC46daEogY
+         pjO9U5Mv3J+3T++sJawlSQgLkuxEe3od1b4PFiwkCoRqhc8E+f9qgYgexCoV2oHmRH
+         xmII0G8lLa6czATOOSeDIWx6tMZwfyR0YWxfUlOk=
+Date:   Tue, 19 May 2020 18:10:34 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sh: include linux/time_types.h for sockios
+Message-Id: <20200519181034.58c67eb5bea24aae24d33421@linux-foundation.org>
+In-Reply-To: <20200519131327.1836482-1-arnd@arndb.de>
+References: <20200519131327.1836482-1-arnd@arndb.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11:56 19.05.20, Brendan Shanks wrote:
-> The problem is that the kernel does not emulate/spoof the SLDT instruction, only SGDT, SIDT, and SMSW.
-> SLDT and STR weren't thought to be commonly used, so emulation/spoofing wasn’t added.
-> In the last few months I have seen reports of one or two (32-bit) Windows games that use SLDT though.
-> Can you share more information about the application you’re running?
+On Tue, 19 May 2020 15:13:13 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
 
-I'll try to create a very simple reproducer for this case in the next
-days. Unfortunately I don't have the source of the original application.
-I can mail you instructions about it directly, if required.
+> Using the socket ioctls on arch/sh (and only there) causes build
+> time problems when __kernel_old_timeval/__kernel_old_timespec are
+> not already visible to the compiler.
+> 
+> Add an explict include line for the header that defines these
+> structures.
 
-> Maybe the best path is to add kernel emulation/spoofing for SLDT and
-> STR on 32 and 64-bit, just to cover all the cases. It should be a
-> pretty simple patch, I’ll start working on it.
+I can grab this.
 
-Check the other mail from Ricardo, you can probably safe that effort :-)
+> Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Fixes: 8c709f9a0693 ("y2038: sh: remove timeval/timespec usage from headers")
+> Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
 
-> Alternately, I did work on a Wine patch to emulate the UMIP
-> instructions in user-space, but it adds a lot of code and I don’t
-> think there’s much appetite for it in upstream Wine (especially since
-> the kernel emulation is sufficient for almost all cases).
-> https://www.winehq.org/pipermail/wine-devel/2020-February/160027.html
+cc:stable?
 
-Yeah that seems like the less favorable effort. My best guess is that
-this might not be limited to Wine thus handling in the kernel might be
-best.
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/sh/include/uapi/asm/sockios.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/sh/include/uapi/asm/sockios.h b/arch/sh/include/uapi/asm/sockios.h
+> index 3da561453260..ef01ced9e169 100644
+> --- a/arch/sh/include/uapi/asm/sockios.h
+> +++ b/arch/sh/include/uapi/asm/sockios.h
+> @@ -2,6 +2,8 @@
+>  #ifndef __ASM_SH_SOCKIOS_H
+>  #define __ASM_SH_SOCKIOS_H
+>  
+> +#include <linux/time_types.h>
+> +
+>  /* Socket-level I/O control calls. */
+>  #define FIOGETOWN	_IOR('f', 123, int)
+>  #define FIOSETOWN 	_IOW('f', 124, int)
 
-> In the meantime, an easy way to disable UMIP without rebuilding the
-> kernel is to pass 'clearcpuid=514’ on the kernel command line.
-
-Nice, I'll use that next time :-)
