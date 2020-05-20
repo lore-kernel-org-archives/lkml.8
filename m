@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C435C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DADC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C274207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA5E207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgETOWf (ORCPT
+        id S1727814AbgETOWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:22:35 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60966 "EHLO
+        Wed, 20 May 2020 10:22:37 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60992 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726829AbgETOWW (ORCPT
+        by vger.kernel.org with ESMTP id S1726845AbgETOWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:22 -0400
+        Wed, 20 May 2020 10:22:23 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-00035N-UU; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-00035B-Iv; Wed, 20 May 2020 15:22:18 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DPC-9Y; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DOn-33; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>
-Date:   Wed, 20 May 2020 15:13:45 +0100
-Message-ID: <lsq.1589984008.328549696@decadent.org.uk>
+        "Steffen Klassert" <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Daniel Jordan" <daniel.m.jordan@oracle.com>
+Date:   Wed, 20 May 2020 15:13:40 +0100
+Message-ID: <lsq.1589984008.991014456@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 17/99] crypto: api - Check spawn->alg under lock in
- crypto_drop_spawn
+Subject: [PATCH 3.16 12/99] padata: purge get_cpu and reorder_via_wq from
+ padata_do_serial
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,36 +58,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-commit 7db3b61b6bba4310f454588c2ca6faf2958ad79f upstream.
+commit 065cf577135a4977931c7a1e1edf442bfd9773dd upstream.
 
-We need to check whether spawn->alg is NULL under lock as otherwise
-the algorithm could be removed from under us after we have checked
-it and found it to be non-NULL.  This could cause us to remove the
-spawn from a non-existent list.
+With the removal of the padata timer, padata_do_serial no longer
+needs special CPU handling, so remove it.
 
-Fixes: 7ede5a5ba55a ("crypto: api - Fix crypto_drop_spawn crash...")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- crypto/algapi.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/padata.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -618,11 +618,9 @@ EXPORT_SYMBOL_GPL(crypto_init_spawn2);
- 
- void crypto_drop_spawn(struct crypto_spawn *spawn)
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -322,24 +322,9 @@ static void padata_serial_worker(struct
+  */
+ void padata_do_serial(struct padata_priv *padata)
  {
--	if (!spawn->alg)
--		return;
+-	int cpu;
+-	struct padata_parallel_queue *pqueue;
+-	struct parallel_data *pd;
+-	int reorder_via_wq = 0;
 -
- 	down_write(&crypto_alg_sem);
--	list_del(&spawn->list);
-+	if (spawn->alg)
-+		list_del(&spawn->list);
- 	up_write(&crypto_alg_sem);
+-	pd = padata->pd;
+-
+-	cpu = get_cpu();
+-
+-	/* We need to enqueue the padata object into the correct
+-	 * per-cpu queue.
+-	 */
+-	if (cpu != padata->cpu) {
+-		reorder_via_wq = 1;
+-		cpu = padata->cpu;
+-	}
+-
+-	pqueue = per_cpu_ptr(pd->pqueue, cpu);
++	struct parallel_data *pd = padata->pd;
++	struct padata_parallel_queue *pqueue = per_cpu_ptr(pd->pqueue,
++							   padata->cpu);
+ 
+ 	spin_lock(&pqueue->reorder.lock);
+ 	list_add_tail(&padata->list, &pqueue->reorder.list);
+@@ -353,8 +338,6 @@ void padata_do_serial(struct padata_priv
+ 	 */
+ 	smp_mb__after_atomic();
+ 
+-	put_cpu();
+-
+ 	padata_reorder(pd);
  }
- EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+ EXPORT_SYMBOL(padata_do_serial);
 
