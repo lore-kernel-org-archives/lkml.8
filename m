@@ -2,160 +2,154 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE09F20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667D0207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:09:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d+l1voCr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgETWJJ (ORCPT
+        id S1728565AbgETWJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:09:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:19871 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbgETWJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:09:08 -0400
-IronPort-SDR: 3xHBM0+NgXeRINkrevD0i011CtmJdJHtfD/TWy8mCTrHzb2sT+ifs+6/P7f15ksFeYwoUxzCAe
- 2PY9GwkXe2Kg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 15:09:08 -0700
-IronPort-SDR: ZT6RPijSh12tJn2rM1PkBNQ94zB5Qv0saTzQcrBhQwCsvzXaQmFTCizwpe9nJrRxaEZJYYkl2m
- UErV/Wi2xMqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
-   d="scan'208";a="282837835"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 20 May 2020 15:09:06 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jbWte-0009bT-6k; Thu, 21 May 2020 06:09:06 +0800
-Date:   Thu, 21 May 2020 06:08:31 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 82c5ba14c091497fc5d79ee017f962e50c3f69ac
-Message-ID: <5ec5aa5f.DIT498k+xjOejM4c%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 20 May 2020 18:09:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42228 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728297AbgETWJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 18:09:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590012566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QEQwrZ9mN6qPW1ehx2nCrQEVDqhuS13VYGcR08yXSDY=;
+        b=d+l1voCrKQxKJ6IszptXJA/JjFxjBPbTUKNYEt6Rzq7hQwrwuODcOzeYY3i/CzCiC+qLjF
+        aKUd5Lv0XENan3mk9MbnISpXgudQ9Xd/5s2/bOxmSEvWt7TT0UrW3+sYEDjOdxVjElt/GB
+        kvTiGztyFJvEeNFp9V9BOt9Do0KNd5I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-Uc5SSMUHMO2lqXXIO8-rjw-1; Wed, 20 May 2020 18:09:22 -0400
+X-MC-Unique: Uc5SSMUHMO2lqXXIO8-rjw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5048819057C6;
+        Wed, 20 May 2020 22:09:19 +0000 (UTC)
+Received: from krava (unknown [10.40.193.10])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 760D2106F764;
+        Wed, 20 May 2020 22:09:13 +0000 (UTC)
+Date:   Thu, 21 May 2020 00:09:12 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
+Message-ID: <20200520220912.GP157452@krava>
+References: <20200520072814.128267-1-irogers@google.com>
+ <20200520072814.128267-6-irogers@google.com>
+ <20200520134847.GM157452@krava>
+ <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 82c5ba14c091497fc5d79ee017f962e50c3f69ac  Merge branch 'x86/entry'
+On Wed, May 20, 2020 at 09:50:13AM -0700, Ian Rogers wrote:
 
-elapsed time: 632m
+SNIP
 
-configs tested: 93
-configs skipped: 2
+> > > +             }
+> >
+> > is the groupping still enabled when we merge groups? could part
+> > of the metric (events) be now computed in different groups?
+> 
+> By default the change will take two metrics and allow the shorter
+> metric (in terms of number of events) to share the events of the
+> longer metric. If the events for the shorter metric aren't in the
+> longer metric then the shorter metric must use its own group of
+> events. If sharing has occurred then the bitmap is used to work out
+> which events and groups are no longer in use.
+> 
+> With --metric-no-group then any event can be used for a metric as
+> there is no grouping. This is why more events can be eliminated.
+> 
+> With --metric-no-merge then the logic to share events between
+> different metrics is disabled and every metric is in a group. This
+> allows the current behavior to be had.
+> 
+> There are some corner cases, such as metrics with constraints (that
+> don't group) and duration_time that is never placed into a group.
+> 
+> Partial sharing, with one event in 1 weak event group and 1 in another
+> is never performed. Using --metric-no-group allows something similar.
+> Given multiplexing, I'd be concerned about accuracy problems if events
+> between groups were shared - say for IPC, were you measuring
+> instructions and cycles at the same moment?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+hum, I think that's also concern if you are multiplexing 2 groups and one
+metric getting events from both groups that were not meassured together 
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-m68k                             allyesconfig
-sparc                            allyesconfig
-arm                         lpc18xx_defconfig
-arm                        keystone_defconfig
-i386                              allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                             allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a004-20200520
-i386                 randconfig-a006-20200520
-i386                 randconfig-a003-20200520
-i386                 randconfig-a002-20200520
-i386                 randconfig-a005-20200520
-i386                 randconfig-a013-20200520
-i386                 randconfig-a012-20200520
-i386                 randconfig-a015-20200520
-i386                 randconfig-a011-20200520
-i386                 randconfig-a016-20200520
-i386                 randconfig-a014-20200520
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+it makes sense to me put all the merged events into single weak group
+anything else will have the issue you described above, no?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+and perhaps add command line option for merging that to make sure it's
+what user actuly wants
+
+thanks,
+jirka
+
+
+> 
+> > I was wondering if we could merge all the hasmaps into single
+> > one before the parse the evlist.. this way we won't need removing
+> > later.. but I did not thought this through completely, so it
+> > might not work at some point
+> 
+> This could be done in the --metric-no-group case reasonably easily
+> like the current hashmap. For groups you'd want something like a set
+> of sets of events, but then you'd only be able to share events if the
+> sets were the same. A directed acyclic graph could capture the events
+> and the sharing relationships, it may be possible to optimize cases
+> like {A,B,C}, {A,B,D}, {A,B} so that the small group on the end shares
+> events with both the {A,B,C} and {A,B,D} group. This may be good
+> follow up work. We could also solve this in the json, for example
+> create a "phony" group of {A,B,C,D} that all three metrics share from.
+> You could also use --metric-no-group to achieve that sharing now.
+> 
+> Thanks,
+> Ian
+> 
+> > jirka
+> >
+> 
+
