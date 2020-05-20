@@ -2,129 +2,96 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD25A206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E60B206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NAfDGZuY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBMlDNwJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETJOY (ORCPT
+        id S1726853AbgETJOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:14:24 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43102 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETJOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:14:23 -0400
-Received: from zn.tnic (p200300ec2f0bab00d907527c3c1e360d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:d907:527c:3c1e:360d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 47C811EC032C;
-        Wed, 20 May 2020 11:14:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589966062;
+        Wed, 20 May 2020 05:14:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29897 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726452AbgETJOv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 05:14:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589966090;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=LiDZJ/nDDOx6HNQyMN6etFUDBDZ4zUzKnqjvmtstft0=;
-        b=NAfDGZuYM1NLD2lCZ1oQZIZ7UGOSHsSZ0Zu/lgomzdOS6sf36E9Rj79WbRNcWpl86KpX+L
-        zvCKYyoH/HH8DbtCZKcEsv40un5TfHc0NyTxCuLOPjo0ovPggkKuqcLUUbHTcKokbQ/mS0
-        o0l9nWvwsPxoFmCz1B3jcXZp80MWqlM=
-Date:   Wed, 20 May 2020 11:14:15 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 40/75] x86/sev-es: Compile early handler code into
- kernel image
-Message-ID: <20200520091415.GC1457@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-41-joro@8bytes.org>
+         in-reply-to:in-reply-to:references:references;
+        bh=mTNW2Odgu4ScH3HKgo9G9zShqsDjgwB0JmSMhzXEj+4=;
+        b=PBMlDNwJAEizn19Dn9oAWcFplAvAQrUYwjOIFNk7KrFdNjjdMUSuXBKI9hExAYRaW9HflN
+        eTK/e/NefdbXYXb31E6sAUM9Vg9e1S9EEZl1oKmYWfYmflzFNS8NpuirNpTbVYfx9RGTym
+        WY3ljGwBcdNFx+urNtLH1ApsfLRKhT8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-ZHWyfhhfNHqF41LTeCUsgQ-1; Wed, 20 May 2020 05:14:48 -0400
+X-MC-Unique: ZHWyfhhfNHqF41LTeCUsgQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F5178005AA;
+        Wed, 20 May 2020 09:14:47 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-148.pek2.redhat.com [10.72.12.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99A6360BEC;
+        Wed, 20 May 2020 09:14:44 +0000 (UTC)
+Date:   Wed, 20 May 2020 17:14:40 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        kexec@lists.infradead.org, vgoyal@redhat.com
+Subject: Re: [PATCH] MAINTAINERS: add files related to kdump
+Message-ID: <20200520091440.GA5052@dhcp-128-65.nay.redhat.com>
+References: <20200520080557.13260-1-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-41-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520080557.13260-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:16:50PM +0200, Joerg Roedel wrote:
-> +static inline u64 sev_es_rd_ghcb_msr(void)
-> +{
-> +	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
-> +}
-> +
-> +static inline void sev_es_wr_ghcb_msr(u64 val)
-> +{
-> +	u32 low, high;
-> +
-> +	low  = (u32)(val);
-> +	high = (u32)(val >> 32);
-> +
-> +	native_write_msr(MSR_AMD64_SEV_ES_GHCB, low, high);
-> +}
+Hi Baoquan,
+On 05/20/20 at 04:05pm, Baoquan He wrote:
+> Kdump is implemented based on kexec, however some files are only
+> related to crash dumping and missing, add them to KDUMP entry.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  MAINTAINERS | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 83cf5c43242a..2f9eefd33114 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9251,6 +9251,11 @@ L:	kexec@lists.infradead.org
+>  S:	Maintained
+>  W:	http://lse.sourceforge.net/kdump/
+>  F:	Documentation/admin-guide/kdump/
+> +F:	fs/proc/vmcore.c
+> +F:	include/linux/crash_core.h
+> +F:	include/linux/crash_dump.h
+> +F:	include/uapi/linux/vmcore.h
+> +F:	kernel/crash.*
 
-Instead of duplicating those two, you can lift the ones in the
-compressed image into sev-es.h and use them here. I don't care one bit
-about the MSR tracepoints in native_*_msr().
+ls kernel/crash.*
+ls: cannot access 'kernel/crash.*': No such file or directory
 
-> +static enum es_result vc_write_mem(struct es_em_ctxt *ctxt,
-> +				   char *dst, char *buf, size_t size)
-> +{
-> +	unsigned long error_code = X86_PF_PROT | X86_PF_WRITE;
-> +	char __user *target = (char __user *)dst;
-> +	u64 d8;
-> +	u32 d4;
-> +	u16 d2;
-> +	u8  d1;
-> +
-> +	switch (size) {
-> +	case 1:
-> +		memcpy(&d1, buf, 1);
-> +		if (put_user(d1, target))
-> +			goto fault;
-> +		break;
-> +	case 2:
-> +		memcpy(&d2, buf, 2);
-> +		if (put_user(d2, target))
-> +			goto fault;
-> +		break;
-> +	case 4:
-> +		memcpy(&d4, buf, 4);
-> +		if (put_user(d4, target))
-> +			goto fault;
-> +		break;
-> +	case 8:
-> +		memcpy(&d8, buf, 8);
-> +		if (put_user(d8, target))
-> +			goto fault;
+But ls kernel/crash*
+kernel/crash_core.c  kernel/crash_dump.c
 
-Ok, those (and below) memcpys get nicely optimized to MOVs by the
-compiler here.
+Thanks
+Dave
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
