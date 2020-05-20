@@ -2,484 +2,138 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F439C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 163D42081A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C87B2081A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/YKjZkO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLrnr3Gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgETCBZ (ORCPT
+        id S1728509AbgETCBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52484 "EHLO
+        Tue, 19 May 2020 22:01:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbgETCBY (ORCPT
+        with ESMTP id S1726348AbgETCBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:01:24 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EA7C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 19:01:24 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id l3so637596qvo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 19:01:24 -0700 (PDT)
+        Tue, 19 May 2020 22:01:42 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FCE0C061A0E;
+        Tue, 19 May 2020 19:01:42 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x13so799626pfn.11;
+        Tue, 19 May 2020 19:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qr0VrcadrZtGUXQmAtNco2RCKU/r7qutN37y7b8TqLY=;
-        b=T/YKjZkOxH87aW4EJmQTHTMJH8SrOsCcmYLbNyWjxz5AyXmbMMCJ5fUJNmQLigSWvi
-         ySEpUxh2Yh1fRKbC7ktAtPgEXGLrHje7hvkNul4e3IIYJEC6qXcqlrspUqlsXzi5emJK
-         dYNEGfRPxKmK0hEz7Mwl0uPnJoWYUyvnLeeSKz9OJcQ7fhydd5M0/KFaV9Zp3zReoVxQ
-         /3SSemuirIh5voizKK0GpKrHSTpcvL9kqGPygIL3lmgDOzzFXcs/R/hGNykjI/C9+Rgn
-         ExU8TEVT2S+CJpDMn5EZQOldCsLj+pJufoUN/KmLXqdqHIWOz1YDVRWzy9azZnhAMsAF
-         v5yQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X8iFYlvRVspF0fTaZYyW17RP+fQGYQbAsWDbBbqHnWo=;
+        b=ZLrnr3GxQADcslYwMJ5xjJu4YHw5KBIXyc7DcjCxJuiJl0E7u2+9oL43607pAzjR2n
+         nA/QI6q5W6XGyranfcLDlRhwm/fqRlewB9FHY2WuHX7VXSIRvJoMV3z5UZLZMT63waeo
+         xZ60yzunX0TFl+b1sl1zSBUo77gMEiedwcszNqwIfSr4BlXu4a8KxRdZMZzgn6QUGYgq
+         hD1o8dYjA0ufQwNMyBoYC4m+Ygvmh+Urz44+fyiaZZ+KHiVJTmhcBIf84kOTfUeDyP2l
+         NSiQK4fbXts1vS7N/Z/VKIy1uP2GobJG88JlGhO5aX5oOTgyVQovhja6QKYwWtZv/9P/
+         sBhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qr0VrcadrZtGUXQmAtNco2RCKU/r7qutN37y7b8TqLY=;
-        b=kx6XXjzycw4o69u5zeDJqvhJ2k2gRq+o75DJnNkJmFACRx20LugsG55T9O1JJBoNPr
-         hpEsUhx4g9LVCGtsWea4Eud4uW1wMOaabD+HeFHTGuVYO2DAG4yKIYlkd21ATlRIdHMy
-         Kw7Dm5FhkAdueD2+URDR3EULtHUkv4qslnh5pxka+99AvEXC7nlR+839gAa41fTkIXLb
-         6kOUCfF5JtuHwD7GnjCZRGcJgoRmHH2xNkwFKqj4wAJi/lccz7aBD7d2PUCvp4Du+8gy
-         Fh8mhwnwVJVYbBqpNvH82CF785ACxzOlIslHttn+jFjiy6J/VcYtjD5Lp5eXHD4elaJr
-         PBcw==
-X-Gm-Message-State: AOAM530wbpnHFtGbgVLmMy2oRdmMoUmjaWuTtedBydrjKtCde04Men/y
-        T5gtIq1uFY1RCoL05bhBGfHslGr72tAZBA==
-X-Google-Smtp-Source: ABdhPJxr+mJXqHjukwJVOZfYSnxHyRKya4Uci/Mw9hCTr7XMLc5Ke37PVVrkVDm2sHeCwamKSPpOxQ==
-X-Received: by 2002:a0c:e806:: with SMTP id y6mr2771567qvn.177.1589940083638;
-        Tue, 19 May 2020 19:01:23 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id g144sm1098475qke.18.2020.05.19.19.01.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 19:01:23 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1365A40AFD; Tue, 19 May 2020 23:01:21 -0300 (-03)
-Date:   Tue, 19 May 2020 23:01:21 -0300
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        ravi.bangoria@linux.ibm.com, maddy@linux.vnet.ibm.com,
-        anju@linux.vnet.ibm.com, jolsa@kernel.org, mpe@ellerman.id.au
-Subject: Re: [PATCH V2] powerpc/perf: Add support for outputting extended
- regs in perf intr_regs
-Message-ID: <20200520020121.GD32678@kernel.org>
-References: <1589868937-1537-1-git-send-email-atrajeev@linux.vnet.ibm.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X8iFYlvRVspF0fTaZYyW17RP+fQGYQbAsWDbBbqHnWo=;
+        b=pvIzcEk2kh9GfSZY4cs7Qcj2A6BowZdkzI4lP5BEyaxQYa7TROQ3HaV6rtyXwB8pgJ
+         /rbw5c9Ze+KiSGDC07q3DAV3GjhWbTj7u0z6lIIIO4cJ50+2kpfqMeJk2Otc9+qqAdZQ
+         pyxTiSmZqmrDPoi7ez+xL9gryAdDUHRFeCa2L9psclsYGtZQqiz9jdmxhO6badxAsl2J
+         eXUrQSDcfJEEFPN3v9p54DUE/q+/uhlNlAA5ehZnMp8Rt5hFKVp1oEa7TXFrLRhff7jg
+         fcd7dgNEhuLkITtFImediwEMsJ81ViZHCn1kB4/kRy3QLRZz4utSY/B+Kn1R5sFdeuAY
+         HeRg==
+X-Gm-Message-State: AOAM5328XoA5Zz4iRBS9QhLB82C4ZoxQpmhWediroaIoVphyixet1pm8
+        FoFuJNipZPWJwGR5NG00sN1xwio3
+X-Google-Smtp-Source: ABdhPJwQaGPZrkib57z4BxetcWjXu8ZE9JkxFAR1HLPi/tVLMdIzQJFoFlaeQKJ2BZCPJTVYK8LhJw==
+X-Received: by 2002:a62:4e88:: with SMTP id c130mr2018424pfb.122.1589940101860;
+        Tue, 19 May 2020 19:01:41 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id n10sm608834pfd.192.2020.05.19.19.01.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 May 2020 19:01:41 -0700 (PDT)
+Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a
+ seqcount
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200519214547.352050-2-a.darwish@linutronix.de>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <33cec6a9-2f6e-3d3c-99ac-9b2a3304ec26@gmail.com>
+Date:   Tue, 19 May 2020 19:01:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589868937-1537-1-git-send-email-atrajeev@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200519214547.352050-2-a.darwish@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 19, 2020 at 02:15:37AM -0400, Athira Rajeev escreveu:
-> From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+
+
+On 5/19/20 2:45 PM, Ahmed S. Darwish wrote:
+> Sequence counters write paths are critical sections that must never be
+> preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
 > 
-> Add support for perf extended register capability in powerpc.
-> The capability flag PERF_PMU_CAP_EXTENDED_REGS, is used to indicate the
-> PMU which support extended registers. The generic code define the mask
-> of extended registers as 0 for non supported architectures.
+> Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
+> netdev name retrieval.") handled a deadlock, observed with
+> CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
+> infinitely spinning: it got scheduled after the seqcount write side
+> blocked inside its own critical section.
 > 
-> Patch adds extended regs support for power9 platform by
-> exposing MMCR0, MMCR1 and MMCR2 registers.
+> To fix that deadlock, among other issues, the commit added a
+> cond_resched() inside the read side section. While this will get the
+> non-preemptible kernel eventually unstuck, the seqcount reader is fully
+> exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
 > 
-> REG_RESERVED mask needs update to include extended regs.
-> `PERF_REG_EXTENDED_MASK`, contains mask value of the supported registers,
-> is defined at runtime in the kernel based on platform since the supported
-> registers may differ from one processor version to another and hence the
-> MASK value.
+> The fix is also still broken: if the seqcount reader belongs to a
+> real-time scheduling policy, it can spin forever and the kernel will
+> livelock.
 > 
-> Perf tools side uses extended mask to display the platform
-> supported register names (with -I? option) to the user and also
-> send this mask to the kernel to capture the extended registers
-> in each sample. Hence decide the mask value based on the processor
-> version.
+> Disabling preemption over the seqcount write side critical section will
+> not work: inside it are a number of GFP_KERNEL allocations and mutex
+> locking through the drivers/base/ :: device_rename() call chain.
 > 
-> with patch
-> ----------
+> From all the above, replace the seqcount with a rwsem.
 > 
-> available registers: r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11
-> r12 r13 r14 r15 r16 r17 r18 r19 r20 r21 r22 r23 r24 r25 r26
-> r27 r28 r29 r30 r31 nip msr orig_r3 ctr link xer ccr softe
-> trap dar dsisr sier mmcra mmcr0 mmcr1 mmcr2
-> 
-> PERF_RECORD_SAMPLE(IP, 0x1): 4784/4784: 0 period: 1 addr: 0
-> ... intr regs: mask 0xffffffffffff ABI 64-bit
-> .... r0    0xc00000000012b77c
-> .... r1    0xc000003fe5e03930
-> .... r2    0xc000000001b0e000
-> .... r3    0xc000003fdcddf800
-> .... r4    0xc000003fc7880000
-> .... r5    0x9c422724be
-> .... r6    0xc000003fe5e03908
-> .... r7    0xffffff63bddc8706
-> .... r8    0x9e4
-> .... r9    0x0
-> .... r10   0x1
-> .... r11   0x0
-> .... r12   0xc0000000001299c0
-> .... r13   0xc000003ffffc4800
-> .... r14   0x0
-> .... r15   0x7fffdd8b8b00
-> .... r16   0x0
-> .... r17   0x7fffdd8be6b8
-> .... r18   0x7e7076607730
-> .... r19   0x2f
-> .... r20   0xc00000001fc26c68
-> .... r21   0xc0002041e4227e00
-> .... r22   0xc00000002018fb60
-> .... r23   0x1
-> .... r24   0xc000003ffec4d900
-> .... r25   0x80000000
-> .... r26   0x0
-> .... r27   0x1
-> .... r28   0x1
-> .... r29   0xc000000001be1260
-> .... r30   0x6008010
-> .... r31   0xc000003ffebb7218
-> .... nip   0xc00000000012b910
-> .... msr   0x9000000000009033
-> .... orig_r3 0xc00000000012b86c
-> .... ctr   0xc0000000001299c0
-> .... link  0xc00000000012b77c
-> .... xer   0x0
-> .... ccr   0x28002222
-> .... softe 0x1
-> .... trap  0xf00
-> .... dar   0x0
-> .... dsisr 0x80000000000
-> .... sier  0x0
-> .... mmcra 0x80000000000
-> .... mmcr0 0x82008090
-> .... mmcr1 0x1e000000
-> .... mmcr2 0x0
->  ... thread: perf:4784
-> 
-> Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-> [Defined PERF_REG_EXTENDED_MASK at run time to add support for different platforms ]
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
+> Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
+> Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
-> Changes from v1 -> v2
-> 
-> - PERF_REG_EXTENDED_MASK` is defined at runtime in the kernel
-> based on platform. This will give flexibility in using extended
-> regs for all processor versions where the supported registers may differ.
-> - removed PERF_REG_EXTENDED_MASK from the perf tools side. Based on the
-> processor version(from PVR value), tool side will return the appropriate
-> extended mask
-> - Since tool changes can handle without a "PERF_REG_EXTENDED_MASK" macro,
-> dropped patch to set NO_AUXTRACE.
-> - Addressed review comments from Ravi Bangoria for V1
-> 
-> ---
-> 
->  arch/powerpc/include/asm/perf_event_server.h    |  8 ++++
->  arch/powerpc/include/uapi/asm/perf_regs.h       | 14 ++++++-
->  arch/powerpc/perf/core-book3s.c                 |  1 +
->  arch/powerpc/perf/perf_regs.c                   | 34 ++++++++++++++--
->  arch/powerpc/perf/power9-pmu.c                  |  6 +++
+>  net/core/dev.c | 30 ++++++++++++------------------
+>  1 file changed, 12 insertions(+), 18 deletions(-)
+>
 
-Can you please split this patch so that the kernel bits are separate
-from the tooling bits?
+Seems fine to me, assuming rwsem prevent starvation of the writer.
 
-Thanks,
+(Presumably this could be a per ndevice rwsem, or per netns, to provide some isolation)
 
-- Arnaldo
+Alternative would be to convert ndev->name from char array to a pointer (rcu protected),
+but this looks quite invasive change, certainly not for stable branches.
 
->  tools/arch/powerpc/include/uapi/asm/perf_regs.h | 14 ++++++-
->  tools/perf/arch/powerpc/include/perf_regs.h     |  5 ++-
->  tools/perf/arch/powerpc/util/perf_regs.c        | 54 +++++++++++++++++++++++++
->  8 files changed, 130 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/perf_event_server.h b/arch/powerpc/include/asm/perf_event_server.h
-> index 3e9703f..1458e1a 100644
-> --- a/arch/powerpc/include/asm/perf_event_server.h
-> +++ b/arch/powerpc/include/asm/perf_event_server.h
-> @@ -15,6 +15,9 @@
->  #define MAX_EVENT_ALTERNATIVES	8
->  #define MAX_LIMITED_HWCOUNTERS	2
->  
-> +extern u64 mask_var;
-> +#define PERF_REG_EXTENDED_MASK          mask_var
-> +
->  struct perf_event;
->  
->  /*
-> @@ -55,6 +58,11 @@ struct power_pmu {
->  	int 		*blacklist_ev;
->  	/* BHRB entries in the PMU */
->  	int		bhrb_nr;
-> +	/*
-> +	 * set this flag with `PERF_PMU_CAP_EXTENDED_REGS` if
-> +	 * the pmu supports extended perf regs capability
-> +	 */
-> +	int		capabilities;
->  };
->  
->  /*
-> diff --git a/arch/powerpc/include/uapi/asm/perf_regs.h b/arch/powerpc/include/uapi/asm/perf_regs.h
-> index f599064..485b1d5 100644
-> --- a/arch/powerpc/include/uapi/asm/perf_regs.h
-> +++ b/arch/powerpc/include/uapi/asm/perf_regs.h
-> @@ -48,6 +48,18 @@ enum perf_event_powerpc_regs {
->  	PERF_REG_POWERPC_DSISR,
->  	PERF_REG_POWERPC_SIER,
->  	PERF_REG_POWERPC_MMCRA,
-> -	PERF_REG_POWERPC_MAX,
-> +	/* Extended registers */
-> +	PERF_REG_POWERPC_MMCR0,
-> +	PERF_REG_POWERPC_MMCR1,
-> +	PERF_REG_POWERPC_MMCR2,
-> +	/* Max regs without the extended regs */
-> +	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
->  };
-> +
-> +#define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
-> +
-> +/* PERF_REG_EXTENDED_MASK value for CPU_FTR_ARCH_300 */
-> +#define PERF_REG_PMU_MASK_300   (((1ULL << (PERF_REG_POWERPC_MMCR2 + 1)) - 1) \
-> +				- PERF_REG_PMU_MASK)
-> +
->  #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
-> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-> index 3dcfecf..f56b778 100644
-> --- a/arch/powerpc/perf/core-book3s.c
-> +++ b/arch/powerpc/perf/core-book3s.c
-> @@ -2276,6 +2276,7 @@ int register_power_pmu(struct power_pmu *pmu)
->  
->  	power_pmu.attr_groups = ppmu->attr_groups;
->  
-> +	power_pmu.capabilities |= (ppmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS);
->  #ifdef MSR_HV
->  	/*
->  	 * Use FCHV to ignore kernel events if MSR.HV is set.
-> diff --git a/arch/powerpc/perf/perf_regs.c b/arch/powerpc/perf/perf_regs.c
-> index a213a0a..f1dbbc5 100644
-> --- a/arch/powerpc/perf/perf_regs.c
-> +++ b/arch/powerpc/perf/perf_regs.c
-> @@ -13,9 +13,11 @@
->  #include <asm/ptrace.h>
->  #include <asm/perf_regs.h>
->  
-> +u64 mask_var;
-> +
->  #define PT_REGS_OFFSET(id, r) [id] = offsetof(struct pt_regs, r)
->  
-> -#define REG_RESERVED (~((1ULL << PERF_REG_POWERPC_MAX) - 1))
-> +#define REG_RESERVED (~(PERF_REG_EXTENDED_MASK | PERF_REG_PMU_MASK))
->  
->  static unsigned int pt_regs_offset[PERF_REG_POWERPC_MAX] = {
->  	PT_REGS_OFFSET(PERF_REG_POWERPC_R0,  gpr[0]),
-> @@ -69,10 +71,26 @@
->  	PT_REGS_OFFSET(PERF_REG_POWERPC_MMCRA, dsisr),
->  };
->  
-> +/* Function to return the extended register values */
-> +static u64 get_ext_regs_value(int idx)
-> +{
-> +	switch (idx) {
-> +	case PERF_REG_POWERPC_MMCR0:
-> +			return mfspr(SPRN_MMCR0);
-> +	case PERF_REG_POWERPC_MMCR1:
-> +			return mfspr(SPRN_MMCR1);
-> +	case PERF_REG_POWERPC_MMCR2:
-> +			return mfspr(SPRN_MMCR2);
-> +	default: return 0;
-> +	}
-> +}
-> +
->  u64 perf_reg_value(struct pt_regs *regs, int idx)
->  {
-> -	if (WARN_ON_ONCE(idx >= PERF_REG_POWERPC_MAX))
-> -		return 0;
-> +	u64 PERF_REG_EXTENDED_MAX;
-> +
-> +	if (cpu_has_feature(CPU_FTR_ARCH_300))
-> +		PERF_REG_EXTENDED_MAX = PERF_REG_POWERPC_MMCR2 + 1;
->  
->  	if (idx == PERF_REG_POWERPC_SIER &&
->  	   (IS_ENABLED(CONFIG_FSL_EMB_PERF_EVENT) ||
-> @@ -85,6 +103,16 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
->  	    IS_ENABLED(CONFIG_PPC32)))
->  		return 0;
->  
-> +	if (idx >= PERF_REG_POWERPC_MAX && idx < PERF_REG_EXTENDED_MAX)
-> +		return get_ext_regs_value(idx);
-> +
-> +	/*
-> +	 * If the idx is referring to value beyond the
-> +	 * supported registers, return 0 with a warning
-> +	 */
-> +	if (WARN_ON_ONCE(idx >= PERF_REG_EXTENDED_MAX))
-> +		return 0;
-> +
->  	return regs_get_register(regs, pt_regs_offset[idx]);
->  }
->  
-> diff --git a/arch/powerpc/perf/power9-pmu.c b/arch/powerpc/perf/power9-pmu.c
-> index 08c3ef7..4525090 100644
-> --- a/arch/powerpc/perf/power9-pmu.c
-> +++ b/arch/powerpc/perf/power9-pmu.c
-> @@ -90,6 +90,8 @@ enum {
->  #define POWER9_MMCRA_IFM3		0x00000000C0000000UL
->  #define POWER9_MMCRA_BHRB_MASK		0x00000000C0000000UL
->  
-> +extern u64 mask_var;
-> +
->  /* Nasty Power9 specific hack */
->  #define PVR_POWER9_CUMULUS		0x00002000
->  
-> @@ -434,6 +436,7 @@ static void power9_config_bhrb(u64 pmu_bhrb_filter)
->  	.cache_events		= &power9_cache_events,
->  	.attr_groups		= power9_pmu_attr_groups,
->  	.bhrb_nr		= 32,
-> +	.capabilities           = PERF_PMU_CAP_EXTENDED_REGS,
->  };
->  
->  int init_power9_pmu(void)
-> @@ -457,6 +460,9 @@ int init_power9_pmu(void)
->  		}
->  	}
->  
-> +	/* Set the PERF_REG_EXTENDED_MASK here */
-> +	mask_var = PERF_REG_PMU_MASK_300;
-> +
->  	rc = register_power_pmu(&power9_pmu);
->  	if (rc)
->  		return rc;
-> diff --git a/tools/arch/powerpc/include/uapi/asm/perf_regs.h b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-> index f599064..485b1d5 100644
-> --- a/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-> +++ b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-> @@ -48,6 +48,18 @@ enum perf_event_powerpc_regs {
->  	PERF_REG_POWERPC_DSISR,
->  	PERF_REG_POWERPC_SIER,
->  	PERF_REG_POWERPC_MMCRA,
-> -	PERF_REG_POWERPC_MAX,
-> +	/* Extended registers */
-> +	PERF_REG_POWERPC_MMCR0,
-> +	PERF_REG_POWERPC_MMCR1,
-> +	PERF_REG_POWERPC_MMCR2,
-> +	/* Max regs without the extended regs */
-> +	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
->  };
-> +
-> +#define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
-> +
-> +/* PERF_REG_EXTENDED_MASK value for CPU_FTR_ARCH_300 */
-> +#define PERF_REG_PMU_MASK_300   (((1ULL << (PERF_REG_POWERPC_MMCR2 + 1)) - 1) \
-> +				- PERF_REG_PMU_MASK)
-> +
->  #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
-> diff --git a/tools/perf/arch/powerpc/include/perf_regs.h b/tools/perf/arch/powerpc/include/perf_regs.h
-> index e18a355..46ed00d 100644
-> --- a/tools/perf/arch/powerpc/include/perf_regs.h
-> +++ b/tools/perf/arch/powerpc/include/perf_regs.h
-> @@ -64,7 +64,10 @@
->  	[PERF_REG_POWERPC_DAR] = "dar",
->  	[PERF_REG_POWERPC_DSISR] = "dsisr",
->  	[PERF_REG_POWERPC_SIER] = "sier",
-> -	[PERF_REG_POWERPC_MMCRA] = "mmcra"
-> +	[PERF_REG_POWERPC_MMCRA] = "mmcra",
-> +	[PERF_REG_POWERPC_MMCR0] = "mmcr0",
-> +	[PERF_REG_POWERPC_MMCR1] = "mmcr1",
-> +	[PERF_REG_POWERPC_MMCR2] = "mmcr2",
->  };
->  
->  static inline const char *perf_reg_name(int id)
-> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-> index 0a52429..b78f81f 100644
-> --- a/tools/perf/arch/powerpc/util/perf_regs.c
-> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
-> @@ -6,9 +6,15 @@
->  
->  #include "../../../util/perf_regs.h"
->  #include "../../../util/debug.h"
-> +#include "../../../util/event.h"
-> +#include "../../../util/header.h"
-> +#include "../../../perf-sys.h"
->  
-> +#include <api/fs/fs.h>
->  #include <linux/kernel.h>
->  
-> +#define PVR_POWER9		0x004E
-> +
->  const struct sample_reg sample_reg_masks[] = {
->  	SMPL_REG(r0, PERF_REG_POWERPC_R0),
->  	SMPL_REG(r1, PERF_REG_POWERPC_R1),
-> @@ -55,6 +61,9 @@
->  	SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
->  	SMPL_REG(sier, PERF_REG_POWERPC_SIER),
->  	SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
-> +	SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
-> +	SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
-> +	SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
->  	SMPL_REG_END
->  };
->  
-> @@ -163,3 +172,48 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
->  
->  	return SDT_ARG_VALID;
->  }
-> +
-> +uint64_t arch__intr_reg_mask(void)
-> +{
-> +	struct perf_event_attr attr = {
-> +		.type                   = PERF_TYPE_HARDWARE,
-> +		.config                 = PERF_COUNT_HW_CPU_CYCLES,
-> +		.sample_type            = PERF_SAMPLE_REGS_INTR,
-> +		.precise_ip             = 1,
-> +		.disabled               = 1,
-> +		.exclude_kernel         = 1,
-> +	};
-> +	int fd, ret;
-> +	char buffer[64];
-> +	u32 version;
-> +	u64 extended_mask = 0;
-> +
-> +	/* Get the PVR value to set the extended
-> +	 * mask specific to platform
-> +	 */
-> +	get_cpuid(buffer, sizeof(buffer));
-> +	ret = sscanf(buffer, "%u,", &version);
-> +
-> +	if (ret != 1) {
-> +		pr_debug("Failed to get the processor version, unable to output extended registers\n");
-> +		return PERF_REGS_MASK;
-> +	}
-> +
-> +	if (version == PVR_POWER9)
-> +		extended_mask = PERF_REG_PMU_MASK_300;
-> +
-> +	attr.sample_regs_intr = extended_mask;
-> +	attr.sample_period = 1;
-> +	event_attr_init(&attr);
-> +
-> +	/*
-> +	 * check if the pmu supports perf extended regs, before
-> +	 * returning the register mask to sample.
-> +	 */
-> +	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
-> +	if (fd != -1) {
-> +		close(fd);
-> +		return (extended_mask | PERF_REGS_MASK);
-> +	}
-> +	return PERF_REGS_MASK;
-> +}
-> -- 
-> 1.8.3.1
-> 
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 
--- 
 
-- Arnaldo
