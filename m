@@ -2,247 +2,301 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4734C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A977BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9839E20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E1E20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q53CpEuC"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ornY/va4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgETAre (ORCPT
+        id S1728176AbgETAue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
+        Tue, 19 May 2020 20:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgETArb (ORCPT
+        with ESMTP id S1726318AbgETAud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:47:31 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2001C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:47:30 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id j21so1244426ejy.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5ATl/YyNFGir4smvEUTlq/KkR2CgcH9y6IS3q99jhLs=;
-        b=Q53CpEuCe5BAQWGjzWeuXrHorlioHrVowYwDVRiGCloTfuif1brMeniDptNuvB9yzj
-         upKasxGIWWovsRAyO3Aoi8vYxGFsUQ9jjjFsAarCnLT0J/MA13Q/+JAiZnrbUHX6YGm9
-         vltH82MgNYHuhHxgfK179xa5qdoWmv0z6EaCI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5ATl/YyNFGir4smvEUTlq/KkR2CgcH9y6IS3q99jhLs=;
-        b=mfD4GJTBdCOi/hPrrLp5FRJFL+ARaP9uS1Zy1pHchkA0R/3ln9vDj3LtBPVVF24da9
-         Iuji71Z0qpaeVJo3LbSV2ZQcdFmTVjVgDPybSIURWFnHazR4VdvB3cl0GbNtzD0wNOFt
-         p+ujKMU74Hs+HvPk7bzeWS9FRi0fUUcZMiv/ku9GeP1alHk0Poaciu58Qzjv5JwKasso
-         mmB17wF7QVkxYwZqn7+1tpY/s8femRPJ4gFn8TNI8ny0hyybSV4u8v4n1Rp725xiKLRZ
-         MMuzYVWO4rn5uGnaN6CdGSp3YddcUGPgsFTMB5gxzFmU4De8//5ZuPDe0cipaIF6FAKR
-         dEfg==
-X-Gm-Message-State: AOAM531blnnRu12St1EcgbmTS+jP5O0o4hhHPqO4cMEhgp3WN8DZdXsR
-        jF1Sgy2o37leIuqXwN1lAqszMD+bghI=
-X-Google-Smtp-Source: ABdhPJymfLAgPTnT9XsxHeifcik608XEdXaqBrOJF3ammwhTfmB7aR8dpHxSEp7B1qKyS6sUYQjM2g==
-X-Received: by 2002:a17:906:c112:: with SMTP id do18mr1547114ejc.231.1589935648343;
-        Tue, 19 May 2020 17:47:28 -0700 (PDT)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id g20sm571810ejx.85.2020.05.19.17.47.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 17:47:25 -0700 (PDT)
-Received: by mail-wr1-f54.google.com with SMTP id v12so1315765wrp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:47:25 -0700 (PDT)
-X-Received: by 2002:ac2:4113:: with SMTP id b19mr930771lfi.143.1589935643824;
- Tue, 19 May 2020 17:47:23 -0700 (PDT)
+        Tue, 19 May 2020 20:50:33 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE72C061A0E;
+        Tue, 19 May 2020 17:50:33 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7184330C;
+        Wed, 20 May 2020 02:50:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589935831;
+        bh=TOmzP22SIGV/a8c3Jvf3dFaO83IOFowTmTJZLReFhFc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ornY/va4NB6Alqny2AnXzUSQj53n90/F/oNX3ROukai8yj9ltbmcNxVk12TKqEhSM
+         dgnTBYoCi4aDQiJuDn1warrD2UOVRzPguNWU9Oa4le25dvjMcprK04vGjNzx3NlQFN
+         /5i1oBNvMRGHQWvPYoxo5DV3tQaXq50QW5qg1kus=
+Date:   Wed, 20 May 2020 03:50:20 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
+Message-ID: <20200520005020.GQ3820@pendragon.ideasonboard.com>
+References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
+ <20200516215103.GA857@valkosipuli.retiisi.org.uk>
+ <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
 MIME-Version: 1.0
-References: <20200515212846.1347-1-mcgrof@kernel.org> <20200515212846.1347-13-mcgrof@kernel.org>
- <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
- <7306323c35e6f44d7c569e689b48f380f80da5e5.camel@sipsolutions.net>
- <CA+ASDXOg9oKeMJP1Mf42oCMMM3sVe0jniaWowbXVuaYZ=ZpDjQ@mail.gmail.com> <20200519140212.GT11244@42.do-not-panic.com>
-In-Reply-To: <20200519140212.GT11244@42.do-not-panic.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 19 May 2020 17:47:12 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMUHOcvJ_7UWgyANMxSz15Ji7TcLDXVCtSPa+fOr=+FGA@mail.gmail.com>
-Message-ID: <CA+ASDXMUHOcvJ_7UWgyANMxSz15Ji7TcLDXVCtSPa+fOr=+FGA@mail.gmail.com>
-Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        aquini@redhat.com, peterz@infradead.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        mchehab+samsung@kernel.org, will@kernel.org, bhe@redhat.com,
-        ath10k@lists.infradead.org, Takashi Iwai <tiwai@suse.de>,
-        mingo@redhat.com, dyoung@redhat.com, pmladek@suse.com,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, gpiccoli@canonical.com,
-        Steven Rostedt <rostedt@goodmis.org>, cai@lca.pw,
-        tglx@linutronix.de,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        schlad@suse.de, Linux Kernel <linux-kernel@vger.kernel.org>,
-        jeyu@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <930009cd-d887-752a-4f1f-567c795101ee@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+Hi Sakari,
 
-On Tue, May 19, 2020 at 7:02 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> On Mon, May 18, 2020 at 06:23:33PM -0700, Brian Norris wrote:
-> > On Sat, May 16, 2020 at 6:51 AM Johannes Berg <johannes@sipsolutions.net> wrote:
-> > > In addition, look what we have in iwl_trans_pcie_removal_wk(). If we
-> > > detect that the device is really wedged enough that the only way we can
-> > > still try to recover is by completely unbinding the driver from it, then
-> > > we give userspace a uevent for that. I don't remember exactly how and
-> > > where that gets used (ChromeOS) though, but it'd be nice to have that
-> > > sort of thing as part of the infrastructure, in a sort of two-level
-> > > notification?
-> >
-> > <slight side track>
-> > We use this on certain devices where we know the underlying hardware
-> > has design issues that may lead to device failure
->
-> Ah, after reading below I see you meant for iwlwifi.
+On Mon, May 18, 2020 at 12:45:18PM +0100, Kieran Bingham wrote:
+> Hi Sakari,
+> 
+> There are only fairly minor comments here, fix ups will be included in a
+> v10.
+> 
+> Is there anything major blocking integration?
+> 
+> On 16/05/2020 22:51, Sakari Ailus wrote:
+> > On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
+> > 
+> > ...
+> > 
+> >> +static int max9286_enum_mbus_code(struct v4l2_subdev *sd,
+> >> +				  struct v4l2_subdev_pad_config *cfg,
+> >> +				  struct v4l2_subdev_mbus_code_enum *code)
+> >> +{
+> >> +	if (code->pad || code->index > 0)
+> >> +		return -EINVAL;
+> >> +
+> >> +	code->code = MEDIA_BUS_FMT_UYVY8_2X8;
+> > 
+> > Why UYVY8_2X8 and not UYVY8_1X16? In general, the single sample / pixel
+> > variant of the format is generally used on the serial busses. This choice
+> > was made when serial busses were introduced.
 
-Sorry, I was replying to Johannes, who I believe had his "we"="Intel"
-hat (as iwlwifi maintainer) on, and was pointing at
-iwl_trans_pcie_removal_wk().
+This is a bit of a tricky one. On the camera size, for the RDACM20, the
+O10635 sensor outputs UYVY8_2X8. This if fed to the MAX9271 serializer,
+which doesn't care about the data type. The MAX9271 has a 16-bit input
+bus, with 10 bits reserved for data, 2 bits dynamically configurable
+to carry H/V sync or extra data, and 4 bits dynamically configurable to
+carry GPIOs or extra data. The 16-bit words are then serialized (it's a
+bit more complicated, when using the H/V sync signals they are
+transmitted in a different way, and the MAX9271 also supports a DDR mode
+that makes the "serial link word" carry up to 30 bits). Effectively, the
+two samples of UYVY8_2X8 are serialized in a 16-bit word each.
 
-> If userspace can indeed grow to support this, that would be fantastic.
+Sakari, with this information in mind, what would you recommend ?
 
-Well, Chrome OS tailors its user space a bit more to the hardware (and
-kernel/drivers in use) than the average distro might. We already do
-this (for some values of "this") today. Is that "fantastic" to you? :D
+> Ok - I presume this doesn't really have much effect anyway, they just
+> have to match for the transmitter/receiver?
+> 
+> But it makes sense to me, so I'll update to the 1x16 variant.
+> 
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static struct v4l2_mbus_framefmt *
+> >> +max9286_get_pad_format(struct max9286_priv *priv,
+> >> +		       struct v4l2_subdev_pad_config *cfg,
+> >> +		       unsigned int pad, u32 which)
+> >> +{
+> >> +	switch (which) {
+> >> +	case V4L2_SUBDEV_FORMAT_TRY:
+> >> +		return v4l2_subdev_get_try_format(&priv->sd, cfg, pad);
+> >> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
+> >> +		return &priv->fmt[pad];
+> >> +	default:
+> >> +		return NULL;
+> >> +	}
+> >> +}
+> >> +
+> >> +static int max9286_set_fmt(struct v4l2_subdev *sd,
+> >> +			   struct v4l2_subdev_pad_config *cfg,
+> >> +			   struct v4l2_subdev_format *format)
+> >> +{
+> >> +	struct max9286_priv *priv = sd_to_max9286(sd);
+> >> +	struct v4l2_mbus_framefmt *cfg_fmt;
+> >> +
+> >> +	if (format->pad >= MAX9286_SRC_PAD)
+> >> +		return -EINVAL;
+> > 
+> > You can remove these checks; it's been already done by the caller.
+> > 
+> 
+> Ok.
+> 
+> 
+> > ...
+> > 
+> >> +static int max9286_parse_dt(struct max9286_priv *priv)
+> >> +{
+> >> +	struct device *dev = &priv->client->dev;
+> >> +	struct device_node *i2c_mux;
+> >> +	struct device_node *node = NULL;
+> >> +	unsigned int i2c_mux_mask = 0;
+> >> +
+> >> +	of_node_get(dev->of_node);
+> >> +	i2c_mux = of_find_node_by_name(dev->of_node, "i2c-mux");
+> >> +	if (!i2c_mux) {
+> >> +		dev_err(dev, "Failed to find i2c-mux node\n");
+> >> +		of_node_put(dev->of_node);
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	/* Identify which i2c-mux channels are enabled */
+> >> +	for_each_child_of_node(i2c_mux, node) {
+> >> +		u32 id = 0;
+> >> +
+> >> +		of_property_read_u32(node, "reg", &id);
+> >> +		if (id >= MAX9286_NUM_GMSL)
+> >> +			continue;
+> >> +
+> >> +		if (!of_device_is_available(node)) {
+> >> +			dev_dbg(dev, "Skipping disabled I2C bus port %u\n", id);
+> >> +			continue;
+> >> +		}
+> >> +
+> >> +		i2c_mux_mask |= BIT(id);
+> >> +	}
+> >> +	of_node_put(node);
+> >> +	of_node_put(i2c_mux);
+> >> +
+> >> +	/* Parse the endpoints */
+> >> +	for_each_endpoint_of_node(dev->of_node, node) {
+> >> +		struct max9286_source *source;
+> >> +		struct of_endpoint ep;
+> >> +
+> >> +		of_graph_parse_endpoint(node, &ep);
+> >> +		dev_dbg(dev, "Endpoint %pOF on port %d",
+> >> +			ep.local_node, ep.port);
+> >> +
+> >> +		if (ep.port > MAX9286_NUM_GMSL) {
+> >> +			dev_err(dev, "Invalid endpoint %s on port %d",
+> >> +				of_node_full_name(ep.local_node), ep.port);
+> >> +			continue;
+> >> +		}
+> >> +
+> >> +		/* For the source endpoint just parse the bus configuration. */
+> >> +		if (ep.port == MAX9286_SRC_PAD) {
+> >> +			struct v4l2_fwnode_endpoint vep = {
+> >> +				.bus_type = V4L2_MBUS_CSI2_DPHY
+> >> +			};
+> >> +			int ret;
+> >> +
+> >> +			ret = v4l2_fwnode_endpoint_parse(
+> >> +					of_fwnode_handle(node), &vep);
+> >> +			if (ret) {
+> >> +				of_node_put(node);
+> >> +				of_node_put(dev->of_node);
+> >> +				return ret;
+> >> +			}
+> >> +
+> >> +			if (vep.bus_type != V4L2_MBUS_CSI2_DPHY) {
+> > 
+> > This won't happen, the bus type will stay if you set it to a non-zero
+> > value.
+> 
+> 
+> Ok - I'll remove this check.
+> 
+> 
+> > 
+> >> +				dev_err(dev,
+> >> +					"Media bus %u type not supported\n",
+> >> +					vep.bus_type);
+> >> +				v4l2_fwnode_endpoint_free(&vep);
+> >> +				of_node_put(node);
+> >> +				of_node_put(dev->of_node);
+> >> +				return -EINVAL;
+> >> +			}
+> >> +
+> >> +			priv->csi2_data_lanes =
+> >> +				vep.bus.mipi_csi2.num_data_lanes;
+> >> +			v4l2_fwnode_endpoint_free(&vep);
+> > 
+> > No need to call this unless you use v4l2_fwnode_endpoint_alloc_parse().
+> > 
+> > And as you don't, you also won't know which frequencies are known to be
+> > safe to use. That said, perhaps where this device is used having a random
+> > frequency on that bus could not be an issue. Perhaps.
+> 
+> Does this generate a range? or a list of static supported frequencies?
+> 
+> We configure the pixel clock based upon the number of cameras connected,
+> and their pixel rates etc ...
+> 
+> Are you saying that the frequency of this clock should be validated to
+> be a specific range? or are you talking about a different frequency?
+> 
+> 
+> For now I'll remove the v4l2_fwnode_endpoint_alloc_parse().
+> 
+> 
+> 
+> >> +
+> >> +			continue;
+> >> +		}
+> >> +
+> >> +		/* Skip if the corresponding GMSL link is unavailable. */
+> >> +		if (!(i2c_mux_mask & BIT(ep.port)))
+> >> +			continue;
+> >> +
+> >> +		if (priv->sources[ep.port].fwnode) {
+> >> +			dev_err(dev,
+> >> +				"Multiple port endpoints are not supported: %d",
+> >> +				ep.port);
+> >> +
+> >> +			continue;
+> >> +		}
+> >> +
+> >> +		source = &priv->sources[ep.port];
+> >> +		source->fwnode = fwnode_graph_get_remote_endpoint(
+> >> +						of_fwnode_handle(node));
+> >> +		if (!source->fwnode) {
+> >> +			dev_err(dev,
+> >> +				"Endpoint %pOF has no remote endpoint connection\n",
+> >> +				ep.local_node);
+> >> +
+> >> +			continue;
+> >> +		}
+> >> +
+> >> +		priv->source_mask |= BIT(ep.port);
+> >> +		priv->nsources++;
+> >> +	}
+> >> +	of_node_put(node);
+> >> +	of_node_put(dev->of_node);
+> >> +
+> >> +	priv->route_mask = priv->source_mask;
+> >> +
+> >> +	return 0;
+> >> +}
+> > 
+> 
 
-> > -- then when we see
-> > this sort of unrecoverable "firmware-death", we remove the
-> > device[*]+driver, force-reset the PCI device (SBR), and try to
-> > reload/reattach the driver. This all happens by way of a udev rule.
->
-> So you've sprikled your own udev event here as part of your kernel delta?
+-- 
+Regards,
 
-No kernel delta -- the event is there already:
-iwl_trans_pcie_removal_wk()
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/wireless/intel/iwlwifi/pcie/trans.c?h=v5.6#n2027
-
-And you can see our udev rules and scripts, in all their ugly details
-here, if you really care:
-https://chromium.googlesource.com/chromiumos/overlays/chromiumos-overlay/+/master/net-wireless/iwlwifi_rescan/files/
-
-> > We
-> > also log this sort of stuff (and metrics around it) for bug reports
-> > and health statistics, since we really hope to not see this happen
-> > often.
->
-> Assuming perfection is ideal but silly. So, what infrastructure do you
-> use for this sort of issue?
-
-We don't yet log firmware crashes generally, but for all our current
-crash reports (including WARN()), they go through this:
-https://chromium.googlesource.com/chromiumos/platform2/+/master/crash-reporter/README.md
-
-For example, look for "cut here" in:
-https://chromium.googlesource.com/chromiumos/platform2/+/master/crash-reporter/anomaly_detector.cc
-
-For other specific metrics (like counting "EVENT=INACCESSIBLE"), we
-use the Chrome UMA system:
-https://chromium.googlesource.com/chromiumos/platform2/+/master/metrics/README.md
-
-I don't imagine the "infrastructure" side of any of that would be
-useful to you, but maybe the client-side gathering can at least show
-you what we do.
-
-> > [*] "We" (user space) don't actually do this...it happens via the
-> > 'remove_when_gone' module parameter abomination found in iwlwifi.
->
-> BTW is this likely a place on iwlwifi where the firmware likely crashed?
-
-iwl_trans_pcie_removal_wk() is triggered because HW accesses timed out
-in a way that is likely due to a dead PCIe endpoint. It's not directly
-a firmware crash, although there may be firmware crashes reported
-around the same time.
-
-Intel folks can probably give a more nuanced answer, but their
-firmware crashes usually land in something like iwl_mvm_nic_error() ->
-iwl_mvm_dump_nic_error_log() + iwl_mvm_nic_restart(). If you can make
-your proposal less punishing (e.g., removing the "taint" as Johannes
-requested), maybe iwlwifi would be another good candidate for
-$subject. iwlwifi generally expects to recover seamlessly, but it's
-also good to know if you've seen a hundred of these in a row.
-
-> > A uevent
-> > would suit us very well I think, although it would be nice if drivers
-> > could also supply some small amount of informative text along with it
->
-> A follow up to this series was to add a uevent to add_taint(), however
-> since a *count* is not considered I think it is correct to seek
-> alternatives at this point. The leaner the solution the better though.
->
-> Do you have a pointer to what guys use so I can read?
-
-Hopefully the above pointers are useful to you. We don't yet have
-firmware-crash parsing implemented, so I don't have pointers for that
-piece yet.
-
-> > (e.g., a sort of "reason code", in case we can possibly aggregate
-> > certain failure types). We already do this sort of thing for WARN()
-> > and friends (not via uevent, but via log parsing; at least it has nice
-> > "cut here" markers!).
->
-> Indeed, similar things can indeed be argued about WARN*()... this
-> however can be non-device specific. With panic-on-warn becoming a
-> "thing", the more important it becomes to really tally exactly *why*
-> these WARN*()s may trigger.
-
-panic-on-warn? Yikes. I guess such folks don't run mac80211... I'm
-probably not supposed to publicize information related to how many
-Chromebooks are out there, but we regularly see a scary number of
-non-fatal warnings (WARN(), WARN_ON(), etc.) logged by Chrome OS users
-every day, and a scary number of those are in WiFi drivers...
-
-> > Perhaps
->
-> Note below.
-
-(My use of "perhaps" is only because I'm not familiar with devlink at all.)
-
-> > devlink (as proposed down-thread) would also fit the bill. I
-> > don't think sysfs alone would fit our needs, as we'd like to process
-> > these things as they happen, not only when a user submits a bug
-> > report.
->
-> I think we've reached a point where using "*Perhaps*" does not suffice,
-> and if there is already a *user* of similar desired infrastructure I
-> think we should jump on the opportunity to replace what you have with
-> something which could be used by other devices / subsystems which
-> require firmware. And indeed, also even consider in the abstract sense,
-> the possibility to leverage something like this for WARN*()s later too.
-
-To precisely lay out what Chrome OS does today:
-
-* WARN() and similar: implemented, see anomaly_detector.cc above. It's
-just log parsing, and that handy "cut here" stuff -- I'm nearly
-certain there are other distros using this already? A uevent would
-probably be nice, but log parsing is good enough for us today.
-* EVENT=INACCESSIBLE: iwlwifi-specific, but reference code is linked
-above. It's a uevent, and we handle it via udev. Code is linked above.
-* Other firmware crashes: not yet implemented here, but we're looking
-at it. Currently, we plan to do something similar to WARN(), but it
-will be ugly and non-generic. A uevent would be a lovely replacement,
-if it has some basic metadata with it. Stats in sysfs might be icing
-on the cake, but mostly redundant for us, if we can grab it on the fly
-via uevent.
-
-HTH,
-Brian
+Laurent Pinchart
