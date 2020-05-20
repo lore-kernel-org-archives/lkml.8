@@ -2,131 +2,140 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A369C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A69C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEAD2207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2488920758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GN6NVp1A"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vSBpiFYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgETMno (ORCPT
+        id S1727022AbgETMn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:43:44 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53236 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETMnn (ORCPT
+        Wed, 20 May 2020 08:43:58 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25053 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726224AbgETMn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:43:43 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KChcBe050883;
-        Wed, 20 May 2020 07:43:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589978618;
-        bh=zxx7ZiFM9eDWZAFgKqDStYi6M6MG5cO3PtSDRr0Kcmw=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=GN6NVp1AXN38VvX2fVgSmWEbeMH6PUTtGZ7x3siZv0PgAkr5OrZYVjZhTndSHCvGs
-         9CfVURfSxaKaoqSyU7roPVmoud+AssIqjELelN/T1sdcLggZ17jamfJ8hLg6hIk5Jd
-         fggNc1OClAXWKHpN3XTQPT4inDs0rleQFgDwh7Oc=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KChcxK046229;
-        Wed, 20 May 2020 07:43:38 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 07:43:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 07:43:38 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KChbt4024072;
-        Wed, 20 May 2020 07:43:37 -0500
-Subject: Re: Bad kfree of dma_parms in v5.7-rc5
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <CGME20200520090109eucas1p17270805f81f6958cd5084a7b910efc6c@eucas1p1.samsung.com>
- <a9df7155-dd7a-752b-6d1c-3426837756b1@ti.com>
- <e9674719-0c86-63be-04a3-ee98bd884901@samsung.com>
- <f3c58dcd-b806-95ef-2434-3084e65e1afb@ti.com>
- <e3fa0b35-7cca-1e37-c2fa-63cc07e6bfda@samsung.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <227465a5-c6e6-5b4d-abbd-7789727843a6@ti.com>
-Date:   Wed, 20 May 2020 15:43:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 08:43:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589978637; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=nLaK/ohEQ1OzRdH5EY+kSAjwbEK+2E1W0vY/2r749BI=;
+ b=vSBpiFYhyP1w7t8DlT703O7bKqtKvbvGWCbWwiNV/nZPwt2mlk1ualoafEinU1QxXpTgP2xh
+ 85h1QkGcF4I7g0SrmiFnvlbjo//LtSdmeIbuYdX5vYq92lyLJB8VMiZtIBJnYFMDoXVJfTbs
+ JzOpIvOsSja/8U+Mv7/JZbaV++Q=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ec526044c3faf51e2931685 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 12:43:48
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 83CE0C433A0; Wed, 20 May 2020 12:43:47 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rananta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5A10C433C8;
+        Wed, 20 May 2020 12:43:46 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <e3fa0b35-7cca-1e37-c2fa-63cc07e6bfda@samsung.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 20 May 2020 05:43:46 -0700
+From:   rananta@codeaurora.org
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     gregkh@linuxfoundation.org, andrew@daynix.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] tty: hvc: Fix data abort due to race in hvc_open
+In-Reply-To: <f84a9da7-bb0f-7538-fa00-968c9625335b@suse.cz>
+References: <20200520064708.24278-1-rananta@codeaurora.org>
+ <f84a9da7-bb0f-7538-fa00-968c9625335b@suse.cz>
+Message-ID: <5895803be5c8fd4c5e7725b57ffe79e4@codeaurora.org>
+X-Sender: rananta@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/2020 12:22, Marek Szyprowski wrote:
-> Hi Tomi,
+On 2020-05-20 01:59, Jiri Slaby wrote:
+> On 20. 05. 20, 8:47, Raghavendra Rao Ananta wrote:
+>> Potentially, hvc_open() can be called in parallel when two tasks calls
+>> open() on /dev/hvcX. In such a scenario, if the 
+>> hp->ops->notifier_add()
+>> callback in the function fails, where it sets the tty->driver_data to
+>> NULL, the parallel hvc_open() can see this NULL and cause a memory 
+>> abort.
+>> Hence, do a NULL check at the beginning, before proceeding ahead.
+>> 
+>> The issue can be easily reproduced by launching two tasks 
+>> simultaneously
+>> that does an open() call on /dev/hvcX.
+>> For example:
+>> $ cat /dev/hvc0 & cat /dev/hvc0 &
+>> 
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+>> ---
+>>  drivers/tty/hvc/hvc_console.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>> 
+>> diff --git a/drivers/tty/hvc/hvc_console.c 
+>> b/drivers/tty/hvc/hvc_console.c
+>> index 436cc51c92c3..80709f754cc8 100644
+>> --- a/drivers/tty/hvc/hvc_console.c
+>> +++ b/drivers/tty/hvc/hvc_console.c
+>> @@ -350,6 +350,9 @@ static int hvc_open(struct tty_struct *tty, struct 
+>> file * filp)
+>>  	unsigned long flags;
+>>  	int rc = 0;
+>> 
+>> +	if (!hp)
+>> +		return -ENODEV;
+>> +
 > 
-> On 20.05.2020 11:18, Tomi Valkeinen wrote:
->> On 20/05/2020 12:13, Marek Szyprowski wrote:
->>> On 20.05.2020 11:00, Tomi Valkeinen wrote:
->>>> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core:
->>>> platform: Initialize dma_parms for platform devices") v5.7-rc5 causes
->>>> at least some v4l2 platform drivers to break when freeing resources.
->>>>
->>>> E.g. drivers/media/platform/ti-vpe/cal.c uses
->>>> vb2_dma_contig_set_max_seg_size() and
->>>> vb2_dma_contig_clear_max_seg_size() to manage the dma_params, and
->>>> similar pattern is seen in other drivers too.
->>>>
->>>> After 9495b7e92f716ab2, vb2_dma_contig_set_max_seg_size() will not
->>>> allocate anything, but vb2_dma_contig_clear_max_seg_size() will still
->>>> kfree the dma_params.
->>>>
->>>> I'm not sure what's the proper fix here. A flag somewhere to indicate
->>>> that vb2_dma_contig_set_max_seg_size() did allocate, and thus
->>>> vb2_dma_contig_clear_max_seg_size() must free?
->>>>
->>>> Or drop the kzalloc and kfree totally, if dma_params is now supposed
->>>> to always be there?
->>>
->>> Thanks for reporting this issue!
->>>
->>> Once the mentioned commit has been merged, the code should assume that
->>> the platform devices does have a struct dma_params allocated, so the
->>> proper fix is to alloc dma_params only if the bus is not a platform bus:
->>>
->>> if (!dev_is_platform(dev) && !dev->dma_parms) {
->>>        dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
->>>
->>> same check for the free path.
->>
->> There is also "amba: Initialize dma_parms for amba devices". And the
->> commit message says PCI devices do this too.
->>
->> Guessing this based on the device type doesn't sound like a good idea
->> to me.
+> This is still not fixing the bug properly. See:
+> https://lore.kernel.org/linuxppc-dev/0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz/
 > 
-> Indeed. Then replace the allocation with a simple check for NULL
-> dma_parms and return an error in such case. This should be enough for
-> v5.8. Later we can simply get rid of those helpers and inline setting
-> max segment size directly to the drivers.
+> In particular, the paragraph starting "IOW".
+> 
+You are right. This doesn't fix the problem entirely. There are other 
+parts to it which is
+not handled in a clean way by the driver. Apart from the things you've 
+mentioned, it doesn't
+seem to handle the hp->port.count correctly as well.
 
-Is that valid either? Then we assume that dma_parms is always set up by someone else. That's true 
-for platform devices and apparently some other devices, but is it true for all devices now?
+hvc_open:
+   hp->port.count++
+   hp->ops->notifier_add(hp, hp->data) fails
+   tty->driver_data = NULL
 
-  Tomi
+hvc_close:
+   returns immediately as tty->driver_data == NULL, without 
+hp->port.count--
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+This would leave the port in a stale state, and the second caller of 
+hvc_open doesn't get
+a chance to call/retry hp->ops->notifier_add(hp, hp->data);
+
+However, the patch is not trying to address the logical issues with 
+hvc_open and hvc_close.
+It's only trying to eliminate the potential NULL pointer dereference, 
+leading to a panic.
+ From what I see, the hvc_open is serialized by tty_lock, and adding a 
+NULL check here is
+preventing the second caller.
+> thanks,
+
+Thank you.
+Raghavendra
