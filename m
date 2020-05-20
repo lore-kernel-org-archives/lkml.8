@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C27C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60700C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0149207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD662075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cKMNm7Xh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0np6wV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgETRWX (ORCPT
+        id S1728304AbgETRW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:22:23 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22137 "EHLO
+        Wed, 20 May 2020 13:22:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27734 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728100AbgETRWP (ORCPT
+        by vger.kernel.org with ESMTP id S1728159AbgETRWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:22:15 -0400
+        Wed, 20 May 2020 13:22:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589995334;
+        s=mimecast20190719; t=1589995340;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=v/fUARAthG/wKTNhu7AC326un8WX6UyBf3/Gu9fdswg=;
-        b=cKMNm7XhCuBi+uvtBoUypNwwTYurkCffssnz0n6pQspKBKt7CGuq3QI93qGKLfAr7ax/VZ
-        9s194XgTY2kR11Mp9C6SBTelEFiRyvO6itIqM6Y/9EA8z/64qvB6EXiMZ4caTlq52xmpgv
-        chC5g1V+asWEUsfQN55UplFyndsyq3c=
+        bh=lZ6+W3bZGAYBVzQ44Q5AecbK6sCDrUFzmYj52X2emww=;
+        b=A0np6wV35ZVlc4DEJKyOzBZ9fLEkg+/zFwnIYMtqpbbYeQuf+BtxzHKJtJGJtRMJIZ1wqy
+        Inz/7IPh916eb9hl1HcTbcvh4xJoIQ2JlaJUoAfmPlhiFxxYEQxaRMbZXef7L3HAFs+Pe0
+        jy+n0E8wsXZyz/w/ti1cayvBsuFAH8o=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-4FNQ00w-O_u5cmoec9ypVA-1; Wed, 20 May 2020 13:22:08 -0400
-X-MC-Unique: 4FNQ00w-O_u5cmoec9ypVA-1
+ us-mta-239-l6M-og0uPU2_iDDsCdYagA-1; Wed, 20 May 2020 13:22:19 -0400
+X-MC-Unique: l6M-og0uPU2_iDDsCdYagA-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 555208463A3;
-        Wed, 20 May 2020 17:22:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0F7F18FF696;
+        Wed, 20 May 2020 17:22:05 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6E7170461;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 180B879589;
         Wed, 20 May 2020 17:22:05 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 17/24] KVM: nSVM: do all MMU switch work in init/uninit functions
-Date:   Wed, 20 May 2020 13:21:38 -0400
-Message-Id: <20200520172145.23284-18-pbonzini@redhat.com>
+Subject: [PATCH 16/24] KVM: nSVM: split nested_vmcb_check_controls
+Date:   Wed, 20 May 2020 13:21:37 -0400
+Message-Id: <20200520172145.23284-17-pbonzini@redhat.com>
 In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
 References: <20200520172145.23284-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
@@ -57,57 +57,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the kvm_mmu_reset_context calls to nested_svm_init_mmu_context and
-nested_svm_uninit_mmu_context, so that the state of the MMU is consistent
-with the vcpu->arch.mmu and vcpu->arch.walk_mmu state.  Remove an
-unnecessary kvm_mmu_load, which can wait until the first vcpu_run.
+The authoritative state does not come from the VMCB once in guest mode,
+but KVM_SET_NESTED_STATE can still perform checks on L1's provided SVM
+controls because we get them from userspace.
+
+Therefore, split out a function to do them.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/svm/nested.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kvm/svm/nested.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 024e27bebba3..54a3384a60f8 100644
+index cbe96a08b080..024e27bebba3 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -90,12 +90,17 @@ static void nested_svm_init_mmu_context(struct kvm_vcpu *vcpu)
- 	vcpu->arch.mmu->shadow_root_level = vcpu->arch.tdp_level;
- 	reset_shadow_zero_bits_mask(vcpu, vcpu->arch.mmu);
- 	vcpu->arch.walk_mmu              = &vcpu->arch.nested_mmu;
-+
-+	/* Guest paging mode is active - reset mmu */
-+	kvm_mmu_reset_context(vcpu);
+@@ -203,26 +203,31 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
+ 	return true;
  }
  
- static void nested_svm_uninit_mmu_context(struct kvm_vcpu *vcpu)
+-static bool nested_vmcb_checks(struct vmcb *vmcb)
++static bool nested_vmcb_check_controls(struct vmcb_control_area *control)
  {
- 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
- 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+-	if ((vmcb->save.efer & EFER_SVME) == 0)
++	if ((control->intercept & (1ULL << INTERCEPT_VMRUN)) == 0)
+ 		return false;
+ 
+-	if (((vmcb->save.cr0 & X86_CR0_CD) == 0) &&
+-	    (vmcb->save.cr0 & X86_CR0_NW))
++	if (control->asid == 0)
+ 		return false;
+ 
+-	if ((vmcb->control.intercept & (1ULL << INTERCEPT_VMRUN)) == 0)
++	if ((control->nested_ctl & SVM_NESTED_CTL_NP_ENABLE) &&
++	    !npt_enabled)
+ 		return false;
+ 
+-	if (vmcb->control.asid == 0)
++	return true;
++}
 +
-+	kvm_mmu_reset_context(vcpu);
++static bool nested_vmcb_checks(struct vmcb *vmcb)
++{
++	if ((vmcb->save.efer & EFER_SVME) == 0)
+ 		return false;
+ 
+-	if ((vmcb->control.nested_ctl & SVM_NESTED_CTL_NP_ENABLE) &&
+-	    !npt_enabled)
++	if (((vmcb->save.cr0 & X86_CR0_CD) == 0) &&
++	    (vmcb->save.cr0 & X86_CR0_NW))
+ 		return false;
+ 
+-	return true;
++	return nested_vmcb_check_controls(&vmcb->control);
  }
  
- void recalc_intercepts(struct vcpu_svm *svm)
-@@ -277,9 +282,6 @@ static void nested_prepare_vmcb_control(struct vcpu_svm *svm)
- 	if (svm->nested.ctl.nested_ctl & SVM_NESTED_CTL_NP_ENABLE)
- 		nested_svm_init_mmu_context(&svm->vcpu);
- 
--	/* Guest paging mode is active - reset mmu */
--	kvm_mmu_reset_context(&svm->vcpu);
--
- 	svm_flush_tlb(&svm->vcpu);
- 
- 	svm->vmcb->control.tsc_offset = svm->vcpu.arch.tsc_offset =
-@@ -573,8 +575,6 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 	kvm_vcpu_unmap(&svm->vcpu, &map, true);
- 
- 	nested_svm_uninit_mmu_context(&svm->vcpu);
--	kvm_mmu_reset_context(&svm->vcpu);
--	kvm_mmu_load(&svm->vcpu);
- 
- 	/*
- 	 * Drop what we picked up for L2 via svm_complete_interrupts() so it
+ static void load_nested_vmcb_control(struct vcpu_svm *svm,
 -- 
 2.18.2
 
