@@ -2,174 +2,166 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0602065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4DE206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nlq5nfjd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSeCxkUX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgETQfO (ORCPT
+        id S1727042AbgETQfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
+        Wed, 20 May 2020 12:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgETQfM (ORCPT
+        with ESMTP id S1726939AbgETQfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:35:12 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53E4FC061A0E;
-        Wed, 20 May 2020 09:35:12 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id f189so4189491qkd.5;
-        Wed, 20 May 2020 09:35:12 -0700 (PDT)
+        Wed, 20 May 2020 12:35:23 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95982C061A0E;
+        Wed, 20 May 2020 09:35:23 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id k19so3755050edv.9;
+        Wed, 20 May 2020 09:35:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ru/VedSe7R+1+BFX/X1C1fyozp4gv15sJxfe6kqv7eI=;
-        b=Nlq5nfjdQYcHX7zuihr1ObqPMAidDgxveeyFHIQQ7O9LGWYgpBFhwvwsgqqYMjwc5s
-         RA2apLZKDvKsPMKXMg/AE4qFdbrEI1TZw96L5ME1jwd6CcnN/YvSgi4ZcyXxpvrftE2D
-         9FKSV7VtZ9Wm5bliE6BjuHB97TJzdramHadvRcVHq9FXeo+KPe5OZVByx3eJJGg2kVEa
-         sJbJNSAzopb/Rzy9cTjpnFAbe/r3b6Huh7UwSS1YvOZjsAFj55pZNHF0J9eXbJP6b5Vr
-         3j5xaZc+CSPb4DE1rbqFVNtgiqHcwPzDj3fYw5riUITT8pwaYauKrjLcGRE6Ht99+O8q
-         RilA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=9LZ3N6eS+xeL2WycYe0EBKoO7cMTBM5h/pIzNPU0uoA=;
+        b=nSeCxkUXkPBkC+bMaKiWwAFF5HRebqDVpy2P07v1pSBINuZBVZrf4qlB2nen9i6sAH
+         IFNiIXIrUN7/tuSC8zY/0mc8OLB/Dy5M/PqFtsy+MvROKnmEOEYbxNmjNHHBtP5yR1wC
+         e3mZqcCzaFHe66Jr3xmpznlMHFjMLoTVZB0MgFUVehc0ZWRuhc1CBINkbiW5bMx402RA
+         87X4TCTW7B0+1j7zhQSNK60EnPn3zd6L5qJOHgbA7z/RpFx8aGqHVD0urC9LHIk5Vfi6
+         FEN2xhZPC6SHsRR4Ng2Dwg8VngjkQbLwxZe9nm5LmdmlYvpg5d0xoqbdQSeqKVYSjbaF
+         i37Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ru/VedSe7R+1+BFX/X1C1fyozp4gv15sJxfe6kqv7eI=;
-        b=tGhRy7GmU0pPP2QRdOQVFbhcZ9Imp3YhwcC96pwFMP1aD2M3xiUTehsqdrimnI0s41
-         MsnuRG7VJ1V4whTlw0cm5uFHyLrujHseIluTxsQ7ne2jEs1IEKZ1EGJb6wvo3poj8wzd
-         pPO5vted8y/QIb27iE7nQbnZOKwt/w7PbQF2y9tFskdim1RNLltH6MG5+xDWCG7a019T
-         EOOPMo1XHuarWzWIqXLk7gmAXqrOhglTUKISXN8UsRmU9ss3hw/4dLGJiF7gR5kvKIzq
-         kV1GQkZysSNQ0295WLcAvnbk6gVwHlOujVYafu0j+FQeOBdVHpbbGGgTfX/KDBg+JAeA
-         I9Bg==
-X-Gm-Message-State: AOAM5306kIRX629nX1luGrczYAFz3B5KPTkrXK1Po/wQlgv/1N/aDXN9
-        NeW6PIIzDu03mO/HJ0UhNG6yq84KDiQ+cQ==
-X-Google-Smtp-Source: ABdhPJwgqPZSyTS3lDP8SPde5lXqTuj9YJ2uc8noId+dOCF8OR+0eN0IGtVc5ore5UFo4ycYXVwv0A==
-X-Received: by 2002:ae9:e854:: with SMTP id a81mr5759199qkg.396.1589992511156;
-        Wed, 20 May 2020 09:35:11 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id q59sm2803261qtd.73.2020.05.20.09.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:35:10 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Steve Winslow <swinslow@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v5 4/4] iio: magnetometer: ak8975: Add gpio reset support
-Date:   Wed, 20 May 2020 18:34:09 +0200
-Message-Id: <20200520163417.27805-5-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200520163417.27805-1-jonathan.albrieux@gmail.com>
-References: <20200520163417.27805-1-jonathan.albrieux@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=9LZ3N6eS+xeL2WycYe0EBKoO7cMTBM5h/pIzNPU0uoA=;
+        b=FKs2fhRQSUI/hU+VipTiWz2lGBXI7uZJ0defyBJd79LeP3PBegIXmM9d2CZAuxX10O
+         0pd391pYa6VonBSbMoeUr/Xrnz+wNd+EI8m3K5TSwhl3Bx5MIN05qyt3HUGU6jLYHuCj
+         wrwjD6lY9zVbWfAEGP9OQlC64uPY4k9zMa7SIcVI6w4WGcvNvwQ9ifCLQ1XkI9MVUDQG
+         NVIXGANiM2RPZVl0uqgwv/u9v97n8QwpoA4x+oTkxtgvMEDizrEbn05nPATZGST8ilkn
+         MZUxCH/ne8wgUWcuCqpi+5i3jivH/i/sscD8DdGFpd7MerLyGYH6LheLn5kSL68vvkVW
+         QqsQ==
+X-Gm-Message-State: AOAM531dalp4tAlpF3I47R7RoVYSfIsA2DY1ZB8Jurtbyfhk3CWwMGGD
+        QOGPIt76nXSYgp7vxGdsxiWrON+rWt/e/MjqLew=
+X-Google-Smtp-Source: ABdhPJztbIVCpypzfMmeE5wi7QZW2wjqt6WJKlmD8c/fGvtyo/k1t0yxQTzmcpir4NVu6nGdGh39/iZWxPahJYBNZUU=
+X-Received: by 2002:a50:d7c7:: with SMTP id m7mr4323197edj.101.1589992522103;
+ Wed, 20 May 2020 09:35:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
+ <1580249770-1088-3-git-send-email-jcrouse@codeaurora.org> <20200318224840.GA10796@willie-the-truck>
+ <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
+ <20200518151838.GL32394@willie-the-truck> <CAF6AEGswv3ZaJyy_kYv6FKAjO5=_juDwEtK+VE9TcVMLGvrdwA@mail.gmail.com>
+ <20200520125700.GD25815@willie-the-truck> <20200520151312.GB31730@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200520151312.GB31730@jcrouse1-lnx.qualcomm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 20 May 2020 09:35:42 -0700
+Message-ID: <CAF6AEGtF+_Q3=GxaVrAtqsPC3B6p_Dc5PB+DQ=btsg3wAej5bg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/6] arm/smmu: Add auxiliary domain support for arm-smmuv2
+To:     Will Deacon <will@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to AK09911 datasheet, if reset gpio is provided then
-deassert reset on ak8975_power_on() and assert reset on ak8975_power_off().
+On Wed, May 20, 2020 at 8:13 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> On Wed, May 20, 2020 at 01:57:01PM +0100, Will Deacon wrote:
+> > On Mon, May 18, 2020 at 08:50:27AM -0700, Rob Clark wrote:
+> > > On Mon, May 18, 2020 at 8:18 AM Will Deacon <will@kernel.org> wrote:
+> > > > On Wed, Mar 18, 2020 at 04:43:07PM -0700, Rob Clark wrote:
+> > > > > We do in fact need live domain switching, that is really the whole
+> > > > > point.  The GPU CP (command processor/parser) is directly updating
+> > > > > TTBR0 and triggering TLB flush, asynchronously from the CPU.
+> > > > >
+> > > > > And I think the answer about ASID is easy (on current hw).. it must be zero[*].
+> > > >
+> > > > Using ASID zero is really bad, because it means that you will end up sharing
+> > > > TLB entries with whichever device is using context bank 0.
+> > > >
+> > > > Is the SMMU only used by the GPU in your SoC?
+> > > >
+> > >
+> > > yes, the snapdragon SoCs have two SMMU instances, one used by the GPU,
+> > > where ASID0/cb0 is the gpu itself, and another cb is the GMU
+> > > (basically power control for the gpu), and the second SMMU is
+> > > everything else.
+> >
+> > Right, in which case I'm starting to think that we should treat this GPU
+> > SMMU instance specially. Give it its own compatible string (looks like you
+> > need this for HUPCFG anyway) and hook in via arm_smmu_impl_init(). You can
+> > then set IO_PGTABLE_QUIRK_ARM_TTBR1 when talking to the io-pgtable code
+> > without having to add a domain attribute.
+>
+> If we did this via a special GPU SMMU instance then we could also create and
+> register a dummy TTBR0 instance along with the TTBR1 instance and then we
+> wouldn't need to worry about the aux domains at all.
+>
+> > With that. you'll need to find a way to allow the GPU driver to call into
+> > your own hooks for getting at the TTBR0 tables -- given that you're
+> > programming these in the hardware, I don't think it makes sense to expose
+> > that in the IOMMU API, since most devices won't be able to do anything with
+> > that data. Perhaps you could install a couple of function pointers
+> > (subdomain_alloc/subdomain_free) in the GPU device when you see it appear
+> > from the SMMU driver? Alternatively, you could make an io_pgtable_cfg
+> > available so that the GPU driver can interface with io-pgtable directly.
+>
+> I don't want to speak for Rob but I think that this is the same direction we've
+> landed on. If we use the implementation specific code to initialize the base
+> pagetables then the GPU driver can use io-pgtable directly. We can easily
+> construct an io_pgtable_cfg. This feature will only be available for opt-in
+> GPU targets that will have a known configuration.
 
-Without reset's deassertion during ak8975_power_on(), driver's probe fails
-on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+Agreed about using io-pgtable helpers directly.. the gpu's use-case is
+pretty far different from anything normal/sane, and I don't think it
+is worth designing some generic iommu interfaces with precisely one
+user[*].  We just need enough in arm-smmu(/-impl) to bootstrap things
+when we power up the gpu.
 
-AK09911 has an active low reset gpio to handle register's reset.
-AK09911 datasheet says that, if not used, reset pin should be connected
-to VID. This patch emulates this situation.
+BR,
+-R
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
----
- drivers/iio/magnetometer/ak8975.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+[*] all the other gpu's that I've seen so far, even if they sit behind
+an iommu, they have their own internal mmu
 
-diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-index fd368455cd7b..a23422aad97d 100644
---- a/drivers/iio/magnetometer/ak8975.c
-+++ b/drivers/iio/magnetometer/ak8975.c
-@@ -358,6 +358,7 @@ struct ak8975_data {
- 	u8			asa[3];
- 	long			raw_to_gauss[3];
- 	struct gpio_desc	*eoc_gpiod;
-+	struct gpio_desc	*reset_gpiod;
- 	int			eoc_irq;
- 	wait_queue_head_t	data_ready_queue;
- 	unsigned long		flags;
-@@ -384,6 +385,9 @@ static int ak8975_power_on(const struct ak8975_data *data)
- 			 "Failed to enable specified Vid supply\n");
- 		return ret;
- 	}
-+
-+	gpiod_set_value_cansleep(data->reset_gpiod, 0);
-+
- 	/*
- 	 * According to the datasheet the power supply rise time is 200us
- 	 * and the minimum wait time before mode setting is 100us, in
-@@ -396,6 +400,8 @@ static int ak8975_power_on(const struct ak8975_data *data)
- /* Disable attached power regulator if any. */
- static void ak8975_power_off(const struct ak8975_data *data)
- {
-+	gpiod_set_value_cansleep(data->reset_gpiod, 1);
-+
- 	regulator_disable(data->vid);
- 	regulator_disable(data->vdd);
- }
-@@ -839,6 +845,7 @@ static int ak8975_probe(struct i2c_client *client,
- 	struct ak8975_data *data;
- 	struct iio_dev *indio_dev;
- 	struct gpio_desc *eoc_gpiod;
-+	struct gpio_desc *reset_gpiod;
- 	const void *match;
- 	unsigned int i;
- 	int err;
-@@ -856,6 +863,16 @@ static int ak8975_probe(struct i2c_client *client,
- 	if (eoc_gpiod)
- 		gpiod_set_consumer_name(eoc_gpiod, "ak_8975");
- 
-+	/*
-+	 * According to AK09911 datasheet, if reset GPIO is provided then
-+	 * deassert reset on ak8975_power_on() and assert reset on
-+	 * ak8975_power_off().
-+	 */
-+	reset_gpiod = devm_gpiod_get_optional(&client->dev,
-+					      "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpiod))
-+		return PTR_ERR(reset_gpiod);
-+
- 	/* Register with IIO */
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
- 	if (indio_dev == NULL)
-@@ -866,6 +883,7 @@ static int ak8975_probe(struct i2c_client *client,
- 
- 	data->client = client;
- 	data->eoc_gpiod = eoc_gpiod;
-+	data->reset_gpiod = reset_gpiod;
- 	data->eoc_irq = 0;
- 
- 	err = iio_read_mount_matrix(&client->dev, "mount-matrix", &data->orientation);
--- 
-2.17.1
-
+> The only gotcha is TLB maintenance but Rob and I have ideas about coordinating
+> with the GPU hardware (which has to do a TLBIALL during a switch anyway) and we
+> can always use the iommu_tlb_flush_all() hammer from software if we really need
+> it. It might take a bit of thought, but it is doable.
+>
+> > Yes, it's ugly, but I don't think it's worth trying to abstract this.
+>
+> I'm not sure how ugly it is. I've always operated under the assumption that the
+> GPU SMMU was special (though it had generic registers) just because of where it
+> was and how it it was used.  In the long run baking in a implementation specific
+> solution would probably be preferable to lots of domain attributes and aux
+> domains that would never be used except by us.
+>
+> > Thoughts? It's taken me a long time to figure out what's going on here,
+> > so sorry if it feels like I'm leading you round the houses.
+>
+> I'll hack on this and try to get something in place. It might be dumber on the
+> GPU side than we would like but it would at least spur some more conversation.
+>
+> Jordan
+>
+> > Will
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
