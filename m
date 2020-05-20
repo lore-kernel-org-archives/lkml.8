@@ -2,122 +2,274 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C37C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE289C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1ACB207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4284207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QlEtHzbV"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="MDfBRknD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgETJDP (ORCPT
+        id S1726596AbgETJF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33378 "EHLO
+        Wed, 20 May 2020 05:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETJDO (ORCPT
+        with ESMTP id S1726452AbgETJF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:03:14 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3277C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:03:13 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u1so1813311wmn.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:03:13 -0700 (PDT)
+        Wed, 20 May 2020 05:05:26 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8086BC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:05:26 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id w25so2275994iol.12
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:05:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fe1y1P3KuNT27Xt1HIe0Tg/h4Eje3e3b/mEovm8Unro=;
-        b=QlEtHzbVimMMdRXvv73kp2w+o5F6H4x1sYU4+rH6GgixXkylmS5m0rHB2BHbyZBEZx
-         0GtVnuEklagqyysOmxpPMSD0LeVgnX1oaVcFSJDBEYFvEDbV6hUYrkslZtkdSJyQ/3iH
-         kMroLkNP/SJZVYZ+NGzgLmlhZRPgFCmcEMdCaAlJjgpWrOwTd8YxV1Jmju312HOhXBdF
-         AyNwBYoneT8mQtAO1ua93Hkmx0GBjGDp1SxM6/6nQJ0boi38STs1J03mJe6eLjdpw2U4
-         rfKvY7eIva/MyhLLij0THeiDFlM0DbjXnTtPYzdH9+ePTKrMB/2qFYETRQHp691sIqs5
-         /lIA==
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k/on5dXOqPPTTiXT6elXTcI6XkJXgcd9gTLZOle0dV4=;
+        b=MDfBRknDn2S/BQFUVM7z6D6T94KFygSDo/kJkICFQue8fXx9Qa2drC4JcszQH+0SqJ
+         rnVDBljeQL6QvXKyM3JJ5qLdcMxL7KScgWzdmvpGeLIUbrcyw7a037GCauyMwR+Qlid6
+         c1gDhAbV+l8eW1qQaipwvyeoXUTXrDtoeonx8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fe1y1P3KuNT27Xt1HIe0Tg/h4Eje3e3b/mEovm8Unro=;
-        b=pg95F6LziAOuO6vhTTLfa/OngkKkUVlLSR7QSufGikfhwQMaFkObPH2J0EN9bUUvgN
-         Rtqusya+04gJNgY2Ol60VKyGdiP++lew/HpYxJmKc4rTXpqMw/coOBrGrU8uqkznYiWa
-         yg6vJ4bkxysJRdnpjJBEnRSdSTl5NdzY6+oLgrOmxuT7uEyAWaJP8SQaJF1Y0YdcAgFA
-         fkzAgrNpcfSsc9rcXfdL7SqSq6uTzlTqsP/BLBwR6LKD8TgUQIGf/3szyyPSyRX9p2lH
-         0XsvbVkmclmN5I9z3Nt5M3pT7pmf7EhyHl+LfCZ4QmiLeN9ZLNyAGglvIFFHiFJYCWlI
-         oANA==
-X-Gm-Message-State: AOAM533rfecVSi9LML0KAQ8mvjUO576geJwiEJ2b+cW3VDQbI67Ch0LV
-        LjnIUNWGfuiYbvbWuxxD0bmhr9wNKMY=
-X-Google-Smtp-Source: ABdhPJw9c4b0FEt51IGNxa1OVFTu4fGFAjKQqnYYgQj9H43HxMbDDt1wTz7bJ12iotKnqA/WDSczSQ==
-X-Received: by 2002:a1c:1b0d:: with SMTP id b13mr3869519wmb.171.1589965392202;
-        Wed, 20 May 2020 02:03:12 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f9a0:30c:ec6c:7971? ([2a01:e34:ed2f:f020:f9a0:30c:ec6c:7971])
-        by smtp.googlemail.com with ESMTPSA id w82sm2389150wmg.28.2020.05.20.02.03.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 02:03:11 -0700 (PDT)
-Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Do one override clock
- parent in prepare()
-To:     Tony Lindgren <tony@atomide.com>, Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Suman Anna <s-anna@ti.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k/on5dXOqPPTTiXT6elXTcI6XkJXgcd9gTLZOle0dV4=;
+        b=QxCgwtFDTvHLANfopiDYU7S+go5Xe2x+FjW3dnaoDfUYiYh0gOox4T5Nl8THVWfZAx
+         alzikNrj3ox8+GwlgTwJbIohAH4Y68roNjSwZUmZeY96F4IQJlm3loEG0iR/iqFZ7orA
+         KO9RNR8xFVkIZAlrnynhTR7uOSqEBbACL2t30fLIMTnu2xA32BurmaqfEqYtnlDfFM5I
+         KIcA7OM4Nl3JSU7nwK1b51p9/0mA1hjPQQ34JRCCIQ1mLYcEeVzkY1I3DFjYqZpslMge
+         lRmQhnaa6T+xgEBfYoAAaJ8HpoT6J4MrU9paK2Z+CWmNqBkUp9AvUPk40FLlDb59ELqg
+         rqTA==
+X-Gm-Message-State: AOAM5310307H4RWO1NYgEfbMmKyxeWIco2y0NRuDbnkLcEleW6HU4NMv
+        BDjwMKekJ/ZkZm3xu6Zr1SbNUg==
+X-Google-Smtp-Source: ABdhPJwZYpjIzIkLLlpmXQDWFkKpC1z3x2FPkXeBEZvoL5ZeTF3tRsMpIlAh31FgNbg3XQj0XOi8yQ==
+X-Received: by 2002:a02:c9d3:: with SMTP id c19mr3504366jap.80.1589965525385;
+        Wed, 20 May 2020 02:05:25 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id s84sm1059046ill.5.2020.05.20.02.05.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 02:05:24 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:05:23 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200427172831.16546-1-lokeshvutla@ti.com>
- <20200428182209.GT37466@atomide.com> <20200505180734.GN37466@atomide.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4d279416-64bb-822f-2783-a7aca7e03877@linaro.org>
-Date:   Wed, 20 May 2020 11:03:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Subject: Re: seccomp feature development
+Message-ID: <20200520090522.GA25177@ircssh-2.c.rugged-nimbus-611.internal>
+References: <202005181120.971232B7B@keescook>
 MIME-Version: 1.0
-In-Reply-To: <20200505180734.GN37466@atomide.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005181120.971232B7B@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/2020 20:07, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [200428 18:23]:
->> * Lokesh Vutla <lokeshvutla@ti.com> [200427 17:29]:
->>> omap_dm_timer_prepare() is setting up the parent 32KHz clock. This
->>> prepare() gets called by request_timer in the client's driver. Because of
->>> this, the timer clock parent that is set with assigned-clock-parent is being
->>> overwritten. So drop this default setting of parent in prepare().
->>>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>
->> This works just fine for me but depends on the dts changes.
->>
->> Daniel, for merging, do you want to set up an immutable branch
->> for the related dts change and this? I'm afraid it will conflict
->> with the related systimer changes for the dts otherwise.
+On Mon, May 18, 2020 at 02:04:57PM -0700, Kees Cook wrote:
+> Hi!
 > 
-> So I've pushed out an immutable branch for the dts changes
-> this patch depends on against v5.7-rc1 as omap-for-v5.8/dt-timer
-> [0][1].
+> This is my attempt at a brain-dump on my plans for nearish-term seccomp
+> features. Welcome to my TED talk... ;)
 > 
-> Daniel feel free to merge it in to apply this clocksource patch if
-> no more comments:
+> These are the things I've been thinking about:
 > 
-> Acked-by: Tony Lindgren <tony@atomide.com>
+> - fd passing
+> - deep argument inspection
+> - changing structure sizes
+> - syscall bitmasks
 > 
-> [0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v5.8/dt-timer
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v5.8/dt-timer
+> So, diving right in:
+> 
+> 
+> ## fd passing
+> 
+> Background: seccomp users want to be able to install an fd in a
+> monitored process during a user_notif to emulate "open" calls (or
+> similar), possibly across security boundaries, etc.
+> 
+> On the fd passing front, it seems that gaining pidfd_addfd() is the way
+> to go as it allows for generic use not tied to seccomp in particular.
+> I expect this feature will be developed orthogonally to seccomp (where
+> does this stand, BTW?). However, as Sargun has shown[1], seccomp could
+> be friendlier to help with using it. Things that need to be resolved:
+> 
+> - report pidnr, or pidfd? It seems the consensus is to pass pidnr, but
+>   if we're going to step back and make some design choices here, is
+>   there a place for pidfds in seccomp user_notif, in order to avoid
+>   needing the user_notif cookie? I think probably not: it's a rather lot
+>   of overhead for notifications. It seems it's safe to perform an fd
+>   installation with these steps:
+> 	- get pidnr from user_notif_recv
+> 	- open pidfd from pidnr
+> 	- re-verify user_notif cookie is still valid
+> 	- send new fd via pidfd
+> 	- reply with user_notif_send
+> 	- close pidfd
+> 
+> - how to deal with changing sizes of the user_notif structures to
+>   include a pidnr. (Which will be its own topic below.)
+> 
+> 
+> ## deep argument inspection
+> 
+> Background: seccomp users would like to write filters that traverse
+> the user pointers passed into many syscalls, but seccomp can't do this
+> dereference for a variety of reasons (mostly involving race conditions and
+> rearchitecting the entire kernel syscall and copy_from_user() code flows).
+> 
+> During the last plumbers and in conversations since, the grudging
+> consensus was reached that having seccomp do this for ALL syscalls was
+> likely going to be extremely disruptive for very little gain (i.e.
+> many things, like pathnames, have differing lifetimes, aliases, unstable
+> kernel object references, etc[6]), but that there were a small subset of
+> syscalls for which this WOULD be beneficial, and those are the newly
+> created "Extensible Argument" syscalls (is there a better name for this
+> design? I'm calling it "EA" for the rest of the email), like clone3(),
+> openat2(), etc, which pass a pointer and a size:
+> 
+> long clone3(struct clone_args *cl_args, size_t size);
+> 
+> I think it should be possible to extend seccomp to examine this structure
+> by appending it to seccomp_data, and allowing filters to examine the
+> contents. This means that no BPF language extensions are required for
+> seccomp, as I'd still prefer to avoid making the eBPF jump (I don't think
+> seccomp's design principles work well with maps, kernel helpers, etc,
+> and I think the earlier the examination of using eBPF for user_notif
+> bares this out).
+> 
+> In order for this to work, there are a number of prerequisites:
+> 
+> - argument caching, in two halves: syscall side and seccomp side:
+>   - the EA syscalls needs to include awareness of potential seccomp
+>     hooking. i.e. seccomp may have done the copy_from_user() already and
+>     kept a cached copy.
+>   - seccomp needs to potentially DO the copy_from_user() itself when it
+>     hits these syscalls for a given filter, and put it somewhere for
+>     later use by the syscall.
+> - the sizes of these EA structs are, by design, growable over time.
+>   seccomp and its users need to be handle this in a forward and backward
+>   compatible way, similar to the design of the EA syscall interface
+>   itself.
+> 
+> The argument caching bit is, I think, rather mechanical in nature since
+> it's all "just" internal to the kernel: seccomp can likely adjust how it
+> allocates seccomp_data (maybe going so far as to have it split across two
+> pages with the syscall argument struct always starting on the 2nd page
+> boundary), and copying the EA struct into that page, which will be both
+> used by the filter and by the syscall. I imagine state tracking ("is
+> there a cached EA?", "what is the address of seccomp_data?", "what is
+> the address of the EA?") can be associated with the thread struct.
+> 
+> The growing size of the EA struct will need some API design. For filters
+> to operate on the contiguous seccomp_data+EA struct, the filter will
+> need to know how large seccomp_data is (more on this later), and how
+> large the EA struct is. When the filter is written in userspace, it can
+> do the math, point into the expected offsets, and get what it needs. For
+> this to work correctly in the kernel, though, the seccomp BPF verifier
+> needs to know the size of the EA struct as well, so it can correctly
+> perform the offset checking (as it currently does for just the
+> seccomp_data struct size).
+> 
+> Since there is not really any caller-based "seccomp state" associated
+> across seccomp(2) calls, I don't think we can add a new command to tell
+> the kernel "I'm expecting the EA struct size to be $foo bytes", since
+> the kernel doesn't track who "I" is besides just being "current", which
+> doesn't take into account the thread lifetime -- if a process launcher
+> knows about one size and the child knows about another, things will get
+> confused. The sizes really are just associated with individual filters,
+> based on the syscalls they're examining. So, I have thoughts on possible
+> solutions:
+> 
+> - create a new seccomp command SECCOMP_SET_MODE_FILTER2 which uses the
+>   EA style so we can pass in more than a filter and include also an
+>   array of syscall to size mappings. (I don't like this...)
+> - create a new filter flag, SECCOMP_FILTER_FLAG_EXTENSIBLE, which changes
+>   the meaning of the uarg from "filter" to a EA-style structure with
+>   sizes and pointers to the filter and an array of syscall to size
+>   mappings. (I like this slightly better, but I still don't like it.)
+> - leverage the EA design and just accept anything <= PAGE_SIZE, record
+>   the "max offset" value seen during filter verification, and zero-fill
+>   the EA struct with zeros to that size when constructing the
+>   seccomp_data + EA struct that the filter will examine. Then the seccomp
+>   filter doesn't care what any of the sizes are, and userspace doesn't
+>   care what any of the sizes are. (I like this as it makes the problems
+>   to solve contained entirely by the seccomp infrastructure and does not
+>   touch user API, but I worry I'm missing some gotcha I haven't
+>   considered.)
+> 
+I may be ridiculed for suggesting this approach, and maybe it's a bit
+mad-science. I'll be honest, my familiarity with mm is low, and although
+I think what I'm describing can be done, I'm unsure of the complexity,
+and performance impact.
 
-Merged and patch applied, thanks
+I was playing with userfaultfd a while ago for somewhat related reasons
+and I found a patchset supporting write protection [1]. This got me
+interested in wondering if we could leverage this. What if we had a
+mechanism to read a process's memory, and simultaneously mark it
+as read-only.
+
+#define memstruct_flag_mark_ro	1
+#define notify_on_mod	2
+struct memstruct {
+	__u32 flags;
+	/* We might even support multiple iovecs... */
+	struct iovec *local_iov;
+	struct iovec *remote_iov;
+}
+Flow:
+1. Supervisor (s1) launches child (c1)
+2. c1 makes syscall that triggers seccomp_notif -- let's say clone3 --
+a call where we can't do injection or such on behalf of the child.
+3. s1 receives notification + seccomp data
+4. s1 calls ioctl(..., SECCOMP_READ_MEM, memstruct) (where memstruct is
+above)
+5. When s1 calls this, the pages which are accessed by the iovec get
+marked as read only, so a fault is triggered if the user process tries
+to change things.
+6. s1 says, continue syscall
+7. Syscall returns, and pages are reverted to pre-notification state.
+
+Upon fault, if the range being changed lies outside of what was copied
+back via the SECCOMP_READ_MEM ioctl, then it is passed through as-is.
+If the range is inside, and notify_on_mod is unset, it will SIGSEGV.
+If the range is inside, and notify_on_mod is set, we will have to do
+a userfaultfd-like notification back down to userspace.
+
+I realize this approach is hacky, and ugly, and potentially goes
+into the same territory as userfaultfd, which has proven to be a security
+thing, but the benefits are that no kernel, cBPF, etc.. need to change.
+
+The only downsides I see are complexity, performance, and potentially
+there may be some userspace programs innocously manipulating memory
+that might get caught in such an iovec.
+
+Thoughts?
+ 
+> And then, my age-old concern, that maybe doesn't need a solution... I
+> remain plagued by the lack of pathname inspection. But I think the
+> ToCToU nature of it means we just cannot do it from seccomp. It does
+> make filtering openat2()'s EA struct a bit funny... a filter has no idea
+> what path it applies to... but that doesn't matter because the object
+> the path points to might change[6] during the syscall. Argh.
+> 
+> 
+I have no idea how to solve this if the process can do stuff like move
+files around on disk, or switch out namespaces while in the user notification.
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+[1]: https://lwn.net/Articles/786896/
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
