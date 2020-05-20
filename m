@@ -2,131 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B039C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19527C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E049E206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="ejWrZ/jf"
+	by mail.kernel.org (Postfix) with ESMTP id CF3E9207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590001886;
+	bh=xy+F+Xk6Eh27TpQwycM8KVFcBwkkldw7VDh+CKoRc4U=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=m0RFfyo7DFOzfhW0F6p8IEB29DgZC7VFCYRf8QoEE7/bKIwA4lvHjA3Hvlxp3bT15
+	 ZlHLCZr9oAanEKQriWSpZ95Y6ez1H9w8gok3tMFUi92EGusYa5MqHqkfPy4v5b4Y3W
+	 Z4ciZft3BMjngHpPbDCfrtBqRlTRiWl1Nqvd1gAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgETTJN (ORCPT
+        id S1726833AbgETTL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:09:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgETTJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:09:10 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23098C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:09:10 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id s19so4324814edt.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tl5hNSaq9jwtAfQ3H4b6ZmG+ScLEKqnmbeQTtX38GBs=;
-        b=ejWrZ/jfJqN1W3XBa5rEh8Lk4R2pGtjUsAfERal12GI7QfCZfWLDd9UtMrTSYE1/tI
-         FovDCSwIGfbaaHj8cZJ1IKJDULyXaqYHAyGtIE65kUKbthWtIjz/KQGrx+y85v2kRRQb
-         81QOjyfbBp6VHvsSe4y3k88jU+q/CRx/ohQyM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tl5hNSaq9jwtAfQ3H4b6ZmG+ScLEKqnmbeQTtX38GBs=;
-        b=lzLL4kKJbY/6s/UKIX6rvmZ4rhXD2HRkQJMLfEWZMBhJe99e6CIixnQYpY1JfW+Wsq
-         cO74nhbXG/6X3L816qR0kyoUKDqo94FgptKbiF7mGXXi7YGzrkGKgGjGAd0luH22FD0+
-         QQcjOYWd43Wsi0Xy1LSUn1kblirsjFyuXT68CVQrKD283ZCMQMKgkx4pywBDwJtRiHcM
-         I7u+WrWI2qr+E+2a04SyYOQzMuAxmKpf1b6cULZK3LA/VfgcTLOS7i9VthpXlCud8C9Z
-         pMDj4kWoleWyvSZSnIIBbLlBqm4iHTeE+1fggxlYBTj1+oGoJN9dQoJC2YLKMO7/AEiH
-         RyEw==
-X-Gm-Message-State: AOAM531DQQbJU+3guy0qf6NRifgQPy8aEHqStVJsemz2x4K3TnaPWg+d
-        oD7FXip7Q6LTNRPtvrhV4pPlgOhbaHdA5CLg
-X-Google-Smtp-Source: ABdhPJweTP3W62AzAZrqweXxsUYkSWvtaZ1Wr8JxuA7F/wzgya+W3/hBf6pFGJ7YDBt9fmp3P99NeQ==
-X-Received: by 2002:a50:9312:: with SMTP id m18mr4674386eda.252.1590001748698;
-        Wed, 20 May 2020 12:09:08 -0700 (PDT)
-Received: from localhost ([2620:10d:c093:400::5:758d])
-        by smtp.gmail.com with ESMTPSA id g21sm2514869edw.9.2020.05.20.12.09.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 12:09:08 -0700 (PDT)
-Date:   Wed, 20 May 2020 20:09:06 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, cgroups@vger.kernel.org
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200520190906.GA558281@chrisdown.name>
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
- <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
- <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
- <20200519075213.GF32497@dhcp22.suse.cz>
- <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz>
- <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+        Wed, 20 May 2020 15:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbgETTLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:11:25 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEB1D206B6;
+        Wed, 20 May 2020 19:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590001885;
+        bh=xy+F+Xk6Eh27TpQwycM8KVFcBwkkldw7VDh+CKoRc4U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KeoSit7FEot91Av1rOcj3Y6AZne6zDmV1+pKSeffKQzno+1EiIAnhhGWSISar8/Pa
+         iyW9G2sGEdej30zDTh+qWDjG+s1ZHjb0qpaBvJb5JrGH6zvJFw3U556+wlYe3qWca+
+         qTTiWm7UY5NJeeWD2hRKxSRFH0Yxz5Zt5AaXvxys=
+Date:   Wed, 20 May 2020 14:16:13 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH perf/core] perf branch: Replace zero-length array with
+ flexible-array
+Message-ID: <20200520191613.GA26869@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Naresh,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Naresh Kamboju writes:
->As a part of investigation on this issue LKFT teammate Anders Roxell
->git bisected the problem and found bad commit(s) which caused this problem.
->
->The following two patches have been reverted on next-20200519 and retested the
->reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
->( invoked oom-killer is gone now)
->
->Revert "mm, memcg: avoid stale protection values when cgroup is above
->protection"
->    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
->
->Revert "mm, memcg: decouple e{low,min} state mutations from protection
->checks"
->    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Thanks Anders and Naresh for tracking this down and reverting.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-I'll take a look tomorrow. I don't see anything immediately obviously wrong in 
-either of those commits from a (very) cursory glance, but they should only be 
-taking effect if protections are set.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-Since you have i386 hardware available, and I don't, could you please apply 
-only "avoid stale protection" again and check if it only happens with that 
-commit, or requires both? That would help narrow down the suspects.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Do you use any memcg protections in these tests?
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
 
-Thank you!
+This issue was found with the help of Coccinelle and audited _manually_.
 
-Chris
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ tools/perf/util/branch.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+index 4d3f02fa223df..17b2ccc61094b 100644
+--- a/tools/perf/util/branch.h
++++ b/tools/perf/util/branch.h
+@@ -46,7 +46,7 @@ struct branch_entry {
+ struct branch_stack {
+ 	u64			nr;
+ 	u64			hw_idx;
+-	struct branch_entry	entries[0];
++	struct branch_entry	entries[];
+ };
+ 
+ /*
+-- 
+2.26.2
+
