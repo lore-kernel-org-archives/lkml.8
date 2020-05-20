@@ -4,129 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B079C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B02BF2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314442075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cUqrUChF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPpms5zM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgETRWE (ORCPT
+        id S1728013AbgETRWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:22:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52428 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727917AbgETRWA (ORCPT
+        Wed, 20 May 2020 13:22:07 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32172 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727963AbgETRWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:22:00 -0400
+        Wed, 20 May 2020 13:22:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589995319;
+        s=mimecast20190719; t=1589995322;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=3b4tcQFYxfckOxLBmeC1hOIW6HRUkgSyBcFd6KivnZY=;
-        b=cUqrUChFxBxgLGcBpS/uYgG8rn6NSUffBEMIcgjyAgKpAekxgHnugvYSdHsmTM9AR+qc5q
-        Lb7hZVDRLAA+E8Kk1FDQmrEvyAZkhUJSKsWFl5RqXR5RG/ITcCwg7rpAQx1MuqUmOdQ6eb
-        +n9JKvHqkc4mYsfHgnX/fBie3qKVFiw=
+        bh=8SK9YQtue71WyQs46tC99v9KZ5RewVoWZvvkNYRnCm4=;
+        b=bPpms5zMvj68NgiM9D0VWHyNo8+xqJEYl0+YQWDFwSGSMkBzPqv5Uz5UV1lj7/LQsHKOU+
+        sFQEV8m1cVX9Off4J8IcgC1UnnDjTTq6QdGFpvSmsmWSkSEqXxi9AYGIJCXtP+3xTWM0/E
+        G/GVNNkVqAyytpTVRqNowYBMwpn25UM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-475-zeOqZ5aqNfeE6xDcpqY4uA-1; Wed, 20 May 2020 13:21:56 -0400
-X-MC-Unique: zeOqZ5aqNfeE6xDcpqY4uA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-501-VyH9usssMAayu-jCYhDgqQ-1; Wed, 20 May 2020 13:22:01 -0400
+X-MC-Unique: VyH9usssMAayu-jCYhDgqQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A5CC81CBF5;
-        Wed, 20 May 2020 17:21:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED63C57093;
+        Wed, 20 May 2020 17:21:59 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9147182A33;
-        Wed, 20 May 2020 17:21:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 538DA797EE;
+        Wed, 20 May 2020 17:21:59 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 04/24] KVM: nSVM: remove exit_required
-Date:   Wed, 20 May 2020 13:21:25 -0400
-Message-Id: <20200520172145.23284-5-pbonzini@redhat.com>
+Subject: [PATCH 11/24] KVM: nSVM: remove trailing padding for struct vmcb_control_area
+Date:   Wed, 20 May 2020 13:21:32 -0400
+Message-Id: <20200520172145.23284-12-pbonzini@redhat.com>
 In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
 References: <20200520172145.23284-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All events now inject vmexits before vmentry rather than after vmexit.  Therefore,
-exit_required is not set anymore and we can remove it.
+Allow placing the VMCB structs on the stack or in other structs without
+wasting too much space.  Add BUILD_BUG_ON as a quick safeguard against typos.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/svm/nested.c |  3 +--
- arch/x86/kvm/svm/svm.c    | 14 --------------
- arch/x86/kvm/svm/svm.h    |  3 ---
- 3 files changed, 1 insertion(+), 19 deletions(-)
+ arch/x86/include/asm/svm.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index e80349132ea1..dd2868dd6129 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -785,8 +785,7 @@ static int svm_check_nested_events(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	bool block_nested_events =
--		kvm_event_needs_reinjection(vcpu) || svm->nested.exit_required ||
--		svm->nested.nested_run_pending;
-+		kvm_event_needs_reinjection(vcpu) || svm->nested.nested_run_pending;
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 6ece8561ba66..8a1f5382a4ea 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -96,7 +96,6 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
+ 	u8 reserved_6[8];	/* Offset 0xe8 */
+ 	u64 avic_logical_id;	/* Offset 0xf0 */
+ 	u64 avic_physical_id;	/* Offset 0xf8 */
+-	u8 reserved_7[768];
+ };
  
- 	if (vcpu->arch.exception.pending) {
- 		if (block_nested_events)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 9da4e5b6d724..04332d0efa5f 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -2889,13 +2889,6 @@ static int handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
- 	if (npt_enabled)
- 		vcpu->arch.cr3 = svm->vmcb->save.cr3;
  
--	if (unlikely(svm->nested.exit_required)) {
--		nested_svm_vmexit(svm);
--		svm->nested.exit_required = false;
--
--		return 1;
--	}
--
- 	if (is_guest_mode(vcpu)) {
- 		int vmexit;
+@@ -203,8 +202,16 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
+ 	u64 last_excp_to;
+ };
  
-@@ -3327,13 +3320,6 @@ static fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	svm->vmcb->save.rsp = vcpu->arch.regs[VCPU_REGS_RSP];
- 	svm->vmcb->save.rip = vcpu->arch.regs[VCPU_REGS_RIP];
++
++static inline void __unused_size_checks(void)
++{
++	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
++	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
++}
++
+ struct __attribute__ ((__packed__)) vmcb {
+ 	struct vmcb_control_area control;
++	u8 reserved_control[1024 - sizeof(struct vmcb_control_area)];
+ 	struct vmcb_save_area save;
+ };
  
--	/*
--	 * A vmexit emulation is required before the vcpu can be executed
--	 * again.
--	 */
--	if (unlikely(svm->nested.exit_required))
--		return EXIT_FASTPATH_NONE;
--
- 	/*
- 	 * Disable singlestep if we're injecting an interrupt/exception.
- 	 * We don't want our modified rflags to be pushed on the stack where
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 8342032291fc..89fab75dd4f5 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -95,9 +95,6 @@ struct nested_state {
- 	u64 vmcb_msrpm;
- 	u64 vmcb_iopm;
- 
--	/* A VMEXIT is required but not yet emulated */
--	bool exit_required;
--
- 	/* A VMRUN has started but has not yet been performed, so
- 	 * we cannot inject a nested vmexit yet.  */
- 	bool nested_run_pending;
 -- 
 2.18.2
 
