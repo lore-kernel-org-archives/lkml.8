@@ -2,451 +2,427 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30552075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FEB2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:01:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i+kOztJH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F5kD6mQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgETI7c (ORCPT
+        id S1726810AbgETJBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:59:32 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26168 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726851AbgETI7b (ORCPT
+        Wed, 20 May 2020 05:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgETJBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:59:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589965168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3K31+CkjqsWja9VmAxfy2jggT3g//RvDqRvf75ZIamg=;
-        b=i+kOztJHpza1ArtAXwgMy7cF0O2bKaM+/oxKc+Sn8lpkDVTKHKJTGPEJxmpZ4Xl9LC5fXt
-        Yy08Z9hr6m5Vbonu5IZM4yF6J8N4DEDoJp6JBw/mp0onLh8E1nylo1O3iRfAsCACbdQE3o
-        hTMDYJo1LCwTDAL3OM7HqjKePOndIvw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-251-EmMqVqe2PrqaBr3ygSTXMQ-1; Wed, 20 May 2020 04:59:27 -0400
-X-MC-Unique: EmMqVqe2PrqaBr3ygSTXMQ-1
-Received: by mail-wr1-f70.google.com with SMTP id e14so1112058wrv.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:59:27 -0700 (PDT)
+        Wed, 20 May 2020 05:01:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A99C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:01:05 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l17so2321360wrr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=QeYaaXZZw9ORQT3wBCin6SxHrsWXeI0gT1M2vCWZaEc=;
+        b=F5kD6mQInuUcyU9yGshGXQzconuyPVBA6Ez/4AZPpnnaa2jmzqCmVJCtCqhGMqLTdC
+         Jgya1C1i9bepk56ABcDUYRtj3IlN12x6ZDJcgJA3HsoCNJeOUzcz58SdXWFObBRcELgf
+         OEN4fkkDIf6tWw9VCrBZam+HqnfYu2FfETz/lEfLMFYV6mgpKise3ONe5djPyl+Bi2H1
+         C42RyJjiSWujQIGx6Jrve5yNtmJw8N6IBPmSIWLGu/zkEVPljTQ4VrqTArDwkVywW1Lh
+         T0VtbOBg56V68eGihVYfjDcuX0khokqSaX4UCKbvSk9bUOIq04Q7ju7qX3tK5Rul92Cy
+         JMkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=3K31+CkjqsWja9VmAxfy2jggT3g//RvDqRvf75ZIamg=;
-        b=ALKujA/qQIzjDsCZJzsgMfUOd1lQcXMiZrJwe5k5BnRoB0fbDjprFg8O2T/r5vE0Jd
-         3+ZJHV4lBCdSATEHHfusqMBVsiixcIkMTZRH95d+VPqLJ4iwgXeX65Eq6uMd3MomJHz/
-         qxWtTKUf3mIMma+gbhwzozIxJTY4e8v2TXJhk1gNGxMq8Zz1HN9Vlr6lUX2NgtmOPWqg
-         WWyUkGhPEiUwkmk5FJSCkjiZaveSmSm7Z+1JzZySLDKNuzKs7sQVJ53V1GmJjx8geXWl
-         8LyAqtu0ukfaO3Im1o7sGZ9FGOhMREeYnTtMqDjR+GZUsnvASAFEAr45cbjKOc8iE+GB
-         EjCg==
-X-Gm-Message-State: AOAM533eLo7foQ6ByznK9mI45dPPNxuJmNyGHfm3TvNnuHzJYQNNpWH2
-        QlCjmacKTIazjbjT7gQMdD9NKLLekzv9MyZNWTnbRSIRTapwK9cNw3F2226idjfd+CfBas9XW1d
-        06U337wCr8QPiJAwUkKm6um5N
-X-Received: by 2002:adf:ed06:: with SMTP id a6mr3161451wro.8.1589965164670;
-        Wed, 20 May 2020 01:59:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzQNbF8H6oN3p9RIlNTE0m0OOP48hs2rXQdUo9XPRTFzxTM8zDzi9KCcVKAuKx0qAU+7wYq5A==
-X-Received: by 2002:adf:ed06:: with SMTP id a6mr3161428wro.8.1589965164321;
-        Wed, 20 May 2020 01:59:24 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id r9sm2320590wmg.47.2020.05.20.01.59.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QeYaaXZZw9ORQT3wBCin6SxHrsWXeI0gT1M2vCWZaEc=;
+        b=Zkm5NFgyNE46ADyxG2LQGOiu+0gg2SICH0z6mU1YpTCedZo0hG2X3eMwikP7R9GTu1
+         AgolATobu41favZtiardCpxuySU35dRJOY8N4uTG26Aq4DFaY9kcJQMQef/Vi0/umjOZ
+         jnlKJwb4cmSKlQANOXdbQ1hoVB+d6jq8IL+VSWTkxY+chk65ST6rN1NbelNJ2QZ7ovLa
+         pvrblEfw19MKFhGqOHrKApanyy+8QPzivkvwpRciEcZQxP+vdROc85I2wENuGoXeV5EM
+         WTujtUxwKOlbeiRAzJWIg3+Qleh1HIdVatRDiEVFhkaZNbT7TGBeyN7iQNlzbQAteVJh
+         jZeg==
+X-Gm-Message-State: AOAM5326igOH6rW+J5UCKm9+yHvupwZoutNFeCFwgqQWtywwHeppmb88
+        7q1LV4vV6JGJ4nGDFsCYbHlTrg==
+X-Google-Smtp-Source: ABdhPJwWj3KF9iYchOy01+W/VOC49PrFEZ9IBPSmXWUC8JJTARZTapa3xqsQpc6Uf5AbSNPQJ4t49w==
+X-Received: by 2002:adf:f74e:: with SMTP id z14mr1221393wrp.338.1589965264473;
+        Wed, 20 May 2020 02:01:04 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id d6sm2333510wra.63.2020.05.20.02.01.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 01:59:23 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>
-Cc:     "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: Re: [PATCH] x86/Hyper-V: Support for free page reporting
-In-Reply-To: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
-References: <SN4PR2101MB0880BB5C9780A854B2609992C0B90@SN4PR2101MB0880.namprd21.prod.outlook.com>
-Date:   Wed, 20 May 2020 10:59:22 +0200
-Message-ID: <87ftbvt21h.fsf@vitty.brq.redhat.com>
+        Wed, 20 May 2020 02:01:03 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:01:01 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] mfd: add support for the Khadas System control
+ Microcontroller
+Message-ID: <20200520090101.GE271301@dell>
+References: <20200512132613.31507-1-narmstrong@baylibre.com>
+ <20200512132613.31507-3-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200512132613.31507-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sunil Muthuswamy <sunilmut@microsoft.com> writes:
+On Tue, 12 May 2020, Neil Armstrong wrote:
 
-> Linux has support for free page reporting now (36e66c554b5c) for
-> virtualized environment. On Hyper-V when virtually backed VMs are
-> configured, Hyper-V will advertise cold memory discard capability,
-> when supported. This patch adds the support to hook into the free
-> page reporting infrastructure and leverage the Hyper-V cold memory
-> discard hint hypercall to report/free these pages back to the host.
->
-> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> This Microcontroller is present on the Khadas VIM1, VIM2, VIM3 and Edge
+> boards.
+> 
+> It has multiple boot control features like password check, power-on
+> options, power-off control and system FAN control on recent boards.
+> 
+> This implements a very basic MFD driver with the fan control and User
+> NVMEM cells.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
-> First patch mail bounced backed. Sending it again with the email
-> addresses fixed.
-> ---
->  arch/x86/hyperv/hv_init.c         | 24 ++++++++
->  arch/x86/kernel/cpu/mshyperv.c    |  6 +-
->  drivers/hv/hv_balloon.c           | 93 +++++++++++++++++++++++++++++++
->  include/asm-generic/hyperv-tlfs.h | 29 ++++++++++
->  include/asm-generic/mshyperv.h    |  2 +
->  5 files changed, 152 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 624f5d9b0f79..925e2f7eb82c 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -506,3 +506,27 @@ bool hv_is_hibernation_supported(void)
->  	return acpi_sleep_state_supported(ACPI_STATE_S4);
->  }
->  EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
+>  drivers/mfd/Kconfig            |  14 ++++
+>  drivers/mfd/Makefile           |   1 +
+>  drivers/mfd/khadas-mcu.c       | 143 +++++++++++++++++++++++++++++++++
+>  include/linux/mfd/khadas-mcu.h |  91 +++++++++++++++++++++
+>  4 files changed, 249 insertions(+)
+>  create mode 100644 drivers/mfd/khadas-mcu.c
+>  create mode 100644 include/linux/mfd/khadas-mcu.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 0a59249198d3..b95091397052 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -2003,6 +2003,20 @@ config MFD_WCD934X
+>  	  This driver provides common support WCD934x audio codec and its
+>  	  associated Pin Controller, Soundwire Controller and Audio codec.
+>  
+> +config MFD_KHADAS_MCU
+> +	tristate "Support for Khadas System control Microcontroller"
+> +	depends on I2C
+> +	depends on OF || COMPILE_TEST
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	help
+> +	  Support for the Khadas System control Microcontroller interface present
+> +	  on their VIM and Edge boards.
 > +
-> +u64 hv_query_ext_cap(void)
+> +	  This driver provides common support for accessing the device,
+> +	  additional drivers must be enabled in order to use the functionality
+> +	  of the device.
+
+It would be good to describe the device here.
+
+>  menu "Multimedia Capabilities Port drivers"
+>  	depends on ARCH_SA1100
+>  
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f935d10cbf0f..0f1633b096bb 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -257,5 +257,6 @@ obj-$(CONFIG_MFD_ROHM_BD70528)	+= rohm-bd70528.o
+>  obj-$(CONFIG_MFD_ROHM_BD71828)	+= rohm-bd71828.o
+>  obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+> +obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+>  
+>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+> diff --git a/drivers/mfd/khadas-mcu.c b/drivers/mfd/khadas-mcu.c
+> new file mode 100644
+> index 000000000000..6d08fa2e373a
+> --- /dev/null
+> +++ b/drivers/mfd/khadas-mcu.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for Khadas System control Microcontroller
+> + *
+> + * Copyright (C) 2020 BayLibre SAS
+
+Nit: '\n' here please.
+
+> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +#include <linux/bitfield.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mfd/khadas-mcu.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+
+Alphabetical.
+
+> +static bool khadas_mcu_reg_volatile(struct device *dev, unsigned int reg)
 > +{
-
-As the only usage of this function looks like
-
-if (!(hv_query_ext_cap() & HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT))
-
-I would've change the interface to 
-
-bool hv_query_ext_cap(u64 cap)
-
-so the usage would look like
-
-if (!(hv_query_ext_cap(HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT))
-...
-
-> +	u64 *cap;
-> +	unsigned long flags;
-> +	u64 ext_cap = 0;
+> +	if (reg >= KHADAS_MCU_USER_DATA_0_REG &&
+> +	    reg < KHADAS_MCU_PWR_OFF_CMD_REG)
+> +		return true;
 > +
-> +	/*
-> +	 * Querying extended capabilities is an extended hypercall. Check if the
-> +	 * partition supports extended hypercall, first.
-> +	 */
-> +	if (!(ms_hyperv.b_features & HV_ENABLE_EXTENDED_HYPERCALLS))
-> +		return 0;
-> +
-> +	local_irq_save(flags);
-> +	cap = *(u64 **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	if (hv_do_hypercall(HV_EXT_CALL_QUERY_CAPABILITIES, NULL, cap) ==
-> +	    HV_STATUS_SUCCESS)
-> +		ext_cap = *cap;
-> +
-> +	local_irq_restore(flags);
-> +	return ext_cap;
+> +	switch (reg) {
+> +	case KHADAS_MCU_PWR_OFF_CMD_REG:
+> +	case KHADAS_MCU_PASSWD_START_REG:
+> +	case KHADAS_MCU_CHECK_VEN_PASSWD_REG:
+> +	case KHADAS_MCU_CHECK_USER_PASSWD_REG:
+> +	case KHADAS_MCU_WOL_INIT_START_REG:
+> +	case KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
 > +}
-> +EXPORT_SYMBOL_GPL(hv_query_ext_cap);
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index ebf34c7bc8bc..2de3f692c8bf 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -224,11 +224,13 @@ static void __init ms_hyperv_init_platform(void)
->  	 * Extract the features and hints
->  	 */
->  	ms_hyperv.features = cpuid_eax(HYPERV_CPUID_FEATURES);
-> +	ms_hyperv.b_features = cpuid_ebx(HYPERV_CPUID_FEATURES);
->  	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
->  	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
->  
-> -	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-> -		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
-> +	pr_info("Hyper-V: features 0x%x, additional features: 0x%x, hints 0x%x, misc 0x%x\n",
-> +		ms_hyperv.features, ms_hyperv.b_features, ms_hyperv.hints,
-> +		ms_hyperv.misc_features);
-
-HYPERV_CPUID_FEATURES(0x40000003) EAX and EBX correspond to Partition
-Privilege Flags (TLFS), I'd suggest to take the opportunity and rename
-this to something like 'privilege flags low=0x%x high=0x%x'.
-
-Also, I don't quite like 'ms_hyperv.b_features' as I'll always have to
-look at what it's being assigned to understand what it holds. I'd even
-suggest to rename ms_hyperv.features to ms_hyperv.priv_low and
-ms_hyperv.b_features tp ms_hyperv.priv_high. Or maybe even better, pack
-them to the same 'u64 ms_hyperv.privileges'.
-
->  
->  	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
->  	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 32e3bc0aa665..77be31094556 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -21,6 +21,7 @@
->  #include <linux/memory.h>
->  #include <linux/notifier.h>
->  #include <linux/percpu_counter.h>
-> +#include <linux/page_reporting.h>
->  
->  #include <linux/hyperv.h>
->  #include <asm/hyperv-tlfs.h>
-> @@ -563,6 +564,10 @@ struct hv_dynmem_device {
->  	 * The negotiated version agreed by host.
->  	 */
->  	__u32 version;
 > +
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	struct page_reporting_dev_info pr_dev_info;
-> +#endif
->  };
->  
->  static struct hv_dynmem_device dm_device;
-> @@ -1565,6 +1570,83 @@ static void balloon_onchannelcallback(void *context)
->  
->  }
->  
-> +#ifdef CONFIG_PAGE_REPORTING
-> +static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
-> +		    struct scatterlist *sgl, unsigned int nents)
+> +static bool khadas_mcu_reg_writeable(struct device *dev, unsigned int reg)
 > +{
-> +	unsigned long flags;
-> +	struct hv_memory_hint *hint;
-> +	int i;
-> +	u64 status;
-> +	struct scatterlist *sg;
+> +	switch (reg) {
+> +	case KHADAS_MCU_PASSWD_VEN_0_REG:
+> +	case KHADAS_MCU_PASSWD_VEN_1_REG:
+> +	case KHADAS_MCU_PASSWD_VEN_2_REG:
+> +	case KHADAS_MCU_PASSWD_VEN_3_REG:
+> +	case KHADAS_MCU_PASSWD_VEN_4_REG:
+> +	case KHADAS_MCU_PASSWD_VEN_5_REG:
+> +	case KHADAS_MCU_MAC_0_REG:
+> +	case KHADAS_MCU_MAC_1_REG:
+> +	case KHADAS_MCU_MAC_2_REG:
+> +	case KHADAS_MCU_MAC_3_REG:
+> +	case KHADAS_MCU_MAC_4_REG:
+> +	case KHADAS_MCU_MAC_5_REG:
+> +	case KHADAS_MCU_USID_0_REG:
+> +	case KHADAS_MCU_USID_1_REG:
+> +	case KHADAS_MCU_USID_2_REG:
+> +	case KHADAS_MCU_USID_3_REG:
+> +	case KHADAS_MCU_USID_4_REG:
+> +	case KHADAS_MCU_USID_5_REG:
+> +	case KHADAS_MCU_VERSION_0_REG:
+> +	case KHADAS_MCU_VERSION_1_REG:
+> +	case KHADAS_MCU_DEVICE_NO_0_REG:
+> +	case KHADAS_MCU_DEVICE_NO_1_REG:
+> +	case KHADAS_MCU_FACTORY_TEST_REG:
+> +	case KHADAS_MCU_SHUTDOWN_NORMAL_STATUS_REG:
+> +		return false;
+> +	default:
+> +		return true;
+> +	}
+> +}
 > +
-> +	WARN_ON(nents > HV_MAX_GPA_PAGE_RANGES);
-> +	local_irq_save(flags);
-> +	hint = *(struct hv_memory_hint **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> +	if (!hint) {
-> +		local_irq_restore(flags);
-> +		return -ENOSPC;
+> +static const struct regmap_config khadas_mcu_regmap_config = {
+> +	.reg_bits	= 8,
+> +	.reg_stride	= 1,
+> +	.val_bits	= 8,
+> +	.max_register	= KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG,
+> +	.volatile_reg	= khadas_mcu_reg_volatile,
+> +	.writeable_reg	= khadas_mcu_reg_writeable,
+> +	.cache_type	= REGCACHE_RBTREE,
+> +};
+> +
+> +static struct mfd_cell khadas_mcu_fan_cells[] = {
+> +	/* Feature supported only on VIM1/2 Rev13+ and VIM3 */
+
+Doesn't read great.
+
+Consider reversing or make the sentence more succinct.
+
+"VIM1/2 Rev13+ and VIM3 only"
+
+> +	{ .name = "khadas-mcu-fan-ctrl", },
+> +};
+> +
+> +static struct mfd_cell khadas_mcu_cells[] = {
+> +	/* Features supported on all board revisions */
+
+I think we can omit this.
+
+> +	{ .name = "khadas-mcu-user-mem", },
+> +};
+> +
+> +static int khadas_mcu_probe(struct i2c_client *client,
+> +		       const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct khadas_mcu *khadas_mcu;
+
+Prefer a rename to 'ddata'.
+
+> +	int ret;
+> +
+> +	khadas_mcu = devm_kzalloc(dev, sizeof(*khadas_mcu), GFP_KERNEL);
+> +	if (!khadas_mcu)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(client, khadas_mcu);
+> +
+> +	khadas_mcu->dev = dev;
+> +
+> +	khadas_mcu->map = devm_regmap_init_i2c(client,
+> +					       &khadas_mcu_regmap_config);
+
+Prefer a rename to 'regmap'.
+
+> +	if (IS_ERR(khadas_mcu->map)) {
+> +		ret = PTR_ERR(khadas_mcu->map);
+> +		dev_err(dev, "Failed to allocate register map: %d\n", ret);
+> +		return ret;
 > +	}
 > +
-> +	hint->type = HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD;
-> +	hint->reserved = 0;
-> +	for (i = 0, sg = sgl; sg; sg = sg_next(sg), i++) {
-> +		int order;
-> +		union hv_gpa_page_range *range;
+> +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
+> +				   khadas_mcu_cells,
+> +				   ARRAY_SIZE(khadas_mcu_cells),
+> +				   NULL, 0, NULL);
+> +	if (ret)
+> +		return ret;
 > +
-> +		order = get_order(sg->length);
-> +		range = &hint->ranges[i];
-> +		range->address_space = 0;
-> +		range->page.largepage = 1;
-
-Why is largepage always '1'?
-
-> +		range->page.additional_pages = (1ull << (order - 9)) - 1;
-> +		range->base_large_pfn = page_to_pfn(sg_page(sg)) >> 9;
-
-What is '9'? Could you please define it through PAGE_*/HPAGE_* macro?
-
-> +	}
-> +
-> +	status = hv_do_rep_hypercall(HV_EXT_CALL_MEMORY_HEAT_HINT, nents, 0,
-> +				     hint, NULL);
-> +	local_irq_restore(flags);
-> +	status &= HV_HYPERCALL_RESULT_MASK;
-> +	if (status != HV_STATUS_SUCCESS) {
-
-Nit: you could've just used
-
-        if (status & HV_HYPERCALL_RESULT_MASK != HV_STATUS_SUCCESS) {
-        ...
-
-> +		pr_err("Cold memory discard hypercall failed with status %llx\n",
-> +			status);
-> +		return -1;
-
--EFAULT or something like it maybe?
-
-> +	}
+> +	if (of_find_property(dev->of_node, "#cooling-cells", NULL))
+> +		return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
+> +					    khadas_mcu_fan_cells,
+> +					    ARRAY_SIZE(khadas_mcu_fan_cells),
+> +					    NULL, 0, NULL);
 > +
 > +	return 0;
 > +}
 > +
-> +static int enable_page_reporting(void)
-> +{
-> +	int ret;
+> +static const struct of_device_id khadas_mcu_of_match[] = {
+> +	{ .compatible = "khadas,mcu", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, khadas_mcu_of_match);
 > +
-> +	if (!(hv_query_ext_cap() &
-> +	      HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT)) {
-> +		pr_info("Cold memory discard hint not supported by Hyper-V\n");
-> +		return 0;
-> +	}
+> +static struct i2c_driver khadas_mcu_driver = {
+> +	.driver = {
+> +		.name = "khadas-mcu-core",
+> +		.of_match_table = of_match_ptr(khadas_mcu_of_match),
+> +	},
+> +	.probe = khadas_mcu_probe,
+> +};
+> +module_i2c_driver(khadas_mcu_driver);
 > +
-> +	BUILD_BUG_ON(PAGE_REPORTING_CAPACITY > HV_MAX_GPA_PAGE_RANGES);
-> +	dm_device.pr_dev_info.report = hv_free_page_report;
-> +	ret = page_reporting_register(&dm_device.pr_dev_info);
-> +	if (ret < 0) {
-> +		dm_device.pr_dev_info.report = NULL;
-> +		pr_err("Failed to enable cold memory discard: %d\n", ret);
-> +	} else {
-> +		pr_info("Cold memory discard hint enabled\n");
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void disable_page_reporting(void)
-> +{
-> +	if (dm_device.pr_dev_info.report) {
-> +		page_reporting_unregister(&dm_device.pr_dev_info);
-> +		dm_device.pr_dev_info.report = NULL;
-> +	}
-> +}
-> +#endif //CONFIG_PAGE_REPORTING
-> +
->  static int balloon_connect_vsp(struct hv_device *dev)
->  {
->  	struct dm_version_request version_req;
-> @@ -1710,6 +1792,11 @@ static int balloon_probe(struct hv_device *dev,
->  	if (ret != 0)
->  		return ret;
->  
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	if (enable_page_reporting() < 0)
-> +		goto probe_error;
-
-Why? The hyperv-balloon driver itself may still be functional and you
-already set dm_device.pr_dev_info.report to NULL.
-
-> +#endif
-> +
->  	dm_device.state = DM_INITIALIZED;
->  
->  	dm_device.thread =
-> @@ -1728,6 +1815,9 @@ static int balloon_probe(struct hv_device *dev,
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  	unregister_memory_notifier(&hv_memory_nb);
->  	restore_online_page_callback(&hv_online_page);
-> +#endif
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	disable_page_reporting();
->  #endif
->  	return ret;
->  }
-> @@ -1750,6 +1840,9 @@ static int balloon_remove(struct hv_device *dev)
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  	unregister_memory_notifier(&hv_memory_nb);
->  	restore_online_page_callback(&hv_online_page);
-> +#endif
-> +#ifdef CONFIG_PAGE_REPORTING
-> +	disable_page_reporting();
->  #endif
->  	spin_lock_irqsave(&dm_device.ha_lock, flags);
->  	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index 262fae9526b1..75aeea0e7f9b 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -89,6 +89,7 @@
->  #define HV_ACCESS_STATS				BIT(8)
->  #define HV_DEBUGGING				BIT(11)
->  #define HV_CPU_POWER_MANAGEMENT			BIT(12)
-> +#define HV_ENABLE_EXTENDED_HYPERCALLS		BIT(20)
->  
->  
->  /*
-> @@ -149,11 +150,18 @@ struct ms_hyperv_tsc_page {
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
->  
-> +/* Extended hypercalls */
-> +#define HV_EXT_CALL_QUERY_CAPABILITIES		0x8001
-> +#define HV_EXT_CALL_MEMORY_HEAT_HINT		0x8003
-> +
->  #define HV_FLUSH_ALL_PROCESSORS			BIT(0)
->  #define HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES	BIT(1)
->  #define HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY	BIT(2)
->  #define HV_FLUSH_USE_EXTENDED_RANGE_FORMAT	BIT(3)
->  
-> +/* Extended capability bits */
-> +#define HV_EXT_CAPABILITY_MEMORY_COLD_DISCARD_HINT BIT(8)
-> +
->  enum HV_GENERIC_SET_FORMAT {
->  	HV_GENERIC_SET_SPARSE_4K,
->  	HV_GENERIC_SET_ALL,
-> @@ -371,6 +379,12 @@ union hv_gpa_page_range {
-
-There is a comment before this structure:
-
-/* HvFlushGuestPhysicalAddressList hypercall */
-
-which is now obsolete.
-
->  		u64 largepage:1;
->  		u64 basepfn:52;
->  	} page;
-> +	struct {
-> +		u64:12;
-
-What is this unnamed member? Another 'reserved', 'pad'? Let's name it.
-
-> +		u64 page_size:1;
-> +		u64 reserved:8;
-> +		u64 base_large_pfn:43;
-> +	};
-
-Please name this structure in the union.
-
->  };
->  
->  /*
-> @@ -490,4 +504,19 @@ struct hv_set_vp_registers_input {
->  	} element[];
->  } __packed;
->  
+> +MODULE_DESCRIPTION("Khadas MCU core driver");
+> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/khadas-mcu.h b/include/linux/mfd/khadas-mcu.h
+> new file mode 100644
+> index 000000000000..2e68af21735c
+> --- /dev/null
+> +++ b/include/linux/mfd/khadas-mcu.h
+> @@ -0,0 +1,91 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
 > +/*
-> + * The whole argument should fit in a page to be able to pass to the hypervisor
-> + * in one hypercall.
+> + * Khadas System control Microcontroller Register map
+> + *
+> + * Copyright (C) 2020 BayLibre SAS
+
+Nit: '\n'
+
+> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
 > + */
-> +#define HV_MAX_GPA_PAGE_RANGES ((PAGE_SIZE - sizeof(u64)) / \
-> +				sizeof(union hv_gpa_page_range))
 > +
+> +#ifndef MFD_KHADAS_MCU_H
+> +#define MFD_KHADAS_MCU_H
+> +
+> +#define KHADAS_MCU_PASSWD_VEN_0_REG		0x0 /* RO */
 
-The name HV_MAX_GPA_PAGE_RANGES sounds too generic and I think this is
-specific to the HvExtCallMemoryHeatHint hypercall as other hypercalls
-may have a different header length.
+Nit: Can you pad these please?
 
-> +/* HvExtCallMemoryHeatHint hypercall */
-> +#define HV_EXT_MEMORY_HEAT_HINT_TYPE_COLD_DISCARD	2
-> +struct hv_memory_hint {
-> +	u64 type:2;
-> +	u64 reserved:62;
-> +	union hv_gpa_page_range ranges[1];
+> +#define KHADAS_MCU_PASSWD_VEN_1_REG		0x1 /* RO */
+> +#define KHADAS_MCU_PASSWD_VEN_2_REG		0x2 /* RO */
+> +#define KHADAS_MCU_PASSWD_VEN_3_REG		0x3 /* RO */
+> +#define KHADAS_MCU_PASSWD_VEN_4_REG		0x4 /* RO */
+> +#define KHADAS_MCU_PASSWD_VEN_5_REG		0x5 /* RO */
+> +#define KHADAS_MCU_MAC_0_REG			0x6 /* RO */
+> +#define KHADAS_MCU_MAC_1_REG			0x7 /* RO */
+> +#define KHADAS_MCU_MAC_2_REG			0x8 /* RO */
+> +#define KHADAS_MCU_MAC_3_REG			0x9 /* RO */
+> +#define KHADAS_MCU_MAC_4_REG			0xa /* RO */
+> +#define KHADAS_MCU_MAC_5_REG			0xb /* RO */
+> +#define KHADAS_MCU_USID_0_REG			0xc /* RO */
+> +#define KHADAS_MCU_USID_1_REG			0xd /* RO */
+> +#define KHADAS_MCU_USID_2_REG			0xe /* RO */
+> +#define KHADAS_MCU_USID_3_REG			0xf /* RO */
+> +#define KHADAS_MCU_USID_4_REG			0x10 /* RO */
+> +#define KHADAS_MCU_USID_5_REG			0x11 /* RO */
+> +#define KHADAS_MCU_VERSION_0_REG		0x12 /* RO */
+> +#define KHADAS_MCU_VERSION_1_REG		0x13 /* RO */
+> +#define KHADAS_MCU_DEVICE_NO_0_REG		0x14 /* RO */
+> +#define KHADAS_MCU_DEVICE_NO_1_REG		0x15 /* RO */
+> +#define KHADAS_MCU_FACTORY_TEST_REG		0x16 /* R */
+> +#define KHADAS_MCU_BOOT_MODE_REG		0x20 /* RW */
+> +#define KHADAS_MCU_BOOT_EN_WOL_REG		0x21 /* RW */
+> +#define KHADAS_MCU_BOOT_EN_RTC_REG		0x22 /* RW */
+> +#define KHADAS_MCU_BOOT_EN_EXP_REG		0x23 /* RW */
+> +#define KHADAS_MCU_BOOT_EN_IR_REG		0x24 /* RW */
+> +#define KHADAS_MCU_BOOT_EN_DCIN_REG		0x25 /* RW */
+> +#define KHADAS_MCU_BOOT_EN_KEY_REG		0x26 /* RW */
+> +#define KHADAS_MCU_KEY_MODE_REG			0x27 /* RW */
+> +#define KHADAS_MCU_LED_MODE_ON_REG		0x28 /* RW */
+> +#define KHADAS_MCU_LED_MODE_OFF_REG		0x29 /* RW */
+> +#define KHADAS_MCU_SHUTDOWN_NORMAL_REG		0x2c /* RW */
+> +#define KHADAS_MCU_MAC_SWITCH_REG		0x2d /* RW */
+> +#define KHADAS_MCU_MCU_SLEEP_MODE_REG		0x2e /* RW */
+> +#define KHADAS_MCU_IR_CODE1_0_REG		0x2f /* RW */
+> +#define KHADAS_MCU_IR_CODE1_1_REG		0x30 /* RW */
+> +#define KHADAS_MCU_IR_CODE1_2_REG		0x31 /* RW */
+> +#define KHADAS_MCU_IR_CODE1_3_REG		0x32 /* RW */
+> +#define KHADAS_MCU_USB_PCIE_SWITCH_REG		0x33 /* RW */
+> +#define KHADAS_MCU_IR_CODE2_0_REG		0x34 /* RW */
+> +#define KHADAS_MCU_IR_CODE2_1_REG		0x35 /* RW */
+> +#define KHADAS_MCU_IR_CODE2_2_REG		0x36 /* RW */
+> +#define KHADAS_MCU_IR_CODE2_3_REG		0x37 /* RW */
+> +#define KHADAS_MCU_PASSWD_USER_0_REG		0x40 /* RW */
+> +#define KHADAS_MCU_PASSWD_USER_1_REG		0x41 /* RW */
+> +#define KHADAS_MCU_PASSWD_USER_2_REG		0x42 /* RW */
+> +#define KHADAS_MCU_PASSWD_USER_3_REG		0x43 /* RW */
+> +#define KHADAS_MCU_PASSWD_USER_4_REG		0x44 /* RW */
+> +#define KHADAS_MCU_PASSWD_USER_5_REG		0x45 /* RW */
+> +#define KHADAS_MCU_USER_DATA_0_REG		0x46 /* RW 56 bytes */
+> +#define KHADAS_MCU_PWR_OFF_CMD_REG		0x80 /* WO */
+> +#define KHADAS_MCU_PASSWD_START_REG		0x81 /* WO */
+> +#define KHADAS_MCU_CHECK_VEN_PASSWD_REG		0x82 /* WO */
+> +#define KHADAS_MCU_CHECK_USER_PASSWD_REG	0x83 /* WO */
+> +#define KHADAS_MCU_SHUTDOWN_NORMAL_STATUS_REG	0x86 /* RO */
+> +#define KHADAS_MCU_WOL_INIT_START_REG		0x87 /* WO */
+> +#define KHADAS_MCU_CMD_FAN_STATUS_CTRL_REG	0x88 /* WO */
+> +
+> +/* Boards */
 
-Why '[1]' and not '[]'? If it was '[]' you could've used 'sizeof(struct
-hv_memory_hint)' in HV_MAX_GPA_PAGE_RANGES macro definition instead of
-'sizeof(u64)'.
+I think the names make this superfluous.
 
+> +enum {
+> +	KHADAS_BOARD_VIM1 = 0x1,
+> +	KHADAS_BOARD_VIM2,
+> +	KHADAS_BOARD_VIM3,
+> +	KHADAS_BOARD_EDGE = 0x11,
+> +	KHADAS_BOARD_EDGE_V,
 > +};
 > +
->  #endif
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> index 1c4fd950f091..c664af4a7503 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -27,6 +27,7 @@
->  
->  struct ms_hyperv_info {
->  	u32 features;
-> +	u32 b_features;
->  	u32 misc_features;
->  	u32 hints;
->  	u32 nested_features;
-> @@ -169,6 +170,7 @@ bool hv_is_hyperv_initialized(void);
->  bool hv_is_hibernation_supported(void);
->  void hyperv_cleanup(void);
->  void hv_setup_sched_clock(void *sched_clock);
-> +u64 hv_query_ext_cap(void);
->  #else /* CONFIG_HYPERV */
->  static inline bool hv_is_hyperv_initialized(void) { return false; }
->  static inline bool hv_is_hibernation_supported(void) { return false; }
+> +/**
+> + * struct khadas_mcu_data - Khadas MCU MFD structure
+
+Doesn't match the struct name.
+
+Prefer you drop the 'MFD' part.
+
+> + * @device:		device reference used for logs
+> + * @map:		register map
+> + */
+> +struct khadas_mcu {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +};
+> +
+> +#endif /* MFD_KHADAS_MCU_H */
 
 -- 
-Vitaly
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
