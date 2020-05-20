@@ -2,195 +2,133 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B2DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 313F0207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="ieZw2mYV"
+	by mail.kernel.org (Postfix) with ESMTP id E84D7207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETEug (ORCPT
+        id S1726621AbgETEwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50452 "EHLO
+        Wed, 20 May 2020 00:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgETEug (ORCPT
+        with ESMTP id S1726435AbgETEwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:50:36 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BDCC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:50:35 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id e10so1055642vsp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0tbXb80+Yh7B9nFEtfOBNTUNTV7zrMR7BziU+1EVuks=;
-        b=ieZw2mYVxPGUlbMGmsKSDyXIuetO2Ee3KwdBkVCfJdW0WhP8FZb1ISRNsDfGSJPf4H
-         cLI/9TyJktZdy21zfRpAJDZIAHqTkpg2Pl+yRFtsG6i7k+1ylzyb8cpXoyxzAFMOdr67
-         bk9C5ntEWwCmqf5Q8Yjm30aenkNW5+iBSrOQ/ncL7T0dppuNhI8Igk+qtts3nR815zwb
-         bpjJ/T0IiQ77tOaHpSYsgFZskxYM5iKzqi5M6aJn9Szm+lEycFQT/YmYytUSSSr1i0o1
-         rk8X8puwnJxGbDHL6t0T+BiJJm3j3cKX10Y1NddXgGpJjjrQ/nCj0pU8CAzSmqaNiWhd
-         qgCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0tbXb80+Yh7B9nFEtfOBNTUNTV7zrMR7BziU+1EVuks=;
-        b=ajKuqQ52pcqTUSLGGnbuPtklW0pPho5h9ZLmFGIAheefecwhItbOod3srRuAj0R0/v
-         4caG9NHctGKF1L98DkTp9JQqBapCbjkNflWHT7pzqlEFrvflQ+1NoeXLOufaXhybNbhK
-         KUYC0dPngzVR2DMuLUt5cb9BKzaBEQ+yCmzWoBhF3NFE48yUk2g4J3M08490ECSLBGtM
-         kn+tITnQBmGpZNP9t++8kcyGg1wabMsOVtBDMkYAMcQe9FqoKyMqHeC1c8iM/TkXMBDK
-         FD+V6YS6vr1BvKv9IROCakYsgyGGhSaWeohezGyLf9WyETs5Ocf8ob02cN8pJ45/Y1Qf
-         SiuQ==
-X-Gm-Message-State: AOAM532rMJGmD6VohIUcXjtOV3HV0UH42HOFylxmHJMluVZ/sD7HCfC+
-        fq5EcdN6KyTecSxCDl0odqi81CAdymQnA5yAsBBFdA==
-X-Google-Smtp-Source: ABdhPJwheLQGbQZyi1vcJVRylkuX2iWXhDKV8oHh618SQR2OfCNSrC7LEYrmInHyZKW6ZI0YvvywcgI5RKWxpElGx08=
-X-Received: by 2002:a67:b42:: with SMTP id 63mr1965745vsl.182.1589950234641;
- Tue, 19 May 2020 21:50:34 -0700 (PDT)
+        Wed, 20 May 2020 00:52:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E85C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:52:08 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jbGi6-0006TK-QU; Wed, 20 May 2020 06:52:06 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jbGi5-00028J-3x; Wed, 20 May 2020 06:52:05 +0200
+Date:   Wed, 20 May 2020 06:52:05 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     jassisinghbrar@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mailbox: imx: Disable the clock on
+ devm_mbox_controller_register() failure
+Message-ID: <20200520045205.ag6i7z2xmeenmqpg@pengutronix.de>
+References: <20200520032246.12482-1-festevam@gmail.com>
 MIME-Version: 1.0
-References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com> <20200504181616.175477-6-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20200504181616.175477-6-srinivas.pandruvada@linux.intel.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 20 May 2020 10:19:52 +0530
-Message-ID: <CAHLCerOvQYbgQDFkA9-pfx-VTZB7KckXeJeFH3sodTgohpMq0g@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/5] thermal: int340x: Use new device interface
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7bmp72cg7y2mwspo"
+Content-Disposition: inline
+In-Reply-To: <20200520032246.12482-1-festevam@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 06:51:06 up 186 days, 20:09, 181 users,  load average: 0.04, 0.03,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 11:47 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> Use the new framework to send notifications for:
-> - Setting temperature threshold for notification to avoid polling
-> - Send THERMAL_TRIP_REACHED event on reaching threshold
-> - Send THERMAL_TRIP_UPDATE when firmware change the the existing trip
-> temperature
 
-I am a little confused here. I would've expected the thermal core to
-send the THERMAL_TRIP_* notifications, not platform drivers. Why
-shouldn't this be done in thermal core?
+--7bmp72cg7y2mwspo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+On Wed, May 20, 2020 at 12:22:46AM -0300, Fabio Estevam wrote:
+> devm_mbox_controller_register() may fail, and in the case of failure the
+> priv->clk clock that was previously enabled, should be disabled.
+>=20
+> Fixes: 2bb7005696e2 ("mailbox: Add support for i.MX messaging unit")
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
 > ---
->  .../intel/int340x_thermal/int3403_thermal.c   |  3 ++
->  .../int340x_thermal/int340x_thermal_zone.c    | 29 +++++++++++++++++++
->  .../int340x_thermal/int340x_thermal_zone.h    |  7 +++++
->  .../processor_thermal_device.c                |  1 +
->  4 files changed, 40 insertions(+)
->
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> index f86cbb125e2f..77c014a113a4 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> @@ -63,15 +63,18 @@ static void int3403_notify(acpi_handle handle,
->
->         switch (event) {
->         case INT3403_PERF_CHANGED_EVENT:
-> +               int340x_thermal_send_user_event(obj->int340x_zone, THERMAL_PERF_CHANGED, 0);
->                 break;
->         case INT3403_THERMAL_EVENT:
->                 int340x_thermal_zone_device_update(obj->int340x_zone,
->                                                    THERMAL_TRIP_VIOLATED);
-> +               int340x_thermal_send_user_event(obj->int340x_zone, THERMAL_TRIP_REACHED, 0);
->                 break;
->         case INT3403_PERF_TRIP_POINT_CHANGED:
->                 int340x_thermal_read_trips(obj->int340x_zone);
->                 int340x_thermal_zone_device_update(obj->int340x_zone,
->                                                    THERMAL_TRIP_CHANGED);
-> +               int340x_thermal_send_user_event(obj->int340x_zone, THERMAL_TRIP_UPDATE, 0);
->                 break;
->         default:
->                 dev_err(&priv->pdev->dev, "Unsupported event [0x%x]\n", event);
-> diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-> index 432213272f1e..9568a2db7afd 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-> @@ -146,12 +146,41 @@ static int int340x_thermal_get_trip_hyst(struct thermal_zone_device *zone,
->         return 0;
+>  drivers/mailbox/imx-mailbox.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+> index 7906624a731c..3f7c4548c18f 100644
+> --- a/drivers/mailbox/imx-mailbox.c
+> +++ b/drivers/mailbox/imx-mailbox.c
+> @@ -508,7 +508,13 @@ static int imx_mu_probe(struct platform_device *pdev)
+> =20
+>  	platform_set_drvdata(pdev, priv);
+> =20
+> -	return devm_mbox_controller_register(dev, &priv->mbox);
+> +	ret =3D devm_mbox_controller_register(dev, &priv->mbox);
+> +	if (ret) {
+> +		clk_disable_unprepare(priv->clk);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
 >  }
->
-> +static int int340x_thermal_get_thres_low(struct thermal_zone_device *zone, int *temp)
-> +{
-> +       struct int34x_thermal_zone *d = zone->devdata;
-> +
-> +       *temp = d->aux_trips[0];
-> +
-> +       return 0;
-> +}
-> +
-> +static int int340x_thermal_set_thres_low(struct thermal_zone_device *zone, int temp)
-> +{
-> +       struct int34x_thermal_zone *d = zone->devdata;
-> +       acpi_status status;
-> +
-> +       if (d->override_ops && d->override_ops->set_trip_temp)
-> +               return d->override_ops->set_trip_temp(zone, 0, temp);
-> +
-> +       status = acpi_execute_simple_method(d->adev->handle, "PAT0",
-> +                       millicelsius_to_deci_kelvin(temp));
-> +       if (ACPI_FAILURE(status))
-> +               return -EIO;
-> +
-> +       d->aux_trips[0] = temp;
-> +
-> +       return 0;
-> +}
-> +
->  static struct thermal_zone_device_ops int340x_thermal_zone_ops = {
->         .get_temp       = int340x_thermal_get_zone_temp,
->         .get_trip_temp  = int340x_thermal_get_trip_temp,
->         .get_trip_type  = int340x_thermal_get_trip_type,
->         .set_trip_temp  = int340x_thermal_set_trip_temp,
->         .get_trip_hyst =  int340x_thermal_get_trip_hyst,
-> +       .set_temp_thres_low = int340x_thermal_set_thres_low,
-> +       .get_temp_thres_low = int340x_thermal_get_thres_low,
->  };
->
->  static int int340x_thermal_get_trip_config(acpi_handle handle, char *name,
-> diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
-> index 3b4971df1b33..142027e4955f 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
-> +++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.h
-> @@ -58,4 +58,11 @@ static inline void int340x_thermal_zone_device_update(
->         thermal_zone_device_update(tzone->zone, event);
->  }
->
-> +static inline void int340x_thermal_send_user_event(
-> +                                       struct int34x_thermal_zone *tzone,
-> +                                       enum thermal_device_events event,
-> +                                       u64 data)
-> +{
-> +       thermal_dev_send_event(tzone->zone->id, event, data);
-> +}
->  #endif
-> diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> index 297db1d2d960..e25f01948d33 100644
-> --- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> +++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> @@ -340,6 +340,7 @@ static void proc_thermal_notify(acpi_handle handle, u32 event, void *data)
->                 proc_thermal_read_ppcc(proc_priv);
->                 int340x_thermal_zone_device_update(proc_priv->int340x_zone,
->                                 THERMAL_DEVICE_POWER_CAPABILITY_CHANGED);
-> +               int340x_thermal_send_user_event(proc_priv->int340x_zone, THERMAL_PERF_CHANGED, 0);
->                 break;
->         default:
->                 dev_dbg(proc_priv->dev, "Unsupported event [0x%x]\n", event);
-> --
-> 2.25.4
->
+> =20
+>  static int imx_mu_remove(struct platform_device *pdev)
+> --=20
+> 2.17.1
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--7bmp72cg7y2mwspo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7Et3QACgkQ4omh9DUa
+UbPjEA//QgEWw4m0bNgKXh2n+zSBOgCnjZFToTsq9sSFbM9hszMEF2qZv/Ju2H2D
+ntWUnL8j66M6A33GfGQlPJKf1ZJIgVAP7In//Xk0/TBDi+qakmYTTnm54b44HjW8
+N6RBOUExlFiiJAxuzlvidOy01HctuAMC2WRzyIqrMv//WubrbrmalllYnysJAEE9
+R5SjJqYxuV8RBl7nZHsMd0CFC4fUS3LYfCd6nNGYyvEfBbuLxJgRQgp+FohQapkT
+g25wH8RKk82Rqf+nlFtnen2l76NYwMxzZVx+x5Bci6qumFUYKmL4aVNFqZYQBATO
+9TLAFyVN4FqFQormzZuNfXDrjsmhf9AfNuSTcfDVXpWuT5zpLwPihtu8Iq91lUsC
+tNFH5W2zAvBWhrRHkT4M5oY6zPigjeagrMpUmzBmCG2ptCRTbHzYTKKhmdSFLQXE
+PcdQfMdsh7R2COkGiRQQJmB0n9BrON6ybVDTb+U4a8clOJIvmRH2+0jkoO3TfoAu
+T1KP08ACcV4BbbsfNyvpSLwDy5etVydDbyVFDwPOxB+UIAoH8b8I2WuLeEVkOxQQ
+0nFTc8upPqCqk5QcFNl6LtpMloltfqLj0i3C2iuHA09f5M8D3XV+5b/HO2lI0+e6
+6d1//OLVj6SolMzqQ40o5lkuQ29KSt1l6LI0RyL0F1vDGzGzU3s=
+=d9Sl
+-----END PGP SIGNATURE-----
+
+--7bmp72cg7y2mwspo--
