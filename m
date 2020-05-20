@@ -2,222 +2,283 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6180C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E8FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA0120758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F335A20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgETMMJ (ORCPT
+        id S1726789AbgETMOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:12:09 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58300 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgETMMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:12:08 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0FADA80307C1;
-        Wed, 20 May 2020 12:12:03 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c8BOnlAs7pZK; Wed, 20 May 2020 15:12:02 +0300 (MSK)
-Date:   Wed, 20 May 2020 15:12:01 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520121201.wohv6u646rx5otkf@mobilestation>
-References: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
- <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
+        Wed, 20 May 2020 08:14:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:38101 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETMOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:14:24 -0400
+IronPort-SDR: L7ORZAzt6+/ys7eBBjp4z4wk8yXJZJrhvSNFTxuJ3nP11vJzJeHd/gLAcFxJYLdb8VSJ+36Zu6
+ e7PXZjTTiDsg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:14:22 -0700
+IronPort-SDR: lDMa4IjaXiaO5yuLenq7hmObVwvLlvW7Ra62UtLnUsEjjY2mIF0qAEeS0m13oTAh5q8zO5V6+3
+ bIe3XWsVL9Xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
+   d="scan'208";a="289330311"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 05:14:18 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jbNc4-007pru-GJ; Wed, 20 May 2020 15:14:20 +0300
+Date:   Wed, 20 May 2020 15:14:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org
+Subject: Re: [PATCH v7 0/6] gpio: Add GPIO Aggregator
+Message-ID: <20200520121420.GA1867563@smile.fi.intel.com>
+References: <20200511145257.22970-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519155053.GB15797@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200511145257.22970-1-geert+renesas@glider.be>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 05:50:53PM +0200, Thomas Bogendoerfer wrote:
-> On Mon, May 18, 2020 at 11:57:52PM +0300, Serge Semin wrote:
-> > On Mon, May 18, 2020 at 06:32:06PM +0200, Thomas Bogendoerfer wrote:
-> > > On Mon, May 18, 2020 at 04:48:20PM +0300, Serge Semin wrote:
-> > > > On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
-> > > > > On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
-> > > > > > Thomas,
-> > > > > > Could you take a look at my comment below so I could proceed with the
-> > > > > > patchset v3 development?
-> > > > > 
-> > > > > I can't help, but using r4k clocksource with changing frequency is
-> > > > > probaly only usefull as a random generator. So IMHO the only two
-> > > > > options are disabling it or implement what arch/x86/kernel/tsc.c does.
-> > > > > 
-> > > > > Thomas.
-> > > > 
-> > > > Thomas, could you proceed with the rest of the patches review?
-> > > > ├─>[PATCH v2 16/20] bus: cdmm: Add MIPS R5 arch support
-> > > > ├─>[PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
-> > > 
-> > > both are not my call, but look ok to me.
-> > 
-> > Can I add your Reviewed-by tag there then?
+On Mon, May 11, 2020 at 04:52:51PM +0200, Geert Uytterhoeven wrote:
+> 	Hi all,
 > 
-> only for 16/20. 15/20 looks ok to me, but I have not enough insides
-> on the hardware to say this is good.
+> GPIO controllers are exported to userspace using /dev/gpiochip*
+> character devices.  Access control to these devices is provided by
+> standard UNIX file system permissions, on an all-or-nothing basis:
+> either a GPIO controller is accessible for a user, or it is not.
+> Currently no mechanism exists to control access to individual GPIOs.
 > 
-> > > > ├─>[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
-> > > 
-> > > that's broken. A reg shift of 2 doesn't mean we could use 32bit access
-> > > to the registers on other platforms. As I don't think adding some ifdefery
-> > > makes things nicer, just implement the your prom_putchar in board code.
-> > 
-> > I thought about that initially, but then I decided to alter the generic
-> > early_printk_8250 code instead. My version of prom_putchar() would be almost
-> > the same as one implemented in the early_printk_8250 module except minor
-> > modification of replacing readb/writeb methods with readl/writel. So I didn't
-> > want to duplicate the code, but wanted to provide a general way to fix the
-> > problem potentially also for another platforms.
-> > 
-> > Since you don't like this fix alternatively I'd suggest to add the reg_width
-> > parameter passed to the setup_8250_early_printk_port() method like this:
-> > -setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
-> > -                             unsigned int timeout)
-> > +setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
-> > +                             unsigned int reg_width, unsigned int timeout)
-> > 
-> > By reg_width parameter we could determine the actual width of the register:
-> >  static inline u8 serial_in(int offset)
-> >  {
-> > -       return readb(serial8250_base + (offset << serial8250_reg_shift));
-> > +       u8 ret = 0xFF;
-> > +
-> > +       offset <<= serial8250_reg_shift;
-> > +       switch (serial8250_reg_width) {
-> > +       case 1:
-> > +               ret = readb(serial8250_base + offset);
-> > +               break;
-> > +       case 2:
-> > +               ret = readw(serial8250_base + offset);
-> > +               break;
-> > +       case 4:
-> > +               ret = readl(serial8250_base + offset);
-> > +               break;
-> > +       default:
-> > +               break;
-> > +       }
-> > +
-> > +       return ret;
-> >  }
-> > 
-> > The similar modification will be implemented for serial_out(). I'll also modify
+> Hence this adds a GPIO driver to aggregate existing GPIOs, and expose
+> them as a new gpiochip.  This is useful for implementing access control,
+> and assigning a set of GPIOs to a specific user.  Furthermore, this
+> simplifies and hardens exporting GPIOs to a virtual machine, as the VM
+> can just grab the full GPIO controller, and no longer needs to care
+> about which GPIOs to grab and which not, reducing the attack surface.
+> This has been implemented for ARM virt in QEMU[1].
 > 
-> look at the lines of code you are adding. Doing your own prom_putchar will
-> probably have less lines.
+> Recently, other use cases have been discovered[2], like describing
+> simple GPIO-operated devices in DT, and using the GPIO Aggregator as a
+> generic GPIO driver for userspace, which is useful for industrial
+> control.
 > 
-> > What do you think about this?
-> 
-> please do your own prom_putchar.
+> Note that the first patch of this series ("i2c: i801: Use GPIO_LOOKUP()
+> helper macro") has been applied to i2c/for-next.
 
-One more time regarding this problem but in appliance to another part of the
-MIPS code. I've missed the patch to draw your attention to:
-[PATCH v2 14/20] mips: Use offset-sized IO-mem accessors in CPS debug printout
+Sorry for late reply, recently noticed this nice idea.
+The comment I have is, please, can we reuse bitmap parse algorithm and syntax?
+We have too many different formats and parsers in the kernel and bitmap's one
+seems suitable here.
 
-There I've applied the same fix as in the patch:
-[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
+(Despite other small clean ups, like strstrip() use)
 
-Since you don't like the way I initially fixed it, suppose there we don't have
-another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
-parameter to select a proper accessors, like sw in our case, and sb by defaul).
-Right?
-
-(Note UART_L is incorrectly created in that patch, I'll remove that macro in
-v3.)
-
--Sergey
-
+> Changes compared to v6[3]:
+>   - Document non-uniqueness of line names,
+>   - Rebase on top of commit a0b66a73785ccc8f ("gpio: Rename variable in
+>     core APIs"),
+>   - Maintained => Supported,
+>   - Add Reviewed-by, Acked-by,
+>   - Drop applied patches:
+>       - "ARM: integrator: impd1: Use GPIO_LOOKUP() helper macro",
+>       - "gpiolib: Introduce gpiod_set_config()".
 > 
+> Changes compared to v5[4]:
+>   - Convert raw gpiod_lookup users to GPIO_LOOKUP*(),
+>   - Update Documentation/driver-api/gpio/board.rst for gpiod_lookup
+>     changes,
+>   - Reword rationale behing looking up GPIOs by line name,
+>   - Introduce gpiod_set_config(),
+>   - Use gpiod_to_chip() instead of open-coding,
+>   - Drop debug print of gpio_desc.label, as it usually points to the
+>     GPIO Aggregator itself,
+>   - Drop no longer needed #include "gpiolib.h",
+>   - Fix missing offset translation in gpio_fwd_set_config(),
+>   - Fix "allows" without object,
+>   - Drop "gpiochipN" support,
+>   - Extend example.
 > 
-> > > 
-> > > > ├─>[PATCH v2 12/20] mips: MAAR: Add XPA mode support
-> > > 
-> > > looks ok so far.
-> > 
-> > Can I add your Reviewed-by tag there then?
+> Changes compared to v4[5]:
+>   - Add Reviewed-by, Tested-by,
+>   - Fix inconsistent indentation in documentation.
 > 
-> As I'm the maintainer of the part, I've simply applied it.
+> Changes compared to v3[6] (more details in the individual patches):
+>   - Drop controversial GPIO repeater,
+>   - Drop support for legacy sysfs interface based name matching,
+>   - Drop applied "gpiolib: Add GPIOCHIP_NAME definition",
+>   - Documentation improvements,
+>   - Lots of small cleanups.
 > 
-> > > 
-> > > > ├─>[PATCH v2 10/20] mips: Add CONFIG/CONFIG6/Cause reg fields macro
-> > > 
-> > > that is fine
-> > 
-> > Can I add your Reviewed-by tag there then?
+> Changes compared to v2[7] (more details in the individual patches):
+>   - Integrate GPIO Repeater functionality,
+>   - Absorb GPIO forwarder library, as the Aggregator and Repeater are
+>     now a single driver,
+>   - Use the aggregator parameters to create a GPIO lookup table instead
+>     of an array of GPIO descriptors,
+>   - Add documentation,
+>   - New patches:
+>       - "gpiolib: Add GPIOCHIP_NAME definition",
+>       - "gpiolib: Add support for gpiochipN-based table lookup",
+>       - "gpiolib: Add support for GPIO line table lookup",
+>       - "dt-bindings: gpio: Add gpio-repeater bindings",
+>       - "docs: gpio: Add GPIO Aggregator/Repeater documentation",
+>       - "MAINTAINERS: Add GPIO Aggregator/Repeater section".
+>   - Dropped patches:
+>       - "gpio: Export gpiod_{request,free}() to modular GPIO code",
+>       - "gpio: Export gpiochip_get_desc() to modular GPIO code",
+>       - "gpio: Export gpio_name_to_desc() to modular GPIO code",
+>       - "gpio: Add GPIO Forwarder Helper".
 > 
-> As this didn't apply cleanly, I'll apply it after you've resent it.
-> IMHO no need for a Reviewed-by.
+> Changes compared to v1[8]:
+>   - Drop "virtual", rename to gpio-aggregator,
+>   - Create and use new GPIO Forwarder Helper, to allow sharing code with
+>     the GPIO inverter,
+>   - Lift limit on the maximum number of GPIOs,
+>   - Improve parsing of GPIO specifiers,
+>   - Fix modular build.
 > 
-> > > > └─>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
-> > > 
-> > > this is IMHO a dangerous change. Enabling write merging for any
-> > > CPU supporting it might triggers bugs. Do it in your board bringup
-> > > code and at the moment I don't see a reason for the rest of that
-> > > patch.
-> > 
-> > Let's at least leave the mm_config() implementation but without the write-merge
-> > enabling by default. Providing features availability macro
-> > cpu_has_mm_sysad/cpu_has_mm_full and c0 config fields
+> Aggregating GPIOs and exposing them as a new gpiochip was suggested in
+> response to my proof-of-concept for GPIO virtualization with QEMU[9][10].
 > 
-> do you have a user of that ? I'm not introducing code nobody uses.
+> For the first use case, aggregated GPIO controllers are instantiated and
+> destroyed by writing to atribute files in sysfs.
+> Sample session on the Renesas Koelsch development board:
 > 
-> > I could use them to implement a code pattern like:
-> > 
-> > +	if (cpu_has_mm_full) {
-> > +		unsigned int config0 = read_c0_config();
-> > +               config0 = (config0 & ~MIPS_CONF_MM) | MIPS_CONF_MM_FULL;
-> > +               write_c0_config(config0);
-> > +	}
+>   - Unbind LEDs from leds-gpio driver:
 > 
-> you know you are running on a R5 core, so you know you have MM_FULL.
-> No need to check this.
+>         echo leds > /sys/bus/platform/drivers/leds-gpio/unbind
 > 
-> > By doing so I can manually enable/disable the MM feature in the
-> > cpu-feature-overrides.h. Without that I'd have to locally define these macro,
-> > which isn't good seeing they are in fact generic and can be useful for other
-> > platforms with SYSAD and FULL MM feature available. What do you think?
+>   - Create aggregators:
 > 
-> To me this is a hardware feature I expect to be done by firmware and
-> Linux shouldn't care about it, if it doesn't have any software
-> implications.
+>     $ echo e6052000.gpio 19,20 \
+>         > /sys/bus/platform/drivers/gpio-aggregator/new_device
 > 
-> Thomas.
+>     gpio-aggregator gpio-aggregator.0: gpio 0 => gpio-953
+>     gpio-aggregator gpio-aggregator.0: gpio 1 => gpio-954
+>     gpiochip_find_base: found new base at 758
+>     gpio gpiochip12: (gpio-aggregator.0): added GPIO chardev (254:13)
+>     gpiochip_setup_dev: registered GPIOs 758 to 759 on device: gpiochip12 (gpio-aggregator.0)
+> 
+>     $ echo e6052000.gpio 21 e6050000.gpio 20-22 \
+>         > /sys/bus/platform/drivers/gpio-aggregator/new_device
+> 
+>     gpio-aggregator gpio-aggregator.1: gpio 0 => gpio-955
+>     gpio-aggregator gpio-aggregator.1: gpio 1 => gpio-1012
+>     gpio-aggregator gpio-aggregator.1: gpio 2 => gpio-1013
+>     gpio-aggregator gpio-aggregator.1: gpio 3 => gpio-1014
+>     gpiochip_find_base: found new base at 754
+>     gpio gpiochip13: (gpio-aggregator.1): added GPIO chardev (254:13)
+>     gpiochip_setup_dev: registered GPIOs 754 to 757 on device: gpiochip13 (gpio-aggregator.1)
+> 
+>   - Adjust permissions on /dev/gpiochip1[23] (optional)
+> 
+>   - Control LEDs:
+> 
+>     $ gpioset gpiochip12 0=0 1=1 # LED6 OFF, LED7 ON
+>     $ gpioset gpiochip12 0=1 1=0 # LED6 ON, LED7 OFF
+>     $ gpioset gpiochip13 0=1     # LED8 ON
+>     $ gpioset gpiochip13 0=0     # LED8 OFF
+> 
+>   - Destroy aggregators:
+> 
+>     $ echo gpio-aggregator.0 \
+>             > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+>     $ echo gpio-aggregator.1 \
+>             > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+> 
+> To ease testing, I have pushed this series to the
+> topic/gpio-aggregator-v7 branch of my renesas-drivers repository at
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
+> 
+> Thanks!
+> 
+> References:
+>   [1] "[PATCH QEMU v2 0/5] Add a GPIO backend"
+>       (https://lore.kernel.org/linux-gpio/20200423090118.11199-1-geert+renesas@glider.be/)
+>   [2] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
+>       (https://lore.kernel.org/r/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/)
+>   [3] "[PATCH v6 0/8] gpio: Add GPIO Aggregator"
+>       (https://lore.kernel.org/linux-doc/20200324135328.5796-1-geert+renesas@glider.be/)
+>   [4] "[PATCH v5 0/5] gpio: Add GPIO Aggregator"
+>       (https://lore.kernel.org/r/20200218151812.7816-1-geert+renesas@glider.be/)
+>   [5] "[PATCH v4 0/5] gpio: Add GPIO Aggregator"
+>       (https://lore.kernel.org/r/20200115181523.23556-1-geert+renesas@glider.be)
+>   [6] "[PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater"
+>       (https://lore.kernel.org/r/20191127084253.16356-1-geert+renesas@glider.be/)
+>   [7] "[PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver"
+>       (https://lore.kernel.org/r/20190911143858.13024-1-geert+renesas@glider.be/)
+>   [8] "[PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver"
+>       (https://lore.kernel.org/r/20190705160536.12047-1-geert+renesas@glider.be/)
+>   [9] "[PATCH QEMU POC] Add a GPIO backend"
+>       (https://lore.kernel.org/r/20181003152521.23144-1-geert+renesas@glider.be/)
+>  [10] "Getting To Blinky: Virt Edition / Making device pass-through
+>        work on embedded ARM"
+>       (https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
+> 
+> Geert Uytterhoeven (6):
+>   i2c: i801: Use GPIO_LOOKUP() helper macro
+>   mfd: sm501: Use GPIO_LOOKUP_IDX() helper macro
+>   gpiolib: Add support for GPIO lookup by line name
+>   gpio: Add GPIO Aggregator
+>   docs: gpio: Add GPIO Aggregator documentation
+>   MAINTAINERS: Add GPIO Aggregator section
+> 
+>  .../admin-guide/gpio/gpio-aggregator.rst      | 111 ++++
+>  Documentation/admin-guide/gpio/index.rst      |   1 +
+>  Documentation/driver-api/gpio/board.rst       |  15 +-
+>  MAINTAINERS                                   |   7 +
+>  drivers/gpio/Kconfig                          |  12 +
+>  drivers/gpio/Makefile                         |   1 +
+>  drivers/gpio/gpio-aggregator.c                | 568 ++++++++++++++++++
+>  drivers/gpio/gpiolib.c                        |  22 +-
+>  drivers/i2c/busses/i2c-i801.c                 |   6 +-
+>  drivers/mfd/sm501.c                           |  24 +-
+>  include/linux/gpio/machine.h                  |  17 +-
+>  11 files changed, 748 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
+>  create mode 100644 drivers/gpio/gpio-aggregator.c
 > 
 > -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+> 2.17.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
