@@ -2,120 +2,320 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3811C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE89C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 821BC207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F30207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgETKFw (ORCPT
+        id S1726899AbgETKF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:05:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:52018 "EHLO foss.arm.com"
+        Wed, 20 May 2020 06:05:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:9129 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgETKFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:05:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98C0F31B;
-        Wed, 20 May 2020 03:05:51 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 873B53F68F;
+        id S1726875AbgETKFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:05:55 -0400
+IronPort-SDR: 1+RHnfLlQj0pD1oFWLWuHGaglogrJEvjpipEE6bUo2g8CVtf8nPph0CPBwtU2HaXZL4Hal7oU6
+ jGKFPzBITRIA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 03:05:53 -0700
+IronPort-SDR: k4MGfed4z1V1QVYLnzSUq5BUEJDxC8Nx3fg8RDLK32tCZX6T2hV40qFS+LbhjTUpdrb7tn/L3B
+ eEdR5roby4/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
+   d="scan'208";a="466330359"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 20 May 2020 03:05:53 -0700
+Received: from [10.213.128.101] (vramuthx-MOBL1.gar.corp.intel.com [10.213.128.101])
+        by linux.intel.com (Postfix) with ESMTP id 441C6580101;
         Wed, 20 May 2020 03:05:50 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:05:44 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Will Deacon <will@kernel.org>, will.deacon@arm.com,
-        linux-kernel@vger.kernel.org, oleg@redhat.com,
-        Keno Fischer <keno@juliacomputing.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: Fix PTRACE_SYSEMU semantics
-Message-ID: <20200520100543.GA18302@gaia>
-References: <20200515222253.GA38408@juliacomputing.com>
- <20200518114119.GB32394@willie-the-truck>
- <20200519120725.GA20313@gaia>
- <20200520100330.GA25430@bogus>
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v1] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        vigneshr@ti.com, broonie@kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20200512004919.40685-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200519184415.GA441457@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <b685ed91-e25b-4a1e-2779-d39dc56cecb3@linux.intel.com>
+Date:   Wed, 20 May 2020 18:05:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520100330.GA25430@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200519184415.GA441457@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:03:30AM +0100, Sudeep Holla wrote:
-> On Tue, May 19, 2020 at 01:07:27PM +0100, Catalin Marinas wrote:
-> > On Mon, May 18, 2020 at 12:41:20PM +0100, Will Deacon wrote:
-> > > On Fri, May 15, 2020 at 06:22:53PM -0400, Keno Fischer wrote:
-> > > > Quoth the man page:
-> > > > ```
-> > > >        If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
-> > > >        tracee enters syscall-enter-stop just prior to entering any system
-> > > >        call (which will not be executed if the restart was using
-> > > >        PTRACE_SYSEMU, regardless of any change made to registers at this
-> > > >        point or how the tracee is restarted after this stop).
-> > > > ```
-> > > >
-> > > > The parenthetical comment is currently true on x86 and powerpc,
-> > > > but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
-> > > > flag after the syscall entry ptrace stop. However, at this point,
-> > > > it reflects which method was used to re-start the syscall
-> > > > at the entry stop, rather than the method that was used to reach it.
-> > > > Fix that by recording the original flag before performing the ptrace
-> > > > stop, bringing the behavior in line with documentation and x86/powerpc.
-> > > >
-> > > > Signed-off-by: Keno Fischer <keno@juliacomputing.com>
-> > > > ---
-> > > >  arch/arm64/kernel/ptrace.c | 8 +++++---
-> > > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> > > > index b3d3005d9515..b67b4d14aa17 100644
-> > > > --- a/arch/arm64/kernel/ptrace.c
-> > > > +++ b/arch/arm64/kernel/ptrace.c
-> > > > @@ -1829,10 +1829,12 @@ static void tracehook_report_syscall(struct pt_regs *regs,
-> > > >
-> > > >  int syscall_trace_enter(struct pt_regs *regs)
-> > > >  {
-> > > > -	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
-> > > > -		test_thread_flag(TIF_SYSCALL_EMU)) {
-> > > > +	u32 flags = READ_ONCE(current_thread_info()->flags) &
-> > > > +		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
-> > > > +
-> > > > +	if (flags) {
-> > >
-> > > nit: but I'd rather the '&' operation was in the conditional so that the
-> > > 'flags' variable holds all of the flags.
-> > >
-> > > With that:
-> > >
-> > > Acked-by: Will Deacon <will@kernel.org>
-> > >
-> > > Also needs:
-> > >
-> > > Cc: <stable@vger.kernel.org>
-> > > Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
-> > >
-> > > Catalin -- can you pick this up for 5.7 please, with my 'nit' addressed?
-> >
-> > I'll queue it with the above addressed. I think flags also needs to be
-> > unsigned long rather than u32.
-> >
-> > However, before sending the pull request, I'd like Sudeep to confirm
-> > that it doesn't break his original use-case for this feature.
-> 
-> I just tested it with my simple programs I had before. I have also asked
-> teams working on gvisor to test. They have tested it and see no
-> regression. I will ask them to reply here.
-> 
-> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+Hi Rob,
 
-Thanks Sudeep.
+   Thank you very much for the review comments...
 
--- 
-Catalin
+On 20/5/2020 2:44 am, Rob Herring wrote:
+> On Tue, May 12, 2020 at 08:49:19AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>> spi based flash memories.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
+>>   2 files changed, 127 insertions(+), 67 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>> deleted file mode 100644
+>> index 945be7d5b236..000000000000
+>> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>> +++ /dev/null
+>> @@ -1,67 +0,0 @@
+>> -* Cadence Quad SPI controller
+>> -
+>> -Required properties:
+>> -- compatible : should be one of the following:
+>> -	Generic default - "cdns,qspi-nor".
+>> -	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+>> -	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+>> -- reg : Contains two entries, each of which is a tuple consisting of a
+>> -	physical address and length. The first entry is the address and
+>> -	length of the controller register set. The second entry is the
+>> -	address and length of the QSPI Controller data area.
+>> -- interrupts : Unit interrupt specifier for the controller interrupt.
+>> -- clocks : phandle to the Quad SPI clock.
+>> -- cdns,fifo-depth : Size of the data FIFO in words.
+>> -- cdns,fifo-width : Bus width of the data FIFO in bytes.
+>> -- cdns,trigger-address : 32-bit indirect AHB trigger address.
+>> -
+>> -Optional properties:
+>> -- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+>> -- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
+>> -  the read data rather than the QSPI clock. Make sure that QSPI return
+>> -  clock is populated on the board before using this property.
+>> -
+>> -Optional subnodes:
+>> -Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
+>> -custom properties:
+>> -- cdns,read-delay : Delay for read capture logic, in clock cycles
+>> -- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
+>> -                  mode chip select outputs are de-asserted between
+>> -		  transactions.
+>> -- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
+>> -                  de-activated and the activation of another.
+>> -- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
+>> -                  transaction and deasserting the device chip select
+>> -		  (qspi_n_ss_out).
+>> -- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+>> -                  and first bit transfer.
+>> -- resets	: Must contain an entry for each entry in reset-names.
+>> -		  See ../reset/reset.txt for details.
+>> -- reset-names	: Must include either "qspi" and/or "qspi-ocp".
+>> -
+>> -Example:
+>> -
+>> -	qspi: spi@ff705000 {
+>> -		compatible = "cdns,qspi-nor";
+>> -		#address-cells = <1>;
+>> -		#size-cells = <0>;
+>> -		reg = <0xff705000 0x1000>,
+>> -		      <0xffa00000 0x1000>;
+>> -		interrupts = <0 151 4>;
+>> -		clocks = <&qspi_clk>;
+>> -		cdns,is-decoded-cs;
+>> -		cdns,fifo-depth = <128>;
+>> -		cdns,fifo-width = <4>;
+>> -		cdns,trigger-address = <0x00000000>;
+>> -		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
+>> -		reset-names = "qspi", "qspi-ocp";
+>> -
+>> -		flash0: n25q00@0 {
+>> -			...
+>> -			cdns,read-delay = <4>;
+>> -			cdns,tshsl-ns = <50>;
+>> -			cdns,tsd2d-ns = <50>;
+>> -			cdns,tchsh-ns = <4>;
+>> -			cdns,tslch-ns = <4>;
+>> -		};
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> new file mode 100644
+>> index 000000000000..28112b38e6a9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+>> @@ -0,0 +1,127 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence QSPI Flash Controller support
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +allOf:
+>> +  - $ref: "spi-controller.yaml#"
+>> +
+>> +description: |
+>> +  Binding Documentation for Cadence QSPI controller,This controller is
+>> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+>> +  has been tested On Intel's LGM SoC.
+>> +
+>> +properties:
+>> +  compatible:
+>> +     enum:
+>> +       - cdns,qspi-nor
+>> +       - ti,k2g-qspi
+>> +       - ti,am654-ospi
+>> +       - intel,lgm-qspi
+>> +
+>> +  reg:
+>> +    maxItems: 2
+> 
+> Need to define what each entry is.
+Noted.
+> 
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  cdns,fifo-depth:
+>> +    description:
+>> +     Depth of hardware FIFOs.
+> 
+> ...FIFO in words.
+Good catch.
+> 
+>> +    allOf:
+>> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+>> +      - enum: [ 128, 256 ]
+>> +      - default: 128
+>> +
+>> +  cdns,fifo-width:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      4 byte bus width of the data FIFO in bytes.
+> 
+> Constraints? Perhaps:
+> 
+> multipleOf: 4
+Noted, will update.
+> 
+> if an enum doesn't work here.
+> 
+>> +
+>> +  cdns,trigger-address:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      32-bit indirect AHB trigger address.
+>> +
+>> +  cdns,rclk-en:
+>> +    type: boolean
+>> +    description: |
+>> +      Flag to indicate that QSPI return clock is used to latch the read data
+>> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
+>> +      on the board before using this property.
+>> +
+>> +# subnode's properties
+>> +patternProperties:
+>> +  "^.*@[0-9a-fa-f]+$":
+> 
+> 'a-f' is twice. What's the max number of chip selects? If less than 10,
+> then '@[0-9]$' is enough. '^.*' can be dropped too.
+16 chip select supports.
+> 
+>> +    type: object
+>> +    description:
+>> +      flash device uses the subnodes below defined properties.
+>> +
+>> +  cdns,read-delay:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      Delay for read capture logic, in clock cycles.
+>> +
+>> +  cdns,tshsl-ns:
+>> +    description: |
+>> +      Delay in nanoseconds for the length that the master mode chip select
+>> +      outputs are de-asserted between transactions.
+>> +
+>> +  cdns,tsd2d-ns:
+>> +    description: |
+>> +      Delay in nanoseconds between one chip select being de-activated
+>> +      and the activation of another.
+>> +
+>> +  cdns,tchsh-ns:
+>> +    description: |
+>> +      Delay in nanoseconds between last bit of current transaction and
+>> +      deasserting the device chip select (qspi_n_ss_out).
+>> +
+>> +  cdns,tslch-ns:
+>> +    description: |
+>> +      Delay in nanoseconds between setting qspi_n_ss_out low and
+>> +      first bit transfer.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - cdns,fifo-depth
+>> +  - cdns,fifo-width
+>> +  - cdns,trigger-address
+>> +
+>> +examples:
+>> +  - |
+>> +    spi@ff705000 {
+>> +          compatible = "cdns,qspi-nor";
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +          reg = <0xff705000 0x1000>,
+>> +                <0xffa00000 0x1000>;
+> 
+> Seems kind of small for a data area if this is like most SPI flash
+> controllers.yes you are right, following the existing example as it is.
+
+Regards
+Vadivel
+
+> 
+>> +          interrupts = <0 151 4>;
+>> +          clocks = <&qspi_clk>;
+>> +          cdns,fifo-depth = <128>;
+>> +          cdns,fifo-width = <4>;
+>> +          cdns,trigger-address = <0x00000000>;
+>> +
+>> +          flash@0 {
+>> +              compatible = "jedec,spi-nor";
+>> +              reg = <0x0>;
+>> +              cdns,read-delay = <4>;
+>> +              cdns,tshsl-ns = <50>;
+>> +              cdns,tsd2d-ns = <50>;
+>> +              cdns,tchsh-ns = <4>;
+>> +              cdns,tslch-ns = <4>;
+>> +          };
+>> +    };
+>> +
+>> -- 
+>> 2.11.0
+>>
