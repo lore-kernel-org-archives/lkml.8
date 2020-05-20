@@ -2,90 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31873C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18EE1207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16B2207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w6Fqc5RU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgETHzg (ORCPT
+        id S1726823AbgETHz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:55:36 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:37950 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726224AbgETHzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:55:36 -0400
-X-Greylist: delayed 733 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 03:55:34 EDT
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app2 (Coremail) with SMTP id by_KCgAH75Fh4sRezsiKAQ--.42332S4;
-        Wed, 20 May 2020 15:55:17 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: sun8i-ce - fix runtime pm imbalance on error
-Date:   Wed, 20 May 2020 15:54:49 +0800
-Message-Id: <20200520075456.21670-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgAH75Fh4sRezsiKAQ--.42332S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfKrX_Cw
-        10qr4xJrWYqrWDXryDZay5Zry0qr95W34kG3WvvFyfJa4j93Z8WF97Wrn3u34xJw4Uur1q
-        y39Fgr9rZ3409jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-        AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GF4l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQzVUUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        Wed, 20 May 2020 03:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETHz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 03:55:57 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B75CC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:55:57 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id f4so1049369pgi.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/pJmK+O6ROVj4s7ndS7G+mQ5Ks/vgkYIiDJBpeL0ff0=;
+        b=w6Fqc5RUEXUV2gSxof7w6N67mrIBP7dEAcmoR1w9p9j1cXZw+Dd7Qe0kP8VDYqkvXK
+         gqVsBQAgODSjvKSC+pt5r1FW/CHCxHQNGu8Xb+9MGKJOxN/MbP/mx2Qb0CdNq4F8KpQp
+         MLmhb1Xk0MwjsixiwPCDBgJb3xl7Yjjh5mN8K1MlyTLGZFggKUeg46wmEsCwNvN61lfA
+         0xIMDgf6t8SipFl2kHt7a/opNAmi2MiFC4xtU49lQ+noZS6njIM7Jp//7jK+GEdogA2P
+         ZzQgx9obIWD2L4ALEI48FeIoe4KLAoHiEO7UPKzZUcAa6UIw3NwkHsb21N8nOQ9NBBIQ
+         zuGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/pJmK+O6ROVj4s7ndS7G+mQ5Ks/vgkYIiDJBpeL0ff0=;
+        b=tyjhhkkMJTztRi+lHH+Ju+LDezJ7kbmA4ZhkvXaVqaxuxqsarfM4apMIgrd030HtzJ
+         G6a+f3L5SzsqAdmBgGdMruiLDdSXRkhJwE0TSvMkWTxYHwRSmmjS1f8se5OPESXYdFAw
+         wvQvkQFNaUwMsphkwr2IDYmFxXICYwJkuC01GiD7amViEbP1juzcleWtirK17UIBjJGm
+         UExOHcoxREa6CpcUXI/iWg2AS4LubH2N9bxhYXeHQheo3Z0VEhqR8wO/atntmysWHb/h
+         Z+h1QP9AoZaclOl87fuI/QnIsLo+94rXHysSEK74/5PV5MfKuEAEK63trWnssugEnLJM
+         E7xg==
+X-Gm-Message-State: AOAM530UERU7AK05Un/Q3bobMuHwwIP2Zl2Ou5Iy6+gzJOPyUK5+k1ok
+        eyA4HCWhASRi+IZe5nc15cPl
+X-Google-Smtp-Source: ABdhPJzRmkifkHMLualmWHNu7RrfLqoam8frQTSzmQcZG6pKy4ae+CjDqwD5hLoxFhW+PxS064rZiw==
+X-Received: by 2002:a63:cc12:: with SMTP id x18mr2910361pgf.140.1589961356846;
+        Wed, 20 May 2020 00:55:56 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:91e:dd0a:7c30:1f7e:ebdb:aa2a])
+        by smtp.gmail.com with ESMTPSA id w26sm196429pfj.20.2020.05.20.00.55.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 00:55:56 -0700 (PDT)
+Date:   Wed, 20 May 2020 13:25:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     gitster@pobox.com, git@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <rv@rasmusvillemoes.dk>
+Subject: Re: git-send-email: Ability to populate CC using more tags
+Message-ID: <20200520075551.GA3155@Mani-XPS-13-9360>
+References: <20200519184041.GB4397@Mani-XPS-13-9360>
+ <f723cce2bcbccbfdf6ebc80d1e68ba4fe10c2aee.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f723cce2bcbccbfdf6ebc80d1e68ba4fe10c2aee.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Tue, May 19, 2020 at 12:06:45PM -0700, Joe Perches wrote:
+> On Wed, 2020-05-20 at 00:10 +0530, Manivannan Sadhasivam wrote:
+> > Hello,
+> > 
+> > Currently 'git-send-email' lacks the ability to CC people described using
+> > tags such as Acked-by and Reported-by etc...
+> > 
+> > While doing a bit of googling, I found a patch from Joe [1] but that doesn't
+> > look like made its way. And in that discussion I didn't see any real objections
+> > for the patch intention apart from the usage of the term 'trailers'.
+> > 
+> > So I'm just curious if Joe or anyone has plan to resubmit it! If not I may
+> > do that.
+> > 
+> > PS: 'bylines' as mentioned by Joe seems reasonable to me.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > [1] https://lkml.org/lkml/2016/8/30/650
+> 
+> You need to use the "--misc-by" option.
+> 
+> Perhaps you need to update your git version
+> as that was added with:
+> 
+> commit ef0cc1df90f6b6c2987ab2db8e0ccf2cfc421edf
+> Author: Rasmus Villemoes <rv@rasmusvillemoes.dk>
+> Date:   Tue Oct 16 09:39:23 2018 +0200
+> 
+> send-email: also pick up cc addresses from -by trailers
+> 
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Ah, yes. This does the job :) I didn't notice this earlier.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 3e4e4bbda34c..18f0f251204c 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -598,8 +598,10 @@ static int sun8i_ce_probe(struct platform_device *pdev)
- 		goto error_alg;
- 
- 	err = pm_runtime_get_sync(ce->dev);
--	if (err < 0)
-+	if (err < 0) {
-+		pm_runtime_put_sync(ce->dev);
- 		goto error_alg;
-+	}
- 
- 	v = readl(ce->base + CE_CTR);
- 	v >>= CE_DIE_ID_SHIFT;
--- 
-2.17.1
+Thanks,
+Mani
 
+> 
