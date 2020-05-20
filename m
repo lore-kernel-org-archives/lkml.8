@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D45C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B516820835
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C31B20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589934526;
-	bh=tV75JqnXKULmhry35QUj8x5DmwwpbF7hVtJoMgm91X8=;
+	s=default; t=1589934599;
+	bh=dFHH4t3ylPjs3pc1IcJfv/L3lTknqDNi2zFrHwpCiN0=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xomi0tVyBlOZYQFW6m5sE9/mP1uC2QudexeF0vUeo2WPuktpBwgygVWlrHJEP4VvX
-	 P8RoqEg2P41BceDrSHyyzjwYs2Q8cfgPc+T/D6Dz/IANF6G8uzAjHGiuQ/kShDSDaT
-	 zir4+JzJ/tIWEQXFbD8GhlA1IQvBlixLMoH2Fke8=
+	b=GJIYTHEVBRNJmqI1n58sIXHZNI9SMuHEpAww+sVunL8lOJFSG5D+VoLsPZSl1942N
+	 vAlggAwB9EfziMCCU+UiOtlOH2PD4W3B43aNMMMo5tw6o12zOp8NDhgIEIhtFqKa/S
+	 YC0WdA+wOmaeAm3U4XV608C3lf3zr7q3Zfrhu5mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgETA2p (ORCPT
+        id S1728100AbgETA36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41392 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 20:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgETA2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:28:45 -0400
+        id S1726352AbgETA35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:29:57 -0400
 Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0AB820835
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A93562087D
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589934525;
-        bh=tV75JqnXKULmhry35QUj8x5DmwwpbF7hVtJoMgm91X8=;
+        s=default; t=1589934596;
+        bh=dFHH4t3ylPjs3pc1IcJfv/L3lTknqDNi2zFrHwpCiN0=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IlRZmJblHEQebF3hZksgLWSFQT24pQ9aMaajKBJs5muqCQdLqKHN1AGkOpId5jsVL
-         +keCOgZNoKEh7d+G5hPUyLnoZLiQ3HL/8Tfr0AA9NE6fAVIRFkW/Wwigao+PfecWTh
-         ecZOtoyuSfMGMUvwV0GKcnsPcQpzSN0v4xnMEpyU=
-Received: by mail-wm1-f51.google.com with SMTP id n5so1123157wmd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:28:44 -0700 (PDT)
-X-Gm-Message-State: AOAM530cCGvOXKWunQW+9GBm7dSkd+h/nlmDDIkcWCZSDFp8FuQKXZnP
-        qita52U+7vxC9/xJlmfru3sIIB/PPbQkHlM1uvR8Ww==
-X-Google-Smtp-Source: ABdhPJym4LAsBzDWDiUFhhTzPfi1ulI7EQIpntKCnphnmUW9fKCRFNP+ofw3vqVHI0x8cjcApDUpO2P+qQdTZiGFFGY=
-X-Received: by 2002:a1c:8141:: with SMTP id c62mr1915720wmd.21.1589934523525;
- Tue, 19 May 2020 17:28:43 -0700 (PDT)
+        b=VbuvxEz0lkx6JN32AyKOKs5i3cAMRjqqOk1BJBAwXW0W1TQm1ElmkwfSsTRuH/FMG
+         k9Vuih125H9RLGguT+z9Zv8K6IwilUh4U7XkQq/MfuVG/Fh0pwtihrdyCVpxHuWaPC
+         hdj/K6PngVywun/W4Ob+xvg3fyPkHEtsQLwCYcoA=
+Received: by mail-wm1-f51.google.com with SMTP id m185so1102945wme.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:29:56 -0700 (PDT)
+X-Gm-Message-State: AOAM530MDuM1sWZ74z9gWgd9yQWm3of4gigRPS88Mj3czz/i4xeTw7PS
+        z80Q2Q3eeLllTA4OIwTwEFfG1Uf9JRmaTKqPg4/oEw==
+X-Google-Smtp-Source: ABdhPJwun4yxBGtVbah2M4PVTclCKxFkwGKi6aq2I0UN4FumY+vdUiYwHCTSFezLrD9KNVPzS4emJSTy1HMXjePcD9Q=
+X-Received: by 2002:a05:600c:2299:: with SMTP id 25mr1967742wmf.138.1589934595163;
+ Tue, 19 May 2020 17:29:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235126.912643204@linutronix.de>
-In-Reply-To: <20200515235126.912643204@linutronix.de>
+References: <20200515234547.710474468@linutronix.de> <20200515235126.724725645@linutronix.de>
+In-Reply-To: <20200515235126.724725645@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 May 2020 17:28:32 -0700
-X-Gmail-Original-Message-ID: <CALCETrXpY9DVfXCOMiqkdt979tT2G5kqCCw2HY22kNJ=z_p6_A@mail.gmail.com>
-Message-ID: <CALCETrXpY9DVfXCOMiqkdt979tT2G5kqCCw2HY22kNJ=z_p6_A@mail.gmail.com>
-Subject: Re: [patch V6 25/37] x86/entry: Convert SMP system vectors to IDTENTRY_SYSVEC
+Date:   Tue, 19 May 2020 17:29:43 -0700
+X-Gmail-Original-Message-ID: <CALCETrUrNq9+k2--OVXyLbTAOoy9hGoPvMh6Ny3y_nU8vVn8gg@mail.gmail.com>
+Message-ID: <CALCETrUrNq9+k2--OVXyLbTAOoy9hGoPvMh6Ny3y_nU8vVn8gg@mail.gmail.com>
+Subject: Re: [patch V6 23/37] x86/entry: Provide IDTENTRY_SYSVEC
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -86,11 +86,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
 >
-> Convert SMP system vectors to IDTENTRY_SYSVEC
->   - Implement the C entry point with DEFINE_IDTENTRY_SYSVEC
->   - Emit the ASM stub with DECLARE_IDTENTRY_SYSVEC
->   - Remove the ASM idtentries in 64bit
->   - Remove the BUILD_INTERRUPT entries in 32bit
->   - Remove the old prototypes
+> Provide a IDTENTRY variant for system vectors to consolidate the different
+> mechanisms to emit the ASM stubs for 32 an 64 bit.
+>
+> On 64bit this also moves the stack switching from ASM to C code. 32bit will
+> excute the system vectors w/o stack switching as before. As some of the
+> system vector handlers require access to pt_regs this requires a new stack
+> switching macro which can handle an argument.
+
+Is that last sentence obsolete?
+
+Otherwise,
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
