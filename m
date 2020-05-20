@@ -2,88 +2,177 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5006EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D47C207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10656207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="N6+F8AHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgETO11 (ORCPT
+        id S1728030AbgETO1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:27:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32952 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726977AbgETOW1 (ORCPT
+        Wed, 20 May 2020 10:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgETO1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:27 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035j-SZ; Wed, 20 May 2020 15:22:19 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DRi-GM; Wed, 20 May 2020 15:22:19 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Wed, 20 May 2020 10:27:32 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E4EC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:27:31 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g14so174887wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ptEFNOIgk4B9+DYPafEJRUQDpVN+/z6CM7j9644NXs0=;
+        b=N6+F8AHyBsGr0JrchNCjPmACddbP02WM42JVatgqpfz453fPvPxNSwETDM9nnCuNdx
+         lmwiFvLsbcA8X8p1dCkos0MC1aP9vojACfnbjOWQMj89Vrd6li3tz3eZNJvm6Cey3kdh
+         ibmCBGe++ATvMcSFUTOTMoFa+1gS6rUIgVBiM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ptEFNOIgk4B9+DYPafEJRUQDpVN+/z6CM7j9644NXs0=;
+        b=J1SHxp2qPTf2VR2JysNZjLVTlgSk7m7QAb8San70Z8kjFVcgMbewAMNjJ5R5+QZPRO
+         iK///XzJliOjVZJ8y2iktebJMkfx5htSSL9IqyVMtebxL8QialDDLlN0JUelGFvzCCit
+         wtvq4YxAjwxny62IUcvHEatoaPQpARHAVb2kLicTIjubdsDd5/6h6Kk0v5badRzs8uyo
+         cRINV1tQCAv0dkm7EA5HPwrP93ALpw5BiyRb+0cRoyoNGk7LX+fVs4SHI0h4Gg291KxM
+         qmexRSDYBpA4rFJ6R13aL87KTP9XtARgGTbwGBjQe31BkPKCTBqXtMOxZJuSwi3miBaL
+         jQkQ==
+X-Gm-Message-State: AOAM533pT5nngP4sZ+Y1g2lgMWlPKAtRJgsiJ7ppSSIxn29nfXlq4sMx
+        TCuodybanpC5VxIS4yrGWZjsmAyWnvQnSEasguJ9zw==
+X-Google-Smtp-Source: ABdhPJySvQfAlpumPlaeBx0gloIM87hF3NnQtQHYZAsxKgeWGRoXo9/4rd6GvjpLG1hbdorf7f1PdTxBLXECGZ/RMao=
+X-Received: by 2002:a1c:7d02:: with SMTP id y2mr3542879wmc.92.1589984850314;
+ Wed, 20 May 2020 07:27:30 -0700 (PDT)
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sasha Levin" <sashal@kernel.org>,
-        "Felipe Balbi" <balbi@kernel.org>, "Bin Liu" <b-liu@ti.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Wed, 20 May 2020 15:14:16 +0100
-Message-ID: <lsq.1589984008.873914027@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 48/99] usb: dwc3: turn off VBUS when leaving host mode
-In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+ <20200519203419.12369-15-james.quinlan@broadcom.com> <4a49e7724e9a12e4f128a5e9ff4181da7af40bd3.camel@suse.de>
+In-Reply-To: <4a49e7724e9a12e4f128a5e9ff4181da7af40bd3.camel@suse.de>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Wed, 20 May 2020 10:27:17 -0400
+Message-ID: <CA+-6iNxB6CS4OJSfCpUfJrd9=7EjFrKwugBT1WycKv-C_j3zAQ@mail.gmail.com>
+Subject: Re: [PATCH 14/15] PCI: brcmstb: Set bus max burst side by chip type
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.84-rc1 review patch.  If anyone has any objections, please let me know.
+On Wed, May 20, 2020 at 9:44 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > The proper value of the parameter SCB_MAX_BURST_SIZE varies
+> > per chip.  The 2711 family requires 128B whereas other devices
+> > can employ 512.  The assignment is complicated by the fact
+> > that the values for this two-bit field have different meanings;
+> >
+> >   Value   Type_Generic    Type_7278
+> >
+> >      00       Reserved         128B
+> >      01           128B         256B
+> >      10           256B         512B
+> >      11           512B     Reserved
+> >
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 18 +++++++++++++++---
+> >  1 file changed, 15 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> > b/drivers/pci/controller/pcie-brcmstb.c
+> > index 7bf945efd71b..0dfa1bbd9764 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -53,7 +53,7 @@
+> >  #define  PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK              0x1000
+> >  #define  PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK   0x2000
+> >  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK     0x300000
+> > -#define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128              0x0
+> > +
+> >  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK          0xf8000000
+> >  #define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK          0x07c00000
+> >  #define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK          0x0000001f
+> > @@ -276,6 +276,7 @@ struct brcm_pcie {
+> >       int                     num_memc;
+> >       u64                     memc_size[PCIE_BRCM_MAX_MEMC];
+> >       u32                     hw_rev;
+> > +     const struct of_device_id *of_id;
+> >  };
+> >
+> >  /*
+> > @@ -841,7 +842,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >       int num_out_wins = 0;
+> >       u16 nlw, cls, lnksta;
+> >       int i, ret, memc;
+> > -     u32 tmp, aspm_support;
+> > +     u32 tmp, burst, aspm_support;
+> >
+> >       /* Reset the bridge */
+> >       brcm_pcie_bridge_sw_init_set(pcie, 1);
+> > @@ -857,10 +858,20 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >       /* Wait for SerDes to be stable */
+> >       usleep_range(100, 200);
+> >
+> > +     /*
+> > +      * SCB_MAX_BURST_SIZE is a two bit field.  For GENERIC chips it
+> > +      * is encoded as 0=128, 1=256, 2=512, 3=Rsvd, for BCM7278 it
+> > +      * is encoded as 0=Rsvd, 1=128, 2=256, 3=512.
+> > +      */
+> > +     if (strcmp(pcie->of_id->compatible, "brcm,bcm2711-pcie") == 0)
+>
+> Would it make sense to use pcie->type here? I know GENERIC != BCM2711, but we
+> could define it and avoid adding redundant info in struct brcm_pcie.
+Yes, that would get rid of the need for keeping of_id around.
 
-------------------
-
-From: Bin Liu <b-liu@ti.com>
-
-commit 09ed259fac621634d51cd986aa8d65f035662658 upstream.
-
-VBUS should be turned off when leaving the host mode.
-Set GCTL_PRTCAP to device mode in teardown to de-assert DRVVBUS pin to
-turn off VBUS power.
-
-Fixes: 5f94adfeed97 ("usb: dwc3: core: refactor mode initialization to its own function")
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/usb/dwc3/core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -614,6 +614,9 @@ static void dwc3_core_exit_mode(struct d
- 		/* do nothing */
- 		break;
- 	}
-+
-+	/* de-assert DRVVBUS for HOST and OTG mode */
-+	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
- }
- 
- #define DWC3_ALIGN_MASK		(16 - 1)
-
+Thanks,
+Jim
+>
+> Regards,
+> Nicolas
+>
+> > +             burst = 0x0; /* 128B */
+> > +     else
+> > +             burst = (pcie->type == BCM7278) ? 0x3 : 0x2; /* 512 bytes */
+> > +
+> >       /* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
+> >       u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK);
+> >       u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK);
+> > -     u32p_replace_bits(&tmp, PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128,
+> > +     u32p_replace_bits(&tmp, burst,
+> >                         PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK);
+> >       writel(tmp, base + PCIE_MISC_MISC_CTRL);
+> >
+> > @@ -1200,6 +1211,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >       pcie->reg_offsets = data->offsets;
+> >       pcie->reg_field_info = data->reg_field_info;
+> >       pcie->type = data->type;
+> > +     pcie->of_id = of_id;
+> >
+> >       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >       pcie->base = devm_ioremap_resource(&pdev->dev, res);
+>
