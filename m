@@ -2,106 +2,122 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD65620708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZOSedoTX"
+	by mail.kernel.org (Postfix) with ESMTP id 9F05B20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgETBzs (ORCPT
+        id S1728498AbgETB4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 21:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51606 "EHLO
+        Tue, 19 May 2020 21:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgETBzr (ORCPT
+        with ESMTP id S1726379AbgETB4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 21:55:47 -0400
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A70AAC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 18:55:47 -0700 (PDT)
-Received: by mail-qv1-xf2d.google.com with SMTP id g20so627642qvb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 18:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=ghTZqejRfgfS5fU2jVg75uMDbgGX4TrDcdfAaAdauPM=;
-        b=ZOSedoTXRdCITrmaNoTnIMCXK7FvETKzbgoMB6JrmV4a5WGgI4bUyJioFolzQmGVrq
-         o84jZ9Q029nIsm59ickCSKRAQ01KYsQEUK+O0c4WczRv54WM0OVp426vCrLLCpKR37Mw
-         m5+8b6DcRSebQJ0RTOCsPoR2ZIbKjuquYzCasav1Nxy8+/U0kUkQUoatHY5OrIxy9YtL
-         yAVmCyNuLc+1DjGAfNtUnT7YgFJbNpFsbuQn2zlgnGL6qXiPYNQ0+P32QGnABRJpe8HR
-         nVBWLJcjfkd+mQxUSjqqoCgfYXpimBamkomH/UGmqkYwxDWuFhnC7r08aRZk4wq13M7K
-         eJcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=ghTZqejRfgfS5fU2jVg75uMDbgGX4TrDcdfAaAdauPM=;
-        b=n3tBGyOqWrIWo5OEB8Y0ObyNNBH1Teqgbqe9fYUomHL7LUSwXYCabyPfpQ+iFYwMZv
-         uID98L1/ETeswZIgYF/W/RoyaPczY5l4g7AMK87KOHzcAkh/mR2z463iByhlsjRU1jmA
-         NxzoY0UwNNw5Er0eMRCpvxkbtzVKDJRzrMjBRRcee55CBDHSD3iB9oTF5Nz87621lYsz
-         I3TT7ugK0C4yr692uRRWx8Wt3ahToFRRmNoWVexY+X1pxzzh57ZOI/x3wU1GZoosYlHl
-         YfshO9JbmSeOUynzV5t2KSs/0544BAlOkuxwviQ5UU/n/d4igtuB7MMo8fEyr+JUjFkS
-         Wq3w==
-X-Gm-Message-State: AOAM530IXX4T7o92MR3xzUcsqXu3FI3udoEKFFpVCE/tAD1tNCSA4hKV
-        ReGzBYzyoQ5Okac4dYFUbBU9xA==
-X-Google-Smtp-Source: ABdhPJyy1uyJk+Gqjg5bwcSBKIbQNOr6J5nfgaVGYYnWbcx1hDrSKyd/Hr8zTt2MLIvCkn1/+n7iIQ==
-X-Received: by 2002:ad4:466f:: with SMTP id z15mr2750441qvv.101.1589939746442;
-        Tue, 19 May 2020 18:55:46 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j3sm1007064qkf.9.2020.05.19.18.55.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 May 2020 18:55:45 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: UBSAN: array-index-out-of-bounds in kernel/bpf/arraymap.c:177
-Date:   Tue, 19 May 2020 21:55:45 -0400
-Message-Id: <FE7742FF-713E-4310-95E7-9B217662E53E@lca.pw>
-References: <CAEf4BzZKCh7+2TL8GVetxrOKYCoL0U7jTGsO5CbDExs7Px+bYQ@mail.gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>
-In-Reply-To: <CAEf4BzZKCh7+2TL8GVetxrOKYCoL0U7jTGsO5CbDExs7Px+bYQ@mail.gmail.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-X-Mailer: iPhone Mail (17E262)
+        Tue, 19 May 2020 21:56:15 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA96C061A0E;
+        Tue, 19 May 2020 18:56:15 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbDxG-0005nh-7R; Wed, 20 May 2020 03:55:34 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 77588100D00; Wed, 20 May 2020 03:55:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a seqcount
+In-Reply-To: <20200519170637.56d1a20a@hermes.lan>
+References: <20200519214547.352050-1-a.darwish@linutronix.de> <20200519214547.352050-2-a.darwish@linutronix.de> <20200519150159.4d91af93@hermes.lan> <87v9kr5zt7.fsf@nanos.tec.linutronix.de> <20200519161141.5fbab730@hermes.lan> <87lfln5w61.fsf@nanos.tec.linutronix.de> <20200519170637.56d1a20a@hermes.lan>
+Date:   Wed, 20 May 2020 03:55:33 +0200
+Message-ID: <87d06z5q0a.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Stephen Hemminger <stephen@networkplumber.org> writes:
+> On Wed, 20 May 2020 01:42:30 +0200
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>> Stephen Hemminger <stephen@networkplumber.org> writes:
+>> > On Wed, 20 May 2020 00:23:48 +0200
+>> > Thomas Gleixner <tglx@linutronix.de> wrote:  
+>> >> No. We did not. -ENOTESTCASE  
+>> >
+>> > Please try, it isn't that hard..
+>> >
+>> > # time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
+>> >
+>> > real	0m17.002s
+>> > user	0m1.064s
+>> > sys	0m0.375s  
+>> 
+>> And that solves the incorrectness of the current code in which way?
+>
+> Agree that the current code is has evolved over time to a state where it is not
+> correct in the case of Preempt-RT.
 
+That's not a RT problem as explained in great length in the changelog
+and as I pointed out in my previous reply.
 
-> On May 19, 2020, at 7:23 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> w=
-rote:
->=20
-> I agree, it's bad to have this noise. But again, there is nothing
-> wrong with the way it's used in BPF code base. We'd gladly use
-> flexible array, if we could. But given we can't, I'd say the proper
-> solution (in order of my preference) would be:
->=20
->  - don't trigger false error, if zero-sized array is the member of union;
->  - or have some sort of annotation at field declaration site (not a
-> field access site).
->=20
-> Is that possible?
+ Realtime scheduling classes are available on stock kernels and all
+ those attempts to "fix" the livelock problem are ignoring that fact.
 
-I am not a compiler expert, but with my experience with all those compiler i=
-nstrumental technology like KCSAN, KASAN and UBSAN, it seems both options yo=
-u prop need to modify compilers, i.e., -fsanitize=3Dundefined=
+Just because you or whoever involved are not using them or do not care
+is not making the code more correct.
+
+> The motivation for the changes to seqcount goes back many years when
+> there were ISP's that were concerned about scaling of tunnels, vlans
+> etc.
+
+I completely understand where this comes from, but that is not a
+justification for incorrect code at all.
+
+> Is it too much to ask for a simple before/after test of your patch as part 
+> of the submission. You probably measure latency changes to the
+> nanosecond.
+
+It's not too much to ask and I'm happy to provide the numbers.
+
+But before I waste my time and produce them, can you please explain how
+any numbers provided are going to change the fact that the code is
+incorrect?
+
+  A bug, is a bug no matter what the numbers are.
+
+I don't have a insta reproducer at hand for the problem which made that
+code go belly up, but the net result is simply:
+
+      Before:			After:
+	real	INFINTE         0mxx.yyys
+
+And the 'Before' comes with the extra benefit of stall warnings (if
+enabled in the config).
+
+If you insist I surely can go the extra mile and write up the insta
+reproducer and stick it into a bugzilla for you.
+
+Thanks,
+
+        tglx
