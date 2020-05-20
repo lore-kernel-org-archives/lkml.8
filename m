@@ -2,105 +2,102 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75809C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB93C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F10120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:39:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FsipvN1G"
+	by mail.kernel.org (Postfix) with ESMTP id 3D90B20874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590018040;
+	bh=yJQr4N2gMImcjIgh4e+Nb6eX8prUZSgWAz7fgEAtjn8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IF1uhxT+tDeMK0+FM3EElQlnyTXOnj6+RRg6+cXN9JIjnCTq18qQiY4QD/z8wgWrz
+	 0KzhBygungIUmGzpd5z5lif2ejwBzNcyTNcuGxUDbIV/rczig70ERhaai6yRjeVw6N
+	 5S4oaAKnymk7ejihJkJVygrWJLuclpPKJuQJ7Rpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgETXjT (ORCPT
+        id S1728198AbgETXkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgETXjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:39:18 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B934C061A0E;
-        Wed, 20 May 2020 16:39:17 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id m44so4094210qtm.8;
-        Wed, 20 May 2020 16:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=usgVE9wGsTmR3Ul4KmzuJXmMmNEoxcCV+K4pKCDDnEw=;
-        b=FsipvN1GuGM9UbR7VsW4XkubLiUqC8Dqtu7L937s2qadx/bxbgPsMl9fWYiJlizujH
-         c9qxkVWOxpVMlAT7nNkHzdOL6XRXbCOpar1C4DQC47Sws3swXaaqI9YAuQyLubSZ0OK0
-         rRko/wzRAKCkIy15w/nWQBRVBLwMvtGjJCE2gisIPTfPY2zdgnpj1FMzVNCnVI10QH79
-         YBAX7tezDRj2K0TOr70GJg9yP9kYgu14VxvOjzih8uvep1FVSB5EojcU0QtKwd0T+IdB
-         hjRKTNxmgJ9liw0vUGr1peJpzaW/R/f+lsktCjxXTndLxOoBi3/frCJqvNi3QaPXR6GX
-         kpaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=usgVE9wGsTmR3Ul4KmzuJXmMmNEoxcCV+K4pKCDDnEw=;
-        b=NX+9uVe/yO0GL9KKvOXOHz5GefBwZRpFfy0UuHRq/9fs+d7Q54crmTq+eztKuFh4KV
-         mrzbWrwiEF2044382M3G9Q8ipjtasHXxaTgrRfrg1RYxTHCm7fS2H2ArcoYXKnToO3dE
-         Om5GFMxY/+u7KqgCb9kq2W2sZVymiitDmKy4DA3wEseC06UIt+1E1DK+wY4U3jydrwmv
-         LXqXEbW0BXFdo6Bm0kQ6Ryvi6DPK/2qKTmhxkiPfs4/05L4icxx3gP9RTEARQkq0U2pn
-         RQMMLV+aRGJoxOYKx6cq2unZSbgeV9mINAar97dF/XXoKCwgN0KU5W5FXpfdXXnNWSQd
-         Y8fw==
-X-Gm-Message-State: AOAM530kitqhp7j8IZQRRpzIFXJBDZpaIJprNSrFUZrdCEHBVWeplmTB
-        C59Pm4gBUHx/XTUg8i+HSa8=
-X-Google-Smtp-Source: ABdhPJzb0RQavdlFPdZ2esbonBQnAnxuJh+Wdn80ZrxdL0NcIMXKvb5xhinFWySzKcTGVqX7yVkgxA==
-X-Received: by 2002:ac8:1af3:: with SMTP id h48mr7625941qtk.371.1590017956516;
-        Wed, 20 May 2020 16:39:16 -0700 (PDT)
-Received: from localhost.localdomain ([168.181.48.225])
-        by smtp.gmail.com with ESMTPSA id z10sm3685208qtu.22.2020.05.20.16.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:39:15 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 43E1FC0DAC; Wed, 20 May 2020 20:39:13 -0300 (-03)
-Date:   Wed, 20 May 2020 20:39:13 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     hch@lst.de, kuba@kernel.org, edumazet@google.com,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, jmaloy@redhat.com, ying.xue@windriver.com,
-        drbd-dev@lists.linbit.com, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 31/33] sctp: add sctp_sock_set_nodelay
-Message-ID: <20200520233913.GV2491@localhost.localdomain>
-References: <20200520195509.2215098-1-hch@lst.de>
- <20200520195509.2215098-32-hch@lst.de>
- <20200520231001.GU2491@localhost.localdomain>
- <20200520.162355.2212209708127373208.davem@davemloft.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520.162355.2212209708127373208.davem@davemloft.net>
+        Wed, 20 May 2020 19:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbgETXkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 19:40:39 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5825B2072C;
+        Wed, 20 May 2020 23:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590018038;
+        bh=yJQr4N2gMImcjIgh4e+Nb6eX8prUZSgWAz7fgEAtjn8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uUzCdsJ4dPUOGOhbWC7K6acCbXeqRHR+0qzMhgjEOxgVke9kEnBa7JF5kx3vHFzK1
+         2JDsO09C77U5VjEP7YTXkaq7ElxS7VohANm9CztE2bI+QoaSzLs8/SxR/44jb4IDIo
+         fHiF99y61RmpcSRtu67jCykydgbedxtWxWl3l/8Y=
+Date:   Wed, 20 May 2020 16:40:37 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: unify reclaim retry limits with page
+ allocator
+Message-Id: <20200520164037.e3598bc902e39415f4c263e7@linux-foundation.org>
+In-Reply-To: <20200520163142.GA808793@chrisdown.name>
+References: <20200520163142.GA808793@chrisdown.name>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 04:23:55PM -0700, David Miller wrote:
-> From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> Date: Wed, 20 May 2020 20:10:01 -0300
-> 
-> > The duplication with sctp_setsockopt_nodelay() is quite silly/bad.
-> > Also, why have the 'true' hardcoded? It's what dlm uses, yes, but the
-> > API could be a bit more complete than that.
-> 
-> The APIs are being designed based upon what in-tree users actually
-> make use of.  We can expand things later if necessary.
+On Wed, 20 May 2020 17:31:42 +0100 Chris Down <chris@chrisdown.name> wrote:
 
-Sometimes expanding things later can be though, thus why the worry.
-But ok, I get it. Thanks.
+> Reclaim retries have been set to 5 since the beginning of time in
+> 66e1707bc346 ("Memory controller: add per cgroup LRU and reclaim").
+> However, we now have a generally agreed-upon standard for page reclaim:
+> MAX_RECLAIM_RETRIES (currently 16), added many years later in
+> 0a0337e0d1d1 ("mm, oom: rework oom detection").
+> 
+> In the absence of a compelling reason to declare an OOM earlier in memcg
+> context than page allocator context, it seems reasonable to supplant
+> MEM_CGROUP_RECLAIM_RETRIES with MAX_RECLAIM_RETRIES, making the page
+> allocator and memcg internals more similar in semantics when reclaim
+> fails to produce results, avoiding premature OOMs or throttling.
+> 
+> ...
+>
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -73,9 +73,6 @@ EXPORT_SYMBOL(memory_cgrp_subsys);
+>  
+>  struct mem_cgroup *root_mem_cgroup __read_mostly;
+>  
+> -/* The number of times we should retry reclaim failures before giving up. */
 
-The comment still applies, though. (re the duplication)
+hm, what tree is this against?
+
+> -#define MEM_CGROUP_RECLAIM_RETRIES	5
+> -
+>  /* Socket memory accounting disabled? */
+>  static bool cgroup_memory_nosocket;
+>  
+> @@ -2386,7 +2383,7 @@ void mem_cgroup_handle_over_high(void)
+>  	unsigned long pflags;
+>  	unsigned long nr_reclaimed;
+>  	unsigned int nr_pages = current->memcg_nr_pages_over_high;
+> -	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	int nr_retries = MAX_RECLAIM_RETRIES;
+
+I can't seem to find a tree in which mem_cgroup_handle_over_high() has
+a local `nr_retries'.
+
+
