@@ -2,80 +2,83 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57713C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44184C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 326E5207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9FF20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8AEIbJL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8rr0MYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgETKy1 (ORCPT
+        id S1726917AbgETKyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:54:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50750 "EHLO
+        Wed, 20 May 2020 06:54:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETKy0 (ORCPT
+        with ESMTP id S1726403AbgETKyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:54:26 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4E9C061A0E;
-        Wed, 20 May 2020 03:54:26 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id g25so2041499otp.13;
-        Wed, 20 May 2020 03:54:26 -0700 (PDT)
+        Wed, 20 May 2020 06:54:50 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C07CBC061A0E;
+        Wed, 20 May 2020 03:54:49 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id j145so2540803oib.5;
+        Wed, 20 May 2020 03:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nqXCwIldH4FavBD4hykx1Fj0fxifKXNdT/BTK4Kwo7U=;
-        b=X8AEIbJLA3DQIY2HkUAkUgsmWfo6rqFMqRLgjKDaWiVM+UzqRC+Z6Xp+kwXPubaEyo
-         JVvy3wM9oouI9BsPwcP52prWe6PHN+2hEAO+Ai74K48KuEKRORSMGLCq+bySouQ0bSeT
-         LblIHgoIycnEnNztT9f1y5byfGJC4e/ikHzFYQRLowPeRklqdIw6i3U18DUQNDH40WEW
-         CY+mlju/lyBdrUwN0EC09PSg9g+hFh6MjGZaaUmlplvb3b7A2bsMmQ09LsB7gvtSz/XG
-         r8V85gmEDHalvISie4Rijec3w6lMnbFP8rzoxGTT2rfphrJU+h2XF8POod4u8SZP4FFG
-         L3Iw==
+        bh=c2Afq77Z+tN7we6adDt0nQZ4ZYEqBUuyV+afhqX2puc=;
+        b=f8rr0MYX1CwWmG1P8YMJ9VNIlmGfD6DN48I3cCEx+22w/alkHCEmUCaz1NwicP7ALW
+         +mc2+QaxzGTRGR9jlnbQoMnmcqFPv7jwszFi/1aMC7eQneaDoEts99E1DHk+QtppPme/
+         hg4NL5PK5UIKRd1Dz/qZRioCPBVrDvaAWMiBduOaNn3kqTwMEqK/EKa+wuDwxyBrGk1u
+         jIjFqTlPpsvfvldTey5gXtJ+HD0XsOe/V55+TlDMF3QkCLSjnUVroX5bR/7v3MWGB1tE
+         r9MWBuNbAfbaVAksvbRYDi1AGxABk/U9PAnUvUUKNwL5eevQN//SxFX8zLYBlKP5sdQ9
+         8Vgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=nqXCwIldH4FavBD4hykx1Fj0fxifKXNdT/BTK4Kwo7U=;
-        b=LwWnLzKIc3fi+gPu+4FsoNb17DF+I07FIjUHtGFpoTduEiOQ41I3a3fdah640+Zcax
-         l5GT3EOUlY/++fzMXgI4ufq2y1zj2LU2WPF43/T3vRzERAavkTsM60azG+VLX9jMfczz
-         LWhSS5XuaVfkeUl585KM42ImqAS997qsvHHSmPZZt7gTx2wV8aNkrPTCpVKo13VLQARp
-         7q06x4pvlIY/Nq9aVp9rbQGAZw8yeYmXPv44nG4sA/t+XTrcvLQ5facwYjQhl9ZydLqp
-         xk2BDXwGeUngRESd9isB8E9kudpNbS+Q6Z0CZ9GcAxgQcXHtpXEZL3anmbOOJTmnX9p6
-         q++A==
-X-Gm-Message-State: AOAM533Hx1pT8u7qF6zr52D5QbaonERGk83KAMlXqnRwWfqZMe4sC4aO
-        oQCfxO5In642LjQshjz+kY8=
-X-Google-Smtp-Source: ABdhPJxfcLMFpOQOl9GprTyZ1tlz6Lk0/vLJSwLGeeX5CKxL+3yEWsvZXmHiK7XoC4kFsyKfeSiLEw==
-X-Received: by 2002:a9d:2041:: with SMTP id n59mr2525764ota.252.1589972062788;
-        Wed, 20 May 2020 03:54:22 -0700 (PDT)
+        bh=c2Afq77Z+tN7we6adDt0nQZ4ZYEqBUuyV+afhqX2puc=;
+        b=QEkVvFk0CgMwThctN4fZ7TbcGcshM/mjq519q/VU6ZOJPJQCp1dMYsGnGxc5ptbqXn
+         goC6XNBQ3RtosZooRF1y+4LykAiGBCjV0G4kuRf/c+EV4xdbq6JHpXvabpDqMZDlYiq8
+         ts5HE4cotOIYx8+58dsr3f8d3fbdwNUORt7JkGGkBka3ATeHqUKXsIx5+4s2zyEm3Toi
+         Gpd6NXnZDmi/LyI+D9TtyPsFK8EZ4ckTwOZjOXkoCayA+f7SpYLJguDOsiKsDpq0x/Kv
+         JU0QlQE6LazPDwrwfkPwe6IRCI4OXEfvI0ZaqgBVP4fR5VlNeD0xqlDjBU3UH1xhAyWB
+         +ocQ==
+X-Gm-Message-State: AOAM530Y2OUQ6RjOGd+GLvnXerWapNdNj8kdRqh7cImawDvna/7jQrRR
+        rIcRGkyWtbzI9wcx8dTC3pA=
+X-Google-Smtp-Source: ABdhPJy4IRDzwitYGg1iawdF5cHyQVUGPHtwPdqhrDocQTEVSWdhmbOM6N8Xn9d1vgPdxh4luawkdw==
+X-Received: by 2002:aca:1208:: with SMTP id 8mr2776332ois.17.1589972088277;
+        Wed, 20 May 2020 03:54:48 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id u45sm677233ooi.41.2020.05.20.03.54.19
+        by smtp.gmail.com with ESMTPSA id t22sm689769ooc.37.2020.05.20.03.54.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 03:54:22 -0700 (PDT)
-Subject: Re: [PATCH 3/4] clk/soc: mediatek: mt6779: Bind clock driver from
- platform device
-To:     Stephen Boyd <sboyd@kernel.org>,
+        Wed, 20 May 2020 03:54:47 -0700 (PDT)
+Subject: Re: [PATCH 4/4] arm64: dts: mt6797: Fix mmsys node name
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>, matthias.bgg@kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, matthias.bgg@kernel.org
-Cc:     mtk01761 <wendell.lin@mediatek.com>, devicetree@vger.kernel.org,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-mediatek@lists.infradead.org,
+        Stephen Boyd <sboyd@kernel.org>,
         Kate Stewart <kstewart@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-clk@vger.kernel.org, Allison Randal <allison@lohutok.net>
 References: <20200518113156.25009-1-matthias.bgg@kernel.org>
- <20200518113156.25009-3-matthias.bgg@kernel.org>
- <158996971719.215346.12802870863066637932@swboyd.mtv.corp.google.com>
+ <20200518113156.25009-4-matthias.bgg@kernel.org>
+ <CAAOTY_-Lh=4N2L9ZOrVw+wK1tSrCA=UuOH+7xs0U=12B3Qi7Ug@mail.gmail.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -151,15 +154,15 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <45fcf31f-918b-fbc6-5c55-5fa74e3a7002@gmail.com>
-Date:   Wed, 20 May 2020 12:54:18 +0200
+Message-ID: <550dc012-4b0e-09ab-2993-48ab3d2ed662@gmail.com>
+Date:   Wed, 20 May 2020 12:54:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <158996971719.215346.12802870863066637932@swboyd.mtv.corp.google.com>
+In-Reply-To: <CAAOTY_-Lh=4N2L9ZOrVw+wK1tSrCA=UuOH+7xs0U=12B3Qi7Ug@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -167,20 +170,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 20/05/2020 12:15, Stephen Boyd wrote:
-> Quoting matthias.bgg@kernel.org (2020-05-18 04:31:55)
+On 19/05/2020 17:06, Chun-Kuang Hu wrote:
+> Hi, Matthias:
+> 
+> <matthias.bgg@kernel.org> 於 2020年5月18日 週一 下午7:33寫道：
+>>
 >> From: Matthias Brugger <matthias.bgg@gmail.com>
 >>
->> The mmsys driver is now the top level entry point for the multimedia
->> system (mmsys), we bind the clock driver by creating a platform device.
->> We also bind the MediaTek DRM driver which is not yet implement and
->> therefor will errror out for now.
+>> Node names are supposed to match the class of the device. The
+>> mmsys node is a syscon as it provides more then just a clock controller.
+>> Update the name.
+> 
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> 
+
+
+Now queued for v5.7-next/dts64
+
+
 >>
 >> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>
 >> ---
-> 
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> 
-
-Now queued for v5.7-next/soc
-
+>>
+>>  arch/arm64/boot/dts/mediatek/mt6797.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+>> index 136ef9527a0d..3efd032481ce 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+>> @@ -233,7 +233,7 @@ uart3: serial@11005000 {
+>>                 status = "disabled";
+>>         };
+>>
+>> -       mmsys: mmsys_config@14000000 {
+>> +       mmsys: syscon@14000000 {
+>>                 compatible = "mediatek,mt6797-mmsys", "syscon";
+>>                 reg = <0 0x14000000 0 0x1000>;
+>>                 #clock-cells = <1>;
+>> --
+>> 2.26.2
+>>
+>>
+>> _______________________________________________
+>> Linux-mediatek mailing list
+>> Linux-mediatek@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
