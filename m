@@ -2,105 +2,99 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C6A207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589996643;
-	bh=P2aat+TlaI2N+/z7SW3hph4BEYfuA7FSbseNufQGe4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tUeXSezIeosDcFYrsvwDFh/f2sYwC1W6WjwUd9lxVx9aLbhp66MksiOqXHZuYzKma
-	 fDLLTYqx/H7oLHWcBRGNwqMm3iuI2Q7MbJko2Cux3JYCoZjw6DajWILf4nFrkfkW8B
-	 kbkmT/ZdM/939Q/tV35Smu60LL+6woFL6TdtyskE=
+	by mail.kernel.org (Postfix) with ESMTP id 7573620709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDM3xe4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgETRoC (ORCPT
+        id S1726805AbgETRpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgETRoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:44:01 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 427C82075F;
-        Wed, 20 May 2020 17:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589996641;
-        bh=P2aat+TlaI2N+/z7SW3hph4BEYfuA7FSbseNufQGe4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LJ5Q3o7lmeUADmYQ2lB29DmpSJq9CwNkr/C8uOM21tMpkAFWObarU+Bu1OsPfq9FG
-         4F6Ql4BWleoI4gCPqUB936+6/WYnqm5xYt5ZI5xAF0uY3EHOr74j831yY9jHzVpFEC
-         at7VFnF549jrYb1WBdZlx226K8TrOTtmFi+2M4UA=
-Date:   Wed, 20 May 2020 18:43:56 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
-        patches@amperecomputing.com, Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] ACPI/IORT: Fix PMCG node single ID mapping handling
-Message-ID: <20200520174355.GC27629@willie-the-truck>
-References: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
- <20200520172736.GA10693@e121166-lin.cambridge.arm.com>
+        Wed, 20 May 2020 13:45:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETRpX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:45:23 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89033C061A0E;
+        Wed, 20 May 2020 10:45:23 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id a13so1633523pls.8;
+        Wed, 20 May 2020 10:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EfR9abvjfYeSu2gOpoQjslxf3ylmODDyibdHeuoKSnQ=;
+        b=rDM3xe4KWRWQelmyP4mTMwjuh5WmcZKYyi9OdmrfaHaiMOlYmooQGnpaYtCXHNPajQ
+         ORm3rYGv/4HJycjjBwwXtqsfTRX8DMCklSJLc9zopKuEd4xBWHkKET7AHqup+f2XljkX
+         twAisaVxkFmULfNTWrEZjING2pUJV9yUN9oAz8eaeOduFQAAmfXQ1Pjg8zPe0zeQ3Uct
+         O00+cmAHfYnkFwePomPWLWI32kqeraDbyhpnJzMXv6ZuKk6KBdhkWBevjXu+FQE9Vauo
+         fJuWYc5UeJ/nd4uwj/W0pGAuq9aN8uMFtGeNrC7oIcYQB06drPUBF62yoMTZY17Qly9c
+         t7ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EfR9abvjfYeSu2gOpoQjslxf3ylmODDyibdHeuoKSnQ=;
+        b=JsB45+GXzKCFupRXLFO38yjiq2drDToQSBsRatSER3ZHWlXLaLdEGJxK7AsdSHcaQz
+         Ia5JMKYwBXw4Q7hiQnfqCXlJccyuxEMLR5wnfcxZenf5JYBl8gntVIiUPnYi9EJILTAf
+         y6LVvS1kvcLtjunXybkfFWi4Q3ppugavXpt2I0gqyyiHDjJmlWnwbK4PRg/CTVWzEDrz
+         ULExHfe8EnkP7R1LhIn5i/vY0UMgywCVRoXz3TzTQH/+3bazF24obZXqFk1yydWB02ki
+         riyDmHYBlXyzG9r6L2O8PXq3DBJyEMnfw/Vv4Glb2Ex4gsLYDcySehgEIVZouseQItQ9
+         v+Jg==
+X-Gm-Message-State: AOAM531f0fOu4MAYsh+ZGnjqaLyBCqKMY14BeVwky+ZH5MVcpGvo62Oe
+        bMHcpx7wCeDN4NLaaCcKpnU=
+X-Google-Smtp-Source: ABdhPJzrOkudsfQf+69YBmDSRfXR9PAXhMkEirMBpWL46zGbjCeXUra4Lba6VD4QyXcCjlZGm9CHxw==
+X-Received: by 2002:a17:90b:1288:: with SMTP id fw8mr6605137pjb.160.1589996722085;
+        Wed, 20 May 2020 10:45:22 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id m2sm2506053pjl.45.2020.05.20.10.45.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 10:45:21 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:45:19 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv3 3/5] Input: EXC3000: add EXC80H60 and EXC80H84 support
+Message-ID: <20200520174519.GV89269@dtor-ws>
+References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
+ <20200520153936.46869-4-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520172736.GA10693@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520153936.46869-4-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:27:36PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, May 20, 2020 at 10:13:07AM -0700, Tuan Phan wrote:
-> > An IORT PMCG node can have no ID mapping if its overflow interrupt is
-> > wire based therefore the code that parses the PMCG node can not assume
-> > the node will always have a single mapping present at index 0.
-> > 
-> > Fix iort_get_id_mapping_index() by checking for an overflow interrupt
-> > and mapping count.
-> > 
-> > Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
-> > 
-> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
-> > Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
-> > ---
-> > v1 -> v2:
-> > - Use pmcg node to detect wired base overflow interrupt.
-> > 
-> > v2 -> v3:
-> > - Address Hanjun and Robin's comments.
-> > 
-> > v3 -> v4:
-> > - Update the title and description as mentioned by Lorenzo.
-> > 
-> > v4 -> v5:
-> > - Remove period in the title and commit references.
-> > 
-> >  drivers/acpi/arm64/iort.c | 5 +++++
-> 
-> Hi Will,
-> 
-> is there a chance we can get this patch into v5.8 ? I understand
-> we are very late in the cycle but I wanted to ask (it applies cleanly
-> to for-next/acpi).
+Hi Sebastian,
 
-Sorry, Lorenzo -- I didn't notice that this had been Acked already. I was
-waiting for somebody to chime in! I'll queue it ASAP for 5.8.
+On Wed, May 20, 2020 at 05:39:34PM +0200, Sebastian Reichel wrote:
+>  
+>  	data->client = client;
+> +	data->info = device_get_match_data(&client->dev);
+> +	if (!data->info) {
+> +		enum eeti_dev_id eeti_dev_id =
+> +			i2c_match_id(exc3000_id, client)->driver_data;
 
-Will
+I believe i2c devices can be instantiated via sysfs, so I think we
+better handle case where we can't find matching id. Also driver_data is
+enough to store a pointer, maybe we can have individual structures
+instead of using an array and indexing here?
+
+Thanks.
+
+-- 
+Dmitry
