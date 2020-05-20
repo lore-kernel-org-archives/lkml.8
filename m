@@ -2,117 +2,64 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1761C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDCDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC7712075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBC920709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Il+/zPYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgETRng (ORCPT
+        id S1726907AbgETRn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:43:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32574 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726619AbgETRnf (ORCPT
+        Wed, 20 May 2020 13:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgETRn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:43:35 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KHY4Nc081243;
-        Wed, 20 May 2020 13:43:15 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312bg8rjrb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 13:43:14 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04KHfGB7019054;
-        Wed, 20 May 2020 17:43:12 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma02fra.de.ibm.com with ESMTP id 313x2j1q2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 17:43:12 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04KHhADf1900976
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 17:43:10 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3914111C04A;
-        Wed, 20 May 2020 17:43:10 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8FF411C04C;
-        Wed, 20 May 2020 17:43:09 +0000 (GMT)
-Received: from pomme.tlslab.ibm.com (unknown [9.145.151.133])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 May 2020 17:43:09 +0000 (GMT)
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, paulus@samba.org
-Cc:     groug@kaod.org, mpe@ellerman.id.au, sukadev@linux.ibm.com,
-        linuxram@us.ibm.com
-Subject: [PATCH v2] KVM: PPC: Book3S HV: relax check on H_SVM_INIT_ABORT
-Date:   Wed, 20 May 2020 19:43:08 +0200
-Message-Id: <20200520174308.77820-1-ldufour@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520193259.0b66db32@bahia.lan>
-References: <20200520193259.0b66db32@bahia.lan>
+        Wed, 20 May 2020 13:43:57 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BB9C061A0E;
+        Wed, 20 May 2020 10:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=72/myqImacqZvgA/Df7tM4W80PT1FO6/o07rXUy1dH4=; b=Il+/zPYl2NlqSMAoFu30IRTSjY
+        qAqRcgvOOfLXUpfM5ePlyGF7j7lXgyyJ6SErXmiH99NPFl8224Hm4TrNU3wuvVeB8D0LuWGrzrqTo
+        2Dj43BzPzcBSwFmJIQh0R/aS8xpR9Xxx0AYNNLl+gIrYiwKG1SSa6zGkMnqhBCjVpY/w3y7N4Q0P/
+        478g/Q9fVjPXKiE/9mk6LOfAjwqXCn5StnSrQPrD62zl/F9E/9dqM6W7TJWeAvXXppdbOs8eKuGRL
+        V2gS68V4zL+xtZD2BakQcJNwY51dpW5jre6H6jGAf00+EwGtIVhg2oeIH+DcXI7HbrMLrmmsLzTXg
+        SSHCH04Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbSl2-0000AA-DN; Wed, 20 May 2020 17:43:56 +0000
+Date:   Wed, 20 May 2020 10:43:56 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 3/3] PCI: Add helpers to enable/disable CXL.mem and
+ CXL.cache
+Message-ID: <20200520174356.GA26878@infradead.org>
+References: <20200518163523.1225643-1-sean.v.kelley@linux.intel.com>
+ <20200518163523.1225643-4-sean.v.kelley@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_13:2020-05-20,2020-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 bulkscore=0 cotscore=-2147483648 malwarescore=0
- mlxscore=0 suspectscore=0 spamscore=0 phishscore=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200142
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518163523.1225643-4-sean.v.kelley@linux.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_*
-Hcalls") added checks of secure bit of SRR1 to filter out the Hcall
-reserved to the Ultravisor.
+On Mon, May 18, 2020 at 09:35:23AM -0700, Sean V Kelley wrote:
+> With these helpers, a device driver can enable/disable access to
+> CXL.mem and CXL.cache. Note that the device driver is responsible for
+> managing the memory area.
 
-However, the Hcall H_SVM_INIT_ABORT is made by the Ultravisor passing the
-context of the VM calling UV_ESM. This allows the Hypervisor to return to
-the guest without going through the Ultravisor. Thus the Secure bit of SRR1
-is not set in that particular case.
-
-In the case a regular VM is calling H_SVM_INIT_ABORT, this hcall will be
-filtered out in kvmppc_h_svm_init_abort() because kvm->arch.secure_guest is
-not set in that case.
-
-Fixes: 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls")
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
----
- arch/powerpc/kvm/book3s_hv.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 93493f0cbfe8..6ad1a3b14300 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -1099,9 +1099,12 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
- 			ret = kvmppc_h_svm_init_done(vcpu->kvm);
- 		break;
- 	case H_SVM_INIT_ABORT:
--		ret = H_UNSUPPORTED;
--		if (kvmppc_get_srr1(vcpu) & MSR_S)
--			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
-+		/*
-+		 * Even if that call is made by the Ultravisor, the SSR1 value
-+		 * is the guest context one, with the secure bit clear as it has
-+		 * not yet been secured. So we can't check it here.
-+		 */
-+		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
- 		break;
- 
- 	default:
--- 
-2.26.2
-
+Who is going to call these?  Please don't submit new APIs without users.
