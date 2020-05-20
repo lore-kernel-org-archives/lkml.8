@@ -2,138 +2,144 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0591CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D721520708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27898206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:50:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inyVIMrO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B2+Ji2FF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgETRt6 (ORCPT
+        id S1726827AbgETRur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETRt6 (ORCPT
+        Wed, 20 May 2020 13:50:47 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13631 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726560AbgETRur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:49:58 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D506C061A0E;
-        Wed, 20 May 2020 10:49:56 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r10so1774741pgv.8;
-        Wed, 20 May 2020 10:49:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8ZGBHFBSzwVrG6yTNBrD2pYfYDTmVVPDAobOgJbT9nE=;
-        b=inyVIMrOtixf2Vfvomt7sPVGC/6mpVEhawpL/ddkpgdc3CInLV/oE2o5eyJlcQklZ5
-         u63rlz/vA/sCwkUE2y9J66HMt40Gff6s8ZyOipWYtS7ClQgFi1b2bBeHF/50Sr1cG7hy
-         zFqY/CEQFpQskdb7iw2sTNxlXdt1sLxAR1aUR4o6ZniP0D/hWNf/mtd2eJOSSw7XLl1O
-         TXVe5F6IpwYENGY8vnH4U2p7cBOyV38xoGJ1XjaFldbjeqqXVDDlhZAyvgsplHmZXS2n
-         +QINKNALtALFSt4cO/jtg5VeCE3UqCDlt1KatgIzA2cRBOWrM2fCCDJpJKXX4rOz8Oqh
-         4sYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8ZGBHFBSzwVrG6yTNBrD2pYfYDTmVVPDAobOgJbT9nE=;
-        b=teKFiF72C289jLrtsyEgE9X6oqTEOEHJkLdNlDVG0MuhOPfjra1Vb0rNtaBiuRH+u1
-         1XG5JevJ7e0yoy5Qe1ouJiwZNFhr8PBMRHoyjF2qZqPPeHZLf+6PEvw/P5N3a+eeE6VZ
-         zX7WsEj/AQDE2nZzw25uFoll/waHGMJS5kQiYgEd5YnYguqtOvkqIEb/KSGVF6udcaLI
-         PLOIkF4ImXgVZGQq7XUeIA/7DsNvhpIOKDqvg7kR9CrxFsX4+kkdMClzOxp6me5eN1ZC
-         tPbyCW1WmmKnkcnscHjewIe5PbKQ0ms5T3ost5F6Y9wmgfyVfrTNm7ilnSoZcPLs3iKb
-         8UHg==
-X-Gm-Message-State: AOAM532Puy+V29XjVJBTBJ0uSJVFBWO2bUPUAsv2Ii5x3CEU5yn1oJ+2
-        /ix6nJWSy8HSrRbXk5TlHKs=
-X-Google-Smtp-Source: ABdhPJw8b85fNCq5hP35cgegplCVk1mGMQSO1GRMXkjss0HG47An1MtBBU7o1W3Qkt66T6UPyaELIA==
-X-Received: by 2002:a65:4903:: with SMTP id p3mr5026027pgs.318.1589996995818;
-        Wed, 20 May 2020 10:49:55 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id s199sm2624861pfs.124.2020.05.20.10.49.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:49:55 -0700 (PDT)
-Date:   Wed, 20 May 2020 10:49:52 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv3 4/5] Input: EXC3000: Add support to query model and
- fw_version
-Message-ID: <20200520174952.GW89269@dtor-ws>
-References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
- <20200520153936.46869-5-sebastian.reichel@collabora.com>
+        Wed, 20 May 2020 13:50:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589997046; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=MuJ6OyHDNvTOOsmTlh/Zlq7+mR2mQh3vcMAegcKB7GI=;
+ b=B2+Ji2FF+K2YW9rJnjq6hm3sOET90vEH8rWF8vHbrNMMcWP3j2BUjrLZPNoFzrIMpuDFitlv
+ jdW/A0cx07wf9L5LoeQ46nUr3IuVjquYbFULtI4tGnObRGlhZV8HqDDzHf7Oo5I4XcnxViAF
+ 2+Yqt77yL+Guq2UezB/f3ZoVfc8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ec56de47171b6d7e444b846 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 17:50:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B6C92C433C6; Wed, 20 May 2020 17:50:27 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C1FCC433C8;
+        Wed, 20 May 2020 17:50:27 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520153936.46869-5-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 20 May 2020 23:20:27 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
+ device node
+In-Reply-To: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
+References: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
+Message-ID: <2174d6b5ab066cf6fd080b5d3c27609f@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
-
-On Wed, May 20, 2020 at 05:39:35PM +0200, Sebastian Reichel wrote:
-> Expose model and fw_version via sysfs. Also query the model
-> in probe to make sure, that the I2C communication with the
-> device works before successfully probing the driver.
+On 2020-05-20 09:26, Rakesh Pillai wrote:
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on sc7180 soc.
 > 
-> This is a bit complicated, since EETI devices do not have
-> a sync interface. Sending the commands and directly reading
-> does not work. Sending the command and waiting for some time
-> is also not an option, since there might be touch events in
-> the mean time.
-> 
-> Last but not least we do not cache the results, since this
-> interface can be used to check the I2C communication is still
-> working as expected.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 > ---
->  .../ABI/testing/sysfs-driver-input-exc3000    |  15 ++
->  drivers/input/touchscreen/exc3000.c           | 145 +++++++++++++++++-
->  2 files changed, 159 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-input-exc3000
+> Changes from v10:
+> - Corrected the position of wifi node, as per address
+> - Removed the wlan_fw_mem from reserved memory, since
+>   its already added as reserved memory in board DT file.
+
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 22 ++++++++++++++++++++++
+>  2 files changed, 29 insertions(+)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-input-exc3000 b/Documentation/ABI/testing/sysfs-driver-input-exc3000
-> new file mode 100644
-> index 000000000000..d79da4f869af
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-input-exc3000
-> @@ -0,0 +1,15 @@
-> +What:		/sys/class/input/inputX/fw_version
-> +Date:		May 2020
-> +Contact:	linux-input@vger.kernel.org
-> +Description:	Reports the firmware version provided by the touchscreen, for example "00_T6" on a EXC80H60
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 4e9149d..38b102e 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -389,6 +389,13 @@
+>  	};
+>  };
+> 
+> +&wifi {
+> +	status = "okay";
+> +	wifi-firmware {
+> +		iommus = <&apps_smmu 0xc2 0x1>;
+> +	};
+> +};
 > +
-> +		Access: Read
-> +		Valid values: Represented as string
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> 
+>  &qspi_clk {
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 6b12c60..da79f8f 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -2811,6 +2811,28 @@
+> 
+>  			#freq-domain-cells = <1>;
+>  		};
 > +
-> +What:		/sys/class/input/inputX/model
-> +Date:		May 2020
-> +Contact:	linux-input@vger.kernel.org
-> +Description:	Reports the model identification provided by the touchscreen, for example "Orion_1320" on a EXC80H60
-> +
-> +		Access: Read
-> +		Valid values: Represented as string
-
-These are properties of the controller (i2c device), not input
-abstraction class on top of it, so the attributes should be attached to
-i2c_client instance.
-
-Please use devm_device_add_group() in probe to instantiate them at the
-proper level.
-
-Thanks.
+> +		wifi: wifi@18800000 {
+> +			compatible = "qcom,wcn3990-wifi";
+> +			reg = <0 0x18800000 0 0x800000>;
+> +			reg-names = "membase";
+> +			iommus = <&apps_smmu 0xc0 0x1>;
+> +			interrupts =
+> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
+> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
+> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
+> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
+> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
+> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
+> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
+> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
+> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
+> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
+> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+> +			memory-region = <&wlan_mem>;
+> +			status = "disabled";
+> +		};
+>  	};
+> 
+>  	thermal-zones {
 
 -- 
-Dmitry
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
