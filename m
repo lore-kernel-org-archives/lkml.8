@@ -2,169 +2,91 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8653C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C485207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F5420826
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="blOTHPml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgETAHp (ORCPT
+        id S1728351AbgETAHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:07:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:22055 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726938AbgETAHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:07:44 -0400
-IronPort-SDR: R7B/zGlWiSTPUPWTDRq+dO68UFpdWnVbCQ9TQrvb2S1IBwMDmbfp98yQdVgzXKpJFsn4cDO8ea
- giR/sxswb3Vw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 17:07:43 -0700
-IronPort-SDR: pCUSU9dEYq4OPUxpYx+DFjmCkFm939CEi270QNV83poy3kDJAP1/EJT/jDAu2nQyJ9gWTvXWDO
- WDmiLL9cD8xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
-   d="scan'208";a="268068547"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga006.jf.intel.com with ESMTP; 19 May 2020 17:07:39 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [RESENDPATCH v8 1/2] dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
-Date:   Wed, 20 May 2020 08:06:20 +0800
-Message-Id: <20200520000621.49152-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200520000621.49152-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200520000621.49152-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Tue, 19 May 2020 20:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728292AbgETAHu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:07:50 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9C1C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:50 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k22so579117pls.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=B1c0jUXz486+RagbFwDxd+sCq0lsYsmvP2f98G6U3js=;
+        b=blOTHPmlZx4GfKOEV01mwt1fb2y8BBOOyMdVTyMjtZX92rrDcpb80U2b7a2VVbC7fk
+         3h9M1dtqhrTXK3/nedw7/rkc/XiMNe0BCyBwr2xa2ohQ4Ke0D7JYYdEu/WN4Qhf6TXS4
+         jV6rk/VqZJCTP8sxaPzJZrWS4mUGgwBCXhuhaFARh9vVb6ORLbtqYI+p7C6vxxSolo7z
+         F6s6XDCfwfwNI7ZD24RYmSZYGggfpEVV2UEQ8wLidhB7yWOCnh9Gn5TRrTV4xjv3NBc/
+         K2JtUu5z5vj30NuPBBijpYQCnGhQgnW5OZD9OpQCLhE5dMR9gek9vc/p5aC0CVtCe5AE
+         8EZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=B1c0jUXz486+RagbFwDxd+sCq0lsYsmvP2f98G6U3js=;
+        b=cMvvtk6k7PAUGVz+kE2SlIU9YoZyNjoY1c6CaDIMAMBtO8DuBCwlR5cuj7mWG42gNi
+         8AI2FR5J5O4UQKV2RRzgfC3lDh8+ntH8oNDzxOhtsbLWefJexZZTqnf5kck8qiaxR1jN
+         SktzeBWSos9TuuyuxJMVirb1c8KuHQIQmEGTGmz2Wl0q8vvgXfgcxbWqMIFJCv+wMZcy
+         CEav/XuO0lnF0Ba0dxoFRrY82FpzvrX2W+K+f0H/KrIgDkh4v/hTvgSFyVg9olTo9drz
+         yS66D31oLrZUnnalRBJ7DsK8jPm/d9YYuWjYBX669ssKxHO8fcrnxzS6ugvC+89Cod9x
+         V/TA==
+X-Gm-Message-State: AOAM5315a5WDd68GllVyewrKC39kEusFy2wu3MZdnr+c4qmpiJVwbkCg
+        U3zP9X8xkN+obillgujG8EpIYA==
+X-Google-Smtp-Source: ABdhPJwRg3C6e5l8lZIpfVpBtp8Q15l/WvuHFOKB6j8KRjl0PT2Y5zYN0N3CqoydGjhxrt37hyXpGw==
+X-Received: by 2002:a17:90b:3118:: with SMTP id gc24mr2074289pjb.41.1589933269389;
+        Tue, 19 May 2020 17:07:49 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id z13sm517136pjz.42.2020.05.19.17.07.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 17:07:48 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH] arm64: dts: meson: add ethernet interrupt to wetek dtsi
+Date:   Tue, 19 May 2020 17:07:43 -0700
+Message-Id: <158993320300.34448.14097191629208785856.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200518025451.16401-1-christianshewitt@gmail.com>
+References: <20200518025451.16401-1-christianshewitt@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Mon, 18 May 2020 02:54:51 +0000, Christian Hewitt wrote:
+> Add Ethernet interrupt details to the WeTek Hub/Play2 dtsi to resolve
+> an issue with Ethernet probing in mainline u-boot.
 
-Add YAML file for dt-bindings to support NAND Flash Controller
-on Intel's Lightning Mountain SoC.
+Applied, thanks!
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+[1/1] arm64: dts: meson: add ethernet interrupt to wetek dtsi
+      commit: 647e1643d61312ce08172e466fa1c8d8a5c8fbc8
 
-diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-new file mode 100644
-index 000000000000..cd4e983a449e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel LGM SoC NAND Controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+maintainers:
-+  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    const: intel,lgm-nand-controller
-+
-+  reg:
-+    items:
-+       - description: ebunand registers
-+       - description: hsnand registers
-+       - description: nand_cs0 external flash access
-+       - description: nand_cs1 external flash access
-+       - description: addr_sel0 memory region enable and access
-+       - description: addr_sel1 memory region enable and access
-+
-+  clocks:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+patternProperties:
-+  "^nand@[a-f0-9]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 7
-+
-+      nand-ecc-mode: true
-+
-+      nand-ecc-algo:
-+        const: hw
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    nand-controller@e0f00000 {
-+      compatible = "intel,lgm-nand";
-+      reg = <0xe0f00000 0x100>,
-+            <0xe1000000 0x300>,
-+            <0xe1400000 0x8000>,
-+            <0xe1c00000 0x1000>,
-+            <0x17400000 0x4>,
-+            <0x17c00000 0x4>;
-+      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1",
-+        "addr_sel0","addr_sel1";
-+      clocks = <&cgu0 125>;
-+      dmas = <&dma0 8>, <&dma0 9>;
-+      dma-names = "tx", "rx";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      #clock-cells = <1>;
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-on-flash-bbt;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+      };
-+    };
-+
-+...
+Best regards,
 -- 
-2.11.0
-
+Kevin Hilman <khilman@baylibre.com>
