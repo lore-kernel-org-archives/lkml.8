@@ -2,117 +2,149 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74068C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3245AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE4E2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o4m1NTL4"
+	by mail.kernel.org (Postfix) with ESMTP id 068B82070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgETNKk (ORCPT
+        id S1726844AbgETNLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:10:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47878 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgETNKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:10:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KD8JFi064189;
-        Wed, 20 May 2020 13:10:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=R7gtf0kiWbCNJ0UhI5MwvQ47qSSl1HmSUaTx5bHu6G0=;
- b=o4m1NTL434XJQbAkIuOB//h3s4FworvA3R42ve4vzv2KBNyiMoH/EbmcxuhOlXbZd+A9
- vJW4rNRvhlnDIx2czecGKoM7wSEB7Cm4Lt0EGB05DA1cOixhUrZ2Uk434gcFJoJr4h30
- EvBTF06GCH/PagknjE+aV2ROHM1ySQqhjKRMgDwfwkqEXlYbNtDw4UfSzcqXBnc626oh
- rQYKowjZKekgM+ykGLa/pW7YGTtZdX3t4A6hKcwuW799AcWvhQafXS7J6Ej6Nl/+rxAb
- sKyP2sKE+2DnK+TCtqHM1Hz9D1ld0gFjEnAevWLNbstcYQpLpg0tNinE6yVGMpu3/Tst GQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3127krb14d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 13:10:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KD8SBh188047;
-        Wed, 20 May 2020 13:08:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 314gm724eb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 13:08:30 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04KD8Lud010719;
-        Wed, 20 May 2020 13:08:21 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 May 2020 06:08:20 -0700
-Date:   Wed, 20 May 2020 16:08:12 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Evan Quan <evan.quan@amd.com>,
-        Rui Huang <ray.huang@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Yintian Tao <yttao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] drm/amdgpu: off by on in
- amdgpu_device_attr_create_groups() error handling
-Message-ID: <20200520130812.GA177222@mwanda>
+        Wed, 20 May 2020 09:11:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53668 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgETNLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:11:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C9140AF26;
+        Wed, 20 May 2020 13:11:30 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id F00F21E126B; Wed, 20 May 2020 15:11:26 +0200 (CEST)
+Date:   Wed, 20 May 2020 15:11:26 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/9] fs/ext4: Disallow encryption if inode is DAX
+Message-ID: <20200520131126.GA30597@quack2.suse.cz>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-4-ira.weiny@intel.com>
+ <20200516020253.GG1009@sol.localdomain>
+ <20200518050315.GA3025231@iweiny-DESK2.sc.intel.com>
+ <20200518162447.GA954@sol.localdomain>
+ <20200520020232.GA3470571@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520125209.GP3041@kadam>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200113
+In-Reply-To: <20200520020232.GA3470571@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This loop in the error handling code should start a "i - 1" and end at
-"i == 0".  Currently it starts a "i" and ends at "i == 1".  The result
-is that it removes one attribute that wasn't created yet, and leaks the
-zeroeth attribute.
+On Tue 19-05-20 19:02:33, Ira Weiny wrote:
+> On Mon, May 18, 2020 at 09:24:47AM -0700, Eric Biggers wrote:
+> > On Sun, May 17, 2020 at 10:03:15PM -0700, Ira Weiny wrote:
+> 
+> First off...  OMG...
+> 
+> I'm seeing some possible user pitfalls which are complicating things IMO.  It
+> probably does not matter because most users don't care and have either enabled
+> DAX on _every_ mount or _not_ enabled DAX on _every_ mount.  And have _not_
+> used verity nor encryption while using DAX.
+> 
+> Verity is a bit easier because verity is not inherited and we only need to
+> protect against setting it if DAX is on.
+> 
+> However, it can be weird for the user thusly:
+> 
+> 1) mount _without_ DAX
+> 2) enable verity on individual inodes
+> 3) unmount/mount _with_ DAX
+> 
+> Now the verity files are not enabled for DAX without any indication...
+> <sigh> This is still true with my patch.  But at least it closes the hole
+> of trying to change the DAX flag after the fact (because verity was set).
+> 
+> Also both this check and the verity need to be maintained to keep the mount
+> option working as it was before...
+> 
+> For encryption it is more complicated because encryption can be set on
+> directories and inherited so the IS_DAX() check does nothing while '-o
+> dax' is used.  Therefore users can:
+> 
+> 1) mount _with_ DAX
+> 2) enable encryption on a directory
+> 3) files created in that directory will not have DAX set
+> 
+> And I now understand why the WARN_ON() was there...  To tell users about this
+> craziness.
 
-Fixes: 4e01847c38f7 ("drm/amdgpu: optimize amdgpu device attribute code")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-v2: style change
+Thanks for digging into this! I agree that just not setting S_DAX where
+other inode features disallow that is probably the best.
 
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c           | 3 +--
- 1 files changed, 1 insertions(+), 2 deletions(-)
+> > > This is, AFAICS, not going to affect correctness.  It will only be confusing
+> > > because the user will be able to set both DAX and encryption on the directory
+> > > but files there will only see encryption being used...  :-(
+> > > 
+> > > Assuming you are correct about this call path only being valid on directories.
+> > > It seems this IS_DAX() needs to be changed to check for EXT4_DAX_FL in
+> > > "fs/ext4: Introduce DAX inode flag"?  Then at that point we can prevent DAX and
+> > > encryption on a directory.  ...  and at this point IS_DAX() could be removed at
+> > > this point in the series???
+> > 
+> > I haven't read the whole series, but if you are indeed trying to prevent a
+> > directory with EXT4_DAX_FL from being encrypted, then it does look like you'd
+> > need to check EXT4_DAX_FL, not S_DAX.
+> > 
+> > The other question is what should happen when a file is created in an encrypted
+> > directory when the filesystem is mounted with -o dax.  Actually, I think I
+> > missed something there.  Currently (based on reading the code) the DAX flag will
+> > get set first, and then ext4_set_context() will see IS_DAX() && i_size == 0 and
+> > clear the DAX flag when setting the encrypt flag.
+> 
+> I think you are correct.
+> 
+> >
+> > So, the i_size == 0 check is actually needed.
+> > Your patch (AFAICS) just makes creating an encrypted file fail
+> > when '-o dax'.  Is that intended?
+> 
+> Yes that is what I intended but it is more complicated I see now.
+> 
+> The intent is that IS_DAX() should _never_ be true on an encrypted or verity
+> file...  even if -o dax is specified.  Because IS_DAX() should be a result of
+> the inode flags being checked.  The order of the setting of those flags is a
+> bit odd for the encrypted case.  I don't really like that DAX is set then
+> un-set.  It is convoluted but I'm not clear right now how to fix it.
+> 
+> > If not, maybe you should change it to check
+> > S_NEW instead of i_size == 0 to make it clearer?
+> 
+> The patch is completely unnecessary.
+> 
+> It is much easier to make (EXT4_ENCRYPT_FL | EXT4_VERITY_FL) incompatible
+> with EXT4_DAX_FL when it is introduced later in the series.  Furthermore
+> this mutual exclusion can be done on directories in the encrypt case.
+> Which I think will be nicer for the user if they get an error when trying
+> to set one when the other is set.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-index b75362bf0742..e809534fabd4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-@@ -1942,9 +1942,8 @@ static int amdgpu_device_attr_create_groups(struct amdgpu_device *adev,
- 	return 0;
- 
- failed:
--	for (; i > 0; i--) {
-+	while (i--)
- 		amdgpu_device_attr_remove(adev, &attrs[i]);
--	}
- 
- 	return ret;
- }
+Agreed.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
