@@ -2,107 +2,81 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251ED20708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8D6207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:05:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HFRC4axw"
+	dkim=pass (4096-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="w9BbRZzk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgETIEr (ORCPT
+        id S1726844AbgETIFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:04:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55745 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726436AbgETIEq (ORCPT
+        Wed, 20 May 2020 04:05:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETIFD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:04:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589961885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tODKxPEhKOy3EtWiEeXfICX4Oq3a9d2MWwv3RjPjgr8=;
-        b=HFRC4axwnvlDfvaRBPAKds6CcKzXO9TKcGFhVwrUU8WAgv1JD9cogxmfYQ47V9i0KiSxFO
-        A3/HW9adgMmLX/2cob1JLjT5CEUNsLSsY5R3DuS6XO5r0Qah0qBn17s6HYuPq6G9qIRecD
-        RcyaVrk0UtlD4DHV4zFHCX3bfi/d81E=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-469-xQsKOu-BMuekTitgqdHZ0A-1; Wed, 20 May 2020 04:04:44 -0400
-X-MC-Unique: xQsKOu-BMuekTitgqdHZ0A-1
-Received: by mail-wr1-f70.google.com with SMTP id l12so1064420wrw.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:04:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tODKxPEhKOy3EtWiEeXfICX4Oq3a9d2MWwv3RjPjgr8=;
-        b=pVrpY0JIXsIdrDmafDfun9WUK4ZrNn5V7iJvqi6rASn8nAcxiMFcYx9Jz9J/zPjAeK
-         +HYvvC9FIwqV7ZGF1Ab+wPZ+1lgQc/rN0s/v6wVltqDuOcJqnzQGIhA1vwwhRZMb4QnB
-         mNd/Xzv1wgX9X/LYKXpPVHJ+BHk8vHajqvg6Oxx1twXf4cnbBtaRdVpWDcDpcszQoqS2
-         fUq4C5IBTk/o7qOGFwfHL6S1xJ56Xq+pIvy7nZYYbxny5VwXF55qneofy2LjhjRkZZG1
-         5Ud/Thds8yt/046yQlXCsYJVvYwKwpoPOEX7w70gcwXh1bsL9gToH2f91e5OoeAdXpX7
-         uqpQ==
-X-Gm-Message-State: AOAM530k5YwU/Y+lYMhy4H2WBMByMq5VesgQuxcuIzYMt+aLppBISeez
-        hEbod9BLtNjhdxDgSyUUK6lTopkFqZiC7oxkMFR8rOqn22tfOAt7iq7mhM2y2JKba9uil5H4f9e
-        NXOzo/d5VUQGnpW4GMhA6G+u9
-X-Received: by 2002:a05:6000:11ca:: with SMTP id i10mr3138764wrx.10.1589961882841;
-        Wed, 20 May 2020 01:04:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzY2cSIgL58y2H/BiNwiTnt+p2jmmQ05xVyK44+WVRrlhAbO7zIFMCD6cJ85iRgSS3nhSobmg==
-X-Received: by 2002:a05:6000:11ca:: with SMTP id i10mr3138741wrx.10.1589961882676;
-        Wed, 20 May 2020 01:04:42 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id n9sm2370316wmj.5.2020.05.20.01.04.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 01:04:42 -0700 (PDT)
-Subject: Re: [PATCH 2/3] objtool: Move struct objtool_file into
- arch-independent header
-To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <cover.1589913349.git.mhelsley@vmware.com>
- <8a877bc283cbad704c7472ac3ef534d49629dd05.1589913349.git.mhelsley@vmware.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <46066936-eb20-1b64-eef1-9b57aeab3a73@redhat.com>
-Date:   Wed, 20 May 2020 09:04:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 20 May 2020 04:05:03 -0400
+Received: from valentin-vidic.from.hr (valentin-vidic.from.hr [IPv6:2001:470:1f0b:3b7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A153C061A0E;
+        Wed, 20 May 2020 01:05:03 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id A33C5543; Wed, 20 May 2020 10:04:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=valentin-vidic.from.hr; s=2020; t=1589961899;
+        bh=yK7wU61+XNDe5ayjqFhyHcHXhrCQnIi9K6wH9jeqssQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w9BbRZzkcc9XXiPyJc7nC2fU8tC2FgYU4zVejiyAznWpkLqxVtUxm1AnJ6JJmuHnG
+         7mwexG3YwkNOyxEd7cMM+mWJwLzjhKTPCUr1dLyz1w92GB7PD4sRAJnTMjGKDXg7gB
+         ip0m+t4exQsSCms350+8uJHrfvxt2tsInOR/6DMuJhTcccJ07Nwu6qEwFH7lt3quYI
+         CsCqxtIcFv6rOoy+kt4DlQcnNxn9QBkhIqjUbiRGJO8IdoKwnypV/QP3RFY+3vAJ4Z
+         CAmIiXzbk1tNW69umhm52LGFWFUifMRMvcFq22q/Iflm77jJcbX8mUw5HQWwnVIvX+
+         oz3qqlZtnlgtXOxIjjQv63HbVa2cRCfZxUQJF+htjbz2uOoVjO3uAcAglIxmGOm5Ce
+         PAm1D4d2Uz4Wi3qgBUXZbq10XtPrJGqJ4CAmYuv6B3QBkjp5fQK/ZyzyuNAmZI2KR9
+         491FBUaqBhnEJFGiprPBYvTVZpZIv1AqppB1HIWQBLdsy4JiVrZ8HnyBaYyQKm3Rmf
+         8syXXYkLDSzeeTWfO6/RpwARIhpMHfBvCUJMLqhEBJw43pZfOIn0PV119T81FQLzLO
+         Mx1w4BFffTcHyNG71ljUa/xhzgqlSZsH/pDIEmtyPJUgV8As3iYp36TxtsnYelu4VF
+         s6+Qkml6jpu8Ut5p4pk0BGn4=
+Date:   Wed, 20 May 2020 10:04:59 +0200
+From:   Valentin =?utf-8?B?VmlkacSH?= <vvidic@valentin-vidic.from.hr>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] s390/sclp_vt220: Fix console name to match device
+Message-ID: <20200520080459.GP4974@valentin-vidic.from.hr>
+References: <20200519181654.16765-1-vvidic@valentin-vidic.from.hr>
+ <65218cdb-d03f-29a8-1e78-42ff2d4f958d@de.ibm.com>
+ <20200520070743.GO4974@valentin-vidic.from.hr>
+ <cba24059-b3a5-1587-c1f3-8d7dfd0807f5@de.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <8a877bc283cbad704c7472ac3ef534d49629dd05.1589913349.git.mhelsley@vmware.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cba24059-b3a5-1587-c1f3-8d7dfd0807f5@de.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 09:14:23AM +0200, Christian Borntraeger wrote:
+> My point was more that a similar issue should happen when installing in LPAR. LPAR
+> uses the line mode style console which is ttyS0 for the console but sclp_line0 for the
+> tty. How does the debian installer handle this?
 
+I suppose it would fail the same way, but I have no way to verify.
 
-On 5/19/20 9:55 PM, Matt Helsley wrote:
-> The objtool_file structure describes the files objtool works on,
-> is used by the check subcommand, and the check.h header is included
-> by the orc subcommands so it's presently used by all subcommands.
-> 
-> Since the structure will be useful in all subcommands besides check,
-> and some subcommands may not want to include check.h to get the
-> definition, split the structure out into a new header meant for use
-> by all objtool subcommands.
-> 
-> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> Regarding your patch I fear that this patch would break existing
+> setups so we cannot use it as is.
 
-Reviewed-by: Julien Thierry <jthierry@redhat.com>
+Right, if some software/documentation depends on the name ttysclp0,
+then I guess it is not possible to change any of the two names.
 
 -- 
-Julien Thierry
-
+Valentin
