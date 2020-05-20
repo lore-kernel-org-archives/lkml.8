@@ -2,178 +2,107 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9133FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8CE20756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A58207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589977796;
-	bh=VGu6dnFTVCKwpzDnxKnQRdLF/W/wyJaAlcUliCdCrVI=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=HkAHJFcNlD/T4F8Y8CSEKWrDgLEcRJ3HgfH55cp5BZ3I9/t6q6Le9J8DWo1mMyAc/
-	 y73KojF7nFu+dWytsv/h4q9rbEpM3RwulTsMSzGTb613rWIA8NUgvR8hDoD0te8mLX
-	 XlsSXTPaT75UZzJPymgH2fy3RDkTDvI6nMnw51Q8=
+	s=default; t=1589977899;
+	bh=rL8WkukpYlQE2FvyEL1Ca998vF4yjcYjdKtcskbOga4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A4GNHiFrke6EVpy6xOVc9OpPxVL14mXClJ6OGpx7wP+vN/8LxMxfoR9z2iidoVsan
+	 Cg94lgbKodE9aF0NB48e5l5l83oXj0wnCYyu8+8Y0YF2p6sWQ06F+PCSam4VG2I42k
+	 SRhZb6WkT1nTHxJPHOPPkOnj1ooFsbcy8s9yzrYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgETM34 (ORCPT
+        id S1726688AbgETMbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:29:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33570 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 08:31:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgETM3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:29:54 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1726439AbgETMbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:31:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED9220756;
-        Wed, 20 May 2020 12:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 191D320756;
+        Wed, 20 May 2020 12:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589977794;
-        bh=VGu6dnFTVCKwpzDnxKnQRdLF/W/wyJaAlcUliCdCrVI=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=CS7PL+Rv9R79fZvV9gVfqHsdFTW+yiv6vBsmUCaPQwLsKoCYHz1X0yfF/9Kr3meYs
-         XZE7O/O1PL8P7RYyCqt3nWMznsAp679ACj9891L9JLhyVUBlLdmdQ5zeRG3Aw7QEDm
-         UaZMBvb7sEpwGADI/np+Sj49wPgdwWhHqDDEcTNA=
-Date:   Wed, 20 May 2020 13:29:49 +0100
-From:   Will Deacon <will@kernel.org>
-To:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/5] iommu/arm-smmu: Add support for TTBR1
-Message-ID: <20200520122949.GC25815@willie-the-truck>
-References: <20200409233350.6343-1-jcrouse@codeaurora.org>
- <20200409233350.6343-3-jcrouse@codeaurora.org>
- <20200518145959.GK32394@willie-the-truck>
- <20200520015326.GA31730@jcrouse1-lnx.qualcomm.com>
+        s=default; t=1589977897;
+        bh=rL8WkukpYlQE2FvyEL1Ca998vF4yjcYjdKtcskbOga4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LoxEWlrzY++Y0BFWiabgMwjNGX/nvadbakyFaRZq89IjX/nhET64+AAldhU56uv4y
+         /N2F8Ge6zCrPiaYs24N4AeJZ8C+ZXyDCJWLD1XynAuUuEF6n7NdU/UlXGv8qQP01VQ
+         yNqJhM8BUg7QoFPleCnp2BaLZ0B5zDCzVNny15Vs=
+Date:   Wed, 20 May 2020 13:31:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH 09/12] devfreq: add mediatek cci devfreq
+Message-ID: <20200520123135.GD4823@sirena.org.uk>
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+ <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2iBwrppp/7QCDedR"
 Content-Disposition: inline
-In-Reply-To: <20200520015326.GA31730@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
+X-Cookie: You can't get there from here.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:53:26PM -0600, Jordan Crouse wrote:
-> On Mon, May 18, 2020 at 03:59:59PM +0100, Will Deacon wrote:
-> > On Thu, Apr 09, 2020 at 05:33:47PM -0600, Jordan Crouse wrote:
-> > > Add support to enable TTBR1 if the domain requests it via the
-> > > DOMAIN_ATTR_SPLIT_TABLES attribute. If enabled by the hardware
-> > > and pagetable configuration the driver will configure the TTBR1 region
-> > > and program the domain pagetable on TTBR1. TTBR0 will be disabled.
-> > > 
-> > > After attaching the device the value of he domain attribute can
-> > > be queried to see if the split pagetables were successfully programmed.
-> > > The domain geometry will be updated as well so that the caller can
-> > > determine the active region for the pagetable that was programmed.
-> > > 
-> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > ---
-> > > 
-> > >  drivers/iommu/arm-smmu.c | 48 ++++++++++++++++++++++++++++++++++------
-> > >  drivers/iommu/arm-smmu.h | 24 +++++++++++++++-----
-> > >  2 files changed, 59 insertions(+), 13 deletions(-)
-> > > 
-> > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > > index a6a5796e9c41..db6d503c1673 100644
-> > > --- a/drivers/iommu/arm-smmu.c
-> > > +++ b/drivers/iommu/arm-smmu.c
-> > > @@ -555,11 +555,16 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
-> > >  			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
-> > >  			cb->ttbr[1] = 0;
-> > >  		} else {
-> > > -			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> > > -			cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID,
-> > > -						  cfg->asid);
-> > > -			cb->ttbr[1] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
-> > > -						 cfg->asid);
-> > > +			cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
-> > > +				cfg->asid);
-> > > +
-> > > +			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
-> > > +				cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> > > +			} else {
-> > > +				cb->ttbr[0] |= pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> > > +				cb->ttbr[1] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
-> > > +							 cfg->asid);
-> > > +			}
-> > 
-> > This looks odd to me. As I mentioned before, the SMMU driver absolutely has
-> > to manage the ASID space, so we should be setting it in both TTBRs here.
-> 
-> Somebody had suggested a while back to only do TTBR0 but I agree that it makes
-> more sense for it to be on both.
 
-Sorry if it was me, I've been having a hard time piecing together how this
-works with the GPU.
+--2iBwrppp/7QCDedR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> > > index 8d1cd54d82a6..5f6d0af7c8c8 100644
-> > > --- a/drivers/iommu/arm-smmu.h
-> > > +++ b/drivers/iommu/arm-smmu.h
-> > > @@ -172,6 +172,7 @@ enum arm_smmu_cbar_type {
-> > >  #define ARM_SMMU_TCR_SH0		GENMASK(13, 12)
-> > >  #define ARM_SMMU_TCR_ORGN0		GENMASK(11, 10)
-> > >  #define ARM_SMMU_TCR_IRGN0		GENMASK(9, 8)
-> > > +#define ARM_SMMU_TCR_EPD0		BIT(7)
-> > >  #define ARM_SMMU_TCR_T0SZ		GENMASK(5, 0)
-> > >  
-> > >  #define ARM_SMMU_VTCR_RES1		BIT(31)
-> > > @@ -343,16 +344,27 @@ struct arm_smmu_domain {
-> > >  	struct mutex			init_mutex; /* Protects smmu pointer */
-> > >  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
-> > >  	struct iommu_domain		domain;
-> > > +	bool				split_pagetables;
-> > >  };
-> > >  
-> > >  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
-> > >  {
-> > > -	return ARM_SMMU_TCR_EPD1 |
-> > > -	       FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
-> > > -	       FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
-> > > -	       FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
-> > > -	       FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
-> > > -	       FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
-> > > +	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
-> > > +		FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
-> > > +		FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
-> > > +		FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
-> > > +		FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
-> > > +
-> > > +       /*
-> > > +	* When TTBR1 is selected shift the TCR fields by 16 bits and disable
-> > > +	* translation in TTBR0
-> > > +	*/
-> > > +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1)
-> > > +		tcr = (tcr << 16) | ARM_SMMU_TCR_EPD0;
-> > 
-> > This looks reasonably dodgy to me, as you copy a RESERVED bit into the A1
-> > field. Furthermore, for 32-bit context banks you've got the EAE bit to
-> > contend with as well.
-> 
-> I can swizzle it more if we need to. I think Robin's main objection was that we
-> didn't want to construct the whole half of the TCR twice and have a bunch of
-> field definitions for the T1 space that are only used in this special case. 
-> 
-> > Perhaps we shouldn't expose DOMAIN_ATTR_SPLIT_TABLES for anything other than
-> > the 64-bit page table format.
-> 
-> We kind of enforce that in arm_smmu_init_domain_context [1] by only allowing the
-> quirk to be set when cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64 and stage 1. I'm not
-> sure if that is formal enough or if we should bake something in to
-> io-pgtable-arm to warn against it too.
+On Wed, May 20, 2020 at 11:43:04AM +0800, Andrew-sh.Cheng wrote:
 
-Sorry again, I missed that this was predicated on
+> +	cci_df->proc_reg = devm_regulator_get_optional(cci_dev, "proc");
+> +	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +	ret = regulator_enable(cci_df->proc_reg);
 
-	'cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64'
+The code appears to require a regulator (and I'm guessing the device
+needs power) so why is this using regulator_get_optional()?
 
-Please can you add that to the comment above the code shifting the TCR
-around? I think you should also say that this clears A1.
+--2iBwrppp/7QCDedR
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Will
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7FIyYACgkQJNaLcl1U
+h9D0kAf/f2yyGL/KhJ2Y+J/Xvk72EFz2UdjxlDjJo9wXYf3J4HWB9sgTXydoZoRj
+bPlZzQtBeUPNmvX60Nczzt1V0KYNXns6mOfBOTueIAlSLeOnWBLV2+IUedCAVOJw
+NX2i3pZdZ2p7yOO9QGU2s8hxc3uwCHKETMa5U/B6ENwkQkkOlJCNkjVYYiuoAJn+
+9mIq1Ko2yfPHqJPyh/wP/CTC7AqXyPnQmO+rAlua+v8ua7RXRqAlkI/LpWhhpe1U
+PAdhYsvKa9TiyafrrUPW1TPbTBRnWpHd1s2gjhpiGuuDhJyEaGjxsm0dz82gs5ml
+aut3SlENmvhhRkfxSKh8LBYpjvJ0hA==
+=vHQ8
+-----END PGP SIGNATURE-----
+
+--2iBwrppp/7QCDedR--
