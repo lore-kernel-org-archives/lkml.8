@@ -2,88 +2,91 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C15C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF5C720708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nD/2Mhlv"
+	by mail.kernel.org (Postfix) with ESMTP id 1799E206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589983032;
+	bh=5+IbKprRxyqw9NFTJTpxeEJkrQ0uTWF2tKNer2QzvW4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=vI0YEoW3QRXkcmnIiJfVh5YDQHoDsvBWsKWz6ux6sjm04UZ+Da2/8LFjc5AM/XaxN
+	 evzNFhfdRCatRZWUeLF6OpRx0axDwN8uyD9hseZYWgS6zkyW3tAT5MQpn6lvWl7Sso
+	 xbZOrrge5OkUDbhh2dM/WSICx/4BpcEbiZS3eKjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgETN4e (ORCPT
+        id S1726830AbgETN5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:56:34 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41284 "EHLO vps0.lunn.ch"
+        Wed, 20 May 2020 09:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgETN4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:56:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=yW9W/HhlxheuNaE5i574WexC9r5Wyq1J3+gq8UzHE+Q=; b=nD/2Mhlv7UcVTvWEFNNokHYfcu
-        uQbQ6t/mZCHTTAvEUgO8TnmDiQ3iJmGwLFsq4IqH/+G7AcXDwmcrkzBVgqE8nkuh9txLbOLNl8qQw
-        KTMcEBTtxzfJi85j0acg0xofLT1SozMJE5gNJeZU0EDs8f2Qml/f52Oc8ybr6wTvRWi4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jbPCq-002oL3-GJ; Wed, 20 May 2020 15:56:24 +0200
-Date:   Wed, 20 May 2020 15:56:24 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-Message-ID: <20200520135624.GC652285@lunn.ch>
-References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-4-dmurphy@ti.com>
+        id S1726436AbgETN5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:57:10 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B1B5206C3;
+        Wed, 20 May 2020 13:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589983030;
+        bh=5+IbKprRxyqw9NFTJTpxeEJkrQ0uTWF2tKNer2QzvW4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q/rc+qik2yM/X4meIPkIhKjBgLcKmYsuhXCObjnXLXQ53nzwMll4Yv32dZYOOT1xE
+         tWoIGlrQa9rjeMjh+5+uDrP9wROLCoFgsVBfksIeeG1s4gEeIjL+DlC8/CFEq0rz34
+         dh199yR295AXjsr1E6Zq8j0sGBROxXWAjWbntkPo=
+Date:   Wed, 20 May 2020 08:57:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Paul Burton <paulburton@kernel.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: piix4-poweroff.c I/O BAR usage
+Message-ID: <20200520135708.GA1086370@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520121835.31190-4-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 07:18:34AM -0500, Dan Murphy wrote:
-> Add the internal delay values into the header and update the binding
-> with the internal delay properties.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/net/ti,dp83869.yaml    | 16 ++++++++++++++++
->  include/dt-bindings/net/ti-dp83869.h           | 18 ++++++++++++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-> index 5b69ef03bbf7..344015ab9081 100644
-> --- a/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-> +++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
-> @@ -64,6 +64,20 @@ properties:
->         Operational mode for the PHY.  If this is not set then the operational
->         mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
->  
-> +  ti,rx-internal-delay:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description: |
-> +      RGMII Receive Clock Delay - see dt-bindings/net/ti-dp83869.h
-> +      for applicable values. Required only if interface type is
-> +      PHY_INTERFACE_MODE_RGMII_ID or PHY_INTERFACE_MODE_RGMII_RXID.
+Hi Paul,
 
-Hi Dan
+This looks like it might be a bug:
 
-Having it required with PHY_INTERFACE_MODE_RGMII_ID or
-PHY_INTERFACE_MODE_RGMII_RXID is pretty unusual. Normally these
-properties are used to fine tune the delay, if the default of 2ns does
-not work.
+  static const int piix4_pm_io_region = PCI_BRIDGE_RESOURCES;
 
-    Andrew
+  static int piix4_poweroff_probe(struct pci_dev *dev,
+                                  const struct pci_device_id *id)
+  {
+          ...
+          /* Request access to the PIIX4 PM IO registers */
+          res = pci_request_region(dev, piix4_pm_io_region,
+                                   "PIIX4 PM IO registers");
+
+pci_request_region() takes a BAR number (0-5), but here we're passing
+PCI_BRIDGE_RESOURCES (13 if CONFIG_PCI_IOV, or 7 otherwise), which is
+the bridge I/O window.
+
+I don't think this device ([8086:7113]) is a bridge, so that resource
+should be empty.
+
+Based on this spec:
+https://www.intel.com/Assets/PDF/datasheet/290562.pdf,
+it looks like it should be the PIIX4 power management function at
+function 3, which has no standard PCI BARs but does have a PMBA (Power
+Management Base Address) at 0x40 and an SMBBA (SMBus Base Address) at
+0x90 in config space.
+
+I suppose on an ACPI system the regions described by PMBA and SMBBA
+might be described via ACPI, since they're not discoverable by
+standard PCI enumeration?  Pretty sure you don't have ACPI on MIPS
+though.
+
+Maybe the driver should read PMBA and SMBBA and reserve those regions
+by hand with request_region()?
+
+Bjorn
