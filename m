@@ -2,358 +2,140 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B86F206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7425207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgETHJN (ORCPT
+        id S1726586AbgETHK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:09:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:49032 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgETHJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:09:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DDAA31B;
-        Wed, 20 May 2020 00:09:11 -0700 (PDT)
-Received: from e119603-lin.cambridge.arm.com (unknown [10.57.44.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F21DC3F52E;
-        Wed, 20 May 2020 00:09:09 -0700 (PDT)
-Date:   Wed, 20 May 2020 08:09:07 +0100
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     cristian.marussi@arm.com, sudeep.holla@arm.com
-Subject: Re: [PATCH v4 07/13] firmware: arm_scmi: Add notification dispatch
- and delivery
-Message-ID: <20200520070907.GE17648@e119603-lin.cambridge.arm.com>
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
- <20200304162558.48836-8-cristian.marussi@arm.com>
- <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
- <363cb1ba-76b5-cc1e-af45-454837fae788@arm.com>
- <484214b4-a71d-9c63-86fc-2e469cb1809b@arm.com>
- <20200313190224.GA5808@e120937-lin>
+        Wed, 20 May 2020 03:10:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8124 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbgETHK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 03:10:28 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K73nDG020952;
+        Wed, 20 May 2020 03:09:52 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312cqp1n84-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 03:09:52 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04K6ofHd026781;
+        Wed, 20 May 2020 07:09:50 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01wdc.us.ibm.com with ESMTP id 313wn8gngg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 07:09:50 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04K79oJs21692726
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 07:09:50 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E08E76E04C;
+        Wed, 20 May 2020 07:09:49 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7024D6E052;
+        Wed, 20 May 2020 07:09:47 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.85.147])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 20 May 2020 07:09:47 +0000 (GMT)
+X-Mailer: emacs 27.0.91 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RESEND PATCH v7 4/5] ndctl/papr_scm,uapi: Add support for PAPR
+ nvdimm specific methods
+In-Reply-To: <20200519190058.257981-5-vaibhav@linux.ibm.com>
+References: <20200519190058.257981-1-vaibhav@linux.ibm.com>
+ <20200519190058.257981-5-vaibhav@linux.ibm.com>
+Date:   Wed, 20 May 2020 12:39:43 +0530
+Message-ID: <87a723f5fs.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313190224.GA5808@e120937-lin>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_03:2020-05-19,2020-05-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=939 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1011 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005200056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:46:05PM +0000, Cristian Marussi wrote:
-> On Thu, Mar 12, 2020 at 09:43:31PM +0000, Lukasz Luba wrote:
-> > 
-> > 
+Vaibhav Jain <vaibhav@linux.ibm.com> writes:
 
-Hi Lukasz,
+....
 
-I went back looking deeper into the possible race issue you pointed out a
-while ago understanding it a bit better down below.
+ +
+> +/* Papr-scm-header + payload expected with ND_CMD_CALL ioctl from libnvdimm */
+> +struct nd_pdsm_cmd_pkg {
+> +	struct nd_cmd_pkg hdr;	/* Package header containing sub-cmd */
+> +	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
+> +	__u16 payload_offset;	/* In: offset from start of struct */
+> +	__u16 payload_version;	/* In/Out: version of the payload */
+> +	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
+> +} __packed;
 
-> > On 3/12/20 6:34 PM, Cristian Marussi wrote:
-> > > On 12/03/2020 13:51, Lukasz Luba wrote:
-> > > > Hi Cristian,
-> > > > 
-> Hi Lukasz
-> 
-> > > > just one comment below...
-> [snip]
-> > > > > +	eh.timestamp = ts;
-> > > > > +	eh.evt_id = evt_id;
-> > > > > +	eh.payld_sz = len;
-> > > > > +	kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
-> > > > > +	kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
-> > > > > +	queue_work(r_evt->proto->equeue.wq,
-> > > > > +		   &r_evt->proto->equeue.notify_work);
-> > > > 
-> > > > Is it safe to ignore the return value from the queue_work here?
-> > > > 
-> > > 
-> > > In fact yes, we do not want to care: it returns true or false depending on the
-> > > fact that the specific work was or not already queued, and we just rely on
-> > > this behavior to keep kicking the worker only when needed but never kick
-> > > more than one instance of it per-queue (so that there's only one reader
-> > > wq and one writer here in the scmi_notify)...explaining better:
-> > > 
-> > > 1. we push an event (hdr+payld) to the protocol queue if we found that there was
-> > > enough space on the queue
-> > > 
-> > > 2a. if at the time of the kfifo_in( ) the worker was already running
-> > > (queue not empty) it will process our new event sooner or later and here
-> > > the queue_work will return false, but we do not care in fact ... we
-> > > tried to kick it just in case
-> > > 
-> > > 2b. if instead at the time of the kfifo_in() the queue was empty the worker would
-> > > have probably already gone to the sleep and this queue_work() will return true and
-> > > so this time it will effectively wake up the worker to process our items
-> > > 
-> > > The important thing here is that we are sure to wakeup the worker when needed
-> > > but we are equally sure we are never causing the scheduling of more than one worker
-> > > thread consuming from the same queue (because that would break the one reader/one writer
-> > > assumption which let us use the fifo in a lockless manner): this is possible because
-> > > queue_work checks if the required work item is already pending and in such a case backs
-> > > out returning false and we have one work_item (notify_work) defined per-protocol and
-> > > so per-queue.
-> > 
-> > I see. That's a good assumption: one work_item per protocol and simplify
-> > the locking. What if there would be an edge case scenario when the
-> > consumer (work_item) has handled the last item (there was NULL from
-> > scmi_process_event_header()), while in meantime scmi_notify put into
-> > the fifo new event but couldn't kick the queue_work. Would it stay there
-> > till the next IRQ which triggers queue_work to consume two events (one
-> > potentially a bit old)? Or we can ignore such race situation assuming
-> > that cleaning of work item is instant and kfifo_in is slow?
-> > 
-> 
-> In fact, this is a very good point, since between the moment the worker
-> determines that the queue is empty and the moment in which the worker
-> effectively exits (and it's marked as no more pending by the Kernel cmwq)
-> there is a window of opportunity for a race in which the ISR could fill
-> the queue with one more event and then fail to kick with queue_work() since
-> the work is in fact still nominally marked as pending from the point of view
-> of Kernel cmwq, as below:
-> 
-> ISR (core N)		|	WQ (core N+1)		cmwq flags	       	queued events
-> ------------------------------------------------------------------------------------------------
-> 			| if (queue_is_empty)		- WORK_PENDING		0 events queued
-> 			+     ...			- WORK_PENDING		0 events queued
-> 			+ } while (scmi_process_event_payload);
-> 			+}// worker function exit 
-> kfifo_in()		+     ...cmwq backing out	- WORK_PENDING		1 events queued
-> kfifo_in()		+     ...cmwq backing out	- WORK_PENDING		1 events queued
-> queue_work()		+     ...cmwq backing out	- WORK_PENDING		1 events queued
->   -> FALSE (pending)	+     ...cmwq backing out	- WORK_PENDING		1 events queued
-> 			+     ...cmwq backing out	- WORK_PENDING		1 events queued
-> 			+     ...cmwq backing out	- WORK_PENDING		1 events queued
-> 			| ---- WORKER THREAD EXIT	- !WORK_PENDING		1 events queued
-> 			| 		 		- !WORK_PENDING		1 events queued
-> kfifo_in()		|     				- !WORK_PENDING		2 events queued
-> kfifo_in()		|  				- !WORK_PENDING		2 events queued
-> queue_work()		|     				- !WORK_PENDING		2 events queued
->    -> TRUE		| --- WORKER ENTER		- WORK_PENDING		2 events queued
-> 			|  				- WORK_PENDING		2 events consumed
-> 		
-> where effectively the last event queued won't be consumed till the next
-> iteration once another event is queued.
-> 
+that payload_offset can be avoided if we prevent userspace to user a
+different variant of nd_pdsm_cmd_pkg which different header. We can keep
+things simpler if we can always find payload at
+nd_pdsm_cmd_pkg->payload.
 
-In summary, looking better at Kernel cmwq code, my explanation above about
-how the possible race could be exposed by a particular tricky limit condition
-and the values assumed by the WORK_STRUCT_PENDING_BIT was ... bullshit :D
-
-In fact there's no race at all because Kernel cmwq takes care to clear the above
-PENDING flag BEFORE the user-provided worker-function starts to finally run:
-such flag is active only when a work instance is queued pending for execution
-but it is cleared just before execution effctively starts.
-
-kernel/workqueue.c:process_one_work()
-
-	set_work_pool_and_clear_pending(work, pool->id);
-	....
-	worker->current_func(work);
-
-As a consequence in the racy scenario above where the ISR pushes events on the
-queues after the worker has already determined the queue to be empty but while
-the worker func is still being deactivated in terms of Kernel cmwq internal
-handling, it is not a problem since the worker while running is already NO more
-marked pending so the queue_work succeeds and a new work will simply be queued
-and run once the current instance terminates fully and it is removed from pool.
-
-On the other side in the normal non racy scenario, when the worker is processing
-normally a non-empty queue, we'll end-up anyway queueing new items and a new work
-from the ISR even if the currently executing one will in fact consume already
-naturally the queued items: this will result (it's what I observe in fact) in a
-final un-needed quick worker activation/deactivation processing zero items (empty
-queue) which is in fact harmless.
-
-Basically the racy condition is taken care by the Kernel cmwq itself, and in fact
-there is an extensive explanation also of the barriers employed to properly
-realize this in the comments around set_work_pool_and_clear_pending()
-
-I'll add a comment in v8 just to note this behaviour.
-
-Thanks
-
-Cristian
-
-> Given the fact that the ISR and the dedicated WQ on an SMP run effectively
-> in parallel I do not think unfortunately that we can simply count on the fact
-> the worker exit is faster than the kifos_in, enough to close the race window
-> opportunity. (even if rare)
-> 
-> On the other side considering the impact of such scenario, I can imagine that
-> it's not simply that we could only have a delayed delivery, but we must consider
-> that if the delayed event is effectively the last one ever it would remain
-> undelivered forever; this is particularly worrying in a scenario in which such
-> last event is particularly important: imagine a system shutdown where a last
-> system-power-off remains undelivered.
-> 
-> As a consequence I think this rare racy condition should be addressed somehow.
-> 
-> Looking at this scenario, it seems the classic situation in which you want to
-> use some sort of completion to avoid missing out on events delivery, BUT in our
-> usecase:
-> 
-> - placing the workers loaned from cmwq into an unbounded wait_for_completion()
->   once the queue is empty seems not the best to use resources (and probably
->   frowned upon)....using a few dedicated kernel threads to simply let them idle
->   waiting most of the time seems equally frowned upon (I could be wrong...))
-> - the needed complete() in the ISR would introduce a spinlock_irqsave into the
->   interrupt path (there's already one inside queue_work in fact) so it is not
->   desirable, at least not if used on a regular base (for each event notified)
-> 
-> So I was thinking to try to reduce sensibly the above race window, more
-> than eliminate it completely, by adding an early flag to be checked under
-> specific conditions in order to retry the queue_work a few times when the race
-> is hit, something like:
-> 
-> ISR (core N)		|	WQ (core N+1)
-> -------------------------------------------------------------------------------
-> 			| atomic_set(&exiting, 0);
-> 			|
-> 			| do {
-> 			|	...
-> 			| 	if (queue_is_empty)		- WORK_PENDING		0 events queued
-> 			+          atomic_set(&exiting, 1)	- WORK_PENDING		0 events queued
-> static int cnt=3	|          --> breakout of while	- WORK_PENDING		0 events queued
-> kfifo_in()		|	....
-> 			| } while (scmi_process_event_payload);
-> kfifo_in()		|
-> exiting = atomic_read()	|     ...cmwq backing out		- WORK_PENDING		1 events queued
-> do {			|     ...cmwq backing out		- WORK_PENDING		1 events queued
->     ret = queue_work() 	|     ...cmwq backing out		- WORK_PENDING		1 events queued
->     if (ret || !exiting)|     ...cmwq backing out		- WORK_PENDING		1 events queued
-> 	break;		|     ...cmwq backing out		- WORK_PENDING		1 events queued
->     mdelay(5);		|     ...cmwq backing out		- WORK_PENDING		1 events queued
->     exiting =		|     ...cmwq backing out		- WORK_PENDING		1 events queued
->       atomic_read;	|     ...cmwq backing out		- WORK_PENDING		1 events queued
-> } while (--cnt);	|     ...cmwq backing out		- WORK_PENDING		1 events queued
-> 			| ---- WORKER EXIT 			- !WORK_PENDING		0 events queued
-> 
-> like down below between the scissors.
-> 
-> Not tested or tried....I could be missing something...and the mdelay is horrible (and not
-> the cleanest thing you've ever seen probably :D)...I'll have a chat with Sudeep too.
-> 
-> > > 
-> > > Now probably I wrote too much of an explanation and confuse stuff more ... :D
-> > 
-> > No, thank you for the detailed explanation. I will continue my review.
-> > 
-> 
-> Thanks
-> 
-> Regards
-> 
-> Cristian
-> 
-> 
-> 
-> -->8-----------------
-> diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-> index 9eb6b8b71bac..8719e077358c 100644
-> --- a/drivers/firmware/arm_scmi/notify.c
-> +++ b/drivers/firmware/arm_scmi/notify.c
-> @@ -223,6 +223,7 @@ struct scmi_notify_instance {
->   */
->  struct events_queue {
->  	size_t				sz;
-> +	atomic_t			exiting;
->  	struct kfifo			kfifo;
->  	struct work_struct		notify_work;
->  	struct workqueue_struct		*wq;
-> @@ -406,11 +407,16 @@ scmi_process_event_header(struct events_queue *eq,
->  
->  	outs = kfifo_out(&eq->kfifo, pd->eh,
->  			 sizeof(struct scmi_event_header));
-> -	if (!outs)
-> +	if (!outs) {
-> +		atomic_set(&eq->exiting, 1);
-> +		smp_mb__after_atomic();
->  		return NULL;
-> +	}
->  	if (outs != sizeof(struct scmi_event_header)) {
->  		pr_err("SCMI Notifications: corrupted EVT header. Flush.\n");
->  		kfifo_reset_out(&eq->kfifo);
-> +		atomic_set(&eq->exiting, 1);
-> +		smp_mb__after_atomic();
->  		return NULL;
->  	}
->  
-> @@ -446,6 +452,8 @@ scmi_process_event_payload(struct events_queue *eq,
->  	outs = kfifo_out(&eq->kfifo, pd->eh->payld, pd->eh->payld_sz);
->  	if (unlikely(!outs)) {
->  		pr_warn("--- EMPTY !!!!\n");
-> +		atomic_set(&eq->exiting, 1);
-> +		smp_mb__after_atomic();
->  		return false;
->  	}
->  
-> @@ -455,6 +463,8 @@ scmi_process_event_payload(struct events_queue *eq,
->  	if (unlikely(outs != pd->eh->payld_sz)) {
->  		pr_err("SCMI Notifications: corrupted EVT Payload. Flush.\n");
->  		kfifo_reset_out(&eq->kfifo);
-> +		atomic_set(&eq->exiting, 1);
-> +		smp_mb__after_atomic();
->  		return false;
->  	}
->  
-> @@ -526,6 +536,8 @@ static void scmi_events_dispatcher(struct work_struct *work)
->  	mdelay(200);
->  
->  	eq = container_of(work, struct events_queue, notify_work);
-> +	atomic_set(&eq->exiting, 0);
-> +	smp_mb__after_atomic();
->  	pd = container_of(eq, struct scmi_registered_protocol_events_desc,
->  			  equeue);
->  	/*
-> @@ -579,6 +591,8 @@ static void scmi_events_dispatcher(struct work_struct *work)
->  int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 evt_id,
->  		const void *buf, size_t len, u64 ts)
->  {
-> +	bool exiting;
-> +	static u8 cnt = 3;
->  	struct scmi_registered_event *r_evt;
->  	struct scmi_event_header eh;
->  	struct scmi_notify_instance *ni = handle->notify_priv;
-> @@ -616,8 +630,20 @@ int scmi_notify(const struct scmi_handle *handle, u8 proto_id, u8 evt_id,
->  	kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
->  	mdelay(30);
->  	kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
-> -	queue_work(r_evt->proto->equeue.wq,
-> -		   &r_evt->proto->equeue.notify_work);
 > +
-> +	smp_mb__before_atomic();
-> +	exiting = atomic_read(&r_evt->proto->equeue.exiting);
-> +	do {
-> +		bool ret;
+> +/*
+> + * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
+> + * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
+> + */
+> +enum papr_scm_pdsm {
+> +	PAPR_SCM_PDSM_MIN = 0x0,
+> +	PAPR_SCM_PDSM_MAX,
+> +};
 > +
-> +		ret = queue_work(r_evt->proto->equeue.wq,
-> +				 &r_evt->proto->equeue.notify_work);
-> +		if (likely(ret || !exiting))
-> +			break;
-> +		mdelay(5);
-> +		smp_mb__before_atomic();
-> +		exiting = atomic_read(&r_evt->proto->equeue.exiting);
-> +	} while (--cnt);
->  
->  	return 0;
->  }
-> @@ -655,6 +681,7 @@ static int scmi_initialize_events_queue(struct scmi_notify_instance *ni,
->  				       &equeue->kfifo);
->  	if (ret)
->  		return ret;
-> +	atomic_set(&equeue->exiting, 0);
->  
->  	INIT_WORK(&equeue->notify_work, scmi_events_dispatcher);
->  	equeue->wq = ni->notify_wq;
-> --<8-----------------------
+> +/* Convert a libnvdimm nd_cmd_pkg to pdsm specific pkg */
+> +static inline struct nd_pdsm_cmd_pkg *nd_to_pdsm_cmd_pkg(struct nd_cmd_pkg *cmd)
+> +{
+> +	return (struct nd_pdsm_cmd_pkg *) cmd;
+> +}
+> +
+> +/* Return the payload pointer for a given pcmd */
+> +static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
+> +{
+> +	if (pcmd->hdr.nd_size_in == 0 && pcmd->hdr.nd_size_out == 0)
+> +		return NULL;
+> +	else
+> +		return (void *)((__u8 *) pcmd + pcmd->payload_offset);
+> +}
+> +
+
+we need to make sure userspace is not passing a wrong payload_offset.
+
+and in the next patch you do
+
++	/* Copy the health struct to the payload */
++	memcpy(pdsm_cmd_to_payload(pkg), &p->health, copysize);
++	pkg->hdr.nd_fw_size = copysize;
++
+
+All this can be simplified if you can keep payload at
+nd_pdsm_cmd_pkg->payload.
+
+If you still want to have the ability to extend the header, then added a
+reserved field similar to nd_cmd_pkg.
+
+
+-aneesh
