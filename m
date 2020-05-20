@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53D3C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2C5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE892089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F331B2089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="jb+DE776"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="PSsOIvSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgETX0W (ORCPT
+        id S1728889AbgETX0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55716 "EHLO
+        Wed, 20 May 2020 19:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbgETX0S (ORCPT
+        with ESMTP id S1728866AbgETX0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:26:18 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CCDC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:17 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id c24so4078745qtw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:17 -0700 (PDT)
+        Wed, 20 May 2020 19:26:19 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A7AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:19 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x12so4062975qts.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jdQ80xB6Sy/rgHokK0g8aS6vKa88in/XYXLkOFHRciw=;
-        b=jb+DE776l/fyNxlCw/JBI42y3UT/XNmb/p3gRaRWiZqQ5FyHxhCQ/vBiaUOO2VQ2fY
-         Y0a7fZNRsgF5KVEvf4Q69PO2/duToOYwm4yZ1PGocFY1ceo4s0necEwOH/quwvnGhnIq
-         aA8q6JP7sv/8yR1o8kLmioTB3hhVUxNa4+ui4/qPtiS1tWfdZsrQdeLFe01oM+WxrBw4
-         GElDns84HC4jqVoG+fhY4Imj6Z4N/IdpI787FPyDiQJVVvJTe1zmVh1EzSdcsGk6Jr9Q
-         5QV4/lE4N89Q/ptxpSRIF9GEhDPfA2b2Jef0Q3GY7eBBUOIX7ko4fqKo62C3bDtjL9rj
-         hXQg==
+        bh=/qXY/GfTCL+Mr3UBVbQ4X5QzZETe/pl7Vv8oztEayYI=;
+        b=PSsOIvSPlgXVB2PWgNn9RS9RdFPIsrwfa/83SQv3ZZf/Uvr9WVl1NH08U4jAfwTUod
+         QJAh5J0PzfHdKRbyXV7fjK+H7YFSnYIyqeI4+n+922T1Vp7jvCdwiWf/d5/toiDLMvDk
+         Hxri8JORn9NhXuBMoiwwGospfZD7yJyppmhtc1Mn+UUQyN4CYoIgO9nu6EiHOTs2f+7r
+         sU0zICUqXiuR8vypJWT2L26oHyUgnyUC7mW9k0fHCuYIfvftxaw1JzhAsUbFOfodI01j
+         ZY/Fy7ZuqoV0nf3mWpqipinUK0bVh66y/AdKSga06/X9ZcHOK7Kl1iOSkYtR6wCOcjbE
+         Op/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jdQ80xB6Sy/rgHokK0g8aS6vKa88in/XYXLkOFHRciw=;
-        b=He1wZZ8ltGe5S22WWpYawNFlHvD2Xtctul5BxGh4svxl+/KHJKTDftd7+guBGguMFc
-         ivhuJ4dyD7CzmAyv/mDDcL/oDyxEwa6jI6vT2chwCdaaISj1L1poPAvCnvZo7CliKfzh
-         N5gNX+16KDGczr4xGzR+Yrazj7GPmXYLaut1sTfPAirD+/oeqiqzBn04+Q2WTvNEeYYf
-         iA1oQHgDBJYDoUA6gFj5EIjPvLgYgmtshdtQgesT9kAKmGU/GRjHtASvnzMFfyw6f5Zj
-         H3i18h4bqqE/1CHwCChY1DHO1b/wGDAdwhEp/0ZC+4QBmkA91b/iRjxqh8FKvYHwhVIG
-         JUoA==
-X-Gm-Message-State: AOAM531F8m0XJd25284gjVDEiC1QxpoqoTjLO0FtlMB9JD4xfODDLDYa
-        F6MK2RgqGixLi9tqIT7+14B/5A==
-X-Google-Smtp-Source: ABdhPJyxwfsHIlUpPMQ1Jzk7Pe13S07SClFnhyqM3GLDO8dPNWkEqRjEquSRuwmK5MchEuMc6VTH2Q==
-X-Received: by 2002:aed:35a1:: with SMTP id c30mr8075822qte.228.1590017176929;
-        Wed, 20 May 2020 16:26:16 -0700 (PDT)
+        bh=/qXY/GfTCL+Mr3UBVbQ4X5QzZETe/pl7Vv8oztEayYI=;
+        b=MkaJk+BX+8eTiBDsYUpswmKYAxevh1SIS67v3AVO0TptTIN2u2bcIJHwejbpXqr2WE
+         fPCQ5YWWoL+zRmG9nu7NYNgniZBOwKPbTsbPC7wepHvwa3JHOgF80i+iJuxFP/rqqyg8
+         9Tzsmnz3hi2QL8uHAq16gTORCR6wbf4pL3wrofNdNyu+xXkpvsLVB33hZIHgMXKWoIWv
+         sNpR/jip1yWjrCEISw/dFcIdeGuRBj1QWxWAjfPqOI8KQeH/IBtWbeu27B8ARemJIOO2
+         r0loL6UjDm08L8NxxAH/rqm2iy6DU0+PrLJNn6B2rbe27ATzNFPDtn+n08E5DQz4wTgO
+         tksA==
+X-Gm-Message-State: AOAM531har1X1iVzcOFmTQMACXoXyYSYGVtdUCgiWF3J6oNzkuqkXaNq
+        jDCxKG8wpA2SqdYRHb/k4ZWpYA==
+X-Google-Smtp-Source: ABdhPJxi4EgJCESVIwdCAEwBX7lXykOt6rKu034N+rUoTj2Ks7dEIwot4dYtekJfafPemUXYI7SASw==
+X-Received: by 2002:ac8:c8b:: with SMTP id n11mr8182253qti.49.1590017178581;
+        Wed, 20 May 2020 16:26:18 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:4708])
-        by smtp.gmail.com with ESMTPSA id o18sm3869649qtb.7.2020.05.20.16.26.16
+        by smtp.gmail.com with ESMTPSA id t88sm3665378qtd.5.2020.05.20.16.26.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:26:16 -0700 (PDT)
+        Wed, 20 May 2020 16:26:18 -0700 (PDT)
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     linux-mm@kvack.org
 Cc:     Rik van Riel <riel@surriel.com>,
@@ -67,9 +67,9 @@ Cc:     Rik van Riel <riel@surriel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH 11/14] mm: balance LRU lists based on relative thrashing
-Date:   Wed, 20 May 2020 19:25:22 -0400
-Message-Id: <20200520232525.798933-12-hannes@cmpxchg.org>
+Subject: [PATCH 12/14] mm: vmscan: determine anon/file pressure balance at the reclaim root
+Date:   Wed, 20 May 2020 19:25:23 -0400
+Message-Id: <20200520232525.798933-13-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200520232525.798933-1-hannes@cmpxchg.org>
 References: <20200520232525.798933-1-hannes@cmpxchg.org>
@@ -80,191 +80,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the LRUs were split into anon and file lists, the VM has been
-balancing between page cache and anonymous pages based on per-list
-ratios of scanned vs. rotated pages. In most cases that tips page
-reclaim towards the list that is easier to reclaim and has the fewest
-actively used pages, but there are a few problems with it:
+We split the LRU lists into anon and file, and we rebalance the scan
+pressure between them when one of them begins thrashing: if the file
+cache experiences workingset refaults, we increase the pressure on
+anonymous pages; if the workload is stalled on swapins, we increase
+the pressure on the file cache instead.
 
-1. Refaults and LRU rotations are weighted the same way, even though
-   one costs IO and the other costs a bit of CPU.
+With cgroups and their nested LRU lists, we currently don't do this
+correctly. While recursive cgroup reclaim establishes a relative LRU
+order among the pages of all involved cgroups, LRU pressure balancing
+is done on an individual cgroup LRU level. As a result, when one
+cgroup is thrashing on the filesystem cache while a sibling may have
+cold anonymous pages, pressure doesn't get equalized between them.
 
-2. The less we scan an LRU list based on already observed rotations,
-   the more we increase the sampling interval for new references, and
-   rotations become even more likely on that list. This can enter a
-   death spiral in which we stop looking at one list completely until
-   the other one is all but annihilated by page reclaim.
+This patch moves LRU balancing decision to the root of reclaim - the
+same level where the LRU order is established.
 
-Since commit a528910e12ec ("mm: thrash detection-based file cache
-sizing") we have refault detection for the page cache. Along with
-swapin events, they are good indicators of when the file or anon list,
-respectively, is too small for its workingset and needs to grow.
+It does this by tracking LRU cost recursively, so that every level of
+the cgroup tree knows the aggregate LRU cost of all memory within its
+domain. When the page scanner calculates the scan balance for any
+given individual cgroup's LRU list, it uses the values from the
+ancestor cgroup that initiated the reclaim cycle.
 
-For example, if the page cache is thrashing, the cache pages need more
-time in memory, while there may be colder pages on the anonymous list.
-Likewise, if swapped pages are faulting back in, it indicates that we
-reclaim anonymous pages too aggressively and should back off.
-
-Replace LRU rotations with refaults and swapins as the basis for
-relative reclaim cost of the two LRUs. This will have the VM target
-list balances that incur the least amount of IO on aggregate.
+If one sibling is then thrashing on the cache, it will tip the
+pressure balance inside its ancestors, and the next hierarchical
+reclaim iteration will go more after the anon pages in the tree.
 
 Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/swap.h |  3 +--
- mm/swap.c            | 11 +++++++----
- mm/swap_state.c      |  5 +++++
- mm/vmscan.c          | 39 ++++++++++-----------------------------
- mm/workingset.c      |  4 ++++
- 5 files changed, 27 insertions(+), 35 deletions(-)
+ include/linux/memcontrol.h | 13 ++++++++++++
+ mm/swap.c                  | 32 ++++++++++++++++++++++++-----
+ mm/vmscan.c                | 41 ++++++++++++++++----------------------
+ 3 files changed, 57 insertions(+), 29 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 5ace6d8a33bd..818a94b41d82 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -333,8 +333,7 @@ extern unsigned long nr_free_pagecache_pages(void);
- 
- 
- /* linux/mm/swap.c */
--extern void lru_note_cost(struct lruvec *lruvec, bool file,
--			  unsigned int nr_pages);
-+extern void lru_note_cost(struct page *);
- extern void lru_cache_add(struct page *);
- extern void lru_add_page_tail(struct page *page, struct page *page_tail,
- 			 struct lruvec *lruvec, struct list_head *head);
-diff --git a/mm/swap.c b/mm/swap.c
-index d7912bfb597f..2ff91656dea2 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -262,12 +262,15 @@ void rotate_reclaimable_page(struct page *page)
- 	}
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 32a0b4d47540..d982c80da157 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1303,6 +1303,19 @@ static inline void dec_lruvec_page_state(struct page *page,
+ 	mod_lruvec_page_state(page, idx, -1);
  }
  
--void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
-+void lru_note_cost(struct page *page)
- {
--	if (file)
--		lruvec->file_cost += nr_pages;
-+	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
++static inline struct lruvec *parent_lruvec(struct lruvec *lruvec)
++{
++	struct mem_cgroup *memcg;
 +
-+	/* Record new data point */
-+	if (page_is_file_lru(page))
-+		lruvec->file_cost++;
- 	else
--		lruvec->anon_cost += nr_pages;
-+		lruvec->anon_cost++;
++	memcg = lruvec_memcg(lruvec);
++	if (!memcg)
++		return NULL;
++	memcg = parent_mem_cgroup(memcg);
++	if (!memcg)
++		return NULL;
++	return mem_cgroup_lruvec(memcg, lruvec_pgdat(lruvec));
++}
++
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ 
+ struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
+diff --git a/mm/swap.c b/mm/swap.c
+index 2ff91656dea2..3d8aa46c47ff 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -266,11 +266,33 @@ void lru_note_cost(struct page *page)
+ {
+ 	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+ 
+-	/* Record new data point */
+-	if (page_is_file_lru(page))
+-		lruvec->file_cost++;
+-	else
+-		lruvec->anon_cost++;
++	do {
++		unsigned long lrusize;
++
++		/* Record cost event */
++		if (page_is_file_lru(page))
++			lruvec->file_cost++;
++		else
++			lruvec->anon_cost++;
++
++		/*
++		 * Decay previous events
++		 *
++		 * Because workloads change over time (and to avoid
++		 * overflow) we keep these statistics as a floating
++		 * average, which ends up weighing recent refaults
++		 * more than old ones.
++		 */
++		lrusize = lruvec_page_state(lruvec, NR_INACTIVE_ANON) +
++			  lruvec_page_state(lruvec, NR_ACTIVE_ANON) +
++			  lruvec_page_state(lruvec, NR_INACTIVE_FILE) +
++			  lruvec_page_state(lruvec, NR_ACTIVE_FILE);
++
++		if (lruvec->file_cost + lruvec->anon_cost > lrusize / 4) {
++			lruvec->file_cost /= 2;
++			lruvec->anon_cost /= 2;
++		}
++	} while ((lruvec = parent_lruvec(lruvec)));
  }
  
  static void __activate_page(struct page *page, struct lruvec *lruvec,
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index b5e08ff00e1e..8b902897a867 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -430,6 +430,11 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
- 	if (mem_cgroup_charge(page, NULL, gfp_mask & GFP_KERNEL))
- 		goto fail_delete;
- 
-+	/* XXX: Move to lru_cache_add() when it supports new vs putback */
-+	spin_lock_irq(&page_pgdat(page)->lru_lock);
-+	lru_note_cost(page);
-+	spin_unlock_irq(&page_pgdat(page)->lru_lock);
-+
- 	/* Initiate read into locked page */
- 	SetPageWorkingset(page);
- 	lru_cache_add(page);
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 2c3fb8dd1159..e7e6868bcbf7 100644
+index e7e6868bcbf7..1487ff5d4698 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -1958,12 +1958,6 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
- 	move_pages_to_lru(lruvec, &page_list);
- 
- 	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, -nr_taken);
--	/*
--	 * Rotating pages costs CPU without actually
--	 * progressing toward the reclaim goal.
--	 */
--	lru_note_cost(lruvec, 0, stat.nr_activate[0]);
--	lru_note_cost(lruvec, 1, stat.nr_activate[1]);
- 	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
- 	if (!cgroup_reclaim(sc))
- 		__count_vm_events(item, nr_reclaimed);
-@@ -2079,11 +2073,6 @@ static void shrink_active_list(unsigned long nr_to_scan,
- 	 * Move pages back to the lru list.
+@@ -79,6 +79,12 @@ struct scan_control {
  	 */
- 	spin_lock_irq(&pgdat->lru_lock);
--	/*
--	 * Rotating pages costs CPU without actually
--	 * progressing toward the reclaim goal.
--	 */
--	lru_note_cost(lruvec, file, nr_rotated);
+ 	struct mem_cgroup *target_mem_cgroup;
  
- 	nr_activate = move_pages_to_lru(lruvec, &l_active);
- 	nr_deactivate = move_pages_to_lru(lruvec, &l_inactive);
-@@ -2298,22 +2287,23 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
++	/*
++	 * Scan pressure balancing between anon and file LRUs
++	 */
++	unsigned long	anon_cost;
++	unsigned long	file_cost;
++
+ 	/* Can active pages be deactivated as part of reclaim? */
+ #define DEACTIVATE_ANON 1
+ #define DEACTIVATE_FILE 2
+@@ -2231,10 +2237,8 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 	int swappiness = mem_cgroup_swappiness(memcg);
+ 	u64 fraction[2];
+ 	u64 denominator = 0;	/* gcc */
+-	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+ 	unsigned long anon_prio, file_prio;
+ 	enum scan_balance scan_balance;
+-	unsigned long anon, file;
+ 	unsigned long totalcost;
+ 	unsigned long ap, fp;
+ 	enum lru_list lru;
+@@ -2285,7 +2289,6 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 	}
+ 
  	scan_balance = SCAN_FRACT;
- 
+-
  	/*
--	 * With swappiness at 100, anonymous and file have the same priority.
--	 * This scanning priority is essentially the inverse of IO cost.
-+	 * Calculate the pressure balance between anon and file pages.
-+	 *
-+	 * The amount of pressure we put on each LRU is inversely
-+	 * proportional to the cost of reclaiming each list, as
-+	 * determined by the share of pages that are refaulting, times
-+	 * the relative IO cost of bringing back a swapped out
-+	 * anonymous page vs reloading a filesystem page (swappiness).
-+	 *
-+	 * With swappiness at 100, anon and file have equal IO cost.
- 	 */
+ 	 * Calculate the pressure balance between anon and file pages.
+ 	 *
+@@ -2300,30 +2303,12 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
  	anon_prio = swappiness;
  	file_prio = 200 - anon_prio;
  
- 	/*
--	 * OK, so we have swap space and a fair amount of page cache
--	 * pages.  We use the recently rotated / recently scanned
--	 * ratios to determine how valuable each cache is.
--	 *
- 	 * Because workloads change over time (and to avoid overflow)
- 	 * we keep these statistics as a floating average, which ends
--	 * up weighing recent references more than old ones.
--	 *
--	 * anon in [0], file in [1]
-+	 * up weighing recent refaults more than old ones.
- 	 */
- 
- 	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
-@@ -2328,15 +2318,6 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
- 		lruvec->file_cost /= 2;
- 		totalcost /= 2;
- 	}
--
 -	/*
--	 * The amount of pressure on anon vs file pages is inversely
--	 * proportional to the assumed cost of reclaiming each list,
--	 * as determined by the share of pages that are likely going
--	 * to refault or rotate on each list (recently referenced),
--	 * times the relative IO cost of bringing back a swapped out
--	 * anonymous page vs reloading a filesystem page (swappiness).
+-	 * Because workloads change over time (and to avoid overflow)
+-	 * we keep these statistics as a floating average, which ends
+-	 * up weighing recent refaults more than old ones.
 -	 */
+-
+-	anon  = lruvec_lru_size(lruvec, LRU_ACTIVE_ANON, MAX_NR_ZONES) +
+-		lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, MAX_NR_ZONES);
+-	file  = lruvec_lru_size(lruvec, LRU_ACTIVE_FILE, MAX_NR_ZONES) +
+-		lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, MAX_NR_ZONES);
+-
+-	spin_lock_irq(&pgdat->lru_lock);
+-	totalcost = lruvec->anon_cost + lruvec->file_cost;
+-	if (unlikely(totalcost > (anon + file) / 4)) {
+-		lruvec->anon_cost /= 2;
+-		lruvec->file_cost /= 2;
+-		totalcost /= 2;
+-	}
++	totalcost = sc->anon_cost + sc->file_cost;
  	ap = anon_prio * (totalcost + 1);
- 	ap /= lruvec->anon_cost + 1;
+-	ap /= lruvec->anon_cost + 1;
++	ap /= sc->anon_cost + 1;
  
-diff --git a/mm/workingset.c b/mm/workingset.c
-index e69865739539..a6a2a740ed0b 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -365,6 +365,10 @@ void workingset_refault(struct page *page, void *shadow)
- 	/* Page was active prior to eviction */
- 	if (workingset) {
- 		SetPageWorkingset(page);
-+		/* XXX: Move to lru_cache_add() when it supports new vs putback */
-+		spin_lock_irq(&page_pgdat(page)->lru_lock);
-+		lru_note_cost(page);
-+		spin_unlock_irq(&page_pgdat(page)->lru_lock);
- 		inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
- 	}
- out:
+ 	fp = file_prio * (totalcost + 1);
+-	fp /= lruvec->file_cost + 1;
+-	spin_unlock_irq(&pgdat->lru_lock);
++	fp /= sc->file_cost + 1;
+ 
+ 	fraction[0] = ap;
+ 	fraction[1] = fp;
+@@ -2679,6 +2664,14 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 	nr_reclaimed = sc->nr_reclaimed;
+ 	nr_scanned = sc->nr_scanned;
+ 
++	/*
++	 * Determine the scan balance between anon and file LRUs.
++	 */
++	spin_lock_irq(&pgdat->lru_lock);
++	sc->anon_cost = target_lruvec->anon_cost;
++	sc->file_cost = target_lruvec->file_cost;
++	spin_unlock_irq(&pgdat->lru_lock);
++
+ 	/*
+ 	 * Target desirable inactive:active list ratios for the anon
+ 	 * and file LRU lists.
 -- 
 2.26.2
 
