@@ -2,142 +2,133 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 337D9207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236FD2072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fdVcLj1o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I8m8YrPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgETOtk (ORCPT
+        id S1726853AbgETOun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:49:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51448 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726439AbgETOtk (ORCPT
+        Wed, 20 May 2020 10:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETOun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:49:40 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KEgDW0028385;
-        Wed, 20 May 2020 16:49:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=mF9hCf7Xk61Z6neQPdNS3sUzpshBFvjsTt55Bt0GOQQ=;
- b=fdVcLj1oCPsKC4aG1U8RGJ2JWpTune9Ufd4VVsdOLuWtcqjiXMMKS0fKZIzKYiq/CriI
- aLf5UuEaoaw83BUhGH7z2p1D+TpgAJdKnxPHAEhw0vaoxiiRHdfY9FwniGxx1Pev7Rck
- 0x+N1FZ3ztGI8ykbZLAGBH14VpBYdTGSG9mkIwvbK2Xo5UZxnuSJorfFmWy75I9V/pD8
- A3mvvUz0FDb73Qw8quPShJyOKC0ZRgXAsQehsjTIhIr99bVibEWzoKKzgYFJ/6BtB2mI
- AP/FAvy4LcgByRwBBsDOlgg8++LPqXnkzlq/+cQ7T0bBo+C8CikGr4OzB56ZjQz1HkUF zA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31272h8phx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 16:49:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E289110002A;
-        Wed, 20 May 2020 16:49:32 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D38652B7FD4;
-        Wed, 20 May 2020 16:49:32 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.51) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
- 2020 16:49:32 +0200
-Subject: Re: [PATCH v6 0/3] rpmsg: core: Add support for name extension
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <ohad@wizery.com>, <s-anna@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Xiang Xiao <xiaoxiang@xiaomi.com>
-References: <20200515205642.13529-1-mathieu.poirier@linaro.org>
- <20200515210914.GA408178@builder.lan>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <bbc97b0d-b36c-c088-a972-d1d10f7eed17@st.com>
-Date:   Wed, 20 May 2020 16:49:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 10:50:43 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5216C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:50:42 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id m10so1109011ybf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ajOsEVzBBmvLmCdJ2Fdc///Cfm2T2Xmx2TMwaA04DAo=;
+        b=I8m8YrPTQXsy55nnqHyJdwIhm6QdarEOtspEoGcg9nkXM0Ew5AiYBTRIXjdtZxXD6S
+         izOaYJYXE9XhaKVivA15X9QwZB3PnP3Qtl7QtzesZcYYMbCOjlRer0BjLRwvbWrr3bKz
+         vk+zY7elcJGaeObSkGHGPxyQecLQW8tuncrc2tGZPsmNSar4qJEW9mJ2sKXaBeXLnFb1
+         knwneHaygvC8zuiYEbffnkfuYqr7AB8BPsN2D0fzE8BkWD983alvNMTYO3pCTscKsJsU
+         UoCgPcIVR5XrlFoUhmm56VsMLBd29uLTatSh8xwvQO3OY7NoruCYGaLLv2KyCDTa7hrJ
+         7ZHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ajOsEVzBBmvLmCdJ2Fdc///Cfm2T2Xmx2TMwaA04DAo=;
+        b=M5dxZLRD6Numbk7m9XBMq0Yypz23KPk2NWuBLzDmGQzhtTN5lrjFLY2YbJZCoxdEMk
+         1Hcpn93IkWKDTD8nTkEFEcWnw4+59uOjI9msY6RKJeL/ABMliDfRsw/v4CRIHgYQAHLU
+         VtKcDSMiTKpSjxO3ZTs9rwnAgIa8Qr+c0/vMTpwaDMGkr5svzGoqz2NnbI4UJU5IXxrj
+         Yjh2BAlsoGLBZ/1Qsjdz96OaH2Xo4+q/gtN5JyxDSq/PpunoKiy6NvKuM+cLZM9HrUiO
+         yAXO/0SImAj8RPymEQe64Py1pyZw+KPyz7/tvxlxuBLz0ZakNhAdVMbfzOGFDCKalT46
+         iubQ==
+X-Gm-Message-State: AOAM530FNKfnzVxXUcoSJV3DKEBmrHGfZie27+H8lrccxVOeKoy57XEj
+        TSlngNhLvloRPk5zILDfHpkDRaU9/YGc47v+AA8MWw==
+X-Google-Smtp-Source: ABdhPJwUG/n0zhdUFbriSJsXmMxGywwDOeEtiLHjve+29uytAAbLo+u0KRAoTbKvizTmfvhGt1A2X7ckmp17h3/0lU0=
+X-Received: by 2002:a25:4446:: with SMTP id r67mr7502533yba.41.1589986241692;
+ Wed, 20 May 2020 07:50:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200515210914.GA408178@builder.lan>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_10:2020-05-20,2020-05-20 signatures=0
+References: <20200520072814.128267-1-irogers@google.com> <20200520131359.GJ157452@krava>
+In-Reply-To: <20200520131359.GJ157452@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 20 May 2020 07:50:30 -0700
+Message-ID: <CAP-5=fXZVmjuiGyRsjzjfsBOpN50SeA+Gi66Of_wa61j7f6X5Q@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Share events between metrics
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Wed, May 20, 2020 at 6:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, May 20, 2020 at 12:28:07AM -0700, Ian Rogers wrote:
+> > Metric groups contain metrics. Metrics create groups of events to
+> > ideally be scheduled together. Often metrics refer to the same events,
+> > for example, a cache hit and cache miss rate. Using separate event
+> > groups means these metrics are multiplexed at different times and the
+> > counts don't sum to 100%. More multiplexing also decreases the
+> > accuracy of the measurement.
+> >
+> > This change orders metrics from groups or the command line, so that
+> > the ones with the most events are set up first. Later metrics see if
+> > groups already provide their events, and reuse them if
+> > possible. Unnecessary events and groups are eliminated.
+> >
+> > The option --metric-no-group is added so that metrics aren't placed in
+> > groups. This affects multiplexing and may increase sharing.
+> >
+> > The option --metric-mo-merge is added and with this option the
+> > existing grouping behavior is preserved.
+> >
+> > Using skylakex metrics I ran the following shell code to count the
+> > number of events for each metric group (this ignores metric groups
+> > with a single metric, and one of the duplicated TopdownL1 and
+> > TopDownL1 groups):
+>
+> hi,
+> I'm getting parser error with:
+>
+> [jolsa@krava perf]$ sudo ./perf stat -M IPC,CPI -a -I 1000
+> event syntax error: '..ed.thread}:W{inst_retired.any,cpu_clk_unhalted.thread}:W,{inst_retired.any,cycles}:W'
+>                                   \___ parser error
+>
+> jirka
 
-On 5/15/20 11:09 PM, Bjorn Andersson wrote:
-> On Fri 15 May 13:56 PDT 2020, Mathieu Poirier wrote:
-> 
->> This patchset adds the capability to supplement the base definition
->> published by an rpmsg_driver with a postfix description so that it
->> is easy to differentiate entities that use the same name service.
->>
->> Applies cleanly on rpmsg-next (4f05fc33bebd).
->>
-> 
-> Thanks Mathieu, this series does look good.
-> 
-> 
-> But before merging this, can someone show me a real example where this
-> is being/would be used? What are some real channel names and extensions?
+Ah, looks like an issue introduced by:
+https://lore.kernel.org/lkml/20200520072814.128267-8-irogers@google.com/
+as there is a missing comma. I'll investigate after some breakfast.
 
-On ST side, This is something we plan to integrate in the TTY over RPMSG support.
-The use case is the support of multi-instances. We already provided to our
-customer a TTY service supporting it but without name extension. 
-Some feed-backs are: how can we know which TTY instances to use to communicate
-to the expected remote application in case of multi-instance.
-A concrete example would be one instance to control a remote processor
-application, the other instance to get the remote system logs.
-
-Then in rpmsg TTY proposed for upstream the extension could also been used to
-differentiate the data from the control channels, as discussed with Mathieu
-during reviews: https://lkml.org/lkml/2020/4/3/964. 
-Means the service is the TTY, the sub-services are the data and the control.
-
-An other usecase i have in mind is the management of the rpmsg flow control for
-the QOS.
-This could be reused to create a core flow control manager based on the
-service extension, which could be quite smooth in term of legacy support.
-
-Suman and Xiang(added in CC) have probably also some usecases as they 
-proposed similar patches...
-
-Regards,
-Arnaud
-
-> 
-> Regards,
-> Bjorn
-> 
->> New for V6:
->> - Added example on how to use the new API.
->>
->> Thanks,
->> Mathieu
->>
->>
->> Mathieu Poirier (3):
->>   rpmsg: core: Add wildcard match for name service
->>   rpmsg: core: Add support to retrieve name extension
->>   sample/rpmsg: Print out RPMSG device name extension
->>
->>  drivers/rpmsg/rpmsg_core.c          | 115 +++++++++++++++++++++++++++-
->>  include/linux/rpmsg.h               |  13 ++++
->>  samples/rpmsg/rpmsg_client_sample.c |   5 ++
->>  3 files changed, 132 insertions(+), 1 deletion(-)
->>
->> -- 
->> 2.20.1
->>
+Thanks,
+Ian
