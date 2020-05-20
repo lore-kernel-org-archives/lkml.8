@@ -2,178 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26153C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3218207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:48:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JoZh3d4a"
+	by mail.kernel.org (Postfix) with ESMTP id DCFF0207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgETTsX (ORCPT
+        id S1727040AbgETTtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:48:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31052 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727801AbgETTsU (ORCPT
+        Wed, 20 May 2020 15:49:40 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:42552 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgETTtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:48:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590004099;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5EOIorljduPvmZJ+oMRVQpix8Ow58lyWoCnbTjlvW6I=;
-        b=JoZh3d4aVCnq1X8CENMMpH8I/P5oxZE/8dUbKOSgLTcYwhASjQMyD75l1carOBtOmdglOJ
-        yJu5FnEyOEl6y7kl+HMLZRtwSZDxPsinSEcGZokauwqfaiMP3OJmsFnSDxKV3n/tIFQymB
-        lYe8/Wa5tyBHI8C9kRvHegSx/sLYZ0w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-TtWJfTLYNbSGBo3AUitG0Q-1; Wed, 20 May 2020 15:48:14 -0400
-X-MC-Unique: TtWJfTLYNbSGBo3AUitG0Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E8278015D1;
-        Wed, 20 May 2020 19:48:12 +0000 (UTC)
-Received: from mail (ovpn-112-106.rdu2.redhat.com [10.10.112.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E93A25D9CA;
-        Wed, 20 May 2020 19:48:04 +0000 (UTC)
-Date:   Wed, 20 May 2020 15:48:04 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, timmurray@google.com,
-        minchan@google.com, sspatil@google.com, lokeshgidra@google.com
-Subject: Re: [PATCH 2/2] Add a new sysctl knob:
- unprivileged_userfaultfd_user_mode_only
-Message-ID: <20200520194804.GJ26186@redhat.com>
-References: <20200423002632.224776-1-dancol@google.com>
- <20200423002632.224776-3-dancol@google.com>
- <20200508125054-mutt-send-email-mst@kernel.org>
- <20200508125314-mutt-send-email-mst@kernel.org>
- <20200520045938.GC26186@redhat.com>
- <202005200921.2BD5A0ADD@keescook>
+        Wed, 20 May 2020 15:49:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 5B045623A7A4;
+        Wed, 20 May 2020 21:49:37 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id TH9rs0QSko1X; Wed, 20 May 2020 21:49:37 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 07759623A7CB;
+        Wed, 20 May 2020 21:49:37 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 8HTSTKpM1ZAC; Wed, 20 May 2020 21:49:36 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id DD072623A7A4;
+        Wed, 20 May 2020 21:49:36 +0200 (CEST)
+Date:   Wed, 20 May 2020 21:49:36 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>
+Message-ID: <1547930539.249342.1590004176796.JavaMail.zimbra@nod.at>
+Subject: [GIT PULL] UML fixes for 5.7 final
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005200921.2BD5A0ADD@keescook>
-User-Agent: Mutt/1.14.0 (2020-05-02)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Index: 7oeqR7ADUshtFLOz07bQL7e19w9UfQ==
+Thread-Topic: UML fixes for 5.7 final
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Kees,
+Linus,
 
-On Wed, May 20, 2020 at 11:03:39AM -0700, Kees Cook wrote:
-> Err, did I miss a separate 6-patch series? I can't find anything on lore.
+The following changes since commit 1d2cc5ac6f6668cc15216d51051103c61467d7e8:
 
-Daniel included the link of the previous series I referred to is the
-cover letter 0/2:
+  Merge tag 'riscv-for-linus-5.7-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux (2020-04-29 09:25:32 -0700)
 
-https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
+are available in the Git repository at:
 
-> > If you keep only 1/2, can't seccomp-bpf enforce userfaultfd to be
-> > always called with flags==0x1 without requiring extra modifications in
-> > the kernel?
-> 
-> Please no. This is way too much overhead for something that a system
-> owner wants to enforce globally. A sysctl is the correct option here,
-> IMO. If it needs to be a per-userns sysctl, that would be fine too.
+  git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git tags/for-linus-5.7-rc6
 
-The question is who could be this system owner who prefers "2" to "0"?
+for you to fetch changes up to 2e27d33d22afa3d12746f854d6a4fad7ad7b86de:
 
-per-ns I don't see the point either when all containers already run
-with default policies enforcing the same behavior as if the sysctl is
-set to "0".
+  um: Fix typo in vector driver transport option definition (2020-04-29 21:22:15 +0200)
 
-Why exactly is it preferable to enlarge the surface of attack of the
-kernel and take the risk there is a real bug in userfaultfd code (not
-just a facilitation of exploiting some other kernel bug) that leads to
-a privilege escalation, when you still break 99% of userfaultfd users,
-if you set with option "2"?
+----------------------------------------------------------------
+This pull request contains the following bug fixes for UML:
 
-Is the system owner really going to purely run on his systems CRIU
-postcopy live migration (which already runs with CAP_SYS_PTRACE) and
-nothing else that could break?
+- Two missing includes which cause build issues on recent systems
+- Correctly set TRANS_GRE_LEN in our vector network driver
 
-Option "2" to me looks with a single possible user, and incidentally
-this single user can already enforce model "2" by only tweaking its
-seccomp-bpf filters without applying 2/2. It'd be a bug if android
-apps runs unprotected by seccomp regardless of 2/2.
+----------------------------------------------------------------
+Ignat Korchagin (1):
+      um: Fix typo in vector driver transport option definition
 
-System owners I think would be better of to stick to "0" or "1" a far
-as I can tell, "2" looks a bad tradeoff as system value, with nearly
-all cons of "0", but less secure than "0".
+Johannes Berg (2):
+      um: Fix xor.h include
+      um: syscall.c: include <asm/unistd.h>
 
-> I'd agree that patch 1 should land, as it appears to be required for any
-
-Agreed about merging 1/2.
-
-> further policy considerations. I'm still a big fan of a sysctl since
-> this is the kind of thing I would absolutely turn on globally for all my
-> systems.
-
-The sysctl /proc/sys/kernel/unprivileged_bpf_disabled is already there
-upstream and you should have already set it to "0" in all your systems
-if you can cope with some app features not working.
-
-2/2 as modified with Peter's suggestion, would add a new value "2" (in
-addition of "1" and "0"), that still breaks the majority of all
-possible users, just like value "0", but that gives less security than
-value "0".
-
-It all boils down of how peculiar it is to be able to leverage only
-the acceleration (reduction in context switches and enter/exit kernel)
-and the vma fragmentation avoidance (to avoid running of vmas in
-/proc/sys/vm/max_map_count) provided by userfaultfd (vs sigsegv
-trapping) but not the transparency in handling faults in kernel (which
-sigsegv can't possibly achieve).
-
-Right now there's a single user that can cope with that limitation,
-and it's not your running on your servers but on your phone. Even CRIU
-cannot cope with such limitation, the only reason it would cope with
-value "2" is that it already runs with CAP_SYS_PTRACE for other
-reasons.
-
-If there will be more users that can cope with handling only user
-initiated page faults, then yes, I think it'd be fine to add a value
-"2" later.
-
-The other benefit of enforcing the policy with seccomp-bpf if that if
-you'd run Android userland on a container on a ARM server on top of an
-enterprise kernel, it'd already run as safe as if the sysctl value was
-tweaked to "2", but without having to also add extra kernel code for
-per-ns sysctl. It just looks simpler. The rest of the containers on
-the same host are already running today as if the sysctl is set to 0
-regardless of this patchset.
-
-If you want to enforce maximum security and override any possible
-opt-out of the default podman seccomp profile that blocks userfaultfd,
-you already can upstream with the global sysctl by setting it to "0".
-
-Thanks,
-Andrea
-
+ arch/um/drivers/vector_user.h | 2 +-
+ arch/um/include/asm/xor.h     | 2 +-
+ arch/um/kernel/skas/syscall.c | 1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
