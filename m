@@ -2,231 +2,106 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30321C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9256CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F81207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBB9207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:03:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKm4+EwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgETMDF (ORCPT
+        id S1726937AbgETMDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:03:05 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:57340 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726525AbgETMDF (ORCPT
+        Wed, 20 May 2020 08:03:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETMDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:03:05 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KBsJTw009126;
-        Wed, 20 May 2020 08:02:47 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 312a1760tk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 08:02:47 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04KC2j57009940
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 20 May 2020 08:02:45 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 20 May
- 2020 05:02:44 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 20 May 2020 05:02:43 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04KC2eC6010756;
-        Wed, 20 May 2020 08:02:41 -0400
-From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: [PATCH v2] iio: dac: ad5592r-base: Replace indio_dev->mlock with own device lock
-Date:   Wed, 20 May 2020 15:02:01 +0300
-Message-ID: <20200520120207.46034-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200520061819.29056-1-sergiu.cuciurean@analog.com>
-References: <20200520061819.29056-1-sergiu.cuciurean@analog.com>
+        Wed, 20 May 2020 08:03:40 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB4BC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:03:39 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q24so1179230pjd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:03:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uSTZY+FCH/CsbXzCEs1ajXnnqSDIAGZV3gPCDr9dJDI=;
+        b=OKm4+EwS5DhdDxYcBsveRI/pq2+Eb7ZuGjPHfVxDACoZQJrihB8xe+Gw7dNU6tInkO
+         LgpV5U+BjMXzlu/DdJ2cj6KZbBRzfAxIVrLaSoF6jiHQxSCYjarqHiNlpoXCuybtrLa8
+         bKwHymbdwb+yNHuT7dvrS317yS09HDnhYwjK5Hl484kPz5A1++onfYG5rMBRX0kCcTz0
+         5RDUJo5HbvZoNRij6pQAICFEYaMXsV3hyX4ksvGz2EfGrDxOwuzyCpnr6z6j4JiBrwU9
+         i+FA3koeAUlMVqS2eN/PkBC1HHFvUYHbTLKmb9ffYEa24884t6YvPN5EUqGgf5LubRpx
+         nYSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uSTZY+FCH/CsbXzCEs1ajXnnqSDIAGZV3gPCDr9dJDI=;
+        b=XsUMYUPEp37Y2dvfsoZKJ+1804as1kdZsRdYM4/IIvLSv51SFrfWLIZFukndD4dnhu
+         AvD1Q01kqWsT9xcuwdx5zCBWbMPNykjPhtomPApnmksWO48URHHaPKd9gYhbmsSfebhN
+         pO8PDGl88RPkyufQVdVIUO/SjS4hHtHpg+Q2i8RtIG221rk3S5p4o6Z5olGi6Ly5zAzX
+         6D/5DgtDjVCHN3uamfrXeQoF+CR0hh+SDUaEz7Zl/3YR1niXumWV6+ZIJtdO+Do/ihwI
+         sS1wI01FfsIqc8zIxA4alNAVwaQkNxgjO3wx1vocTDycnOQrnCL4LwGzci/4v71RK+oN
+         /WZw==
+X-Gm-Message-State: AOAM531OvWsjYfuBfeEcGfnHUlYQQhMlURuKugSPvo+rqmL/G0FdEGIb
+        6faSoX00MhoUPxpl5yni5rNYzba+KGFqAajkbw0=
+X-Google-Smtp-Source: ABdhPJzlS0/QLumcsxy/AkcPqpC5Qj+ROn+VA0uMqCHu4uTcyy/8IRu5SVpkweJZ8phlfvhYFMenpmAcw+VhQDfw5Gg=
+X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr5160248pjb.228.1589976219013;
+ Wed, 20 May 2020 05:03:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_07:2020-05-19,2020-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=838 spamscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 cotscore=-2147483648
- suspectscore=0 adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005200104
+References: <202005201042.yjSO10j2%lkp@intel.com>
+In-Reply-To: <202005201042.yjSO10j2%lkp@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 20 May 2020 15:03:26 +0300
+Message-ID: <CAHp75VcwekGU3bQDWkaTmLE8SPU7NZoUY6Es9Fy8oG5E=LT81A@mail.gmail.com>
+Subject: Re: drivers/mux/adgs1408.c:112:34: warning: unused variable 'adgs1408_of_match'
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of the general cleanup of indio_dev->mlock, this change replaces
-it with a local lock on the device's state structure.
-This also removes unused iio_dev pointers.
+On Wed, May 20, 2020 at 5:23 AM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Chris,
+>
+> First bad commit (maybe != root cause):
+>
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   115a54162a6c0d0ef2aef25ebd0b61fc5e179ebe
+> commit: e9e40543ad5b38b848879768359fd13650529961 spi: Add generic SPI multiplexer
+> date:   3 months ago
+> config: x86_64-randconfig-r022-20200519 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 135b877874fae96b4372c8a3fbfaa8ff44ff86e3)
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install x86_64 cross compiling tool for clang build
+>         # apt-get install binutils-x86-64-linux-gnu
+>         git checkout e9e40543ad5b38b848879768359fd13650529961
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
----
- drivers/iio/dac/ad5592r-base.c | 30 +++++++++++++++---------------
- drivers/iio/dac/ad5592r-base.h |  1 +
- 2 files changed, 16 insertions(+), 15 deletions(-)
+Fix has been submitted:
+https://lore.kernel.org/lkml/20200520120122.67528-1-andriy.shevchenko@linux.intel.com/T/#u
 
-diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
-index e2110113e884..410e90e5f75f 100644
---- a/drivers/iio/dac/ad5592r-base.c
-+++ b/drivers/iio/dac/ad5592r-base.c
-@@ -156,7 +156,6 @@ static void ad5592r_gpio_cleanup(struct ad5592r_state *st)
- static int ad5592r_reset(struct ad5592r_state *st)
- {
- 	struct gpio_desc *gpio;
--	struct iio_dev *iio_dev = iio_priv_to_dev(st);
- 
- 	gpio = devm_gpiod_get_optional(st->dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(gpio))
-@@ -166,10 +165,10 @@ static int ad5592r_reset(struct ad5592r_state *st)
- 		udelay(1);
- 		gpiod_set_value(gpio, 1);
- 	} else {
--		mutex_lock(&iio_dev->mlock);
-+		mutex_lock(&st->lock);
- 		/* Writing this magic value resets the device */
- 		st->ops->reg_write(st, AD5592R_REG_RESET, 0xdac);
--		mutex_unlock(&iio_dev->mlock);
-+		mutex_unlock(&st->lock);
- 	}
- 
- 	udelay(250);
-@@ -197,7 +196,6 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
- 	const struct ad5592r_rw_ops *ops = st->ops;
- 	int ret;
- 	unsigned i;
--	struct iio_dev *iio_dev = iio_priv_to_dev(st);
- 	u8 pulldown = 0, tristate = 0, dac = 0, adc = 0;
- 	u16 read_back;
- 
-@@ -247,7 +245,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
- 		}
- 	}
- 
--	mutex_lock(&iio_dev->mlock);
-+	mutex_lock(&st->lock);
- 
- 	/* Pull down unused pins to GND */
- 	ret = ops->reg_write(st, AD5592R_REG_PULLDOWN, pulldown);
-@@ -285,7 +283,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
- 		ret = -EIO;
- 
- err_unlock:
--	mutex_unlock(&iio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 	return ret;
- }
- 
-@@ -314,11 +312,11 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
- 		if (!chan->output)
- 			return -EINVAL;
- 
--		mutex_lock(&iio_dev->mlock);
-+		mutex_lock(&st->lock);
- 		ret = st->ops->write_dac(st, chan->channel, val);
- 		if (!ret)
- 			st->cached_dac[chan->channel] = val;
--		mutex_unlock(&iio_dev->mlock);
-+		mutex_unlock(&st->lock);
- 		return ret;
- 	case IIO_CHAN_INFO_SCALE:
- 		if (chan->type == IIO_VOLTAGE) {
-@@ -333,12 +331,12 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
- 			else
- 				return -EINVAL;
- 
--			mutex_lock(&iio_dev->mlock);
-+			mutex_lock(&st->lock);
- 
- 			ret = st->ops->reg_read(st, AD5592R_REG_CTRL,
- 						&st->cached_gp_ctrl);
- 			if (ret < 0) {
--				mutex_unlock(&iio_dev->mlock);
-+				mutex_unlock(&st->lock);
- 				return ret;
- 			}
- 
-@@ -360,7 +358,7 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
- 
- 			ret = st->ops->reg_write(st, AD5592R_REG_CTRL,
- 						 st->cached_gp_ctrl);
--			mutex_unlock(&iio_dev->mlock);
-+			mutex_unlock(&st->lock);
- 
- 			return ret;
- 		}
-@@ -382,7 +380,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
- 
- 	switch (m) {
- 	case IIO_CHAN_INFO_RAW:
--		mutex_lock(&iio_dev->mlock);
-+		mutex_lock(&st->lock);
- 
- 		if (!chan->output) {
- 			ret = st->ops->read_adc(st, chan->channel, &read_val);
-@@ -419,7 +417,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
- 		} else {
- 			int mult;
- 
--			mutex_lock(&iio_dev->mlock);
-+			mutex_lock(&st->lock);
- 
- 			if (chan->output)
- 				mult = !!(st->cached_gp_ctrl &
-@@ -437,7 +435,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
- 	case IIO_CHAN_INFO_OFFSET:
- 		ret = ad5592r_get_vref(st);
- 
--		mutex_lock(&iio_dev->mlock);
-+		mutex_lock(&st->lock);
- 
- 		if (st->cached_gp_ctrl & AD5592R_REG_CTRL_ADC_RANGE)
- 			*val = (-34365 * 25) / ret;
-@@ -450,7 +448,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
- 	}
- 
- unlock:
--	mutex_unlock(&iio_dev->mlock);
-+	mutex_unlock(&st->lock);
- 	return ret;
- }
- 
-@@ -625,6 +623,8 @@ int ad5592r_probe(struct device *dev, const char *name,
- 	iio_dev->info = &ad5592r_info;
- 	iio_dev->modes = INDIO_DIRECT_MODE;
- 
-+	mutex_init(&st->lock);
-+
- 	ad5592r_init_scales(st, ad5592r_get_vref(st));
- 
- 	ret = ad5592r_reset(st);
-diff --git a/drivers/iio/dac/ad5592r-base.h b/drivers/iio/dac/ad5592r-base.h
-index 4774e4cd9c11..23dac2f1ff8a 100644
---- a/drivers/iio/dac/ad5592r-base.h
-+++ b/drivers/iio/dac/ad5592r-base.h
-@@ -52,6 +52,7 @@ struct ad5592r_state {
- 	struct regulator *reg;
- 	struct gpio_chip gpiochip;
- 	struct mutex gpio_lock;	/* Protect cached gpio_out, gpio_val, etc. */
-+	struct mutex lock;
- 	unsigned int num_channels;
- 	const struct ad5592r_rw_ops *ops;
- 	int scale_avail[2][2];
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
