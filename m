@@ -2,77 +2,103 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E981C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA94B204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32FA52070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:21:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCz+sHF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgETDSj (ORCPT
+        id S1728445AbgETDVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 23:18:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4871 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728176AbgETDSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 23:18:38 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6AC3BD0BA95EB4BBB08E;
-        Wed, 20 May 2020 11:18:36 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 20 May 2020 11:18:29 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next] bus: arm-integrator-lm: Fix return value check in integrator_ap_lm_probe()
-Date:   Wed, 20 May 2020 03:21:50 +0000
-Message-ID: <20200520032150.165388-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Tue, 19 May 2020 23:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgETDVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 23:21:35 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AB4C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:21:34 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id a23so1546520qto.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=H3LD04AQwmxN/W6G9Hm1qR+vU06ilPmJsdKj04uNnA4=;
+        b=DCz+sHF4It2JSWZejzc2SvNTbmx85dJISq+sgdg0dUWXllA4lOVq2msJAtSdiv1wRm
+         xEZazLGCamFvnKTJ5idqqsJyTT6NDYBVwliNcWXQ2qVhK3po4rHxUqT6VBeOm/xJgvE4
+         qibpNpqidLiKMhhBLw0Lz1UrwfMgGIx3hmMmyKCxMpC94i5wyetynGDJhH6KRRlhM45k
+         vSxZjQcBRf+2plI1M5uEv3zDZp+ltkOQiESSW7CYH0FQqvpebhjxTfhg+fmvXx1g/DPw
+         O28tGqbziISe3XYzPOMYGigcZnI39Re+nU8POnnvr+QheqGcxrPYKi1Ur7ef977G1gJJ
+         QQSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H3LD04AQwmxN/W6G9Hm1qR+vU06ilPmJsdKj04uNnA4=;
+        b=SpyrjLksn3eZvmFNLZlrMP9v4SekLyi44nXYDh9yWyU2JfFRvPOIQZNxCKhaA9qYzT
+         0qRw8tpNCEqLlehxKxG8JeHbW8zkJJaFjsll8HRdMolyGXk/tqeSfNZxIgfqWQ3KQiB7
+         3YYPU5MIfvQ+owPnlTGz93t9hPS3a2o+Xsr9ugkGQigt6tkagfzrXfZo+xbhFyheN/Ee
+         1AgGYuq7sftEPEUZc/e6MOFDWhU7cNXR4ZdSrkZDRIwCm45FOfuVzmZ/uK+r2xu7P9dE
+         DOLomSytIfBqDCs4iKQkg0FmfCgH27rEyGhXz0q62WfegkqjEZw5zud30mMX2Ek5CZ+A
+         gcAg==
+X-Gm-Message-State: AOAM532I1dYMWoLtwpobVZm1BaRTnBUPoMT7udckEF0Aj4OS71a97n7S
+        U0giVUEWR/Jfe6MN6b10gnw=
+X-Google-Smtp-Source: ABdhPJwkNV6xh7GZP+CGFpCwAKH9XVqPYyKAWJgVcQ54oj4PyYOJxs7jmCc0CrKwg6XeaT9VYHT8EQ==
+X-Received: by 2002:ac8:5142:: with SMTP id h2mr3306395qtn.37.1589944893849;
+        Tue, 19 May 2020 20:21:33 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:919:d4cb:2d07:fb81:cec4])
+        by smtp.gmail.com with ESMTPSA id g20sm1210274qki.75.2020.05.19.20.21.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 20:21:32 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     jassisinghbrar@gmail.com
+Cc:     kernel@pengutronix.de, o.rempel@pengutronix.de, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] mailbox: imx: Disable the clock on devm_mbox_controller_register() failure
+Date:   Wed, 20 May 2020 00:22:46 -0300
+Message-Id: <20200520032246.12482-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of error, the function of_find_matching_node() returns NULL
-pointer not ERR_PTR(). The IS_ERR() test in the return value check
-should be replaced with NULL test.
+devm_mbox_controller_register() may fail, and in the case of failure the
+priv->clk clock that was previously enabled, should be disabled.
 
-Fixes: ccea5e8a5918 ("bus: Add driver for Integrator/AP logic modules")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Fixes: 2bb7005696e2 ("mailbox: Add support for i.MX messaging unit")
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- drivers/bus/arm-integrator-lm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mailbox/imx-mailbox.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/arm-integrator-lm.c b/drivers/bus/arm-integrator-lm.c
-index 669ea7e1f92e..845b6c43fef8 100644
---- a/drivers/bus/arm-integrator-lm.c
-+++ b/drivers/bus/arm-integrator-lm.c
-@@ -78,10 +78,10 @@ static int integrator_ap_lm_probe(struct platform_device *pdev)
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 7906624a731c..3f7c4548c18f 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -508,7 +508,13 @@ static int imx_mu_probe(struct platform_device *pdev)
  
- 	/* Look up the system controller */
- 	syscon = of_find_matching_node(NULL, integrator_ap_syscon_match);
--	if (IS_ERR(syscon)) {
-+	if (!syscon) {
- 		dev_err(dev,
- 			"could not find Integrator/AP system controller\n");
--		return PTR_ERR(syscon);
-+		return -ENODEV;
- 	}
- 	map = syscon_node_to_regmap(syscon);
- 	if (IS_ERR(map)) {
-
-
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	return devm_mbox_controller_register(dev, &priv->mbox);
++	ret = devm_mbox_controller_register(dev, &priv->mbox);
++	if (ret) {
++		clk_disable_unprepare(priv->clk);
++		return ret;
++	}
++
++	return 0;
+ }
+ 
+ static int imx_mu_remove(struct platform_device *pdev)
+-- 
+2.17.1
 
