@@ -2,193 +2,269 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA376C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08457C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 910A42084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB1752065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="LL290Z2h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vd77kxg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgETVgh (ORCPT
+        id S1728216AbgETVkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38504 "EHLO
+        Wed, 20 May 2020 17:40:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgETVgh (ORCPT
+        with ESMTP id S1728019AbgETVkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:36:37 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D83EC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:36:37 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n15so1964630pjt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:36:37 -0700 (PDT)
+        Wed, 20 May 2020 17:40:31 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 781ACC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:40:31 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id n11so4902407ilj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:40:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oEy3KONd3ADgphDGousWSyHD+5c1mt4Xvb33TZ3mihY=;
-        b=LL290Z2h4Q1tCi+X3mjwmJ1EJl1P6WYPOnYCO1tGDHYNhhRCae0EGxIgn/Ddlcgey6
-         zy5CrKXWGd84PkCwGgaFHH6SR+MP8CVFlTJsIaRFLWJT7UFUTR9aDQJHTgixsek0q+ow
-         OL0Mx6F9+fuxUzKc7NlItIp9XEwV+1rmXHLhCh8CV1FLsUa5wbfho/hk9SW0VXjrI9HX
-         s64r+evbEbD7dpow22lLX1xJOOTi05vI43bQrUeyf/lFKFJ+lIe/OznskVc9ETsH9SfK
-         h/iqScJ/ZwVs7WSsV6Ji1gX2wqXDEpWa/vkwNUSCsJ8skVKudn4iiSci/Bn6qodpUOeL
-         5fUQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K4uSck2D86dpTs469W5wKjloBJypVL8duZpRo2duhsQ=;
+        b=vd77kxg4ETWr2fDRCnGcqjQ9TsU8wqOlCCoHGj4JIvrmNSarEtFJcltK1N7uaYm+9E
+         v+BFEpuMeG1qJqv+Sw1FwGsoPWzLvAvBrVBT22386iJg/BgZ6XAIupsCEnCx83xA1zwg
+         jBi/W61OZO0yv0Ae2RkpET6KWoBQSqLUGIu0kgCC228iTG9rA1y+f1G0tNInHCSOx5YE
+         hb0l6JHXoTQYBR8cc6RekCMirCIgCKnuY8u6jc8hG2sT9/Na0JMmHWOfo+iW79pzXG42
+         k1Ia55xi0wZbi1doYvG58vrW/mBXpEf9/iKIFXxeY6ZMFYqcddTnKYTk6l3RD/m5+H1g
+         czLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oEy3KONd3ADgphDGousWSyHD+5c1mt4Xvb33TZ3mihY=;
-        b=bSF8zZGQYnDTnYNTRnfzunhXPwFl0yPbxRefOGZeXrB1ea0H7kHcuXC6ST5JLoP//F
-         cTIFWotIGhDEtAV9z0mNslIl9oRIGJvHXR+rzDk2a9Cz+lxtjLnc2Hna+Wxasp6rxSbY
-         KuVghyMRqI9XCNIUVMHg1SJuFPwi3l2HpIPt+9hpiUZk4jsD+9oEZoIi5jwFHKF4WvuS
-         tCb74WuxjQgZzuO0/78Y/hFXHDHApG6GsjGXMHyEPRP3jkxiMRxsPNkNcCm1lol0k6U7
-         gNv8xGhFIiTBeJAPv95LdWyqXguPi5xdaozBcc9+ZUGuHHE0+uZqu1U85eby3LpOSv5T
-         1FZw==
-X-Gm-Message-State: AOAM530xYgAzHcpl8r/DccoSC79Og9SO50VFuJECQiFMkud7uGB2VUd5
-        ASxpPI5kI1tzITygHa7rZ1KEpBz4IChnrw==
-X-Google-Smtp-Source: ABdhPJyUKHAVjK06yBDbJoW20J2Rnz9M38TfcrCfIdpul3TwxJgrhXMdsqq5oAddMtivbLswlTyHJA==
-X-Received: by 2002:a17:902:bf02:: with SMTP id bi2mr6456658plb.330.1590010596676;
-        Wed, 20 May 2020 14:36:36 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id r31sm2942792pjg.2.2020.05.20.14.36.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 14:36:36 -0700 (PDT)
-Date:   Wed, 20 May 2020 14:36:27 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     David Miller <davem@davemloft.net>, a.darwish@linutronix.de,
-        peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-        paulmck@kernel.org, bigeasy@linutronix.de, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, kuba@kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
- a seqcount
-Message-ID: <20200520143627.047a7eee@hermes.lan>
-In-Reply-To: <87wo56v1nc.fsf@nanos.tec.linutronix.de>
-References: <20200519.195722.1091264300612213554.davem@davemloft.net>
-        <87wo56v1nc.fsf@nanos.tec.linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K4uSck2D86dpTs469W5wKjloBJypVL8duZpRo2duhsQ=;
+        b=i8dMBLzv7csT9dI7vTo1fLd1OhjMQQU9jXHaXwLiITvGfBoZ+mJU6m7WL0wLF5tVYG
+         sh79KCAExXCSmbgke6rMMi1bm47JXDs/U0QbzEjlNTxCF0QNrHbjqNaCS7LEDAc0EE5L
+         +GEFyxDbliVbzOMn6xM8F4vGkJ8zUKJF1ISbBUYj5FeW2gfC8gu8hy6tW4VDUTKQeR9k
+         rkiV089EItb6RpZY8JGO7qNBuB7QAcOAdxDClTn10LgXdneWH4kbP/wdwdZdTJ5IceX8
+         CIabTifk7izY87/wTQjWOcOva3bK+Xpqfp6y5yyIR+/oUr0B5A93Ksa3UY4GLx/YWxle
+         1FHw==
+X-Gm-Message-State: AOAM531TqlyZr4N2oIkQgv0+hY1oyaYu1OU5fxJ3PdEROk2Qjw9SGIRV
+        81mlQxcrB+OUNYAyiGQewSa+8D9irAUVqN5++KQ=
+X-Google-Smtp-Source: ABdhPJz23uIlfGOeXr7jQekSJcilX37yG4hoY41Ib+Q53STXl7JIZKScUW9ZFwROs3p5jdVOaxQO3YGTKbGm43mw8lk=
+X-Received: by 2002:a92:d591:: with SMTP id a17mr6081321iln.13.1590010830285;
+ Wed, 20 May 2020 14:40:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1589497311.git.syednwaris@gmail.com> <f4d924971feb15b0044eeefdd969b36747d2322b.1589497312.git.syednwaris@gmail.com>
+ <20200515113202.GO185537@smile.fi.intel.com>
+In-Reply-To: <20200515113202.GO185537@smile.fi.intel.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Thu, 21 May 2020 03:10:18 +0530
+Message-ID: <CACG_h5o5=DXFtNzHn+NzY0rRjbZXhjrs58ka042hoOsVFFHnkA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] lib/test_bitmap.c: Add for_each_set_clump test cases
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 21:37:11 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> David Miller <davem@davemloft.net> writes:
-> > From: Thomas Gleixner <tglx@linutronix.de>
-> > Date: Wed, 20 May 2020 01:42:30 +0200  
-> >>> Please try, it isn't that hard..
-> >>>
-> >>> # time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
-> >>>
-> >>> real	0m17.002s
-> >>> user	0m1.064s
-> >>> sys	0m0.375s  
-> >> 
-> >> And that solves the incorrectness of the current code in which way?  
+On Fri, May 15, 2020 at 5:02 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, May 15, 2020 at 04:48:46AM +0530, Syed Nayyar Waris wrote:
+> > The introduction of the generic for_each_set_clump macro need test
+> > cases to verify the implementation. This patch adds test cases for
+> > scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
+> > The cases contain situations where clump is getting split at the word
+> > boundary and also when zeroes are present in the start and middle of
+> > bitmap.
+>
+> Thanks for an update. Looks pretty much okay to me, though one nit below.
+> After addressing,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > ---
+> > Changes in v6:
+> >  - Make 'for loop' inside 'test_for_each_set_clump' more succinct.
 > >
-> > You mentioned that there wasn't a test case, he gave you one to try.  
-> 
-> If it makes you happy to compare incorrrect code with correct code, here
-> you go:
-> 
-> 5 runs of 1000 device add, 1000 device rename and 1000 device del
-> 
-> CONFIG_PREEMPT_NONE=y
-> 
->          Base      rwsem
->  add     0:05.01   0:05.28
-> 	 0:05.93   0:06.11
-> 	 0:06.52   0:06.26
-> 	 0:06.06   0:05.74
-> 	 0:05.71   0:06.07
-> 
->  rename  0:32.57   0:33.04
-> 	 0:32.91   0:32.45
-> 	 0:32.72   0:32.53
-> 	 0:39.65   0:34.18
-> 	 0:34.52   0:32.50
-> 
->  delete  3:48.65   3:48.91
-> 	 3:49.66   3:49.13
-> 	 3:45.29   3:48.26
-> 	 3:47.56   3:46.60
-> 	 3:50.01   3:48.06
-> 
->  -------------------------
-> 
-> CONFIG_PREEMPT_VOLUNTARY=y
-> 
->          Base      rwsem
->  add     0:06.80   0:06.42
-> 	 0:04.77   0:05.03
-> 	 0:05.74   0:04.62
-> 	 0:05.87   0:04.34
-> 	 0:04.20   0:04.12
-> 
->  rename  0:33.33   0:42.02
-> 	 0:42.36   0:32.55
-> 	 0:39.58   0:31.60
-> 	 0:33.69   0:35.08
-> 	 0:34.24   0:33.97
-> 
->  delete  3:47.82   3:44.00
-> 	 3:47.42   3:51.00
-> 	 3:48.52   3:48.88
-> 	 3:48.50   3:48.09
-> 	 3:50.03   3:46.56
-> 
->  -------------------------
-> 
-> CONFIG_PREEMPT=y
-> 
->          Base      rwsem
-> 
->  add     0:07.89   0:07.72
-> 	 0:07.25   0:06.72
-> 	 0:07.42   0:06.51
-> 	 0:06.92   0:06.38
-> 	 0:06.20   0:06.72
-> 
->  rename  0:41.77   0:32.39
-> 	 0:44.29   0:33.29
-> 	 0:36.19   0:34.86
-> 	 0:33.19   0:35.06
-> 	 0:37.00   0:34.78
-> 
->  delete  2:36.96   2:39.97
-> 	 2:37.80   2:42.19
-> 	 2:44.66   2:48.40
-> 	 2:39.75   2:41.02
-> 	 2:40.77   2:38.36
-> 
-> The runtime variation is rather large and when running the same in a VM
-> I got complete random numbers for both base and rwsem. The most amazing
-> was delete where the time varies from 30s to 6m20s.
-> 
-> Btw, Sebastian noticed that rename spams dmesg:
-> 
->   netdev_info(dev, "renamed from %s\n", oldname);
-> 
-> which eats about 50% of the Rename run time.
-> 
->          Base      netdev_info() removed
-> 
-> Rename   0:34.84   0:17.48
-> 
-> That number at least makes tons of sense
-> 
-> Thanks,
-> 
->         tglx
+> > Changes in v5:
+> >  - No change.
+> >
+> > Changes in v4:
+> >  - Use 'for' loop in test function of 'for_each_set_clump'.
+> >
+> > Changes in v3:
+> >  - No Change.
+> >
+> > Changes in v2:
+> >  - Unify different tests for 'for_each_set_clump'. Pass test data as
+> >    function parameters.
+> >  - Remove unnecessary bitmap_zero calls.
+> >
+> >  lib/test_bitmap.c | 142 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 142 insertions(+)
+> >
+> > diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+> > index 6b13150667f5..673c512a5bbd 100644
+> > --- a/lib/test_bitmap.c
+> > +++ b/lib/test_bitmap.c
+> > @@ -155,6 +155,38 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
+> >       return true;
+> >  }
+> >
+> > +static bool __init __check_eq_clump(const char *srcfile, unsigned int line,
+> > +                                 const unsigned int offset,
+> > +                                 const unsigned int size,
+> > +                                 const unsigned long *const clump_exp,
+> > +                                 const unsigned long *const clump,
+> > +                                 const unsigned long clump_size)
+> > +{
+> > +     unsigned long exp;
+> > +
+> > +     if (offset >= size) {
+> > +             pr_warn("[%s:%u] bit offset for clump out-of-bounds: expected less than %u, got %u\n",
+> > +                     srcfile, line, size, offset);
+> > +             return false;
+> > +     }
+> > +
+> > +     exp = clump_exp[offset / clump_size];
+> > +     if (!exp) {
+> > +             pr_warn("[%s:%u] bit offset for zero clump: expected nonzero clump, got bit offset %u with clump value 0",
+> > +                     srcfile, line, offset);
+> > +             return false;
+> > +     }
+> > +
+> > +     if (*clump != exp) {
+> > +             pr_warn("[%s:%u] expected clump value of 0x%lX, got clump value of 0x%lX",
+> > +                     srcfile, line, exp, *clump);
+> > +             return false;
+> > +     }
+> > +
+> > +     return true;
+> > +}
+> > +
+> > +
+> >  #define __expect_eq(suffix, ...)                                     \
+> >       ({                                                              \
+> >               int result = 0;                                         \
+> > @@ -172,6 +204,7 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
+> >  #define expect_eq_pbl(...)           __expect_eq(pbl, ##__VA_ARGS__)
+> >  #define expect_eq_u32_array(...)     __expect_eq(u32_array, ##__VA_ARGS__)
+> >  #define expect_eq_clump8(...)                __expect_eq(clump8, ##__VA_ARGS__)
+> > +#define expect_eq_clump(...)         __expect_eq(clump, ##__VA_ARGS__)
+> >
+> >  static void __init test_zero_clear(void)
+> >  {
+> > @@ -577,6 +610,28 @@ static void noinline __init test_mem_optimisations(void)
+> >       }
+> >  }
+> >
+> > +static const unsigned long clump_bitmap_data[] __initconst = {
+> > +     0x38000201,
+> > +     0x05ff0f38,
+> > +     0xeffedcba,
+> > +     0xbbbbabcd,
+> > +     0x000000aa,
+> > +     0x000000aa,
+> > +     0x00ff0000,
+> > +     0xaaaaaa00,
+> > +     0xff000000,
+> > +     0x00aa0000,
+> > +     0x00000000,
+> > +     0x00000000,
+> > +     0x00000000,
+> > +     0x0f000000,
+> > +     0x00ff0000,
+> > +     0xaaaaaa00,
+> > +     0xff000000,
+> > +     0x00aa0000,
+> > +     0x00000ac0,
+> > +};
+> > +
+> >  static const unsigned char clump_exp[] __initconst = {
+> >       0x01,   /* 1 bit set */
+> >       0x02,   /* non-edge 1 bit set */
+> > @@ -588,6 +643,92 @@ static const unsigned char clump_exp[] __initconst = {
+> >       0x05,   /* non-adjacent 2 bits set */
+> >  };
+> >
+> > +static const unsigned long clump_exp1[] __initconst = {
+> > +     0x01,   /* 1 bit set */
+> > +     0x02,   /* non-edge 1 bit set */
+> > +     0x00,   /* zero bits set */
+> > +     0x38,   /* 3 bits set across 4-bit boundary */
+> > +     0x38,   /* Repeated clump */
+> > +     0x0F,   /* 4 bits set */
+> > +     0xFF,   /* all bits set */
+> > +     0x05,   /* non-adjacent 2 bits set */
+> > +};
+> > +
+> > +static const unsigned long clump_exp2[] __initconst = {
+> > +     0xfedcba,       /* 24 bits */
+> > +     0xabcdef,
+> > +     0xaabbbb,       /* Clump split between 2 words */
+> > +     0x000000,       /* zeroes in between */
+> > +     0x0000aa,
+> > +     0x000000,
+> > +     0x0000ff,
+> > +     0xaaaaaa,
+> > +     0x000000,
+> > +     0x0000ff,
+> > +};
+> > +
+> > +static const unsigned long clump_exp3[] __initconst = {
+> > +     0x00000000,     /* starting with 0s*/
+> > +     0x00000000,     /* All 0s */
+> > +     0x00000000,
+> > +     0x00000000,
+> > +     0x3f00000f,     /* Non zero set */
+> > +     0x2aa80003,
+> > +     0x00000aaa,
+> > +     0x00003fc0,
+> > +};
+> > +
+> > +static const unsigned long clump_exp4[] __initconst = {
+> > +     0x00,
+> > +     0x2b,
+> > +};
+> > +
+> > +struct clump_test_data {
+>
+> > +     unsigned long data[256];
+>
+> DECLARE_BITMAP() ?
+>
+> > +     unsigned long count;
+> > +     unsigned long offset;
+> > +     unsigned long limit;
+> > +     unsigned long clump_size;
+> > +     unsigned long const *exp;
+>
+> > +} clump_test_data[] = { {{0}, 2, 0, 64, 8, clump_exp1},
+> > +                     {{0}, 8, 2, 240, 24, clump_exp2},
+> > +                     {{0}, 8, 10, 240, 30, clump_exp3},
+> > +                     {{0}, 1, 18, 18, 6, clump_exp4} };
+>
+> Please, split structure definition and test data.
+>
+> > +
 
-Looks good thanks for following through.
+I have incorporated your above 2 review comments.
+
+I will be sharing the new (v7) patchset in some time with your
+'Reviewed-by' tag included in this patch. I believe I have understood
+correctly.
+
+Regards
+Syed Nayyar Waris
