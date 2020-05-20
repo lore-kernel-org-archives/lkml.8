@@ -2,153 +2,172 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C00C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFE9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C708206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJmZATl7"
+	by mail.kernel.org (Postfix) with ESMTP id 6092220708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589993976;
+	bh=UW1xs7yeIGx3kZqw2YLLv5n3UIU3CvqqIq1meipxqmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oBZjj1x1F7aN8O1+RHldoMLLCPRcGXcDeZ+vRdus/d+pcnyB3zLfrGsm8aWHCf3E8
+	 fhYdb+VAr/xUvk3AdpYQkc2y9wfygRgaEte/PAdO4u4x1AEK0g5rSTlKhnB3IR+FQH
+	 VvW7cyYe1vfZQtEMch8B92eqnglOvvlObsxNW1aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgETQ4w (ORCPT
+        id S1726790AbgETQ7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:56:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42139 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726548AbgETQ4w (ORCPT
+        Wed, 20 May 2020 12:59:35 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:43705 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETQ7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:56:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589993810;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QaZb1dScaBd+ZKT5FJJNAu4zg30y7sIbqMztcEcLgo4=;
-        b=NJmZATl7RI35wLZFIyNWR31qRXP80q1smB9lOVz9jH1hyM3X0FL6+TCm1293d8hOr/mIfz
-        eOzn7sLxO4yVKdWZfvuL6qMxhZxVx/rERj3bd5x/YQwhVVpHz0k6Wg5+SHLFGFB4VxsNFh
-        BK69v4uOh2S5yZYxty8p+cOZeyQ20pc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-NywVvRHRMOe8vsWxjz5dnA-1; Wed, 20 May 2020 12:56:48 -0400
-X-MC-Unique: NywVvRHRMOe8vsWxjz5dnA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D603E81A3FF;
-        Wed, 20 May 2020 16:56:47 +0000 (UTC)
-Received: from starship (unknown [10.35.207.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3FFD5D994;
-        Wed, 20 May 2020 16:56:44 +0000 (UTC)
-Message-ID: <0c1a0c81bbdcfaf4ae9af545f4a38439b1a56d11.camel@redhat.com>
-Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL
- unconditionally
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 20 May 2020 19:56:43 +0300
-In-Reply-To: <874ksatvkr.fsf@vitty.brq.redhat.com>
-References: <20200520160740.6144-1-mlevitsk@redhat.com>
-         <20200520160740.6144-3-mlevitsk@redhat.com>
-         <874ksatvkr.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 20 May 2020 12:59:35 -0400
+Received: by mail-ej1-f67.google.com with SMTP id a2so4786903ejb.10;
+        Wed, 20 May 2020 09:59:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ulK8UjBcVR88erWI+DBVtEzBcjfexz2ALmk1KaikEeE=;
+        b=Guq15TKhii54fz86KViM72ZQKoUigoduUrKfP7Hv8effARsvmK749+sqbgVNdesEvV
+         wji5r4TSOYX6BP3WBD1LJ64jxH2er+dd/KGuVNyUcAb4ROrBdgqo0ItHf9GG5MV4UVJG
+         WWFg/cIyZTsimG5AGInXs16UjD9cSD2Efqls3G5hzk8HiwbbBGYRGhi/SinBOLRl7y8T
+         Y01ZVMKFwfmtcc85yfV64uyVL5NJf5TUPTqtIKBBNYCSzyYxSfaEzwhMDUb0XE63UFsY
+         PttRZJOoaCTqq9BrmVM18KeSfv+pM4I6pL17HgKrhxpl6BSSSle3GVFApyl3AOevmBFw
+         qtkg==
+X-Gm-Message-State: AOAM532SRQu+gXGANwTDq6jkXnZST5iUiNCpiYU1wsqhs7l+R8/hLrIy
+        kn5hXo7Mz6oRPNYDTP7NnZc=
+X-Google-Smtp-Source: ABdhPJxKJgx5XBPyBkWBT1fGe9dfNWGjBmU9XzwJaHwySJbBASqYFUxO125YFnq5b+LbkAd0l7I75g==
+X-Received: by 2002:a17:906:3912:: with SMTP id f18mr4709801eje.539.1589993973055;
+        Wed, 20 May 2020 09:59:33 -0700 (PDT)
+Received: from localhost (ip-37-188-251-131.eurotel.cz. [37.188.251.131])
+        by smtp.gmail.com with ESMTPSA id z14sm2355795ejd.37.2020.05.20.09.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 09:59:32 -0700 (PDT)
+Date:   Wed, 20 May 2020 18:59:30 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: unify reclaim retry limits with page allocator
+Message-ID: <20200520165930.GF6462@dhcp22.suse.cz>
+References: <20200520163142.GA808793@chrisdown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520163142.GA808793@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-20 at 18:33 +0200, Vitaly Kuznetsov wrote:
-> Maxim Levitsky <mlevitsk@redhat.com> writes:
+On Wed 20-05-20 17:31:42, Chris Down wrote:
+> Reclaim retries have been set to 5 since the beginning of time in
+> 66e1707bc346 ("Memory controller: add per cgroup LRU and reclaim").
+> However, we now have a generally agreed-upon standard for page reclaim:
+> MAX_RECLAIM_RETRIES (currently 16), added many years later in
+> 0a0337e0d1d1 ("mm, oom: rework oom detection").
 > 
-> > This msr is only available when the host supports WAITPKG feature.
-> > 
-> > This breaks a nested guest, if the L1 hypervisor is set to ignore
-> > unknown msrs, because the only other safety check that the
-> > kernel does is that it attempts to read the msr and
-> > rejects it if it gets an exception.
-> > 
-> > Fixes: 6e3ba4abce KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-> > 
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index fe3a24fd6b263..9c507b32b1b77 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -5314,6 +5314,10 @@ static void kvm_init_msr_list(void)
-> >  			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
-> >  			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
-> >  				continue;
-> > +			break;
-> > +		case MSR_IA32_UMWAIT_CONTROL:
-> > +			if (!kvm_cpu_cap_has(X86_FEATURE_WAITPKG))
-> > +				continue;
+> In the absence of a compelling reason to declare an OOM earlier in memcg
+> context than page allocator context, it seems reasonable to supplant
+> MEM_CGROUP_RECLAIM_RETRIES with MAX_RECLAIM_RETRIES, making the page
+> allocator and memcg internals more similar in semantics when reclaim
+> fails to produce results, avoiding premature OOMs or throttling.
 > 
-> I'm probably missing something but (if I understand correctly) the only
-> effect of dropping MSR_IA32_UMWAIT_CONTROL from msrs_to_save would be
-> that KVM userspace won't see it in e.g. KVM_GET_MSR_INDEX_LIST. But why
-> is this causing an issue? I see both vmx_get_msr()/vmx_set_msr() have
-> 'host_initiated' check:
+> Signed-off-by: Chris Down <chris@chrisdown.name>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+
+I have already expressed my dislike to some of the MEM_CGROUP_RECLAIM_RETRIES
+usage but using MAX_RECLAIM_RETRIES is a reasonable thing to do. There
+is simply no reason to have two retry limits.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/memcontrol.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
 > 
->        case MSR_IA32_UMWAIT_CONTROL:
->                 if (!msr_info->host_initiated && !vmx_has_waitpkg(vmx))
->                         return 1;
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index b040951ccd6b..d3b23c57bed4 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -73,9 +73,6 @@ EXPORT_SYMBOL(memory_cgrp_subsys);
+>  
+>  struct mem_cgroup *root_mem_cgroup __read_mostly;
+>  
+> -/* The number of times we should retry reclaim failures before giving up. */
+> -#define MEM_CGROUP_RECLAIM_RETRIES	5
+> -
+>  /* Socket memory accounting disabled? */
+>  static bool cgroup_memory_nosocket;
+>  
+> @@ -2386,7 +2383,7 @@ void mem_cgroup_handle_over_high(void)
+>  	unsigned long pflags;
+>  	unsigned long nr_reclaimed;
+>  	unsigned int nr_pages = current->memcg_nr_pages_over_high;
+> -	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	int nr_retries = MAX_RECLAIM_RETRIES;
+>  	struct mem_cgroup *memcg;
+>  
+>  	if (likely(!nr_pages))
+> @@ -2438,7 +2435,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>  		      unsigned int nr_pages)
+>  {
+>  	unsigned int batch = max(MEMCG_CHARGE_BATCH, nr_pages);
+> -	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	int nr_retries = MAX_RECLAIM_RETRIES;
+>  	struct mem_cgroup *mem_over_limit;
+>  	struct page_counter *counter;
+>  	unsigned long nr_reclaimed;
+> @@ -2557,7 +2554,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>  		       get_order(nr_pages * PAGE_SIZE));
+>  	switch (oom_status) {
+>  	case OOM_SUCCESS:
+> -		nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +		nr_retries = MAX_RECLAIM_RETRIES;
+>  		goto retry;
+>  	case OOM_FAILED:
+>  		goto force;
+> @@ -3168,7 +3165,7 @@ static inline bool memcg_has_children(struct mem_cgroup *memcg)
+>   */
+>  static int mem_cgroup_force_empty(struct mem_cgroup *memcg)
+>  {
+> -	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	int nr_retries = MAX_RECLAIM_RETRIES;
+>  
+>  	/* we call try-to-free pages for make this cgroup empty */
+>  	lru_add_drain_all();
+> @@ -6001,7 +5998,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
+>  				 char *buf, size_t nbytes, loff_t off)
+>  {
+>  	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
+> -	unsigned int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
+> +	unsigned int nr_retries = MAX_RECLAIM_RETRIES;
+>  	bool drained = false;
+>  	unsigned long high;
+>  	int err;
+> @@ -6049,7 +6046,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+>  				char *buf, size_t nbytes, loff_t off)
+>  {
+>  	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
+> -	unsigned int nr_reclaims = MEM_CGROUP_RECLAIM_RETRIES;
+> +	unsigned int nr_reclaims = MAX_RECLAIM_RETRIES;
+>  	bool drained = false;
+>  	unsigned long max;
+>  	int err;
+> -- 
+> 2.26.2
 
-Here it fails like that:
-
-1. KVM_GET_MSR_INDEX_LIST returns this msrs, and qemu notes that
-   it is supported in 'has_msr_umwait' global var
-
-2. Qemu does kvm_arch_get/put_registers->kvm_get/put_msrs->ioctl(KVM_GET_MSRS)
-   and while doing this it adds MSR_IA32_UMWAIT_CONTROL to that msr list.
-   That reaches 'svm_get_msr', and this one knows nothing about MSR_IA32_UMWAIT_CONTROL.
-
-So the difference here is that vmx_get_msr not called at all.
-I can add this msr to svm_get_msr instead but that feels wrong since this feature
-is not yet supported on AMD.
-When AMD adds support for this feature, then the VMX specific code can be moved to
-kvm_get_msr_common I guess.
-
-
-
-> 
-> so KVM userspace should be able to read/write this MSR even when there's
-> no hardware support for it. Or who's trying to read/write it?
-> 
-> Also, kvm_cpu_cap_has() check is not equal to vmx_has_waitpkg() which
-> checks secondary execution controls.
-
-I was afraid that something like that will happen, but in this particular
-case we can only check CPUID support and if supported, the then it means
-we are dealing with intel system and thus vmx_get_msr will be called and
-ignore that msr.
-
-Calling vmx_has_waitpkg from the common code doesn't seem right, and besides,
-it checks the secondary controls which are set by the host and can change,
-at least in theory during runtime (I don't know if KVM does this).
-
-Note that if I now understand correctly, the 'host_initiated' means that MSR read/write
-is done by the host itself and not on behalf of the guest.
-
-
-Best regards,
-	Maxim Levitsky
-
-> 
-> >  		default:
-> >  			break;
-> >  		}
-
-
+-- 
+Michal Hocko
+SUSE Labs
