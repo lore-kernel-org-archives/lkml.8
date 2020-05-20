@@ -2,90 +2,226 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47D28207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589950746;
-	bh=0uBprx3zgrPmKIHQh5K/KhY5RQol9LDmQGYsEkv3dF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WtBsTCYEyQIUyJsencMQPSmCCJwtOy+BYIHu/3WjHlqOw2Ywt6AWPHa8eGDvHORrz
-	 z7vvistP+Nx5PRhK9y5FNLIntQ8NrD2LEpQLNYzHJk920L4qwrQE15Tw5QU2j8x79w
-	 iybRs41wdb2iDvu3u2A1bhey4oaXxdggRMmr7c6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 0D2192075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mV33gjoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgETE7F (ORCPT
+        id S1726826AbgETE7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgETE7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:59:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 233742075F;
-        Wed, 20 May 2020 04:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589950744;
-        bh=0uBprx3zgrPmKIHQh5K/KhY5RQol9LDmQGYsEkv3dF8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DD2y4B3oJ/agfWo6rHk87iOaHbnRZ5FQsZK++7S2VyoZVu3SlZFvn//cXTzp+VoI3
-         GS96rGLP9TNws7d0NoeaphWlmVS9YPrJp+Mu3SxuGTuHXuEMlTT4nLF3APmJvoQ4aK
-         hD+vImzBwT2oM691xBNpGhFh1lJcGGpb3lPQCkGU=
-Date:   Wed, 20 May 2020 06:59:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Olof Johansson <olof.johansson@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-Message-ID: <20200520045900.GA2105777@kroah.com>
-References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+        Wed, 20 May 2020 00:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgETE7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 00:59:14 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD728C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:59:14 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ci23so702313pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DUe61dQ2rATp0g2fVzkgSjry1iA6cICVHnLw1uv8pQo=;
+        b=mV33gjoe3gfJjgsWMj0D1BkuNrrlvxVP2//X4rVJg3pnvhEiTuaVXR20j9q8mXKPTf
+         vzn/v/BXrr8ltlm2z4zZzpmZHkaqA3aP2+lvK+wJF/mLZG0dh4P5k2699yiPSVzLTwmL
+         m8uJUGPJDGoyauejydfLol7ikLOXABWjilNkJHJhb4YEEdjeXuTEdsDw88JfaOSnw5aN
+         YfV4iPg70SJin4nljODK6VyC1Plahclp7ExBTyBzZ2T/Mzm5m83yyKZut+Ui+Pttstov
+         AKIKAsecCxPDbUuBgxc0MMV1F0k2EGFGoiA+E6r5OJ262l89HjtbaMy3sLY3p1kUkjru
+         R/3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DUe61dQ2rATp0g2fVzkgSjry1iA6cICVHnLw1uv8pQo=;
+        b=i5ipTWBCWfgrQksdQttsBNzv8oj18gRHLw+oxiBeRrxSQQN5Lu2esqWGAVGbV6i3wX
+         FTGykRkpwvKpWT6qNA/I82p/WPNx83gubqSdOetHvhh5nL+QZ/31aOkUyq99vN50Qfkz
+         c6JFo/1JeJBQgIK0gppgDMEVrgvG4iaUCCnXtQfdVIJWAo1xlpTTTZ4lwcYb1YBMbFXG
+         oqia9cgLrEbfWAA2A3iDCpnStFwDRqDDMwhzWdYtU1HqSqR7TNS0p9r8m+KK7qoeia1X
+         ZalQ6CZRpo95E2hU9HRCNgdvT/RA4J8w2o7yX1sCm3laZzOmkd4IDjuz6yiHlhjbWKsm
+         P3jw==
+X-Gm-Message-State: AOAM5308Obm0tyEcB+FpJ/lp80xlBz+KWb0q2JYnuJ0FkdKNHl4RjWpi
+        knNHHypy6CI84Bg7EXbAKMNGsw==
+X-Google-Smtp-Source: ABdhPJznzDJNUdhD5z0jGMVi+d7HROyOCPena41ltLDgm7oZ3XNWA9W3k+3iz8MjCmRep0yVm0J7fg==
+X-Received: by 2002:a17:90b:4c88:: with SMTP id my8mr3180471pjb.176.1589950754061;
+        Tue, 19 May 2020 21:59:14 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id f6sm915490pfd.175.2020.05.19.21.59.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 21:59:13 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:29:11 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     rjw@rjwysocki.net, Souvik.Chakravarty@arm.com,
+        Thanu.Rangarajan@arm.com, Sudeep.Holla@arm.com,
+        guohanjun@huawei.com, john.garry@huawei.com,
+        jonathan.cameron@huawei.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 1/2] cpufreq: change '.set_boost' to act on only
+ one policy
+Message-ID: <20200520045911.amww3nm3e7cezcbf@vireshk-i7>
+References: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1589888489-13828-2-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+In-Reply-To: <1589888489-13828-2-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
-> > Ok, that's a decision you are going to have to push upward on, as we
-> > really can't take this without a working, open, userspace.
+On 19-05-20, 19:41, Xiongfeng Wang wrote:
+> Macro 'for_each_active_policy()' is defined internally. To avoid some
+> cpufreq driver needing this macro to iterate over all the policies in
+> '.set_boost' callback, we redefine '.set_boost' to act on only one
+> policy and pass the policy as an argument.
+> 'cpufreq_boost_trigger_state()' iterate over all the policies to set
+> boost for the system. This is preparation for adding SW BOOST support
+> for CPPC.
 > 
-> Uh wut.
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c |  4 ++--
+>  drivers/cpufreq/cpufreq.c      | 53 +++++++++++++++++++++---------------------
+>  include/linux/cpufreq.h        |  2 +-
+>  3 files changed, 30 insertions(+), 29 deletions(-)
 > 
-> So the merge criteria for drivers/accel (atm still drivers/misc but I
-> thought that was interim until more drivers showed up) isn't actually
-> "totally-not-a-gpu accel driver without open source userspace".
-> 
-> Instead it's "totally-not-a-gpu accel driver without open source
-> userspace" _and_ you have to be best buddies with Greg. Or at least
-> not be on the naughty company list. Since for habanalabs all you
-> wanted is a few test cases to exercise the ioctls. Not the entire
-> userspace.
+> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+> index 289e8ce..b0a9eb5 100644
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -126,7 +126,7 @@ static void boost_set_msr_each(void *p_en)
+>  	boost_set_msr(enable);
+>  }
+>  
+> -static int set_boost(int val)
+> +static int set_boost(struct cpufreq_policy *policy, int val)
+>  {
+>  	get_online_cpus();
+>  	on_each_cpu(boost_set_msr_each, (void *)(long)val, 1);
 
-Habanalabs now has their full library opensourced that their tools use
-directly, so that's not an argument anymore.
+I think (Rafael can confirm), that you need to update this as well. You don't
+need to run for each cpu now, but for each CPU in the policy.
 
-My primary point here is the copyright owner of this code, because of
-that, I'm not going to objet to allowing this to be merged without open
-userspace code.
+> @@ -162,7 +162,7 @@ static ssize_t store_cpb(struct cpufreq_policy *policy, const char *buf,
+>  	if (ret || val > 1)
+>  		return -EINVAL;
+>  
+> -	set_boost(val);
+> +	set_boost(policy, val);
+>  
+>  	return count;
+>  }
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index d03f250..d0d86b1 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2532,34 +2532,29 @@ void cpufreq_update_limits(unsigned int cpu)
+>  /*********************************************************************
+>   *               BOOST						     *
+>   *********************************************************************/
+> -static int cpufreq_boost_set_sw(int state)
+> +static int cpufreq_boost_set_sw(struct cpufreq_policy *policy, int state)
+>  {
+> -	struct cpufreq_policy *policy;
+> -
+> -	for_each_active_policy(policy) {
+> -		int ret;
+> -
+> -		if (!policy->freq_table)
+> -			return -ENXIO;
+> +	int ret;
+>  
+> -		ret = cpufreq_frequency_table_cpuinfo(policy,
+> -						      policy->freq_table);
+> -		if (ret) {
+> -			pr_err("%s: Policy frequency update failed\n",
+> -			       __func__);
+> -			return ret;
+> -		}
+> +	if (!policy->freq_table)
+> +		return -ENXIO;
+>  
+> -		ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+> -		if (ret < 0)
+> -			return ret;
+> +	ret = cpufreq_frequency_table_cpuinfo(policy, policy->freq_table);
+> +	if (ret) {
+> +		pr_err("%s: Policy frequency update failed\n", __func__);
+> +		return ret;
+>  	}
+>  
+> +	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	return 0;
+>  }
+>  
+>  int cpufreq_boost_trigger_state(int state)
+>  {
+> +	struct cpufreq_policy *policy;
+>  	unsigned long flags;
+>  	int ret = 0;
+>  
+> @@ -2570,16 +2565,22 @@ int cpufreq_boost_trigger_state(int state)
+>  	cpufreq_driver->boost_enabled = state;
+>  	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+>  
+> -	ret = cpufreq_driver->set_boost(state);
+> -	if (ret) {
+> -		write_lock_irqsave(&cpufreq_driver_lock, flags);
+> -		cpufreq_driver->boost_enabled = !state;
+> -		write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+> -
+> -		pr_err("%s: Cannot %s BOOST\n",
+> -		       __func__, state ? "enable" : "disable");
+> +	for_each_active_policy(policy) {
+> +		ret = cpufreq_driver->set_boost(policy, state);
+> +		if (ret)
+> +			goto err_reset_state;
+>  	}
+>  
+> +	return 0;
+> +
+> +err_reset_state:
+> +	write_lock_irqsave(&cpufreq_driver_lock, flags);
+> +	cpufreq_driver->boost_enabled = !state;
+> +	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+> +
+> +	pr_err("%s: Cannot %s BOOST\n",
+> +	       __func__, state ? "enable" : "disable");
+> +
+>  	return ret;
+>  }
+>  
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index 67d5950..3494f67 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -367,7 +367,7 @@ struct cpufreq_driver {
+>  
+>  	/* platform specific boost support code */
+>  	bool		boost_enabled;
+> -	int		(*set_boost)(int state);
+> +	int		(*set_boost)(struct cpufreq_policy *policy, int state);
+>  };
+>  
+>  /* flags */
+> -- 
+> 1.7.12.4
 
-thanks,
-
-greg k-h
+-- 
+viresh
