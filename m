@@ -2,134 +2,79 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D124C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A205C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62D2F20748
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18341207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgETE4c (ORCPT
+        id S1726679AbgETE6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbgETE4b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:56:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0658BC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:56:31 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jbGmI-0006ye-Kw; Wed, 20 May 2020 06:56:26 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jbGmI-0003cM-7L; Wed, 20 May 2020 06:56:26 +0200
-Date:   Wed, 20 May 2020 06:56:26 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Michal Kubecek <mkubecek@suse.cz>, Marek Vasut <marex@denx.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        mkl@pengutronix.de, kernel@pengutronix.de,
-        David Jander <david@protonic.nl>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Herber <christian.herber@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next v1 1/2] ethtool: provide UAPI for PHY Signal
- Quality Index (SQI)
-Message-ID: <20200520045626.hlsthjgxjqsah7zz@pengutronix.de>
-References: <20200519075200.24631-1-o.rempel@pengutronix.de>
- <20200519140348.GI624248@lunn.ch>
+        Wed, 20 May 2020 00:58:10 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:59280 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726439AbgETE6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 00:58:10 -0400
+Received: from [10.130.0.52] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP2rWuMReudY2AA--.67S3;
+        Wed, 20 May 2020 12:58:00 +0800 (CST)
+Subject: Re: [PATCH] MIPS: SGI-IP27: Remove duplicated include in ip27-timer.c
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <1589891291-7030-1-git-send-email-yangtiezhu@loongson.cn>
+ <20200519160334.GA16307@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <22dedcf5-356c-3963-a4ec-a8413ce45997@loongson.cn>
+Date:   Wed, 20 May 2020 12:57:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5qr6a6va65al6rt2"
-Content-Disposition: inline
-In-Reply-To: <20200519140348.GI624248@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:55:55 up 186 days, 20:14, 181 users,  load average: 0.48, 0.19,
- 0.07
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200519160334.GA16307@alpha.franken.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxP2rWuMReudY2AA--.67S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYw7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87
+        Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
+        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx
+        8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY
+        jI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
+        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUywZ7UUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/20/2020 12:03 AM, Thomas Bogendoerfer wrote:
+> On Tue, May 19, 2020 at 08:28:11PM +0800, Tiezhu Yang wrote:
+>> After commit 9d0aaf98dc24 ("MIPS: SGI-IP27: Move all shared IP27
+>> declarations to ip27-common.h"), ip27-common.h is included more
+>> than once in ip27-timer.c, remove it.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> applied to mips-next. I only removed the second #include. If you
+> want to clean this up further the includes and comment about
+> ioc3_init() could be removed as well.
 
---5qr6a6va65al6rt2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, thank you. I will do it later.
 
-On Tue, May 19, 2020 at 04:03:48PM +0200, Andrew Lunn wrote:
-> > --- a/net/ethtool/common.c
-> > +++ b/net/ethtool/common.c
-> > @@ -310,6 +310,16 @@ int __ethtool_get_link(struct net_device *dev)
-> >  	return netif_running(dev) && dev->ethtool_ops->get_link(dev);
-> >  }
-> > =20
-> > +int __ethtool_get_sqi(struct net_device *dev)
-> > +{
-> > +	struct phy_device *phydev =3D dev->phydev;
-> > +
-> > +	if (!phydev->drv->get_sqi)
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	return phydev->drv->get_sqi(phydev);
-> > +}
-> > +
->=20
-> You are only providing access via netlink ethtool? There is no ioctl
-> method to get this.
+Thanks,
+Tiezhu Yang
 
-ack
+>
+> Thomas.
+>
 
-> If so, i wonder if common.c is the correct place
-> for this, or if it should be moved into linkstate.c. You can then drop
-> the __.
-
-ok
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---5qr6a6va65al6rt2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl7EuHkACgkQ4omh9DUa
-UbOaLBAAh0tA+gDBCyLGNEaAVTVRH34zLhLAp9Pu/8Z6dYGN6ruMpLXOjsuNBxXD
-EDKZEreI9H6h/nZeGfIuicbsjINU6cF6F3I5Wv1MpdC6FtRKC3EMlMHQJdS6PJc5
-AveRmCXuK32UiTV3UPvhdt/ohWZYdBIdhNQ7Fro6wKJjgfx9GIH+vxRT/l7GA/mG
-VGiermkSfyJOzk4x7muUHlKqblQivRxX10hc4D9gzQsaWvbvhzyuLyUA0ncmIbBd
-orDD3kEFaSosUA4FvWK0BQGvdkXSQlgv6zo9ii0G7HexMWQkDcwGEPDLqmPaNpaH
-Gj4VaIk55z53sft0+x5iHyacfE8yWjRLogMb+GZMxYEge3sXj8XnaW1Pqv93Eb+w
-7Q5DRLlYt1wZ62cxQtx/T1ha8jDzGWosv0dqiG9oYMIa+4lBusTd5rj1t731Of/f
-znY0Il4eF8bTyrgXSSPJ47RvGHIy7U96V/nVQKQTkXsQeeR7+ufNUEgpVgE49O2i
-hQFkB3iXHXjzlBjIoCicmGqEPtxI5WK8taJ7zKK9+uTsT59rfX4YmMXk4uPfHGFe
-2FEMRdUSPNNl+jkN7zZYj65znJ5EIXnYDc0LZG4gFJ4vSy524ZeKjPs/PEXjLYxL
-epTfO5yt2bD05dFqPyilpgBNAly9QYojlw/tGw4iG3de9ZBn3XA=
-=2CDe
------END PGP SIGNATURE-----
-
---5qr6a6va65al6rt2--
