@@ -2,108 +2,83 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A30C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 645902083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="K+j+o19Q"
+	by mail.kernel.org (Postfix) with ESMTP id D142D20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589933401;
+	bh=ncS4/WJ13FIx6+ovp8byd0aXq8LXhHwOMR/bGy+ucpM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MqUZOJzI+QR+CgPkzkn2HIhywZDb5ThXEWUGUgZ5nZ+2SkCz5zEiMfb0AaYZsK+G0
+	 UHsjYxtlZfIaZ+3hFnyVD79tGSwBAsS9P8zoBnp4CrckMDTA56GukakPvcUQLi5Vie
+	 Vu9l8XQCAo8QOlTQgs6xRl1SWKQHooy295IHVbCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgETAIH (ORCPT
+        id S1728026AbgETAKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbgETAHw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:07:52 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271A6C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:52 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id l73so1692128pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v4Zua8syvVDyjlKtRUfz1/JaYZeWqEjXOGIn23EyWyY=;
-        b=K+j+o19Q2tjCH8aojaNFPWFNI5EAyV3RM0XCJbordzLCrPzzRJzsvDX6PBJYj6/mXs
-         y9/kW8FQem+xVoDvQ4JOnEg+Exqf5VUe6UU8eb4qdNibziBOVvkn/0A3SgEOvIZqNTeg
-         LbsfdqYe3c6woAkL9qYV11X4NkGYe2+StiJB7exTsj/X2H9OKtpocEz11GQL7skYh8hj
-         rIKgmaTIgrO1ntQxvY5xdDhlyNhIrXYOzIlTF+tiQxpSuHNW/fJoRrmhiyZzT9tSbyj9
-         tPlAitPiGpgSxszcZBgqCbeSr/wCrYfBEJUzFDMdMCz8yTYFomT3tOySyHoR+iLVsQvC
-         cZ9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v4Zua8syvVDyjlKtRUfz1/JaYZeWqEjXOGIn23EyWyY=;
-        b=golRMww4lBvsQG6V+tHVdgCYMnBVJAn3SofrO6i4n4ROvZuiqTJ//dMp4Ic/E8bIvE
-         PFbn7CaxI6nRlsULYGmj0HFpsC5dVDiPZ8wp/KpAMKf0KvkUlqn6XgCm9AVNFXmI4ySF
-         TxyikPnpmIjWu9/NiYiKTv80zVDdX38idh+iRq9UOHA4CvEqITOHb8HeLdoWFSLQxgpw
-         IZliqT7z9zI+8pRkm0FYZXxm0v44iN2+ODg8jIY7kFhKlNeCiaPIfNt2ki2yqYKoxeUB
-         dr2fGuM1awDJVIGvhksZZ0byMNdhIvrJPjgqCEPrWTiREbul0lGSggzr5SDgexZGj5t2
-         6otA==
-X-Gm-Message-State: AOAM532r+C4Dxn3PDxy/81lLJu6mw6uLLLMzWms3E/mA/9EoHRecUONw
-        Ne3e/2ELjYgIIeI7vJNktqPtFmAEeGs2ag==
-X-Google-Smtp-Source: ABdhPJzrZMtPAglu8Lp6rv2NhYAg8uMIsQJ02jmlsVDWUhGgpM4226LIixXFfHuO8Pd9+30COJ9tFw==
-X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr1886573plr.160.1589933271579;
-        Tue, 19 May 2020 17:07:51 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id w186sm505288pff.83.2020.05.19.17.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 17:07:51 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 0/7] arm64: dts: meson: add internal audio DAC support
-Date:   Tue, 19 May 2020 17:07:45 -0700
-Message-Id: <158993320300.34448.14791273150623120523.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200506221656.477379-1-jbrunet@baylibre.com>
-References: <20200506221656.477379-1-jbrunet@baylibre.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 19 May 2020 20:10:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726348AbgETAKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:10:00 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 127CA207C4;
+        Wed, 20 May 2020 00:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589933399;
+        bh=ncS4/WJ13FIx6+ovp8byd0aXq8LXhHwOMR/bGy+ucpM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T4knsEdcbJxOWgUV5tpYiL5MmKlO+Lup+tlcl6W5gxC7ZR1kNeChYC+sK2ciY9bbJ
+         IDXkgQPZWuoHtFdmT06VI2UA+8pxn/h8x/CujDcnmo0Tc385EL3r++J5E26Jx/Q3hS
+         C2mYP3dD9X2uXhyuPW5VrKIi7I2qNpiXTTvD8HOU=
+Date:   Tue, 19 May 2020 17:09:58 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        kernel test robot <rong.a.chen@intel.com>
+Subject: Re: [PATCH] kasan: Disable branch tracing for core runtime
+Message-Id: <20200519170958.d6e399f7f98286c1162f1383@linux-foundation.org>
+In-Reply-To: <CAAeHK+wcrmo=Hhwvqzd8kC-=5UR+fzRcA_4mo8wccWCTdrEzEQ@mail.gmail.com>
+References: <20200519182459.87166-1-elver@google.com>
+        <CAAeHK+wcrmo=Hhwvqzd8kC-=5UR+fzRcA_4mo8wccWCTdrEzEQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 May 2020 00:16:49 +0200, Jerome Brunet wrote:
-> This patchset adds support for the internal audio DAC found on the gxl,
-> g12 and sm1 SoC family.
-> 
-> It was mainly tested on the gxl libretech-cc and g12a u200.
-> 
-> /!\
-> This series (patches 1 in particular) depends on this reset binding [0].
-> Philipp has provided an immutable with it here [1]
-> 
-> [...]
+On Tue, 19 May 2020 23:05:46 +0200 Andrey Konovalov <andreyknvl@google.com> wrote:
 
-Applied, thanks!
+> On Tue, May 19, 2020 at 8:25 PM Marco Elver <elver@google.com> wrote:
+> >
+> > During early boot, while KASAN is not yet initialized, it is possible to
+> > enter reporting code-path and end up in kasan_report(). While
+> > uninitialized, the branch there prevents generating any reports,
+> > however, under certain circumstances when branches are being traced
+> > (TRACE_BRANCH_PROFILING), we may recurse deep enough to cause kernel
+> > reboots without warning.
+> >
+> > To prevent similar issues in future, we should disable branch tracing
+> > for the core runtime.
+> >
+> 
+> ...
+>
+> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 
-[1/7] arm64: dts: meson: gxl: add acodec support
-      commit: a66d4ae3144a18476626dd8de8b8dff5f523daee
-[2/7] arm64: dts: meson: p230-q200: add internal DAC support
-      commit: f3c35382259f67c2ae878de2142fb58b94df0525
-[3/7] arm64: dts: meson: libretech-cc: add internal DAC support
-      commit: 249ce3777c25b383702e91a6547ffc676dc004a5
-[4/7] arm64: dts: meson: libretech-ac: add internal DAC support
-      commit: 451323f8bc9e9b701b87b4598ec1cac8eff82d15
-[5/7] arm64: dts: meson: libretech-pc: add internal DAC support
-      commit: 2989a2d6c7f36da2bddffdb293bdf123e735d5f7
-[6/7] arm64: dts: meson: g12: add internal DAC
-      commit: 457fa78771a23ecedf3bcd9ce9946a5183472ff6
-[7/7] arm64: dts: meson: g12: add internal DAC glue
-      commit: dbffd7f9bdb463437d3c3f7c3e1bd4379a785fe4
-
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
+Thanks, I queued this for 5.7.
