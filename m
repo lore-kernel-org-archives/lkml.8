@@ -2,102 +2,126 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B604FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC76C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C338206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F181F207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SEhJWQ57"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCXM2Puj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgETHGA (ORCPT
+        id S1726628AbgETHHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:06:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48309 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725998AbgETHGA (ORCPT
+        Wed, 20 May 2020 03:07:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgETHHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:06:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589958358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=12r6Pw0ocdRXl1n2t8Xeq4Bd0G+JXCXMNugfD9+yIIQ=;
-        b=SEhJWQ57M4yP1ARlB3EaDU1MfxhZue82ltX8OAdyDjc9/JjaUlnuVpkOfreq70a5NmjhUR
-        t7nt2YtQ0aJwVQKWTaavjPDXIrxdnq5/S4N6NM/+vw3w5Z63SXeqhwz4M6qMMEH8q8Kn5g
-        7Ly+5gPFGKzuGs6b2DnZdOwErB0MwCI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-hp6Vo_v5MlSkVVNrj1qJlQ-1; Wed, 20 May 2020 03:05:57 -0400
-X-MC-Unique: hp6Vo_v5MlSkVVNrj1qJlQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 536AD107ACF2;
-        Wed, 20 May 2020 07:05:55 +0000 (UTC)
-Received: from krava (unknown [10.40.194.155])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6F14F5D9CA;
-        Wed, 20 May 2020 07:05:52 +0000 (UTC)
-Date:   Wed, 20 May 2020 09:05:51 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
-Cc:     cj.chengjian@huawei.com, huawei.libin@huawei.com,
-        xiexiuqi@huawei.com, mark.rutland@arm.com, guohanjun@huawei.com,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        wangnan0@huawei.com, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf bpf-loader: Add missing '*' for key_scan_pos
-Message-ID: <20200520070551.GC110644@krava>
-References: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
+        Wed, 20 May 2020 03:07:04 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE46C061A0E;
+        Wed, 20 May 2020 00:07:04 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id er16so882162qvb.0;
+        Wed, 20 May 2020 00:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N9nY7Nz6gwu5FrcNeOcXemzIizmbKBDnLPp3m4VuvqM=;
+        b=UCXM2PujW0MqBkGgv1FFV0/F+4nAmR4CqvG3VqN+ZJu13YAvYdrYwQFViR7mdogoVI
+         BxO4xpZ1F/U01gWFua+hJxyzxjgpLb2km2RgOmkB9i8BwiW/ExZr/3/FfJ+UjCf3RVUd
+         6CcY+A6XLPcWMTDOa4GUmEC8pBU7hbAU2AEtEAJSxF3XY6C0bRFk9rouIL7ifK+ErKpk
+         nJDMlhNU+NleG8SpJmxmn5mfQl/qdXdQKK+hllHb40q0z+5WUUIJ7Ced/Q3MPKliwcqK
+         7a/zp54Ew0ee1tJreQCI3tw0TpX95MQ51c3oZ48eZUJfCZ5IwNTZApTmP1yEbX5E/3wz
+         0eGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N9nY7Nz6gwu5FrcNeOcXemzIizmbKBDnLPp3m4VuvqM=;
+        b=PTnqeBtRNPu5RO8uloxoA1te0HHkH5nds7Kjwj9R6ru8sBcMkNYrnaSVWr7iPpbhl3
+         ByaHhECUGzBUpERsvpHfOYQOAFkilpc/U9+lNOGGh9UNA0WNjCx/KGLANiGogbdJhtc7
+         EgGrEK7Y2/v3+unAnvj7JUnTvc/8FUG++hJ113izV4I+ET3DE+qg9C403DaA8tArpgWY
+         SkPo6b3vyagRBzKlJjpn0u9s4zYOyHcDPleAuQfX0JCO6n/ZgoLHYepDtMRahtrH0+hH
+         39xb+9sxHRewv7X0PfQ6EaD896QxLue6PAMUm1el5RZEY7xmWy1kTNTnfilbWCEOlkLg
+         wpjg==
+X-Gm-Message-State: AOAM5323v3nYjUaXQlccy/zpi+i3tjCRZbrB1lshSFwX7HZEX2Fk4wAb
+        SrHvSEMDNOHPOBKRgCPz14w=
+X-Google-Smtp-Source: ABdhPJzMfBTm/klO3f5I9gk53xR0ZxsILmHi0KRJOgGETbg6kAA3OEondSzE6d8ZaHPnDfXJscyvwA==
+X-Received: by 2002:a05:6214:8e4:: with SMTP id dr4mr3266633qvb.97.1589958423778;
+        Wed, 20 May 2020 00:07:03 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id n9sm1581138qkn.10.2020.05.20.00.07.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 00:07:02 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:06:58 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
+ to yaml
+Message-ID: <20200520070658.GB3361@ict14-OptiPlex-980>
+References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
+ <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+ <20200519173738.GA342367@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200519173738.GA342367@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:32:16AM +0800, Wang ShaoBo wrote:
-> key_scan_pos is a pointer for getting scan position in
-> bpf__obj_config_map() for each BPF map configuration term,
-> but it's misused when error not happened.
+On Tue, May 19, 2020 at 11:37:38AM -0600, Rob Herring wrote:
+> On Tue, 19 May 2020 09:50:57 +0200, Jonathan Albrieux wrote:
+> > Converts documentation from txt format to yaml
+> > 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > ---
+> >  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
+> >  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
+> >  2 files changed, 84 insertions(+), 37 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
+> > 
 > 
-> Fixes: 066dacbf2a32 ("perf bpf: Add API to set values to map entries in a bpf object")
-> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-> ---
->  tools/perf/util/bpf-loader.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> index 10c187b8b8ea..460056bc072c 100644
-> --- a/tools/perf/util/bpf-loader.c
-> +++ b/tools/perf/util/bpf-loader.c
-> @@ -1225,7 +1225,7 @@ bpf__obj_config_map(struct bpf_object *obj,
->  out:
->  	free(map_name);
->  	if (!err)
-> -		key_scan_pos += strlen(map_opt);
-> +		*key_scan_pos += strlen(map_opt);
-
-seems good, was there something failing because of this?
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
->  	return err;
->  }
->  
-> -- 
-> 2.17.1
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Error: Documentation/devicetree/bindings/iio/imu/bmi160.example.dts:37.1-2 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/iio/imu/bmi160.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/iio/imu/bmi160.example.dt.yaml] Error 1
+> Makefile:1300: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1293085
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
 > 
 
+Uhm I don't get that error, will try to update to see if it gives me the same error,
+Thank you,
+
+Best regards,
+Jonathan Albrieux
