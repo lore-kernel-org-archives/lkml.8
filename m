@@ -2,99 +2,129 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7573620709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0A7206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDM3xe4K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iV6TViia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgETRpY (ORCPT
+        id S1726917AbgETRpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:45:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58780 "EHLO
+        Wed, 20 May 2020 13:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETRpX (ORCPT
+        with ESMTP id S1726436AbgETRpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:45:23 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89033C061A0E;
-        Wed, 20 May 2020 10:45:23 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id a13so1633523pls.8;
-        Wed, 20 May 2020 10:45:23 -0700 (PDT)
+        Wed, 20 May 2020 13:45:44 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A9FC061A0E;
+        Wed, 20 May 2020 10:45:44 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r3so2141275wrn.11;
+        Wed, 20 May 2020 10:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EfR9abvjfYeSu2gOpoQjslxf3ylmODDyibdHeuoKSnQ=;
-        b=rDM3xe4KWRWQelmyP4mTMwjuh5WmcZKYyi9OdmrfaHaiMOlYmooQGnpaYtCXHNPajQ
-         ORm3rYGv/4HJycjjBwwXtqsfTRX8DMCklSJLc9zopKuEd4xBWHkKET7AHqup+f2XljkX
-         twAisaVxkFmULfNTWrEZjING2pUJV9yUN9oAz8eaeOduFQAAmfXQ1Pjg8zPe0zeQ3Uct
-         O00+cmAHfYnkFwePomPWLWI32kqeraDbyhpnJzMXv6ZuKk6KBdhkWBevjXu+FQE9Vauo
-         fJuWYc5UeJ/nd4uwj/W0pGAuq9aN8uMFtGeNrC7oIcYQB06drPUBF62yoMTZY17Qly9c
-         t7ag==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=D5JmNuIcmWj9PJckcf8PZ/y227AtBQpRXD26DETlfQQ=;
+        b=iV6TViiaeKUAaE1Vp3z17NyAtjiakBJxGDTJ8bc3Q9Ory99wDaqi93QLrL5Ncga3m7
+         uDBZGQHgLOz/tcewEnQd83/lpEe7dOsMLbGer9wbl+Wyg0dwnn3tALYnKYMmiwtFSGpv
+         zT3d163IIZz0dQbsCWzlO7lZ+gHBAcGEG/rNtjP5PWMzCD6hhiErrVFYOWKR2KwnhoeQ
+         AgxMtCPGcSlOK+EbIy13pfY8bcS+SVhq8mkacjoCqcwH8eckb/9bg2NdPsZ0VCd4hh+Y
+         4H7V09G7jPauzLnzjK+IWw4+fqKcboC2rOEUkwAlS+9e9jlM8fiyT2D5BlYlQ1xO6U8J
+         0BWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EfR9abvjfYeSu2gOpoQjslxf3ylmODDyibdHeuoKSnQ=;
-        b=JsB45+GXzKCFupRXLFO38yjiq2drDToQSBsRatSER3ZHWlXLaLdEGJxK7AsdSHcaQz
-         Ia5JMKYwBXw4Q7hiQnfqCXlJccyuxEMLR5wnfcxZenf5JYBl8gntVIiUPnYi9EJILTAf
-         y6LVvS1kvcLtjunXybkfFWi4Q3ppugavXpt2I0gqyyiHDjJmlWnwbK4PRg/CTVWzEDrz
-         ULExHfe8EnkP7R1LhIn5i/vY0UMgywCVRoXz3TzTQH/+3bazF24obZXqFk1yydWB02ki
-         riyDmHYBlXyzG9r6L2O8PXq3DBJyEMnfw/Vv4Glb2Ex4gsLYDcySehgEIVZouseQItQ9
-         v+Jg==
-X-Gm-Message-State: AOAM531f0fOu4MAYsh+ZGnjqaLyBCqKMY14BeVwky+ZH5MVcpGvo62Oe
-        bMHcpx7wCeDN4NLaaCcKpnU=
-X-Google-Smtp-Source: ABdhPJzrOkudsfQf+69YBmDSRfXR9PAXhMkEirMBpWL46zGbjCeXUra4Lba6VD4QyXcCjlZGm9CHxw==
-X-Received: by 2002:a17:90b:1288:: with SMTP id fw8mr6605137pjb.160.1589996722085;
-        Wed, 20 May 2020 10:45:22 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id m2sm2506053pjl.45.2020.05.20.10.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:45:21 -0700 (PDT)
-Date:   Wed, 20 May 2020 10:45:19 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv3 3/5] Input: EXC3000: add EXC80H60 and EXC80H84 support
-Message-ID: <20200520174519.GV89269@dtor-ws>
-References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
- <20200520153936.46869-4-sebastian.reichel@collabora.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D5JmNuIcmWj9PJckcf8PZ/y227AtBQpRXD26DETlfQQ=;
+        b=L5xvHvJ2Nt8DOI3bNfnpzCU8LPB2e5ZJmEHcS3jGqayB9EzNsI1QkJM1oBy3EzNrYh
+         Gbb7bBnXnw2TOYiSqW1YmCiR0PTQZOPhc7uUzlvGthyuJ6GDtGwb64sEuMkb3MruvBiS
+         2vk0TG5UyK/qsro+S7nTHoww6go6Nv94Qzt39UaAtE1w9kgcGv+wwewlTfPxnH6Adr7W
+         PTl5FYADfpXeAlw8QZSn1Rhnq4U5O5Habx3ydcj+pr1MfTo2pgapzmHENRSHZ/hu5ixd
+         G1mJ3f0tbqZcDsvSWIOKH+Re3M0v1twJV7mLEJSEEIaAfPyehCLx0UkZjvwxMHlFnY9E
+         OAQQ==
+X-Gm-Message-State: AOAM532iHwJGXcGXJ2p6rK4kA2H8DytuNV8EEEhTldelC+x+F15DW9CS
+        zx8A0REoOurJLRwJdVvnNswxqad8
+X-Google-Smtp-Source: ABdhPJy6YY7aNDIxqKO4ABtmYK5jM9e9Y3VrQ7CcJdC4/mpJ5nC5Ouh8zCBe5DQbFoWS0+LOcM7nNA==
+X-Received: by 2002:adf:e441:: with SMTP id t1mr4597279wrm.347.1589996743033;
+        Wed, 20 May 2020 10:45:43 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id q144sm3946631wme.0.2020.05.20.10.45.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 10:45:41 -0700 (PDT)
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Dan Murphy <dmurphy@ti.com>, Andrew Lunn <andrew@lunn.ch>
+Cc:     hkallweit1@gmail.com, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+ <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+Date:   Wed, 20 May 2020 10:45:38 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520153936.46869-4-sebastian.reichel@collabora.com>
+In-Reply-To: <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
 
-On Wed, May 20, 2020 at 05:39:34PM +0200, Sebastian Reichel wrote:
->  
->  	data->client = client;
-> +	data->info = device_get_match_data(&client->dev);
-> +	if (!data->info) {
-> +		enum eeti_dev_id eeti_dev_id =
-> +			i2c_match_id(exc3000_id, client)->driver_data;
 
-I believe i2c devices can be instantiated via sysfs, so I think we
-better handle case where we can't find matching id. Also driver_data is
-enough to store a pointer, maybe we can have individual structures
-instead of using an array and indexing here?
+On 5/20/2020 10:20 AM, Dan Murphy wrote:
+> Andrew/Florian
+> 
+> On 5/20/20 11:43 AM, Andrew Lunn wrote:
+>>> I am interested in knowing where that is documented.  I want to RTM I
+>>> grepped for a few different words but came up empty
+>> Hi Dan
+>>
+>> It probably is not well documented, but one example would be
+>>
+>> Documentation/devicetree/bindings/net/ethernet-controller.yaml
+>>
+>> says:
+>>
+>>        # RX and TX delays are added by the MAC when required
+>>        - rgmii
+>>
+>>        # RGMII with internal RX and TX delays provided by the PHY,
+>>        # the MAC should not add the RX or TX delays in this case
+>>        - rgmii-id
+>>
+>>        # RGMII with internal RX delay provided by the PHY, the MAC
+>>        # should not add an RX delay in this case
+>>        - rgmii-rxid
+>>
+>>        # RGMII with internal TX delay provided by the PHY, the MAC
+>>        # should not add an TX delay in this case
+>>
+>>        Andrew
+> 
+> OKI I read that.  I also looked at a couple other drivers too.
+> 
+> I am wondering if rx-internal-delay and tx-internal-delay should become
+> a common property like tx/rx fifo-depth
+> > And properly document how to use it or at least the expectation on use.
 
-Thanks.
-
+Yes they should, and they should have an unit associated with the name.
 -- 
-Dmitry
+Florian
