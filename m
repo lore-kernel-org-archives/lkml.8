@@ -2,101 +2,95 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDA7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD17C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA9A2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E112072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZVk5iqVv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="csPiNuNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbgETSfU (ORCPT
+        id S1726966AbgETSgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:35:20 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57800 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgETSfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:35:20 -0400
-Received: from zn.tnic (p200300ec2f0bab0028d24a65f02999fe.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:28d2:4a65:f029:99fe])
+        Wed, 20 May 2020 14:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETSf7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:35:59 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84DBC061A0E;
+        Wed, 20 May 2020 11:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=LpP3njNeRQlE8pQN/rNMBpiRJ3syO8fJUum3/qmawto=; b=csPiNuNPAaI8C2B9I7+3BVXpP6
+        t2g4rmNFkmh5xBRnw1JA3qY7k2C2Id0r36b3orlPJYdmJO9YZVdWLxwXeSuOV7ap2bMKwaFTWHbc6
+        s3Osf4Bxet3PqhUXCZTzEz1DCTrOWYkB/LhuSe6LDNLTcb9M7caoRKXReq798pBgQhwf8ARAJCEfq
+        OSJ5rgh1oiuoy90omdSEAqNyUrZudjJI7FmEPg78njYambgqwf3B3xo3I5hzCmIWnEXFx9xAZMkw3
+        3oNHhfgxTGkUR3uZteTjCsrRdInH9SE7eQxjzOIPvcYF9qHewQ+4pV8lDAg+Zo10CfTseFOJalRNm
+        NQqkffMA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbTYy-0005GP-LJ; Wed, 20 May 2020 18:35:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E5371EC02CF;
-        Wed, 20 May 2020 20:35:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589999718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=7HjMn/eYtC1l7LDL2oV16GubcFZH4crCiZ55n4hNNe8=;
-        b=ZVk5iqVvU1rAEjCoCiW56BBXsnHm8Fp6sKwgdC7pvYCro/hQX4zPdYSJB6aeh6QNylUuSQ
-        9hDgKK3huUZL4EFaeOgrTF6IN/L1bVWBRabsKG7Bpl8ZwwwOjTjQC7ReZfpfDglohCv0VU
-        iD3CCkci2yH1TSwqlkpRWHoJaEgAsMk=
-Date:   Wed, 20 May 2020 20:35:08 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
-        mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V6 0/4] x86/resctrl: Enable user to view and select
- thread throttling mode
-Message-ID: <20200520183508.GI1457@zn.tnic>
-References: <cover.1589922949.git.reinette.chatre@intel.com>
- <20200519213516.GF444@zn.tnic>
- <1d9ee0f0-8078-e8b6-ce66-6c0bf51cb3b4@intel.com>
- <20200520071109.GA1457@zn.tnic>
- <5c044d17-e42e-1493-28a5-3ecac043c8f1@intel.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C76D2305EEE;
+        Wed, 20 May 2020 20:35:29 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2A10E20C3437F; Wed, 20 May 2020 20:35:29 +0200 (CEST)
+Date:   Wed, 20 May 2020 20:35:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
+ access
+Message-ID: <20200520183529.GR317569@hirez.programming.kicks-ass.net>
+References: <20200519201912.1564477-1-bigeasy@linutronix.de>
+ <20200519201912.1564477-4-bigeasy@linutronix.de>
+ <20200520102407.GF317569@hirez.programming.kicks-ass.net>
+ <20200520120608.mwros5jurmidxxfv@linutronix.de>
+ <20200520174259.GA247557@google.com>
+ <20200520182800.sdp6t6bgbhn4kkqk@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5c044d17-e42e-1493-28a5-3ecac043c8f1@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200520182800.sdp6t6bgbhn4kkqk@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:32:02AM -0700, Reinette Chatre wrote:
-> I was told that these enhancements really needed to get into v5.8,
-> otherwise the OSV intercepts will be much further out. Certainly not of
-> concern to you and not your problem, I am just answering your question
-> as an explanation for my goal for inclusion into v5.8.
+On Wed, May 20, 2020 at 08:28:00PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-05-20 13:42:59 [-0400], Joel Fernandes wrote:
+> > Hi Sebastian,
+> Hi Joel,
+> 
+> > For pointer stability, can we just use get_local_ptr() and put_local_ptr()
+> > instead of adding an extra lock? This keeps the pointer stable while keeping
+> > the section preemptible on -rt. And we already have a lock in rcu_data, I
+> > prefer not to add another lock if possible.
+> 
+> What is this get_local_ptr() doing? I can't find it anywhere…
 
-I believe under "OSV" fall distros too and I, with my distro hat on, can
-tell you that at least for us, SUSE, it suffices if the patches are in a
-maintainer tree on their way upstream to start backporting them.
+I suspect it is ({ preempt_disable(); this_cpu_ptr(ptr); }), or
+something along those lines.
 
-Which means, if they get queued in tip after 5.8 releases, that would be
-like a couple of weeks later.
-
-Dunno if the other OSVs you work with have such relaxed requirements
-- just pointing out that if they do, a couple of weeks later is not a
-whole cycle later.
-
-> It seems inappropriate that I have the title of maintainer and not be
-> able to have patches considered for inclusion during an entire release
-> cycle.
-
-Well, we try very hard to be fair when looking at patchsets. In your
-case, I already took a patchset from you this cycle and there are other
-patchsets waiting for a lot longer than yours - even patchsets from your
-colleagues at Intel.
-
-So I understand that you think it might be inappropriate but please try
-to understand it also from our standpoint in that we try to round-robin
-between everyone as fair as possible.
-
-So I will try to look at yours in the next days but I cannot promise you
-anything.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+But yeah, I can't find it either.
