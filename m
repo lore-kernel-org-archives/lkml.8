@@ -2,168 +2,133 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9722EC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661D920708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589994290;
-	bh=EpX/OrXPLd151MAlOFD9zeQjHS9VZGaiAsGo8Z19sVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O2boALIbDJKTYrHNJMZv5BMoSS7jsTipNZHteV+mjrpZ05BODxCnwtvqITVLGOuqV
-	 bdxZH+bPxVCV+ush/JobD06wWpRk/VShog7E8JYyIqvs7VPqk4GApctGPPSEVIK1Qz
-	 ptyhdqTYWf2EnHUmzqqSdX14RPkl3cW8EgJU+IAs=
+	by mail.kernel.org (Postfix) with ESMTP id B9D9C206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpf5fKUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgETREs (ORCPT
+        id S1726954AbgETRHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:04:48 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:43058 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgETREf (ORCPT
+        Wed, 20 May 2020 13:07:25 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34983 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726560AbgETRHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:04:35 -0400
-Received: by mail-ej1-f66.google.com with SMTP id a2so4815953ejb.10;
-        Wed, 20 May 2020 10:04:33 -0700 (PDT)
+        Wed, 20 May 2020 13:07:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589994440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=05KQX8lVPlCt8vmRWHdvXIWoBaoV9a3Uogcp9WxiQ8g=;
+        b=dpf5fKUsxaKIDTiQMZYZpXZqpnsXuKEYMVeKYO4eyI5dPwxI0ve2ZPaOhor7oWAytRDk6b
+        rWBwFO0z5c+1vtawytRylBrVjsqbaNoH85pGWU6MSWhC+dWlucolq2dpQOk1Q9tjjLWiSH
+        TphmDVS61eU4m6SPbXgjt0Fw1VkCH4k=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-228-Ym2gmKKSM9ycGxwYlqcrFQ-1; Wed, 20 May 2020 13:07:19 -0400
+X-MC-Unique: Ym2gmKKSM9ycGxwYlqcrFQ-1
+Received: by mail-wm1-f69.google.com with SMTP id g10so1521562wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:07:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CKAKs6M+xNNbpSPK3MJ4q3ECcAhYBkNGaDaHvUvffAI=;
-        b=m9hRbchndHeslfXhoMg/Mv1clGOmYJmuYqp33IrMygOj52oFeA05Pz//544VTAZaJg
-         gxWU+K9F5WrPk973PeDypbYx4saBvWTx3aNRnVNnboUMd8QU/jcwWoyjHQCgleUtIqLP
-         jBiw95j5uB84y/p6KVlshlxv1M3sqCHuZ+69H6csoEpwlVA+YS8W2tG0e4+bB/eP/AQU
-         occSbxooBL0q/JCyWee5edgsqcnneySoqOKqppCIcHpicz5t7tl5gh7YpcbuA729l0rK
-         QYugQuHZmdn3F6LYskrh794GfcbhpQV9LD6v7OofbgaOT2tkcrHt/Fwyju9B7qeKYiON
-         caeQ==
-X-Gm-Message-State: AOAM530l2TnJT9dojU+Xpk1SLQ+HCqWYft9B14QTxyrmJ4Cr/bE+qOjR
-        v0YkQo5voChFqWcbd55qtMY=
-X-Google-Smtp-Source: ABdhPJzqWwufjnHkD8jYZguqLqj575Aq4c2shzdQXyx4VVRTNVsIf3LPCCbL8tdzsKopnGIHXMVIgQ==
-X-Received: by 2002:a17:907:a98:: with SMTP id by24mr10749ejc.365.1589994272954;
-        Wed, 20 May 2020 10:04:32 -0700 (PDT)
-Received: from localhost (ip-37-188-251-131.eurotel.cz. [37.188.251.131])
-        by smtp.gmail.com with ESMTPSA id m8sm2364861ejk.100.2020.05.20.10.04.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=05KQX8lVPlCt8vmRWHdvXIWoBaoV9a3Uogcp9WxiQ8g=;
+        b=evmwEQkHiHbqTeCqmbTbPmhRBWO/FaZcwM3AwrMJHkvjfsH4f6dBBlXJYP9wVuqQ+9
+         Q89Sl782Qwi+waSQIqhjjw0o9rsB8Q6MEQdQC6HrykrRpraj8KrdxRuifYdC8vRxpb7v
+         RgwvRkN0iGXIm+5PLhVexU266wFNomBCWd9utUnujZSJMktHeRdBDJBo4n2eJ/wjnun3
+         zRMU0gJEe3sGiEpL8klcX7jg2VleXzmzmm3r829C92psax2+PLaKQiAlv7pQ7Q6jhwY6
+         5A7qCk+drAzHfPdnfVO2Fv0jn78wvyC/Ztegz/5JaHgkGmUTWHq53WZGaQBSX1EoTDpw
+         03EQ==
+X-Gm-Message-State: AOAM533BkWXu8ae12F+ACzyL2KvkkolX6Yl+N+ZUjkqDv4rWwD3f53CH
+        zSCJ2O7t7tL118ziTUEecsKJ9S2Rh60jAjqtbomb/k+mIuODJnuMC+vb5aQlGVe1AYQXGVs3I2G
+        bazPnDcGXYSMf2iDDXeG8g8nU
+X-Received: by 2002:adf:a15c:: with SMTP id r28mr256970wrr.337.1589994437574;
+        Wed, 20 May 2020 10:07:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw+adX5YucyY7E4vzhaND3YOzLEGdbHzr9/aBODa2oQodWTjohpKwnZCVuELuNx5MWcx6XbzQ==
+X-Received: by 2002:adf:a15c:: with SMTP id r28mr256959wrr.337.1589994437393;
+        Wed, 20 May 2020 10:07:17 -0700 (PDT)
+Received: from steredhat.redhat.com ([79.49.207.108])
+        by smtp.gmail.com with ESMTPSA id u74sm3768614wmu.13.2020.05.20.10.07.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:04:32 -0700 (PDT)
-Date:   Wed, 20 May 2020 19:04:30 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200520170430.GG6462@dhcp22.suse.cz>
-References: <20200520143712.GA749486@chrisdown.name>
- <20200520160756.GE6462@dhcp22.suse.cz>
- <20200520165131.GB630613@cmpxchg.org>
+        Wed, 20 May 2020 10:07:16 -0700 (PDT)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Subject: [PATCH liburing v2 1/5] Add CQ ring 'flags' field
+Date:   Wed, 20 May 2020 19:07:10 +0200
+Message-Id: <20200520170714.68156-2-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200520170714.68156-1-sgarzare@redhat.com>
+References: <20200520170714.68156-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520165131.GB630613@cmpxchg.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 20-05-20 12:51:31, Johannes Weiner wrote:
-> On Wed, May 20, 2020 at 06:07:56PM +0200, Michal Hocko wrote:
-> > On Wed 20-05-20 15:37:12, Chris Down wrote:
-> > > In Facebook production, we've seen cases where cgroups have been put
-> > > into allocator throttling even when they appear to have a lot of slack
-> > > file caches which should be trivially reclaimable.
-> > > 
-> > > Looking more closely, the problem is that we only try a single cgroup
-> > > reclaim walk for each return to usermode before calculating whether or
-> > > not we should throttle. This single attempt doesn't produce enough
-> > > pressure to shrink for cgroups with a rapidly growing amount of file
-> > > caches prior to entering allocator throttling.
-> > > 
-> > > As an example, we see that threads in an affected cgroup are stuck in
-> > > allocator throttling:
-> > > 
-> > >     # for i in $(cat cgroup.threads); do
-> > >     >     grep over_high "/proc/$i/stack"
-> > >     > done
-> > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> > > 
-> > > ...however, there is no I/O pressure reported by PSI, despite a lot of
-> > > slack file pages:
-> > > 
-> > >     # cat memory.pressure
-> > >     some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
-> > >     full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
-> > >     # cat io.pressure
-> > >     some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
-> > >     full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
-> > >     # grep _file memory.stat
-> > >     inactive_file 1370939392
-> > >     active_file 661635072
-> > > 
-> > > This patch changes the behaviour to retry reclaim either until the
-> > > current task goes below the 10ms grace period, or we are making no
-> > > reclaim progress at all. In the latter case, we enter reclaim throttling
-> > > as before.
-> > 
-> > Let me try to understand the actual problem. The high memory reclaim has
-> > a target which is proportional to the amount of charged memory. For most
-> > requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
-> > N is the number of memcgs in excess up the hierarchy). I can see to be
-> > insufficient if the memcg is already in a large excess but if the
-> > reclaim can make a forward progress this should just work fine because
-> > each charging context should reclaim at least the contributed amount.
-> > 
-> > Do you have any insight on why this doesn't work in your situation?
-> > Especially with such a large inactive file list I would be really
-> > surprised if the reclaim was not able to make a forward progress.
-> 
-> The workload we observed this in was downloading a large file and
-> writing it to disk, which means that a good chunk of that memory was
-> dirty. The first reclaim pass appears to make little progress because
-> it runs into dirty pages.
+io_uring provides the new CQ ring 'flags' field if 'cq_off.flags'
+is not zero. In this case we set the 'cq->kflags' pointer, otherwise
+it will be NULL.
 
-OK, I see but why does the subsequent reclaim attempt makes a forward
-progress? Is this just because dirty pages are flushed in the mean time?
-Because if this is the case then the underlying problem seems to be that
-the reclaim should be throttled on dirty data.
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ src/include/liburing.h          | 1 +
+ src/include/liburing/io_uring.h | 4 +++-
+ src/setup.c                     | 2 ++
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
-> > Now to your patch. I do not like it much to be honest.
-> > MEM_CGROUP_RECLAIM_RETRIES is quite arbitrary and I neither like it in
-> > memory_high_write because the that is an interruptible context so there
-> > shouldn't be a good reason to give up after $FOO number of failed
-> > attempts. try_charge and memory_max_write are slightly different because
-> > we are invoking OOM killer based on the number of failed attempts.
-> 
-> The same is true for memory.high. We are invoking the userspace OOM
-> killer when memory.high reclaim fails and we put tasks to sleep.
-
-Right but there is no way to indicate that the reclaim has failed when
-writing to memory.high.
-
-> The actual number of retries is arbitrary, correct. That's because OOM
-> is arbitrary. It's a sampled state, and this is our sampling period.
-> 
-> But it's not that important. The much more important thing is that we
-> continue reclaiming as long as there is forward progress. How many
-> times we retry when there is no forward progress is less critical -
-> but it's nice to have the same cutoff for OOM situations everywhere.
-> 
-> > Also if the current high reclaim scaling is insufficient then we should
-> > be handling that via memcg_nr_pages_over_high rather than effectivelly
-> > unbound number of reclaim retries.
-> 
-> ???
-
-I am not sure what you are asking here.
-
+diff --git a/src/include/liburing.h b/src/include/liburing.h
+index 4311325..adc8db9 100644
+--- a/src/include/liburing.h
++++ b/src/include/liburing.h
+@@ -41,6 +41,7 @@ struct io_uring_cq {
+ 	unsigned *ktail;
+ 	unsigned *kring_mask;
+ 	unsigned *kring_entries;
++	unsigned *kflags;
+ 	unsigned *koverflow;
+ 	struct io_uring_cqe *cqes;
+ 
+diff --git a/src/include/liburing/io_uring.h b/src/include/liburing/io_uring.h
+index a279151..9860a8a 100644
+--- a/src/include/liburing/io_uring.h
++++ b/src/include/liburing/io_uring.h
+@@ -205,7 +205,9 @@ struct io_cqring_offsets {
+ 	__u32 ring_entries;
+ 	__u32 overflow;
+ 	__u32 cqes;
+-	__u64 resv[2];
++	__u32 flags;
++	__u32 resv1;
++	__u64 resv2;
+ };
+ 
+ /*
+diff --git a/src/setup.c b/src/setup.c
+index f783b6a..860c112 100644
+--- a/src/setup.c
++++ b/src/setup.c
+@@ -76,6 +76,8 @@ err:
+ 	cq->kring_entries = cq->ring_ptr + p->cq_off.ring_entries;
+ 	cq->koverflow = cq->ring_ptr + p->cq_off.overflow;
+ 	cq->cqes = cq->ring_ptr + p->cq_off.cqes;
++	if (p->cq_off.flags)
++		cq->kflags = cq->ring_ptr + p->cq_off.flags;
+ 	return 0;
+ }
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.25.4
+
