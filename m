@@ -2,161 +2,162 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9690520671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEAC20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N19XSSiH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iS75Jwd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgETQz0 (ORCPT
+        id S1727042AbgETQz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:55:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47462 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726436AbgETQzZ (ORCPT
+        Wed, 20 May 2020 12:55:56 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46942 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbgETQzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:55:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589993724;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Zwa0MajcbgkU5nITVNmkMZzy8QDk2TJnCFI7ljAY5W0=;
-        b=N19XSSiHnqpXzjALMYZfZSi/0lyS/lfL4yeraFXNTPumZWK3L86ydILRYNKQu7jJrgN07D
-        8hujDoIpw5o6KZRXJXftJ6gYcsqW+l3qrhZwGYrTGDPuwDHeezsMwxo2jIKf0f2VBpfcqD
-        rVpHohlrHHIXQVUPdFAEjoCbi01fdFc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502-7V8LUDUJOuyvUyRsJiWNBg-1; Wed, 20 May 2020 12:55:22 -0400
-X-MC-Unique: 7V8LUDUJOuyvUyRsJiWNBg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 12:55:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589993755; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=fPU9FrcmOGKQPbx+xpLCEeVLHsVWTWvsU+CO+NzO6BM=; b=iS75Jwd/Gi6/fkg2xgecLo2hO7Z2pWuzaq12M0jhh5WdXXLNutyazruLoWgSOnqRSXAN8q5G
+ XPdmHxb53KJAMWIBYz0SntGIL+XIObfamb5b6jNxK6q0ciE2SwUjyQtIz8zPLNS/eoqyctMf
+ XFBF+goVe/cnQCtFfe9rcaR+X/w=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec56112.7f64ed020f48-smtp-out-n02;
+ Wed, 20 May 2020 16:55:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6C3C7C43391; Wed, 20 May 2020 16:55:46 +0000 (UTC)
+Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC61E835B41;
-        Wed, 20 May 2020 16:55:20 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E64C60554;
-        Wed, 20 May 2020 16:55:13 +0000 (UTC)
-Date:   Wed, 20 May 2020 12:55:10 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Cc:     fw@strlen.de, twoerner@redhat.com, eparis@parisplace.org,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v6] audit: add subj creds to NETFILTER_CFG record
- to cover async unregister
-Message-ID: <20200520165510.4l4q47vq6fyx7hh6@madcap2.tricolour.ca>
-References: <a585b9933896bc542347d8f3f26b08005344dd84.1589920939.git.rgb@redhat.com>
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5BE96C433C6;
+        Wed, 20 May 2020 16:55:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5BE96C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v3 2/2] scsi: ufs-qcom: enter and exit hibern8 during
+ clock scaling
+To:     Pedro Sousa <PedroM.Sousa@synopsys.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "vinholikatti@gmail.com" <vinholikatti@gmail.com>,
+        "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1571849351-819-1-git-send-email-asutoshd@codeaurora.org>
+ <1571849351-819-2-git-send-email-asutoshd@codeaurora.org>
+ <MN2PR12MB31675521623C9AFEA87B6076CC740@MN2PR12MB3167.namprd12.prod.outlook.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <06fbd425-3815-690a-22bc-a362c5deca6d@codeaurora.org>
+Date:   Wed, 20 May 2020 09:55:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a585b9933896bc542347d8f3f26b08005344dd84.1589920939.git.rgb@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <MN2PR12MB31675521623C9AFEA87B6076CC740@MN2PR12MB3167.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 12:51, Richard Guy Briggs wrote:
-> Some table unregister actions seem to be initiated by the kernel to
-> garbage collect unused tables that are not initiated by any userspace
-> actions.  It was found to be necessary to add the subject credentials to
-> cover this case to reveal the source of these actions.  A sample record:
-> 
-> The uid, auid, tty, ses and exe fields have not been included since they
-> are in the SYSCALL record and contain nothing useful in the non-user
-> context.
-> 
->   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
-> 
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+Hi Pedro,
 
-Self-NACK.  I forgot to remove cred and tty declarations.
+On 11/11/2019 7:54 AM, Pedro Sousa wrote:
+> Hi Asutosh,
+> 
+> Please check comments.
+Sorry for missing out on this and thanks for your review.
 
+> 
+> -----Original Message-----
+> From: Asutosh Das <asutoshd@codeaurora.org>
+> Sent: Wednesday, October 23, 2019 5:49 PM
+> To: cang@codeaurora.org; rnayak@codeaurora.org; vinholikatti@gmail.com; jejb@linux.vnet.ibm.com; martin.petersen@oracle.com
+> Cc: linux-scsi@vger.kernel.org; kernel-team@android.com; saravanak@google.com; salyzyn@google.com; Asutosh Das <asutoshd@codeaurora.org>; Andy Gross <agross@kernel.org>; Alim Akhtar <alim.akhtar@samsung.com>; Avri Altman <avri.altman@wdc.com>; Pedro Sousa <pedrom.sousa@synopsys.com>; James E.J. Bottomley <jejb@linux.ibm.com>; open list:ARM/QUALCOMM SUPPORT <linux-arm-msm@vger.kernel.org>; open list <linux-kernel@vger.kernel.org>
+> Subject: [PATCH v3 2/2] scsi: ufs-qcom: enter and exit hibern8 during clock scaling
+> 
+> Qualcomm controller needs to be in hibern8 before scaling clocks.
+> This change puts the controller in hibern8 state before scaling
+> and brings it out after scaling of clocks.
+> 
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
 > ---
-> Changelog:
-> v6
-> - remove uid, auid fields as duplicates or unset
+>   drivers/scsi/ufs/ufs-qcom.c | 12 +++++++++++-
+>   1 file changed, 11 insertions(+), 1 deletion(-)
 > 
-> v5
-> - rebase on upstreamed ghak28 on audit/next v5.7-rc1
-> - remove tty, ses and exe fields as duplicates or unset
-> - drop upstreamed patches 1&2 from set
-> 
-> v4
-> - rebase on audit/next v5.7-rc1
-> - fix checkpatch.pl errors/warnings in 1/3 and 2/3
-> 
-> v3
-> - rebase on v5.6-rc1 audit/next
-> - change audit_nf_cfg to audit_log_nfcfg
-> - squash 2,3,4,5 to 1 and update patch descriptions
-> - add subject credentials to cover garbage collecting kernel threads
-> 
-> v2
-> - Rebase (audit/next 5.5-rc1) to get audit_context access and ebt_register_table ret code
-> - Split x_tables and ebtables updates
-> - Check audit_dummy_context
-> - Store struct audit_nfcfg params in audit_context, abstract to audit_nf_cfg() call
-> - Restore back to "table, family, entries" from "family, table, entries"
-> - Log unregistration of tables
-> - Add "op=" at the end of the AUDIT_NETFILTER_CFG record
-> - Defer nsid patch (ghak79) to once nsid patchset upstreamed (ghak32)
-> - Add ghak refs
-> - Ditch NETFILTER_CFGSOLO record
-> 
->  kernel/auditsc.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index cfe3486e5f31..e646055adb0b 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -2557,12 +2557,21 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
->  		       enum audit_nfcfgop op)
->  {
->  	struct audit_buffer *ab;
-> +	const struct cred *cred;
-> +	struct tty_struct *tty;
-> +	char comm[sizeof(current->comm)];
->  
->  	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
->  	if (!ab)
->  		return;
->  	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
->  			 name, af, nentries, audit_nfcfgs[op].s);
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index a5b7148..55b1de5 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -1305,18 +1305,27 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
+>   	int err = 0;
+>   
+>   	if (status == PRE_CHANGE) {
+> +		err = ufshcd_uic_hibern8_enter(hba);
+> +		if (err)
+> +			return err;
+>   		if (scale_up)
+>   			err = ufs_qcom_clk_scale_up_pre_change(hba);
+>   		else
+>   			err = ufs_qcom_clk_scale_down_pre_change(hba);
+> +		if (err)
+> +			ufshcd_uic_hibern8_exit(hba);
 > +
-> +	cred = current_cred();
-> +	audit_log_format(ab, " pid=%u", task_pid_nr(current));
-> +	audit_log_task_context(ab); /* subj= */
-> +	audit_log_format(ab, " comm=");
-> +	audit_log_untrustedstring(ab, get_task_comm(comm, current));
->  	audit_log_end(ab);
->  }
->  EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
-> -- 
-> 1.8.3.1
+>   	} else {
+>   		if (scale_up)
+>   			err = ufs_qcom_clk_scale_up_post_change(hba);
+>   		else
+>   			err = ufs_qcom_clk_scale_down_post_change(hba);
+>   
+> -		if (err || !dev_req_params)
+> +
+> +		if (err || !dev_req_params) {
+> +			ufshcd_uic_hibern8_exit(hba);
+>   			goto out;
+> +		}
+>   
+>   		ufs_qcom_cfg_timers(hba,
+>   				    dev_req_params->gear_rx,
+> @@ -1324,6 +1333,7 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
+>   				    dev_req_params->hs_rate,
+>   				    false);
+>   		ufs_qcom_update_bus_bw_vote(host);
+> +		ufshcd_uic_hibern8_exit(hba);
 > 
-> --
-> Linux-audit mailing list
-> Linux-audit@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-audit
+> Here you are creating the possibility of returning a success even if hibern8 exit fails.
+> If hibern8 exit fails the ufs recovery will be triggered and "err" variable will not get updated
+> in this function, how is this handled? Did you tested this possibility?
+> 
+>   	}
+>   
+>   out:
+> 
 
-- RGB
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Yes - I agree with your comment. The error should be propagated from 
+this function correctly to the caller. I'll push another version.
 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
