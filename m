@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E03C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0189C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB5D9207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC3E205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgETOWr (ORCPT
+        id S1727853AbgETOWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:22:47 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32868 "EHLO
+        Wed, 20 May 2020 10:22:45 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32864 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726925AbgETOWZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726917AbgETOWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:25 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035b-Cm; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-00035n-K9; Wed, 20 May 2020 15:22:19 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DPb-Fy; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DQB-Pu; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Wed, 20 May 2020 15:13:50 +0100
-Message-ID: <lsq.1589984008.710387195@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Kalle Valo" <kvalo@codeaurora.org>
+Date:   Wed, 20 May 2020 15:13:57 +0100
+Message-ID: <lsq.1589984008.955560377@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 22/99] ath9k: fix storage endpoint lookup
+Subject: [PATCH 3.16 29/99] zd1211rw: fix storage endpoint lookup
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,7 +57,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 0ef332951e856efa89507cdd13ba8f4fb8d4db12 upstream.
+commit 2d68bb2687abb747558b933e80845ff31570a49c upstream.
 
 Make sure to use the current alternate setting when verifying the
 storage interface descriptors to avoid submitting an URB to an invalid
@@ -66,22 +66,23 @@ endpoint.
 Failing to do so could cause the driver to misbehave or trigger a WARN()
 in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-Fixes: 36bcce430657 ("ath9k_htc: Handle storage devices")
+Fixes: a1030e92c150 ("[PATCH] zd1211rw: Convert installer CDROM device into WLAN device")
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c | 2 +-
+ drivers/net/wireless/zd1211rw/zd_usb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -1141,7 +1141,7 @@ err_fw:
- static int send_eject_command(struct usb_interface *interface)
+--- a/drivers/net/wireless/zd1211rw/zd_usb.c
++++ b/drivers/net/wireless/zd1211rw/zd_usb.c
+@@ -1272,7 +1272,7 @@ static void print_id(struct usb_device *
+ static int eject_installer(struct usb_interface *intf)
  {
- 	struct usb_device *udev = interface_to_usbdev(interface);
--	struct usb_host_interface *iface_desc = &interface->altsetting[0];
-+	struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct usb_device *udev = interface_to_usbdev(intf);
+-	struct usb_host_interface *iface_desc = &intf->altsetting[0];
++	struct usb_host_interface *iface_desc = intf->cur_altsetting;
  	struct usb_endpoint_descriptor *endpoint;
  	unsigned char *cmd;
  	u8 bulk_out_ep;
