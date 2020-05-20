@@ -2,156 +2,109 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0274C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBD7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87BB9207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44421207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vlIn5QRm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YjXyudE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgETUl3 (ORCPT
+        id S1727992AbgETUmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:41:29 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38595 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727041AbgETUl1 (ORCPT
+        Wed, 20 May 2020 16:42:18 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37167 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727018AbgETUmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:41:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590007286; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=PK4Nm5Yf1XR6jxTZRIzMni/Z8uMeTEJuBDhBhcdtnqM=; b=vlIn5QRmJzEh4FgQKYkBDqIUjstUBcV6FDDjJm+nA5Ao7/RB0aGBTrcx7GbOQrAHiupYiUPn
- NfoqewtbAL+ixTiumCkNzQ+At2DTPS7nPvylH0HDLVI3vo44Hkk1eGffs0Uyx+aXPHf8Nslh
- 5q0PMB7N9e87i3vuBJR3HVkZiPw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ec595f64110e14718f8c430 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 20:41:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6A0B2C433C9; Wed, 20 May 2020 20:41:25 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 157FEC433C8;
-        Wed, 20 May 2020 20:41:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 157FEC433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v3 2/7] bus: mhi: core: Introduce independent voting
- mechanism
-To:     bbhatt@codeaurora.org
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        hemantk@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
- <1589832241-13867-3-git-send-email-bbhatt@codeaurora.org>
- <a12e693d-a8bb-3ecf-e799-c46de7429b5d@codeaurora.org>
- <574a4fe915f86608b59f10577eb960e9@codeaurora.org>
- <a51d366e-5466-cbd0-b19c-61e76e8671b5@codeaurora.org>
- <70f32d3dfc9dd81163897a57ebe35d02@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <ca7a0342-ad10-91a3-3896-1b3ee62257e9@codeaurora.org>
-Date:   Wed, 20 May 2020 14:41:22 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 16:42:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590007335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o8obcu4RJyJ5SsFoPKEalBasJOWg/UMge1/Qyw2g7H4=;
+        b=YjXyudE9MlSR0s+O6udRASvrie77Yofg97s3sFuVbPmklhIGrhyaZIEwZ9KVYhIgdLsU74
+        2sMXhnC5H6lRIQE9e2Mmqp5F5vfeTylP4neFqoq4jIQFQVHYL607YiMt8sCzlnsaIFuIke
+        LHE3mFiFfWXSrzG7qzyxi0jtzcE27nU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-406-BpCPt0jQOxOxfXT_1nXr7Q-1; Wed, 20 May 2020 16:42:14 -0400
+X-MC-Unique: BpCPt0jQOxOxfXT_1nXr7Q-1
+Received: by mail-ed1-f70.google.com with SMTP id o7so1773547edq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:42:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o8obcu4RJyJ5SsFoPKEalBasJOWg/UMge1/Qyw2g7H4=;
+        b=JAhQSHI8vyZkECk3Lw8TmhuGWWxhUd3xksocLyqhaPZg6To7RMHqq1l70nDmejajbS
+         K/jPmeq5U+z7VNYwebPK35qoZ1olHwsl/L3ynvpoZcDmB0068SRQbas/bOQ69yDKm+tf
+         YJzqy5RP6kFva/8TKLeRISt+xssCTlOf+6pALhSMpCaOJo0nAANkyN+yRPqOtTveLXo1
+         GJCDWY9Pg7DI3KuLmCNOktR9hhZT7VwFhXQb+jBjXh/b6Ef0hxI0sWjFrUpwcFr/UxUM
+         VLZkz9o005iUyZV1MXWGY11R3kKKP7qMZ8wzknIFL90/L1bvS66JTNsyaACu05N+wiaA
+         /l6g==
+X-Gm-Message-State: AOAM530AqkzEwW0KImKnyavzbkBRb77ytB2LOkK18XPWRtskaZQM2Ita
+        f3aoeLJLiq0ZrmdnfGrlT/VDMGrbGLdCsONlCYjkosacLD0KbBcy+zcqHQ3YbM4c3/qvnN/Pgvg
+        jpUgi5rzVhhR569VDEZS4RU+y
+X-Received: by 2002:a50:ee15:: with SMTP id g21mr4962373eds.170.1590007333148;
+        Wed, 20 May 2020 13:42:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxwelCdht1h/DJBFh9VXKA7BJoRU8H9J+/uLAg+4Euypi4HeaOVE1BVWG7K28wnyTkiFiv/gg==
+X-Received: by 2002:a50:ee15:: with SMTP id g21mr4962360eds.170.1590007332892;
+        Wed, 20 May 2020 13:42:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1c48:1dd8:fe63:e3da? ([2001:b07:6468:f312:1c48:1dd8:fe63:e3da])
+        by smtp.gmail.com with ESMTPSA id qp13sm2900842ejb.8.2020.05.20.13.42.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 13:42:12 -0700 (PDT)
+Subject: Re: [PATCH 00/24] KVM: nSVM: event fixes and migration support
+To:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
+References: <20200520172145.23284-1-pbonzini@redhat.com>
+ <6b8674fa647d3b80125477dc344581ba7adfb931.camel@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cecf6c64-6828-5a3f-642a-11aac4cefa75@redhat.com>
+Date:   Wed, 20 May 2020 22:42:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <70f32d3dfc9dd81163897a57ebe35d02@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <6b8674fa647d3b80125477dc344581ba7adfb931.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/2020 1:44 PM, bbhatt@codeaurora.org wrote:
-> On 2020-05-20 12:06, Jeffrey Hugo wrote:
->> On 5/20/2020 12:43 PM, bbhatt@codeaurora.org wrote:
->>> On 2020-05-20 09:54, Jeffrey Hugo wrote:
->>>> On 5/18/2020 2:03 PM, Bhaumik Bhatt wrote:
->>>>> Allow independent votes from clients such that they can choose to vote
->>>>> for either the device or the bus or both. This helps in cases where 
->>>>> the
->>>>> device supports autonomous low power mode wherein it can move to M2
->>>>> state without the need to notify the host. Clients can also vote 
->>>>> only to
->>>>> keep the underlying bus active without having the device in M0 
->>>>> state to
->>>>> support offload use cases.
->>>>>
->>>>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->>>>> ---
->>>>
->>>> I wonder, why doesn't this fit with runtimePM?
->>> Hi Jeff,
->>>
->>> Can you elaborate?
->>>
->>> In short, with this patch, MHI just wants to give controller the 
->>> option to
->>> choose the vote type so we can implement autonomous low power mode 
->>> entries
->>> on both host and device.
->>
->> So, you are attempting to manage the power mode of the device.  The
->> standard mechanism to do so in Linux is runtime pm.
->>
->> https://elixir.bootlin.com/linux/latest/source/Documentation/driver-api/pm/devices.rst 
->>
->>
->> I'm no runtime pm expert, but it feels like your whole voting
->> mechanism, etc is just reimplemeting that.  Reimplementing the wheel,
->> when its been a standard thing that the majority of the kernel uses is
->> not usually acceptable.
->>
->> IMO, you need some sort of justification why runtime pm is not
->> applicable for you, because I'm willing to bet Mani/Greg are going to
->> ask the same.
-> I think we can look at the patch as simply expanding the scope of what 
-> already exists.
+On 20/05/20 21:24, Maxim Levitsky wrote:
+> Patch 24 doesn't apply cleanly on top of kvm/queue, I appplied it manually,
+> due to missing KVM_STATE_NESTED_MTF_PENDING bit
 > 
-> The client here has been calling mhi_device_get/put/sync APIs to gain 
-> device vote and with
-> new features yet to come in, this introductory change is only 
-> re-purposing what voting
-> means going forward. i.e. allowing individual bus and device votes.
-> 
-> If you're suggesting using runtimePM APIs to replace the newly 
-> introduced bus vote, it
-> would be kind of overkill here IMO. Is that what you were getting at? 
-> Because currently,
-> we just have controllers use runtimePM and provide callbacks to them.
-> 
-> If you have ideas, we can discuss them.
+> Also patch 22 needes ALIGN_UP which is not on mainline.
+> Probably in linux-next?
 
-Ultimately, yes I think I am suggesting replacing this API with the 
-runtime pm API.
+Just replace it with ALIGN.  (I tested it with memzero_user in
+arch/x86/kvm/ for convenience, and the lib/ patch ended up out of sync
+with the actual code).
 
-As near as I can tell, if I'm a device driver on some other bus, and I 
-want to keep my device alive because I'm doing a DMA to it or something, 
-I would call pm_runtime_get(), and when I have confirmation my activity 
-is done, I would use pm_runtime_put().
+> With these fixes, I don't see #DE exceptions on a nested guest I try to run
+> however it still hangs, right around the time it tries to access PS/2 keyboard/mouse.
 
-As near as I can tell, this is already plumbed into the bus framework, 
-such that the MHI bus would get a callback when the device driver does 
-that.  In the MHI bus callback, you would be able to route the request 
-as needed.
+IIRC you said that the bug appeared with the vintr rework, and then went
+from hang to #DE and now back to hang?  And the hang is reported by L2,
+not L1?
 
-So, with this API (that has no consumers currently), I call 
-pm_runtime_get() and also mhi_device_get()?
+In order to debug the hang, a good start would be to understand if it
+also happens with vgif=0.  This is because with vgif=1 we use VINTR
+intercepts even while GIF=0, so the whole thing is a bit more complicated.
 
--- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Paolo
+
