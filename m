@@ -2,87 +2,109 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AD9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A17C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEDAA207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590012772;
-	bh=DhtNwb/vZbRTa+p1UAu2bTK20oquIBBjrAis2OG4vLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v1mkJu9/WIzBqu2IgvgqBEHRv7g0ftJpc8pR5UKa34HM6lYZDtJkhdL3WxLjRw2Ed
-	 3Es9jNw3/x4ydfSsL82RGYhOhKUZKzf5lM/FofhxmMcKxpunwouKK5nneLCEFW8I0h
-	 zu2gxZj4FMRaSHG7DX7xRnap3rv7OyrDI/ZNO8iw=
+	by mail.kernel.org (Postfix) with ESMTP id 5C04A20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgETWMw (ORCPT
+        id S1728490AbgETWOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:12:52 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35012 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgETWMv (ORCPT
+        Wed, 20 May 2020 18:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbgETWOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:12:51 -0400
-Received: by mail-io1-f67.google.com with SMTP id 79so5142840iou.2;
-        Wed, 20 May 2020 15:12:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/XCwGl3CcxYLRdci/jrQqyQhX1vNzc/WTIXwP/3z2ks=;
-        b=hvXHwZdrSBa/aXBhLEtwhk/g2Ci8KIgJ/X+E/AFBaToE4PSOFhfqBzFoCcHRFcgg3V
-         BW/tCOnM9FuKvcOwJrLgk/IstCMxCIcCwI13mxReAsynzTqN8WosbvHQb4dpXctvW64u
-         ormnh05KqQljL6NeDSFdksXuxfe0mk7pGoy1X5KmCLF9EaBuPY5l2+wAikbkYv4aD7Nt
-         CzgZUv+TXfubX9sZR2zG3BqIWqgqZvSLe0OK71Kb7AQHzdgMr1x26rAWywA/AAt3++vW
-         08vYrBIi6o5Y3xWbbITLHRgaFAxMytHDtlWzoaMjLHtM523/nV4YMwoZGQ69RkAFtABD
-         fAhA==
-X-Gm-Message-State: AOAM530NB/hm2qlNN1/bBgOyJi5xejmVRJR1E6KTqEp+n+OSycBRycpd
-        Cf+6ohjs/McAxBGPDFwChQ==
-X-Google-Smtp-Source: ABdhPJwGQuSwEVeMo+S0Yp+avSAC0hl08uGB13i+IbavwQBYqhKPmzBjVCg7+0XKmioQ+tYLET3S3w==
-X-Received: by 2002:a6b:3708:: with SMTP id e8mr4834928ioa.99.1590012771097;
-        Wed, 20 May 2020 15:12:51 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id e13sm1891621ils.27.2020.05.20.15.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 15:12:50 -0700 (PDT)
-Received: (nullmailer pid 692806 invoked by uid 1000);
-        Wed, 20 May 2020 22:12:49 -0000
-Date:   Wed, 20 May 2020 16:12:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 14/14] MAINTAINERS: Add Kishon Vijay Abraham I for TI
- J721E SoC PCIe
-Message-ID: <20200520221249.GA692726@bogus>
-References: <20200506151429.12255-1-kishon@ti.com>
- <20200506151429.12255-15-kishon@ti.com>
+        Wed, 20 May 2020 18:14:34 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D19C061A0E;
+        Wed, 20 May 2020 15:14:34 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbWyg-0004su-V0; Thu, 21 May 2020 00:14:19 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 6333F100C2D; Thu, 21 May 2020 00:14:18 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
+In-Reply-To: <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
+References: <20200518093155.GB35380@T590> <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590> <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590> <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590> <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590> <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de> <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk> <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk> <87tv0av1gu.fsf@nanos.tec.linutronix.de> <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
+Date:   Thu, 21 May 2020 00:14:18 +0200
+Message-ID: <87eereuudh.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506151429.12255-15-kishon@ti.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 20:44:29 +0530, Kishon Vijay Abraham I wrote:
-> Add Kishon Vijay Abraham I as MAINTAINER for TI J721E SoC PCIe.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  MAINTAINERS | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+Jens Axboe <axboe@kernel.dk> writes:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> On 5/20/20 1:41 PM, Thomas Gleixner wrote:
+>> Jens Axboe <axboe@kernel.dk> writes:
+>>> On 5/20/20 8:45 AM, Jens Axboe wrote:
+>>>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
+>>>> they just break affinity if that CPU goes offline.
+>>>
+>>> Just checked, and it works fine for me. If I create an SQPOLL ring with
+>>> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
+>>> just appears unbound but runs just fine. When CPU 3 comes online again,
+>>> the mask appears correct.
+>> 
+>> When exactly during the unplug operation is it unbound?
+>
+> When the CPU has been fully offlined. I check the affinity mask, it
+> reports 0. But it's still being scheduled, and it's processing work.
+> Here's an example, PID 420 is the thread in question:
+>
+> [root@archlinux cpu3]# taskset -p 420
+> pid 420's current affinity mask: 8
+> [root@archlinux cpu3]# echo 0 > online 
+> [root@archlinux cpu3]# taskset -p 420
+> pid 420's current affinity mask: 0
+> [root@archlinux cpu3]# echo 1 > online 
+> [root@archlinux cpu3]# taskset -p 420
+> pid 420's current affinity mask: 8
+>
+> So as far as I can tell, it's working fine for me with the goals
+> I have for that kthread.
+
+Works for me is not really useful information and does not answer my
+question:
+
+>> When exactly during the unplug operation is it unbound?
+
+The problem Ming and Christoph are trying to solve requires that the
+thread is migrated _before_ the hardware queue is shut down and
+drained. That's why I asked for the exact point where this happens.
+
+When the CPU is finally offlined, i.e. the CPU cleared the online bit in
+the online mask is definitely too late simply because it still runs on
+that outgoing CPU _after_ the hardware queue is shut down and drained.
+
+This needs more thought and changes to sched and kthread so that the
+kthread breaks affinity once the CPU goes offline. Too tired to figure
+that out right now.
+
+Thanks,
+
+        tglx
+
+
+
+
