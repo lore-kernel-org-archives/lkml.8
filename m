@@ -2,157 +2,150 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E093C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B704C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 457CB20756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09096207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrtU39lT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qTxpeKo+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgETJ7M (ORCPT
+        id S1726791AbgETJ7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETJ7M (ORCPT
+        Wed, 20 May 2020 05:59:34 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46576 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETJ7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:59:12 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C79C061A0E;
-        Wed, 20 May 2020 02:59:11 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id e10so2443715edq.0;
-        Wed, 20 May 2020 02:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2mSdUGmI7gLDVcTe2cRva7FjtWoTpHYcaj/XLsqA2vI=;
-        b=YrtU39lTeJAqPQQkZb43lfRtC64CIn07XJVKPFiifIeX+yYz+y0kFt69hvsUi1DL5I
-         hdSX1YhEVemNYrY8ZU/B4CBhvMiKIDSPRz2hFHvmvwlGtEaCT/qhu3jzhZ2wcCru8SzQ
-         znm/aRGuTKVPL1YPAondIqQVKPQdHmlGdkdJJMxnqRtjuMcR2huK7dXWq6OIlfR+30By
-         xHXw+QmlpAbFep08t3buYP5+wxakkJh9lxXfAAtFu9xYhfhAubhb2pE4xCEM9DFVyN6m
-         xAywPomt/pSC0O6K7a20RqGfT7TkVx/iMcf5NgMgFsWsS2fYnlQtrwjYMiX9y4cdiHC8
-         C3ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2mSdUGmI7gLDVcTe2cRva7FjtWoTpHYcaj/XLsqA2vI=;
-        b=t5WKKjF+JfaqF4g33EeyXmkXw47EvOX1wRCP5mOWQt88QiwsuLglWSB6DC3Lkok711
-         gXjicPyeovv3wRtTBdFs6DpvlwToOFk4Ky/WMwESnWog+qHI+bU8xb1UJnU+IlK789SM
-         DvzPE3DuDM4BLm/fS9mzrlLizDpuu4RcQ9sAju1N2SEWUEROQ7d5axOWwxoORPjN0gYZ
-         O5UP2RvQ91jlvGyBDiJqtURC0PnLWXHyNskpEErccWYhkgPsN7/hv7S5uELhSQKWXlFY
-         cUK1tF7ZJDZtZwsD3NK2b7ie+sZFRBqargrWWeQjY/Yj2g+JtCBAVSa/HvZlsPzZo0+1
-         /OQA==
-X-Gm-Message-State: AOAM530VXbrr9mykJKLRKcBz2KD5yhdW+fnBzZFWTxGCvOIisrMInZ72
-        mL3PUgC+4F6ct60nPrZj/Hk=
-X-Google-Smtp-Source: ABdhPJxVsaM7q70jtdMBWaUYowpQP/8V2aQND/netL1y3AK3+eEzndfn8T1/gqlfNFC78XNNc91zQw==
-X-Received: by 2002:aa7:dd0a:: with SMTP id i10mr2544659edv.291.1589968750534;
-        Wed, 20 May 2020 02:59:10 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id n11sm1505695ejh.39.2020.05.20.02.59.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 02:59:09 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:59:08 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
-Message-ID: <20200520095908.GD2136208@ulmo>
-References: <20200520085231.32552-1-dinghao.liu@zju.edu.cn>
+        Wed, 20 May 2020 05:59:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04K9xNsT081005;
+        Wed, 20 May 2020 04:59:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589968763;
+        bh=z8fCduaUOqT6TsM+KISLgzvniK8e7DBe4mfv09EOZ2Q=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qTxpeKo+KcDdF0d0RmKtT2gCLT5tXvJI2mvqPcTL1Npx9ajK4kzZI8/vf1xlM1bIK
+         lj63HtgQwosvYura1gznbc16z4o8yLe/bgwaleSrkgtVXVJaryHmEZOUUx7FJu2kyJ
+         hu2Qk3SH0cH6CDskEWCb/LK4pYYwkwSpiCPeP/IE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04K9xNHt008071
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 04:59:23 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 04:59:23 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 04:59:23 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04K9xLuv105835;
+        Wed, 20 May 2020 04:59:21 -0500
+Subject: Re: [PATCH v2 2/3] bindings: sound: Add documentation for TI j721e
+ EVM (CPB and IVI)
+To:     Rob Herring <robh@kernel.org>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200512131633.32668-1-peter.ujfalusi@ti.com>
+ <20200512131633.32668-3-peter.ujfalusi@ti.com>
+ <20200519224215.GB488519@bogus>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <d0496765-918c-766b-825c-76eb2f76c274@ti.com>
+Date:   Wed, 20 May 2020 12:59:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RYJh/3oyKhIjGcML"
-Content-Disposition: inline
-In-Reply-To: <20200520085231.32552-1-dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200519224215.GB488519@bogus>
+Content-Type: multipart/mixed;
+        boundary="------------B17804B71D9C95B8A8C1439A"
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---RYJh/3oyKhIjGcML
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--------------B17804B71D9C95B8A8C1439A
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 20, 2020 at 04:52:23PM +0800, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> it returns an error code. Thus a pairing decrement is needed on
+Hi Rob,
 
-s/even it/even when it/
-
-Might also be a good idea to use a different subject prefix because I
-was almost not going to look at the other patch, taking this to be a
-replacement for it.
-
-Although, looking at the log we have used this same prefix for both
-drivers in the past...
-
-> the error handling path to keep the counter balanced.
+On 20/05/2020 1.42, Rob Herring wrote:
+> On Tue, May 12, 2020 at 04:16:32PM +0300, Peter Ujfalusi wrote:
+>> The audio support on the Common Processor Board board is using
+>> pcm3168a codec connected to McASP10 serializers in parallel setup.
+>>
+>> The Infotainment board plugs into the Common Processor Board, the supp=
+ort
+>> of the extension board is extending the CPB audio support by adding
+>> the two codecs on the expansion board.
+>>
+>> The audio support on the Infotainment Expansion Board consists of McAS=
+P0
+>> connected to two pcm3168a codecs with dedicated set of serializers to =
+each.
+>> The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
 >=20
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/con=
-troller/dwc/pcie-tegra194.c
-> index ae30a2fd3716..a69f9e49dcb5 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1651,8 +1651,8 @@ static int tegra_pcie_config_rp(struct tegra_pcie_d=
-w *pcie)
->  fail_host_init:
->  	tegra_pcie_deinit_controller(pcie);
->  fail_pinctrl:
-> -	pm_runtime_put_sync(dev);
->  fail_pm_get_sync:
+> Would the audio graph card work for you on this?
 
-Either of those two labels is now no longer needed. Of course it'll now
-be odd to jump to fail_pm_get_sync on pinctrl_pm_select_default_state()
-failure, but that's one of the reasons why label should have names
-describing what they do rather than describe the failure location. I
-guess we can live with that for now. I'll make a note to send a cleanup
-patch for that later on.
+Unfortunately not.
+The CPB and IVI while using different McASP (10 for CPB, 0 for IVI) and
+different clock pin is used for the SCKI of the codecs on CPB and IVI,
+they are actually coming from the same source from within the SoC.
+The inter-dependency between the two audio domains are fragile and I
+have spent countless hours to figure out a way to masquerade the unique
+setup as generic. Did not worked out, it needs a custom machine driver
+to be able to handle the setup.
 
-With the fixup in the commit message and either of the labels removed:
+- P=C3=A9ter
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
---RYJh/3oyKhIjGcML
-Content-Type: application/pgp-signature; name="signature.asc"
+--------------B17804B71D9C95B8A8C1439A
+Content-Type: application/pgp-keys; name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename="pEpkey.asc"
 
------BEGIN PGP SIGNATURE-----
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7E/2gACgkQ3SOs138+
-s6H1dRAAjP9fv8WTiqlN64A0U8jgW7w0okcZGXwf1+Lrb+g7s94GdR8KJD4vLHpL
-lOVPr0BwTg4u6ED50ZaMrr0AJkkwlJCMniWIF9RK4Qdetuw2clnu/+Rx98ptS053
-TcOa0LpwWQ8qPwBO/HQ9tRA+4EmrCG8qOLXHWIa1HkyAp8Gq4ju5x2x4E10MTNWc
-YtjLDKnXLICCLLcPmhhG+gnVln6YF5l5qTPVcMOfPm7H31OMm8cTeGFgg8j3TdR9
-P9ZyHooksciS4sktzruBzSoyYlun1OyCQoUK5yHTa+FhiXcvcG5C0ABSQkDlj87B
-7ormUGu9p9BTXLZbch+iE3rCh4HCeNtppUY3RCrWSbAsXmnFeDEqItCTFthlcQyq
-5PUwVLH3AixFgAigFSZ01i0TrBCox5ypo6lcUMpgFhmzPrQ8iHGlAU+ZUx3kVyNZ
-mKSk2jh5wrJlgLQnDDs776nv2zwCXS2MV1xLunkUIw+dZe4twPQGbyqLnLov0nax
-uHSUtL5wS4H/2tHim7EwhZwaz9JHIliKPz+yFx9Usk08uOL1q61JbWiMhKl+yXlL
-X+3cYIM5AsO6wN0LaKj90msAlW0HqkfuVpCfULTzyxGjSNhwqiNNl4bM/FQG7Byq
-L1vf1atVlNld4rFXE8yMCnAOHzFn5M9hjq45DnyYERIFSRa+/oQ=
-=zMyM
------END PGP SIGNATURE-----
+mQENBFki4nsBCAD3BM+Ogt951JlaDloruEjoZk/Z+/37CjP0fY2mqLhBOzkpx95u
+X1Fquf0KfVk+ZzCd25XGOZEtpZNlXfbxRr2iRWPS5RW2FeLYGvg2TTJCpSr+ugKu
+OOec6KECCUotGbGhpYwBrbarJNEwDcAzPK7UJYa1rhWOmkpZJ1hXF1hUghB84q35
+8DmN4sGLcsIbVdRFZ1tWFh4vGBFV9LsoDZIrnnANb6/XMX78s+tr3RG3GZBaFPl8
+jO5IIv0UIGNUKaYlNVFYthjGCzOqtstHchWuK9eQkR7m1+Vc+ezh1qK0VJydIcjn
+OtoMZZL7RAz13LB9vmcJjbQPnI7dJojz/M7zABEBAAG0JlBldGVyIFVqZmFsdXNp
+IDxwZXRlci51amZhbHVzaUB0aS5jb20+iQFOBBMBCAA4FiEE+dBcpRFvJjZw+uta
+LCayis85LN4FAlki4nsCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQLCay
+is85LN4QjggAzxxxXqiWpA3vuj9yrlGLft3BeGKWqF8+RzdeRvshtNdpGeIFf+r5
+AJVR71R1w89Qeb4DGXus7qsKiafdFGG7yxbuhw8a5wUm+ZncBXA+ETn3OyVtl8g8
+r/ZcPX420jClBNTVuL0sSnyqDFDrt5f+uAFOIwsnHdpns174Zu9QhgYxdvdZ+jMh
+Psb745O9EVeNvdfUIRdrVjb4IhJKNIzkb0Tulsz5xeCJReUYpxZU1jzEq3YZqIou
++fi+oS4wlJuSoxKKTmIXtSeEy/weStF1XHMo6vLYqzaK4FyIuclqeuYUYSVy2425
+7TMXugaI+O85AEI6KW8MCcu1NucSfAWUabkBDQRZIuJ7AQgAypKq8iIugpHxWA2c
+Ck6MQdPBT6cOEVK0tjeHaHAVOUPiw9Pq+ssMifdIkDdqXNZ3RLH/X2svYvd8c81C
+egqshfB8nkJ5EKmQc9d7s0EwnYT8OwsoVb3c2WXnsdcKEyu2nHgyeJEUpPpMPyLc
++PWhoREifttab4sOPktepdnUbvrDK/gkjHmiG6+L2owSn637N+Apo3/eQuDajfEu
+kybxK19ReRcp6dbqWSBGSeNB32c/zv1ka37bTMNVUY39Rl+/8lA/utLfrMeACHRO
+FGO1BexMASKUdmlB0v9n4BaJFGrAJYAFJBNHLCDemqkU7gjaiimuHSjwuP0Wk7Ct
+KQJfVQARAQABiQE2BBgBCAAgFiEE+dBcpRFvJjZw+utaLCayis85LN4FAlki4nsC
+GwwACgkQLCayis85LN7kCwgAoy9r3ZQfJNOXO1q/YQfpEELHn0p8LpwliSDUS1xL
+sswyxtZS8LlW8PjlTXuBLu38Vfr0vGav7oyV7TkhnKT3oBOLXanyZqwgyZSKNEGB
+PB4v3Fo7YTzpfSofiwuz03uyfjTxiMGjonxSb+YxM7HBHfzjrOKKlg02fK+lWNZo
+m5lXugeWD7U6JJguNdYfr+U4zYIblelUImcIE+wnR0oLzUEVDIWSpVrl/OqS3Rzo
+mw8wBsHksTHrbgUnKL0SCzYc90BTeKbyjEBnVDr+dlfbxRxkB8h9RMPMdjodvXzS
+Gfsa9V/k4XAsh7iX9EUVBbnmjA61ySxU/w98h96jMuteTg=3D=3D
+=3DeQmw
+-----END PGP PUBLIC KEY BLOCK-----
 
---RYJh/3oyKhIjGcML--
+--------------B17804B71D9C95B8A8C1439A--
