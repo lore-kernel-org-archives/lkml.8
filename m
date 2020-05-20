@@ -2,90 +2,113 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81632C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273EB20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4702065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nlMkxRsY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I+oZMYMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgETLzF (ORCPT
+        id S1726944AbgETLzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:55:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETLzF (ORCPT
+        Wed, 20 May 2020 07:55:36 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:37556 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726435AbgETLzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:55:05 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01D2C061A0E;
-        Wed, 20 May 2020 04:55:03 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 20 May 2020 07:55:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589975735; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=kk/GsuDE6ll1jB2RxfLcgdLRrs8QROW9zKYeSI1XwB8=; b=I+oZMYMxgmz0IHr5PevjCu1kENR8CbyxmYbgOgu3dPmNX/eblUisR/wjfMIRn4jTN04ra3pf
+ fqivSjgCxSo2H0K+0NKo3g+7mAfjGd0EBPNiA+ZX7xH1+9EpGQbg573ptxUs+BO3fDXHAGlu
+ ZVlmLhX8P5bEm7xWl0NekDOWz5Y=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ec51ab04e523733abd3cf59 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 11:55:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AA622C433CB; Wed, 20 May 2020 11:55:27 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rrlm0MDlz9sT1;
-        Wed, 20 May 2020 21:55:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589975700;
-        bh=yDiiTAInSxyK1/TTzPLx+2xpNCn5L5xGDKCbAxG0qYE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nlMkxRsYAgPWReiVmkDR3EsF1GexJ7l4Hd+kQAF9FYnDcGXLSX53zlVYDXNfiHiqT
-         i22+JGO578gIhFlbhbvbiJ+ZzZBAWmz/eU3LOe2PC0TtkdhptZjJQrgxbR4+qQjS3x
-         gaRMPoYrExnpy7X9LlXydkQMHfoHAFGBSXerH7e7OqO5xSoZoH4Wd2cK3Yk64RJzhA
-         oZPucsiJGLjSMyJPzYou17fI8cFBZM2QoPJZeuF+9GKe+PmcFn9aHgqOBR/tBjKQ9j
-         KkLsHY8E9aK9jIaj2wAs+NMNQHTNemnsY0eYV7wo0YPEenuAPptfTDGE+4JzCoa3Rk
-         2MQJCR6f3/Xcg==
-Date:   Wed, 20 May 2020 21:54:59 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the v4l-dvb tree
-Message-ID: <20200520215459.4e921042@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Sf4G2MbesCFRkAcAW=pjY6X";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76314C433C6;
+        Wed, 20 May 2020 11:55:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76314C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+From:   Pavankumar Kondeti <pkondeti@codeaurora.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Vinayak Menon <vinmenon@codeaurora.org>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Liang Chen <cl@rock-chips.com>
+Subject: [PATCH] kthread: Use TASK_IDLE state for newly created kernel threads
+Date:   Wed, 20 May 2020 17:25:09 +0530
+Message-Id: <1589975710-9283-1-git-send-email-pkondeti@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Sf4G2MbesCFRkAcAW=pjY6X
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When kernel threads are created for later use, they will be in
+TASK_UNINTERRUPTIBLE state until they are woken up. This results
+in increased loadavg and false hung task reports. To fix this,
+use TASK_IDLE state instead of TASK_UNINTERRUPTIBLE when
+a kernel thread schedules out for the first time.
 
-Hi all,
+Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
+---
+ kernel/kthread.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Commit
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index bfbfa48..b74ed8e 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -250,7 +250,7 @@ static int kthread(void *_create)
+ 	current->vfork_done = &self->exited;
+ 
+ 	/* OK, tell user we're spawned, wait for stop or wakeup */
+-	__set_current_state(TASK_UNINTERRUPTIBLE);
++	__set_current_state(TASK_IDLE);
+ 	create->result = current;
+ 	/*
+ 	 * Thread is going to call schedule(), do not preempt it,
+@@ -428,7 +428,7 @@ static void __kthread_bind(struct task_struct *p, unsigned int cpu, long state)
+ 
+ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
+ {
+-	__kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
++	__kthread_bind_mask(p, mask, TASK_IDLE);
+ }
+ 
+ /**
+@@ -442,7 +442,7 @@ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
+  */
+ void kthread_bind(struct task_struct *p, unsigned int cpu)
+ {
+-	__kthread_bind(p, cpu, TASK_UNINTERRUPTIBLE);
++	__kthread_bind(p, cpu, TASK_IDLE);
+ }
+ EXPORT_SYMBOL(kthread_bind);
+ 
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-  21abaf06e4b8 ("media: atomisp: improve device detection code")
-
-is missing a Signed-off-by from its author and committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Sf4G2MbesCFRkAcAW=pjY6X
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7FGpMACgkQAVBC80lX
-0GyzdQgAn804dgQsuHo/zaLStzBlnW6hP1q0pWf+52tJ3S8jg/3O82SArxDJThBE
-uPe33OZaovPQ1SZTWmWwdQkv/MS+ybLLf4PTxVcQNCdQeKMXJiARsfW0SGJ0ainM
-+VVjwS0mk5MYRnuu7G0yiGCUjRG3fYZ4gTHc8W89wP2bls6te/R10b7sRCulGoPI
-9Ud8r9IMK+2ZSgfID4YQIxltHhMzZxuGtRs2HPKCGSst1q3C0X6uUqp6vD18H/Cb
-HWJXPZWj3Tont7m4FnX6HtTOevl86Qopy5YCDLQsad5hegrK7zvsMTQ3hkkED/hW
-8Ggm1lQL+VlcnUivi0mZulMhQ9Dy7A==
-=Faog
------END PGP SIGNATURE-----
-
---Sig_/Sf4G2MbesCFRkAcAW=pjY6X--
