@@ -2,139 +2,126 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF790C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5604C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5B8220756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C452C207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589983404;
+	bh=QuXivJWfSCHoFejw2WGsuzr9GwmENzgWc4fknuN2hVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fwXcVbXEx3f5JieGlZh8DwsfzH1t2S21Aj0Qdw/VhtE6qU7hgJmUC/0g+5pGpY8fO
+	 4qeBT4SJJnU3REO2iEu3Wui+ltHtxwByhPTFuKa1cu3dTV8/TiTZXmmKLaS+CmxY12
+	 eXOOWKP++MgrbXNZgiSyXR4ayYDebyDKH6NvxZiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgETODI (ORCPT
+        id S1726844AbgETODY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:03:08 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59232 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgETODH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:03:07 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 871B5803087B;
-        Wed, 20 May 2020 14:03:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id teVxHK5lDq1I; Wed, 20 May 2020 17:03:03 +0300 (MSK)
-Date:   Wed, 20 May 2020 17:03:03 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        Wed, 20 May 2020 10:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgETODX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:03:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E20D320756;
+        Wed, 20 May 2020 14:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589983403;
+        bh=QuXivJWfSCHoFejw2WGsuzr9GwmENzgWc4fknuN2hVw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eiyArFOnyS9XWPVzx2pT9OR3PB51ouV4SYNXBJ/MysL4g4tA60zrn+LXVy2btR79O
+         RI9k8qrNOLyJ2r26YpfZ9DWI8NVapbA8kStc2j9iMBOnMPrz+iik1p9pAf++tpwLEf
+         mcWbA0DiSjTiLMPuGXhTXbwNZHh9ZjMLZ0mML4wI=
+Date:   Wed, 20 May 2020 16:03:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
         <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520140303.gthbmm7r7z2uvupn@mobilestation>
-References: <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
- <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
- <20200520115926.lk6ycke75flwzcd2@mobilestation>
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma
+ offsets
+Message-ID: <20200520140320.GA3624154@kroah.com>
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+ <20200519203419.12369-10-james.quinlan@broadcom.com>
+ <20200520054349.GB2180554@kroah.com>
+ <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200520115926.lk6ycke75flwzcd2@mobilestation>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <CA+-6iNyQFauYc0ZNbzRmao_oOZD8XM+1D0XE133HP_-zgMLzuA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:59:27PM +0300, Serge Semin wrote:
-> On Tue, May 19, 2020 at 05:50:53PM +0200, Thomas Bogendoerfer wrote:
-> > On Mon, May 18, 2020 at 11:57:52PM +0300, Serge Semin wrote:
-> > > On Mon, May 18, 2020 at 06:32:06PM +0200, Thomas Bogendoerfer wrote:
-> > > > On Mon, May 18, 2020 at 04:48:20PM +0300, Serge Semin wrote:
-> > > > > On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
+On Wed, May 20, 2020 at 09:50:36AM -0400, Jim Quinlan wrote:
+> On Wed, May 20, 2020 at 1:43 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
+> > > diff --git a/include/linux/device.h b/include/linux/device.h
+> > > index ac8e37cd716a..6cd916860b5f 100644
+> > > --- a/include/linux/device.h
+> > > +++ b/include/linux/device.h
+> > > @@ -493,6 +493,8 @@ struct dev_links_info {
+> > >   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
+> > >   *           DMA limit than the device itself supports.
+> > >   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+> > > + * @dma_map: Like dma_pfn_offset but used when there are multiple
+> > > + *           pfn offsets for multiple dma-ranges.
+> > >   * @dma_parms:       A low level driver may set these to teach IOMMU code about
+> > >   *           segment limitations.
+> > >   * @dma_pools:       Dma pools (if dma'ble device).
+> > > @@ -578,7 +580,12 @@ struct device {
+> > >                                            allocations such descriptors. */
+> > >       u64             bus_dma_limit;  /* upstream dma constraint */
+> > >       unsigned long   dma_pfn_offset;
+> > > -
+> > > +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
+> > > +     const void *dma_offset_map;     /* Like dma_pfn_offset, but for
+> > > +                                      * the unlikely case of multiple
+> > > +                                      * offsets. If non-null, dma_pfn_offset
+> > > +                                      * will be 0. */
+> > > +#endif
+> > >       struct device_dma_parameters *dma_parms;
+> > >
+> > >       struct list_head        dma_pools;      /* dma pools (if dma'ble) */
+> >
+> > I'll defer to Christoph here, but I thought we were trying to get rid of
+> > stuff like this from struct device, not add new things to it for dma
+> Hi Greg,
+> 
+> I wasn't aware of this policy.  I put it in 'struct device' because
+> just like the existing dma_pfn_offset; it seemed to be the only way to
+> pull this off.  I'll certainly follow any ideas on alternative
+> strategies from Christoph et al.
+> 
+> > apis.  And why is it a void *?
+> Just wanted to minimize the number of lines I've added to device.h, no
+> other reason.
 
-[nip]
+How would using a real type make this more lines?  Never use a void *
+unless you have to, we want the compiler to check our errors for us :)
 
-> > > > > └─>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
-> > > > 
-> > > > this is IMHO a dangerous change. Enabling write merging for any
-> > > > CPU supporting it might triggers bugs. Do it in your board bringup
-> > > > code and at the moment I don't see a reason for the rest of that
-> > > > patch.
-> > > 
-> > > Let's at least leave the mm_config() implementation but without the write-merge
-> > > enabling by default. Providing features availability macro
-> > > cpu_has_mm_sysad/cpu_has_mm_full and c0 config fields
-> > 
-> > do you have a user of that ? I'm not introducing code nobody uses.
-> > 
-> 
-> See my comment below.
-> 
-> > > I could use them to implement a code pattern like:
-> > > 
-> > > +	if (cpu_has_mm_full) {
-> > > +		unsigned int config0 = read_c0_config();
-> > > +               config0 = (config0 & ~MIPS_CONF_MM) | MIPS_CONF_MM_FULL;
-> > > +               write_c0_config(config0);
-> > > +	}
-> > 
-> > you know you are running on a R5 core, so you know you have MM_FULL.
-> > No need to check this.
-> > 
-> > > By doing so I can manually enable/disable the MM feature in the
-> > > cpu-feature-overrides.h. Without that I'd have to locally define these macro,
-> > > which isn't good seeing they are in fact generic and can be useful for other
-> > > platforms with SYSAD and FULL MM feature available. What do you think?
-> > 
-> > To me this is a hardware feature I expect to be done by firmware and
-> > Linux shouldn't care about it, if it doesn't have any software
-> > implications.
-> 
-> I think there is a misunderstanding here. In this patch I am not enabling
-> Write-Merge feature for any memory range. I am enabling the UCA Cache Coherency
-> attribute to be available for utilization. See the user-manual info regarding
-> the CP0.CONFIG.MM field:
-> 	Write Merge.This bit indicates whether write-through merging is enabled
-> 	in the 32-byte collapsing write buffer.
-> 	0: No merging allowed
-> 	1: Merging allowed
-> 
-> In order to have the Write-merging really enabled for a particular PFN one have
-> to mark its TLB entry with UCA (EntryLoX.C[3:5] = 7) attribute. So in this patch
-> I am attempting to detect whether the feature is either already enabled or if
-> available to enable it for utilization.
-> 
-> If there is no misunderstanding and you said what you said, that even enabling
-> the feature for utilization might be dangerous, let's at least leave the
-> MIPS_CONF_MM, MIPS_CONF_MM_FULL and MIPS_CONF_MM_SYS_SYSAD fields
-> definition in the "arch/mips/include/asm/mipsregs.h" header. I'll use
-> them to enable the write-merge in my platform code.
-> 
-> What do you think?
-> 
+thanks,
 
-Thomas,
-Could you also give me your comment on the above, so to make sure that we
-understood each other correctly in this question?
-
--Sergey
+greg k-h
