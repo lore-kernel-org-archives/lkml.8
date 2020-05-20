@@ -4,268 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B301C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7770B206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E17206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgETRKu (ORCPT
+        id S1726861AbgETRM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgETRKu (ORCPT
+        Wed, 20 May 2020 13:12:27 -0400
+Received: from mailoutvs21.siol.net ([185.57.226.212]:35666 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726436AbgETRM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:10:50 -0400
-Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB7AC061A0E;
-        Wed, 20 May 2020 10:10:49 -0700 (PDT)
-Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=pengu.fritz.box); authenticated
-        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1jbSEt-00088y-Ih; Wed, 20 May 2020 19:10:43 +0200
-From:   Roelof Berg <rberg@berg-solutions.de>
-To:     rberg@berg-solutions.de
-Cc:     andrew@lunn.ch, Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Wed, 20 May 2020 13:12:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 7177252262E;
+        Wed, 20 May 2020 19:12:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Zb2kWSo0VfZD; Wed, 20 May 2020 19:12:23 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 0DB3E5227F4;
+        Wed, 20 May 2020 19:12:23 +0200 (CEST)
+Received: from kista.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Zimbra) with ESMTPSA id 1D040522746;
+        Wed, 20 May 2020 19:12:17 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, paul.kocialkowski@bootlin.com
+Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org, wens@csie.org,
+        hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] lan743x: Added fixed link support
-Date:   Wed, 20 May 2020 19:10:06 +0200
-Message-Id: <20200520171006.5263-1-rberg@berg-solutions.de>
-X-Mailer: git-send-email 2.25.1
+Subject: [PATCH] media: cedrus: Add support for additional output formats
+Date:   Wed, 20 May 2020 19:14:57 +0200
+Message-Id: <20200520171457.11937-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1589994650;ee76ab02;
-X-HE-SMSGID: 1jbSEt-00088y-Ih
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Microchip lan7431 is frequently connected to a phy. However, it
-can also be directly connected to a MII remote peer without
-any phy in between. For supporting such a phyless hardware setup
-in Linux we added the capability to the driver to understand
-the fixed-link and the phy-connection-type entries in the device
-tree.
+If VPU supports untiled output, it actually supports several different
+YUV 4:2:0 layouts, namely NV12, NV21, YUV420 and YVU420.
 
-New behavior:
-. If no device tree node is configured the behavior of the driver remains
-  unchanged. This will ensure backwards compatibility to off-the-shelve
-  PC hardware.
+Add support for all of them.
 
-. If a device tree node is configured but no fixed-link node is present
-  the phy-connection-type (as specified in the device tree)  will be
-  applied and of_phy_connect() will be used instead of
-  phy_connect_direct().
-
-. If a device tree node is configured and a fixed-link node is present
-  the phy-connection-type will be applied, of_phy_connect() will be
-  used and the MAC will be configured to use the fix speed and duplex
-  mode configured in the fixed-link node. Also ASD and ADD will be
-  switched off.
-
-Example:
-
- &pcie {
-	status = "okay";
-
-	host@0 {
-		reg = <0 0 0 0 0>;
-
-		#address-cells = <3>;
-		#size-cells = <2>;
-
-		ethernet@0 {
-			compatible = "weyland-yutani,noscom1", "microchip,lan743x";
-			status = "okay";
-			reg = <0 0 0 0 0>;
-			phy-connection-type = "rgmii";
-
-			fixed-link {
-				speed = <100>;
-				full-duplex;
-			};
-		};
-	};
-};
-
-Signed-off-by: Roelof Berg <rberg@berg-solutions.de>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/net/ethernet/microchip/lan743x_main.c | 101 ++++++++++++++++--
- drivers/net/ethernet/microchip/lan743x_main.h |   4 +
- 2 files changed, 97 insertions(+), 8 deletions(-)
+ drivers/staging/media/sunxi/cedrus/cedrus_hw.c | 18 +++++++++++++++++-
+ .../staging/media/sunxi/cedrus/cedrus_video.c  | 18 ++++++++++++++++++
+ 2 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index a43140f7b5eb..50ca223e8b8f 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -9,9 +9,12 @@
- #include <linux/microchipphy.h>
- #include <linux/net_tstamp.h>
- #include <linux/phy.h>
-+#include <linux/phy_fixed.h>
- #include <linux/rtnetlink.h>
- #include <linux/iopoll.h>
- #include <linux/crc16.h>
-+#include <linux/of_mdio.h>
-+#include <linux/of_net.h>
- #include "lan743x_main.h"
- #include "lan743x_ethtool.h"
- 
-@@ -946,6 +949,10 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
- {
- 	struct lan743x_adapter *adapter = netdev_priv(netdev);
- 	struct phy_device *phydev = netdev->phydev;
-+	struct device_node *phynode;
-+	phy_interface_t phyifc;
-+	int ret = -EIO;
-+	u32 data;
- 
- 	phy_print_status(phydev);
- 	if (phydev->state == PHY_RUNNING) {
-@@ -953,6 +960,53 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
- 		int remote_advertisement = 0;
- 		int local_advertisement = 0;
- 
-+		/* check if a device-tree configuration is present */
-+		phynode = of_node_get(adapter->pdev->dev.of_node);
-+		if (phynode) {
-+			data = lan743x_csr_read(adapter, MAC_CR);
-+
-+			/* set interface mode */
-+			ret = of_get_phy_mode(phynode, &phyifc);
-+			if (ret)
-+				phyifc = PHY_INTERFACE_MODE_GMII;
-+
-+			if (phy_interface_mode_is_rgmii(phyifc))
-+				/* RGMII */
-+				data &= ~MAC_CR_MII_EN_;
-+			else
-+				/* GMII */
-+				data |= MAC_CR_MII_EN_;
-+
-+			/* apply fixed-link configuration */
-+			if (of_phy_is_fixed_link(phynode)) {
-+				/* disable auto duplex, and speed detection */
-+				data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
-+				/* set fixed duplex mode */
-+				if (phydev->duplex)
-+					data |= MAC_CR_DPX_;
-+				else
-+					data &= ~MAC_CR_DPX_;
-+				/* set fixed bus speed */
-+				switch (phydev->speed) {
-+				case 10:
-+					data &= ~MAC_CR_CFG_H_;
-+					data &= ~MAC_CR_CFG_L_;
-+					break;
-+				case 100:
-+					data &= ~MAC_CR_CFG_H_;
-+					data |= MAC_CR_CFG_L_;
-+					break;
-+				case 1000:
-+					data |= MAC_CR_CFG_H_;
-+					data |= MAC_CR_CFG_L_;
-+					break;
-+				}
-+			}
-+
-+			lan743x_csr_write(adapter, MAC_CR, data);
-+			of_node_put(phynode);
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/sta=
+ging/media/sunxi/cedrus/cedrus_hw.c
+index daf5f244f93b..c119fd8c4b92 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+@@ -83,9 +83,25 @@ void cedrus_dst_format_set(struct cedrus_dev *dev,
+=20
+ 	switch (fmt->pixelformat) {
+ 	case V4L2_PIX_FMT_NV12:
++	case V4L2_PIX_FMT_NV21:
++	case V4L2_PIX_FMT_YUV420:
++	case V4L2_PIX_FMT_YVU420:
+ 		chroma_size =3D ALIGN(width, 16) * ALIGN(height, 16) / 2;
+=20
+-		reg =3D VE_PRIMARY_OUT_FMT_NV12;
++		switch (fmt->pixelformat) {
++		case V4L2_PIX_FMT_NV12:
++			reg =3D VE_PRIMARY_OUT_FMT_NV12;
++			break;
++		case V4L2_PIX_FMT_NV21:
++			reg =3D VE_PRIMARY_OUT_FMT_NV21;
++			break;
++		case V4L2_PIX_FMT_YUV420:
++			reg =3D VE_PRIMARY_OUT_FMT_YU12;
++			break;
++		case V4L2_PIX_FMT_YVU420:
++			reg =3D VE_PRIMARY_OUT_FMT_YV12;
++			break;
 +		}
-+
- 		memset(&ksettings, 0, sizeof(ksettings));
- 		phy_ethtool_get_link_ksettings(netdev, &ksettings);
- 		local_advertisement =
-@@ -974,26 +1028,57 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
- 
- 	phy_stop(netdev->phydev);
- 	phy_disconnect(netdev->phydev);
-+	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
-+		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
- 	netdev->phydev = NULL;
- }
- 
- static int lan743x_phy_open(struct lan743x_adapter *adapter)
- {
- 	struct lan743x_phy *phy = &adapter->phy;
-+	struct device_node *phynode;
- 	struct phy_device *phydev;
- 	struct net_device *netdev;
-+	phy_interface_t phyifc;
- 	int ret = -EIO;
- 
- 	netdev = adapter->netdev;
--	phydev = phy_find_first(adapter->mdiobus);
--	if (!phydev)
--		goto return_error;
- 
--	ret = phy_connect_direct(netdev, phydev,
--				 lan743x_phy_link_status_change,
--				 PHY_INTERFACE_MODE_GMII);
--	if (ret)
--		goto return_error;
-+	/* is a device tree configuration present */
-+	phynode = of_node_get(adapter->pdev->dev.of_node);
-+	if (phynode) {
-+		/* apply device tree configuration */
-+		if (of_phy_is_fixed_link(phynode)) {
-+			ret = of_phy_register_fixed_link(phynode);
-+			if (ret) {
-+				netdev_err(netdev, "cannot register fixed PHY\n");
-+				of_node_put(phynode);
-+				goto return_error;
-+			}
-+		}
-+
-+		ret = of_get_phy_mode(phynode, &phyifc);
-+		if (ret)
-+			phyifc = PHY_INTERFACE_MODE_GMII;
-+
-+		phydev = of_phy_connect(netdev, phynode,
-+					lan743x_phy_link_status_change,
-+					0, phyifc);
-+		of_node_put(phynode);
-+		if (!phydev)
-+			goto return_error;
-+	} else {
-+		/* no device tree configuration */
-+		phydev = phy_find_first(adapter->mdiobus);
-+		if (!phydev)
-+			goto return_error;
-+
-+		ret = phy_connect_direct(netdev, phydev,
-+					 lan743x_phy_link_status_change,
-+					 PHY_INTERFACE_MODE_GMII);
-+		if (ret)
-+			goto return_error;
-+	}
- 
- 	/* MAC doesn't support 1000T Half */
- 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index 3b02eeae5f45..e49f6b6cd440 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -104,10 +104,14 @@
- 	((value << 0) & FCT_FLOW_CTL_ON_THRESHOLD_)
- 
- #define MAC_CR				(0x100)
-+#define MAC_CR_MII_EN_			BIT(19)
- #define MAC_CR_EEE_EN_			BIT(17)
- #define MAC_CR_ADD_			BIT(12)
- #define MAC_CR_ASD_			BIT(11)
- #define MAC_CR_CNTR_RST_		BIT(5)
-+#define MAC_CR_DPX_			BIT(3)
-+#define MAC_CR_CFG_H_			BIT(2)
-+#define MAC_CR_CFG_L_			BIT(1)
- #define MAC_CR_RST_			BIT(0)
- 
- #define MAC_RX				(0x104)
--- 
-2.25.1
+ 		cedrus_write(dev, VE_PRIMARY_OUT_FMT, reg);
+=20
+ 		reg =3D chroma_size / 2;
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/=
+staging/media/sunxi/cedrus/cedrus_video.c
+index 15cf1f10221b..016021d71df2 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+@@ -55,6 +55,21 @@ static struct cedrus_format cedrus_formats[] =3D {
+ 		.directions	=3D CEDRUS_DECODE_DST,
+ 		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
+ 	},
++	{
++		.pixelformat	=3D V4L2_PIX_FMT_NV21,
++		.directions	=3D CEDRUS_DECODE_DST,
++		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
++	},
++	{
++		.pixelformat	=3D V4L2_PIX_FMT_YUV420,
++		.directions	=3D CEDRUS_DECODE_DST,
++		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
++	},
++	{
++		.pixelformat	=3D V4L2_PIX_FMT_YVU420,
++		.directions	=3D CEDRUS_DECODE_DST,
++		.capabilities	=3D CEDRUS_CAPABILITY_UNTILED,
++	},
+ };
+=20
+ #define CEDRUS_FORMATS_COUNT	ARRAY_SIZE(cedrus_formats)
+@@ -130,6 +145,9 @@ void cedrus_prepare_format(struct v4l2_pix_format *pi=
+x_fmt)
+ 		break;
+=20
+ 	case V4L2_PIX_FMT_NV12:
++	case V4L2_PIX_FMT_NV21:
++	case V4L2_PIX_FMT_YUV420:
++	case V4L2_PIX_FMT_YVU420:
+ 		/* 16-aligned stride. */
+ 		bytesperline =3D ALIGN(width, 16);
+=20
+--=20
+2.26.2
 
