@@ -2,70 +2,72 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA226205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C5E205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgETGlI (ORCPT
+        id S1726654AbgETGlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:41:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2610 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726369AbgETGlG (ORCPT
+        Wed, 20 May 2020 02:41:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56476 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726596AbgETGlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:41:06 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K6WW2x075620;
-        Wed, 20 May 2020 02:41:01 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 314rxd24xk-1
+        Wed, 20 May 2020 02:41:10 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K6VNgX039696;
+        Wed, 20 May 2020 02:41:04 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312c659w81-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 02:41:01 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04K6eqTe003282;
-        Wed, 20 May 2020 06:40:59 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 313xehk2qw-1
+        Wed, 20 May 2020 02:41:04 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04K6eOsE007591;
+        Wed, 20 May 2020 06:41:02 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 313xas32ng-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 06:40:58 +0000
+        Wed, 20 May 2020 06:41:02 +0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04K6euGd65470584
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04K6f0vn56819850
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 06:40:56 GMT
+        Wed, 20 May 2020 06:41:00 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 337DFA4060;
-        Wed, 20 May 2020 06:40:56 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id ECDCCA4060;
+        Wed, 20 May 2020 06:40:59 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E01AA4054;
-        Wed, 20 May 2020 06:40:54 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6D59CA4066;
+        Wed, 20 May 2020 06:40:58 +0000 (GMT)
 Received: from localhost.localdomain.com (unknown [9.79.188.115])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 May 2020 06:40:54 +0000 (GMT)
+        Wed, 20 May 2020 06:40:58 +0000 (GMT)
 From:   Ritesh Harjani <riteshh@linux.ibm.com>
 To:     linux-ext4@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.com>,
         tytso@mit.edu, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         linux-kernel@vger.kernel.org,
         Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: [PATCHv5 0/5] Improve ext4 handling of ENOSPC with multi-threaded use-case
-Date:   Wed, 20 May 2020 12:10:31 +0530
-Message-Id: <cover.1589955723.git.riteshh@linux.ibm.com>
+Subject: [PATCHv5 2/5] ext4: mballoc: Refactor ext4_mb_discard_preallocations()
+Date:   Wed, 20 May 2020 12:10:33 +0530
+Message-Id: <1cfae0098d2aa9afbeb59331401258182868c8f2.1589955723.git.riteshh@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1589955723.git.riteshh@linux.ibm.com>
+References: <cover.1589955723.git.riteshh@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-20_02:2020-05-19,2020-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 cotscore=-2147483648 malwarescore=0
- impostorscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 suspectscore=0 classifier=spam adjust=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=1 mlxlogscore=999 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2005200051
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,112 +75,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello All,
+Implement ext4_mb_discard_preallocations_should_retry()
+which we will need in later patches to add more logic
+like check for sequence number match to see if we should
+retry for block allocation or not.
 
-Please note that these patches are based on top of mballoc cleanup series [2]
-which is also pending review. :)
+There should be no functionality change in this patch.
 
-v4 -> v5:
-1. Removed ext4_lock_group() from fastpath and added that in the retry attempt,
-so that the performance of fastpath is not affected.
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+---
+ fs/ext4/mballoc.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-v3 -> v4:
-1. Splitted code cleanups and debug improvements as a separate patch series.
-2. Dropped rcu_barrier() approach since it did cause some latency
-in my testing of ENOSPC handling.
-3. This patch series takes a different approach to improve the multi-threaded
-ENOSPC handling in ext4 mballoc code. Below mail gives more details.
-
-
-Background
-==========
-Consider a case where your disk is close to full but still enough space
-remains for your multi-threaded application to run. Now when this application
-threads tries to write (e.g. sparse file followed by mmap write or
-even fallocate multiple files) in parallel, then with current code of
-ext4 multi-block allocator, the application may get an ENOSPC error in some
-cases. Examining disk space at this time, we see there is sufficient space
-remaining for your application to continue to run.
-
-Additional info:
-============================
-1. Our internal test team was easily able to reproduce this ENOSPC error on 
-   an upstream kernel with 2GB ext4 image, with 64K blocksize. They didn't try
-   above 2GB and reprorted this issue directly to dev team. On examining the
-   free space when the application gets ENOSPC, the free space left was more
-   then 50% of filesystem size in some cases.
-
-2. For debugging/development of these patches, I used below script [1] to
-   trigger this issue quite frequently on a 64K blocksize setup with 240MB
-   ext4 image.
-
-
-Summary of patches and problem with current design
-==================================================
-There were 3 main problems which these patches tries to address and hence
-improve the ENOSPC handling in ext4's multi-block allocator code.
-
-1. Patch-2: Earlier we were considering the group is good or not (means
-   checking if it has enough free blocks to serve your request) without taking
-   the group's lock. This could result into a race where, if another thread is
-   discarding the group's prealloc list, then the allocation thread will not
-   consider those about to be free blocks and will fail will return that group
-   is not fit for allocation thus eventually fails with ENOSPC error.
-
-2. Patch-4: Discard PA algoritm only scans the PA list to free up the
-   additional blocks which got added to PA. This is done by the same thread-A
-   which at 1st couldn't allocate any blocks. But there is a window where,
-   once the blocks were allocated (say by some other thread-B previously) we
-   drop the group's lock and then checks to see if some of these blocks could
-   be added to prealloc list of the group from where we allocated some blocks.
-   After that we take the lock and add these additional blocks allocated by
-   thread-B to the PA list. But say if thread-A tries to scan the PA list
-   between this time interval then there is possibilty that it won't find any
-   blocks added to the PA list and hence may return ENOSPC error.
-   Hence this patch tries to add those additional blocks to the PA list just
-   after the blocks are marked as used with the same group's spinlock held.
-   
-3. Patch-3: Introduces a per cpu discard_pa_seq counter which is increased
-   whenever there is block allocation/freeing or when the discarding of any
-   group's PA list has started. With this we could know when to stop the
-   retrying logic and return ENOSPC error if there is actually no free space
-   left.
-   There is an optimization done in the block allocation fast path with this
-   approach that, before starting the block allocation, we only sample the
-   percpu seq count on that cpu. Only when the allocation fails and discard
-   couldn't free up any of the blocks in all of the group's PA list, that is
-   when we sample the percpu seq counter sum over all possible cpus to check
-   if we need to retry.
-
-
-Testing:
-=========
-Tested fstests with default bs of 4K and bs == PAGESIZE ("-g auto")
-No new failures were reported with this patch series in this testing.
-
-NOTE:
-1. This patch series is based on top of mballoc code cleanup patch series
-posted at [2].
-
-References:
-===========
-[v3]: https://lkml.kernel.org/linux-ext4/cover.1588313626.git.riteshh@linux.ibm.com/
-[1]: https://github.com/riteshharjani/LinuxStudy/blob/master/tools/test_mballoc.sh
-[2]: https://lkml.kernel.org/linux-ext4/cover.1589086800.git.riteshh@linux.ibm.com/
-
-
-Ritesh Harjani (5):
-  ext4: mballoc: Add blocks to PA list under same spinlock after allocating blocks
-  ext4: mballoc: Refactor ext4_mb_discard_preallocations()
-  ext4: mballoc: Introduce pcpu seqcnt for freeing PA to improve ENOSPC handling
-  ext4: mballoc: Refactor ext4_mb_good_group()
-  ext4: mballoc: Use lock for checking free blocks while retrying
-
- fs/ext4/ext4.h              |   2 +
- fs/ext4/mballoc.c           | 247 ++++++++++++++++++++++++++----------
- include/trace/events/ext4.h |   3 +-
- 3 files changed, 185 insertions(+), 67 deletions(-)
-
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index decc5168d126..b75408d72773 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -4543,6 +4543,17 @@ static int ext4_mb_discard_preallocations(struct super_block *sb, int needed)
+ 	return freed;
+ }
+ 
++static bool ext4_mb_discard_preallocations_should_retry(struct super_block *sb,
++			struct ext4_allocation_context *ac)
++{
++	int freed;
++
++	freed = ext4_mb_discard_preallocations(sb, ac->ac_o_ex.fe_len);
++	if (freed)
++		return true;
++	return false;
++}
++
+ /*
+  * Main entry point into mballoc to allocate blocks
+  * it tries to use preallocation first, then falls back
+@@ -4551,7 +4562,6 @@ static int ext4_mb_discard_preallocations(struct super_block *sb, int needed)
+ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
+ 				struct ext4_allocation_request *ar, int *errp)
+ {
+-	int freed;
+ 	struct ext4_allocation_context *ac = NULL;
+ 	struct ext4_sb_info *sbi;
+ 	struct super_block *sb;
+@@ -4656,8 +4666,7 @@ ext4_fsblk_t ext4_mb_new_blocks(handle_t *handle,
+ 			ar->len = ac->ac_b_ex.fe_len;
+ 		}
+ 	} else {
+-		freed  = ext4_mb_discard_preallocations(sb, ac->ac_o_ex.fe_len);
+-		if (freed)
++		if (ext4_mb_discard_preallocations_should_retry(sb, ac))
+ 			goto repeat;
+ 		/*
+ 		 * If block allocation fails then the pa allocated above
 -- 
 2.21.0
 
