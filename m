@@ -2,145 +2,194 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E1FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE62C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA6F207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589991347;
-	bh=h9MTIGPYQzOllbjEkIgnEniE41lTl+OD7Fs3cDvWlC4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=NQz6V5xwVhngbdssjJ6CloERsT728hmqdBO2CWLBELZYj2CU/8GOPOAHFSqMJDzlJ
-	 E7/pGMlemlM2Y1YJO5hZEAb77ft1Ud4S47WjyhmH76a+q2ObXSJ2+WG5KL0bimyMvJ
-	 cSWeg2D0BF8tUYHHociSM5A2p1VPaEYHYnffhYM4=
+	by mail.kernel.org (Postfix) with ESMTP id D0A18206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZZaYFFR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgETQPq (ORCPT
+        id S1726826AbgETQP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:15:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETQPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:15:45 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 20 May 2020 12:15:58 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:36767 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726791AbgETQP5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:15:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589991356; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=W+H+ZNLN/PeeQd0HYlXgSjXVcP3NRkRb7E2OQ2VXotk=; b=ZZaYFFR77lS8tbSB/KMARhK8BENAfWBD1SJkaZmfsEcDKKXsEF0CWCx7aSb978Ij6hkB1Yg6
+ ty+BzOVbu/ZFAStwMhiaCzX4ezXZLeFKHRPcHtmwFwNGC0m04u7UdcNTEj1ACZX4fMysVmB0
+ NJkT5Wfrb3Y/9AJGI8To8PkQtyk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ec557a9e79e24225d646352 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 16:15:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0DF59C433C9; Wed, 20 May 2020 16:15:36 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A8C120671;
-        Wed, 20 May 2020 16:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589991344;
-        bh=h9MTIGPYQzOllbjEkIgnEniE41lTl+OD7Fs3cDvWlC4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dBQAsnvSt1BuQnO2Uz0LYcXqH8wrzmcE0sMq3dliKDQWy2VD07oQBTPN8C3Xz4q5j
-         EEp4TAFPoo5NVsbBnUlz3FFLpZ4E3P2l4+ULM4f39CP4KxODVhaYOqqg6ZguekD1Z4
-         YSmgsUdQndWtM7LDHv6BuDaL4cZ+TEEM751dZfMc=
-Date:   Wed, 20 May 2020 11:15:41 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "open list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
-        Julien Grall <julien.grall@arm.com>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 00/15] PCI: brcmstb: enable PCIe for STB chips
-Message-ID: <20200520161541.GA1089402@bjorn-Precision-5520>
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0DD45C433C6;
+        Wed, 20 May 2020 16:15:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0DD45C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Olof Johansson <olof.johansson@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        wufan@codeaurora.org, pratanan@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+ <20200520051536.GA2141566@kroah.com>
+ <CAKMK7uEbwTK68sxhf452fPHzAreQqRbRc7=RLGX-9SesXnJnLQ@mail.gmail.com>
+ <5701b299-7800-1584-4b3a-6147e7ad3fca@codeaurora.org>
+ <20200520155943.GB3916378@kroah.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <543f7692-7b0e-eeab-fc6e-a292f1bc7640@codeaurora.org>
+Date:   Wed, 20 May 2020 10:15:33 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519203419.12369-1-james.quinlan@broadcom.com>
+In-Reply-To: <20200520155943.GB3916378@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 04:33:58PM -0400, Jim Quinlan wrote:
-> This patchset expands the usefulness of the Broadcom Settop Box PCIe
-> controller by building upon the PCIe driver used currently by the
-> Raspbery Pi.  Other forms of this patchset were submitted by me years
-> ago and not accepted; the major sticking point was the code required
-> for the DMA remapping needed for the PCIe driver to work [1].
+On 5/20/2020 9:59 AM, Greg Kroah-Hartman wrote:
+> On Wed, May 20, 2020 at 08:48:13AM -0600, Jeffrey Hugo wrote:
+>> On 5/20/2020 2:34 AM, Daniel Vetter wrote:
+>>> On Wed, May 20, 2020 at 7:15 AM Greg Kroah-Hartman
+>>> <gregkh@linuxfoundation.org> wrote:
+>>>>
+>>>> On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
+>>>>> On Tue, May 19, 2020 at 07:41:20PM +0200, Greg Kroah-Hartman wrote:
+>>>>>> On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
+>>>>>>> On 5/18/2020 11:08 PM, Dave Airlie wrote:
+>>>>>>>> On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>>>>>>>>>
+>>>>>>>>> Introduction:
+>>>>>>>>> Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
+>>>>>>>>> SoC ASIC for the purpose of efficently running Deep Learning inference
+>>>>>>>>> workloads in a data center environment.
+>>>>>>>>>
+>>>>>>>>> The offical press release can be found at -
+>>>>>>>>> https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
+>>>>>>>>>
+>>>>>>>>> The offical product website is -
+>>>>>>>>> https://www.qualcomm.com/products/datacenter-artificial-intelligence
+>>>>>>>>>
+>>>>>>>>> At the time of the offical press release, numerious technology news sites
+>>>>>>>>> also covered the product.  Doing a search of your favorite site is likely
+>>>>>>>>> to find their coverage of it.
+>>>>>>>>>
+>>>>>>>>> It is our goal to have the kernel driver for the product fully upstream.
+>>>>>>>>> The purpose of this RFC is to start that process.  We are still doing
+>>>>>>>>> development (see below), and thus not quite looking to gain acceptance quite
+>>>>>>>>> yet, but now that we have a working driver we beleive we are at the stage
+>>>>>>>>> where meaningful conversation with the community can occur.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> Hi Jeffery,
+>>>>>>>>
+>>>>>>>> Just wondering what the userspace/testing plans for this driver.
+>>>>>>>>
+>>>>>>>> This introduces a new user facing API for a device without pointers to
+>>>>>>>> users or tests for that API.
+>>>>>>>
+>>>>>>> We have daily internal testing, although I don't expect you to take my word
+>>>>>>> for that.
+>>>>>>>
+>>>>>>> I would like to get one of these devices into the hands of Linaro, so that
+>>>>>>> it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
+>>>>>>> to convince the powers that be to make this happen.
+>>>>>>>
+>>>>>>> Regarding what the community could do on its own, everything but the Linux
+>>>>>>> driver is considered proprietary - that includes the on device firmware and
+>>>>>>> the entire userspace stack.  This is a decision above my pay grade.
+>>>>>>
+>>>>>> Ok, that's a decision you are going to have to push upward on, as we
+>>>>>> really can't take this without a working, open, userspace.
+>>>>>
+>>>>> Uh wut.
+>>>>>
+>>>>> So the merge criteria for drivers/accel (atm still drivers/misc but I
+>>>>> thought that was interim until more drivers showed up) isn't actually
+>>>>> "totally-not-a-gpu accel driver without open source userspace".
+>>>>>
+>>>>> Instead it's "totally-not-a-gpu accel driver without open source
+>>>>> userspace" _and_ you have to be best buddies with Greg. Or at least
+>>>>> not be on the naughty company list. Since for habanalabs all you
+>>>>> wanted is a few test cases to exercise the ioctls. Not the entire
+>>>>> userspace.
+>>>>
+>>>> Also, to be fair, I have changed my mind after seeing the mess of
+>>>> complexity that these "ioctls for everyone!" type of pass-through
+>>>> these kinds of drivers are creating.  You were right, we need open
+>>>> userspace code in order to be able to properly evaluate and figure out
+>>>> what they are doing is right or not and be able to maintain things over
+>>>> time correctly.
+>>>>
+>>>> So I was wrong, and you were right, my apologies for my previous
+>>>> stubbornness.
+>>>
+>>> Awesome and don't worry, I'm pretty sure we've all been stubborn
+>>> occasionally :-)
+>>>
+>>>   From a drivers/gpu pov I think still not quite there since we also
+>>> want to see the compiler for these programmable accelerator thingies.
+>>> But just having a fairly good consensus that "userspace library with
+>>> all the runtime stuff excluding compiler must be open" is a huge step
+>>> forward. Next step may be that we (kernel overall, drivers/gpu will
+>>> still ask for the full thing) have ISA docs for these programmable
+>>> things, so that we can also evaluate that aspect and gauge how many
+>>> security issues there might be. Plus have a fighting chance to fix up
+>>> the security leaks when (post smeltdown I don't really want to
+>>> consider this an if) someone finds a hole in the hw security wall. At
+>>> least in drivers/gpu we historically have a ton of drivers with
+>>> command checkers to validate what userspace wants to run on the
+>>> accelerator thingie. Both in cases where the hw was accidentally too
+>>> strict, and not strict enough.
+>>
+>> I think this provides a pretty clear guidance on what you/the community are
+>> looking for, both now and possibly in the future.
+>>
+>> Thank you.
+>>
+>>  From my perspective, it would be really nice if there was something like
+>> Mesa that was a/the standard for these sorts of accelerators.  Its somewhat
+>> the wild west, and we've struggled with it.
 > 
-> There have been many changes to the DMA and OF subsystems since that
-> time, making a cleaner and less intrusive patchset possible.  This
-> patchset implements a generalization of "dev->dma_pfn_offset", except
-> that instead of a single scalar offset it provides for multiple
-> offsets via a function which depends upon the "dma-ranges" property of
-> the PCIe host controller.  This is required for proper functionality
-> of the BrcmSTB PCIe controller and possibly some other devices.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
-> 
-> Jim Quinlan (15):
->   PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
->   ahci_brcm: fix use of BCM7216 reset controller
->   dt-bindings: PCI: Add bindings for more Brcmstb chips
->   PCI: brcmstb: Add compatibily of other chips
->   PCI: brcmstb: Add suspend and resume pm_ops
->   PCI: brcmstb: Asserting PERST is different for 7278
->   PCI: brcmstb: Add control of rescal reset
->   of: Include a dev param in of_dma_get_range()
->   device core: Add ability to handle multiple dma offsets
->   dma-direct: Invoke dma offset func if needed
->   arm: dma-mapping: Invoke dma offset func if needed
->   PCI: brcmstb: Set internal memory viewport sizes
->   PCI: brcmstb: Accommodate MSI for older chips
->   PCI: brcmstb: Set bus max burst side by chip type
->   PCI: brcmstb: add compatilbe chips to match list
+> Put a first cut at such a thing out there and see how it goes!  Nothing
+> is preventing you from starting such a project, and it would be most
+> welcome as you have seen.
 
-If you have occasion to post a v2 for other reasons,
+I wish.  I'll float the idea, but don't hold your breath.
 
-s/PCIE_BRCMSTB depends on ARCH_BRCMSTB/Allow PCIE_BRCMSTB on ARCH_BRCMSTB also/
-s/ahci_brcm: fix use of BCM7216 reset controller/ata: ahci_brcm: Fix .../
-s/Add compatibily of other chips/Add bcm7278 register info/
-s/Asserting PERST is different for 7278/Add bcm7278 PERST support/
-s/Set bus max burst side/Set bus max burst size/
-s/add compatilbe chips.*/Add bcm7211, bcm7216, bcm7445, bcm7278 to match list/
-
-Rewrap commit logs to use full 75 character lines (to allow for the 4
-spaces added by git log).
-
-In commit logs, s/This commit// (use imperative mood instead).
-
-In "Accommodate MSI for older chips" commit log, s/commont/common/.
-
->  .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
->  arch/arm/include/asm/dma-mapping.h            |  17 +-
->  drivers/ata/ahci_brcm.c                       |  14 +-
->  drivers/of/address.c                          |  54 ++-
->  drivers/of/device.c                           |   2 +-
->  drivers/of/of_private.h                       |   8 +-
->  drivers/pci/controller/Kconfig                |   4 +-
->  drivers/pci/controller/pcie-brcmstb.c         | 403 +++++++++++++++---
->  include/linux/device.h                        |   9 +-
->  include/linux/dma-direct.h                    |  16 +
->  include/linux/dma-mapping.h                   |  44 ++
->  kernel/dma/Kconfig                            |  12 +
->  12 files changed, 542 insertions(+), 81 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
