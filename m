@@ -2,87 +2,55 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A92C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD041C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 598DD20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:18:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NZ05gz8s"
+	by mail.kernel.org (Postfix) with ESMTP id 79E33207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgETUSk (ORCPT
+        id S1727065AbgETUYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgETUSj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:18:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DC5C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:18:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id cx22so1836131pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:18:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GD7wbiQVI9rDR+L0sEdN/nHd36x0k4vATNQrzzfPzoU=;
-        b=NZ05gz8s6GydpM6eOuzSznetqGRW9eW/02dAMxNfEUCAM4R+pMFoXINk7ro5zVCii9
-         jjfDfQggtDRPOnsgnmOwbScCf7gWYW18dSNk7I2YE2Ow/un4uL71VpEsOYWOQLlUU3lV
-         xNwHfwD85yMZZpH43YizXLDKZaVzttOu0Yp4IXNdNVxaxk4eFnmWmSGXydslh/oebnfg
-         QEb6xgcB518MMvYDug8FuRQ3JAh34QHBEGJizbuoY6Sj4A4nr/MGGkM0Skdw8iqTmD3K
-         cxVwr/XsRe5yVRkEr0v1SQgB4XYpJQNJhqmCw1ya1EAFWgkHmuLkjhgU1mgssMgb/k9O
-         3wew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GD7wbiQVI9rDR+L0sEdN/nHd36x0k4vATNQrzzfPzoU=;
-        b=b6JcScbsWJI/uLkDKhPRVQ1yGunOKeAtis/GDg/3SUcprjXbj8tv88yeUQAJVnOgXf
-         q9Z22HUMhNsVzSfIhSu8NR3dTzCNIeyI73xb4WDu+/pyLTIE6wpNocuSrpRMbs+OP6UK
-         U+5f5+M1hL5I4bai6rQs3tAOi3/FmkFUIwZp/5balUPzU2BrUxgOXBC9KXmM/Qxcchak
-         mMOePvVv7SJu3XAuspBDxhUy8SOZ3WAHnMgqHITnQZ2URbYgebEJu7QTpJTgMghm7epP
-         ee4xHSerelZ+xyWLN079+eY/gHO3etqnVxxwHK1EM+gTBsQn6mSut57RADgFdP/aLtpp
-         AzEA==
-X-Gm-Message-State: AOAM533V8YVCw7RPnlILGpnTtNh/cwi3M34f10pqTdqacOB2ekZJDlGb
-        yR7ULYGFurzjEwtazNZJdF7IDA==
-X-Google-Smtp-Source: ABdhPJxusZNKzaTGl4uzCNSAer9ynGVb3v2uIj/wxTVjbrHKoqcG7zisYx84mtxQ+xz2+LlHEXh4oQ==
-X-Received: by 2002:a17:90a:648c:: with SMTP id h12mr7504923pjj.229.1590005918384;
-        Wed, 20 May 2020 13:18:38 -0700 (PDT)
-Received: from [192.168.86.156] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
-        by smtp.gmail.com with ESMTPSA id h4sm2675419pfo.3.2020.05.20.13.18.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 13:18:37 -0700 (PDT)
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
- data->ctx and data->hctx in blk_mq_alloc_request_hctx
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org
-References: <20200518093155.GB35380@T590>
- <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590>
- <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590>
- <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590>
- <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590>
- <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de>
- <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
- <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
- <87tv0av1gu.fsf@nanos.tec.linutronix.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
-Date:   Wed, 20 May 2020 14:18:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 16:24:42 -0400
+Received: from mga02.intel.com ([134.134.136.20]:13641 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbgETUYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 16:24:42 -0400
+IronPort-SDR: afjfcTGcUMaZ/GXfs8xFl0OeHgtlhx2FY8DNf+Qv2I3bfdYrWdBqyBujYqNRHZUa3t5GTk4wqg
+ mDprX2MvJkQQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 13:24:41 -0700
+IronPort-SDR: 5Pcl5kLFOaYs3NYO7bCucja3dcJ0D3dSdiHsXs6UuzLGjqN8YyM5G0PyPqKLqbM/+2sfaAQpMP
+ NQGrvwULfIIQ==
+X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
+   d="scan'208";a="268388157"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.101.53]) ([10.254.101.53])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 13:24:41 -0700
+Subject: Re: [PATCH V6 0/4] x86/resctrl: Enable user to view and select thread
+ throttling mode
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
+        kuo-lang.tseng@intel.com, ravi.v.shankar@intel.com,
+        mingo@redhat.com, babu.moger@amd.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1589922949.git.reinette.chatre@intel.com>
+ <20200519213516.GF444@zn.tnic>
+ <1d9ee0f0-8078-e8b6-ce66-6c0bf51cb3b4@intel.com>
+ <20200520071109.GA1457@zn.tnic>
+ <5c044d17-e42e-1493-28a5-3ecac043c8f1@intel.com>
+ <20200520183508.GI1457@zn.tnic>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <0e2b37d4-1b43-c666-b8b1-4caeceaf48e0@intel.com>
+Date:   Wed, 20 May 2020 13:24:39 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <87tv0av1gu.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200520183508.GI1457@zn.tnic>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,35 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 1:41 PM, Thomas Gleixner wrote:
-> Jens Axboe <axboe@kernel.dk> writes:
->> On 5/20/20 8:45 AM, Jens Axboe wrote:
->>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
->>> they just break affinity if that CPU goes offline.
->>
->> Just checked, and it works fine for me. If I create an SQPOLL ring with
->> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
->> just appears unbound but runs just fine. When CPU 3 comes online again,
->> the mask appears correct.
+Hi Borislav,
+
+On 5/20/2020 11:35 AM, Borislav Petkov wrote:
+> On Wed, May 20, 2020 at 10:32:02AM -0700, Reinette Chatre wrote:
 > 
-> When exactly during the unplug operation is it unbound?
+>> It seems inappropriate that I have the title of maintainer and not be
+>> able to have patches considered for inclusion during an entire release
+>> cycle.
+> 
+> Well, we try very hard to be fair when looking at patchsets. In your
+> case, I already took a patchset from you this cycle and there are other
+> patchsets waiting for a lot longer than yours - even patchsets from your
+> colleagues at Intel.
+> 
+> So I understand that you think it might be inappropriate but please try
+> to understand it also from our standpoint in that we try to round-robin
+> between everyone as fair as possible.
 
-When the CPU has been fully offlined. I check the affinity mask, it
-reports 0. But it's still being scheduled, and it's processing work.
-Here's an example, PID 420 is the thread in question:
+I understand now. Thank you very much.
 
-[root@archlinux cpu3]# taskset -p 420
-pid 420's current affinity mask: 8
-[root@archlinux cpu3]# echo 0 > online 
-[root@archlinux cpu3]# taskset -p 420
-pid 420's current affinity mask: 0
-[root@archlinux cpu3]# echo 1 > online 
-[root@archlinux cpu3]# taskset -p 420
-pid 420's current affinity mask: 8
+> 
+> So I will try to look at yours in the next days but I cannot promise you
+> anything.
 
-So as far as I can tell, it's working fine for me with the goals
-I have for that kthread.
+Please don't. That would be unfair to everybody waiting longer then me
+as well set a bad precedent.
 
--- 
-Jens Axboe
+Reinette
 
