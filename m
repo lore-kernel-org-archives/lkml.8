@@ -2,25 +2,25 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5537AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA71AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB4C20756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A482320829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgETBVs (ORCPT
+        id S1728391AbgETBVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 21:21:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4817 "EHLO huawei.com"
+        Tue, 19 May 2020 21:21:51 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4818 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726348AbgETBVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 21:21:48 -0400
+        id S1726379AbgETBVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 21:21:49 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E6589CCFBD304388998F;
+        by Forcepoint Email with ESMTP id F0FA2CEF62B92E5BEE14;
         Wed, 20 May 2020 09:21:45 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
@@ -30,11 +30,14 @@ To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
+        GuoJia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 0/2] net: hns3: adds two VLAN feature
-Date:   Wed, 20 May 2020 09:20:11 +0800
-Message-ID: <1589937613-40545-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 2/2] net: hns3: add support for 'QOS' in port based VLAN configuration
+Date:   Wed, 20 May 2020 09:20:13 +0800
+Message-ID: <1589937613-40545-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589937613-40545-1-git-send-email-tanhuazhong@huawei.com>
+References: <1589937613-40545-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -44,24 +47,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds two new VLAN feature.
+From: GuoJia Liao <liaoguojia@huawei.com>
 
-[patch 1] adds a new dynamic VLAN mode.
-[patch 2] adds support for 'QOS' field to PVID.
+This patch adds support for 'QOS' in port based VLAN configuration.
 
-GuoJia Liao (2):
-  net: hns3: adds support for dynamic VLAN mode
-  net: hns3: add support for 'QOS' in port based VLAN configuration
+Signed-off-by: GuoJia Liao <liaoguojia@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 32 ++++++++++++----------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  4 +--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 10 +++----
+ 3 files changed, 24 insertions(+), 22 deletions(-)
 
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   5 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |   3 +
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |   6 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |   2 +
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 151 ++++++++++++++++-----
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  25 +++-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  10 +-
- 7 files changed, 155 insertions(+), 47 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index bdacda4..936e3bc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8546,7 +8546,7 @@ static int hclge_set_vlan_rx_offload_cfg(struct hclge_vport *vport)
+ 
+ static int hclge_vlan_offload_cfg(struct hclge_vport *vport,
+ 				  u16 port_base_vlan_state,
+-				  u16 vlan_tag)
++				  u16 vlan_tag, u8 qos)
+ {
+ 	int ret;
+ 
+@@ -8557,7 +8557,8 @@ static int hclge_vlan_offload_cfg(struct hclge_vport *vport,
+ 	} else {
+ 		vport->txvlan_cfg.accept_tag1 = false;
+ 		vport->txvlan_cfg.insert_tag1_en = true;
+-		vport->txvlan_cfg.default_tag1 = vlan_tag;
++		vport->txvlan_cfg.default_tag1 = (qos << VLAN_PRIO_SHIFT) |
++						 vlan_tag;
+ 	}
+ 
+ 	vport->txvlan_cfg.accept_untag1 = true;
+@@ -8687,13 +8688,15 @@ static int hclge_init_vlan_config(struct hclge_dev *hdev)
+ 
+ 	for (i = 0; i < hdev->num_alloc_vport; i++) {
+ 		u16 vlan_tag;
++		u8 qos;
+ 
+ 		vport = &hdev->vport[i];
+ 		vlan_tag = vport->port_base_vlan_cfg.vlan_info.vlan_tag;
++		qos = vport->port_base_vlan_cfg.vlan_info.qos;
+ 
+ 		ret = hclge_vlan_offload_cfg(vport,
+ 					     vport->port_base_vlan_cfg.state,
+-					     vlan_tag);
++					     vlan_tag, qos);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -8979,7 +8982,8 @@ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
+ 
+ 	old_vlan_info = &vport->port_base_vlan_cfg.vlan_info;
+ 
+-	ret = hclge_vlan_offload_cfg(vport, state, vlan_info->vlan_tag);
++	ret = hclge_vlan_offload_cfg(vport, state, vlan_info->vlan_tag,
++				     vlan_info->qos);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -9029,18 +9033,19 @@ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
+ 
+ static u16 hclge_get_port_base_vlan_state(struct hclge_vport *vport,
+ 					  enum hnae3_port_base_vlan_state state,
+-					  u16 vlan)
++					  u16 vlan, u8 qos)
+ {
+ 	if (state == HNAE3_PORT_BASE_VLAN_DISABLE) {
+-		if (!vlan)
++		if (!vlan && !qos)
+ 			return HNAE3_PORT_BASE_VLAN_NOCHANGE;
+ 
+ 		return HNAE3_PORT_BASE_VLAN_ENABLE;
+ 	} else {
+-		if (!vlan)
++		if (!vlan && !qos)
+ 			return HNAE3_PORT_BASE_VLAN_DISABLE;
+ 
+-		if (vport->port_base_vlan_cfg.vlan_info.vlan_tag == vlan)
++		if (vport->port_base_vlan_cfg.vlan_info.vlan_tag == vlan &&
++		    vport->port_base_vlan_cfg.vlan_info.qos == qos)
+ 			return HNAE3_PORT_BASE_VLAN_NOCHANGE;
+ 
+ 		return HNAE3_PORT_BASE_VLAN_MODIFY;
+@@ -9054,7 +9059,6 @@ static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
+ 	struct hclge_dev *hdev = vport->back;
+ 	struct hclge_vlan_info vlan_info;
+ 	u16 state;
+-	int ret;
+ 
+ 	if (hdev->pdev->revision == 0x20)
+ 		return -EOPNOTSUPP;
+@@ -9071,7 +9075,7 @@ static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
+ 
+ 	state = hclge_get_port_base_vlan_state(vport,
+ 					       vport->port_base_vlan_cfg.state,
+-					       vlan);
++					       vlan, qos);
+ 	if (state == HNAE3_PORT_BASE_VLAN_NOCHANGE)
+ 		return 0;
+ 
+@@ -9083,11 +9087,9 @@ static int hclge_set_vf_vlan_filter(struct hnae3_handle *handle, int vfid,
+ 		return hclge_update_port_base_vlan_cfg(vport, state,
+ 						       &vlan_info);
+ 	} else {
+-		ret = hclge_push_vf_port_base_vlan_info(&hdev->vport[0],
+-							vport->vport_id, state,
+-							vlan, qos,
+-							ntohs(proto));
+-		return ret;
++		return hclge_push_vf_port_base_vlan_info(&hdev->vport[0],
++							 vport->vport_id,
++							 state, &vlan_info);
+ 	}
+ }
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 1a1a88a..2d69f98 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -1026,8 +1026,8 @@ void hclge_restore_vport_vlan_table(struct hclge_vport *vport);
+ int hclge_update_port_base_vlan_cfg(struct hclge_vport *vport, u16 state,
+ 				    struct hclge_vlan_info *vlan_info);
+ int hclge_push_vf_port_base_vlan_info(struct hclge_vport *vport, u8 vfid,
+-				      u16 state, u16 vlan_tag, u16 qos,
+-				      u16 vlan_proto);
++				      u16 state,
++				      struct hclge_vlan_info *vlan_info);
+ void hclge_task_schedule(struct hclge_dev *hdev, unsigned long delay_time);
+ int hclge_query_bd_num_cmd_send(struct hclge_dev *hdev,
+ 				struct hclge_desc *desc);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index 0874ae4..b85c9b9 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -319,17 +319,17 @@ static int hclge_set_vf_mc_mac_addr(struct hclge_vport *vport,
+ }
+ 
+ int hclge_push_vf_port_base_vlan_info(struct hclge_vport *vport, u8 vfid,
+-				      u16 state, u16 vlan_tag, u16 qos,
+-				      u16 vlan_proto)
++				      u16 state,
++				      struct hclge_vlan_info *vlan_info)
+ {
+ #define MSG_DATA_SIZE	8
+ 
+ 	u8 msg_data[MSG_DATA_SIZE];
+ 
+ 	memcpy(&msg_data[0], &state, sizeof(u16));
+-	memcpy(&msg_data[2], &vlan_proto, sizeof(u16));
+-	memcpy(&msg_data[4], &qos, sizeof(u16));
+-	memcpy(&msg_data[6], &vlan_tag, sizeof(u16));
++	memcpy(&msg_data[2], &vlan_info->vlan_proto, sizeof(u16));
++	memcpy(&msg_data[4], &vlan_info->qos, sizeof(u16));
++	memcpy(&msg_data[6], &vlan_info->vlan_tag, sizeof(u16));
+ 
+ 	return hclge_send_mbx_msg(vport, msg_data, sizeof(msg_data),
+ 				  HCLGE_MBX_PUSH_VLAN_INFO, vfid);
 -- 
 2.7.4
 
