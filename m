@@ -2,176 +2,156 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48139C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD671C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28B182065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Eh6SNc8k"
+	by mail.kernel.org (Postfix) with ESMTP id 8DB0520671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589993493;
+	bh=NNmpX8qsqR07aMp56pZuUcOFtIh8+LhgnAJftGVYzEM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zdBAdBs+EwqUiOm6lGM5UFPXSc9pcezW+2wJSaneXHTTYqfexcyKjSezouSAmgLhj
+	 rQPdYTPx9cwKYpopEjMDL/c9MV3BqQRRZ5mwGRH97byQf+3jiyOkRcf76x/6E1qhXo
+	 L0ITYZf2frdPEe7PBIiVhrPkopnmbbnkznkP/2ho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgETQuc (ORCPT
+        id S1727125AbgETQvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:50:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgETQu2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:50:28 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890D4C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:50:27 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id o134so1311122ybg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:50:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dKYd+eEqh94+PPSxeT0mEN4CuPeMB4JjYrAni6yKOek=;
-        b=Eh6SNc8kXSnAsUcJ5NDUp1JxID73klNpgan5mB/uvuYRnEWgar9pgqlkZSuIvpsVcJ
-         5D5oeNsStNFxA5sYJNZ+t216Rv2BDcgEUT+Mhe6/MaxnYjKFV5VEe6GxiBoERmOmBrSG
-         RVtGXez/y2uvR9MXKV3qNOX9QlYr+FXL6PLilyrvR3Ykp4Q2AWMM9PXTjASyVKPeInsW
-         Rs9Ery4sW/GeLu7I76XKp55D0+vk0kEAdXO3YC+5xGkPWviutxFd6lHb9qBEYaHV4dPl
-         vSyLhhI8q5fbkzAwG2N8Uwip8g5oXJfipPY8OlZN9Q6/Wodsd6B81xf5GdR53xHbKpRO
-         qgdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dKYd+eEqh94+PPSxeT0mEN4CuPeMB4JjYrAni6yKOek=;
-        b=Rp4YaLCjC79w2/GDnYe9aWS/j+HdYlQ8DETT1JIyIN9tM+unEvJkOE6qKapXeWppp0
-         amTKjAV0LOkkqrKBryWake5TFFG8/zwqg8xXdq21fQcyINTctfpkj7VsMnYxKV9AsXw+
-         yVE+y6Zxa3CrKKxCc5kdOOsubTRF3wQexWrlQP0TG42kxKY6aPmd5brALZKNGBXZ5uH2
-         NH5E5Jf4yAhQJuFw74c/vfRrUaFIqI5QtF/I+2masZFgqrvkvSwiL+dnqcQVaiKtSFPq
-         8v6fTYihElch/C2eZ1JGKKvsHlKYxiyOhHxvZoHtodXb2eJNED6Shyns9GsU0XJSAtFA
-         VVLA==
-X-Gm-Message-State: AOAM533n5rS52GSlBNa9TsA7JS58+RBbVPiCgYrPZj0kP5xvTx/BsQPJ
-        rNP4fn6VVdNkBcVHUhH7fRJ05lBO0YdnbVzyrgd1HQ==
-X-Google-Smtp-Source: ABdhPJy5M4bW3EQJOtlA1J3fukdU3GsXBm5ahWMZ7f1tynRhLuSFHjlXX7HP519wXpXurP8N9XDEwnsZVT7E1P4g7iM=
-X-Received: by 2002:a25:790e:: with SMTP id u14mr8671529ybc.324.1589993426351;
- Wed, 20 May 2020 09:50:26 -0700 (PDT)
+        Wed, 20 May 2020 12:51:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726824AbgETQvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:51:32 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8AC320873
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589993491;
+        bh=NNmpX8qsqR07aMp56pZuUcOFtIh8+LhgnAJftGVYzEM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xSFef6/9WTIA9gsF7U0oTKLdFFtDT7skpEeFDtg0drWZNmO0ap3cywUZlzeJ4iG+Z
+         8CniZZHwLLd0cY4ibCWb4HYFE+SSSyJClGCSUFmSVx+lpOsPsA9l0fUfh+x8Z0Th/d
+         D4yFlW1VnBscXFJ2AEe3FnBon/D+HmH2IkeM/U18=
+Received: by mail-wr1-f53.google.com with SMTP id e1so3878391wrt.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:51:30 -0700 (PDT)
+X-Gm-Message-State: AOAM5336j88yfYw6CTIz40uXlvuzWOdSX7zIIQH9/Al3ywcOgkWf9iTV
+        zQYZrxkOzPajQ/iGFTxARjr6bjuGWTjMTaFsY72nBA==
+X-Google-Smtp-Source: ABdhPJwXSDXAhEaAEQaJT+UVc4mYYhYzepKhMQ2ehfJYM0DYVk0xMXG0PzV6aEFM/MlrF0qmW9R55uHd0Dy6BOVxm+w=
+X-Received: by 2002:adf:a298:: with SMTP id s24mr4857429wra.184.1589993489259;
+ Wed, 20 May 2020 09:51:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200520072814.128267-1-irogers@google.com> <20200520072814.128267-6-irogers@google.com>
- <20200520134847.GM157452@krava>
-In-Reply-To: <20200520134847.GM157452@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 20 May 2020 09:50:13 -0700
-Message-ID: <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
-Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
+References: <20200515234547.710474468@linutronix.de> <20200515235125.628629605@linutronix.de>
+ <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com>
+ <87ftbv7nsd.fsf@nanos.tec.linutronix.de> <87a7237k3x.fsf@nanos.tec.linutronix.de>
+ <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com>
+ <874ksb7hbg.fsf@nanos.tec.linutronix.de> <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
+ <20200520022353.GN2869@paulmck-ThinkPad-P72> <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
+In-Reply-To: <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 20 May 2020 09:51:17 -0700
+X-Gmail-Original-Message-ID: <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+Message-ID: <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+Subject: Re: [patch V6 12/37] x86/entry: Provide idtentry_entry/exit_cond_rcu()
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 6:49 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Wed, May 20, 2020 at 8:36 AM Andy Lutomirski <luto@kernel.org> wrote:
 >
-> On Wed, May 20, 2020 at 12:28:12AM -0700, Ian Rogers wrote:
->
-> SNIP
->
+> On Tue, May 19, 2020 at 7:23 PM Paul E. McKenney <paulmck@kernel.org> wrote:
 > >
-> > @@ -157,7 +183,7 @@ static int metricgroup__setup_events(struct list_head *groups,
-> >       int i = 0;
-> >       int ret = 0;
-> >       struct egroup *eg;
-> > -     struct evsel *evsel;
-> > +     struct evsel *evsel, *tmp;
-> >       unsigned long *evlist_used;
-> >
-> >       evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
-> > @@ -173,7 +199,8 @@ static int metricgroup__setup_events(struct list_head *groups,
-> >                       ret = -ENOMEM;
-> >                       break;
-> >               }
-> > -             evsel = find_evsel_group(perf_evlist, &eg->pctx, metric_events,
-> > +             evsel = find_evsel_group(perf_evlist, &eg->pctx,
-> > +                                     eg->has_constraint, metric_events,
-> >                                       evlist_used);
-> >               if (!evsel) {
-> >                       pr_debug("Cannot resolve %s: %s\n",
-> > @@ -200,6 +227,12 @@ static int metricgroup__setup_events(struct list_head *groups,
-> >               list_add(&expr->nd, &me->head);
-> >       }
-> >
-> > +     evlist__for_each_entry_safe(perf_evlist, tmp, evsel) {
-> > +             if (!test_bit(evsel->idx, evlist_used)) {
-> > +                     evlist__remove(perf_evlist, evsel);
-> > +                     evsel__delete(evsel);
-> > +             }
->
-> is the groupping still enabled when we merge groups? could part
-> of the metric (events) be now computed in different groups?
+> > On Tue, May 19, 2020 at 05:26:58PM -0700, Andy Lutomirski wrote:
+> > > On Tue, May 19, 2020 at 2:20 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 
-By default the change will take two metrics and allow the shorter
-metric (in terms of number of events) to share the events of the
-longer metric. If the events for the shorter metric aren't in the
-longer metric then the shorter metric must use its own group of
-events. If sharing has occurred then the bitmap is used to work out
-which events and groups are no longer in use.
+First, the patch as you submitted it is Acked-by: Andy Lutomirski
+<luto@kernel.org>.  I think there are cleanups that should happen, but
+I think the patch is correct.
 
-With --metric-no-group then any event can be used for a metric as
-there is no grouping. This is why more events can be eliminated.
+About cleanups, concretely:  I think that everything that calls
+__idtenter_entry() is called in one of a small number of relatively
+sane states:
 
-With --metric-no-merge then the logic to share events between
-different metrics is disabled and every metric is in a group. This
-allows the current behavior to be had.
+1. User mode.  This is easy.
 
-There are some corner cases, such as metrics with constraints (that
-don't group) and duration_time that is never placed into a group.
+2. Kernel, RCU is watching, everything is sane.  We don't actually
+need to do any RCU entry/exit pairs -- we should be okay with just a
+hypothetical RCU tickle (and IRQ tracing, etc).  This variant can
+sleep after the entry part finishes if regs->flags & IF and no one
+turned off preemption.
 
-Partial sharing, with one event in 1 weak event group and 1 in another
-is never performed. Using --metric-no-group allows something similar.
-Given multiplexing, I'd be concerned about accuracy problems if events
-between groups were shared - say for IPC, were you measuring
-instructions and cycles at the same moment?
+3. Kernel, RCU is not watching, system was idle.  This can only be an
+actual interrupt.
 
-> I was wondering if we could merge all the hasmaps into single
-> one before the parse the evlist.. this way we won't need removing
-> later.. but I did not thought this through completely, so it
-> might not work at some point
+So maybe the code can change to:
 
-This could be done in the --metric-no-group case reasonably easily
-like the current hashmap. For groups you'd want something like a set
-of sets of events, but then you'd only be able to share events if the
-sets were the same. A directed acyclic graph could capture the events
-and the sharing relationships, it may be possible to optimize cases
-like {A,B,C}, {A,B,D}, {A,B} so that the small group on the end shares
-events with both the {A,B,C} and {A,B,D} group. This may be good
-follow up work. We could also solve this in the json, for example
-create a "phony" group of {A,B,C,D} that all three metrics share from.
-You could also use --metric-no-group to achieve that sharing now.
+    if (user_mode(regs)) {
+        enter_from_user_mode();
+    } else {
+        if (!__rcu_is_watching()) {
+            /*
+             * If RCU is not watching then the same careful
+             * sequence vs. lockdep and tracing is required.
+             *
+             * This only happens for IRQs that hit the idle loop, and
+             * even that only happens if we aren't using the sane
+             * MWAIT-while-IF=0 mode.
+             */
+            lockdep_hardirqs_off(CALLER_ADDR0);
+            rcu_irq_enter();
+            instrumentation_begin();
+            trace_hardirqs_off_prepare();
+            instrumentation_end();
+            return true;
+        } else {
+            /*
+             * If RCU is watching then the combo function
+             * can be used.
+             */
+            instrumentation_begin();
+            trace_hardirqs_off();
+            rcu_tickle();
+            instrumentation_end();
+        }
+    }
+    return false;
 
-Thanks,
-Ian
+This is exactly what you have except that the cond_rcu part is gone
+and I added rcu_tickle().
 
-> jirka
->
+Paul, the major change here is that if an IRQ hits normal kernel code
+(i.e. code where RCU is watching and we're not in an EQS), the IRQ
+won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
+rcu_tickle() on entry and nothing on exit.  Does that cover all the
+bases?
