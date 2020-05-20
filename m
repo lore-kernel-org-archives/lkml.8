@@ -2,124 +2,157 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6933C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E051C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9892920758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E8520758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="TxfYKVxY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzRhD8IV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgETLUm (ORCPT
+        id S1726729AbgETLWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:20:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
+        Wed, 20 May 2020 07:22:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETLUl (ORCPT
+        with ESMTP id S1726403AbgETLWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:20:41 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0A7C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:20:39 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id yc10so3272657ejb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:20:39 -0700 (PDT)
+        Wed, 20 May 2020 07:22:41 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E79C061A0E;
+        Wed, 20 May 2020 04:22:41 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id f83so3029080qke.13;
+        Wed, 20 May 2020 04:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=56SGhcyK7h3nlixc/WhwZR2DoIL8pNFZvChxJ3qBgro=;
-        b=TxfYKVxYVFfCs8i2Vi9BQbNqxUsBlp737CU0QRWDFGflGGUqQ4KL0DrSCj9f5f8B9A
-         srhor7uAaj568a/aA6w2KN1ZCj78ruiLf0w8AbVcmpl077VvtkSUPqEd5VpkpSCdIUb9
-         Cfjv1GMVvlTf5E8AbNLN3bn55sKNfaVjuvKp4=
+         :cc:content-transfer-encoding;
+        bh=ZjqVhvVauJwxzdubRCxzpwyDgNZsr/jK/zmF2UGqkm0=;
+        b=LzRhD8IVgnmIVQzzoYcQc9SGvryKW9AvjBv+5xt1U5TlXPqkgWZYhhLZ+fDOiIMJVE
+         j8fn5+fABxBNdukYPVM+l0vF16UvWxzpEJBJLKCW56Z4DkC5xa0rvUGkgFzj9G0Agcbl
+         CR4ePEwCrdO65XTKv1Q7qKPo1V5T2jQjs+MOPyTun845of6hg3kQqItmtboNDlREjJcu
+         Z2pKrl+oLt5umJH0Z+pIMp+EXFb7tOaN6BDew0UWwQ+/7bg+moQfUGPSduuzZJPyI5/X
+         2YFdC3nAFQopV7V8BMDEMRy8CAn1JlcOebH4yDfMrImRBq3nMNW49Dcoe93t2TjTRQsi
+         5qvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=56SGhcyK7h3nlixc/WhwZR2DoIL8pNFZvChxJ3qBgro=;
-        b=GKbGqnNlv4Mk4dIlx0dZTe+mdPeqBLEpv/NphoovOJg+Xs2FW61mLMcoVq9Uwf2jKF
-         +ajBxER3Iss+txqCwrLpG0bWguBvwg218o+pjOgUkOkpBBNWuZc55S2jmOmoRvrulN8y
-         7OInItZxYvykOG7zgPFD0tNXAyRbB99Z9ATY+RcuKS40sOFe+AXNdhWfKOqL0Z8gNWLp
-         iDX7P5I2NhVIdQZKEfRjxAmPlGvMhizGXqe92FJp/mmNUtV1yv7S1jkGbFfZmfhmium/
-         zRKFb/b6cgDGH5qc65rp28p58PnA7RHCccHQvz34jcZXqlC3qzzBficU4d8Lnyh8zHna
-         FghA==
-X-Gm-Message-State: AOAM530MugiFI364cyXMzTNhd+7Ukuk8FMORpXoGE3yT6N73faJ9wchG
-        e7l+elv7zMMCQlcA0gvI/GXbzR6n8v+r0DTFQ26xVQ==
-X-Google-Smtp-Source: ABdhPJx+P94dGQ64ppbHjlnXmNryVQv5No+atzEiem400vzryPPIDwWWuPy1i2M+gn6vmeZdZUDvyc08UUJyNWG+QyE=
-X-Received: by 2002:a17:906:1199:: with SMTP id n25mr3543965eja.14.1589973638596;
- Wed, 20 May 2020 04:20:38 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZjqVhvVauJwxzdubRCxzpwyDgNZsr/jK/zmF2UGqkm0=;
+        b=tGKfvQOLbYU/CCvevpp/elZsTM7jW2xKsLaADafhQe+knI3smKvwcOGAaZ+Vm+A4I/
+         VUF5yGRw2wmZ8G+jz6LpMGsbWmPi7M+w7yvwfPBLr0wMTYZC2K1yVBSrEF0pefuHaehF
+         0VmXDY0KIIPqj2xQeI0qGhQrc7tcktsceAhq2P2/9YrsUR+2Z0+gbbgTb7qCCIl69Jbc
+         Wa12BS5zRf/QzTvFKR1162IKOeUZK50fCX8VcsdFQ0gaOaLwot1y1Lr08MH7JTJa1Fun
+         uqNJnq05p2q+nAZneJjjBpvOmmkIAytpzfQLzAB32nmy4tLgxBTazuTFuhcPvL8IfZDW
+         XqIw==
+X-Gm-Message-State: AOAM532jmsvr7fhp83fnG/0ifx+WTD/JtVFX/YK7qkPl8+ForL6i7RsG
+        3LfwpUMPIOJAD2UO8FoFmoxxg82yspwqdbu9AhI=
+X-Google-Smtp-Source: ABdhPJxBdmgJNCR88xlbXPGclNlO2GaIwRkfV+dyapGMbu4Q9RuUthOHvMqPP4yv8y1KdCvdCmqnj7BHtLVZZI62f64=
+X-Received: by 2002:a37:a50d:: with SMTP id o13mr4087174qke.121.1589973760794;
+ Wed, 20 May 2020 04:22:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000b4684e05a2968ca6@google.com> <aa7812b8-60ae-8578-40db-e71ad766b4d3@oracle.com>
- <CAJfpegtVca6H1JPW00OF-7sCwpomMCo=A2qr5K=9uGKEGjEp3w@mail.gmail.com>
- <bb232cfa-5965-42d0-88cf-46d13f7ebda3@www.fastmail.com> <9a56a79a-88ed-9ff4-115e-ec169cba5c0b@oracle.com>
-In-Reply-To: <9a56a79a-88ed-9ff4-115e-ec169cba5c0b@oracle.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 20 May 2020 13:20:27 +0200
-Message-ID: <CAJfpegsNVB12MQ-Jgbb-f=+i3g0Xy52miT3TmUAYL951HVQS_w@mail.gmail.com>
-Subject: Re: kernel BUG at mm/hugetlb.c:LINE!
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Colin Walters <walters@verbum.org>,
-        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm <linux-mm@kvack.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
+References: <1589881301-4143-1-git-send-email-shengjiu.wang@nxp.com>
+ <0866cd8cdb0c22f0b2a6814c4dafa29202aad5f3.camel@pengutronix.de>
+ <CAA+D8APhHvA39wmCayeCsAEKmOJ0n7qOQiT1tZmFHr4+yASgTw@mail.gmail.com> <53258cd99caaf1199036737f8fad6cc097939567.camel@pengutronix.de>
+In-Reply-To: <53258cd99caaf1199036737f8fad6cc097939567.camel@pengutronix.de>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Wed, 20 May 2020 19:22:19 +0800
+Message-ID: <CAA+D8APAMRwtVneqFsuBgAhozmQo3R0AQi0bVdUCQO4Af4xVfw@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl: imx-pcm-dma: Don't request dma channel in probe
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        Takashi Iwai <tiwai@suse.com>, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        sumit.semwal@linaro.org, Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 2:35 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+Hi
+
+On Wed, May 20, 2020 at 5:42 PM Lucas Stach <l.stach@pengutronix.de> wrote:
 >
-> On 5/18/20 4:41 PM, Colin Walters wrote:
+> Am Mittwoch, den 20.05.2020, 16:20 +0800 schrieb Shengjiu Wang:
+> > Hi
 > >
-> > On Tue, May 12, 2020, at 11:04 AM, Miklos Szeredi wrote:
+> > On Tue, May 19, 2020 at 6:04 PM Lucas Stach <l.stach@pengutronix.de> wr=
+ote:
+> > > Am Dienstag, den 19.05.2020, 17:41 +0800 schrieb Shengjiu Wang:
+> > > > There are two requirements that we need to move the request
+> > > > of dma channel from probe to open.
+> > >
+> > > How do you handle -EPROBE_DEFER return code from the channel request =
+if
+> > > you don't do it in probe?
 > >
-> >>> However, in this syzbot test case the 'file' is in an overlayfs filesystem
-> >>> created as follows:
-> >>>
-> >>> mkdir("./file0", 000)                   = 0
-> >>> mount(NULL, "./file0", "hugetlbfs", MS_MANDLOCK|MS_POSIXACL, NULL) = 0
-> >>> chdir("./file0")                        = 0
-> >>> mkdir("./file1", 000)                   = 0
-> >>> mkdir("./bus", 000)                     = 0
-> >>> mkdir("./file0", 000)                   = 0
-> >>> mount("\177ELF\2\1\1", "./bus", "overlay", 0, "lowerdir=./bus,workdir=./file1,u"...) = 0
-> >
-> > Is there any actual valid use case for mounting an overlayfs on top of hugetlbfs?  I can't think of one.  Why isn't the response to this to instead only allow mounting overlayfs on top of basically a set of whitelisted filesystems?
-> >
+> > I use the dma_request_slave_channel or dma_request_channel instead
+> > of dmaengine_pcm_request_chan_of. so there should be not -EPROBE_DEFER
+> > return code.
 >
-> I can not think of a use case.  I'll let Miklos comment on adding whitelist
-> capability to overlayfs.
+> This is a pretty weak argument. The dmaengine device might probe after
+> you try to get the channel. Using a function to request the channel
+> that doesn't allow you to handle probe deferral is IMHO a bug and
+> should be fixed, instead of building even more assumptions on top of
+> it.
+>
 
-I've not heard of overlayfs being used over hugetlbfs.
+I see some driver also request dma channel in open() or hw_params().
+how can they avoid the defer probe issue?
+for example=EF=BC=9A
+sound/arm/pxa2xx-pcm-lib.c
+sound/soc/sprd/sprd-pcm-dma.c
 
-Overlayfs on tmpfs is definitely used, I guess without hugepages.
-But if we'd want to allow tmpfs _without_ hugepages but not tmpfs
-_with_ hugepages, then we can't just whitelist based on filesystem
-type, but need to look at mount options as well.  Which isn't really a
-clean solution either.
+> > > > - When dma device binds with power-domains, the power will
+> > > > be enabled when we request dma channel. If the request of dma
+> > > > channel happen on probe, then the power-domains will be always
+> > > > enabled after kernel boot up,  which is not good for power
+> > > > saving,  so we need to move the request of dma channel to .open();
+> > >
+> > > This is certainly something which could be fixed in the dmaengine
+> > > driver.
+> >
+> > Dma driver always call the pm_runtime_get_sync in
+> > device_alloc_chan_resources, the device_alloc_chan_resources is
+> > called when channel is requested. so power is enabled on channel
+> > request.
+>
+> So why can't you fix the dmaengine driver to do that RPM call at a
+> later time when the channel is actually going to be used? This will
+> allow further power savings with other slave devices than the audio
+> PCM.
+>
+> Regards,
+> Lucas
+>
 
-> IMO - This BUG/report revealed two issues.  First is the BUG by mmap'ing
-> a hugetlbfs file on overlayfs.  The other is that core mmap code will skip
-> any filesystem specific get_unmapped area routine if on a union/overlay.
-> My patch fixes both, but if we go with a whitelist approach and don't allow
-> hugetlbfs I think we still need to address the filesystem specific
-> get_unmapped area issue.  That is easy enough to do by adding a routine to
-> overlayfs which calls the routine for the underlying fs.
+It seems the best place for calling pm_runtime_get_sync is the
+device_alloc_chan_resources, and calling pm_runtime_put_sync
+in the .device_free_chan_resources
 
-I think the two are strongly related:  get_unmapped_area() adjusts the
-address alignment, and the is_file_hugepages() call in
-ksys_mmap_pgoff() adjusts the length alignment.
+For the slave_sg mode, the .device_prep_slave_sg and
+.device_issue_pending  will be called many times after
+.device_alloc_chan_resources. so it is not good to call
+pm_runtime_get_sync in .device_prep_slave_sg or
+.device_issue_pending
 
-Is there any other purpose for which  f_op->get_unmapped_area() is
-used by a filesystem?
-
-Thanks,
-Miklos
+best regards
+wang shengjiu
