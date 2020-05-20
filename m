@@ -2,295 +2,157 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C40C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0672053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C15A2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YXL+VmaW"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nZDn5WqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgETF74 (ORCPT
+        id S1726535AbgETGBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 01:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgETF74 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 01:59:56 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6116BC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:59:55 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id l17so391005ybk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rSUq1ASvXrmsySuLwc+ocfNGiDNTTDIhditLqSS0b5M=;
-        b=YXL+VmaWClVrXTbaEdo21Oj7d3aR6XF9h1lixKBR5U5z7PHi39hzIHeLt3hCO3yJgh
-         Sclk5ufSI/OGXalavGYQaKlYcyrxSp/fKTOQ11SiPNSpn8wjDzZHizNhHWWBXqk+QtFU
-         6Z+RpYFTMbXYJaJpPILef4c+J1NUvFF1D8oZnot2WgmZ1mrjqJPCHChH1H/FOjO51TL7
-         blUfJVPhEX7U2VxXLxMh2R1IQR/SiEB/IkJ3gft/80XtCUCa/nXQt6Ghgqeqa4KquWz2
-         B40IdBW8LnuaommI4aFUieqXisdIyPMc/LgaVlguq5044fUR30aJhH4put4FZuj6SIxa
-         NXgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rSUq1ASvXrmsySuLwc+ocfNGiDNTTDIhditLqSS0b5M=;
-        b=Wh1dACqLR/GXqCfQHtzi4+YgHdcQt7oQlwVxb4HB0MMpl9Bxb2ppAer51lwpg8vPQJ
-         4Dnu+poK3ct1G/FkCOfySelASVd7EPC6DFfH95dkXPYprhqz/Ko45Bu3MsWAfINhctvJ
-         etjIzBJ1Dilalp2TIUMp2ho2D6Rxqzulcmu/s2qdSpSHW9iKFhNZn3PlFNwVMB6XTKFK
-         68qk9y/9zIZ5zYrKVeWoaOZ9OHBRkUWkMKOe7uKPurnJTwoGO96zPiifH5umLGLB/8an
-         IQ+S2TWdndn2vRReucRa53cbSI0ZQ/mvTixaDhAF5n/Gs5Og8ZPAVLLCPLNN0kDYc5f2
-         38Qg==
-X-Gm-Message-State: AOAM530TWAbaJdkrMpA+kN+CzTbNP5ic2HVABpUQcHDFTmzOfR4ZhpIp
-        /p+RrL6FHsQu5snTOjfNJq81RgluTEeHyq2p9Ur64A==
-X-Google-Smtp-Source: ABdhPJzXZDvGC+ku90VSGwg18vg7vrG+q45CHPaFpvVi8uQ+JX4VV/CLXJQjumRkvLM1I8gOgg+sPB5LgfE02M5e4LA=
-X-Received: by 2002:a25:bb42:: with SMTP id b2mr4473340ybk.383.1589954393276;
- Tue, 19 May 2020 22:59:53 -0700 (PDT)
+        Wed, 20 May 2020 02:01:25 -0400
+Received: from mail-db8eur05on2043.outbound.protection.outlook.com ([40.107.20.43]:29665
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726473AbgETGBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:01:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ILq5aEkY67AK5ACMr8VmsO9L2mRIYtLzo0AJyX77IoLoJ7OzBhp9AF9DdmqcPPrjm5VGDl1SZkAdZVi8iyvm3s/+6P13nRcCVoeEfoTS3TTkkwlE35emanlPBtwvMzSlM0A/wamJJU7ywHLqO9ovwihwY1kr02uACKDBMLEeIfAu8U7MFsViIEQ42Isu2ulqje606pWTBSrlk6FTn9hw9Nm4Hno7xZv7F/gw5y10PJMybQWqBai/L/EDPhRH+1lWtoGcwlcQvXY4Dkxr16dwhw619OtjC+mfcGNCJGYMBQ6nhjB1PNPy9gghELKGTdg7HnAM5hyuv4nbo0AO60T3iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4pziITDQvwrvyKHtLnKFlbCGb7/VBRcRhm8W4JqkTpk=;
+ b=V84T1cZd/W1bGlTfSEWfeLH849nZNtNppgZahZa/VF4uBKkyU2WL0go93IfDWdd3RZOABSI+f1SF1HyT/EjHvMG0oNokBrfhIsvhtFZfn59cBglrjICsbhS+tgmeWEzbiJRMt7EqCv69LMryUfbbfdXs0yDnpwSfKsDeL4d+BkZf7+rre89WDOrIsa05eFeXsvV5ABXv/8jZbXbGYK0CFaoY0uL0D9tLmYa/Hi/IeswcSaF4oevn+6F8VyX0gZl2H1dqgShHj8BitfHJr4aJBcUAXEWJSqEaSQybRYwUK48SRNT7fwfutvT66BVlI8IieU+1ihmxsjrRTENRFuUQOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4pziITDQvwrvyKHtLnKFlbCGb7/VBRcRhm8W4JqkTpk=;
+ b=nZDn5WqK5I9LVJiwsnliw6nrWZ1f1Rf7+fgRmK8gbe48bGHKWiPpJ3Dx0QUtxwZTfOUn2+vqwjHC+GY/chWs33tAP5qDiS5SJNqDIaaOApskXf+sT0xd7OLurwPpsI28/fhlLdhsiqbNraxwUKr5BmBwjQP+L9NGer7ppTqHhy4=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2790.eurprd04.prod.outlook.com (2603:10a6:4:97::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Wed, 20 May
+ 2020 06:01:21 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3021.020; Wed, 20 May 2020
+ 06:01:21 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        allison@lohutok.net, info@metux.net, Anson.Huang@nxp.com,
+        leonard.crestez@nxp.com, git@andred.net, abel.vesa@nxp.com,
+        andrew.smirnov@gmail.com, cphealy@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 0/3] ARM: imx: move cpu code to drivers/soc/imx
+Date:   Wed, 20 May 2020 13:51:26 +0800
+Message-Id: <1589953889-30955-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0038.apcprd02.prod.outlook.com
+ (2603:1096:3:18::26) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
 MIME-Version: 1.0
-References: <20200422173615.59436-1-irogers@google.com> <20200520015435.GB32678@kernel.org>
-In-Reply-To: <20200520015435.GB32678@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 19 May 2020 22:59:42 -0700
-Message-ID: <CAP-5=fVLgsQxutNOEmKfCs6W=hx1ABHtVVhhxiA3GpAs9S049Q@mail.gmail.com>
-Subject: Re: [PATCH v3] perf record: add dummy event during system wide synthesis
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR02CA0038.apcprd02.prod.outlook.com (2603:1096:3:18::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.31 via Frontend Transport; Wed, 20 May 2020 06:01:16 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8d579ff5-6ccf-4166-84c5-08d7fc83382e
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2790:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB2790186BE4030DA7FD3B856288B60@DB6PR0402MB2790.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 04097B7F7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FflA5pYAgLtfPqUlyXbWDzTwPK0PlVvQ8iNEm80U/xzHxJ1q84n3m7CPT0FG5KpLgznPjzmbuYst0I0gmCRN5llz8d1nai0lAUSzmJ+Oe6d96dj8hi/Etv5O/gqG7b8oOOoiFAUgyETlyAL2KdJyN+9R+j5iXqdLmCxt00hu4jAITn35hrCLVodv0n2YxENbUYX8jgpyQ8sKbDxLmKeFh2DvpR9cJhbvSRsmhOlPmm+24O02hEer7/bdP9u4nYiGkgCTJLBuIusGL+6rTbs3l9dRiPE12ex/WDr4pvlpGq9C+ykifNNZO6vpIZ+OjmxQV98+N7DBX9gE7Wzt0notOjFwBiyn2O1UbGvq5X2cZnvqKXCWDj+P08X1E6OiXdcfWIO9CT8Ztm/FOZNNvfJQdEh436x55P0st8ubBHMCZSOvs4cAZbQOkzkbo0Wdj774+vAWngxjZVYog6hXFRl5rVLhK7wXOBatHDPP6QhvhlntFpB2xItiQzp/FgX3feRNJLV1s8W1aryE5EyQ3JjWweFeQwJhcOB6PKl7phI4sosN5K411gzYrIOiyMkqvzTPj8Xeuodl0pZpBfZBhqLqrg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(136003)(346002)(39860400002)(7416002)(2906002)(16526019)(186003)(66556008)(6486002)(86362001)(956004)(66476007)(2616005)(66946007)(69590400007)(6666004)(316002)(26005)(5660300002)(4326008)(966005)(8676002)(6512007)(478600001)(9686003)(36756003)(52116002)(6506007)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: G9mR2SAcqKtG0lEtT8MManaEGTk00IbGnDTdBmDCllQbCpx8nsgNjJ7umoIg7vzBeFN2raCdPwuTUN3e7CQpZh0QHgJZ4lfMhutJRIFuzaipyHFGTVXbbkDFcB7lRkxJIDdgJKBG1MHg5myyQjgaI5G5bzCPPBm+2JZzwZtWudSnVdyuFxHXx1uQ0lRk+BB2XI7IC7z0ZsWMXBiDUMvRDaAT2ChFIAcWT4ug+Yum6Xu3obof4Sj2iyNP0uHa9Ia2/I4Kf9jczSxbyiz1kp8sFZONm04xQufUFMi+bAGxS0pBMs4yLOlUDat0pofWbl6HJKu/tPkorgFXxhxSrCKyuj2cTXaF/lmjsm/eAZCdyLrm9/0YTGWsUQaw0Xqu6Gzbn26fjwrXAyhLpFEk1uW4YB69Idn7yRKTLzxXetl1wQYyNofzfqyNQdqI2rNsa18vFHVjKM2y8Sgs0OpWwvbaOr/LvdsfdW2we1tew8gRUxi9n7KebJ7WmtWs5FlqJsLx
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d579ff5-6ccf-4166-84c5-08d7fc83382e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 06:01:21.3750
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KD0HFwofWK2W1riL4GcdqS9zACsEwH5hggMCP/anKOytV9AAtgHXLY6qXu6uP0V0UYxgnt7yQrBuhw2aWyssFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2790
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 6:54 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Wed, Apr 22, 2020 at 10:36:15AM -0700, Ian Rogers escreveu:
-> > During the processing of /proc during event synthesis new processes may
-> > start. Add a dummy event if /proc is to be processed, to capture mmaps
-> > for starting processes. This reuses the existing logic for
-> > initial-delay.
-> >
-> > v3 fixes the attr test of test-record-C0
-> > v2 fixes the dummy event configuration and a branch stack issue.
->
-> Something I noticed only now is that this ends up in the perf.data file,
-> and we don't need it at all there, i.e.
->
->   # perf record -I
->
-> I.e. system wide, asking for registers now ends up with:
->
-> [root@quaco ~]# perf record -I
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 2.855 MB perf.data (4902 samples) ]
-> [root@quaco ~]# perf evlist
-> cycles
-> dummy:HG
-> [root@quaco ~]# perf evlist -v
-> cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|=
-TID|TIME|ID|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1, inherit: 1,=
- freq: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, sample_regs_in=
-tr: 0xff0fff
-> dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq }=
-: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD|REGS_INTR, read_format: ID, =
-inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, sample_id_all: 1, mmap2: 1,=
- comm_exec: 1, ksymbol: 1, bpf_event: 1, sample_regs_intr: 0xff0fff
-> [root@quaco ~]#
->
-> For perf top is ok to reuse the main evlist, as those are not going to
-> hit the disk, but for 'perf record' it pollutes the perf.data file with
-> that dummy event.
->
-> This was a problem introduced with initial-delay, that IIRC predates the
-> side band thread tho, I'll have to think about it, just writing this
-> down to revisit this, as may raise some eyebrows by now being more
-> exposed.
+From: Peng Fan <peng.fan@nxp.com>
 
-Agreed. We've had to adjust some tooling like the protobuf convertor
-because of this:
-https://github.com/google/perf_data_converter/pull/88
+V3:
+ Rebased to latest next tree
+ Resolved the conflicts with vf610 soc patch
 
-Thanks,
-Ian
+V2:
+ Keep i.MX1/2/3/5 cpu type for completness
+ Correct return value in patch 1/3
+ use CONFIG_ARM to guard compile soc-imx.c in patch 3/3
 
-> - Arnaldo
->
-> > Suggested-by: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-record.c             | 19 +++++++---
-> >  tools/perf/tests/attr/system-wide-dummy | 50 +++++++++++++++++++++++++
-> >  tools/perf/tests/attr/test-record-C0    | 12 +++++-
-> >  tools/perf/util/evsel.c                 |  5 ++-
-> >  4 files changed, 78 insertions(+), 8 deletions(-)
-> >  create mode 100644 tools/perf/tests/attr/system-wide-dummy
-> >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 1ab349abe904..8d1e93351298 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -805,19 +805,28 @@ static int record__open(struct record *rec)
-> >       int rc =3D 0;
-> >
-> >       /*
-> > -      * For initial_delay we need to add a dummy event so that we can =
-track
-> > -      * PERF_RECORD_MMAP while we wait for the initial delay to enable=
- the
-> > -      * real events, the ones asked by the user.
-> > +      * For initial_delay or system wide, we need to add a dummy event=
- so
-> > +      * that we can track PERF_RECORD_MMAP to cover the delay of waiti=
-ng or
-> > +      * event synthesis.
-> >        */
-> > -     if (opts->initial_delay) {
-> > +     if (opts->initial_delay || target__has_cpu(&opts->target)) {
-> >               if (perf_evlist__add_dummy(evlist))
-> >                       return -ENOMEM;
-> >
-> > +             /* Disable tracking of mmaps on lead event. */
-> >               pos =3D evlist__first(evlist);
-> >               pos->tracking =3D 0;
-> > +             /* Set up dummy event. */
-> >               pos =3D evlist__last(evlist);
-> >               pos->tracking =3D 1;
-> > -             pos->core.attr.enable_on_exec =3D 1;
-> > +             /*
-> > +              * Enable the dummy event when the process is forked for
-> > +              * initial_delay, immediately for system wide.
-> > +              */
-> > +             if (opts->initial_delay)
-> > +                     pos->core.attr.enable_on_exec =3D 1;
-> > +             else
-> > +                     pos->immediate =3D 1;
-> >       }
-> >
-> >       perf_evlist__config(evlist, opts, &callchain_param);
-> > diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests=
-/attr/system-wide-dummy
-> > new file mode 100644
-> > index 000000000000..eba723cc0d38
-> > --- /dev/null
-> > +++ b/tools/perf/tests/attr/system-wide-dummy
-> > @@ -0,0 +1,50 @@
-> > +# Event added by system-wide or CPU perf-record to handle the race of
-> > +# processes starting while /proc is processed.
-> > +[event]
-> > +fd=3D1
-> > +group_fd=3D-1
-> > +cpu=3D*
-> > +pid=3D-1
-> > +flags=3D8
-> > +type=3D1
-> > +size=3D120
-> > +config=3D9
-> > +sample_period=3D4000
-> > +sample_type=3D455
-> > +read_format=3D4
-> > +# Event will be enabled right away.
-> > +disabled=3D0
-> > +inherit=3D1
-> > +pinned=3D0
-> > +exclusive=3D0
-> > +exclude_user=3D0
-> > +exclude_kernel=3D0
-> > +exclude_hv=3D0
-> > +exclude_idle=3D0
-> > +mmap=3D1
-> > +comm=3D1
-> > +freq=3D1
-> > +inherit_stat=3D0
-> > +enable_on_exec=3D0
-> > +task=3D1
-> > +watermark=3D0
-> > +precise_ip=3D0
-> > +mmap_data=3D0
-> > +sample_id_all=3D1
-> > +exclude_host=3D0
-> > +exclude_guest=3D0
-> > +exclude_callchain_kernel=3D0
-> > +exclude_callchain_user=3D0
-> > +mmap2=3D1
-> > +comm_exec=3D1
-> > +context_switch=3D0
-> > +write_backward=3D0
-> > +namespaces=3D0
-> > +use_clockid=3D0
-> > +wakeup_events=3D0
-> > +bp_type=3D0
-> > +config1=3D0
-> > +config2=3D0
-> > +branch_sample_type=3D0
-> > +sample_regs_user=3D0
-> > +sample_stack_user=3D0
-> > diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/at=
-tr/test-record-C0
-> > index 93818054ae20..317730b906dd 100644
-> > --- a/tools/perf/tests/attr/test-record-C0
-> > +++ b/tools/perf/tests/attr/test-record-C0
-> > @@ -9,6 +9,14 @@ cpu=3D0
-> >  # no enable on exec for CPU attached
-> >  enable_on_exec=3D0
-> >
-> > -# PERF_SAMPLE_IP | PERF_SAMPLE_TID PERF_SAMPLE_TIME | # PERF_SAMPLE_PE=
-RIOD
-> > +# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
-> > +# PERF_SAMPLE_ID | PERF_SAMPLE_PERIOD
-> >  # + PERF_SAMPLE_CPU added by -C 0
-> > -sample_type=3D391
-> > +sample_type=3D455
-> > +
-> > +# Dummy event handles mmaps, comm and task.
-> > +mmap=3D0
-> > +comm=3D0
-> > +task=3D0
-> > +
-> > +[event:system-wide-dummy]
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 6a571d322bb2..ca8f9533d8f9 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1163,11 +1163,14 @@ void perf_evsel__config(struct evsel *evsel, st=
-ruct record_opts *opts,
-> >       }
-> >
-> >       /*
-> > +      * A dummy event never triggers any actual counter and therefore
-> > +      * cannot be used with branch_stack.
-> > +      *
-> >        * For initial_delay, a dummy event is added implicitly.
-> >        * The software event will trigger -EOPNOTSUPP error out,
-> >        * if BRANCH_STACK bit is set.
-> >        */
-> > -     if (opts->initial_delay && is_dummy_event(evsel))
-> > +     if (is_dummy_event(evsel))
-> >               perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
-> >  }
-> >
-> > --
-> > 2.26.2.303.gf8c07b1a785-goog
-> >
->
-> --
->
-> - Arnaldo
+V1:
+https://patchwork.kernel.org/cover/11433689/
+RFC version :
+https://patchwork.kernel.org/cover/11336433/
+
+Nothing changed in v1, just rename to formal patches
+
+Shawn,
+ The original concern has been eliminated in RFC discussion,
+ so this patchset is ready to be in next.
+Thanks.
+
+Follow i.MX8, move the soc device register code to drivers/soc/imx
+to simplify arch/arm/mach-imx/cpu.c
+
+I planned to use similar logic as soc-imx8m.c to restructure soc-imx.c
+and merged the two files into one. But not sure, so still keep
+the logic in cpu.c.
+
+There is one change is the platform devices are not under
+/sys/devices/soc0 after patch 1/4. Actually ARM64 platform
+devices are not under /sys/devices/soc0, such as i.MX8/8M.
+So it should not hurt to let the platform devices under platform dir.
+
+Peng Fan (3):
+  ARM: imx: use device_initcall for imx_soc_device_init
+  ARM: imx: move cpu definitions into a header
+  soc: imx: move cpu code to drivers/soc/imx
+
+ arch/arm/mach-imx/common.h       |   1 -
+ arch/arm/mach-imx/cpu.c          | 175 -----------------------------------
+ arch/arm/mach-imx/mach-imx6q.c   |   8 +-
+ arch/arm/mach-imx/mach-imx6sl.c  |   8 +-
+ arch/arm/mach-imx/mach-imx6sx.c  |   8 +-
+ arch/arm/mach-imx/mach-imx6ul.c  |   8 +-
+ arch/arm/mach-imx/mach-imx7d.c   |   6 --
+ arch/arm/mach-imx/mach-imx7ulp.c |   2 +-
+ arch/arm/mach-imx/mach-vf610.c   |   8 +-
+ arch/arm/mach-imx/mxc.h          |  28 +-----
+ drivers/soc/imx/Makefile         |   3 +
+ drivers/soc/imx/soc-imx.c        | 192 +++++++++++++++++++++++++++++++++++++++
+ include/soc/imx/cpu.h            |  36 ++++++++
+ 13 files changed, 238 insertions(+), 245 deletions(-)
+ create mode 100644 drivers/soc/imx/soc-imx.c
+ create mode 100644 include/soc/imx/cpu.h
+
+-- 
+2.16.4
+
