@@ -2,78 +2,69 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F4720709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:27:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yJq3Ul7d"
+	by mail.kernel.org (Postfix) with ESMTP id D507F20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590003003;
+	bh=L28mxoLEiKKvTNlDautC1Ytl5LwVJQDq1/2fiDMtl64=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=UP2YHzJwX1Cl1t2FCiio33cnOqgsMPsNc0LAuxSRs6UJOnmGFC2f8HnNGLeo5nT+n
+	 A7uDmwvMvVc6jC3plL9+H3GvsqdAfbbjBqQhBFXLgCzKCa0M9iPQ1x3Hqop+XfiiFH
+	 aUAS7N4OWbZ5Byx5Y6ksHCq+Qku5U3BCwe3mmsoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgETT11 (ORCPT
+        id S1726837AbgETTaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:27:27 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41932 "EHLO vps0.lunn.ch"
+        Wed, 20 May 2020 15:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbgETT10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:27:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4rHhSwlt0coVHMURe6/q1fSVBHKApGrHanOZroyRRls=; b=yJq3Ul7dmw24UfEWAAp7TeKPCO
-        EELwjXzfv5c4o0CwVxXIej+jkdnnHCqT+KiLG1fVR2qCgWRhVOvlJWpVZclLWBykY9TcP+pM09qKa
-        y6+ae1+zt8pEBsEiywLrG1G8Und2InNCz8uiuD2S8OU7QN8vGY9aC7OVG+/czQ6Lr+gM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jbUN5-002pxx-0p; Wed, 20 May 2020 21:27:19 +0200
-Date:   Wed, 20 May 2020 21:27:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, hkallweit1@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-Message-ID: <20200520192719.GK652285@lunn.ch>
-References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-4-dmurphy@ti.com>
- <20200520135624.GC652285@lunn.ch>
- <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
- <20200520153631.GH652285@lunn.ch>
- <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
- <20200520164313.GI652285@lunn.ch>
- <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
- <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
- <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
+        id S1726548AbgETTaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:30:02 -0400
+Subject: Re: [GIT PULL] overlayfs fixes for 5.7-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590003002;
+        bh=L28mxoLEiKKvTNlDautC1Ytl5LwVJQDq1/2fiDMtl64=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=bB7C4iekUxPfRxttYqQZmJ3enjc0cKOCSNoHhPx9nN6GoaDA7+O9NiVXyitBQqhIa
+         JiNqpI2Nw2n7zOjBj/eOfSWqA0pMAoA+Rvz32HgCVRL9vDGovr+VEON0mU6xH5yxbe
+         Sxg7RnvidWwkEE1WNgw8T6h9wsjqsDJenX8uL2vM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200520142537.GD13131@miu.piliscsaba.redhat.com>
+References: <20200520142537.GD13131@miu.piliscsaba.redhat.com>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200520142537.GD13131@miu.piliscsaba.redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git
+ tags/ovl-fixes-5.7-rc7
+X-PR-Tracked-Commit-Id: 9aafc1b0187322fa4fd4eb905d0903172237206c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8e2b7f634a851fb711a7e693e00905fc6c05b74b
+Message-Id: <159000300246.7201.15233334499752091112.pr-tracker-bot@kernel.org>
+Date:   Wed, 20 May 2020 19:30:02 +0000
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-unionfs@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan
+The pull request you sent on Wed, 20 May 2020 16:25:37 +0200:
 
-> UGH I think I just got volunteered to do make them common.
+> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-fixes-5.7-rc7
 
-There is code you can copy from PHY drivers. :-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8e2b7f634a851fb711a7e693e00905fc6c05b74b
 
-What would be kind of nice is if the validate was in the core as
-well. Pass a list of possible delays in pS, and it will do a
-phydev_err() if what is in DT does not match one of the listed
-delays. Take a look around at what current drivers do and see if you
-can find a nice abstraction which will work for a few drivers. We
-cannot easily convert existing drivers without breaking DT, but a
-design which works in theory for what we currently have has a good
-chance of working for any new PHY driver.
+Thank you!
 
-     Andrew
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
