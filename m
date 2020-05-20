@@ -2,170 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA314C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70842207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F5820829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:44:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fWIF3URj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgETNoU (ORCPT
+        id S1726954AbgETNob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:44:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51768 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgETNoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:44:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B59DCAC46;
-        Wed, 20 May 2020 13:44:20 +0000 (UTC)
-Message-ID: <4a49e7724e9a12e4f128a5e9ff4181da7af40bd3.camel@suse.de>
-Subject: Re: [PATCH 14/15] PCI: brcmstb: Set bus max burst side by chip type
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+        Wed, 20 May 2020 09:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbgETNoa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:44:30 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468FAC061A0E;
+        Wed, 20 May 2020 06:44:29 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id d1so1317858qvl.6;
+        Wed, 20 May 2020 06:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3vK3nsBFTUox5VtXfjXHT3m8C9Ys2vrzWellcEOT1UA=;
+        b=fWIF3URjdiqbEqnnNsEITEtGMuDoHZJukdB+4gulXXy0hu6od4l6l4n1FWjj+iNu9h
+         M+28gRKWO3EWVw0ALS7pP1nE9rLI5f7pM6eqerSXIR3EpX4ZEikYFY4CHGbCjYpf0G6e
+         vW/qW2TRCfc8wPB2LijF6j8pa18sEw6U5MPlxAZdL4OAymMEdvb3X305E/W5rEa9CqWt
+         KI2o2CoPw6SsOr23dg0XGeN8HVijlmOHndcP8jm9PycsGrpZ8jqEKaWMzu0BurLGIALj
+         PMYW8q2ARjuM7CjHvuxHx9l/kUQayoFK7olj0uELaEY1IWoo/IHhIY77ZHUoQp6ZuoKi
+         pKdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3vK3nsBFTUox5VtXfjXHT3m8C9Ys2vrzWellcEOT1UA=;
+        b=iefnIUUvJjjZAA5pOzddaHumMHUpvwfQNmP3N8c2vY6/P5G7hVyjKgR8fvSECAH5LH
+         RoUfxvSvZ9H2c4Ne7GD7EvS1CM+RR8I+lhgXUqPQNGCWTFWpY5MqJzjjDxNiJrgujFke
+         tFJjt0mu+vyTTKrEJK42k37cIJGpqsqu6PXB5A4/tbvFERT1CT3D4xbTmGOuT2ADHBmV
+         BvhWw9DTCZAv/OQuqBd5/EyDHT6Kl5QlqlWa8XLwm0QPNRD9jo0tqjanhkVHR92Ei31/
+         ySUu6CSl52Rb+u4JcgTvA2VnRHGMiLaFui3DvQwDWZEXE/iED/j9psROsR79ddxZTp4P
+         +99g==
+X-Gm-Message-State: AOAM530f2GOsucYGQvYtY+DIGQVHf8p2KQBHqh9Up2d9MWYPJUe0ENfs
+        vIDLoPq9PgFPM11GE39SOYg=
+X-Google-Smtp-Source: ABdhPJyX9D4tU8jsRgHl5ZmQSrl6CZAtPsiMfgqBGdwxfHZJmZillxmWXIsxInkdJ6RKFMwWzeciZg==
+X-Received: by 2002:a0c:9e53:: with SMTP id z19mr4905737qve.47.1589982268293;
+        Wed, 20 May 2020 06:44:28 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id i5sm2311091qtp.66.2020.05.20.06.44.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 06:44:27 -0700 (PDT)
 Date:   Wed, 20 May 2020 15:44:16 +0200
-In-Reply-To: <20200519203419.12369-15-james.quinlan@broadcom.com>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
-         <20200519203419.12369-15-james.quinlan@broadcom.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-67gf22uKBltY92+BH4yY"
-User-Agent: Evolution 3.36.2 
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200520134416.GA6875@ict14-OptiPlex-980>
+References: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
+ <20200520073125.30808-2-jonathan.albrieux@gmail.com>
+ <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 11:23:18AM +0300, Andy Shevchenko wrote:
+> On Wed, May 20, 2020 at 10:32 AM Jonathan Albrieux
+> <jonathan.albrieux@gmail.com> wrote:
+> 
+> > +maintainers:
+> > +  - can't find a maintainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+> 
+> Alas, you'll never go forward with this.
+> One (easiest way) is to drop this patch completely if you won't be a
+> maintainer of the binding.
+>
 
---=-67gf22uKBltY92+BH4yY
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+That's too bad. How can I be a maintainer of the binding?
 
-On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
->=20
-> The proper value of the parameter SCB_MAX_BURST_SIZE varies
-> per chip.  The 2711 family requires 128B whereas other devices
-> can employ 512.  The assignment is complicated by the fact
-> that the values for this two-bit field have different meanings;
->=20
->   Value   Type_Generic    Type_7278
->=20
->      00       Reserved         128B
->      01           128B         256B
->      10           256B         512B
->      11           512B     Reserved
->=20
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> b/drivers/pci/controller/pcie-brcmstb.c
-> index 7bf945efd71b..0dfa1bbd9764 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -53,7 +53,7 @@
->  #define  PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK		0x1000
->  #define  PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK	0x2000
->  #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
-> -#define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
-> +
->  #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
->  #define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
->  #define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
-> @@ -276,6 +276,7 @@ struct brcm_pcie {
->  	int			num_memc;
->  	u64			memc_size[PCIE_BRCM_MAX_MEMC];
->  	u32			hw_rev;
-> +	const struct of_device_id *of_id;
->  };
-> =20
->  /*
-> @@ -841,7 +842,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	int num_out_wins =3D 0;
->  	u16 nlw, cls, lnksta;
->  	int i, ret, memc;
-> -	u32 tmp, aspm_support;
-> +	u32 tmp, burst, aspm_support;
-> =20
->  	/* Reset the bridge */
->  	brcm_pcie_bridge_sw_init_set(pcie, 1);
-> @@ -857,10 +858,20 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
->  	/* Wait for SerDes to be stable */
->  	usleep_range(100, 200);
-> =20
-> +	/*
-> +	 * SCB_MAX_BURST_SIZE is a two bit field.  For GENERIC chips it
-> +	 * is encoded as 0=3D128, 1=3D256, 2=3D512, 3=3DRsvd, for BCM7278 it
-> +	 * is encoded as 0=3DRsvd, 1=3D128, 2=3D256, 3=3D512.
-> +	 */
-> +	if (strcmp(pcie->of_id->compatible, "brcm,bcm2711-pcie") =3D=3D 0)
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
-Would it make sense to use pcie->type here? I know GENERIC !=3D BCM2711, bu=
-t we
-could define it and avoid adding redundant info in struct brcm_pcie.
-
-Regards,
-Nicolas
-
-> +		burst =3D 0x0; /* 128B */
-> +	else
-> +		burst =3D (pcie->type =3D=3D BCM7278) ? 0x3 : 0x2; /* 512 bytes */
-> +
->  	/* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
->  	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK);
->  	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK);
-> -	u32p_replace_bits(&tmp, PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128,
-> +	u32p_replace_bits(&tmp, burst,
->  			  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK);
->  	writel(tmp, base + PCIE_MISC_MISC_CTRL);
-> =20
-> @@ -1200,6 +1211,7 @@ static int brcm_pcie_probe(struct platform_device *=
-pdev)
->  	pcie->reg_offsets =3D data->offsets;
->  	pcie->reg_field_info =3D data->reg_field_info;
->  	pcie->type =3D data->type;
-> +	pcie->of_id =3D of_id;
-> =20
->  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	pcie->base =3D devm_ioremap_resource(&pdev->dev, res);
-
-
---=-67gf22uKBltY92+BH4yY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7FNDAACgkQlfZmHno8
-x/5Lpwf/eAOpwSlhLavh+bn9QboXcCi13EVtwNjwBha1uical8dcFXceMgfJOJVm
-7x35rF6gyugDp+uKGHdsG9q71U/R4VLiwdGJrsCYYgFa+8RALwAXNqefb3kmyFIt
-GSh8WzRkKUSR4/5Py6TfcgxWJ4ATyzSRwXIJ8KTOPEt73GFPgKyQFmfCthpvD8as
-iVdWqU6HmzlhsNPPgH98RCZ7d4lIAlN4VjhayR7A3QO2mBoQqtX3xyBGKM5Wzu9w
-vfRTV1Wnb3nFeK3ly+iGGCUJG1vWtDIWZFNSNHxmjgqKLiS9Lp7HgrWXAOpUZJ/J
-9dDEJKpEi1M3rhu+p8ItSk3hat7sTg==
-=pmwt
------END PGP SIGNATURE-----
-
---=-67gf22uKBltY92+BH4yY--
-
+Thank you,
+Best regards,
+Jonathan Albrieux
