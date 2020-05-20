@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE71205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635D9207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgETOZg (ORCPT
+        id S1728373AbgETOZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33086 "EHLO
+        Wed, 20 May 2020 10:25:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33108 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727042AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbz-00037W-Ji; Wed, 20 May 2020 15:22:23 +0100
+        id 1jbPby-00037U-D9; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbx-007DVO-6a; Wed, 20 May 2020 15:22:21 +0100
+        id 1jbPbx-007DVF-31; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Andrew Honig" <ahonig@google.com>,
         "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Chen Yucong" <slaoub@gmail.com>
-Date:   Wed, 20 May 2020 15:14:49 +0100
-Message-ID: <lsq.1589984009.998060719@decadent.org.uk>
+        "Jim Mattson" <jmattson@google.com>,
+        "Marios Pomonis" <pomonis@google.com>,
+        "Nick Finco" <nifi@google.com>
+Date:   Wed, 20 May 2020 15:14:47 +0100
+Message-ID: <lsq.1589984009.163041687@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 81/99] kvm: x86: use macros to compute bank MSRs
+Subject: [PATCH 3.16 79/99] KVM: x86: Protect ioapic_write_indirect() from
+ Spectre-v1/L1TF attacks
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,59 +59,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Chen Yucong <slaoub@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 81760dccf8d1fe5b128b58736fe3f56a566133cb upstream.
+commit 670564559ca35b439c8d8861fc399451ddf95137 upstream.
 
-Avoid open coded calculations for bank MSRs by using well-defined
-macros that hide the index of higher bank MSRs.
+This fixes a Spectre-v1/L1TF vulnerability in ioapic_write_indirect().
+This function contains index computations based on the
+(attacker-controlled) IOREGSEL register.
 
-No semantic changes.
+This patch depends on patch
+"KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks".
 
-Signed-off-by: Chen Yucong <slaoub@gmail.com>
+Fixes: 70f93dae32ac ("KVM: Use temporary variable to shorten lines.")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: adjust context]
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kvm/x86.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ virt/kvm/ioapic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1915,7 +1915,7 @@ static int set_msr_mce(struct kvm_vcpu *
- 		break;
- 	default:
- 		if (msr >= MSR_IA32_MC0_CTL &&
--		    msr < MSR_IA32_MC0_CTL + 4 * bank_num) {
-+		    msr < MSR_IA32_MCx_CTL(bank_num)) {
- 			u32 offset = msr - MSR_IA32_MC0_CTL;
- 			/* only 0 or all 1s can be written to IA32_MCi_CTL
- 			 * some Linux kernels though clear bit 10 in bank 4 to
-@@ -2276,7 +2276,7 @@ int kvm_set_msr_common(struct kvm_vcpu *
- 
- 	case MSR_IA32_MCG_CTL:
- 	case MSR_IA32_MCG_STATUS:
--	case MSR_IA32_MC0_CTL ... MSR_IA32_MC0_CTL + 4 * KVM_MAX_MCE_BANKS - 1:
-+	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
- 		return set_msr_mce(vcpu, msr, data);
- 
- 	/* Performance counters are not protected by a CPUID bit,
-@@ -2442,7 +2442,7 @@ static int get_msr_mce(struct kvm_vcpu *
- 		break;
- 	default:
- 		if (msr >= MSR_IA32_MC0_CTL &&
--		    msr < MSR_IA32_MC0_CTL + 4 * bank_num) {
-+		    msr < MSR_IA32_MCx_CTL(bank_num)) {
- 			u32 offset = msr - MSR_IA32_MC0_CTL;
- 			data = vcpu->arch.mce_banks[offset];
- 			break;
-@@ -2628,7 +2628,7 @@ int kvm_get_msr_common(struct kvm_vcpu *
- 	case MSR_IA32_MCG_CAP:
- 	case MSR_IA32_MCG_CTL:
- 	case MSR_IA32_MCG_STATUS:
--	case MSR_IA32_MC0_CTL ... MSR_IA32_MC0_CTL + 4 * KVM_MAX_MCE_BANKS - 1:
-+	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
- 		return get_msr_mce(vcpu, msr_info->index, &msr_info->data);
- 	case MSR_K7_CLK_CTL:
- 		/*
+--- a/virt/kvm/ioapic.c
++++ b/virt/kvm/ioapic.c
+@@ -312,6 +312,7 @@ static void ioapic_write_indirect(struct
+ 		ioapic_debug("change redir index %x val %x\n", index, val);
+ 		if (index >= IOAPIC_NUM_PINS)
+ 			return;
++		index = array_index_nospec(index, IOAPIC_NUM_PINS);
+ 		e = &ioapic->redirtbl[index];
+ 		mask_before = e->fields.mask;
+ 		if (ioapic->ioregsel & 1) {
 
