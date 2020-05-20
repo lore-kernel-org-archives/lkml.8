@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03111C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB35C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC09420758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC2920758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:38:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GyuzwZ3i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cUB/8DCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgETMib (ORCPT
+        id S1727024AbgETMih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:38:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23019 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726224AbgETMi3 (ORCPT
+        Wed, 20 May 2020 08:38:37 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38618 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726224AbgETMig (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:38:29 -0400
+        Wed, 20 May 2020 08:38:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589978307;
+        s=mimecast20190719; t=1589978315;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=YRkP9yrnnteaS5Rww4TgocKUE1QxNtgUdSZQwMB1PeY=;
-        b=GyuzwZ3iQBpH3aEwHZpwd/+H2GpIY+/xGpekmve2M5Ca++Up128Qfd17jF/uUMjFRzpsr1
-        PixG08oXBmLuladlHwQS4ilc4LIb9EaAgGc1A4o7vF42/Q9IdMUkhBA9mkt7nlrSbxxE59
-        8cdRDeDU6EdDoXMPkDsC2QprL2qSuQo=
+        bh=LpPWcWre6erap/QD2kzhcgnROeHj6DcH9s7pJSk+zGI=;
+        b=cUB/8DCdtMakN+YiNzy2S1yPkNNvv+093diOFg4UYrcBp0FRqflCatrXzCifzIKr91mGo+
+        vXRS07zto84O0jJ4FRVfE/2munwMaXM8kLxlEuV01+FZMp43f8aks5RYnOnkr4olsad72Q
+        yzDoR97Nmm2subGoNw+8714r1xMc7kg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-487-03c2jG1JNj2sWbZdAhILSQ-1; Wed, 20 May 2020 08:38:23 -0400
-X-MC-Unique: 03c2jG1JNj2sWbZdAhILSQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-199-Om-U037cN32Ar2lv3zo5WQ-1; Wed, 20 May 2020 08:38:30 -0400
+X-MC-Unique: Om-U037cN32Ar2lv3zo5WQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13211835B42;
-        Wed, 20 May 2020 12:38:22 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16659835B51;
+        Wed, 20 May 2020 12:38:29 +0000 (UTC)
 Received: from krava (unknown [10.40.193.10])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4536E26198;
-        Wed, 20 May 2020 12:38:20 +0000 (UTC)
-Date:   Wed, 20 May 2020 14:38:19 +0200
+        by smtp.corp.redhat.com (Postfix) with SMTP id 485C91010403;
+        Wed, 20 May 2020 12:38:27 +0000 (UTC)
+Date:   Wed, 20 May 2020 14:38:26 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
@@ -54,147 +54,67 @@ Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@redhat.com>,
         Andi Kleen <ak@linux.intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/9] perf stat: introduce --ctl-fd[-ack] options
-Message-ID: <20200520123819.GE157452@krava>
+Subject: Re: [PATCH v3 1/9] perf evlist: introduce control file descriptors
+Message-ID: <20200520123826.GF157452@krava>
 References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
- <6b8f7e1f-f89c-2c96-95ac-2a128b365a81@linux.intel.com>
+ <3a1ed73d-6d11-eeb1-0897-476c5367369d@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6b8f7e1f-f89c-2c96-95ac-2a128b365a81@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <3a1ed73d-6d11-eeb1-0897-476c5367369d@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:03:03AM +0300, Alexey Budankov wrote:
+On Wed, May 13, 2020 at 10:59:00AM +0300, Alexey Budankov wrote:
 > 
-> Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
-> from command line. Extend perf-stat.txt file with --ctl-fd[-ack] options
-> description. Document possible usage model introduced by --ctl-fd[-ack]
-> options by providing example bash shell script.
+> Define and initialize control file descriptors.
 > 
 > Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 > ---
->  tools/perf/Documentation/perf-stat.txt | 40 ++++++++++++++++++++++++++
->  tools/perf/builtin-stat.c              | 10 +++++++
->  tools/perf/util/stat.h                 |  2 ++
->  3 files changed, 52 insertions(+)
+>  tools/perf/util/evlist.c | 3 +++
+>  tools/perf/util/evlist.h | 3 +++
+>  2 files changed, 6 insertions(+)
 > 
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index 3b91b30d7672..7f7a0019fbfc 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -164,6 +164,46 @@ with it.  --append may be used here.  Examples:
->       3>results  perf stat --log-fd 3          -- $cmd
->       3>>results perf stat --log-fd 3 --append -- $cmd
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 2a9de6491700..aa61619fa304 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -63,6 +63,9 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+>  	perf_evlist__set_maps(&evlist->core, cpus, threads);
+>  	evlist->workload.pid = -1;
+>  	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
+> +	evlist->ctl_fd = -1;
+> +	evlist->ctl_fd_ack = -1;
+> +	evlist->ctl_fd_pos = -1;
+>  }
 >  
-> +--ctl-fd::
-> +--ctl-fd-ack::
-> +
-> +Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
-> +'disable': disable events). Optionally send control command completion ('ack') to fd-ack
-> +descriptor to synchronize with the controlling process. Example of bash shell script
-> +to enable and disable events during measurements:
-> +
-> +#!/bin/bash
-> +
-> +ctl_dir=/tmp/
-> +
-> +ctl_fifo=${ctl_dir}perf_ctl.fifo
-> +test -p ${ctl_fifo} && unlink ${ctl_fifo}
-> +mkfifo ${ctl_fifo}
-> +exec {ctl_fd}<>${ctl_fifo}
-> +
-> +ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-> +test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-> +mkfifo ${ctl_ack_fifo}
-> +exec {ctl_fd_ack}<>${ctl_ack_fifo}
-> +
-> +perf stat -D -1 -e cpu-cycles -a -I 1000                \
-> +          --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
-> +          -- sleep 30 &
-> +perf_pid=$!
-> +
-> +sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-> +sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-> +
-> +exec {ctl_fd_ack}>&-
-> +unlink ${ctl_ack_fifo}
-> +
-> +exec {ctl_fd}>&-
-> +unlink ${ctl_fifo}
-> +
-> +wait -n ${perf_pid}
-> +exit $?
-> +
-> +
->  --pre::
->  --post::
->  	Pre and post measurement hooks, e.g.:
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index abea82a1ba24..88055aaf670f 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -187,6 +187,8 @@ static struct perf_stat_config stat_config = {
->  	.metric_only_len	= METRIC_ONLY_LEN,
->  	.walltime_nsecs_stats	= &walltime_nsecs_stats,
->  	.big_num		= true,
-> +	.ctl_fd			= -1,
-> +	.ctl_fd_ack		= -1
->  };
->  
->  static inline void diff_timespec(struct timespec *r, struct timespec *a,
-> @@ -984,6 +986,10 @@ static struct option stat_options[] = {
->  		    "Use with 'percore' event qualifier to show the event "
->  		    "counts of one hardware thread by sum up total hardware "
->  		    "threads of same physical core"),
-> +	OPT_INTEGER(0, "ctl-fd", &stat_config.ctl_fd,
-> +		    "Listen on fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events)"),
-> +	OPT_INTEGER(0, "ctl-fd-ack", &stat_config.ctl_fd_ack,
-> +		    "Send control command completion ('ack') to fd ack descriptor"),
->  	OPT_END()
->  };
->  
-> @@ -2180,6 +2186,8 @@ int cmd_stat(int argc, const char **argv)
->  	signal(SIGALRM, skip_signal);
->  	signal(SIGABRT, skip_signal);
->  
-> +	evlist__initialize_ctlfd(evsel_list, stat_config.ctl_fd, stat_config.ctl_fd_ack);
+>  struct evlist *evlist__new(void)
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index b6f325dfb4d2..62f259d89b41 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -74,6 +74,9 @@ struct evlist {
+>  		pthread_t		th;
+>  		volatile int		done;
+>  	} thread;
+> +	int		ctl_fd;
+> +	int		ctl_fd_ack;
+> +	int		ctl_fd_pos;
 
-please check the return value
+we are using the anonymous structs to keep related
+parts together like for workload and thread
+
+could you use it in there as well?
 
 jirka
 
-> +
->  	status = 0;
->  	for (run_idx = 0; forever || run_idx < stat_config.run_count; run_idx++) {
->  		if (stat_config.run_count != 1 && verbose > 0)
-> @@ -2199,6 +2207,8 @@ int cmd_stat(int argc, const char **argv)
->  	if (!forever && status != -1 && !interval)
->  		print_counters(NULL, argc, argv);
->  
-> +	evlist__finalize_ctlfd(evsel_list);
-> +
->  	if (STAT_RECORD) {
->  		/*
->  		 * We synthesize the kernel mmap record just so that older tools
-> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> index 027b9dcd902f..0b0fa3a2cde2 100644
-> --- a/tools/perf/util/stat.h
-> +++ b/tools/perf/util/stat.h
-> @@ -130,6 +130,8 @@ struct perf_stat_config {
->  	struct perf_cpu_map		*cpus_aggr_map;
->  	u64			*walltime_run;
->  	struct rblist		 metric_events;
-> +	int			 ctl_fd;
-> +	int			 ctl_fd_ack;
 >  };
 >  
->  void update_stats(struct stats *stats, u64 val);
+>  struct evsel_str_handler {
 > -- 
 > 2.24.1
-> 
 > 
 
