@@ -2,148 +2,91 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9D5206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589987274;
-	bh=8VBA9kFdjdfRlKPEK46ZtWpmUq8WEwLqJ2P0szY8vsc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=kxIQ01Ava+2cFCEj11Ca49WNjC3m4x6cjhDdN6HdomEsRTAKFkn4nNjlu8+F/K7nB
-	 bXvhJUmBX710+rwzsQxCO/qDSAQJh95ycRiQdPzoap+8Hv4d1Lrbkho+Z8iDxxnllO
-	 5vAr52/HnbDuziE3iOrNfUCCi9eJtKgPDli+IK5c=
+	by mail.kernel.org (Postfix) with ESMTP id 5DED72054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgETPHy (ORCPT
+        id S1726932AbgETPIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETPHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:07:53 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A08D2054F;
-        Wed, 20 May 2020 15:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589987272;
-        bh=8VBA9kFdjdfRlKPEK46ZtWpmUq8WEwLqJ2P0szY8vsc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=voKh9N8h0YWJaND3rq5MWEC8Rwr72Xt5vuNq4vxv3cM7Rz1qfbpYifGnlVTc3C3NH
-         MzFn2Gm9/+GWRTFQAtI9aWJ3zn3CV3ZGdBlFlx3SOhGxKiDn1SK/zmDBpIgGtlYTZK
-         HB+enmZ/sw8Bh5MCBehK5tFyI5XLFC7AIqKhiD0o=
-Message-ID: <ed3d0ebdeabe53c6cfc0c6fd185dc50f4055a0e6.camel@kernel.org>
-Subject: Re: [PATCH] dns: Apply a default TTL to records obtained from
- getaddrinfo()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     David Howells <dhowells@redhat.com>, me@benboeckel.net,
-        fweimer@redhat.com
-Cc:     linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        keyrings@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 20 May 2020 11:07:50 -0400
-In-Reply-To: <1512927.1589904409@warthog.procyon.org.uk>
-References: <20200519141432.GA2949457@erythro.dev.benboeckel.internal>
-         <20200518155148.GA2595638@erythro.dev.benboeckel.internal>
-         <158981176590.872823.11683683537698750702.stgit@warthog.procyon.org.uk>
-         <1080378.1589895580@warthog.procyon.org.uk>
-         <1512927.1589904409@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Wed, 20 May 2020 11:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETPIV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 11:08:21 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00D5FC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:08:21 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbQJx-0003qg-SS; Wed, 20 May 2020 17:07:50 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 4642B100C99; Wed, 20 May 2020 17:07:49 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V6 23/37] x86/entry: Provide IDTENTRY_SYSVEC
+In-Reply-To: <CALCETrUrNq9+k2--OVXyLbTAOoy9hGoPvMh6Ny3y_nU8vVn8gg@mail.gmail.com>
+References: <20200515234547.710474468@linutronix.de> <20200515235126.724725645@linutronix.de> <CALCETrUrNq9+k2--OVXyLbTAOoy9hGoPvMh6Ny3y_nU8vVn8gg@mail.gmail.com>
+Date:   Wed, 20 May 2020 17:07:49 +0200
+Message-ID: <87sgfu4pbu.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-19 at 17:06 +0100, David Howells wrote:
-> Okay, how about this incremental change, then?  If fixes the typo, only prints
-> the "READ CONFIG" line in verbose mode, filters escape chars in the config
-> file and reduces the expiration time to 5s.
-> 
-> David
-> ---
-> diff --git a/key.dns_resolver.c b/key.dns_resolver.c
-> index c241eda3..7a7ec424 100644
-> --- a/key.dns_resolver.c
-> +++ b/key.dns_resolver.c
-> @@ -52,7 +52,7 @@ key_serial_t key;
->  static int verbose;
->  int debug_mode;
->  unsigned mask = INET_ALL;
-> -unsigned int key_expiry = 10 * 60;
-> +unsigned int key_expiry = 5;
->  
->  
->  /*
-> @@ -109,7 +109,7 @@ void _error(const char *fmt, ...)
->  }
->  
->  /*
-> - * Pring a warning to stderr or the syslog
-> + * Print a warning to stderr or the syslog
->   */
->  void warning(const char *fmt, ...)
->  {
-> @@ -454,7 +454,7 @@ static void read_config(void)
->  	unsigned int line = 0, u;
->  	int n;
->  
-> -	printf("READ CONFIG %s\n", config_file);
-> +	info("READ CONFIG %s", config_file);
->  
->  	f = fopen(config_file, "r");
->  	if (!f) {
-> @@ -514,6 +514,16 @@ static void read_config(void)
->  			v = p = b;
->  			while (*b) {
->  				if (esc) {
-> +					switch (*b) {
-> +					case ' ':
-> +					case '\t':
-> +					case '"':
-> +					case '\'':
-> +					case '\\':
-> +						break;
-> +					default:
-> +						goto invalid_escape_char;
-> +					}
->  					esc = false;
->  					*p++ = *b++;
->  					continue;
-> @@ -563,6 +573,8 @@ static void read_config(void)
->  
->  missing_value:
->  	error("%s:%u: %s: Missing value", config_file, line, k);
-> +invalid_escape_char:
-> +	error("%s:%u: %s: Invalid char in escape", config_file, line, k);
->  post_quote_data:
->  	error("%s:%u: %s: Data after closing quote", config_file, line, k);
->  bad_value:
-> diff --git a/man/key.dns_resolver.conf.5 b/man/key.dns_resolver.conf.5
-> index 03d04049..c944ad55 100644
-> --- a/man/key.dns_resolver.conf.5
-> +++ b/man/key.dns_resolver.conf.5
-> @@ -34,7 +34,7 @@ Available options include:
->  The number of seconds to set as the expiration on a cached record.  This will
->  be overridden if the program manages to retrieve TTL information along with
->  the addresses (if, for example, it accesses the DNS directly).  The default is
-> -600 seconds.  The value must be in the range 1 to INT_MAX.
-> +5 seconds.  The value must be in the range 1 to INT_MAX.
->  .P
->  The file can also include comments beginning with a '#' character unless
->  otherwise suppressed by being inside a quoted value or being escaped with a
-> 
+Andy Lutomirski <luto@kernel.org> writes:
 
-This looks good to me.
+> On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>>
+>> Provide a IDTENTRY variant for system vectors to consolidate the different
+>> mechanisms to emit the ASM stubs for 32 an 64 bit.
+>>
+>> On 64bit this also moves the stack switching from ASM to C code. 32bit will
+>> excute the system vectors w/o stack switching as before. As some of the
+>> system vector handlers require access to pt_regs this requires a new stack
+>> switching macro which can handle an argument.
+>
+> Is that last sentence obsolete?
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Yes.
 
+> Otherwise,
+>
+> Acked-by: Andy Lutomirski <luto@kernel.org>
