@@ -2,321 +2,154 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B23FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E737207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1559A207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:12:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TqVjp535"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgETLLn (ORCPT
+        id S1726938AbgETLMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:11:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48594 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgETLLm (ORCPT
+        Wed, 20 May 2020 07:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53618 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETLMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:11:42 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 75A641C028F; Wed, 20 May 2020 13:11:37 +0200 (CEST)
-Date:   Wed, 20 May 2020 13:11:37 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com
-Subject: next-0519 on thinkpad x60: sound related? window manager crash
-Message-ID: <20200520111136.GA3802@amd>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 20 May 2020 07:12:42 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E86DC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:12:42 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x11so192150plv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=05sWOFK6tuBIdg0teEFyYCPt+cVyW+PqgkCyuRv1w18=;
+        b=TqVjp5354l9g1YsMnmiLHIjXurzKyt9dZu9rMhX+qNabLlTNIE6ll/SK69p9ELSwHb
+         HuIDMQdB8adG6bsECZCVjF6ESjyXInN9zVRWoK7m76v6WmBTs2VR4Ky643jLAM6gh8Q9
+         vJZzAU8MIsFMiG+WKtswEPNgfgeXmkv2k31LT6AXPJobmw8gSC4EGJXHXV/zZLSc7kjQ
+         j9M5acva6zU2GvPjWKZiCWaPnNNwDNV79FzECZ+56c5USFDAg0hizjdw23llsucwhdRY
+         o5Tg2VeRzxBngmGYQOCf9DrCKdUGxO6/Bu5iH1ApiTirZU7ZQ1blBuRj4Wi/anElVBX/
+         BidQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=05sWOFK6tuBIdg0teEFyYCPt+cVyW+PqgkCyuRv1w18=;
+        b=T41ExoBlw1LbajZzgbjl8OwH9hx2e6aUpfvKm6i1ebqfsDRuBvrk4bFcbaaHNOxrn2
+         361oIQCakRMLMCB1TKBw/MsiJUVGaLkp+qrxOeXpcRFmdZ96WJ/deYUugtFRU5qbjraq
+         66d6fc7yrsfn0NBhl025sg4gLjVfsEqacF4RS6L0CPI4QQS8SDxq/YfSFrb3pZXHNxcp
+         gEXkDKdw12/5QzHkuU0Rxu+96UDEPX64BKsRDCw95xeFriqDfWI66Sswtc+Q7fgk0I+j
+         Ksc1oD2y87ArvLsN3J5Bvemvs5/eks3CRDU61gv+Rhh0+dhiYr3gwu2aZ8dn/9WRmxci
+         JpIA==
+X-Gm-Message-State: AOAM531hO4dUX2wlGi8/OmrsPQhit75SqZAHRo4LPQZF27RGS/+a3eix
+        aQFpC6mEJv67ABXHH9Sj+RrH5g==
+X-Google-Smtp-Source: ABdhPJyaLwGf8TIiu+2wsx2Qxt0RIooE9jEihzhPvu8Fjah7GhQsku+h9APnrXOZSyeJeeClHe/oVQ==
+X-Received: by 2002:a17:90a:4d4a:: with SMTP id l10mr4851457pjh.0.1589973161858;
+        Wed, 20 May 2020 04:12:41 -0700 (PDT)
+Received: from localhost.localdomain ([117.252.68.136])
+        by smtp.gmail.com with ESMTPSA id q134sm2044974pfc.143.2020.05.20.04.12.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 May 2020 04:12:40 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        julien.thierry.kdev@gmail.com, dianders@chromium.org,
+        daniel.thompson@linaro.org, jason.wessel@windriver.com,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH v2 0/4] arm64: Introduce new IPI as IPI_CALL_NMI_FUNC
+Date:   Wed, 20 May 2020 16:41:51 +0530
+Message-Id: <1589973115-14757-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With pseudo NMIs support available its possible to configure SGIs to be
+triggered as pseudo NMIs running in NMI context. And kernel features
+such as kgdb relies on NMI support to round up CPUs which are stuck in
+hard lockup state with interrupts disabled.
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch-set adds support for IPI_CALL_NMI_FUNC which can be triggered
+as a pseudo NMI which in turn is leveraged via kgdb to round up CPUs.
 
-Hi!
+After this patch-set we should be able to get a backtrace for a CPU
+stuck in HARDLOCKUP. Have a look at an example below from a testcase run
+on Developerbox:
 
-My window manager stopped responding. I was able to recover machine
-using sysrq-k.
+$ echo HARDLOCKUP > /sys/kernel/debug/provoke-crash/DIRECT
 
-I started writing nice report, when session failed second time. And
-then third time on next attempt.
+# Enter kdb via Magic SysRq
 
-Any ideas?
+[11]kdb> btc
+btc: cpu status: Currently on cpu 10
+Available cpus: 0-7(I), 8, 9(I), 10, 11-23(I)
+<snip>
+Stack traceback for pid 619
+0xffff000871bc9c00      619      618  1    8   R  0xffff000871bca5c0  bash
+CPU: 8 PID: 619 Comm: bash Not tainted 5.7.0-rc6-00762-g3804420 #77
+Hardware name: Socionext SynQuacer E-series DeveloperBox, BIOS build #73 Apr  6 2020
+Call trace:
+ dump_backtrace+0x0/0x198
+ show_stack+0x18/0x28
+ dump_stack+0xb8/0x100
+ kgdb_cpu_enter+0x5c0/0x5f8
+ kgdb_nmicallback+0xa0/0xa8
+ ipi_kgdb_nmicallback+0x24/0x30
+ ipi_handler+0x160/0x1b8
+ handle_percpu_devid_fasteoi_ipi+0x44/0x58
+ generic_handle_irq+0x30/0x48
+ handle_domain_nmi+0x44/0x80
+ gic_handle_irq+0x140/0x2a0
+ el1_irq+0xcc/0x180
+ lkdtm_HARDLOCKUP+0x10/0x18
+ direct_entry+0x124/0x1c0
+ full_proxy_write+0x60/0xb0
+ __vfs_write+0x1c/0x48
+ vfs_write+0xe4/0x1d0
+ ksys_write+0x6c/0xf8
+ __arm64_sys_write+0x1c/0x28
+ el0_svc_common.constprop.0+0x74/0x1f0
+ do_el0_svc+0x24/0x90
+ el0_sync_handler+0x178/0x2b8
+ el0_sync+0x158/0x180
+<snip>
 
-I'll send this out before this locks up...
+Changes since RFC version [1]:
+- Switch to use generic interrupt framework to turn an IPI as NMI.
+- Dependent on Marc's patch-set [2] which turns IPIs into normal
+  interrupts.
+- Addressed misc. comments from Doug on patch #4.
+- Posted kgdb NMI printk() fixup separately which has evolved since
+  to be solved using different approach via changing kgdb interception
+  of printk() in common printk() code (see patch [3]).
 
-Best regards,
-								Pavel
+[1] https://lkml.org/lkml/2020/4/24/328
+[2] https://lkml.org/lkml/2020/5/19/710
+[3] https://lkml.org/lkml/2020/5/20/418
 
-[ 2801.147411] sdhci-pci 0000:15:00.2: Will use DMA mode even though HW doe=
-sn't fully claim to support it.
-[ 2801.187449] sdhci-pci 0000:15:00.2: Will use DMA mode even though HW doe=
-sn't fully claim to support it.
-[ 2801.192260] usb 1-2: new high-speed USB device number 5 using ehci-pci
-[ 2801.240241] sdhci-pci 0000:15:00.2: Will use DMA mode even though HW doe=
-sn't fully claim to support it.
-[ 2801.300663] sdhci-pci 0000:15:00.2: Will use DMA mode even though HW doe=
-sn't fully claim to support it.
-[ 2801.352181] usb 1-2: New USB device found, idVendor=3D0525, idProduct=3D=
-a4a1, bcdDevice=3D 5.07
-[ 2801.352192] usb 1-2: New USB device strings: Mfr=3D1, Product=3D2, Seria=
-lNumber=3D0
-[ 2801.352200] usb 1-2: Product: Ethernet Gadget
-[ 2801.352207] usb 1-2: Manufacturer: Linux 5.7.0-rc4-00046-g6d7c0f75a522 w=
-ith musb-hdrc
-[ 2801.419872] e1000e 0000:02:00.0 eth1: NIC Link is Down
-[ 2801.428760] cdc_ether 1-2:1.0 usb0: register 'cdc_ether' at usb-0000:00:=
-1d.7-2, CDC Ethernet Device, 72:ed:12:23:c9:c2
-[ 2804.020289] wlan0: authenticate with 5c:f4:ab:10:d2:bb
-[ 2804.020451] wlan0: send auth to 5c:f4:ab:10:d2:bb (try 1/3)
-[ 2804.022385] wlan0: authenticated
-[ 2804.024243] wlan0: associate with 5c:f4:ab:10:d2:bb (try 1/3)
-[ 2804.026985] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=3D0x411 st=
-atus=3D0 aid=3D2)
-[ 2804.028961] wlan0: associated
-[ 2874.520955] perf: interrupt took too long (2507 > 2500), lowering kernel=
-=2Eperf_event_max_sample_rate to 79750
-[ 3730.016148] perf: interrupt took too long (3135 > 3133), lowering kernel=
-=2Eperf_event_max_sample_rate to 63750
-[ 4274.984810] BUG: unable to handle page fault for address: f8600000
-[ 4274.984821] #PF: supervisor write access in kernel mode
-[ 4274.984827] #PF: error_code(0x0002) - not-present page
-[ 4274.984833] *pdpt =3D 000000002c0b2001 *pde =3D 0000000000000000=20
-[ 4274.984843] Oops: 0002 [#1] PREEMPT SMP PTI
-[ 4274.984853] CPU: 1 PID: 3351 Comm: marco Not tainted 5.7.0-rc6-next-2020=
-0519+ #115
-[ 4274.984859] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 )=
- 03/31/2011
-[ 4274.984871] EIP: memset+0xb/0x20
-[ 4274.984878] Code: f9 01 72 0b 8a 0e 88 0f 8d b4 26 00 00 00 00 8b 45 f0 =
-83 c4 04 5b 5e 5f 5d c3 8d 74 26 00 90 55 89 e5 57 89 c7 53 89 c3 89 d0 <f3=
-> aa 89 d8 5b 5f 5d c3 cc cc cc cc cc cc cc cc cc cc cc cc cc 89
-[ 4274.984885] EAX: 00000000 EBX: f85fe000 ECX: 0001e000 EDX: 00000000
-[ 4274.984892] ESI: ed158400 EDI: f8600000 EBP: edcc9e6c ESP: edcc9e64
-[ 4274.984898] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
-[ 4274.984905] CR0: 80050033 CR2: f8600000 CR3: 2c114000 CR4: 000006b0
-[ 4274.984910] Call Trace:
-[ 4274.984923]  snd_pcm_hw_params+0x38d/0x400
-[ 4274.984930]  snd_pcm_ioctl+0x187/0xe80
-[ 4274.984940]  ? __fget_files+0x86/0xc0
-[ 4274.984947]  ? __fget_light+0x6b/0x80
-[ 4274.984954]  ? snd_pcm_status_user64+0x90/0x90
-[ 4274.984962]  ksys_ioctl+0x1cd/0x880
-[ 4274.984971]  ? ksys_mmap_pgoff+0x81/0xc0
-[ 4274.984978]  ? fput+0xd/0x10
-[ 4274.984984]  ? ksys_mmap_pgoff+0x8d/0xc0
-[ 4274.984991]  __ia32_sys_ioctl+0x10/0x12
-[ 4274.985000]  do_int80_syscall_32+0x3c/0x100
-[ 4274.985010]  entry_INT80_32+0x116/0x116
-[ 4274.985016] EIP: 0xb7f17092
-[ 4274.985023] Code: 00 00 00 e9 90 ff ff ff ff a3 24 00 00 00 68 30 00 00 =
-00 e9 80 ff ff ff ff a3 e8 ff ff ff 66 90 00 00 00 00 00 00 00 00 cd 80 <c3=
-> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-[ 4274.985030] EAX: ffffffda EBX: 00000011 ECX: c25c4111 EDX: bf8d5280
-[ 4274.985036] ESI: 08250880 EDI: bf8d5280 EBP: 082a4150 ESP: bf8d50a4
-[ 4274.985042] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00200292
-[ 4274.985051]  ? nmi+0xcc/0x2bc
-[ 4274.985055] Modules linked in:
-[ 4274.985063] CR2: 00000000f8600000
-[ 4274.985072] ---[ end trace 61b0852711d6de1d ]---
-[ 4274.985079] EIP: memset+0xb/0x20
-[ 4274.985086] Code: f9 01 72 0b 8a 0e 88 0f 8d b4 26 00 00 00 00 8b 45 f0 =
-83 c4 04 5b 5e 5f 5d c3 8d 74 26 00 90 55 89 e5 57 89 c7 53 89 c3 89 d0 <f3=
-> aa 89 d8 5b 5f 5d c3 cc cc cc cc cc cc cc cc cc cc cc cc cc 89
-[ 4274.985092] EAX: 00000000 EBX: f85fe000 ECX: 0001e000 EDX: 00000000
-[ 4274.985099] ESI: ed158400 EDI: f8600000 EBP: edcc9e6c ESP: edcc9e64
-[ 4274.985105] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00210246
-[ 4274.985112] CR0: 80050033 CR2: f8600000 CR3: 2c114000 CR4: 000006b0
-[ 4337.396551] sysrq: SAK
-[ 4337.397010] tty tty7: SAK: killed process 2963 (Xorg): by session
-[ 4337.397282] tty tty7: SAK: killed process 2963 (Xorg): by controlling tty
-[ 4337.397621] tty tty7: SAK: killed process 3484 (console-kit-dae): by fd#9
-[ 4337.397934] tty tty7: SAK: killed process 3485 (console-kit-dae): by fd#9
-[ 4337.397940] tty tty7: SAK: killed process 3486 (console-kit-dae): by fd#9
-[ 4337.397945] tty tty7: SAK: killed process 3487 (console-kit-dae): by fd#9
-[ 4337.397951] tty tty7: SAK: killed process 3488 (console-kit-dae): by fd#9
-[ 4337.397956] tty tty7: SAK: killed process 3489 (console-kit-dae): by fd#9
-[ 4337.397961] tty tty7: SAK: killed process 3490 (console-kit-dae): by fd#9
-[ 4337.397967] tty tty7: SAK: killed process 3491 (console-kit-dae): by fd#9
-[ 4337.397972] tty tty7: SAK: killed process 3492 (console-kit-dae): by fd#9
-[ 4337.397978] tty tty7: SAK: killed process 3493 (console-kit-dae): by fd#9
-[ 4337.397983] tty tty7: SAK: killed process 3494 (console-kit-dae): by fd#9
-[ 4337.397989] tty tty7: SAK: killed process 3495 (console-kit-dae): by fd#9
-[ 4337.397994] tty tty7: SAK: killed process 3496 (console-kit-dae): by fd#9
-[ 4337.397999] tty tty7: SAK: killed process 3497 (console-kit-dae): by fd#9
-[ 4337.398005] tty tty7: SAK: killed process 3498 (console-kit-dae): by fd#9
-[ 4337.398010] tty tty7: SAK: killed process 3499 (console-kit-dae): by fd#9
-[ 4337.398015] tty tty7: SAK: killed process 3500 (console-kit-dae): by fd#9
-[ 4337.398021] tty tty7: SAK: killed process 3501 (console-kit-dae): by fd#9
-[ 4337.398026] tty tty7: SAK: killed process 3502 (console-kit-dae): by fd#9
-[ 4337.398032] tty tty7: SAK: killed process 3503 (console-kit-dae): by fd#9
-[ 4337.398037] tty tty7: SAK: killed process 3504 (console-kit-dae): by fd#9
-[ 4337.398042] tty tty7: SAK: killed process 3505 (console-kit-dae): by fd#9
-[ 4337.398048] tty tty7: SAK: killed process 3506 (console-kit-dae): by fd#9
-[ 4337.398053] tty tty7: SAK: killed process 3507 (console-kit-dae): by fd#9
-[ 4337.398059] tty tty7: SAK: killed process 3508 (console-kit-dae): by fd#9
-[ 4337.398064] tty tty7: SAK: killed process 3509 (console-kit-dae): by fd#9
-[ 4337.398070] tty tty7: SAK: killed process 3510 (console-kit-dae): by fd#9
-[ 4337.398075] tty tty7: SAK: killed process 3511 (console-kit-dae): by fd#9
-[ 4337.398080] tty tty7: SAK: killed process 3512 (console-kit-dae): by fd#9
-[ 4337.398086] tty tty7: SAK: killed process 3513 (console-kit-dae): by fd#9
-[ 4337.398091] tty tty7: SAK: killed process 3514 (console-kit-dae): by fd#9
-[ 4337.398097] tty tty7: SAK: killed process 3515 (console-kit-dae): by fd#9
-[ 4337.398102] tty tty7: SAK: killed process 3516 (console-kit-dae): by fd#9
-[ 4337.398107] tty tty7: SAK: killed process 3517 (console-kit-dae): by fd#9
-[ 4337.398113] tty tty7: SAK: killed process 3518 (console-kit-dae): by fd#9
-[ 4337.398118] tty tty7: SAK: killed process 3519 (console-kit-dae): by fd#9
-[ 4337.398124] tty tty7: SAK: killed process 3520 (console-kit-dae): by fd#9
-[ 4337.398129] tty tty7: SAK: killed process 3521 (console-kit-dae): by fd#9
-[ 4337.398135] tty tty7: SAK: killed process 3522 (console-kit-dae): by fd#9
-[ 4337.398141] tty tty7: SAK: killed process 3523 (console-kit-dae): by fd#9
-[ 4337.398146] tty tty7: SAK: killed process 3524 (console-kit-dae): by fd#9
-[ 4337.398151] tty tty7: SAK: killed process 3525 (console-kit-dae): by fd#9
-[ 4337.398157] tty tty7: SAK: killed process 3526 (console-kit-dae): by fd#9
-[ 4337.398162] tty tty7: SAK: killed process 3527 (console-kit-dae): by fd#9
-[ 4337.398168] tty tty7: SAK: killed process 3528 (console-kit-dae): by fd#9
-[ 4337.398173] tty tty7: SAK: killed process 3529 (console-kit-dae): by fd#9
-[ 4337.398178] tty tty7: SAK: killed process 3530 (console-kit-dae): by fd#9
-[ 4337.398184] tty tty7: SAK: killed process 3531 (console-kit-dae): by fd#9
-[ 4337.398189] tty tty7: SAK: killed process 3532 (console-kit-dae): by fd#9
-[ 4337.398194] tty tty7: SAK: killed process 3533 (console-kit-dae): by fd#9
-[ 4337.398200] tty tty7: SAK: killed process 3534 (console-kit-dae): by fd#9
-[ 4337.398205] tty tty7: SAK: killed process 3535 (console-kit-dae): by fd#9
-[ 4337.398210] tty tty7: SAK: killed process 3536 (console-kit-dae): by fd#9
-[ 4337.398216] tty tty7: SAK: killed process 3537 (console-kit-dae): by fd#9
-[ 4337.398221] tty tty7: SAK: killed process 3538 (console-kit-dae): by fd#9
-[ 4337.398227] tty tty7: SAK: killed process 3539 (console-kit-dae): by fd#9
-[ 4337.398232] tty tty7: SAK: killed process 3540 (console-kit-dae): by fd#9
-[ 4337.398237] tty tty7: SAK: killed process 3541 (console-kit-dae): by fd#9
-[ 4337.398243] tty tty7: SAK: killed process 3542 (console-kit-dae): by fd#9
-[ 4337.398248] tty tty7: SAK: killed process 3543 (console-kit-dae): by fd#9
-[ 4337.398253] tty tty7: SAK: killed process 3544 (console-kit-dae): by fd#9
-[ 4337.398260] tty tty7: SAK: killed process 3545 (console-kit-dae): by fd#9
-[ 4337.398265] tty tty7: SAK: killed process 3546 (console-kit-dae): by fd#9
-[ 4337.398270] tty tty7: SAK: killed process 3548 (gmain): by fd#9
-[ 4337.398276] tty tty7: SAK: killed process 3549 (gdbus): by fd#9
-[ 4337.743402] wlan0: deauthenticating from 5c:f4:ab:10:d2:bb by local choi=
-ce (Reason: 3=3DDEAUTH_LEAVING)
-[ 4349.750345] traps: clock-applet[7160] trap int3 ip:b71bafc0 sp:bffdd3b0 =
-error:0 in libglib-2.0.so.0.5000.3[b716e000+12a000]
-[ 4349.751834] traps: mateweather-app[7164] trap int3 ip:b729ffc0 sp:bfc45b=
-f0 error:0 in libglib-2.0.so.0.5000.3[b7253000+12a000]
-[ 4352.181317] wlan0: authenticate with 5c:f4:ab:10:d2:bb
-[ 4352.183330] wlan0: send auth to 5c:f4:ab:10:d2:bb (try 1/3)
-[ 4352.187927] wlan0: authenticated
-[ 4352.192203] wlan0: associate with 5c:f4:ab:10:d2:bb (try 1/3)
-[ 4352.194932] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=3D0x411 st=
-atus=3D0 aid=3D2)
-[ 4352.199395] wlan0: associated
-[ 4688.523006] sysrq: SAK
-[ 4688.523318] tty tty7: SAK: killed process 6791 (Xorg): by session
-[ 4688.523683] tty tty7: SAK: killed process 6791 (Xorg): by controlling tty
-[ 4688.523930] tty tty7: SAK: killed process 7017 (console-kit-dae): by fd#9
-[ 4688.524330] tty tty7: SAK: killed process 7018 (console-kit-dae): by fd#9
-[ 4688.524337] tty tty7: SAK: killed process 7019 (console-kit-dae): by fd#9
-[ 4688.524342] tty tty7: SAK: killed process 7020 (console-kit-dae): by fd#9
-[ 4688.524347] tty tty7: SAK: killed process 7021 (console-kit-dae): by fd#9
-[ 4688.524353] tty tty7: SAK: killed process 7022 (console-kit-dae): by fd#9
-[ 4688.524358] tty tty7: SAK: killed process 7023 (console-kit-dae): by fd#9
-[ 4688.524363] tty tty7: SAK: killed process 7024 (console-kit-dae): by fd#9
-[ 4688.524369] tty tty7: SAK: killed process 7025 (console-kit-dae): by fd#9
-[ 4688.524374] tty tty7: SAK: killed process 7026 (console-kit-dae): by fd#9
-[ 4688.524380] tty tty7: SAK: killed process 7027 (console-kit-dae): by fd#9
-[ 4688.524385] tty tty7: SAK: killed process 7028 (console-kit-dae): by fd#9
-[ 4688.524391] tty tty7: SAK: killed process 7029 (console-kit-dae): by fd#9
-[ 4688.524396] tty tty7: SAK: killed process 7030 (console-kit-dae): by fd#9
-[ 4688.524402] tty tty7: SAK: killed process 7031 (console-kit-dae): by fd#9
-[ 4688.524407] tty tty7: SAK: killed process 7032 (console-kit-dae): by fd#9
-[ 4688.524412] tty tty7: SAK: killed process 7033 (console-kit-dae): by fd#9
-[ 4688.524419] tty tty7: SAK: killed process 7034 (console-kit-dae): by fd#9
-[ 4688.524424] tty tty7: SAK: killed process 7035 (console-kit-dae): by fd#9
-[ 4688.524429] tty tty7: SAK: killed process 7036 (console-kit-dae): by fd#9
-[ 4688.524435] tty tty7: SAK: killed process 7037 (console-kit-dae): by fd#9
-[ 4688.524440] tty tty7: SAK: killed process 7038 (console-kit-dae): by fd#9
-[ 4688.524446] tty tty7: SAK: killed process 7039 (console-kit-dae): by fd#9
-[ 4688.524451] tty tty7: SAK: killed process 7040 (console-kit-dae): by fd#9
-[ 4688.524456] tty tty7: SAK: killed process 7041 (console-kit-dae): by fd#9
-[ 4688.524462] tty tty7: SAK: killed process 7042 (console-kit-dae): by fd#9
-[ 4688.524467] tty tty7: SAK: killed process 7043 (console-kit-dae): by fd#9
-[ 4688.524473] tty tty7: SAK: killed process 7044 (console-kit-dae): by fd#9
-[ 4688.524478] tty tty7: SAK: killed process 7045 (console-kit-dae): by fd#9
-[ 4688.524483] tty tty7: SAK: killed process 7046 (console-kit-dae): by fd#9
-[ 4688.524489] tty tty7: SAK: killed process 7047 (console-kit-dae): by fd#9
-[ 4688.524494] tty tty7: SAK: killed process 7048 (console-kit-dae): by fd#9
-[ 4688.524500] tty tty7: SAK: killed process 7049 (console-kit-dae): by fd#9
-[ 4688.524505] tty tty7: SAK: killed process 7050 (console-kit-dae): by fd#9
-[ 4688.524511] tty tty7: SAK: killed process 7051 (console-kit-dae): by fd#9
-[ 4688.524516] tty tty7: SAK: killed process 7052 (console-kit-dae): by fd#9
-[ 4688.524521] tty tty7: SAK: killed process 7053 (console-kit-dae): by fd#9
-[ 4688.524527] tty tty7: SAK: killed process 7054 (console-kit-dae): by fd#9
-[ 4688.524532] tty tty7: SAK: killed process 7055 (console-kit-dae): by fd#9
-[ 4688.524538] tty tty7: SAK: killed process 7056 (console-kit-dae): by fd#9
-[ 4688.524543] tty tty7: SAK: killed process 7057 (console-kit-dae): by fd#9
-[ 4688.524549] tty tty7: SAK: killed process 7058 (console-kit-dae): by fd#9
-[ 4688.524554] tty tty7: SAK: killed process 7059 (console-kit-dae): by fd#9
-[ 4688.524560] tty tty7: SAK: killed process 7060 (console-kit-dae): by fd#9
-[ 4688.524565] tty tty7: SAK: killed process 7061 (console-kit-dae): by fd#9
-[ 4688.524570] tty tty7: SAK: killed process 7062 (console-kit-dae): by fd#9
-[ 4688.524576] tty tty7: SAK: killed process 7063 (console-kit-dae): by fd#9
-[ 4688.524581] tty tty7: SAK: killed process 7064 (console-kit-dae): by fd#9
-[ 4688.524587] tty tty7: SAK: killed process 7065 (console-kit-dae): by fd#9
-[ 4688.524593] tty tty7: SAK: killed process 7066 (console-kit-dae): by fd#9
-[ 4688.524598] tty tty7: SAK: killed process 7067 (console-kit-dae): by fd#9
-[ 4688.524603] tty tty7: SAK: killed process 7068 (console-kit-dae): by fd#9
-[ 4688.524609] tty tty7: SAK: killed process 7069 (console-kit-dae): by fd#9
-[ 4688.524614] tty tty7: SAK: killed process 7070 (console-kit-dae): by fd#9
-[ 4688.524620] tty tty7: SAK: killed process 7071 (console-kit-dae): by fd#9
-[ 4688.524625] tty tty7: SAK: killed process 7072 (console-kit-dae): by fd#9
-[ 4688.524631] tty tty7: SAK: killed process 7073 (console-kit-dae): by fd#9
-[ 4688.524636] tty tty7: SAK: killed process 7074 (console-kit-dae): by fd#9
-[ 4688.524642] tty tty7: SAK: killed process 7075 (console-kit-dae): by fd#9
-[ 4688.524648] tty tty7: SAK: killed process 7076 (console-kit-dae): by fd#9
-[ 4688.524653] tty tty7: SAK: killed process 7077 (console-kit-dae): by fd#9
-[ 4688.524659] tty tty7: SAK: killed process 7078 (console-kit-dae): by fd#9
-[ 4688.524664] tty tty7: SAK: killed process 7079 (console-kit-dae): by fd#9
-[ 4688.524670] tty tty7: SAK: killed process 7083 (gmain): by fd#9
-[ 4688.524675] tty tty7: SAK: killed process 7085 (gdbus): by fd#9
-[ 4688.780517] wlan0: deauthenticating from 5c:f4:ab:10:d2:bb by local choi=
-ce (Reason: 3=3DDEAUTH_LEAVING)
-[ 4698.601308] traps: clock-applet[7813] trap int3 ip:b71e9fc0 sp:bf901050 =
-error:0 in libglib-2.0.so.0.5000.3[b719d000+12a000]
-[ 4698.676549] traps: mateweather-app[7814] trap int3 ip:b7260fc0 sp:bfcfb9=
-d0 error:0 in libglib-2.0.so.0.5000.3[b7214000+12a000]
-[ 4700.456620] wlan0: authenticate with 5c:f4:ab:10:d2:bb
-[ 4700.456710] wlan0: send auth to 5c:f4:ab:10:d2:bb (try 1/3)
-[ 4700.459606] wlan0: authenticated
-[ 4700.460449] wlan0: associate with 5c:f4:ab:10:d2:bb (try 1/3)
-[ 4700.463153] wlan0: RX AssocResp from 5c:f4:ab:10:d2:bb (capab=3D0x411 st=
-atus=3D0 aid=3D2)
-[ 4700.465007] wlan0: associated
+Sumit Garg (4):
+  arm64: smp: Introduce a new IPI as IPI_CALL_NMI_FUNC
+  irqchip/gic-v3: Enable support for SGIs to act as NMIs
+  arm64: smp: Setup IPI_CALL_NMI_FUNC as a pseudo NMI
+  arm64: kgdb: Round up cpus using IPI_CALL_NMI_FUNC
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+ arch/arm64/include/asm/hardirq.h |  2 +-
+ arch/arm64/include/asm/kgdb.h    |  8 +++++++
+ arch/arm64/include/asm/smp.h     |  1 +
+ arch/arm64/kernel/kgdb.c         | 21 +++++++++++++++++
+ arch/arm64/kernel/smp.c          | 49 ++++++++++++++++++++++++++++++++--------
+ drivers/irqchip/irq-gic-v3.c     | 13 +++++++++--
+ 6 files changed, 81 insertions(+), 13 deletions(-)
 
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7FEGgACgkQMOfwapXb+vIs8gCgiH64NadMFT0rmNF2jTGsurlx
-VCQAmQG8Jtbh4YzjmyxQjqfSgGemqKpI
-=Vqp4
------END PGP SIGNATURE-----
-
---C7zPtVaVf+AK4Oqc--
