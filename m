@@ -2,216 +2,160 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7866C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9380520884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 912BE20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="maeJMRB/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vKa2Btqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgETWmU (ORCPT
+        id S1728624AbgETWnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
+        Wed, 20 May 2020 18:43:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbgETWmQ (ORCPT
+        with ESMTP id S1728566AbgETWnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:42:16 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A742DC08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:42:15 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id d10so382091ybk.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:42:15 -0700 (PDT)
+        Wed, 20 May 2020 18:43:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62ED7C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:43:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q16so1976208plr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:43:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dvtn9Vcw9Mu98E89DI4uU9zUHcPKNAC6K0uYrY5V7wY=;
-        b=maeJMRB/Bw0/93huxTAw8NYf3nSth3kkbZ9jMF+IJqT2fe0A1xTTw4sEh4NoG95aLe
-         Po+q2bJp4eS3oJEc2sXJ28TdPUqHJomesT1sCV/yvkD5m2S/y+tyufRNDIthIIJSW7A7
-         4R74ipSexjHgkb5kBTwWB0n//Uv7rtfY+XcPhEdVvWr6PMUKImP+vDaym8neM/m/akuJ
-         x/ZIZragkSbzTAAi7cgYW+o7RWmwH7edNLhOggQ0iO1loGe/bCbX128N/G5Fp73Gojzp
-         4bQjoHC+yDjmPHbFXbQs4Rn9HfWdBHyr/2fLKdDeBB7OWbY00I7QzxbFcrtG1pesDBJG
-         jWXA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yMGpmOi06kg2NChC86QhG6ArrmXyNvKLzVNTDjcsEps=;
+        b=vKa2BtqrwpJ2OIAQQiMoagOexaRtHBqLXqhqej/7l3qmBBYVeoWMZTcIVYtRZx0OZU
+         dIwu56erl+1x9/ORSBOK0HHu7b6vCMX/SosRtSHNiZ49Czx6qo9aaemFyPqsU42NAwSE
+         RkQef1RkljNxjemjRFk9u5xuP5zY2a6nrOOdRBNkxony0DK61xYrA1lTjjp0DbmOK8vd
+         IrnxRt0iU05o2gvTZkg7yHTiYTcSutL10Rt7vBm0VgWtuJS3tInaFolESh/nbgjgAo3q
+         T2JN3mGN5CFn370kCWp+Ig8YQN/JorJLte/+gwRZ4JyXyWXsehdJZO9q5U+BJKJVZv7i
+         JHHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dvtn9Vcw9Mu98E89DI4uU9zUHcPKNAC6K0uYrY5V7wY=;
-        b=P701173ENgb03QjRhfQXnV8sD7+57/PIvg1GLUnMfs8HLIIr//ii7BsvT6IsnnLoxM
-         ya54jjrO4xDWzfeFFmHOAePYcyvkTCT9tHbcGrapx4NFtzNmGIFd+y86kwlxUo5vEy87
-         kOKRVuC1UZj9W+xpDrF1NLkLJGuDq+iYSxxHQNaZwaqeLMPSpT5yTGs+miEIIgIYssyo
-         ZiGSaw0zq+wbFbq4QJj3hN/krBf4AkKny2ji51j9vkEYMc/Rgk4pBW+R7aXflh+Kelrl
-         dAsI38kfTreaPWHR4V8Uc+FH1Q6gyhtQZQVpKj+lKG7kphgutI85GPte/R8xClDb2bvn
-         h9Pw==
-X-Gm-Message-State: AOAM530L9wBeyOr7S+zjdhYD6H1BRaz7vSugmEhGL27HIOifV33lKNvu
-        Gf3tffcFK+RLXwMe/wmvo0wTFMqEd/LZ62Ke3iXwVw==
-X-Google-Smtp-Source: ABdhPJzs+ERhRHgOSK3Jl85Xe9DI8Tn03w4ppBuvTG+XjaVacohus9qdYiAG5C64Y7dMx6LihN2Z+owKtQ2E0CUdUUI=
-X-Received: by 2002:a25:790e:: with SMTP id u14mr10909068ybc.324.1590014534392;
- Wed, 20 May 2020 15:42:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200520072814.128267-1-irogers@google.com> <20200520072814.128267-6-irogers@google.com>
- <20200520134847.GM157452@krava> <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
- <20200520220912.GP157452@krava>
-In-Reply-To: <20200520220912.GP157452@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 20 May 2020 15:42:02 -0700
-Message-ID: <CAP-5=fU12vP45Sg3uRSuz-xoceTPTKw9-XZieKv1PaTnREMdrw@mail.gmail.com>
-Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yMGpmOi06kg2NChC86QhG6ArrmXyNvKLzVNTDjcsEps=;
+        b=lerbeaWh9Xf9nJ+B7DiucNaFwxeHImQdBreS0y3BxuQY0YYAqSdpAE+hSbCkgPQH//
+         NsdTFDA4AxAp+LlUs8zOWYipNuvQ13Ehx5KlfAftH5nNi47gNHYa5IV3Mu6MBb28lU6a
+         Tl1u4IfAhznHBRDtxKCHFIyCtRIbeKfKYpuROsjQGhzxbjqzBSOUMweC3QxPMIP1qr/Q
+         hcVEz2iJQmYLUzibA4Ki9YCsD9trnyZFIQhcLxVWY7wTk+AFA/yHsDVaUo01S8/CiEuz
+         h12EMkzsYTKLAxr4Klszm+j5UjC5FSZ1jaynkCL5O1HhpdAbr82poJq+5T8A9PIPkJpp
+         6rSw==
+X-Gm-Message-State: AOAM530TV4aaIN6UEPVbCjUwijtUYda6kH4zDKk1c1vtCaXf2d53Ub8L
+        oRbr9EAlIpayAi9RcKv49x8eFg==
+X-Google-Smtp-Source: ABdhPJw1yt/LZP+T6QbQZs6rvn+mGFCHg+0h5jTdbQVLg9NIUcO/ofxkJDW1YP+tB5GHirKM+s0+6Q==
+X-Received: by 2002:a17:90b:1101:: with SMTP id gi1mr8195787pjb.117.1590014581794;
+        Wed, 20 May 2020 15:43:01 -0700 (PDT)
+Received: from [192.168.86.156] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
+        by smtp.gmail.com with ESMTPSA id w21sm3152642pfu.47.2020.05.20.15.43.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 15:43:01 -0700 (PDT)
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
+ data->ctx and data->hctx in blk_mq_alloc_request_hctx
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
         John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20200518093155.GB35380@T590>
+ <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590>
+ <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590>
+ <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590>
+ <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590>
+ <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de>
+ <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
+ <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
+ <87tv0av1gu.fsf@nanos.tec.linutronix.de>
+ <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
+ <87eereuudh.fsf@nanos.tec.linutronix.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2ff46486-7d78-cec4-351e-749447f587e9@kernel.dk>
+Date:   Wed, 20 May 2020 16:40:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <87eereuudh.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 3:09 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Wed, May 20, 2020 at 09:50:13AM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> > > > +             }
-> > >
-> > > is the groupping still enabled when we merge groups? could part
-> > > of the metric (events) be now computed in different groups?
-> >
-> > By default the change will take two metrics and allow the shorter
-> > metric (in terms of number of events) to share the events of the
-> > longer metric. If the events for the shorter metric aren't in the
-> > longer metric then the shorter metric must use its own group of
-> > events. If sharing has occurred then the bitmap is used to work out
-> > which events and groups are no longer in use.
-> >
-> > With --metric-no-group then any event can be used for a metric as
-> > there is no grouping. This is why more events can be eliminated.
-> >
-> > With --metric-no-merge then the logic to share events between
-> > different metrics is disabled and every metric is in a group. This
-> > allows the current behavior to be had.
-> >
-> > There are some corner cases, such as metrics with constraints (that
-> > don't group) and duration_time that is never placed into a group.
-> >
-> > Partial sharing, with one event in 1 weak event group and 1 in another
-> > is never performed. Using --metric-no-group allows something similar.
-> > Given multiplexing, I'd be concerned about accuracy problems if events
-> > between groups were shared - say for IPC, were you measuring
-> > instructions and cycles at the same moment?
->
-> hum, I think that's also concern if you are multiplexing 2 groups and one
-> metric getting events from both groups that were not meassured together
->
-> it makes sense to me put all the merged events into single weak group
-> anything else will have the issue you described above, no?
->
-> and perhaps add command line option for merging that to make sure it's
-> what user actuly wants
+On 5/20/20 4:14 PM, Thomas Gleixner wrote:
+> Jens Axboe <axboe@kernel.dk> writes:
+> 
+>> On 5/20/20 1:41 PM, Thomas Gleixner wrote:
+>>> Jens Axboe <axboe@kernel.dk> writes:
+>>>> On 5/20/20 8:45 AM, Jens Axboe wrote:
+>>>>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
+>>>>> they just break affinity if that CPU goes offline.
+>>>>
+>>>> Just checked, and it works fine for me. If I create an SQPOLL ring with
+>>>> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
+>>>> just appears unbound but runs just fine. When CPU 3 comes online again,
+>>>> the mask appears correct.
+>>>
+>>> When exactly during the unplug operation is it unbound?
+>>
+>> When the CPU has been fully offlined. I check the affinity mask, it
+>> reports 0. But it's still being scheduled, and it's processing work.
+>> Here's an example, PID 420 is the thread in question:
+>>
+>> [root@archlinux cpu3]# taskset -p 420
+>> pid 420's current affinity mask: 8
+>> [root@archlinux cpu3]# echo 0 > online 
+>> [root@archlinux cpu3]# taskset -p 420
+>> pid 420's current affinity mask: 0
+>> [root@archlinux cpu3]# echo 1 > online 
+>> [root@archlinux cpu3]# taskset -p 420
+>> pid 420's current affinity mask: 8
+>>
+>> So as far as I can tell, it's working fine for me with the goals
+>> I have for that kthread.
+> 
+> Works for me is not really useful information and does not answer my
+> question:
+> 
+>>> When exactly during the unplug operation is it unbound?
 
-I'm not sure I'm following. With the patch set if we have 3 metrics
-with the event groups shown:
-M1: {A,B,C}:W
-M2: {A,B}:W
-M3: {A,B,D}:W
+I agree, and that question is relevant to the block side of things. What
+Christoph asked in this particular sub-thread was specifically for the
+io_uring sqpoll thread, and that's what I was adressing. For that, it
+doesn't matter _when_ it becomes unbound. All that matters it that it
+breaks affinity and keeps working.
 
-then what happens is we sort the metrics in to M1, M3, M2 then when we
-come to match the events:
+> The problem Ming and Christoph are trying to solve requires that the
+> thread is migrated _before_ the hardware queue is shut down and
+> drained. That's why I asked for the exact point where this happens.
 
- - by default: match events allowing sharing if all events come from
-the same group. So in the example M1 will first match with {A,B,C}
-then M3 will fail to match the group {A,B,C} but match {A,B,D}; M2
-will succeed with matching {A,B} from M1. The events/group for M2 can
-be removed as they are no longer used. This kind of sharing is
-opportunistic and respects existing groupings. While it may mean a
-metric is computed from a group that now multiplexes, that group will
-run for more of the time as there are fewer groups to multiplex with.
-In this example we've gone from 3 groups down to 2, 8 events down to
-6. An improvement would be to realize that A,B is in both M1 and M3,
-so when we print the stat we could combine these values.
+Right, and I haven't looked into that at all, so don't know the answer
+to that question.
 
- - with --metric-no-merge: no events are shared by metrics M1, M2 and
-M3 have their events and computation as things currently are. There
-are 3 groups and 8 events.
+> When the CPU is finally offlined, i.e. the CPU cleared the online bit in
+> the online mask is definitely too late simply because it still runs on
+> that outgoing CPU _after_ the hardware queue is shut down and drained.
+> 
+> This needs more thought and changes to sched and kthread so that the
+> kthread breaks affinity once the CPU goes offline. Too tired to figure
+> that out right now.
 
- - with --metric-no-group: all groups are removed and so the evlist
-has A,B,C,A,B,A,B,D in it. The matching will now match M1 to A,B,C at
-the beginning of the list, M2 to the first A,B and M3 to the same A,B
-and D at the end of the list. We've got no groups and the events have
-gone from 8 down to 4.
+Yes, to provide the needed guarantees for the block ctx and hctx
+mappings we'll need to know exactly at what stage it ceases to run on
+that CPU.
 
-It is difficult to reason about which grouping is most accurate. If we
-have 4 counters (no NMI watchdog) then this example will fit with no
-multiplexing. The default above should achieve less multiplexing, in
-the same way merging PMU events currently does - this patch is trying
-to mirror the --no-merge functionality to a degree. Considering
-TopDownL1 then we go from metrics that never sum to 100%, to metrics
-that do in either the default or --metric-no-group cases.
+-- 
+Jens Axboe
 
-I'm not sure what user option is missing with these combinations? The
-default is trying to strike a compromise and I think user interaction
-is unnecessary, just as --no-merge doesn't cause interaction. If the
-existing behavior is wanted using --metric-no-merge will give that.
-The new default and --metric-no-group are hopefully going to reduce
-the number of groups and events. I'm somewhat agnostic as to what the
-flag functionality should be as what I'm working with needs either the
-default or --metric-no-group, I can use whatever flag is agreed upon.
-
-Thanks,
-Ian
-
-> thanks,
-> jirka
->
->
-> >
-> > > I was wondering if we could merge all the hasmaps into single
-> > > one before the parse the evlist.. this way we won't need removing
-> > > later.. but I did not thought this through completely, so it
-> > > might not work at some point
-> >
-> > This could be done in the --metric-no-group case reasonably easily
-> > like the current hashmap. For groups you'd want something like a set
-> > of sets of events, but then you'd only be able to share events if the
-> > sets were the same. A directed acyclic graph could capture the events
-> > and the sharing relationships, it may be possible to optimize cases
-> > like {A,B,C}, {A,B,D}, {A,B} so that the small group on the end shares
-> > events with both the {A,B,C} and {A,B,D} group. This may be good
-> > follow up work. We could also solve this in the json, for example
-> > create a "phony" group of {A,B,C,D} that all three metrics share from.
-> > You could also use --metric-no-group to achieve that sharing now.
-> >
-> > Thanks,
-> > Ian
-> >
-> > > jirka
-> > >
-> >
->
