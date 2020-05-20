@@ -2,83 +2,103 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D142D20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589933401;
-	bh=ncS4/WJ13FIx6+ovp8byd0aXq8LXhHwOMR/bGy+ucpM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MqUZOJzI+QR+CgPkzkn2HIhywZDb5ThXEWUGUgZ5nZ+2SkCz5zEiMfb0AaYZsK+G0
-	 UHsjYxtlZfIaZ+3hFnyVD79tGSwBAsS9P8zoBnp4CrckMDTA56GukakPvcUQLi5Vie
-	 Vu9l8XQCAo8QOlTQgs6xRl1SWKQHooy295IHVbCc=
+	by mail.kernel.org (Postfix) with ESMTP id 8F1C8207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LVb/LnYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgETAKB (ORCPT
+        id S1728148AbgETAKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:10:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726348AbgETAKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:10:00 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 127CA207C4;
-        Wed, 20 May 2020 00:09:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589933399;
-        bh=ncS4/WJ13FIx6+ovp8byd0aXq8LXhHwOMR/bGy+ucpM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=T4knsEdcbJxOWgUV5tpYiL5MmKlO+Lup+tlcl6W5gxC7ZR1kNeChYC+sK2ciY9bbJ
-         IDXkgQPZWuoHtFdmT06VI2UA+8pxn/h8x/CujDcnmo0Tc385EL3r++J5E26Jx/Q3hS
-         C2mYP3dD9X2uXhyuPW5VrKIi7I2qNpiXTTvD8HOU=
-Date:   Tue, 19 May 2020 17:09:58 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        kernel test robot <rong.a.chen@intel.com>
-Subject: Re: [PATCH] kasan: Disable branch tracing for core runtime
-Message-Id: <20200519170958.d6e399f7f98286c1162f1383@linux-foundation.org>
-In-Reply-To: <CAAeHK+wcrmo=Hhwvqzd8kC-=5UR+fzRcA_4mo8wccWCTdrEzEQ@mail.gmail.com>
-References: <20200519182459.87166-1-elver@google.com>
-        <CAAeHK+wcrmo=Hhwvqzd8kC-=5UR+fzRcA_4mo8wccWCTdrEzEQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 19 May 2020 20:10:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgETAKr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:10:47 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB6CC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:10:46 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id f89so552271qva.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1nnNMMnWgVyddSvx9CTHRp85r+Uj2T/EgMi8iim52iY=;
+        b=LVb/LnYEoZe/hqO2/o5y+SCwpWFlcD/OzI++bhVo7RKZq90uUz9gmoGH+/45X+MDte
+         9Itf5OW4Cc0+8iNIsEp9QldXccLCYOOXxe57Sm1cHCDdjlfkgY+6MWzPqdPE0N5W6sVJ
+         UngYpYZ+SFTMFjtCSYMyEMMwIJffklZXje5JNDyn8tYKYQ9YG5zlcqBdqHOfU0oQ9Uw9
+         sXxDcISZGRbopbiyyH/7otZAIWj0g9hDoVNxGs8EVQgDkvbjYdF0GJMDl1atusMM+kci
+         maK30q1hgpUahvg+JY+rRdll417il1WAMpgiGnih61Jo9t2HhRiV5twbf75SYKTXX2NG
+         LrQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1nnNMMnWgVyddSvx9CTHRp85r+Uj2T/EgMi8iim52iY=;
+        b=bBd7fO6BosotIC++L/bQzatuOSuT9CtzjQpzJnI2KkGsGEo5+NeOFpvk1X8kfCX9HF
+         lXHIWQY58xA0XVt+l450EZ2khRneOdV9BhL3/yEBO1K96Fi4+HkH7oILOQORijI87Nva
+         iR5HuV3jgpKQvWvf623IT1xnHfHgVn0Gg4WDVo7NOGpfbtTlzYZ39a+1b9CdrC3tzZMK
+         WD/7GCvcXSfkCMSXkQMfBacOXKn08Rvq1Zkf67eEjniw8JEsHD1Bc5MSThOTSQgrZrWg
+         HxeTTjVD8PSOh10x1/1p68mUWy6n2/wZr3Nt9SP7Xqfk2uia1Eb9JfxarPesd2ZrmO8W
+         XB9Q==
+X-Gm-Message-State: AOAM533MxWovWN3LuMBOShVreXyuZNL7d4sJGgldRDHnR68z/5bcp4R7
+        O4H6duDFH4f4NdgfHHUvThBUVg==
+X-Google-Smtp-Source: ABdhPJwsz5AKr0aQtHN738xGZhJMASG0JaA7L/CXolhH1cBCNFuWAt77YF/YQI1M6dbZTVO5OtyTrQ==
+X-Received: by 2002:a05:6214:42f:: with SMTP id a15mr2302980qvy.170.1589933446165;
+        Tue, 19 May 2020 17:10:46 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id d196sm959328qkg.16.2020.05.19.17.10.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 17:10:45 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jbCJp-0003It-Am; Tue, 19 May 2020 21:10:45 -0300
+Date:   Tue, 19 May 2020 21:10:45 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Kaike Wan <kaike.wan@intel.com>,
+        Gerd Rausch <gerd.rausch@oracle.com>,
+        =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
+        Doug Ledford <dledford@redhat.com>
+Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
+Message-ID: <20200520001045.GA31189@ziepe.ca>
+References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
+ <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
+ <20200508000809.GM26002@ziepe.ca>
+ <33fc99e2-e9fc-3c8c-e47f-41535f514c2d@oracle.com>
+ <20200513150021.GD29989@ziepe.ca>
+ <c761da30-3663-4932-dd72-3501f15c0197@oracle.com>
+ <272dbe83-a72b-d38b-6993-d3bbda50a7d1@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <272dbe83-a72b-d38b-6993-d3bbda50a7d1@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 23:05:46 +0200 Andrey Konovalov <andreyknvl@google.com> wrote:
-
-> On Tue, May 19, 2020 at 8:25 PM Marco Elver <elver@google.com> wrote:
-> >
-> > During early boot, while KASAN is not yet initialized, it is possible to
-> > enter reporting code-path and end up in kasan_report(). While
-> > uninitialized, the branch there prevents generating any reports,
-> > however, under certain circumstances when branches are being traced
-> > (TRACE_BRANCH_PROFILING), we may recurse deep enough to cause kernel
-> > reboots without warning.
-> >
-> > To prevent similar issues in future, we should disable branch tracing
-> > for the core runtime.
-> >
+On Tue, May 19, 2020 at 04:30:52PM -0700, Divya Indi wrote:
+> Hi Jason,
 > 
-> ...
->
-> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+> I wanted to follow up to see if you got a chance to review the following reply?
 
-Thanks, I queued this for 5.7.
+Not yet, it still seems bad to be doing code like this.
+
+If two threads are sharing memory they really need to use a
+refcount/kref not rely on some sketchy thing with flags. It is very
+hard to tell if the sketchy thing with flags is correct or not.
+
+Jason
