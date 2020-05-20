@@ -1,211 +1,95 @@
 Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB12C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22982C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78BE8207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="flAGazfR"
+	by mail.kernel.org (Postfix) with ESMTP id F1F4B207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgETKVh (ORCPT
+        id S1726850AbgETKWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETKVY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:21:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E01C061A0E;
-        Wed, 20 May 2020 03:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=byLosyX8OkvGSnd/wUlp1r+QewPCabBxbFeDlkadP7M=; b=flAGazfRzeASVv+VOK57DI2L9r
-        BnZGeYRyRqR/Homc0d9iMHyqn0avvFDpyI0y3bmjV3sVbyBmlBIqf+ZXp5sbRLEAbZgwr0IAoqFBh
-        fhwUH4tahwxDUJKd52fydXH6kbno5GRcBqhw8ipMQ7sT4vZY6beVBDLUu60uID1O3CDBfQbXy3C2V
-        UTX1IPCt9YOa3dU7ziEtloa1FlbteAGVjB06StFvCjkmSokFKp3x5MUQpjlQnzImO0k9pfZXJPoOZ
-        vYmyUK6ezRWlu59XTf1TCSTkSj2Bq/CH9RZjxiKBi9hY5e0jyy7pTfLxV/e1t7moFQkj3Q3vehy38
-        TDZqIlhg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbLqb-0004Zd-CE; Wed, 20 May 2020 10:21:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DA4CB30067C;
-        Wed, 20 May 2020 12:21:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6EDF025D60CB3; Wed, 20 May 2020 12:21:10 +0200 (CEST)
-Date:   Wed, 20 May 2020 12:21:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/8] radix-tree: Use local_lock for protection
-Message-ID: <20200520102110.GE317569@hirez.programming.kicks-ass.net>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-3-bigeasy@linutronix.de>
+        Wed, 20 May 2020 06:22:23 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35600 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726435AbgETKWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:22:23 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1DACEE65830E18F0CE88;
+        Wed, 20 May 2020 18:22:20 +0800 (CST)
+Received: from [127.0.0.1] (10.166.213.10) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Wed, 20 May 2020
+ 18:22:13 +0800
+Subject: Re: [PATCH] perf bpf-loader: Add missing '*' for key_scan_pos
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     <cj.chengjian@huawei.com>, <huawei.libin@huawei.com>,
+        <xiexiuqi@huawei.com>, <mark.rutland@arm.com>,
+        <guohanjun@huawei.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <wangnan0@huawei.com>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
+ <20200520070551.GC110644@krava>
+From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Message-ID: <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
+Date:   Wed, 20 May 2020 18:22:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519201912.1564477-3-bigeasy@linutronix.de>
+In-Reply-To: <20200520070551.GC110644@krava>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.213.10]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:19:06PM +0200, Sebastian Andrzej Siewior wrote:
-> @@ -64,6 +64,7 @@ struct radix_tree_preload {
->  	struct radix_tree_node *nodes;
->  };
->  static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) = { 0, };
-> +static DEFINE_LOCAL_LOCK(radix_tree_preloads_lock);
->  
->  static inline struct radix_tree_node *entry_to_node(void *ptr)
->  {
 
-So I'm all with Andrew on the naming and pass-by-pointer thing, but
-also, the above is pretty crap. You want the local_lock to be in the
-structure you're actually protecting, and there really isn't anything
-stopping you from doing that.
+在 2020/5/20 15:05, Jiri Olsa 写道:
+> On Wed, May 20, 2020 at 11:32:16AM +0800, Wang ShaoBo wrote:
+>> key_scan_pos is a pointer for getting scan position in
+>> bpf__obj_config_map() for each BPF map configuration term,
+>> but it's misused when error not happened.
+>>
+>> Fixes: 066dacbf2a32 ("perf bpf: Add API to set values to map entries in a bpf object")
+>> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+>> ---
+>>   tools/perf/util/bpf-loader.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+>> index 10c187b8b8ea..460056bc072c 100644
+>> --- a/tools/perf/util/bpf-loader.c
+>> +++ b/tools/perf/util/bpf-loader.c
+>> @@ -1225,7 +1225,7 @@ bpf__obj_config_map(struct bpf_object *obj,
+>>   out:
+>>   	free(map_name);
+>>   	if (!err)
+>> -		key_scan_pos += strlen(map_opt);
+>> +		*key_scan_pos += strlen(map_opt);
+> seems good, was there something failing because of this?
+>
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+>
+> thanks,
+> jirka
 
-The below builds just fine and is ever so much more sensible.
+   I found this problem when i checked this code, I think it is
 
---- a/include/linux/locallock_internal.h
-+++ b/include/linux/locallock_internal.h
-@@ -19,7 +19,7 @@ struct local_lock {
- # define LL_DEP_MAP_INIT(lockname)
- #endif
- 
--#define INIT_LOCAL_LOCK(lockname)	LL_DEP_MAP_INIT(lockname)
-+#define INIT_LOCAL_LOCK(lockname)	{ LL_DEP_MAP_INIT(lockname) }
- 
- #define local_lock_lockdep_init(lock)				\
- do {								\
-@@ -63,35 +63,35 @@ static inline void local_lock_release(st
- #define __local_lock(lock)					\
- 	do {							\
- 		preempt_disable();				\
--		local_lock_acquire(this_cpu_ptr(&(lock)));	\
-+		local_lock_acquire(this_cpu_ptr(lock));		\
- 	} while (0)
- 
- #define __local_lock_irq(lock)					\
- 	do {							\
- 		local_irq_disable();				\
--		local_lock_acquire(this_cpu_ptr(&(lock)));	\
-+		local_lock_acquire(this_cpu_ptr(lock));		\
- 	} while (0)
- 
- #define __local_lock_irqsave(lock, flags)			\
- 	do {							\
- 		local_irq_save(flags);				\
--		local_lock_acquire(this_cpu_ptr(&(lock)));	\
-+		local_lock_acquire(this_cpu_ptr(lock));		\
- 	} while (0)
- 
- #define __local_unlock(lock)					\
- 	do {							\
--		local_lock_release(this_cpu_ptr(&lock));	\
-+		local_lock_release(this_cpu_ptr(lock));		\
- 		preempt_enable();				\
- 	} while (0)
- 
- #define __local_unlock_irq(lock)				\
- 	do {							\
--		local_lock_release(this_cpu_ptr(&lock));	\
-+		local_lock_release(this_cpu_ptr(lock));		\
- 		local_irq_enable();				\
- 	} while (0)
- 
- #define __local_unlock_irqrestore(lock, flags)			\
- 	do {							\
--		local_lock_release(this_cpu_ptr(&lock));	\
-+		local_lock_release(this_cpu_ptr(lock));		\
- 		local_irq_restore(flags);			\
- 	} while (0)
---- a/lib/radix-tree.c
-+++ b/lib/radix-tree.c
-@@ -59,12 +59,14 @@ struct kmem_cache *radix_tree_node_cache
-  * Per-cpu pool of preloaded nodes
-  */
- struct radix_tree_preload {
-+	struct local_lock lock;
- 	unsigned nr;
- 	/* nodes->parent points to next preallocated node */
- 	struct radix_tree_node *nodes;
- };
--static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) = { 0, };
--static DEFINE_LOCAL_LOCK(radix_tree_preloads_lock);
-+static DEFINE_PER_CPU(struct radix_tree_preload, radix_tree_preloads) =
-+	{ .lock = INIT_LOCAL_LOCK(lock),
-+	  .nr = 0, };
- 
- static inline struct radix_tree_node *entry_to_node(void *ptr)
- {
-@@ -333,14 +335,14 @@ static __must_check int __radix_tree_pre
- 	 */
- 	gfp_mask &= ~__GFP_ACCOUNT;
- 
--	local_lock(radix_tree_preloads_lock);
-+	local_lock(&radix_tree_preloads.lock);
- 	rtp = this_cpu_ptr(&radix_tree_preloads);
- 	while (rtp->nr < nr) {
--		local_unlock(radix_tree_preloads_lock);
-+		local_unlock(&radix_tree_preloads.lock);
- 		node = kmem_cache_alloc(radix_tree_node_cachep, gfp_mask);
- 		if (node == NULL)
- 			goto out;
--		local_lock(radix_tree_preloads_lock);
-+		local_lock(&radix_tree_preloads.lock);
- 		rtp = this_cpu_ptr(&radix_tree_preloads);
- 		if (rtp->nr < nr) {
- 			node->parent = rtp->nodes;
-@@ -382,14 +384,14 @@ int radix_tree_maybe_preload(gfp_t gfp_m
- 	if (gfpflags_allow_blocking(gfp_mask))
- 		return __radix_tree_preload(gfp_mask, RADIX_TREE_PRELOAD_SIZE);
- 	/* Preloading doesn't help anything with this gfp mask, skip it */
--	local_lock(radix_tree_preloads_lock);
-+	local_lock(&radix_tree_preloads.lock);
- 	return 0;
- }
- EXPORT_SYMBOL(radix_tree_maybe_preload);
- 
- void radix_tree_preload_end(void)
- {
--	local_unlock(radix_tree_preloads_lock);
-+	local_unlock(&radix_tree_preloads.lock);
- }
- EXPORT_SYMBOL(radix_tree_preload_end);
- 
-@@ -1477,13 +1479,13 @@ EXPORT_SYMBOL(radix_tree_tagged);
- void idr_preload(gfp_t gfp_mask)
- {
- 	if (__radix_tree_preload(gfp_mask, IDR_PRELOAD_SIZE))
--		local_lock(radix_tree_preloads_lock);
-+		local_lock(&radix_tree_preloads.lock);
- }
- EXPORT_SYMBOL(idr_preload);
- 
- void idr_preload_end(void)
- {
--	local_unlock(radix_tree_preloads_lock);
-+	local_unlock(&radix_tree_preloads.lock);
- }
- EXPORT_SYMBOL(idr_preload_end);
- 
+   an implicit question, but if we delete the two line,  the problem
+
+   also no longer exists.
+
+   thanks,
+
+   Wang ShaoBo
+
+
