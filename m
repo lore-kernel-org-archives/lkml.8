@@ -2,213 +2,115 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A33C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B5120759
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8226C212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bCMe/xuf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NQ7nnDch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgETXVa (ORCPT
+        id S1728720AbgETXVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbgETXVa (ORCPT
+        Wed, 20 May 2020 19:21:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37474 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728573AbgETXVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:21:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F384DC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:21:29 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id t40so2095240pjb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d9DQ+P49I61QAM9lR3N7+GDsq5XLFYN6aPsU2WBNwdA=;
-        b=bCMe/xufpajCZo6YgMImSf+lTdCreI01DMnL4oJeCB9u0gQLrDRGQXxGTumbBbuvzh
-         VcDJZT4Ny6BwS+JLq9FHho1IX9jfdQ5sOuExaKvGL2AH4X9KmCptFgKjxP7aRYaoUPhQ
-         MvhYfmWH85jfcUsMu6h5WaoUBoQDcA5Xz5PjP4SSNumiMXRgBSoFPNgKFJXJAXaFSF7W
-         Dj68ICN+nMquOckHkYDdNE2pkCqZco9LR5I/Z9OxvsAygMVao2Igz+p8fVdBRnQFah+G
-         VJRV3RSxoanGFJDrODq6TgaQU6H2uRSdyfPYRmr1/x6IfXd439j6kC5Q1wyfsFdAE7Vi
-         GUEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d9DQ+P49I61QAM9lR3N7+GDsq5XLFYN6aPsU2WBNwdA=;
-        b=m7Y4S4oDe7UlzWVobdul0lgj48g9UG9WoRreYVicahvknMMkwg8i+ejn4v6XIWqd+y
-         67PSNAibmANAeXenU9vv/LvIvq4OjVp9nNNYJCZgORSBuITVWf8ySeKYD4CfuhGzBLGo
-         /9MkAZNdLDi4mZSPhsjuvyhlM0QVbPg0xAeoutC2MeudbF0U8uLPA5lraxS1tFyqDHOe
-         SrS7uPUv3ezH93haZ5EI0LYSuXdKsJ9pPZggXPP27JY7eD7f6mnSB93sAbzQzckwf4pV
-         02KaTuXuwRGyzsKdZo04o9/MFmEYJJdutW32YPYLfXYYyiSIzgghHKuLg/PGZbYx216I
-         tn0A==
-X-Gm-Message-State: AOAM5318RFNC1pII95j+49bXml7umWHD9EhwpB+fNsD0bpLUs4OWKoCB
-        8oWHzvjj6bLMYKZP6ZQ6eL9yD+bxtpflec8ZOEaGkQ==
-X-Google-Smtp-Source: ABdhPJwOuhDXljbe3Nx6PNNntzvSd8QVlDkOKG7LEakLPOWFDiFba7EgO8kLFoBlCMhfiiYSeVeFn7z/GM0hKI6vqEs=
-X-Received: by 2002:a17:90b:19cc:: with SMTP id nm12mr7431934pjb.25.1590016889009;
- Wed, 20 May 2020 16:21:29 -0700 (PDT)
+        Wed, 20 May 2020 19:21:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590016906;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QCvvSQse9uoRSN4nhne9pBMylRnmmLbVVrXB6qYkxWg=;
+        b=NQ7nnDche2OfvtrxXBkb5e7vSubn9iYsF2OJNBulWd+CE0HTGmGelBmjT29NEVCdK8sxf3
+        Y0skSbNf4Uv5VzbCuUwsFfuqVB9Sw4BzYoOXdWOIOTNm1+aO1nC4+CKUrkmH+OUzEEPdK6
+        eZI9u8FBrhQLcNU/FcmIctvYMUaOkAM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-HWe3uLGmPfWPMmwsfaXDtA-1; Wed, 20 May 2020 19:21:44 -0400
+X-MC-Unique: HWe3uLGmPfWPMmwsfaXDtA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B18C4835B40;
+        Wed, 20 May 2020 23:21:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E48C782A2C;
+        Wed, 20 May 2020 23:21:42 +0000 (UTC)
+Subject: [PATCH net 0/3] rxrpc: Fix retransmission timeout and ACK discard
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 May 2020 00:21:42 +0100
+Message-ID: <159001690181.18663.663730118645460940.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-References: <10f4fb0b-1012-b0e6-af05-0aa5a906de21@redhat.com> <20200520193637.6015-1-ndesaulniers@google.com>
-In-Reply-To: <20200520193637.6015-1-ndesaulniers@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 20 May 2020 16:21:17 -0700
-Message-ID: <CAKwvOd=LvSSrg6ynWwnmg4oYS+Ti_rcUrQNudwQLCnEgt6Uzyg@mail.gmail.com>
-Subject: Re: [PATCH v2] Makefile: support compressed debug info
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Clifton <nickc@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        David Blaikie <blaikie@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:36 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> As debug information gets larger and larger, it helps significantly save
-> the size of vmlinux images to compress the information in the debug
-> information sections. Note: this debug info is typically split off from
-> the final compressed kernel image, which is why vmlinux is what's used
-> in conjunction with GDB. Minimizing the debug info size should have no
-> impact on boot times, or final compressed kernel image size.
->
-> All of the debug sections will have a `C` flag set.
-> $ readelf -S <object file>
->
-> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
->     vmlinux.gcc75.uncompressed.dwarf4
->
->     FILE SIZE        VM SIZE
->  --------------  --------------
->   +0.0%     +18  [ = ]       0    [Unmapped]
->  -73.3%  -114Ki  [ = ]       0    .debug_aranges
->  -76.2% -2.01Mi  [ = ]       0    .debug_frame
->  -73.6% -2.89Mi  [ = ]       0    .debug_str
->  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
->  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
->  -70.5% -9.04Mi  [ = ]       0    .debug_line
->  -79.3% -10.9Mi  [ = ]       0    .debug_loc
->  -39.5% -88.6Mi  [ = ]       0    .debug_info
->  -18.2%  -123Mi  [ = ]       0    TOTAL
->
-> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
->     vmlinux.clang11.uncompressed.dwarf4
->
->     FILE SIZE        VM SIZE
->  --------------  --------------
->   +0.0%     +23  [ = ]       0    [Unmapped]
->  -65.6%    -871  [ = ]       0    .debug_aranges
->  -77.4% -1.84Mi  [ = ]       0    .debug_frame
->  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
->  -73.1% -2.43Mi  [ = ]       0    .debug_str
->  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
->  -65.9% -8.62Mi  [ = ]       0    .debug_line
->  -86.2% -40.0Mi  [ = ]       0    .debug_loc
->  -42.0% -64.1Mi  [ = ]       0    .debug_info
->  -22.1%  -122Mi  [ = ]       0    TOTAL
->
-> For x86_64 defconfig + LLVM=1 (before):
-> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
-> Maximum resident set size (kbytes): 43856
->
-> For x86_64 defconfig + LLVM=1 (after):
-> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
-> Maximum resident set size (kbytes): 1566776
->
-> Suggested-by: David Blaikie <blakie@google.com>
 
-Sorry, I have mistyped David's email, it should be:
-Suggested-by: David Blaikie <blaikie@google.com>
-(I missed the first `i` in the last name)
+Here are a couple of fixes and an extra tracepoint for AF_RXRPC:
 
-> Suggested-by: Fangrui Song <maskray@google.com>
-> Suggested-by: Nick Clifton <nickc@redhat.com>
-> Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V1 -> V2:
-> * rebase on linux-next.
-> * Add assembler flags as per Fangrui.
-> * Add note about KDEB_COMPRESS+scripts/package/builddeb
->   as per Sedat and Masahiro.
-> * Add note about bintutils version requirements as per Nick C.
-> * Add note about measured increased build time and max RSS.
->
->  Makefile          |  6 ++++++
->  lib/Kconfig.debug | 15 +++++++++++++++
->  2 files changed, 21 insertions(+)
->
-> diff --git a/Makefile b/Makefile
-> index 71687bfe1cd9..be8835296754 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -822,6 +822,12 @@ DEBUG_CFLAGS       += $(call cc-option, -femit-struct-debug-baseonly) \
->                    $(call cc-option,-fno-var-tracking)
->  endif
->
-> +ifdef CONFIG_DEBUG_INFO_COMPRESSED
-> +DEBUG_CFLAGS   += -gz=zlib
-> +KBUILD_AFLAGS  += -Wa,--compress-debug-sections=zlib
-> +KBUILD_LDFLAGS += --compress-debug-sections=zlib
-> +endif
-> +
->  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
->  export DEBUG_CFLAGS
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index b8f023e054b9..5a423cbfaea4 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -225,6 +225,21 @@ config DEBUG_INFO_REDUCED
->           DEBUG_INFO build and compile times are reduced too.
->           Only works with newer gcc versions.
->
-> +config DEBUG_INFO_COMPRESSED
-> +       bool "Compressed debugging information"
-> +       depends on DEBUG_INFO
-> +       depends on $(cc-option,-gz=zlib)
-> +       depends on $(as-option,-Wa,--compress-debug-sections=zlib)
-> +       depends on $(ld-option,--compress-debug-sections=zlib)
-> +       help
-> +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-> +         5.0+, binutils 2.26+, and zlib.
-> +
-> +         Users of dpkg-deb via scripts/package/builddeb may
-> +         wish to set the $KDEB_COMPRESS env var to "none" to avoid recompressing
-> +         the debug info again with a different compression scheme, which can
-> +         result in larger binaries.
-> +
->  config DEBUG_INFO_SPLIT
->         bool "Produce split debuginfo in .dwo files"
->         depends on DEBUG_INFO
-> --
-> 2.26.2.761.g0e0b3e54be-goog
->
+ (1) Calculate the RTO pretty much as TCP does, rather than making
+     something up, including an initial 4s timeout (which causes return
+     probes from the fileserver to fail if a packet goes missing), and add
+     backoff.
+
+ (2) Fix the discarding of out-of-order received ACKs.  We mustn't let the
+     hard-ACK point regress, nor do we want to do unnecessary
+     retransmission because the soft-ACK list regresses.  This is not
+     trivial, however, due to some loose wording in various old protocol
+     specs, the ACK field that should be used for this sometimes has the
+     wrong information in it.
+
+ (3) Add a tracepoint to log a discarded ACK.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	rxrpc-fixes-20200520
+
+and can also be found on the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David
+---
+David Howells (1):
+      rxrpc: Fix ack discard
 
 
--- 
-Thanks,
-~Nick Desaulniers
+ fs/afs/fs_probe.c            |  18 ++--
+ fs/afs/vl_probe.c            |  18 ++--
+ include/net/af_rxrpc.h       |   2 +-
+ include/trace/events/rxrpc.h |  52 +++++++++---
+ net/rxrpc/Makefile           |   1 +
+ net/rxrpc/ar-internal.h      |  25 ++++--
+ net/rxrpc/call_accept.c      |   2 +-
+ net/rxrpc/call_event.c       |  22 ++---
+ net/rxrpc/input.c            |  44 ++++++++--
+ net/rxrpc/misc.c             |   5 --
+ net/rxrpc/output.c           |   9 +-
+ net/rxrpc/peer_event.c       |  46 ----------
+ net/rxrpc/peer_object.c      |  12 +--
+ net/rxrpc/proc.c             |   8 +-
+ net/rxrpc/rtt.c              | 195 +++++++++++++++++++++++++++++++++++++++++++
+ net/rxrpc/sendmsg.c          |  26 ++----
+ net/rxrpc/sysctl.c           |   9 --
+ 17 files changed, 335 insertions(+), 159 deletions(-)
+ create mode 100644 net/rxrpc/rtt.c
+
+
