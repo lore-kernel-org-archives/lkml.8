@@ -2,93 +2,82 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05311C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E68D220756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD04D2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0VG26ibh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AW8/FERE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgETChX (ORCPT
+        id S1728504AbgETCiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:37:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33586 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgETChW (ORCPT
+        Tue, 19 May 2020 22:38:50 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45806 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgETCiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:37:22 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K2RFM8084713;
-        Wed, 20 May 2020 02:30:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=kUGQDr/v7sUBLEwDb3Xz/wcZpIxXeDLcJONr9yOjouM=;
- b=0VG26ibhj4o06wk5NIrulWnIbUFLGsNIIdbQxMijaOKLRluFV/d2rrBlv+CSOu/M1gV5
- qQ/mbVtPg4m6fsoryBM0fApAWQ/O4r+pk1QAWQV3RS8z77XQTwrIgElSedcHo4Z86DpQ
- QGAW/DJvIE/f4w/GcfA0X/5DRuk9dWrN1UVNGjEbWMTykR+9S7AXsr2ZxPPgTspRzVi6
- HWnCEbcGvs8/O/vkLMBlzLbgA7YajdcGK8z8QZP0eDpVFEzhBhmJi11EOyzBUw6oifIJ
- +UNtA95siBDFG1SpeeYvaTErkSOdlJ/XA3xjVqEzC0c5P0LTXd8PvXInvI8gTqsdajWC MQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3127kr8n9u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 02:30:25 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K2SZ5v064335;
-        Wed, 20 May 2020 02:30:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 313gj2mf8r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 02:30:24 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04K2UNTS011820;
-        Wed, 20 May 2020 02:30:23 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 May 2020 19:30:22 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Ye Bin <yebin10@huawei.com>, jejb@linux.ibm.com
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: Refactor scsi_mq_setup_tags function
-Date:   Tue, 19 May 2020 22:30:10 -0400
-Message-Id: <158994171818.20861.13541589109613423066.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200518074732.39679-1-yebin10@huawei.com>
-References: <20200518074732.39679-1-yebin10@huawei.com>
+        Tue, 19 May 2020 22:38:50 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04K2cfWx037101;
+        Tue, 19 May 2020 21:38:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589942321;
+        bh=w0rb93lin9mdFPl9b4m8Fz3RZOi1CYkEm8my5Ry7GIQ=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=AW8/FEREGVpAIDq3u1Goo41Qp1SOttZ0uwan4Q4Fqqg8Ve62C628CXRWs4D8flyx5
+         tBOl/SNV7GI5uMSXvm5900m2xfkloRvhhw1cxN03sCjT6VnBPK8dFrT/m0Rdp6qfO9
+         YQaKq434CjWXWB0lo8u6I9Kd9pxCZySnuqLVSoNg=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04K2cfXP024106
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 May 2020 21:38:41 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 21:38:41 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 21:38:41 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04K2cfRn024519;
+        Tue, 19 May 2020 21:38:41 -0500
+Date:   Tue, 19 May 2020 21:38:41 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Jason Yan <yanaijie@huawei.com>
+CC:     <gregkh@linuxfoundation.org>, <tony@atomide.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: musb: use true for 'use_dma'
+Message-ID: <20200520023841.GA5684@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>, Jason Yan <yanaijie@huawei.com>,
+        gregkh@linuxfoundation.org, tony@atomide.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200426094130.23384-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=952
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200018
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=998 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200018
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200426094130.23384-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 15:47:32 +0800, Ye Bin wrote:
+On Sun, Apr 26, 2020 at 05:41:30PM +0800, Jason Yan wrote:
+> Fix the following coccicheck warning:
+> 
+> drivers/usb/musb/musb_core.c:1798:12-19: WARNING: Assignment of 0/1 to
+> bool variable
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
->   "shost->tag_set" is used too many times, introduce temporary parameter
-> "tag_set" instead of "&shost->tag_set".
+Queued for v5.8. Thanks.
 
-Applied to 5.8/scsi-queue, thanks!
-
-[1/1] scsi: core: Refactor scsi_mq_setup_tags function
-      https://git.kernel.org/mkp/scsi/c/840e1b55bb75
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+-Bin.
