@@ -2,113 +2,178 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81632C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00101C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4702065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5B1207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I+oZMYMx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qlgXHVmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgETLzg (ORCPT
+        id S1726954AbgETL4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:55:36 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:37556 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726435AbgETLzg (ORCPT
+        Wed, 20 May 2020 07:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgETL4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:55:36 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589975735; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=kk/GsuDE6ll1jB2RxfLcgdLRrs8QROW9zKYeSI1XwB8=; b=I+oZMYMxgmz0IHr5PevjCu1kENR8CbyxmYbgOgu3dPmNX/eblUisR/wjfMIRn4jTN04ra3pf
- fqivSjgCxSo2H0K+0NKo3g+7mAfjGd0EBPNiA+ZX7xH1+9EpGQbg573ptxUs+BO3fDXHAGlu
- ZVlmLhX8P5bEm7xWl0NekDOWz5Y=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ec51ab04e523733abd3cf59 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 11:55:28
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AA622C433CB; Wed, 20 May 2020 11:55:27 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76314C433C6;
-        Wed, 20 May 2020 11:55:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76314C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-From:   Pavankumar Kondeti <pkondeti@codeaurora.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Vinayak Menon <vinmenon@codeaurora.org>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Liang Chen <cl@rock-chips.com>
-Subject: [PATCH] kthread: Use TASK_IDLE state for newly created kernel threads
-Date:   Wed, 20 May 2020 17:25:09 +0530
-Message-Id: <1589975710-9283-1-git-send-email-pkondeti@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 May 2020 07:56:31 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECA4C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:56:31 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id r125so2081812lff.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c8qp29x57Bnw83ildG5bfYkgdHVhrczJ6/NyvfJLqdw=;
+        b=qlgXHVmEwhlw8sQKewHDsuWMSreqtLqu7J0G2FobOqDX6oBRZuV/ovWE3ANMJBrQ/R
+         VHSrnEzZvSTDxoGM3/zD4+VTvhNG0yaVzAa7lwGqABFXOzXetvh0ERA4i6G5tYAoy+YR
+         Qr6jPv+xDkynFLCazHC8VGxm8nKlCbFmrG5Kj91mWASiJARiWqfoR7ILN0Zk3nndZglm
+         xfojJ2HA3S+ljjrJhP5FQNxiCPqhXs7R18c5zKgCMh12Zewow13rinQNy8sr0PEtMvmD
+         gPqjH0dG3srB+Q4snOOPhnSigEJYiArkGSq8les+OJeIhHLgVWpVkJPP+TTaSgnYuQhJ
+         AIGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c8qp29x57Bnw83ildG5bfYkgdHVhrczJ6/NyvfJLqdw=;
+        b=ddpkhTmUaqJpdRk3qhQYG5MLi1sZ2FGEoxox6klsQAs7TNpUGlPH6PsR7Bq/LDZAvk
+         zDmCigJldfS/na/05vT3/kWalOtV5UJ1ZTspQHl35NDufKBvWMBiAzWlGP7661IRSmh7
+         ssn7XBwTJxr9YCKNAwDQeRTEMpJ7XQrpEF4qUgolVFpKv0prt7dMIBi1lTWYsh7vz0KE
+         sBEH4whqfoUUFOlFzabrhI82xOwvjwug1Qmcm92Ti+B/5sDg4DOWIQRJ7bRHlPtPzvpm
+         vp7VKKVF2muOhsOW9vUVcGfx3bOeBU8mIuvdHUpTos1GD9wiorvnvS+vZPL56xx8wHO+
+         PUYw==
+X-Gm-Message-State: AOAM5318GiMHNbg+lJaDvlJOsxAWfpbMXi/YJlY/gl4CcUPUhfezqoAt
+        mj1/2yVDq7bXaw380tdI+HtwB5lwDQnRJUS3mceBAg==
+X-Google-Smtp-Source: ABdhPJwm4d8MeeXVBkReCSgeKef0/TrHxDY6JMkbe05871VEuSEJIfm5/eJuCpE32/mb9LC8RnbJH+gDczs7BL2boVk=
+X-Received: by 2002:a19:8453:: with SMTP id g80mr2422388lfd.167.1589975789287;
+ Wed, 20 May 2020 04:56:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
+ <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
+ <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+ <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz>
+In-Reply-To: <20200519084535.GG32497@dhcp22.suse.cz>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 20 May 2020 17:26:17 +0530
+Message-ID: <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kernel threads are created for later use, they will be in
-TASK_UNINTERRUPTIBLE state until they are woken up. This results
-in increased loadavg and false hung task reports. To fix this,
-use TASK_IDLE state instead of TASK_UNINTERRUPTIBLE when
-a kernel thread schedules out for the first time.
+FYI,
 
-Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
----
- kernel/kthread.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This issue is specific on 32-bit architectures i386 and arm on linux-next tree.
+As per the test results history this problem started happening from
+Bad : next-20200430
+Good : next-20200429
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index bfbfa48..b74ed8e 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -250,7 +250,7 @@ static int kthread(void *_create)
- 	current->vfork_done = &self->exited;
- 
- 	/* OK, tell user we're spawned, wait for stop or wakeup */
--	__set_current_state(TASK_UNINTERRUPTIBLE);
-+	__set_current_state(TASK_IDLE);
- 	create->result = current;
- 	/*
- 	 * Thread is going to call schedule(), do not preempt it,
-@@ -428,7 +428,7 @@ static void __kthread_bind(struct task_struct *p, unsigned int cpu, long state)
- 
- void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
- {
--	__kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
-+	__kthread_bind_mask(p, mask, TASK_IDLE);
- }
- 
- /**
-@@ -442,7 +442,7 @@ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
-  */
- void kthread_bind(struct task_struct *p, unsigned int cpu)
- {
--	__kthread_bind(p, cpu, TASK_UNINTERRUPTIBLE);
-+	__kthread_bind(p, cpu, TASK_IDLE);
- }
- EXPORT_SYMBOL(kthread_bind);
- 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+steps to reproduce:
+dd if=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190504A00573
+of=/dev/null bs=1M count=2048
+or
+mkfs -t ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190804A00BE5
 
+
+Problem:
+[   38.802375] dd invoked oom-killer: gfp_mask=0x100cc0(GFP_USER),
+order=0, oom_score_adj=0
+
+i386 crash log:  https://pastebin.com/Hb8U89vU
+arm crash log: https://pastebin.com/BD9t3JTm
+
+On Tue, 19 May 2020 at 14:15, Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 19-05-20 10:11:25, Arnd Bergmann wrote:
+> > On Tue, May 19, 2020 at 9:52 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Mon 18-05-20 19:40:55, Naresh Kamboju wrote:
+> > > > Thanks for looking into this problem.
+> > > >
+> > > > On Sat, 2 May 2020 at 02:28, Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > > >
+> > > > > On Fri, 1 May 2020 18:08:28 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > > >
+> > > > > > mkfs -t ext4 invoked oom-killer on i386 kernel running on x86_64 device
+> > > > > > and started happening on linux -next master branch kernel tag next-20200430
+> > > > > > and next-20200501. We did not bisect this problem.
+> > > [...]
+> > > > Creating journal (131072 blocks): [   31.251333] mkfs.ext4 invoked
+> > > > oom-killer: gfp_mask=0x101cc0(GFP_USER|__GFP_WRITE), order=0,
+> > > > oom_score_adj=0
+> > > [...]
+> > > > [   31.500943] DMA free:187396kB min:22528kB low:28160kB high:33792kB
+> > > > reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
+> > > > active_file:4736kB inactive_file:431688kB unevictable:0kB
+> > > > writepending:62020kB present:783360kB managed:668264kB mlocked:0kB
+> > > > kernel_stack:888kB pagetables:0kB bounce:0kB free_pcp:880kB
+> > > > local_pcp:216kB free_cma:163840kB
+> > >
+> > > This is really unexpected. You are saying this is a regular i386 and DMA
+> > > should be bottom 16MB while yours is 780MB and the rest of the low mem
+> > > is in the Normal zone which is completely missing here. How have you got
+> > > to that configuration? I have to say I haven't seen anything like that
+> > > on i386.
+> >
+> > I think that line comes from an ARM32 beaglebone-X15 machine showing
+> > the same symptom. The i386 line from the log file that Naresh linked to at
+> > https://lkft.validation.linaro.org/scheduler/job/1406110#L1223  is less
+> > unusual:
+>
+> OK, that makes more sense! At least for the memory layout.
+>
+> > [   34.931663] Node 0 active_anon:21464kB inactive_anon:8688kB
+> > active_file:16604kB inactive_file:849976kB unevictable:0kB
+> > isolated(anon):0kB isolated(file):0kB mapped:25284kB dirty:58952kB
+> > writeback:27772kB shmem:8944kB writeback_tmp:0kB unstable:0kB
+> > all_unreclaimable? yes
+> > [   34.955523] DMA free:3356kB min:68kB low:84kB high:100kB
+> > reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
+> > active_file:0kB inactive_file:11964kB unevictable:0kB
+> > writepending:11980kB present:15964kB managed:15876kB mlocked:0kB
+> > kernel_stack:0kB pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB
+> > free_cma:0kB
+> > [   34.983385] lowmem_reserve[]: 0 825 1947 825
+> > [   34.987678] Normal free:3948kB min:7732kB low:8640kB high:9548kB
+> > reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
+> > active_file:1096kB inactive_file:786400kB unevictable:0kB
+> > writepending:65432kB present:884728kB managed:845576kB mlocked:0kB
+> > kernel_stack:1112kB pagetables:0kB bounce:0kB free_pcp:2908kB
+> > local_pcp:500kB free_cma:0kB
+>
+> The lowmem is really low (way below the min watermark so even memory
+> reserves for high priority and atomic requests are depleted. There is
+> still 786MB of inactive page cache to be reclaimed. It doesn't seem to
+> be dirty or under the writeback but it still might be pinned by the
+> filesystem. I would suggest watching vmscan reclaim tracepoints and
+> check why the reclaim fails to reclaim anything.
+> --
+> Michal Hocko
+> SUSE Labs
