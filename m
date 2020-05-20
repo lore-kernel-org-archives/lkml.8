@@ -8,61 +8,60 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D782CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88070C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFA6207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F06B207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:52:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnII1InU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/+e4jR0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgETKvp (ORCPT
+        id S1726851AbgETKwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50324 "EHLO
+        Wed, 20 May 2020 06:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETKvo (ORCPT
+        with ESMTP id S1726435AbgETKwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:51:44 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BB3C061A0E;
-        Wed, 20 May 2020 03:51:44 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id c3so2041351otr.12;
-        Wed, 20 May 2020 03:51:44 -0700 (PDT)
+        Wed, 20 May 2020 06:52:16 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B363AC061A0E;
+        Wed, 20 May 2020 03:52:16 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 63so2071277oto.8;
+        Wed, 20 May 2020 03:52:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+pHFuQZ2r4Z0DaeMsdsoXYaEy9WRSH2ny3D42qCYq9E=;
-        b=OnII1InUbJ08I7/tADo25PRGg3ZkO5cp7KXxbaCMAmhNETuVjb6aLL8k7r/ASEcn78
-         sle5yKUBlPt88sOdpSPok/fqHjQAkfMwpIaXDMyDb+ykPpKhjreCM0CbB5Uscmm4LIKj
-         38euJjg9wNrOm1YUyRBfu+BSUg70zeHsSUMEk6xb5CwAB8DnRWNLTooS8OWqtPDLgxgR
-         TRYfuL0mZWtl2Qvn/gFTozIMJwRfpw05VgzmWjUBfPneJOlu5exggJd+L71owiWzzNV9
-         EoJ2DQxqfPVkNmul/C0IJPOlGAG0e7oeCPjsmZlR/Ayi6XJcpxCcM2MqlJSfnKQg/KMy
-         0nEQ==
+        bh=hFUeOztHXwIWxr32WwjRl6k43PaGfHZ/FxiAc43beH4=;
+        b=h/+e4jR0UxQ2XUyEtRHOoDvqC1nC6MTymVUGht+tsvAJtRI8c3THsTAW1rs6szP3fB
+         feKr4cHrAYsq5rirUAJtxusM3nLnsB6O7muGvPANQy5OVZcqTSIWqZNgS642znvPF6sb
+         vk3fvAJKN7+7Dz9Y1u0nvKjdXZlep3guAjq9nInLttsVoN1nNm+UjVYERMJUKjtPcuUv
+         e2z/miSftq65r+ECEJCfUVID2w5heEmnV3/oJ0dbCUGFU2YrcINEU1ODLcbBqZzPkmcW
+         vImcva23Xv2OSRUyhvvETHMNp2qREBbm9vin40CA3UM4v/sO1car+SUL/niDmLqHOSSU
+         4GEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=+pHFuQZ2r4Z0DaeMsdsoXYaEy9WRSH2ny3D42qCYq9E=;
-        b=SdwJTQ1k7Xp+Z7vtlwIT6blBTeyEZL89QQsJOChvNXRogO4v7UDIn3iAdUQoK8AsBC
-         +BKDliJ+58913Gsk1sdDp574vso2QKm2qSy7dgiuBMllNce4f6UVD1CbMsutz0G7bwUs
-         mlti4k2uWH45ann+L6MBn8tNxdNgLq4UqM7/GANV6XC1Yp+6QYVMTdwAVNr9JTX9n2zX
-         BmUb69gXI4Q5+kWiqvWEvkyI2dMCMhsXAGN3c0L0xHBLue4iqvtPpCmVQz3ehIKRgiY6
-         w5hzZCRDYYqgw4kEHyFdgzIiqs+/ymjZ8AO8cM8fOYwrKq71Mt0NkpEDLGVTvmDulcIY
-         7HlA==
-X-Gm-Message-State: AOAM530zriTKw0u/5l6B692t5Mh8ab/2HoRKhRIU7+X0aHnku82Vr/+q
-        kIuxLtASI1jK5gsG4lNE+To=
-X-Google-Smtp-Source: ABdhPJwiSES5f0ZAZs/ZpOezXeN2unkBHAzi9blokicRcLkIDVzLIHGxKleQ6sIvqzP5uaM9pAY1Rg==
-X-Received: by 2002:a9d:3b36:: with SMTP id z51mr2585846otb.343.1589971903571;
-        Wed, 20 May 2020 03:51:43 -0700 (PDT)
+        bh=hFUeOztHXwIWxr32WwjRl6k43PaGfHZ/FxiAc43beH4=;
+        b=jWZwBB1m03FwqcnrAgaCxnI2ErXHgWk9wa+WTakvWZaWa99MphJpWTMsjp/wjzY+pU
+         RNDaWaR7VtBk0V/jXWT3cEJ+rYJrvlUzl4sUebXBbycGozzNUEAuqigP8xO0lYI009gT
+         uALmpj1eeze9e/QVNtSSajYCzuj+bU8hW1Zcf01lt4P90Saw6qFupjwKZ3XGJ63/wqeP
+         xZJPLFZKpvi94cDFhFwRs6K7A2OtpVNrCiRT3+SXYw3H6Yg8A/cwoIwqsecbh0Tqilm6
+         KG7YoHq4MEr3mCzlorW8qR3z3q6LX8xYzs4oSQ1pBotloojpps3nHoo92RMEAalM7YQC
+         ++zA==
+X-Gm-Message-State: AOAM5303VGVdPe2f5PTsuXH3wqLn5e5o6YVYhJrlbAbYj4jZdtVu3xAX
+        ylXJcFrpPjeIhdU2HwOfiCNbXMfG
+X-Google-Smtp-Source: ABdhPJx91HAj4QHi1sZ+aPmfBlYLTyf8vXscMcEfFd2DkHCwaYc0V9Ns/v4tvXwZReaif4LNYHxEQA==
+X-Received: by 2002:a9d:444:: with SMTP id 62mr2577306otc.272.1589971935830;
+        Wed, 20 May 2020 03:52:15 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id u75sm110015oie.54.2020.05.20.03.51.40
+        by smtp.gmail.com with ESMTPSA id 15sm644889otj.52.2020.05.20.03.52.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 03:51:42 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] soc: mediatek: Enable mmsys driver by default if
- Mediatek arch is selected
+        Wed, 20 May 2020 03:52:15 -0700 (PDT)
+Subject: Re: [PATCH v2 4/4] arm64: dts: mt8173: Fix mmsys node name
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         mark.rutland@arm.com, ck.hu@mediatek.com, sboyd@kernel.org,
         ulrich.hecht+renesas@gmail.com
@@ -70,8 +69,11 @@ Cc:     linux-kernel@vger.kernel.org, drinkcat@chromium.org,
         hsinyi@chromium.org, Collabora Kernel ML <kernel@collabora.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org
+        Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 References: <20200401201736.2980433-1-enric.balletbo@collabora.com>
+ <20200401201736.2980433-4-enric.balletbo@collabora.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -147,12 +149,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <1432dfb1-19c9-8c81-34a1-7b76077da46a@gmail.com>
-Date:   Wed, 20 May 2020 12:51:38 +0200
+Message-ID: <c4de878a-4505-83e5-ef6f-acfaae960359@gmail.com>
+Date:   Wed, 20 May 2020 12:52:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200401201736.2980433-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200401201736.2980433-4-enric.balletbo@collabora.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -164,39 +166,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 01/04/2020 22:17, Enric Balletbo i Serra wrote:
-> The mmsys driver supports only MT8173 device for now, but like other system
-> controllers is an important piece for other Mediatek devices. Actually
-> it depends on the mt8173 clock specific driver but that dependency is
-> not real as it can build without the clock driver. Instead of depends on
-> a specific model, make the driver depends on the generic ARCH_MEDIATEK and
-> enable by default so other Mediatek devices can start using it without
-> flood the Kconfig.
+> Node names are supposed to match the class of the device, mmsys is a
+> system controller (syscon) not a clock controller, so change the node
+> name accordingly.
 > 
 > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 > ---
 
-Now queued for v5.7-next/soc
+Now queued for v5.7-next/dts64
 
 Thanks!
+
 
 > 
 > Changes in v2: None
 > 
->  drivers/soc/mediatek/Kconfig | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index e84513318725..59a56cd790ec 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -46,8 +46,7 @@ config MTK_SCPSYS
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 8b4e806d5119..a55e8c177832 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -908,7 +908,7 @@ u2port1: usb-phy@11291000 {
+>  			};
+>  		};
 >  
->  config MTK_MMSYS
->  	bool "MediaTek MMSYS Support"
-> -	depends on COMMON_CLK_MT8173_MMSYS
-> -	default COMMON_CLK_MT8173_MMSYS
-> +	default ARCH_MEDIATEK
->  	help
->  	  Say yes here to add support for the MediaTek Multimedia
->  	  Subsystem (MMSYS).
+> -		mmsys: clock-controller@14000000 {
+> +		mmsys: syscon@14000000 {
+>  			compatible = "mediatek,mt8173-mmsys", "syscon";
+>  			reg = <0 0x14000000 0 0x1000>;
+>  			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
 > 
