@@ -2,116 +2,222 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A80C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6180C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079BE20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:11:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="loekasaQ"
+	by mail.kernel.org (Postfix) with ESMTP id ADA0120758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgETML6 (ORCPT
+        id S1726944AbgETMMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgETMLt (ORCPT
+        Wed, 20 May 2020 08:12:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58300 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgETMMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:11:49 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B27C061A0E;
-        Wed, 20 May 2020 05:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589976702;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=dxK4Z+9yHO4jSPBzrsgC+jQ7JJM6/ROZjhK04+QSi/s=;
-        b=loekasaQ58kKtS65SiEgMbCExdrlarRrN2LXfhbvpn916/r1eY32+fzUCo//cbUcVp
-        PUjksE3TEAorh4s8NRDzCaM6bh2Hb9RQx2D1mse4PLSNVsHwQkIwvGYLpurfvQ/cvxnl
-        0qhRBSJFGf26sj81y95Mgz6JnpgbesXgZ+ufVjDpkltvmBPocQAkqGNTQL8hA95QGa2C
-        62CsSCriKHIcp0YW/0WoYwI45TsH6KRUU6f+tGOcdXdk1FgKo1C0jn7ie5v4OcjTZRBd
-        YKZPp9/PY7YBytHFXTP9+gcA0+ggPx3aREDNYCqzIXUhiTz8NSKVYMgzk4S6Tbt02+2z
-        BpLg==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbI/Sc5g=="
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.7.0 DYNA|AUTH)
-        with ESMTPSA id k09005w4KCBZ5LX
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 20 May 2020 14:11:35 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Wed, 20 May 2020 08:12:08 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0FADA80307C1;
+        Wed, 20 May 2020 12:12:03 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id c8BOnlAs7pZK; Wed, 20 May 2020 15:12:02 +0300 (MSK)
+Date:   Wed, 20 May 2020 15:12:01 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Kukjin Kim <kgene@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
-Date:   Wed, 20 May 2020 14:11:34 +0200
-Message-ID: <3322411.JsYv2Y6bm7@tauon.chronox.de>
-In-Reply-To: <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
-References: <15745285.MnsZKaK4VV@tauon.chronox.de> <2041475.ybOAuNAZB8@tauon.chronox.de> <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200520121201.wohv6u646rx5otkf@mobilestation>
+References: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
+ <20200518163206.GA17800@alpha.franken.de>
+ <20200518205752.txbylbjt2zkwdwwe@mobilestation>
+ <20200519155053.GB15797@alpha.franken.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519155053.GB15797@alpha.franken.de>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 20. Mai 2020, 14:00:01 CEST schrieb Krzysztof Kozlowski:
-
-Hi Krzysztof,
-
-> On Wed, 20 May 2020 at 13:53, Stephan Mueller <smueller@chronox.de> wrote:
-> > > > That said, the illustrated example is typical for hardware RNGs. Yet
-> > > > it is never guaranteed to work that way. Thus, if you can point to
-> > > > architecture documentation of your specific hardware RNGs showing that
-> > > > the data read from the hardware is pure unconditioned noise data, then
-> > > > I have no objections to the patch.
+On Tue, May 19, 2020 at 05:50:53PM +0200, Thomas Bogendoerfer wrote:
+> On Mon, May 18, 2020 at 11:57:52PM +0300, Serge Semin wrote:
+> > On Mon, May 18, 2020 at 06:32:06PM +0200, Thomas Bogendoerfer wrote:
+> > > On Mon, May 18, 2020 at 04:48:20PM +0300, Serge Semin wrote:
+> > > > On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
+> > > > > On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
+> > > > > > Thomas,
+> > > > > > Could you take a look at my comment below so I could proceed with the
+> > > > > > patchset v3 development?
+> > > > > 
+> > > > > I can't help, but using r4k clocksource with changing frequency is
+> > > > > probaly only usefull as a random generator. So IMHO the only two
+> > > > > options are disabling it or implement what arch/x86/kernel/tsc.c does.
+> > > > > 
+> > > > > Thomas.
+> > > > 
+> > > > Thomas, could you proceed with the rest of the patches review?
+> > > > ├─>[PATCH v2 16/20] bus: cdmm: Add MIPS R5 arch support
+> > > > ├─>[PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
 > > > 
-> > > I can tell for sure that this is the case for exynos-trng[1].
+> > > both are not my call, but look ok to me.
 > > 
-> > So you are saying that the output for the exynos-trng is straight from a
-> > ring oscillator without any post-processing of any kind?
+> > Can I add your Reviewed-by tag there then?
 > 
-> Hi,
+> only for 16/20. 15/20 looks ok to me, but I have not enough insides
+> on the hardware to say this is good.
 > 
-> I think we will never be able to state this because the manual is
-> quite limited in sharing internals. What the driver does and probably
-> Lukasz wanted to say is that there is "post processing" block and
-> feature which can be disabled. The manual is saying the TRNG block
-> generates random data from thermal noise but not how much in a direct
-> way. There could be some simple post-processing or not (except the one
-> able to on/off). Also manual says this post processing block is there
-> to remove statistical weakness from the TRNG block. To me it does not
-> prove enough that raw data is really raw...
-
-Unterstood, but can't that statement be added to the commit message?
+> > > > ├─>[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
+> > > 
+> > > that's broken. A reg shift of 2 doesn't mean we could use 32bit access
+> > > to the registers on other platforms. As I don't think adding some ifdefery
+> > > makes things nicer, just implement the your prom_putchar in board code.
+> > 
+> > I thought about that initially, but then I decided to alter the generic
+> > early_printk_8250 code instead. My version of prom_putchar() would be almost
+> > the same as one implemented in the early_printk_8250 module except minor
+> > modification of replacing readb/writeb methods with readl/writel. So I didn't
+> > want to duplicate the code, but wanted to provide a general way to fix the
+> > problem potentially also for another platforms.
+> > 
+> > Since you don't like this fix alternatively I'd suggest to add the reg_width
+> > parameter passed to the setup_8250_early_printk_port() method like this:
+> > -setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
+> > -                             unsigned int timeout)
+> > +setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
+> > +                             unsigned int reg_width, unsigned int timeout)
+> > 
+> > By reg_width parameter we could determine the actual width of the register:
+> >  static inline u8 serial_in(int offset)
+> >  {
+> > -       return readb(serial8250_base + (offset << serial8250_reg_shift));
+> > +       u8 ret = 0xFF;
+> > +
+> > +       offset <<= serial8250_reg_shift;
+> > +       switch (serial8250_reg_width) {
+> > +       case 1:
+> > +               ret = readb(serial8250_base + offset);
+> > +               break;
+> > +       case 2:
+> > +               ret = readw(serial8250_base + offset);
+> > +               break;
+> > +       case 4:
+> > +               ret = readl(serial8250_base + offset);
+> > +               break;
+> > +       default:
+> > +               break;
+> > +       }
+> > +
+> > +       return ret;
+> >  }
+> > 
+> > The similar modification will be implemented for serial_out(). I'll also modify
 > 
-> Best regards,
-> Krzysztof
+> look at the lines of code you are adding. Doing your own prom_putchar will
+> probably have less lines.
+> 
+> > What do you think about this?
+> 
+> please do your own prom_putchar.
 
+One more time regarding this problem but in appliance to another part of the
+MIPS code. I've missed the patch to draw your attention to:
+[PATCH v2 14/20] mips: Use offset-sized IO-mem accessors in CPS debug printout
 
-Ciao
-Stephan
+There I've applied the same fix as in the patch:
+[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
 
+Since you don't like the way I initially fixed it, suppose there we don't have
+another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
+parameter to select a proper accessors, like sw in our case, and sb by defaul).
+Right?
 
+(Note UART_L is incorrectly created in that patch, I'll remove that macro in
+v3.)
+
+-Sergey
+
+> 
+> 
+> > > 
+> > > > ├─>[PATCH v2 12/20] mips: MAAR: Add XPA mode support
+> > > 
+> > > looks ok so far.
+> > 
+> > Can I add your Reviewed-by tag there then?
+> 
+> As I'm the maintainer of the part, I've simply applied it.
+> 
+> > > 
+> > > > ├─>[PATCH v2 10/20] mips: Add CONFIG/CONFIG6/Cause reg fields macro
+> > > 
+> > > that is fine
+> > 
+> > Can I add your Reviewed-by tag there then?
+> 
+> As this didn't apply cleanly, I'll apply it after you've resent it.
+> IMHO no need for a Reviewed-by.
+> 
+> > > > └─>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
+> > > 
+> > > this is IMHO a dangerous change. Enabling write merging for any
+> > > CPU supporting it might triggers bugs. Do it in your board bringup
+> > > code and at the moment I don't see a reason for the rest of that
+> > > patch.
+> > 
+> > Let's at least leave the mm_config() implementation but without the write-merge
+> > enabling by default. Providing features availability macro
+> > cpu_has_mm_sysad/cpu_has_mm_full and c0 config fields
+> 
+> do you have a user of that ? I'm not introducing code nobody uses.
+> 
+> > I could use them to implement a code pattern like:
+> > 
+> > +	if (cpu_has_mm_full) {
+> > +		unsigned int config0 = read_c0_config();
+> > +               config0 = (config0 & ~MIPS_CONF_MM) | MIPS_CONF_MM_FULL;
+> > +               write_c0_config(config0);
+> > +	}
+> 
+> you know you are running on a R5 core, so you know you have MM_FULL.
+> No need to check this.
+> 
+> > By doing so I can manually enable/disable the MM feature in the
+> > cpu-feature-overrides.h. Without that I'd have to locally define these macro,
+> > which isn't good seeing they are in fact generic and can be useful for other
+> > platforms with SYSAD and FULL MM feature available. What do you think?
+> 
+> To me this is a hardware feature I expect to be done by firmware and
+> Linux shouldn't care about it, if it doesn't have any software
+> implications.
+> 
+> Thomas.
+> 
+> -- 
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
