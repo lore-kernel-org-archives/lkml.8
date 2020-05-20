@@ -2,150 +2,178 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC558C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26153C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99367207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3218207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sl5Q5x/A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JoZh3d4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgETTsQ (ORCPT
+        id S1727819AbgETTsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:48:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbgETTsP (ORCPT
+        Wed, 20 May 2020 15:48:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31052 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727801AbgETTsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:48:15 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD22C061A0E;
-        Wed, 20 May 2020 12:48:15 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id m11so4904293qka.4;
-        Wed, 20 May 2020 12:48:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=j9GtLPWP384+mcmNAjX0iJ86SP6E9SyJL2vo8P6h15U=;
-        b=Sl5Q5x/AR2Cz1CAvTwZdOUzSDcS1IoQUjBY1fsHBdcZ5ff2iJLVCx4Wpgo6pWMtppo
-         Qg7bibiXvAe0J8B48njqtDUyPxTy4DEiIxugvAX4yguVlx4js6USdh9R6krQ8K0qMkb4
-         GQXRXRAp7J3Eo4Fjn4o5dxvzoJDqdgAdficdKdEJT+elbKteocf+XSgjeX3HOHQDoilN
-         5SVI+N1BJpSw+t0v/iI9aHQ468Qb8y4xefOE9hRmHUqdQBziUqAWiRnRv3w81Xr1ZKK6
-         mxx3q0LJPp3PybZYh+BNcnfZh2oOgvhWX6+t6hIvlO20GBW/Iok4ZqsJe3PccDdaqTAz
-         gM+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=j9GtLPWP384+mcmNAjX0iJ86SP6E9SyJL2vo8P6h15U=;
-        b=O7Qt2rvhoc0s51IxfywynxLjjbP8qwyjH9ycjOUKGRXFxmdiCkWLMJOiaqhroP3ibm
-         BZ6kHQznw1FocKAFnJFUizxcRTY5SbU0St0y6c710bbdcAY23AGhqH/FOE08haFIQTbA
-         /62o6D9ztOTdGzGLy93Rrf2yy6EASvxgjPADbT1EWt6dDkZhglaHnBLlXq91klu14sJi
-         iFBgkolHFPFvpMubYuBphpO5AkYpT9mRsjDRXaSoNxADY026FYHAGcmttr8WY24H1wEv
-         7f9p6P3WFhqPGzGovQqdUJq7/LyiwCG58Q2PRwAZoxSZ998LgPyhavCrJmTNFMDDSlst
-         tJ3g==
-X-Gm-Message-State: AOAM531XasSpPIIjpQr11kNZEOmS9x1MHvFhZY/P+UrrDVfRE5BzAe5b
-        e753oHku8zGgwRj1wIjeep5R/tQFSH3Z+g==
-X-Google-Smtp-Source: ABdhPJzmmfjnZ7v5lGiG7IP3kli4Yc3gZcR3wRYRHUJSWq/PIhQlU1MF8BbwpjcxK2O6dG5qUal0DA==
-X-Received: by 2002:a37:7347:: with SMTP id o68mr5962002qkc.343.1590004093902;
-        Wed, 20 May 2020 12:48:13 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id m33sm3158419qte.17.2020.05.20.12.48.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 12:48:13 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, daniel.baluta@nxp.com,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v3 5/5] iio: imu: bmi160: added mount-matrix support
-Date:   Wed, 20 May 2020 21:46:44 +0200
-Message-Id: <20200520194656.16218-6-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
-References: <20200520194656.16218-1-jonathan.albrieux@gmail.com>
+        Wed, 20 May 2020 15:48:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590004099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5EOIorljduPvmZJ+oMRVQpix8Ow58lyWoCnbTjlvW6I=;
+        b=JoZh3d4aVCnq1X8CENMMpH8I/P5oxZE/8dUbKOSgLTcYwhASjQMyD75l1carOBtOmdglOJ
+        yJu5FnEyOEl6y7kl+HMLZRtwSZDxPsinSEcGZokauwqfaiMP3OJmsFnSDxKV3n/tIFQymB
+        lYe8/Wa5tyBHI8C9kRvHegSx/sLYZ0w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-TtWJfTLYNbSGBo3AUitG0Q-1; Wed, 20 May 2020 15:48:14 -0400
+X-MC-Unique: TtWJfTLYNbSGBo3AUitG0Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E8278015D1;
+        Wed, 20 May 2020 19:48:12 +0000 (UTC)
+Received: from mail (ovpn-112-106.rdu2.redhat.com [10.10.112.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E93A25D9CA;
+        Wed, 20 May 2020 19:48:04 +0000 (UTC)
+Date:   Wed, 20 May 2020 15:48:04 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Daniel Colascione <dancol@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, timmurray@google.com,
+        minchan@google.com, sspatil@google.com, lokeshgidra@google.com
+Subject: Re: [PATCH 2/2] Add a new sysctl knob:
+ unprivileged_userfaultfd_user_mode_only
+Message-ID: <20200520194804.GJ26186@redhat.com>
+References: <20200423002632.224776-1-dancol@google.com>
+ <20200423002632.224776-3-dancol@google.com>
+ <20200508125054-mutt-send-email-mst@kernel.org>
+ <20200508125314-mutt-send-email-mst@kernel.org>
+ <20200520045938.GC26186@redhat.com>
+ <202005200921.2BD5A0ADD@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005200921.2BD5A0ADD@keescook>
+User-Agent: Mutt/1.14.0 (2020-05-02)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add mount-matrix binding support. As chip could have different orientations
-a mount matrix support is needed to correctly translate these differences.
+Hello Kees,
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
----
- drivers/iio/imu/bmi160/bmi160.h      |  1 +
- drivers/iio/imu/bmi160/bmi160_core.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
+On Wed, May 20, 2020 at 11:03:39AM -0700, Kees Cook wrote:
+> Err, did I miss a separate 6-patch series? I can't find anything on lore.
 
-diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-index 923c3b274fde..a82e040bd109 100644
---- a/drivers/iio/imu/bmi160/bmi160.h
-+++ b/drivers/iio/imu/bmi160/bmi160.h
-@@ -9,6 +9,7 @@ struct bmi160_data {
- 	struct regmap *regmap;
- 	struct iio_trigger *trig;
- 	struct regulator_bulk_data supplies[2];
-+	struct iio_mount_matrix orientation;
- };
- 
- extern const struct regmap_config bmi160_regmap_config;
-diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-index d3316ca02fbd..26d586daee26 100644
---- a/drivers/iio/imu/bmi160/bmi160_core.c
-+++ b/drivers/iio/imu/bmi160/bmi160_core.c
-@@ -110,6 +110,7 @@
- 		.storagebits = 16,				\
- 		.endianness = IIO_LE,				\
- 	},							\
-+	.ext_info = bmi160_ext_info,				\
- }
- 
- /* scan indexes follow DATA register order */
-@@ -265,6 +266,20 @@ static const struct  bmi160_odr_item bmi160_odr_table[] = {
- 	},
- };
- 
-+static const struct iio_mount_matrix *
-+bmi160_get_mount_matrix(const struct iio_dev *indio_dev,
-+			const struct iio_chan_spec *chan)
-+{
-+	struct bmi160_data *data = iio_priv(indio_dev);
-+
-+	return &data->orientation;
-+}
-+
-+static const struct iio_chan_spec_ext_info bmi160_ext_info[] = {
-+	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmi160_get_mount_matrix),
-+	{ }
-+};
-+
- static const struct iio_chan_spec bmi160_channels[] = {
- 	BMI160_CHANNEL(IIO_ACCEL, X, BMI160_SCAN_ACCEL_X),
- 	BMI160_CHANNEL(IIO_ACCEL, Y, BMI160_SCAN_ACCEL_Y),
-@@ -839,6 +854,11 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
- 		return ret;
- 	}
- 
-+	ret = iio_read_mount_matrix(dev, "mount-matrix",
-+				    &data->orientation);
-+	if (ret)
-+		return ret;
-+
- 	ret = bmi160_chip_init(data, use_spi);
- 	if (ret)
- 		return ret;
--- 
-2.17.1
+Daniel included the link of the previous series I referred to is the
+cover letter 0/2:
+
+https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
+
+> > If you keep only 1/2, can't seccomp-bpf enforce userfaultfd to be
+> > always called with flags==0x1 without requiring extra modifications in
+> > the kernel?
+> 
+> Please no. This is way too much overhead for something that a system
+> owner wants to enforce globally. A sysctl is the correct option here,
+> IMO. If it needs to be a per-userns sysctl, that would be fine too.
+
+The question is who could be this system owner who prefers "2" to "0"?
+
+per-ns I don't see the point either when all containers already run
+with default policies enforcing the same behavior as if the sysctl is
+set to "0".
+
+Why exactly is it preferable to enlarge the surface of attack of the
+kernel and take the risk there is a real bug in userfaultfd code (not
+just a facilitation of exploiting some other kernel bug) that leads to
+a privilege escalation, when you still break 99% of userfaultfd users,
+if you set with option "2"?
+
+Is the system owner really going to purely run on his systems CRIU
+postcopy live migration (which already runs with CAP_SYS_PTRACE) and
+nothing else that could break?
+
+Option "2" to me looks with a single possible user, and incidentally
+this single user can already enforce model "2" by only tweaking its
+seccomp-bpf filters without applying 2/2. It'd be a bug if android
+apps runs unprotected by seccomp regardless of 2/2.
+
+System owners I think would be better of to stick to "0" or "1" a far
+as I can tell, "2" looks a bad tradeoff as system value, with nearly
+all cons of "0", but less secure than "0".
+
+> I'd agree that patch 1 should land, as it appears to be required for any
+
+Agreed about merging 1/2.
+
+> further policy considerations. I'm still a big fan of a sysctl since
+> this is the kind of thing I would absolutely turn on globally for all my
+> systems.
+
+The sysctl /proc/sys/kernel/unprivileged_bpf_disabled is already there
+upstream and you should have already set it to "0" in all your systems
+if you can cope with some app features not working.
+
+2/2 as modified with Peter's suggestion, would add a new value "2" (in
+addition of "1" and "0"), that still breaks the majority of all
+possible users, just like value "0", but that gives less security than
+value "0".
+
+It all boils down of how peculiar it is to be able to leverage only
+the acceleration (reduction in context switches and enter/exit kernel)
+and the vma fragmentation avoidance (to avoid running of vmas in
+/proc/sys/vm/max_map_count) provided by userfaultfd (vs sigsegv
+trapping) but not the transparency in handling faults in kernel (which
+sigsegv can't possibly achieve).
+
+Right now there's a single user that can cope with that limitation,
+and it's not your running on your servers but on your phone. Even CRIU
+cannot cope with such limitation, the only reason it would cope with
+value "2" is that it already runs with CAP_SYS_PTRACE for other
+reasons.
+
+If there will be more users that can cope with handling only user
+initiated page faults, then yes, I think it'd be fine to add a value
+"2" later.
+
+The other benefit of enforcing the policy with seccomp-bpf if that if
+you'd run Android userland on a container on a ARM server on top of an
+enterprise kernel, it'd already run as safe as if the sysctl value was
+tweaked to "2", but without having to also add extra kernel code for
+per-ns sysctl. It just looks simpler. The rest of the containers on
+the same host are already running today as if the sysctl is set to 0
+regardless of this patchset.
+
+If you want to enforce maximum security and override any possible
+opt-out of the default podman seccomp profile that blocks userfaultfd,
+you already can upstream with the global sysctl by setting it to "0".
+
+Thanks,
+Andrea
 
