@@ -2,64 +2,105 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDCDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBC920709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Il+/zPYl"
+	by mail.kernel.org (Postfix) with ESMTP id 68C6A207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589996643;
+	bh=P2aat+TlaI2N+/z7SW3hph4BEYfuA7FSbseNufQGe4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tUeXSezIeosDcFYrsvwDFh/f2sYwC1W6WjwUd9lxVx9aLbhp66MksiOqXHZuYzKma
+	 fDLLTYqx/H7oLHWcBRGNwqMm3iuI2Q7MbJko2Cux3JYCoZjw6DajWILf4nFrkfkW8B
+	 kbkmT/ZdM/939Q/tV35Smu60LL+6woFL6TdtyskE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgETRn5 (ORCPT
+        id S1726944AbgETRoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgETRn5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:43:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BB9C061A0E;
-        Wed, 20 May 2020 10:43:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=72/myqImacqZvgA/Df7tM4W80PT1FO6/o07rXUy1dH4=; b=Il+/zPYl2NlqSMAoFu30IRTSjY
-        qAqRcgvOOfLXUpfM5ePlyGF7j7lXgyyJ6SErXmiH99NPFl8224Hm4TrNU3wuvVeB8D0LuWGrzrqTo
-        2Dj43BzPzcBSwFmJIQh0R/aS8xpR9Xxx0AYNNLl+gIrYiwKG1SSa6zGkMnqhBCjVpY/w3y7N4Q0P/
-        478g/Q9fVjPXKiE/9mk6LOfAjwqXCn5StnSrQPrD62zl/F9E/9dqM6W7TJWeAvXXppdbOs8eKuGRL
-        V2gS68V4zL+xtZD2BakQcJNwY51dpW5jre6H6jGAf00+EwGtIVhg2oeIH+DcXI7HbrMLrmmsLzTXg
-        SSHCH04Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbSl2-0000AA-DN; Wed, 20 May 2020 17:43:56 +0000
-Date:   Wed, 20 May 2020 10:43:56 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Sean V Kelley <sean.v.kelley@linux.intel.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        Wed, 20 May 2020 13:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgETRoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:44:01 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 427C82075F;
+        Wed, 20 May 2020 17:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589996641;
+        bh=P2aat+TlaI2N+/z7SW3hph4BEYfuA7FSbseNufQGe4k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LJ5Q3o7lmeUADmYQ2lB29DmpSJq9CwNkr/C8uOM21tMpkAFWObarU+Bu1OsPfq9FG
+         4F6Ql4BWleoI4gCPqUB936+6/WYnqm5xYt5ZI5xAF0uY3EHOr74j831yY9jHzVpFEC
+         at7VFnF549jrYb1WBdZlx226K8TrOTtmFi+2M4UA=
+Date:   Wed, 20 May 2020 18:43:56 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        patches@amperecomputing.com, Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 3/3] PCI: Add helpers to enable/disable CXL.mem and
- CXL.cache
-Message-ID: <20200520174356.GA26878@infradead.org>
-References: <20200518163523.1225643-1-sean.v.kelley@linux.intel.com>
- <20200518163523.1225643-4-sean.v.kelley@linux.intel.com>
+Subject: Re: [PATCH v5] ACPI/IORT: Fix PMCG node single ID mapping handling
+Message-ID: <20200520174355.GC27629@willie-the-truck>
+References: <1589994787-28637-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <20200520172736.GA10693@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518163523.1225643-4-sean.v.kelley@linux.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200520172736.GA10693@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 09:35:23AM -0700, Sean V Kelley wrote:
-> With these helpers, a device driver can enable/disable access to
-> CXL.mem and CXL.cache. Note that the device driver is responsible for
-> managing the memory area.
+On Wed, May 20, 2020 at 06:27:36PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, May 20, 2020 at 10:13:07AM -0700, Tuan Phan wrote:
+> > An IORT PMCG node can have no ID mapping if its overflow interrupt is
+> > wire based therefore the code that parses the PMCG node can not assume
+> > the node will always have a single mapping present at index 0.
+> > 
+> > Fix iort_get_id_mapping_index() by checking for an overflow interrupt
+> > and mapping count.
+> > 
+> > Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
+> > 
+> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+> > Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+> > ---
+> > v1 -> v2:
+> > - Use pmcg node to detect wired base overflow interrupt.
+> > 
+> > v2 -> v3:
+> > - Address Hanjun and Robin's comments.
+> > 
+> > v3 -> v4:
+> > - Update the title and description as mentioned by Lorenzo.
+> > 
+> > v4 -> v5:
+> > - Remove period in the title and commit references.
+> > 
+> >  drivers/acpi/arm64/iort.c | 5 +++++
+> 
+> Hi Will,
+> 
+> is there a chance we can get this patch into v5.8 ? I understand
+> we are very late in the cycle but I wanted to ask (it applies cleanly
+> to for-next/acpi).
 
-Who is going to call these?  Please don't submit new APIs without users.
+Sorry, Lorenzo -- I didn't notice that this had been Acked already. I was
+waiting for somebody to chime in! I'll queue it ASAP for 5.8.
+
+Will
