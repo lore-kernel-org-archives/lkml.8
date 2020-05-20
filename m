@@ -2,153 +2,147 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD696C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69264C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC811207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D0F207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="opcHvNIS"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="gr9GMxtd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgETJSz (ORCPT
+        id S1726819AbgETJTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:18:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35794 "EHLO
+        Wed, 20 May 2020 05:19:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETJSy (ORCPT
+        with ESMTP id S1726510AbgETJTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:18:54 -0400
-Received: from mo6-p01-ob.smtp.rzone.de (mo6-p01-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5301::7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FCB2C061A0E;
-        Wed, 20 May 2020 02:18:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589966330;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=jnu5hWhBP4JZRIy4PRG4U6miSmGbRgsPoOIk1eFJ53E=;
-        b=opcHvNIS2wUmw7Z8RZ1xMShDtJeCEMF2S+IkoH4VGplXLFVF9y22JJ9TZPnZYh4Rdy
-        i6wkhmgcfBQHzF3VxqKfXAYptX9H3/FG4YiJzCo7GANAEzeC5iX7PR6O6bqmmNE/LCIh
-        WIfpu0IqwbVzf03B/9hBW21168BNxHJhesyFKjkfTFwMJrnTQgAuPlxdYYDOLhpofFfu
-        3pFRffsvVKBBAuqt9hWkvXkegriOQohGq0xA9sWTgWaV4LL36r3bgjvYc8Rb/D9WXOda
-        mOEU5gHHrOtFZ211MbFl5AQ2tx8jf7k9NxcVwaRbDujt+miqvgtZnXZHdP+l+Eov+uzf
-        frvQ==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zmgLKehaO2hZDSTWbg/LOA=="
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.7.0 AUTH)
-        with ESMTPSA id k09005w4K9IZ4DL
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 20 May 2020 11:18:35 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
-Date:   Wed, 20 May 2020 11:18:32 +0200
-Message-ID: <15745285.MnsZKaK4VV@tauon.chronox.de>
-In-Reply-To: <dleftjr1vf2cqf.fsf%l.stelmach@samsung.com>
-References: <1748331.j7eDFAdTc1@tauon.chronox.de> <CGME20200520091043eucas1p15ecae108007382a95b01e42241cc7a26@eucas1p1.samsung.com> <dleftjr1vf2cqf.fsf%l.stelmach@samsung.com>
+        Wed, 20 May 2020 05:19:45 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5872FC05BD43
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:19:44 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d7so2370510ioq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4MtCeXtYJztBAdny7JMpr9tFuQgehgsjdymzaj9y89A=;
+        b=gr9GMxtdJnZ4/HGUFlPqG3223EEHFYHgbywWo5fZ7nEcHZ/0L6m/rPRz9EMomdinGX
+         gw+4y2Ot7K3hqcXBlicBJGhv59sV6FTdDVXFBbOpizlDxwLs1N1BwdpncaefpyUFWwiT
+         2J4oHkfgE9Q7nJ/GxD0HVIozJ54ni07wwhAoUxEzFtI34chD+Iv01o/teHe3Gqw7nvHW
+         V2Rks6kPST1qvYf+/zQ49dKrWE79INi0q4sdTLF9TbU36N9xr5znY/VfLju3YaIUC3Zl
+         oldzyJFzVLpQtquHM9cyLQrc+K1nX2S9NO+aqt/tmtrmU/a97iKz1e8XIocgiaitIdS7
+         UccQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4MtCeXtYJztBAdny7JMpr9tFuQgehgsjdymzaj9y89A=;
+        b=kpQjF5EeIvymB0/CsBWAqv+DTKb4hlr+BH96xkwVWhFm+RSgJco8fo3i3XeC6T4az8
+         vbEnrfDvp6U+skhAWJRFaBtNWm87B7T1Jpf0c5tCHtu4jpVF2izO/ZDcmESNX5ITNfG7
+         sTKN4BJlA8JVnGzwX1Fe4V0MOmLFcHvSMSKChh/TRC1to+UEvzZp+NdxX2sohrjDyFwb
+         Gj8/alWGCpB/+qjpnNBZg7H1uQVmPY5Y4rAV9km/CEkc/wzJwMH5rd7Ep5iwDXUNViSx
+         JMikaeMRjCXuETC6x+l7vF1sL4+ho5lhr9hqZwGmqO5NUBaaoy9Fqe9On0MK8qbrd+6J
+         ZqrA==
+X-Gm-Message-State: AOAM532e5y1xLokoIi4812SZFs4dgaVzp9lXPtY7NDdoA1l1MM9bBHCI
+        WNcVErjWXT8I25BSlV9e246suETVyXyOa30WZ/PYWA==
+X-Google-Smtp-Source: ABdhPJxfcMFcRpgMe3jPhIr7dlnaeApgO41HN00hg/DL0f0uo79Shv8ju19FCk5CWaCaCcGPEVG3ppJTh2gjtP/n54o=
+X-Received: by 2002:a5d:9e11:: with SMTP id h17mr2551601ioh.119.1589966383474;
+ Wed, 20 May 2020 02:19:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20200511150759.18766-1-brgl@bgdev.pl> <20200511150759.18766-2-brgl@bgdev.pl>
+ <20200519182831.GA418402@bogus>
+In-Reply-To: <20200519182831.GA418402@bogus>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 20 May 2020 11:19:32 +0200
+Message-ID: <CAMRc=Md6Be41XEu3ZnR1Du_hSMaAcPn4t4Ci9jAOZ1VXz6vbfA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: arm: add a binding document for
+ MediaTek PERICFG controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 20. Mai 2020, 11:10:32 CEST schrieb Lukasz Stelmach:
+wt., 19 maj 2020 o 20:28 Rob Herring <robh@kernel.org> napisa=C5=82(a):
+>
+> On Mon, May 11, 2020 at 05:07:46PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This adds a binding document for the PERICFG controller present on
+> > MediaTek SoCs. For now the only variant supported is 'mt8516-pericfg'.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  .../arm/mediatek/mediatek,pericfg.yaml        | 34 +++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/mediatek/medi=
+atek,pericfg.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pe=
+ricfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericf=
+g.yaml
+> > new file mode 100644
+> > index 000000000000..74b2a6173ffb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.y=
+aml
+> > @@ -0,0 +1,34 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml=
+#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: MediaTek Peripheral Configuration Controller
+> > +
+> > +maintainers:
+> > +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+>
+> Don't need oneOf here.
+>
+> > +      - items:
+> > +        - enum:
+> > +          - mediatek,pericfg
+>
+> Doesn't match the example (which is correct).
+>
 
-Hi Lukasz,
+Hi Rob,
 
-> It was <2020-05-20 =C5=9Bro 08:23>, when Stephan Mueller wrote:
-> > Am Dienstag, 19. Mai 2020, 23:25:51 CEST schrieb =C5=81ukasz Stelmach:
-> >> The value was estimaded with ea_iid[1] using on 10485760 bytes read fr=
-om
-> >> the RNG via /dev/hwrng. The min-entropy value calculated using the most
-> >> common value estimate (NIST SP 800-90P[2], section 6.3.1) was 7.964464.
-> >=20
-> > I am sorry, but I think I did not make myself clear: testing random
-> > numbers
-> > post-processing with the statistical tools does NOT give any idea about
-> > the
-> > entropy rate. Thus, all that was calculated is the proper implementation
-> > of
-> > the post-processing operation and not the actual noise source.
-> >=20
-> > What needs to happen is that we need access to raw, unconditioned data
-> > from
-> > the noise source that is analyzed with the statistical methods.
->=20
-> I did understand you and I assure you the data I tested were obtained
-> directly from RNGs. As I pointed before[1], that is how /dev/hwrng
-> works[2].
+FYI this was superseded by v3 which should now be correct.
 
-I understand that /dev/hwrng pulls the data straight from the hardware. But=
-=20
-the data from the hardware usually is not obtained straight from the noise=
-=20
-source.
-
-Typically you have a noise source (e.g. a ring oscillator) whose data is=20
-digitized then fed into a compression function like an LFSR or a hash. Then=
- a=20
-cryptographic operation like a CBC-MAC, hash or even a DRBG is applied to t=
-hat=20
-data when the caller wants to have random numbers.
-
-In order to estimate entropy, we need the raw unconditioned data from the,=
-=20
-say, ring oscillator and not from the (cryptographic) output operation.
-
-That said, the illustrated example is typical for hardware RNGs. Yet it is=
-=20
-never guaranteed to work that way. Thus, if you can point to architecture=20
-documentation of your specific hardware RNGs showing that the data read fro=
-m=20
-the hardware is pure unconditioned noise data, then I have no objections to=
-=20
-the patch.
->=20
-> If I am wrong, do show me the code that processes the data from a HW RNG
-> before copying them to user provided buffer[3].
-
-I am not talking about any software post-processing. I am talking about pos=
-t-
-processing within the hardware.
->=20
-> [1] https://lkml.org/lkml/2020/5/15/252
-> [2]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-oc
-> umentation/admin-guide/hw_random.rst?h=3Dv5.6 [3]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-ri
-> vers/char/hw_random/core.c?h=3Dv5.6#n251
->=20
-> Kind regards,
-
-
-Ciao
-Stephan
-
-
+Bart
