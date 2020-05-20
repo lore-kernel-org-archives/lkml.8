@@ -2,106 +2,112 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA14C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1445D206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CAW4kdbN"
+	by mail.kernel.org (Postfix) with ESMTP id B2C82207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgETRHv (ORCPT
+        id S1727812AbgETRIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:07:51 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57017 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726835AbgETRHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:07:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589994467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h8s8eLV7Rc+UskCAa0sA5YpsdyL5CTF8FfVq7I1LuUs=;
-        b=CAW4kdbNc6OspzFZ8q9qLx121a6CHcGMMTQ3NZa5LevvFXosXKuV7lWHHWG4XWm8ptwe5H
-        24O9Zf9zLzri2FAAIXFrjo01FjBSd8wkk7u9yT4IZbZGs8n30GC43/vv/h2kAXjJkApCcu
-        Pzvwow2PLO0NmIws8b6okETG758ARd0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-INsAV-zpOO6Sns0liO_eVQ-1; Wed, 20 May 2020 13:07:45 -0400
-X-MC-Unique: INsAV-zpOO6Sns0liO_eVQ-1
-Received: by mail-wm1-f69.google.com with SMTP id q6so1090270wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:07:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=h8s8eLV7Rc+UskCAa0sA5YpsdyL5CTF8FfVq7I1LuUs=;
-        b=YETMb8Kr6/W7cfw0sWi64WnZsuvfsIA+I0WFIS+e3eEQXCji7aVPJILqUmSK2TopbW
-         gfHnMayk8lNgApHXUskXWrq4xiRGRpmBAV5ip9qXqCrk7ohjnffdBfEvfjJsJU9jeg5i
-         nu4LmpJSw98UBlbWntzH/Oqf8vlC8EdqfFYw5ksU6u7amChyigpgCui5+c7W2AvyewFc
-         7yGyaYHCeG3PG9F0O5pUH1P7AfQxjARefWet1j/+c41xsYW5n/bi/Oygk4irkqoExO2j
-         wokhez7WYNj5CXRx2egx2cayAfewAK+4FyJGH5LoNpV2A3hDKJneQifNImFhMN/4zNLv
-         VWMQ==
-X-Gm-Message-State: AOAM531Vh1HKCOcNCLLCGtdoHSmX5rPlI4ADEEBcTSM3eOJ0WEu38a1E
-        E6qP7kM3W4BIlHsGtIzfEWVxELjVFo+UJoYglm3wPNadGZRZwiGUxLMvgsvW8iNQXYMr7ml5F5p
-        hiJfyfRC9cUbdldaiv90jZ9yv
-X-Received: by 2002:a1c:29c2:: with SMTP id p185mr5106268wmp.7.1589994461626;
-        Wed, 20 May 2020 10:07:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxXwz+s1k2t4Yt/PPpgCx537sWFWIohMV+6cLRupqxNVklTI9TSnTh39ma356x642wRy6d4eA==
-X-Received: by 2002:a1c:29c2:: with SMTP id p185mr5106256wmp.7.1589994461441;
-        Wed, 20 May 2020 10:07:41 -0700 (PDT)
-Received: from steredhat.redhat.com (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id s8sm522512wrg.50.2020.05.20.10.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:07:40 -0700 (PDT)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH liburing v2 4/5] man/io_uring_register.2: add IORING_CQ_EVENTFD_DISABLED description
-Date:   Wed, 20 May 2020 19:07:13 +0200
-Message-Id: <20200520170714.68156-5-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200520170714.68156-1-sgarzare@redhat.com>
-References: <20200520170714.68156-1-sgarzare@redhat.com>
+        Wed, 20 May 2020 13:08:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:60208 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726826AbgETRIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:08:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E73D130E;
+        Wed, 20 May 2020 10:08:05 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBC813F305;
+        Wed, 20 May 2020 10:08:02 -0700 (PDT)
+Date:   Wed, 20 May 2020 18:08:00 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     linux-arch@vger.kernel.org, suzuki.poulose@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, xiexiangyou@huawei.com,
+        steven.price@arm.com, zhangshaokun@hisilicon.com,
+        linux-mm@kvack.org, arm@kernel.org, prime.zeng@hisilicon.com,
+        guohanjun@huawei.com, olof@lixom.net, kuhn.chenqun@huawei.com,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v3 2/2] arm64: tlb: Use the TLBI RANGE feature in
+ arm64
+Message-ID: <20200520170759.GE18302@gaia>
+References: <20200414112835.1121-1-yezhenyu2@huawei.com>
+ <20200414112835.1121-3-yezhenyu2@huawei.com>
+ <20200514152840.GC1907@gaia>
+ <54468aae-dbb1-66bd-c633-82fc75936206@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54468aae-dbb1-66bd-c633-82fc75936206@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- man/io_uring_register.2 | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Mon, May 18, 2020 at 08:21:02PM +0800, Zhenyu Ye wrote:
+> On 2020/5/14 23:28, Catalin Marinas wrote:
+> > On Tue, Apr 14, 2020 at 07:28:35PM +0800, Zhenyu Ye wrote:
+> >> +		}
+> >> +		scale++;
+> >> +		range_size >>= TLB_RANGE_MASK_SHIFT;
+> >> +	}
+> > 
+> > So, you start from scale 0 and increment it until you reach the maximum.
+> > I think (haven't done the maths on paper) you could also start from the
+> > top with something like scale = ilog2(range_size) / 5. Not sure it's
+> > significantly better though, maybe avoiding the loop 3 times if your
+> > range is 2MB (which happens with huge pages).
+> 
+> This optimization is only effective when the range is a multiple of 256KB
+> (when the page size is 4KB), and I'm worried about the performance
+> of ilog2().  I traced the __flush_tlb_range() last year and found that in
+> most cases the range is less than 256K (see details in [1]).
 
-diff --git a/man/io_uring_register.2 b/man/io_uring_register.2
-index e64f688..5022c03 100644
---- a/man/io_uring_register.2
-+++ b/man/io_uring_register.2
-@@ -168,6 +168,14 @@ must contain a pointer to the eventfd file descriptor, and
- .I nr_args
- must be 1. Available since 5.2.
- 
-+An application can temporarily disable notifications, coming through the
-+registered eventfd, by setting the
-+.B IORING_CQ_EVENTFD_DISABLED
-+bit in the
-+.I flags
-+field of the CQ ring.
-+Available since 5.8.
-+
- .TP
- .B IORING_REGISTER_EVENTFD_ASYNC
- This works just like
+THP or hugetlbfs would exercise bigger strides but I guess it depends on
+the use-case. ilog2() should be reduced to a few instructions on arm64
+AFAICT (haven't tried but it should use the CLZ instruction).
+
+> > Anyway, I think it would be more efficient if we combine the
+> > __flush_tlb_range() and the _directly one into the same function with a
+> > single loop for both. For example, if the stride is 2MB already, we can
+> > handle this with a single classic TLBI without all the calculations for
+> > the range operation. The hardware may also handle this better since the
+> > software already told it there can be only one entry in that 2MB range.
+> > So each loop iteration could figure which operation to use based on
+> > cpucaps, TLBI range ops, stride and reduce range_size accordingly.
+> 
+> Summarize your suggestion in one sentence: use 'stride' to optimize the
+> preformance of TLBI.  This can also be done by dividing into two functions,
+> and this should indeed be taken into account in the TLBI RANGE feature.
+> 
+> But if we figure which operation to use based on cpucaps in each loop
+> iteration, then cpus_have_const_cap() will be called frequently, which
+> may affect performance of TLBI.  In my opinion, we should do as few
+> judgments as possible in the loop, so judge the cpucaps outside the
+> loop maybe a good choice.
+
+cpus_have_const_cap() is a static label, so should be patched with a
+branch or nop. My point was that in the classic __flush_tlb_range()
+loop, instead of an addr += stride we could have something more dynamic
+depending on whether the CPU supports range TLBI ops or not. But we
+would indeed have more (static) branches in the loop, so possibly some
+performance degradation.
+
+If the code looks ok, I'd favour this and we can look at the
+optimisation later. But I can't really tell how the code would look
+without attempting to merge the two.
+
+Anyway, a first step would be to to add the the range and stride to the
+decision (i.e. (end-start)/stride > 1) before jumping to the range
+operations. You can avoid the additional checks in the new TLBI
+functions since we know we have at least two (huge)pages.
+
 -- 
-2.25.4
-
+Catalin
