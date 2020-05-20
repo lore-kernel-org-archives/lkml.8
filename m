@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26084C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57466C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B38B205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D924205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgETOZF (ORCPT
+        id S1726548AbgETOZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:05 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33152 "EHLO
+        Wed, 20 May 2020 10:25:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33092 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727056AbgETOW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727044AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:28 -0400
+        Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035k-UW; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbw-00035l-2E; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DSC-No; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-007DSU-Rm; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "Neelima Krishnan" <neelima.krishnan@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>
-Date:   Wed, 20 May 2020 15:14:22 +0100
-Message-ID: <lsq.1589984008.274460399@decadent.org.uk>
+        "Marc Zyngier" <maz@kernel.org>,
+        "Christoffer Dall" <christoffer.dall@arm.com>
+Date:   Wed, 20 May 2020 15:14:24 +0100
+Message-ID: <lsq.1589984008.139003611@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 54/99] x86/cpu: Update cached HLE state on write to
- TSX_CTRL_CPUID_CLEAR
+Subject: [PATCH 3.16 56/99] KVM: arm64: Only sign-extend MMIO up to
+ register width
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,60 +56,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Christoffer Dall <christoffer.dall@arm.com>
 
-commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b upstream.
+commit b6ae256afd32f96bec0117175b329d0dd617655e upstream.
 
-/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
-be present on boot cpu even if it was disabled during the bootup. This
-is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
-state is changed via the new MSR IA32_TSX_CTRL.
+On AArch64 you can do a sign-extended load to either a 32-bit or 64-bit
+register, and we should only sign extend the register up to the width of
+the register as specified in the operation (by using the 32-bit Wn or
+64-bit Xn register specifier).
 
-Update the cached HLE bit also since it is expected to change after an
-update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
+As it turns out, the architecture provides this decoding information in
+the SF ("Sixty-Four" -- how cute...) bit.
 
-Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
+Let's take advantage of this with the usual 32-bit/64-bit header file
+dance and do the right thing on AArch64 hosts.
+
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20191212195055.5541-1-christoffer.dall@arm.com
+[bwh: Backported to 3.16:
+ - Use ESR_EL2_SF
+ - Adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/tsx.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/arm/include/asm/kvm_emulate.h   | 5 +++++
+ arch/arm/include/asm/kvm_mmio.h      | 2 ++
+ arch/arm/kvm/mmio.c                  | 6 ++++++
+ arch/arm64/include/asm/kvm_emulate.h | 5 +++++
+ arch/arm64/include/asm/kvm_mmio.h    | 6 ++----
+ 5 files changed, 20 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kernel/cpu/tsx.c
-+++ b/arch/x86/kernel/cpu/tsx.c
-@@ -115,11 +115,12 @@ void __init tsx_init(void)
- 		tsx_disable();
- 
- 		/*
--		 * tsx_disable() will change the state of the
--		 * RTM CPUID bit.  Clear it here since it is now
--		 * expected to be not set.
-+		 * tsx_disable() will change the state of the RTM and HLE CPUID
-+		 * bits. Clear them here since they are now expected to be not
-+		 * set.
- 		 */
- 		setup_clear_cpu_cap(X86_FEATURE_RTM);
-+		setup_clear_cpu_cap(X86_FEATURE_HLE);
- 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
- 
- 		/*
-@@ -131,10 +132,10 @@ void __init tsx_init(void)
- 		tsx_enable();
- 
- 		/*
--		 * tsx_enable() will change the state of the
--		 * RTM CPUID bit.  Force it here since it is now
--		 * expected to be set.
-+		 * tsx_enable() will change the state of the RTM and HLE CPUID
-+		 * bits. Force them here since they are now expected to be set.
- 		 */
- 		setup_force_cpu_cap(X86_FEATURE_RTM);
-+		setup_force_cpu_cap(X86_FEATURE_HLE);
- 	}
+--- a/arch/arm/include/asm/kvm_emulate.h
++++ b/arch/arm/include/asm/kvm_emulate.h
+@@ -105,6 +105,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return kvm_vcpu_get_hsr(vcpu) & HSR_SSE;
  }
+ 
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
+ static inline int kvm_vcpu_dabt_get_rd(struct kvm_vcpu *vcpu)
+ {
+ 	return (kvm_vcpu_get_hsr(vcpu) & HSR_SRT_MASK) >> HSR_SRT_SHIFT;
+--- a/arch/arm/include/asm/kvm_mmio.h
++++ b/arch/arm/include/asm/kvm_mmio.h
+@@ -26,6 +26,8 @@
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Not used on 32-bit arm */
++	bool sixty_four;
+ };
+ 
+ /*
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -140,6 +140,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_EL2_SSE);
+ }
+ 
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
++{
++	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_EL2_SF);
++}
++
+ static inline int kvm_vcpu_dabt_get_rd(const struct kvm_vcpu *vcpu)
+ {
+ 	return (kvm_vcpu_get_hsr(vcpu) & ESR_EL2_SRT_MASK) >> ESR_EL2_SRT_SHIFT;
+--- a/arch/arm64/include/asm/kvm_mmio.h
++++ b/arch/arm64/include/asm/kvm_mmio.h
+@@ -22,13 +22,11 @@
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_arm.h>
+ 
+-/*
+- * This is annoying. The mmio code requires this, even if we don't
+- * need any decoding. To be fixed.
+- */
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Witdth of the register accessed by the faulting instruction is 64-bits */
++	bool sixty_four;
+ };
+ 
+ /*
+--- a/arch/arm/kvm/mmio.c
++++ b/arch/arm/kvm/mmio.c
+@@ -112,6 +112,9 @@ int kvm_handle_mmio_return(struct kvm_vc
+ 			data = (data ^ mask) - mask;
+ 		}
+ 
++		if (!vcpu->arch.mmio_decode.sixty_four)
++			data = data & 0xffffffff;
++
+ 		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
+ 			       &data);
+ 		data = vcpu_data_host_to_guest(vcpu, data, len);
+@@ -127,6 +130,7 @@ static int decode_hsr(struct kvm_vcpu *v
+ 	unsigned long rt;
+ 	int len;
+ 	bool is_write, sign_extend;
++	bool sixty_four;
+ 
+ 	if (kvm_vcpu_dabt_isextabt(vcpu)) {
+ 		/* cache operation on I/O addr, tell guest unsupported */
+@@ -146,6 +150,7 @@ static int decode_hsr(struct kvm_vcpu *v
+ 
+ 	is_write = kvm_vcpu_dabt_iswrite(vcpu);
+ 	sign_extend = kvm_vcpu_dabt_issext(vcpu);
++	sixty_four = kvm_vcpu_dabt_issf(vcpu);
+ 	rt = kvm_vcpu_dabt_get_rd(vcpu);
+ 
+ 	mmio->is_write = is_write;
+@@ -153,6 +158,7 @@ static int decode_hsr(struct kvm_vcpu *v
+ 	mmio->len = len;
+ 	vcpu->arch.mmio_decode.sign_extend = sign_extend;
+ 	vcpu->arch.mmio_decode.rt = rt;
++	vcpu->arch.mmio_decode.sixty_four = sixty_four;
+ 
+ 	/*
+ 	 * The MMIO instruction is emulated and should not be re-executed
 
