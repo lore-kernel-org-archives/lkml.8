@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D64CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C1CC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19578205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77AF8205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgETOXQ (ORCPT
+        id S1727988AbgETOXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:23:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33498 "EHLO
+        Wed, 20 May 2020 10:23:20 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33356 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727779AbgETOWa (ORCPT
+        by vger.kernel.org with ESMTP id S1726805AbgETOW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:30 -0400
+        Wed, 20 May 2020 10:22:29 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-00036O-LQ; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPby-00036p-Ei; Wed, 20 May 2020 15:22:22 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DRO-DR; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbx-007DVy-Gi; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,32 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Matthew Garrett" <mjg59@google.com>,
-        "Ard Biesheuvel" <ardb@kernel.org>,
-        "Ard Biesheuvel" <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org, "Arvind Sankar" <nivedita@alum.mit.edu>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Ingo Molnar" <mingo@kernel.org>
-Date:   Wed, 20 May 2020 15:14:12 +0100
-Message-ID: <lsq.1589984008.411826113@decadent.org.uk>
+        "Jens Axboe" <axboe@kernel.dk>,
+        "Jerome Glisse" <jglisse@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Jan Kara" <jack@suse.cz>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Jason Gunthorpe" <jgg@ziepe.ca>,
+        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
+        "Christoph Hellwig" <hch@lst.de>,
+        "Leon Romanovsky" <leonro@mellanox.com>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        "Daniel Vetter" <daniel.vetter@ffwll.ch>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        "=?UTF-8?Q?Bj=C3=B6rn=20?= =?UTF-8?Q?T=C3=B6pel?=" 
+        <bjorn.topel@intel.com>, "Ira Weiny" <ira.weiny@intel.com>,
+        "Mike Rapoport" <rppt@linux.ibm.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Date:   Wed, 20 May 2020 15:14:56 +0100
+Message-ID: <lsq.1589984009.929198316@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 44/99] efi/x86: Map the entire EFI vendor string
- before copying it
+Subject: [PATCH 3.16 88/99] media/v4l2-core: set pages dirty upon
+ releasing DMA buffers
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,65 +74,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c upstream.
+commit 3c7470b6f68434acae459482ab920d1e3fabd1c7 upstream.
 
-Fix a couple of issues with the way we map and copy the vendor string:
-- we map only 2 bytes, which usually works since you get at least a
-  page, but if the vendor string happens to cross a page boundary,
-  a crash will result
-- only call early_memunmap() if early_memremap() succeeded, or we will
-  call it with a NULL address which it doesn't like,
-- while at it, switch to early_memremap_ro(), and array indexing rather
-  than pointer dereferencing to read the CHAR16 characters.
+After DMA is complete, and the device and CPU caches are synchronized,
+it's still required to mark the CPU pages as dirty, if the data was
+coming from the device.  However, this driver was just issuing a bare
+put_page() call, without any set_page_dirty*() call.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: linux-efi@vger.kernel.org
-Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
-Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: Keep using early_memremap() since
- early_memremap_ro() is not defined.]
+Fix the problem, by calling set_page_dirty_lock() if the CPU pages were
+potentially receiving data from the device.
+
+Link: http://lkml.kernel.org/r/20200107224558.2362728-11-jhubbard@nvidia.com
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Björn Töpel <bjorn.topel@intel.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Jerome Glisse <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Leon Romanovsky <leonro@mellanox.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/platform/efi/efi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/media/v4l2-core/videobuf-dma-sg.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -718,7 +718,6 @@ void __init efi_init(void)
- 	efi_char16_t *c16;
- 	char vendor[100] = "unknown";
- 	int i = 0;
--	void *tmp;
+--- a/drivers/media/v4l2-core/videobuf-dma-sg.c
++++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+@@ -316,8 +316,11 @@ int videobuf_dma_free(struct videobuf_dm
+ 	BUG_ON(dma->sglen);
  
- #ifdef CONFIG_X86_32
- 	if (boot_params.efi_info.efi_systab_hi ||
-@@ -745,14 +744,16 @@ void __init efi_init(void)
- 	/*
- 	 * Show what we know for posterity
- 	 */
--	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
-+	c16 = early_memremap(efi.systab->fw_vendor,
-+			     sizeof(vendor) * sizeof(efi_char16_t));
- 	if (c16) {
--		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
--			vendor[i] = *c16++;
-+		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
-+			vendor[i] = c16[i];
- 		vendor[i] = '\0';
--	} else
-+		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
-+	} else {
- 		pr_err("Could not map the firmware vendor!\n");
--	early_memunmap(tmp, 2);
-+	}
- 
- 	pr_info("EFI v%u.%.02u by %s\n",
- 		efi.systab->hdr.revision >> 16,
+ 	if (dma->pages) {
+-		for (i = 0; i < dma->nr_pages; i++)
++		for (i = 0; i < dma->nr_pages; i++) {
++			if (dma->direction == DMA_FROM_DEVICE)
++				set_page_dirty_lock(dma->pages[i]);
+ 			page_cache_release(dma->pages[i]);
++		}
+ 		kfree(dma->pages);
+ 		dma->pages = NULL;
+ 	}
 
