@@ -2,128 +2,138 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD8CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF402206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="S/C8q0u1"
+	by mail.kernel.org (Postfix) with ESMTP id E86CE206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgETPXG (ORCPT
+        id S1726944AbgETPXz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgETPXD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:23:03 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688ACC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:23:03 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id n18so1723010pfa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=q/sKPgEYp3g3cebHBn38ukD6oq83OtlMsqDeM2dlT2s=;
-        b=S/C8q0u1+H6mmpXkFnd+U1cMWvHcjrZbgtYPv8vmiMr2HBXRFa05Xaukja1+yAc0nj
-         Gl9tEsA7MFacod1B+/lF7+tlBsSy/goNENRi9nZuALTFtX8t1hYMg6dVkxsOiOqIJ/xu
-         8GuerfD5ZHBRFwTvp5W0/wUUGXkQIouY0qV37HJiWjeY6f2aV2uaDrwfXdPPDL0pD25v
-         yk+vS0XmimnbqTY6bf7lgulMI3B4GeDbVJqRY2j9TCeaKQoJ/wRxlSwmf7BXFZ6OeNb6
-         wVI1cgBnLy0zG7haievzWmun2dC3jSlduuUWOp397IU8Lq/C1QI56+X8ut6thbGYbIUV
-         vwuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=q/sKPgEYp3g3cebHBn38ukD6oq83OtlMsqDeM2dlT2s=;
-        b=EW6Y9aYxQkNSBgaGPRnx4qGrzICeEOd+W5qk0MbWRPwyOr44Kux7F9bkGrz66B52iE
-         F80nnln0X9q1u3dfaIW/klfdqhGk+g2VtyTPXFB8Ow6NQARsk+Agz0O8M0o0ERNTYSnV
-         T1BL9fPOaNSqvR5LGAQr5AAv0V1rg5714+5Cqb4Fp5HmhGj+0Y23Wh1xkUW30imApOaE
-         xpwfiSGGDfYH1k32MtAJ0iH82rDZPGxeH2NL+Xi/a6mJapZ00P/X7M9jVYcXIfLaqexp
-         Qot+R33sUPFoShscqy3UjseIbSAkq+gAA73tzlvNIDFnmxCx963HbCvllsNUrdPXXLv3
-         4Eyw==
-X-Gm-Message-State: AOAM5339WENpMvXPwgpBkp5+lVkWuB9gMgfkYWa3XTmlS0p0k6/BG2E2
-        BhT0KyRc5AIc4Axa+x8jukBruX4N7Jc=
-X-Google-Smtp-Source: ABdhPJwli/yOPULvtKHWFg0JjlFST9zIaDeZJYeKHoqoUEmaQIOAwFunV33sHbFGnPJcrs+wZY6JzQ==
-X-Received: by 2002:a63:5b1f:: with SMTP id p31mr4691882pgb.335.1589988182905;
-        Wed, 20 May 2020 08:23:02 -0700 (PDT)
-Received: from [192.168.86.156] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
-        by smtp.gmail.com with ESMTPSA id d18sm2473267pjv.34.2020.05.20.08.23.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 08:23:02 -0700 (PDT)
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
- data->ctx and data->hctx in blk_mq_alloc_request_hctx
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org
-References: <20200518093155.GB35380@T590>
- <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590>
- <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590>
- <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590>
- <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590>
- <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de>
- <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
-Message-ID: <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
-Date:   Wed, 20 May 2020 09:20:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
-Content-Type: text/plain; charset=utf-8
+        Wed, 20 May 2020 11:23:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:32705 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726729AbgETPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 11:23:54 -0400
+IronPort-SDR: WR8+yPwwH0i1D9vtMloCx6u1fLFkLvn+oalhwokfYdK68XRQPpjAW/b7JGj2PYOXXE+zHk7iWY
+ ebPxIYhqm9VA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 08:23:53 -0700
+IronPort-SDR: AkeQM6LZ3P7X6Oi8bFUdxbhbbvsvujPavT2OPZY5Aa8oNm0QW2ltDRhi5803B9ircrW61/80KB
+ 0byOG3sFXlVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="253700519"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by fmsmga007.fm.intel.com with ESMTP; 20 May 2020 08:23:53 -0700
+Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 20 May 2020 08:23:53 -0700
+Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.97]) by
+ fmsmsx115.amr.corp.intel.com ([169.254.4.85]) with mapi id 14.03.0439.000;
+ Wed, 20 May 2020 08:23:53 -0700
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Kevin Wang <kevin1.wang@amd.com>
+CC:     David Airlie <airlied@linux.ie>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        "Rui Huang" <ray.huang@amd.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Evan Quan <evan.quan@amd.com>,
+        "Kenneth Feng" <kenneth.feng@amd.com>,
+        =?iso-8859-1?Q?Christian_K=F6nig?= <christian.koenig@amd.com>,
+        Yintian Tao <yttao@amd.com>
+Subject: RE: [PATCH v2] drm/amdgpu: off by on in
+ amdgpu_device_attr_create_groups() error handling
+Thread-Topic: [PATCH v2] drm/amdgpu: off by on in
+ amdgpu_device_attr_create_groups() error handling
+Thread-Index: AQHWLqgW9uvuDNiQMEi3BV2xZkJF36ixF+EA
+Date:   Wed, 20 May 2020 15:23:52 +0000
+Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E2302FA@FMSMSX108.amr.corp.intel.com>
+References: <20200520125209.GP3041@kadam> <20200520130812.GA177222@mwanda>
+In-Reply-To: <20200520130812.GA177222@mwanda>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.106]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 8:45 AM, Jens Axboe wrote:
-> On 5/20/20 2:03 AM, Christoph Hellwig wrote:
->> On Wed, May 20, 2020 at 11:04:24AM +0800, Ming Lei wrote:
->>> On Wed, May 20, 2020 at 09:18:23AM +0800, Ming Lei wrote:
->>>> On Tue, May 19, 2020 at 05:30:00PM +0200, Christoph Hellwig wrote:
->>>>> On Tue, May 19, 2020 at 09:54:20AM +0800, Ming Lei wrote:
->>>>>> As Thomas clarified, workqueue hasn't such issue any more, and only other
->>>>>> per CPU kthreads can run until the CPU clears the online bit.
->>>>>>
->>>>>> So the question is if IO can be submitted from such kernel context?
->>>>>
->>>>> What other per-CPU kthreads even exist?
->>>>
->>>> I don't know, so expose to wider audiences.
->>>
->>> One user is io uring with IORING_SETUP_SQPOLL & IORING_SETUP_SQ_AFF, see
->>> io_sq_offload_start(), and it is a IO submission kthread.
->>
->> As far as I can tell that code is buggy, as it still needs to migrate
->> the thread away when the cpu is offlined.  This isn't a per-cpu kthread
->> in the sene of having one for each CPU.
->>
->> Jens?
-> 
-> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
-> they just break affinity if that CPU goes offline.
+"off by on"
 
-Just checked, and it works fine for me. If I create an SQPOLL ring with
-SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
-just appears unbound but runs just fine. When CPU 3 comes online again,
-the mask appears correct.
+or 
 
-So don't think there's anything wrong on that side. The affinity is a
-performance optimization, not a correctness issue. Really not much we
-can do if the chosen CPU is offlined, apart from continue to chug along.
+"off by one"
 
--- 
-Jens Axboe
+?
 
+M
+
+>-----Original Message-----
+>From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of Dan
+>Carpenter
+>Sent: Wednesday, May 20, 2020 9:08 AM
+>To: Alex Deucher <alexander.deucher@amd.com>; Kevin Wang
+><kevin1.wang@amd.com>
+>Cc: David Airlie <airlied@linux.ie>; kernel-janitors@vger.kernel.org; linux-
+>kernel@vger.kernel.org; amd-gfx@lists.freedesktop.org; Hawking Zhang
+><Hawking.Zhang@amd.com>; Rui Huang <ray.huang@amd.com>; dri-
+>devel@lists.freedesktop.org; Evan Quan <evan.quan@amd.com>; Kenneth
+>Feng <kenneth.feng@amd.com>; Christian König
+><christian.koenig@amd.com>; Yintian Tao <yttao@amd.com>
+>Subject: [PATCH v2] drm/amdgpu: off by on in
+>amdgpu_device_attr_create_groups() error handling
+>
+>This loop in the error handling code should start a "i - 1" and end at
+>"i == 0".  Currently it starts a "i" and ends at "i == 1".  The result
+>is that it removes one attribute that wasn't created yet, and leaks the
+>zeroeth attribute.
+>
+>Fixes: 4e01847c38f7 ("drm/amdgpu: optimize amdgpu device attribute code")
+>Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>---
+>v2: style change
+>
+> drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c           | 3 +--
+> 1 files changed, 1 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+>b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+>index b75362bf0742..e809534fabd4 100644
+>--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+>+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+>@@ -1942,9 +1942,8 @@ static int amdgpu_device_attr_create_groups(struct
+>amdgpu_device *adev,
+> 	return 0;
+>
+> failed:
+>-	for (; i > 0; i--) {
+>+	while (i--)
+> 		amdgpu_device_attr_remove(adev, &attrs[i]);
+>-	}
+>
+> 	return ret;
+> }
+>_______________________________________________
+>dri-devel mailing list
+>dri-devel@lists.freedesktop.org
+>https://lists.freedesktop.org/mailman/listinfo/dri-devel
