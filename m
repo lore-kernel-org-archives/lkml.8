@@ -2,134 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F34DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6833120758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:41:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMPUbzd4"
+	by mail.kernel.org (Postfix) with ESMTP id 39812207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgETMlE (ORCPT
+        id S1726829AbgETMna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:41:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgETMlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:41:04 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12105C061A0E;
-        Wed, 20 May 2020 05:41:04 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so1226023pjb.3;
-        Wed, 20 May 2020 05:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oByZiP5udJbQzBWklBptE2RceP4HV/dxPc97SQf5r9I=;
-        b=bMPUbzd4w8Xckix21mTZAu4nqS8lo47Q1IuxRu1bg7ZEfkEGQ8nXx5annWGMvSJpUG
-         Ik/OdHHZVFQzOUM1UtH3eq53mId64W2QngOShgah4eBAgtzA8wecG2nCqBzMqTNljtsD
-         I/obKtjGl79PBq18fdqrzfjBAgO5nXDSxTC6ja6DWm6PPpb0EEEoMoUqBYfL2jgwEY31
-         ny9uKMDOQHdpq3EmyqBSW1qcC/9hybhjlqyzXdhMmUELkNCHd+FG4uFvvhSZ89c0FYk8
-         Wc8Amekl/xkn7XYPvcq8vhfKVysczN0Bay8pc2ehG7MO/QFdv0+hAQ81qW7BWXJ5hvL3
-         f5SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oByZiP5udJbQzBWklBptE2RceP4HV/dxPc97SQf5r9I=;
-        b=iTW//rTfh2OraISO7oFTfovkDbK4B1c7WKL8cgXuLQsQo2yeCoAp/BgGh/ME/lexIe
-         tiryTnPHC7lnY/p08ako84JAvN2CVoFl9HG6hNjD2h0SR5geUslhmJ2awjX6HX5lxxeV
-         WSm25aZZ0Kbm0Bw4yYFRdhghYoEY4IUEZJUzhN7MVtJ0MDy1D92oKWdnw6LPkG6SrtqZ
-         0oBaP7eezwTJExDI+QZQ3ohnlpNL8/3FpDD/Wsgjt4IAPp17dOImCW7E4Q73EnWAxPIl
-         jYSakU3hWyzqiCsfj+Dx6ZGLRRL6ue5NbtxbM4wRfw19aT/BiFMAZc657dWcGUogltbr
-         NpNQ==
-X-Gm-Message-State: AOAM5323YLnml1jSvYNjN9OL7TPbxbF+sIoxe3zCEJqgC9ezlmuccjAl
-        aR9XUcTAH1jDyuCL42l072fBNaBHhFTUC6tjpCk=
-X-Google-Smtp-Source: ABdhPJyjV9IcI4Rvhp2yDHZ0cMw5+9uLEMBQuP44Edg6AhPbW7DTGRWOGVfUVIEgCtyep5Po1iHo+g/GYI8TVSX85T8=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr5093444pjd.181.1589978463619;
- Wed, 20 May 2020 05:41:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200511145257.22970-1-geert+renesas@glider.be>
- <20200520121420.GA1867563@smile.fi.intel.com> <CAMuHMdW9EsRLYYTL0pd-PqqZs5WcUfK8i2uceNwJnSvAQKuVgw@mail.gmail.com>
- <CAHp75Vc9=1cD81TDuaGuFQpBcHaKqEZKv8tA7ZGBbDJ6MKq6kw@mail.gmail.com>
-In-Reply-To: <CAHp75Vc9=1cD81TDuaGuFQpBcHaKqEZKv8tA7ZGBbDJ6MKq6kw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 20 May 2020 15:40:52 +0300
-Message-ID: <CAHp75VcARgxf-Ty77mk2PJ0BUxJsXQdDLMffiDdv1gCkF_VMtg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/6] gpio: Add GPIO Aggregator
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 May 2020 08:43:30 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:10270 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726224AbgETMn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:43:29 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgBXHpDCJcVe1faNAQ--.48765S4;
+        Wed, 20 May 2020 20:42:46 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] wlcore: fix runtime pm imbalance in wl1271_tx_work
+Date:   Wed, 20 May 2020 20:42:38 +0800
+Message-Id: <20200520124241.9931-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgBXHpDCJcVe1faNAQ--.48765S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF1UWFW3Wr1xCFyruF45KFg_yoW3twc_Gr
+        yUWF1xCr18Ar1jgr47CayfXrWSvryDZ3Z3Gr40qFyfG3y7ArZ8KrySvr9xZryUGrWavF1f
+        Crn8XFyxZr9rXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbTxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW5JwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
+        4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbl1v3UUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 3:40 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, May 20, 2020 at 3:38 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, May 20, 2020 at 2:14 PM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> > > On Mon, May 11, 2020 at 04:52:51PM +0200, Geert Uytterhoeven wrote:
->
-> ...
->
-> > > Sorry for late reply, recently noticed this nice idea.
-> > > The comment I have is, please, can we reuse bitmap parse algorithm and syntax?
-> > > We have too many different formats and parsers in the kernel and bitmap's one
-> > > seems suitable here.
-> >
-> > Thank you, I wasn't aware of that.
-> >
-> > Which one do you mean? The documentation seems to be confusing,
-> > and incomplete.
-> > My first guess was bitmap_parse(), but that one assumes hex values?
-> > And given it processes the unsigned long bitmap in u32 chunks, I guess
-> > it doesn't work as expected on big-endian 64-bit?
-> >
-> > bitmap_parselist() looks more suitable, and the format seems to be
+There are two error handling paths in this functon. When
+wlcore_tx_work_locked() returns an error code, we should
+decrease the runtime PM usage counter the same way as the
+error handling path beginning from pm_runtime_get_sync().
 
-> > compatible with what's currently used, so it won't change ABI.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/net/wireless/ti/wlcore/tx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-What ABI? We didn't have a release with it, right? So, we are quite
-flexible for few more weeks to amend it.
-
-> > Is that the one you propose?
->
-> Yes, sorry for the confusion.
->
-> > > (Despite other small clean ups, like strstrip() use)
-> >
-> > Aka strim()? There are too many of them, to know all of them by heart ;-)
->
-> The difference between them is __must_check flag. But yes.
-
-
-
+diff --git a/drivers/net/wireless/ti/wlcore/tx.c b/drivers/net/wireless/ti/wlcore/tx.c
+index 90e56d4c3df3..e20e18cd04ae 100644
+--- a/drivers/net/wireless/ti/wlcore/tx.c
++++ b/drivers/net/wireless/ti/wlcore/tx.c
+@@ -863,6 +863,7 @@ void wl1271_tx_work(struct work_struct *work)
+ 
+ 	ret = wlcore_tx_work_locked(wl);
+ 	if (ret < 0) {
++		pm_runtime_put_noidle(wl->dev);
+ 		wl12xx_queue_recovery_work(wl);
+ 		goto out;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
