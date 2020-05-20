@@ -2,130 +2,109 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D080207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1EB207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="APP+6E7j"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fWRZRQBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgETToc (ORCPT
+        id S1726985AbgETTp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:44:32 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:31677 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbgETToc (ORCPT
+        Wed, 20 May 2020 15:45:57 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37278 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgETTp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:44:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590003871; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=CAOGbNRPH8PavTHVA+eqY2zfyumPm9H6vlGj6V/xRYU=;
- b=APP+6E7jpRbDh4Tx7daMmpU34xMultipu5vTb8y4wuJfEeXsjQxL282jqW6JirJY6y1FskDv
- xJotdgOkpZWiX6c3WjNxSSyJbKGKVNosPwINc7dWmSQGAF+V4qN7eQ0mt1oIPImglTFvgnKs
- 4NmREjKSkFbjw0V+gqHOWP4fr0E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ec5889245598550e697656b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 19:44:18
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D3A5DC433CB; Wed, 20 May 2020 19:44:17 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DADFC433C9;
-        Wed, 20 May 2020 19:44:16 +0000 (UTC)
+        Wed, 20 May 2020 15:45:56 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KJRr4m063954;
+        Wed, 20 May 2020 19:45:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=uK5Lcdw4NGbEJFHC3Vv/WDvbuBjG0vtZ2idMT/tLedo=;
+ b=fWRZRQBt2ZL6U+Dc1kee8uHj0a7B/lWVBTlYYS/wW47o9hDTAAiBW53+vF6djqgz/DdZ
+ BedVe0daUpOj6iedd5CANaiTGY1x3Ha3eu03e6FGWscz4BbG5xdZRM4mJ781VDYowXI/
+ GNPROm6sp7JxMXGciSVDGUvFgR9zUI6j25L+AtBcg/PtCM6NDvjz/KgSov+lkrJ4hOjD
+ Y4WLWflBe9fl73Be5p5zPBgoYh7WCUlgKS3/gEk+ipy8Rv4cb3O2X469A5S2qkv5RO1L
+ ITnU09AkdwlPcQHzMx6S0MRUuFdo76jC7QAwc6rcE4f5I3oFNZf9UBTPc6Tu5Z4zcC6g ow== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31284m52ra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 19:45:44 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KJSeAC099029;
+        Wed, 20 May 2020 19:43:44 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 313gj43u34-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 19:43:44 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04KJev92134964;
+        Wed, 20 May 2020 19:43:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 313gj43u13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 19:43:43 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04KJhftj025589;
+        Wed, 20 May 2020 19:43:42 GMT
+Received: from [10.74.108.67] (/10.74.108.67)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 May 2020 12:43:41 -0700
+Subject: Re: [PATCH] rds: fix crash in rds_info_getsockopt()
+To:     John Hubbard <jhubbard@nvidia.com>,
+        syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com
+Cc:     akpm@linux-foundation.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        rds-devel@oss.oracle.com, syzkaller-bugs@googlegroups.com
+References: <00000000000000d71e05a6185662@google.com>
+ <20200520194147.127137-1-jhubbard@nvidia.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <d848c10e-1d04-3669-0d0f-5b53505686b1@oracle.com>
+Date:   Wed, 20 May 2020 12:43:39 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200520194147.127137-1-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 May 2020 12:44:16 -0700
-From:   bbhatt@codeaurora.org
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        hemantk@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] bus: mhi: core: Introduce independent voting
- mechanism
-In-Reply-To: <a51d366e-5466-cbd0-b19c-61e76e8671b5@codeaurora.org>
-References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
- <1589832241-13867-3-git-send-email-bbhatt@codeaurora.org>
- <a12e693d-a8bb-3ecf-e799-c46de7429b5d@codeaurora.org>
- <574a4fe915f86608b59f10577eb960e9@codeaurora.org>
- <a51d366e-5466-cbd0-b19c-61e76e8671b5@codeaurora.org>
-Message-ID: <70f32d3dfc9dd81163897a57ebe35d02@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005200155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 12:06, Jeffrey Hugo wrote:
-> On 5/20/2020 12:43 PM, bbhatt@codeaurora.org wrote:
->> On 2020-05-20 09:54, Jeffrey Hugo wrote:
->>> On 5/18/2020 2:03 PM, Bhaumik Bhatt wrote:
->>>> Allow independent votes from clients such that they can choose to 
->>>> vote
->>>> for either the device or the bus or both. This helps in cases where 
->>>> the
->>>> device supports autonomous low power mode wherein it can move to M2
->>>> state without the need to notify the host. Clients can also vote 
->>>> only to
->>>> keep the underlying bus active without having the device in M0 state 
->>>> to
->>>> support offload use cases.
->>>> 
->>>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
->>>> ---
->>> 
->>> I wonder, why doesn't this fit with runtimePM?
->> Hi Jeff,
->> 
->> Can you elaborate?
->> 
->> In short, with this patch, MHI just wants to give controller the 
->> option to
->> choose the vote type so we can implement autonomous low power mode 
->> entries
->> on both host and device.
+On 5/20/20 12:41 PM, John Hubbard wrote:
+> The conversion to pin_user_pages() had a bug: it overlooked
+> the case of allocation of pages failing. Fix that by restoring
+> an equivalent check.
 > 
-> So, you are attempting to manage the power mode of the device.  The
-> standard mechanism to do so in Linux is runtime pm.
+> Reported-by: syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com
+> Fixes: dbfe7d74376e ("rds: convert get_user_pages() --> pin_user_pages()")
 > 
-> https://elixir.bootlin.com/linux/latest/source/Documentation/driver-api/pm/devices.rst
-> 
-> I'm no runtime pm expert, but it feels like your whole voting
-> mechanism, etc is just reimplemeting that.  Reimplementing the wheel,
-> when its been a standard thing that the majority of the kernel uses is
-> not usually acceptable.
-> 
-> IMO, you need some sort of justification why runtime pm is not
-> applicable for you, because I'm willing to bet Mani/Greg are going to
-> ask the same.
-I think we can look at the patch as simply expanding the scope of what 
-already exists.
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: rds-devel@oss.oracle.com
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+Thanks John !!
 
-The client here has been calling mhi_device_get/put/sync APIs to gain 
-device vote and with
-new features yet to come in, this introductory change is only 
-re-purposing what voting
-means going forward. i.e. allowing individual bus and device votes.
-
-If you're suggesting using runtimePM APIs to replace the newly 
-introduced bus vote, it
-would be kind of overkill here IMO. Is that what you were getting at? 
-Because currently,
-we just have controllers use runtimePM and provide callbacks to them.
-
-If you have ideas, we can discuss them.
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
