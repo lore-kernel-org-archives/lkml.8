@@ -2,104 +2,188 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4563C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D1C20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:59:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jAMH1927"
+	by mail.kernel.org (Postfix) with ESMTP id 7405620829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590008387;
+	bh=cSZ3Z6xbm0qHdC2Xdd4hiTxmk5VZQtJFQqZpQGd27Tw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E/J9IuNEuPo+ehZ2fo9Oy+nj8OlvMDtfUTNsk0UuM0QzAbF1eE9VzbsDorzPQp3uk
+	 inXghmEyAAeqXxx9LM3EpXiOzaoK8y+/Gzcdsh8fs/+dHLey/tSMkNb6H3Y5ZuJ7Zl
+	 xSsc18auMDPlX4QnYcJcf+ITCTtu+6o9q5sRNN50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgETU7j (ORCPT
+        id S1728199AbgETU7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727938AbgETU7i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:59:38 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F774C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:59:38 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id z22so3219972lfd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e/Xdk+2Qjc16LzOVa9lnuQqAqYFbaHhJYfbPjyOMWM0=;
-        b=jAMH1927IOAoBJgvE2Gbj2cFEfC8mJsV3BVmnk97PIGu2VwPko5fwcFleC8sU0XF/G
-         ITqIoW9YRkeABtk+sSwOOTV+vC5TF+URq5GRPfWFvNrh9ZDc41Ack3poVNcJGSL2iOnv
-         ExgXaWUZCNd7yo8NhRoyf0iALymd6I61WzQ9E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e/Xdk+2Qjc16LzOVa9lnuQqAqYFbaHhJYfbPjyOMWM0=;
-        b=hy+YEeGztlBp9gqZwN0oTKLXqes8vxJ7RRWW9RDalo00ZS++vPwxefYCFubRtBhWq9
-         juefp6tJ20wdNJcn/9H2OmrrYR8d46nJW64ybSCCtsSca8YlYjbYGuE+chH2AVHeZhio
-         8ZY7sikklSj+OvnFpG4GM7zTsJuvhoO28Y7pqooQ5sU/8rUbPMSAl5PQyAyQGW7T5/Hd
-         ArgLTU8fckkpoXHemswcNXScruBccMHANth4Nc9N+xE91cNRcKfJEsf3pGfeJW1d4yd6
-         faezPkxi/rqSvcv4BBcbfOBKQGAL2Yrv+bWHC2TntsZmu6pegx1s+EFPwq7cUTWCxEay
-         jOtg==
-X-Gm-Message-State: AOAM530p8bEbVm9f28XSMnr9riJK+w0mb0tBwOjw9NLESBVvhYLrJkT9
-        cVPUwqHVjZS9KeUWE/EkTsL7L1uMYTk=
-X-Google-Smtp-Source: ABdhPJwXV2MusE6afo0ZkmlW6HKHPLkXxWRp26wge9Ksm4PdMhq/rRRFisyooFSzOjIQeSLPGfu9AQ==
-X-Received: by 2002:ac2:5a07:: with SMTP id q7mr3454053lfn.77.1590008375449;
-        Wed, 20 May 2020 13:59:35 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id v17sm1269883ljd.76.2020.05.20.13.59.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 13:59:34 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id g1so5515832ljk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:59:32 -0700 (PDT)
-X-Received: by 2002:a05:651c:3c6:: with SMTP id f6mr3496652ljp.138.1590008372306;
- Wed, 20 May 2020 13:59:32 -0700 (PDT)
+        Wed, 20 May 2020 16:59:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728180AbgETU7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 16:59:43 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E73520758;
+        Wed, 20 May 2020 20:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590008382;
+        bh=cSZ3Z6xbm0qHdC2Xdd4hiTxmk5VZQtJFQqZpQGd27Tw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bJyJcZvk0+x9lSpU8GCPbcmNFNtUF7MxRW44vYHH9cckOkVPctXDu7BgmDzeZroi7
+         Rr+VLRLQt52wT3QGSUe5gXDkfxD2rlbnrmtLTJPF7qZc85/tJ4nqxUDuEzxlbJ7ah3
+         ibJlLVmQgkj9OATZvx/PKniu/mIRzho/2iTrv7Bs=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9F17040AFD; Wed, 20 May 2020 17:59:40 -0300 (-03)
+Date:   Wed, 20 May 2020 17:59:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/19] perf ftrace: add option '-l/--list-functions' to
+ list available functions
+Message-ID: <20200520205940.GS32678@kernel.org>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200510150628.16610-6-changbin.du@gmail.com>
 MIME-Version: 1.0
-References: <20190906185931.19288-1-navid.emamdoost@gmail.com>
- <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com>
- <878shwtiw3.fsf@kamboji.qca.qualcomm.com> <CA+ASDXOgechejxzN4-xPcuTW-Ra7z9Z6EeiQ4wMrEowZc-p+uA@mail.gmail.com>
-In-Reply-To: <CA+ASDXOgechejxzN4-xPcuTW-Ra7z9Z6EeiQ4wMrEowZc-p+uA@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Wed, 20 May 2020 13:59:20 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXM6w-t85hZWcbTqTBA8aye0oka3Nw5YYZH2LqixO-PJzg@mail.gmail.com>
-Message-ID: <CA+ASDXM6w-t85hZWcbTqTBA8aye0oka3Nw5YYZH2LqixO-PJzg@mail.gmail.com>
-Subject: Re: [PATCH] ath9k: release allocated buffer if timed out
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510150628.16610-6-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:02 PM Brian Norris <briannorris@chromium.org> wrote:
->
-> On Wed, May 13, 2020 at 12:05 AM Kalle Valo <kvalo@codeaurora.org> wrote:
-> > Actually it's already reverted in -next, nobody just realised that it's
-> > a regression from commit 728c1e2a05e4:
-> >
-> > ced21a4c726b ath9k: Fix use-after-free Read in htc_connect_service
->
-> Nice.
->
-> > v5.8-rc1 should be the first release having the fix.
->
-> So I guess we have to wait until 5.8-rc1 (when this lands in mainline)
-> to send this manually to stable@vger.kernel.org?
+Em Sun, May 10, 2020 at 11:06:14PM +0800, Changbin Du escreveu:
+> This adds an option '-l/--list-functions' to list all available functions
+> which is read from tracing file 'available_filter_functions'.
 
-For the record, there are more reports of this, if I'm reading them right:
+Here, in 'perf probe' we have:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=207797
+[acme@five perf]$ perf probe -F tcp_* | head
+tcp_abort
+tcp_ack
+tcp_ack_update_rtt.isra.0
+tcp_add_backlog
+tcp_add_reno_sack
+tcp_adjust_pcount
+tcp_alloc_md5sig_pool
+tcp_any_retrans_done.part.0
+tcp_assign_congestion_control
+tcp_bpf_clone
+[acme@five perf]$ perf probe -h -F
+
+ Usage: perf probe [<options>] 'PROBEDEF' ['PROBEDEF' ...]
+    or: perf probe [<options>] --add 'PROBEDEF' [--add 'PROBEDEF' ...]
+    or: perf probe [<options>] --del '[GROUP:]EVENT' ...
+    or: perf probe --list [GROUP:]EVENT ...
+    or: perf probe [<options>] --line 'LINEDESC'
+    or: perf probe [<options>] --vars 'PROBEPOINT'
+    or: perf probe [<options>] --funcs
+
+    -F, --funcs <[FILTER]>
+                          Show potential probe-able functions.
+
+[acme@five perf]$
+
+So I think we should align with this.
+
+- Arnaldo
+ 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 43 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 1d30c2d5f88b..8133d910d5d8 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -33,6 +33,7 @@ struct perf_ftrace {
+>  	struct evlist		*evlist;
+>  	struct target		target;
+>  	const char		*tracer;
+> +	bool			list_avail_functions;
+>  	struct list_head	filters;
+>  	struct list_head	notrace;
+>  	struct list_head	graph_funcs;
+> @@ -142,6 +143,43 @@ static int write_tracing_option_file(const char *name, const char *val)
+>  	return ret;
+>  }
+>  
+> +static int read_tracing_file_to_stdout(const char *name)
+> +{
+> +	char buf[4096];
+> +	char *file;
+> +	int fd;
+> +	int ret = -1;
+> +
+> +	file = get_tracing_file(name);
+> +	if (!file) {
+> +		pr_debug("cannot get tracing file: %s\n", name);
+> +		return -1;
+> +	}
+> +
+> +	fd = open(file, O_RDONLY);
+> +	if (fd < 0) {
+> +		pr_debug("cannot open tracing file: %s: %s\n",
+> +			 name, str_error_r(errno, buf, sizeof(buf)));
+> +		goto out;
+> +	}
+> +
+> +	/* read contents to stdout */
+> +	while (true) {
+> +		int n = read(fd, buf, sizeof(buf));
+> +		if (n <= 0)
+> +			goto out_close;
+> +		if (fwrite(buf, n, 1, stdout) != 1)
+> +			goto out_close;
+> +	}
+> +	ret = 0;
+> +
+> +out_close:
+> +	close(fd);
+> +out:
+> +	put_tracing_file(file);
+> +	return ret;
+> +}
+> +
+>  static int reset_tracing_cpu(void);
+>  static void reset_tracing_filters(void);
+>  
+> @@ -332,6 +370,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  	signal(SIGCHLD, sig_handler);
+>  	signal(SIGPIPE, sig_handler);
+>  
+> +	if (ftrace->list_avail_functions)
+> +		return read_tracing_file_to_stdout("available_filter_functions");
+> +
+>  	if (reset_tracing_files(ftrace) < 0) {
+>  		pr_err("failed to reset ftrace\n");
+>  		goto out;
+> @@ -483,6 +524,8 @@ int cmd_ftrace(int argc, const char **argv)
+>  		NULL
+>  	};
+>  	const struct option ftrace_options[] = {
+> +	OPT_BOOLEAN('L', "list-functions", &ftrace.list_avail_functions,
+> +		    "List available functions to filter"),
+>  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+>  		   "trace on existing process id"),
+>  	OPT_INCR('v', "verbose", &verbose,
+> -- 
+> 2.25.1
+> 
+
+-- 
+
+- Arnaldo
