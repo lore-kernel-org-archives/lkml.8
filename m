@@ -2,131 +2,239 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3490C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B288F207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589985019;
-	bh=bMsUrfEBhqQ2ZdF+Y8Gv8Gqh8iNsHpYp6jNM1nM5kOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i8X0s2rWFaUYfrI/+e21zj9ZabSYfXvw9uBjGeftPGtZZUThrJ3nF19s1e5ZMJwXz
-	 +Y6Qmxizczrop0R6xTlFka309L+OGAFI2ldX+OIJUJYancaEALwIo1qt9Q26h9emt5
-	 NhSo5h2g13hNKHP2018dfrfvpFBR2NSys/0Hgwpk=
+	by mail.kernel.org (Postfix) with ESMTP id 0CE48205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Tj9V6vdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgETOaT (ORCPT
+        id S1727030AbgETObQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:30:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgETOaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:30:18 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64206205CB;
-        Wed, 20 May 2020 14:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589985017;
-        bh=bMsUrfEBhqQ2ZdF+Y8Gv8Gqh8iNsHpYp6jNM1nM5kOw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a1bWiQwGLeEtWfAIKT8KsxIp2IslN1LO7MUduJYWar1HTcCTeM3d4Ezc5JNBAsHCK
-         rnGNB8PhtKB5u1+Zqvj43iEvKE3bjuuTIGPpj+YeanbhhQaULqz2KHIDG9/zGHbxw5
-         mpqsV/5ILxloh74L23h6n+c9hrF0GV38iICkmozI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7646040AFD; Wed, 20 May 2020 11:30:14 -0300 (-03)
-Date:   Wed, 20 May 2020 11:30:14 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, cj.chengjian@huawei.com,
-        huawei.libin@huawei.com, xiexiuqi@huawei.com, mark.rutland@arm.com,
-        guohanjun@huawei.com, alexander.shishkin@linux.intel.com,
-        wangnan0@huawei.com, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf bpf-loader: Add missing '*' for key_scan_pos
-Message-ID: <20200520143014.GJ32678@kernel.org>
-References: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
- <20200520070551.GC110644@krava>
- <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
+        Wed, 20 May 2020 10:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbgETObO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:31:14 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B18AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:31:13 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r3so1477023wrn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HP7BIyw2Y/C8hkvgzZRIvmSm/MyaptHmyY6CakMJdU0=;
+        b=Tj9V6vdUREzHIKAIcpP3UNMkiwFZOfcPfxrRu9Xv38B5EuZqo0CIOpH5uP0XZ/JRTi
+         dVeKogHLAYHhyKOiXt062o/+fbm82eFp7zEgKhKW64uh3b6SCTshnMRYrSS+lWlvUMT/
+         fEtOzoXazBSk1EL3cd0pjluANGqfFdC4zEpaY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HP7BIyw2Y/C8hkvgzZRIvmSm/MyaptHmyY6CakMJdU0=;
+        b=dNHUXYerqWhzK74gGof27tERQU38RpQV80IInzPeauEkcooKCySbuH3g/H4GC29UqP
+         BRyJ4SDqxKXRKlz6ATQYji/wM1yF6eyxRPwzs/SL9f9TziUrm1P7jgVcC4FkZuBLH5Qy
+         mNjryeb27L8r1/SGM6ul5Z1SDOY3lYni6TMt8B4sfZ0MXUiStzrvtjiud/TED/7MKTu3
+         MXZhqgHI5O29dI1h5P9lgM8ilu72MD3/vjyPVyVKA89cuYIa/eA8cA/kbSkLCxM1TasQ
+         MCz1eREcZKnv9Vd0MfAXeJrEFbZEyBI9QLOsWJ5MW0k9rNflyT48NNiCzEYijH1YX5Zt
+         OXmg==
+X-Gm-Message-State: AOAM533uKBhtunZtQqP6XsxXdSghusE5JguVBOmQSR7tehBeBAD7hHcY
+        5fsvxhTTCwsottXy/1GCjfkmcjCVZ78uMk0U6m8Ycw==
+X-Google-Smtp-Source: ABdhPJwVIXTx8ngi6DSuNnR19unkLPjwJTEgk1hS1LqfoqkdWGyUpA/+44SVaMxijYJ6PhLELxTsrpH9bpACjNB88j0=
+X-Received: by 2002:adf:e688:: with SMTP id r8mr4324103wrm.274.1589985072196;
+ Wed, 20 May 2020 07:31:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200519203419.12369-1-james.quinlan@broadcom.com>
+ <20200519203419.12369-5-james.quinlan@broadcom.com> <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
+In-Reply-To: <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Wed, 20 May 2020 10:30:59 -0400
+Message-ID: <CA+-6iNwE7CkD0r7Z0cKGXxE14Unf7ZGsr4q7Z8dPhgYYXHXHEg@mail.gmail.com>
+Subject: Re: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 20, 2020 at 06:22:12PM +0800, Wangshaobo (bobo) escreveu:
-> 
-> 在 2020/5/20 15:05, Jiri Olsa 写道:
-> > On Wed, May 20, 2020 at 11:32:16AM +0800, Wang ShaoBo wrote:
-> > > key_scan_pos is a pointer for getting scan position in
-> > > bpf__obj_config_map() for each BPF map configuration term,
-> > > but it's misused when error not happened.
-> > > 
-> > > Fixes: 066dacbf2a32 ("perf bpf: Add API to set values to map entries in a bpf object")
-> > > Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-> > > ---
-> > >   tools/perf/util/bpf-loader.c | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> > > index 10c187b8b8ea..460056bc072c 100644
-> > > --- a/tools/perf/util/bpf-loader.c
-> > > +++ b/tools/perf/util/bpf-loader.c
-> > > @@ -1225,7 +1225,7 @@ bpf__obj_config_map(struct bpf_object *obj,
-> > >   out:
-> > >   	free(map_name);
-> > >   	if (!err)
-> > > -		key_scan_pos += strlen(map_opt);
-> > > +		*key_scan_pos += strlen(map_opt);
-> > seems good, was there something failing because of this?
-> > 
-> > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> > 
-> > thanks,
-> > jirka
-> 
->   I found this problem when i checked this code, I think it is
-> 
->   an implicit question, but if we delete the two line,  the problem
-> 
->   also no longer exists.
-
-The point is that the only user of this is:
-
-  tools/perf/util/parse-events.c
-    err = bpf__config_obj(obj, term, parse_state->evlist, &error_pos);
-      if (err) bpf__strerror_config_obj(obj, term, parse_state->evlist, &error_pos, err, errbuf, sizeof(errbuf));
-
-
-And then:
-
-int bpf__strerror_config_obj(struct bpf_object *obj __maybe_unused,
-                             struct parse_events_term *term __maybe_unused,
-                             struct evlist *evlist __maybe_unused,
-                             int *error_pos __maybe_unused, int err,
-                             char *buf, size_t size)
-{
-        bpf__strerror_head(err, buf, size);
-        bpf__strerror_entry(BPF_LOADER_ERRNO__OBJCONF_MAP_TYPE,
-                            "Can't use this config term with this map type");
-        bpf__strerror_end(buf, size);
-        return 0;
-}
-
-        
-So this is infrastructure that Wang Nan put in place for providing
-better error messages but that he ended up not using, so I'll apply the
-fix, its correct even not fixing any real problem at this time.
-
-- Arnaldo
+On Wed, May 20, 2020 at 7:51 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Hi Jim,
+>
+> On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
+> > From: Jim Quinlan <jquinlan@broadcom.com>
+> >
+> > Add in compatibility strings and code for three Broadcom STB chips.
+> > Some of the register locations, shifts, and masks are different
+> > for certain chips, requiring the use of different constants based
+> > on of_id.
+> >
+> > We would like to add the following at this time to the match list
+> > but we need to wait until the end of this patchset so that
+> > everything works.
+> >
+> >     { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
+> >     { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
+> >     { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
+> >     { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
+> >
+> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 103 +++++++++++++++++++++++---
+> >  1 file changed, 91 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
+> > b/drivers/pci/controller/pcie-brcmstb.c
+> > index 73020b4ff090..c1cf4ea7d3d9 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -120,9 +120,8 @@
+> >  #define  PCIE_EXT_SLOT_SHIFT                         15
+> >  #define  PCIE_EXT_FUNC_SHIFT                         12
+> >
+> > -#define PCIE_RGR1_SW_INIT_1                          0x9210
+> >  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK                      0x1
+> > -#define  PCIE_RGR1_SW_INIT_1_INIT_MASK                       0x2
+> > +#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT             0x0
+> >
+> >  /* PCIe parameters */
+> >  #define BRCM_NUM_PCIE_OUT_WINS               0x4
+> > @@ -152,6 +151,69 @@
+> >  #define SSC_STATUS_SSC_MASK          0x400
+> >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
+> >
+> > +#define IDX_ADDR(pcie)       \
+> > +     (pcie->reg_offsets[EXT_CFG_INDEX])
+> > +#define DATA_ADDR(pcie)      \
+> > +     (pcie->reg_offsets[EXT_CFG_DATA])
+> > +#define PCIE_RGR1_SW_INIT_1(pcie) \
+> > +     (pcie->reg_offsets[RGR1_SW_INIT_1])
+> > +
+> > +enum {
+> > +     RGR1_SW_INIT_1,
+> > +     EXT_CFG_INDEX,
+> > +     EXT_CFG_DATA,
+> > +};
+> > +
+> > +enum {
+> > +     RGR1_SW_INIT_1_INIT_MASK,
+> > +     RGR1_SW_INIT_1_INIT_SHIFT,
+> > +};
+> > +
+> > +enum pcie_type {
+> > +     GENERIC,
+> > +     BCM7278,
+> > +};
+> > +
+> > +struct pcie_cfg_data {
+> > +     const int *reg_field_info;
+> > +     const int *offsets;
+> > +     const enum pcie_type type;
+> > +};
+> > +
+> > +static const int pcie_reg_field_info[] = {
+> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x2,
+> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
+> > +};
+> > +
+> > +static const int pcie_reg_field_info_bcm7278[] = {
+> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x1,
+> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
+> > +};
+> > +
+> > +static const int pcie_offsets[] = {
+> > +     [RGR1_SW_INIT_1] = 0x9210,
+> > +     [EXT_CFG_INDEX]  = 0x9000,
+> > +     [EXT_CFG_DATA]   = 0x9004,
+> > +};
+> > +
+> > +static const struct pcie_cfg_data generic_cfg = {
+> > +     .reg_field_info = pcie_reg_field_info,
+> > +     .offsets        = pcie_offsets,
+> > +     .type           = GENERIC,
+> > +};
+> > +
+> > +static const int pcie_offset_bcm7278[] = {
+> > +     [RGR1_SW_INIT_1] = 0xc010,
+> > +     [EXT_CFG_INDEX] = 0x9000,
+> > +     [EXT_CFG_DATA] = 0x9004,
+> > +};
+> > +
+> > +static const struct pcie_cfg_data bcm7278_cfg = {
+> > +     .reg_field_info = pcie_reg_field_info_bcm7278,
+> > +     .offsets        = pcie_offset_bcm7278,
+> > +     .type           = BCM7278,
+> > +};
+>
+> It's not essential, but if v2 is due I'd suggest factoring out the bcm2728
+> specific structures above, and moving them to patch #15. This will keep a
+> clearer division between the patch introducing the infrastructure and the one
+> adding the support for a new device.
+The problem is that one of the commits needs the 7278 type so it has
+to be declared earlier.
+>
+> > +
+> >  struct brcm_msi {
+> >       struct device           *dev;
+> >       void __iomem            *base;
+> > @@ -176,6 +238,9 @@ struct brcm_pcie {
+> >       int                     gen;
+> >       u64                     msi_target_addr;
+> >       struct brcm_msi         *msi;
+> > +     const int               *reg_offsets;
+> > +     const int               *reg_field_info;
+> > +     enum pcie_type          type;
+> >  };
+> >
+> >  /*
+> > @@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops = {
+> >
+> >  static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32
+> > val)
+> >  {
+> > -     u32 tmp;
+> > +     u32 tmp, mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
+> > +     u32 shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
+>
+> I don't think you need shift here, IIUC u32p_replace_bits() will take care of
+> all the masking and shifting internally, moreover, you'd be able to drop the
+> shift entry from reg_field_info.
+Got it.
+>
+> > -     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
+> > -     u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
+> > -     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
+> > +     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+> > +     tmp = (tmp & ~mask) | ((val << shift) & mask);
+> > +     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
+> >  }
+>
+> Regards,
+> Nicolas
+>
+Thanks!
+Jim
