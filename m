@@ -2,81 +2,83 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8D6207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCE22065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="w9BbRZzk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7rQ3oBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETIFE (ORCPT
+        id S1726757AbgETIGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETIFD (ORCPT
+        Wed, 20 May 2020 04:06:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35326 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726436AbgETIGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:05:03 -0400
-Received: from valentin-vidic.from.hr (valentin-vidic.from.hr [IPv6:2001:470:1f0b:3b7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A153C061A0E;
-        Wed, 20 May 2020 01:05:03 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id A33C5543; Wed, 20 May 2020 10:04:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=valentin-vidic.from.hr; s=2020; t=1589961899;
-        bh=yK7wU61+XNDe5ayjqFhyHcHXhrCQnIi9K6wH9jeqssQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w9BbRZzkcc9XXiPyJc7nC2fU8tC2FgYU4zVejiyAznWpkLqxVtUxm1AnJ6JJmuHnG
-         7mwexG3YwkNOyxEd7cMM+mWJwLzjhKTPCUr1dLyz1w92GB7PD4sRAJnTMjGKDXg7gB
-         ip0m+t4exQsSCms350+8uJHrfvxt2tsInOR/6DMuJhTcccJ07Nwu6qEwFH7lt3quYI
-         CsCqxtIcFv6rOoy+kt4DlQcnNxn9QBkhIqjUbiRGJO8IdoKwnypV/QP3RFY+3vAJ4Z
-         CAmIiXzbk1tNW69umhm52LGFWFUifMRMvcFq22q/Iflm77jJcbX8mUw5HQWwnVIvX+
-         oz3qqlZtnlgtXOxIjjQv63HbVa2cRCfZxUQJF+htjbz2uOoVjO3uAcAglIxmGOm5Ce
-         PAm1D4d2Uz4Wi3qgBUXZbq10XtPrJGqJ4CAmYuv6B3QBkjp5fQK/ZyzyuNAmZI2KR9
-         491FBUaqBhnEJFGiprPBYvTVZpZIv1AqppB1HIWQBLdsy4JiVrZ8HnyBaYyQKm3Rmf
-         8syXXYkLDSzeeTWfO6/RpwARIhpMHfBvCUJMLqhEBJw43pZfOIn0PV119T81FQLzLO
-         Mx1w4BFffTcHyNG71ljUa/xhzgqlSZsH/pDIEmtyPJUgV8As3iYp36TxtsnYelu4VF
-         s6+Qkml6jpu8Ut5p4pk0BGn4=
-Date:   Wed, 20 May 2020 10:04:59 +0200
-From:   Valentin =?utf-8?B?VmlkacSH?= <vvidic@valentin-vidic.from.hr>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] s390/sclp_vt220: Fix console name to match device
-Message-ID: <20200520080459.GP4974@valentin-vidic.from.hr>
-References: <20200519181654.16765-1-vvidic@valentin-vidic.from.hr>
- <65218cdb-d03f-29a8-1e78-42ff2d4f958d@de.ibm.com>
- <20200520070743.GO4974@valentin-vidic.from.hr>
- <cba24059-b3a5-1587-c1f3-8d7dfd0807f5@de.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cba24059-b3a5-1587-c1f3-8d7dfd0807f5@de.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 20 May 2020 04:06:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589961968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=nFRT2Dwzeb1s4TncyaAvoKFX2GM9mDLYe58xsFJAsBQ=;
+        b=X7rQ3oBNSzgorpV+7FI7Up+Gm/GsqzC048XZVqcCKALn2sEDTaftAyaKMZlRBBYmYuyyZO
+        RTECwvkX3n9ut5GvvaQlnwjkWW43hCd4zw6iwoZhohLt/yK2vWhc+11RHYx8gMQ3fUNUmh
+        XaG2HRYiljhY0L0Oc3E4U1Le+wFposI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-PybYBE1GPJ6AN7cxRRyUkQ-1; Wed, 20 May 2020 04:06:04 -0400
+X-MC-Unique: PybYBE1GPJ6AN7cxRRyUkQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5F938018A5;
+        Wed, 20 May 2020 08:06:03 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-22.pek2.redhat.com [10.72.12.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 09DD85C1D0;
+        Wed, 20 May 2020 08:05:58 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dyoung@redhat.com,
+        kexec@lists.infradead.org, vgoyal@redhat.com
+Subject: [PATCH] MAINTAINERS: add files related to kdump
+Date:   Wed, 20 May 2020 16:05:57 +0800
+Message-Id: <20200520080557.13260-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:14:23AM +0200, Christian Borntraeger wrote:
-> My point was more that a similar issue should happen when installing in LPAR. LPAR
-> uses the line mode style console which is ttyS0 for the console but sclp_line0 for the
-> tty. How does the debian installer handle this?
+Kdump is implemented based on kexec, however some files are only
+related to crash dumping and missing, add them to KDUMP entry.
 
-I suppose it would fail the same way, but I have no way to verify.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> Regarding your patch I fear that this patch would break existing
-> setups so we cannot use it as is.
-
-Right, if some software/documentation depends on the name ttysclp0,
-then I guess it is not possible to change any of the two names.
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 83cf5c43242a..2f9eefd33114 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9251,6 +9251,11 @@ L:	kexec@lists.infradead.org
+ S:	Maintained
+ W:	http://lse.sourceforge.net/kdump/
+ F:	Documentation/admin-guide/kdump/
++F:	fs/proc/vmcore.c
++F:	include/linux/crash_core.h
++F:	include/linux/crash_dump.h
++F:	include/uapi/linux/vmcore.h
++F:	kernel/crash.*
+ 
+ KEENE FM RADIO TRANSMITTER DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
 -- 
-Valentin
+2.17.2
+
