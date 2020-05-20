@@ -2,76 +2,91 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5830C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E18FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77B08207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589970077;
-	bh=S7tsdwkiGlZosauRkq6IW1mxdJPbcPef9De8p/Neb20=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=qVIT4dr4z7bBDgEJjLJulBQQ8T7bSHw/i+EE/QNqgnUr59MhlXIFy2D1o9/o0PndJ
-	 N5TIMdGG51hgc7nyjBLbXChIQmOQuuw/GZeLghXI0VAAyThTQfladDqcyoNC334hu8
-	 fG/6lFkqS6FM+nIjDlUuSjShXHRF6tdHOX2wg93w=
+	by mail.kernel.org (Postfix) with ESMTP id E371C207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:21:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WzbVoL/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgETKVP (ORCPT
+        id S1726836AbgETKVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:21:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgETKVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:21:12 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 20 May 2020 06:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbgETKV0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:21:26 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B21C061A0E;
+        Wed, 20 May 2020 03:21:25 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 568C0207C4;
-        Wed, 20 May 2020 10:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589970072;
-        bh=S7tsdwkiGlZosauRkq6IW1mxdJPbcPef9De8p/Neb20=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=2KKDky4YfNsdoMUsOT6q866Gu85DZEO5U2zNBrmYAkybjIIujOMSiuwZb+vnRutu/
-         60YwDeoKmU7WyRvP7vfVdBynaEy9BgJzTT12+v/auDjVVh8aHC+KBgNvuTgwAZsw4n
-         HYUiiK2wFmUK+NL0nuwYfd+Mo1hVhhRFaFwANN+s=
-Content-Type: text/plain; charset="utf-8"
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rpgm1t8fz9sTd;
+        Wed, 20 May 2020 20:21:24 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589970084;
+        bh=ssWyo9ZQJwmqYStKYRADo5+sDEqCMcXmhdC1gF6qDqM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WzbVoL/yC+Jrcwa7p4qGBgTBgeF4acYHgkbV1TzuKraCxn65F/0bmo57zyti4qA1o
+         1Iw0qqgzwDMtikA0rDL6f5xltAVs/Kk2MjjR1U0zbY6F3zIx3OVIzVrC5NRazX9iqI
+         SvLC/VX0s7mVwaSd/l9P83W2mHqfhujst9p34GXBnMN57QKOD+B/sdUIp84G1EJkcw
+         3+x4oEzwNn218UB381dZd1awE3UutN0znwDAZMEKG9RTFA4JTeWtLOPOvRM30sYMry
+         CBLgkWEmcy30U0B/7f+LngH+OxNDEqVmkm/9Dzi5lCK1EJ8cs1DNGIXEGMzokZxIKH
+         TLuO1kVN2BK+g==
+Date:   Wed, 20 May 2020 20:21:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the imx-mxs tree
+Message-ID: <20200520202115.5409186e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200518113156.25009-3-matthias.bgg@kernel.org>
-References: <20200518113156.25009-1-matthias.bgg@kernel.org> <20200518113156.25009-3-matthias.bgg@kernel.org>
-Subject: Re: [PATCH 3/4] clk/soc: mediatek: mt6779: Bind clock driver from platform device
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     mtk01761 <wendell.lin@mediatek.com>, devicetree@vger.kernel.org,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-mediatek@lists.infradead.org,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, matthias.bgg@kernel.org
-Date:   Wed, 20 May 2020 03:21:11 -0700
-Message-ID: <158997007160.215346.10358796743530839745@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: multipart/signed; boundary="Sig_/+BnUBuvl01NHTg1FTRfF8Vg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting matthias.bgg@kernel.org (2020-05-18 04:31:55)
-> From: Matthias Brugger <matthias.bgg@gmail.com>
->=20
-> The mmsys driver is now the top level entry point for the multimedia
-> system (mmsys), we bind the clock driver by creating a platform device.
-> We also bind the MediaTek DRM driver which is not yet implement and
-> therefor will errror out for now.
->=20
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
+--Sig_/+BnUBuvl01NHTg1FTRfF8Vg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Hi all,
+
+Commit
+
+  089795766399 ("arm64: dts: ls1028a: sl28: keep switch port names consiste=
+nt")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+BnUBuvl01NHTg1FTRfF8Vg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7FBJsACgkQAVBC80lX
+0GyzIQf6AmglBY/53f0CkeyESbfZ1PXb5miCeortN/6N+7dWscsR42hJs2rseH6y
+vPQSlh6AwXMyrveq66gTPoCWvgNm9djiUmWONuH88AGn0+U+4sUH13S2OHuIRvek
+mPh+dSn4IGE90s9F64jtPMJV7g3ZHmF7TpXXU+63Bp/YLrAqNVerNNGkO5vWYeoM
+p+Kxt3un+Fb6T0vgEsVUu6z6WjENS4NYG8EiqNrgHIyCu2e/RU4Ax1EaA+gHPpC1
+sL2fHjaZpGq29XZxHEaD8zQcUC+KcyEbfVfVJY9acRMzHF4QfMLcMvhsd/YxaH/A
+0y8fKxZPpf7YSdJVDL3OOEybpm1nTQ==
+=UdoQ
+-----END PGP SIGNATURE-----
+
+--Sig_/+BnUBuvl01NHTg1FTRfF8Vg--
