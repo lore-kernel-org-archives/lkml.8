@@ -2,124 +2,114 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE24C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D017C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C18B92075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:33:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8f6KuRo"
+	by mail.kernel.org (Postfix) with ESMTP id 41508207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:34:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589942087;
+	bh=5TX6blDXQ6f+6hKSGCxomiV/h9BfQhuTdQ1tm+sld0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HAoDaSlJJxbgRNF9oHy1fWUW5YcPGvn26xvCezGmATf9Rwn3OcNcztYziC9V2jXYz
+	 8SJLQdD8+eOWV6tZLc7+a+MQblkCW039IDT5SAGR217/L43Gw9POPCzPBiS0BoiGfG
+	 /SB0JaLLCiR840/KDGzqmK0/+/vy+G0lM0Oqb+zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgETCdN (ORCPT
+        id S1728583AbgETCeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:33:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgETCdM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:33:12 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF22C061A0E;
-        Tue, 19 May 2020 19:33:12 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id z15so1808987pjb.0;
-        Tue, 19 May 2020 19:33:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BwDIrBXiNjaNz3sG9XWNN0+BTSmsf3erXnkyJQzGLzI=;
-        b=Z8f6KuRo4EWgcL3PMTyVvvSNgU0tmmvrMjN6uxyXU2nszwe3HCzMMtkOxiYzfzoK4Y
-         3fdPzf6RukbQKC7WTlixVM2LfcZhISfWGUjwAquCrxgZC6LDBvGYB3LGMNi5Rg7ZiB6U
-         GrLEeUzKkE5ev6tNquiHmTN7M4BuyTNf49Hz5e3IcQ1/Qkau4XkEUpWqRyWqNKofauoZ
-         w5wcJ4kwIEV35b0gObCkDtLRF1jp+vIwpBY14Y23OHyu9CW8HWGP0BrfhkbYyLRIAe51
-         Jygd3bVaGiaKpKrqjW69KscBv0vhYwcVYEzJ4pGRDm+Bzc1OHEE+oizovEAVAg8X8Lit
-         t9Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=BwDIrBXiNjaNz3sG9XWNN0+BTSmsf3erXnkyJQzGLzI=;
-        b=DDiI2LrLjeznnr+2XhwWJK01XbgkVs+cBNumn40atajKdAna4fBpL2HTSL66TD+nXV
-         wp8h0/GXld9Pow+jg9aAtNJaM09AREUw9g1hSiw4nvGpYLHtB6kuYNSTWbaWRqH60Izp
-         CV7xAaE/WI6Di9S+8nzY0HHnlVDyF3E/Ch+VWFb5M2SAY0o6y1WlUNRZ6ESpMkgv+P08
-         dlLIvujqLxEEErlghpMBygn2ObjSLvu7K5LyGMHQYWfAn4eC6AWG9AdHyIfRjgV/e+vz
-         jvUkKml/G38HPkpQbvt/dlXkX1fKon0a//WvchJggowwVbH9+MiRl0wAQhLC/AkvyTrf
-         HVug==
-X-Gm-Message-State: AOAM533lZEsNt5fytIcroDiqRjQ3TJ3nUZUXgnpVsHqDimEcPwGwKt6c
-        ZDUMl7NO6fmNThEeHtF6YyM=
-X-Google-Smtp-Source: ABdhPJxLssJreMhxQDprWZeb6hHopnxv+jYg4bnwEbtDXeRJ+cFIy9AaD/D2G1zU3jzWNUFJVhTaZw==
-X-Received: by 2002:a17:90a:8918:: with SMTP id u24mr2625764pjn.71.1589941990928;
-        Tue, 19 May 2020 19:33:10 -0700 (PDT)
-Received: from localhost.localdomain (c-73-170-106-24.hsd1.ca.comcast.net. [73.170.106.24])
-        by smtp.gmail.com with ESMTPSA id k24sm651418pfk.134.2020.05.19.19.33.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 19:33:10 -0700 (PDT)
-From:   Alan Mikhak <alanmikhak@gmail.com>
-X-Google-Original-From: Alan Mikhak <amikhak@wirelessfabric.com>
-To:     gustavo.pimentel@synopsys.com
-Cc:     alan.mikhak@sifive.com, amurray@thegoodpenguin.co.uk,
-        bhelgaas@google.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        jonathanh@nvidia.com, kthota@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, mmaddireddy@nvidia.com,
-        sagar.tv@gmail.com, thierry.reding@gmail.com, vidyas@nvidia.com,
-        Alan Mikhak <amikhak@wirelessfabric.com>
-Subject: Re: PCI: dwc: Warn only for non-prefetchable memory resource size >4GB
-Date:   Tue, 19 May 2020 19:33:04 -0700
-Message-Id: <20200520023304.14348-1-amikhak@wirelessfabric.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
-References: <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
+        Tue, 19 May 2020 22:34:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbgETCep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 22:34:45 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D9F2075F;
+        Wed, 20 May 2020 02:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589942085;
+        bh=5TX6blDXQ6f+6hKSGCxomiV/h9BfQhuTdQ1tm+sld0Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=klTWpgECYRftIP9DfV5mt0U3/nHgbW3YxUGGev8YNKgKYSbR6PX904dQj9BXy+wwR
+         Z57gcVqNNDl8oZQ0XqQt4jR8uStgPIqDNn91m1Hty6nAQEazs44wW6mpqpznPL70Lr
+         2SM+1MGRt9qkjE38McwUKkvY60bdDnwI6cC1wIjI=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0C7C740AFD; Tue, 19 May 2020 23:34:43 -0300 (-03)
+Date:   Tue, 19 May 2020 23:34:43 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v3 6/7] perf test: Improve pmu event metric testing
+Message-ID: <20200520023443.GE32678@kernel.org>
+References: <20200515221732.44078-1-irogers@google.com>
+ <20200515221732.44078-7-irogers@google.com>
+ <20200519190602.GB28228@kernel.org>
+ <CAP-5=fVdDjazSdzfTXeuWwqCSh0zURp3M8QZpYK=qd92GeyrRw@mail.gmail.com>
+ <20200520011548.GD28228@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520011548.GD28228@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+Em Tue, May 19, 2020 at 10:15:48PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, May 19, 2020 at 01:15:41PM -0700, Ian Rogers escreveu:
+> > On Tue, May 19, 2020 at 12:06 PM Arnaldo Carvalho de Melo
+> > errno != 0 for both cases as the man page notes suggest doing this.
+> > The tests using v are necessary to avoid the unused result, but
+> > presumably any errno case should return false here? I guess testing
+> > that is redundant as the return below will catch it. Perhaps this
+> > should be:
+> > 
+> > errno = 0;
+> > v = strtod(str, &end_ptr);
+> > (void)v;  /* We don't care for the value of the double, just that it
+> > converts. Avoid unused result warnings. */
+> > return errno == 0 && end_ptr != str;
+> 
+> Ok, I'll try that one.
 
-I came across this issue when implementing a Linux NVMe endpoint function
-driver under the Linux PCI Endpoint Framework:
-https://lwn.net/Articles/804369/
+What I have is in my tmp.perf/core branch, this and the hashmap.h
+__WORDSIZE fixups, with those all the alpine Linux containers, that use
+Musl libc passed, waiting for the remaining 80 other containers to
+finish, now lots of these containers build with and without NO_LIBBPF=1
+to make sure we test both variants,
 
-I needed to map up to 128GB of host memory using a single ATU window
-from the endpoint side because NVMe PRPs can be scattered all over host
-memory. In the process, I came across this 4GB limitation where the
-maximum size of memory that can be mapped is limited by what a u32 value
-can represent.
-
-I submitted a separate patch to fix an undefined behavior that may also
-happen in dw_pcie_prog_outbound_atu_unroll() under some circumstances
-when the size of the memory being mapped is greater than what a u32 value
-can represent.
-https://patchwork.kernel.org/patch/11469701/
-
-The above patch has been accepted. However, the variable pp->mem_size
-in dw_pcie_host_init() is still a u32 whereas the value returned by
-resource_size() is u64. If the resource size has non-zero upper 32-bits,
-those upper 32-bits will be lost when assigning:
- pp->mem_size = resource_size(pp->mem).
-
-Since current callers seem happy with the existing 4GB implementation
-and fixing the u32 limit is beyond my available resources and has a long
-high-impact tail, a warning seemed to be a good choice to highlight
-this issue in case someone else decides to map a MEM region that is
-greater than 4GB.
-
-Removing the warning will avoid such discussions. Without this warning,
-this limitation will go unnoticed and will only impact whoever has to
-deal with it. It cost me time to figure it out when I had an application
-that needed a region larger than 4GB. I figured the most I could do about
-it is to raise the issue by adding a warning.
-
-Regards,
-Alan
-
-
-
-
-
-
+- Arnaldo
