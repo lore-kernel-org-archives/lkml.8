@@ -2,66 +2,100 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD65DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE64C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E55207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F4720823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590010157;
+	bh=tNeHg18J8KpIUbnkvwoUOTfv+q14yZF+X4qaszsqdL4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zBn4NnDvJSeMSLh5P4zZ/9HhLiwUZzJHYKs3rG6NLpAioEuPcFEvQzC3ZsTs3/o+A
+	 mGLWK/9B5vFG3V2F1dVuXh7ky6F2aqurGvpnxbVDaLJ/bfMorXXSQS6jjBUVgifIKt
+	 W8k4NE38C0jk2721TEbAeUeDmHlH6VnyMeM2qilI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgETV2O (ORCPT
+        id S1728236AbgETV3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:28:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgETV2N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:28:13 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 565ECC061A0E;
-        Wed, 20 May 2020 14:28:12 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jbWFz-00Cc4Y-5f; Wed, 20 May 2020 21:28:07 +0000
-Date:   Wed, 20 May 2020 22:28:07 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 22/24] uaccess: add memzero_user
-Message-ID: <20200520212807.GD23230@ZenIV.linux.org.uk>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
- <20200520172145.23284-23-pbonzini@redhat.com>
- <20200520204036.GA1335@infradead.org>
- <e2e23a99-f682-1556-dad0-408e78233eb6@redhat.com>
+        Wed, 20 May 2020 17:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbgETV3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:29:16 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63703207F9;
+        Wed, 20 May 2020 21:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590010156;
+        bh=tNeHg18J8KpIUbnkvwoUOTfv+q14yZF+X4qaszsqdL4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cuBGoPqfHeYx1FqXipdaSEJ1UDMiiyPZiH2iuG7zGzREsRYHjkswEcFbv78fo9BS/
+         Fyc5ytsi8JMe/DclVaIrMRT4ND0qgnWV66V6mV7K1O0G/mzgvfj59V/IRK32zIdvOP
+         ZI+bn1f9Q0z9WAvWecyPY697SYlsWEbzUqw7DhfU=
+From:   Will Deacon <will@kernel.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 + ARCH_SOC_ID support
+Date:   Wed, 20 May 2020 22:29:10 +0100
+Message-Id: <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200518091222.27467-1-sudeep.holla@arm.com>
+References: <20200518091222.27467-1-sudeep.holla@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2e23a99-f682-1556-dad0-408e78233eb6@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:13:36PM +0200, Paolo Bonzini wrote:
-> On 20/05/20 22:40, Christoph Hellwig wrote:
-> > On Wed, May 20, 2020 at 01:21:43PM -0400, Paolo Bonzini wrote:
-> >> +			unsafe_put_user(val, (unsigned long __user *) from, err_fault);
-> > This adds a way too long line.  In many ways it would be much nicer if
-> > you used an unsigned long __user * variable internally, a that would
-> > remove all these crazy casts and actually make the code readable.
-> > 
+On Mon, 18 May 2020 10:12:15 +0100, Sudeep Holla wrote:
+> This patch series adds support for SMCCCv1.2 ARCH_SOC_ID.
+> This doesn't add other changes added in SMCCC v1.2 yet. They will
+> follow these soon along with its first user SPCI/PSA-FF.
 > 
-> Good idea, thanks.
+> This is tested using upstream TF-A + the patch[3] fixing the original
+> implementation there.
+> 
+> [...]
 
-Unless I'm seriously misreading that patch, it could've been done as
+Applied to arm64 (for-next/smccc), thanks!
 
-static inline __must_check int memzero_user(void __user *addr, size_t size)
-{
-	return clear_user(addr, n) ? -EFAULT : 0;
-}
+[1/7] firmware: smccc: Add HAVE_ARM_SMCCC_DISCOVERY to identify SMCCC v1.1 and above
+      https://git.kernel.org/arm64/c/e5bfb21d98b6
+[2/7] firmware: smccc: Update link to latest SMCCC specification
+      https://git.kernel.org/arm64/c/15c704ab6244
+[3/7] firmware: smccc: Add the definition for SMCCCv1.2 version/error codes
+      https://git.kernel.org/arm64/c/0441bfe7f00a
+[4/7] firmware: smccc: Drop smccc_version enum and use ARM_SMCCC_VERSION_1_x instead
+      https://git.kernel.org/arm64/c/ad5a57dfe434
+[5/7] firmware: smccc: Refactor SMCCC specific bits into separate file
+      https://git.kernel.org/arm64/c/f2ae97062a48
+[6/7] firmware: smccc: Add function to fetch SMCCC version
+      https://git.kernel.org/arm64/c/a4fb17465182
+[7/7] firmware: smccc: Add ARCH_SOC_ID support
+      https://git.kernel.org/arm64/c/ce6488f0ce09
 
-What am I missing?
+Arnd -- Sudeep's reply to you about the sysfs groups seemed reasonable to me,
+but please shout if you'd rather I dropped this in order to pursue an
+alternative approach.
+
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
