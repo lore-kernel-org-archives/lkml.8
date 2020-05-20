@@ -2,88 +2,124 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B83C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78463C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 403D2207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE07207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="C4YpUv33"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bX8NyOa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgETUC2 (ORCPT
+        id S1728369AbgETUCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:02:28 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:55822 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgETUC1 (ORCPT
+        Wed, 20 May 2020 16:02:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47190 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgETUCe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:02:27 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id A5E0A60233;
-        Wed, 20 May 2020 16:02:25 -0400 (EDT)
-        (envelope-from junio@pobox.com)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type; s=sasl; bh=GNEMXWUJjY+FjrgaGZ2Nxbc6ddo=; b=C4YpUv
-        33nYYwaTq4v7t5/g0OMs82CqpDtY0mpnuTYGXPflCXO4LilaurMNQsFNdbRV4iXo
-        WHYi553IZvNG20HOuIISDS4xsaoCKyaBMU3ykvDaPR1CygnY19QEA/AMSkfOjv7L
-        566nMutwq5dsMtmM02f74AvAv34v0CrCCzhZg=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type; q=dns; s=sasl; b=RyXwnEionwZQyYQHKbM5t5vxIMpo8awO
-        3J4/4y5Z25azS9Nbneg9FycILaGRSr2LfxU7B/EeboT9uhUZ8/slojkbVqyzouDf
-        OV8r0O7T/HJszB5ajEabrG4gKrqvQocWF2MkcWwU2cmslcfQcVSrxIGsBkttxWUZ
-        f4jLPIrsf3Y=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 9596E60232;
-        Wed, 20 May 2020 16:02:25 -0400 (EDT)
-        (envelope-from junio@pobox.com)
-Received: from pobox.com (unknown [35.196.173.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 13F6360231;
-        Wed, 20 May 2020 16:02:25 -0400 (EDT)
-        (envelope-from junio@pobox.com)
-From:   Junio C Hamano <gitster@pobox.com>
-To:     Jeff King <peff@peff.net>
-Cc:     git@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
-        git-packagers@googlegroups.com
-Subject: Re: [ANNOUNCE] Git v2.27.0-rc1
-References: <xmqqsgfuv2ko.fsf@gitster.c.googlers.com>
-        <20200520193156.GA4700@coredump.intra.peff.net>
-Date:   Wed, 20 May 2020 13:02:24 -0700
-In-Reply-To: <20200520193156.GA4700@coredump.intra.peff.net> (Jeff King's
-        message of "Wed, 20 May 2020 15:31:56 -0400")
-Message-ID: <xmqqmu62v0hb.fsf@gitster.c.googlers.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Wed, 20 May 2020 16:02:34 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2Ree059688;
+        Wed, 20 May 2020 15:02:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590004947;
+        bh=Jlv71XRhYvS94aqoB9HV5Z9r9HYEVNg9gj2FL6x/cOU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=bX8NyOa8WhyNk1kme0Ol5d4SFgz4V9Pcvi0kj3nadBNqeURZ08n3uwL4ltrKmUcsY
+         +hSZ01qy6SNvf1vtFrHOV1hZ2lu1r7NgxVx4LY1QMwp12Zt5hb1uqbFZHJIezOi9+E
+         9bAK8kNa+qbB+Ig53lAcB5rDIqVElT4xqVSg9pq4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KK2Rfb071370
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 15:02:27 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 15:02:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 15:02:27 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KK2PFc102988;
+        Wed, 20 May 2020 15:02:25 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+ <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+ <20200520164313.GI652285@lunn.ch>
+ <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
+ <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
+ <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
+ <20200520192719.GK652285@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
+Date:   Wed, 20 May 2020 15:02:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Pobox-Relay-ID: D2F15FB2-9AD4-11EA-8B7C-C28CBED8090B-77302942!pb-smtp1.pobox.com
+In-Reply-To: <20200520192719.GK652285@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jeff King <peff@peff.net> writes:
+Andrew
 
-> On Wed, May 20, 2020 at 12:17:11PM -0700, Junio C Hamano wrote:
+On 5/20/20 2:27 PM, Andrew Lunn wrote:
+> Hi Dan
 >
->> Git 2.27 Release Notes (draft)
->> ==============================
->> 
->> Updates since v2.26
->> -------------------
->> 
->> Backward compatibility notes
+>> UGH I think I just got volunteered to do make them common.
+> There is code you can copy from PHY drivers. :-)
 >
-> Is it worth mentioning here the reversion of v2 as the default protocol?
+> What would be kind of nice is if the validate was in the core as
+> well. Pass a list of possible delays in pS, and it will do a
+> phydev_err() if what is in DT does not match one of the listed
+> delays. Take a look around at what current drivers do and see if you
+> can find a nice abstraction which will work for a few drivers. We
+> cannot easily convert existing drivers without breaking DT, but a
+> design which works in theory for what we currently have has a good
+> chance of working for any new PHY driver.
 
-Yeah, that is a good suggestion.  The fix inside v2 is not worth
-reporting, but the change of the default is noteworthy enough to be
-at the top.
+I think adding it in the core would be a bit of a challenge.  I think 
+each PHY driver needs to handle parsing and validating this property on 
+its own (like fifo-depth).  It is a PHY specific setting.
+
+Take the DP83867/9 and the ADIN1200/ADIN1300.
+
+The 8386X devices has a delta granularity of 250pS and the AD devices is 
+200pS per each setting
+
+And the 867/9 has 3x more values (15) vs only 5 for the AD PHY.
+
+And the Atheros AR803x PHY does use rgmii-id in the yaml, which I guess 
+is what you were pointing out, that if set the PHY uses a default 2nS 
+delay and it is not configurable.
+
+Same with the Broadcomm.
+
+Ack to not changing already existing drivers which is only 2 the AD PHY 
+and the DP83867 PHY.  But I can update the yaml for the 83867 and mark 
+the TI specific properties as deprecated in favor of the new properties 
+like I did with fifo-depth.
+
+Dan
 
 
+>       Andrew
