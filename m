@@ -3,110 +3,193 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B24C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF0D20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2ABF207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgETVUI (ORCPT
+        id S1728299AbgETVXH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:20:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgETVUH (ORCPT
+        Wed, 20 May 2020 17:23:07 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:52935 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgETVXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:20:07 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9E14C061A0E;
-        Wed, 20 May 2020 14:20:06 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 84B392A2B99
-Received: by earth.universe (Postfix, from userid 1000)
-        id F0C6F3C08C7; Wed, 20 May 2020 23:20:03 +0200 (CEST)
-Date:   Wed, 20 May 2020 23:20:03 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv3 3/5] Input: EXC3000: add EXC80H60 and EXC80H84 support
-Message-ID: <20200520212003.fxxi4uytifkeb2ca@earth.universe>
-References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
- <20200520153936.46869-4-sebastian.reichel@collabora.com>
- <20200520174519.GV89269@dtor-ws>
+        Wed, 20 May 2020 17:23:06 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MDhth-1jjWFd3pd1-00AjXF; Wed, 20 May 2020 23:23:03 +0200
+Received: by mail-qk1-f177.google.com with SMTP id z80so5241757qka.0;
+        Wed, 20 May 2020 14:23:02 -0700 (PDT)
+X-Gm-Message-State: AOAM530+4XTsxvzjPhSLBin0cpDLo9y2f91Y0R2+LF80GcbwIikIORur
+        pBa53MPvHr1pB0CXehBARuUBDyut2h3N5t2OiKQ=
+X-Google-Smtp-Source: ABdhPJwZcCZSxDynCH3r3gKmPJPpPeE9FrIMPWva+zbjlW1lcOdkg0GE0sngrt5N6VQ/g7lU1Cjl02NdfnJS0lbfHTc=
+X-Received: by 2002:a37:46c9:: with SMTP id t192mr3853110qka.3.1590009781522;
+ Wed, 20 May 2020 14:23:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hcixh3a6whlmsy5m"
-Content-Disposition: inline
-In-Reply-To: <20200520174519.GV89269@dtor-ws>
+References: <20200520112523.30995-1-brgl@bgdev.pl> <20200520112523.30995-7-brgl@bgdev.pl>
+ <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com> <CAMRc=MeuQk9rFDFGWK0ijsiM-r296cVz9Rth8hWhW5Aeeti_cA@mail.gmail.com>
+In-Reply-To: <CAMRc=MeuQk9rFDFGWK0ijsiM-r296cVz9Rth8hWhW5Aeeti_cA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 May 2020 23:22:45 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com>
+Message-ID: <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/11] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:/gC/5Naxf714EfIF7VfC28t3aDY3Z5zwTf0bIDD9BdZYwi1aXcQ
+ wOAjoLgJmY8yqt0tKwvjPxlYQ+YHeUWSIugxeSDb9jafNiVALoWHpxKqOE0Fe00bZNgWbGx
+ iEyFxQ3un9OWUbA9NjfuAGpCULoebm33vwCBY8/VOyy+DRplmE4KqkhuQQwTIRAMIvrYGOy
+ w9+U66RvOrIdXm53Qth/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5ZVhrGWEVig=:MlewIc1FlCowA24CzIifiW
+ my+BBmPcV4f7xG20qgT44Dniq/cekNL0vxCJFHqfgv295t3XjNGj1Z8+/C+QBDDIw2Fl+iEzd
+ GjUpQm0FZn4bGKRO1MLD2kb4ETS6EzCBoOY73Hl1LZ8Zz8dssR2HVWtlmgHHWe8nEouK1TMGG
+ BzCw6+EeQGg9ZbSNmNRnxy6JS7DR22doUghbO5SUD8gLQoeIiiiBHu6vTx1FiwZ901OBOHcTJ
+ Otlcf8hZ0axSrjU7i2dwXA6vdPkorfuxxjgDTySPwp9f/2CFQFDg/CBjoWian5nmBPKgDKnzm
+ LJeIfeACi2ptva/SS/mfAmeDe12mrScIm7HCzCYd9rtMhfvNhhWnhHRXIJVMsMWRh1IBOMg1s
+ 3REl8+v6LKhC1V7NoEvT2rfTTOQ/hmwQg7hDUjl1dJcWdZu20swCmK06z0LG+3XNwNu/54+y1
+ lcG+JiEvK3ySHgdp0Q1jXRVXiVmNYZG+dvsiHYOcR8Q/Xt7refjI0rC7mO82P1IaCSk62ykvL
+ wER9MK6H9YleFs2FHk0VvqGSir5+ifjDx+N7hJ13yJDUy6tRRI6DymSkJonDzJMWnd8b/Hde6
+ pjn1HRmWOxEwj0fbFtNn3hKToZoNEJm2itITl/X9PxDdlrjSYL/hWxAV0kpOFPiQV7KWLRidK
+ mOxI+/NnX7fqmQubUWr8ASozgGWcx67roHtxljG84+wZr1efzQ0XKgzzxEUKMURPZi1ZYZFEt
+ 5h3+ONVmZCrYln6pbM63bB+kz2syqE1ioEzLO/CjkVMfqqqS0JUf96/CUWrI5Eym50SeFdZdx
+ k2Lev8IcWKg8EEU9a7GOqTeFqxseVkdqdS2zl6WWStvjErVoFM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 7:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> śr., 20 maj 2020 o 16:37 Arnd Bergmann <arnd@arndb.de> napisał(a):
 
---hcixh3a6whlmsy5m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > I just noticed how the naming of NET_MEDIATEK_MAC and NET_MEDIATEK_SOC
+> > for two different drivers doing the same thing is really confusing.
+> >
+> > Maybe someone can come up with a better name, such as one
+> > based on the soc it first showed up in.
+> >
+>
+> This has been discussed under one of the previous submissions.
+> MediaTek wants to use this IP on future designs as well and it's
+> already used on multiple SoCs so they want the name to be generic. I
+> also argued that this is a driver strongly tied to a specific
+> platform(s) so if someone wants to compile it - they probably know
+> what they're doing.
+>
+> That being said: I verified with MediaTek and the name of the IP I can
+> use is "star" so they proposed "mtk-star-eth". I would personally
+> maybe go with "mtk-star-mac". How about those two?
 
-Hi,
+Both seem fine to me. If this was previously discussed, I don't want
+do further bike-shedding and I'd trust you to pick a sensible name
+based on the earlier discussions.
 
-On Wed, May 20, 2020 at 10:45:19AM -0700, Dmitry Torokhov wrote:
-> Hi Sebastian,
->=20
-> On Wed, May 20, 2020 at 05:39:34PM +0200, Sebastian Reichel wrote:
-> > =20
-> >  	data->client =3D client;
-> > +	data->info =3D device_get_match_data(&client->dev);
+> >  +               /* One of the counters reached 0x8000000 - update stats and
+> > > +                * reset all counters.
+> > > +                */
+> > > +               if (unlikely(status & MTK_MAC_REG_INT_STS_MIB_CNT_TH)) {
+> > > +                       mtk_mac_intr_disable_stats(priv);
+> > > +                       schedule_work(&priv->stats_work);
+> > > +               }
+> > > + befor
+> > > +               mtk_mac_intr_ack_all(priv);
+> >
+> > The ack here needs to be dropped, otherwise you can get further
+> > interrupts before the bottom half has had a chance to run.
+> >
+>
+> My thinking was this: if I mask the relevant interrupt (TX/RX
+> complete) and ack it right away, the status bit will be asserted on
+> the next packet received/sent but the process won't get interrupted
+> and when I unmask it, it will fire right away and I won't have to
+> recheck the status register. I noticed that if I ack it at the end of
+> napi poll callback, I end up missing certain TX complete interrupts
+> and end up seeing a lot of retransmissions even if I reread the status
+> register. I'm not yet sure where this race happens.
 
-The above is for DT (and ACPI, but driver has no ACPI table).
+Right, I see. If you just ack at the end of the poll function, you need
+to check the rings again to ensure you did not miss an interrupt
+between checking observing both rings to be empty and the irq-ack.
 
-> > +	if (!data->info) {
-> > +		enum eeti_dev_id eeti_dev_id =3D
-> > +			i2c_match_id(exc3000_id, client)->driver_data;
->=20
-> I believe i2c devices can be instantiated via sysfs, so I think we
-> better handle case where we can't find matching id. Also driver_data is
-> enough to store a pointer, maybe we can have individual structures
-> instead of using an array and indexing here?
+I suspect it's still cheaper to check the two rings with an uncached
+read from memory than to to do the read-modify-write on the mmio,
+but you'd have to measure that to be sure.
 
-The above code is only for exactly this usecase (loading via sysfs).
-There is zero chance, that we cannot find matching id. The sysfs
-based probing works by providing the device address and the name
-listed in driver's id_table. I took the above code style from
-drivers/i2c/muxes/i2c-mux-ltc4306.c.
+> > > +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
+> > > +{
+> > > +       struct mtk_mac_ring *ring = &priv->tx_ring;
+> > > +       struct net_device *ndev = priv->ndev;
+> > > +       int ret, pkts_compl, bytes_compl;
+> > > +       bool wake = false;
+> > > +
+> > > +       mtk_mac_lock(priv);
+> > > +
+> > > +       for (pkts_compl = 0, bytes_compl = 0;;
+> > > +            pkts_compl++, bytes_compl += ret, wake = true) {
+> > > +               if (!mtk_mac_ring_descs_available(ring))
+> > > +                       break;
+> > > +
+> > > +               ret = mtk_mac_tx_complete_one(priv);
+> > > +               if (ret < 0)
+> > > +                       break;
+> > > +       }
+> > > +
+> > > +       netdev_completed_queue(ndev, pkts_compl, bytes_compl);
+> > > +
+> > > +       if (wake && netif_queue_stopped(ndev))
+> > > +               netif_wake_queue(ndev);
+> > > +
+> > > +       mtk_mac_intr_enable_tx(priv);
+> >
+> > No need to ack the interrupt here if napi is still active. Just
+> > ack both rx and tx when calling napi_complete().
+> >
+> > Some drivers actually use the napi budget for both rx and tx:
+> > if you have more than 'budget' completed tx frames, return
+> > early from this function and skip the napi_complete even
+> > when less than 'budget' rx frames have arrived.
+> >
+>
+> IIRC Jakub said that the most seen approach is to free all TX descs
+> and receive up to budget packets, so this is what I did. I think it
+> makes the most sense.
 
-We can store the pointer directly in i2c_device_id's driver_data
-field, but that requires two type casts (field is ulong instead
-of pointer). The array variant feels a bit cleaner to me.
+Ok, he's probably right then.
 
--- Sebastian
+My idea was that the dma_unmap operation for the tx cleanup is
+rather expensive on chips without cache-coherent DMA, so you
+might not want to do too much of it but rather do it in reasonably
+sized batches. It would also avoid the case where you renable the
+tx-complete interrupt after cleaning the already-sent frames but
+then immediately get an irq when the next frame that is already
+queued is done.
 
---hcixh3a6whlmsy5m
-Content-Type: application/pgp-signature; name="signature.asc"
+This probably depends on the specific workload which one works
+better here.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7Fnv0ACgkQ2O7X88g7
-+po2bA//S0yFjgkrJB7fjg4C3R86Xu6HxdkqfQaAUch7IP/RsFdhDsxcCeNO1yC2
-PSuIRz5c+QZDayKvVBA4zfrLaqtn7yKadyzaoHqTIFbavZpuEnLjT6ySC9AFFKCR
-FUwWBrVfhXxJH1PWJVTfB4ZgwwnZ5wqu7x0nuKp4My4JsqbsKir0JCE8oOftTkAd
-HSW5bGRwVKxbDI6vQ0x9aDac/+bw1b4vTD5k8hWPKlzZufEzln0NgWJH+4CKFQbg
-7UqB1NjNmUxrTZLMco5czBbocVojX6yOs5/1WjvVGvb0aai1Ny4p9HEzV9A7by+m
-A+yRbrbUhMX9fdIFBoRIFSiHLglpMRm2/h8tfPLE5m5DsL1tv4+aW4Y+j9rMuWxy
-yWyFwDZ92UgYGwv5N7QmozpBdp+732YBseEXT6q0OzVpP61RAj0QpL3TEgDHZZ98
-hL8KOb88E4kOmYmbUQoYz+W2ACN90HX9PS3Meb711iSlYPh/MOiYol5VT5lRqJHV
-DHwi0bTIbRxJJiTFrTambDURbWUdFSqPEDwQaZnBalEWk7e9ipWOJhYXgHBE6QiR
-sGvn/2oA2dxwJdzJzrzoOjRQTafeB2GnFGmZPJOhNHiiHbRUEnIFkCTeNOAJ0C93
-R0jR3PYflML/6Hmsmx4WRsf5xmlAq7AIvt7ahxX7eooQ40+EeqA=
-=oNKC
------END PGP SIGNATURE-----
-
---hcixh3a6whlmsy5m--
+         Arnd
