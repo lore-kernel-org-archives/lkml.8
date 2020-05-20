@@ -2,182 +2,168 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C84CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB269204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:05:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Gkqd7eG/"
+	by mail.kernel.org (Postfix) with ESMTP id D302420709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589997949;
+	bh=kXoflEbp5ulmwEoxjarHhtSJEjOi/lhE28kVEiZxBns=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=e/XJRpAgnTvTPCf/Ro3GXM/ZzCb+fqeAKSyvD7Za//GrtFP85006lwXTTZ+48oEcf
+	 dk4YxEqOxWeC5oHeulqMR+uJcnTe0Kg77sFdUbuqbjNunuUC23j9KfAzXQjt6HWDpq
+	 dzYsCHspaI2fE1HJEZ3n/KCLCETPIOWn55h//0Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgETSFB (ORCPT
+        id S1726905AbgETSFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgETSFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:05:00 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD1CC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:05:00 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id v12so4056210wrp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:05:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7VLWQjSGehoQQ10TIMLPZjQP7xmwIhJsBUGDoa1VrTI=;
-        b=Gkqd7eG/0dnXjHy1xG1j6m7TgceuOsXw1H/rc22l7IJlPhwJ2B6P2ljAHXrYzTRdar
-         MIaXDobt3I0ohzfnM8+IrTc0qKhgEUwuY7/Fo9s2GXiixg4EmEP6C4/NiXdh9NUFhFJv
-         EkITnRLky4apVZDMRRGPfnmoIfrxMMPEjnOeE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=7VLWQjSGehoQQ10TIMLPZjQP7xmwIhJsBUGDoa1VrTI=;
-        b=FXxOqgDpLPx4Qs3zL6Dq9GzKSTTal1Uf68bHdBIJrDX7GQpGcc/2YKFPJyi+7BLMnf
-         xUKPrCFfz3NiFPomRzvQFqTb3bSkrn15nIc/lTYjAq2nAK/4Xgc5CoMq2nYG2UYwicZN
-         BxONTp/VuZI3Z9B80kztr/eNCpdGo+KSh3LSnNnod5L0RdTg4F465DNbTVv2eCaoOocg
-         MfysRodoDh+aYuR59KmNDA2AsvRj0pecDLi7ttbt3zXdo+5aQn9SloH+YZEpGESOga3Z
-         K5GhhLePWKkcDyuPUTcsUOS3kMEvPZXUgmv9ccBQlemiZIH8vAsgASdpVN0+7kzclDEu
-         0t1g==
-X-Gm-Message-State: AOAM531JkkDgDxsMS9bT+RLIQTJDJG0R4lAh8ycUL9LZ3q67fEoMOlCY
-        vRrH7QpaiVGCrs7KjOdHalBTZPutXDM=
-X-Google-Smtp-Source: ABdhPJyS/wpov4LAbGyHkjwZQ9PTa7H2uWj92iFIX5HPBrejAjzuIvVfeVBaSJI7TyMuvzzPHXcGHg==
-X-Received: by 2002:adf:ec87:: with SMTP id z7mr5634315wrn.149.1589997899278;
-        Wed, 20 May 2020 11:04:59 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id b12sm4040708wmj.0.2020.05.20.11.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 11:04:58 -0700 (PDT)
-Date:   Wed, 20 May 2020 20:04:56 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Olof Johansson <olof@lixom.net>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Subject: Re: [Intel-gfx] [PATCH 3/3] misc/habalabs: don't set default
- fence_ops->wait
-Message-ID: <20200520180456.GC206103@phenom.ffwll.local>
-Mail-Followup-To: Oded Gabbay <oded.gabbay@gmail.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
- <20200511091142.208787-3-daniel.vetter@ffwll.ch>
- <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
- <CAPM=9tyukFdDiM6-Mxd+ouXCt9Z4t6LRZwxq7DGoX9drrHnMdQ@mail.gmail.com>
- <CAKMK7uF=SzeEBtZ9xH+jPzeML4V0QQuwBnPVw+OL+MUgTaaLzQ@mail.gmail.com>
- <CAFCwf110j5EDNH9nvrVX9fQ5JkEt5B217snyiTyfpFz8yAkxNg@mail.gmail.com>
+        Wed, 20 May 2020 14:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbgETSFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:05:47 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B906420671;
+        Wed, 20 May 2020 18:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589997946;
+        bh=kXoflEbp5ulmwEoxjarHhtSJEjOi/lhE28kVEiZxBns=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ujwYf10cYEUTD94IZ3hRka3qPIljRIMk5K6sC9F1xC6BWgXVUfeYzun63oZFgp+3o
+         pWBjbN0Vm1VDFtZB3Qff7hFmtotlDe3tYrTZs1lKyXTbBtEuqsKGlNmEpF4TENGTxj
+         l9B2W7YDZlCQPTHXxa17tKW8tZe2wbtqjkp7Btac=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A1C5A3522A2B; Wed, 20 May 2020 11:05:46 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:05:46 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V6 12/37] x86/entry: Provide
+ idtentry_entry/exit_cond_rcu()
+Message-ID: <20200520180546.GQ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200515235125.628629605@linutronix.de>
+ <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com>
+ <87ftbv7nsd.fsf@nanos.tec.linutronix.de>
+ <87a7237k3x.fsf@nanos.tec.linutronix.de>
+ <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com>
+ <874ksb7hbg.fsf@nanos.tec.linutronix.de>
+ <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
+ <20200520022353.GN2869@paulmck-ThinkPad-P72>
+ <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
+ <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFCwf110j5EDNH9nvrVX9fQ5JkEt5B217snyiTyfpFz8yAkxNg@mail.gmail.com>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+In-Reply-To: <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:38:38PM +0300, Oded Gabbay wrote:
-> On Tue, May 12, 2020 at 9:12 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+On Wed, May 20, 2020 at 09:51:17AM -0700, Andy Lutomirski wrote:
+> On Wed, May 20, 2020 at 8:36 AM Andy Lutomirski <luto@kernel.org> wrote:
 > >
-> > On Tue, May 12, 2020 at 4:14 AM Dave Airlie <airlied@gmail.com> wrote:
+> > On Tue, May 19, 2020 at 7:23 PM Paul E. McKenney <paulmck@kernel.org> wrote:
 > > >
-> > > On Mon, 11 May 2020 at 19:37, Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> > > >
-> > > > On Mon, May 11, 2020 at 12:11 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> > > > >
-> > > > > It's the default.
-> > > > Thanks for catching that.
-> > > >
-> > > > >
-> > > > > Also so much for "we're not going to tell the graphics people how to
-> > > > > review their code", dma_fence is a pretty core piece of gpu driver
-> > > > > infrastructure. And it's very much uapi relevant, including piles of
-> > > > > corresponding userspace protocols and libraries for how to pass these
-> > > > > around.
-> > > > >
-> > > > > Would be great if habanalabs would not use this (from a quick look
-> > > > > it's not needed at all), since open source the userspace and playing
-> > > > > by the usual rules isn't on the table. If that's not possible (because
-> > > > > it's actually using the uapi part of dma_fence to interact with gpu
-> > > > > drivers) then we have exactly what everyone promised we'd want to
-> > > > > avoid.
-> > > >
-> > > > We don't use the uapi parts, we currently only using the fencing and
-> > > > signaling ability of this module inside our kernel code. But maybe I
-> > > > didn't understand what you request. You want us *not* to use this
-> > > > well-written piece of kernel code because it is only used by graphics
-> > > > drivers ?
-> > > > I'm sorry but I don't get this argument, if this is indeed what you meant.
-> > >
-> > > We would rather drivers using a feature that has requirements on
-> > > correct userspace implementations of the feature have a userspace that
-> > > is open source and auditable.
-> > >
-> > > Fencing is tricky, cross-device fencing is really tricky, and having
-> > > the ability for a closed userspace component to mess up other people's
-> > > drivers, think i915 shared with closed habana userspace and shared
-> > > fences, decreases ability to debug things.
-> > >
-> > > Ideally we wouldn't offer users known untested/broken scenarios, so
-> > > yes we'd prefer that drivers that intend to expose a userspace fencing
-> > > api around dma-fence would adhere to the rules of the gpu drivers.
-> > >
-> > > I'm not say you have to drop using dma-fence, but if you move towards
-> > > cross-device stuff I believe other drivers would be correct in
-> > > refusing to interact with fences from here.
-> >
-> > The flip side is if you only used dma-fence.c "because it's there",
-> > and not because it comes with an uapi attached and a cross-driver
-> > kernel internal contract for how to interact with gpu drivers, then
-> > there's really not much point in using it. It's a custom-rolled
-> > wait_queue/event thing, that's all. Without the gpu uapi and gpu
-> > cross-driver contract it would be much cleaner to just use wait_queue
-> > directly, and that's a construct all kernel developers understand, not
-> > just gpu folks. From a quick look at least habanalabs doesn't use any
-> > of these uapi/cross-driver/gpu bits.
-> > -Daniel
+> > > On Tue, May 19, 2020 at 05:26:58PM -0700, Andy Lutomirski wrote:
+> > > > On Tue, May 19, 2020 at 2:20 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> Hi Daniel,
-> I want to say explicitly that we don't use the dma-buf uapi parts, nor
-> we intend to use them to communicate with any GPU device. We only use
-> it as simple completion mechanism as it was convenient to use.
-> I do understand I can exchange that mechanism with a simpler one, and
-> I will add an internal task to do it (albeit not in a very high
-> priority) and upstream it, its just that it is part of our data path
-> so we need to thoroughly validate it first.
+> First, the patch as you submitted it is Acked-by: Andy Lutomirski
+> <luto@kernel.org>.  I think there are cleanups that should happen, but
+> I think the patch is correct.
+> 
+> About cleanups, concretely:  I think that everything that calls
+> __idtenter_entry() is called in one of a small number of relatively
+> sane states:
+> 
+> 1. User mode.  This is easy.
+> 
+> 2. Kernel, RCU is watching, everything is sane.  We don't actually
+> need to do any RCU entry/exit pairs -- we should be okay with just a
+> hypothetical RCU tickle (and IRQ tracing, etc).  This variant can
+> sleep after the entry part finishes if regs->flags & IF and no one
+> turned off preemption.
+> 
+> 3. Kernel, RCU is not watching, system was idle.  This can only be an
+> actual interrupt.
+> 
+> So maybe the code can change to:
+> 
+>     if (user_mode(regs)) {
+>         enter_from_user_mode();
+>     } else {
+>         if (!__rcu_is_watching()) {
+>             /*
+>              * If RCU is not watching then the same careful
+>              * sequence vs. lockdep and tracing is required.
+>              *
+>              * This only happens for IRQs that hit the idle loop, and
+>              * even that only happens if we aren't using the sane
+>              * MWAIT-while-IF=0 mode.
+>              */
+>             lockdep_hardirqs_off(CALLER_ADDR0);
+>             rcu_irq_enter();
+>             instrumentation_begin();
+>             trace_hardirqs_off_prepare();
+>             instrumentation_end();
+>             return true;
+>         } else {
+>             /*
+>              * If RCU is watching then the combo function
+>              * can be used.
+>              */
+>             instrumentation_begin();
+>             trace_hardirqs_off();
+>             rcu_tickle();
+>             instrumentation_end();
+>         }
+>     }
+>     return false;
+> 
+> This is exactly what you have except that the cond_rcu part is gone
+> and I added rcu_tickle().
+> 
+> Paul, the major change here is that if an IRQ hits normal kernel code
+> (i.e. code where RCU is watching and we're not in an EQS), the IRQ
+> won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
+> rcu_tickle() on entry and nothing on exit.  Does that cover all the
+> bases?
 
-Sounds good.
+From an RCU viewpoint, yes, give or take my concerns about someone
+putting rcu_tickle() on entry and rcu_irq_exit() on exit.  Perhaps
+I can bring some lockdep trickery to bear.
 
-Wrt merging this patch here, can you include that in one of your next
-pulls? Or should I toss it entirely, waiting for you to remove dma_fence
-outright?
+But I must defer to Thomas and Peter on the non-RCU/non-NO_HZ_FULL
+portions of this.
 
-Thanks, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+							Thanx, Paul
