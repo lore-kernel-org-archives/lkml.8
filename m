@@ -2,169 +2,66 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71107C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D48720842
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505EE20842
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgETC5s (ORCPT
+        id S1728595AbgETC7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:57:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54552 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726318AbgETC5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:57:48 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7C93712289F3B3FBD862;
-        Wed, 20 May 2020 10:57:46 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.93) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 20 May 2020
- 10:57:39 +0800
-Subject: Re: [PATCH 09/10] timer-riscv: Fix undefined riscv_time_val
-To:     Anup Patel <anup@brainfault.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        <hulkci@huawei.com>
-References: <mhng-0c491e9e-41fd-4f76-a048-55c03d9359f0@palmerdabbelt-glaptop1>
- <66121f9a-48f3-d3a5-7c96-d71397e12aed@linaro.org>
- <0bc3eb36-7b9d-7c86-130c-68b566e85c10@huawei.com>
- <e1916079-c209-bfad-6b0c-ccfb2e136ca4@linaro.org>
- <29dc112e-d8c2-2749-7f5d-7c0c19aa9092@huawei.com>
- <8c5ecbd3-c23a-ccd4-b5d8-2e7d2bd10699@linaro.org>
- <CAAhSdy2wsnkYMLpT1_2OAjr334t6dAy9LCPNefC=h+aPuRqFrg@mail.gmail.com>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <7bfb95d7-93ff-e649-06c0-dc96bedcdb1d@huawei.com>
-Date:   Wed, 20 May 2020 10:57:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAAhSdy2wsnkYMLpT1_2OAjr334t6dAy9LCPNefC=h+aPuRqFrg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.166.215.93]
-X-CFilter-Loop: Reflected
+        Tue, 19 May 2020 22:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgETC7G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 22:59:06 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38480C061A0E;
+        Tue, 19 May 2020 19:59:06 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D110712944A09;
+        Tue, 19 May 2020 19:59:05 -0700 (PDT)
+Date:   Tue, 19 May 2020 19:59:05 -0700 (PDT)
+Message-Id: <20200519.195905.432048543421387943.davem@davemloft.net>
+To:     luobin9@huawei.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        luoxianjun@huawei.com, yin.yinshi@huawei.com,
+        cloud.wangxiaoyun@huawei.com
+Subject: Re: [PATCH net-next v1] hinic: add support to set and get pause
+ param
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <db07445f-245c-7b19-ef65-939f159fc53f@huawei.com>
+References: <20200518233848.29536-1-luobin9@huawei.com>
+        <20200519.153449.1340018473891698454.davem@davemloft.net>
+        <db07445f-245c-7b19-ef65-939f159fc53f@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 May 2020 19:59:06 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "luobin (L)" <luobin9@huawei.com>
+Date: Wed, 20 May 2020 09:51:02 +0800
 
-On 2020/5/20 9:14, Anup Patel wrote:
-> On Tue, May 19, 2020 at 7:21 PM Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->> On 19/05/2020 14:39, Kefeng Wang wrote:
->>> On 2020/5/19 4:23, Daniel Lezcano wrote:
->>>> Hi Kefeng,
->>>>
->>>> On 18/05/2020 17:40, Kefeng Wang wrote:
->>>>> On 2020/5/18 22:09, Daniel Lezcano wrote:
->>>>>> On 13/05/2020 23:14, Palmer Dabbelt wrote:
->>>>>>> On Sun, 10 May 2020 19:20:00 PDT (-0700), wangkefeng.wang@huawei.com
->>>>>>> wrote:
->>>>>>>> ERROR: modpost: "riscv_time_val" [crypto/tcrypt.ko] undefined!
->>>>>>>>
->>>>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>>>>>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->>>>>>>> ---
->>>>>>>>     drivers/clocksource/timer-riscv.c | 1 +
->>>>>>>>     1 file changed, 1 insertion(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/clocksource/timer-riscv.c
->>>>>>>> b/drivers/clocksource/timer-riscv.c
->>>>>>>> index c4f15c4068c0..071b8c144027 100644
->>>>>>>> --- a/drivers/clocksource/timer-riscv.c
->>>>>>>> +++ b/drivers/clocksource/timer-riscv.c
->>>>>>>> @@ -19,6 +19,7 @@
->>>>>>>>
->>>>>>>>     u64 __iomem *riscv_time_cmp;
->>>>>>>>     u64 __iomem *riscv_time_val;
->>>>>>>> +EXPORT_SYMBOL(riscv_time_val);
->>>>>>>>
->>>>>>>>     static inline void mmio_set_timer(u64 val)
->>>>>>>>     {
->>>>>>> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
->>>>>>> Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
->>>>>>>
->>>>>>> Adding the clocksource maintainers.  Let me know if you want this
->>>>>>> through my
->>>>>>> tree, I'm assuming you want it through your tree.
->>>>>> How can we end up by an export symbol here ?!
->>>>> Hi Danile,
->>>> s/Danile/Daniel/
->>> Sorry for typing error.
->>>>> Found this build error when CONFIG_RISCV_M_MODE=y and CONFIG_RISCV_SBI
->>>>> is not,
->>>>>
->>>>> see patch "4f9bbcefa142 riscv: add support for MMIO access to the timer
->>>>> registers"
->>>> Thanks for the pointer.
->>>>
->>>> The question still remains, how do we end up with this EXPORT_SYMBOL?
->>>>
->>>> There is something wrong if the fix is an EXPORT_SYMBOL for a global
->>>> variable.
->>> Not very clear, there are some global variable( eg, acpi_disabled,
->>> memstart_addr in arm64,) is exported by EXPORT_SYMBOL,  do you mean that
->>> export riscv_time_val is wrong way?
->> I do not maintain acpi neither arm64.mm.
->>
->> AFAICT, riscv_time_val is globally declared in
->> drivers/clocksource/timer-riscv.c
->>
->> The driver does not use this variable at all. Then there is a readl on
->> it in the header file arch/riscv/include/asm/timex.h
->>
->> And finally it is initialized in arch/riscv/kernel/clint.c
->>
->> Same thing for riscv_time_cmp.
->>
->> The correct fix is to initialize the variables in the place where they
->> belong to (drivers/clocksource/timer-riscv.c), create a function to read
->> their content and export-symbol-gpl the function.
+> Sorry$B!$(BI'm afraid I haven't got what you mean.
 
-ok, it's better.  thanks for your explanation.
+Please don't top-post.
 
+What I said was:
 
-> I agree with Daniel. Exporting riscv_time_val is a temporary fix.
+>> This doesn't apply cleanly to net-next.
 
-yes.  it's only for build,  let's wait for Anup's patch.
-
->
-> The problem is timer-riscv.c is pretty convoluted right now. It is
-> implementing two different clocksources and clockevents in one-place.
->
-> I think we need two separate drivers for RISC-V world.
->
-> 1. timer-riscv: This for regular S-mode kernel with MMU. The clocksource
-> will use TIME CSR and the clockevent device will use SBI calls.
->
-> 2. timer-clint: This for M-mode kernel without MMU (or NoMMU kernel).
-> The clocksource will use MMIO counter for clocksource and the
-> clockevent device will use MMIO compare registers.
->
-> I will send a patch to have a separate timer-clint driver under
-> drivers/clocksource. (@Daniel, I hope you will be fine with this?)
-> Regards,
-> Anup
->
->>
->> --
->> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
->>
->> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
->> <http://twitter.com/#!/linaroorg> Twitter |
->> <http://www.linaro.org/linaro-blog/> Blog
-> .
->
-
+Which simply means that when I try to apply your patch to net-next
+with 'git am' it fails.
