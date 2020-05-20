@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30873C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9D9C206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAD22070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:07:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpf5fKUs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P+WUAfrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgETRHZ (ORCPT
+        id S1727086AbgETRH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:07:25 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34983 "EHLO
+        Wed, 20 May 2020 13:07:28 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49821 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726560AbgETRHW (ORCPT
+        by vger.kernel.org with ESMTP id S1726860AbgETRHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:07:22 -0400
+        Wed, 20 May 2020 13:07:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589994440;
+        s=mimecast20190719; t=1589994442;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=05KQX8lVPlCt8vmRWHdvXIWoBaoV9a3Uogcp9WxiQ8g=;
-        b=dpf5fKUsxaKIDTiQMZYZpXZqpnsXuKEYMVeKYO4eyI5dPwxI0ve2ZPaOhor7oWAytRDk6b
-        rWBwFO0z5c+1vtawytRylBrVjsqbaNoH85pGWU6MSWhC+dWlucolq2dpQOk1Q9tjjLWiSH
-        TphmDVS61eU4m6SPbXgjt0Fw1VkCH4k=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-Ym2gmKKSM9ycGxwYlqcrFQ-1; Wed, 20 May 2020 13:07:19 -0400
-X-MC-Unique: Ym2gmKKSM9ycGxwYlqcrFQ-1
-Received: by mail-wm1-f69.google.com with SMTP id g10so1521562wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:07:18 -0700 (PDT)
+        bh=O9d7VWgOSe/qjvNlnDodBcvOOgqJg891hEBMUAOJFSc=;
+        b=P+WUAfrw1q7no8m7wyX+5Bb9RHLExdbBDVgwvaxwiu6ShBCna9l+1hYO3VugHQb3O5WLGW
+        PcHkzdY/t0E25TpJBO16v8BL7hLGIs4IzQipbv7qv9a0SgOnLyOzSbtjLGMOhJDCdnUDs1
+        /5f61P8oKJl1gkmx/fJElNy4N23QAU0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-OwN6kv5AOi22hhCZLz8ATw-1; Wed, 20 May 2020 13:07:21 -0400
+X-MC-Unique: OwN6kv5AOi22hhCZLz8ATw-1
+Received: by mail-wr1-f70.google.com with SMTP id r7so1662000wrc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:07:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=05KQX8lVPlCt8vmRWHdvXIWoBaoV9a3Uogcp9WxiQ8g=;
-        b=evmwEQkHiHbqTeCqmbTbPmhRBWO/FaZcwM3AwrMJHkvjfsH4f6dBBlXJYP9wVuqQ+9
-         Q89Sl782Qwi+waSQIqhjjw0o9rsB8Q6MEQdQC6HrykrRpraj8KrdxRuifYdC8vRxpb7v
-         RgwvRkN0iGXIm+5PLhVexU266wFNomBCWd9utUnujZSJMktHeRdBDJBo4n2eJ/wjnun3
-         zRMU0gJEe3sGiEpL8klcX7jg2VleXzmzmm3r829C92psax2+PLaKQiAlv7pQ7Q6jhwY6
-         5A7qCk+drAzHfPdnfVO2Fv0jn78wvyC/Ztegz/5JaHgkGmUTWHq53WZGaQBSX1EoTDpw
-         03EQ==
-X-Gm-Message-State: AOAM533BkWXu8ae12F+ACzyL2KvkkolX6Yl+N+ZUjkqDv4rWwD3f53CH
-        zSCJ2O7t7tL118ziTUEecsKJ9S2Rh60jAjqtbomb/k+mIuODJnuMC+vb5aQlGVe1AYQXGVs3I2G
-        bazPnDcGXYSMf2iDDXeG8g8nU
-X-Received: by 2002:adf:a15c:: with SMTP id r28mr256970wrr.337.1589994437574;
-        Wed, 20 May 2020 10:07:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw+adX5YucyY7E4vzhaND3YOzLEGdbHzr9/aBODa2oQodWTjohpKwnZCVuELuNx5MWcx6XbzQ==
-X-Received: by 2002:adf:a15c:: with SMTP id r28mr256959wrr.337.1589994437393;
-        Wed, 20 May 2020 10:07:17 -0700 (PDT)
+        bh=O9d7VWgOSe/qjvNlnDodBcvOOgqJg891hEBMUAOJFSc=;
+        b=Eabw2FuVJtaoiiPVC7WFczeL/UcTz0izPvQHva4w2+QWatSHNWPjlvixDB721zDSEU
+         gRr/v6areD1sec7EJjm80o+dd5rteb+dpEexJjLD/ryBXIacHTOxoxu9rLGE7jP83mcy
+         FH2VZEZGMgxpRK9Ts5PoMehlugHNoUiqxf/u+H5wjqSVEEFq9Uj+D+Js3pkCwn0WVzuT
+         1GKHS/++VI9nXF8EqHTtJpsADYa9PDiXPrk7afNxJHLDZ89+cmG4D3K41iVpgJAGJY6A
+         V/tEQtTKPKFmbyxtmi8tDgsVhbLEq0naL4kJX0ghg+xYJ34dtz333Vh2pHs0Ru6iwnuF
+         Th8Q==
+X-Gm-Message-State: AOAM530Wir3a4WoK/In398BJI+QdDxMLFArOKbr4RRGHBxF+oMKImDrf
+        pn/b1z14ERCiz2Js/GctJLa+/g1aWsNIH61xxK16yEriwGoI+L3f8VzLyTcVogWTbeBWqelj8Cx
+        z0Bp/DwDbYGAtVBu3hO8egu5a
+X-Received: by 2002:a1c:7515:: with SMTP id o21mr5343857wmc.52.1589994440014;
+        Wed, 20 May 2020 10:07:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwP/KAxcq+j3CuGhNdzPkxWKaWxRgPtfGdNQFk2DNOJ7uQe76sv4GxyNOb9EzJKk680RI+xFA==
+X-Received: by 2002:a1c:7515:: with SMTP id o21mr5343843wmc.52.1589994439789;
+        Wed, 20 May 2020 10:07:19 -0700 (PDT)
 Received: from steredhat.redhat.com ([79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id u74sm3768614wmu.13.2020.05.20.10.07.16
+        by smtp.gmail.com with ESMTPSA id u74sm3768614wmu.13.2020.05.20.10.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:07:16 -0700 (PDT)
+        Wed, 20 May 2020 10:07:19 -0700 (PDT)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: [PATCH liburing v2 1/5] Add CQ ring 'flags' field
-Date:   Wed, 20 May 2020 19:07:10 +0200
-Message-Id: <20200520170714.68156-2-sgarzare@redhat.com>
+Subject: [PATCH liburing v2 3/5] Add helpers to set and get eventfd notification status
+Date:   Wed, 20 May 2020 19:07:12 +0200
+Message-Id: <20200520170714.68156-4-sgarzare@redhat.com>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200520170714.68156-1-sgarzare@redhat.com>
 References: <20200520170714.68156-1-sgarzare@redhat.com>
@@ -78,57 +78,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-io_uring provides the new CQ ring 'flags' field if 'cq_off.flags'
-is not zero. In this case we set the 'cq->kflags' pointer, otherwise
-it will be NULL.
+This patch adds the new IORING_CQ_EVENTFD_DISABLED flag. It can be
+used to disable/enable notifications from the kernel when a
+request is completed and queued to the CQ ring.
+
+We also add two helpers function to check if the notifications are
+enabled and to toggle them.
+
+If the kernel doesn't provide CQ ring flags, the notifications are
+always enabled if an eventfd is registered.
 
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- src/include/liburing.h          | 1 +
- src/include/liburing/io_uring.h | 4 +++-
- src/setup.c                     | 2 ++
- 3 files changed, 6 insertions(+), 1 deletion(-)
+v1 -> v2:
+- renamed io_uring_cq_eventfd_toggle()
+- return EOPNOTSUPP only if we need to change the flag
+---
+ src/include/liburing.h          | 33 +++++++++++++++++++++++++++++++++
+ src/include/liburing/io_uring.h |  7 +++++++
+ 2 files changed, 40 insertions(+)
 
 diff --git a/src/include/liburing.h b/src/include/liburing.h
-index 4311325..adc8db9 100644
+index adc8db9..0192b47 100644
 --- a/src/include/liburing.h
 +++ b/src/include/liburing.h
-@@ -41,6 +41,7 @@ struct io_uring_cq {
- 	unsigned *ktail;
- 	unsigned *kring_mask;
- 	unsigned *kring_entries;
-+	unsigned *kflags;
- 	unsigned *koverflow;
- 	struct io_uring_cqe *cqes;
- 
-diff --git a/src/include/liburing/io_uring.h b/src/include/liburing/io_uring.h
-index a279151..9860a8a 100644
---- a/src/include/liburing/io_uring.h
-+++ b/src/include/liburing/io_uring.h
-@@ -205,7 +205,9 @@ struct io_cqring_offsets {
- 	__u32 ring_entries;
- 	__u32 overflow;
- 	__u32 cqes;
--	__u64 resv[2];
-+	__u32 flags;
-+	__u32 resv1;
-+	__u64 resv2;
- };
- 
- /*
-diff --git a/src/setup.c b/src/setup.c
-index f783b6a..860c112 100644
---- a/src/setup.c
-+++ b/src/setup.c
-@@ -76,6 +76,8 @@ err:
- 	cq->kring_entries = cq->ring_ptr + p->cq_off.ring_entries;
- 	cq->koverflow = cq->ring_ptr + p->cq_off.overflow;
- 	cq->cqes = cq->ring_ptr + p->cq_off.cqes;
-+	if (p->cq_off.flags)
-+		cq->kflags = cq->ring_ptr + p->cq_off.flags;
- 	return 0;
+@@ -9,7 +9,9 @@ extern "C" {
+ #include <sys/socket.h>
+ #include <sys/uio.h>
+ #include <sys/stat.h>
++#include <errno.h>
+ #include <signal.h>
++#include <stdbool.h>
+ #include <inttypes.h>
+ #include <time.h>
+ #include "liburing/compat.h"
+@@ -445,6 +447,37 @@ static inline unsigned io_uring_cq_ready(struct io_uring *ring)
+ 	return io_uring_smp_load_acquire(ring->cq.ktail) - *ring->cq.khead;
  }
  
++static inline bool io_uring_cq_eventfd_enabled(struct io_uring *ring)
++{
++	if (!ring->cq.kflags)
++		return true;
++
++	return !(*ring->cq.kflags & IORING_CQ_EVENTFD_DISABLED);
++}
++
++static inline int io_uring_cq_eventfd_toggle(struct io_uring *ring,
++					     bool enabled)
++{
++	uint32_t flags;
++
++	if (!!enabled == io_uring_cq_eventfd_enabled(ring))
++		return 0;
++
++	if (!ring->cq.kflags)
++		return -EOPNOTSUPP;
++
++	flags = *ring->cq.kflags;
++
++	if (enabled)
++		flags &= ~IORING_CQ_EVENTFD_DISABLED;
++	else
++		flags |= IORING_CQ_EVENTFD_DISABLED;
++
++	IO_URING_WRITE_ONCE(*ring->cq.kflags, flags);
++
++	return 0;
++}
++
+ /*
+  * Return an IO completion, waiting for 'wait_nr' completions if one isn't
+  * readily available. Returns 0 with cqe_ptr filled in on success, -errno on
+diff --git a/src/include/liburing/io_uring.h b/src/include/liburing/io_uring.h
+index 9860a8a..92c2269 100644
+--- a/src/include/liburing/io_uring.h
++++ b/src/include/liburing/io_uring.h
+@@ -210,6 +210,13 @@ struct io_cqring_offsets {
+ 	__u64 resv2;
+ };
+ 
++/*
++ * cq_ring->flags
++ */
++
++/* disable eventfd notifications */
++#define IORING_CQ_EVENTFD_DISABLED	(1U << 0)
++
+ /*
+  * io_uring_enter(2) flags
+  */
 -- 
 2.25.4
 
