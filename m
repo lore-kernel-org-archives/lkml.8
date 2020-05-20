@@ -2,149 +2,112 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3176C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30144C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E52120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0922720884
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HMo1TGmo"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="EIBjZ/F9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgETWs2 (ORCPT
+        id S1728663AbgETWuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
+        Wed, 20 May 2020 18:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbgETWs0 (ORCPT
+        with ESMTP id S1728261AbgETWt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:48:26 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF07BC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:48:26 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id er16so2230599qvb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:48:26 -0700 (PDT)
+        Wed, 20 May 2020 18:49:59 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BBEC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:49:58 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x2so2303648pfx.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:49:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RStaSzm0BE79LxWHy0r6BH6gCPvj9qWnIh+kjRrtDqs=;
-        b=HMo1TGmoIadolO348/feUnNKreceXmNKSpkmSSZBAfVlijoSVb7QdgroRmplfbn43Q
-         fRlJiTkyVCaEUr2sZuc7m3WQVaJC6ui1ntFR0I5Os/tIeou8a10HOEjN4v6OW0QjFezt
-         VZyINWgAw8VPK+6riAK0tl6vVs4lAnSmPjXr8=
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QKwUc2R6uw/eDgmTMc7GXVJUbTy1jO4XiUWek83viy0=;
+        b=EIBjZ/F9r+i1Uxd18RwcwxXQVkYbaLrUocOByK8WgOLNbFAPUA4PhtM3VxYNkiky2k
+         MtKNPT9Z0wI0pYeXs6wByOFK/84soRVDHeVVT8LR3zjhz8I6nHgVtg2Z3FnsthUWh6kw
+         +WRp6S34NU0IqRFAjTikS376odk3+3C7tkXaOLxdbKeBNC7UBMG+itCpT+fMUk4bt663
+         UQQp/CYHbyYYDCre+cnmgwD7jZ+qjjQg50mxchLOh/uHaCrJVffftMhqqCwb5QT8PcDb
+         qwsHRlYMUHyCKHPyJ74Sid+Jcjtv3LXljsr8WlvCb/HWkIflaMCub9W3S6OEPTX1PRtS
+         3mYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RStaSzm0BE79LxWHy0r6BH6gCPvj9qWnIh+kjRrtDqs=;
-        b=o6ma8TYdqyFt6Kf79sufuYGp1RCYojrM+bu2aO3Qydwrx4F0LQXhX1Ts52mCp1O4bo
-         d+s30TA4XrCdonV7wfMNNO8NlljPeTlAZKuMaQYc0RsFeUXS9jFTZTqssBhACzjFb9wQ
-         Talt7bE6TUbc8cbD9QXb0rLSK+83V/XPdeL8LyNdeEze4A/11rithtqT33ociLcuZKWb
-         qN7P1+bipr4N+ZPgVozoBxT/X2v/INZMsnck+NkSpEul6WNWNjeARXlQfzaoHXm9xBRf
-         8cILjx9be+xGcYf5dODCGex3He8v8iG4BsmFtXlyn6R9OUCDZ2/tlrWU0Zow1iACqBcE
-         pqNQ==
-X-Gm-Message-State: AOAM530twvJ98I6WkOaL1aCzTwNW+weR0bwwE96dNUupFdGgDBQaSTNN
-        D3HbHb4zZmtzj9X3Hn/j7A3MRg==
-X-Google-Smtp-Source: ABdhPJx6kwE258pbhfEt1te9GYfBlCarhExCr10+mjpGezARIkHTrNcpY3adcrfm7+5RiLYQTARiKg==
-X-Received: by 2002:a0c:b78a:: with SMTP id l10mr7528048qve.121.1590014905916;
-        Wed, 20 May 2020 15:48:25 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id c3sm3451258qtp.24.2020.05.20.15.48.24
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=QKwUc2R6uw/eDgmTMc7GXVJUbTy1jO4XiUWek83viy0=;
+        b=i3hEiyyINUQsyfX3TCIcAleKO28lnprwv4cGczn1dC0fQM1nEIcZ1VaN77as2+2dfH
+         kgk00N3V4bSe9hX317VOo3DfdN4e2omoPuPggXYDxve5/4aSOMrenq2MBtLtJGY1RudZ
+         6kTrm78aSCGqYKadQH3P1TyuEvUSXt8EEu7CRe0PrchrXbO487E8FoyoyDGrU1kREln2
+         Nn4F97FO58CHFK4f145VcfsIsYczflSeLelhnxcyZeRIaHTWzl+2o6rgAipcFBQcArjp
+         HHoH9X4lcAF9Z6TgyowiJTo0AnoZ3CPiVSLyQQ7j9i7/wuBMhGMs8bIbeY5ITxs8qgQu
+         8N9Q==
+X-Gm-Message-State: AOAM531wCnvaQoipKoRkzZJucCf30rX0MtGaD+KYwnpYp3ox4U7ZrPH/
+        a872UsvmccI+RIQ63H/F+5sRhQ==
+X-Google-Smtp-Source: ABdhPJyHDWPJOXCR6ItvC+aD357uYMEJiQMYkP/S6dIex9nbbID5CupKL+DroIq9cN3c4VmBEIaiCw==
+X-Received: by 2002:aa7:80cf:: with SMTP id a15mr6904139pfn.124.1590014997875;
+        Wed, 20 May 2020 15:49:57 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id d35sm2553068pgd.29.2020.05.20.15.49.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 15:48:25 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org,
-        paulmck@kernel.org
-Subject: [PATCH RFC] sched: Use sched-RCU in core-scheduling balancing logic
-Date:   Wed, 20 May 2020 18:48:18 -0400
-Message-Id: <20200520224818.78930-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-In-Reply-To: <cover.1583332764.git.vpillai@digitalocean.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
-MIME-Version: 1.0
+        Wed, 20 May 2020 15:49:57 -0700 (PDT)
+Date:   Wed, 20 May 2020 15:49:57 -0700 (PDT)
+X-Google-Original-Date: Wed, 20 May 2020 15:46:51 PDT (-0700)
+Subject:     Re: [PATCH v2] riscv: Fix print_vm_layout build error if NOMMU
+In-Reply-To: <20200514115335.110603-1-wangkefeng.wang@huawei.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alex@ghiti.fr, wangkefeng.wang@huawei.com, hulkci@huawei.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     wangkefeng.wang@huawei.com
+Message-ID: <mhng-533eaf79-af8c-4bf7-9a18-0990f22a2efd@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rcu_read_unlock() can incur an infrequent deadlock in
-sched_core_balance(). Fix this by using sched-RCU instead.
+On Thu, 14 May 2020 04:53:35 PDT (-0700), wangkefeng.wang@huawei.com wrote:
+> arch/riscv/mm/init.c: In function ‘print_vm_layout’:
+> arch/riscv/mm/init.c:68:37: error: ‘FIXADDR_START’ undeclared (first use in this function);
+> arch/riscv/mm/init.c:69:20: error: ‘FIXADDR_TOP’ undeclared
+> arch/riscv/mm/init.c:70:37: error: ‘PCI_IO_START’ undeclared
+> arch/riscv/mm/init.c:71:20: error: ‘PCI_IO_END’ undeclared
+> arch/riscv/mm/init.c:72:38: error: ‘VMEMMAP_START’ undeclared
+> arch/riscv/mm/init.c:73:20: error: ‘VMEMMAP_END’ undeclared (first use in this function);
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> v2:
+> - Should CONFIG_DEBUG_VM instead of DEBUG_VM
+> - Based on riscv fixes branch
+>
+>  arch/riscv/mm/init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 27a334106708..736de6c8739f 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -47,7 +47,7 @@ static void setup_zero_page(void)
+>  	memset((void *)empty_zero_page, 0, PAGE_SIZE);
+>  }
+>
+> -#ifdef CONFIG_DEBUG_VM
+> +#if defined(CONFIG_MMU) && defined(CONFIG_DEBUG_VM)
+>  static inline void print_mlk(char *name, unsigned long b, unsigned long t)
+>  {
+>  	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
 
-This fixes the following spinlock recursion observed when testing the
-core scheduling patches on PREEMPT=y kernel on ChromeOS:
-
-[    3.240891] BUG: spinlock recursion on CPU#2, swapper/2/0
-[    3.240900]  lock: 0xffff9cd1eeb28e40, .magic: dead4ead, .owner: swapper/2/0, .owner_cpu: 2
-[    3.240905] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.4.22htcore #4
-[    3.240908] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
-[    3.240910] Call Trace:
-[    3.240919]  dump_stack+0x97/0xdb
-[    3.240924]  ? spin_bug+0xa4/0xb1
-[    3.240927]  do_raw_spin_lock+0x79/0x98
-[    3.240931]  try_to_wake_up+0x367/0x61b
-[    3.240935]  rcu_read_unlock_special+0xde/0x169
-[    3.240938]  ? sched_core_balance+0xd9/0x11e
-[    3.240941]  __rcu_read_unlock+0x48/0x4a
-[    3.240945]  __balance_callback+0x50/0xa1
-[    3.240949]  __schedule+0x55a/0x61e
-[    3.240952]  schedule_idle+0x21/0x2d
-[    3.240956]  do_idle+0x1d5/0x1f8
-[    3.240960]  cpu_startup_entry+0x1d/0x1f
-[    3.240964]  start_secondary+0x159/0x174
-[    3.240967]  secondary_startup_64+0xa4/0xb0
-[   14.998590] watchdog: BUG: soft lockup - CPU#0 stuck for 11s! [kworker/0:10:965]
-
-Cc: vpillai <vpillai@digitalocean.com>
-Cc: Aaron Lu <aaron.lwe@gmail.com>
-Cc: Aubrey Li <aubrey.intel@gmail.com>
-Cc: peterz@infradead.org
-Cc: paulmck@kernel.org
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Change-Id: I1a4bf0cd1426b3c21ad5de44719813ad4ee5805e
----
- kernel/sched/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 780514d03da47..b8ca6fcaaaf06 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4897,7 +4897,7 @@ static void sched_core_balance(struct rq *rq)
- 	struct sched_domain *sd;
- 	int cpu = cpu_of(rq);
- 
--	rcu_read_lock();
-+	rcu_read_lock_sched();
- 	raw_spin_unlock_irq(rq_lockp(rq));
- 	for_each_domain(cpu, sd) {
- 		if (!(sd->flags & SD_LOAD_BALANCE))
-@@ -4910,7 +4910,7 @@ static void sched_core_balance(struct rq *rq)
- 			break;
- 	}
- 	raw_spin_lock_irq(rq_lockp(rq));
--	rcu_read_unlock();
-+	rcu_read_unlock_sched();
- }
- 
- static DEFINE_PER_CPU(struct callback_head, core_balance_head);
--- 
-2.26.2.761.g0e0b3e54be-goog
-
+Thanks, this is on fixes.
