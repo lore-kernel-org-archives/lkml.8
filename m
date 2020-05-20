@@ -2,138 +2,183 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1825C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B92207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589951740;
-	bh=KPQMGRpN/8pksdTK+mITk4uG/KU+mOKwSHzD2e/jfd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rOs067i+WMNA0u6AHw2Q8Jf1LBDGAo44dwHCO8Cb1SbtajIyXnpOZQBI0Bw8OJyLv
-	 SeQ0mqusHl7SXmLfBINK6GO2Z19LGGckZwmLzQqK2YSuLMWx+1cl28wYABc5teXNJb
-	 b9xG9fBISjfbJvR0dMpVwRtduoEhf2NlDz8Ts85E=
+	by mail.kernel.org (Postfix) with ESMTP id 72DFF20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgETFPk (ORCPT
+        id S1726829AbgETFQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 01:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34472 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 01:16:38 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41633 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgETFPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 01:15:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87D5420709;
-        Wed, 20 May 2020 05:15:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589951739;
-        bh=KPQMGRpN/8pksdTK+mITk4uG/KU+mOKwSHzD2e/jfd0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r22Tpllut6JmcXCyRGqQGTHKkf+22MD5eYE7TFPAMk7X78m31KDGDFuD+uNPcCiTl
-         g4uT+VmG793nPL1sLrtCYYfoXMcQ2Ky12cmbiU+7S/dNdTfSNFVXsCgl+BlbHCQGlZ
-         BV+7JbQGliTmhHd9MijjWRkFp9hBHgEtqUq1BjfQ=
-Date:   Wed, 20 May 2020 07:15:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Olof Johansson <olof.johansson@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-Message-ID: <20200520051536.GA2141566@kroah.com>
-References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+        id S1726403AbgETFQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 01:16:38 -0400
+IronPort-SDR: 6HTM3dZ22JhHtmceV+I3V6bOs12ajFuDOiypljSVtYmZ3zOmlZQzzQfKBwdEot3jJ0Lv9G+E1t
+ Kn9G4wo5Gfnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 22:16:37 -0700
+IronPort-SDR: edQYPoNFAVTUiUGEt675lz/q2cfDj+zYnay8YXQ4q7zlMWS5A+zq/iR4sR2xgE4wfSA3o1J6oO
+ sK7Epnexw6kA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
+   d="scan'208";a="264557977"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 22:16:37 -0700
+Date:   Tue, 19 May 2020 22:16:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 64/75] x86/sev-es: Cache CPUID results for improved
+ performance
+Message-ID: <20200520051637.GA16599@linux.intel.com>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-65-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+In-Reply-To: <20200428151725.31091-65-joro@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
-> On Tue, May 19, 2020 at 07:41:20PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
-> > > On 5/18/2020 11:08 PM, Dave Airlie wrote:
-> > > > On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
-> > > > >
-> > > > > Introduction:
-> > > > > Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
-> > > > > SoC ASIC for the purpose of efficently running Deep Learning inference
-> > > > > workloads in a data center environment.
-> > > > >
-> > > > > The offical press release can be found at -
-> > > > > https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
-> > > > >
-> > > > > The offical product website is -
-> > > > > https://www.qualcomm.com/products/datacenter-artificial-intelligence
-> > > > >
-> > > > > At the time of the offical press release, numerious technology news sites
-> > > > > also covered the product.  Doing a search of your favorite site is likely
-> > > > > to find their coverage of it.
-> > > > >
-> > > > > It is our goal to have the kernel driver for the product fully upstream.
-> > > > > The purpose of this RFC is to start that process.  We are still doing
-> > > > > development (see below), and thus not quite looking to gain acceptance quite
-> > > > > yet, but now that we have a working driver we beleive we are at the stage
-> > > > > where meaningful conversation with the community can occur.
-> > > >
-> > > >
-> > > > Hi Jeffery,
-> > > >
-> > > > Just wondering what the userspace/testing plans for this driver.
-> > > >
-> > > > This introduces a new user facing API for a device without pointers to
-> > > > users or tests for that API.
-> > >
-> > > We have daily internal testing, although I don't expect you to take my word
-> > > for that.
-> > >
-> > > I would like to get one of these devices into the hands of Linaro, so that
-> > > it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
-> > > to convince the powers that be to make this happen.
-> > >
-> > > Regarding what the community could do on its own, everything but the Linux
-> > > driver is considered proprietary - that includes the on device firmware and
-> > > the entire userspace stack.  This is a decision above my pay grade.
-> >
-> > Ok, that's a decision you are going to have to push upward on, as we
-> > really can't take this without a working, open, userspace.
+On Tue, Apr 28, 2020 at 05:17:14PM +0200, Joerg Roedel wrote:
+> From: Mike Stunes <mstunes@vmware.com>
 > 
-> Uh wut.
+> To avoid a future VMEXIT for a subsequent CPUID function, cache the
+> results returned by CPUID into an xarray.
 > 
-> So the merge criteria for drivers/accel (atm still drivers/misc but I
-> thought that was interim until more drivers showed up) isn't actually
-> "totally-not-a-gpu accel driver without open source userspace".
+>  [tl: coding standard changes, register zero extension]
 > 
-> Instead it's "totally-not-a-gpu accel driver without open source
-> userspace" _and_ you have to be best buddies with Greg. Or at least
-> not be on the naughty company list. Since for habanalabs all you
-> wanted is a few test cases to exercise the ioctls. Not the entire
-> userspace.
+> Signed-off-by: Mike Stunes <mstunes@vmware.com>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> [ jroedel@suse.de: - Wrapped cache handling into vc_handle_cpuid_cached()
+>                    - Used lower_32_bits() where applicable
+> 		   - Moved cache_index out of struct es_em_ctxt ]
+> Co-developed-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
 
-Also, to be fair, I have changed my mind after seeing the mess of
-complexity that these "ioctls for everyone!" type of pass-through
-these kinds of drivers are creating.  You were right, we need open
-userspace code in order to be able to properly evaluate and figure out
-what they are doing is right or not and be able to maintain things over
-time correctly.
+...
 
-So I was wrong, and you were right, my apologies for my previous
-stubbornness.
+> +struct sev_es_cpuid_cache_entry {
+> +	unsigned long eax;
+> +	unsigned long ebx;
+> +	unsigned long ecx;
+> +	unsigned long edx;
 
-thanks,
+Why are these unsigned longs?  CPUID returns 32-bit values, this wastes 16
+bytes per entry.
 
-greg k-h
+> +};
+> +
+> +static struct xarray sev_es_cpuid_cache;
+> +static bool __ro_after_init sev_es_cpuid_cache_initialized;
+> +
+>  /* For early boot hypervisor communication in SEV-ES enabled guests */
+>  static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
+>  
+> @@ -463,6 +474,9 @@ void __init sev_es_init_vc_handling(void)
+>  		sev_es_setup_vc_stack(cpu);
+>  	}
+>  
+> +	xa_init_flags(&sev_es_cpuid_cache, XA_FLAGS_LOCK_IRQ);
+> +	sev_es_cpuid_cache_initialized = true;
+> +
+>  	init_vc_stack_names();
+>  }
+>  
+> @@ -744,6 +758,91 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+>  	return ret;
+>  }
+>  
+> +static unsigned long sev_es_get_cpuid_cache_index(struct es_em_ctxt *ctxt)
+> +{
+> +	unsigned long hi, lo;
+> +
+> +	/* Don't attempt to cache until the xarray is initialized */
+> +	if (!sev_es_cpuid_cache_initialized)
+> +		return ULONG_MAX;
+> +
+> +	lo = lower_32_bits(ctxt->regs->ax);
+> +
+> +	/*
+> +	 * CPUID 0x0000000d requires both RCX and XCR0, so it can't be
+> +	 * cached.
+> +	 */
+> +	if (lo == 0x0000000d)
+> +		return ULONG_MAX;
+> +
+> +	/*
+> +	 * Some callers of CPUID don't always set RCX to zero for CPUID
+> +	 * functions that don't require RCX, which can result in excessive
+> +	 * cached values, so RCX needs to be manually zeroed for use as part
+> +	 * of the cache index. Future CPUID values may need RCX, but since
+> +	 * they can't be known, they must not be cached.
+> +	 */
+> +	if (lo > 0x80000020)
+> +		return ULONG_MAX;
+> +
+> +	switch (lo) {
+> +	case 0x00000007:
+
+OSPKE may or may not be cached correctly depending on when
+sev_es_cpuid_cache_initialized is set.
+
+> +	case 0x0000000b:
+> +	case 0x0000000f:
+> +	case 0x00000010:
+> +	case 0x8000001d:
+> +	case 0x80000020:
+> +		hi = ctxt->regs->cx << 32;
+> +		break;
+> +	default:
+> +		hi = 0;
+> +	}
+> +
+> +	return hi | lo;
+
+This needs to be way more restrictive on what is cached.  Unless I've
+overlooked something, this lets userspace trigger arbitrary, unaccounted
+kernel memory allocations.  E.g.
+
+	for (i = 0; i <= 0x80000020; i++) {
+		for (j = 0; j <= 0xffffffff; j++) {
+			cpuid(i, j);
+			if (i != 7 || i != 0xb || i != 0xf || i != 0x10 ||
+			    i != 0x8000001d || i != 0x80000020)
+				break;
+		}
+	}
+
+The whole cache on-demand approach seems like overkill.  The number of CPUID
+leaves that are invoked after boot with any regularity can probably be counted
+on one hand.   IIRC glibc invokes CPUID to gather TLB/cache info, XCR0-based
+features, and one or two other leafs.  A statically sized global array that's
+arbitrarily index a la x86_capability would be just as simple and more
+performant.  It would also allow fancier things like emulating CPUID 0xD in
+the guest if you want to go down that road.
