@@ -2,241 +2,106 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3211DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEAE207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5106207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589976016;
+	bh=p2b++fqgB3j8t8wQVCowLSphUGbZ0n9M7PbJlfK7X/g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qJIz0YKhVXQP/eFRKFllSwvALeSnHywze9e0kTDAyf/KqbZqMtJ8WHKh2ey/7b47Q
+	 NGzWCusHdYW5ZKHjDAJs7+PdkPoVxLibPqGCIPlezCumI69ppTm98KtJTluK1yepNo
+	 4gDcHze9+VivF1JLyCSYv4hxcjy85ugHHfY+DTb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgETL7e (ORCPT
+        id S1726851AbgETMAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:59:34 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58188 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgETL7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:59:34 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 530D480307C1;
-        Wed, 20 May 2020 11:59:28 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ez3oW4GvgvxF; Wed, 20 May 2020 14:59:27 +0300 (MSK)
-Date:   Wed, 20 May 2020 14:59:26 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520115926.lk6ycke75flwzcd2@mobilestation>
-References: <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
- <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
+        Wed, 20 May 2020 08:00:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgETMAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:00:15 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD4F02088E;
+        Wed, 20 May 2020 12:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589976015;
+        bh=p2b++fqgB3j8t8wQVCowLSphUGbZ0n9M7PbJlfK7X/g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CW5CxvEsFMAQykySax7pzLLLsuOOb0yHjoog78dUyoDsiNZGpdB8q/hjeryKbCcTP
+         wIa4BnzHQws04aAqGlgPIA8bdvGr19unsaZtfbi4gLUwlMH2JvsZcNiutZfHgBEWvk
+         gebWAQM0XpcbGPvbaAEOxAJQZtXaojp57sWXGDvY=
+Received: by mail-lj1-f172.google.com with SMTP id v16so3323685ljc.8;
+        Wed, 20 May 2020 05:00:14 -0700 (PDT)
+X-Gm-Message-State: AOAM532eYYX0uWOGVm2+oU5QjmU2qUG2wfhKSV4RaFm4Om1FVb9OJaDj
+        g4sPXTOz1bX3mbmanQWvemVWQGxJUWgnKudqtT8=
+X-Google-Smtp-Source: ABdhPJzqow3O8ENCEDm8pm97wOipgg7aCLHp2fW6FeVlcUNXw9PQ19agZuUv9OGshUKmBWlDt+HIDjaQRQTcXVnWHKU=
+X-Received: by 2002:a2e:8e99:: with SMTP id z25mr2440347ljk.142.1589976012909;
+ Wed, 20 May 2020 05:00:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519155053.GB15797@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <15745285.MnsZKaK4VV@tauon.chronox.de> <CGME20200520104448eucas1p122e9a8ed84d5276a1b796e10ef5e1964@eucas1p1.samsung.com>
+ <dleftjh7wa3my6.fsf%l.stelmach@samsung.com> <2041475.ybOAuNAZB8@tauon.chronox.de>
+In-Reply-To: <2041475.ybOAuNAZB8@tauon.chronox.de>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 20 May 2020 14:00:01 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
+Message-ID: <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
+To:     Stephan Mueller <smueller@chronox.de>
+Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 05:50:53PM +0200, Thomas Bogendoerfer wrote:
-> On Mon, May 18, 2020 at 11:57:52PM +0300, Serge Semin wrote:
-> > On Mon, May 18, 2020 at 06:32:06PM +0200, Thomas Bogendoerfer wrote:
-> > > On Mon, May 18, 2020 at 04:48:20PM +0300, Serge Semin wrote:
-> > > > On Fri, May 15, 2020 at 11:06:47PM +0200, Thomas Bogendoerfer wrote:
-> > > > > On Fri, May 15, 2020 at 10:48:27AM +0300, Serge Semin wrote:
-> > > > > > Thomas,
-> > > > > > Could you take a look at my comment below so I could proceed with the
-> > > > > > patchset v3 development?
-> > > > > 
-> > > > > I can't help, but using r4k clocksource with changing frequency is
-> > > > > probaly only usefull as a random generator. So IMHO the only two
-> > > > > options are disabling it or implement what arch/x86/kernel/tsc.c does.
-> > > > > 
-> > > > > Thomas.
-> > > > 
-> > > > Thomas, could you proceed with the rest of the patches review?
-> > > > ├─>[PATCH v2 16/20] bus: cdmm: Add MIPS R5 arch support
-> > > > ├─>[PATCH v2 15/20] mips: cdmm: Add mti,mips-cdmm dtb node support
-> > > 
-> > > both are not my call, but look ok to me.
-> > 
-> > Can I add your Reviewed-by tag there then?
-> 
-> only for 16/20. 15/20 looks ok to me, but I have not enough insides
-> on the hardware to say this is good.
+On Wed, 20 May 2020 at 13:53, Stephan Mueller <smueller@chronox.de> wrote:
+> > > That said, the illustrated example is typical for hardware RNGs. Yet
+> > > it is never guaranteed to work that way. Thus, if you can point to
+> > > architecture documentation of your specific hardware RNGs showing that
+> > > the data read from the hardware is pure unconditioned noise data, then
+> > > I have no objections to the patch.
+> >
+> > I can tell for sure that this is the case for exynos-trng[1].
+>
+> So you are saying that the output for the exynos-trng is straight from a ring
+> oscillator without any post-processing of any kind?
 
-Ok.
+Hi,
 
-> 
-> > > > ├─>[PATCH v2 13/20] mips: early_printk_8250: Use offset-sized IO-mem accessors
-> > > 
-> > > that's broken. A reg shift of 2 doesn't mean we could use 32bit access
-> > > to the registers on other platforms. As I don't think adding some ifdefery
-> > > makes things nicer, just implement the your prom_putchar in board code.
-> > 
-> > I thought about that initially, but then I decided to alter the generic
-> > early_printk_8250 code instead. My version of prom_putchar() would be almost
-> > the same as one implemented in the early_printk_8250 module except minor
-> > modification of replacing readb/writeb methods with readl/writel. So I didn't
-> > want to duplicate the code, but wanted to provide a general way to fix the
-> > problem potentially also for another platforms.
-> > 
-> > Since you don't like this fix alternatively I'd suggest to add the reg_width
-> > parameter passed to the setup_8250_early_printk_port() method like this:
-> > -setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
-> > -                             unsigned int timeout)
-> > +setup_8250_early_printk_port(unsigned long base, unsigned int reg_shift,
-> > +                             unsigned int reg_width, unsigned int timeout)
-> > 
-> > By reg_width parameter we could determine the actual width of the register:
-> >  static inline u8 serial_in(int offset)
-> >  {
-> > -       return readb(serial8250_base + (offset << serial8250_reg_shift));
-> > +       u8 ret = 0xFF;
-> > +
-> > +       offset <<= serial8250_reg_shift;
-> > +       switch (serial8250_reg_width) {
-> > +       case 1:
-> > +               ret = readb(serial8250_base + offset);
-> > +               break;
-> > +       case 2:
-> > +               ret = readw(serial8250_base + offset);
-> > +               break;
-> > +       case 4:
-> > +               ret = readl(serial8250_base + offset);
-> > +               break;
-> > +       default:
-> > +               break;
-> > +       }
-> > +
-> > +       return ret;
-> >  }
-> > 
-> > The similar modification will be implemented for serial_out(). I'll also modify
-> 
-> look at the lines of code you are adding. Doing your own prom_putchar will
-> probably have less lines.
-> 
-> > What do you think about this?
-> 
-> please do your own prom_putchar.
-> 
+I think we will never be able to state this because the manual is
+quite limited in sharing internals. What the driver does and probably
+Lukasz wanted to say is that there is "post processing" block and
+feature which can be disabled. The manual is saying the TRNG block
+generates random data from thermal noise but not how much in a direct
+way. There could be some simple post-processing or not (except the one
+able to on/off). Also manual says this post processing block is there
+to remove statistical weakness from the TRNG block. To me it does not
+prove enough that raw data is really raw...
 
-Ok.
-
-> 
-> > > 
-> > > > ├─>[PATCH v2 12/20] mips: MAAR: Add XPA mode support
-> > > 
-> > > looks ok so far.
-> > 
-> > Can I add your Reviewed-by tag there then?
-> 
-> As I'm the maintainer of the part, I've simply applied it.
-> 
-> > > 
-> > > > ├─>[PATCH v2 10/20] mips: Add CONFIG/CONFIG6/Cause reg fields macro
-> > > 
-> > > that is fine
-> > 
-> > Can I add your Reviewed-by tag there then?
-> 
-> As this didn't apply cleanly, I'll apply it after you've resent it.
-> IMHO no need for a Reviewed-by.
-
-Ok.
-
-> 
-> > > > └─>[PATCH v2 09/20] mips: Add CP0 Write Merge config support
-> > > 
-> > > this is IMHO a dangerous change. Enabling write merging for any
-> > > CPU supporting it might triggers bugs. Do it in your board bringup
-> > > code and at the moment I don't see a reason for the rest of that
-> > > patch.
-> > 
-> > Let's at least leave the mm_config() implementation but without the write-merge
-> > enabling by default. Providing features availability macro
-> > cpu_has_mm_sysad/cpu_has_mm_full and c0 config fields
-> 
-> do you have a user of that ? I'm not introducing code nobody uses.
-> 
-
-See my comment below.
-
-> > I could use them to implement a code pattern like:
-> > 
-> > +	if (cpu_has_mm_full) {
-> > +		unsigned int config0 = read_c0_config();
-> > +               config0 = (config0 & ~MIPS_CONF_MM) | MIPS_CONF_MM_FULL;
-> > +               write_c0_config(config0);
-> > +	}
-> 
-> you know you are running on a R5 core, so you know you have MM_FULL.
-> No need to check this.
-> 
-> > By doing so I can manually enable/disable the MM feature in the
-> > cpu-feature-overrides.h. Without that I'd have to locally define these macro,
-> > which isn't good seeing they are in fact generic and can be useful for other
-> > platforms with SYSAD and FULL MM feature available. What do you think?
-> 
-> To me this is a hardware feature I expect to be done by firmware and
-> Linux shouldn't care about it, if it doesn't have any software
-> implications.
-
-I think there is a misunderstanding here. In this patch I am not enabling
-Write-Merge feature for any memory range. I am enabling the UCA Cache Coherency
-attribute to be available for utilization. See the user-manual info regarding
-the CP0.CONFIG.MM field:
-	Write Merge.This bit indicates whether write-through merging is enabled
-	in the 32-byte collapsing write buffer.
-	0: No merging allowed
-	1: Merging allowed
-
-In order to have the Write-merging really enabled for a particular PFN one have
-to mark its TLB entry with UCA (EntryLoX.C[3:5] = 7) attribute. So in this patch
-I am attempting to detect whether the feature is either already enabled or if
-available to enable it for utilization.
-
-If there is no misunderstanding and you said what you said, that even enabling
-the feature for utilization might be dangerous, let's at least leave the
-MIPS_CONF_MM, MIPS_CONF_MM_FULL and MIPS_CONF_MM_SYS_SYSAD fields
-definition in the "arch/mips/include/asm/mipsregs.h" header. I'll use
-them to enable the write-merge in my platform code.
-
-What do you think?
-
--Sergey
-
-> 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+Best regards,
+Krzysztof
