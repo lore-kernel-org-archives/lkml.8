@@ -2,94 +2,171 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB18C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF20207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC1820849
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:53:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aL557VXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgETNw4 (ORCPT
+        id S1726851AbgETNxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:52:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:56804 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETNw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:52:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AB8930E;
-        Wed, 20 May 2020 06:52:55 -0700 (PDT)
-Received: from [10.37.8.206] (unknown [10.37.8.206])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E31ED3F52E;
-        Wed, 20 May 2020 06:52:53 -0700 (PDT)
-Subject: Re: [PATCH V4 15/17] arm64/cpufeature: Add remaining feature bits in
- ID_AA64DFR0 register
-To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org
-References: <1589881254-10082-1-git-send-email-anshuman.khandual@arm.com>
- <1589881254-10082-16-git-send-email-anshuman.khandual@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <5bad1e13-e498-b33e-5305-336d855c2c8b@arm.com>
-Date:   Wed, 20 May 2020 14:57:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Wed, 20 May 2020 09:53:11 -0400
+Received: from mail-dm6nam12on2080.outbound.protection.outlook.com ([40.107.243.80]:26081
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726436AbgETNxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:53:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nQc/uUgfYV+4e/K6WKc62MhQwDZgZeCMci3bEJJ6f/0O7NwRTN1rTqcvQ820OraJb4raEW6YXW7LJKz8AzjrgJDOsTVHa2sPQlJ8Q0i/+/CxK45YBitcClZ82bDaGkjqJM5bfUbmhY8/Wb7Oje6CxLd+SEvvfvzrIzDpv2o+qBKD3CsrRLptQg8Te7NVMVP06j5u0JEvA3T+8Os0GPXL/KOodeTpNic8CgYRw+2j0kpbi+q31RGB6tAPnfumKGsu5gshDWANJd5EHU4GMxl7zUbfbJDt0zUOmR6zKXgNMBrQw6fM4WJwO0Ef3NIzzJuOAlWWef1RWclm1OQdowrEEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xz9rwR0eUPKuVj4fJQdvsNxw6BeDwm1RNlON+6WNOFI=;
+ b=ajQJWTCUBAPB3yEJOjKwrWyIVPEpD3aA6CRWpgo7xSDUwnDcJ2hHnNinLbuRewbCSMuNVwFNvsBslkAOsg4e9UgmTTCO6BEOByCk3G1WXJ86SmFCpFxM9gYGIQDv9AE+TxZYrPbtv6951CbohusqREfmzGgJ0A8CRBnJXTIiX3Cp8q7k1R0YorS7lhx9znZzgf0a4GPjsaCTnHPFvww0+CmpyXk4SmKlooeho8gWsn1WL0YokKsfwFwFTAPXsxbxRaMwjGXJchHQyDiPibwLyt/EcfeoqeqFyrYbopsNeIjSZHncGOgkuUOXmBUQlpqLk4OjG0z2AHvUrVyB6A6kGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.ie smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xz9rwR0eUPKuVj4fJQdvsNxw6BeDwm1RNlON+6WNOFI=;
+ b=aL557VXwW+i6iDFCJuPF9arTyaUKl4GuxtqhaCxA/dIMpURPU8S4qwgcYQlg0MikTLYWOGM2PSyeFIKLqHIre75Cbf6+Iqmj6gbUFGrSFF5HT47QxnHNEeTISw5DuqFMmvRNpmth1yUpZrH3QwZkjjX4P4K6NgnTHYR1jUGMVng=
+Received: from DM5PR22CA0003.namprd22.prod.outlook.com (2603:10b6:3:101::13)
+ by DM6PR12MB2907.namprd12.prod.outlook.com (2603:10b6:5:183::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Wed, 20 May
+ 2020 13:53:08 +0000
+Received: from DM6NAM11FT003.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:101:cafe::45) by DM5PR22CA0003.outlook.office365.com
+ (2603:10b6:3:101::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
+ Transport; Wed, 20 May 2020 13:53:08 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; linux.ie; dkim=none (message not signed)
+ header.d=none;linux.ie; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB02.amd.com (165.204.84.17) by
+ DM6NAM11FT003.mail.protection.outlook.com (10.13.173.162) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3021.23 via Frontend Transport; Wed, 20 May 2020 13:53:07 +0000
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 20 May
+ 2020 08:53:07 -0500
+Received: from sudo.amd.com (10.180.168.240) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 20 May 2020 08:53:06 -0500
+From:   Aurabindo Pillai <aurabindo.pillai@amd.com>
+To:     <Felix.Kuehling@amd.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, Amber Lin <Amber.Lin@amd.com>
+Subject: [PATCH] drm/amd/amdkfd: Fix large framesize for kfd_smi_ev_read()
+Date:   Wed, 20 May 2020 09:53:06 -0400
+Message-ID: <20200520135306.11221-1-aurabindo.pillai@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1589881254-10082-16-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39860400002)(376002)(396003)(46966005)(82310400002)(82740400003)(8936002)(478600001)(7696005)(36756003)(336012)(426003)(44832011)(356005)(186003)(4326008)(6636002)(81166007)(26005)(8676002)(5660300002)(316002)(70586007)(70206006)(1076003)(86362001)(54906003)(2616005)(110136005)(2906002)(47076004);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8cd0635e-a73a-433a-d741-08d7fcc52061
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2907:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB2907E5BEEEAEF8FEDFB6943F8BB60@DM6PR12MB2907.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 04097B7F7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HKg2Le69gBYBUtgWXH+CiAOH/hLKk2jV2WVrHAPPl+DKUJLMjmO7NgwG7hCyvKbPdlMdMvsfNF7zBYxzmEjw5S29sosveLp/fFCQ8LYo5gJsAP2TSVuDUK6lleom19SkV25HKCi0nV1JLXu9t/tH2ACWiCk4nJZJinJ1Z/2aYZ5M1/K7/oghIMhk2AjdsKhtJphLl7kIPC6DqPnoSoFC59amnh0R098khoMnkKB2VLy6zS3Kz380iUCHMhJLS/yX8lcAcgRAI11yCfPBwKOrqBJVXAVTR2CGp128aGo1EpZMzdcS3PiziAlJcDGowhOTFpR3VKG7aEJpJWD7Ese64eNg2mSQLJVEICfQBHdpyvr8b1WCg93ANe0Rrf3aoz2SnJXi6YrGlSxBiNm+eiFDTKn1kdi03i7qt7qR1zOyTwwREMWCmimAASBFfEzcPcB4paFltWz4RECLRNVrsOUk1pk+egCw2kbe6FSkLc0j0MARTqQZzWiJq+Ou9bxD0mwMv9bIV3XzfoKJmYD9YiENXQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2020 13:53:07.7344
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cd0635e-a73a-433a-d741-08d7fcc52061
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2907
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/19/2020 10:40 AM, Anshuman Khandual wrote:
-> Enable MTPMU and TRACEFILT features bits in ID_AA64DFR0 register as per ARM
-> DDI 0487F.a specification.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->   arch/arm64/include/asm/sysreg.h | 2 ++
->   arch/arm64/kernel/cpufeature.c  | 2 ++
->   2 files changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index a572069ccf6e..4bcd21cc2d68 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -766,6 +766,8 @@
->   #define ID_AA64MMFR2_CNP_SHIFT		0
->   
->   /* id_aa64dfr0 */
-> +#define ID_AA64DFR0_MTPMU_SHIFT		48
-> +#define ID_AA64DFR0_TRACEFILT_SHIFT	40
->   #define ID_AA64DFR0_PMSVER_SHIFT	32
->   #define ID_AA64DFR0_CTX_CMPS_SHIFT	28
->   #define ID_AA64DFR0_WRPS_SHIFT		20
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 6338151f263c..986974be0178 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -366,6 +366,8 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
->   };
->   
->   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
-> +	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_MTPMU_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_TRACEFILT_SHIFT, 4, 0),
+The buffer allocated is of 1024 bytes. Allocate this from
+heap instead of stack.
 
-We maske both the fields for KVM in AArch32 ID registers. We should do 
-the same here.
+Also remove check for stack size since we're allocating from heap
 
-Suzuki
+Signed-off-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Tested-by: Amber Lin <Amber.Lin@amd.com>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c | 26 +++++++++++++++------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c b/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
+index f5fd18eacf0d..5aebe169f8c6 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
+@@ -77,9 +77,11 @@ static ssize_t kfd_smi_ev_read(struct file *filep, char __user *user,
+ 	int ret;
+ 	size_t to_copy;
+ 	struct kfd_smi_client *client = filep->private_data;
+-	unsigned char buf[MAX_KFIFO_SIZE];
++	unsigned char *buf;
+ 
+-	BUILD_BUG_ON(MAX_KFIFO_SIZE > 1024);
++	buf = kzalloc(MAX_KFIFO_SIZE * sizeof(*buf), GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
+ 
+ 	/* kfifo_to_user can sleep so we can't use spinlock protection around
+ 	 * it. Instead, we kfifo out as spinlocked then copy them to the user.
+@@ -88,19 +90,29 @@ static ssize_t kfd_smi_ev_read(struct file *filep, char __user *user,
+ 	to_copy = kfifo_len(&client->fifo);
+ 	if (!to_copy) {
+ 		spin_unlock(&client->lock);
+-		return -EAGAIN;
++		ret = -EAGAIN;
++		goto ret_err;
+ 	}
+ 	to_copy = min3(size, sizeof(buf), to_copy);
+ 	ret = kfifo_out(&client->fifo, buf, to_copy);
+ 	spin_unlock(&client->lock);
+-	if (ret <= 0)
+-		return -EAGAIN;
++	if (ret <= 0) {
++		ret = -EAGAIN;
++		goto ret_err;
++	}
+ 
+ 	ret = copy_to_user(user, buf, to_copy);
+-	if (ret)
+-		return -EFAULT;
++	if (ret) {
++		ret = -EFAULT;
++		goto ret_err;
++	}
+ 
++	kfree(buf);
+ 	return to_copy;
++
++ret_err:
++	kfree(buf);
++	return ret;
+ }
+ 
+ static ssize_t kfd_smi_ev_write(struct file *filep, const char __user *user,
+-- 
+2.25.1
+
