@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B849C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22D8207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3732E2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UQ99uAW9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="unkXLUw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgETJkM (ORCPT
+        id S1726831AbgETJkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:40:12 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53180 "EHLO
+        Wed, 20 May 2020 05:40:15 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15335 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726748AbgETJkL (ORCPT
+        by vger.kernel.org with ESMTP id S1726435AbgETJkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:40:11 -0400
+        Wed, 20 May 2020 05:40:14 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589967611; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1589967613; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=K4ExBGCsYxziXQ/tZmwH21vvC09oS+9OCCe2vM9zxcc=; b=UQ99uAW9NNuTuYX/lEeNKaeVYzr234SaLuE5QoNdVYhJ60Q8KyHxpY+pSqeyPl7Q8FdNRlAe
- UsuPRrcbkuLmFiuiiQDaDbOR/u9bWbfXqxgQkvWVgys4sel3QL2jLzazjI3xptpgHwdKiBE/
- QSJMk8X1ah7dZ3MQ1oYO5P8mL8g=
+ bh=C4tMTaVJ6iVzjDcdBpRTcJeL+02Hc/HgZP+KSi6i9S8=; b=unkXLUw8U136Nxum2/PfQWxe+BBuh2jWycX3EtwIG1R9fugTaUvd/Zn/EJtAAdCOPSSXsOLh
+ kP6YDVKQ+FdlnEW5wQKW+g/4IDsPUD8oBc2qKzzgVVN5QgE9Jak3lURKg4VEYX2FFKjtPwti
+ OjeyZoXnfl5XPtGxW2qwp/UyXLI=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec4fafb.7f97c5cc4f10-smtp-out-n02;
- Wed, 20 May 2020 09:40:11 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5ec4faf0.7f6d1cc4f570-smtp-out-n03;
+ Wed, 20 May 2020 09:40:00 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1D3FBC433C9; Wed, 20 May 2020 09:40:10 +0000 (UTC)
+        id BCDE6C43387; Wed, 20 May 2020 09:39:59 +0000 (UTC)
 Received: from aneelaka-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: aneela)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD072C43391;
-        Wed, 20 May 2020 09:40:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD072C43391
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34A16C433C6;
+        Wed, 20 May 2020 09:39:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34A16C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
 From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
@@ -52,9 +52,9 @@ Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Arun Kumar Neelakantam <aneela@codeaurora.org>,
         Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
-Subject: [PATCH V6 4/5] rpmsg: glink: Expose rpmsg name attr for glink
-Date:   Wed, 20 May 2020 15:09:38 +0530
-Message-Id: <1589967579-15559-5-git-send-email-aneela@codeaurora.org>
+Subject: [PATCH V6 1/5] rpmsg: glink: Use complete_all for open states
+Date:   Wed, 20 May 2020 15:09:35 +0530
+Message-Id: <1589967579-15559-2-git-send-email-aneela@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589967579-15559-1-git-send-email-aneela@codeaurora.org>
 References: <1589967579-15559-1-git-send-email-aneela@codeaurora.org>
@@ -65,58 +65,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chris Lew <clew@codeaurora.org>
 
-Expose the name field as an attr so clients listening to uevents for
-rpmsg can identify the edge the events correspond to.
+The open_req and open_ack completion variables are the state variables
+to represent a remote channel as open. Use complete_all so there are no
+races with waiters and using completion_done.
 
 Signed-off-by: Chris Lew <clew@codeaurora.org>
 Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
 ---
- drivers/rpmsg/qcom_glink_native.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/rpmsg/qcom_glink_native.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index b85433c..2b5368b 100644
+index 1995f5b..ea2f33f 100644
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1574,6 +1574,26 @@ static void qcom_glink_cancel_rx_work(struct qcom_glink *glink)
- 		kfree(dcmd);
+@@ -970,7 +970,7 @@ static int qcom_glink_rx_open_ack(struct qcom_glink *glink, unsigned int lcid)
+ 		return -EINVAL;
+ 	}
+ 
+-	complete(&channel->open_ack);
++	complete_all(&channel->open_ack);
+ 
+ 	return 0;
  }
+@@ -1178,7 +1178,7 @@ static int qcom_glink_announce_create(struct rpmsg_device *rpdev)
+ 	__be32 *val = defaults;
+ 	int size;
  
-+static ssize_t rpmsg_name_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	int ret = 0;
-+	const char *name;
-+
-+	ret = of_property_read_string(dev->of_node, "label", &name);
-+	if (ret < 0)
-+		name = dev->of_node->name;
-+
-+	return snprintf(buf, RPMSG_NAME_SIZE, "%s\n", name);
-+}
-+static DEVICE_ATTR_RO(rpmsg_name);
-+
-+static struct attribute *qcom_glink_attrs[] = {
-+	&dev_attr_rpmsg_name.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(qcom_glink);
-+
- static void qcom_glink_device_release(struct device *dev)
- {
- 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-@@ -1638,6 +1658,12 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 	idr_init(&glink->lcids);
- 	idr_init(&glink->rcids);
+-	if (glink->intentless)
++	 if (glink->intentless || !completion_done(&channel->open_ack))
+ 		return 0;
  
-+	glink->dev->groups = qcom_glink_groups;
-+
-+	ret = device_add_groups(dev, qcom_glink_groups);
-+	if (ret)
-+		dev_err(dev, "failed to add groups\n");
-+
- 	ret = of_property_read_string(dev->of_node, "label", &glink->name);
- 	if (ret < 0)
- 		glink->name = dev->of_node->name;
+ 	prop = of_find_property(np, "qcom,intents", NULL);
+@@ -1413,7 +1413,7 @@ static int qcom_glink_rx_open(struct qcom_glink *glink, unsigned int rcid,
+ 	channel->rcid = ret;
+ 	spin_unlock_irqrestore(&glink->idr_lock, flags);
+ 
+-	complete(&channel->open_req);
++	complete_all(&channel->open_req);
+ 
+ 	if (create_device) {
+ 		rpdev = kzalloc(sizeof(*rpdev), GFP_KERNEL);
 -- 
 2.7.4
