@@ -2,115 +2,159 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39379C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 144CA207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A622070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:51:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NKiIB31r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aOST2MUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgETMsV (ORCPT
+        id S1726810AbgETMvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40410 "EHLO
+        Wed, 20 May 2020 08:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgETMsU (ORCPT
+        with ESMTP id S1726443AbgETMvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:48:20 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C9DC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:48:19 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id l3so1219737qvo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:48:19 -0700 (PDT)
+        Wed, 20 May 2020 08:51:31 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC757C061A0E;
+        Wed, 20 May 2020 05:51:30 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id z15so2317843pjb.0;
+        Wed, 20 May 2020 05:51:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=je/KbnslOZKPvi+gdbk2BorRQK9HerFcoy4nD5X6lMM=;
-        b=NKiIB31rUNec8vPy5B581Ac3XHacW4bKFkiRsrE64Ih4KYBq8+vE7e6JqfUsABdEEs
-         vpEWvb2tq7FEsIQQ7SlWvqCtsFj8Y6eQz8bHkER5KF5DxHCd3cF8ddiES1gge5xyggyC
-         woCsKccdrLS1Pa2+DKIj1RFtH4b/rdouJtV4rI89ssc0/a0Pfvbnrdcbpj5X1PYFe/du
-         NlfzXFkUIsb/bxVA1uLZfeUJib3SXDMEgFDgU+pr04YShYQZ1xwhYE3oe3BxJg+ltOav
-         rSDV7Wnut8vVcWwyY3O2fDe6KMHW5muXkuRMe6RltEdiK3sknldDfVTCcTf5EcwVoyMv
-         c5aw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XVrZcEQ3Ohwq93lQaVh49GHURIxMEGS078tmEHwT2JQ=;
+        b=aOST2MULZ/U9WisiPYmah4vmhjjvFf/jMZY3I2re/kUa5PCYb2JOrvRfx6QapIT4PT
+         DdPWlxNkXXtABiJ8ZLQH8y+tCiMkVBQWvKF4e2r5teEkEILQrJS3mwV0fC/BwUE4SOYl
+         5rVAlIyi4b5/dEdVT5XZYzXE6e1RTsrPrBfaOzmhYJAzNkayzQaheIjaZhsNU9xer7RZ
+         eHtsX04xOAXnBxnfhnloASIpXviTlUD+5kQoMRjM0P8lrJdK81kDkxDJMwj2mpNAaJJ7
+         2pJTZ3q+BTp4lYWkc7Bl8sUZrWBba9QxiFNRZdlJijDTq67sB2lDV/CzXVP0OamL3PS4
+         Pshg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=je/KbnslOZKPvi+gdbk2BorRQK9HerFcoy4nD5X6lMM=;
-        b=PbhXe1JdAElWCO7OBz9Vy7H1H3gJ2novntRnCj7q+EjW5PvijanOVi9ddX5X3DKTUi
-         f6vWrdJWPY3FqiYEeBCYoYFNnQ/uCap7EWTkYIgENcery6X4FiBT1IYergNHZ1eO6vWx
-         wpPkhOOz/GHPXv5l02H1Ooi/ms4oW1M9vCTdgr6vkX97brqAKxrJ98rgBCxvpLe9scuT
-         /MkD3gSjR8MC1fi/xmIouKIJaDi4u0EtTN7sk0J2AFlzGjIzk/zZISwg904O8zuZ3jgb
-         E/uiJKeVRag10tFZIaPkpSwsHwRxpwePY72b7kHECNSMsOEkwdbUiCrxvtXrupJ9khaH
-         bnxQ==
-X-Gm-Message-State: AOAM531heG5bSiLK0+YzJqatBnDYulIJuc5TminVhmquRCE/4g+F6bXh
-        zZ5+0k2pJg942deTnfjyNMkc5A==
-X-Google-Smtp-Source: ABdhPJxB9IgoFEYhXyhWQbtJRUK6zs/WfyptsnOZKIDXlwXkNioof1JO/WpAsbbm3+41MY2mjsIJLg==
-X-Received: by 2002:a05:6214:42f:: with SMTP id a15mr4609714qvy.212.1589978898653;
-        Wed, 20 May 2020 05:48:18 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id j83sm1912436qke.7.2020.05.20.05.48.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 May 2020 05:48:18 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jbO8v-00063L-Du; Wed, 20 May 2020 09:48:17 -0300
-Date:   Wed, 20 May 2020 09:48:17 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XVrZcEQ3Ohwq93lQaVh49GHURIxMEGS078tmEHwT2JQ=;
+        b=cP/9GVALplibfpPTuggHEiOCzkFtE+neE+68DxTy514ZEBwrBCC5795MJPt0x9qGID
+         pDlOqv2OibDAT33KPi2KjxeqofF1PLqYTrJT2XABs1sUFdRh2qNtFgTVjsabWrPsgKB9
+         xUz6WFHupDkd45LRvXZN4Cc44Q/6pCV5s5xoK7XnSwwsr0kj0M/TQzxFpfGQEvQcou1D
+         myC6EE+XBZzmd6MEj0T7maf/MhmrffsMDI3FDKAkIYA2fDXykfBYNOnNqBbjgBbI6Vtz
+         RXc9jWfpcXixKSOqTOtXE4LYRInXzWMTBzuLbaEFMR30EAzbNG/MFtJGMq4SCo2wLk3l
+         mDgw==
+X-Gm-Message-State: AOAM533dZe61vcyio66nBDvjgNqgMThKkaemjLOpi74FfLy/xPZmnJme
+        7AT4d4CobclGn5gmckqGKzMHcjKh
+X-Google-Smtp-Source: ABdhPJz/vfz6SPgr2I4WPUNz2HX9I6wa5WPDb+JOB4wSOa/i95lO65KxDD4uC82ktZiTA2FuyRsamg==
+X-Received: by 2002:a17:90b:1288:: with SMTP id fw8mr5179133pjb.160.1589979090211;
+        Wed, 20 May 2020 05:51:30 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id mn19sm2109266pjb.8.2020.05.20.05.51.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 05:51:29 -0700 (PDT)
+Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of a
+ seqcount
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Waiman Long <longman@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH v5.5 10/10] mmap locking API: rename mmap_sem to mmap_lock
-Message-ID: <20200520124817.GG31189@ziepe.ca>
-References: <CANN689EnGsJXA8n6JvTryQfkCtARPvtZbkH+9Dd2a4X+fvqU9g@mail.gmail.com>
- <20200423015917.GA13910@bombadil.infradead.org>
- <20200424012612.GA158937@google.com>
- <20200424013958.GC158937@google.com>
- <f20ab834-cddb-eaa7-c03e-18f0c4897a33@linux.ibm.com>
- <20200519131009.GD189720@google.com>
- <7c540ac9-ba44-7187-5dc2-60b4c761e91c@linux.ibm.com>
- <20200519153251.GY16070@bombadil.infradead.org>
- <10d48b77-5c6e-2e10-84e6-16cdd76a45f1@nvidia.com>
- <CANN689EubtJL2mbcz5Au05nW87gVuY-19r7nZd9x0y320PUb0g@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200519214547.352050-2-a.darwish@linutronix.de>
+ <33cec6a9-2f6e-3d3c-99ac-9b2a3304ec26@gmail.com>
+ <20200520064246.GA353513@debian-buster-darwi.lab.linutronix.de>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <1498089b-08bd-d776-1570-d8b34463c702@gmail.com>
+Date:   Wed, 20 May 2020 05:51:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANN689EubtJL2mbcz5Au05nW87gVuY-19r7nZd9x0y320PUb0g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200520064246.GA353513@debian-buster-darwi.lab.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 07:39:30PM -0700, Michel Lespinasse wrote:
-> > > I think this assertion should be deleted from this driver.  It's there
-> > > in case get_user_pages_fast() takes the mmap sem.  It would make sense to
-> > > have this assertion in get_user_pages_fast() in case we take the fast path
-> > > which doesn't acquire the mmap_sem.  Something like this:
+
+
+On 5/19/20 11:42 PM, Ahmed S. Darwish wrote:
+> Hello Eric,
 > 
-> I like this idea a lot - having might_lock assertions in
-> get_user_pages_fast makes a log more sense than doing the same at the
-> call sites.
+> On Tue, May 19, 2020 at 07:01:38PM -0700, Eric Dumazet wrote:
+>>
+>> On 5/19/20 2:45 PM, Ahmed S. Darwish wrote:
+>>> Sequence counters write paths are critical sections that must never be
+>>> preempted, and blocking, even for CONFIG_PREEMPTION=n, is not allowed.
+>>>
+>>> Commit 5dbe7c178d3f ("net: fix kernel deadlock with interface rename and
+>>> netdev name retrieval.") handled a deadlock, observed with
+>>> CONFIG_PREEMPTION=n, where the devnet_rename seqcount read side was
+>>> infinitely spinning: it got scheduled after the seqcount write side
+>>> blocked inside its own critical section.
+>>>
+>>> To fix that deadlock, among other issues, the commit added a
+>>> cond_resched() inside the read side section. While this will get the
+>>> non-preemptible kernel eventually unstuck, the seqcount reader is fully
+>>> exhausting its slice just spinning -- until TIF_NEED_RESCHED is set.
+>>>
+>>> The fix is also still broken: if the seqcount reader belongs to a
+>>> real-time scheduling policy, it can spin forever and the kernel will
+>>> livelock.
+>>>
+>>> Disabling preemption over the seqcount write side critical section will
+>>> not work: inside it are a number of GFP_KERNEL allocations and mutex
+>>> locking through the drivers/base/ :: device_rename() call chain.
+>>>
+>>> From all the above, replace the seqcount with a rwsem.
+>>>
+>>> Fixes: 5dbe7c178d3f (net: fix kernel deadlock with interface rename and netdev name retrieval.)
+>>> Fixes: 30e6c9fa93cf (net: devnet_rename_seq should be a seqcount)
+>>> Fixes: c91f6df2db49 (sockopt: Change getsockopt() of SO_BINDTODEVICE to return an interface name)
+>>> Cc: <stable@vger.kernel.org>
+>>> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+>>> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>>> ---
+>>>  net/core/dev.c | 30 ++++++++++++------------------
+>>>  1 file changed, 12 insertions(+), 18 deletions(-)
+>>>
+>>
+>> Seems fine to me, assuming rwsem prevent starvation of the writer.
+>>
+> 
+> Thanks for the review.
+> 
+> AFAIK, due to 5cfd92e12e13 ("locking/rwsem: Adaptive disabling of reader
+> optimistic spinning"), using a rwsem shouldn't lead to writer starvation
+> in the contended case.
 
-+1 I've wanted to see more complete lockdep annotations in gup.c for a
-while now.. There has been a number of bugs this would have caught
+Hmm this was in linux-5.3, so very recent stuff.
 
-Jason
+Has this patch been backported to stable releases ?
+
+With all the Fixes: tags you added, stable teams will backport this networking patch to
+all stable versions.
+
+Do we have a way to tune a dedicare rwsem to 'give preference to the (unique in this case) writer" over
+a myriad of potential readers ?
+
+Thanks.
+
