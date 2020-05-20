@@ -2,109 +2,277 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A17C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7563CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C04A20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4615B20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590012934;
+	bh=aHIwMpLNIUwrAoCIhPWxIan4ODVV6e70BRdbQbLMFcg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=NlD0IQD9aVCXLJ4qfN7Xu9n+/CQ4osS9u1kIiFDnlItFd6wpV3BIc3gqWifL6VK25
+	 pRr11Mf+jXMyFS1e6L3jEsevU50sC670f7GURO2XnLRB3nz4M4p+FgR8s61kykhqyD
+	 eqvYLDrBZjzhXYl6GMtPgDqOJpMsTQJNTJx+Zeyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgETWOe (ORCPT
+        id S1728525AbgETWPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgETWOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:14:34 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D19C061A0E;
-        Wed, 20 May 2020 15:14:34 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbWyg-0004su-V0; Thu, 21 May 2020 00:14:19 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6333F100C2D; Thu, 21 May 2020 00:14:18 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
-In-Reply-To: <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
-References: <20200518093155.GB35380@T590> <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590> <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590> <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590> <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590> <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de> <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk> <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk> <87tv0av1gu.fsf@nanos.tec.linutronix.de> <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
-Date:   Thu, 21 May 2020 00:14:18 +0200
-Message-ID: <87eereuudh.fsf@nanos.tec.linutronix.de>
+        Wed, 20 May 2020 18:15:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726847AbgETWPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 18:15:33 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F60A20823;
+        Wed, 20 May 2020 22:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590012932;
+        bh=aHIwMpLNIUwrAoCIhPWxIan4ODVV6e70BRdbQbLMFcg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wdRPJ8wvm3t3ksbcnLju8ASGrtoxZqDq9pQNi/VxTOGZ3T8kYVnOfXNaO2FAJAE35
+         wh6bNdVllBeVdLTH2O0Mh5AZ8E+CQDNQSHHeESZR9hbsEhrdk6oknsybFhgsUcbr9z
+         kAwUeIxk4+hKPA5wAt32L2V5FoaK7DgvoNN9vkIY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 88B863522A2B; Wed, 20 May 2020 15:15:31 -0700 (PDT)
+Date:   Wed, 20 May 2020 15:15:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V6 12/37] x86/entry: Provide
+ idtentry_entry/exit_cond_rcu()
+Message-ID: <20200520221531.GW2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <87ftbv7nsd.fsf@nanos.tec.linutronix.de>
+ <87a7237k3x.fsf@nanos.tec.linutronix.de>
+ <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com>
+ <874ksb7hbg.fsf@nanos.tec.linutronix.de>
+ <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
+ <20200520022353.GN2869@paulmck-ThinkPad-P72>
+ <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
+ <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+ <20200520180546.GQ2869@paulmck-ThinkPad-P72>
+ <87o8qiv135.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8qiv135.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jens Axboe <axboe@kernel.dk> writes:
+On Wed, May 20, 2020 at 09:49:18PM +0200, Thomas Gleixner wrote:
+> "Paul E. McKenney" <paulmck@kernel.org> writes:
+> > On Wed, May 20, 2020 at 09:51:17AM -0700, Andy Lutomirski wrote:
+> >> Paul, the major change here is that if an IRQ hits normal kernel code
+> >> (i.e. code where RCU is watching and we're not in an EQS), the IRQ
+> >> won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
+> >> rcu_tickle() on entry and nothing on exit.  Does that cover all the
+> >> bases?
+> >
+> > From an RCU viewpoint, yes, give or take my concerns about someone
+> > putting rcu_tickle() on entry and rcu_irq_exit() on exit.  Perhaps
+> > I can bring some lockdep trickery to bear.
+> 
+> An surplus rcu_irq_exit() should already trigger alarms today.
 
-> On 5/20/20 1:41 PM, Thomas Gleixner wrote:
->> Jens Axboe <axboe@kernel.dk> writes:
->>> On 5/20/20 8:45 AM, Jens Axboe wrote:
->>>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
->>>> they just break affinity if that CPU goes offline.
->>>
->>> Just checked, and it works fine for me. If I create an SQPOLL ring with
->>> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
->>> just appears unbound but runs just fine. When CPU 3 comes online again,
->>> the mask appears correct.
->> 
->> When exactly during the unplug operation is it unbound?
->
-> When the CPU has been fully offlined. I check the affinity mask, it
-> reports 0. But it's still being scheduled, and it's processing work.
-> Here's an example, PID 420 is the thread in question:
->
-> [root@archlinux cpu3]# taskset -p 420
-> pid 420's current affinity mask: 8
-> [root@archlinux cpu3]# echo 0 > online 
-> [root@archlinux cpu3]# taskset -p 420
-> pid 420's current affinity mask: 0
-> [root@archlinux cpu3]# echo 1 > online 
-> [root@archlinux cpu3]# taskset -p 420
-> pid 420's current affinity mask: 8
->
-> So as far as I can tell, it's working fine for me with the goals
-> I have for that kthread.
+Fair point!
 
-Works for me is not really useful information and does not answer my
-question:
+> > But I must defer to Thomas and Peter on the non-RCU/non-NO_HZ_FULL
+> > portions of this.
+> 
+> I don't see a problem. Let me write that into actual testable patch
+> form.
 
->> When exactly during the unplug operation is it unbound?
+Here is the RCU part, with my current best guess for the commit log.
 
-The problem Ming and Christoph are trying to solve requires that the
-thread is migrated _before_ the hardware queue is shut down and
-drained. That's why I asked for the exact point where this happens.
+Please note that this is on top of my -rcu stack, so some adjustment
+will likely be needed to pull it underneath Joel's series that removes
+the special-purpose bits at the bottom of the ->dynticks counter.
 
-When the CPU is finally offlined, i.e. the CPU cleared the online bit in
-the online mask is definitely too late simply because it still runs on
-that outgoing CPU _after_ the hardware queue is shut down and drained.
+But a starting point, anyway.
 
-This needs more thought and changes to sched and kthread so that the
-kthread breaks affinity once the CPU goes offline. Too tired to figure
-that out right now.
+							Thanx, Paul
 
-Thanks,
+------------------------------------------------------------------------
 
-        tglx
+commit ca05838a9a1809fafee63f488a7be8b30e1c2a6a
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Wed May 20 15:03:07 2020 -0700
 
+    rcu: Abstract out tickle_nohz_for_rcu() from rcu_nmi_enter()
+    
+    This commit splits out the nohz_full scheduler-tick enabling from the
+    rest of the rcu_nmi_enter() logic.  This allows short exception handlers
+    that interrupt kernel code regions that RCU is already watching to just
+    invoke tickle_nohz_for_rcu() at exception entry instead of having to
+    invoke rcu_nmi_enter() on entry and also rcu_nmi_exit() on all exit paths.
+    
+    Suggested-by: Andy Lutomirski <luto@kernel.org>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-
-
+diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
+index 621556e..d4be42a 100644
+--- a/include/linux/hardirq.h
++++ b/include/linux/hardirq.h
+@@ -14,6 +14,10 @@ extern bool synchronize_hardirq(unsigned int irq);
+ 
+ #if defined(CONFIG_TINY_RCU)
+ 
++static inline void tickle_nohz_for_rcu(void)
++{
++}
++
+ static inline void rcu_nmi_enter(void)
+ {
+ }
+@@ -23,6 +27,7 @@ static inline void rcu_nmi_exit(void)
+ }
+ 
+ #else
++extern void tickle_nohz_for_rcu(void);
+ extern void rcu_nmi_enter(void);
+ extern void rcu_nmi_exit(void);
+ #endif
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 7812574..0a3cad4 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -806,6 +806,67 @@ void noinstr rcu_user_exit(void)
+ #endif /* CONFIG_NO_HZ_FULL */
+ 
+ /**
++ * tickle_nohz_for_rcu - Enable scheduler tick on CPU if RCU needs it.
++ *
++ * The scheduler tick is not normally enabled when CPUs enter the kernel
++ * from nohz_full userspace execution.  After all, nohz_full userspace
++ * execution is an RCU quiescent state and the time executing in the kernel
++ * is quite short.  Except of course when it isn't.  And it is not hard to
++ * cause a large system to spend tens of seconds or even minutes looping
++ * in the kernel, which can cause a number of problems, include RCU CPU
++ * stall warnings.
++ *
++ * Therefore, if a nohz_full CPU fails to report a quiescent state
++ * in a timely manner, the RCU grace-period kthread sets that CPU's
++ * ->rcu_urgent_qs flag with the expectation that the next interrupt or
++ * exception will invoke this function, which will turn on the scheduler
++ * tick, which will enable RCU to detect that CPU's quiescent states,
++ * for example, due to cond_resched() calls in CONFIG_PREEMPT=n kernels.
++ * The tick will be disabled once a quiescent state is reported for
++ * this CPU.
++ *
++ * Of course, in carefully tuned systems, there might never be an
++ * interrupt or exception.  In that case, the RCU grace-period kthread
++ * will eventually cause one to happen.  However, in less carefully
++ * controlled environments, this function allows RCU to get what it
++ * needs without creating otherwise useless interruptions.
++ */
++noinstr void tickle_nohz_for_rcu(void)
++{
++	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
++
++	if (in_nmi())
++		return; // Enabling tick is unsafe in NMI handlers.
++	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
++			 "Illegal tickle_nohz_for_rcu from extended quiescent state");
++	instrumentation_begin();
++	if (!tick_nohz_full_cpu(rdp->cpu) ||
++	    !READ_ONCE(rdp->rcu_urgent_qs) ||
++	    READ_ONCE(rdp->rcu_forced_tick)) {
++		// RCU doesn't need nohz_full help from this CPU, or it is
++		// already getting that help.
++		instrumentation_end();
++		return;
++	}
++
++	// We get here only when not in an extended quiescent state and
++	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
++	// already watching and (2) The fact that we are in an interrupt
++	// handler and that the rcu_node lock is an irq-disabled lock
++	// prevents self-deadlock.  So we can safely recheck under the lock.
++	// Note that the nohz_full state currently cannot change.
++	raw_spin_lock_rcu_node(rdp->mynode);
++	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
++		// A nohz_full CPU is in the kernel and RCU needs a
++		// quiescent state.  Turn on the tick!
++		WRITE_ONCE(rdp->rcu_forced_tick, true);
++		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
++	}
++	raw_spin_unlock_rcu_node(rdp->mynode);
++	instrumentation_end();
++}
++
++/**
+  * rcu_nmi_enter - inform RCU of entry to NMI context
+  * @irq: Is this call from rcu_irq_enter?
+  *
+@@ -835,7 +896,9 @@ noinstr void rcu_nmi_enter(void)
+ 	 * is if the interrupt arrived in kernel mode; in this case we would
+ 	 * be the outermost interrupt but still increment by 2 which is Ok.
+ 	 */
+-	if (rcu_dynticks_curr_cpu_in_eqs()) {
++	if (!rcu_dynticks_curr_cpu_in_eqs()) {
++		tickle_nohz_for_rcu();
++	} else {
+ 
+ 		if (!in_nmi())
+ 			rcu_dynticks_task_exit();
+@@ -851,28 +914,6 @@ noinstr void rcu_nmi_enter(void)
+ 		}
+ 
+ 		incby = 1;
+-	} else if (!in_nmi()) {
+-		instrumentation_begin();
+-		if (tick_nohz_full_cpu(rdp->cpu) &&
+-		    READ_ONCE(rdp->rcu_urgent_qs) &&
+-		    !READ_ONCE(rdp->rcu_forced_tick)) {
+-			// We get here only if we had already exited the
+-			// extended quiescent state and this was an
+-			// interrupt (not an NMI).  Therefore, (1) RCU is
+-			// already watching and (2) The fact that we are in
+-			// an interrupt handler and that the rcu_node lock
+-			// is an irq-disabled lock prevents self-deadlock.
+-			// So we can safely recheck under the lock.
+-			raw_spin_lock_rcu_node(rdp->mynode);
+-			if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+-				// A nohz_full CPU is in the kernel and RCU
+-				// needs a quiescent state.  Turn on the tick!
+-				WRITE_ONCE(rdp->rcu_forced_tick, true);
+-				tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+-			}
+-			raw_spin_unlock_rcu_node(rdp->mynode);
+-		}
+-		instrumentation_end();
+ 	}
+ 	instrumentation_begin();
+ 	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
