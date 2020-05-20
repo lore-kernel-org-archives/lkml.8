@@ -2,148 +2,104 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DABDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE401207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC79207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XdM9DQOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgETKWh (ORCPT
+        id S1726886AbgETKXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:22:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36640 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgETKWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:22:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 29739AEC2;
-        Wed, 20 May 2020 10:22:37 +0000 (UTC)
-Date:   Wed, 20 May 2020 12:22:33 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v2] printk/kdb: Redirect printk messages into kdb in any
- context
-Message-ID: <20200520102233.GC3464@linux-b0ei>
-References: <20200512142533.ta4uejwmq5gchtlx@holly.lan>
- <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
- <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
- <20200515085021.GS17734@linux-b0ei>
- <20200515103308.GD42471@jagdpanzerIV.localdomain>
- <20200515134806.5cw4xxnxw7k3223l@holly.lan>
- <20200518092139.GK7340@linux-b0ei>
- <20200520042102.GA938@jagdpanzerIV.localdomain>
- <20200520093557.lwwxnhvgmacipdce@holly.lan>
+        Wed, 20 May 2020 06:23:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETKXQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:23:16 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D66C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:23:16 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id v63so1322058pfb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:23:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UeYH74heESnZiF/0WzARTRhBvqO0sJy8NsvoDg+3AZM=;
+        b=XdM9DQOn//mg3VQ0zAw38oISQd7fr//RuX43QN4SmO2dfzhOasKxTnH2B2efhWow8x
+         J9MSBlmVlxtz5ZYvH7tY99SRB9k7nMv0Kgr17lZN0hUXrPMlp8VgYspi5PvY2fhrPlMA
+         EYiqN4vjb9L0Kzg5FIjLrg7qvtsIN7AOuDSRtdtxYMHuuAaEVOKBJO53LIgfAT3A2r6P
+         GZxq9ddGt5X5Z8pTyPj4Dq9alUYYuc39/vpXcYmYfSS2xPC6VpTsA6PrmyQy00Q8DZvM
+         bzZmUm7vnI3AV7C83PAgubZ5wdzLNt3E0GjZTR07Q241ySijf4AMOdqUst2+pbFcs+US
+         MWgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UeYH74heESnZiF/0WzARTRhBvqO0sJy8NsvoDg+3AZM=;
+        b=ucwJMtjCXCIPV2z0XQh/eomKaajVaX6imvyoTPKqi9qhe7gQnUhg0lQkeL4frIFHcD
+         I3mDkIPoGVuauoSwdVd033p9nOaACF9U/wQ3qd/jWojx2/QPhjKrIQu0yO33fcEbJpNI
+         Td8KnYcMGFXxlh/8oi3MY58prbtOHEBN1oPtFXNwVfmC11ccHo27lbFQHYVQ8XzLZS0v
+         SeOMe1Mt9P/gdtoa2WfD+LXmSd6ck9V2BGYTkjwOeIzRnosikIxGTSI3o7CaWRQjDNX/
+         V+t1rdEVC9rRvQOCsIAqAQLWUfh/ij5A1gZzvb3vRCiQk7lmVgB9RJ27ghndybjFPYjQ
+         Ol3A==
+X-Gm-Message-State: AOAM531yTRe423HIDQSidqq6uPXS/jObeJuebB5a1TSAj5/gwlqD8ITr
+        /oEuHITb7xPdiQH/Lr0+Dwx1vUE5dSw=
+X-Google-Smtp-Source: ABdhPJw71J+/ZknkAY+XoPTM8ROD5fgMhPUYFR8W496/dKeyZt6keGJDKmK529dWGTs7LpQ0zvYC/Q==
+X-Received: by 2002:a63:5f41:: with SMTP id t62mr3536425pgb.252.1589970195997;
+        Wed, 20 May 2020 03:23:15 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id l1sm1611630pgj.48.2020.05.20.03.23.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 May 2020 03:23:15 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] asm-generic/sembuf: Update architecture related information in comment
+Date:   Wed, 20 May 2020 15:53:08 +0530
+Message-Id: <64efe033394b6f0dfef043a63fd8897a81ba6d16.1589970173.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520093557.lwwxnhvgmacipdce@holly.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kdb has to get messages on consoles even when the system is stopped.
-It uses kdb_printf() internally and calls console drivers on its own.
+The structure came originally from x86_32 but is used by most of the
+architectures now. Update the comment which says it is for x86 only.
 
-It uses a hack to reuse an existing code. It sets "kdb_trap_printk"
-global variable to redirect even the normal printk() into the
-kdb_printf() variant.
-
-The variable "kdb_trap_printk" is checked in printk_default() and
-it is ignored when printk is redirected to printk_safe in NMI context.
-Solve this by moving the check into printk_func().
-
-It is obvious that it is not fully safe. But it does not make things
-worse. The console drivers are already called in this context by
-db_printf() direct calls.
-
-Reported-by: Sumit Garg <sumit.garg@linaro.org>
-Tested-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
-Changes in v2:
+ include/uapi/asm-generic/sembuf.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-   + more detailed commit message
-
- kernel/printk/printk.c      | 14 +-------------
- kernel/printk/printk_safe.c |  7 +++++++
- 2 files changed, 8 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 9a9b6156270b..63a1aa377cd9 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -35,7 +35,6 @@
- #include <linux/memblock.h>
- #include <linux/syscalls.h>
- #include <linux/crash_core.h>
--#include <linux/kdb.h>
- #include <linux/ratelimit.h>
- #include <linux/kmsg_dump.h>
- #include <linux/syslog.h>
-@@ -2036,18 +2035,7 @@ EXPORT_SYMBOL(vprintk);
+diff --git a/include/uapi/asm-generic/sembuf.h b/include/uapi/asm-generic/sembuf.h
+index 0e709bd3d730..f54e48fc91ae 100644
+--- a/include/uapi/asm-generic/sembuf.h
++++ b/include/uapi/asm-generic/sembuf.h
+@@ -6,9 +6,9 @@
+ #include <asm/ipcbuf.h>
  
- int vprintk_default(const char *fmt, va_list args)
- {
--	int r;
--
--#ifdef CONFIG_KGDB_KDB
--	/* Allow to pass printk() to kdb but avoid a recursion. */
--	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0)) {
--		r = vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
--		return r;
--	}
--#endif
--	r = vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
--
--	return r;
-+	return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, 0, fmt, args);
- }
- EXPORT_SYMBOL_GPL(vprintk_default);
- 
-diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-index d9a659a686f3..7ccb821d0bfe 100644
---- a/kernel/printk/printk_safe.c
-+++ b/kernel/printk/printk_safe.c
-@@ -6,6 +6,7 @@
- #include <linux/preempt.h>
- #include <linux/spinlock.h>
- #include <linux/debug_locks.h>
-+#include <linux/kdb.h>
- #include <linux/smp.h>
- #include <linux/cpumask.h>
- #include <linux/irq_work.h>
-@@ -359,6 +360,12 @@ void __printk_safe_exit(void)
- 
- __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
- {
-+#ifdef CONFIG_KGDB_KDB
-+	/* Allow to pass printk() to kdb but avoid a recursion. */
-+	if (unlikely(kdb_trap_printk && kdb_printf_cpu < 0))
-+		return vkdb_printf(KDB_MSGSRC_PRINTK, fmt, args);
-+#endif
-+
- 	/*
- 	 * Try to use the main logbuf even in NMI. But avoid calling console
- 	 * drivers that might have their own locks.
+ /*
+- * The semid64_ds structure for x86 architecture.
+- * Note extra padding because this structure is passed back and forth
+- * between kernel and user space.
++ * The semid64_ds structure for most architectures (though it came from x86_32
++ * originally). Note extra padding because this structure is passed back and
++ * forth between kernel and user space.
+  *
+  * semid64_ds was originally meant to be architecture specific, but
+  * everyone just ended up making identical copies without specific
 -- 
-2.26.1
+2.25.0.rc1.19.g042ed3e048af
 
