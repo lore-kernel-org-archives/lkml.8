@@ -2,110 +2,121 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08397C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 732FE207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589979427;
-	bh=1P2e+BY8TZ0h6Yd53TbsOZuyfQmxWpY2o80nVEhI8us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IM8oKe/xhEeyFTt6W+FOAEdINPze3KsbnsORdJJI+zT/XNHIsvE4hLqnJIHOiA81A
-	 SKlDysPJSt1H+XcIOyFFklE3d92vecr6T6rgBOYvlgDD1bUJx6GGsgtjpd7JsFRRqP
-	 1KAwWJHhzE8OKbjBd73Sizwh2qP4LuZE7FkD02EQ=
+	by mail.kernel.org (Postfix) with ESMTP id E426E2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgETM5H (ORCPT
+        id S1726881AbgETM5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgETM5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:57:06 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 836572070A;
-        Wed, 20 May 2020 12:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589979425;
-        bh=1P2e+BY8TZ0h6Yd53TbsOZuyfQmxWpY2o80nVEhI8us=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zkn/FJDugptcSPb2TlufybwUBXf+t2GBlQWkTf8jsh05woVtd9F2NBuNpIkwAhcPq
-         vQSKaQkD8Olh0FxCizpxzW306pp2xZjyRQvbrVj7U6ggrIu87F74GQujz5nVriZfa9
-         Y8Z2V42UPxkqE/DkdjVUyWIuT6YtAHiFOH8Vodt0=
-Date:   Wed, 20 May 2020 13:57:01 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v1 2/6] arm/smmu: Add auxiliary domain support for
- arm-smmuv2
-Message-ID: <20200520125700.GD25815@willie-the-truck>
-References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
- <1580249770-1088-3-git-send-email-jcrouse@codeaurora.org>
- <20200318224840.GA10796@willie-the-truck>
- <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
- <20200518151838.GL32394@willie-the-truck>
- <CAF6AEGswv3ZaJyy_kYv6FKAjO5=_juDwEtK+VE9TcVMLGvrdwA@mail.gmail.com>
+        Wed, 20 May 2020 08:57:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46451 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETM5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:57:18 -0400
+Received: by mail-oi1-f193.google.com with SMTP id b3so2760145oib.13;
+        Wed, 20 May 2020 05:57:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aJamwLm96ytvqLYKUjvZ9u/+2q4WNnQotOo2fde5CyY=;
+        b=RYnh5AHn7EaIbWpJHztdHUvamESoormlMzEx+3VLrLoja9JM5+OB73jLEuj+quLM9x
+         JINTDcwi+ZieErAw3P1lNU3Lr7zi6kZ5M3zZURm3nKhltNCAIv/CX/scDZH/QrM6NcPd
+         AOQdKwaHL+spyQMipPI3l+nQwR/XnMqCuE9BuQwHDqzDsNlH4oqrVQbYAiWnjKVYqlW8
+         LwxQIBdcSjAWvImclN8db/CBrHEGNtdWCenVQ3dV6rFF7k2YIecrb6w7+i2z6u14dfr7
+         FVWEJk8vxHgksPNC/nYGlsBjlTYC6L5NlR2ymXD3lNQYiT2UZQ5LEvaALel0MXuGuGaW
+         /08w==
+X-Gm-Message-State: AOAM5337vv65OmtvByjKI96Obo1UlAOVdnxUb9CrUynf8jt7Xu3GwePh
+        f1C+PE1EgWtJUIUWvuMtuZQzjNs0FcHR8aK8Yho=
+X-Google-Smtp-Source: ABdhPJwu+X5b8qR/tGxmz/DLvGSkjMTN6arpme3EHT/9IgTdRR+s5gJsMua0uE/HtMU43Dl221Icff70S4LCyfQLDG4=
+X-Received: by 2002:a05:6808:1:: with SMTP id u1mr3056906oic.54.1589979437182;
+ Wed, 20 May 2020 05:57:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGswv3ZaJyy_kYv6FKAjO5=_juDwEtK+VE9TcVMLGvrdwA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200511145257.22970-1-geert+renesas@glider.be>
+ <20200520121420.GA1867563@smile.fi.intel.com> <CAMuHMdW9EsRLYYTL0pd-PqqZs5WcUfK8i2uceNwJnSvAQKuVgw@mail.gmail.com>
+ <CAHp75Vc9=1cD81TDuaGuFQpBcHaKqEZKv8tA7ZGBbDJ6MKq6kw@mail.gmail.com> <CAHp75VcARgxf-Ty77mk2PJ0BUxJsXQdDLMffiDdv1gCkF_VMtg@mail.gmail.com>
+In-Reply-To: <CAHp75VcARgxf-Ty77mk2PJ0BUxJsXQdDLMffiDdv1gCkF_VMtg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 20 May 2020 14:57:05 +0200
+Message-ID: <CAMuHMdXA8skK86yM4uX=2=ib0PNZvuvVdu4GzoD7zYngwz1emg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] gpio: Add GPIO Aggregator
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:50:27AM -0700, Rob Clark wrote:
-> On Mon, May 18, 2020 at 8:18 AM Will Deacon <will@kernel.org> wrote:
-> > On Wed, Mar 18, 2020 at 04:43:07PM -0700, Rob Clark wrote:
-> > > We do in fact need live domain switching, that is really the whole
-> > > point.  The GPU CP (command processor/parser) is directly updating
-> > > TTBR0 and triggering TLB flush, asynchronously from the CPU.
+Hi Andy,
+
+On Wed, May 20, 2020 at 2:41 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, May 20, 2020 at 3:40 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, May 20, 2020 at 3:38 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Wed, May 20, 2020 at 2:14 PM Andy Shevchenko
+> > > <andriy.shevchenko@intel.com> wrote:
+> > > > On Mon, May 11, 2020 at 04:52:51PM +0200, Geert Uytterhoeven wrote:
+> >
+> > ...
+> >
+> > > > Sorry for late reply, recently noticed this nice idea.
+> > > > The comment I have is, please, can we reuse bitmap parse algorithm and syntax?
+> > > > We have too many different formats and parsers in the kernel and bitmap's one
+> > > > seems suitable here.
 > > >
-> > > And I think the answer about ASID is easy (on current hw).. it must be zero[*].
-> >
-> > Using ASID zero is really bad, because it means that you will end up sharing
-> > TLB entries with whichever device is using context bank 0.
-> >
-> > Is the SMMU only used by the GPU in your SoC?
-> >
-> 
-> yes, the snapdragon SoCs have two SMMU instances, one used by the GPU,
-> where ASID0/cb0 is the gpu itself, and another cb is the GMU
-> (basically power control for the gpu), and the second SMMU is
-> everything else.
+> > > Thank you, I wasn't aware of that.
+> > >
+> > > Which one do you mean? The documentation seems to be confusing,
+> > > and incomplete.
+> > > My first guess was bitmap_parse(), but that one assumes hex values?
+> > > And given it processes the unsigned long bitmap in u32 chunks, I guess
+> > > it doesn't work as expected on big-endian 64-bit?
+> > >
+> > > bitmap_parselist() looks more suitable, and the format seems to be
+>
+> > > compatible with what's currently used, so it won't change ABI.
+>
+> What ABI? We didn't have a release with it, right? So, we are quite
 
-Right, in which case I'm starting to think that we should treat this GPU
-SMMU instance specially. Give it its own compatible string (looks like you
-need this for HUPCFG anyway) and hook in via arm_smmu_impl_init(). You can
-then set IO_PGTABLE_QUIRK_ARM_TTBR1 when talking to the io-pgtable code
-without having to add a domain attribute.
+ABI = the parameters it accepts currently.
 
-With that. you'll need to find a way to allow the GPU driver to call into
-your own hooks for getting at the TTBR0 tables -- given that you're
-programming these in the hardware, I don't think it makes sense to expose
-that in the IOMMU API, since most devices won't be able to do anything with
-that data. Perhaps you could install a couple of function pointers
-(subdomain_alloc/subdomain_free) in the GPU device when you see it appear
-from the SMMU driver? Alternatively, you could make an io_pgtable_cfg
-available so that the GPU driver can interface with io-pgtable directly.
+> flexible for few more weeks to amend it.
 
-Yes, it's ugly, but I don't think it's worth trying to abstract this.
+Indeed, we have time to make changes until the release of v5.8.
 
-Thoughts? It's taken me a long time to figure out what's going on here,
-so sorry if it feels like I'm leading you round the houses.
+Gr{oetje,eeting}s,
 
-Will
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
