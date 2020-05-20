@@ -2,121 +2,122 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A42C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FCC207FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589970863;
-	bh=XVubJRlPT96GrrZ5jDHQabf+HzfcQ2yoNEQJ9gYa29U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NuPEfgKfnK6Y8/VN0CpIHNZfhYxICkmKgqFjxBgJ3aMCafCDmbw6X50vZf64dbGpI
-	 9qCPYcwIXaS8cUwX1dLsbF6UUS9n1ojBmdjiGOhhExxc6cHuNDz1tNJ9XNyL1TgBxH
-	 hUWEfSYPqMI2wufl+YwDdPnsPcQW1C/cy/gS6Cbk=
+	by mail.kernel.org (Postfix) with ESMTP id 4E549207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgETKeX (ORCPT
+        id S1726822AbgETKfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:34:23 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39913 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgETKeU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:34:20 -0400
-Received: by mail-ot1-f67.google.com with SMTP id d7so2048113ote.6
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:34:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C9NRsCAHn82ubkftxUZ5kSJRCBH4nCc/jtP3ymsxx+c=;
-        b=FIIPxPPapDKTzAxu7UM0kIPF6vAts2ED9GSTZXHzgz6aJd3NdiuR9UFiMWipkFgUq+
-         pOi2dyR8Y/nkZ8bWcwWXHmfe3ZTgmdX0JtHNwfvNJYStxYfyI8DasW7z200jWo32MDt2
-         iy1NJYm+85F4t9jFji35kcqcHpragugG26HWd4sLVgpsmSuWqKJT8FTC5I2S9ukRk1Oy
-         Rl5ZQiBl56WSNs+UbAv7mMcvyV10PXuIOHWJOh/lCnLVu87L4XJ8WvIDfe2bXq2u/pMM
-         J4EKbaWWmXdbbfiIUb3nLhbohwusWIQoeJO1p3hXxKQYcAIs+N/b3uxlD9sdOgjiwGwz
-         0Bnw==
-X-Gm-Message-State: AOAM5312bxwdmdwQk5lF9tNLcBTb5th5eB7CZk5/KnROFAGvNsQtWBvr
-        +WdqcGESVDN0EUoY1lZ5/BhHWUeW0b9rC+eV7So=
-X-Google-Smtp-Source: ABdhPJxlgZArAm2RiUC1pmsRfzqwCNnAnn7Yu1P7DFwtZeQw7Ci04BDpbLAo0GnI06KfIHdKb6TZVpWlDqcNCgonvmg=
-X-Received: by 2002:a9d:6c0f:: with SMTP id f15mr1016333otq.118.1589970857339;
- Wed, 20 May 2020 03:34:17 -0700 (PDT)
+        Wed, 20 May 2020 06:35:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:52642 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgETKfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:35:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E02A31B;
+        Wed, 20 May 2020 03:35:29 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.169.41.142])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5957E3F68F;
+        Wed, 20 May 2020 03:35:27 -0700 (PDT)
+From:   Bin Lu <bin.lu@arm.com>
+To:     catalin.marinas@arm.com
+Cc:     keno@juliacomputing.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, oleg@redhat.com,
+        sudeep.holla@arm.com, will@kernel.org, Bin Lu <Bin.Lu@arm.com>
+Subject: Re: [PATCH] arm64: Fix PTRACE_SYSEMU semantics
+Date:   Wed, 20 May 2020 18:34:20 +0800
+Message-Id: <1589970860-62695-1-git-send-email-bin.lu@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200519120725.GA20313@gaia>
+References: <20200519120725.GA20313@gaia>
+References: <20200515222253.GA38408@juliacomputing.com> <20200518114119.GB32394@willie-the-truck> <20200519120725.GA20313@gaia>
 MIME-Version: 1.0
-References: <20200520102959.34812-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200520102959.34812-1-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 20 May 2020 12:34:06 +0200
-Message-ID: <CAJZ5v0heg9w=k1yqkECNo9XLP2hZny_WJQv4EJq_Wh0dVT137g@mail.gmail.com>
-Subject: Re: [PATCH v1] drivers property: When no children in primary, try secondary
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519120725.GA20313@gaia>
+X-Mutt-References: <20200519120725.GA20313@gaia>
+X-Mutt-Fcc: =ARM/Sent Items
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:30 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Software firmware nodes can provide a child node to its parent.
-> Since software node can be secondary, we need a mechanism to access
-> the children. The idea is to list children of the primary node first
-> and when they are finished, continue with secondary node if available.
+From: Bin Lu <Bin.Lu@arm.com>
 
-Makes sense.
-
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Greg, do you want me to apply it?
-
-If you'd rather take it yourself, please feel free to add
-
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
->  drivers/base/property.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+On Tue, May 19, 2020 at 01:07:27PM +0100, Catalin Marinas wrote:
+> On Mon, May 18, 2020 at 12:41:20PM +0100, Will Deacon wrote:
+> > On Fri, May 15, 2020 at 06:22:53PM -0400, Keno Fischer wrote:
+> > > Quoth the man page:
+> > > ```
+> > >        If the tracee was restarted by PTRACE_SYSCALL or PTRACE_SYSEMU, the
+> > >        tracee enters syscall-enter-stop just prior to entering any system
+> > >        call (which will not be executed if the restart was using
+> > >        PTRACE_SYSEMU, regardless of any change made to registers at this
+> > >        point or how the tracee is restarted after this stop).
+> > > ```
+> > >
+> > > The parenthetical comment is currently true on x86 and powerpc,
+> > > but not currently true on arm64. arm64 re-checks the _TIF_SYSCALL_EMU
+> > > flag after the syscall entry ptrace stop. However, at this point,
+> > > it reflects which method was used to re-start the syscall
+> > > at the entry stop, rather than the method that was used to reach it.
+> > > Fix that by recording the original flag before performing the ptrace
+> > > stop, bringing the behavior in line with documentation and x86/powerpc.
+> > >
+> > > Signed-off-by: Keno Fischer <keno@juliacomputing.com>
+> > > ---
+> > >  arch/arm64/kernel/ptrace.c | 8 +++++---
+> > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> > > index b3d3005d9515..b67b4d14aa17 100644
+> > > --- a/arch/arm64/kernel/ptrace.c
+> > > +++ b/arch/arm64/kernel/ptrace.c
+> > > @@ -1829,10 +1829,12 @@ static void tracehook_report_syscall(struct pt_regs *regs,
+> > >
+> > >  int syscall_trace_enter(struct pt_regs *regs)
+> > >  {
+> > > -	if (test_thread_flag(TIF_SYSCALL_TRACE) ||
+> > > -		test_thread_flag(TIF_SYSCALL_EMU)) {
+> > > +	u32 flags = READ_ONCE(current_thread_info()->flags) &
+> > > +		(_TIF_SYSCALL_EMU | _TIF_SYSCALL_TRACE);
+> > > +
+> > > +	if (flags) {
+> >
+> > nit: but I'd rather the '&' operation was in the conditional so that the
+> > 'flags' variable holds all of the flags.
+> >
+> > With that:
+> >
+> > Acked-by: Will Deacon <will@kernel.org>
+> >
+> > Also needs:
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Fixes: f086f67485c5 ("arm64: ptrace: add support for syscall emulation")
+> >
+> > Catalin -- can you pick this up for 5.7 please, with my 'nit' addressed?
 >
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 5f35c0ccf5e0..1e6d75e65938 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -708,14 +708,23 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
->                                                  struct fwnode_handle *child)
->  {
->         struct acpi_device *adev = ACPI_COMPANION(dev);
-> -       struct fwnode_handle *fwnode = NULL;
-> +       struct fwnode_handle *fwnode = NULL, *next;
+> I'll queue it with the above addressed. I think flags also needs to be
+> unsigned long rather than u32.
 >
->         if (dev->of_node)
->                 fwnode = &dev->of_node->fwnode;
->         else if (adev)
->                 fwnode = acpi_fwnode_handle(adev);
+> However, before sending the pull request, I'd like Sudeep to confirm
+> that it doesn't break his original use-case for this feature.
 >
-> -       return fwnode_get_next_child_node(fwnode, child);
-> +       /* Try to find a child in primary fwnode */
-> +       next = fwnode_get_next_child_node(fwnode, child);
-> +       if (next)
-> +               return next;
-> +
-> +       /* When no more children in primary, continue with secondary */
-> +       if (!IS_ERR_OR_NULL(fwnode->secondary))
-> +               next = fwnode_get_next_child_node(fwnode->secondary, child);
-> +
-> +       return next;
->  }
->  EXPORT_SYMBOL_GPL(device_get_next_child_node);
->
-> --
-> 2.26.2
->
+
+Tested-by: Bin Lu <Bin.Lu@arm.com> (for gVisor)
+
+I have just tested all gVisor syscall test cases with ptrace(Regs, FPRegs, TLS)
+on Arm64 platform.
+The test results are the same as before there was no patch.
+
+My idea is that this kernel patch has no bad effects on gVisor.
+Linux Kernel version: 5.7.0-rc6+
+gVisor version: release-20200511.0
+
