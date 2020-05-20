@@ -2,152 +2,153 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC42C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8873DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3C982084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNEE1o6y"
+	by mail.kernel.org (Postfix) with ESMTP id 6E693205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgETGjk (ORCPT
+        id S1726544AbgETGkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETGjj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:39:39 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B7CC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 23:39:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l18so1916423wrn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 23:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=t0COEyXj5D7NvkjtdvydID9BlBfxGe8of0Dfo1AtG48=;
-        b=JNEE1o6yhLVdcuKXhiGY+WKqOeJP/cguKffC8RXamxJeYUzNWMSAf5svkdHabJt3X2
-         fQ/ibhR69Q/0NTu4DHD1BhZyV7yp+1jx/ogls2VBx5Anqks+AxyaB+uFdCiAWepuXPml
-         fU++yx8fB9HPa9iEI3CLdd7jRQ8FEfbiI9/EAAJzPFP8dR3c/XRJncHAWqD0LnIOzUZh
-         U1ES+pAUkLOyI1r5UuXphntFHQOmYJ4LYw9cTLf2lsrZDPH1C0w9p4dv82Isr1hUoaU+
-         xcHPLrBKE0qyoZ45tbz1tXRA7gkPXpD3oBKkI2k0xxQrJ4CHs/8EbN1fojDjeTAKR2lR
-         mqcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=t0COEyXj5D7NvkjtdvydID9BlBfxGe8of0Dfo1AtG48=;
-        b=of57LKEF85O+ZnjmZZIb/W8PmPkwJCgkVvqcwNKwI/1gxy9Cyl/CpfMlJQLZ94kbej
-         wEC1Xl7P94AiFIysRp2JGOxPPWDK3MWkIHcJBxAz0FB5nvDVE4tLzUmFx1W8sEiWrTz2
-         EG/YTDGY/enhY+Z619/GqP2fl8RWEWq4dCFXhV5uSAbmrJ+mxxe8p2/eWRBuUp26iuQ7
-         aaybTPed71BiYVklCUnunmnAOc8x0MDx9aUDHPHKd9JP21TGSHvIrIMfA6hh56t4LYUN
-         fWoH3f+OK9YqH8NMDYset/vF+UmNSyPW/uWscReinN+qhE4BMDiz6bmKpiZULIrz0VCJ
-         3N7A==
-X-Gm-Message-State: AOAM533yvGVxp5L5EwtIiGwRm1tt55RsaR2eUI0X9nTUO0Ypzpwdye4/
-        hxD956xudKe80myC+h8ZIFyE6A==
-X-Google-Smtp-Source: ABdhPJz10hiF6TxXkTZa5JarAelnWM1tRH1Rh9uBwIjHWV9cX2CCPggm62zNbl3YzgDThSkN+F/BhA==
-X-Received: by 2002:a5d:43d1:: with SMTP id v17mr2579195wrr.282.1589956777948;
-        Tue, 19 May 2020 23:39:37 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id z132sm2217692wmc.29.2020.05.19.23.39.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 23:39:37 -0700 (PDT)
-Date:   Wed, 20 May 2020 07:39:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] mfd: Introduce QTI I2C PMIC controller
-Message-ID: <20200520063935.GZ271301@dell>
-References: <cover.1588115326.git.gurus@codeaurora.org>
- <5644dea146f8b49a5b827c56392ff916bfb343e9.1588115326.git.gurus@codeaurora.org>
- <20200429075010.GX3559@dell>
- <20200501011319.GA28441@codeaurora.org>
- <20200515104520.GK271301@dell>
- <20200519185757.GA13992@codeaurora.org>
+        Wed, 20 May 2020 02:40:02 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:47006 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726224AbgETGkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:40:02 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH2mR0MReo942AA--.119S3;
+        Wed, 20 May 2020 14:39:14 +0800 (CST)
+Subject: Re: [PATCH v4 2/4] mm/memory.c: Update local TLB if PTE entry exists
+To:     Andrew Morton <akpm@linux-foundation.org>
+References: <1589882610-7291-1-git-send-email-maobibo@loongson.cn>
+ <1589882610-7291-2-git-send-email-maobibo@loongson.cn>
+ <20200519182619.2c5e76d3f6b25d71702abbe0@linux-foundation.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <e9cd1d61-c475-9b13-fd48-3ff886c74797@loongson.cn>
+Date:   Wed, 20 May 2020 14:39:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519185757.GA13992@codeaurora.org>
+In-Reply-To: <20200519182619.2c5e76d3f6b25d71702abbe0@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxH2mR0MReo942AA--.119S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWryfKr1rGrWUGF4kCF13twb_yoW5urW3pF
+        WfCa1DXayktr4UZFWxXr4DZry5Za45XFWkJryfK3WYy3sxXw4SvFW7Ga9Y9rW5Ary0vwsr
+        Aa1jgFWUZa1xZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvEb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
+        xwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+        b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73UjIFyTuYvjxUg0D7DUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020, Guru Das Srinagesh wrote:
 
-> On Fri, May 15, 2020 at 11:45:20AM +0100, Lee Jones wrote:
-> > On Thu, 30 Apr 2020, Guru Das Srinagesh wrote:
-> > 
-> > > On Wed, Apr 29, 2020 at 08:50:10AM +0100, Lee Jones wrote:
-> > > > On Tue, 28 Apr 2020, Guru Das Srinagesh wrote:
-> > > > 
-> > > > > The Qualcomm Technologies, Inc. I2C PMIC Controller is used by
-> > > > > multi-function PMIC devices which communicate over the I2C bus.  The
-> > > > > controller enumerates all child nodes as platform devices, and
-> > > > > instantiates a regmap interface for them to communicate over the I2C
-> > > > > bus.
-> > > > > 
-> > > > > The controller also controls interrupts for all of the children platform
-> > > > > devices.  The controller handles the summary interrupt by deciphering
-> > > > > which peripheral triggered the interrupt, and which of the peripheral
-> > > > > interrupts were triggered.  Finally, it calls the interrupt handlers for
-> > > > > each of the virtual interrupts that were registered.
-> > > > > 
-> > > > > Nicholas Troast is the original author of this driver.
-> > > > > 
-> > > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > > > ---
-> > > > >  drivers/mfd/Kconfig         |  11 +
-> > > > >  drivers/mfd/Makefile        |   1 +
-> > > > >  drivers/mfd/qcom-i2c-pmic.c | 737 ++++++++++++++++++++++++++++++++++++++++++++
-> > > > 
-> > > > The vast majority of this driver deals with IRQ handling.  Why can't
-> > > > this be split out into its own IRQ Chip driver and moved to
-> > > > drivers/irqchip?
-> > > 
-> > > There appear to be quite a few in-tree MFD drivers that register IRQ
-> > > controllers, like this driver does:
-> > > 
-> > > $ grep --exclude-dir=.git -rnE "irq_domain_(add|create).+\(" drivers/mfd | wc -l
-> > > 23
-> > > 
-> > > As a further example, drivers/mfd/stpmic1.c closely resembles this
-> > > driver in that it uses both devm_regmap_add_irq_chip() as well as
-> > > devm_of_platform_populate().
-> > > 
-> > > As such, it seems like this driver is in line with some of the
-> > > architectural choices that have been accepted in already-merged drivers.
-> > > Could you please elaborate on your concerns?
-> > 
-> > It is true that *basic* IRQ domain support has been added to these
-> > drivers in the past.  However, IMHO the support added to this driver
-> > goes beyond those realms such that it would justify a driver of its
-> > own.
+
+On 05/20/2020 09:26 AM, Andrew Morton wrote:
+> On Tue, 19 May 2020 18:03:28 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
 > 
-> I am exploring an option to see if the regmap-irq APIs may be used in
-> this driver, similar to stpmic1.c. Just to let you know, it might be a
-> few days before I am able to post my next patchset as I'll have to make
-> the necessary changes and test them out first.
+>> If two threads concurrently fault at the same address, the thread that
+>> won the race updates the PTE and its local TLB. For now, the other
+>> thread gives up, simply does nothing, and continues.
+>>
+>> It could happen that this second thread triggers another fault, whereby
+>> it only updates its local TLB while handling the fault. Instead of
+>> triggering another fault, let's directly update the local TLB of the
+>> second thread.
+>>
+>> It is only useful to architectures where software can update TLB, it may
+>> bring out some negative effect if update_mmu_cache is used for other
+>> purpose also. It seldom happens where multiple threads access the same
+>> page at the same time, so the negative effect is limited on other arches.
+> 
+> I'm still worried about the impact on other architectures.  The
+> additional update_mmu_cache() calls won't occur only when multiple
+> threads are racing against the same page, I think?  For example,
+> insert_pfn() will do this when making a read-only page a writable one.
+How about defining ptep_set_access_flags function like this on mips system?
+which is the same on riscv platform.
 
-Take your time.
+static inline int ptep_set_access_flags(struct vm_area_struct *vma,
+					unsigned long address, pte_t *ptep,
+					pte_t entry, int dirty)
+{
+	if (!pte_same(*ptep, entry))
+		set_pte_at(vma->vm_mm, address, ptep, entry);
+	/*
+	 * update_mmu_cache will unconditionally execute, handling both
+	 * the case that the PTE changed and the spurious fault case.
+	 */
+	return true;
+}
 
-The next release is due imminently, so you have as long as you need.
+And keep the following piece of code unchanged, the change will be smaller.
+@@ -1770,8 +1770,8 @@ static vm_fault_t insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+                        }
+                        entry = pte_mkyoung(*pte);
+                        entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+-                       if (ptep_set_access_flags(vma, addr, pte, entry, 1))
+-                               update_mmu_cache(vma, addr, pte);
++                       ptep_set_access_flags(vma, addr, pte, entry, 1);
++                       update_mmu_cache(vma, addr, pte);
+                }
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+@@ -2436,17 +2436,16 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+                entry = pte_mkyoung(vmf->orig_pte);
+-               if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
+-                       update_mmu_cache(vma, addr, vmf->pte);
++               ptep_set_access_flags(vma, addr, vmf->pte, entry, 0);
++               update_mmu_cache(vma, addr, vmf->pte);
+        }
+@@ -2618,8 +2618,8 @@ static inline void wp_page_reuse(struct vm_fault *vmf)
+        flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+        entry = pte_mkyoung(vmf->orig_pte);
+        entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+-       if (ptep_set_access_flags(vma, vmf->address, vmf->pte, entry, 1))
+-               update_mmu_cache(vma, vmf->address, vmf->pte);
++       ptep_set_access_flags(vma, vmf->address, vmf->pte, entry, 1);
++       update_mmu_cache(vma, vmf->address, vmf->pte);
+        pte_unmap_unlock(vmf->pte, vmf->ptl);
+ }
+
+
+
+> 
+> Would you have time to add some instrumentation into update_mmu_cache()
+> (maybe a tracepoint) and see what effect this change has upon the
+> frequency at which update_mmu_cache() is called for a selection of
+> workloads?  And add this info to the changelog to set minds at ease?
+OK, I will add some instrumentation data in the changelog.
+
+ 
+
