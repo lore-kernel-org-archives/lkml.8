@@ -2,301 +2,380 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3841C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8083BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7992075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B73A2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R1qfkFFA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vhchaizd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgETRV6 (ORCPT
+        id S1727937AbgETRWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:21:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30110 "EHLO
+        Wed, 20 May 2020 13:22:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35579 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726560AbgETRV5 (ORCPT
+        with ESMTP id S1727123AbgETRV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 13:21:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589995314;
+        s=mimecast20190719; t=1589995315;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=b1e72ai5xr6VO89iRvvb4B58/x2QU6V3gbbwzULbvm0=;
-        b=R1qfkFFAFQzVWbjk/figW+NH3IiwItbDzuYIh+iG7eyNs2wTDqYYfgj+IPbbB/w7Azvf4c
-        s7N2S2ltBNyYFHlMIAdUIc1bJBbjY8uAJirpnRFpybIgOHNNZw9zShwQfFwT25pPozM4HQ
-        zddIMv1Sz4h1Yo8Gi7ZxUSGvZIYbGdc=
+         to:to:cc:cc; bh=GrU586De/Nyh6CPscmLHHw6/pFNd1WB/w3lruPEutEo=;
+        b=VhchaizdayNSAxbSFCBG24wPl6CbJilfeMtSGzOj6ahjnHhU4xWCy5E37A4aqFmnNja4tQ
+        GaUZptEXKs4duhv1ROQVmZ2vs/+Eps6Jn6ey9SK1EL+nB4wQ9kRinymtfAQgSk7usC8ojM
+        ldF6kV9Bo7awfIqoc4YPTqMcUvdpX28=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-501-RxVMZLUwO7mYFn4Ydjt2MA-1; Wed, 20 May 2020 13:21:50 -0400
-X-MC-Unique: RxVMZLUwO7mYFn4Ydjt2MA-1
+ us-mta-321-zJQ68WUoPrqXKaPLFHEXyQ-1; Wed, 20 May 2020 13:21:54 -0400
+X-MC-Unique: zJQ68WUoPrqXKaPLFHEXyQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75004A0C00;
-        Wed, 20 May 2020 17:21:49 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 060261009795;
+        Wed, 20 May 2020 17:21:47 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D7B582A33;
-        Wed, 20 May 2020 17:21:48 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 33D568E602;
+        Wed, 20 May 2020 17:21:46 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 03/24] KVM: nSVM: inject exceptions via svm_check_nested_events
-Date:   Wed, 20 May 2020 13:21:24 -0400
-Message-Id: <20200520172145.23284-4-pbonzini@redhat.com>
-In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
+Subject: [PATCH 00/24] KVM: nSVM: event fixes and migration support
+Date:   Wed, 20 May 2020 13:21:21 -0400
+Message-Id: <20200520172145.23284-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows exceptions injected by the emulator to be properly delivered
-as vmexits.  The code also becomes simpler, because we can just let all
-L0-intercepted exceptions go through the usual path.  In particular, our
-emulation of the VMX #DB exit qualification is very much simplified,
-because the vmexit injection path can use kvm_deliver_exception_payload
-to update DR6.
+Large parts of this series were posted before (patches 1, 3-4-5 and
+6-7-8-12-13-14).  This is basically what I'd like to get into 5.8 as
+far as nested SVM is concerned; the fix for exception vmexits is related
+to migration support, because it gets rid of the exit_required flag
+and therefore consolidates the SVM migration format.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm/nested.c | 129 ++++++++++++++------------------------
- arch/x86/kvm/svm/svm.c    |   9 ---
- arch/x86/kvm/svm/svm.h    |   1 +
- 3 files changed, 47 insertions(+), 92 deletions(-)
+There are a couple more bugfixes (2 and 21), the latter of which actually
+affects VMX as well.
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index d544cce4f964..e80349132ea1 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -111,6 +111,8 @@ void recalc_intercepts(struct vcpu_svm *svm)
- 	h = &svm->nested.hsave->control;
- 	g = &svm->nested;
- 
-+	svm->nested.host_intercept_exceptions = h->intercept_exceptions;
-+
- 	c->intercept_cr = h->intercept_cr;
- 	c->intercept_dr = h->intercept_dr;
- 	c->intercept_exceptions = h->intercept_exceptions;
-@@ -616,50 +618,6 @@ static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
- 	return (value & mask) ? NESTED_EXIT_DONE : NESTED_EXIT_HOST;
- }
- 
--/* DB exceptions for our internal use must not cause vmexit */
--static int nested_svm_intercept_db(struct vcpu_svm *svm)
--{
--	unsigned long dr6 = svm->vmcb->save.dr6;
--
--	/* Always catch it and pass it to userspace if debugging.  */
--	if (svm->vcpu.guest_debug &
--	    (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
--		return NESTED_EXIT_HOST;
--
--	/* if we're not singlestepping, it's not ours */
--	if (!svm->nmi_singlestep)
--		goto reflected_db;
--
--	/* if it's not a singlestep exception, it's not ours */
--	if (!(dr6 & DR6_BS))
--		goto reflected_db;
--
--	/* if the guest is singlestepping, it should get the vmexit */
--	if (svm->nmi_singlestep_guest_rflags & X86_EFLAGS_TF) {
--		disable_nmi_singlestep(svm);
--		goto reflected_db;
--	}
--
--	/* it's ours, the nested hypervisor must not see this one */
--	return NESTED_EXIT_HOST;
--
--reflected_db:
--	/*
--	 * Synchronize guest DR6 here just like in kvm_deliver_exception_payload;
--	 * it will be moved into the nested VMCB by nested_svm_vmexit.  Once
--	 * exceptions will be moved to svm_check_nested_events, all this stuff
--	 * will just go away and we could just return NESTED_EXIT_HOST
--	 * unconditionally.  db_interception will queue the exception, which
--	 * will be processed by svm_check_nested_events if a nested vmexit is
--	 * required, and we will just use kvm_deliver_exception_payload to copy
--	 * the payload to DR6 before vmexit.
--	 */
--	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
--	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
--	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
--	return NESTED_EXIT_DONE;
--}
--
- static int nested_svm_intercept_ioio(struct vcpu_svm *svm)
- {
- 	unsigned port, size, iopm_len;
-@@ -710,20 +668,12 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
- 		break;
- 	}
- 	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f: {
--		u32 excp_bits = 1 << (exit_code - SVM_EXIT_EXCP_BASE);
--		if (svm->nested.intercept_exceptions & excp_bits) {
--			if (exit_code == SVM_EXIT_EXCP_BASE + DB_VECTOR)
--				vmexit = nested_svm_intercept_db(svm);
--			else if (exit_code == SVM_EXIT_EXCP_BASE + BP_VECTOR &&
--				 svm->vcpu.guest_debug & KVM_GUESTDBG_USE_SW_BP)
--				vmexit = NESTED_EXIT_HOST;
--			else
--				vmexit = NESTED_EXIT_DONE;
--		}
--		/* async page fault always cause vmexit */
--		else if ((exit_code == SVM_EXIT_EXCP_BASE + PF_VECTOR) &&
--			 svm->vcpu.arch.exception.nested_apf != 0)
--			vmexit = NESTED_EXIT_DONE;
-+		/*
-+		 * Host-intercepted exceptions have been checked already in
-+		 * nested_svm_exit_special.  There is nothing to do here,
-+		 * the vmexit is injected by svm_check_nested_events.
-+		 */
-+		vmexit = NESTED_EXIT_DONE;
- 		break;
- 	}
- 	case SVM_EXIT_ERR: {
-@@ -768,35 +718,38 @@ int nested_svm_check_permissions(struct vcpu_svm *svm)
- 	return 0;
- }
- 
--int nested_svm_check_exception(struct vcpu_svm *svm, unsigned nr,
--			       bool has_error_code, u32 error_code)
-+static bool nested_exit_on_exception(struct vcpu_svm *svm)
- {
--	int vmexit;
-+	unsigned int nr = svm->vcpu.arch.exception.nr;
- 
--	if (!is_guest_mode(&svm->vcpu))
--		return 0;
-+	return (svm->nested.intercept_exceptions & (1 << nr));
-+}
- 
--	vmexit = nested_svm_intercept(svm);
--	if (vmexit != NESTED_EXIT_DONE)
--		return 0;
-+static void nested_svm_inject_exception_vmexit(struct vcpu_svm *svm)
-+{
-+	unsigned int nr = svm->vcpu.arch.exception.nr;
- 
- 	svm->vmcb->control.exit_code = SVM_EXIT_EXCP_BASE + nr;
- 	svm->vmcb->control.exit_code_hi = 0;
--	svm->vmcb->control.exit_info_1 = error_code;
-+
-+	if (svm->vcpu.arch.exception.has_error_code)
-+		svm->vmcb->control.exit_info_1 = svm->vcpu.arch.exception.error_code;
- 
- 	/*
- 	 * EXITINFO2 is undefined for all exception intercepts other
- 	 * than #PF.
- 	 */
--	if (svm->vcpu.arch.exception.nested_apf)
--		svm->vmcb->control.exit_info_2 = svm->vcpu.arch.apf.nested_apf_token;
--	else if (svm->vcpu.arch.exception.has_payload)
--		svm->vmcb->control.exit_info_2 = svm->vcpu.arch.exception.payload;
--	else
--		svm->vmcb->control.exit_info_2 = svm->vcpu.arch.cr2;
-+	if (nr == PF_VECTOR) {
-+		if (svm->vcpu.arch.exception.nested_apf)
-+			svm->vmcb->control.exit_info_2 = svm->vcpu.arch.apf.nested_apf_token;
-+		else if (svm->vcpu.arch.exception.has_payload)
-+			svm->vmcb->control.exit_info_2 = svm->vcpu.arch.exception.payload;
-+		else
-+			svm->vmcb->control.exit_info_2 = svm->vcpu.arch.cr2;
-+	} else if (svm->vcpu.arch.exception.has_payload)
-+		kvm_deliver_exception_payload(&svm->vcpu);
- 
--	svm->nested.exit_required = true;
--	return vmexit;
-+	nested_svm_vmexit(svm);
- }
- 
- static void nested_svm_smi(struct vcpu_svm *svm)
-@@ -835,6 +788,15 @@ static int svm_check_nested_events(struct kvm_vcpu *vcpu)
- 		kvm_event_needs_reinjection(vcpu) || svm->nested.exit_required ||
- 		svm->nested.nested_run_pending;
- 
-+	if (vcpu->arch.exception.pending) {
-+		if (block_nested_events)
-+                        return -EBUSY;
-+		if (!nested_exit_on_exception(svm))
-+			return 0;
-+		nested_svm_inject_exception_vmexit(svm);
-+		return 0;
-+	}
-+
- 	if (vcpu->arch.smi_pending && !svm_smi_blocked(vcpu)) {
- 		if (block_nested_events)
- 			return -EBUSY;
-@@ -872,18 +834,19 @@ int nested_svm_exit_special(struct vcpu_svm *svm)
- 	switch (exit_code) {
- 	case SVM_EXIT_INTR:
- 	case SVM_EXIT_NMI:
--	case SVM_EXIT_EXCP_BASE + MC_VECTOR:
--		return NESTED_EXIT_HOST;
- 	case SVM_EXIT_NPF:
--		/* For now we are always handling NPFs when using them */
--		if (npt_enabled)
-+		return NESTED_EXIT_HOST;
-+	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f: {
-+		u32 excp_bits = 1 << (exit_code - SVM_EXIT_EXCP_BASE);
-+
-+		if (get_host_vmcb(svm)->control.intercept_exceptions & excp_bits)
- 			return NESTED_EXIT_HOST;
--		break;
--	case SVM_EXIT_EXCP_BASE + PF_VECTOR:
--		/* Trap async PF even if not shadowing */
--		if (!npt_enabled || svm->vcpu.arch.apf.host_apf_reason)
-+		else if (exit_code == SVM_EXIT_EXCP_BASE + PF_VECTOR &&
-+			 svm->vcpu.arch.apf.host_apf_reason)
-+			/* Trap async PF even if not shadowing */
- 			return NESTED_EXIT_HOST;
- 		break;
-+	}
- 	default:
- 		break;
- 	}
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 9987f6fe9d88..9da4e5b6d724 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -331,17 +331,8 @@ static void svm_queue_exception(struct kvm_vcpu *vcpu)
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	unsigned nr = vcpu->arch.exception.nr;
- 	bool has_error_code = vcpu->arch.exception.has_error_code;
--	bool reinject = vcpu->arch.exception.injected;
- 	u32 error_code = vcpu->arch.exception.error_code;
- 
--	/*
--	 * If we are within a nested VM we'd better #VMEXIT and let the guest
--	 * handle the exception
--	 */
--	if (!reinject &&
--	    nested_svm_check_exception(svm, nr, has_error_code, error_code))
--		return;
--
- 	kvm_deliver_exception_payload(&svm->vcpu);
- 
- 	if (nr == BP_VECTOR && !nrips) {
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 5cc559ab862d..8342032291fc 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -86,6 +86,7 @@ struct nested_state {
- 	u64 hsave_msr;
- 	u64 vm_cr_msr;
- 	u64 vmcb;
-+	u32 host_intercept_exceptions;
- 
- 	/* These are the merged vectors */
- 	u32 *msrpm;
+The SVM migration data consists of:
+
+- the GIF state
+
+- the guest mode and nested-run-pending flags
+
+- the host state from before VMRUN
+
+- the nested VMCB control state
+
+The last two items are conveniently packaged in VMCB format.  Compared
+to the previous prototype, HF_HIF_MASK is removed since it is part of
+"the host state from before VMRUN".
+
+The patch has been tested with the QEMU changes after my signature,
+where it also fixes system_reset while x86/svm.flat runs.
+
+Paolo
+
+Paolo Bonzini (24):
+  KVM: nSVM: fix condition for filtering async PF
+  KVM: nSVM: leave ASID aside in copy_vmcb_control_area
+  KVM: nSVM: inject exceptions via svm_check_nested_events
+  KVM: nSVM: remove exit_required
+  KVM: nSVM: correctly inject INIT vmexits
+  KVM: nSVM: move map argument out of enter_svm_guest_mode
+  KVM: nSVM: extract load_nested_vmcb_control
+  KVM: nSVM: extract preparation of VMCB for nested run
+  KVM: nSVM: clean up tsc_offset update
+  KVM: nSVM: pass vmcb_control_area to copy_vmcb_control_area
+  KVM: nSVM: remove trailing padding for struct vmcb_control_area
+  KVM: nSVM: save all control fields in svm->nested
+  KVM: nSVM: do not reload pause filter fields from VMCB
+  KVM: nSVM: remove HF_VINTR_MASK
+  KVM: nSVM: remove HF_HIF_MASK
+  KVM: nSVM: split nested_vmcb_check_controls
+  KVM: nSVM: do all MMU switch work in init/uninit functions
+  KVM: nSVM: leave guest mode when clearing EFER.SVME
+  KVM: nSVM: extract svm_set_gif
+  KVM: MMU: pass arbitrary CR0/CR4/EFER to kvm_init_shadow_mmu
+  KVM: x86: always update CR3 in VMCB
+  uaccess: add memzero_user
+  selftests: kvm: add a SVM version of state-test
+  KVM: nSVM: implement KVM_GET_NESTED_STATE and KVM_SET_NESTED_STATE
+
+ arch/x86/include/asm/kvm_host.h               |   2 -
+ arch/x86/include/asm/svm.h                    |   9 +-
+ arch/x86/include/uapi/asm/kvm.h               |  17 +-
+ arch/x86/kvm/cpuid.h                          |   5 +
+ arch/x86/kvm/irq.c                            |   1 +
+ arch/x86/kvm/mmu.h                            |   2 +-
+ arch/x86/kvm/mmu/mmu.c                        |  14 +-
+ arch/x86/kvm/svm/nested.c                     | 525 +++++++++++-------
+ arch/x86/kvm/svm/svm.c                        | 107 ++--
+ arch/x86/kvm/svm/svm.h                        |  32 +-
+ arch/x86/kvm/vmx/nested.c                     |   5 -
+ arch/x86/kvm/vmx/vmx.c                        |   5 +-
+ arch/x86/kvm/x86.c                            |   3 +-
+ include/linux/uaccess.h                       |   1 +
+ lib/usercopy.c                                |  63 +++
+ .../testing/selftests/kvm/x86_64/state_test.c |  65 ++-
+ 16 files changed, 549 insertions(+), 307 deletions(-)
+
 -- 
 2.18.2
+
+
+diff --git a/linux-headers/asm-x86/kvm.h b/linux-headers/asm-x86/kvm.h
+index 3f3f780c8c..c4a8c10e2d 100644
+--- a/linux-headers/asm-x86/kvm.h
++++ b/linux-headers/asm-x86/kvm.h
+@@ -385,18 +385,22 @@ struct kvm_sync_regs {
+ #define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
+ 
+ #define KVM_STATE_NESTED_FORMAT_VMX	0
+-#define KVM_STATE_NESTED_FORMAT_SVM	1	/* unused */
++#define KVM_STATE_NESTED_FORMAT_SVM	1
+ 
+ #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
+ #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
+ #define KVM_STATE_NESTED_EVMCS		0x00000004
+ #define KVM_STATE_NESTED_MTF_PENDING	0x00000008
++#define KVM_STATE_NESTED_GIF_SET	0x00000100
+ 
+ #define KVM_STATE_NESTED_SMM_GUEST_MODE	0x00000001
+ #define KVM_STATE_NESTED_SMM_VMXON	0x00000002
+ 
+ #define KVM_STATE_NESTED_VMX_VMCS_SIZE	0x1000
+ 
++#define KVM_STATE_NESTED_SVM_VMCB_SIZE	0x1000
++
++
+ struct kvm_vmx_nested_state_data {
+ 	__u8 vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
+ 	__u8 shadow_vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
+@@ -411,6 +415,15 @@ struct kvm_vmx_nested_state_hdr {
+ 	} smm;
+ };
+ 
++struct kvm_svm_nested_state_data {
++	/* Save area only used if KVM_STATE_NESTED_RUN_PENDING.  */
++	__u8 vmcb12[KVM_STATE_NESTED_SVM_VMCB_SIZE];
++};
++
++struct kvm_svm_nested_state_hdr {
++	__u64 vmcb_pa;
++};
++
+ /* for KVM_CAP_NESTED_STATE */
+ struct kvm_nested_state {
+ 	__u16 flags;
+@@ -419,6 +432,7 @@ struct kvm_nested_state {
+ 
+ 	union {
+ 		struct kvm_vmx_nested_state_hdr vmx;
++		struct kvm_svm_nested_state_hdr svm;
+ 
+ 		/* Pad the header to 128 bytes.  */
+ 		__u8 pad[120];
+@@ -431,6 +445,7 @@ struct kvm_nested_state {
+ 	 */
+ 	union {
+ 		struct kvm_vmx_nested_state_data vmx[0];
++		struct kvm_svm_nested_state_data svm[0];
+ 	} data;
+ };
+ 
+diff --git a/linux-headers/linux/kvm.h b/linux-headers/linux/kvm.h
+index 9804495a46..f4ff71da0b 100644
+--- a/linux-headers/linux/kvm.h
++++ b/linux-headers/linux/kvm.h
+@@ -1017,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_S390_VCPU_RESETS 179
+ #define KVM_CAP_S390_PROTECTED 180
+ #define KVM_CAP_PPC_SECURE_GUEST 181
++#define KVM_CAP_HALT_POLL 182
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+diff --git a/target/i386/cpu.h b/target/i386/cpu.h
+index e818fc712a..9627f88ebf 100644
+--- a/target/i386/cpu.h
++++ b/target/i386/cpu.h
+@@ -2103,6 +2103,11 @@ static inline bool cpu_has_vmx(CPUX86State *env)
+     return env->features[FEAT_1_ECX] & CPUID_EXT_VMX;
+ }
+ 
++static inline bool cpu_has_svm(CPUX86State *env)
++{
++    return env->features[FEAT_8000_0001_ECX] & CPUID_EXT3_SVM;
++}
++
+ /*
+  * In order for a vCPU to enter VMX operation it must have CR4.VMXE set.
+  * Since it was set, CR4.VMXE must remain set as long as vCPU is in
+diff --git a/target/i386/cpu.c b/target/i386/cpu.c
+index 9c256ab159..6833400191 100644
+--- a/target/i386/cpu.c
++++ b/target/i386/cpu.c
+@@ -5939,6 +5939,7 @@ static void x86_cpu_reset(DeviceState *dev)
+     /* init to reset state */
+ 
+     env->hflags2 |= HF2_GIF_MASK;
++    env->hflags &= ~HF_GUEST_MASK;
+ 
+     cpu_x86_update_cr0(env, 0x60000010);
+     env->a20_mask = ~0x0;
+diff --git a/target/i386/kvm.c b/target/i386/kvm.c
+index 4901c6dd74..599a34b49d 100644
+--- a/target/i386/kvm.c
++++ b/target/i386/kvm.c
+@@ -1834,16 +1834,18 @@ int kvm_arch_init_vcpu(CPUState *cs)
+     if (max_nested_state_len > 0) {
+         assert(max_nested_state_len >= offsetof(struct kvm_nested_state, data));
+ 
+-        if (cpu_has_vmx(env)) {
++        if (cpu_has_vmx(env) || cpu_has_svm(env)) {
+             struct kvm_vmx_nested_state_hdr *vmx_hdr;
+ 
+             env->nested_state = g_malloc0(max_nested_state_len);
+             env->nested_state->size = max_nested_state_len;
+             env->nested_state->format = KVM_STATE_NESTED_FORMAT_VMX;
+ 
+-            vmx_hdr = &env->nested_state->hdr.vmx;
+-            vmx_hdr->vmxon_pa = -1ull;
+-            vmx_hdr->vmcs12_pa = -1ull;
++            if (cpu_has_vmx(env)) {
++                    vmx_hdr = &env->nested_state->hdr.vmx;
++                    vmx_hdr->vmxon_pa = -1ull;
++                    vmx_hdr->vmcs12_pa = -1ull;
++            }
+         }
+     }
+ 
+@@ -3847,6 +3849,20 @@ static int kvm_put_nested_state(X86CPU *cpu)
+         return 0;
+     }
+ 
++    /*
++     * Copy flags that are affected by reset from env->hflags and env->hflags2.
++     */
++    if (env->hflags & HF_GUEST_MASK) {
++        env->nested_state->flags |= KVM_STATE_NESTED_GUEST_MODE;
++    } else {
++        env->nested_state->flags &= ~KVM_STATE_NESTED_GUEST_MODE;
++    }
++    if (env->hflags2 & HF2_GIF_MASK) {
++        env->nested_state->flags |= KVM_STATE_NESTED_GIF_SET;
++    } else {
++        env->nested_state->flags &= ~KVM_STATE_NESTED_GIF_SET;
++    }
++
+     assert(env->nested_state->size <= max_nested_state_len);
+     return kvm_vcpu_ioctl(CPU(cpu), KVM_SET_NESTED_STATE, env->nested_state);
+ }
+@@ -3875,11 +3891,19 @@ static int kvm_get_nested_state(X86CPU *cpu)
+         return ret;
+     }
+ 
++    /*
++     * Copy flags that are affected by reset to env->hflags and env->hflags2.
++     */
+     if (env->nested_state->flags & KVM_STATE_NESTED_GUEST_MODE) {
+         env->hflags |= HF_GUEST_MASK;
+     } else {
+         env->hflags &= ~HF_GUEST_MASK;
+     }
++    if (env->nested_state->flags & KVM_STATE_NESTED_GIF_SET) {
++        env->hflags2 |= HF2_GIF_MASK;
++    } else {
++        env->hflags2 &= ~HF2_GIF_MASK;
++    }
+ 
+     return ret;
+ }
+@@ -3891,6 +3915,12 @@ int kvm_arch_put_registers(CPUState *cpu, int level)
+ 
+     assert(cpu_is_stopped(cpu) || qemu_cpu_is_self(cpu));
+ 
++    /* must be before kvm_put_nested_state so that EFER.SVME is set */
++    ret = kvm_put_sregs(x86_cpu);
++    if (ret < 0) {
++        return ret;
++    }
++
+     if (level >= KVM_PUT_RESET_STATE) {
+         ret = kvm_put_nested_state(x86_cpu);
+         if (ret < 0) {
+@@ -3924,10 +3954,6 @@ int kvm_arch_put_registers(CPUState *cpu, int level)
+     if (ret < 0) {
+         return ret;
+     }
+-    ret = kvm_put_sregs(x86_cpu);
+-    if (ret < 0) {
+-        return ret;
+-    }
+     /* must be before kvm_put_msrs */
+     ret = kvm_inject_mce_oldstyle(x86_cpu);
+     if (ret < 0) {
+diff --git a/target/i386/machine.c b/target/i386/machine.c
+index 0c96531a56..8684a247c1 100644
+--- a/target/i386/machine.c
++++ b/target/i386/machine.c
+@@ -1071,13 +1071,40 @@ static const VMStateDescription vmstate_vmx_nested_state = {
+     }
+ };
+ 
++static bool svm_nested_state_needed(void *opaque)
++{
++    struct kvm_nested_state *nested_state = opaque;
++
++    /*
++     * HF2_GIF_MASK is relevant for non-guest mode but it is already
++     * serialized via hflags2.
++     */
++    return (nested_state->format == KVM_STATE_NESTED_FORMAT_SVM &&
++            nested_state->size > offsetof(struct kvm_nested_state, data));
++}
++
++static const VMStateDescription vmstate_svm_nested_state = {
++    .name = "cpu/kvm_nested_state/svm",
++    .version_id = 1,
++    .minimum_version_id = 1,
++    .needed = svm_nested_state_needed,
++    .fields = (VMStateField[]) {
++        VMSTATE_U64(hdr.svm.vmcb_pa, struct kvm_nested_state),
++        VMSTATE_UINT8_ARRAY(data.svm[0].vmcb12,
++                            struct kvm_nested_state,
++                            KVM_STATE_NESTED_SVM_VMCB_SIZE),
++        VMSTATE_END_OF_LIST()
++    }
++};
++
+ static bool nested_state_needed(void *opaque)
+ {
+     X86CPU *cpu = opaque;
+     CPUX86State *env = &cpu->env;
+ 
+     return (env->nested_state &&
+-            vmx_nested_state_needed(env->nested_state));
++            (vmx_nested_state_needed(env->nested_state) ||
++             svm_nested_state_needed(env->nested_state)));
+ }
+ 
+ static int nested_state_post_load(void *opaque, int version_id)
+@@ -1139,6 +1166,7 @@ static const VMStateDescription vmstate_kvm_nested_state = {
+     },
+     .subsections = (const VMStateDescription*[]) {
+         &vmstate_vmx_nested_state,
++        &vmstate_svm_nested_state,
+         NULL
+     }
+ };
+
 
 
