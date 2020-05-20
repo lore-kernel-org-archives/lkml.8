@@ -2,205 +2,100 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57419C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028C4207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF9720756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:23:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="rUVxQPbC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Z3mDLMae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgETMWV (ORCPT
+        id S1726791AbgETMXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:22:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
+        Wed, 20 May 2020 08:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETMWU (ORCPT
+        with ESMTP id S1726224AbgETMXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:22:20 -0400
-Received: from forwardcorp1o.mail.yandex.net (forwardcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::193])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C607C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:22:20 -0700 (PDT)
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id A042A2E15B6;
-        Wed, 20 May 2020 15:22:18 +0300 (MSK)
-Received: from sas2-32987e004045.qloud-c.yandex.net (sas2-32987e004045.qloud-c.yandex.net [2a02:6b8:c08:b889:0:640:3298:7e00])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id RHZB8Jy9ID-MGd0Xjff;
-        Wed, 20 May 2020 15:22:18 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1589977338; bh=fWlELSchNbK6X8WY/LIEnxOeuh7ut5C9pJiR7sPpmL4=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=rUVxQPbCa/3movkIPbwhwJovtico490x0cE7XdLEsHZQnLaUYW+pTRlQRpRn8/iwU
-         SwZNBoMivSRY67RYcygcwS9TDCquOKNDRXOInxSLhkrIVEOhF2EzUU/7eUwTK2ozNJ
-         Y+kQrnHFNE8mhbwf9qHviU4i9RzIkhZGNAH3lRtI=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:704::1:9])
-        by sas2-32987e004045.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id g13KAeIdih-MGWCL2v2;
-        Wed, 20 May 2020 15:22:16 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v1 02/25] mm/swap: Don't abuse the seqcount latching API
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-3-a.darwish@linutronix.de>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <706c697c-c951-e0c3-40f8-f6e429b2226a@yandex-team.ru>
-Date:   Wed, 20 May 2020 15:22:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 08:23:49 -0400
+X-Greylist: delayed 439 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 20 May 2020 05:23:48 PDT
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3ABEC061A0E;
+        Wed, 20 May 2020 05:23:48 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0bab004cc75e27543cdd50.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:4cc7:5e27:543c:dd50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4AF6B1EC0350;
+        Wed, 20 May 2020 14:23:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589977427;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=//xodGP6uhFG6vU7T1NA0Z0VRMEbIPWTE05pu4xOSHw=;
+        b=Z3mDLMae+SBhuHDz3MH6XaBIXV3Z3AICO3CSsw5YVT2SEpD9en5Fi+CVeIzJwpfE/srKCG
+        X8+WxIcver1ZCVgH6Vlx3Gahwaz/nQcUzCRloGKHrrOy75HP07Y+RG5zaOX0sob1MZcJKB
+        wy/cYXXDul93QgDM9UPYdvYzGo4sILI=
+Date:   Wed, 20 May 2020 14:23:47 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 02/20] x86/cpufeatures: x86/msr: Intel SGX Launch
+ Control hardware bits
+Message-ID: <20200520122346.GG1457@zn.tnic>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-3-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200519214547.352050-3-a.darwish@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200515004410.723949-3-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/2020 00.45, Ahmed S. Darwish wrote:
-> Commit eef1a429f234 ("mm/swap.c: piggyback lru_add_drain_all() calls")
-> implemented an optimization mechanism to exit the to-be-started LRU
-> drain operation (name it A) if another drain operation *started and
-> finished* while (A) was blocked on the LRU draining mutex.
-> 
-> This was done through a seqcount latch, which is an abuse of its
-> semantics:
-> 
->    1. Seqcount latching should be used for the purpose of switching
->       between two storage places with sequence protection to allow
->       interruptible, preemptible writer sections. The optimization
->       mechanism has absolutely nothing to do with that.
-> 
->    2. The used raw_write_seqcount_latch() has two smp write memory
->       barriers to always insure one consistent storage place out of the
->       two storage places available. This extra smp_wmb() is redundant for
->       the optimization use case.
-> 
-> Beside the API abuse, the semantics of a latch sequence counter was
-> force fitted into the optimization. What was actually meant is to track
-> generations of LRU draining operations, where "current lru draining
-> generation = x" implies that all generations 0 < n <= x are already
-> *scheduled* for draining.
-> 
-> Remove the conceptually-inappropriate seqcount latch usage and manually
-> implement the optimization using a counter and SMP memory barriers.
 
-Well, I thought it fits perfectly =)
+> Subject: Re: [PATCH v30 02/20] x86/cpufeatures: x86/msr: Intel SGX Launch Control hardware bits
+							  ^
+							Add
 
-Maybe it's worth to add helpers with appropriate semantics?
-This is pretty common pattern.
+Needs a verb.
 
+On Fri, May 15, 2020 at 03:43:52AM +0300, Jarkko Sakkinen wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> Link: https://lkml.kernel.org/r/CALYGNiPSr-cxV9MX9czaVh6Wz_gzSv3H_8KPvgjBTGbJywUJpA@mail.gmail.com
-> Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-> ---
->   mm/swap.c | 57 +++++++++++++++++++++++++++++++++++++++++++++----------
->   1 file changed, 47 insertions(+), 10 deletions(-)
+> Add X86_FEATURE_SGX_LC, which informs whether or not the CPU supports SGX
+> Launch Control.
 > 
-> diff --git a/mm/swap.c b/mm/swap.c
-> index bf9a79fed62d..d6910eeed43d 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -713,10 +713,20 @@ static void lru_add_drain_per_cpu(struct work_struct *dummy)
->    */
->   void lru_add_drain_all(void)
->   {
-> -	static seqcount_t seqcount = SEQCNT_ZERO(seqcount);
-> -	static DEFINE_MUTEX(lock);
-> +	/*
-> +	 * lru_drain_gen - Current generation of pages that could be in vectors
-> +	 *
-> +	 * (A) Definition: lru_drain_gen = x implies that all generations
-> +	 *     0 < n <= x are already scheduled for draining.
-> +	 *
-> +	 * This is an optimization for the highly-contended use case where a
-> +	 * user space workload keeps constantly generating a flow of pages
-> +	 * for each CPU.
-> +	 */
-> +	static unsigned int lru_drain_gen;
->   	static struct cpumask has_work;
-> -	int cpu, seq;
-> +	static DEFINE_MUTEX(lock);
-> +	int cpu, this_gen;
->   
->   	/*
->   	 * Make sure nobody triggers this path before mm_percpu_wq is fully
-> @@ -725,21 +735,48 @@ void lru_add_drain_all(void)
->   	if (WARN_ON(!mm_percpu_wq))
->   		return;
->   
-> -	seq = raw_read_seqcount_latch(&seqcount);
-> +	/*
-> +	 * (B) Cache the LRU draining generation number
-> +	 *
-> +	 * smp_rmb() ensures that the counter is loaded before the mutex is
-> +	 * taken. It pairs with the smp_wmb() inside the mutex critical section
-> +	 * at (D).
-> +	 */
-> +	this_gen = READ_ONCE(lru_drain_gen);
-> +	smp_rmb();
->   
->   	mutex_lock(&lock);
->   
->   	/*
-> -	 * Piggyback on drain started and finished while we waited for lock:
-> -	 * all pages pended at the time of our enter were drained from vectors.
-> +	 * (C) Exit the draining operation if a newer generation, from another
-> +	 * lru_add_drain_all(), was already scheduled for draining. Check (A).
->   	 */
-> -	if (__read_seqcount_retry(&seqcount, seq))
-> +	if (unlikely(this_gen != lru_drain_gen))
->   		goto done;
->   
-> -	raw_write_seqcount_latch(&seqcount);
-> +	/*
-> +	 * (D) Increment generation number
-> +	 *
-> +	 * Pairs with READ_ONCE() and smp_rmb() at (B), outside of the critical
-> +	 * section.
-> +	 *
-> +	 * This pairing must be done here, before the for_each_online_cpu loop
-> +	 * below which drains the page vectors.
-> +	 *
-> +	 * Let x, y, and z represent some system CPU numbers, where x < y < z.
-> +	 * Assume CPU #z is is in the middle of the for_each_online_cpu loop
-> +	 * below and has already reached CPU #y's per-cpu data. CPU #x comes
-> +	 * along, adds some pages to its per-cpu vectors, then calls
-> +	 * lru_add_drain_all().
-> +	 *
-> +	 * If the paired smp_wmb() below is done at any later step, e.g. after
-> +	 * the loop, CPU #x will just exit at (C) and miss flushing out all of
-> +	 * its added pages.
-> +	 */
-> +	WRITE_ONCE(lru_drain_gen, lru_drain_gen + 1);
-> +	smp_wmb();
->   
->   	cpumask_clear(&has_work);
-> -
->   	for_each_online_cpu(cpu) {
->   		struct work_struct *work = &per_cpu(lru_add_drain_work, cpu);
->   
-> @@ -766,7 +803,7 @@ void lru_add_drain_all(void)
->   {
->   	lru_add_drain();
->   }
-> -#endif
-> +#endif /* CONFIG_SMP */
->   
->   /**
->    * release_pages - batched put_page()
+> Add MSR_IA32_SGXLEPUBKEYHASH{0, 1, 2, 3}, which when combined contain a
+> SHA256 hash of a 3072-bit RSA public key. SGX backed software packages, so
+> called enclaves, are always signed. All enclaves signed with the public key
+> are unconditionally allowed to initialize. [1]
 > 
+> Add FEATURE_CONTROL_SGX_LE_WR bit of the feature control MSR, which informs
+> whether the formentioned MSRs are writable or not. If the bit is off, the
+
+"aforementioned"
+
+> public key MSRs are read-only for the OS.
+
+...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
