@@ -2,136 +2,313 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E01DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4077E2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iRwmCRCd"
+	by mail.kernel.org (Postfix) with ESMTP id 52B8420709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:53:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgETQwO (ORCPT
+        id S1726837AbgETQxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:52:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44544 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726829AbgETQwN (ORCPT
+        Wed, 20 May 2020 12:53:47 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39474 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETQxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:52:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589993532;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=rM7hZmpECL8qLEqrdjdyQimVaHtfW73QhKyl/FZ1pAI=;
-        b=iRwmCRCdzBv61gfNOvtzs6LgT0zC0wZwobiw/UElbzykhCpHKbrXmGqaEy8UkjqY/uV8x7
-        rKUBkycaxGNspBa3T1tMaiEyfKbJicPyViKXlAZ1X5sY7LOVsq0dAyLEmR6oKpdNWHQ9z6
-        1U0qUYc7cVhEjQfLEeKlZbq9Ql5/t6c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-320-dPQRfS6aNfCV1XUTUYVImA-1; Wed, 20 May 2020 12:52:07 -0400
-X-MC-Unique: dPQRfS6aNfCV1XUTUYVImA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DF008015CF;
-        Wed, 20 May 2020 16:52:05 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 31E3B60BEC;
-        Wed, 20 May 2020 16:51:56 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
-        eparis@parisplace.org, tgraf@infradead.org,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak25 v6] audit: add subj creds to NETFILTER_CFG record to cover async unregister
-Date:   Wed, 20 May 2020 12:51:32 -0400
-Message-Id: <a585b9933896bc542347d8f3f26b08005344dd84.1589920939.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Wed, 20 May 2020 12:53:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5E27A2A0632
+Subject: Re: [PATCHv3 4/5] Input: EXC3000: Add support to query model and
+ fw_version
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
+ <20200520153936.46869-5-sebastian.reichel@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d2cde5c1-c6b1-7e05-5b32-74b3fcc4a1bb@collabora.com>
+Date:   Wed, 20 May 2020 18:53:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200520153936.46869-5-sebastian.reichel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some table unregister actions seem to be initiated by the kernel to
-garbage collect unused tables that are not initiated by any userspace
-actions.  It was found to be necessary to add the subject credentials to
-cover this case to reveal the source of these actions.  A sample record:
+Hi Sebastian,
 
-The uid, auid, tty, ses and exe fields have not been included since they
-are in the SYSCALL record and contain nothing useful in the non-user
-context.
+On 20/5/20 17:39, Sebastian Reichel wrote:
+> Expose model and fw_version via sysfs. Also query the model
+> in probe to make sure, that the I2C communication with the
+> device works before successfully probing the driver.
+> 
+> This is a bit complicated, since EETI devices do not have
+> a sync interface. Sending the commands and directly reading
+> does not work. Sending the command and waiting for some time
+> is also not an option, since there might be touch events in
+> the mean time.
+> 
+> Last but not least we do not cache the results, since this
+> interface can be used to check the I2C communication is still
+> working as expected.
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-  type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
+I went through the code and understood the reasoning to implement that way, if
+it helps:
 
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
----
-Changelog:
-v6
-- remove uid, auid fields as duplicates or unset
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-v5
-- rebase on upstreamed ghak28 on audit/next v5.7-rc1
-- remove tty, ses and exe fields as duplicates or unset
-- drop upstreamed patches 1&2 from set
-
-v4
-- rebase on audit/next v5.7-rc1
-- fix checkpatch.pl errors/warnings in 1/3 and 2/3
-
-v3
-- rebase on v5.6-rc1 audit/next
-- change audit_nf_cfg to audit_log_nfcfg
-- squash 2,3,4,5 to 1 and update patch descriptions
-- add subject credentials to cover garbage collecting kernel threads
-
-v2
-- Rebase (audit/next 5.5-rc1) to get audit_context access and ebt_register_table ret code
-- Split x_tables and ebtables updates
-- Check audit_dummy_context
-- Store struct audit_nfcfg params in audit_context, abstract to audit_nf_cfg() call
-- Restore back to "table, family, entries" from "family, table, entries"
-- Log unregistration of tables
-- Add "op=" at the end of the AUDIT_NETFILTER_CFG record
-- Defer nsid patch (ghak79) to once nsid patchset upstreamed (ghak32)
-- Add ghak refs
-- Ditch NETFILTER_CFGSOLO record
-
- kernel/auditsc.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-index cfe3486e5f31..e646055adb0b 100644
---- a/kernel/auditsc.c
-+++ b/kernel/auditsc.c
-@@ -2557,12 +2557,21 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
- 		       enum audit_nfcfgop op)
- {
- 	struct audit_buffer *ab;
-+	const struct cred *cred;
-+	struct tty_struct *tty;
-+	char comm[sizeof(current->comm)];
- 
- 	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
- 	if (!ab)
- 		return;
- 	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
- 			 name, af, nentries, audit_nfcfgs[op].s);
-+
-+	cred = current_cred();
-+	audit_log_format(ab, " pid=%u", task_pid_nr(current));
-+	audit_log_task_context(ab); /* subj= */
-+	audit_log_format(ab, " comm=");
-+	audit_log_untrustedstring(ab, get_task_comm(comm, current));
- 	audit_log_end(ab);
- }
- EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
--- 
-1.8.3.1
-
+> ---
+>  .../ABI/testing/sysfs-driver-input-exc3000    |  15 ++
+>  drivers/input/touchscreen/exc3000.c           | 145 +++++++++++++++++-
+>  2 files changed, 159 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-input-exc3000
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-driver-input-exc3000 b/Documentation/ABI/testing/sysfs-driver-input-exc3000
+> new file mode 100644
+> index 000000000000..d79da4f869af
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-driver-input-exc3000
+> @@ -0,0 +1,15 @@
+> +What:		/sys/class/input/inputX/fw_version
+> +Date:		May 2020
+> +Contact:	linux-input@vger.kernel.org
+> +Description:	Reports the firmware version provided by the touchscreen, for example "00_T6" on a EXC80H60
+> +
+> +		Access: Read
+> +		Valid values: Represented as string
+> +
+> +What:		/sys/class/input/inputX/model
+> +Date:		May 2020
+> +Contact:	linux-input@vger.kernel.org
+> +Description:	Reports the model identification provided by the touchscreen, for example "Orion_1320" on a EXC80H60
+> +
+> +		Access: Read
+> +		Valid values: Represented as string
+> diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
+> index b497bd2ae41d..b5a3bbb63504 100644
+> --- a/drivers/input/touchscreen/exc3000.c
+> +++ b/drivers/input/touchscreen/exc3000.c
+> @@ -25,6 +25,9 @@
+>  #define EXC3000_LEN_FRAME		66
+>  #define EXC3000_LEN_POINT		10
+>  
+> +#define EXC3000_LEN_MODEL_NAME		16
+> +#define EXC3000_LEN_FW_VERSION		16
+> +
+>  #define EXC3000_MT1_EVENT		0x06
+>  #define EXC3000_MT2_EVENT		0x18
+>  
+> @@ -65,6 +68,11 @@ struct exc3000_data {
+>  	struct touchscreen_properties prop;
+>  	struct timer_list timer;
+>  	u8 buf[2 * EXC3000_LEN_FRAME];
+> +	struct completion wait_event;
+> +	struct mutex query_lock;
+> +	int query_result;
+> +	char model[EXC3000_LEN_MODEL_NAME];
+> +	char fw_version[EXC3000_LEN_FW_VERSION];
+>  };
+>  
+>  static void exc3000_report_slots(struct input_dev *input,
+> @@ -150,6 +158,28 @@ static int exc3000_read_data(struct exc3000_data *data,
+>  	return 0;
+>  }
+>  
+> +static int exc3000_query_interrupt(struct exc3000_data *data)
+> +{
+> +	u8 *buf = data->buf;
+> +	int err;
+> +
+> +	err = i2c_master_recv(data->client, buf, EXC3000_LEN_FRAME);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (buf[0] != 0x42)
+> +		return -EPROTO;
+> +
+> +	if (buf[4] == 'E')
+> +		strlcpy(data->model, buf+5, sizeof(data->model));
+> +	else if (buf[4] == 'D')
+> +		strlcpy(data->fw_version, buf+5, sizeof(data->fw_version));
+> +	else
+> +		return -EPROTO;
+> +
+> +	return 0;
+> +}
+> +
+>  static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+>  {
+>  	struct exc3000_data *data = dev_id;
+> @@ -158,6 +188,12 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+>  	int slots, total_slots;
+>  	int error;
+>  
+> +	if (mutex_is_locked(&data->query_lock)) {
+> +		data->query_result = exc3000_query_interrupt(data);
+> +		complete(&data->wait_event);
+> +		goto out;
+> +	}
+> +
+>  	error = exc3000_read_data(data, buf, &total_slots);
+>  	if (error) {
+>  		/* Schedule a timer to release "stuck" contacts */
+> @@ -185,11 +221,94 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static ssize_t fw_version_show(struct device *dev,
+> +			       struct device_attribute *attr, char *buf)
+> +{
+> +	struct exc3000_data *data = dev_get_drvdata(dev);
+> +	static const u8 request[68] = {
+> +		0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'D', 0x00
+> +	};
+> +	struct i2c_client *client = data->client;
+> +	int err;
+> +
+> +	mutex_lock(&data->query_lock);
+> +
+> +	data->query_result = -ETIMEDOUT;
+> +	reinit_completion(&data->wait_event);
+> +
+> +	err = i2c_master_send(client, request, sizeof(request));
+> +	if (err < 0) {
+> +		mutex_unlock(&data->query_lock);
+> +		return err;
+> +	}
+> +
+> +	wait_for_completion_interruptible_timeout(&data->wait_event, 1*HZ);
+> +	mutex_unlock(&data->query_lock);
+> +
+> +	if (data->query_result < 0)
+> +		return data->query_result;
+> +
+> +	return sprintf(buf, "%s\n", data->fw_version);
+> +}
+> +static DEVICE_ATTR_RO(fw_version);
+> +
+> +static ssize_t exc3000_get_model(struct exc3000_data *data)
+> +{
+> +	static const u8 request[68] = {
+> +		0x67, 0x00, 0x42, 0x00, 0x03, 0x01, 'E', 0x00
+> +	};
+> +	struct i2c_client *client = data->client;
+> +	int err;
+> +
+> +	mutex_lock(&data->query_lock);
+> +	data->query_result = -ETIMEDOUT;
+> +	reinit_completion(&data->wait_event);
+> +
+> +	err = i2c_master_send(client, request, sizeof(request));
+> +	if (err < 0) {
+> +		mutex_unlock(&data->query_lock);
+> +		return err;
+> +	}
+> +
+> +	wait_for_completion_interruptible_timeout(&data->wait_event, 1 * HZ);
+> +	mutex_unlock(&data->query_lock);
+> +
+> +	return data->query_result;
+> +}
+> +
+> +static ssize_t model_show(struct device *dev,
+> +			  struct device_attribute *attr, char *buf)
+> +{
+> +	struct exc3000_data *data = dev_get_drvdata(dev);
+> +	int err = exc3000_get_model(data);
+> +
+> +	if (err < 0)
+> +		return err;
+> +
+> +	return sprintf(buf, "%s\n", data->model);
+> +}
+> +static DEVICE_ATTR_RO(model);
+> +
+> +static struct attribute *sysfs_attrs[] = {
+> +	&dev_attr_fw_version.attr,
+> +	&dev_attr_model.attr,
+> +	NULL
+> +};
+> +
+> +static struct attribute_group exc3000_attribute_group = {
+> +	.attrs = sysfs_attrs
+> +};
+> +
+> +static const struct attribute_group *exc3000_attribute_groups[] = {
+> +	&exc3000_attribute_group,
+> +	NULL
+> +};
+> +
+>  static int exc3000_probe(struct i2c_client *client)
+>  {
+>  	struct exc3000_data *data;
+>  	struct input_dev *input;
+> -	int error, max_xy;
+> +	int error, max_xy, retry;
+>  
+>  	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+> @@ -203,15 +322,19 @@ static int exc3000_probe(struct i2c_client *client)
+>  		data->info = &exc3000_info[eeti_dev_id];
+>  	}
+>  	timer_setup(&data->timer, exc3000_timer, 0);
+> +	init_completion(&data->wait_event);
+> +	mutex_init(&data->query_lock);
+>  
+>  	input = devm_input_allocate_device(&client->dev);
+>  	if (!input)
+>  		return -ENOMEM;
+>  
+>  	data->input = input;
+> +	input_set_drvdata(input, data);
+>  
+>  	input->name = data->info->name;
+>  	input->id.bustype = BUS_I2C;
+> +	input->dev.groups = exc3000_attribute_groups;
+>  
+>  	max_xy = data->info->max_xy;
+>  	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_xy, 0, 0);
+> @@ -234,6 +357,26 @@ static int exc3000_probe(struct i2c_client *client)
+>  	if (error)
+>  		return error;
+>  
+> +	/*
+> +	 * I²C does not have built-in recovery, so retry on failure. This ensures,
+> +	 * that the device probe will not fail for temporary issues on the bus.
+> +	 * This is not needed for the sysfs calls (userspace will receive the error
+> +	 * code and can start another query) and cannot be done for touch events
+> +	 * (but that only means loosing one or two touch events anyways).
+> +	 */
+> +	for (retry = 0; retry < 3; ++retry) {
+> +		error = exc3000_get_model(data);
+> +		if (!error)
+> +			break;
+> +		dev_warn(&client->dev, "Retry %d get EETI EXC3000 model: %d\n",
+> +			 retry + 1, error);
+> +	}
+> +
+> +	if (error)
+> +		return error;
+> +
+> +	dev_dbg(&client->dev, "TS Model: %s", data->model);
+> +
+>  	return 0;
+>  }
+>  
+> 
