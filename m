@@ -2,117 +2,141 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD6AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1DED20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:06:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="WDGtbCVB"
+	by mail.kernel.org (Postfix) with ESMTP id 32EDA207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgETAGq (ORCPT
+        id S1728261AbgETAHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgETAGq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:06:46 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430CDC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:06:46 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r22so585025pga.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vqQJphs4dbH8l1OCiHVqe97WM4gwnpKo7IbEOxUcuq8=;
-        b=WDGtbCVBE8fAUQyK7b2ulxbQd5NoTpIwjwmAiZ+xjWv23qgDFYqB+n3uEENMJF4evR
-         eQybQUIovab5oL9uP2JzO7/swZQR7Lac/N+9LuMDnYRN/vux1dRM8Ai+UvXrMQDNSXds
-         giu/CUiz0LCzZo+rFtSn5hr/VzyiBazjBkDWxSalBmaM+kZsF/jtgZp30ifXQT1tndDm
-         K+cmlhk0mNBeLKQKLjGb4kejQKR5OPHQmKhNzy3M33KYeBeHFzFAx78BBq1Ia0Aqb/q7
-         iy8kDskGmclrjdQEtx9kzAivf9ZcpoqlwCE0HuGoG13qLjJvN7c+Be8TZbWz/AnWavDM
-         W6Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vqQJphs4dbH8l1OCiHVqe97WM4gwnpKo7IbEOxUcuq8=;
-        b=nSGcnpyt/xvM1eDBFuVLPjdsVlwUNWdYYP/d3gdYJhk3ngwoIWHgzAA4TbnYKJupvz
-         gJ3M+9jdqzwQm9/4NDUQtNjw/M6vJpvhs1ZnFN9Yuf0tHeamaXt86DzD/edjm0G9wk6M
-         P51AUuqhwsFrYqRXJQ0Lqtm0B69EB1NQyGmI4p7cVafKWs+6s4gPUuUsaYVmi4gAsLAV
-         FPZjKmdmkqJAmWrUM2MHmmZtoZktaJG5QNXxwK2MRrb139yvJhXAypU3EVlbdDgcZKGT
-         v2Md7PpNabue+1cKVHm8979eMlx0ggxgSaGdT6D0P5V5LdkM3F8BnpS41lRV+aXcPHQa
-         TN7A==
-X-Gm-Message-State: AOAM532sT/h8ky1KqfjaXTbVSXvcil+/xqvdwdyyKOcoZmXqeMT8h+W9
-        pBvpk6meNGWdKhCq7Vb15AgaBA==
-X-Google-Smtp-Source: ABdhPJxROAqekSmuMlHLMi/sAPCSy2KV5BTqjcZH0X10PmVEw2MHWo2h4USoKLaDBzISBwMyAVnWjg==
-X-Received: by 2002:a62:1cc9:: with SMTP id c192mr1482493pfc.197.1589933205590;
-        Tue, 19 May 2020 17:06:45 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id v1sm452386pgl.11.2020.05.19.17.06.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 17:06:45 -0700 (PDT)
-Date:   Tue, 19 May 2020 17:06:37 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: Re: [PATCH v1 01/25] net: core: device_rename: Use rwsem instead of
- a seqcount
-Message-ID: <20200519170637.56d1a20a@hermes.lan>
-In-Reply-To: <87lfln5w61.fsf@nanos.tec.linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
-        <20200519214547.352050-2-a.darwish@linutronix.de>
-        <20200519150159.4d91af93@hermes.lan>
-        <87v9kr5zt7.fsf@nanos.tec.linutronix.de>
-        <20200519161141.5fbab730@hermes.lan>
-        <87lfln5w61.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 19 May 2020 20:07:39 -0400
+Received: from mga09.intel.com ([134.134.136.24]:35847 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgETAHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:07:39 -0400
+IronPort-SDR: WMN/ds5Ge1mt7cXtrWZhJg9+a7pnB4ri7Tq3I40GsPq5IfuMABQaKiQVvwtLPXv0JFLff5hSpu
+ sIGDVQo3seWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 17:07:38 -0700
+IronPort-SDR: U4U0klmwTkCKIxGqP9u2+bEPZdNRGJN9zT3fa+Z7P2nU8dDiEYrbZsKLHmCNi8iJEdG7lt8iYm
+ YAy7HP0JDOVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,411,1583222400"; 
+   d="scan'208";a="264487902"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 17:07:34 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [RESENDPATCH v8 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Wed, 20 May 2020 08:06:19 +0800
+Message-Id: <20200520000621.49152-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 01:42:30 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-> Stephen Hemminger <stephen@networkplumber.org> writes:
-> > On Wed, 20 May 2020 00:23:48 +0200
-> > Thomas Gleixner <tglx@linutronix.de> wrote:  
-> >> No. We did not. -ENOTESTCASE  
-> >
-> > Please try, it isn't that hard..
-> >
-> > # time for ((i=0;i<1000;i++)); do ip li add dev dummy$i type dummy; done
-> >
-> > real	0m17.002s
-> > user	0m1.064s
-> > sys	0m0.375s  
-> 
-> And that solves the incorrectness of the current code in which way?
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-Agree that the current code is has evolved over time to a state where it is not
-correct in the case of Preempt-RT. The motivation for the changes to seqcount
-goes back many years when there were ISP's that were concerned about scaling of tunnels, vlans etc.
+NAND controller also supports in-built HW ECC engine.
 
-Is it too much to ask for a simple before/after test of your patch as part 
-of the submission. You probably measure latency changes to the nanosecond.
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
 
-Getting it correct without causing user complaints.
+Thanks Boris, Andy and Arnd for the review comments and suggestions.
+---
+v8:
+  - fix the kbuild bot warnings
+  - correct the typo's
+v7:
+  - indentation issue is fixed
+  - add error check for retrieve the resource from dt
+  - Rob's review comments addressed
+  - dt-schema build issue fixed with upgraded dt-schema
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+  - add the example in YAML file
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
 
+v1:
+ - initial version
+
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  91 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 747 +++++++++++++++++++++
+ 4 files changed, 847 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
+-- 
+2.11.0
 
