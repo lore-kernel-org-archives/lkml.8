@@ -2,170 +2,128 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6575C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8272920884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6nrdRt7"
+	by mail.kernel.org (Postfix) with ESMTP id 0FEC220884
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgETXKI (ORCPT
+        id S1728663AbgETXPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbgETXKG (ORCPT
+        Wed, 20 May 2020 19:15:10 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:55831 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728462AbgETXPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:10:06 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3748FC061A0E;
-        Wed, 20 May 2020 16:10:05 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id a23so4090322qto.1;
-        Wed, 20 May 2020 16:10:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/qygMQEHgAHnXXlcBf3bWz8hekZtO5JE6hUpY/E6MlI=;
-        b=P6nrdRt7oaMJFGVn8tdcieLX1Y0jzSKCiVAEYNtArrwifpga+dN5v83cMRIKerr4lw
-         S6tkBAkA2pzBZjc0nUkbiuQyYHvOajF4yI1Q6trOeI35JHSiPIaxzZCbG3Qtsy2IBEa3
-         0u/0e0g7iT4mi/FhVlpzyBQ3hBLshkLlZGHWrVd+CnnFjHpAgBIE+8ymdFvfsvnw6oP1
-         vrswReGAc6hPcqUAp+cE2FXwLqOAkzyS//X9yOiiedFgThmSWHlqXdSgAkTBcBgd7wGx
-         VhCZmmEUAtG955eDuUNmBsKKkyJTq5OMaHqmy6az6aQ6f3SohaWpveT0RKHmFyEz+bny
-         g7MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/qygMQEHgAHnXXlcBf3bWz8hekZtO5JE6hUpY/E6MlI=;
-        b=OEWa6tgj0BT4zb4FhTVujJ+azhQH/NcM9h8ChGqiCTg6Fg+aYQNJ/eyRifQGsCtYg6
-         dCJ1ZIYaklm98lidg0XxKXOeA7kDbJNvRomQmJ3UAgmzZWLIRax1nHhRIiFpKldDom/A
-         d2bNiTcXqgRazbzki5AzE+8XwNZ+aA6Q26S1217dORR8O2V79dRJWdQSl8+mZ9+vhPkU
-         BzSqfw4x722NhDXetw4fzmLgsZKfPEGNSDpexY1N4wI3CzxyUpdd0s7sn7lmLohgHgCh
-         J9h13bcKP2ZaygHhF0Fjgi1Y/MJOHQMA/JdElWNLY7XLjPXHHJf0EmgJ/o45HZe8l0Cj
-         81vg==
-X-Gm-Message-State: AOAM5317rKZC2jirEIix5DBVB0NNfPjYMpQ/ZUtyDsAeiRXuOroBvk4h
-        xR+wirt+gO7ikCW7D2EOOOp7p3wR5RRiYA==
-X-Google-Smtp-Source: ABdhPJwRWSgggkzxnJn0dwyU2QDiQnm5wTM+hCXxxx8a5qFL0yi0c7Z5VunfQVgq58oD4bmA7XAdrQ==
-X-Received: by 2002:aed:3f7b:: with SMTP id q56mr7818149qtf.152.1590016204171;
-        Wed, 20 May 2020 16:10:04 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:b7f5:289f:a703:e466:2a27])
-        by smtp.gmail.com with ESMTPSA id e28sm3451287qkn.17.2020.05.20.16.10.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:10:03 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 2EE17C0DAC; Wed, 20 May 2020 20:10:01 -0300 (-03)
-Date:   Wed, 20 May 2020 20:10:01 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
-        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 31/33] sctp: add sctp_sock_set_nodelay
-Message-ID: <20200520231001.GU2491@localhost.localdomain>
-References: <20200520195509.2215098-1-hch@lst.de>
- <20200520195509.2215098-32-hch@lst.de>
+        Wed, 20 May 2020 19:15:10 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 20 May 2020 16:15:09 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 20 May 2020 16:15:09 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 14D2A4D8D; Wed, 20 May 2020 16:15:09 -0700 (PDT)
+Date:   Wed, 20 May 2020 16:15:09 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v13 00/11] Convert PWM period and duty cycle to u64
+Message-ID: <20200520231508.GA29437@codeaurora.org>
+Mail-Followup-To: Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Guenter Roeck <linux@roeck-us.net>, Joe Perches <joe@perches.com>
+References: <cover.1587523702.git.gurus@codeaurora.org>
+ <20200423114857.GG3612@dell>
+ <20200423215306.GA8670@codeaurora.org>
+ <20200424064303.GJ3612@dell>
+ <20200424221422.GA31118@codeaurora.org>
+ <20200427064434.GA3559@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520195509.2215098-32-hch@lst.de>
+In-Reply-To: <20200427064434.GA3559@dell>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:55:07PM +0200, Christoph Hellwig wrote:
-> Add a helper to directly set the SCTP_NODELAY sockopt from kernel space
-> without going through a fake uaccess.
+On Mon, Apr 27, 2020 at 07:44:34AM +0100, Lee Jones wrote:
+> On Fri, 24 Apr 2020, Guru Das Srinagesh wrote:
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/dlm/lowcomms.c       | 10 ++--------
->  include/net/sctp/sctp.h |  7 +++++++
->  2 files changed, 9 insertions(+), 8 deletions(-)
+> > On Fri, Apr 24, 2020 at 07:43:03AM +0100, Lee Jones wrote:
+> > > A great deal of mailing lists contain numerous protections against
+> > > things like flooding and spamming.  One of those protections is a
+> > > check for "Too many recipients to the message".  Most of the time this
+> > > simply requires moderator intervention by way of review and approval,
+> > > but this ultimately depends on the ML's configuration.
+> > > 
+> > > The first thing to ascertain is why your recipients list is so large.
+> > > Have you added every reviewer, subsystem-maintainer, maintainer and
+> > > contributor suggested by get-maintainer.pl?  If so, consider pruning
+> > > that a little.  Contributors do not tend to care about subsequent
+> > > changes to a file.  As someone who receives a lot of patches, I tend
+> > > to get fed-up when receiving patches simply because I made a change X
+> > > years ago.  Stick to listed maintainers/reviewers in the first
+> > > instance and see how far that takes you.
+> > 
+> > Thank you for the detailed reply. I did this in the first few patchsets
+> > and then when a few patches didn't get any attention, expanded the
+> > audience thus. Still, around 50% of the patches in this series remain
+> > unreviewed by anyone.
 > 
-> diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-> index 69333728d871b..9f1c3cdc9d653 100644
-> --- a/fs/dlm/lowcomms.c
-> +++ b/fs/dlm/lowcomms.c
-> @@ -914,7 +914,6 @@ static int sctp_bind_addrs(struct connection *con, uint16_t port)
->  static void sctp_connect_to_sock(struct connection *con)
->  {
->  	struct sockaddr_storage daddr;
-> -	int one = 1;
->  	int result;
->  	int addr_len;
->  	struct socket *sock;
-> @@ -961,8 +960,7 @@ static void sctp_connect_to_sock(struct connection *con)
->  	log_print("connecting to %d", con->nodeid);
->  
->  	/* Turn off Nagle's algorithm */
-> -	kernel_setsockopt(sock, SOL_SCTP, SCTP_NODELAY, (char *)&one,
-> -			  sizeof(one));
-> +	sctp_sock_set_nodelay(sock->sk);
->  
->  	/*
->  	 * Make sock->ops->connect() function return in specified time,
-> @@ -1176,7 +1174,6 @@ static int sctp_listen_for_all(void)
->  	struct socket *sock = NULL;
->  	int result = -EINVAL;
->  	struct connection *con = nodeid2con(0, GFP_NOFS);
-> -	int one = 1;
->  
->  	if (!con)
->  		return -ENOMEM;
-> @@ -1191,10 +1188,7 @@ static int sctp_listen_for_all(void)
->  	}
->  
->  	sock_set_rcvbuf(sock->sk, NEEDED_RMEM);
-> -	result = kernel_setsockopt(sock, SOL_SCTP, SCTP_NODELAY, (char *)&one,
-> -				   sizeof(one));
-> -	if (result < 0)
-> -		log_print("Could not set SCTP NODELAY error %d\n", result);
-> +	sctp_sock_set_nodelay(sock->sk);
->  
->  	write_lock_bh(&sock->sk->sk_callback_lock);
->  	/* Init con struct */
-> diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
-> index 3ab5c6bbb90bd..f8bcb75bb0448 100644
-> --- a/include/net/sctp/sctp.h
-> +++ b/include/net/sctp/sctp.h
-> @@ -615,4 +615,11 @@ static inline bool sctp_newsk_ready(const struct sock *sk)
->  	return sock_flag(sk, SOCK_DEAD) || sk->sk_socket;
->  }
->  
-> +static inline void sctp_sock_set_nodelay(struct sock *sk)
-> +{
-> +	lock_sock(sk);
-> +	sctp_sk(sk)->nodelay = true;
-> +	release_sock(sk);
-> +}
-> +
+> This isn't a reason to add more recipients (who are likely to care
+> even less than your original group).  However it *is* a good argument
+> for including all of the specified maintainers/reviewers in on all of
+> the patches.
+> 
+> > > If your recipients list is as succinct as reasonably possible, maybe
+> > > just accept that every version isn't going to be archived by every
+> > > ML.  It's still much more useful for the correct people to have
+> > > visibility into the set than for it to be archived multiple times.
+> > 
+> > Thank you, will prune the list and remove past contributors from the
+> > Cc-list and add all parties to all patches.
+> 
+> Great.  Once you've done that, we can start to help you acquire the
+> Acks you need on your remaining patches.
 
-The duplication with sctp_setsockopt_nodelay() is quite silly/bad.
-Also, why have the 'true' hardcoded? It's what dlm uses, yes, but the
-API could be a bit more complete than that.
+Hi Lee, Thierry, Uwe,
 
-Like for the other patch, this one could build on David's patch, do
-the ternary check before calling sctp_setsockopt_nodelay and then move
-sctp_setsockopt_nodelay to the header, or something like that.
+In v14 of this patchset I've pruned the list of contributors, removed
+past contributors from the cc-list, and added all parties to all patches
+(except for the patches that are yet to reviewed, for which I've added
+what get_maintainer.pl showed me). I've also resent v14 a couple of
+times already, with around a week's time interval between resends, and
+somehow it seems like this set has lost traction.
+
+Could you please indicate what next steps I should take to have more
+eyes on the unreviewed patches? Only 4 out of 11 patches remain
+unreviewed.
+
+Thank you.
+
+Guru Das.
