@@ -2,162 +2,186 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D732720823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:57:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QShBqFHv"
+	by mail.kernel.org (Postfix) with ESMTP id 89649207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgETH5T (ORCPT
+        id S1726688AbgETH7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:57:19 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34887 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726224AbgETH5S (ORCPT
+        Wed, 20 May 2020 03:59:39 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:37467 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETH7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:57:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589961436;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=UIvXtlWBLKFIu4V9oAUKZ57rzg9d4soBp17Bi+j9QXM=;
-        b=QShBqFHvJ05OJHHrhy5tQrTsFCUSSwkBBSJihnQQLOZStRA7Kb8NHDuQkH35Gb6tmu88Qq
-        8DHgn7Cnv7iEMPd/YazdC2+kwiS6LRZZmB99W4sQ1dvfI2rv/RA4B8c8VmMjcISYuZ37J+
-        pInpArxB2/oPoaYcXsalGDdtKb0mhJA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-Jw91e5gOMDe08SrT3X4kjg-1; Wed, 20 May 2020 03:57:12 -0400
-X-MC-Unique: Jw91e5gOMDe08SrT3X4kjg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3BE71009440;
-        Wed, 20 May 2020 07:57:06 +0000 (UTC)
-Received: from [10.36.113.76] (ovpn-113-76.ams2.redhat.com [10.36.113.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D679682A31;
-        Wed, 20 May 2020 07:56:49 +0000 (UTC)
-Subject: Re: [PATCH v4 00/15] virtio-mem: paravirtualized memory
-To:     teawater <teawaterz@linux.alibaba.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        virtio-dev@lists.oasis-open.org,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        kvm@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200507140139.17083-1-david@redhat.com>
- <2603F9B2-17D0-4A05-A82B-2D3B9671A96E@linux.alibaba.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <d7f18e6b-84e7-47d1-88d6-c73b5dcd8315@redhat.com>
-Date:   Wed, 20 May 2020 09:56:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 03:59:39 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 04K7xUdE096136;
+        Wed, 20 May 2020 15:59:30 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id B9D79C5271EE9FAE1410;
+        Wed, 20 May 2020 15:59:30 +0800 (CST)
+In-Reply-To: <20200519142642.24131-10-p.yadav@ti.com>
+References: <20200519142642.24131-1-p.yadav@ti.com> <20200519142642.24131-10-p.yadav@ti.com>
+To:     "Pratyush Yadav" <p.yadav@ti.com>
+Cc:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        "Boris Brezillon" <boris.brezillon@collabora.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org,
+        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+        "Sekhar Nori" <nsekhar@ti.com>, "Pratyush Yadav" <p.yadav@ti.com>,
+        "Richard Weinberger" <richard@nod.at>,
+        "Tudor Ambarus" <tudor.ambarus@microchip.com>,
+        "Vignesh Raghavendra" <vigneshr@ti.com>, juliensu@mxic.com.tw
+Subject: Re: [PATCH v5 09/19] mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
 MIME-Version: 1.0
-In-Reply-To: <2603F9B2-17D0-4A05-A82B-2D3B9671A96E@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-KeepSent: 83616464:480FA751-4825856E:002A4483;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF83616464.480FA751-ON4825856E.002A4483-4825856E.002BE6AF@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Wed, 20 May 2020 15:59:31 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/05/20 PM 03:59:30,
+        Serialize complete at 2020/05/20 PM 03:59:30
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 04K7xUdE096136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.05.20 07:25, teawater wrote:
-> Hi David,
-> 
-> Thanks for your work.
-> I tried this version with cloud-hypervisor master.  It worked very well.
-> 
-> Best,
-> Hui
 
-Hi Hui,
+Hi Pratyush, 
 
-thanks for testing!
+> +/**
+> + * spi_nor_parse_profile1() - parse the xSPI Profile 1.0 table
+> + * @nor:      pointer to a 'struct spi_nor'
+> + * @param_header:   pointer to the 'struct sfdp_parameter_header' 
+describing
+> + *         the 4-Byte Address Instruction Table length and version.
+> + * @params:      pointer to the 'struct spi_nor_flash_parameter' to be.
+> + *
+> + * Return: 0 on success, -errno otherwise.
+> + */
+> +static int spi_nor_parse_profile1(struct spi_nor *nor,
+> +              const struct sfdp_parameter_header *profile1_header,
+> +              struct spi_nor_flash_parameter *params)
+> +{
+> +   u32 *table, opcode, addr;
+> +   size_t len;
+> +   int ret, i;
+> +
+> +   len = profile1_header->length * sizeof(*table);
+> +   table = kmalloc(len, GFP_KERNEL);
+> +   if (!table)
+> +      return -ENOMEM;
+> +
+> +   addr = SFDP_PARAM_HEADER_PTP(profile1_header);
+> +   ret = spi_nor_read_sfdp(nor, addr, len, table);
+> +   if (ret)
+> +      goto out;
+> +
+> +   /* Fix endianness of the table DWORDs. */
+> +   for (i = 0; i < profile1_header->length; i++)
+> +      table[i] = le32_to_cpu(table[i]);
+> +
+> +   /* Get 8D-8D-8D fast read opcode and dummy cycles. */
+> +   opcode = FIELD_GET(PROFILE1_DWORD1_RD_FAST_CMD, table[0]);
+> +
+> +   /*
+> +    * Update the fast read settings. We set the default dummy cycles to 
+20
+> +    * here. Flashes can change this value if they need to when enabling
+> +    * octal mode.
+> +    */
+> +   spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8_DTR],
+> +              0, 20, opcode,
+> +              SNOR_PROTO_8_8_8_DTR);
+> +
 
-Cheers!
 
--- 
-Thanks,
+I thought we have a agreement that only do parse here, no other read 
+parameters setting.
 
-David / dhildenb
+Driver should get dummy cycles used for various frequencies 
+from 4th and 5th DWORD of xSPI table.[1]
+ 
+[1] 
+https://patchwork.ozlabs.org/project/linux-mtd/patch/1587451187-6889-3-git-send-email-masonccyang@mxic.com.tw/ 
+
+
+In addition, 20 dummy cycles is for 200MHz but not for 100MHz, 133MHz and 
+166MHz
+in case of read performance concern.
+
+Given a correct dummy cycles for a specific device. [2] 
+
+[2] 
+https://patchwork.ozlabs.org/project/linux-mtd/patch/1587451187-6889-5-git-send-email-masonccyang@mxic.com.tw/ 
+
+
+
+> +   /*
+> +    * Set the Read Status Register dummy cycles and dummy address 
+bytes.
+> +    */
+> +   if (table[0] & PROFILE1_DWORD1_RDSR_DUMMY)
+> +      params->rdsr_dummy = 8;
+> +   else
+> +      params->rdsr_dummy = 4;
+> +
+> +   if (table[0] & PROFILE1_DWORD1_RDSR_ADDR_BYTES)
+> +      params->rdsr_addr_nbytes = 4;
+> +   else
+> +      params->rdsr_addr_nbytes = 0;
+> +
+> +out:
+> +   kfree(table);
+> +   return ret;
+> +}
+> +
+
+thanks & best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
