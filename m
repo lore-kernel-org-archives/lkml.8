@@ -2,96 +2,92 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30674C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFBBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 095A32070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A09402070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:18:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EFifNyF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgETMRg (ORCPT
+        id S1726806AbgETMSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:17:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24917 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETMRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:17:33 -0400
-IronPort-SDR: 14PYyW8NPhIq+CTNqIGa6g4dJIGIB/g+lkWMaruHCkt40uLT3c0ICDNKLvq8+2F0ODx8Qw4cZH
- /i+JOFBy3gOw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:17:32 -0700
-IronPort-SDR: 0OgppyOHBZqIfc8vIRqLSAl7ReKWQFtjaVUnxPTEofddvm//r+vVa2HGa+2xvPdFfBJMF82vDK
- BSMTzUOymp6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
-   d="scan'208";a="289331424"
-Received: from mylly.fi.intel.com (HELO [10.237.72.161]) ([10.237.72.161])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 05:17:28 -0700
-Subject: Re: [PATCH v2 10/12] i2c: designware: Discard Cherry Trail model flag
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-11-Sergey.Semin@baikalelectronics.ru>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <f199b084-fc07-b2ee-fb74-1c2aadab13ef@linux.intel.com>
-Date:   Wed, 20 May 2020 15:17:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 08:18:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59118 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgETMSr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:18:47 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIfBW111632;
+        Wed, 20 May 2020 07:18:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589977121;
+        bh=lveTRFgFsCYfbjIVbrg/oRtKQhc97NWSLfFp+S3MDJ0=;
+        h=From:To:CC:Subject:Date;
+        b=EFifNyF26m64h5Ac9yQ+0nm+bLY7r2/UH38jlrHBRUegrUKRrEmlBnZRETB/fCpsn
+         DAMAKkZb18O8CNj7e7asLFKm8qBHbOcG9Nd7pou7/aJeowew+IVtzMO8EmpiiZzagL
+         duW2wsbAT3G8H7EP8ZkKwJykk/Nf4BYyEQl5xVrw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KCIf1F090299
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 07:18:41 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 07:18:41 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 07:18:41 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KCIfmO108587;
+        Wed, 20 May 2020 07:18:41 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-next v2 0/4] DP83869 Enhancements
+Date:   Wed, 20 May 2020 07:18:31 -0500
+Message-ID: <20200520121835.31190-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200510095019.20981-11-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/20 12:50 PM, Serge Semin wrote:
-> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
-> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
-> bus pm_disabled workaround"), but the flag most likely by mistake has been
-> left in the Dw I2C drivers. Lets remove it.
-> 
-> By doing so we get rid from the last DW APB I2C IP-core model flag, so we
-> can remove the MODEL_MASK macro too.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->   drivers/i2c/busses/i2c-designware-core.h    | 3 ---
->   drivers/i2c/busses/i2c-designware-pcidrv.c  | 1 -
->   drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
->   3 files changed, 1 insertion(+), 5 deletions(-)
-> 
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Hello
+
+These are improvements to the DP83869 Ethernet PHY driver.  OP-mode and port
+mirroring may be strapped on the device but the software only retrives these
+settings from the device tree.  Reading the straps and initializing the
+associated stored variables so when setting the PHY up and down the PHY's
+configuration values will be retained.
+
+The PHY also supports RGMII internal delays.  Implement this feature as it
+was done in the DP83867 device.
+
+Dan Murphy (4):
+  net: phy: dp83869: Update port-mirroring to read straps
+  net: phy: dp83869: Set opmode from straps
+  dt-bindings: net: Add RGMII internal delay for DP83869
+  net: dp83869: Add RGMII internal delay configuration
+
+ .../devicetree/bindings/net/ti,dp83869.yaml   |  16 +++
+ drivers/net/phy/dp83869.c                     | 120 +++++++++++++++++-
+ include/dt-bindings/net/ti-dp83869.h          |  18 +++
+ 3 files changed, 150 insertions(+), 4 deletions(-)
+
+-- 
+2.26.2
+
