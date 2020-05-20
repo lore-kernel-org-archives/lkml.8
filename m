@@ -2,104 +2,113 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA7220758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C7D20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:08:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PmDTRhJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgETMGS (ORCPT
+        id S1726737AbgETMIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgETMGS (ORCPT
+        Wed, 20 May 2020 08:08:17 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37532 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETMIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:06:18 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A6CEC061A0E;
-        Wed, 20 May 2020 05:06:18 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jbNU8-0007FV-Jb; Wed, 20 May 2020 14:06:08 +0200
-Date:   Wed, 20 May 2020 14:06:08 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
- access
-Message-ID: <20200520120608.mwros5jurmidxxfv@linutronix.de>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-4-bigeasy@linutronix.de>
- <20200520102407.GF317569@hirez.programming.kicks-ass.net>
+        Wed, 20 May 2020 08:08:16 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KC89T5192735;
+        Wed, 20 May 2020 12:08:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=pZAPjeoI2xoUqEyaRPjaQ4Ox+SaH6agdK7O7UIhiaI0=;
+ b=PmDTRhJ9cWXHzK89OejwhJak/4sjFjjNPeEbxdHQaF7r06QC6pr9WRgN0ilMhw5cJKl2
+ wC60n+oE6j4fVtTd4B28Mza+bHvft/nChjJDxJRiXLSaoFmKhAsA7QEEnsgr/5aWvWZE
+ ym/RolFsfFkhLrXA4air15JpCoYAxt5xOmMOX1rhoRIBnT57+sKwDOr1fj4vSx8oiDp2
+ QyadLQ5QskZLhjnYe2IQMM44OaM8XOZE4QLJG/ae295IHSdjuZBBPS+XZcGTAX2m1XbO
+ taErhF5wx5UIDfN6sc5SCuCDDmTRKcL6wFe9XAp+TTXZwUSIileeZzhXn3BlIPjvDx1i aA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31501r980m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 12:08:11 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KC3AJ6104590;
+        Wed, 20 May 2020 12:08:11 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31502063tv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 12:08:11 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KC8AEi017587;
+        Wed, 20 May 2020 12:08:10 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 May 2020 05:08:09 -0700
+Date:   Wed, 20 May 2020 15:08:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] bus: arm-integrator-lm: Fix an IS_ERR() vs NULL check
+Message-ID: <20200520120804.GI172354@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520102407.GF317569@hirez.programming.kicks-ass.net>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 suspectscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 12:24:07 [+0200], Peter Zijlstra wrote:
-> On Tue, May 19, 2020 at 10:19:07PM +0200, Sebastian Andrzej Siewior wrote:
-> 
-> > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> > index 0c71505f0e19c..8d2b5f75145d7 100644
-> > --- a/kernel/rcu/srcutree.c
-> > +++ b/kernel/rcu/srcutree.c
-> > @@ -25,6 +25,7 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/module.h>
-> >  #include <linux/srcu.h>
-> > +#include <linux/locallock.h>
-> >  
-> >  #include "rcu.h"
-> >  #include "rcu_segcblist.h"
-> > @@ -735,6 +736,7 @@ static void srcu_flip(struct srcu_struct *ssp)
-> >  	smp_mb(); /* D */  /* Pairs with C. */
-> >  }
-> >  
-> > +static DEFINE_LOCAL_LOCK(sda_lock);
-> >  /*
-> >   * If SRCU is likely idle, return true, otherwise return false.
-> >   *
-> > @@ -765,13 +767,13 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
-> >  	unsigned long tlast;
-> >  
-> >  	/* If the local srcu_data structure has callbacks, not idle.  */
-> > -	local_irq_save(flags);
-> > +	local_lock_irqsave(sda_lock, flags);
-> >  	sdp = this_cpu_ptr(ssp->sda);
-> >  	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
-> > -		local_irq_restore(flags);
-> > +		local_unlock_irqrestore(sda_lock, flags);
-> >  		return false; /* Callbacks already present, so not idle. */
-> >  	}
-> > -	local_irq_restore(flags);
-> > +	local_unlock_irqrestore(sda_lock, flags);
-> 
-> Would it perhaps make sense to stick the local_lock in struct srcu_data ?
+The of_find_matching_node() function returns NULL on error, it never
+returns error pointers.  This doesn't really impact runtime very much
+because if "syscon" is NULL then syscon_node_to_regmap() will return
+-EINVAL.  The only runtime difference is that now it returns -ENODEV.
 
-In that case we would need something for pointer stability before the
-lock is acquired.
-I remember Paul looked at that patch a few years ago and he said that
-that disabling interrupts here is important and matches the other part
-instance where the interrupts are disabled. Looking at it now, it seems
-that there is just pointer stability but I can't tell if
-rcu_segcblist_pend_cbs() needs more than just this.
+Fixes: ccea5e8a5918 ("bus: Add driver for Integrator/AP logic modules")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+The first patch which added this file doesn't give a good hint what the
+subsystem prefix should be so I just guessed "bus: arm-integrator-lm:".
 
-Sebastian
+ drivers/bus/arm-integrator-lm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bus/arm-integrator-lm.c b/drivers/bus/arm-integrator-lm.c
+index 669ea7e1f92e..845b6c43fef8 100644
+--- a/drivers/bus/arm-integrator-lm.c
++++ b/drivers/bus/arm-integrator-lm.c
+@@ -78,10 +78,10 @@ static int integrator_ap_lm_probe(struct platform_device *pdev)
+ 
+ 	/* Look up the system controller */
+ 	syscon = of_find_matching_node(NULL, integrator_ap_syscon_match);
+-	if (IS_ERR(syscon)) {
++	if (!syscon) {
+ 		dev_err(dev,
+ 			"could not find Integrator/AP system controller\n");
+-		return PTR_ERR(syscon);
++		return -ENODEV;
+ 	}
+ 	map = syscon_node_to_regmap(syscon);
+ 	if (IS_ERR(map)) {
+-- 
+2.26.2
+
