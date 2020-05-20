@@ -2,85 +2,124 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B540EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE26A207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94733207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:49:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V5P8TwdK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgETIsr (ORCPT
+        id S1726803AbgETItG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:48:47 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:45640 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726224AbgETIsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:48:46 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgBHnwm97sReaUvXAQ--.24724S4;
-        Wed, 20 May 2020 16:48:01 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: dwc: pci-dra7xx: fix runtime pm imbalance on error
-Date:   Wed, 20 May 2020 16:47:56 +0800
-Message-Id: <20200520084756.31620-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgBHnwm97sReaUvXAQ--.24724S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfXrg_ur
-        n8uFsrCrs0kFyqyryqyw1Fvr9IqasxXw1vga1ftF43ZFyIvr15WrWUXFZ8AFZ8Wr1fXF1q
-        yryqqF17CrWUAjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l
-        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAF
-        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-        7VUj3CztUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        Wed, 20 May 2020 04:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETItF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 04:49:05 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41931C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:49:05 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id n18so1237468pfa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mUXoHCk9YjTWtIe6lbZRmuzsCBfcD819p2whO3KZzec=;
+        b=V5P8TwdKayVbTIZwm1h3TmhwoplB3ufnXPirbcvqxIZEaxZVWo0JRlVQXvn8r/K9gs
+         4RCoyH9TJpBmE8kcM8SF1Pri5yYNd/oHodStSUbHGHkVSz6HoibzfFJ1V8C6qAr2rdlA
+         gF1hsua1hK1WBDyQjqDBj3rPex1e8ZH7Wtt1XGHM76n13q9hSyWaiCsdTMRjFGTIGeOL
+         q6bTFWs4FODgiQLavsdRlt2teB+gCiMl+V58t7MsCN2HkyJMn17q9jhBEgB/BZHNsDed
+         wN5elR8SYIg3OOyqNlmAHfTXdA8I6mGY0s+tSsP0WDOHVScKLX87TVdsjjA82uKJqzrQ
+         ItTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mUXoHCk9YjTWtIe6lbZRmuzsCBfcD819p2whO3KZzec=;
+        b=aRuFNX3eo2MePH4By0iMtCVydkyENJSpCeheqxyz3sJnS/wCbh5225sLIMO4FqRrM+
+         Zd6UYcIMAtBGgajsG67GBs89JPMR0CguzrI/2KgPkio4T4YvigrPfDkg2fT43e1L1wWN
+         QhUmjwWeH2OtGZb+q0nu5vx6mmkbA3xcpYf1Of9Bi+eDrr4e5fSajag2Tvnb//m1ofZ+
+         HeeNT8Y4AStR0tiEg//cN//q1ujh4p6jaU3DIO69bI0PscgiclpPJrCUxJQ+dpdMzOAM
+         gL6tgdYeio8vUMi26X2500vlr2XBcYrAaNFRCOjYSLLEA6OK/4KMl9sslgI2OXk0r3zj
+         SfLg==
+X-Gm-Message-State: AOAM532WHhG421q5flV5HuT1dvHLE5+owfMZ+lMZ+75V6GhVF8kHcMWh
+        b89ZwXMEpx9M2YqvbjqRQ+th
+X-Google-Smtp-Source: ABdhPJyq90ZITiiPWo8tMvFxVbmDXvkTW65XmUrhBPoNPkXK2t+uMDsUzjGi4u3kCRRn4t6FSPQIhQ==
+X-Received: by 2002:aa7:9e92:: with SMTP id p18mr3257038pfq.195.1589964544634;
+        Wed, 20 May 2020 01:49:04 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:91e:dd0a:7c30:1f7e:ebdb:aa2a])
+        by smtp.gmail.com with ESMTPSA id a5sm1629332pfk.210.2020.05.20.01.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 01:49:03 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     jassisinghbrar@gmail.com, robh+dt@kernel.org
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/3] Add Qualcomm IPCC driver support
+Date:   Wed, 20 May 2020 14:18:51 +0530
+Message-Id: <20200520084854.19729-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.26.GIT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Hello,
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/pci/controller/dwc/pci-dra7xx.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This series adds mailbox driver support for Qualcomm Inter Processor
+Communications Controller (IPCC) block found in MSM chipsets. This block
+is used to route interrupts between modems, DSPs and APSS (Application
+Processor Subsystem).
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 3b0e58f2de58..8fd9f2281e02 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -1000,9 +1000,8 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_gpio:
--	pm_runtime_put(dev);
--
- err_get_sync:
-+	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
- 	dra7xx_pcie_disable_phy(dra7xx);
- 
+The driver is modeled as a mailbox+irqchip driver. The irqchip part helps
+in receiving the interrupts from the IPCC clients such as modems, DSPs,
+PCI-E etc... and forwards them to respective entities in APSS.
+    
+On the other hand, the mailbox part is used to send interrupts to the IPCC
+clients from the entities of APSS.
+
+This series is tested on SM8250-MTP board.
+
+Thanks,
+Mani
+
+Changes in v3:
+
+* Added Bjorn's review tags
+* Few changes to DT binding as suggested by Rob
+
+Changes in v2:
+
+* Moved from soc/ to mailbox/
+* Switched to static mbox channels
+* Some misc cleanups
+
+Manivannan Sadhasivam (3):
+  dt-bindings: mailbox: Add devicetree binding for Qcom IPCC
+  mailbox: Add support for Qualcomm IPCC
+  MAINTAINERS: Add entry for Qualcomm IPCC driver
+
+ .../bindings/mailbox/qcom-ipcc.yaml           |  80 +++++
+ MAINTAINERS                                   |   8 +
+ drivers/mailbox/Kconfig                       |  10 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/qcom-ipcc.c                   | 286 ++++++++++++++++++
+ include/dt-bindings/mailbox/qcom-ipcc.h       |  33 ++
+ 6 files changed, 419 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
+ create mode 100644 drivers/mailbox/qcom-ipcc.c
+ create mode 100644 include/dt-bindings/mailbox/qcom-ipcc.h
+
 -- 
-2.17.1
+2.26.GIT
 
