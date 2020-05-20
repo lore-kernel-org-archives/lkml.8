@@ -2,290 +2,194 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65570C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5AB22070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E3A20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IHF+WyLK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="daN7Y6ZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETQCJ (ORCPT
+        id S1726903AbgETQCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:02:09 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57883 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726560AbgETQCI (ORCPT
+        Wed, 20 May 2020 12:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgETQCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:02:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589990526;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KMQx3CJaDuLGpNTSBHpWIwiqV2cYKS8CUQMrDvjG1OI=;
-        b=IHF+WyLKeCn+Dk/KeOnFfyyBOwEypwX3AZYh61Qe06YMWw/USmM3/uI67/JlpRR29xrDp9
-        8koYFsu36S/kSM3aC5poBiLGO3OPr4sSNkGcWF2ghRBJQpwwt3ExDG8qhg/3Jth+SEVa9H
-        vIWvRJiSwkFng7VmRGviiIQhf5CT3xU=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-b8VpCxxpPZayDUKteklelw-1; Wed, 20 May 2020 12:01:32 -0400
-X-MC-Unique: b8VpCxxpPZayDUKteklelw-1
-Received: by mail-ej1-f71.google.com with SMTP id gl5so1540948ejb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:01:32 -0700 (PDT)
+        Wed, 20 May 2020 12:02:40 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB738C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:02:39 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id j28so885652vkn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Oaxmms6S+D3RLKgoxkPRFXAUlOA5Vp3PgUPuvODNC54=;
+        b=daN7Y6ZGJMO9M3WF8cQSS/i6Zxqgdb6eb7NdI6SDB/DGM9ng92rAMgE8ZXnaSzqwtp
+         gD8MZODcyzF8xprMQq6ewSXbIO687gYkr9E51sB8aOCMVDjlJqCTB3M5jyXt1TmuJoc+
+         ODyjcbBkQod3AkBXa0IuzaCZWHP1TcbXnafwVzBGQFNe9qiuqhKoeWVMbfsWi7+KudgI
+         AOP/1mLtUZyGK5b/bd3tSVoLauPQCnK3QOAOxigyLPW2MF6amXGJiWVAXbM2/XHs7JDi
+         lLfiR4hGoRt1bTlg9uiaEy7BzwHz2JGdKVtkYlqqF9BcC+X/2Ajp3HBLz4O32ZgCovWe
+         O7WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KMQx3CJaDuLGpNTSBHpWIwiqV2cYKS8CUQMrDvjG1OI=;
-        b=Q+Iju85NER9joNC4XMd9qoqbACAswh9D/PzsCjvyWTFfx36qmh20LTHNoGy4tik7a6
-         1qET1kAsPxrLYLxK7+BsNUcqw3GSw6JreG+L49WlZ1pozVNMA0kzSTjI5VksBnJUxI0R
-         btFxcuTn5NV6r826QFgBjEM2ais3uGYwnJEsvvfpVgQni9MNB8scCUzaYwCqin1fBgG8
-         h8QHi0smyBxh4y6r1nwKnMmREMfe+PbKB2h7mP6RJJy6g7E3E3S4x8pLj2TpM6K8p4nc
-         peNjeCUjksoERwPRxw2L0nDDkbDz6o1DMN22wSULJdmbCwSweJGvvRXnesR7DxjDGneD
-         3Zyw==
-X-Gm-Message-State: AOAM532ei4fP4bTdjwJnTqaoAoIW4ajDlbx8b251B118nmXZ0maujBgv
-        O7h4YNabhWP5kBN2SHTH5I4SdG2aXUsI7iFm1yG+gpcGXwNzKpG9UESrXnmLpgP7kcG/s1HOoWL
-        UJCrZVW1cHiKeAoLnGRSHP5Pc6j1FIuaEaLveMfPe
-X-Received: by 2002:a05:6402:31ad:: with SMTP id dj13mr4175765edb.232.1589990490999;
-        Wed, 20 May 2020 09:01:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzT9suogOnoQUaF/gxrh/lSHkNmFGj8jKQHtSgp0nG/kUUrYtFstNCEi3zmWpJfNw4m2Rq4QNGA6RtD20kKDfU=
-X-Received: by 2002:a05:6402:31ad:: with SMTP id dj13mr4175708edb.232.1589990490525;
- Wed, 20 May 2020 09:01:30 -0700 (PDT)
+        bh=Oaxmms6S+D3RLKgoxkPRFXAUlOA5Vp3PgUPuvODNC54=;
+        b=fPPsCqiLdjUTeoj3xnvoIJ7kPPIFt3QmVc16QMIsJxeMWgAu0UPTGpx+VD4K1XFJeJ
+         EGCTLzesfPMYmKG177ddZ2fa9qa1WvY6AI5cqhBxR2J/NLIhbNWJzGjVjsvXFw/AElhB
+         5zzWr6wQQFt9VaouyQ7J6884Fl/N66+shmx0USmmyihDh0D4DTFfk/dTBR+j0hATfehE
+         DIdQHTj+ACw2LiYGY1KvVETKy+DtenHSgBzXKH46qjAexVoM8HFhMkGymkuJDjIanMOy
+         k06rwGYM18dfjhaoW7rpY2z4pUSlvVcdFHPzc/nXxgAQiJF2fZOPhnH/CPehPRVJ1dDG
+         tCww==
+X-Gm-Message-State: AOAM530K5SunMD4I2uUxTHZufouuBXNO8XhByH9DuFhYKy7fGSKSb06J
+        CMafQdjnJo804UTKdhAVmEwU9nCj0ZjriU39OPwJ7g==
+X-Google-Smtp-Source: ABdhPJx+vcAio0UMotr9EBZwqzsZZdGl/lJYDY+6mYhrnUnC2V51FJHVO0B2WWsbJDVMYI7Yp16fLaPIIekNZ0qmcs8=
+X-Received: by 2002:a1f:fc06:: with SMTP id a6mr4282634vki.101.1589990553231;
+ Wed, 20 May 2020 09:02:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAE4VaGD8DUEi6JnKd8vrqUL_8HZXnNyHMoK2D+1-F5wo+5Z53Q@mail.gmail.com>
- <20200312214736.GA3818@techsingularity.net> <CAE4VaGCfDpu0EuvHNHwDGbR-HNBSAHY=yu3DJ33drKgymMTTOw@mail.gmail.com>
- <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
- <20200320152251.GC3818@techsingularity.net> <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
- <20200320163843.GD3818@techsingularity.net> <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
- <20200507155422.GD3758@techsingularity.net> <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
- <20200507174934.GD19331@lorien.usersys.redhat.com> <20200508034741.13036-1-hdanton@sina.com>
- <CAE4VaGDBAquxbBjuzzyaT1WPR95wiaiHsrEPs-eOP2W+r=fQFg@mail.gmail.com>
- <20200519043154.10876-1-hdanton@sina.com> <CAE4VaGAxqK_gr7gstk1S8z3vx+9c6rG-Xo_kUiAzuOWpqOR4cQ@mail.gmail.com>
-In-Reply-To: <CAE4VaGAxqK_gr7gstk1S8z3vx+9c6rG-Xo_kUiAzuOWpqOR4cQ@mail.gmail.com>
-From:   Jirka Hladky <jhladky@redhat.com>
-Date:   Wed, 20 May 2020 18:01:19 +0200
-Message-ID: <CAE4VaGBsjVYc0kOXjm8OgRQgg73rUcyovMAiqcTO7VhbOhxUFw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
-        "aokuliar@redhat.com" <aokuliar@redhat.com>,
-        "kkolakow@redhat.com" <kkolakow@redhat.com>
+References: <CGME20200520090109eucas1p17270805f81f6958cd5084a7b910efc6c@eucas1p1.samsung.com>
+ <a9df7155-dd7a-752b-6d1c-3426837756b1@ti.com> <e9674719-0c86-63be-04a3-ee98bd884901@samsung.com>
+ <f3c58dcd-b806-95ef-2434-3084e65e1afb@ti.com> <e3fa0b35-7cca-1e37-c2fa-63cc07e6bfda@samsung.com>
+ <227465a5-c6e6-5b4d-abbd-7789727843a6@ti.com> <29a21e64-a63f-6721-c938-d713488767c1@samsung.com>
+ <CAPDyKFq8-JYA_tKZmUZOY3mT-jeoWMHNpdj8SDGkqYmX7jJHVQ@mail.gmail.com>
+ <9f72aeab-8d63-7fc1-d5ff-7d5c4f11012b@samsung.com> <CAPDyKFpgzYJzWR3mc-4XQDijtHVibDrFXazY0=P7TUs6rvE_hQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFpgzYJzWR3mc-4XQDijtHVibDrFXazY0=P7TUs6rvE_hQ@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 20 May 2020 18:01:56 +0200
+Message-ID: <CAPDyKFqMfbBU-_0gBfkgF3d2FZQH5cihXaOCxWUiT11aSHhWMg@mail.gmail.com>
+Subject: Re: Bad kfree of dma_parms in v5.7-rc5
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have an update on netperf-cstate-small-cross-socket results.
+Marek, Tomi, Greg
 
-Reported performance degradation of 2.5% for the UDP stream throughput
-and 0.6% for the TCP throughput is for message size of 16kB. For
-smaller message sizes, the performance drop is higher - up to 5% for
-UDP throughput for a message size of 64B. See the numbers below [1]
-
-We still think that it's acceptable given the gains in other
-situations (this is again compared to 5.7 vanilla) :
-
-* solved the performance drop upto 20%  with single instance
-SPECjbb2005 benchmark on 8 NUMA node servers (particularly on AMD EPYC
-Rome systems) => this performance drop was INCREASING with higher
-threads counts (10% for 16 threads and 20 % for 32 threads)
-* solved the performance drop upto 50% for low load scenarios
-(SPECjvm2008 and NAS)
-
-[1]
-Hillf's patch compared to 5.7 (rc4) vanilla:
-
-TCP throughput
-Message size (B)
-64          -2.6%
-128        -2.3%
-256        -2.6%
-1024      -2.7%
-2048      -2.2%
-3312      -2.4%
-4096      -1.1%
-8192      -0.4%
-16384    -0.6%
-
-UDP throughput
-64          -5.0%
-128        -3.0%
-256        -3.0%
-1024      -3.1%
-2048      -3.3%
-3312      -3.5%
-4096      -4.0%
-8192      -3.3%
-16384    -2.6%
-
-
-On Wed, May 20, 2020 at 3:58 PM Jirka Hladky <jhladky@redhat.com> wrote:
+On Wed, 20 May 2020 at 17:14, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 >
-> Hi Hillf, Mel and all,
->
-> thanks for the patch! It has produced really GOOD results.
->
-> 1) It has fixed performance problems with 5.7 vanilla kernel for
-> single-tenant workload and low system load scenarios, without
-> performance degradation for the multi-tenant tasks. It's producing the
-> same results as the previous proof-of-concept patch where
-> adjust_numa_imbalance function was modified to be a no-op (returning
-> the same value of imbalance as it gets on the input).
->
-> 2) We have also added Mel's netperf-cstate-small-cross-socket test to
-> our test battery:
-> https://github.com/gormanm/mmtests/blob/master/configs/config-network-netperf-cstate-small-cross-socket
->
-> Mel told me that he had seen significant performance improvements with
-> 5.7 over 5.6 for the netperf-cstate-small-cross-socket scenario.
->
-> Out of 6 different patches we have tested, your patch has performed
-> the best for this scenario. Compared to vanilla, we see minimal
-> performance degradation of 2.5% for the udp stream throughput and 0.6%
-> for the tcp throughput. The testing was done on a dual-socket system
-> with Gold 6132 CPU.
->
-> @Mel - could you please test Hillf's patch with your full testing
-> suite? So far, it looks very promising, but I would like to check the
-> patch thoroughly to make sure it does not hurt performance in other
-> areas.
->
-> Thanks a lot!
-> Jirka
->
->
->
->
->
->
->
->
->
->
->
->
-> On Tue, May 19, 2020 at 6:32 AM Hillf Danton <hdanton@sina.com> wrote:
+> On Wed, 20 May 2020 at 15:28, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
 > >
+> > Hi Ulf,
 > >
-> > Hi Jirka
-> >
-> > On Mon, 18 May 2020 16:52:52 +0200 Jirka Hladky wrote:
+> > On 20.05.2020 15:12, Ulf Hansson wrote:
+> > > + Greg
 > > >
-> > > We have compared it against kernel with adjust_numa_imbalance disabled
-> > > [1], and both kernels perform at the same level for the single-tenant
-> > > jobs, but the proposed patch is bad for the multitenancy mode. The
-> > > kernel with adjust_numa_imbalance disabled is a clear winner here.
+> > > On Wed, 20 May 2020 at 14:54, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > >> On 20.05.2020 14:43, Tomi Valkeinen wrote:
+> > >>> On 20/05/2020 12:22, Marek Szyprowski wrote:
+> > >>>> On 20.05.2020 11:18, Tomi Valkeinen wrote:
+> > >>>>> On 20/05/2020 12:13, Marek Szyprowski wrote:
+> > >>>>>> On 20.05.2020 11:00, Tomi Valkeinen wrote:
+> > >>>>>>> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core:
+> > >>>>>>> platform: Initialize dma_parms for platform devices") v5.7-rc5 causes
+> > >>>>>>> at least some v4l2 platform drivers to break when freeing resources.
+> > >>>>>>>
+> > >>>>>>> E.g. drivers/media/platform/ti-vpe/cal.c uses
+> > >>>>>>> vb2_dma_contig_set_max_seg_size() and
+> > >>>>>>> vb2_dma_contig_clear_max_seg_size() to manage the dma_params, and
+> > >>>>>>> similar pattern is seen in other drivers too.
+> > >>>>>>>
+> > >>>>>>> After 9495b7e92f716ab2, vb2_dma_contig_set_max_seg_size() will not
+> > >>>>>>> allocate anything, but vb2_dma_contig_clear_max_seg_size() will still
+> > >>>>>>> kfree the dma_params.
+> > >>>>>>>
+> > >>>>>>> I'm not sure what's the proper fix here. A flag somewhere to indicate
+> > >>>>>>> that vb2_dma_contig_set_max_seg_size() did allocate, and thus
+> > >>>>>>> vb2_dma_contig_clear_max_seg_size() must free?
+> > >>>>>>>
+> > >>>>>>> Or drop the kzalloc and kfree totally, if dma_params is now supposed
+> > >>>>>>> to always be there?
+> > >>>>>> Thanks for reporting this issue!
+> > >>>>>>
+> > >>>>>> Once the mentioned commit has been merged, the code should assume that
+> > >>>>>> the platform devices does have a struct dma_params allocated, so the
+> > >>>>>> proper fix is to alloc dma_params only if the bus is not a platform
+> > >>>>>> bus:
+> > >>>>>>
+> > >>>>>> if (!dev_is_platform(dev) && !dev->dma_parms) {
+> > >>>>>>         dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
+> > >>>>>>
+> > >>>>>> same check for the free path.
+> > >>>>> There is also "amba: Initialize dma_parms for amba devices". And the
+> > >>>>> commit message says PCI devices do this too.
+> > >>>>>
+> > >>>>> Guessing this based on the device type doesn't sound like a good idea
+> > >>>>> to me.
+> > >>>> Indeed. Then replace the allocation with a simple check for NULL
+> > >>>> dma_parms and return an error in such case. This should be enough for
+> > >>>> v5.8. Later we can simply get rid of those helpers and inline setting
+> > >>>> max segment size directly to the drivers.
+> > > That seems like a good idea, in the long run.
+> > >
+> > >>> Is that valid either? Then we assume that dma_parms is always set up
+> > >>> by someone else. That's true for platform devices and apparently some
+> > >>> other devices, but is it true for all devices now?
+> > >> # git grep vb2_dma_contig_set_max_seg_size | wc -l
+> > >>
+> > >> 18
+> > >>
+> > >> I've checked all clients of the vb2_dma_contig_set_max_seg_size
+> > >> function. There are only 9 drivers, all of them are platform device
+> > >> drivers. We don't care about off-tree users, so the proposed approach is
+> > >> imho fine.
+> > > Thanks for reporting and for looking into this. I apologize for the mess!
+> > >
+> > > There is one case, where the above solution could be a problem (unless
+> > > I am wrong). That is, s5p_mfc_configure_2port_memory() that calls
+> > > s5p_mfc_alloc_memdev(), which allocates/initializes an internal struct
+> > > *device. Thus, this doesn't have the dev->dma_parms
+> > > allocated/assigned.
+> > Indeed, this one will fail.
+> > > In other words, we would need to manage alloc/free for the
+> > > dev->dma_parms to have a complete fix. Maybe in
+> > > s5p_mfc_configure|unconfigure_2port_memory()!?
+> > That would be the best place to allocate it.
+> > > Additionally, I think reverting the offending commit, as discussed
+> > > above, could cause even more issues, as it's even included for
+> > > v5.6-stable kernels. I will go through all cases, more carefully this
+> > > time, of how ->dma_parms is managed, to be sure there are no more
+> > > conflicting cases.
 > >
-> > Double thanks to you for the tests!
-> >
-> > > We would be very interested in what others think about disabling
-> > > adjust_numa_imbalance function. The patch is bellow. It would be great
-> >
-> > A minute...
-> >
-> > > to collect performance results for different scenarios to make sure
-> > > the results are objective.
-> >
-> > I don't have another test case but a diff trying to confine the tool
-> > in question back to the hard-coded 2's field.
-> >
-> > It's used in the first hunk below to detect imbalance before migrating
-> > a task, and a small churn of code is added at another call site when
-> > balancing idle CPUs.
-> >
-> > Thanks
-> > Hillf
-> >
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -1916,20 +1916,26 @@ static void task_numa_find_cpu(struct ta
-> >          * imbalance that would be overruled by the load balancer.
-> >          */
-> >         if (env->dst_stats.node_type == node_has_spare) {
-> > -               unsigned int imbalance;
-> > -               int src_running, dst_running;
-> > +               unsigned int imbalance = 2;
-> >
-> > -               /*
-> > -                * Would movement cause an imbalance? Note that if src has
-> > -                * more running tasks that the imbalance is ignored as the
-> > -                * move improves the imbalance from the perspective of the
-> > -                * CPU load balancer.
-> > -                * */
-> > -               src_running = env->src_stats.nr_running - 1;
-> > -               dst_running = env->dst_stats.nr_running + 1;
-> > -               imbalance = max(0, dst_running - src_running);
-> > -               imbalance = adjust_numa_imbalance(imbalance, src_running);
-> > +               //No imbalance computed without spare capacity
-> > +               if (env->dst_stats.node_type != env->src_stats.node_type)
-> > +                       goto check_imb;
-> > +
-> > +               imbalance = adjust_numa_imbalance(imbalance,
-> > +                                               env->src_stats.nr_running);
-> > +
-> > +               //Do nothing without imbalance
-> > +               if (!imbalance) {
-> > +                       imbalance = 2;
-> > +                       goto check_imb;
-> > +               }
-> > +
-> > +               //Migrate task if it's likely to grow balance
-> > +               if (env->dst_stats.nr_running + 1 < env->src_stats.nr_running)
-> > +                       imbalance = 0;
-> >
-> > +check_imb:
-> >                 /* Use idle CPU if there is no imbalance */
-> >                 if (!imbalance) {
-> >                         maymove = true;
-> > @@ -9011,12 +9017,13 @@ static inline void calculate_imbalance(s
-> >                         env->migration_type = migrate_task;
-> >                         env->imbalance = max_t(long, 0, (local->idle_cpus -
-> >                                                  busiest->idle_cpus) >> 1);
-> > -               }
-> >
-> > -               /* Consider allowing a small imbalance between NUMA groups */
-> > -               if (env->sd->flags & SD_NUMA)
-> > -                       env->imbalance = adjust_numa_imbalance(env->imbalance,
-> > -                                               busiest->sum_nr_running);
-> > +                       /* Consider allowing a small imbalance between NUMA groups */
-> > +                       if (env->sd->flags & SD_NUMA &&
-> > +                           local->group_type == busiest->group_type)
-> > +                               env->imbalance = adjust_numa_imbalance(env->imbalance,
-> > +                                                       busiest->sum_nr_running);
-> > +               }
-> >
-> >                 return;
-> >         }
-> > --
-> >
+> > I've already posted a fix for ExynosDRM driver, which is also affected:
+> > https://patchwork.kernel.org/patch/11559965/
 >
+> Alright, thanks for helping out!
 >
-> --
-> -Jirka
+> Please add a fixes/stable tag to it.
+>
+> Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for
+> platform devices")
+> Cc: stable@vger.kernel.org
+>
 
+FYI:
 
+I have now double checked all cases where ->dma_params are being
+allocated/freed. Besides those you (Marek/Tomi) you have found and
+sent fixes for (many thanks!)  - I haven't found any additional cases
+to worry about.
 
--- 
--Jirka
+However, of course there are cleanups and removal of redundant code
+that can be made, for some drivers/devices, which are based upon a
+platform device. For example, some have their own "struct
+device_dma_parameters", such as drivers/dma/dma-axi-dmac.c for
+example. This is not a problem, but deserves to be cleaned up. I have
+started to prepare patches for it.
 
+Kind regards
+Uffe
