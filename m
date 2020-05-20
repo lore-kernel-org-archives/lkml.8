@@ -2,149 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF96C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62421C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35C45207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:14:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yg9w9UDs"
+	by mail.kernel.org (Postfix) with ESMTP id 4BF0C20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgETTOF (ORCPT
+        id S1726857AbgETTPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbgETTOE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:14:04 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9C3C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:14:04 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id z26so908124oog.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FRPY2XoLC1HQ0rwn66pqOU81U3Fi4846T5ndJoAtH6c=;
-        b=Yg9w9UDs6tUntrB8W23rRvi1y7E7NEUOuEnjPj0mpeq+am0z5b0QbPNF4VDCSYPmNw
-         sBKAPvUKJzHKaDsnJH2JZpY+FDRJKMQvzx3iFRit/JfcMVrpJTmpnbVON7Bxf/XfxXhx
-         SqiWGOZt4iUaAr+64SgvFOUa9XCxMkdB6tCyl/NUpElBr6edcOltHM/5iVm0zqFlnR6B
-         Yb7RDU9oYm08GbL3xXfcqX/RZN1Ku84LRuC3b4+YrMeIBDOc5ogEIiVlGEFj2UD6Rtxn
-         7GHIxjZo9asxYbuP015cF2S2T+fsqaJGBwfVzgfZO6eo7G0AmhoP/sm90raRXD6asDHf
-         GitQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FRPY2XoLC1HQ0rwn66pqOU81U3Fi4846T5ndJoAtH6c=;
-        b=qhVxcGlJXQmXf4Cy/lAraQsnp7iX6KQBGvfO7rZEP6YA/RMCoT5U7qqRaoQldMtlBb
-         blsir3cRtYiUpoGu7m0QpbB4Iecl5C/vOrRyPPe4JzBDPxNChQ6I3648QIprAmlTKKqw
-         RRW/Z1SrxwT2A9QenQrtYIHhpuXZ7zkqNsP+57ImYjVT60doUVhc0GJ/qIXUHEKCThzw
-         tfys8Yf0JIZebNiBSbldD+FkwO5yedjLklyU6sE+bCX6KYI1BOT9CGhWSSReGASq9zgq
-         Mz63Yg/SwtNLezpnHX8yum1mZhxMcL+1Jz7jxC3VdnVcLUMDG8PLnFe0pdNIva4nc+nA
-         SeSA==
-X-Gm-Message-State: AOAM533SVAPPeXme+EyfL3FiCE8VuoSLUO2EcgPSCjFHio5E07RItnNK
-        8u1vrbCuqroDgICg8j6uizpUIQt/M6RwE/7M4BKrGQ==
-X-Google-Smtp-Source: ABdhPJyGZsapr+npAruEBsDKJ42yyXDu4Y+4ye6UYWC88Y9NpvopN4BSuewmoE4/1wwkovB0eTsyoA2KR87k48NO6+A=
-X-Received: by 2002:a4a:b389:: with SMTP id p9mr4566919ooo.84.1590002043642;
- Wed, 20 May 2020 12:14:03 -0700 (PDT)
+        Wed, 20 May 2020 15:15:35 -0400
+Received: from v6.sk ([167.172.42.174]:33216 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgETTPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:15:35 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 3544A610B3;
+        Wed, 20 May 2020 19:15:03 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v3 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded Controller binding
+Date:   Wed, 20 May 2020 20:59:54 +0200
+Message-Id: <20200520185955.2144252-2-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520185955.2144252-1-lkundrak@v3.sk>
+References: <20200520185955.2144252-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <20200512125327.1868-10-georgi.djakov@linaro.org> <20200519185836.GA469006@bogus>
- <CAGETcx8+NZYT863ySLf6XvgLBm8PM_4euue2=zbDscgmDFh+7g@mail.gmail.com> <3a392629be195fa6bebca18309efffab@codeaurora.org>
-In-Reply-To: <3a392629be195fa6bebca18309efffab@codeaurora.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 20 May 2020 12:13:27 -0700
-Message-ID: <CAGETcx9a=9pMonfyoNGqkkfaDwJ+=U6OqK1op5UYM2zQbktsXQ@mail.gmail.com>
-Subject: Re: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags bindings
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:51 AM Sibi Sankar <sibis@codeaurora.org> wrote:
->
-> On 2020-05-20 01:27, Saravana Kannan wrote:
-> > On Tue, May 19, 2020 at 11:58 AM Rob Herring <robh@kernel.org> wrote:
-> >>
-> >> On Tue, May 12, 2020 at 03:53:26PM +0300, Georgi Djakov wrote:
-> >> > From: Sibi Sankar <sibis@codeaurora.org>
-> >> >
-> >> > Add interconnect-tags bindings to enable passing of optional
-> >> > tag information to the interconnect framework.
-> >> >
-> >> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> >> > ---
-> >> > v8:
-> >> > * New patch, picked from here:
-> >> >   https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
-> >> >
-> >> >  .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
-> >> >  1 file changed, 5 insertions(+)
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> >> > index 6f5d23a605b7..c1a226a934e5 100644
-> >> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> >> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> >> > @@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
-> >> >                        * dma-mem: Path from the device to the main memory of
-> >> >                                   the system
-> >> >
-> >> > +interconnect-tags : List of interconnect path tags sorted in the same order as the
-> >> > +                 interconnects property. Consumers can append a specific tag to
-> >> > +                 the path and pass this information to the interconnect framework
-> >> > +                 to do aggregation based on the attached tag.
-> >>
-> >> Why isn't this information in the 'interconnect' arg cells?
-> >>
-> >> We have 'interconnect-names' because strings don't mix with cells. An
-> >> expanding list of 'interconnect-.*' is not a good pattern IMO.
->
-> Rob,
-> Currently the interconnect paths
-> assume a default tag and only few
-> icc paths require tags that differ
-> from the default ones. Encoding the
-> tags in the interconnect arg cells
-> would force all paths to specify
-> the tags. I guess that's okay.
+Add binding document for the ENE KB3930 Embedded Controller.
 
-I think that's the right thing. Those cells are meant to be "args" to
-the provider.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-> >
-> > Also, is there an example for interconnect-tags that I missed? Is it a
-> > list of strings, numbers, etc?
->
-> Saravana,
-> https://patchwork.kernel.org/patch/11527589/
-> ^^ is an example of interconnect-tag useage.
+---
+Changes since v1:
+- Addressed binding validation failure
 
-If we actually merge interconnect-tags, I think the doc should be
-updated. Instead of having to grep around.
+ .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
 
--Saravana
+diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+new file mode 100644
+index 000000000000..005f5cb59ab1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/ene-kb3930.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ENE KB3930 Embedded Controller bindings
++
++description: |
++  This binding describes the ENE KB3930 Embedded Controller attached to a
++  I2C bus.
++
++maintainers:
++  - Lubomir Rintel <lkundrak@v3.sk>
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - dell,wyse-ariel-ec  # Dell Wyse Ariel board (3020)
++      - const: ene,kb3930
++  reg:
++    maxItems: 1
++
++  off-gpios:
++    description: GPIO used with the shutdown protocol on Ariel
++    maxItems: 2
++
++  system-power-controller: true
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      embedded-controller@58 {
++        compatible = "dell,wyse-ariel-ec", "ene,kb3930";
++        reg = <0x58>;
++        system-power-controller;
++
++        off-gpios = <&gpio 126 GPIO_ACTIVE_HIGH>,
++                    <&gpio 127 GPIO_ACTIVE_HIGH>;
++      };
++    };
++
++...
+-- 
+2.26.2
+
