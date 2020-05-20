@@ -2,84 +2,74 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC82C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82512C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE65C207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A730207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WnNmS2VB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dg1xXsOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgETOrk (ORCPT
+        id S1726933AbgETOsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:47:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgETOrj (ORCPT
+        Wed, 20 May 2020 10:48:22 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:40403 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726545AbgETOsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:47:39 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CD8C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:47:39 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w19so1411277ply.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kArQ+7y4L6frg88ICtlSJa9zVlyeVvUtuDGqusIcsBk=;
-        b=WnNmS2VBKjBI77hVvKte2NJr2utSHOxsd68MFTv7UPPkqqjByh4JvmD+jk+s79+RN2
-         bPgfEc19G9eaqjZe3NK8v4whqk0JP3eKYu8zdFCguqv3sV7ZehXtS8NyQTltFjx1Mlac
-         CQUVxU6sLNo6k90DkqRPu4DU1V/CKLjkyaWvRhzYd4Hdq+jIygmgR/Bh6pC/uyWu3kdk
-         x9f/ehyF4kFW7/6ffqCVlxU6TI2zyv+OpKq2Zl3WCpW5BVB6+/rsE8Uo8ChJ0cZtfNMA
-         tO+zASgkMfIUOc5JURKjuLT8EilupPcd0QCNLmMlp72oodOzoH2d0M36VohaTisvvvPm
-         STZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kArQ+7y4L6frg88ICtlSJa9zVlyeVvUtuDGqusIcsBk=;
-        b=CHCjfO0VBJTCZjZjdKCqFvxFvtezbbQjggDaUit8XjFhSNz6NlTcnf/hHrMLSHLpvW
-         LoHDdd7oVUbmp2JQgiRIJTKupXdjaWUAUE1QskiK1nzmdblcmUmOuchBcZvEoThAQjI6
-         bWieCLJSytJnjIs32cq7r7K6OtgT9lj+ZsxUCTsBCxLIteBqeCOqHn84Li57iL23A0op
-         4AJ4THVJRSt1fV1KYX+7vBZVxA3iH2W96OFP+01kwVaz1dJbfNpYSTxbfq28GTikkbCf
-         rMT6HtaitXMX7zyZ5PXRtYkKoWLZHIKpcmSxNsXcwNVvG6OQFTOIXDodBAAA7vjgky/3
-         IU/A==
-X-Gm-Message-State: AOAM533iPvfNEFEtFl2yKmn4hpfM9GvrSKdIobzSdxpfcGfg22Ccgzvr
-        6kmgjeerBCD+Zb2GwRCA5PAlTA==
-X-Google-Smtp-Source: ABdhPJxNP8jNR/AeDMvtQX+mgoEcBr8O0kpb7Aq9uRE7lSIIlhtfMvDn1adZ2FD9SnGCkGedpejq5Q==
-X-Received: by 2002:a17:902:8ec5:: with SMTP id x5mr4948289plo.149.1589986058525;
-        Wed, 20 May 2020 07:47:38 -0700 (PDT)
-Received: from [192.168.86.156] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
-        by smtp.gmail.com with ESMTPSA id q201sm2398914pfq.40.2020.05.20.07.47.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 07:47:37 -0700 (PDT)
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
- data->ctx and data->hctx in blk_mq_alloc_request_hctx
-To:     Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org
-References: <20200518093155.GB35380@T590>
- <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590>
- <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590>
- <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590>
- <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590>
- <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
-Date:   Wed, 20 May 2020 08:45:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 20 May 2020 10:48:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589986100; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=qaZ6s9SOH0Sq4cNQeThLfRZPHMC2sU4KEh7rdlDegEs=; b=dg1xXsOA7B2xX2ktw1VkjT7NTrBKSyNXR+I0AY14jn2de6PXNuFNgRHOTL6uVT19u/INV5DP
+ WgztcoBhHjrB9fIBuyVLV8P9zqA5YI2AUZBJUJS5czXQJnVUPC3J8aNrN4o5ABkBFFOepYif
+ iEW6ET2JCyLt5NddNk8zcrDiclM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ec54333eb073d56919be704 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 14:48:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 05497C433A0; Wed, 20 May 2020 14:48:18 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 271D9C433C6;
+        Wed, 20 May 2020 14:48:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 271D9C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Olof Johansson <olof.johansson@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        wufan@codeaurora.org, pratanan@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
+ <20200520051536.GA2141566@kroah.com>
+ <CAKMK7uEbwTK68sxhf452fPHzAreQqRbRc7=RLGX-9SesXnJnLQ@mail.gmail.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <5701b299-7800-1584-4b3a-6147e7ad3fca@codeaurora.org>
+Date:   Wed, 20 May 2020 08:48:13 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200520080357.GA4197@lst.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAKMK7uEbwTK68sxhf452fPHzAreQqRbRc7=RLGX-9SesXnJnLQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,32 +77,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 2:03 AM, Christoph Hellwig wrote:
-> On Wed, May 20, 2020 at 11:04:24AM +0800, Ming Lei wrote:
->> On Wed, May 20, 2020 at 09:18:23AM +0800, Ming Lei wrote:
->>> On Tue, May 19, 2020 at 05:30:00PM +0200, Christoph Hellwig wrote:
->>>> On Tue, May 19, 2020 at 09:54:20AM +0800, Ming Lei wrote:
->>>>> As Thomas clarified, workqueue hasn't such issue any more, and only other
->>>>> per CPU kthreads can run until the CPU clears the online bit.
->>>>>
->>>>> So the question is if IO can be submitted from such kernel context?
->>>>
->>>> What other per-CPU kthreads even exist?
->>>
->>> I don't know, so expose to wider audiences.
+On 5/20/2020 2:34 AM, Daniel Vetter wrote:
+> On Wed, May 20, 2020 at 7:15 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 >>
->> One user is io uring with IORING_SETUP_SQPOLL & IORING_SETUP_SQ_AFF, see
->> io_sq_offload_start(), and it is a IO submission kthread.
+>> On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
+>>> On Tue, May 19, 2020 at 07:41:20PM +0200, Greg Kroah-Hartman wrote:
+>>>> On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
+>>>>> On 5/18/2020 11:08 PM, Dave Airlie wrote:
+>>>>>> On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>>>>>>>
+>>>>>>> Introduction:
+>>>>>>> Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
+>>>>>>> SoC ASIC for the purpose of efficently running Deep Learning inference
+>>>>>>> workloads in a data center environment.
+>>>>>>>
+>>>>>>> The offical press release can be found at -
+>>>>>>> https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
+>>>>>>>
+>>>>>>> The offical product website is -
+>>>>>>> https://www.qualcomm.com/products/datacenter-artificial-intelligence
+>>>>>>>
+>>>>>>> At the time of the offical press release, numerious technology news sites
+>>>>>>> also covered the product.  Doing a search of your favorite site is likely
+>>>>>>> to find their coverage of it.
+>>>>>>>
+>>>>>>> It is our goal to have the kernel driver for the product fully upstream.
+>>>>>>> The purpose of this RFC is to start that process.  We are still doing
+>>>>>>> development (see below), and thus not quite looking to gain acceptance quite
+>>>>>>> yet, but now that we have a working driver we beleive we are at the stage
+>>>>>>> where meaningful conversation with the community can occur.
+>>>>>>
+>>>>>>
+>>>>>> Hi Jeffery,
+>>>>>>
+>>>>>> Just wondering what the userspace/testing plans for this driver.
+>>>>>>
+>>>>>> This introduces a new user facing API for a device without pointers to
+>>>>>> users or tests for that API.
+>>>>>
+>>>>> We have daily internal testing, although I don't expect you to take my word
+>>>>> for that.
+>>>>>
+>>>>> I would like to get one of these devices into the hands of Linaro, so that
+>>>>> it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
+>>>>> to convince the powers that be to make this happen.
+>>>>>
+>>>>> Regarding what the community could do on its own, everything but the Linux
+>>>>> driver is considered proprietary - that includes the on device firmware and
+>>>>> the entire userspace stack.  This is a decision above my pay grade.
+>>>>
+>>>> Ok, that's a decision you are going to have to push upward on, as we
+>>>> really can't take this without a working, open, userspace.
+>>>
+>>> Uh wut.
+>>>
+>>> So the merge criteria for drivers/accel (atm still drivers/misc but I
+>>> thought that was interim until more drivers showed up) isn't actually
+>>> "totally-not-a-gpu accel driver without open source userspace".
+>>>
+>>> Instead it's "totally-not-a-gpu accel driver without open source
+>>> userspace" _and_ you have to be best buddies with Greg. Or at least
+>>> not be on the naughty company list. Since for habanalabs all you
+>>> wanted is a few test cases to exercise the ioctls. Not the entire
+>>> userspace.
+>>
+>> Also, to be fair, I have changed my mind after seeing the mess of
+>> complexity that these "ioctls for everyone!" type of pass-through
+>> these kinds of drivers are creating.  You were right, we need open
+>> userspace code in order to be able to properly evaluate and figure out
+>> what they are doing is right or not and be able to maintain things over
+>> time correctly.
+>>
+>> So I was wrong, and you were right, my apologies for my previous
+>> stubbornness.
 > 
-> As far as I can tell that code is buggy, as it still needs to migrate
-> the thread away when the cpu is offlined.  This isn't a per-cpu kthread
-> in the sene of having one for each CPU.
+> Awesome and don't worry, I'm pretty sure we've all been stubborn
+> occasionally :-)
 > 
-> Jens?
+>  From a drivers/gpu pov I think still not quite there since we also
+> want to see the compiler for these programmable accelerator thingies.
+> But just having a fairly good consensus that "userspace library with
+> all the runtime stuff excluding compiler must be open" is a huge step
+> forward. Next step may be that we (kernel overall, drivers/gpu will
+> still ask for the full thing) have ISA docs for these programmable
+> things, so that we can also evaluate that aspect and gauge how many
+> security issues there might be. Plus have a fighting chance to fix up
+> the security leaks when (post smeltdown I don't really want to
+> consider this an if) someone finds a hole in the hw security wall. At
+> least in drivers/gpu we historically have a ton of drivers with
+> command checkers to validate what userspace wants to run on the
+> accelerator thingie. Both in cases where the hw was accidentally too
+> strict, and not strict enough.
 
-It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
-they just break affinity if that CPU goes offline.
+I think this provides a pretty clear guidance on what you/the community 
+are looking for, both now and possibly in the future.
 
+Thank you.
+
+ From my perspective, it would be really nice if there was something 
+like Mesa that was a/the standard for these sorts of accelerators.  Its 
+somewhat the wild west, and we've struggled with it.
+
+I don't work on the compiler end of things, but based on what I've seen 
+in my project, I think the vendors are going to be highly resistant to 
+opening that up.  There is more than just the raw instruction set that 
+goes on in the device, and its viewed as "secret sauce" even though I 
+agree with your previous statements on that viewpoint.
 -- 
-Jens Axboe
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
