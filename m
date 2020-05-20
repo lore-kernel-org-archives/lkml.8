@@ -2,142 +2,160 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A234C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A65207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3141D207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fHmNx+2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgETUCp (ORCPT
+        id S1727113AbgETUJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:02:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8428 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbgETUCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:02:43 -0400
-IronPort-SDR: En7TE4pC35+FsL0O09GAitU4+sdrIHfIoMomojKG3Eak4OdySbhQRzLJBPesusjYt+K2xDWlrI
- Qgi90tMh9pGw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 13:02:42 -0700
-IronPort-SDR: WGQiCEpS+JLoSUye2jjBRzzaU2aCBC9y335dAGm4Yvf+0DsM2Hro8uzHZ9fCeX36P9ZVeV2cR3
- LKkGrLFBJVxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
-   d="scan'208";a="289471916"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 13:02:42 -0700
-Date:   Wed, 20 May 2020 13:02:42 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Li Xi <lixi@ddn.com>
-Subject: Re: [PATCH V3 7/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200520200242.GG3660833@iweiny-DESK2.sc.intel.com>
-References: <20200520055753.3733520-1-ira.weiny@intel.com>
- <20200520055753.3733520-8-ira.weiny@intel.com>
- <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
+        Wed, 20 May 2020 16:09:07 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8406 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgETUJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 16:09:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec58e560002>; Wed, 20 May 2020 13:08:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 20 May 2020 13:09:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 20 May 2020 13:09:07 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
+ 2020 20:09:06 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 20 May 2020 20:09:06 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.184]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec58e610004>; Wed, 20 May 2020 13:09:06 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <skomatineni@nvidia.com>, <digetx@gmail.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>
+Subject: [PATCH] sdhci: tegra: Avoid reading autocal timeout values when not applicable
+Date:   Wed, 20 May 2020 13:08:57 -0700
+Message-ID: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590005334; bh=asVh9rLzkiD5JyaaI6j95vjUXlrE2IDu86+Pd2Cz4zM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=fHmNx+2lYx43GNJpWveADlxwYya+YjTiMTBROfuoxO6BfYFYdKL88jXEWWl8RcMc/
+         v1iphoiCiARVwfwnYCpwPcY+qC8yV//Xvd0f/P90lRsdH4ivw0p0cS6L23Ak7BFgMs
+         sATl7k0XAKXkhUWcIBVoVBw6PMkhdSCeiMzZCcVa1KlvROoTV548j5jC0H6HUfNIYm
+         TBRrHaqqi3mFLUYB5yDOEEaO7aRZ6AhBv5Gi//iHfLiwI4+TzwKX7zZb665VtuLJsu
+         QVK23NunEtoELHRvUAa3z8ZBxLeP3FNvCzFG7pckxHxM+VO0jgRIcMQwZ+keZiiA9v
+         9gx41ZeN2BnNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 01:26:44PM -0600, Andreas Dilger wrote:
-> On May 19, 2020, at 11:57 PM, ira.weiny@intel.com wrote:
-> > 
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> > 
-> > Set the flag to be user visible and changeable.  Set the flag to be
-> > inherited.  Allow applications to change the flag at any time with the
-> > exception of if VERITY or ENCRYPT is set.
-> > 
-> > Disallow setting VERITY or ENCRYPT if DAX is set.
-> > 
-> > Finally, on regular files, flag the inode to not be cached to facilitate
-> > changing S_DAX on the next creation of the inode.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > ---
-> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> > index 6235440e4c39..467c30a789b6 100644
-> > --- a/fs/ext4/ext4.h
-> > +++ b/fs/ext4/ext4.h
-> > @@ -415,13 +415,16 @@ struct flex_groups {
-> > #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
-> > #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
-> > /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
-> > +
-> > +#define EXT4_DAX_FL			0x01000000 /* Inode is DAX */
-> > +
-> > #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline data. */
-> > #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
-> > #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
-> > #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 lib */
-> 
-> Hi Ira,
-> This flag value conflicts with the reserved flag in e2fsprogs for snapshots:
-> 
-> #define EXT4_SNAPFILE_FL                0x01000000  /* Inode is a snapshot */
+When auto calibration timeouts, calibration is disabled and fail-safe
+drive strength values are programmed based on the signal voltage.
 
-Sure NP but is that new?  I'm building off of 5.7-rc4.
+Different fail-safe drive strength values based on voltage are
+applicable only for SoCs supporting 3V3 and 1V8 pad controls.
 
-Just curious if I completely missed something.
+So, this patch avoids reading these properties from the device tree
+for SoCs not using pad controls and the warning of missing properties
+will not show up on these SoC platforms.
 
-> 
-> Please change EXT4_DAX_FL and FS_DAX_FL to use 0x02000000, which is not used
-> for anything in either case.
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 57 ++++++++++++++++++++++++------------------
+ 1 file changed, 33 insertions(+), 24 deletions(-)
 
-NP, thanks!
-Ira
-
-> 
-> Cheers, Andreas
-> 
-> 
-> > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-> > index 379a612f8f1d..7c5f6eb51e2d 100644
-> > --- a/include/uapi/linux/fs.h
-> > +++ b/include/uapi/linux/fs.h
-> > @@ -262,6 +262,7 @@ struct fsxattr {
-> > #define FS_EA_INODE_FL			0x00200000 /* Inode used for large EA */
-> > #define FS_EOFBLOCKS_FL			0x00400000 /* Reserved for ext4 */
-> > #define FS_NOCOW_FL			0x00800000 /* Do not cow file */
-> > +#define FS_DAX_FL			0x01000000 /* Inode is DAX */
-> > #define FS_INLINE_DATA_FL		0x10000000 /* Reserved for ext4 */
-> > #define FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
-> > #define FS_CASEFOLD_FL			0x40000000 /* Folder is case insensitive */
-> > --
-> > 2.25.1
-> > 
-> 
-> 
-> Cheers, Andreas
-> 
-> 
-> 
-> 
-> 
-
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 3e2c510..141b49b 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -605,6 +605,39 @@ static void tegra_sdhci_parse_pad_autocal_dt(struct sdhci_host *host)
+ 		autocal->pull_down_1v8 = 0;
+ 
+ 	err = device_property_read_u32(host->mmc->parent,
++			"nvidia,pad-autocal-pull-up-offset-sdr104",
++			&autocal->pull_up_sdr104);
++	if (err)
++		autocal->pull_up_sdr104 = autocal->pull_up_1v8;
++
++	err = device_property_read_u32(host->mmc->parent,
++			"nvidia,pad-autocal-pull-down-offset-sdr104",
++			&autocal->pull_down_sdr104);
++	if (err)
++		autocal->pull_down_sdr104 = autocal->pull_down_1v8;
++
++	err = device_property_read_u32(host->mmc->parent,
++			"nvidia,pad-autocal-pull-up-offset-hs400",
++			&autocal->pull_up_hs400);
++	if (err)
++		autocal->pull_up_hs400 = autocal->pull_up_1v8;
++
++	err = device_property_read_u32(host->mmc->parent,
++			"nvidia,pad-autocal-pull-down-offset-hs400",
++			&autocal->pull_down_hs400);
++	if (err)
++		autocal->pull_down_hs400 = autocal->pull_down_1v8;
++
++	/*
++	 * Different fail-safe drive strength values based on the signaling
++	 * voltage are applicable for SoCs supporting 3V3 and 1V8 pad controls.
++	 * So, avoid reading below device tree properies for SoCs that don't
++	 * have NVQUIRK_NEEDS_PAD_CONTROL.
++	 */
++	if (!(tegra_host->soc_data->nvquirks & NVQUIRK_NEEDS_PAD_CONTROL))
++		return;
++
++	err = device_property_read_u32(host->mmc->parent,
+ 			"nvidia,pad-autocal-pull-up-offset-3v3-timeout",
+ 			&autocal->pull_up_3v3_timeout);
+ 	if (err) {
+@@ -647,30 +680,6 @@ static void tegra_sdhci_parse_pad_autocal_dt(struct sdhci_host *host)
+ 				mmc_hostname(host->mmc));
+ 		autocal->pull_down_1v8_timeout = 0;
+ 	}
+-
+-	err = device_property_read_u32(host->mmc->parent,
+-			"nvidia,pad-autocal-pull-up-offset-sdr104",
+-			&autocal->pull_up_sdr104);
+-	if (err)
+-		autocal->pull_up_sdr104 = autocal->pull_up_1v8;
+-
+-	err = device_property_read_u32(host->mmc->parent,
+-			"nvidia,pad-autocal-pull-down-offset-sdr104",
+-			&autocal->pull_down_sdr104);
+-	if (err)
+-		autocal->pull_down_sdr104 = autocal->pull_down_1v8;
+-
+-	err = device_property_read_u32(host->mmc->parent,
+-			"nvidia,pad-autocal-pull-up-offset-hs400",
+-			&autocal->pull_up_hs400);
+-	if (err)
+-		autocal->pull_up_hs400 = autocal->pull_up_1v8;
+-
+-	err = device_property_read_u32(host->mmc->parent,
+-			"nvidia,pad-autocal-pull-down-offset-hs400",
+-			&autocal->pull_down_hs400);
+-	if (err)
+-		autocal->pull_down_hs400 = autocal->pull_down_1v8;
+ }
+ 
+ static void tegra_sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+-- 
+2.7.4
 
