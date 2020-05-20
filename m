@@ -2,84 +2,163 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A330C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03351207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15EC3207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589981747;
+	bh=phloIUBQpu3/jpZrsC4HMcX5ETMF1RT2H6pJF8+igM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OM/uUp15N91sJvQig+k2+sr+bp9JWiZHWEvmIkG9qyuTw1hho5mIwRBjGcKYcKyOH
+	 jtC+53cM9l67TKGCUmw6h2qeZBrIIp36a9dOO3qbKHDp8znYHBl1kf/9vg2erp08pj
+	 nDwIcBFWSNBIpvTFycBUkE2i/xwyrDlgiqU3EBkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgETNfD (ORCPT
+        id S1726831AbgETNfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:35:03 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:15258 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726439AbgETNfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:35:03 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app2 (Coremail) with SMTP id by_KCgAneBLpMcVev4SOAQ--.59815S4;
-        Wed, 20 May 2020 21:34:37 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: omap-keypad - fix runtime pm imbalance on error
-Date:   Wed, 20 May 2020 21:34:29 +0800
-Message-Id: <20200520133432.19738-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgAneBLpMcVev4SOAQ--.59815S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWDJwb_W3
-        4Yvrs7Wr4IkF4jgwnrJa1avrW2gFs0qFyDZr10qFyft3yfZrWDGa4UZF93ZrsF9ws7GF17
-        twnrGrWxAws5ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW5GwCF04k20xvY0x0EwIxG
-        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAF
-        wI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUp5l8UUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        Wed, 20 May 2020 09:35:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgETNfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:35:45 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2182205CB;
+        Wed, 20 May 2020 13:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589981745;
+        bh=phloIUBQpu3/jpZrsC4HMcX5ETMF1RT2H6pJF8+igM8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pRPVN1VEWz1jagm9L1OZpf/2CjCGsJiDqQqthV2zLLnj3k95/HLC/fXdMNPDW2D8l
+         mzjIOsRpyd6E48y1AXQsLa1G/1JN0vR5TM2JquiEVwBJIeX4LuLEHJXc6fjyE8jkZ2
+         b9Ns2hHBsXXh5sQMQLNgqbINFvLJyNDTF3ZtHb1U=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BEEF840AFD; Wed, 20 May 2020 10:35:42 -0300 (-03)
+Date:   Wed, 20 May 2020 10:35:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/7] perf metricgroup: Change evlist_used to a bitmap
+Message-ID: <20200520133542.GG32678@kernel.org>
+References: <20200520072814.128267-1-irogers@google.com>
+ <20200520072814.128267-2-irogers@google.com>
+ <20200520131422.GL157452@krava>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520131422.GL157452@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a pairing decrement is needed
-on the error handling path to keep the counter balanced.
+Em Wed, May 20, 2020 at 03:14:22PM +0200, Jiri Olsa escreveu:
+> On Wed, May 20, 2020 at 12:28:08AM -0700, Ian Rogers wrote:
+> > Use a bitmap rather than an array of bools.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/input/keyboard/omap4-keypad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, applied.
+ 
+> thanks,
+> jirka
+> 
+> > ---
+> >  tools/perf/util/metricgroup.c | 18 ++++++++----------
+> >  1 file changed, 8 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index 6772d256dfdf..a16f60da06ab 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -95,7 +95,7 @@ struct egroup {
+> >  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+> >  				      struct expr_parse_ctx *pctx,
+> >  				      struct evsel **metric_events,
+> > -				      bool *evlist_used)
+> > +				      unsigned long *evlist_used)
+> >  {
+> >  	struct evsel *ev;
+> >  	bool leader_found;
+> > @@ -105,7 +105,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+> >  	double *val_ptr;
+> >  
+> >  	evlist__for_each_entry (perf_evlist, ev) {
+> > -		if (evlist_used[j++])
+> > +		if (test_bit(j++, evlist_used))
+> >  			continue;
+> >  		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr)) {
+> >  			if (!metric_events[i])
+> > @@ -141,7 +141,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+> >  			j++;
+> >  		}
+> >  		ev = metric_events[i];
+> > -		evlist_used[ev->idx] = true;
+> > +		set_bit(ev->idx, evlist_used);
+> >  	}
+> >  
+> >  	return metric_events[0];
+> > @@ -157,13 +157,11 @@ static int metricgroup__setup_events(struct list_head *groups,
+> >  	int ret = 0;
+> >  	struct egroup *eg;
+> >  	struct evsel *evsel;
+> > -	bool *evlist_used;
+> > +	unsigned long *evlist_used;
+> >  
+> > -	evlist_used = calloc(perf_evlist->core.nr_entries, sizeof(bool));
+> > -	if (!evlist_used) {
+> > -		ret = -ENOMEM;
+> > -		return ret;
+> > -	}
+> > +	evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
+> > +	if (!evlist_used)
+> > +		return -ENOMEM;
+> >  
+> >  	list_for_each_entry (eg, groups, nd) {
+> >  		struct evsel **metric_events;
+> > @@ -201,7 +199,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+> >  		list_add(&expr->nd, &me->head);
+> >  	}
+> >  
+> > -	free(evlist_used);
+> > +	bitmap_free(evlist_used);
+> >  
+> >  	return ret;
+> >  }
+> > -- 
+> > 2.26.2.761.g0e0b3e54be-goog
+> > 
+> 
 
-diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
-index 94c94d7f5155..d13d81c796d2 100644
---- a/drivers/input/keyboard/omap4-keypad.c
-+++ b/drivers/input/keyboard/omap4-keypad.c
-@@ -371,8 +371,8 @@ static int omap4_keypad_probe(struct platform_device *pdev)
- err_free_input:
- 	input_free_device(input_dev);
- err_pm_put_sync:
--	pm_runtime_put_sync(&pdev->dev);
- err_unmap:
-+	pm_runtime_put_sync(&pdev->dev);
- 	iounmap(keypad_data->base);
- err_release_mem:
- 	release_mem_region(res->start, resource_size(res));
 -- 
-2.17.1
 
+- Arnaldo
