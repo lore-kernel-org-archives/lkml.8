@@ -2,99 +2,145 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E1FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 326E920671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cTN8MLqD"
+	by mail.kernel.org (Postfix) with ESMTP id EBA6F207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589991347;
+	bh=h9MTIGPYQzOllbjEkIgnEniE41lTl+OD7Fs3cDvWlC4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=NQz6V5xwVhngbdssjJ6CloERsT728hmqdBO2CWLBELZYj2CU/8GOPOAHFSqMJDzlJ
+	 E7/pGMlemlM2Y1YJO5hZEAb77ft1Ud4S47WjyhmH76a+q2ObXSJ2+WG5KL0bimyMvJ
+	 cSWeg2D0BF8tUYHHociSM5A2p1VPaEYHYnffhYM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgETQPO (ORCPT
+        id S1726805AbgETQPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETQPN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:15:13 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2368C061A0E;
-        Wed, 20 May 2020 09:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=KUsG4feXigEdZ3QpYALXvpu/1zKdm/ox7vuSCPQehrI=; b=cTN8MLqDM8INSNrXIHuE2+fp09
-        UNc+u5wyrqEtriUMCkNXq63TjVhwN90f8CssOrLD37dfcPJkAW9o2Cgplh5Urq3dBC2NZJVXmUPE4
-        Pn1oQxZYoUQ8NzPVUuB/PB6r3wsG1pao7sGlEs2Z5oG4z4/yCaFGGzaOiRv2YC8u+YwUre+rCPPat
-        DOAKg/QWoTChuBCw8tVTBhqJfhLVAXOGfmvTdJLPVSmjzL+O4fMpqU8EyvwB3kBWbCF3t4N6WUt6r
-        4uusMh5Bpe8D/t4OTl7ulP1uifl9IHKfAW6+3JuRA037ZRPEe84Z9uUZyjPmvLlEjavPow5eycrBO
-        IcHZf5lw==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbRN6-00083y-Lu; Wed, 20 May 2020 16:15:09 +0000
-Subject: Re: [next] i2c: mediatek: Use div_u64 for 64-bit division to fix
- 32-bit kernels
-To:     qii.wang@mediatek.com, wsa@the-dreams.de
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        leilk.liu@mediatek.com
-References: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c92c499b-825d-bd28-3c0d-e63076cba1b6@infradead.org>
-Date:   Wed, 20 May 2020 09:15:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 12:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgETQPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:15:45 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8C120671;
+        Wed, 20 May 2020 16:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589991344;
+        bh=h9MTIGPYQzOllbjEkIgnEniE41lTl+OD7Fs3cDvWlC4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dBQAsnvSt1BuQnO2Uz0LYcXqH8wrzmcE0sMq3dliKDQWy2VD07oQBTPN8C3Xz4q5j
+         EEp4TAFPoo5NVsbBnUlz3FFLpZ4E3P2l4+ULM4f39CP4KxODVhaYOqqg6ZguekD1Z4
+         YSmgsUdQndWtM7LDHv6BuDaL4cZ+TEEM751dZfMc=
+Date:   Wed, 20 May 2020 11:15:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "open list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
+        Julien Grall <julien.grall@arm.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 00/15] PCI: brcmstb: enable PCIe for STB chips
+Message-ID: <20200520161541.GA1089402@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <1589970713-19944-1-git-send-email-qii.wang@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519203419.12369-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 3:31 AM, qii.wang@mediatek.com wrote:
-> From: Qii Wang <qii.wang@mediatek.com>
+On Tue, May 19, 2020 at 04:33:58PM -0400, Jim Quinlan wrote:
+> This patchset expands the usefulness of the Broadcom Settop Box PCIe
+> controller by building upon the PCIe driver used currently by the
+> Raspbery Pi.  Other forms of this patchset were submitted by me years
+> ago and not accepted; the major sticking point was the code required
+> for the DMA remapping needed for the PCIe driver to work [1].
 > 
-> Use div_u64 for 64-bit division, and change sample_ns type to
-> unsigned int. Otherwise, the module will reference __udivdi3
-> under 32-bit kernels, which is not allowed in kernel space.
+> There have been many changes to the DMA and OF subsystems since that
+> time, making a cleaner and less intrusive patchset possible.  This
+> patchset implements a generalization of "dev->dma_pfn_offset", except
+> that instead of a single scalar offset it provides for multiple
+> offsets via a function which depends upon the "dma-ranges" property of
+> the PCIe host controller.  This is required for proper functionality
+> of the BrcmSTB PCIe controller and possibly some other devices.
 > 
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-thanks.
-
-> ---
->  drivers/i2c/busses/i2c-mt65xx.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> [1] https://lore.kernel.org/linux-arm-kernel/1516058925-46522-5-git-send-email-jim2101024@gmail.com/
 > 
-> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index 7020618..deef69e 100644
-> --- a/drivers/i2c/busses/i2c-mt65xx.c
-> +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -551,7 +551,8 @@ static int mtk_i2c_check_ac_timing(struct mtk_i2c *i2c,
->  	const struct i2c_spec_values *spec;
->  	unsigned int su_sta_cnt, low_cnt, high_cnt, max_step_cnt;
->  	unsigned int sda_max, sda_min, clk_ns, max_sta_cnt = 0x3f;
-> -	long long sample_ns = (1000000000 * (sample_cnt + 1)) / clk_src;
-> +	unsigned int sample_ns = div_u64(1000000000ULL * (sample_cnt + 1),
-> +					 clk_src);
->  
->  	if (!i2c->dev_comp->timing_adjust)
->  		return 0;
+> Jim Quinlan (15):
+>   PCI: brcmstb: PCIE_BRCMSTB depends on ARCH_BRCMSTB
+>   ahci_brcm: fix use of BCM7216 reset controller
+>   dt-bindings: PCI: Add bindings for more Brcmstb chips
+>   PCI: brcmstb: Add compatibily of other chips
+>   PCI: brcmstb: Add suspend and resume pm_ops
+>   PCI: brcmstb: Asserting PERST is different for 7278
+>   PCI: brcmstb: Add control of rescal reset
+>   of: Include a dev param in of_dma_get_range()
+>   device core: Add ability to handle multiple dma offsets
+>   dma-direct: Invoke dma offset func if needed
+>   arm: dma-mapping: Invoke dma offset func if needed
+>   PCI: brcmstb: Set internal memory viewport sizes
+>   PCI: brcmstb: Accommodate MSI for older chips
+>   PCI: brcmstb: Set bus max burst side by chip type
+>   PCI: brcmstb: add compatilbe chips to match list
+
+If you have occasion to post a v2 for other reasons,
+
+s/PCIE_BRCMSTB depends on ARCH_BRCMSTB/Allow PCIE_BRCMSTB on ARCH_BRCMSTB also/
+s/ahci_brcm: fix use of BCM7216 reset controller/ata: ahci_brcm: Fix .../
+s/Add compatibily of other chips/Add bcm7278 register info/
+s/Asserting PERST is different for 7278/Add bcm7278 PERST support/
+s/Set bus max burst side/Set bus max burst size/
+s/add compatilbe chips.*/Add bcm7211, bcm7216, bcm7445, bcm7278 to match list/
+
+Rewrap commit logs to use full 75 character lines (to allow for the 4
+spaces added by git log).
+
+In commit logs, s/This commit// (use imperative mood instead).
+
+In "Accommodate MSI for older chips" commit log, s/commont/common/.
+
+>  .../bindings/pci/brcm,stb-pcie.yaml           |  40 +-
+>  arch/arm/include/asm/dma-mapping.h            |  17 +-
+>  drivers/ata/ahci_brcm.c                       |  14 +-
+>  drivers/of/address.c                          |  54 ++-
+>  drivers/of/device.c                           |   2 +-
+>  drivers/of/of_private.h                       |   8 +-
+>  drivers/pci/controller/Kconfig                |   4 +-
+>  drivers/pci/controller/pcie-brcmstb.c         | 403 +++++++++++++++---
+>  include/linux/device.h                        |   9 +-
+>  include/linux/dma-direct.h                    |  16 +
+>  include/linux/dma-mapping.h                   |  44 ++
+>  kernel/dma/Kconfig                            |  12 +
+>  12 files changed, 542 insertions(+), 81 deletions(-)
 > 
-
-
--- 
-~Randy
+> -- 
+> 2.17.1
+> 
