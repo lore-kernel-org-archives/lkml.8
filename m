@@ -2,208 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC059C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEB1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B9520671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:29:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="D7oPGHVD"
+	by mail.kernel.org (Postfix) with ESMTP id 14A1120671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgETS3k (ORCPT
+        id S1726791AbgETScv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:29:40 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59600 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgETS3g (ORCPT
+        Wed, 20 May 2020 14:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgETScv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:29:36 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KIHaTv000885;
-        Wed, 20 May 2020 18:29:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=jH2azHDilRy3Eymjd7YkT7wc4b3eHTRR3U5ixDSNB0U=;
- b=D7oPGHVDZIlDsTEsi2DHPv3YDdcbiQrvy1RcZyH7DNu/8USFBIkdYzxB4JBHLOhQswIS
- Bl1HC+g5Ma+05ZEllyzsYldowthCi7Upwy0bCwouq6N+Y0loFQtuLd8W7im9902U0EqA
- sAN7Dyol+855dzUiB7dbikgMrHPMG2NbGc6bfALVHj1wtGNjTNS8PY3HYVRFhmQPLRCE
- Qwd9p3EOBY2jmsn58iPOh0kzUCJevSTTVpKfROGICIy6oKIeSxqDnkKXbshHb0xLW1PM
- gJjs07jlP+TPlbtM6lHbFm1UMAI5wmZ9Lr3NZIj9WvDu7nh7s3jXH4Z7HkXl39EFTMzJ fw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 31501rb8jf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 18:29:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KICcee014778;
-        Wed, 20 May 2020 18:27:03 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 313gj3yt6u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 18:27:03 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KIQq27008059;
-        Wed, 20 May 2020 18:26:52 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 May 2020 11:26:52 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Robert Elliott <elliott@hpe.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH v2 0/7] padata: parallelize deferred page init
-Date:   Wed, 20 May 2020 14:26:38 -0400
-Message-Id: <20200520182645.1658949-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 20 May 2020 14:32:51 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835ABC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:32:50 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbTVi-0008Vl-HC; Wed, 20 May 2020 20:32:10 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id C4E03100C99; Wed, 20 May 2020 20:32:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V6 12/37] x86/entry: Provide idtentry_entry/exit_cond_rcu()
+In-Reply-To: <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+References: <20200515234547.710474468@linutronix.de> <20200515235125.628629605@linutronix.de> <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com> <87ftbv7nsd.fsf@nanos.tec.linutronix.de> <87a7237k3x.fsf@nanos.tec.linutronix.de> <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com> <874ksb7hbg.fsf@nanos.tec.linutronix.de> <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com> <20200520022353.GN2869@paulmck-ThinkPad-P72> <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com> <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+Date:   Wed, 20 May 2020 20:32:09 +0200
+Message-ID: <877dx6wj86.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005200148
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deferred struct page init is a bottleneck in kernel boot--the biggest
-for us and probably others.  Optimizing it maximizes availability for
-large-memory systems and allows spinning up short-lived VMs as needed
-without having to leave them running.  It also benefits bare metal
-machines hosting VMs that are sensitive to downtime.  In projects such
-as VMM Fast Restart[1], where guest state is preserved across kexec
-reboot, it helps prevent application and network timeouts in the guests.
+Andy Lutomirski <luto@kernel.org> writes:
+> So maybe the code can change to:
+>
+>     if (user_mode(regs)) {
+>         enter_from_user_mode();
+>     } else {
+>         if (!__rcu_is_watching()) {
+>             /*
+>              * If RCU is not watching then the same careful
+>              * sequence vs. lockdep and tracing is required.
+>              *
+>              * This only happens for IRQs that hit the idle loop, and
+>              * even that only happens if we aren't using the sane
+>              * MWAIT-while-IF=0 mode.
+>              */
+>             lockdep_hardirqs_off(CALLER_ADDR0);
+>             rcu_irq_enter();
+>             instrumentation_begin();
+>             trace_hardirqs_off_prepare();
+>             instrumentation_end();
+>             return true;
+>         } else {
+>             /*
+>              * If RCU is watching then the combo function
+>              * can be used.
+>              */
+>             instrumentation_begin();
+>             trace_hardirqs_off();
+>             rcu_tickle();
+>             instrumentation_end();
+>         }
+>     }
+>     return false;
+>
+> This is exactly what you have except that the cond_rcu part is gone
+> and I added rcu_tickle().
+>
+> Paul, the major change here is that if an IRQ hits normal kernel code
+> (i.e. code where RCU is watching and we're not in an EQS), the IRQ
+> won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
+> rcu_tickle() on entry and nothing on exit.  Does that cover all the
+> bases?
 
-So, multithread deferred init to take full advantage of system memory
-bandwidth.
+Fine with me, but the final vote needs to come from Paul and Joel.
 
-Extend padata, a framework that handles many parallel singlethreaded
-jobs, to handle multithreaded jobs as well by adding support for
-splitting up the work evenly, specifying a minimum amount of work that's
-appropriate for one helper thread to do, load balancing between helpers,
-and coordinating them.  More documentation in patches 4 and 7.
+Thanks,
 
-This series is the first step in a project to address other memory
-proportional bottlenecks in the kernel such as pmem struct page init,
-vfio page pinning, hugetlb fallocate, and munmap.  Deferred page init
-doesn't require concurrency limits, resource control, or priority
-adjustments like these other users will because it happens during boot
-when the system is otherwise idle and waiting for page init to finish.
-
-This has been run on a variety of x86 systems and speeds up kernel boot
-by 3% to 49%, saving up to 1.6 out of 4 seconds.  Patch 5 has more
-numbers.
-
-Please review and test, and thanks to Alex, Andrew, Josh, and Pavel for
-their feedback in the last version.
-
-The powerpc and s390 lists are included in case they want to give this a
-try, they had enabled this feature when it was configured per arch.
-
-Series based on 5.7-rc6 plus these three from mmotm
-
-  mm-call-touch_nmi_watchdog-on-max-order-boundaries-in-deferred-init.patch
-  mm-initialize-deferred-pages-with-interrupts-enabled.patch
-  mm-call-cond_resched-from-deferred_init_memmap.patch
-
-and it's available here:
-
-  git://oss.oracle.com/git/linux-dmjordan.git padata-mt-definit-v2
-  https://oss.oracle.com/git/gitweb.cgi?p=linux-dmjordan.git;a=shortlog;h=refs/heads/padata-mt-definit-v2
-
-and the future users and related features are available as
-work-in-progress:
-
-  git://oss.oracle.com/git/linux-dmjordan.git padata-mt-wip-v0.4
-  https://oss.oracle.com/git/gitweb.cgi?p=linux-dmjordan.git;a=shortlog;h=refs/heads/padata-mt-wip-v0.4
-
-v2:
- - Improve the problem statement (Andrew, Josh, Pavel)
- - Add T-b's to unchanged patches (Josh)
- - Fully initialize max-order blocks to avoid buddy issues (Alex)
- - Parallelize on section-aligned boundaries to avoid potential
-   false sharing (Alex)
- - Return the maximum thread count from a function that architectures
-   can override, with the generic version returning 1 (current
-   behavior).  Override for x86 since that's the only arch this series
-   has been tested on so far.  Other archs can test with more threads
-   by dropping patch 6.
- - Rebase to v5.7-rc6, rerun tests
-
-RFC v4 [2] -> v1:
- - merged with padata (Peter)
- - got rid of the 'task' nomenclature (Peter, Jon)
-
-future work branch:
- - made lockdep-aware (Jason, Peter)
- - adjust workqueue worker priority with renice_or_cancel() (Tejun)
- - fixed undo problem in VFIO (Alex)
-
-The remaining feedback, mainly resource control awareness (cgroup etc),
-is TODO for later series.
-
-[1] https://static.sched.com/hosted_files/kvmforum2019/66/VMM-fast-restart_kvmforum2019.pdf
-    https://www.youtube.com/watch?v=pBsHnf93tcQ
-    https://lore.kernel.org/linux-mm/1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com/
-
-[2] https://lore.kernel.org/linux-mm/20181105165558.11698-1-daniel.m.jordan@oracle.com/
-
-Daniel Jordan (7):
-  padata: remove exit routine
-  padata: initialize earlier
-  padata: allocate work structures for parallel jobs from a pool
-  padata: add basic support for multithreaded jobs
-  mm: parallelize deferred_init_memmap()
-  mm: make deferred init's max threads arch-specific
-  padata: document multithreaded jobs
-
- Documentation/core-api/padata.rst |  41 +++--
- arch/x86/mm/init_64.c             |  12 ++
- include/linux/memblock.h          |   3 +
- include/linux/padata.h            |  43 ++++-
- init/main.c                       |   2 +
- kernel/padata.c                   | 277 ++++++++++++++++++++++++------
- mm/Kconfig                        |   6 +-
- mm/page_alloc.c                   |  67 +++++++-
- 8 files changed, 373 insertions(+), 78 deletions(-)
-
-
-base-commit: b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
-prerequisite-patch-id: 4ad522141e1119a325a9799dad2bd982fbac8b7c
-prerequisite-patch-id: 169273327e56f5461101a71dfbd6b4cfd4570cf0
-prerequisite-patch-id: 0f34692c8a9673d4c4f6a3545cf8ec3a2abf8620
--- 
-2.26.2
-
+        tglx
