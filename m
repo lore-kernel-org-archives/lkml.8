@@ -2,83 +2,108 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4164DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C42B7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D688207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589959993;
-	bh=wubkXTV9YfNSZFkVpKAM6nS+N7G81auN5xKELhErTmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gfw3+rDlpH+JJNrZJFdQzB2mKdrAbI+Eobwj1yZCIm7JgI7OfKXSI+k16oK4WpRA5
-	 sTUvKKGvtLEf5WZXLPRmkYECjmEJ778zHBCNftYYgOjPVd6mA2qm2A11L+HMTNHwdl
-	 tXIFa+KOaRt3+CiKNvXkn2ZPzTuYVfu7cSzs+fK4=
+	by mail.kernel.org (Postfix) with ESMTP id A0FB320671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:33:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMMvxKw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgETHdL (ORCPT
+        id S1726760AbgETHdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgETHdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:33:10 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26ABF205CB;
-        Wed, 20 May 2020 07:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589959989;
-        bh=wubkXTV9YfNSZFkVpKAM6nS+N7G81auN5xKELhErTmY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yc/605SUMUJFs9TJLBPK2N5ck7U+Xa/E8+UxOiI7rgE3jsziwIwsk2ilHury9s9E2
-         pTi8zsr9ZsOdemB7gI4Lu3oSp6U9/zDqz0PuAkVPzm4Smr6sumxAV0qmwbH5wb3vON
-         SxPzkYN+kKYXfWbahrcv+B36uCRmn6Sj+4UJgtoU=
-Date:   Wed, 20 May 2020 08:33:04 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>, john.garry@huawei.com,
-        mark.rutland@arm.com, shawnguo@kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier
- for userspace
-Message-ID: <20200520073304.GA23534@willie-the-truck>
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-2-qiangqing.zhang@nxp.com>
- <20200519185125.GB453195@bogus>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519185125.GB453195@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 20 May 2020 03:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgETHdf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 03:33:35 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8EBC061A0E;
+        Wed, 20 May 2020 00:33:35 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id k19so1819936edv.9;
+        Wed, 20 May 2020 00:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=JhMvQ6wT2z/w9jJ1AFzBZlKrPInU1Ytn40KkatChIbI=;
+        b=OMMvxKw98HtRI0PuS3gCbRt7U0oBV+X/jYhUXMOzZtBBWsa/2zBaiAzySqnvgAbuUi
+         rXiyqAkfovsELMtD4msd6trgfju0pOHGSoBT8VZCDGNAT9XjF3ah2vTD9OM2tgYxED/z
+         4joKMkb917LW6jRKmKdPT6OHqdRIL5Zo3Pc8DqqCiKCb4Y06YOtLsdpG8s7JPa6+QHNB
+         k7cxDzlzU8ASGhhBQERLxZYTsEsEROjs+YYtrC46x8k5nl6CtAp3k4uGaMcaa5zV+kAo
+         J+VMdZa5vjFOJcp8nW/y73ommkh2dISrDXYp7hr+UhhVopWkTZ5VlGnZt1WKydQHDQus
+         wE1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JhMvQ6wT2z/w9jJ1AFzBZlKrPInU1Ytn40KkatChIbI=;
+        b=H6lKsKOsL7tAg/69FTKQLY0wHTV8mUxKaJ+2Wxjln8r6gBUmHxzLFNIN0RreYBRo5A
+         FHK/RrlZ7leu5lQVe6tErZGKwWTlGk1kFlpQjVOogPpFVA70TWQhRUYH1ksiS8RLCG1V
+         A4w2LMOWX2dLr1PGNAYgKRg4IHu8BaQ12d0BV9TiS77spyCOqK12lr+SMwaxOHPX5uuh
+         SeBiaQZ0a425oyQ4rvyvPzxkOvmujbbL2yGAPo7K7PwxTxXRw3HfM/9ZTDnagDiMQnrG
+         K1dm0c93PoeRiwz4fPaYgTsQvUFboAFqHi8vAW8XpL28K5BeJpb1WJVFj9FcyoT+tYrh
+         aOXA==
+X-Gm-Message-State: AOAM531aQvIGib+HJizwwpmpU90ry+kbMxvaAkK39Gg1TDd0mXMJ0NVd
+        UaCuN6wMXi+mRnBJ9ZdzoqxV5xi+c9c=
+X-Google-Smtp-Source: ABdhPJwB4O0WJOY8eMzSBtHOUZMdLBdwqnBOUTE9viaGo0ldgqm4CzJ5o972WDJ7A+EM4U1tBXuh0Q==
+X-Received: by 2002:aa7:c4da:: with SMTP id p26mr2186573edr.184.1589960013840;
+        Wed, 20 May 2020 00:33:33 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id u10sm1057252edb.65.2020.05.20.00.33.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 May 2020 00:33:33 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, dmitry.torokhov@gmail.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg property
+Date:   Wed, 20 May 2020 09:33:27 +0200
+Message-Id: <20200520073327.6016-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:51:25PM -0600, Rob Herring wrote:
-> On Tue, May 12, 2020 at 03:31:13PM +0800, Joakim Zhang wrote:
-> > +static ssize_t ddr_perf_identifier_show(struct device *dev,
-> > +					struct device_attribute *attr,
-> > +					char *page)
-> > +{
-> > +	struct ddr_pmu *pmu = dev_get_drvdata(dev);
-> > +
-> > +	return sprintf(page, "%s\n", pmu->devtype_data->identifier);
-> 
-> Why do we need yet another way to identify the SoC from userspace?
+A test with the command below gives this error:
 
-I also really dislike this. What's the preferred way to identify the SoC
-from userspace? It's needed so that the perf userspace tool can describe
-perf events that are supported for the PMU, as this isn't probe-able
-directly from the hardware. We have the same issue with the SMMUv3 PMCG [1],
-and so we need to solve the problem for both DT and ACPI.
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
+touchscreen@3e: reg:0:0: 56 was expected
 
-Will
+The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
+was shipped with different addresses then the binding currently allows.
+Change the reg property that any address will pass.
 
-[1] https://lore.kernel.org/r/1587120634-19666-1-git-send-email-john.garry@huawei.com
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
+edt-ft5x06.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+index 383d64a91..baa8e8f7e 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+@@ -42,7 +42,7 @@ properties:
+       - focaltech,ft6236
+ 
+   reg:
+-    const: 0x38
++    maxItems: 1
+ 
+   interrupts:
+     maxItems: 1
+-- 
+2.11.0
+
