@@ -3,105 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7768C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F6F207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975DE207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589953433;
-	bh=IEc+QC7akchK5eV7/ZYdgqsaG2z+ctbqijAK6mJ6Q98=;
+	s=default; t=1589953482;
+	bh=ZSFGZSaSAHQFHwCrw/WChCi7NvAdkE7dPM4CwL7wCgc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t7pz6zeQFuYLk8f6rqMPnP5AT/N9V1R/jRyuHdSDaU9QaH84ZIKGgc+KVXmFWl1xo
-	 Xl7pTcMlIUoUuJAmZ5KQ70P/D6Smcwnlu8Q5bLD0YIAz2y0aEeOhxS0QjZYuZ06654
-	 7wL48yhhWyJSxi2bdDOT6C9t6PeUSEI1o7Oc+xas=
+	b=nlfdp3CpHMe4J302C0tDpvcOU/metZiq1jWi7XoowHYB1FyEJNOm7PG0ff5volR+a
+	 BuhlS4RMov89oDyvb/YR8TOCjDQ8GFlSp6F7/8oDrJcnC+H9TzSV7mS0fzTFvMgXmD
+	 2YR38YRnqC5ArtLdMk6m8XfGI6gT7SYatRHmpYPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgETFnx (ORCPT
+        id S1726835AbgETFol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 01:43:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 01:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgETFnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 01:43:52 -0400
+        id S1726309AbgETFol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 01:44:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B534C2075F;
-        Wed, 20 May 2020 05:43:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 352652075F;
+        Wed, 20 May 2020 05:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589953432;
-        bh=IEc+QC7akchK5eV7/ZYdgqsaG2z+ctbqijAK6mJ6Q98=;
+        s=default; t=1589953479;
+        bh=ZSFGZSaSAHQFHwCrw/WChCi7NvAdkE7dPM4CwL7wCgc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MV9LOgk3OXP5XC66veg+cLqTxXmgekS2F0K2Lx1avu81cXlkxReu1me2r75MMQ2b+
-         ZE/q6upLQs+FrqRHXAntfRYgsnkgOdGK7p4UiV+dhvyZ4PYwI5dyJMh3rzb1/w81wX
-         vLFfMmab6HO3EzfJeRgK37kwsXkaZoBeGIY6dFJs=
-Date:   Wed, 20 May 2020 07:43:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Subject: Re: [PATCH 09/15] device core: Add ability to handle multiple dma
- offsets
-Message-ID: <20200520054349.GB2180554@kroah.com>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-10-james.quinlan@broadcom.com>
+        b=hnlUkCfqrT8CtMlGqxFJacI9Br3vxlAhOyNgh5yz7gQ6VZei0HpH913A1355N/HPD
+         vS6j6TR7wPc47peYKA+fjP+hKf4F8n3C2pJ0dSFMIOxd3CUAZ/MdqEUo21XZKqiTdT
+         55mAM/K6awkz0qC1KHpIZ+0N0cOwhUoem4MOJez0=
+Date:   Wed, 20 May 2020 07:44:36 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [PATCH v2] /dev/mem: Revoke mappings when a driver claims the
+ region
+Message-ID: <20200520054436.GC2180554@kroah.com>
+References: <158987153989.4000084.17143582803685077783.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200519121115.GC332015@kroah.com>
+ <CAPcyv4gTkWx_q4sDXVyS+ybh0Nj7ybPUXGC4HCHQCO4eGxXwiQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200519203419.12369-10-james.quinlan@broadcom.com>
+In-Reply-To: <CAPcyv4gTkWx_q4sDXVyS+ybh0Nj7ybPUXGC4HCHQCO4eGxXwiQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 04:34:07PM -0400, Jim Quinlan wrote:
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index ac8e37cd716a..6cd916860b5f 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -493,6 +493,8 @@ struct dev_links_info {
->   * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
->   *		DMA limit than the device itself supports.
->   * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-> + * @dma_map:	Like dma_pfn_offset but used when there are multiple
-> + *		pfn offsets for multiple dma-ranges.
->   * @dma_parms:	A low level driver may set these to teach IOMMU code about
->   * 		segment limitations.
->   * @dma_pools:	Dma pools (if dma'ble device).
-> @@ -578,7 +580,12 @@ struct device {
->  					     allocations such descriptors. */
->  	u64		bus_dma_limit;	/* upstream dma constraint */
->  	unsigned long	dma_pfn_offset;
-> -
-> +#ifdef CONFIG_DMA_PFN_OFFSET_MAP
-> +	const void *dma_offset_map;	/* Like dma_pfn_offset, but for
-> +					 * the unlikely case of multiple
-> +					 * offsets. If non-null, dma_pfn_offset
-> +					 * will be 0. */
-> +#endif
->  	struct device_dma_parameters *dma_parms;
->  
->  	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
+On Tue, May 19, 2020 at 11:27:02AM -0700, Dan Williams wrote:
+> On Tue, May 19, 2020 at 5:11 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, May 19, 2020 at 12:03:06AM -0700, Dan Williams wrote:
+> > > Close the hole of holding a mapping over kernel driver takeover event of
+> > > a given address range.
+> > >
+> > > Commit 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+> > > introduced CONFIG_IO_STRICT_DEVMEM with the goal of protecting the
+> > > kernel against scenarios where a /dev/mem user tramples memory that a
+> > > kernel driver owns. However, this protection only prevents *new* read(),
+> > > write() and mmap() requests. Established mappings prior to the driver
+> > > calling request_mem_region() are left alone.
+> > >
+> > > Especially with persistent memory, and the core kernel metadata that is
+> > > stored there, there are plentiful scenarios for a /dev/mem user to
+> > > violate the expectations of the driver and cause amplified damage.
+> > >
+> > > Teach request_mem_region() to find and shoot down active /dev/mem
+> > > mappings that it believes it has successfully claimed for the exclusive
+> > > use of the driver. Effectively a driver call to request_mem_region()
+> > > becomes a hole-punch on the /dev/mem device.
+> > >
+> > > The typical usage of unmap_mapping_range() is part of
+> > > truncate_pagecache() to punch a hole in a file, but in this case the
+> > > implementation is only doing the "first half" of a hole punch. Namely it
+> > > is just evacuating current established mappings of the "hole", and it
+> > > relies on the fact that /dev/mem establishes mappings in terms of
+> > > absolute physical address offsets. Once existing mmap users are
+> > > invalidated they can attempt to re-establish the mapping, or attempt to
+> > > continue issuing read(2) / write(2) to the invalidated extent, but they
+> > > will then be subject to the CONFIG_IO_STRICT_DEVMEM checking that can
+> > > block those subsequent accesses.
+> > >
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > Cc: Russell King <linux@arm.linux.org.uk>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Fixes: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > ---
+> > > Changes since v1 [1]:
+> > >
+> > > - updated the changelog to describe the usage of unmap_mapping_range().
+> > >   No other logic changes:
+> > >
+> > > [1]: http://lore.kernel.org/r/158662721802.1893045.12301414116114602646.stgit@dwillia2-desk3.amr.corp.intel.com
+> > >
+> > > Greg, Andrew,
+> > >
+> > > I have a regression test for this case now. This was found by an
+> > > intermittent data corruption scenario on pmem from a test tool using
+> > > /dev/mem.
+> >
+> > Ick, why are test tools messing around in /dev/mem :)
+> 
+> Yeah, I'm all for useful tools, just not at the expense of kernel integrity.
+> 
+> > Anyway, this seems sane to me, want me to take it through my tree?
+> 
+> Yes please, seems to belong with the driver core.
 
-I'll defer to Christoph here, but I thought we were trying to get rid of
-stuff like this from struct device, not add new things to it for dma
-apis.  And why is it a void *?
+Ok, will wait for a v3 to handle the issue that was just found in
+review.
 
 thanks,
 
