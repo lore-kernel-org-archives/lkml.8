@@ -2,166 +2,216 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F99DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4DE206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSeCxkUX"
+	by mail.kernel.org (Postfix) with ESMTP id DE9F8206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgETQfY (ORCPT
+        id S1727067AbgETQfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgETQfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:35:23 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95982C061A0E;
-        Wed, 20 May 2020 09:35:23 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id k19so3755050edv.9;
-        Wed, 20 May 2020 09:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=9LZ3N6eS+xeL2WycYe0EBKoO7cMTBM5h/pIzNPU0uoA=;
-        b=nSeCxkUXkPBkC+bMaKiWwAFF5HRebqDVpy2P07v1pSBINuZBVZrf4qlB2nen9i6sAH
-         IFNiIXIrUN7/tuSC8zY/0mc8OLB/Dy5M/PqFtsy+MvROKnmEOEYbxNmjNHHBtP5yR1wC
-         e3mZqcCzaFHe66Jr3xmpznlMHFjMLoTVZB0MgFUVehc0ZWRuhc1CBINkbiW5bMx402RA
-         87X4TCTW7B0+1j7zhQSNK60EnPn3zd6L5qJOHgbA7z/RpFx8aGqHVD0urC9LHIk5Vfi6
-         FEN2xhZPC6SHsRR4Ng2Dwg8VngjkQbLwxZe9nm5LmdmlYvpg5d0xoqbdQSeqKVYSjbaF
-         i37Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=9LZ3N6eS+xeL2WycYe0EBKoO7cMTBM5h/pIzNPU0uoA=;
-        b=FKs2fhRQSUI/hU+VipTiWz2lGBXI7uZJ0defyBJd79LeP3PBegIXmM9d2CZAuxX10O
-         0pd391pYa6VonBSbMoeUr/Xrnz+wNd+EI8m3K5TSwhl3Bx5MIN05qyt3HUGU6jLYHuCj
-         wrwjD6lY9zVbWfAEGP9OQlC64uPY4k9zMa7SIcVI6w4WGcvNvwQ9ifCLQ1XkI9MVUDQG
-         NVIXGANiM2RPZVl0uqgwv/u9v97n8QwpoA4x+oTkxtgvMEDizrEbn05nPATZGST8ilkn
-         MZUxCH/ne8wgUWcuCqpi+5i3jivH/i/sscD8DdGFpd7MerLyGYH6LheLn5kSL68vvkVW
-         QqsQ==
-X-Gm-Message-State: AOAM531dalp4tAlpF3I47R7RoVYSfIsA2DY1ZB8Jurtbyfhk3CWwMGGD
-        QOGPIt76nXSYgp7vxGdsxiWrON+rWt/e/MjqLew=
-X-Google-Smtp-Source: ABdhPJztbIVCpypzfMmeE5wi7QZW2wjqt6WJKlmD8c/fGvtyo/k1t0yxQTzmcpir4NVu6nGdGh39/iZWxPahJYBNZUU=
-X-Received: by 2002:a50:d7c7:: with SMTP id m7mr4323197edj.101.1589992522103;
- Wed, 20 May 2020 09:35:22 -0700 (PDT)
+        Wed, 20 May 2020 12:35:52 -0400
+Received: from mga05.intel.com ([192.55.52.43]:57407 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbgETQfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:35:51 -0400
+IronPort-SDR: 8w7yP62QZmLn55FA2wnx4yRfuYYjopJpVtm4d6kR5Apv3X6Qk3Q0ahX/NPsP3F0LBIeh19l5oB
+ 6nc1fvs9O8NQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 09:35:47 -0700
+IronPort-SDR: D+KiRXDX5hd4WHYZvX+len8jMJUOOA8Ojx29d5T/L3IhL/ekrjiEQ8+Smo2cz/uhAe5zzi99DX
+ yMfZzlSsaUfw==
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="440096934"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 09:35:47 -0700
+Date:   Wed, 20 May 2020 09:35:46 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jue Wang <juew@google.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] x86/mm: Change so poison pages are either unmapped or
+ marked uncacheable
+Message-ID: <20200520163546.GA7977@agluck-desk2.amr.corp.intel.com>
+References: <20200516150229.GB19372@zn.tnic>
+ <8022D1E6-A8BC-4610-9F58-67A06B9A9575@intel.com>
+ <CAPcxDJ50pbuTbittyvPwKq1uUT8q8jJ+dHH8rCug8a1DDZXVYw@mail.gmail.com>
+ <CAPcxDJ6f3pBpwiR9nvXN_g_HBa1RAMG+aOmgfXLFT6aZ9HQn3w@mail.gmail.com>
+ <20200518134813.GC25034@zn.tnic>
+ <20200518153625.GA31444@agluck-desk2.amr.corp.intel.com>
+ <20200518165500.GD25034@zn.tnic>
+ <20200518182629.GA2957@agluck-desk2.amr.corp.intel.com>
+ <20200519085000.GA444@zn.tnic>
 MIME-Version: 1.0
-References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
- <1580249770-1088-3-git-send-email-jcrouse@codeaurora.org> <20200318224840.GA10796@willie-the-truck>
- <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
- <20200518151838.GL32394@willie-the-truck> <CAF6AEGswv3ZaJyy_kYv6FKAjO5=_juDwEtK+VE9TcVMLGvrdwA@mail.gmail.com>
- <20200520125700.GD25815@willie-the-truck> <20200520151312.GB31730@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20200520151312.GB31730@jcrouse1-lnx.qualcomm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 20 May 2020 09:35:42 -0700
-Message-ID: <CAF6AEGtF+_Q3=GxaVrAtqsPC3B6p_Dc5PB+DQ=btsg3wAej5bg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] arm/smmu: Add auxiliary domain support for arm-smmuv2
-To:     Will Deacon <will@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519085000.GA444@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 8:13 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Wed, May 20, 2020 at 01:57:01PM +0100, Will Deacon wrote:
-> > On Mon, May 18, 2020 at 08:50:27AM -0700, Rob Clark wrote:
-> > > On Mon, May 18, 2020 at 8:18 AM Will Deacon <will@kernel.org> wrote:
-> > > > On Wed, Mar 18, 2020 at 04:43:07PM -0700, Rob Clark wrote:
-> > > > > We do in fact need live domain switching, that is really the whole
-> > > > > point.  The GPU CP (command processor/parser) is directly updating
-> > > > > TTBR0 and triggering TLB flush, asynchronously from the CPU.
-> > > > >
-> > > > > And I think the answer about ASID is easy (on current hw).. it must be zero[*].
-> > > >
-> > > > Using ASID zero is really bad, because it means that you will end up sharing
-> > > > TLB entries with whichever device is using context bank 0.
-> > > >
-> > > > Is the SMMU only used by the GPU in your SoC?
-> > > >
-> > >
-> > > yes, the snapdragon SoCs have two SMMU instances, one used by the GPU,
-> > > where ASID0/cb0 is the gpu itself, and another cb is the GMU
-> > > (basically power control for the gpu), and the second SMMU is
-> > > everything else.
-> >
-> > Right, in which case I'm starting to think that we should treat this GPU
-> > SMMU instance specially. Give it its own compatible string (looks like you
-> > need this for HUPCFG anyway) and hook in via arm_smmu_impl_init(). You can
-> > then set IO_PGTABLE_QUIRK_ARM_TTBR1 when talking to the io-pgtable code
-> > without having to add a domain attribute.
->
-> If we did this via a special GPU SMMU instance then we could also create and
-> register a dummy TTBR0 instance along with the TTBR1 instance and then we
-> wouldn't need to worry about the aux domains at all.
->
-> > With that. you'll need to find a way to allow the GPU driver to call into
-> > your own hooks for getting at the TTBR0 tables -- given that you're
-> > programming these in the hardware, I don't think it makes sense to expose
-> > that in the IOMMU API, since most devices won't be able to do anything with
-> > that data. Perhaps you could install a couple of function pointers
-> > (subdomain_alloc/subdomain_free) in the GPU device when you see it appear
-> > from the SMMU driver? Alternatively, you could make an io_pgtable_cfg
-> > available so that the GPU driver can interface with io-pgtable directly.
->
-> I don't want to speak for Rob but I think that this is the same direction we've
-> landed on. If we use the implementation specific code to initialize the base
-> pagetables then the GPU driver can use io-pgtable directly. We can easily
-> construct an io_pgtable_cfg. This feature will only be available for opt-in
-> GPU targets that will have a known configuration.
+An interesting thing happened when a guest Linux instance took
+a machine check. The VMM unmapped the bad page from guest physical
+space and passed the machine check to the guest.
 
-Agreed about using io-pgtable helpers directly.. the gpu's use-case is
-pretty far different from anything normal/sane, and I don't think it
-is worth designing some generic iommu interfaces with precisely one
-user[*].  We just need enough in arm-smmu(/-impl) to bootstrap things
-when we power up the gpu.
+Linux took all the normal actions to offline the page from the process
+that was using it. But then guest Linux crashed because it said there
+was a second machine check inside the kernel with this stack trace:
 
-BR,
--R
+do_memory_failure
+    set_mce_nospec
+         set_memory_uc
+              _set_memory_uc
+                   change_page_attr_set_clr
+                        cpa_flush
+                             clflush_cache_range_opt
 
-[*] all the other gpu's that I've seen so far, even if they sit behind
-an iommu, they have their own internal mmu
+This was odd, because a CLFLUSH instruction shouldn't raise a machine
+check (it isn't consuming the data). Further investigation showed that
+the VMM had passed in another machine check because is appeared that the
+guest was accessing the bad page.
 
-> The only gotcha is TLB maintenance but Rob and I have ideas about coordinating
-> with the GPU hardware (which has to do a TLBIALL during a switch anyway) and we
-> can always use the iommu_tlb_flush_all() hammer from software if we really need
-> it. It might take a bit of thought, but it is doable.
->
-> > Yes, it's ugly, but I don't think it's worth trying to abstract this.
->
-> I'm not sure how ugly it is. I've always operated under the assumption that the
-> GPU SMMU was special (though it had generic registers) just because of where it
-> was and how it it was used.  In the long run baking in a implementation specific
-> solution would probably be preferable to lots of domain attributes and aux
-> domains that would never be used except by us.
->
-> > Thoughts? It's taken me a long time to figure out what's going on here,
-> > so sorry if it feels like I'm leading you round the houses.
->
-> I'll hack on this and try to get something in place. It might be dumber on the
-> GPU side than we would like but it would at least spur some more conversation.
->
-> Jordan
->
-> > Will
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Fix is to check the scope of the poison by checking the MCi_MISC register.
+If the entire page is affected, then unmap the page. If only part of the
+page is affected, then mark the page as uncacheable.
+
+This assumes that VMMs will do the logical thing and pass in the "whole
+page scope" via the MCi_MISC register (since they unmapped the entire
+page).
+
+Reported-by: Jue Wang <juew@google.com>
+Tested-by: Jue Wang <juew@google.com>
+Fixes: 284ce4011ba6 ("x86/memory_failure: Introduce {set, clear}_mce_nospec()")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+Boris wrote:
+> Maybe I'm not making myself clear enough here: I'm talking about using
+> a *special* MCE signature which says "your mapping has disappeared from
+> underneath you." Maybe a bit in MCi_MISC which the hw doesn't use. Or
+> some other deprecated bit, whatever.
+
+My reactions (in order)
+1) How can I do that for 10 year old h/w?
+2) Oh wait, Boris is talking about the VMM faking a signature to the guest.
+   They can mess with whatever bits they want.
+3) Unused/deprecated bits are in short supply. Taking one over and getting
+   all the VMM vendors to agree to this "standard" is going to be a huge effort.
+4) Could we do something inside the existing architecture?
+5) MCi_MISC uses low order bits to indicate the "blast radius" of an error
+6) Asks Jue "Could you set those MCi_MISC bits to say the whole page is gone?
+7) Jue: We already do that!
+8) Me: writes this patch
+
+ arch/x86/include/asm/set_memory.h | 19 +++++++++++++------
+ arch/x86/kernel/cpu/mce/core.c    | 11 +++++++++--
+ include/linux/set_memory.h        |  2 +-
+ 3 files changed, 23 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+index ec2c0a094b5d..5948218f35c5 100644
+--- a/arch/x86/include/asm/set_memory.h
++++ b/arch/x86/include/asm/set_memory.h
+@@ -86,28 +86,35 @@ int set_direct_map_default_noflush(struct page *page);
+ extern int kernel_set_to_readonly;
+ 
+ #ifdef CONFIG_X86_64
+-static inline int set_mce_nospec(unsigned long pfn)
++/*
++ * Prevent speculative access to the page by either unmapping
++ * it (if we do not require access to any part of the page) or
++ * marking it uncacheable (if we want to try to retrieve data
++ * from non-poisoned lines in the page).
++ */
++static inline int set_mce_nospec(unsigned long pfn, bool unmap)
+ {
+ 	unsigned long decoy_addr;
+ 	int rc;
+ 
+ 	/*
+-	 * Mark the linear address as UC to make sure we don't log more
+-	 * errors because of speculative access to the page.
+ 	 * We would like to just call:
+-	 *      set_memory_uc((unsigned long)pfn_to_kaddr(pfn), 1);
++	 *      set_memory_XX((unsigned long)pfn_to_kaddr(pfn), 1);
+ 	 * but doing that would radically increase the odds of a
+ 	 * speculative access to the poison page because we'd have
+ 	 * the virtual address of the kernel 1:1 mapping sitting
+ 	 * around in registers.
+ 	 * Instead we get tricky.  We create a non-canonical address
+ 	 * that looks just like the one we want, but has bit 63 flipped.
+-	 * This relies on set_memory_uc() properly sanitizing any __pa()
++	 * This relies on set_memory_XX() properly sanitizing any __pa()
+ 	 * results with __PHYSICAL_MASK or PTE_PFN_MASK.
+ 	 */
+ 	decoy_addr = (pfn << PAGE_SHIFT) + (PAGE_OFFSET ^ BIT(63));
+ 
+-	rc = set_memory_uc(decoy_addr, 1);
++	if (unmap)
++		rc = set_memory_np(decoy_addr, 1);
++	else
++		rc = set_memory_uc(decoy_addr, 1);
+ 	if (rc)
+ 		pr_warn("Could not invalidate pfn=0x%lx from 1:1 map\n", pfn);
+ 	return rc;
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 54165f3569e8..c1a480a27164 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -529,6 +529,13 @@ bool mce_is_memory_error(struct mce *m)
+ }
+ EXPORT_SYMBOL_GPL(mce_is_memory_error);
+ 
++static bool whole_page(struct mce *m)
++{
++	if (!mca_cfg.ser || !(m->status & MCI_STATUS_MISCV))
++		return true;
++	return MCI_MISC_ADDR_LSB(m->misc) >= PAGE_SHIFT;
++}
++
+ bool mce_is_correctable(struct mce *m)
+ {
+ 	if (m->cpuvendor == X86_VENDOR_AMD && m->status & MCI_STATUS_DEFERRED)
+@@ -600,7 +607,7 @@ static int uc_decode_notifier(struct notifier_block *nb, unsigned long val,
+ 
+ 	pfn = mce->addr >> PAGE_SHIFT;
+ 	if (!memory_failure(pfn, 0))
+-		set_mce_nospec(pfn);
++		set_mce_nospec(pfn, whole_page(mce));
+ 
+ 	return NOTIFY_OK;
+ }
+@@ -1098,7 +1105,7 @@ static int do_memory_failure(struct mce *m)
+ 	if (ret)
+ 		pr_err("Memory error not recovered");
+ 	else
+-		set_mce_nospec(m->addr >> PAGE_SHIFT);
++		set_mce_nospec(m->addr >> PAGE_SHIFT, whole_page(m));
+ 	return ret;
+ }
+ 
+diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
+index 86281ac7c305..860e0f843c12 100644
+--- a/include/linux/set_memory.h
++++ b/include/linux/set_memory.h
+@@ -26,7 +26,7 @@ static inline int set_direct_map_default_noflush(struct page *page)
+ #endif
+ 
+ #ifndef set_mce_nospec
+-static inline int set_mce_nospec(unsigned long pfn)
++static inline int set_mce_nospec(unsigned long pfn, bool unmap)
+ {
+ 	return 0;
+ }
+-- 
+2.21.1
+
