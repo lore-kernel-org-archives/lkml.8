@@ -2,178 +2,192 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00101C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6830EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF5B1207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qlgXHVmE"
+	by mail.kernel.org (Postfix) with ESMTP id 366D6207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589975832;
+	bh=iykMISmEA3B2cWlO05h0kvztgbh5MJtjGLS9pgY5hRs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L9FJCGd1r9JPwjnHTOdDenLdWPDN8M2iph7pS5+KH9OgZYY7E6BV5iIfMeuq3xfR1
+	 Nz2j27McxjHZnZPBXthoXRKO3QHZYj04DnwHd4mjgzDyxqwS3evw97vp2p8bD54WNQ
+	 towhMN6kSxyiHHF/pOHT5Mnoucq2p3yPKaa9Zc0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgETL4c (ORCPT
+        id S1726881AbgETL5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgETL4b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:56:31 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECA4C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:56:31 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id r125so2081812lff.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c8qp29x57Bnw83ildG5bfYkgdHVhrczJ6/NyvfJLqdw=;
-        b=qlgXHVmEwhlw8sQKewHDsuWMSreqtLqu7J0G2FobOqDX6oBRZuV/ovWE3ANMJBrQ/R
-         VHSrnEzZvSTDxoGM3/zD4+VTvhNG0yaVzAa7lwGqABFXOzXetvh0ERA4i6G5tYAoy+YR
-         Qr6jPv+xDkynFLCazHC8VGxm8nKlCbFmrG5Kj91mWASiJARiWqfoR7ILN0Zk3nndZglm
-         xfojJ2HA3S+ljjrJhP5FQNxiCPqhXs7R18c5zKgCMh12Zewow13rinQNy8sr0PEtMvmD
-         gPqjH0dG3srB+Q4snOOPhnSigEJYiArkGSq8les+OJeIhHLgVWpVkJPP+TTaSgnYuQhJ
-         AIGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c8qp29x57Bnw83ildG5bfYkgdHVhrczJ6/NyvfJLqdw=;
-        b=ddpkhTmUaqJpdRk3qhQYG5MLi1sZ2FGEoxox6klsQAs7TNpUGlPH6PsR7Bq/LDZAvk
-         zDmCigJldfS/na/05vT3/kWalOtV5UJ1ZTspQHl35NDufKBvWMBiAzWlGP7661IRSmh7
-         ssn7XBwTJxr9YCKNAwDQeRTEMpJ7XQrpEF4qUgolVFpKv0prt7dMIBi1lTWYsh7vz0KE
-         sBEH4whqfoUUFOlFzabrhI82xOwvjwug1Qmcm92Ti+B/5sDg4DOWIQRJ7bRHlPtPzvpm
-         vp7VKKVF2muOhsOW9vUVcGfx3bOeBU8mIuvdHUpTos1GD9wiorvnvS+vZPL56xx8wHO+
-         PUYw==
-X-Gm-Message-State: AOAM5318GiMHNbg+lJaDvlJOsxAWfpbMXi/YJlY/gl4CcUPUhfezqoAt
-        mj1/2yVDq7bXaw380tdI+HtwB5lwDQnRJUS3mceBAg==
-X-Google-Smtp-Source: ABdhPJwm4d8MeeXVBkReCSgeKef0/TrHxDY6JMkbe05871VEuSEJIfm5/eJuCpE32/mb9LC8RnbJH+gDczs7BL2boVk=
-X-Received: by 2002:a19:8453:: with SMTP id g80mr2422388lfd.167.1589975789287;
- Wed, 20 May 2020 04:56:29 -0700 (PDT)
+        Wed, 20 May 2020 07:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgETL5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:57:11 -0400
+Received: from localhost (unknown [122.178.227.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5CE1206BE;
+        Wed, 20 May 2020 11:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589975830;
+        bh=iykMISmEA3B2cWlO05h0kvztgbh5MJtjGLS9pgY5hRs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=alR7aWRzrS+FUgCnAxm/sAtv2qosqZMo77Ks9sqnj8L+o+zNCJoLgsuxpeH7mvBuq
+         HMHacczQmUyiUYrF6//cLN8VHogYz2F87uT78h/dpMQc5pfJ0EqymqYF9T0LKUQIEQ
+         EJH1lp05zfFm/aJ26v144OcgYqsGwmzqSOENwLtU=
+Date:   Wed, 20 May 2020 17:27:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
+        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: Re: [PATCH 3/3] soundwire: add Slave sysfs support
+Message-ID: <20200520115705.GV374218@vkoul-mobl.Dlink>
+References: <20200518203551.2053-1-yung-chuan.liao@linux.intel.com>
+ <20200518203551.2053-4-yung-chuan.liao@linux.intel.com>
 MIME-Version: 1.0
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
- <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
- <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
- <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz>
-In-Reply-To: <20200519084535.GG32497@dhcp22.suse.cz>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 20 May 2020 17:26:17 +0530
-Message-ID: <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518203551.2053-4-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FYI,
+On 19-05-20, 04:35, Bard Liao wrote:
 
-This issue is specific on 32-bit architectures i386 and arm on linux-next tree.
-As per the test results history this problem started happening from
-Bad : next-20200430
-Good : next-20200429
+> +int sdw_slave_sysfs_init(struct sdw_slave *slave)
+> +{
+> +	int ret;
+> +
+> +	ret = devm_device_add_groups(&slave->dev, slave_groups);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = devm_device_add_group(&slave->dev, &sdw_slave_dev_attr_group);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (slave->prop.dp0_prop) {
+> +		ret = devm_device_add_group(&slave->dev, &dp0_group);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	if (slave->prop.source_ports || slave->prop.sink_ports) {
+> +		ret = sdw_slave_sysfs_dpn_init(slave);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
 
-steps to reproduce:
-dd if=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190504A00573
-of=/dev/null bs=1M count=2048
-or
-mkfs -t ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190804A00BE5
+We have trailing line here
 
+> +static int add_all_attributes(struct device *dev, int N, int dir)
+> +{
+> +	struct attribute **dpn_attrs;
+> +	struct attribute_group *dpn_group;
+> +	int i = 0;
+> +	int ret;
+> +
+> +	/* allocate attributes, last one is NULL */
+> +	dpn_attrs = devm_kcalloc(dev, SDW_DPN_ATTRIBUTES + 1,
+> +				 sizeof(struct attribute *),
+> +				 GFP_KERNEL);
+> +	if (!dpn_attrs)
+> +		return -ENOMEM;
+> +
+> +	ret = max_word_attribute_alloc(dev, &dpn_attrs[i++],
+> +				       N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = min_word_attribute_alloc(dev, &dpn_attrs[i++],
+> +				       N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = words_attribute_alloc(dev, &dpn_attrs[i++],
+> +				    N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = type_attribute_alloc(dev, &dpn_attrs[i++],
+> +				   N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = max_grouping_attribute_alloc(dev, &dpn_attrs[i++],
+> +					   N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = simple_ch_prep_sm_attribute_alloc(dev, &dpn_attrs[i++],
+> +						N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = ch_prep_timeout_attribute_alloc(dev, &dpn_attrs[i++],
+> +					      N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = imp_def_interrupts_attribute_alloc(dev, &dpn_attrs[i++],
+> +						 N, dir, "0x%x\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = min_ch_attribute_alloc(dev, &dpn_attrs[i++],
+> +				     N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = max_ch_attribute_alloc(dev, &dpn_attrs[i++],
+> +				     N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = channels_attribute_alloc(dev, &dpn_attrs[i++],
+> +				       N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = ch_combinations_attribute_alloc(dev, &dpn_attrs[i++],
+> +					      N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = max_async_buffer_attribute_alloc(dev, &dpn_attrs[i++],
+> +					       N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = block_pack_mode_attribute_alloc(dev, &dpn_attrs[i++],
+> +					      N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = port_encoding_attribute_alloc(dev, &dpn_attrs[i++],
+> +					    N, dir, "%d\n");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* paranioa check for editing mistakes */
 
-Problem:
-[   38.802375] dd invoked oom-killer: gfp_mask=0x100cc0(GFP_USER),
-order=0, oom_score_adj=0
+s/paranioa/paranoia
 
-i386 crash log:  https://pastebin.com/Hb8U89vU
-arm crash log: https://pastebin.com/BD9t3JTm
+I found only these two nitpicks so I will go ahead and apply these and
+fix them up.
 
-On Tue, 19 May 2020 at 14:15, Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 19-05-20 10:11:25, Arnd Bergmann wrote:
-> > On Tue, May 19, 2020 at 9:52 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Mon 18-05-20 19:40:55, Naresh Kamboju wrote:
-> > > > Thanks for looking into this problem.
-> > > >
-> > > > On Sat, 2 May 2020 at 02:28, Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > > >
-> > > > > On Fri, 1 May 2020 18:08:28 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > > > >
-> > > > > > mkfs -t ext4 invoked oom-killer on i386 kernel running on x86_64 device
-> > > > > > and started happening on linux -next master branch kernel tag next-20200430
-> > > > > > and next-20200501. We did not bisect this problem.
-> > > [...]
-> > > > Creating journal (131072 blocks): [   31.251333] mkfs.ext4 invoked
-> > > > oom-killer: gfp_mask=0x101cc0(GFP_USER|__GFP_WRITE), order=0,
-> > > > oom_score_adj=0
-> > > [...]
-> > > > [   31.500943] DMA free:187396kB min:22528kB low:28160kB high:33792kB
-> > > > reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> > > > active_file:4736kB inactive_file:431688kB unevictable:0kB
-> > > > writepending:62020kB present:783360kB managed:668264kB mlocked:0kB
-> > > > kernel_stack:888kB pagetables:0kB bounce:0kB free_pcp:880kB
-> > > > local_pcp:216kB free_cma:163840kB
-> > >
-> > > This is really unexpected. You are saying this is a regular i386 and DMA
-> > > should be bottom 16MB while yours is 780MB and the rest of the low mem
-> > > is in the Normal zone which is completely missing here. How have you got
-> > > to that configuration? I have to say I haven't seen anything like that
-> > > on i386.
-> >
-> > I think that line comes from an ARM32 beaglebone-X15 machine showing
-> > the same symptom. The i386 line from the log file that Naresh linked to at
-> > https://lkft.validation.linaro.org/scheduler/job/1406110#L1223  is less
-> > unusual:
->
-> OK, that makes more sense! At least for the memory layout.
->
-> > [   34.931663] Node 0 active_anon:21464kB inactive_anon:8688kB
-> > active_file:16604kB inactive_file:849976kB unevictable:0kB
-> > isolated(anon):0kB isolated(file):0kB mapped:25284kB dirty:58952kB
-> > writeback:27772kB shmem:8944kB writeback_tmp:0kB unstable:0kB
-> > all_unreclaimable? yes
-> > [   34.955523] DMA free:3356kB min:68kB low:84kB high:100kB
-> > reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> > active_file:0kB inactive_file:11964kB unevictable:0kB
-> > writepending:11980kB present:15964kB managed:15876kB mlocked:0kB
-> > kernel_stack:0kB pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB
-> > free_cma:0kB
-> > [   34.983385] lowmem_reserve[]: 0 825 1947 825
-> > [   34.987678] Normal free:3948kB min:7732kB low:8640kB high:9548kB
-> > reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-> > active_file:1096kB inactive_file:786400kB unevictable:0kB
-> > writepending:65432kB present:884728kB managed:845576kB mlocked:0kB
-> > kernel_stack:1112kB pagetables:0kB bounce:0kB free_pcp:2908kB
-> > local_pcp:500kB free_cma:0kB
->
-> The lowmem is really low (way below the min watermark so even memory
-> reserves for high priority and atomic requests are depleted. There is
-> still 786MB of inactive page cache to be reclaimed. It doesn't seem to
-> be dirty or under the writeback but it still might be pinned by the
-> filesystem. I would suggest watching vmscan reclaim tracepoints and
-> check why the reclaim fails to reclaim anything.
-> --
-> Michal Hocko
-> SUSE Labs
+-- 
+~Vinod
