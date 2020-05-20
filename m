@@ -2,140 +2,132 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30673C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14409207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C31207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:14:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KSCD3oTk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgETLNn (ORCPT
+        id S1726856AbgETLOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:13:43 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2143 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbgETLNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:13:42 -0400
-Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id E03853142281D6A3D371;
-        Wed, 20 May 2020 19:13:39 +0800 (CST)
-Received: from DGGEMI421-HUB.china.huawei.com (10.1.199.150) by
- dggemi405-hub.china.huawei.com (10.3.17.143) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 20 May 2020 19:13:39 +0800
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.191]) by
- dggemi421-hub.china.huawei.com ([10.1.199.150]) with mapi id 14.03.0487.000;
- Wed, 20 May 2020 19:13:32 +0800
-From:   Song Bao Hua <song.bao.hua@hisilicon.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH 8/8] mm/zswap: Use local lock to protect per-CPU data
-Thread-Topic: [PATCH 8/8] mm/zswap: Use local lock to protect per-CPU data
-Thread-Index: AQHWLhsB19zOKbhSok+Mjvon7Zb2Y6iv78fAgABQKwCAAIyLcA==
-Date:   Wed, 20 May 2020 11:13:31 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD24B2058@DGGEMI525-MBS.china.huawei.com>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-9-bigeasy@linutronix.de>
- <B926444035E5E2439431908E3842AFD24AFEC5@DGGEMI525-MBS.china.huawei.com>
- <20200520102634.pin4mzyytmfqtuo2@linutronix.de>
-In-Reply-To: <20200520102634.pin4mzyytmfqtuo2@linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.151]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 20 May 2020 07:14:10 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:4399 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETLOJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:14:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589973248; x=1621509248;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=et7/2Wbhr+Tjr3SPQbyGvMvrDUcfwqh+l2hAH+RXOXs=;
+  b=KSCD3oTkXhpcp9cQBt3LNay7iIk7hmJ/4kiYcLluV/d06KZK/tNGd7s/
+   X7XqdDlZ50kLroOumokiW9VEDBw/Txvf/7bH4UzTCPqoRgezR+6WFu4TN
+   pqwKmYd7Tn74PR292kaj8YUdBzCwbh2L+Ixtqq47nm5BPz3vES1Velp89
+   o8VPijGzuY1kCZ16KjP4+YzT2krY6rHA2HOo06M54bA6DuxQmEhlV2mcp
+   vdfDBI9CrD89zfe/KofqdOd0mpwAe+08VmfF7m5mDjk+tzwhQVqx6nt/D
+   TahMIdfd536Pg02evN2DBSqvAASYVSlc8dEpNeO3lD+3+fn5d5+OTFhSz
+   w==;
+IronPort-SDR: XQ05QwiSvahC4lol82+DSsU7gaK85vSS9KTUzqz0V6Fv0dhJb94Pwfq8RYwgOlcfBmat5Eso8i
+ vrNi3tK4nWLrwx9ViY4mK7wslLYL83Tdsdt8x8rnY7+P34a1HtUBz449IVEpEiqKHRqYz5JeHU
+ R2wJ9tWcJeqb4cghLc2PdpBhElY0R7DZ1GE6S+OCwBwZ1EYfgramfxrGFOD62sFkwhUxqo+bsJ
+ B30RgmdsmOE/nwu5DpF0dmnS8Tkvv6nhUoRp0PCjVBtQYpcPHh15cLIUNgggahDcMQD4WSN+Mk
+ sL8=
+X-IronPort-AV: E=Sophos;i="5.73,413,1583218800"; 
+   d="scan'208";a="77279288"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 May 2020 04:14:07 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 20 May 2020 04:14:07 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 20 May 2020 04:14:05 -0700
+References: <20200513133122.25121-1-lars.povlsen@microchip.com> <20200513133122.25121-3-lars.povlsen@microchip.com> <6398c7a6-ce5e-1df6-d5a6-08664a7fc123@intel.com> <87v9ktoc0h.fsf@soft-dev15.microsemi.net>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Ulf Hansson <ulf.hansson@linaro.org>, SoC Team <soc@kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
+Subject: Re: [PATCH 2/3] sdhci: sparx5: Add Sparx5 SoC eMMC driver
+In-Reply-To: <87v9ktoc0h.fsf@soft-dev15.microsemi.net>
+Date:   Wed, 20 May 2020 13:14:04 +0200
+Message-ID: <87wo56q2o3.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiAyMDIwLTA1LTE5IDIxOjQ2OjA2IFsrMDAwMF0sIFNvbmcgQmFvIEh1YSB3cm90ZToNCj4g
-PiBIaSBMdWlzLA0KPiA+IEluIHRoZSBiZWxvdyBwYXRjaCwgaW4gb3JkZXIgdG8gdXNlIHRoZSBh
-Y29tcCBBUElzIHRvIGxldmVyYWdlIHRoZSBwb3dlciBvZg0KPiBoYXJkd2FyZSBjb21wcmVzc29y
-cy4gSSBoYXZlIG1vdmVkIHRvIG11dGV4Og0KPiA+IGh0dHBzOi8vbWFyYy5pbmZvLz9sPWxpbnV4
-LWNyeXB0by12Z2VyJm09MTU4OTQxMjg1ODMwMzAyJnc9Mg0KPiA+IGh0dHBzOi8vbWFyYy5pbmZv
-Lz9sPWxpbnV4LWNyeXB0by12Z2VyJm09MTU4OTQxMjg3OTMwMzExJnc9Mg0KPiA+DQo+ID4gc28g
-b25jZSB3ZSBnZXQgc29tZSBwcm9ncmVzcyBvbiB0aGF0IG9uZSwgSSBndWVzcyB3ZSBkb24ndCBu
-ZWVkIGEgc3BlY2lhbA0KPiBwYXRjaCBmb3IgUlQgYW55IG1vcmUuDQo+IA0KPiBJZiB5b3UgY29u
-dmVydCB0aGlzIHdheSBmcm9tIHRoZSBjdXJyZW50IGNvbmNlcHQgdGhlbiB3ZSBjb3VsZCBkcm9w
-IGl0IGZyb20NCj4gdGhlIHNlcmllcy4NCj4gVGhlIHNlY29uZCBwYXRjaCBzaG93cyB0aGUgZm9s
-bG93aW5nIGh1bms6DQo+IA0KPiB8QEAgLTEwNzUsMTEgKzExMjQsMjAgQEAgc3RhdGljIGludCB6
-c3dhcF9mcm9udHN3YXBfc3RvcmUodW5zaWduZWQNCj4gdHlwZSwNCj4gfHBnb2ZmX3Qgb2Zmc2V0
-LA0KPiB8DQo+IHwgCS8qIGNvbXByZXNzICovDQo+IHwgCWRzdCA9IGdldF9jcHVfdmFyKHpzd2Fw
-X2RzdG1lbSk7DQo+IHwJYWNvbXBfY3R4ID0gKnRoaXNfY3B1X3B0cihlbnRyeS0+cG9vbC0+YWNv
-bXBfY3R4KTsNCj4gfAlwdXRfY3B1X3Zhcih6c3dhcF9kc3RtZW0pOw0KPiANCj4gU28gaGVyZSB5
-b3UgZ2V0IHBlci1DUFUgdmVyc2lvbiBvZiBgZHN0JyBhbmQgYGFjb21wX2N0eCcgYW5kIHRoZW4g
-YWxsb3cNCj4gcHJlZW1wdGlvbiBhZ2Fpbi4NCj4gDQo+IHwJbXV0ZXhfbG9jaygmYWNvbXBfY3R4
-LT5tdXRleCk7DQo+IHwNCj4gfAlzcmMgPSBrbWFwKHBhZ2UpOw0KPiB8CXNnX2luaXRfb25lKCZp
-bnB1dCwgc3JjLCBQQUdFX1NJWkUpOw0KPiB8CS8qIHpzd2FwX2RzdG1lbSBpcyBvZiBzaXplIChQ
-QUdFX1NJWkUgKiAyKS4gUmVmbGVjdCBzYW1lIGluIHNnX2xpc3QgKi8NCj4gfAlzZ19pbml0X29u
-ZSgmb3V0cHV0LCBkc3QsIFBBR0VfU0laRSAqIDIpOw0KPiANCj4gYW5kIGhlcmUgeW91IHVzZSBg
-ZHN0JyBhbmQgYGFjb21wX2N0eCcgYWZ0ZXIgdGhlIHByZWVtcHRfZGlzYWJsZSgpIGhhcyBiZWVu
-DQo+IGRyb3BwZWQgc28gSSBkb24ndCB1bmRlcnN0YW5kIHdoeSB5b3UgdXNlZCBnZXRfY3B1X3Zh
-cigpLiBJdCBpcyBlaXRoZXINCj4gcHJvdGVjdGVkIGJ5IHRoZSBtdXRleCBhbmQgZG9lc24ndCBy
-ZXF1aXJlIGdldF9jcHVfdmFyKCkgb3IgaXQgaXNuJ3QgKGFuZA0KPiBzaG91bGQgaGF2ZSBhZGRp
-dGlvbmFsIHByb3RlY3Rpb24pLg0KDQpUaGUgb2xkIGNvZGUgd2FzIGxpa2U6DQpGb3IgZWFjaCBj
-cHUsIHRoZXJlIGlzIG9uZSBwZXJjcHUgY29tcCBhbmQgb25lIHBlcmNwdSBwYWdlcyBmb3IgY29t
-cHJlc3Npb24gZGVzdGluYXRpb24gLSB6c3dhcF9kc3RtZW0uDQpGb3IgZXhhbXBsZSwgb24gY3B1
-MSwgb25jZSB5b3UgYmVnaW4gdG8gY29tcHJlc3MsIHlvdSBob2xkIHRoZSBwZXJjcHUgY29tcCBh
-bmQgcGVyY3B1IGRlc3RpbmF0aW9uIGJ1ZmZlci4gTWVhbndoaWxlLCBwcmVlbXB0aW9uIGlzIGRp
-c2FibGVkLiBTbyBkZWNvbXByZXNzaW9uIHdvbid0IGJlIGFibGUgdG8gd29yayBhdCB0aGUgc2Ft
-ZSBjb3JlIGluIHBhcmFsbGVsLiBBbmQgdHdvIGNvbXByZXNzaW9ucyB3b24ndCBiZSBhYmxlIHRv
-IGRvIGF0IHRoZSBzYW1lIGNvcmUgaW4gcGFyYWxsZWwgYXMgd2VsbC4gQXQgdGhlIHNhbWUgdGlt
-ZSwgdGhlIHRocmVhZCB3b24ndCBiZSBhYmxlIHRvIG1pZ3JhdGUgdG8gYW5vdGhlciBjb3JlLiBP
-dGhlciBjb3JlcyBtaWdodCBjYW4gZG8gY29tcHJlc3Npb24vZGVjb21wcmVzc2lvbiBpbiBwYXJh
-bGxlbA0KDQpUaGUgbmV3IGNvZGUgaXMgbGlrZToNCkZvciBlYWNoIGNwdSwgdGhlcmUgaXMgc3Rp
-bGwgb25lIHBlcmNwdSBhY29tcC1jdHggYW5kIG9uZSBwZXJjcHUgcGFnZXMgZm9yIGNvbXByZXNz
-aW9uIGRlc3RpbmF0aW9uLiBIZXJlIGFjb21wIHJlcGxhY2VzIGNvbXAsIGFuZCBhY29tcCByZXF1
-aXJlcyBzbGVlcCBkdXJpbmcgY29tcHJlc3NpbmcgYW5kIGRlY29tcHJlc3NpbmcuDQpGb3IgZXhh
-bXBsZSwgb24gY3B1MSwgb25jZSB5b3UgYmVnaW4gdG8gY29tcHJlc3MsIHlvdSBob2xkIHRoZSBw
-ZXJjcHUgYWNvbXAtY3R4IGFuZCBwZXJjcHUgZGVzdGluYXRpb24gYnVmZmVyIG9mIENQVTEsIHRo
-ZSBiZWxvdyBjb2RlIG1ha2VzIHN1cmUgeW91IGdldCB0aGUgYWNvbXAgYW5kIGRzdG1lbSBmcm9t
-IHRoZSBzYW1lIGNvcmUgYnkgZGlzYWJsaW5nIHByZWVtcHRpb24gd2l0aCBnZXRfY3B1X3ZhciBh
-bmQgcHV0X2NwdV92YXI6DQpkc3QgPSBnZXRfY3B1X3Zhcih6c3dhcF9kc3RtZW0pOw0KYWNvbXBf
-Y3R4ID0gKnRoaXNfY3B1X3B0cihlbnRyeS0+cG9vbC0+YWNvbXBfY3R4KTsNCnB1dF9jcHVfdmFy
-KHpzd2FwX2RzdG1lbSk7DQoNCnRoZW4gdGhlcmUgYXJlIHR3byBjYXNlczoNCg0KMS4gYWZ0ZXIg
-Z2V0dGluZyBkc3QgYW5kIGFjb21wX2N0eCBvZiBjcHUxLCB5b3UgbWlnaHQgYWx3YXlzIHdvcmsg
-aW4gY3B1MSwgdGhlIG11dGV4IGluIHBlci1jcHUgYWNvbXAtY3R4IHdpbGwgZ3VhcmFudGVlIHR3
-byBjb21wcmVzc2lvbnMgd29uJ3QgZG8gYXQgdGhlIHNhbWUgY29yZSBpbiBwYXJhbGxlbCwgYW5k
-IGl0IGFsc28gbWFrZXMgY2VydGFpbiBjb21wcmVzc2lvbiBhbmQgZGVjb21wcmVzc2lvbiB3b24n
-dCBkbyBhdCB0aGUgc2FtZSBjb3JlIGluIHBhcmFsbGVsLiBFdmVyeXRoaW5nIGlzIGxpa2UgYmVm
-b3JlLg0KDQoyLiBhZnRlciBnZXR0aW5nIGRzdCBhbmQgYWNvbXBfY3R4IG9mIGNwdTEsIHlvdSBt
-aWdodCBtaWdyYXRlIHRvIGNwdTIsIGJ1dCBldmVuIHlvdSBtb3ZlIHRvIGNwdTIsIHlvdSBhcmUg
-c3RpbGwgaG9sZGluZyB0aGUgbXV0ZXggb2YgY3B1MSdzIGFjb21wLWN0eC4NCklmIGF0IHRoYXQg
-dGltZSwgY3B1MSBoYXMgYW5vdGhlciByZXF1ZXN0IHRvIGRvIGNvbXByZXNzaW9uLCBpdCB3aWxs
-IGJlIGJsb2NrZWQgYnkgdGhlIG11dGV4IGhlbGQgYnkgY3B1Mi4NCklmIGF0IHRoYXQgdGltZSwg
-Y3B1MSB3YW50cyB0byBkbyBkZWNvbXByZXNzaW9uLCBpdCB3aWwgYmUgYmxvY2tlZCBieSB0aGUg
-bXV0ZXggaGVsZCBieSBjcHUyLg0KDQpFdmVyeXRoaW5nIGlzIGxpa2UgYmVmb3JlLiBObyBtYXR0
-ZXIgd2hpY2ggY29yZSB5b3UgaGF2ZSBtaWdyYXRlZCB0bywgb25jZSB5b3UgaG9sZCB0aGUgbXV0
-ZXggb2YgY29yZSBOLCBhbm90aGVyIGNvbXByZXNzaW9uL2RlY29tcHJlc3Npb24gd2hvIHdhbnRz
-IHRvIGhvbGQgdGhlIG11dGV4IG9mIGNvcmUgTiB3aWxsIGJlIGJsb2NrZWQuIFNvIG1vc3RseSwg
-aWYgeW91IGhhdmUgTSBjb3JlcywgeW91IGNhbiBkbyBNIGNvbXByZXNzaW9uL2RlY29tcHJlc3Np
-b24gaW4gcGFyYWxsZWwgbGlrZSBiZWZvcmUuDQoNCk15IGJhc2ljIGlkZWEgaXMga2VlcGluZyB0
-aGUgd29yayBtb2RlbCB1bmNoYW5nZWQgbGlrZSBiZWZvcmUuDQoNCj4gDQo+IHwJYWNvbXBfcmVx
-dWVzdF9zZXRfcGFyYW1zKGFjb21wX2N0eC0+cmVxLCAmaW5wdXQsICZvdXRwdXQsDQo+IFBBR0Vf
-U0laRSwgZGxlbik7DQo+IHwJcmV0ID0gY3J5cHRvX3dhaXRfcmVxKGNyeXB0b19hY29tcF9jb21w
-cmVzcyhhY29tcF9jdHgtPnJlcSksDQo+ICZhY29tcF9jdHgtPndhaXQpOw0KPiB8CWRsZW4gPSBh
-Y29tcF9jdHgtPnJlcS0+ZGxlbjsNCj4gfAlrdW5tYXAocGFnZSk7DQo+IHwNCj4gfCAJaWYgKHJl
-dCkgew0KPiB8IAkJcmV0ID0gLUVJTlZBTDsNCj4gfCAJCWdvdG8gcHV0X2RzdG1lbTsNCj4gfA0K
-PiANCj4gU2ViYXN0aWFuDQoNCkJhcnJ5DQoNCg==
+
+Lars Povlsen writes:
+
+> Adrian Hunter writes:
+>
+>> On 13/05/20 4:31 pm, Lars Povlsen wrote:
+>>> This adds the eMMC driver for the Sparx5 SoC. It is based upon the
+>>> designware IP, but requires some extra initialization and quirks.
+>>>
+>>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>>> ---
+{Snip]
+>>> +};
+>>> +
+>>> +static const struct sdhci_pltfm_data sdhci_sparx5_pdata = {
+>>> +     .quirks  = 0,
+>>> +     .quirks2 = SDHCI_QUIRK2_HOST_NO_CMD23 | /* Card quirk */
+>>
+>> If this is a card quirk then it should be in drivers/mmc/core/quirks.h not here.
+>
+
+Adrian, I had a go at changing the controller quirk to a card quirk.
+
+Unfortunately, SDHCI_QUIRK2_HOST_NO_CMD23 does not directly translate to
+MMC_QUIRK_BLK_NO_CMD23, as for 'do_rel_wr' in mmc_blk_rw_rq_prep(), it
+will *still* use MMC_SET_BLOCK_COUNT (cmd23), causing the issue.
+
+We are using a ISSI "IS004G" device, and so I have gone through the
+motions of adding it to quirks.h. The comment before the list of devices
+using MMC_QUIRK_BLK_NO_CMD23 suggest working around a performance issue,
+which is not exactly the issue I'm seeing. I'm seeing combinations of
+CMD_TOUT_ERR, DATA_CRC_ERR and DATA_END_BIT_ERR whenever a cmd23 is
+issued.
+
+I have not been able to test the controller with another eMMC device
+yet, but I expect its not the controller at fault.
+
+So, I'm a little bit in doubt of how to proceed - either keep the quirk
+as a controller quirk - or make a *new* card quirk (with
+SDHCI_QUIRK2_HOST_NO_CMD23 semantics)?
+
+Anybody else have had experience with ISSI eMMC devices?
+
+I have also tried to use DT sdhci-caps-mask, but MMC_CAP_CMD23 is not
+read from the controller just (unconditionally) set in sdhci.c - so that
+doesn't fly either.
+
+Any suggestions?
+
+> Yes, its supposedly a card quirk. I'll see to use the card quirks
+> methods in place.
+>
+
+-- 
+Lars Povlsen,
+Microchip
