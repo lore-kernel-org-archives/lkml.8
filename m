@@ -2,81 +2,138 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0972BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74202C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6913207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566352072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="llGNjZNz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IFXkmBFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgETSrz (ORCPT
+        id S1726943AbgETSr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:47:55 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59994 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbgETSrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:47:58 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49002 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726510AbgETSrx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 14:47:53 -0400
-Received: from zn.tnic (p200300ec2f0bab0028d24a65f02999fe.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:28d2:4a65:f029:99fe])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F35791EC0350;
-        Wed, 20 May 2020 20:47:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590000472;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590000472;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=HwICrHSvqXW0KUjMgnBKpXTq3Lwh2cwDngS79k2qZPM=;
-        b=llGNjZNz+wSlE07oaDxWE/C5t4nHS0kUHav3B1X9KHnYIDHmoM9guyTAtVNpCafhyHiQiR
-        80s5DfMTigf/vl1q9Pz+d+pg0THIGkEqdDX0f1a9kgNQjagkk1rN5BQ7VfwsEAxmpLUh1Y
-        NaMCeG/1aocWagcBnEvKdHli2gzeUhk=
-Date:   Wed, 20 May 2020 20:47:45 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 04/20] x86/sgx: Add SGX microarchitectural data
- structures
-Message-ID: <20200520184745.GJ1457@zn.tnic>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-5-jarkko.sakkinen@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200515004410.723949-5-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+         to:to:cc:cc; bh=FbstOtZHjkI5WT/d0lTEZRtt+wY/I8Pmam5TWWakNYU=;
+        b=IFXkmBFugo3bbhA4djINt4b1HZ74ZByF/vrQdRLdBYDMBEmK+S8TdVYvjr7yNwXOrm1Q9N
+        p14xr/T9doDfssj1VDk6be5FmVrYQWurYrLTKcpmwW+KqA8Ny+6prtwx4dPdEpPQpUjOpx
+        Jy6MSCfxxR2idjOBw6nJXqmqQcy+230=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-kNT_esMuNGqglWWRk1wHxw-1; Wed, 20 May 2020 14:47:47 -0400
+X-MC-Unique: kNT_esMuNGqglWWRk1wHxw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E597E107ACCA;
+        Wed, 20 May 2020 18:47:45 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 833435C1BE;
+        Wed, 20 May 2020 18:47:37 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        eparis@parisplace.org, tgraf@infradead.org,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak25 v6a] audit: add subj creds to NETFILTER_CFG record to cover async unregister
+Date:   Wed, 20 May 2020 14:47:13 -0400
+Message-Id: <6404938413ca29b0e0196dd74bacb9b0c1cb6f42.1589993784.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:43:54AM +0300, Jarkko Sakkinen wrote:
-> +/**
-> + * struct sgx_sigstruct_header -  defines author of the enclave
-> + * @header1:		constant byte string
-> + * @vendor:		must be either 0x0000 or 0x8086
+Some table unregister actions seem to be initiated by the kernel to
+garbage collect unused tables that are not initiated by any userspace
+actions.  It was found to be necessary to add the subject credentials to
+cover this case to reveal the source of these actions.  A sample record:
 
-Out of pure curiosity: what is that about?
+The uid, auid, tty, ses and exe fields have not been included since they
+are in the SYSCALL record and contain nothing useful in the non-user
+context.
 
-Nothing in the patchset enforces this, so hw does? If so, why?
+Here are two sample orphaned records:
 
-Are those vendor IDs going to be assigned by someone or what's up?
+  type=NETFILTER_CFG msg=audit(2020-05-20 12:14:36.505:5) : table=filter family=ipv4 entries=0 op=register pid=1 subj=kernel comm=swapper/0
 
-Thx.
+  type=NETFILTER_CFG msg=audit(2020-05-20 12:15:27.701:301) : table=nat family=bridge entries=0 op=unregister pid=30 subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:1
 
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+---
+Changelog:
+v6
+- remove uid, auid fields as duplicates or unset
+- update sample records in patch description
+
+v5
+- rebase on upstreamed ghak28 on audit/next v5.7-rc1
+- remove tty, ses and exe fields as duplicates or unset
+- drop upstreamed patches 1&2 from set
+
+v4
+- rebase on audit/next v5.7-rc1
+- fix checkpatch.pl errors/warnings in 1/3 and 2/3
+
+v3
+- rebase on v5.6-rc1 audit/next
+- change audit_nf_cfg to audit_log_nfcfg
+- squash 2,3,4,5 to 1 and update patch descriptions
+- add subject credentials to cover garbage collecting kernel threads
+
+v2
+- Rebase (audit/next 5.5-rc1) to get audit_context access and ebt_register_table ret code
+- Split x_tables and ebtables updates
+- Check audit_dummy_context
+- Store struct audit_nfcfg params in audit_context, abstract to audit_nf_cfg() call
+- Restore back to "table, family, entries" from "family, table, entries"
+- Log unregistration of tables
+- Add "op=" at the end of the AUDIT_NETFILTER_CFG record
+- Defer nsid patch (ghak79) to once nsid patchset upstreamed (ghak32)
+- Add ghak refs
+- Ditch NETFILTER_CFGSOLO record
+
+ kernel/auditsc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index cfe3486e5f31..468a23390457 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -2557,12 +2557,18 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+ 		       enum audit_nfcfgop op)
+ {
+ 	struct audit_buffer *ab;
++	char comm[sizeof(current->comm)];
+ 
+ 	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
+ 	if (!ab)
+ 		return;
+ 	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
+ 			 name, af, nentries, audit_nfcfgs[op].s);
++
++	audit_log_format(ab, " pid=%u", task_pid_nr(current));
++	audit_log_task_context(ab); /* subj= */
++	audit_log_format(ab, " comm=");
++	audit_log_untrustedstring(ab, get_task_comm(comm, current));
+ 	audit_log_end(ab);
+ }
+ EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
 -- 
-Regards/Gruss,
-    Boris.
+1.8.3.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
