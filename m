@@ -2,290 +2,193 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2525FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4A6F2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28152075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:00:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oTstFMXK"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TnDmT1d/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgETD6b (ORCPT
+        id S1726379AbgETEAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 23:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgETD6a (ORCPT
+        Wed, 20 May 2020 00:00:42 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:43818 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgETEAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 23:58:30 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A2DC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:58:29 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id x1so1568607ejd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 20:58:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=y0ceURLh1cG/m7MRLKI1ykSu/ArqlsYe04+aHCm8s8w=;
-        b=oTstFMXKjlK6iPs6Im4fp56Jd0zqw4KEdbjH4n1AKjWmL18lC2MfhmkdfL+hYxEbQt
-         1X45EUYt1PPEzvS5HH7iW3nPC9+2ZDOq2yd8PIAm3ryJe7xZgRy277ATM7tBdWFJUpGh
-         pSkXJNjyja5jN1b2PIZysNCc4ZGUHfvubQKJrVhqz94GSiga/d8FsF6q0t+DCHbUiGnG
-         St0Rza2a7kyOhVBPqUfwduhMcvXY2oMEKb3eJ6zd4cajMWVgpbkaBG6lL7/vrBjCkoSH
-         quFueDSB68AbYKkYAFTKJCgkjL+xbmSbUT1ghWQdvKmiU8bkZVpebGMjmqztVoSWEaXz
-         +Eng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=y0ceURLh1cG/m7MRLKI1ykSu/ArqlsYe04+aHCm8s8w=;
-        b=rKHUPYJ8UEM5NfOjeaUKdchBZ5Mc4bMkHjfY1lkXz/7YYnNdWTDHYQgwYNeBOSkzNA
-         EKgU0L1NQD6Idfj8nTFvzGiIY3wUd5xZjXxgWTxoVd/HYRDpLsK5/VFJrC7ucOL+fGRZ
-         4fvYuOW9KnzTJy0r+XGGo0AkNilsRgrT3cC+nkfCjcpcG3WMOVRcff56RDZ0s+1Vaapz
-         UtD6o4ahPGbmzY/rn0Y8+sreaxlQ5FgxVa1U6YBtR8AteJrBfN8UBAdUOthanbyW52Xe
-         6lBiFY8uFmY7E451khAg3FODkQ6WFYDew9ES0HBtD/PBTAExu5AYsiQwDboG11q5LlnW
-         K/AQ==
-X-Gm-Message-State: AOAM532DGP7dnI8xd62RgSAtJ0fEE2wT/VX+nQb8PjUUk1V6jhCj6IJe
-        2oMTwipkpoECyc0lCi6xsdsvwG9T1lbQ0sVOYKHjNg==
-X-Google-Smtp-Source: ABdhPJxdsNmxYQGKdSgfWOH/NaoFnrqLpJ/+kgn/yvN5szdAfxlOm2EGP35LtR4inToJ6EhQVkTZqWRqFjkRsNpw7Mk=
-X-Received: by 2002:a17:906:7256:: with SMTP id n22mr2238477ejk.31.1589947108372;
- Tue, 19 May 2020 20:58:28 -0700 (PDT)
+        Wed, 20 May 2020 00:00:41 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200520040038epoutp01a5c8207941f7c2ed27f9660354cfef66~QoJbkTnMm0849508495epoutp01C
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:00:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200520040038epoutp01a5c8207941f7c2ed27f9660354cfef66~QoJbkTnMm0849508495epoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589947238;
+        bh=+A93EgRDoz7uCPtvKzScjT7YCC3iGmFF0K5t8LgUfsY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=TnDmT1d/aGi/fTN7+LhlGLDvEc9oqWQsW1+sBqaWJ5vUgw4Gk9REx4oKi84hR24jt
+         XvgD1yS0UmwPEm14kNrDSBTiXit+E3L/9XWnomCxdsih0wY+B09vMQCD2NGBUIHewZ
+         mampQ2YulMmtvsThpZ8yWugeqNifQED3VSvdLiQ4=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200520040037epcas1p3d899d50212fdfb99f0cf0fb08413ddb7~QoJajZThm0716307163epcas1p3m;
+        Wed, 20 May 2020 04:00:37 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49RfDM1TTkzMqYkn; Wed, 20 May
+        2020 04:00:35 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        99.9B.04658.36BA4CE5; Wed, 20 May 2020 13:00:35 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200520040033epcas1p24774bccf513be863ab4a2b5499eb61fd~QoJXKZ9s60392403924epcas1p2x;
+        Wed, 20 May 2020 04:00:33 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200520040033epsmtrp2b8b9163d2e6d734804559d37671ace69~QoJXJIvbC0682106821epsmtrp2k;
+        Wed, 20 May 2020 04:00:33 +0000 (GMT)
+X-AuditID: b6c32a39-a99ff70000001232-72-5ec4ab63a02a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C6.5D.25866.16BA4CE5; Wed, 20 May 2020 13:00:33 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200520040033epsmtip1bf656738f910c076b9f02a7400fa6ce7~QoJWyTxic1684816848epsmtip1W;
+        Wed, 20 May 2020 04:00:33 +0000 (GMT)
+Subject: Re: [PATCH 00/12] Add cpufreq and cci devfreq for mt8183, and SVS
+ support
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <d08c0dc0-5573-6ba0-1d9f-18857c7f6fb6@samsung.com>
+Date:   Wed, 20 May 2020 13:10:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-From:   Qian Cai <cai@lca.pw>
-Date:   Tue, 19 May 2020 23:58:17 -0400
-Message-ID: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
-Subject: Endless soft-lockups for compiling workload since next-20200519
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEJsWRmVeSWpSXmKPExsWy7bCmrm7y6iNxBod7OCy2r3/BajH14RM2
+        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
+        j7NMFmdOX2K1aN17hN3i37WNLBbT7wpZbPzq4SDksWbeGkaPnbPusntsWtXJ5nHn2h42j81L
+        6j1aTu5n8dhytZ3Fo2/LKkaP4ze2M3l83iQXwBWVbZORmpiSWqSQmpecn5KZl26r5B0c7xxv
+        amZgqGtoaWGupJCXmJtqq+TiE6DrlpkD9JKSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYp
+        tSAlp8CyQK84Mbe4NC9dLzk/18rQwMDIFKgwITtj/q2JjAVzRSqWrelnaWDcztfFyMEhIWAi
+        8fVbQRcjF4eQwA5GiWlX+pkhnE+MEjfezGWBcD4zSjy4v4yxi5ETrOP2z0msEIldjBIf771n
+        h3DeM0r8v9DADFIlLBAisXbHejBbROA2s8SE2SEgRcwCBxklpl+6yASSYBPQktj/4gYbiM0v
+        oChx9cdjsBW8AnYSr689ZAGxWQRUJbbe3AlmiwqESZzc1gJVIyhxcuYTsDingJPE5DPPwGxm
+        AXGJW0/mM0HY8hLb384Be0hCYDKnxJ+XB9khfnCRmNy1mwXCFpZ4dXwLVFxK4vO7vWwQdrXE
+        ypNH2CCaOxgltuy/wAqRMJbYv3QyEyj4mAU0Jdbv0ocIK0rs/D2XEWIxn8S7rz2skBDmleho
+        E4IoUZa4/OAuE4QtKbG4vZNtAqPSLCTvzELywiwkL8xCWLaAkWUVo1hqQXFuemqxYYEpcnRv
+        YgSndy3LHYzHzvkcYhTgYFTi4b2x83CcEGtiWXFl7iFGCQ5mJRHeCS8OxQnxpiRWVqUW5ccX
+        leakFh9iNAWG9kRmKdHkfGDuySuJNzQ1MjY2tjAxNDM1NFQS5516PSdOSCA9sSQ1OzW1ILUI
+        po+Jg1OqgVGUs6ZfzHqb9qPKX0KX+7fLXHJ1m76l7PaFvXaGXzYt1AnI1X535bem6dn3BWev
+        Wy2O/Zvx+5+8733v8Ff7jmWJrzsleuH+1MtLJt7euEmX/21Wxt16Kyl1KW7XKzpmTD/UJZkS
+        WV/UJ0icDijbupTTjdtFzzdM56rvh5WJ4SvtmTuz5XLyNymxFGckGmoxFxUnAgBGfzrDBQQA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsWy7bCSnG7i6iNxBluXKlhsX/+C1WLqwyds
+        FvOPnGO1ONv0ht3i25UOJotNj6+xWlzeNYfN4nLzRUaLz71HGC2WXr/IZNHUYmxxu3EFm8Wb
+        H2eZLM6cvsRq0br3CLvFv2sbWSym3xWy2PjVw0HIY828NYweO2fdZffYtKqTzePOtT1sHpuX
+        1Hu0nNzP4rHlajuLR9+WVYwex29sZ/L4vEkugCuKyyYlNSezLLVI3y6BK2P+rYmMBXNFKpat
+        6WdpYNzO18XIySEhYCJx++ck1i5GLg4hgR2MEo8PbGaDSEhKTLt4lLmLkQPIFpY4fLgYouYt
+        o8S2hglMIDXCAiESa3esZwZJiAjcZ5ZYfvcqG4jDLHCQUeJZ9x92iJapjBIvX61gBmlhE9CS
+        2P/iBtgKfgFFias/HjOC2LwCdhKvrz1kAbFZBFQltt7cCWaLCoRJ7FzymAmiRlDi5MwnYHFO
+        ASeJyWeegdnMAuoSf+ZdYoawxSVuPZnPBGHLS2x/O4d5AqPwLCTts5C0zELSMgtJywJGllWM
+        kqkFxbnpucWGBUZ5qeV6xYm5xaV56XrJ+bmbGMGxrqW1g3HPqg96hxiZOBgPMUpwMCuJ8E54
+        cShOiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/XWQvjhATSE0tSs1NTC1KLYLJMHJxSDUyOf27N
+        fFj2fVHePwMjG9vo9NmXlu5fe5tj/5f5209cU1FrzQ12SPOM/BG72iBpwsLje2onfko4+XXl
+        3cmZ6a51H6x0v73QN4gu5NNs33F/5wzHnyJtuj/uSPn/dhDTnCG6/rBlD2/ImrXKhqGHeL+e
+        fXWjtaK8u1h8dTC3X9/UQ6vPqTOwtJUevC0XN+lU02mtHc86VyvuqGpaI5fK/CkrLP/7tUqZ
+        HcypQfGT92pys1p5h29qkY0oncHLJOB9/3//M98TW7Tfn2aplPpfYmgfLG8oKHPq8v7Jdds9
+        BM6uc1VMXm6ZI2C2apc3k/JNjcf/AmYk7NlwdZWyPc+8T3uUJt+ft3ZL384yjv7IsqVKLMUZ
+        iYZazEXFiQAg1dBHZAMAAA==
+X-CMS-MailID: 20200520040033epcas1p24774bccf513be863ab4a2b5499eb61fd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520034324epcas1p3affbd24bd1f3fe40d51baade07c1abba
+References: <CGME20200520034324epcas1p3affbd24bd1f3fe40d51baade07c1abba@epcas1p3.samsung.com>
+        <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a head up. Repeatedly compiling kernels for a while would trigger
-endless soft-lockups since next-20200519 on both x86_64 and powerpc.
-.config are in,
+Hi Andrew,
 
-https://github.com/cailca/linux-mm
+Could you explain the base commit of these patches?
+When I tried to apply them to v5.7-rc1 for testing,
+the merge conflict occurs.
 
-I did first try to revert the linux-next commit 68cd9f4e7238
-("tick/nohz: Narrow down noise while setting current task's tick
-dependency"), but it did not help.
+Thanks,
+Chanwoo Choi
 
-== x86_64 ==
-[ 1167.993773][    C1] WARNING: CPU: 1 PID: 0 at kernel/smp.c:127
-flush_smp_call_function_queue+0x1fa/0x2e0
-[ 1168.003333][    C1] Modules linked in: nls_iso8859_1 nls_cp437 vfat
-fat kvm_amd ses kvm enclosure dax_pmem irqbypass dax_pmem_core efivars
-acpi_cpufreq efivarfs ip_tables x_tables xfs sd_mod smartpqi
-scsi_transport_sas tg3 mlx5_core libphy firmware_class dm_mirror
-dm_region_hash dm_log dm_mod
-[ 1168.029492][    C1] CPU: 1 PID: 0 Comm: swapper/1 Not tainted
-5.7.0-rc6-next-20200519 #1
-[ 1168.037665][    C1] Hardware name: HPE ProLiant DL385
-Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-[ 1168.046978][    C1] RIP: 0010:flush_smp_call_function_queue+0x1fa/0x2e0
-[ 1168.053658][    C1] Code: 01 0f 87 c9 12 00 00 83 e3 01 0f 85 cc fe
-ff ff 48 c7 c7 c0 55 a9 8f c6 05 f6 86 cd 01 01 e8 de 09 ea ff 0f 0b
-e9 b2 fe ff ff <0f> 0b e9 52 ff ff ff 0f 0b e9 f2 fe ff ff 65 44 8b 25
-10 52 3f 71
-[ 1168.073262][    C1] RSP: 0018:ffffc90000178918 EFLAGS: 00010046
-[ 1168.079253][    C1] RAX: 0000000000000000 RBX: ffff8888430c58f8
-RCX: ffffffff8ec26083
-[ 1168.087156][    C1] RDX: 0000000000000003 RSI: dffffc0000000000
-RDI: ffff8888430c58f8
-[ 1168.095054][    C1] RBP: ffffc900001789a8 R08: ffffed1108618cec
-R09: ffffed1108618cec
-[ 1168.102964][    C1] R10: ffff8888430c675b R11: 0000000000000000
-R12: ffff8888430c58e0
-[ 1168.110866][    C1] R13: ffffffff8eb30c40 R14: ffff8888430c5880
-R15: ffff8888430c58e0
-[ 1168.118767][    C1] FS:  0000000000000000(0000)
-GS:ffff888843080000(0000) knlGS:0000000000000000
-[ 1168.127628][    C1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1168.134129][    C1] CR2: 000055b169604560 CR3: 0000000d08a14000
-CR4: 00000000003406e0
-[ 1168.142026][    C1] Call Trace:
-[ 1168.145206][    C1]  <IRQ>
-[ 1168.147957][    C1]  ? smp_call_on_cpu_callback+0xd0/0xd0
-[ 1168.153421][    C1]  ? rcu_read_lock_sched_held+0xac/0xe0
-[ 1168.158880][    C1]  ? rcu_read_lock_bh_held+0xc0/0xc0
-[ 1168.164076][    C1]  generic_smp_call_function_single_interrupt+0x13/0x2b
-[ 1168.170938][    C1]  smp_call_function_single_interrupt+0x157/0x4e0
-[ 1168.177278][    C1]  ? smp_call_function_interrupt+0x4e0/0x4e0
-[ 1168.183172][    C1]  ? interrupt_entry+0xe4/0xf0
-[ 1168.187846][    C1]  ? trace_hardirqs_off_caller+0x8d/0x1f0
-[ 1168.193478][    C1]  ? trace_hardirqs_on_caller+0x1f0/0x1f0
-[ 1168.199116][    C1]  ? _nohz_idle_balance+0x221/0x360
-[ 1168.204228][    C1]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[ 1168.209690][    C1]  call_function_single_interrupt+0xf/0x20
-[ 1168.215415][    C1] RIP: 0010:_raw_spin_unlock_irqrestore+0x46/0x50
-[ 1168.221747][    C1] Code: 8d 5e ff 4c 89 e7 e8 a9 35 5f ff f6 c7 02
-75 13 53 9d e8 fd c0 6f ff 65 ff 0d 4e ab a6 70 5b 41 5c 5d c3 e8 dc
-c2 6f ff 53 9d <eb> eb 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55 65 ff
-05 2b ab a6
-[ 1168.241353][    C1] RSP: 0018:ffffc90000178bd0 EFLAGS: 00000246
-ORIG_RAX: ffffffffffffff04
-[ 1168.249700][    C1] RAX: 0000000000000000 RBX: 0000000000000246
-RCX: ffffffff8eba0740
-[ 1168.257602][    C1] RDX: 0000000000000007 RSI: dffffc0000000000
-RDI: ffff888214f5c8e4
-[ 1168.265503][    C1] RBP: ffffc90000178be0 R08: fffffbfff2120216
-R09: 0000000000000000
-[ 1168.273400][    C1] R10: 0000000000000000 R11: 0000000000000000
-R12: ffff888843145880
-[ 1168.281300][    C1] R13: ffffffff90b2db80 R14: 0000000000000002
-R15: 00000001000164cb
-[ 1168.289218][    C1]  ? call_function_single_interrupt+0xa/0x20
-[ 1168.295117][    C1]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-[ 1168.300319][    C1]  _nohz_idle_balance+0x221/0x360
-[ 1168.305256][    C1]  run_rebalance_domains+0x16c/0x2e0
-[ 1168.310452][    C1]  __do_softirq+0x1ca/0x96a
-[ 1168.314861][    C1]  ? __irqentry_text_end+0x1fa9e7/0x1fa9e7
-[ 1168.320579][    C1]  ? hrtimer_reprogram+0x170/0x170
-[ 1168.325608][    C1]  ? __bpf_trace_preemptirq_template+0x100/0x100
-[ 1168.331856][    C1]  ? lapic_next_event+0x3c/0x50
-[ 1168.336617][    C1]  ? clockevents_program_event+0xfc/0x180
-[ 1168.342249][    C1]  ? check_flags.part.28+0x86/0x220
-[ 1168.347355][    C1]  ? trace_hardirqs_off+0x8d/0x1f0
-[ 1168.352374][    C1]  ? __bpf_trace_preemptirq_template+0x100/0x100
-[ 1168.358620][    C1]  ? rcu_read_lock_sched_held+0xac/0xe0
-[ 1168.364077][    C1]  ? rcu_read_lock_bh_held+0xc0/0xc0
-[ 1168.369282][    C1]  irq_exit+0xd6/0xf0
-[ 1168.373168][    C1]  smp_apic_timer_interrupt+0x215/0x560
-[ 1168.378628][    C1]  ? smp_call_function_single_interrupt+0x4e0/0x4e0
-[ 1168.385137][    C1]  ? smp_call_function_interrupt+0x4e0/0x4e0
-[ 1168.391031][    C1]  ? interrupt_entry+0xe4/0xf0
-[ 1168.395705][    C1]  ? trace_hardirqs_off_caller+0x8d/0x1f0
-[ 1168.401336][    C1]  ? trace_hardirqs_off_caller+0x8d/0x1f0
-[ 1168.406969][    C1]  ? trace_hardirqs_on_caller+0x1f0/0x1f0
-[ 1168.412602][    C1]  ? trace_hardirqs_on_caller+0x1f0/0x1f0
-[ 1168.418234][    C1]  ? __kasan_check_write+0x14/0x20
-[ 1168.423260][    C1]  ? rcu_dynticks_eqs_enter+0x25/0x40
-[ 1168.428550][    C1]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[ 1168.434013][    C1]  apic_timer_interrupt+0xf/0x20
-[ 1168.438855][    C1]  </IRQ>
-[ 1168.441698][    C1] RIP: 0010:cpuidle_enter_state+0x1d1/0xac0
-[ 1168.447504][    C1] Code: ff e8 63 22 7c ff 80 bd 28 ff ff ff 00 74
-12 9c 58 f6 c4 02 0f 85 cc 06 00 00 31 ff e8 d8 1e 8a ff e8 23 c4 93
-ff fb 45 85 ed <0f> 88 dc 01 00 00 4d 63 f5 49 83 fe 09 0f 87 d0 07 00
-00 4b 8d 14
-[ 1168.467110][    C1] RSP: 0018:ffffc9000031fc70 EFLAGS: 00000202
-ORIG_RAX: ffffffffffffff13
-[ 1168.475452][    C1] RAX: 0000000000000000 RBX: ffff8886381b4400
-RCX: ffffffff8eba0740
-[ 1168.483353][    C1] RDX: 0000000000000007 RSI: dffffc0000000000
-RDI: ffff888214f5c8e4
-[ 1168.491255][    C1] RBP: ffffc9000031fd78 R08: fffffbfff2120216
-R09: 0000000000000000
-[ 1168.499158][    C1] R10: 0000000000000000 R11: 0000000000000000
-R12: 0000000000000001
-[ 1168.507061][    C1] R13: 0000000000000002 R14: ffffffff90695bb0
-R15: 0000010ff187211b
-[ 1168.514971][    C1]  ? lockdep_hardirqs_on+0x1b0/0x2c0
-[ 1168.520178][    C1]  ? tick_nohz_idle_stop_tick+0x2b0/0x690
-[ 1168.525817][    C1]  ? cpuidle_enter_s2idle+0x280/0x280
-[ 1168.531104][    C1]  ? tick_nohz_tick_stopped_cpu+0xa0/0xa0
-[ 1168.536741][    C1]  ? menu_enable_device+0xf0/0xf0
-[ 1168.541679][    C1]  ? trace_hardirqs_off+0x1f0/0x1f0
-[ 1168.546794][    C1]  cpuidle_enter+0x41/0x70
-[ 1168.551126][    C1]  do_idle+0x3cf/0x440
-
-== powerpc ==
-[13720.177440][   C35] WARNING: CPU: 35 PID: 0 at kernel/smp.c:127
-flush_smp_call_function_queue+0x104/0x360
-[13720.177562][   C35] Modules linked in: nf_tables nfnetlink cn
-kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci tg3 libahci mdio
-libphy libata firmware_class dm_mirror dm_region_hash dm_log dm_mod
-[13720.177776][   C35] CPU: 35 PID: 0 Comm: swapper/35 Tainted: G
-  W    L    5.7.0-rc6-next-20200519 #2
-[13720.177877][   C35] NIP:  c000000000275f44 LR: c000000000275f60
-CTR: c0000000001875b0
-[13720.177952][   C35] REGS: c00000003e64f0c0 TRAP: 0700   Tainted: G
-      W    L     (5.7.0-rc6-next-20200519)
-[13720.178061][   C35] MSR:  9000000000029033
-<SF,HV,EE,ME,IR,DR,RI,LE>  CR: 24002428  XER: 20040000
-[13720.178183][   C35] CFAR: c000000000275f68 IRQMASK: 1
-[13720.178183][   C35] GPR00: c000000000275f60 c00000003e64f350
-c000000001765000 c000001ffe204000
-[13720.178183][   C35] GPR04: c00000000179bc30 0000000000000000
-c00000003e64f674 c000201fff7ff800
-[13720.178183][   C35] GPR08: 0000000000000000 0000000000000001
-c0000000001875b0 000000003b70faa3
-[13720.178183][   C35] GPR12: c0000000001875b0 c000001ffffe2a80
-c000001ffe2b4018 0000000000000024
-[13720.178183][   C35] GPR16: 0000000000000000 c000001ffe204000
-0000000000000000 c0000000015b1e90
-[13720.178183][   C35] GPR20: 000000010013d6df 0000000000000003
-0000000000000001 0000000000000002
-[13720.178183][   C35] GPR24: 0000000000000000 c00000000179c664
-c00000003e64f4f8 c00000000179c3b0
-[13720.178183][   C35] GPR28: 0000001ffd0b0000 0000000000000000
-c000001ffe204060 c000001ffe204060
-[13720.179023][   C35] NIP [c000000000275f44]
-flush_smp_call_function_queue+0x104/0x360
-[13720.179104][   C35] LR [c000000000275f60]
-flush_smp_call_function_queue+0x120/0x360
-[13720.179191][   C35] Call Trace:
-[13720.179225][   C35] [c00000003e64f350] [c000000000275f60]
-flush_smp_call_function_queue+0x120/0x360 (unreliable)
-[13720.179337][   C35] [c00000003e64f3f0] [c000000000059894]
-smp_ipi_demux_relaxed+0xa4/0x100
-[13720.179439][   C35] [c00000003e64f430] [c000000000053084]
-doorbell_exception+0x124/0x730
-[13720.179525][   C35] [c00000003e64f4d0] [c000000000017404]
-replay_soft_interrupts+0x254/0x3c0
-[13720.179622][   C35] [c00000003e64f6c0] [c0000000000175c0]
-arch_local_irq_restore+0x50/0xd0
-[13720.179714][   C35] [c00000003e64f6e0] [c000000000adc3f0]
-_raw_spin_unlock_irqrestore+0xa0/0xd0
-[13720.179806][   C35] [c00000003e64f710] [c0000000001a8f68]
-_nohz_idle_balance+0x308/0x450
-[13720.179900][   C35] [c00000003e64f810] [c000000000add04c]
-__do_softirq+0x3ac/0xaa8
-[13720.179986][   C35] [c00000003e64f990] [c00000000012981c]
-irq_exit+0x16c/0x1d0
-[13720.180080][   C35] [c00000003e64fa00] [c00000000002771c]
-timer_interrupt+0x1fc/0x880
-[13720.180162][   C35] [c00000003e64fac0] [c000000000017344]
-replay_soft_interrupts+0x194/0x3c0
-[13720.180266][   C35] [c00000003e64fcb0] [c0000000000175c0]
-arch_local_irq_restore+0x50/0xd0
-[13720.180367][   C35] [c00000003e64fcd0] [c0000000008cee78]
-cpuidle_enter_state+0x128/0x9f0
-[13720.180464][   C35] [c00000003e64fd80] [c0000000008cf7e0]
-cpuidle_enter+0x50/0x70
-[13720.180543][   C35] [c00000003e64fdc0] [c00000000018e2ec]
-call_cpuidle+0x4c/0x90
-[13720.180638][   C35] [c00000003e64fde0] [c00000000018e7f8] do_idle+0x378/0x470
-[13720.506608][   C35] [c00000003e64fe90] [c00000000018ed18]
-cpu_startup_entry+0x38/0x40
-[13720.506678][   C35] [c00000003e64fec0] [c00000000005b0a0]
-start_secondary+0x780/0xa20
-[13720.506759][   C35] [c00000003e64ff90] [c00000000000c454]
-start_secondary_prolog+0x10/0x14
-[13720.506851][   C35] Instruction dump:
-[13720.506909][   C35] 2fbe0000 93bf0018 7fdff378 419e004c 813f0018
-ebdf0000 e95f0008 e87f0010
-[13720.507016][   C35] 71280002 4082ffb8 7d2948f8 552907fe <0b090000>
-7c2004ac 911f0018 7d4c5378
-[13720.507119][   C35] irq event stamp: 122776347
-[13720.507202][   C35] hardirqs last  enabled at (122776346):
-[<c000000000adc3e4>] _raw_spin_unlock_irqrestore+0x94/0xd0
-[13720.507303][   C35] hardirqs last disabled at (122776347):
-[<c0000000000175b8>] arch_local_irq_restore+0x48/0xd0
-[13720.507427][   C35] softirqs last  enabled at (122776342):
-[<c0000000001296ac>] irq_enter+0x9c/0xa0
-[13720.507517][   C35] softirqs last disabled at (122776343):
-[<c00000000012981c>] irq_exit+0x16c/0x1d0
-[13720.507632][   C35] ---[ end trace 20587d9746d61ca8 ]---
+On 5/20/20 12:42 PM, Andrew-sh.Cheng wrote:
+> MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
+> So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
+> 
+> For SVS support, need OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
+> 
+> Change since v5:
+> 	- Changing dt-binding format to yaml.
+> 	- Extending current devfreq passive_governor instead of create a new one.
+> 	- Resend depending patches of Sravana Kannan base on kernel-5.7
+> 
+> 
+> Andrew-sh.Cheng (6):
+>   cpufreq: mediatek: add clock and regulator enable for intermediate
+>     clock
+>   dt-bindings: devfreq: add compatible for mt8183 cci devfreq
+>   devfreq: add mediatek cci devfreq
+>   opp: Modify opp API, dev_pm_opp_get_freq(), find freq in opp, even it
+>     is disabled
+>   cpufreq: mediatek: add opp notification for SVS support
+>   devfreq: mediatek: cci devfreq register opp notification for SVS
+>     support
+> 
+> Saravana Kannan (6):
+>   OPP: Allow required-opps even if the device doesn't have power-domains
+>   OPP: Add function to look up required OPP's for a given OPP
+>   OPP: Improve required-opps linking
+>   PM / devfreq: Cache OPP table reference in devfreq
+>   PM / devfreq: Add required OPPs support to passive governor
+>   PM / devfreq: Add cpu based scaling support to passive_governor
+> 
+>  .../devicetree/bindings/devfreq/mt8183-cci.yaml    |  51 ++++
+>  drivers/cpufreq/mediatek-cpufreq.c                 | 122 ++++++++-
+>  drivers/devfreq/Kconfig                            |  12 +
+>  drivers/devfreq/Makefile                           |   1 +
+>  drivers/devfreq/devfreq.c                          |   6 +
+>  drivers/devfreq/governor_passive.c                 | 298 +++++++++++++++++++--
+>  drivers/devfreq/mt8183-cci-devfreq.c               | 233 ++++++++++++++++
+>  drivers/opp/core.c                                 |  85 +++++-
+>  drivers/opp/of.c                                   | 108 ++++----
+>  drivers/opp/opp.h                                  |   5 +
+>  include/linux/devfreq.h                            |  42 ++-
+>  include/linux/pm_opp.h                             |  11 +
+>  12 files changed, 874 insertions(+), 100 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
+>  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
+> 
