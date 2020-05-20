@@ -2,111 +2,90 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CBD2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D28207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589950746;
+	bh=0uBprx3zgrPmKIHQh5K/KhY5RQol9LDmQGYsEkv3dF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WtBsTCYEyQIUyJsencMQPSmCCJwtOy+BYIHu/3WjHlqOw2Ywt6AWPHa8eGDvHORrz
+	 z7vvistP+Nx5PRhK9y5FNLIntQ8NrD2LEpQLNYzHJk920L4qwrQE15Tw5QU2j8x79w
+	 iybRs41wdb2iDvu3u2A1bhey4oaXxdggRMmr7c6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgETE64 (ORCPT
+        id S1726780AbgETE7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:58:56 -0400
-Received: from smtprelay0073.hostedemail.com ([216.40.44.73]:50388 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726403AbgETE64 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:58:56 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 87EE1181D330D;
-        Wed, 20 May 2020 04:58:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bee40_1b05ed926d13
-X-Filterd-Recvd-Size: 2756
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 20 May 2020 04:58:54 +0000 (UTC)
-Message-ID: <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
-Subject: Re: [RFC PATCH 2/2] init: Allow multi-line output of kernel command
- line
-From:   Joe Perches <joe@perches.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Chenggang Wang <wangchenggang@vivo.com>,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Date:   Tue, 19 May 2020 21:58:53 -0700
-In-Reply-To: <20200520044127.GB938@jagdpanzerIV.localdomain>
-References: <cover.1589916689.git.joe@perches.com>
-         <2b3832fed9370f0f8dfd1ea33dddb1d05a36e265.1589916689.git.joe@perches.com>
-         <20200520044127.GB938@jagdpanzerIV.localdomain>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Wed, 20 May 2020 00:59:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbgETE7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 00:59:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 233742075F;
+        Wed, 20 May 2020 04:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589950744;
+        bh=0uBprx3zgrPmKIHQh5K/KhY5RQol9LDmQGYsEkv3dF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DD2y4B3oJ/agfWo6rHk87iOaHbnRZ5FQsZK++7S2VyoZVu3SlZFvn//cXTzp+VoI3
+         GS96rGLP9TNws7d0NoeaphWlmVS9YPrJp+Mu3SxuGTuHXuEMlTT4nLF3APmJvoQ4aK
+         hD+vImzBwT2oM691xBNpGhFh1lJcGGpb3lPQCkGU=
+Date:   Wed, 20 May 2020 06:59:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Olof Johansson <olof.johansson@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        wufan@codeaurora.org, pratanan@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
+Message-ID: <20200520045900.GA2105777@kroah.com>
+References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-20 at 13:41 +0900, Sergey Senozhatsky wrote:
-> On (20/05/19 12:42), Joe Perches wrote:
-> > +static void __init print_cmdline(char *line)
-> > +{
-> > +#ifdef CONFIG_PRINTK
-> > +	const char *prefix = "Kernel command line";
-> > +	size_t len = strlen(line);
-> > +
-> > +	while (len > PRINTK_LOG_LINE_MAX) {
-> > +		char *pos = line;
-> > +		char *last_pos = pos + PRINTK_LOG_LINE_MAX - 1;
-> > +		char saved_char;
-> > +		/* Find last space char within the maximum line length */
-> > +		while ((pos = memchr(pos, ' ', len - (pos - line))) &&
-> > +		       (pos - line) < PRINTK_LOG_LINE_MAX - 1) {
+On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
+> > Ok, that's a decision you are going to have to push upward on, as we
+> > really can't take this without a working, open, userspace.
 > 
-> Don't you need to also count in the 'prefix' length?
-
-yup.
-
-> > +			last_pos = pos;
-> > +		}
-> > +		saved_char = line[last_pos - line];
-> > +		line[last_pos - line] = 0;
-> > +		pr_notice("%s: %s\n", prefix, line);
-> > +		prefix = "Kernel command line (continued)";
-> > +		line[last_pos - line] = saved_char;
-> > +		len -= pos - line;
-> > +		line += pos - line;
-> > +	}
-> > +
-> > +	pr_notice("%s: %s\n", prefix, line);
-> > +#endif
-> > +}
+> Uh wut.
 > 
-> I like this in general. And I agree that we better handle this
-> externally, on the printk() caller side, so that printk() will
-> still have sane limits and won't print a 1G string for example.
+> So the merge criteria for drivers/accel (atm still drivers/misc but I
+> thought that was interim until more drivers showed up) isn't actually
+> "totally-not-a-gpu accel driver without open source userspace".
 > 
-> I wonder if we need to export PRINTK_LOG_LINE_MAX.
+> Instead it's "totally-not-a-gpu accel driver without open source
+> userspace" _and_ you have to be best buddies with Greg. Or at least
+> not be on the naughty company list. Since for habanalabs all you
+> wanted is a few test cases to exercise the ioctls. Not the entire
+> userspace.
 
-I think a #define works well enough.(
+Habanalabs now has their full library opensourced that their tools use
+directly, so that's not an argument anymore.
 
->  Maybe we can
-> use here something rather random and much shorter instead. E.g.
-> 256 chars. Hmm. How 
+My primary point here is the copyright owner of this code, because of
+that, I'm not going to objet to allowing this to be merged without open
+userspace code.
 
-	min(some_max like 132/256, PRINTK_LOG_LINE_MAX)
+thanks,
 
-would work.
-
-> many crash/monitoring tools can get confused
-> by multiple "Kernel command line" prefixes?
-
-I doubt any as it's an init only function.
-
-
+greg k-h
