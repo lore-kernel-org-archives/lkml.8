@@ -2,37 +2,40 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE91C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C24BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9FA20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57FD207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgETVNp (ORCPT
+        id S1727835AbgETVNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:13:45 -0400
-Received: from muru.com ([72.249.23.125]:55296 "EHLO muru.com"
+        Wed, 20 May 2020 17:13:48 -0400
+Received: from muru.com ([72.249.23.125]:55306 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbgETVNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:13:44 -0400
+        id S1727018AbgETVNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:13:45 -0400
 Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id BE94B8108;
-        Wed, 20 May 2020 21:14:32 +0000 (UTC)
+        by muru.com (Postfix) with ESMTP id 279DF819C;
+        Wed, 20 May 2020 21:14:34 +0000 (UTC)
 From:   Tony Lindgren <tony@atomide.com>
 To:     linux-omap@vger.kernel.org
 Cc:     "Andrew F . Davis" <afd@ti.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
         Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCHv2 0/6] Add initial genpd support for omap PRM driver
-Date:   Wed, 20 May 2020 14:13:28 -0700
-Message-Id: <20200520211334.61814-1-tony@atomide.com>
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/6] dt-bindings: omap: Update PRM binding for genpd
+Date:   Wed, 20 May 2020 14:13:29 -0700
+Message-Id: <20200520211334.61814-2-tony@atomide.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520211334.61814-1-tony@atomide.com>
+References: <20200520211334.61814-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,57 +43,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+The PRM (Power and Reset Module) has registers to enable and disable
+power domains, so let's update the binding for that.
 
-Heris v2 set of patches to add genpd support to the PRM (Power and Reset
-Module) driver.
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ Documentation/devicetree/bindings/arm/omap/prm-inst.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Initially we just add one hardware accelerator power domain for sgx,
-and one interconnect instance for l4_abe. The rest of the SoC specific
-domain data is probably best added one SoC at a time based on generated
-data.
-
-Regards,
-
-Tony
-
-
-Changes since v1:
-
-- Dropped clocks from the binding and prm driver as there's no need
-  for them as pointed out by Tero
-
-- Add checking for domain transition bit in pwrstst register as
-  pointed out by Tero
-
-- Add omap_prm_domain_show_state() for CONFIG_DEBUG
-
-
-Tony Lindgren (6):
-  dt-bindings: omap: Update PRM binding for genpd
-  soc: ti: omap-prm: Add basic power domain support
-  soc: ti: omap-prm: Configure sgx power domain for am3 and am4
-  soc: ti: omap-prm: Configure omap4 and 5 l4_abe power domain
-  ARM: dts: Configure am3 and am4 sgx for genpd and drop platform data
-  ARM: dts: Configure omap4 and 5 l4_abe for genpd and drop platform
-    data
-
- .../devicetree/bindings/arm/omap/prm-inst.txt |   2 +
- arch/arm/boot/dts/am33xx.dtsi                 |   2 +
- arch/arm/boot/dts/am4372.dtsi                 |   2 +
- arch/arm/boot/dts/omap4-l4-abe.dtsi           |   6 +-
- arch/arm/boot/dts/omap4.dtsi                  |   6 +
- arch/arm/boot/dts/omap5-l4-abe.dtsi           |   6 +-
- arch/arm/boot/dts/omap5.dtsi                  |   6 +
- arch/arm/mach-omap2/Kconfig                   |   1 +
- .../omap_hwmod_33xx_43xx_interconnect_data.c  |  16 -
- .../omap_hwmod_33xx_43xx_ipblock_data.c       |  40 ---
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c    |   2 -
- arch/arm/mach-omap2/omap_hwmod_43xx_data.c    |   2 -
- arch/arm/mach-omap2/omap_hwmod_44xx_data.c    |  33 --
- arch/arm/mach-omap2/omap_hwmod_54xx_data.c    |  31 --
- drivers/soc/ti/omap_prm.c                     | 281 +++++++++++++++++-
- 15 files changed, 305 insertions(+), 131 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+--- a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
++++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+@@ -18,6 +18,7 @@ Required properties:
+ 		(base address and length)
+ 
+ Optional properties:
++- #power-domain-cells:	Should be 0 if the PRM instance is a power domain.
+ - #reset-cells:	Should be 1 if the PRM instance in question supports resets.
+ 
+ Example:
+@@ -25,5 +26,6 @@ Example:
+ prm_dsp2: prm@1b00 {
+ 	compatible = "ti,dra7-prm-inst", "ti,omap-prm-inst";
+ 	reg = <0x1b00 0x40>;
++	#power-domain-cells = <0>;
+ 	#reset-cells = <1>;
+ };
 -- 
 2.26.2
