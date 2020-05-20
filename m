@@ -2,94 +2,121 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66823C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF8F207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928DF207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:41:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rwnlnI1G"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qC/4F699"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgETNkN (ORCPT
+        id S1726754AbgETNl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:40:13 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:46787 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726525AbgETNkG (ORCPT
+        Wed, 20 May 2020 09:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETNl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:40:06 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KDZU1M013236;
-        Wed, 20 May 2020 15:39:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=ArUV+HFn/C8Z3UZZJNpc9RKgx2vqaUmmaj6fhlTfivg=;
- b=rwnlnI1GXtCJVbfrq5wfodJRg2QzJ/tkJ60vGTW98FkJKUFXPl/Lrm0mWdeW8O9/JP6u
- nO+Jq/QZERPXnmPQMOwxNp6pPzCi6vtnROWzsN5o0xKmAwEEXprf+M1SVscv4jkpEEGw
- KHCb9FWDyHOtdjKQQPdrMnkHM0GGvFTN0/Z547EjsctIhwAayY/dBm4bs7W2JNr8KAKg
- SI1HD/aEADQE7GXk7Grq5DJXZkM3VGfPNGgX4sUfkqxMaT8FTqHSmjriCiNoaxfUrvx/
- ast7T1HhJKpfwOxqDTP0flKL8sgJk2TKhH97dhBx6N7NVmcB6+eFnOunGxxgmhxj4IyP UQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3125xy0jf8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 15:39:38 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8029210002A;
-        Wed, 20 May 2020 15:39:37 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 667EA2C38A9;
-        Wed, 20 May 2020 15:39:37 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May 2020 15:39:36
- +0200
-From:   Erwan Le Ray <erwan.leray@st.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-CC:     <linux-serial@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>,
-        Erwan Le Ray <erwan.leray@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 0/2] add generic DT binding for RTS/CTS
-Date:   Wed, 20 May 2020 15:39:30 +0200
-Message-ID: <20200520133932.30441-1-erwan.leray@st.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 20 May 2020 09:41:58 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CF67C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 06:41:58 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id a23so2544412qto.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 06:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0V2YdmdsPWdKOdrPaJCwbEh29ibmH+HakgeEAIazLoU=;
+        b=qC/4F699airF84eCWUHyAnJB2w/aPWBgGWneKHzTy6qapry8QGNFK5UmiB5clWhkUD
+         ggrB7niieo2jjQVXpglDBJb7ukXKkzrkVarquFn4tm1uu2dajOKsFVM5z66yImWDvg/n
+         e0LSe7TWd8zLwI9BVGuPxyk4wl1zCBkVrtmrEdgy90J45DrtDPZhLrfNNaUSGeqDZb4V
+         Ohs7FLbLPjpkLw1yfxZKSavEOB6tO/0daVpWkCS1Zajo6To+piVtmILV8UNr33bAD5uX
+         fK1dZdDvTXtkO+JqrxVuanC5knpnBNpif9cuHsTAeKkYe4hPnNM/jDZt16d03+R5FHv7
+         VPCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0V2YdmdsPWdKOdrPaJCwbEh29ibmH+HakgeEAIazLoU=;
+        b=arRiMUG98nUtz9mtam1C+NZ2Kw7jZZkerTs6B6shY+5nanPN1zcSTn8rAaCB78UP6D
+         2ozH+D0eJuyBeWAKwpDp8bnPDDPU0XKyQgK8P6bzgjgOobxpffBgvVL0XEmpI65qJu7d
+         ZaPoCOWGh6MObEm7OzmFHEu7/BIocwe29qxFi0QEdFAUtnF52oi2hEcdwnMJr6P5JwJR
+         wUmQXvzEO62Cd/11JfF4Y3qwaY8BQKoDdmeD/FiOOBQeQjJorEusX4yolHkTLBUyowmd
+         utohfA4mpBDhYdy2wMGDdvrAqgt9g1WwzGHVHwZ88DkFaVcFS/pvN9oWbpSIdw1bgy12
+         sbdw==
+X-Gm-Message-State: AOAM533kKc47xn49oTiBvxzCSYDf/nTqrXLeAVPN9xTxSO+4ngUO1pA6
+        tQcOmoSAo1mJiyS7840GNHISN88AwZH54Ppt/MUfZQ==
+X-Google-Smtp-Source: ABdhPJzdPKAs0FcB021TXKJADOyr7L07b4L1TgAmLuJZwsC2A0ftVTV4M5T7ShHJQofye20SE1BJoCJsElyH3SJIfec=
+X-Received: by 2002:aed:3668:: with SMTP id e95mr5404706qtb.50.1589982117153;
+ Wed, 20 May 2020 06:41:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_09:2020-05-20,2020-05-20 signatures=0
+References: <000000000000598a2905a60d50cd@google.com> <877dx66ce1.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <877dx66ce1.fsf@nanos.tec.linutronix.de>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 20 May 2020 15:41:45 +0200
+Message-ID: <CACT4Y+apEBx58B7q7XOMrPzzXZiQ6zvnVLRypD1MxCURwNkkMg@mail.gmail.com>
+Subject: Re: linux-next boot error: BUG: Invalid wait context ]
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     syzbot <syzbot+08003d278f04ed0944e0@syzkaller.appspotmail.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support of generic DT binding for annoucing RTS/CTS lines. The initial
-binding 'st,hw-flow-control' is not needed anymore since generic binding
-is available, but is kept for backward compatibility.
+On Wed, May 20, 2020 at 2:04 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> syzbot <syzbot+08003d278f04ed0944e0@syzkaller.appspotmail.com> writes:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    fb57b1fa Add linux-next specific files for 20200519
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17c9196e100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=2522f758a3588c2d
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=08003d278f04ed0944e0
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+08003d278f04ed0944e0@syzkaller.appspotmail.com
+> >
+> > =============================
+> > [ BUG: Invalid wait context ]
+> > 5.7.0-rc6-next-20200519-syzkaller #0 Not tainted
+> > -----------------------------
+> > swapper/1/0 is trying to lock:
+> > ffff8880ae737518 (&pool->lock){..-.}-{3:3}, at: spin_lock include/linux/spinlock.h:353 [inline]
+> > ffff8880ae737518 (&pool->lock){..-.}-{3:3}, at: __queue_work+0x2bf/0x1350 kernel/workqueue.c:1448
+>
+> Can you please disable CONFIG_PROVE_RAW_LOCK_NESTING for now?
+>
+> From the help text:
+>
+> NOTE:
+>   There are known nesting problems. So if you enable this option expect
+>   lockdep splats until these problems have been fully addressed which is
+>   work in progress. This config switch allows to identify and analyze
+>   these problems. It will be removed and the check permanentely enabled
+>   once the main issues have been fixed.
 
-Erwan Le Ray (2):
-  dt-bindings: serial: add generic DT binding for announcing RTS/CTS
-    lines
-  serial: stm32: Use generic DT binding for announcing RTS/CTS lines
+Hi Thomas,
 
- Documentation/devicetree/bindings/serial/st,stm32-uart.yaml | 4 +++-
- drivers/tty/serial/stm32-usart.c                            | 5 +++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Done:
+https://github.com/google/syzkaller/commit/4afdfa205b55633e7eb9db03a9d099d7aa324801
 
--- 
-2.17.1
+We can obsolete this then:
 
+#syz invalid
