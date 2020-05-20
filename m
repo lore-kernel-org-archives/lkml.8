@@ -2,125 +2,116 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4275F206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:07:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="PRmVuI4d"
+	by mail.kernel.org (Postfix) with ESMTP id AA13C20756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589980088;
+	bh=wi/+NOBq+bd+eIhLEuGblfHafXUqce5vURv0gARXUtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ygO7XQBnCFHtF5L2XLKPVCWj3cq7uVIKfi9L9skHZ80/4ztEOIJ5F+Lk27UyZ1DuQ
+	 PaXks0KK2Z0P5nVgZcZAQD4LqJtC7woiJaC+alEV+aXNhRnlaYUx9xtU19f4d9ZmtB
+	 vs5zHeRZigd7xde1vp5dpNu9kcOEQU/PhURPLNQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgETNHZ (ORCPT
+        id S1726857AbgETNII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:07:25 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:57709 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726435AbgETNHZ (ORCPT
+        Wed, 20 May 2020 09:08:08 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34468 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgETNIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:07:25 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id bOREjbq85dPgTbORHjMclh; Wed, 20 May 2020 15:07:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1589980042; bh=rYS3eL4X6aw5M0pkKgGOVqaY9OT7/X7gkx5eI9SDVq4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=PRmVuI4dDLKTdCWyJ3fnxM+PQgO9D41hALUvt4jxGKKkwvcgAbMpJz0rvmMac/S9z
-         uGuazWORDK0P/ZAyu1anDAW8McjKHfi0sgRq5jdYHwiAlY2rjIHz9g2sUz0ttkHwdd
-         tYerv2gdaS7pjYqKsgupKOUpaldz98Fd1GsAFOEsr7vS7gc6sNbx3iqwQuJkuiyjxB
-         3qR/+0TWrILMfCvAP1bskAwI++DDIFKAjL8iRbmpqvg+8WmHkFEzVtNY1d6XUgtB3t
-         cKIzAo8UkGAvJ6IisUtwneeLsDxTUggWW7Q/N97XdD5Ej5ugVPFbitwnQVavw3SKUt
-         P7NDZvCcGKDEQ==
-Subject: Re: [PATCH v4 1/3] media: rkvdec: Fix .buf_prepare
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        gustavo.padovan@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>
-References: <20200518174011.15543-1-ezequiel@collabora.com>
- <20200518174011.15543-2-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <2c69a8d6-3402-15e8-1b19-49b8591ae1d8@xs4all.nl>
-Date:   Wed, 20 May 2020 15:07:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 20 May 2020 09:08:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f6so1421001pgm.1;
+        Wed, 20 May 2020 06:08:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oC3CO1dbSoIbsRb/LeuNNuvbNSOpiNXf/liPEnpy158=;
+        b=LpB2UG6PNkXlYBbS+rnwrYdal+waUizlpU1kD3u2YnZkE1yKjFFE1QfURoEq1AH0VJ
+         dEVaeh9rsWL1qWlygeutMsqXCTQMelvReCtm2XwuOX3dWxBuM2hTAyJNe4mzSFgaiRyJ
+         zs51MBW0MhC8HW7COufXv3luLVM8pQtqOXdVqkiXeW8OSD41iGpB3DJ1WVOxET6g+gih
+         AhBNFmre98pRK/SYtp4hIfBk1reWNlRKmM+/2E1reKGdf8ebZflYZk5NQz78XVXTKr0H
+         h0Rm6YbQqeoxxguuIaiOqb0KoNpzQadkETA13UVi6Gk2gY07t4R37pAA1Aa2X8yUhmK3
+         /peA==
+X-Gm-Message-State: AOAM533tpcXoMxEnmGCL45bDaBZR819JWiJQqQqzkz0uWvl4Dw2Qd9gD
+        hZ4nJApsqNTCh0SWTcswMNz1er6D4yQ=
+X-Google-Smtp-Source: ABdhPJxyuQadFi/BPczL9wi1UixCiN30Jo1EXPFYckrbfa3pjL31XvU1Kw4ZvnRcyfwd/dTCpWqcAA==
+X-Received: by 2002:a63:b904:: with SMTP id z4mr4117050pge.25.1589980085715;
+        Wed, 20 May 2020 06:08:05 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d4sm1899478pgk.2.2020.05.20.06.08.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 06:08:04 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 460F74088B; Wed, 20 May 2020 13:08:03 +0000 (UTC)
+Date:   Wed, 20 May 2020 13:08:03 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, keescook@chromium.org,
+        yzaikin@google.com, adobriyan@gmail.com, mingo@kernel.org,
+        gpiccoli@canonical.com, rdna@fb.com, patrick.bellasi@arm.com,
+        sfr@canb.auug.org.au, mhocko@suse.com,
+        penguin-kernel@i-love.sakura.ne.jp, vbabka@suse.cz,
+        tglx@linutronix.de, peterz@infradead.org,
+        Jisheng.Zhang@synaptics.com, khlebnikov@yandex-team.ru,
+        bigeasy@linutronix.de, pmladek@suse.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        wangle6@huawei.com, alex.huangjianhui@huawei.com
+Subject: Re: [PATCH v4 0/4] cleaning up the sysctls table (hung_task watchdog)
+Message-ID: <20200520130802.GW11244@42.do-not-panic.com>
+References: <1589859071-25898-1-git-send-email-nixiaoming@huawei.com>
+ <20200519203141.f3152a41dce4bc848c5dded7@linux-foundation.org>
+ <5574b304-e890-76a9-8190-f705eba8082d@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200518174011.15543-2-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNvqZFKA72/EsLonoJeUejdO8KU4dUjjbTEntSsfRDJyM4Fy0SsUFVINMgvprIi+w7wIlbWQtX8x6c6Ll5Q8P4s0UDexWF8/r5UsPL4XnkC5l2GbF8ja
- 7xgONG2aEx1/RzqPdh0tXuyeFW4gycq9xFvsuwAadwSmsvGpRc7CHoa/Gg1qof85YagOiPTCDYLeS3LMy8PX/36BePzHZInu/bVhFjQwRgGsT51qi9ffJwda
- r0s8xKc5WEn0ng17m4AuA6HrZS1+Vtxza9G2xmYE3WnkSDpKvk2H8MPaFCKxlFxW1/LELu1+K+5oDX1JwZBYTVuZIX616X3OL6tpvsq7GH/T99jYd9L5AjjA
- qeEe6FdrSGaQGlWTcIk9JywaiD6Xg5D0auCISdRYxxDjpCn3hwIF+HtiDWtuiY1AOZtVGiUhMVPs4aJzZoFmhTkP3LJXhEqjr4cSh49W8UjDLz6nocWObbJA
- 2neiSlz6cxCVbFyNPIgGfoIYRkTQysutQKzmh3kmC5UKcYgCFgtgidioQo6ZejXEwhFnFXaNo/WUrbd+wq/6gG3GGmjSqOkT5+ZL1Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5574b304-e890-76a9-8190-f705eba8082d@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/05/2020 19:40, Ezequiel Garcia wrote:
-> The driver should only set the payload on .buf_prepare
-> if the buffer is CAPTURE type, or if an OUTPUT buffer
-> has a zeroed payload.
+On Wed, May 20, 2020 at 12:02:26PM +0800, Xiaoming Ni wrote:
+> On 2020/5/20 11:31, Andrew Morton wrote:
+> > On Tue, 19 May 2020 11:31:07 +0800 Xiaoming Ni <nixiaoming@huawei.com> wrote:
+> > 
+> > > Kernel/sysctl.c
+> > 
+> > eek!
+> > 
+> > > 
+> > >   fs/proc/proc_sysctl.c        |   2 +-
+> > >   include/linux/sched/sysctl.h |  14 +--
+> > >   include/linux/sysctl.h       |  13 ++-
+> > >   kernel/hung_task.c           |  77 +++++++++++++++-
+> > >   kernel/sysctl.c              | 214 +++++++------------------------------------
+> > >   kernel/watchdog.c            | 101 ++++++++++++++++++++
+> > >   6 files changed, 224 insertions(+), 197 deletions(-)
+> > 
+> > Here's what we presently have happening in linux-next's kernel/sysctl.c:
+> > 
+> >   sysctl.c | 3109 ++++++++++++++++++++++++++++++---------------------------------
+> >   1 file changed, 1521 insertions(+), 1588 deletions(-)
+> > 
+> > 
+> > So this is not a good time for your patch!
+> > 
+> > Can I suggest that you set the idea aside and take a look after 5.8-rc1
+> > is released?
+> > 
 > 
-> Fix it.
-> 
-> Fixes: cd33c830448ba ("media: rkvdec: Add the rkvdec driver")
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/rkvdec/rkvdec.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-> index 225eeca73356..4df2a248ab96 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec.c
-> @@ -456,7 +456,15 @@ static int rkvdec_buf_prepare(struct vb2_buffer *vb)
->  		if (vb2_plane_size(vb, i) < sizeimage)
->  			return -EINVAL;
->  	}
-> -	vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
-> +
-> +	/*
-> +	 * Buffer's bytesused is written by the driver for CAPTURE buffers,
-> +	 * or if the application passed zero bytesused on an OUTPUT buffer.
-> +	 */
-> +	if (!V4L2_TYPE_IS_OUTPUT(vq->type) ||
-> +	    (V4L2_TYPE_IS_OUTPUT(vq->type) && !vb2_get_plane_payload(vb, 0)))
-> +		vb2_set_plane_payload(vb, 0,
-> +				      f->fmt.pix_mp.plane_fmt[0].sizeimage);
+> ok, I will make v5 patch based on 5.8-rc1 after 5.8-rc1 is released,
+> And add more sysctl table cleanup.
 
-This should just be:
+Xiaoming, I'll coordinate with you on this offline as I have the fs
+kernel/sysctl.c stuff out of the way as well.
 
-	if (!V4L2_TYPE_IS_OUTPUT(vq->type))
-		vb2_set_plane_payload(vb, 0, f->fmt.pix_mp.plane_fmt[0].sizeimage);
-
-If the application passes 0 as bytesused, then 1) a warning will be generated
-by the v4l2 core and 2) the v4l2 core will set bytesused to the length of the
-buffer. See vb2_fill_vb2_v4l2_buffer() in videobuf2-v4l2.c.
-
-Some old drivers explicitly allow bytesused to be 0 for an output queue to
-signal end-of-stream, but that's only supported if the allow_zero_bytesused
-flag is set in the vb2_queue, and that shall not be used for new drivers
-since it is deprecated functionality.
-
-Regards,
-
-	Hans
-
->  	return 0;
->  }
->  
-> 
-
+  Luis
