@@ -2,119 +2,162 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB39C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B35C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F304F20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA51D20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VmcDX7Jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgETVwH (ORCPT
+        id S1728364AbgETVwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:52:07 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:52947 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbgETVwG (ORCPT
+        Wed, 20 May 2020 17:52:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33648 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728032AbgETVwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:52:06 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MO9r5-1jQLZl1ulV-00OV7U for <linux-kernel@vger.kernel.org>; Wed, 20 May
- 2020 23:52:04 +0200
-Received: by mail-qk1-f172.google.com with SMTP id i14so5224787qka.10
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:52:04 -0700 (PDT)
-X-Gm-Message-State: AOAM530rxGpOOfOFC7gen3OC2//H7nVSPoec/En2Y1MKUqtbptJUWx5R
-        1rLFDWLEQGDumRt+xrvs+zaEsKInC7d2xSWu/aI=
-X-Google-Smtp-Source: ABdhPJxRbi0MiQo5LHl7IsWyHK1uuyEIhLaUVN+AuiR50+YI5y03MH2otO1L7nuScC6ChfjLJivuQ626xbz3vZftMA0=
-X-Received: by 2002:a37:434b:: with SMTP id q72mr7329549qka.352.1590011523351;
- Wed, 20 May 2020 14:52:03 -0700 (PDT)
+        Wed, 20 May 2020 17:52:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590011560;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=K1eoD/CbeHmAwwQM5Kk034bbHXePj0f8t/9qXqJL1eo=;
+        b=VmcDX7JwTf5ihf5iii8uXNNaZvG3/HQRgQrgiB0lBEopLAiEir8ET0MLa0fEIWhBqPPn+Z
+        99nx67sMGwfnZlSrI7zZqRBIL7d6iue5UtqiEL2hCH3rGtlv9zRGmcU9DBcwR0h+LDhCox
+        6c/RzkEUDOP47ZK3u/xW/b8+2WRd01I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-2-JYwh_Y0HPJqVYzbY5uaHLg-1; Wed, 20 May 2020 17:52:37 -0400
+X-MC-Unique: JYwh_Y0HPJqVYzbY5uaHLg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 629918015CF;
+        Wed, 20 May 2020 21:52:36 +0000 (UTC)
+Received: from krava (unknown [10.40.193.10])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 25AE960C05;
+        Wed, 20 May 2020 21:52:34 +0000 (UTC)
+Date:   Wed, 20 May 2020 23:52:34 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf ordered_events: Optimise event object reuse
+Message-ID: <20200520215234.GO157452@krava>
+References: <20200515210151.2058-1-matt@codeblueprint.co.uk>
+ <20200518120408.GD3726797@krava>
+ <20200520130049.GC19431@codeblueprint.co.uk>
 MIME-Version: 1.0
-References: <20200518091222.27467-1-sudeep.holla@arm.com> <20200518091222.27467-8-sudeep.holla@arm.com>
- <CAK8P3a20R+H6m5GZj2_0w3s-xF+J_qSVrQH8EjyQXe6+9WTYxw@mail.gmail.com> <20200518115546.GB16262@bogus>
-In-Reply-To: <20200518115546.GB16262@bogus>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 20 May 2020 23:51:47 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3bOEL5wYFc1Fjg1vAT51NumzO0iUSroHQLSUt8WpZL7g@mail.gmail.com>
-Message-ID: <CAK8P3a3bOEL5wYFc1Fjg1vAT51NumzO0iUSroHQLSUt8WpZL7g@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] firmware: smccc: Add ARCH_SOC_ID support
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:CyleiRwEDypNb05YSJ6bg7Nn/wTfL1FwmUjlWLFo0eOLEbdNt2i
- R4wnu+8vRfz1lPsTWoxAI9uYOu//apgDyUXyHyIbw/rP4hwLj0NGZH16tvzh5UlS48+8nIu
- sOI3jsQAx+ZIGofTpFopoJoBHukt1juzUQaFzTJAp4MgnrSRV4YJ0RsnNkGeVoo+5ApTXM1
- Lt4by6mQZXEcm606c3G2w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2/O97iSHWnE=:nqog+HJPlih32H3radIoes
- B8xiIaC8ZrtbQ+VzQBlkiI3xaR6RG4Ly8N014iXy62JShe0VabL3uu54h78DjkMZntoxMGLrZ
- b+1m46AXlITXtuJU1aKkxHD0Od+aWqNXfAH3qjFbK+KwVQ3IXGQj0IXkOAjhNw2+sjCqRsU7v
- UctWAmTrqz54j8/rM89+6gx2CxJf2eUtxTw2VPMtwbvoPvluJg8+G7bGdT9kwYogyHb8BW0Kq
- 4PceH6St7WvA2Kj2EWyvjksC8hLVNaiUs65xuc0QPnHp/HxU7yggg1uvggFjzAqEM+5aDjGjR
- /8MzcpqV7AF2hMm/ra4yzcgA4N/CXxnlTKACM1UW5jihQS1GeilxT0NwKiFWoYKfj/656Z1je
- cteB64RzQ2lHxQdGphk3VkQNasgPX7iK5rle6s91UOnhr8AsxXva8Y6+vPqAeS0DitSyJ760B
- XqyK1ZCq5Rj0je0HW1Jm7BoB9YXxbemeU5VFwqfGbYgCv5ICf4S3RdW90wOQTayHhVJIdIpCy
- pazRo4Z6lPWQvdTzLlUFQnZ3ncuHeQsW5XYiuFEkV0R6BmpdsOtsWadHsKp0tm8TjzMJrme8b
- Ai6QlXVMsfTFKvofTLBt+hsX923+bgKJOnyhCqrqTs4p5JEWU35ytttq+CYmwQvOEE8MG5+En
- ShA1P+2UCHKRvCjAamkOSmhCjTdVWasJ7ykGr7isRQUGI9vdCeI48N+3DgEf5v1CJ9hEkeu8a
- ksNSmwP9fH2Z8A7HPUQpP4f6aB42bFjlWoRIEaaCfgZb5NdUvTJB/Iq5rk6+LDdXT9b6NPz+C
- 53vFloliXcojPH0/UA3VpktbwvPpHYHB8osDzxCPxABjV3dU+o=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520130049.GC19431@codeblueprint.co.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 1:55 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Mon, May 18, 2020 at 11:30:21AM +0200, Arnd Bergmann wrote:
-> > On Mon, May 18, 2020 at 11:12 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > > +static ssize_t
-> > > +jep106_cont_bank_code_show(struct device *dev, struct device_attribute *attr,
-> > > +                          char *buf)
-> > > +{
-> > > +       return sprintf(buf, "0x%02x\n", JEP106_BANK_CONT_CODE(soc_id_version));
-> > > +}
+On Wed, May 20, 2020 at 02:00:49PM +0100, Matt Fleming wrote:
+> On Mon, 18 May, at 02:04:08PM, Jiri Olsa wrote:
+> > On Fri, May 15, 2020 at 10:01:51PM +0100, Matt Fleming wrote:
+> > > ordered_event objects can be placed on the free object cache list in any
+> > > order which means future allocations may not return objects at
+> > > sequential locations in memory. Getting non-contiguous objects from the
+> > > free cache has bad consequences when later iterating over those objects
+> > > in ordered_events__queue().
+> > > 
+> > > For example, large perf.data files can contain trillions of events and
+> > > since objects that are next to each other in the free cache linked list
+> > > can point to pretty much anywhere in the object address space, lots of
+> > > cycles in ordered_events__queue() are spent servicing DTLB misses.
+> > > 
+> > > Implement the free object cache using the in-kernel implementation of
+> > > interval trees so that objects can always be allocated from the free
+> > > object cache in sequential order, improving spatial locality and
+> > > reducing DTLB misses.
+> > > 
+> > > Here are some numbers showing the speed up (reducing in execution time)
+> > > when running perf sched latency on sched events data and perf report on
+> > > HW_CPU_CYCLES.
+> > 
+> > really nice, few questions below
+> > 
+> > > 
+> > >  $ perf stat --null -r 10 -- bash -c \
+> > > 	"export PAGER=cat ; perf sched latency -i $file --stdio &>/dev/null"
+> > > 
+> > >   Nr events     File Size   Before    After    Speed up
+> > > --------------  ---------  --------  -------  ----------
+> > >   123318457470     29MB     0.2149    0.2440    -13.5%
+> > 
+> > should we be concerned about small data and the extra processing?
+>  
+> I didn't look into this slowdown originally because it's ~2.9 ms, but
+> FYI it looks like this is caused by:
+> 
+>  - Longer code paths (more instructions)
+>  - More branches
+>  - More branch mispredicts
+> 
+> > maybe we could add some option that disables this, at leat to be
+> > able to compare times in the future
+>  
+> Sure. Do you mean a command-line option or build-time config?
+
+command line option would be great
+
+SNIP
+
+> > > diff --git a/tools/perf/tests/free-object-cache.c b/tools/perf/tests/free-object-cache.c
+> > > new file mode 100644
+> > > index 000000000000..e4395ece7d2b
+> > > --- /dev/null
+> > > +++ b/tools/perf/tests/free-object-cache.c
+> > > @@ -0,0 +1,200 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +#include "tests.h"
+> > > +#include <linux/kernel.h>
 > > > +
-> > > +static DEVICE_ATTR_RO(jep106_cont_bank_code);
-> > > +
-> > > +static ssize_t
-> > > +jep106_identification_code_show(struct device *dev,
-> > > +                               struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       return sprintf(buf, "0x%02x\n", JEP106_ID_CODE(soc_id_version));
-> > > +}
-> >
-> > I think we should try hard to avoid nonstandard attributes for the soc device.
-> >
->
-> I agree with that in general but this is bit different for below mentioned
-> reason.
->
-> > Did you run into a problem with finding one of the existing attributes
-> > that can be used to hold the fields?
-> >
->
-> Not really! The 2 JEP106 codes can be used to derive the manufacturer which
-> could match one of the existing attributes. However doing so might require
-> importing the huge JEP106 list as it needs to be maintained and updated
-> in the kernel. Also that approach will have the compatibility issue and
-> that is the reason for introducing these attributes representing raw
-> values for userspace.
+> > > +#define ordered_events__flush_time __test_ordered_events__flush_time
+> > > +#define ordered_events__first_time __test_ordered_events__first_time
+> > > +#define ordered_events__delete __test_ordered_events__delete
+> > > +#define ordered_events__init __test_ordered_events__init
+> > > +#define ordered_events__free __test_ordered_events__free
+> > > +#define ordered_events__queue __test_ordered_events__queue
+> > > +#define ordered_events__reinit __test_ordered_events__reinit
+> > > +#define ordered_events__flush __test_ordered_events__flush
+> > 
+> > I'm excited to see these tests, but why is above needed?
+> > 
+> > can't you use ordered-events interface as it is? you used only
+> > exported functions right?
+>  
+> Nope, the tests in this file are unit tests so I'm testing
+> free_cache_{get,put} which are file-local functions by #include'ing
+> ordered-events.c.
+> 
+> The above define are required to avoid duplicate symbol errors at
+> link-time, e.g.
+> 
+>   util/perf-in.o: In function `ordered_events__flush_time':
+>   /home/matt/src/kernels/linux/tools/perf/util/ordered-events.c:461: multiple definition of `ordered_events__flush_time'
+>   tests/perf-in.o:/home/matt/src/kernels/linux/tools/perf/tests/../util/ordered-events.c:461: first defined here
+> 
+> There are other ways to resolve this (linker flags to change the
+> symbols) but I couldn't find any precedent with that, so this seemed
+> like the easiest and most obvious solution. I'm happy to fix this up any
+> other way if you have suggestions though.
 
-I was thinking they codes could just be part of the normal strings rather
-than get translated. Can you give an example what they would look like
-with your current code?
+hum, could we just make free_cache_{get,put} public?
 
-If  you think they should be standard attributes, how about adding them
-to the default list, and hardcoding them in the other soc device drivers
-based on the information we have available there?
+thanks,
+jirka
 
-      Arnd
