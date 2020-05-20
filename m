@@ -2,202 +2,201 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FABC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269A7207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B27207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgETKXZ (ORCPT
+        id S1726920AbgETKXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:23:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:52382 "EHLO foss.arm.com"
+        Wed, 20 May 2020 06:23:49 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:14698 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETKXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:23:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15DED31B;
-        Wed, 20 May 2020 03:23:24 -0700 (PDT)
-Received: from [10.37.12.87] (unknown [10.37.12.87])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23C6C3F68F;
-        Wed, 20 May 2020 03:23:22 -0700 (PDT)
-Subject: Re: [PATCH v4 07/13] firmware: arm_scmi: Add notification dispatch
- and delivery
-To:     Cristian Marussi <cristian.marussi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
- <20200304162558.48836-8-cristian.marussi@arm.com>
- <45d4aee9-57df-6be9-c176-cf0d03940c21@arm.com>
- <363cb1ba-76b5-cc1e-af45-454837fae788@arm.com>
- <484214b4-a71d-9c63-86fc-2e469cb1809b@arm.com>
- <20200313190224.GA5808@e120937-lin>
- <20200520070907.GE17648@e119603-lin.cambridge.arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <0234c256-2e29-69f8-99ae-2599f982961e@arm.com>
-Date:   Wed, 20 May 2020 11:23:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200520070907.GE17648@e119603-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726224AbgETKXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:23:48 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49RpkS2nC5z9tyrh;
+        Wed, 20 May 2020 12:23:44 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id o0EE-i3VuAXH; Wed, 20 May 2020 12:23:44 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49RpkS232pz9tyrd;
+        Wed, 20 May 2020 12:23:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E73658B7BC;
+        Wed, 20 May 2020 12:23:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3pGrT1tspxue; Wed, 20 May 2020 12:23:45 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 96EB28B7BB;
+        Wed, 20 May 2020 12:23:45 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 56DD165A4A; Wed, 20 May 2020 10:23:45 +0000 (UTC)
+Message-Id: <b34706f8de87f84d135abb5f3ede6b6f16fb1f41.1589969799.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] Revert "powerpc/32s: reorder Linux PTE bits to better match
+ Hash PTE bits."
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Rui Salvaterra <rsalvaterra@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 20 May 2020 10:23:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cristian,
+This reverts commit 697ece78f8f749aeea40f2711389901f0974017a.
 
-On 5/20/20 8:09 AM, Cristian Marussi wrote:
-> On Mon, Mar 16, 2020 at 02:46:05PM +0000, Cristian Marussi wrote:
->> On Thu, Mar 12, 2020 at 09:43:31PM +0000, Lukasz Luba wrote:
->>>
->>>
-> 
-> Hi Lukasz,
-> 
-> I went back looking deeper into the possible race issue you pointed out a
-> while ago understanding it a bit better down below.
-> 
->>> On 3/12/20 6:34 PM, Cristian Marussi wrote:
->>>> On 12/03/2020 13:51, Lukasz Luba wrote:
->>>>> Hi Cristian,
->>>>>
->> Hi Lukasz
->>
->>>>> just one comment below...
->> [snip]
->>>>>> +	eh.timestamp = ts;
->>>>>> +	eh.evt_id = evt_id;
->>>>>> +	eh.payld_sz = len;
->>>>>> +	kfifo_in(&r_evt->proto->equeue.kfifo, &eh, sizeof(eh));
->>>>>> +	kfifo_in(&r_evt->proto->equeue.kfifo, buf, len);
->>>>>> +	queue_work(r_evt->proto->equeue.wq,
->>>>>> +		   &r_evt->proto->equeue.notify_work);
->>>>>
->>>>> Is it safe to ignore the return value from the queue_work here?
->>>>>
->>>>
->>>> In fact yes, we do not want to care: it returns true or false depending on the
->>>> fact that the specific work was or not already queued, and we just rely on
->>>> this behavior to keep kicking the worker only when needed but never kick
->>>> more than one instance of it per-queue (so that there's only one reader
->>>> wq and one writer here in the scmi_notify)...explaining better:
->>>>
->>>> 1. we push an event (hdr+payld) to the protocol queue if we found that there was
->>>> enough space on the queue
->>>>
->>>> 2a. if at the time of the kfifo_in( ) the worker was already running
->>>> (queue not empty) it will process our new event sooner or later and here
->>>> the queue_work will return false, but we do not care in fact ... we
->>>> tried to kick it just in case
->>>>
->>>> 2b. if instead at the time of the kfifo_in() the queue was empty the worker would
->>>> have probably already gone to the sleep and this queue_work() will return true and
->>>> so this time it will effectively wake up the worker to process our items
->>>>
->>>> The important thing here is that we are sure to wakeup the worker when needed
->>>> but we are equally sure we are never causing the scheduling of more than one worker
->>>> thread consuming from the same queue (because that would break the one reader/one writer
->>>> assumption which let us use the fifo in a lockless manner): this is possible because
->>>> queue_work checks if the required work item is already pending and in such a case backs
->>>> out returning false and we have one work_item (notify_work) defined per-protocol and
->>>> so per-queue.
->>>
->>> I see. That's a good assumption: one work_item per protocol and simplify
->>> the locking. What if there would be an edge case scenario when the
->>> consumer (work_item) has handled the last item (there was NULL from
->>> scmi_process_event_header()), while in meantime scmi_notify put into
->>> the fifo new event but couldn't kick the queue_work. Would it stay there
->>> till the next IRQ which triggers queue_work to consume two events (one
->>> potentially a bit old)? Or we can ignore such race situation assuming
->>> that cleaning of work item is instant and kfifo_in is slow?
->>>
->>
->> In fact, this is a very good point, since between the moment the worker
->> determines that the queue is empty and the moment in which the worker
->> effectively exits (and it's marked as no more pending by the Kernel cmwq)
->> there is a window of opportunity for a race in which the ISR could fill
->> the queue with one more event and then fail to kick with queue_work() since
->> the work is in fact still nominally marked as pending from the point of view
->> of Kernel cmwq, as below:
->>
->> ISR (core N)		|	WQ (core N+1)		cmwq flags	       	queued events
->> ------------------------------------------------------------------------------------------------
->> 			| if (queue_is_empty)		- WORK_PENDING		0 events queued
->> 			+     ...			- WORK_PENDING		0 events queued
->> 			+ } while (scmi_process_event_payload);
->> 			+}// worker function exit
->> kfifo_in()		+     ...cmwq backing out	- WORK_PENDING		1 events queued
->> kfifo_in()		+     ...cmwq backing out	- WORK_PENDING		1 events queued
->> queue_work()		+     ...cmwq backing out	- WORK_PENDING		1 events queued
->>    -> FALSE (pending)	+     ...cmwq backing out	- WORK_PENDING		1 events queued
->> 			+     ...cmwq backing out	- WORK_PENDING		1 events queued
->> 			+     ...cmwq backing out	- WORK_PENDING		1 events queued
->> 			| ---- WORKER THREAD EXIT	- !WORK_PENDING		1 events queued
->> 			| 		 		- !WORK_PENDING		1 events queued
->> kfifo_in()		|     				- !WORK_PENDING		2 events queued
->> kfifo_in()		|  				- !WORK_PENDING		2 events queued
->> queue_work()		|     				- !WORK_PENDING		2 events queued
->>     -> TRUE		| --- WORKER ENTER		- WORK_PENDING		2 events queued
->> 			|  				- WORK_PENDING		2 events consumed
->> 		
->> where effectively the last event queued won't be consumed till the next
->> iteration once another event is queued.
->>
-> 
-> In summary, looking better at Kernel cmwq code, my explanation above about
-> how the possible race could be exposed by a particular tricky limit condition
-> and the values assumed by the WORK_STRUCT_PENDING_BIT was ... bullshit :D
-> 
-> In fact there's no race at all because Kernel cmwq takes care to clear the above
-> PENDING flag BEFORE the user-provided worker-function starts to finally run:
-> such flag is active only when a work instance is queued pending for execution
-> but it is cleared just before execution effctively starts.
-> 
-> kernel/workqueue.c:process_one_work()
-> 
-> 	set_work_pool_and_clear_pending(work, pool->id);
-> 	....
-> 	worker->current_func(work);
-> 
-> As a consequence in the racy scenario above where the ISR pushes events on the
-> queues after the worker has already determined the queue to be empty but while
-> the worker func is still being deactivated in terms of Kernel cmwq internal
-> handling, it is not a problem since the worker while running is already NO more
-> marked pending so the queue_work succeeds and a new work will simply be queued
-> and run once the current instance terminates fully and it is removed from pool.
+The implementation of SWAP on powerpc requires page protection
+bits to not be one of the least significant PTE bits.
 
-Sounds good, thanks to for digging into this workqueue code and figuring 
-it out.
+Until the SWAP implementation is changed and this requirement voids,
+we have to keep at least _PAGE_RW outside of the 3 last bits.
 
-> 
-> On the other side in the normal non racy scenario, when the worker is processing
-> normally a non-empty queue, we'll end-up anyway queueing new items and a new work
-> from the ISR even if the currently executing one will in fact consume already
-> naturally the queued items: this will result (it's what I observe in fact) in a
-> final un-needed quick worker activation/deactivation processing zero items (empty
-> queue) which is in fact harmless.
-> 
-> Basically the racy condition is taken care by the Kernel cmwq itself, and in fact
-> there is an extensive explanation also of the barriers employed to properly
-> realize this in the comments around set_work_pool_and_clear_pending()
-> 
-> I'll add a comment in v8 just to note this behaviour.
+For now, revert to previous PTE bits order. A further rework
+may come later.
 
-Great research.
+Reported-by: Rui Salvaterra <rsalvaterra@gmail.com>
+Fixes: 697ece78f8f7 ("powerpc/32s: reorder Linux PTE bits to better match Hash PTE bits.")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/include/asm/book3s/32/hash.h |  8 ++++----
+ arch/powerpc/kernel/head_32.S             |  9 ++++++---
+ arch/powerpc/mm/book3s32/hash_low.S       | 14 ++++++++------
+ 3 files changed, 18 insertions(+), 13 deletions(-)
 
-Regards,
-Lukasz
+diff --git a/arch/powerpc/include/asm/book3s/32/hash.h b/arch/powerpc/include/asm/book3s/32/hash.h
+index 34a7215ae81e..2a0a467d2985 100644
+--- a/arch/powerpc/include/asm/book3s/32/hash.h
++++ b/arch/powerpc/include/asm/book3s/32/hash.h
+@@ -17,9 +17,9 @@
+  * updating the accessed and modified bits in the page table tree.
+  */
+ 
+-#define _PAGE_USER	0x001	/* usermode access allowed */
+-#define _PAGE_RW	0x002	/* software: user write access allowed */
+-#define _PAGE_PRESENT	0x004	/* software: pte contains a translation */
++#define _PAGE_PRESENT	0x001	/* software: pte contains a translation */
++#define _PAGE_HASHPTE	0x002	/* hash_page has made an HPTE for this pte */
++#define _PAGE_USER	0x004	/* usermode access allowed */
+ #define _PAGE_GUARDED	0x008	/* G: prohibit speculative access */
+ #define _PAGE_COHERENT	0x010	/* M: enforce memory coherence (SMP systems) */
+ #define _PAGE_NO_CACHE	0x020	/* I: cache inhibit */
+@@ -27,7 +27,7 @@
+ #define _PAGE_DIRTY	0x080	/* C: page changed */
+ #define _PAGE_ACCESSED	0x100	/* R: page referenced */
+ #define _PAGE_EXEC	0x200	/* software: exec allowed */
+-#define _PAGE_HASHPTE	0x400	/* hash_page has made an HPTE for this pte */
++#define _PAGE_RW	0x400	/* software: user write access allowed */
+ #define _PAGE_SPECIAL	0x800	/* software: Special page */
+ 
+ #ifdef CONFIG_PTE_64BIT
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index daaa153950c2..97c887950c3c 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -348,7 +348,7 @@ BEGIN_MMU_FTR_SECTION
+ 	andis.	r0, r5, (DSISR_BAD_FAULT_32S | DSISR_DABRMATCH)@h
+ #endif
+ 	bne	handle_page_fault_tramp_2	/* if not, try to put a PTE */
+-	rlwinm	r3, r5, 32 - 24, 30, 30		/* DSISR_STORE -> _PAGE_RW */
++	rlwinm	r3, r5, 32 - 15, 21, 21		/* DSISR_STORE -> _PAGE_RW */
+ 	bl	hash_page
+ 	b	handle_page_fault_tramp_1
+ FTR_SECTION_ELSE
+@@ -497,6 +497,7 @@ InstructionTLBMiss:
+ 	andc.	r1,r1,r0		/* check access & ~permission */
+ 	bne-	InstructionAddressInvalid /* return if access not permitted */
+ 	/* Convert linux-style PTE to low word of PPC-style PTE */
++	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
+ 	ori	r1, r1, 0xe06		/* clear out reserved bits */
+ 	andc	r1, r0, r1		/* PP = user? 1 : 0 */
+ BEGIN_FTR_SECTION
+@@ -564,8 +565,9 @@ DataLoadTLBMiss:
+ 	 * we would need to update the pte atomically with lwarx/stwcx.
+ 	 */
+ 	/* Convert linux-style PTE to low word of PPC-style PTE */
+-	rlwinm	r1,r0,0,30,30		/* _PAGE_RW -> PP msb */
+-	rlwimi	r0,r0,1,30,30		/* _PAGE_USER -> PP msb */
++	rlwinm	r1,r0,32-9,30,30	/* _PAGE_RW -> PP msb */
++	rlwimi	r0,r0,32-1,30,30	/* _PAGE_USER -> PP msb */
++	rlwimi	r0,r0,32-1,31,31	/* _PAGE_USER -> PP lsb */
+ 	ori	r1,r1,0xe04		/* clear out reserved bits */
+ 	andc	r1,r0,r1		/* PP = user? rw? 1: 3: 0 */
+ BEGIN_FTR_SECTION
+@@ -643,6 +645,7 @@ DataStoreTLBMiss:
+ 	 * we would need to update the pte atomically with lwarx/stwcx.
+ 	 */
+ 	/* Convert linux-style PTE to low word of PPC-style PTE */
++	rlwimi	r0,r0,32-2,31,31	/* _PAGE_USER -> PP lsb */
+ 	li	r1,0xe06		/* clear out reserved bits & PP msb */
+ 	andc	r1,r0,r1		/* PP = user? 1: 0 */
+ BEGIN_FTR_SECTION
+diff --git a/arch/powerpc/mm/book3s32/hash_low.S b/arch/powerpc/mm/book3s32/hash_low.S
+index 6d236080cb1a..877d880890fe 100644
+--- a/arch/powerpc/mm/book3s32/hash_low.S
++++ b/arch/powerpc/mm/book3s32/hash_low.S
+@@ -35,7 +35,7 @@ mmu_hash_lock:
+ /*
+  * Load a PTE into the hash table, if possible.
+  * The address is in r4, and r3 contains an access flag:
+- * _PAGE_RW (0x002) if a write.
++ * _PAGE_RW (0x400) if a write.
+  * r9 contains the SRR1 value, from which we use the MSR_PR bit.
+  * SPRG_THREAD contains the physical address of the current task's thread.
+  *
+@@ -69,7 +69,7 @@ _GLOBAL(hash_page)
+ 	blt+	112f			/* assume user more likely */
+ 	lis	r5, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
+ 	addi	r5 ,r5 ,(swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
+-	rlwimi	r3,r9,32-14,31,31	/* MSR_PR -> _PAGE_USER */
++	rlwimi	r3,r9,32-12,29,29	/* MSR_PR -> _PAGE_USER */
+ 112:
+ #ifndef CONFIG_PTE_64BIT
+ 	rlwimi	r5,r4,12,20,29		/* insert top 10 bits of address */
+@@ -94,7 +94,7 @@ _GLOBAL(hash_page)
+ #else
+ 	rlwimi	r8,r4,23,20,28		/* compute pte address */
+ #endif
+-	rlwinm	r0,r3,6,24,24		/* _PAGE_RW access -> _PAGE_DIRTY */
++	rlwinm	r0,r3,32-3,24,24	/* _PAGE_RW access -> _PAGE_DIRTY */
+ 	ori	r0,r0,_PAGE_ACCESSED|_PAGE_HASHPTE
+ 
+ 	/*
+@@ -310,9 +310,11 @@ Hash_msk = (((1 << Hash_bits) - 1) * 64)
+ 
+ _GLOBAL(create_hpte)
+ 	/* Convert linux-style PTE (r5) to low word of PPC-style PTE (r8) */
++	rlwinm	r8,r5,32-9,30,30	/* _PAGE_RW -> PP msb */
+ 	rlwinm	r0,r5,32-6,30,30	/* _PAGE_DIRTY -> PP msb */
+-	and	r8,r5,r0		/* writable if _RW & _DIRTY */
+-	rlwimi	r5,r5,1,30,30		/* _PAGE_USER -> PP msb */
++	and	r8,r8,r0		/* writable if _RW & _DIRTY */
++	rlwimi	r5,r5,32-1,30,30	/* _PAGE_USER -> PP msb */
++	rlwimi	r5,r5,32-2,31,31	/* _PAGE_USER -> PP lsb */
+ 	ori	r8,r8,0xe04		/* clear out reserved bits */
+ 	andc	r8,r5,r8		/* PP = user? (rw&dirty? 1: 3): 0 */
+ BEGIN_FTR_SECTION
+@@ -564,7 +566,7 @@ _GLOBAL(flush_hash_pages)
+ 33:	lwarx	r8,0,r5			/* fetch the pte flags word */
+ 	andi.	r0,r8,_PAGE_HASHPTE
+ 	beq	8f			/* done if HASHPTE is already clear */
+-	rlwinm	r8,r8,0,~_PAGE_HASHPTE	/* clear HASHPTE bit */
++	rlwinm	r8,r8,0,31,29		/* clear HASHPTE bit */
+ 	stwcx.	r8,0,r5			/* update the pte */
+ 	bne-	33b
+ 
+-- 
+2.25.0
 
-> 
-> Thanks
-> 
-> Cristian
-> 
