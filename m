@@ -2,148 +2,253 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B37C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EECEC204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVrZ/6JY"
+	by mail.kernel.org (Postfix) with ESMTP id EE9A620884
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgETDQv (ORCPT
+        id S1728591AbgETDRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 23:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgETDQu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 23:16:50 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D5EC061A0E;
-        Tue, 19 May 2020 20:16:50 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u1so1190769wmn.3;
-        Tue, 19 May 2020 20:16:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2nEgJxLKt7sGcW4byyIraWO1xaiKoTWBDlRHFJajGbA=;
-        b=pVrZ/6JYUCpdV2hhkhm7yrMiS01LBziQOrCkZ6n0GgF/zakoeC3l8pUyrUqJQSnpr5
-         CJWskLnBBEGyi+WQU6/AKHCItey6jDnYeEC6yEUHqUncP3LgVUErZdFoItEOxfC9O3gD
-         OARa/Ia9GOS3xcjEeOOis//2hccJ/63PkdQqXnSphetieu/le6wV3X3ZA9zMM1WqH7KT
-         FwnMJKe/v+GNdlPE4T5KcOCGHOU94BUjWa28lktuvIdHSf0tPCD7eAey47N5DvdvSbFB
-         2Nxkiqifr7JEgNuIOFkREHViK0S3cxUjcej+1WtMfP9bT4BRUB4LeBRt6gRZx4HOavtn
-         zrDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2nEgJxLKt7sGcW4byyIraWO1xaiKoTWBDlRHFJajGbA=;
-        b=hD5UVDpjsx6EZpp3tAY7g5RSOskM0LnBzn+cqwRoMrWe257pI6V4dZ5kIMpFOPULIJ
-         CFba0Ex8VEr5vR/FBXt6/MoZvSvoWsINKyurIhMdQa3xq99psWdwrwvFQeqhBxXeDbmo
-         1CVEe9Xi2WPPWCTvyVCCYcQM3vgEs3bPk2XBsQ5COh+74K6cTD3ceENYq8ZymkJkSPHE
-         pTtc38uUgOGAcp7SRX2rGdLXzrTfxo12rmKLIlXlYkosXOdqvS5+xbLTdDWUF7L6oRMj
-         uPumfnieARCgtDOx1tX0FAN1VrrQShu/zw7Z7DyDE1kwksPgO1/NCF2dE2YhR1wurKdl
-         m0og==
-X-Gm-Message-State: AOAM530YKos5Jv8anRLVBsAlMQoTIuDT717aZehuyKzulQpA4dhSnM2u
-        SHbJwubFmtI/it4P9+C1+3aMDp9JlMZI9nVKSBo=
-X-Google-Smtp-Source: ABdhPJyorx9rIYjwfGWs5c/+/DTWQX+XeyqUNrSLPfIgnzjXlY3Gkag4N7ICwQCMyFJikPmFhna+ncTjCURuT8j3rrU=
-X-Received: by 2002:a7b:c413:: with SMTP id k19mr2459883wmi.124.1589944608931;
- Tue, 19 May 2020 20:16:48 -0700 (PDT)
+        Tue, 19 May 2020 23:17:33 -0400
+Received: from mga04.intel.com ([192.55.52.120]:38904 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbgETDRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 23:17:33 -0400
+IronPort-SDR: qNJsdOxnKyF9POqMVKZZJTuBI/VW0bi/uuGj9WGWhlEdAmvph9W7vmkhhQMp+fLny1pKYYMlrO
+ livZKCa1YJCQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 20:17:33 -0700
+IronPort-SDR: BE8fhbLj04vyBfYPFkpO6ipuSrpsR/f1qoS8MMQbMbPvUjYAese/2EUrwMJyTAbsWSQePDSGQR
+ WtCTwA937IEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
+   d="scan'208";a="264535105"
+Received: from unknown (HELO yhuang-mobile.sh.intel.com) ([10.238.6.207])
+  by orsmga003.jf.intel.com with ESMTP; 19 May 2020 20:17:30 -0700
+From:   Huang Ying <ying.huang@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: [PATCH -V2] swap: Reduce lock contention on swap cache from swap slots allocation
+Date:   Wed, 20 May 2020 11:15:02 +0800
+Message-Id: <20200520031502.175659-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200516042303.6070-1-andrew.smirnov@gmail.com> <befcc520-6556-b09b-0464-fe0b5f28cf1e@nxp.com>
-In-Reply-To: <befcc520-6556-b09b-0464-fe0b5f28cf1e@nxp.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Wed, 20 May 2020 03:16:37 +0000
-Message-ID: <CAHQ1cqHWGJgZUf0zpPt9oX7hbokkwXf7gFGwbgtGSPTRpvNvaQ@mail.gmail.com>
-Subject: Re: [PATCH] crypto: caam - make soc match data optional
-To:     =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 6:59 PM Horia Geant=C4=83 <horia.geanta@nxp.com> wr=
-ote:
->
-> On 5/16/2020 7:23 AM, Andrey Smirnov wrote:
-> > Vyrbrid devices don't have any clock that need to be taken care of, so
-> > make clock data optional on i.MX.
-> >
-> Vybrid Security RM states that IPG clock used by CAAM
-> can be gated by CCM_CCGR11[CG176].
->
+In some swap scalability test, it is found that there are heavy lock
+contention on swap cache even if we have split one swap cache radix
+tree per swap device to one swap cache radix tree every 64 MB trunk in
+commit 4b3ef9daa4fc ("mm/swap: split swap cache into 64MB trunks").
 
-Cool, looks like I missed this when I was looking through RM.
+The reason is as follow.  After the swap device becomes fragmented so
+that there's no free swap cluster, the swap device will be scanned
+linearly to find the free swap slots.  swap_info_struct->cluster_next
+is the next scanning base that is shared by all CPUs.  So nearby free
+swap slots will be allocated for different CPUs.  The probability for
+multiple CPUs to operate on the same 64 MB trunk is high.  This causes
+the lock contention on the swap cache.
 
-> Clock driver needs to be updated accordingly,
-> and so will CAAM driver and DT node.
->
-> I don't have a board at hand, so patch below is not tested.
->
+To solve the issue, in this patch, for SSD swap device, a percpu
+version next scanning base (cluster_next_cpu) is added.  Every CPU
+will use its own per-cpu next scanning base.  And after finishing
+scanning a 64MB trunk, the per-cpu scanning base will be changed to
+the beginning of another randomly selected 64MB trunk.  In this way,
+the probability for multiple CPUs to operate on the same 64 MB trunk
+is reduced greatly.  Thus the lock contention is reduced too.  For
+HDD, because sequential access is more important for IO performance,
+the original shared next scanning base is used.
 
-I'll take it from here and test/submit appropriate patches. Thanks!
+To test the patch, we have run 16-process pmbench memory benchmark on
+a 2-socket server machine with 48 cores.  One ram disk is configured
+as the swap device per socket.  The pmbench working-set size is much
+larger than the available memory so that swapping is triggered.  The
+memory read/write ratio is 80/20 and the accessing pattern is random.
+In the original implementation, the lock contention on the swap cache
+is heavy.  The perf profiling data of the lock contention code path is
+as following,
 
-> Horia
->
-> ------ >8 ------
->
-> Subject: [PATCH] clk: imx: vf610: add CAAM clock
->
-> According to Vybrid Security RM, CCM_CCGR11[CG176] can be used to
-> gate CAAM ipg clock.
->
-> Signed-off-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
-> ---
->  drivers/clk/imx/clk-vf610.c             | 2 ++
->  include/dt-bindings/clock/vf610-clock.h | 3 ++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-> index cd04e7dc1878..4f3066cf1b89 100644
-> --- a/drivers/clk/imx/clk-vf610.c
-> +++ b/drivers/clk/imx/clk-vf610.c
-> @@ -439,6 +439,8 @@ static void __init vf610_clocks_init(struct device_no=
-de *ccm_node)
->         clk[VF610_CLK_DAP] =3D imx_clk_gate("dap", "platform_bus", CCM_CC=
-SR, 24);
->         clk[VF610_CLK_OCOTP] =3D imx_clk_gate("ocotp", "ipg_bus", CCM_CCG=
-R6, CCM_CCGRx_CGn(5));
->
-> +       clk[VF610_CLK_CAAM] =3D imx_clk_gate2("caam", "ipg_bus", CCM_CCGR=
-11, CCM_CCGRx_CGn(0));
-> +
->         imx_check_clocks(clk, ARRAY_SIZE(clk));
->
->         clk_set_parent(clk[VF610_CLK_QSPI0_SEL], clk[VF610_CLK_PLL1_PFD4]=
-);
-> diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-binding=
-s/clock/vf610-clock.h
-> index 95394f35a74a..0f2d60e884dc 100644
-> --- a/include/dt-bindings/clock/vf610-clock.h
-> +++ b/include/dt-bindings/clock/vf610-clock.h
-> @@ -195,6 +195,7 @@
->  #define VF610_CLK_WKPU                 186
->  #define VF610_CLK_TCON0                        187
->  #define VF610_CLK_TCON1                        188
-> -#define VF610_CLK_END                  189
-> +#define VF610_CLK_CAAM                 189
-> +#define VF610_CLK_END                  190
->
->  #endif /* __DT_BINDINGS_CLOCK_VF610_H */
-> --
-> 2.17.1
+_raw_spin_lock_irq.add_to_swap_cache.add_to_swap.shrink_page_list:      7.91
+_raw_spin_lock_irqsave.__remove_mapping.shrink_page_list:               7.11
+_raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 2.51
+_raw_spin_lock_irqsave.swap_cgroup_record.mem_cgroup_uncharge_swap:     1.66
+_raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:      1.29
+_raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:         1.03
+_raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:        0.93
+
+After applying this patch, it becomes,
+
+_raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 3.58
+_raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:      2.3
+_raw_spin_lock_irqsave.swap_cgroup_record.mem_cgroup_uncharge_swap:     2.26
+_raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:        1.8
+_raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:         1.19
+
+The lock contention on the swap cache is almost eliminated.
+
+And the pmbench score increases 18.5%.  The swapin throughput
+increases 18.7% from 2.96 GB/s to 3.51 GB/s.  While the swapout
+throughput increases 18.5% from 2.99 GB/s to 3.54 GB/s.
+
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Hugh Dickins <hughd@google.com>
+---
+
+Changelog:
+
+v2:
+
+- Rebased on latest mmotm tree (v5.7-rc5-mmots-2020-05-15-16-36), the
+  mem cgroup change has influence on performance data.
+
+- Fix cluster_next_cpu initialization per Andrew and Daniel's comments.
+
+- Change per-cpu scan base every 64MB per Andrew's comments.
+
+---
+ include/linux/swap.h |  1 +
+ mm/swapfile.c        | 54 ++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 51 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index b42fb47d8cbe..e96820fb7472 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -252,6 +252,7 @@ struct swap_info_struct {
+ 	unsigned int inuse_pages;	/* number of those currently in use */
+ 	unsigned int cluster_next;	/* likely index for next allocation */
+ 	unsigned int cluster_nr;	/* countdown to next cluster search */
++	unsigned int __percpu *cluster_next_cpu; /*percpu index for next allocation */
+ 	struct percpu_cluster __percpu *percpu_cluster; /* per cpu's swap location */
+ 	struct rb_root swap_extent_root;/* root of the swap extent rbtree */
+ 	struct block_device *bdev;	/* swap device or bdev of swap file */
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 423c234aca15..f5e3ab06bf18 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -615,7 +615,8 @@ static bool scan_swap_map_try_ssd_cluster(struct swap_info_struct *si,
+ 			 * discarding, do discard now and reclaim them
+ 			 */
+ 			swap_do_scheduled_discard(si);
+-			*scan_base = *offset = si->cluster_next;
++			*scan_base = this_cpu_read(*si->cluster_next_cpu);
++			*offset = *scan_base;
+ 			goto new_cluster;
+ 		} else
+ 			return false;
+@@ -721,6 +722,34 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
+ 	}
+ }
+ 
++static void set_cluster_next(struct swap_info_struct *si, unsigned long next)
++{
++	unsigned long prev;
++
++	if (!(si->flags & SWP_SOLIDSTATE)) {
++		si->cluster_next = next;
++		return;
++	}
++
++	prev = this_cpu_read(*si->cluster_next_cpu);
++	/*
++	 * Cross the swap address space size aligned trunk, choose
++	 * another trunk randomly to avoid lock contention on swap
++	 * address space if possible.
++	 */
++	if ((prev >> SWAP_ADDRESS_SPACE_SHIFT) !=
++	    (next >> SWAP_ADDRESS_SPACE_SHIFT)) {
++		/* No free swap slots available */
++		if (si->highest_bit <= si->lowest_bit)
++			return;
++		next = si->lowest_bit +
++			prandom_u32_max(si->highest_bit - si->lowest_bit + 1);
++		next = ALIGN(next, SWAP_ADDRESS_SPACE_PAGES);
++		next = max_t(unsigned int, next, si->lowest_bit);
++	}
++	this_cpu_write(*si->cluster_next_cpu, next);
++}
++
+ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 			       unsigned char usage, int nr,
+ 			       swp_entry_t slots[])
+@@ -745,7 +774,16 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 	 */
+ 
+ 	si->flags += SWP_SCANNING;
+-	scan_base = offset = si->cluster_next;
++	/*
++	 * Use percpu scan base for SSD to reduce lock contention on
++	 * cluster and swap cache.  For HDD, sequential access is more
++	 * important.
++	 */
++	if (si->flags & SWP_SOLIDSTATE)
++		scan_base = this_cpu_read(*si->cluster_next_cpu);
++	else
++		scan_base = si->cluster_next;
++	offset = scan_base;
+ 
+ 	/* SSD algorithm */
+ 	if (si->cluster_info) {
+@@ -834,7 +872,6 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 	unlock_cluster(ci);
+ 
+ 	swap_range_alloc(si, offset, 1);
+-	si->cluster_next = offset + 1;
+ 	slots[n_ret++] = swp_entry(si->type, offset);
+ 
+ 	/* got enough slots or reach max slots? */
+@@ -883,6 +920,7 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
+ 	}
+ 
+ done:
++	set_cluster_next(si, offset + 1);
+ 	si->flags -= SWP_SCANNING;
+ 	return n_ret;
+ 
+@@ -2827,6 +2865,11 @@ static struct swap_info_struct *alloc_swap_info(void)
+ 	p = kvzalloc(struct_size(p, avail_lists, nr_node_ids), GFP_KERNEL);
+ 	if (!p)
+ 		return ERR_PTR(-ENOMEM);
++	p->cluster_next_cpu = alloc_percpu(unsigned int);
++	if (!p->cluster_next_cpu) {
++		kvfree(p);
++		return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	spin_lock(&swap_lock);
+ 	for (type = 0; type < nr_swapfiles; type++) {
+@@ -3202,7 +3245,10 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+ 		 * select a random position to start with to help wear leveling
+ 		 * SSD
+ 		 */
+-		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
++		for_each_possible_cpu(cpu) {
++			per_cpu(*p->cluster_next_cpu, cpu) =
++				1 + prandom_u32_max(p->highest_bit);
++		}
+ 		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
+ 
+ 		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
+-- 
+2.26.2
+
