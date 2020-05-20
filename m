@@ -2,88 +2,96 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30674C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1DB2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:16:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B5qxRDCT"
+	by mail.kernel.org (Postfix) with ESMTP id 095A32070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgETMQb (ORCPT
+        id S1726799AbgETMRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETMQ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:16:29 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5901C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:16:29 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0bab004cc75e27543cdd50.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:4cc7:5e27:543c:dd50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ABFD81EC0350;
-        Wed, 20 May 2020 14:16:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589976986;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=MLD/1PujuqFss8hz/rJreIyFo+695cA8jplss0woFC0=;
-        b=B5qxRDCTQxiyFy4fFKxZK2LdpdIx/LzOzUBuO69SdVrpw7DsLMMikIfLwHcA2gLZsMjPnD
-        mK8y8epGTitGCAfn4S5hFNG6bCUs3WdpoPA/ar1PdfiUGOKL+phkljOR2MAjq42s7yHKkI
-        1gk2InIuHiuU9tXKjFyi7dISZ8nFSss=
-Date:   Wed, 20 May 2020 14:16:21 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 01/20] x86/cpufeatures: x86/msr: Add Intel SGX
- hardware bits
-Message-ID: <20200520121604.GF1457@zn.tnic>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-2-jarkko.sakkinen@linux.intel.com>
+        Wed, 20 May 2020 08:17:36 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24917 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgETMRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:17:33 -0400
+IronPort-SDR: 14PYyW8NPhIq+CTNqIGa6g4dJIGIB/g+lkWMaruHCkt40uLT3c0ICDNKLvq8+2F0ODx8Qw4cZH
+ /i+JOFBy3gOw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:17:32 -0700
+IronPort-SDR: 0OgppyOHBZqIfc8vIRqLSAl7ReKWQFtjaVUnxPTEofddvm//r+vVa2HGa+2xvPdFfBJMF82vDK
+ BSMTzUOymp6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
+   d="scan'208";a="289331424"
+Received: from mylly.fi.intel.com (HELO [10.237.72.161]) ([10.237.72.161])
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 05:17:28 -0700
+Subject: Re: [PATCH v2 10/12] i2c: designware: Discard Cherry Trail model flag
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jean Delvare <jdelvare@suse.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-11-Sergey.Semin@baikalelectronics.ru>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <f199b084-fc07-b2ee-fb74-1c2aadab13ef@linux.intel.com>
+Date:   Wed, 20 May 2020 15:17:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200515004410.723949-2-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200510095019.20981-11-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:43:51AM +0300, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+On 5/10/20 12:50 PM, Serge Semin wrote:
+> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
+> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
+> bus pm_disabled workaround"), but the flag most likely by mistake has been
+> left in the Dw I2C drivers. Lets remove it.
 > 
-> Add X86_FEATURE_SGX from CPUID.(EAX=7, ECX=1), which informs whether the
-> CPU has SGX.
+> By doing so we get rid from the last DW APB I2C IP-core model flag, so we
+> can remove the MODEL_MASK macro too.
 > 
-> Add X86_FEATURE_SGX1 and X86_FEATURE_SGX2 from CPUID.(EAX=12H, ECX=0),
-> which describe the level of SGX support available [1].
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>   drivers/i2c/busses/i2c-designware-core.h    | 3 ---
+>   drivers/i2c/busses/i2c-designware-pcidrv.c  | 1 -
+>   drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
+>   3 files changed, 1 insertion(+), 5 deletions(-)
 > 
-> Remap CPUID.(EAX=12H, ECX=0) bits to the Linux fake CPUID 8 in order to
-> conserve some space. Keep the bit positions intact because KVM requires
-> this. Reserve bits 0-7 for SGX in order to maintain this invariant also
-> when new SGX specific feature bits get added.
-
-That paragraph needs dropping now.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
