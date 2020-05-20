@@ -2,105 +2,97 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DACC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F12F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9944E207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B26207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589937981;
+	bh=6AZyfxeStk9BMps7zFSgzaqvLw2zumjttdsiUTuiNgA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=L2D2YoSrKI/MF+nhOM/6YqP9XpRyKjVEZdWNiR/qpxq51c/b4Z9zbMQi60oH4pDzy
+	 Z8Wo9f2p8LCVXBrejTFD1vADgyRL22//poA6KVuvNG5C8Jc9g9qVXcnUfb0x1j4b2T
+	 umzhnUnlSnOQt3SPxomJgmMt0WrmOTUR1LRr8Sc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgETBZ3 (ORCPT
+        id S1728371AbgETB0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 21:25:29 -0400
-Received: from mga05.intel.com ([192.55.52.43]:57023 "EHLO mga05.intel.com"
+        Tue, 19 May 2020 21:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726348AbgETBZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 21:25:29 -0400
-IronPort-SDR: cmJSgNikuq0rsM3wh0R2+DN/brhvSZ0s9dACNChL6EO0b/95bkfSOD6cG6uH9do/7DseCDpa2k
- +zEQEa8ScW6g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 18:25:29 -0700
-IronPort-SDR: MDx3VP1Ag3njQZh53RjtNhipvr8a/FY2Meq9Bv17SiqNpQJAh3/K1jVEYEsAkqeGXFuYpc7kJ1
- hu9Mz+vnpMcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
-   d="scan'208";a="466194708"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by fmsmga005.fm.intel.com with ESMTP; 19 May 2020 18:25:26 -0700
-Date:   Wed, 20 May 2020 09:24:04 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, lkp <lkp@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [tip:x86/mm 1/23] arch/x86/mm/init.c:75:6: warning: no previous
- prototype for function 'x86_has_pat_wp'
-Message-ID: <20200520012404.GA3992@intel.com>
-References: <202005200123.gFjGzJEH%lkp@intel.com>
- <20200519205505.GD444@zn.tnic>
- <20200519212541.GA3580016@ubuntu-s3-xlarge-x86>
- <CAKwvOdk+JwddxLaXc9S7SMMTye8bDaGEckcs7zu5tEMD0G3Yog@mail.gmail.com>
- <831EE4E5E37DCC428EB295A351E6624952648ACF@shsmsx102.ccr.corp.intel.com>
- <CAKwvOdmoA5ZFCiUQ5fVf7+970Y4bxvU=kYWb49NENQzxdm7F1Q@mail.gmail.com>
- <20200520005218.GA3101@intel.com>
- <CAKwvOdkPW2p-4fDUNT6so3DrxiJgtUNEFPJcHNf7VROozc4wjQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkPW2p-4fDUNT6so3DrxiJgtUNEFPJcHNf7VROozc4wjQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726348AbgETB0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 21:26:20 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE0220756;
+        Wed, 20 May 2020 01:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589937980;
+        bh=6AZyfxeStk9BMps7zFSgzaqvLw2zumjttdsiUTuiNgA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lF50fRFZsZz5wrn3GA/OeEY8bbfIUAnbQyNmLNbxrFG6roWJNjnlhClJqc3yRCYzu
+         aBJXOWiExX3Hiv9Lzymb5Ce57FdtfFoIiZSXhl2hKmLs1TuYEgptgZ2iLpTTOFzhWm
+         JbuegdY50rdNUA/VlY5RaoJ1srHk3yVjtI2NOkEE=
+Date:   Tue, 19 May 2020 18:26:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v4 2/4] mm/memory.c: Update local TLB if PTE entry
+ exists
+Message-Id: <20200519182619.2c5e76d3f6b25d71702abbe0@linux-foundation.org>
+In-Reply-To: <1589882610-7291-2-git-send-email-maobibo@loongson.cn>
+References: <1589882610-7291-1-git-send-email-maobibo@loongson.cn>
+        <1589882610-7291-2-git-send-email-maobibo@loongson.cn>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 06:07:14PM -0700, Nick Desaulniers wrote:
-> On Tue, May 19, 2020 at 5:53 PM Philip Li <philip.li@intel.com> wrote:
-> >
-> > On Tue, May 19, 2020 at 05:26:18PM -0700, Nick Desaulniers wrote:
-> > > I think having in the top of the warning that this is a W=1 build will
-> > > make it more obvious.
-> > >
-> > > I get that -Wmissing-prototypes can be noisy, but it's trivial to fix.
-> > > I do worry what other warnings lurk in W=1 though...
-> > with some monitoring, so far, issue like unused-but-set-variable is quite
-> > helpful. We will keep monitor for other issues and feedbacks.
-> 
-> Hey, I'm always happy to see more warnings turned on.  In our
-> experience, we had to get a sense of how many instances of a newly
-> enabled warning there are, and estimate how much time it would take to
-> fix them all.  It's further complicated by the fix going into
-> different maintainers' trees and reaching mainline at different points
-> in time, while regressions continue to sneak in until the warning is
-> enabled.
-thanks and agree all the thinking here. For the 0-day ci side, we will
-be very careful, since the mechanism for us is to notify newly introduced
-problems from developer's patch, this can allow relatively min effort
-to solve the new problems.
+On Tue, 19 May 2020 18:03:28 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
 
-The other consideration is we test a lot of developer's tree and mailing
-list before they are upstream, we also hope such shift left testing can
-expose these warnings in new patches before maintainer's trees. Of course,
-there're extra reports due to W=1 against stable or mainline, while the
-number is small comparing to developer and mailing list part.
-
+> If two threads concurrently fault at the same address, the thread that
+> won the race updates the PTE and its local TLB. For now, the other
+> thread gives up, simply does nothing, and continues.
 > 
-> It may be time to consider "promoting" some warnings from W=1 to be on
-> by default.  But that takes careful manual review and estimation of
-> the work involved.  Turning on W=1 may be blasting people with a lot
-> of new warnings, but if developers treat them with the same respect as
-> the default enabled ones for Kbuild then I'm not complaining.
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+> It could happen that this second thread triggers another fault, whereby
+> it only updates its local TLB while handling the fault. Instead of
+> triggering another fault, let's directly update the local TLB of the
+> second thread.
+> 
+> It is only useful to architectures where software can update TLB, it may
+> bring out some negative effect if update_mmu_cache is used for other
+> purpose also. It seldom happens where multiple threads access the same
+> page at the same time, so the negative effect is limited on other arches.
+
+I'm still worried about the impact on other architectures.  The
+additional update_mmu_cache() calls won't occur only when multiple
+threads are racing against the same page, I think?  For example,
+insert_pfn() will do this when making a read-only page a writable one.
+
+Would you have time to add some instrumentation into update_mmu_cache()
+(maybe a tracepoint) and see what effect this change has upon the
+frequency at which update_mmu_cache() is called for a selection of
+workloads?  And add this info to the changelog to set minds at ease?
+
