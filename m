@@ -2,113 +2,221 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55958C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D39F207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589998742;
-	bh=trnJEEy7OwEzJwuvyGL2l3v8wDg+b4PNHsrrpzNkbOE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=utS1qvvFQX+En0Uz7IV6djRS/kwon9CrEku3LQvXTr9V+s09iyY3XHH9UZlXRXEhY
-	 9RHdm+5Oep3Z3+Peh0hXEeCGWbZPmY9j9+YAP5+K4gRsbPYaQckd6zHAZX+3DiG0Cy
-	 E20k6z50Pdnbx/MqzioeDGLWo6GzxkFAWO9Lk4wg=
+	by mail.kernel.org (Postfix) with ESMTP id AB290206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:20:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lymp+HoZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgETSTB (ORCPT
+        id S1726832AbgETSUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:19:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgETSTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:19:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BB020671;
-        Wed, 20 May 2020 18:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589998740;
-        bh=trnJEEy7OwEzJwuvyGL2l3v8wDg+b4PNHsrrpzNkbOE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cEe388rihi9A9Ygia+EhA/HSD+CGYhtoz7QcoOy1Avi1zhDX+Y3FViO3MRDa6CC/z
-         nI6IqNKWN/EtZmX+w66BOrh8DcAnp5QN87UZ9HnHZ4CHE2XrfyvonumRrSJlK8xH8t
-         XCnp4LcdBPL5aQ8Udu0ivaljY596i99S9SHjWBHk=
-Date:   Wed, 20 May 2020 20:18:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavankumar Kondeti <pkondeti@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Vinayak Menon <vinmenon@codeaurora.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Liang Chen <cl@rock-chips.com>
-Subject: Re: [PATCH] kthread: Use TASK_IDLE state for newly created kernel
- threads
-Message-ID: <20200520181858.GA343493@kroah.com>
-References: <1589975710-9283-1-git-send-email-pkondeti@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589975710-9283-1-git-send-email-pkondeti@codeaurora.org>
+        Wed, 20 May 2020 14:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgETSUT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:20:19 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C056C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:20:19 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id q16so2614281ybg.18
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=HirrhLtLdWXctOmYl+GGXlhELiHQimzvAAf/lgliNtM=;
+        b=Lymp+HoZWtdVPsEhkUCFjvzZfmfCdrJ+0vpCWb9rwEx/Xmetsrtm/o00bCY08F4/Rq
+         VR186IkjVvsURWe54okR8cFkJoanJBuOvCIDJfSXLGVyGTHR4Gl1kSzMhDgKfzkNSjKA
+         ph3Q4CRNvIOxysyDzInQidifLpqLr/GuDHaiDa6SonZLSHveVv61Ic1rCyzPDIZwAH1e
+         xHeiKA+Iu5rKPGvcC40LPkBoq0OLz6Fg0KfD9S1GV1+t8iVrCm2T7YX5sNCVLIosG+q9
+         wSn9njOb1jLeO6X1Uj7oJpkXY5ZC1pYeyyD8ZfBirweSpGYPa/8icc4aYlO69VD621/L
+         n+Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=HirrhLtLdWXctOmYl+GGXlhELiHQimzvAAf/lgliNtM=;
+        b=WFgy7ogmWmIETA5nHsh84VSnoteaHYCl+pNL9I9DgjoEQ7fc5xTNsPCNkOopSNdVD8
+         NrogX5O/YLO+Bflyi+9A6I7xaNdTsuKL/1077pWOeI9WKweCPL9Yx7VFJepX1dQK/pXl
+         /Vni6outmsua8iHdEkiEG5/2hQTopLUe/6c+MteLquINmAmmreJCpqm/10fqfK+l1t0c
+         zs2FsAryMweM9sqMeyG+oFvtq8pKjy9jafHhSJYr/zpOUY5R7OtL7CLhq2etsOM15c0p
+         /ABuDDD13okN+mM+XrhNax0bK/IqLA5Hvu4DoLuDy9YF42v9xeT4/xJ/XJcVUlDhq4Dc
+         bl7w==
+X-Gm-Message-State: AOAM530Dsd7y1W/5RGCf0N5Loqm21KU9bGbkT+hnWP/8dNxzDekjPFl0
+        YuV6b5EKIbNPZ4aAv6DFF1NEn/QDTNzp
+X-Google-Smtp-Source: ABdhPJycvTSovxfJnyx4j6fte7xJCX7Uvo5rFBgeP48/vmM2CXzcwrtEtZojGSQO78TM+7YUq6KB9+mLPl2J
+X-Received: by 2002:a25:d8cf:: with SMTP id p198mr8525330ybg.119.1589998818599;
+ Wed, 20 May 2020 11:20:18 -0700 (PDT)
+Date:   Wed, 20 May 2020 11:20:04 -0700
+Message-Id: <20200520182011.32236-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+Subject: [PATCH v2 0/7] Share events between metrics
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 05:25:09PM +0530, Pavankumar Kondeti wrote:
-> When kernel threads are created for later use, they will be in
-> TASK_UNINTERRUPTIBLE state until they are woken up. This results
-> in increased loadavg and false hung task reports. To fix this,
-> use TASK_IDLE state instead of TASK_UNINTERRUPTIBLE when
-> a kernel thread schedules out for the first time.
-> 
-> Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
-> ---
->  kernel/kthread.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index bfbfa48..b74ed8e 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -250,7 +250,7 @@ static int kthread(void *_create)
->  	current->vfork_done = &self->exited;
->  
->  	/* OK, tell user we're spawned, wait for stop or wakeup */
-> -	__set_current_state(TASK_UNINTERRUPTIBLE);
-> +	__set_current_state(TASK_IDLE);
->  	create->result = current;
->  	/*
->  	 * Thread is going to call schedule(), do not preempt it,
-> @@ -428,7 +428,7 @@ static void __kthread_bind(struct task_struct *p, unsigned int cpu, long state)
->  
->  void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
->  {
-> -	__kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
-> +	__kthread_bind_mask(p, mask, TASK_IDLE);
->  }
->  
->  /**
-> @@ -442,7 +442,7 @@ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
->   */
->  void kthread_bind(struct task_struct *p, unsigned int cpu)
->  {
-> -	__kthread_bind(p, cpu, TASK_UNINTERRUPTIBLE);
-> +	__kthread_bind(p, cpu, TASK_IDLE);
->  }
->  EXPORT_SYMBOL(kthread_bind);
+Metric groups contain metrics. Metrics create groups of events to
+ideally be scheduled together. Often metrics refer to the same events,
+for example, a cache hit and cache miss rate. Using separate event
+groups means these metrics are multiplexed at different times and the
+counts don't sum to 100%. More multiplexing also decreases the
+accuracy of the measurement.
 
-It's as if people never read mailing lists:
-	https://lore.kernel.org/r/DM6PR11MB3531D3B164357B2DC476102DDFC90@DM6PR11MB3531.namprd11.prod.outlook.com
+This change orders metrics from groups or the command line, so that
+the ones with the most events are set up first. Later metrics see if
+groups already provide their events, and reuse them if
+possible. Unnecessary events and groups are eliminated.
 
-Given that this is an identical resend of the previous patch, why are
-you doing so, and what has changed since that original rejection?
+The option --metric-no-group is added so that metrics aren't placed in
+groups. This affects multiplexing and may increase sharing.
 
-greg k-h
+The option --metric-mo-merge is added and with this option the
+existing grouping behavior is preserved.
+
+Using skylakex metrics I ran the following shell code to count the
+number of events for each metric group (this ignores metric groups
+with a single metric, and one of the duplicated TopdownL1 and
+TopDownL1 groups):
+
+for i in all Branches BrMispredicts Cache_Misses FLOPS Instruction_Type Memory_BW Pipeline Power SMT Summary TopdownL1 TopdownL1_SMT
+do
+  echo Metric group: $i
+  echo -n " - No merging (old default, now --metric-no-merge): "
+  /tmp/perf/perf stat -a --metric-no-merge -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]" | wc -l
+  echo -n " - Merging over metrics (new default)             : "
+  /tmp/perf/perf stat -a -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
+  echo -n " - No event groups and merging (--metric-no-group): "
+  /tmp/perf/perf stat -a --metric-no-group -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
+done
+
+Metric group: all
+ - No merging (old default, now --metric-no-merge): 193
+ - Merging over metrics (new default)             : 142
+ - No event groups and merging (--metric-no-group): 84
+Metric group: Branches
+ - No merging (old default, now --metric-no-merge): 8
+ - Merging over metrics (new default)             : 8
+ - No event groups and merging (--metric-no-group): 4
+Metric group: BrMispredicts
+ - No merging (old default, now --metric-no-merge): 11
+ - Merging over metrics (new default)             : 11
+ - No event groups and merging (--metric-no-group): 10
+Metric group: Cache_Misses
+ - No merging (old default, now --metric-no-merge): 11
+ - Merging over metrics (new default)             : 9
+ - No event groups and merging (--metric-no-group): 6
+Metric group: FLOPS
+ - No merging (old default, now --metric-no-merge): 18
+ - Merging over metrics (new default)             : 10
+ - No event groups and merging (--metric-no-group): 10
+Metric group: Instruction_Type
+ - No merging (old default, now --metric-no-merge): 6
+ - Merging over metrics (new default)             : 6
+ - No event groups and merging (--metric-no-group): 4
+Metric group: Pipeline
+ - No merging (old default, now --metric-no-merge): 6
+ - Merging over metrics (new default)             : 6
+ - No event groups and merging (--metric-no-group): 5
+Metric group: Power
+ - No merging (old default, now --metric-no-merge): 16
+ - Merging over metrics (new default)             : 16
+ - No event groups and merging (--metric-no-group): 10
+Metric group: SMT
+ - No merging (old default, now --metric-no-merge): 11
+ - Merging over metrics (new default)             : 8
+ - No event groups and merging (--metric-no-group): 7
+Metric group: Summary
+ - No merging (old default, now --metric-no-merge): 19
+ - Merging over metrics (new default)             : 17
+ - No event groups and merging (--metric-no-group): 17
+Metric group: TopdownL1
+ - No merging (old default, now --metric-no-merge): 16
+ - Merging over metrics (new default)             : 7
+ - No event groups and merging (--metric-no-group): 7
+Metric group: TopdownL1_SMT
+ - No merging (old default, now --metric-no-merge): 24
+ - Merging over metrics (new default)             : 7
+ - No event groups and merging (--metric-no-group): 7
+
+There are 5 out of 12 metric groups where no events are shared, such
+as Power, however, disabling grouping of events always reduces the
+number of events.
+
+The result for Memory_BW needs explanation:
+
+Metric group: Memory_BW
+ - No merging (old default, now --metric-no-merge): 9
+ - Merging over metrics (new default)             : 5
+ - No event groups and merging (--metric-no-group): 11
+
+Both with and without merging the groups fail to be set up and so the
+event counts here are for broken metrics. The --metric-no-group number
+is accurate as all the events are scheduled. Ideally a constraint
+would be added for these metrics in the json code to avoid grouping.
+
+v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
+missing comma with metric lists (reported-by Jiri Olsa
+<jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
+(suggested-by Jiri Olsa).
+
+v1. was prepared on kernel/git/acme/linux.git branch tmp.perf/core
+
+Compared to RFC v3: fix a bug where unnecessary commas were passed to
+parse-events and were echoed. Fix a bug where the same event could be
+matched more than once with --metric-no-group, causing there to be
+events missing.
+https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
+
+Ian Rogers (7):
+  perf metricgroup: Always place duration_time last
+  perf metricgroup: Use early return in add_metric
+  perf metricgroup: Delay events string creation
+  perf metricgroup: Order event groups by size
+  perf metricgroup: Remove duped metric group events
+  perf metricgroup: Add options to not group or merge
+  perf metricgroup: Remove unnecessary ',' from events
+
+ tools/perf/Documentation/perf-stat.txt |  19 ++
+ tools/perf/builtin-stat.c              |  11 +-
+ tools/perf/util/metricgroup.c          | 239 ++++++++++++++++++-------
+ tools/perf/util/metricgroup.h          |   6 +-
+ tools/perf/util/stat.h                 |   2 +
+ 5 files changed, 207 insertions(+), 70 deletions(-)
+
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
