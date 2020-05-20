@@ -2,260 +2,106 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C615CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC41E20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5F720671
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IYVriDqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgETPx1 (ORCPT
+        id S1726856AbgETP4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:53:27 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34526 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726596AbgETPx0 (ORCPT
+        Wed, 20 May 2020 11:56:11 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41956 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgETP4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:53:26 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbR24-0007YG-AT; Wed, 20 May 2020 16:53:24 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbR23-007IZ9-NP; Wed, 20 May 2020 16:53:23 +0100
-Message-ID: <9bb09863432ef9c9f820276cfe6db1a0aa8e6c4e.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 43/99] efi: Use early_mem*() instead of early_io*()
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Matt Fleming <matt.fleming@intel.com>,
-        Mark Salter <msalter@redhat.com>,
-        Leif Lindholm <leif.lindholm@linaro.org>
-Date:   Wed, 20 May 2020 16:53:23 +0100
-In-Reply-To: <lsq.1589984008.586913999@decadent.org.uk>
-References: <lsq.1589984008.586913999@decadent.org.uk>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-1ELFL5WP8obhLEch6Dz4"
-User-Agent: Evolution 3.36.2-1 
+        Wed, 20 May 2020 11:56:10 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KFu5kl121964;
+        Wed, 20 May 2020 10:56:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589990165;
+        bh=Z1FghLDYCt9S+tlhl6CoZ8M0XLa4JQ7N0CO0ouJegsA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IYVriDqHuGv8dSt1qh2dSXk38T/6c0V3Mwck06kesJERAoxAQozitXmGF0uFSZvF4
+         V3GxqQ328t33wRZMkDUYZdINBQWTFdwUW3bIXU8BU1gyWxm227aK3rJVBwz2UIvAq0
+         jrMCnIZg4RT/LfbknaoB7GZhIPTqtHwZeosfHCTY=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KFu4FD125889
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 10:56:05 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 10:56:04 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 10:56:05 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KFu4TV130035;
+        Wed, 20 May 2020 10:56:04 -0500
+Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
+ delay for DP83869
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200520121835.31190-1-dmurphy@ti.com>
+ <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
+ <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
+ <20200520153631.GH652285@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
+Date:   Wed, 20 May 2020 10:56:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <20200520153631.GH652285@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Andrew
 
---=-1ELFL5WP8obhLEch6Dz4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 5/20/20 10:36 AM, Andrew Lunn wrote:
+>>> Hi Dan
+>>>
+>>> Having it required with PHY_INTERFACE_MODE_RGMII_ID or
+>>> PHY_INTERFACE_MODE_RGMII_RXID is pretty unusual. Normally these
+>>> properties are used to fine tune the delay, if the default of 2ns does
+>>> not work.
+>> Also if the MAC phy-mode is configured with RGMII-ID and no internal delay
+>> values defined wouldn't that be counter intuitive?
+> Most PHYs don't allow the delay to be fine tuned. You just pass for
+> example PHY_INTERFACE_MODE_RGMII_ID to the PHY driver and it enables a
+> 2ns delay. That is what people expect, and is documented.
 
-On Wed, 2020-05-20 at 15:14 +0100, Ben Hutchings wrote:
-> 3.16.84-rc1 review patch.  If anyone has any objections, please let me kn=
-ow.
->=20
-> ------------------
->=20
-> From: Daniel Kiper <daniel.kiper@oracle.com>
->=20
-> commit abc93f8eb6e46a480485f19256bdbda36ec78a84 upstream.
+> Being able to tune the delay is an optional extra, which some PHYs
+> support, but that is always above and beyond
+> PHY_INTERFACE_MODE_RGMII_ID.
 
-I've now seen that this depends on the preceding commit 4fa62481e231
-"arch/ia64: Define early_memunmap()".  I've queued that up as well.
+I am interested in knowing where that is documented.  I want to RTM I 
+grepped for a few different words but came up empty
 
-Ben.
+Since this is a tuneable phy we need to program the ID.  2ns is the 
+default value
 
-> Use early_mem*() instead of early_io*() because all mapped EFI regions
-> are memory (usually RAM but they could also be ROM, EPROM, EEPROM, flash,
-> etc.) not I/O regions. Additionally, I/O family calls do not work correct=
-ly
-> under Xen in our case. early_ioremap() skips the PFN to MFN conversion
-> when building the PTE. Using it for memory will attempt to map the wrong
-> machine frame. However, all artificial EFI structures created under Xen
-> live in dom0 memory and should be mapped/unmapped using early_mem*() fami=
-ly
-> calls which map domain memory.
->=20
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> Cc: Leif Lindholm <leif.lindholm@linaro.org>
-> Cc: Mark Salter <msalter@redhat.com>
-> Signed-off-by: Matt Fleming <matt.fleming@intel.com>
-> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> ---
->  arch/x86/platform/efi/efi.c | 28 ++++++++++++++--------------
->  drivers/firmware/efi/efi.c  |  4 ++--
->  2 files changed, 16 insertions(+), 16 deletions(-)
->=20
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -435,7 +435,7 @@ void __init efi_unmap_memmap(void)
->  {
->  	clear_bit(EFI_MEMMAP, &efi.flags);
->  	if (memmap.map) {
-> -		early_iounmap(memmap.map, memmap.nr_map * memmap.desc_size);
-> +		early_memunmap(memmap.map, memmap.nr_map * memmap.desc_size);
->  		memmap.map =3D NULL;
->  	}
->  }
-> @@ -475,12 +475,12 @@ static int __init efi_systab_init(void *
->  			if (!data)
->  				return -ENOMEM;
->  		}
-> -		systab64 =3D early_ioremap((unsigned long)phys,
-> +		systab64 =3D early_memremap((unsigned long)phys,
->  					 sizeof(*systab64));
->  		if (systab64 =3D=3D NULL) {
->  			pr_err("Couldn't map the system table!\n");
->  			if (data)
-> -				early_iounmap(data, sizeof(*data));
-> +				early_memunmap(data, sizeof(*data));
->  			return -ENOMEM;
->  		}
-> =20
-> @@ -512,9 +512,9 @@ static int __init efi_systab_init(void *
->  					   systab64->tables;
->  		tmp |=3D data ? data->tables : systab64->tables;
-> =20
-> -		early_iounmap(systab64, sizeof(*systab64));
-> +		early_memunmap(systab64, sizeof(*systab64));
->  		if (data)
-> -			early_iounmap(data, sizeof(*data));
-> +			early_memunmap(data, sizeof(*data));
->  #ifdef CONFIG_X86_32
->  		if (tmp >> 32) {
->  			pr_err("EFI data located above 4GB, disabling EFI.\n");
-> @@ -524,7 +524,7 @@ static int __init efi_systab_init(void *
->  	} else {
->  		efi_system_table_32_t *systab32;
-> =20
-> -		systab32 =3D early_ioremap((unsigned long)phys,
-> +		systab32 =3D early_memremap((unsigned long)phys,
->  					 sizeof(*systab32));
->  		if (systab32 =3D=3D NULL) {
->  			pr_err("Couldn't map the system table!\n");
-> @@ -545,7 +545,7 @@ static int __init efi_systab_init(void *
->  		efi_systab.nr_tables =3D systab32->nr_tables;
->  		efi_systab.tables =3D systab32->tables;
-> =20
-> -		early_iounmap(systab32, sizeof(*systab32));
-> +		early_memunmap(systab32, sizeof(*systab32));
->  	}
-> =20
->  	efi.systab =3D &efi_systab;
-> @@ -571,7 +571,7 @@ static int __init efi_runtime_init32(voi
->  {
->  	efi_runtime_services_32_t *runtime;
-> =20
-> -	runtime =3D early_ioremap((unsigned long)efi.systab->runtime,
-> +	runtime =3D early_memremap((unsigned long)efi.systab->runtime,
->  			sizeof(efi_runtime_services_32_t));
->  	if (!runtime) {
->  		pr_err("Could not map the runtime service table!\n");
-> @@ -586,7 +586,7 @@ static int __init efi_runtime_init32(voi
->  	efi_phys.set_virtual_address_map =3D
->  			(efi_set_virtual_address_map_t *)
->  			(unsigned long)runtime->set_virtual_address_map;
-> -	early_iounmap(runtime, sizeof(efi_runtime_services_32_t));
-> +	early_memunmap(runtime, sizeof(efi_runtime_services_32_t));
-> =20
->  	return 0;
->  }
-> @@ -595,7 +595,7 @@ static int __init efi_runtime_init64(voi
->  {
->  	efi_runtime_services_64_t *runtime;
-> =20
-> -	runtime =3D early_ioremap((unsigned long)efi.systab->runtime,
-> +	runtime =3D early_memremap((unsigned long)efi.systab->runtime,
->  			sizeof(efi_runtime_services_64_t));
->  	if (!runtime) {
->  		pr_err("Could not map the runtime service table!\n");
-> @@ -610,7 +610,7 @@ static int __init efi_runtime_init64(voi
->  	efi_phys.set_virtual_address_map =3D
->  			(efi_set_virtual_address_map_t *)
->  			(unsigned long)runtime->set_virtual_address_map;
-> -	early_iounmap(runtime, sizeof(efi_runtime_services_64_t));
-> +	early_memunmap(runtime, sizeof(efi_runtime_services_64_t));
-> =20
->  	return 0;
->  }
-> @@ -641,7 +641,7 @@ static int __init efi_runtime_init(void)
->  static int __init efi_memmap_init(void)
->  {
->  	/* Map the EFI memory map */
-> -	memmap.map =3D early_ioremap((unsigned long)memmap.phys_map,
-> +	memmap.map =3D early_memremap((unsigned long)memmap.phys_map,
->  				   memmap.nr_map * memmap.desc_size);
->  	if (memmap.map =3D=3D NULL) {
->  		pr_err("Could not map the memory map!\n");
-> @@ -745,14 +745,14 @@ void __init efi_init(void)
->  	/*
->  	 * Show what we know for posterity
->  	 */
-> -	c16 =3D tmp =3D early_ioremap(efi.systab->fw_vendor, 2);
-> +	c16 =3D tmp =3D early_memremap(efi.systab->fw_vendor, 2);
->  	if (c16) {
->  		for (i =3D 0; i < sizeof(vendor) - 1 && *c16; ++i)
->  			vendor[i] =3D *c16++;
->  		vendor[i] =3D '\0';
->  	} else
->  		pr_err("Could not map the firmware vendor!\n");
-> -	early_iounmap(tmp, 2);
-> +	early_memunmap(tmp, 2);
-> =20
->  	pr_info("EFI v%u.%.02u by %s\n",
->  		efi.systab->hdr.revision >> 16,
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -295,7 +295,7 @@ int __init efi_config_init(efi_config_ta
->  			if (table64 >> 32) {
->  				pr_cont("\n");
->  				pr_err("Table located above 4GB, disabling EFI.\n");
-> -				early_iounmap(config_tables,
-> +				early_memunmap(config_tables,
->  					       efi.systab->nr_tables * sz);
->  				return -EINVAL;
->  			}
-> @@ -311,7 +311,7 @@ int __init efi_config_init(efi_config_ta
->  		tablep +=3D sz;
->  	}
->  	pr_cont("\n");
-> -	early_iounmap(config_tables, efi.systab->nr_tables * sz);
-> +	early_memunmap(config_tables, efi.systab->nr_tables * sz);
-> =20
->  	set_bit(EFI_CONFIG_TABLES, &efi.flags);
-> =20
->=20
---=20
-Ben Hutchings
-All the simple programs have been written, and all the good names taken
+Maybe I can change it from Required to Configurable or Used.
+
+Dan
 
 
---=-1ELFL5WP8obhLEch6Dz4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl7FUnMACgkQ57/I7JWG
-EQlYZg//R7Szg0IzIAgL/VpvxIvOpkDaUPCSmtcqLimTpd8zrljXXFNCeSX5XKB8
-a2+f+UVeYSi5jpoXN5lSHJxqXh6UC/QIWWx4S5Q7vmbiFNwLpDcNFR1ozSL8PN6X
-i5/er4hAN3INwsRddbrsjrYpg9MklX4eHVHQELmx0gYOH/syw3YRyJFCRyvnUf5m
-4VGeve3/igYCzcvKm/sLl08UhYoyKfii6uxhiIO/wma2HpPjHzU2RYwiix0kiz8h
-zy17vNGfKwS/x1dWcXdzShTgJt5V0fVEZK/FhkUQgelYNtgJr663iSKzumy1VPuv
-cE3I0TEN0hN7+j5ra2+gRTOtAUZ/4ADcWECGOSqy4hu33mcdT3Oqxvkb+l5KVjdf
-fQnc8sa9XHY5Ycic9YGi05Y5Z8/ol3JawzHuZiol3Mell652LTSICl1mQQj4sYpB
-4xQpvcSfk3jtfIh1k/o5Jg6pMJfzsG3Pv6gkw0lUxAaVgbgKdnsC4FIBaYg/SVuJ
-aVniqnGoYQdsnaKCdXv/XnIBtXmq5P/LGG7ZRAqq3Js2tTQS0vAHd8LVTbdLi80T
-i047KvUWPT1XglEZVMAlks0lY2uru7+E2A8dlKFQZLQbZiLlrBaly4SCmO6aLGce
-8n1YcMUrL4qSbF8aE0cQuJquqlOWV4He/QkolhpCILl570FCPeo=
-=SW7j
------END PGP SIGNATURE-----
-
---=-1ELFL5WP8obhLEch6Dz4--
+>       Andrew
