@@ -2,87 +2,96 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 645682065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QUEybOHU"
+	by mail.kernel.org (Postfix) with ESMTP id 2483120759
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgETQtR (ORCPT
+        id S1726845AbgETQtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:49:17 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33142 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726566AbgETQtQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:49:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589993356; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=AtZzN9l3Kts69kOEIWpwwKUEDYmTk95ucmsOExLIP9E=; b=QUEybOHU+bZjTw8s6ljHyASKUvy3WrelI3VXSb8nrIpBROY53Gv0CoLjjJ2TDr4e0sYVmMFv
- 2QWteNXzPvW63BGmGU0sxRZV1ZQrWHw/haEoVNT44eCuN2SfN2DtszgG/Puk3LEmepRWatm4
- +qKCFRSL9ib3+iHWCB0voEN+3yo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ec55f7e45598550e6112a69 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 16:49:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 17279C433CA; Wed, 20 May 2020 16:49:01 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59946C433C6;
-        Wed, 20 May 2020 16:49:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59946C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v3 1/7] bus: mhi: core: Abort suspends due to outgoing
- pending packets
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>,
-        manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        linux-kernel@vger.kernel.org
-References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
- <1589832241-13867-2-git-send-email-bbhatt@codeaurora.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <f9badb81-989d-3c7f-63c1-d85a3e875fe7@codeaurora.org>
-Date:   Wed, 20 May 2020 10:48:59 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 12:49:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:40344 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgETQtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:49:31 -0400
+IronPort-SDR: j2OorsXcnBhStH+I12uwRWkIcPcllhhhCnBIjOwR3MuX0yDXyCPXVDiAArVXk5RX+iduL+YhoX
+ SVR+5uJLn0YA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 09:49:30 -0700
+IronPort-SDR: Y1SCKT2h35aN4PMn+Z5vjjoLC3V76rGwqdqdipFgCRF8odvuTmkfTZGaInNL0BwI72HHTYwQMZ
+ uJ6PkIbukTmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="466457865"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 20 May 2020 09:49:29 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 5B9E514E; Wed, 20 May 2020 19:49:28 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/3] irqdomain: Get rid of special treatment for ACPI in __irq_domain_add()
+Date:   Wed, 20 May 2020 19:49:26 +0300
+Message-Id: <20200520164927.39090-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
+References: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1589832241-13867-2-git-send-email-bbhatt@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/2020 2:03 PM, Bhaumik Bhatt wrote:
-> Add the missing check to abort suspends if a client has pending outgoing
-> packets to send to the device. This allows better utilization of the MHI
-> bus wherein clients on the host are not left waiting for longer suspend
-> or resume cycles to finish for data transfers.
-> 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
+After change __irq_domain_add() to cooperate better with fwnodes
+we don't need to have special treatment for ACPI case.
 
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Get rid of the special treatment for ACPI.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ kernel/irq/irqdomain.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index d59a4224f920..c6204bc606a2 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -161,22 +161,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 			domain->name = fwid->name;
+ 			break;
+ 		}
+-#ifdef CONFIG_ACPI
+-	} else if (is_acpi_device_node(fwnode)) {
+-		struct acpi_buffer buf = {
+-			.length = ACPI_ALLOCATE_BUFFER,
+-		};
+-		acpi_handle handle;
+-
+-		handle = acpi_device_handle(to_acpi_device_node(fwnode));
+-		if (acpi_get_name(handle, ACPI_FULL_PATHNAME, &buf) == AE_OK) {
+-			domain->name = buf.pointer;
+-			domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
+-		}
+-
+-		domain->fwnode = fwnode;
+-#endif
+-	} else if (is_of_node(fwnode)) {
++	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode)) {
+ 		char *name;
+ 
+ 		/*
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.26.2
+
