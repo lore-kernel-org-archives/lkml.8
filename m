@@ -2,54 +2,69 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E97C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2918C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB883207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590000227;
-	bh=owmd5u00J5EiVH2Bk/mE1PizXwMz7BYeJOqOkWe+ZV4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=yA76qQytjoTCdvbxyMHa5jjdxypeKGlJVWsbM6YihR06WshhFC4kbdIYhIqJ8Dlvc
-	 zFBWjKzAtRZ4jyPGhJ/+ibERRhTmk1+CtSZLOxbSzOfdL3vFjSfuN14z9zdMs7SNRn
-	 syu2cd3tBhJKpSu8nwck+KpRXRZA+HMV+f+4KTZQ=
+	by mail.kernel.org (Postfix) with ESMTP id A0CE22072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="b1JgVhbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgETSnr (ORCPT
+        id S1726827AbgETSo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbgETSnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:43:46 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE1BB2072C;
-        Wed, 20 May 2020 18:43:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590000226;
-        bh=owmd5u00J5EiVH2Bk/mE1PizXwMz7BYeJOqOkWe+ZV4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=StBvvx4lBl3cno5a4mqWpDoOstM5l0ZCDMY6G5r34semnxevm7xhNqhzoFtrEPcMu
-         ydvPzGsJnRI0oNwJlKNR49Lz90gDD2ruiCbx5Z6s9q2k+ARwsupEKIUcxB9HTDpQlh
-         vTNLSIQVTrnsvOHUxetEg7a+bqKt7BB38Ws79mng=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id CA0273522A2B; Wed, 20 May 2020 11:43:45 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:43:45 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 20 May 2020 14:44:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgETSo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:44:27 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D07EC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:44:27 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id ee19so1829716qvb.11
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qOfQCDp2HCW/1be9NabwoRwd9cyNa6cUtRAtXPrtw2Q=;
+        b=b1JgVhbtcDcRNeATwCgHH5AGRGpf3saVLNB3dDZvn+H/h35zl6CsrNZ+GxBXTR2aeg
+         cVoYL05pM/HKI9vVU2OSY4TmyQA09Zff5DL7CULZseWaFfE213rT0lt98yjN3oqAKEIu
+         MWlW4j4S+ldfXObUm/4Ha8Jij9Ij7PgpI/lhk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qOfQCDp2HCW/1be9NabwoRwd9cyNa6cUtRAtXPrtw2Q=;
+        b=tVY0dKWuSO24jV0EqyAW0Izremv217GUs2vGXTQSzyZaKuKvKxqRXRq+TKXh0gR3jA
+         KXAWDBItHtYxqIAPnHA2AIUEbvCq3xMzRXY5qg0ndb/SFhBduxAruEVvN4Stf5g5bqmG
+         HDoNb4LNi5tgGpuUZg8LkzYVpiZIIvqlZD3klJz/77TH8YM3/skl4i6TuXyXs7TsYpxU
+         Xd8Qevjduszey/jBbgxx2u8wO7KNVOKR7u3YxjNlxcHmhnifYFntFHq6IMWcfYGcIpqQ
+         t+fnzjSUEsiQm1colCRqElNhzSBRBNg85U4/TauWvlOXkqstfEj+SygpY81niPyoVmmI
+         JaWw==
+X-Gm-Message-State: AOAM531ZRZ3AGRppvbr+6D2e1ce6UYgmeKmukXIUqH4D70d35xd9hat+
+        +7HdoyV+KKKS49eWs8BKHddbrg==
+X-Google-Smtp-Source: ABdhPJxNBIVSAm0uep+3KJcPcEhvTbKTZVvSyElPmhQoJlY9o5W1rPI2gSIRz5Z5i7syUzAvNn35+w==
+X-Received: by 2002:a0c:fe88:: with SMTP id d8mr6045164qvs.208.1590000266269;
+        Wed, 20 May 2020 11:44:26 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d196sm2926006qkg.16.2020.05.20.11.44.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 11:44:25 -0700 (PDT)
+Date:   Wed, 20 May 2020 14:44:25 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         Josh Triplett <josh@joshtriplett.org>,
@@ -57,86 +72,68 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         rcu@vger.kernel.org
 Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
  access
-Message-ID: <20200520184345.GU2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+Message-ID: <20200520184425.GA261674@google.com>
 References: <20200519201912.1564477-1-bigeasy@linutronix.de>
  <20200519201912.1564477-4-bigeasy@linutronix.de>
  <20200520102407.GF317569@hirez.programming.kicks-ass.net>
  <20200520120608.mwros5jurmidxxfv@linutronix.de>
+ <20200520174259.GA247557@google.com>
+ <20200520182800.sdp6t6bgbhn4kkqk@linutronix.de>
+ <20200520183529.GR317569@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200520120608.mwros5jurmidxxfv@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200520183529.GR317569@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:06:08PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-05-20 12:24:07 [+0200], Peter Zijlstra wrote:
-> > On Tue, May 19, 2020 at 10:19:07PM +0200, Sebastian Andrzej Siewior wrote:
+On Wed, May 20, 2020 at 08:35:29PM +0200, Peter Zijlstra wrote:
+> On Wed, May 20, 2020 at 08:28:00PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2020-05-20 13:42:59 [-0400], Joel Fernandes wrote:
+> > > Hi Sebastian,
+> > Hi Joel,
 > > 
-> > > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> > > index 0c71505f0e19c..8d2b5f75145d7 100644
-> > > --- a/kernel/rcu/srcutree.c
-> > > +++ b/kernel/rcu/srcutree.c
-> > > @@ -25,6 +25,7 @@
-> > >  #include <linux/delay.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/srcu.h>
-> > > +#include <linux/locallock.h>
-> > >  
-> > >  #include "rcu.h"
-> > >  #include "rcu_segcblist.h"
-> > > @@ -735,6 +736,7 @@ static void srcu_flip(struct srcu_struct *ssp)
-> > >  	smp_mb(); /* D */  /* Pairs with C. */
-> > >  }
-> > >  
-> > > +static DEFINE_LOCAL_LOCK(sda_lock);
-> > >  /*
-> > >   * If SRCU is likely idle, return true, otherwise return false.
-> > >   *
-> > > @@ -765,13 +767,13 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
-> > >  	unsigned long tlast;
-> > >  
-> > >  	/* If the local srcu_data structure has callbacks, not idle.  */
-> > > -	local_irq_save(flags);
-> > > +	local_lock_irqsave(sda_lock, flags);
-> > >  	sdp = this_cpu_ptr(ssp->sda);
-> > >  	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
-> > > -		local_irq_restore(flags);
-> > > +		local_unlock_irqrestore(sda_lock, flags);
-> > >  		return false; /* Callbacks already present, so not idle. */
-> > >  	}
-> > > -	local_irq_restore(flags);
-> > > +	local_unlock_irqrestore(sda_lock, flags);
+> > > For pointer stability, can we just use get_local_ptr() and put_local_ptr()
+> > > instead of adding an extra lock? This keeps the pointer stable while keeping
+> > > the section preemptible on -rt. And we already have a lock in rcu_data, I
+> > > prefer not to add another lock if possible.
 > > 
-> > Would it perhaps make sense to stick the local_lock in struct srcu_data ?
+> > What is this get_local_ptr() doing? I can't find it anywhere…
 > 
-> In that case we would need something for pointer stability before the
-> lock is acquired.
-> I remember Paul looked at that patch a few years ago and he said that
-> that disabling interrupts here is important and matches the other part
-> instance where the interrupts are disabled. Looking at it now, it seems
-> that there is just pointer stability but I can't tell if
-> rcu_segcblist_pend_cbs() needs more than just this.
+> I suspect it is ({ preempt_disable(); this_cpu_ptr(ptr); }), or
+> something along those lines.
+> 
+> But yeah, I can't find it either.
 
-Yes, that CPU's rcu_segcblist structure does need mutual exclusion in
-this case.  This is because rcu_segcblist_pend_cbs() looks not just
-at the ->tails[] pointer, but also at the pointer referenced by the
-->tails[] pointer.  This last pointer is in an rcu_head structure, and
-not just any rcu_head structure, but one that is ready to be invoked.
-So this callback could vanish into the freelist (or worse) at any time.
-But callback invocation runs on the CPU that enqueued the callbacks
-(as long as that CPU remains online, anyway), so disabling interrupts
-suffices in mainline.
+I actually found it in RT 4.4 kernel, I thought this was also on newer RT
+kernels as well (is that not true anymore?). But yes it was exactly what
+Peter said.
 
-Now, we could have srcu_might_be_idle() instead acquire the sdp->lock
-to protect the structure.
+In 4.4 RT there's code similar to:
 
-What would be really nice is a primitive that acquires such a per-CPU
-lock and remains executing on that CPU, whether by the graces of
-preempt_disable(), local_irq_save(), migrate_disable(), or what have you.
+#ifdef CONFIG_PREEMPT_RT_FULL
 
-							Thanx, Paul
+# define get_local_ptr(var) ({          \
+                migrate_disable();      \
+                this_cpu_ptr(var);      })
+
+# define put_local_ptr(var) do {        \
+        (void)(var);                    \
+        migrate_enable();               \
+} while (0)
+
+#else
+
+#define get_local_ptr(var)      get_cpu_ptr(var)
+#define put_local_ptr(var)      put_cpu_ptr(var)
+
+#endif
+
+
+thanks,
+
+ - Joel
+
