@@ -2,264 +2,153 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A70C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8740E205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9840F205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZ2dpYJB"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cdQjBZ/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgETH3c (ORCPT
+        id S1726836AbgETHaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:29:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETH33 (ORCPT
+        Wed, 20 May 2020 03:30:01 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:33834 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgETHaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:29:29 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C27EAC061A0E;
-        Wed, 20 May 2020 00:29:28 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id i14so2578676qka.10;
-        Wed, 20 May 2020 00:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HTou0WUXzDf0o0mQsx/duwk3hrNBz9rboYojoyLD5HQ=;
-        b=tZ2dpYJB4FNN/ruIH8/R+pf4rYd+0NckDU5SgH2l7b7nWMd+tV1DftkaYewtxWFKk9
-         kzSQXi3WUnrcDhIUb8BfU0C9cUi5arGmzK+72smcK69MaXPKLYdE7k3i2v/GBpy8mJyv
-         HLjKCXJH3Pj2sPK6hQOXO+yN1tN/RK3TqvDrEHMxZADeJx0u82Tx7aCDUSqsZYltcfJa
-         Dw9eRuJizPtErqOnV+EABghVnkK0fo0SgFrgsTVTVfC3ql3GK8MCd+atJZJiAuScL6RF
-         Ch53P1isQbeYqq40GhEoj4TjbEc+tVyqUNYxVmfE8z2yIKt9o37CusVqoZRrnvcjAK/v
-         q81Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HTou0WUXzDf0o0mQsx/duwk3hrNBz9rboYojoyLD5HQ=;
-        b=hd+pRQpSJw0BAsda3XsFO7HqelwXO9pzDH3forsHROmKmseZBYhMXlNJGU8KYJJwNG
-         iW8gUxQQD8C0HcOz52MD31WQlWhZ1XEyZPFzvefyeF1qjty6rMvfIXZIHrlDZxh8xPqD
-         voFk/z4DJ3T0cYM+0972EeJqKvDtBq4GFYCmdGESkp+Qy+0vX5XMzxns4Th9XoDQAcdY
-         XtEzaxH/9hp6M6buZNruWSkhw8dTRHjsmqzuMPLsuqas5dGQRSptohnbhAiyxBnob4V/
-         htFftuQ5XFzIDoZIu/ZT+6WkWAJgjSogozzqMhBAuEJgY+N37ELMJtRgv9Q2oYSe5t7w
-         /yCQ==
-X-Gm-Message-State: AOAM532Hdjwb0tHZpKW899AHLDbfWri5osC2NMWOKo1v0kf7RNZYa7p8
-        BpxPidl7NodO+wIyIIf9w5s=
-X-Google-Smtp-Source: ABdhPJxSr2e4My6HF39ER0wjT+rTL2Jx/3tBpkFRC1TW2tLEbOFEbU7rgeg3puCqKKnn2RGsFxr8fw==
-X-Received: by 2002:a37:8d85:: with SMTP id p127mr3040499qkd.35.1589959767869;
-        Wed, 20 May 2020 00:29:27 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id c26sm1551092qkm.98.2020.05.20.00.29.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 May 2020 00:29:27 -0700 (PDT)
-Date:   Wed, 20 May 2020 09:29:22 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
- to yaml
-Message-ID: <20200520072922.GG3361@ict14-OptiPlex-980>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-2-jonathan.albrieux@gmail.com>
- <20200519182028.GB342367@bogus>
+        Wed, 20 May 2020 03:30:00 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K7R4l3030676;
+        Wed, 20 May 2020 09:29:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=IMRVBLQ0AEUt0XOltEpT6Zor4zCeIp6mr6TUQS8qvRQ=;
+ b=cdQjBZ/mX2n0JEfCgWFNEi0Ys1CBifFs7JeGaa4gCl4dwiy0eMdj61dfvmS9fcLraH5s
+ edE75o7FWmIQ5Nud6pY5li2Ot+AbIMDDEEXgtkoe4dBXc7L8o8kebSKedmoJ1j1DWgAY
+ TIcLaw/wCBOqpBI/CmtPmWoeEQDPrV4xDBkGVrp0vZKAWZZJGMUVchO/yBpG6BewyJQ9
+ vqywWLgov7kYS5k/A4PYVSb80GSQk9F2g/rN+6m2760UJUVDjyPOgxs6U4b15a+oU34i
+ OsGmCexT3UhxVJQJvOEvKDWVkEdosH3J696tHqcclxExOITXVvVzd7npEsQ17WEcUBzr uQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3125n3pn8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 09:29:38 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC92A10002A;
+        Wed, 20 May 2020 09:29:37 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AAB032A5671;
+        Wed, 20 May 2020 09:29:37 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 20 May
+ 2020 09:29:37 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Wed, 20 May 2020 09:29:37 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+CC:     "len.brown@intel.com" <len.brown@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Patrick Bellasi" <patrick.bellasi@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Subject: Re: [Linux-stm32] [RFC 0/3] Introduce cpufreq minimum load QoS
+Thread-Topic: [Linux-stm32] [RFC 0/3] Introduce cpufreq minimum load QoS
+Thread-Index: AQHWGi06wBgeAQBseECYOK/U7Qvw76iQJdAAgAACCYCAAAQ3AIABBseAgAAT0wCAAE7QgIAADU2AgAARzICAAAO9AIAF2zaAgBkHbAA=
+Date:   Wed, 20 May 2020 07:29:37 +0000
+Message-ID: <d854844e-e651-5210-3e85-1be9f52d44d3@st.com>
+References: <20200424114058.21199-1-benjamin.gaignard@st.com>
+ <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
+ <70e743cf-b88e-346a-5114-939b8724c83d@arm.com>
+ <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
+ <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com>
+ <a234e123-6c15-8e58-8921-614b58ca24ca@st.com> <jhjtv11cabk.mognet@arm.com>
+ <a20c5214-211b-1f70-1162-57b32e60549b@st.com> <jhjmu6tc6rz.mognet@arm.com>
+ <b8757472-c973-a32d-d5c9-a584d7d703f8@st.com>
+In-Reply-To: <b8757472-c973-a32d-d5c9-a584d7d703f8@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DB271001AA377743824DE815E4C2B3FB@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519182028.GB342367@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_03:2020-05-19,2020-05-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 12:20:28PM -0600, Rob Herring wrote:
-> On Tue, May 19, 2020 at 09:50:57AM +0200, Jonathan Albrieux wrote:
-> > Converts documentation from txt format to yaml 
-> > 
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > ---
-> >  .../devicetree/bindings/iio/imu/bmi160.txt    | 37 --------
-> >  .../devicetree/bindings/iio/imu/bmi160.yaml   | 84 +++++++++++++++++++
-> >  2 files changed, 84 insertions(+), 37 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-> 
-> Use compatible string for filename: bosch,bmi160.yaml
->
-
-Ok thank you, will change filename.
- 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-> > deleted file mode 100644
-> > index 900c169de00f..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-> > +++ /dev/null
-> > @@ -1,37 +0,0 @@
-> > -Bosch BMI160 - Inertial Measurement Unit with Accelerometer, Gyroscope
-> > -and externally connectable Magnetometer
-> > -
-> > -https://www.bosch-sensortec.com/bst/products/all_products/bmi160
-> > -
-> > -Required properties:
-> > - - compatible : should be "bosch,bmi160"
-> > - - reg : the I2C address or SPI chip select number of the sensor
-> > - - spi-max-frequency : set maximum clock frequency (only for SPI)
-> > -
-> > -Optional properties:
-> > - - interrupts : interrupt mapping for IRQ
-> > - - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
-> > -   input, set to "INT2" if INT2 pin should be used instead
-> > - - drive-open-drain : set if the specified interrupt pin should be configured as
-> > -   open drain. If not set, defaults to push-pull.
-> > -
-> > -Examples:
-> > -
-> > -bmi160@68 {
-> > -	compatible = "bosch,bmi160";
-> > -	reg = <0x68>;
-> > -
-> > -	interrupt-parent = <&gpio4>;
-> > -	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
-> > -	interrupt-names = "INT1";
-> > -};
-> > -
-> > -bmi160@0 {
-> > -	compatible = "bosch,bmi160";
-> > -	reg = <0>;
-> > -	spi-max-frequency = <10000000>;
-> > -
-> > -	interrupt-parent = <&gpio2>;
-> > -	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-> > -	interrupt-names = "INT2";
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.yaml b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-> > new file mode 100644
-> > index 000000000000..6b464ce5ed0b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/imu/bmi160.yaml
-> > @@ -0,0 +1,84 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/imu/bmi160.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Bosch BMI160
-> > +
-> > +maintainers:
-> > +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>
-> 
-> Would help to Cc him perhaps.
-> 
-
-Thank you, I will add him too on the next version.
-
-> > +
-> > +description: |
-> > +  Inertial Measurement Unit with Accelerometer, Gyroscope and externally
-> > +  connectable Magnetometer
-> > +  https://www.bosch-sensortec.com/bst/products/all_products/bmi160
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: bosch,bmi160
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: the I2C address or SPI chip select number of the sensor
-> > +
-> > +  spi-max-frequency:
-> > +    maxItems: 1
-> > +    description: set maximum clock frequency (required only for SPI)
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: interrupt mapping for IRQ
-> 
-> No need for description if not adding anything unique for this device.
-> 
-
-Will remove it then.
-
-> > +
-> > +  interrupt-names:
-> > +    minItems: 1
-> > +    maxItems: 1
-> > +    items:
-> > +      enum:
-> > +        - INT1
-> > +        - INT2
-> 
-> Just the enum is enough.
-> 
-
-Ok, will clean this.
-
-> > +    description: |
-> > +      set to "INT1" if INT1 pin should be used as interrupt input, set
-> > +      to "INT2" if INT2 pin should be used instead
-> > +
-> > +  drive-open-drain:
-> > +    description: |
-> > +      set if the specified interrupt pin should be configured as
-> > +      open drain. If not set, defaults to push-pull.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    // Example for I2C
-> > +    i2c@78b7000 {
-> > +        reg = <0x78b6000 0x600>;
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        bmi160@68 {
-> > +                compatible = "bosch,bmi160";
-> > +                reg = <0x68>;
-> > +                interrupt-parent = <&gpio4>;
-> > +                interrupts = <12 1>;
-> > +                interrupt-names = "INT1";
-> > +        };
-> > +  - |
-> > +    // Example for SPI
-> > +    spi@78b7000 {
-> > +        reg = <0x78b7000 0x600>,
-> > +              <0x7884000 0x23000>;
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        bmi160@0 {
-> > +                compatible = "bosch,bmi160";
-> > +                reg = <0>;
-> > +                spi-max-frequency = <10000000>;
-> > +                interrupt-parent = <&gpio2>;
-> > +                interrupts = <12 1>;
-> > +                interrupt-names = "INT2";
-> > +        };
-> > +    };
-> > -- 
-> > 2.17.1
-> > 
-
-Thank you for your help,
-
-Best regards,
-Jonathan Albrieux
+DQoNCk9uIDUvNC8yMCAxMToxNyBBTSwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+DQo+IE9u
+IDQvMzAvMjAgNTo1MCBQTSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPj4gT24gMzAvMDQv
+MjAgMTY6MzcsIEJlbmphbWluIEdBSUdOQVJEIHdyb3RlOg0KPj4+IE9uIDQvMzAvMjAgNDozMyBQ
+TSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPj4+PiBPbiAzMC8wNC8yMCAxNDo0NiwgQmVu
+amFtaW4gR0FJR05BUkQgd3JvdGU6DQo+Pj4+Pj4gVGhhdCdzIG5vdCB3aGF0IEkgbWVhbnQuDQo+
+Pj4+Pj4NCj4+Pj4+PiBJIHN1cHBvc2UgdGhhdCB0aGUgaW50ZXJydXB0IHByb2Nlc3NpbmcgaW4g
+cXVlc3Rpb24gdGFrZXMgcGxhY2UgaW4NCj4+Pj4+PiBwcm9jZXNzIGNvbnRleHQgYW5kIHNvIHlv
+dSBtYXkgc2V0IHRoZSBsb3dlciBjbGFtcCBvbiB0aGUgdXRpbGl6YXRpb24NCj4+Pj4+PiBvZiB0
+aGUgdGFzayBjYXJyeWluZyB0aGF0IG91dC4NCj4+Pj4+IEkgaGF2ZSB0cnkgdG8gYWRkIHRoaXMg
+Y29kZSB3aGVuIHN0YXJ0aW5nIHN0cmVhbWluZyAoYmVmb3JlIHRoZSBmaXJzdA0KPj4+Pj4gaW50
+ZXJydXB0KSB0aGUgZnJhbWVzIGZyb20gdGhlIHNlbnNvcjoNCj4+Pj4+IGNvbnN0IHN0cnVjdCBz
+Y2hlZF9hdHRyIHNjaGVkX2F0dHIgPSB7DQo+Pj4+PiAgICAgICAuc2NoZWRfdXRpbF9taW4gPSAx
+MDAwMCwgLyogMTAwJSBvZiB1c2FnZSAqLw0KPj4+PiBVbmxlc3MgeW91IHBsYXkgd2l0aCBTQ0hF
+RF9DQVBBQ0lUWV9TSElGVCwgdGhlIG1heCBzaG91bGQgYmUgMTAyNCAtDQo+Pj4+IGkuZS4gU0NI
+RURfQ0FQQUNJVFlfU0NBTEUuIFRoYXQncyBhIHJlYWxseSBiaWcgYm9vc3QsIGJ1dCB0aGF0J3Mg
+Zm9yIHlvdSB0bw0KPj4+PiBiZW5jaG1hcmsuDQo+Pj4+DQo+Pj4+PiAgICAgICAuc2NoZWRfZmxh
+Z3MgPSBTQ0hFRF9GTEFHX1VUSUxfQ0xBTVBfTUlOLA0KPj4+Pj4gICAgICB9Ow0KPj4+Pj4NCj4+
+Pj4+IHNjaGVkX3NldGF0dHIoY3VycmVudCwgJnNjaGVkX2F0dHIpOw0KPj4+Pj4NCj4+Pj4+IEkg
+ZG9uJ3Qgc2VlIGFueSBiZW5lZmljZXMgbWF5YmUgdGhlcmUgaXMgc29tZSBjb25maWd1cmF0aW9u
+IGZsYWdzIHRvIHNldC4NCj4+Pj4+DQo+Pj4+PiBIb3cgY2hhbmdpbmcgc2NoZWRfdXRpbF9taW4g
+Y291bGQgaW1wYWN0IGNwdWZyZXEgb25kZW1hbmQgZ292ZXJub3IgPw0KPj4+Pj4gRG9lcyBpdCBj
+aGFuZ2UgdGhlIHZhbHVlIHJldHVybmVkIHdoZW4gdGhlIGdvdmVybm9yIGNoZWNrIHRoZSBpZGxl
+IHRpbWUgPw0KPj4+Pj4NCj4+Pj4gWW91J2xsIGhhdmUgdG8gdXNlIHRoZSBzY2hlZHV0aWwgZ292
+ZXJub3IgZm9yIHVjbGFtcCB0byBoYXZlIGFuIGVmZmVjdC4gQW5kDQo+Pj4+IGFyZ3VhYmx5IHRo
+YXQncyB3aGF0IHlvdSBzaG91bGQgYmUgdXNpbmcsIHVubGVzcyBzb21ldGhpbmcgZXhwbGljaXRs
+eQ0KPj4+PiBwcmV2ZW50cyB5b3UgZnJvbSBkb2luZyB0aGF0Lg0KPj4+IEV2ZW4gd2l0aCBzY2hl
+ZHV0aWwgYW5kIFNDSEVEX0NBUEFDSVRZX1NDQUxFIHRoYXQgaXQgZG9lc24ndCB3b3JrLg0KPj4+
+IGNwdWZyZXEvY3B1aW5mb19jdXJfZnJlcSB2YWx1ZXMgYXJlIGFsd2F5cyBvbiB0aGUgbWF4IHZh
+bHVlIGV2ZW4gaWYgdGhlDQo+Pj4gc3RhdHMgc2hvdyB0cmFuc2l0aW9ucyBiZXR3ZWVuIHRoZSBh
+dmFpbGFibGUgZnJlcXVlbmNpZXMuDQo+Pj4NCj4+PiBJIHNlZSB0d28gcG9zc2libGVzIHJlYXNv
+bnMgdG8gZXhwbGFpbiB0aGF0Og0KPj4+IC0gc2NoZWRfc2V0YXR0cigpIGlzIGNhbGxlZCBpbiB1
+c2VybGFuZCBwcm9jZXNzIGNvbnRleHQsIGJ1dCB0aGUNCj4+PiB0aHJlYWRlZCBpcnEgaGFuZGxl
+ciBpcyBydW5uaW5nIGluIGFub3RoZXIgcHJvY2Vzcy4NCj4+IEFoIHllcywgdGhpcyBvbmx5IHdv
+cmtzIGlmIHRoZSB0YXNrIHlvdSBib29zdCBpcyB0aGUgb25lIHRoYXQgd2lsbCBoYW5kbGUNCj4+
+IHdoYXRldmVyIHdvcmsgeW91IGNhcmUgYWJvdXQgKGluIHRoaXMgY2FzZSBoYW5kbGluZyB0aGUg
+aXJxKS4gVGhhdCBzYWlkLCBpZg0KPj4geW91IGRvIHVzZSB0aHJlYWRlZCBJUlFzLCB0aGF0IHNo
+b3VsZCBnaXZlIHlvdSBhIFNDSEVEX0ZJRk8gdGhyZWFkLCB3aGljaA0KPj4gc2hvdWxkIGRyaXZl
+IHRoZSBmcmVxdWVuY3kgdG8gaXRzIG1heCB3aGVuIHVzaW5nIHNjaGVkdXRpbCAodW5yZWxhdGVk
+IHRvDQo+PiB1Y2xhbXApLg0KPiBDYW4gSSBjb25jbHVkZSB0aGF0IHNjaGVkX3NldGF0dHIoKSBp
+c24ndCB0aGUgZ29vZCB3YXkgdG8gc29sdmUgdGhpcw0KPiBwcm9ibGVtID8NCj4gRG9lcyBteSBw
+YXRjaGVzIG1ha2Ugc2Vuc2UgaW4gdGhpcyBjYXNlID8NCkdlbnRsZSB1cCBvbiB0aGlzIHNlcmll
+cyBiZWFjYXVzZSBJIGhhdmVuJ3QgZm91bmQgYW55IG90aGVyIHdheSB0byBzb2x2ZQ0KdGhpcyBw
+cm9ibGVtLg0KDQpUaGFua3MsDQpCZW5qYW1pbg0KPg0KPj4+IC0gYmVjYXVzZSB0aGlzIHVzZSBj
+YXNlIGlzIGFsbW9zdCBydW5uaW5nIGFsbCBpbiBoYXJkd2FyZSB0aGUgcHJvY2Vzcw0KPj4+IGlz
+bid0IGRvaW5nIGFueXRoaW5nIHNvIHRoZSBzY2hlZHVsZXIgZG9lc24ndCB0YWtlIGNhcmUgb2Yg
+aXQuDQo+Pj4NCj4+Pj4+PiBBbHRlcm5hdGl2ZWx5LCB0aGF0IHRhc2sgbWF5IGJlIGEgZGVhZGxp
+bmUgb25lLg0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Xw0KPiBMaW51eC1zdG0zMiBtYWlsaW5nIGxpc3QNCj4gTGludXgtc3RtMzJAc3QtbWQtbWFpbG1h
+bi5zdG9ybXJlcGx5LmNvbQ0KPiBodHRwczovL3N0LW1kLW1haWxtYW4uc3Rvcm1yZXBseS5jb20v
+bWFpbG1hbi9saXN0aW5mby9saW51eC1zdG0zMg0K
