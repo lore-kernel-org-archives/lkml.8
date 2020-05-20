@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22E512083E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C79520829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 00:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589934757;
-	bh=d0jrmBGquTgDXWOFwkyLLuDxr4VT46/MGEM6yZgUXmg=;
+	s=default; t=1589934799;
+	bh=SAzIvB9/KlljR9/+QQM7s6jGk448vsklZKoyBEgSIZw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0TQDugoPnUaFLi2ewJ9wiJE3iBURn588AcKSqn4agYcUhLRN26/eMtpnIIyM3Hq5+
-	 PUh6eeunZDV1I+kgXQKSnrVyfeXNAZf/Qlt/K42RWchGtlUxPKnBs10NFGoMH7bL2i
-	 p/jcqDVVf2f9TwF/Pz58Kl6WcRnhBZpVEeVADOr4=
+	b=FxtJ8HQVJxv+Xpw6FGU3sNT2s6Kh/5BAW07M8lJOogMCLyo5KvhpmflSUYA3moSQ9
+	 iGMVc5u+CjWKEW5c7NWsZVi/a++p7IVVxjaXICaIiSF5eBYL95w6X0TecbsU0c0cRU
+	 uLQXADi6ZYg+lABS4pG+rPm6s08oG6dH7NeXhytY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgETAcg (ORCPT
+        id S1728303AbgETAdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 20:32:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
+        Tue, 19 May 2020 20:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbgETAcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 20:32:36 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        id S1726595AbgETAdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 20:33:18 -0400
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7740020878
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:32:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C0FE20884
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589934755;
-        bh=d0jrmBGquTgDXWOFwkyLLuDxr4VT46/MGEM6yZgUXmg=;
+        s=default; t=1589934797;
+        bh=SAzIvB9/KlljR9/+QQM7s6jGk448vsklZKoyBEgSIZw=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZUfVqIbinHXhst0UAm2pZq3i10tHRBFEJsiJ2DE+eUjYK9GOGUUzcr1+r/sEVa+ci
-         4gBicc5SBRLaRVLppxLniEZLM7gfxVlmpHPHx18M2X1QDqbRSUuSPckn+QnMB1R0a+
-         f3YEmBS52CK1AitjPddKJkmd/A81ZHAZf5+YTAws=
-Received: by mail-wm1-f41.google.com with SMTP id t8so1848525wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:32:35 -0700 (PDT)
-X-Gm-Message-State: AOAM532oeRS3V6fZEKFI+mpQnH5DgPEg0JtOOIqJJOOyXchrQ2iHcegF
-        EnXNeNKNrrL3Qb4EXYKonD4BSoXG843x8/2luRz5oQ==
-X-Google-Smtp-Source: ABdhPJw/93SRdRyXHGe0TxJC2o0fMyqFnfMuNES7xI6meEy1aM8ByNgIiDiAfb2FM2K1V1p34BSJZ4/4WKTKS8PTwMU=
-X-Received: by 2002:a05:600c:2299:: with SMTP id 25mr1977081wmf.138.1589934753959;
- Tue, 19 May 2020 17:32:33 -0700 (PDT)
+        b=0WIw2M4nB4wFPtK+kKnrRFmZ7QbA5g5mnxWFRQmgp7Lo+M85mtKy+XCAzYaRaKf+c
+         zBwaVvPwXy0u4Z57KYMp7EpqTrw+ahz2vDsPeJcc2ikn3X8ZfFaroEk+Jh/uTAA6fJ
+         ZhruESKjsxJ7aK3gCv/R2/WOgUZe7sdFjj7RcD5E=
+Received: by mail-wm1-f51.google.com with SMTP id z4so976374wmi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 17:33:17 -0700 (PDT)
+X-Gm-Message-State: AOAM530BTb2uoMCxJijBWtraIpuTjDRiYdIudxG6Ev1qhlf3KNqHHZhC
+        Bna/gitQ9KBq7aKuZhVvWbGwH+OFcrJSnyxyHf7cbg==
+X-Google-Smtp-Source: ABdhPJyjV+47YKc6lyCfMCpB5CyVHHbeGAfAsPauUnNG75r+5QLHXKVDjoYDZmmiBW9oGFBYz+lV9jmJDq3VLVMhLpQ=
+X-Received: by 2002:a1c:8141:: with SMTP id c62mr1930926wmd.21.1589934795733;
+ Tue, 19 May 2020 17:33:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200515234547.710474468@linutronix.de> <20200515235127.498652915@linutronix.de>
-In-Reply-To: <20200515235127.498652915@linutronix.de>
+References: <20200515234547.710474468@linutronix.de> <20200515235127.607881162@linutronix.de>
+In-Reply-To: <20200515235127.607881162@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 May 2020 17:32:22 -0700
-X-Gmail-Original-Message-ID: <CALCETrXnRSCpRMNnQG0Pb-DHAscb5QAv3-G9eCZYtkHAFNp0Bg@mail.gmail.com>
-Message-ID: <CALCETrXnRSCpRMNnQG0Pb-DHAscb5QAv3-G9eCZYtkHAFNp0Bg@mail.gmail.com>
-Subject: Re: [patch V6 31/37] x86/entry: Remove the apic/BUILD interrupt leftovers
+Date:   Tue, 19 May 2020 17:33:04 -0700
+X-Gmail-Original-Message-ID: <CALCETrWm2G_NMKyJ-gPERUyi_WBXmGs8Ct2YwSZcdeL5=ZBu7A@mail.gmail.com>
+Message-ID: <CALCETrWm2G_NMKyJ-gPERUyi_WBXmGs8Ct2YwSZcdeL5=ZBu7A@mail.gmail.com>
+Subject: Re: [patch V6 32/37] x86/entry/64: Remove IRQ stack switching ASM
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -85,11 +85,5 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
->
-> Remove all the code which was there to emit the system vector stubs. All
-> users are gone.
->
-> Move the now unused GET_CR2_INTO macro muck to head_64.S where the last
-> user is. Fixup the eye hurting comment there while at it.
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
