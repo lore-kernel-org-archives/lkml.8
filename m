@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E880DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C133C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEB62205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181CF205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgETO2s (ORCPT
+        id S1728626AbgETO2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:28:48 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60950 "EHLO
+        Wed, 20 May 2020 10:28:52 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60932 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726824AbgETOWW (ORCPT
+        by vger.kernel.org with ESMTP id S1726785AbgETOWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:22 -0400
+        Wed, 20 May 2020 10:22:21 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-000358-JK; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-000350-9E; Wed, 20 May 2020 15:22:18 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DOi-1g; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbt-007DOO-Rr; Wed, 20 May 2020 15:22:17 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,12 +36,13 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Daniel Jordan" <daniel.m.jordan@oracle.com>
-Date:   Wed, 20 May 2020 15:13:39 +0100
-Message-ID: <lsq.1589984008.865998157@decadent.org.uk>
+        "Mathias Krause" <minipli@googlemail.com>
+Date:   Wed, 20 May 2020 15:13:35 +0100
+Message-ID: <lsq.1589984008.277855522@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 11/99] padata: Remove broken queue flushing
+Subject: [PATCH 3.16 07/99] padata: ensure the reorder timer callback runs
+ on the correct CPU
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,131 +56,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Mathias Krause <minipli@googlemail.com>
 
-commit 07928d9bfc81640bab36f5190e8725894d93b659 upstream.
+commit cf5868c8a22dc2854b96e9569064bb92365549ca upstream.
 
-The function padata_flush_queues is fundamentally broken because
-it cannot force padata users to complete the request that is
-underway.  IOW padata has to passively wait for the completion
-of any outstanding work.
+The reorder timer function runs on the CPU where the timer interrupt was
+handled which is not necessarily one of the CPUs of the 'pcpu' CPU mask
+set.
 
-As it stands flushing is used in two places.  Its use in padata_stop
-is simply unnecessary because nothing depends on the queues to
-be flushed afterwards.
+Ensure the padata_reorder() callback runs on the correct CPU, which is
+one in the 'pcpu' CPU mask set and, preferrably, the next expected one.
+Do so by comparing the current CPU with the expected target CPU. If they
+match, call padata_reorder() right away. If they differ, schedule a work
+item on the target CPU that does the padata_reorder() call for us.
 
-The other use in padata_replace is more substantial as we depend
-on it to free the old pd structure.  This patch instead uses the
-pd->refcnt to dynamically free the pd structure once all requests
-are complete.
-
-Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Mathias Krause <minipli@googlemail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
+ include/linux/padata.h |  2 ++
+ kernel/padata.c        | 43 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -85,6 +85,7 @@ struct padata_serial_queue {
+  * @swork: work struct for serialization.
+  * @pd: Backpointer to the internal control structure.
+  * @work: work struct for parallelization.
++ * @reorder_work: work struct for reordering.
+  * @num_obj: Number of objects that are processed by this cpu.
+  * @cpu_index: Index of the cpu.
+  */
+@@ -93,6 +94,7 @@ struct padata_parallel_queue {
+        struct padata_list    reorder;
+        struct parallel_data *pd;
+        struct work_struct    work;
++       struct work_struct    reorder_work;
+        atomic_t              num_obj;
+        int                   cpu_index;
+ };
 --- a/kernel/padata.c
 +++ b/kernel/padata.c
-@@ -33,6 +33,8 @@
+@@ -279,11 +279,51 @@ static void padata_reorder(struct parall
+ 	return;
+ }
  
- #define MAX_OBJ_NUM 1000
- 
-+static void padata_free_pd(struct parallel_data *pd);
++static void invoke_padata_reorder(struct work_struct *work)
++{
++	struct padata_parallel_queue *pqueue;
++	struct parallel_data *pd;
 +
- static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
++	local_bh_disable();
++	pqueue = container_of(work, struct padata_parallel_queue, reorder_work);
++	pd = pqueue->pd;
++	padata_reorder(pd);
++	local_bh_enable();
++}
++
+ static void padata_reorder_timer(unsigned long arg)
  {
- 	int cpu, target_cpu;
-@@ -281,6 +283,7 @@ static void padata_serial_worker(struct
- 	struct padata_serial_queue *squeue;
- 	struct parallel_data *pd;
- 	LIST_HEAD(local_list);
-+	int cnt;
+ 	struct parallel_data *pd = (struct parallel_data *)arg;
++	unsigned int weight;
++	int target_cpu, cpu;
  
- 	local_bh_disable();
- 	squeue = container_of(serial_work, struct padata_serial_queue, work);
-@@ -290,6 +293,8 @@ static void padata_serial_worker(struct
- 	list_replace_init(&squeue->serial.list, &local_list);
- 	spin_unlock(&squeue->serial.lock);
- 
-+	cnt = 0;
+-	padata_reorder(pd);
++	cpu = get_cpu();
 +
- 	while (!list_empty(&local_list)) {
- 		struct padata_priv *padata;
++	/* We don't lock pd here to not interfere with parallel processing
++	 * padata_reorder() calls on other CPUs. We just need any CPU out of
++	 * the cpumask.pcpu set. It would be nice if it's the right one but
++	 * it doesn't matter if we're off to the next one by using an outdated
++	 * pd->processed value.
++	 */
++	weight = cpumask_weight(pd->cpumask.pcpu);
++	target_cpu = padata_index_to_cpu(pd, pd->processed % weight);
++
++	/* ensure to call the reorder callback on the correct CPU */
++	if (cpu != target_cpu) {
++		struct padata_parallel_queue *pqueue;
++		struct padata_instance *pinst;
++
++		/* The timer function is serialized wrt itself -- no locking
++		 * needed.
++		 */
++		pinst = pd->pinst;
++		pqueue = per_cpu_ptr(pd->pqueue, target_cpu);
++		queue_work_on(target_cpu, pinst->wq, &pqueue->reorder_work);
++	} else {
++		padata_reorder(pd);
++	}
++
++	put_cpu();
+ }
  
-@@ -299,9 +304,12 @@ static void padata_serial_worker(struct
- 		list_del_init(&padata->list);
- 
- 		padata->serial(padata);
--		atomic_dec(&pd->refcnt);
-+		cnt++;
+ static void padata_serial_worker(struct work_struct *serial_work)
+@@ -404,6 +444,7 @@ static void padata_init_pqueues(struct p
+ 		__padata_list_init(&pqueue->reorder);
+ 		__padata_list_init(&pqueue->parallel);
+ 		INIT_WORK(&pqueue->work, padata_parallel_worker);
++		INIT_WORK(&pqueue->reorder_work, invoke_padata_reorder);
+ 		atomic_set(&pqueue->num_obj, 0);
  	}
- 	local_bh_enable();
-+
-+	if (atomic_sub_and_test(cnt, &pd->refcnt))
-+		padata_free_pd(pd);
  }
- 
- /**
-@@ -432,7 +440,7 @@ static struct parallel_data *padata_allo
- 	padata_init_squeues(pd);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
--	atomic_set(&pd->refcnt, 0);
-+	atomic_set(&pd->refcnt, 1);
- 	pd->pinst = pinst;
- 	spin_lock_init(&pd->lock);
- 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
-@@ -459,29 +467,6 @@ static void padata_free_pd(struct parall
- 	kfree(pd);
- }
- 
--/* Flush all objects out of the padata queues. */
--static void padata_flush_queues(struct parallel_data *pd)
--{
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct padata_serial_queue *squeue;
--
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
--		pqueue = per_cpu_ptr(pd->pqueue, cpu);
--		flush_work(&pqueue->work);
--	}
--
--	if (atomic_read(&pd->reorder_objects))
--		padata_reorder(pd);
--
--	for_each_cpu(cpu, pd->cpumask.cbcpu) {
--		squeue = per_cpu_ptr(pd->squeue, cpu);
--		flush_work(&squeue->work);
--	}
--
--	BUG_ON(atomic_read(&pd->refcnt) != 0);
--}
--
- static void __padata_start(struct padata_instance *pinst)
- {
- 	pinst->flags |= PADATA_INIT;
-@@ -495,10 +480,6 @@ static void __padata_stop(struct padata_
- 	pinst->flags &= ~PADATA_INIT;
- 
- 	synchronize_rcu();
--
--	get_online_cpus();
--	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
- 
- /* Replace the internal control structure with a new one. */
-@@ -519,8 +500,8 @@ static void padata_replace(struct padata
- 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
- 		notification_mask |= PADATA_CPU_SERIAL;
- 
--	padata_flush_queues(pd_old);
--	padata_free_pd(pd_old);
-+	if (atomic_dec_and_test(&pd_old->refcnt))
-+		padata_free_pd(pd_old);
- 
- 	if (notification_mask)
- 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
 
