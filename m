@@ -2,100 +2,70 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53429C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E014EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30EF020873
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C0B20829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgETOLl (ORCPT
+        id S1726804AbgETOLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:11:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37452 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETOLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:11:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1655AABCE;
-        Wed, 20 May 2020 14:11:42 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 719CE1E126F; Wed, 20 May 2020 16:11:38 +0200 (CEST)
-Date:   Wed, 20 May 2020 16:11:38 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 7/8] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200520141138.GE30597@quack2.suse.cz>
-References: <20200520055753.3733520-1-ira.weiny@intel.com>
- <20200520055753.3733520-8-ira.weiny@intel.com>
+        Wed, 20 May 2020 10:11:44 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:14684 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgETOLn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:11:43 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75ec53a8cfaa-6b731; Wed, 20 May 2020 22:11:24 +0800 (CST)
+X-RM-TRANSID: 2ee75ec53a8cfaa-6b731
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.3.208.33])
+        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25ec53a89ff6-60b9b;
+        Wed, 20 May 2020 22:11:24 +0800 (CST)
+X-RM-TRANSID: 2ee25ec53a89ff6-60b9b
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] driver core: platform: Fix spelling errors in platform.c
+Date:   Wed, 20 May 2020 22:12:02 +0800
+Message-Id: <20200520141202.19568-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520055753.3733520-8-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 19-05-20 22:57:52, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> 
-> Set the flag to be user visible and changeable.  Set the flag to be
-> inherited.  Allow applications to change the flag at any time with the
-> exception of if VERITY or ENCRYPT is set.
-> 
-> Disallow setting VERITY or ENCRYPT if DAX is set.
-> 
-> Finally, on regular files, flag the inode to not be cached to facilitate
-> changing S_DAX on the next creation of the inode.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+There is a word spelling mistake of 'Unegisters', thus
+it should be fixed.
 
-The patch looks good to me. You can add:
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ drivers/base/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-One comment below:
-
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 5ba65eb0e2ef..be9713e898eb 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1323,6 +1323,9 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
->  	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
->  		return -EINVAL;
-
-AFAIU this check is here so that fscrypt_inherit_context() is able call us
-and we can clear S_DAX flag. So can't we rather move this below the
-EXT4_INODE_DAX check and change this to
-
-	IS_DAX(inode) && !(inode->i_flags & I_NEW)
-
-? Because as I'm reading the code now, this should never trigger?
-
->  
-> +	if (ext4_test_inode_flag(inode, EXT4_INODE_DAX))
-> +		return -EOPNOTSUPP;
-> +
-
-								Honza
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 7fa654f12..15ae9428a 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -967,7 +967,7 @@ EXPORT_SYMBOL_GPL(__platform_register_drivers);
+  * @drivers: an array of drivers to unregister
+  * @count: the number of drivers to unregister
+  *
+- * Unegisters platform drivers specified by an array. This is typically used
++ * Unregisters platform drivers specified by an array. This is typically used
+  * to complement an earlier call to platform_register_drivers(). Drivers are
+  * unregistered in the reverse order in which they were registered.
+  */
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1.windows.1
+
+
+
