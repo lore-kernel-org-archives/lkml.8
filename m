@@ -2,125 +2,104 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E45C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A25C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 271F9206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:53:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dyYg60zw"
+	by mail.kernel.org (Postfix) with ESMTP id AD909206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgETRxE (ORCPT
+        id S1726957AbgETRxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:53:04 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38238 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgETRxE (ORCPT
+        Wed, 20 May 2020 13:53:40 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:49198 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726747AbgETRxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:53:04 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KHqxnO082673;
-        Wed, 20 May 2020 12:52:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589997179;
-        bh=SMQCS5BSmnxFa3H5C1NH1s5D+HnAPmg4JMl1668xgyk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dyYg60zw1ySiaIyZRM5p11q9kuuiMv8NHWPI4TdTk63YMLiREgGYPxMEXmyRXoPfO
-         PFrRJCD23iboJFkIrXzbziBc6O59UMetynvTUjUBXqVytAdEwRoUjKEJXp6xkvmg/G
-         xMWR0ZllagvfR9c9ul+z5B9SCkUzKRoYi3PEerTU=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KHqwVi036168
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 12:52:59 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 12:52:58 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 12:52:58 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KHqw5O074199;
-        Wed, 20 May 2020 12:52:58 -0500
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     <hkallweit1@gmail.com>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200520121835.31190-1-dmurphy@ti.com>
- <20200520121835.31190-4-dmurphy@ti.com> <20200520135624.GC652285@lunn.ch>
- <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
- <20200520153631.GH652285@lunn.ch>
- <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
- <20200520164313.GI652285@lunn.ch>
- <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
- <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
-Date:   Wed, 20 May 2020 12:52:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 20 May 2020 13:53:39 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 20 May 2020 10:53:39 -0700
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 20 May 2020 10:53:38 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id 779F120B90; Wed, 20 May 2020 10:53:38 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     cang@codeaurora.org, martin.petersen@oracle.com,
+        PedroM.Sousa@synopsys.com, linux-scsi@vger.kernel.org
+Cc:     Asutosh Das <asutoshd@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 2/2] scsi: ufs-qcom: enter and exit hibern8 during clock scaling
+Date:   Wed, 20 May 2020 10:53:17 -0700
+Message-Id: <9b67c25eb7c0bf80075b36660aebdb3788207353.1589997078.git.asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <186237103353b5a79c3496e619fca894dbc78600.1589997078.git.asutoshd@codeaurora.org>
+References: <186237103353b5a79c3496e619fca894dbc78600.1589997078.git.asutoshd@codeaurora.org>
+In-Reply-To: <186237103353b5a79c3496e619fca894dbc78600.1589997078.git.asutoshd@codeaurora.org>
+References: <186237103353b5a79c3496e619fca894dbc78600.1589997078.git.asutoshd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
+Qualcomm controller needs to be in hibern8 before scaling clocks.
+This change puts the controller in hibern8 state before scaling
+and brings it out after scaling of clocks.
 
-On 5/20/20 12:45 PM, Florian Fainelli wrote:
->
-> On 5/20/2020 10:20 AM, Dan Murphy wrote:
->> Andrew/Florian
->>
->> On 5/20/20 11:43 AM, Andrew Lunn wrote:
->>>> I am interested in knowing where that is documented.  I want to RTM I
->>>> grepped for a few different words but came up empty
->>> Hi Dan
->>>
->>> It probably is not well documented, but one example would be
->>>
->>> Documentation/devicetree/bindings/net/ethernet-controller.yaml
->>>
->>> says:
->>>
->>>         # RX and TX delays are added by the MAC when required
->>>         - rgmii
->>>
->>>         # RGMII with internal RX and TX delays provided by the PHY,
->>>         # the MAC should not add the RX or TX delays in this case
->>>         - rgmii-id
->>>
->>>         # RGMII with internal RX delay provided by the PHY, the MAC
->>>         # should not add an RX delay in this case
->>>         - rgmii-rxid
->>>
->>>         # RGMII with internal TX delay provided by the PHY, the MAC
->>>         # should not add an TX delay in this case
->>>
->>>         Andrew
->> OKI I read that.  I also looked at a couple other drivers too.
->>
->> I am wondering if rx-internal-delay and tx-internal-delay should become
->> a common property like tx/rx fifo-depth
->>> And properly document how to use it or at least the expectation on use.
-> Yes they should, and they should have an unit associated with the name.
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+---
+ drivers/scsi/ufs/ufs-qcom.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-
-UGH I think I just got volunteered to do make them common.
-
-Dan
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 00ce8d6..3a4ed64 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1418,18 +1418,27 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
+ 	int err = 0;
+ 
+ 	if (status == PRE_CHANGE) {
++		err = ufshcd_uic_hibern8_enter(hba);
++		if (err)
++			return err;
+ 		if (scale_up)
+ 			err = ufs_qcom_clk_scale_up_pre_change(hba);
+ 		else
+ 			err = ufs_qcom_clk_scale_down_pre_change(hba);
++		if (err)
++			ufshcd_uic_hibern8_exit(hba);
++
+ 	} else {
+ 		if (scale_up)
+ 			err = ufs_qcom_clk_scale_up_post_change(hba);
+ 		else
+ 			err = ufs_qcom_clk_scale_down_post_change(hba);
+ 
+-		if (err || !dev_req_params)
++
++		if (err || !dev_req_params) {
++			ufshcd_uic_hibern8_exit(hba);
+ 			goto out;
++		}
+ 
+ 		ufs_qcom_cfg_timers(hba,
+ 				    dev_req_params->gear_rx,
+@@ -1437,6 +1446,7 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
+ 				    dev_req_params->hs_rate,
+ 				    false);
+ 		ufs_qcom_update_bus_bw_vote(host);
++		err = ufshcd_uic_hibern8_exit(hba);
+ 	}
+ 
+ out:
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
