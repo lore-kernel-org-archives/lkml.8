@@ -2,83 +2,101 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E764C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB77C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD022075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C528220829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:05:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OXSTJKDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgETVEn (ORCPT
+        id S1728117AbgETVFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:04:43 -0400
-Received: from mga14.intel.com ([192.55.52.115]:60965 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgETVEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:04:43 -0400
-IronPort-SDR: o3Bo0UT+dO6ibuBadmxuVg+z5NlkdXbUgnO/hmW0bdtyM5Gq5LqK8/vqYTd5IDeMcrzt0GT72O
- Y+9rD1fhjAwg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 14:04:42 -0700
-IronPort-SDR: 4xYjxQw9iQNwd+UAdFu4L3s23woNlbuAhhuV1E0+mLOeQ75curoIzQvYtn3y6Xv8ueWEDlckJw
- pP6x9/dSsilg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
-   d="scan'208";a="289486103"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 14:04:41 -0700
-Date:   Wed, 20 May 2020 14:04:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 04/20] x86/sgx: Add SGX microarchitectural data
- structures
-Message-ID: <20200520210441.GD18102@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-5-jarkko.sakkinen@linux.intel.com>
- <20200520184745.GJ1457@zn.tnic>
+        Wed, 20 May 2020 17:05:11 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17456 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgETVFK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:05:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec59af60000>; Wed, 20 May 2020 14:02:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 20 May 2020 14:05:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 20 May 2020 14:05:10 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
+ 2020 21:05:09 +0000
+Subject: Re: [PATCH] nouveau/hmm: fix migrate zero page to GPU
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>, Ben Skeggs <bskeggs@redhat.com>
+References: <20200520183652.21633-1-rcampbell@nvidia.com>
+ <20200520192045.GH24561@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <0ef69e08-7f5d-7a3d-c657-55b3a8df1dfe@nvidia.com>
+Date:   Wed, 20 May 2020 14:05:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520184745.GJ1457@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200520192045.GH24561@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590008566; bh=oNYfOayL5+NnABbnpFvMSS5jJdalJIc06Ghq09EUD4E=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=OXSTJKDHNXgUvcTtaCjRAbYfLocszE4i6M3tulp2GOmCgY+AtUmJn09EYEPdwMXak
+         qBNS1ru1cIpS5X+kjTGjaFfdmoHvtoZY5l3arAAiNRNiJI6/9fIRgnXyzXFfRNunfy
+         e7fys5XkFfg76pjban7f52m7QSu5jIJjzW6DyHYa19Z8otwsm6BAKxOEv4s6XnhwkR
+         sEElneYYy7Vr5vGMG9inFQ7oP1gdk7FgIeuEDL5HTIfhCmOQMRuqgDTQUQO22+9ASL
+         t2yLvPza0CZuQ4UjzRUItjyydP5yPzO8cb9kKfk3uINysnpUQ0GMWaSRYNUYgfph5z
+         qlsDmF8dXLmBA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:47:45PM +0200, Borislav Petkov wrote:
-> On Fri, May 15, 2020 at 03:43:54AM +0300, Jarkko Sakkinen wrote:
-> > +/**
-> > + * struct sgx_sigstruct_header -  defines author of the enclave
-> > + * @header1:		constant byte string
-> > + * @vendor:		must be either 0x0000 or 0x8086
+
+On 5/20/20 12:20 PM, Jason Gunthorpe wrote:
+> On Wed, May 20, 2020 at 11:36:52AM -0700, Ralph Campbell wrote:
+>> When calling OpenCL clEnqueueSVMMigrateMem() on a region of memory that
+>> is backed by pte_none() or zero pages, migrate_vma_setup() will fill the
+>> source PFN array with an entry indicating the source page is zero.
+>> Use this to optimize migration to device private memory by allocating
+>> GPU memory and zero filling it instead of failing to migrate the page.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>>
+>> This patch applies cleanly to Jason's Gunthorpe's hmm tree plus two
+>> patches I posted earlier. The first is queued in Ben Skegg's nouveau
+>> tree and the second is still pending review/not queued.
+>> [1] ("nouveau/hmm: map pages after migration")
+>> https://lore.kernel.org/linux-mm/20200304001339.8248-5-rcampbell@nvidia.com/
+>> [2] ("nouveau/hmm: fix nouveau_dmem_chunk allocations")
+>> https://lore.kernel.org/lkml/20200421231107.30958-1-rcampbell@nvidia.com/
 > 
-> Out of pure curiosity: what is that about?
+> It would be best if it goes through Ben's tree if it doesn't have
+> conflicts with the hunks I have in the hmm tree.. Is it the case?
 > 
-> Nothing in the patchset enforces this, so hw does? If so, why?
+> Jason
 
-Yes, enforced by hardware during EINIT.
-
-> Are those vendor IDs going to be assigned by someone or what's up?
-
-No, the field has no real meaning or value, and there is no (and never was
-any) intent to use it to create an OEM registry or anything of that nature.
-
-It's effectively a reserved-0 field that happens to allow 0x8086 because of
-legacy behavior within Intel's signing sytem.  Intel signed enclaves
-currently populate it with 0x8086, but future enclaves may change the vendor
-to 0x0 just to avoid confusion.  In short, software should ignore the field.
+I think there might be some merge conflicts even though it is semantically
+independent of the other changes. I guess since we are at 5.7-rc6 and not
+far from the merge window, I can rebase after 5.8-rc1 and resend.
+I posted this mostly to get some review and as a "heads up" of the issue.
