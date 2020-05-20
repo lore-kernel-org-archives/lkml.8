@@ -2,115 +2,68 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D72C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19185207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A52207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgETTkw (ORCPT
+        id S1727004AbgETTlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:40:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:10555 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgETTkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:40:51 -0400
-IronPort-SDR: i199y7XT3y75vPZAv3dVOhQe6MgxJboCXdkOlmKrC1TuUgbrowYksG6I/Xivybs19sd7XkqZq+
- vGgvOBCKRu7A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 12:40:51 -0700
-IronPort-SDR: 0UdC0Tm/rggWF0VKDIH29th3oEr8q+29E63n9FBqDINHenmY5OhrM0IHVCDJ+TNF0kMWOHYcKa
- azNczIypjZaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
-   d="scan'208";a="466508115"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga005.fm.intel.com with ESMTP; 20 May 2020 12:40:50 -0700
-Date:   Wed, 20 May 2020 12:40:50 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 4/8] fs/ext4: Update ext4_should_use_dax()
-Message-ID: <20200520194050.GF3660833@iweiny-DESK2.sc.intel.com>
-References: <20200520055753.3733520-1-ira.weiny@intel.com>
- <20200520055753.3733520-5-ira.weiny@intel.com>
- <20200520133728.GD30597@quack2.suse.cz>
+        Wed, 20 May 2020 15:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgETTlS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 15:41:18 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A48FC061A0E;
+        Wed, 20 May 2020 12:41:18 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbUaQ-0001RU-Cr; Wed, 20 May 2020 21:41:06 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D65F4100C99; Wed, 20 May 2020 21:41:05 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Ming Lei <ming.lei@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
+In-Reply-To: <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
+References: <20200518093155.GB35380@T590> <87imgty15d.fsf@nanos.tec.linutronix.de> <20200518115454.GA46364@T590> <20200518131634.GA645@lst.de> <20200518141107.GA50374@T590> <20200518165619.GA17465@lst.de> <20200519015420.GA70957@T590> <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590> <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de> <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk> <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
+Date:   Wed, 20 May 2020 21:41:05 +0200
+Message-ID: <87tv0av1gu.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520133728.GD30597@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:37:28PM +0200, Jan Kara wrote:
-> On Tue 19-05-20 22:57:49, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > S_DAX should only be enabled when the underlying block device supports
-> > dax.
-> > 
-> > Change ext4_should_use_dax() to check for device support prior to the
-> > over riding mount option.
-> > 
-> > While we are at it change the function to ext4_should_enable_dax() as
-> > this better reflects the ask as well as matches xfs.
-> > 
-> > Reviewed-by: Jan Kara <jack@suse.cz>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ...
-> 
-> > @@ -4412,7 +4410,13 @@ static bool ext4_should_use_dax(struct inode *inode)
-> >  		return false;
-> >  	if (ext4_test_inode_flag(inode, EXT4_INODE_VERITY))
-> >  		return false;
-> > -	return true;
-> > +	if (!bdev_dax_supported(inode->i_sb->s_bdev,
-> > +				inode->i_sb->s_blocksize))
-> > +		return false;
-> > +	if (test_opt(inode->i_sb, DAX_ALWAYS))
-> > +		return true;
-> > +
-> > +	return false;
-> >  }
-> 
-> Now that I think about it - shouldn't we rather cache the result of
-> bdev_dax_supported() in sb on mount and then just check the flag here?
-> Because bdev_dax_supported() isn't exactly cheap (it does a lot of checks
-> and mappings, tries to read from the pmem, ...).
+Jens Axboe <axboe@kernel.dk> writes:
+> On 5/20/20 8:45 AM, Jens Axboe wrote:
+>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
+>> they just break affinity if that CPU goes offline.
+>
+> Just checked, and it works fine for me. If I create an SQPOLL ring with
+> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
+> just appears unbound but runs just fine. When CPU 3 comes online again,
+> the mask appears correct.
 
-Sounds reasonable.
+When exactly during the unplug operation is it unbound?
 
-Not sure which flags are appropriate.  So add it here?
+Thanks,
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 1a3daf2d18ef..0b4db9ce7756 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1979,6 +1979,7 @@ static inline bool ext4_has_incompat_features(struct super_block *sb)
-  */
- #define EXT4_FLAGS_RESIZING    0
- #define EXT4_FLAGS_SHUTDOWN    1
-+#define EXT4_FLAGS_BDEV_IS_DAX 2
- 
- static inline int ext4_forced_shutdown(struct ext4_sb_info *sbi)
- {
-
+        tglx
