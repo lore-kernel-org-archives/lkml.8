@@ -2,105 +2,126 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAE5C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE95C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1989D205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9821D207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iXLUJwYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgETNsd (ORCPT
+        id S1726953AbgETNtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:48:33 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59090 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgETNsc (ORCPT
+        Wed, 20 May 2020 09:49:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53588 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726747AbgETNtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:48:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BE2DE8030875;
-        Wed, 20 May 2020 13:48:28 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 879XwsdEpqBa; Wed, 20 May 2020 16:48:28 +0300 (MSK)
-Date:   Wed, 20 May 2020 16:48:26 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520134826.pc6si3k6boaexp4i@mobilestation>
-References: <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
- <20200520121201.wohv6u646rx5otkf@mobilestation>
- <20200520133827.GA17714@alpha.franken.de>
+        Wed, 20 May 2020 09:49:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589982540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=a816W8Z5hp9K0nG+dy2LJ94rdDDToT47/ru3WqNRsNQ=;
+        b=iXLUJwYxYGP/SkkPVywn7SleB/SImDDE7f5MlyAugUmXwJydPQj7YQowJLBM6S9TX3jbg5
+        d90uCmewab+pxDHd5bxI6HtdBF9p8BNFCIPZ2dzlsIKCdllUO38GQ/MyozFRtD78dzQ6O2
+        WFE72Ys2vTEVLUxrlcQ6baE6lZqEPYQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-191-Of_ePFwOOx-1njuz7CnsEg-1; Wed, 20 May 2020 09:48:56 -0400
+X-MC-Unique: Of_ePFwOOx-1njuz7CnsEg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3300E80B71E;
+        Wed, 20 May 2020 13:48:53 +0000 (UTC)
+Received: from krava (unknown [10.40.193.10])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 373567958D;
+        Wed, 20 May 2020 13:48:48 +0000 (UTC)
+Date:   Wed, 20 May 2020 15:48:47 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
+Message-ID: <20200520134847.GM157452@krava>
+References: <20200520072814.128267-1-irogers@google.com>
+ <20200520072814.128267-6-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520133827.GA17714@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200520072814.128267-6-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:38:27PM +0200, Thomas Bogendoerfer wrote:
-> On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
-> > Since you don't like the way I initially fixed it, suppose there we don't have
-> > another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
-> > parameter to select a proper accessors, like sw in our case, and sb by defaul).
-> > Right?
-> 
-> to be on the safe side it's probably the best thing. But I don't know
-> enough about CPS_NS16550 to judge whether shift value correlates with
-> possible access width.
+On Wed, May 20, 2020 at 12:28:12AM -0700, Ian Rogers wrote:
 
-The base address passed to the _mips_cps_putc() leaf is UART-base address. It
-has nothing to do with CPS. See:
-/**
- * _mips_cps_putc() - write a character to the UART
- * @a0: ASCII character to write
- * @t9: UART base address
- */
-LEAF(_mips_cps_putc)
-1:      lw              t0, UART_LSR_OFS(t9)
-        andi            t0, t0, UART_LSR_TEMT
-        beqz            t0, 1b
-        sb              a0, UART_TX_OFS(t9)
-        jr              ra
-        END(_mips_cps_putc)
+SNIP
 
-So it's base address must be accessed with proper alignment. On our case it's
-lw/sw instructions. Regarding using lw in the first line of the function. That's
-must be a bug, since further in the same function they use sb to access the UART
-Tx register. So reading a data from UART_LSR register should be also byte-sized
-by using lb.
+>  
+> @@ -157,7 +183,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  	int i = 0;
+>  	int ret = 0;
+>  	struct egroup *eg;
+> -	struct evsel *evsel;
+> +	struct evsel *evsel, *tmp;
+>  	unsigned long *evlist_used;
+>  
+>  	evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
+> @@ -173,7 +199,8 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  			ret = -ENOMEM;
+>  			break;
+>  		}
+> -		evsel = find_evsel_group(perf_evlist, &eg->pctx, metric_events,
+> +		evsel = find_evsel_group(perf_evlist, &eg->pctx,
+> +					eg->has_constraint, metric_events,
+>  					evlist_used);
+>  		if (!evsel) {
+>  			pr_debug("Cannot resolve %s: %s\n",
+> @@ -200,6 +227,12 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  		list_add(&expr->nd, &me->head);
+>  	}
+>  
+> +	evlist__for_each_entry_safe(perf_evlist, tmp, evsel) {
+> +		if (!test_bit(evsel->idx, evlist_used)) {
+> +			evlist__remove(perf_evlist, evsel);
+> +			evsel__delete(evsel);
+> +		}
 
--Sergey
+is the groupping still enabled when we merge groups? could part
+of the metric (events) be now computed in different groups?
 
-> 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+I was wondering if we could merge all the hasmaps into single
+one before the parse the evlist.. this way we won't need removing
+later.. but I did not thought this through completely, so it
+might not work at some point
+
+jirka
+
