@@ -2,100 +2,84 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E734C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223442072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D68C206D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgETSjM (ORCPT
+        id S1726791AbgETSkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:39:12 -0400
-Received: from 1.mo173.mail-out.ovh.net ([178.33.111.180]:51486 "EHLO
-        1.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbgETSjM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:39:12 -0400
-X-Greylist: delayed 925 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 14:39:11 EDT
-Received: from player792.ha.ovh.net (unknown [10.110.103.180])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 2D00213CDD9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:23:45 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player792.ha.ovh.net (Postfix) with ESMTPSA id 6F0A9129C9408;
-        Wed, 20 May 2020 18:23:37 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-101G00477dc0413-69de-485b-8c2c-a864b1457d08,D4AE9CB3A4750E3488E7135F1D4D455A9A9A4933) smtp.auth=groug@kaod.org
-Date:   Wed, 20 May 2020 20:23:36 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, paulus@samba.org, mpe@ellerman.id.au,
-        sukadev@linux.ibm.com, linuxram@us.ibm.com
-Subject: Re: [PATCH v2] KVM: PPC: Book3S HV: relax check on H_SVM_INIT_ABORT
-Message-ID: <20200520202336.661ae973@bahia.lan>
-In-Reply-To: <20200520174308.77820-1-ldufour@linux.ibm.com>
-References: <20200520193259.0b66db32@bahia.lan>
-        <20200520174308.77820-1-ldufour@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 20 May 2020 14:40:36 -0400
+Received: from elvis.franken.de ([193.175.24.41]:60592 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbgETSkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:40:36 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jbTdq-0005JR-01; Wed, 20 May 2020 20:40:34 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 952F1C0155; Wed, 20 May 2020 20:40:24 +0200 (CEST)
+Date:   Wed, 20 May 2020 20:40:24 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
+ if CPU_FREQ enabled
+Message-ID: <20200520184024.GB23855@alpha.franken.de>
+References: <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
+ <20200508154150.GB22247@alpha.franken.de>
+ <20200511133121.cz5axbwynhmqkx7x@mobilestation>
+ <20200515074827.6p5zx4sb3bmavjih@mobilestation>
+ <20200515210647.GA22922@alpha.franken.de>
+ <20200518134820.wedoumgbsllvhem6@mobilestation>
+ <20200518163206.GA17800@alpha.franken.de>
+ <20200518205752.txbylbjt2zkwdwwe@mobilestation>
+ <20200519155053.GB15797@alpha.franken.de>
+ <20200520115926.lk6ycke75flwzcd2@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 8480559574304070084
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedruddtledguddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpefirhgvghcumfhurhiiuceoghhrohhugheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeehkefhtdehgeehheejledufeekhfdvleefvdeihefhkefhudffhfeuuedvffdthfenucfkpheptddrtddrtddrtddpkedvrddvheefrddvtdekrddvgeeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeelvddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehgrhhouhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520115926.lk6ycke75flwzcd2@mobilestation>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 19:43:08 +0200
-Laurent Dufour <ldufour@linux.ibm.com> wrote:
+On Wed, May 20, 2020 at 02:59:26PM +0300, Serge Semin wrote:
+> I think there is a misunderstanding here. In this patch I am not enabling
 
-> The commit 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_*
-> Hcalls") added checks of secure bit of SRR1 to filter out the Hcall
-> reserved to the Ultravisor.
-> 
-> However, the Hcall H_SVM_INIT_ABORT is made by the Ultravisor passing the
-> context of the VM calling UV_ESM. This allows the Hypervisor to return to
-> the guest without going through the Ultravisor. Thus the Secure bit of SRR1
-> is not set in that particular case.
-> 
-> In the case a regular VM is calling H_SVM_INIT_ABORT, this hcall will be
-> filtered out in kvmppc_h_svm_init_abort() because kvm->arch.secure_guest is
-> not set in that case.
-> 
-> Fixes: 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls")
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> ---
+you are right, I've missed the fact, that this also needs to be enabled
+in TLB entries. Strange that MIPS added the enable bit while R10k simply
+do uncached acclerated, whenever TLB entry selects it.
 
-Reviewed-by: Greg Kurz <groug@kaod.org>
-
->  arch/powerpc/kvm/book3s_hv.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> If there is no misunderstanding and you said what you said, that even enabling
+> the feature for utilization might be dangerous, let's at least leave the
+> MIPS_CONF_MM, MIPS_CONF_MM_FULL and MIPS_CONF_MM_SYS_SYSAD fields
+> definition in the "arch/mips/include/asm/mipsregs.h" header. I'll use
+> them to enable the write-merge in my platform code.
 > 
-> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-> index 93493f0cbfe8..6ad1a3b14300 100644
-> --- a/arch/powerpc/kvm/book3s_hv.c
-> +++ b/arch/powerpc/kvm/book3s_hv.c
-> @@ -1099,9 +1099,12 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
->  			ret = kvmppc_h_svm_init_done(vcpu->kvm);
->  		break;
->  	case H_SVM_INIT_ABORT:
-> -		ret = H_UNSUPPORTED;
-> -		if (kvmppc_get_srr1(vcpu) & MSR_S)
-> -			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
-> +		/*
-> +		 * Even if that call is made by the Ultravisor, the SSR1 value
-> +		 * is the guest context one, with the secure bit clear as it has
-> +		 * not yet been secured. So we can't check it here.
-> +		 */
-> +		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
->  		break;
->  
->  	default:
+> What do you think?
 
+I withdraw my concerns and will apply the patch as is.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
