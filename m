@@ -2,104 +2,137 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9E020829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590006853;
-	bh=nrhqiPlqg0n1hAE/O/a+UV4rvWhhKR/jrI3wT+HPdB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jjF+Z61CjyF77ct8sPtpW1BFLk2ekcNUwxbS5hyfs3YV1Cr6TnR10J5/GeTpGlJoD
-	 ZR5DtIORna9VzNLtukCtUctS3mgp4IYShEDaQXd1wVh5BKyjX4stSwmAjsc2keIP2s
-	 DZplSoI3FjS1VA0Ph20xVhRDVGrqfkuBESXYIkso=
+	by mail.kernel.org (Postfix) with ESMTP id 5F064207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgETUeM (ORCPT
+        id S1728019AbgETUeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgETUeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:34:12 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 766D3207E8;
-        Wed, 20 May 2020 20:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590006851;
-        bh=nrhqiPlqg0n1hAE/O/a+UV4rvWhhKR/jrI3wT+HPdB4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fnETanLGKttjkEDsIOkbvEpJYimeA18NjKziM8drdxMbWqnxJRwv2z9bJPmHYy4OX
-         Qymq55cxN+8xS9TpqOtAcsZqHbC9oKnawEEkLKBjb/yGVzqJj8DHvUu7N1CNgXjWcC
-         FPJnGkx5GKum6HTnpGaHQ3qI28qCOx5Zb6erqtF4=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7029A40AFD; Wed, 20 May 2020 17:34:09 -0300 (-03)
-Date:   Wed, 20 May 2020 17:34:09 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 3/7] perf metricgroup: Delay events string creation
-Message-ID: <20200520203409.GA26877@kernel.org>
-References: <20200520072814.128267-1-irogers@google.com>
- <20200520072814.128267-4-irogers@google.com>
- <20200520131412.GK157452@krava>
- <CAP-5=fXHRiahLZjQHcFiWW=zdXc7r+=WdMpzeCj-+xPcqB2khQ@mail.gmail.com>
+        Wed, 20 May 2020 16:34:21 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:49257 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726860AbgETUeT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 16:34:19 -0400
+Received: (qmail 23997 invoked by uid 1000); 20 May 2020 16:34:17 -0400
+Date:   Wed, 20 May 2020 16:34:17 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-usb <linux-usb@vger.kernel.org>, alsa-devel@alsa-project.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Subject: Re: XHCI vs PCM2903B/PCM2904 part 2
+Message-ID: <20200520203417.GA23602@rowland.harvard.edu>
+References: <273cc1c074cc4a4058f31afe487fb233f5cf0351.camel@surriel.com>
+ <20200520163840.GA11084@rowland.harvard.edu>
+ <667d8d156fa5d8420ef1c3b1d08b94a10d2398cc.camel@surriel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXHRiahLZjQHcFiWW=zdXc7r+=WdMpzeCj-+xPcqB2khQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <667d8d156fa5d8420ef1c3b1d08b94a10d2398cc.camel@surriel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 20, 2020 at 11:22:22AM -0700, Ian Rogers escreveu:
-> On Wed, May 20, 2020 at 6:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >                               break;
-> > >               }
-> > >       }
-> > > +     if (!ret) {
-> >
-> > could you please do instead:
-> >
-> >         if (ret)
-> >                 return ret;
-> >
-> > so the code below cuts down one indent level and you
-> > don't need to split up the lines
+On Wed, May 20, 2020 at 03:21:44PM -0400, Rik van Riel wrote:
+> On Wed, 2020-05-20 at 12:38 -0400, Alan Stern wrote:
+> > On Wed, May 20, 2020 at 07:26:57AM -0400, Rik van Riel wrote:
+> > > After a few more weeks of digging, I have come to the tentative
+> > > conclusion that either the XHCI driver, or the USB sound driver,
+> > > or both, fail to handle USB errors correctly.
+> > > 
+> > > I have some questions at the bottom, after a (brief-ish)
+> > > explanation
+> > > of exactly what seems to go wrong.
+> > > 
+> > > TL;DR: arecord from a misbehaving device can hang forever
+> > > after a USB error, due to poll on /dev/snd/timer never returning.
+> > > 
+> > > The details: under some mysterious circumstances, the PCM290x
+> > > family sound chips can send more data than expected during an
+> > > isochronous transfer, leading to a babble error. Those
+> > 
+> > Do these chips connect as USB-3 devices or as USB-2?  (I wouldn't
+> > expect 
+> > an audio device to use USB-3; it shouldn't need the higher
+> > bandwidth.)
 > 
-> Done, broken out as a separate patch in v2:
-> https://lore.kernel.org/lkml/20200520182011.32236-3-irogers@google.com/
+> USB-2
 
-Jiri, was this the only issue with this patchkit? I've merged already
-the first one, that you acked.
+Okay.  In that case, xhci-hcd should appear to act just like a USB-2 
+host controller.
 
-- Arnaldo
+> > In general, errors such as babble are not supposed to stop
+> > isochronous 
+> > endpoints.
+> 
+> However, it seems that they do. The urb never
+> gets an answer after snd_complete_urb refiles
+> it with usb_submit_urb.
+> 
+> > > However, the USB sound driver seems to have no idea that this
+> > > error happened. The function retire_capture_urb looks at the
+> > > status of each isochronous frame, but seems to be under the
+> > > assumption that the sound device just keeps on running.
+> > 
+> > This is appropriate, for the reason mentioned above.
+> 
+> Having arecord get stuck forever does not seem like
+> the right behavior, though :)
+
+No, it isn't.
+
+> > > This leads me to a few questions:
+> > > - should retire_capture_urb call snd_pcm_stop_xrun,
+> > >   or another function like it, if it sees certain
+> > >   errors in the iso frame in the URB?
+> > 
+> > No.  Isochronous endpoints are expected to encounter errors from time
+> > to 
+> > time; that is the nature of isochronous communications.  You're
+> > supposed 
+> > to ignore the errors (skip over any bad data) and keep going.
+> 
+> ...
+> 
+> > The notion of "stopped state" is not part of USB-2.  As a result, it 
+> > should be handled entirely within the xhci-hcd driver.
+> 
+> Interesting. That makes me really curious why things are
+> getting stuck, now...
+
+This could be a bug in xhci-hcd.  Perhaps the controller's endpoint 
+state needs to be updated after one of these errors occurs.  Mathias 
+will know all about that.
+
+> > > - how should the USB sound driver recover from these
+> > >   occasional and/or one-off errors? stop the sound
+> > >   stream, or try to reinitialize the device and start
+> > >   recording again?
+> > 
+> > As far as I know, it should do its best to continue (perhaps fill in 
+> > missing data with zeros).
+> 
+> That was my first intuition as well, given the documented
+> behavior of isochronous frames.
+> 
+> However, given that the device appears to stop sending
+> frames after that error, at least usbmon is not seeing
+> any, I am not sure what needs to happen in order to get
+> that behavior.
+
+The device won't send any data unless the host controller tells it to.  
+If something is wrong with the host controller then usbmon won't see any 
+data.
+
+Alan Stern
