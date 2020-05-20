@@ -2,115 +2,141 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8226C212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NQ7nnDch"
+	by mail.kernel.org (Postfix) with ESMTP id 4671420759
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:21:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590016913;
+	bh=WwJNj5w/54NjB1ri+DkJJcorVEhoVNcHPfB3LzjxW0E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IzAaGWAcq8g4yEDfl7NEIXuc17WE5WpUBI9TQ+WK/e9Es+lB+y7WSSyEvSNMYKg8J
+	 1I3qMYi50zldBe5REdgAAhDv2FnguHqLgNcZJ3A912nupJtv/b7QNep6gCWuxQm+uK
+	 NeuWcObNM7oE03Hqc8xI9UA+7/tlb4+RrkEIYQOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgETXVs (ORCPT
+        id S1728738AbgETXVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:21:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37474 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728573AbgETXVr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:21:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590016906;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=QCvvSQse9uoRSN4nhne9pBMylRnmmLbVVrXB6qYkxWg=;
-        b=NQ7nnDche2OfvtrxXBkb5e7vSubn9iYsF2OJNBulWd+CE0HTGmGelBmjT29NEVCdK8sxf3
-        Y0skSbNf4Uv5VzbCuUwsFfuqVB9Sw4BzYoOXdWOIOTNm1+aO1nC4+CKUrkmH+OUzEEPdK6
-        eZI9u8FBrhQLcNU/FcmIctvYMUaOkAM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-HWe3uLGmPfWPMmwsfaXDtA-1; Wed, 20 May 2020 19:21:44 -0400
-X-MC-Unique: HWe3uLGmPfWPMmwsfaXDtA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 19:21:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728694AbgETXVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 19:21:50 -0400
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B18C4835B40;
-        Wed, 20 May 2020 23:21:43 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E48C782A2C;
-        Wed, 20 May 2020 23:21:42 +0000 (UTC)
-Subject: [PATCH net 0/3] rxrpc: Fix retransmission timeout and ACK discard
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 21 May 2020 00:21:42 +0100
-Message-ID: <159001690181.18663.663730118645460940.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EDB820C56
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 23:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590016909;
+        bh=WwJNj5w/54NjB1ri+DkJJcorVEhoVNcHPfB3LzjxW0E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Wip68iPVRN/1kE7eGetNhcgk3qhXGso1NSPAD3vnVBXMLtFtO2tAErmsPcKdu/ZyU
+         9IhXJBRv7wJpLAv3SrE/gnN36uBQyYG9gGE2cdhk3FwQZGiEvs+RmKtIy/gcPUxBIe
+         nn9YSl1ykQDYvSb08Xk5aSfXicvNSiOINR11D9qk=
+Received: by mail-wm1-f45.google.com with SMTP id u188so4598103wmu.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:21:49 -0700 (PDT)
+X-Gm-Message-State: AOAM533Tdun+aq5sQdG4aB2LK0TUEpaZT9eSeqRnMxc4q6EMy1RVIQ5p
+        /bHmG8Sb9o26ER7JZTaxepFLGZL+KkBmkS0Z0O+QEA==
+X-Google-Smtp-Source: ABdhPJynzyEtBDxtXZsGNmVJtcNhxS+BO9Pf3Crs8l7l7L8Yiqs0lgITY4XiltjeURyPkDKem+4pxrINEGrYoDkMK+8=
+X-Received: by 2002:a1c:8141:: with SMTP id c62mr6385044wmd.21.1590016907726;
+ Wed, 20 May 2020 16:21:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200515234547.710474468@linutronix.de> <20200515235125.425810667@linutronix.de>
+ <CALCETrUqK6hv4AuGL=GtK+12TCmr5nBA7CBy=X7TNA=w_Jk0Qw@mail.gmail.com>
+ <87imgr7nwp.fsf@nanos.tec.linutronix.de> <CALCETrW4BxfTVzv8mXntNXiAPnKxqdMEv7djUknGZcrno2WJHg@mail.gmail.com>
+ <87y2pm4ruh.fsf@nanos.tec.linutronix.de> <CALCETrUvH5DQvL6Lo6EkM04pr7wWj+7eZbTg3H_eLNXcZsH0FA@mail.gmail.com>
+ <CALCETrX4Zy2iuc39XTifYd_mvezCEUtW2ax3=ec1TF=yZxAHDg@mail.gmail.com> <871rnewh5w.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <871rnewh5w.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 20 May 2020 16:21:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrU4xaawDfFkYCLzaEFf3TJ2JTcD3ba_q5jbqhmJQ7qV0A@mail.gmail.com>
+Message-ID: <CALCETrU4xaawDfFkYCLzaEFf3TJ2JTcD3ba_q5jbqhmJQ7qV0A@mail.gmail.com>
+Subject: Re: [patch V6 10/37] x86/entry: Switch XEN/PV hypercall entry to IDTENTRY
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 12:17 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy Lutomirski <luto@kernel.org> writes:
+> > Andrew Cooper pointed out that there is too much magic in Xen for this
+> > to work.  So never mind.
+>
+> :)
+>
+> But you made me stare more at that stuff and I came up with a way
+> simpler solution. See below.
 
-Here are a couple of fixes and an extra tracepoint for AF_RXRPC:
+I like it, but I bet it can be even simpler if you do the
+tickle_whatever_paulmck_call_it() change:
 
- (1) Calculate the RTO pretty much as TCP does, rather than making
-     something up, including an initial 4s timeout (which causes return
-     probes from the fileserver to fail if a packet goes missing), and add
-     backoff.
+> +__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+> +{
+> +       struct pt_regs *old_regs;
+> +       bool inhcall;
+> +
+> +       idtentry_enter(regs);
+> +       old_regs = set_irq_regs(regs);
+> +
+> +       run_on_irqstack(__xen_pv_evtchn_do_upcall, NULL, regs);
+> +
+> +       set_irq_regs(old_regs);
+> +
+> +       inhcall = get_and_clear_inhcall();
+> +       __idtentry_exit(regs, inhcall);
+> +       restore_inhcall(inhcall);
 
- (2) Fix the discarding of out-of-order received ACKs.  We mustn't let the
-     hard-ACK point regress, nor do we want to do unnecessary
-     retransmission because the soft-ACK list regresses.  This is not
-     trivial, however, due to some loose wording in various old protocol
-     specs, the ACK field that should be used for this sometimes has the
-     wrong information in it.
+How about:
 
- (3) Add a tracepoint to log a discarded ACK.
+       inhcall = get_and_clear_inhcall();
+       if (inhcall) {
+        if (!WARN_ON_ONCE((regs->flags & X86_EFLAGS_IF) || preempt_count()) {
+          local_irq_enable();
+          cond_resched();
+          local_irq_disable();
+        }
+     }
+     restore_inhcall(inhcall);
+     idtentry_exit(regs);
 
-The patches are tagged here:
+This could probably be tidied up by having a xen_maybe_preempt() that
+does the inhcall and resched mess.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-	rxrpc-fixes-20200520
+The point is that, with the tickle_nohz_ stuff, there is nothing
+actually preventing IRQ handlers from sleeping as long as they aren't
+on the IRQ stack and as long as the interrupted context was safe to
+sleep in.
 
-and can also be found on the following branch:
-
-	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
-
-David
----
-David Howells (1):
-      rxrpc: Fix ack discard
-
-
- fs/afs/fs_probe.c            |  18 ++--
- fs/afs/vl_probe.c            |  18 ++--
- include/net/af_rxrpc.h       |   2 +-
- include/trace/events/rxrpc.h |  52 +++++++++---
- net/rxrpc/Makefile           |   1 +
- net/rxrpc/ar-internal.h      |  25 ++++--
- net/rxrpc/call_accept.c      |   2 +-
- net/rxrpc/call_event.c       |  22 ++---
- net/rxrpc/input.c            |  44 ++++++++--
- net/rxrpc/misc.c             |   5 --
- net/rxrpc/output.c           |   9 +-
- net/rxrpc/peer_event.c       |  46 ----------
- net/rxrpc/peer_object.c      |  12 +--
- net/rxrpc/proc.c             |   8 +-
- net/rxrpc/rtt.c              | 195 +++++++++++++++++++++++++++++++++++++++++++
- net/rxrpc/sendmsg.c          |  26 ++----
- net/rxrpc/sysctl.c           |   9 --
- 17 files changed, 335 insertions(+), 159 deletions(-)
- create mode 100644 net/rxrpc/rtt.c
-
-
+--Andy
