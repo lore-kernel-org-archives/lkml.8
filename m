@@ -2,193 +2,112 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88487C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5C720884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:06:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="a8KS2mPm"
+	by mail.kernel.org (Postfix) with ESMTP id 5B54520748
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgETGGo (ORCPT
+        id S1726436AbgETGLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:06:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:56383 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgETGGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:06:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Rj1r557Fz9sT1;
-        Wed, 20 May 2020 16:06:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1589954801;
-        bh=B5d+TcIuRwQVi/8LSOWWiWgdlteHGB54WIjY9G+SsEg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=a8KS2mPmmjOaOIfny1M5Idmgm7R8ntkK2f1fL8g9nOo138iyvNKGSsi6l1gU1AD6k
-         VkXRAsUcmEk8Jt+pq0EFQDL65vk3Hn046ACZ5Vc1ugK1d3+uVoqw5v0+zUn6GcYOS2
-         9Ec6Ao96XcVicF8x5XfD3N62iirHV5jBMq5Cvsrce76Iy8zOfMbvPaquXGhIYCVWWo
-         nkj1NGioC/xW9nKtlQCrLHxcY8bmrknWDtn+cHEWyoy77qIMwymqsNJvUw0fNSAF1w
-         lSED4D9364BsPDScLgljK4sf9IP09RRRQ0Xaf9dTsBdqqNvfTfcQqwbRhZnGUPTF+2
-         LaKnvQgmqT/8g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] input: i8042: Remove special PowerPC handling
-In-Reply-To: <20200518181043.3363953-1-natechancellor@gmail.com>
-References: <87a7254bxd.fsf@mpe.ellerman.id.au> <20200518181043.3363953-1-natechancellor@gmail.com>
-Date:   Wed, 20 May 2020 16:07:00 +1000
-Message-ID: <87ftbv87i3.fsf@mpe.ellerman.id.au>
+        Wed, 20 May 2020 02:11:04 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37561 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgETGLE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:11:04 -0400
+Received: by mail-lj1-f195.google.com with SMTP id o14so2252340ljp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 23:11:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=bnICOn/Ls9L7VkdJqYNqQPYwFGnRPfcq5kfoLGIdoVs=;
+        b=ejmrwQlEqzpvyVXkrvCc6Dax3TVszjZT71gMNjPbEqiYgUZXufBGX7I8i/Hq0GPchp
+         LrXA5OrNPU8etL3t3dG6TNW32lal/9V1B3uR0U4rynB52gP4fK0MA4ZhueCL6SLlFufc
+         YTKc1Wi+Q2yEFtddrXQIP3BV8Gg/Wtgnd6akXa3huk4ThQlohyHNKN/gecQ7yImWfln0
+         EKd2g6O1spW4yc6uw/arRGd/Y/fs7am6eiI5eJ2Z3zH6Yr4ruRMquol90HlrQFjVAUYD
+         C69afgB/jkLJsrnd32/Su8MNKI71NnJNUbQoUK995sNcE4tkBvgffLDrAj0CO/ORMHZy
+         q3pQ==
+X-Gm-Message-State: AOAM532SJgyPTX5cPBRaYckqLY29x5wvQv9n10JeYsmVjkRijuxAjLRG
+        WLTv0svoQAWMkVhkXUx9tr6UcmTExN4=
+X-Google-Smtp-Source: ABdhPJz3c5S+JD5sGw2mH6VDFQM/mqWWFCmL0T7a3eZhn6reEZD3evimiGFq4sFKXR7RZPHonOjchw==
+X-Received: by 2002:a2e:8347:: with SMTP id l7mr1897381ljh.243.1589955062203;
+        Tue, 19 May 2020 23:11:02 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id t22sm786928ljk.11.2020.05.19.23.10.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 23:11:01 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:10:22 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        SebastianReichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] MAINTAINER entries for few ROHM power devices
+Message-ID: <cover.1589866137.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ + Dmitry & linux-input ]
+Add maintainer entries to a few ROHM devices and Linear Ranges
 
-Nathan Chancellor <natechancellor@gmail.com> writes:
-> This causes a build error with CONFIG_WALNUT because kb_cs and kb_data
-> were removed in commit 917f0af9e5a9 ("powerpc: Remove arch/ppc and
-> include/asm-ppc").
->
-> ld.lld: error: undefined symbol: kb_cs
->> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->
-> ld.lld: error: undefined symbol: kb_data
->> referenced by i8042.c:309 (drivers/input/serio/i8042.c:309)
->> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> referenced by i8042-ppcio.h:33 (drivers/input/serio/i8042-ppcio.h:33)
->> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> referenced by i8042.c:319 (drivers/input/serio/i8042.c:319)
->> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> referenced 15 more times
->
-> Presumably since nobody has noticed this for the last 12 years, there is
-> not anyone actually trying to use this driver so we can just remove this
-> special walnut code and use the generic header so it builds for all
-> configurations.
->
-> Fixes: 917f0af9e5a9 ("powerpc: Remove arch/ppc and include/asm-ppc")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/input/serio/i8042-ppcio.h | 57 -------------------------------
->  drivers/input/serio/i8042.h       |  2 --
->  2 files changed, 59 deletions(-)
->  delete mode 100644 drivers/input/serio/i8042-ppcio.h
+Linear Ranges helpers were refactored out of regulator core to lib so
+that other drivers could utilize them too. (I guess power/supply drivers 
+and possibly clk drivers can benefit from them). As regulators is
+currently the main user it makes sense the changes to linear_ranges go
+through Mark's tree.
 
-This LGTM.
+During past two years few ROHM PMIC drivers have been added to
+mainstream. They deserve a supporter from ROHM side too :)
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Patch 1:
+	Maintainer entries for few ROHM IC drivers
+Patch 2:
+	Maintainer entry for linear ranges helpers
 
-I assumed drivers/input/serio would be pretty quiet, but there's
-actually some commits to it in linux-next. So perhaps this should go via
-the input tree.
+---
 
-Dmitry do you want to take this, or should I take it via powerpc?
+Matti Vaittinen (2):
+  MAINTAINERS: Add entry for ROHM power management ICs
+  MAINTAINERS: Add maintainer entry for linear ranges helper
 
-Original patch is here:
-  https://lore.kernel.org/lkml/20200518181043.3363953-1-natechancellor@gmail.com
+ MAINTAINERS | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-cheers
 
-> diff --git a/drivers/input/serio/i8042-ppcio.h b/drivers/input/serio/i8042-ppcio.h
-> deleted file mode 100644
-> index 391f94d9e47d..000000000000
-> --- a/drivers/input/serio/i8042-ppcio.h
-> +++ /dev/null
-> @@ -1,57 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0-only */
-> -#ifndef _I8042_PPCIO_H
-> -#define _I8042_PPCIO_H
-> -
-> -
-> -#if defined(CONFIG_WALNUT)
-> -
-> -#define I8042_KBD_IRQ 25
-> -#define I8042_AUX_IRQ 26
-> -
-> -#define I8042_KBD_PHYS_DESC "walnutps2/serio0"
-> -#define I8042_AUX_PHYS_DESC "walnutps2/serio1"
-> -#define I8042_MUX_PHYS_DESC "walnutps2/serio%d"
-> -
-> -extern void *kb_cs;
-> -extern void *kb_data;
-> -
-> -#define I8042_COMMAND_REG (*(int *)kb_cs)
-> -#define I8042_DATA_REG (*(int *)kb_data)
-> -
-> -static inline int i8042_read_data(void)
-> -{
-> -	return readb(kb_data);
-> -}
-> -
-> -static inline int i8042_read_status(void)
-> -{
-> -	return readb(kb_cs);
-> -}
-> -
-> -static inline void i8042_write_data(int val)
-> -{
-> -	writeb(val, kb_data);
-> -}
-> -
-> -static inline void i8042_write_command(int val)
-> -{
-> -	writeb(val, kb_cs);
-> -}
-> -
-> -static inline int i8042_platform_init(void)
-> -{
-> -	i8042_reset = I8042_RESET_ALWAYS;
-> -	return 0;
-> -}
-> -
-> -static inline void i8042_platform_exit(void)
-> -{
-> -}
-> -
-> -#else
-> -
-> -#include "i8042-io.h"
-> -
-> -#endif
-> -
-> -#endif /* _I8042_PPCIO_H */
-> diff --git a/drivers/input/serio/i8042.h b/drivers/input/serio/i8042.h
-> index 38dc27ad3c18..eb376700dfff 100644
-> --- a/drivers/input/serio/i8042.h
-> +++ b/drivers/input/serio/i8042.h
-> @@ -17,8 +17,6 @@
->  #include "i8042-ip22io.h"
->  #elif defined(CONFIG_SNI_RM)
->  #include "i8042-snirm.h"
-> -#elif defined(CONFIG_PPC)
-> -#include "i8042-ppcio.h"
->  #elif defined(CONFIG_SPARC)
->  #include "i8042-sparcio.h"
->  #elif defined(CONFIG_X86) || defined(CONFIG_IA64)
->
-> base-commit: 72bc15d0018ebfbc9c389539d636e2e9a9002b3b
-> -- 
-> 2.27.0.rc0
+base-commit: b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
