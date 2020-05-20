@@ -2,95 +2,203 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF649C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF949207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:04:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=notmuch.email header.i=@notmuch.email header.b="NJpU64f0"
+	by mail.kernel.org (Postfix) with ESMTP id E5927207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 01:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589936668;
+	bh=PXXxP8uhFGUWNSwJ6Vc/qmk12yFcTacQV1nb6Sn0O9M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ng9r+B119w1SqrsYfqSdGr6rA0t42vr78arVLpTeMIgxwTgMzCOsrctyTTPebcIxQ
+	 5SEmlWe+JetkQ/aV1A51fnmLDdnU/8AmnSSjIUWX8xfAQqpCvHY08JUxT++RvtRF7D
+	 uRpPS76lQp7CThc5JBETg7bbvaz0iussqCqxapzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgETBEV (ORCPT
+        id S1728324AbgETBE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 21:04:21 -0400
-Received: from mx.h4ck.space ([159.69.146.50]:58672 "EHLO mx.h4ck.space"
+        Tue, 19 May 2020 21:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgETBEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 21:04:20 -0400
-Date:   Wed, 20 May 2020 03:04:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=notmuch.email;
-        s=mail; t=1589936658;
-        bh=SXL42srFoPlaa2GUG3aQEU4fKva96clfFImQwvvj0kk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=NJpU64f086GykurTVLJgzZg2h6QJW6hyh4o4awavfBwOCyTWlGRUa9QnS4i1WonMw
-         LKgv1wirpX6uWaTATrjPhiaMog7MfV88X7cAFHU6iqgAoY/GOS2RzDZXNU2RCBr3A9
-         cS4VU71DxdVi8Ap5My4DjUSGvn/An5DwMOEEqlf4=
-From:   andi@notmuch.email
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc:     Brendan Shanks <bshanks@codeweavers.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: umip: AMD Ryzen 3900X, pagefault after emulate SLDT/SIDT
- instruction
-Message-ID: <20200520010418.ippljxawcwrbp6o2@wrt>
-References: <20200519143815.cpsd2xfx2kl3khsq@wrt>
- <2330FAB4-A6CE-49E7-921C-B7D55763BDED@codeweavers.com>
- <20200519194320.GA25138@ranerica-svr.sc.intel.com>
+        id S1728287AbgETBE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 21:04:26 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD72020897
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589936665;
+        bh=PXXxP8uhFGUWNSwJ6Vc/qmk12yFcTacQV1nb6Sn0O9M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HEVOP/LCjo3d2AutI7sFJgWyNVejy9Uif8ss+JK94CYrJxteTKIyrlaeaaqumfv2A
+         mk2hEnz5XtBap1jm9Tdq6jB5vh9i179lQ8J3CsbA4V7/XfqWU/6z/m0p9DPRZ0Qjpz
+         yn9iEsdpEHP+5BvKfP/cKCZQX8KEETNthacRFe10=
+Received: by mail-wm1-f50.google.com with SMTP id n5so1180306wmd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 18:04:24 -0700 (PDT)
+X-Gm-Message-State: AOAM533FXnhpS2Hjq+ti8bUiC56qw7PwKv2ZNW82EsB51OZ6ven2fVBU
+        ZnmoK/SvzIfy7f2b+82eDReeIsccn2Mx3ub4882TfQ==
+X-Google-Smtp-Source: ABdhPJxRzLaRgKpPFo9hQLyxTV5/YLigR1ZRrqC8GQsn5VFgWv551/4M7QbnOdI+nhoskIp5Pe8gQBm7X9gB2HZu4wg=
+X-Received: by 2002:a05:600c:2299:: with SMTP id 25mr2086671wmf.138.1589936663161;
+ Tue, 19 May 2020 18:04:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519194320.GA25138@ranerica-svr.sc.intel.com>
+References: <2eb98637-bd2d-dda6-7729-f06ea84256ca@intel.com> <58319765-891D-44B9-AF18-64492B01FF36@amacapital.net>
+In-Reply-To: <58319765-891D-44B9-AF18-64492B01FF36@amacapital.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 19 May 2020 18:04:11 -0700
+X-Gmail-Original-Message-ID: <CALCETrWavh1_Atk=VPQbOoB5tY=zGWGukW8qjF51msKTJSJgQQ@mail.gmail.com>
+Message-ID: <CALCETrWavh1_Atk=VPQbOoB5tY=zGWGukW8qjF51msKTJSJgQQ@mail.gmail.com>
+Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12:43 19.05.20, Ricardo Neri wrote:
-> > > Running the same executable on the exact same kernel (and userland) but
-> > > on a Intel i7-8565U doesn't crash at this point. I am guessing the
-> > > emulation is supposed to do something different on AMD CPUs?
-> 
-> I am surprised you don't see it on the Intel processor. Maybe it does
-> not have UMIP. Do you see umip when you do
-> 
-> $ grep umip /proc/cpuinfo 
+On Mon, May 18, 2020 at 6:35 PM Andy Lutomirski <luto@amacapital.net> wrote=
+:
+>
+>
+>
+> > On May 18, 2020, at 5:38 PM, Dave Hansen <dave.hansen@intel.com> wrote:
+> >
+> > =EF=BB=BFOn 5/18/20 4:47 PM, Yu-cheng Yu wrote:
+> >>> On Fri, 2020-05-15 at 19:53 -0700, Yu-cheng Yu wrote:
+> >>> On Fri, 2020-05-15 at 16:56 -0700, Dave Hansen wrote:
+> >>>> On 5/15/20 4:29 PM, Yu-cheng Yu wrote:
+> >>>>> [...]
+> >>>>> I have run them with CET enabled.  All of them pass, except for the=
+ following:
+> >>>>> Sigreturn from 64-bit to 32-bit fails, because shadow stack is at a=
+ 64-bit
+> >>>>> address.  This is understandable.
+> >>>> [...]
+> >>>> One a separate topic: You ran the selftests and one failed.  This is=
+ a
+> >>>> *MASSIVE* warning sign.  It should minimally be described in your co=
+ver
+> >>>> letter, and accompanied by a fix to the test case.  It is absolutely
+> >>>> unacceptable to introduce a kernel feature that causes a test to fai=
+l.
+> >>>> You must either fix your kernel feature or you fix the test.
+> >>>>
+> >>>> This code can not be accepted until this selftests issue is rectifie=
+d.
+> >> The x86/sigreturn test constructs 32-bit ldt entries, and does sigretu=
+rn from
+> >> 64-bit to 32-bit context.  We do not have a way to construct a static =
+32-bit
+> >> shadow stack.
+> >
+> > Why? What's the limiting factor?  Hardware architecture?  Something in
+> > the kernel?
+> >
+> >> Why do we want that?  I think we can simply run the test with CET
+> >> disabled.
+> >
+> > The sadistic parts of selftests/x86 come from real bugs.  Either bugs
+> > where the kernel fell over, or where behavior changed that broke apps.
+> > I'd suggest doing some research on where that particular test case came
+> > from.  Find the author of the test, look at the changelogs.
+> >
+> > If this is something that a real app does, this is a problem.  If it's =
+a
+> > sadistic test that Andy L added because it was an attack vector against
+> > the entry code, it's a different story.
+>
+> There are quite a few tests that do these horrible things in there. IN my=
+ personal opinion, sigreturn.c is one of the most important tests we have =
+=E2=80=94 it does every horrible thing to the entry code that I thought of =
+and that I could come up with a way of doing.  We have been saved from regr=
+essing many times by these tests.  CET, and especially the CPL0 version of =
+CET, is its own set of entry horror, and we need to keep these tests workin=
+g.
+>
+> I assume the basic issue is that we call raise(), the context magically c=
+hanges to 32-bit, but SSP has a 64-bit value, and horrors happen.  So I thi=
+nk two things need to happen:
+>
+> 1. Someone needs to document what happens when IRET tries to put a 64-bit=
+ value into SSP but CS is compat. Because Intel has plenty of history of do=
+ing colossally broken things here. IOW you could easily be hitting a hardwa=
+re design problem, not a software issue per se.
+>
+> 2. The test needs to work. Assuming the hardware doesn=E2=80=99t do somet=
+hing utterly broken, either the 32-bit code needs to be adjusted to avoid a=
+ny CALL
+> or RET, or you need to write a little raise_on_32bit_shstk() func that sw=
+itches to an SSP that fits in 32 bits, calls raise(), and switches back.  F=
+rom memory, I didn=E2=80=99t think there was a CALl or RET, so I=E2=80=99m =
+guessing that SSP is getting truncated when we round trip through CPL3 comp=
+at mode and the result is that the kernel invoked the signal handler with t=
+he wrong SSP.  Whoops.
+>
 
-Indeed it doesn't ahve the feature. I would have assumed that it is
-recent enough. Apparently not.
+Following up here, I think this needs attention from the H/W architects.
 
-> > > On the Ryzen the code executes successfully after setting CONFIG_X86_UMIP=n.
-> > 
-> > Hi Andreas,
-> > 
-> > The problem is that the kernel does not emulate/spoof the SLDT instruction, only SGDT, SIDT, and SMSW.
-> > SLDT and STR weren't thought to be commonly used, so emulation/spoofing wasn’t added.
-> > In the last few months I have seen reports of one or two (32-bit) Windows games that use SLDT though.
-> > Can you share more information about the application you’re running?
-> > 
-> > Maybe the best path is to add kernel emulation/spoofing for SLDT and STR on 32 and 64-bit, just to cover all the cases. It should be a pretty simple patch, I’ll start working on it.
-> 
-> I have a patch for this already that I wrote for testing purposes:
-> 
-> https://github.com/ricardon/tip/commit/1692889cb3f8accb523d44b682458e234b93be50
-> 
-> Perhaps it can be used as a starting point? Not sure what the spoofing
-> value should be, though. Perhaps 0?
+From the SDM:
 
-I am not entirely sure what it should return in the general case. My
-assumption is that 0 might work. Maybe making it configurable like with
-the other UMIP constants that I saw?
+SYSRET and SYSEXIT:
 
-I'll give the patch a shot and try to figure out what the authors of the
-code have to say about it.
+IF ShadowStackEnabled(CPL)
+SSP =E2=86=90 IA32_PL3_SSP;
+FI;
+
+IRET:
+
+IF ShadowStackEnabled(CPL)
+IF CPL =3D 3
+THEN tempSSP =E2=86=90 IA32_PL3_SSP; FI;
+IF ((EFER.LMA AND CS.L) =3D 0 AND tempSSP[63:32] !=3D 0)
+THEN #GP(0); FI;
+SSP =E2=86=90 tempSSP
+
+The semantics of actually executing in compat mode with SSP >=3D 2^32
+are unclear.  If nothing else, VM exit will save the full SSP and a
+subsequent VM entry will fail.
+
+I don't know what the actual effect of operand-size-32 SYSRET or
+SYSEXIT with too big a PL3_SSP will be, but I think it needs to be
+documented.  Ideally it will not put the CPU in an invalid state.
+Ideally it will also not fault, because SYSRET faults in particular
+are fatal unless the vector uses IST, and please please please don't
+force more ISTs on anyone.
+
+So I think we may need to put this entire series on hold until we get
+some answers, because I suspect we're going to have a nice little root
+hole otherwise.
