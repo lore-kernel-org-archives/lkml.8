@@ -2,53 +2,53 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A901C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E881C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75177207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F63D207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+3oZ79s"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GFMuHPZv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgETRWb (ORCPT
+        id S1728280AbgETRWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:22:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34612 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728244AbgETRW3 (ORCPT
+        Wed, 20 May 2020 13:22:33 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50660 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728215AbgETRW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:22:29 -0400
+        Wed, 20 May 2020 13:22:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589995347;
+        s=mimecast20190719; t=1589995344;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=R+/Wgs4EpdRHJ+M//PKLQIAi6WzuAJ7i4HLViCKSV/E=;
-        b=h+3oZ79skz4mPRcmeTdjkYt81byViyZp44jPPA+/QSSQfX/l6aV6btMMBDlVvlaTqXwhSn
-        0dPw8DOwqaDIkG+tbyKJAXG+NYndaZ89U9qTDo4krUd8DOJsnXK6QjMVuzXzBIU+xKBY0V
-        gQTiurJHz6XYq9z6oORDTKhc0mp3U4s=
+        bh=yRQKE5e2wt/obw3+N38gkuEi0HDMFjMCRqa7dn5fQ8g=;
+        b=GFMuHPZv6PAx2oRyaC5PdAcXlR5fiFvETluInCWzA7bpfx6S+KIKzuoXwB8kaaF347muFA
+        W8KZHwtVz1bh0YT2DbvSQ7mnYpmEYUZAoRrzGx7wdQvl6QrFArQ0mvsHELxiDAlPIbL4Ix
+        MU7ZfFel7R2Uor/IWjTwADepBXFYNcw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-9wcHcTE1NUifyILaOAfyZA-1; Wed, 20 May 2020 13:22:25 -0400
-X-MC-Unique: 9wcHcTE1NUifyILaOAfyZA-1
+ us-mta-18-cUNZzNMVNPm2llGsZ97AYQ-1; Wed, 20 May 2020 13:22:22 -0400
+X-MC-Unique: cUNZzNMVNPm2llGsZ97AYQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 770E788EF2B;
-        Wed, 20 May 2020 17:22:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C617385B690;
+        Wed, 20 May 2020 17:22:13 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0989E60554;
-        Wed, 20 May 2020 17:22:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DA32C60554;
+        Wed, 20 May 2020 17:22:12 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 24/24] KVM: nSVM: implement KVM_GET_NESTED_STATE and KVM_SET_NESTED_STATE
-Date:   Wed, 20 May 2020 13:21:45 -0400
-Message-Id: <20200520172145.23284-25-pbonzini@redhat.com>
+Subject: [PATCH 22/24] uaccess: add memzero_user
+Date:   Wed, 20 May 2020 13:21:43 -0400
+Message-Id: <20200520172145.23284-23-pbonzini@redhat.com>
 In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
 References: <20200520172145.23284-1-pbonzini@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
@@ -57,312 +57,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to VMX, the state that is captured through the currently available
-IOCTLs is a mix of L1 and L2 state, dependent on whether the L2 guest was
-running at the moment when the process was interrupted to save its state.
-
-In particular, the SVM-specific state for nested virtualization includes
-the L1 saved state (including the interrupt flag), the cached L2 controls,
-and the GIF.
+This will be used from KVM.  Add it to lib/ so that everyone can use it.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/uapi/asm/kvm.h |  17 +++-
- arch/x86/kvm/cpuid.h            |   5 ++
- arch/x86/kvm/svm/nested.c       | 147 ++++++++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm.c          |   1 +
- arch/x86/kvm/vmx/nested.c       |   5 --
- arch/x86/kvm/x86.c              |   3 +-
- 6 files changed, 171 insertions(+), 7 deletions(-)
+ include/linux/uaccess.h |  1 +
+ lib/usercopy.c          | 63 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 3f3f780c8c65..12075a9de1c1 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -385,18 +385,22 @@ struct kvm_sync_regs {
- #define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 67f016010aad..bd8c85b50e67 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -232,6 +232,7 @@ __copy_from_user_inatomic_nocache(void *to, const void __user *from,
+ #endif		/* ARCH_HAS_NOCACHE_UACCESS */
  
- #define KVM_STATE_NESTED_FORMAT_VMX	0
--#define KVM_STATE_NESTED_FORMAT_SVM	1	/* unused */
-+#define KVM_STATE_NESTED_FORMAT_SVM	1
+ extern __must_check int check_zeroed_user(const void __user *from, size_t size);
++extern __must_check int memzero_user(void __user *from, size_t size);
  
- #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
- #define KVM_STATE_NESTED_EVMCS		0x00000004
- #define KVM_STATE_NESTED_MTF_PENDING	0x00000008
-+#define KVM_STATE_NESTED_GIF_SET	0x00000100
- 
- #define KVM_STATE_NESTED_SMM_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_SMM_VMXON	0x00000002
- 
- #define KVM_STATE_NESTED_VMX_VMCS_SIZE	0x1000
- 
-+#define KVM_STATE_NESTED_SVM_VMCB_SIZE	0x1000
-+
-+
- struct kvm_vmx_nested_state_data {
- 	__u8 vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
- 	__u8 shadow_vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
-@@ -411,6 +415,15 @@ struct kvm_vmx_nested_state_hdr {
- 	} smm;
- };
- 
-+struct kvm_svm_nested_state_data {
-+	/* Save area only used if KVM_STATE_NESTED_RUN_PENDING.  */
-+	__u8 vmcb12[KVM_STATE_NESTED_SVM_VMCB_SIZE];
-+};
-+
-+struct kvm_svm_nested_state_hdr {
-+	__u64 vmcb_pa;
-+};
-+
- /* for KVM_CAP_NESTED_STATE */
- struct kvm_nested_state {
- 	__u16 flags;
-@@ -419,6 +432,7 @@ struct kvm_nested_state {
- 
- 	union {
- 		struct kvm_vmx_nested_state_hdr vmx;
-+		struct kvm_svm_nested_state_hdr svm;
- 
- 		/* Pad the header to 128 bytes.  */
- 		__u8 pad[120];
-@@ -431,6 +445,7 @@ struct kvm_nested_state {
- 	 */
- 	union {
- 		struct kvm_vmx_nested_state_data vmx[0];
-+		struct kvm_svm_nested_state_data svm[0];
- 	} data;
- };
- 
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 63a70f6a3df3..05434cd9342f 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -303,4 +303,9 @@ static __always_inline void kvm_cpu_cap_check_and_set(unsigned int x86_feature)
- 		kvm_cpu_cap_set(x86_feature);
- }
- 
-+static inline bool page_address_valid(struct kvm_vcpu *vcpu, gpa_t gpa)
-+{
-+	return PAGE_ALIGNED(gpa) && !(gpa >> cpuid_maxphyaddr(vcpu));
-+}
-+
+ /**
+  * copy_struct_from_user: copy a struct from userspace
+diff --git a/lib/usercopy.c b/lib/usercopy.c
+index cbb4d9ec00f2..82997862bf02 100644
+--- a/lib/usercopy.c
++++ b/lib/usercopy.c
+@@ -33,6 +33,69 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
+ EXPORT_SYMBOL(_copy_to_user);
  #endif
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 087a04ae74e4..001d1f830076 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -25,6 +25,7 @@
- #include "trace.h"
- #include "mmu.h"
- #include "x86.h"
-+#include "cpuid.h"
- #include "lapic.h"
- #include "svm.h"
  
-@@ -243,6 +244,8 @@ static void load_nested_vmcb_control(struct vcpu_svm *svm,
- {
- 	copy_vmcb_control_area(&svm->nested.ctl, control);
- 
-+	/* Copy it here because nested_svm_check_controls will check it.  */
-+	svm->nested.ctl.asid           = control->asid;
- 	svm->nested.ctl.msrpm_base_pa &= ~0x0fffULL;
- 	svm->nested.ctl.iopm_base_pa  &= ~0x0fffULL;
- }
-@@ -870,6 +873,150 @@ int nested_svm_exit_special(struct vcpu_svm *svm)
- 	return NESTED_EXIT_CONTINUE;
- }
- 
-+static int svm_get_nested_state(struct kvm_vcpu *vcpu,
-+				struct kvm_nested_state __user *user_kvm_nested_state,
-+				u32 user_data_size)
++/**
++ * memzero_user: write zero bytes to a userspace buffer
++ * @from: Source address, in userspace.
++ * @size: Size of buffer.
++ *
++ * This is effectively shorthand for "memset(from, 0, size)" for
++ * userspace addresses.
++ *
++ * Returns:
++ *  * 0: zeroes have been written to the buffer
++ *  * -EFAULT: access to userspace failed.
++ */
++int memzero_user(void __user *from, size_t size)
 +{
-+	struct vcpu_svm *svm;
-+	struct kvm_nested_state kvm_state = {
-+		.flags = 0,
-+		.format = KVM_STATE_NESTED_FORMAT_SVM,
-+		.size = sizeof(kvm_state),
-+	};
-+	struct vmcb __user *user_vmcb = (struct vmcb __user *)
-+		&user_kvm_nested_state->data.svm[0];
++	unsigned long val = 0;
++	unsigned long mask = 0;
++	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
 +
-+	if (!vcpu)
-+		return kvm_state.size + KVM_STATE_NESTED_SVM_VMCB_SIZE;
++	if (unlikely(size == 0))
++		return 0;
 +
-+	svm = to_svm(vcpu);
++	from -= align;
++	size += align;
 +
-+	if (user_data_size < kvm_state.size)
-+		goto out;
++	if (!user_access_begin(from, ALIGN_UP(size, sizeof(unsigned long))))
++		return -EFAULT;
 +
-+	/* First fill in the header and copy it out.  */
-+	if (is_guest_mode(vcpu)) {
-+		kvm_state.hdr.svm.vmcb_pa = svm->nested.vmcb;
-+		kvm_state.size += KVM_STATE_NESTED_SVM_VMCB_SIZE;
-+		kvm_state.flags |= KVM_STATE_NESTED_GUEST_MODE;
-+
-+		if (svm->nested.nested_run_pending)
-+			kvm_state.flags |= KVM_STATE_NESTED_RUN_PENDING;
++	if (align) {
++		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
++		/* Prepare a mask to keep the first "align" bytes.  */
++		mask = aligned_byte_mask(align);
 +	}
 +
-+	if (gif_set(svm))
-+		kvm_state.flags |= KVM_STATE_NESTED_GIF_SET;
++	if (size >= sizeof(unsigned long)) {
++		/* The mask only applies to the first full word.  */
++		val &= mask;
++		mask = 0;
++		do {
++			unsafe_put_user(val, (unsigned long __user *) from, err_fault);
++			from += sizeof(unsigned long);
++			size -= sizeof(unsigned long);
++			val = 0;
++		} while (size >= sizeof(unsigned long));
 +
-+	if (copy_to_user(user_kvm_nested_state, &kvm_state, sizeof(kvm_state)))
-+		return -EFAULT;
-+
-+	if (!is_guest_mode(vcpu))
-+		goto out;
-+
-+	/*
-+	 * Copy over the full size of the VMCB rather than just the size
-+	 * of the struct.
-+	 */
-+	if (memzero_user(user_vmcb, KVM_STATE_NESTED_SVM_VMCB_SIZE))
-+		return -EFAULT;
-+	if (copy_to_user(&user_vmcb->control, &svm->nested.ctl,
-+			 sizeof(user_vmcb->control)))
-+		return -EFAULT;
-+	if (copy_to_user(&user_vmcb->save, &svm->nested.hsave->save,
-+			 sizeof(user_vmcb->save)))
-+		return -EFAULT;
-+
-+out:
-+	return kvm_state.size;
-+}
-+
-+static int svm_set_nested_state(struct kvm_vcpu *vcpu,
-+				struct kvm_nested_state __user *user_kvm_nested_state,
-+				struct kvm_nested_state *kvm_state)
-+{
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+	struct vmcb *hsave = svm->nested.hsave;
-+	struct vmcb __user *user_vmcb = (struct vmcb __user *)
-+		&user_kvm_nested_state->data.svm[0];
-+	struct vmcb_control_area ctl;
-+	struct vmcb_save_area save;
-+	u32 cr0;
-+
-+	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
-+		return -EINVAL;
-+
-+	if (kvm_state->flags & ~(KVM_STATE_NESTED_GUEST_MODE |
-+				 KVM_STATE_NESTED_RUN_PENDING |
-+				 KVM_STATE_NESTED_GIF_SET))
-+		return -EINVAL;
-+
-+	/*
-+	 * If in guest mode, vcpu->arch.efer actually refers to the L2 guest's
-+	 * EFER.SVME, but EFER.SVME still has to be 1 for VMRUN to succeed.
-+	 */
-+	if (!(vcpu->arch.efer & EFER_SVME)) {
-+		/* GIF=1 and no guest mode are required if SVME=0.  */
-+		if (kvm_state->flags != KVM_STATE_NESTED_GIF_SET)
-+			return -EINVAL;
++		if (!size)
++			goto done;
++		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
 +	}
 +
-+	/* SMM temporarily disables SVM, so we cannot be in guest mode.  */
-+	if (is_smm(vcpu) && (kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
-+		return -EINVAL;
++	/* Bytes after the first "size" have to be kept too. */
++	mask |= ~aligned_byte_mask(size);
++	val &= mask;
++	unsafe_put_user(val, (unsigned long __user *) from, err_fault);
 +
-+	if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE)) {
-+		svm_leave_nested(svm);
-+		goto out_set_gif;
-+	}
-+
-+	if (!page_address_valid(vcpu, kvm_state->hdr.svm.vmcb_pa))
-+		return -EINVAL;
-+	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
-+		return -EINVAL;
-+	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
-+		return -EFAULT;
-+	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
-+		return -EFAULT;
-+
-+	if (!nested_vmcb_check_controls(&ctl))
-+		return -EINVAL;
-+
-+	/*
-+	 * Processor state contains L2 state.  Check that it is
-+	 * valid for guest mode (see nested_vmcb_checks).
-+	 */
-+	cr0 = kvm_read_cr0(vcpu);
-+        if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
-+                return -EINVAL;
-+
-+	/*
-+	 * Validate host state saved from before VMRUN (see
-+	 * nested_svm_check_permissions).
-+	 * TODO: validate reserved bits for all saved state.
-+	 */
-+	if (!(save.cr0 & X86_CR0_PG))
-+		return -EINVAL;
-+
-+	/*
-+	 * All checks done, we can enter guest mode.  L1 control fields
-+	 * come from the nested save state.  Guest state is already
-+	 * in the registers, the save area of the nested state instead
-+	 * contains saved L1 state.
-+	 */
-+	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
-+	hsave->save = save;
-+
-+	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
-+	load_nested_vmcb_control(svm, &ctl);
-+	nested_prepare_vmcb_control(svm);
-+
-+out_set_gif:
-+	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
++done:
++	user_access_end();
 +	return 0;
++err_fault:
++	user_access_end();
++	return -EFAULT;
 +}
++EXPORT_SYMBOL(memzero_user);
 +
- struct kvm_x86_nested_ops svm_nested_ops = {
- 	.check_events = svm_check_nested_events,
-+	.get_state = svm_get_nested_state,
-+	.set_state = svm_set_nested_state,
- };
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 56be704ffe95..f64d071715d2 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1191,6 +1191,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 		svm->avic_is_running = true;
- 
- 	svm->nested.hsave = page_address(hsave_page);
-+	clear_page(svm->nested.hsave);
- 
- 	svm->msrpm = page_address(msrpm_pages);
- 	svm_vcpu_init_msrpm(svm->msrpm);
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 51ebb60e1533..106fc6fceb97 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -437,11 +437,6 @@ static void vmx_inject_page_fault_nested(struct kvm_vcpu *vcpu,
- 	}
- }
- 
--static bool page_address_valid(struct kvm_vcpu *vcpu, gpa_t gpa)
--{
--	return PAGE_ALIGNED(gpa) && !(gpa >> cpuid_maxphyaddr(vcpu));
--}
--
- static int nested_vmx_check_io_bitmap_controls(struct kvm_vcpu *vcpu,
- 					       struct vmcs12 *vmcs12)
- {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 0001b2addc66..3e9252737f9d 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4626,7 +4626,8 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 
- 		if (kvm_state.flags &
- 		    ~(KVM_STATE_NESTED_RUN_PENDING | KVM_STATE_NESTED_GUEST_MODE
--		      | KVM_STATE_NESTED_EVMCS | KVM_STATE_NESTED_MTF_PENDING))
-+		      | KVM_STATE_NESTED_EVMCS | KVM_STATE_NESTED_MTF_PENDING
-+		      | KVM_STATE_NESTED_GIF_SET))
- 			break;
- 
- 		/* nested_run_pending implies guest_mode.  */
+ /**
+  * check_zeroed_user: check if a userspace buffer only contains zero bytes
+  * @from: Source address, in userspace.
 -- 
 2.18.2
+
 
