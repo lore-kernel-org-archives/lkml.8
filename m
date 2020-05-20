@@ -2,86 +2,289 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4462CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A27BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21466207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DF02075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgETI6y (ORCPT
+        id S1726833AbgETI7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:58:54 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:47220 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726224AbgETI6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:58:53 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgBncD0+8cRe5XDXAQ--.24513S4;
-        Wed, 20 May 2020 16:58:43 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: qcom: fix runtime pm imbalance on error
-Date:   Wed, 20 May 2020 16:58:37 +0800
-Message-Id: <20200520085837.1399-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgBncD0+8cRe5XDXAQ--.24513S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfGFgE9r
-        Z8ZFsrArs8Kr9Fqr1qya13Zr9ava47X3W8Kw1FyF4avFWIvrn8JryDZrZ8Zws8Gr45AF1k
-        t34qvF1fCFWUCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUj3CztUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
+        Wed, 20 May 2020 04:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETI7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 04:59:00 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FCFC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 01:59:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E4E5B2A29CA;
+        Wed, 20 May 2020 09:58:58 +0100 (BST)
+Date:   Wed, 20 May 2020 10:58:55 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>,
+        mparab@cadence.com, praneeth@ti.com, linux-kernel@vger.kernel.org,
+        pgaj@cadence.com, linux-i3c@lists.infradead.org
+Subject: Re: [PATCH] i3c: master: fix for SETDASA and DAA process
+Message-ID: <20200520105855.71db98d1@collabora.com>
+In-Reply-To: <1589473809-16708-1-git-send-email-pthombar@cadence.com>
+References: <1589473809-16708-1-git-send-email-pthombar@cadence.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Thu, 14 May 2020 18:30:09 +0200
+Parshuram Thombare <pthombar@cadence.com> wrote:
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> This patch fix following issues.
+> 1. Controller slots blocked for devices with static_addr
+>    but no init_dyn_addr may limit the number of I3C devices
+>    on the bus which gets dynamic address in DAA. So
+>    instead of attaching all the devices with static_addr,
+>    now we only attach the devices which successfully
+>    complete SETDASA. Remaining devices are handled in DAA.
+> 2. Since we alreay handled devices with init_dyn_addr, removed
+>    it's handling from i3c_master_add_i3c_dev_locked().
+>    Now only case handled is devices already with dyn_addr
+>    participated in DAA, and again got new dyn_addr with an
+>    extra slot in the master controller.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 138e1a2d21cc..35686930df1d 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1340,8 +1340,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
--		pm_runtime_disable(dev);
--		return ret;
-+		goto err_pm_runtime_put;
- 	}
- 
- 	pci->dev = dev;
--- 
-2.17.1
+I don't get that one.
+
+> 3. Removed unnecessary i3c_master_reattach_i3c_dev() from
+>    i3c_master_add_i3c_dev_locked(), right away after finding
+>    if duplicate device exists in the I3C list.
+>    In case of different new and old dyn_addr
+>    i3c_master_reattach_i3c_dev() will fail which is wrong,
+>    and in case of same dyn_addr it doesn't add anything new.
+
+I think we should fix re-attach instead, which is what we discussed
+with Przemek if I remember correctly.
+
+> 
+
+Can you please split the patch accordingly (one fix per commit)?
+
+> Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
+> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
+> ---
+>  drivers/i3c/master.c | 111 ++++++++++++++++++-------------------------
+>  1 file changed, 46 insertions(+), 65 deletions(-)
+> 
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 5f4bd52121fe..f1d929b58549 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -1375,6 +1375,11 @@ static int i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
+>  		i3c_bus_set_addr_slot_status(&master->bus,
+>  					     dev->info.dyn_addr,
+>  					     I3C_ADDR_SLOT_I3C_DEV);
+> +
+> +		if (old_dyn_addr)
+> +			i3c_bus_set_addr_slot_status(&master->bus,
+> +						     old_dyn_addr,
+> +						     I3C_ADDR_SLOT_FREE);
+>  	}
+>  
+>  	if (master->ops->reattach_i3c_dev) {
+> @@ -1426,33 +1431,52 @@ static void i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
+>  		master->ops->detach_i2c_dev(dev);
+>  }
+>  
+> -static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> +static void i3c_master_pre_assign_dyn_addr(struct i3c_master_controller *master,
+> +					   struct i3c_dev_boardinfo *boardinfo)
+>  {
+> -	struct i3c_master_controller *master = i3c_dev_get_master(dev);
+> +	struct i3c_device_info info = {
+> +		.static_addr = boardinfo->static_addr,
+> +	};
+> +	struct i3c_dev_desc *i3cdev;
+>  	int ret;
+>  
+> -	if (!dev->boardinfo || !dev->boardinfo->init_dyn_addr ||
+> -	    !dev->boardinfo->static_addr)
+> +	/*
+> +	 * We anyway don't attach devices which are not addressable
+> +	 * (no static_addr and dyn_addr) and devices with static_addr
+> +	 * but no init_dyn_addr will participate in DAA.
+> +	 */
+> +	if (!boardinfo->static_addr || !boardinfo->init_dyn_addr)
+> +		return;
+> +
+> +	i3cdev = i3c_master_alloc_i3c_dev(master, &info);
+> +	if (IS_ERR(i3cdev))
+>  		return;
+>  
+> -	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
+> -					dev->boardinfo->init_dyn_addr);
+> +	i3cdev->boardinfo = boardinfo;
+> +
+> +	ret = i3c_master_attach_i3c_dev(master, i3cdev);
+>  	if (ret)
+>  		return;
+>  
+> -	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
+> -	ret = i3c_master_reattach_i3c_dev(dev, 0);
+> +	ret = i3c_master_setdasa_locked(master, i3cdev->info.static_addr,
+> +					i3cdev->boardinfo->init_dyn_addr);
+>  	if (ret)
+> -		goto err_rstdaa;
+> +		goto err_setdasa;
+>  
+> -	ret = i3c_master_retrieve_dev_info(dev);
+> +	i3cdev->info.dyn_addr = i3cdev->boardinfo->init_dyn_addr;
+> +	ret = i3c_master_reattach_i3c_dev(i3cdev, 0);
+>  	if (ret)
+>  		goto err_rstdaa;
+>  
+> -	return;
+> +	ret = i3c_master_retrieve_dev_info(i3cdev);
+> +	if (ret)
+> +		goto err_rstdaa;
+>  
+>  err_rstdaa:
+> -	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
+> +	i3c_master_rstdaa_locked(master, i3cdev->boardinfo->init_dyn_addr);
+> +err_setdasa:
+> +	i3c_master_detach_i3c_dev(i3cdev);
+> +	i3c_master_free_i3c_dev(i3cdev);
+>  }
+>  
+>  static void
+> @@ -1619,8 +1643,8 @@ static void i3c_master_detach_free_devs(struct i3c_master_controller *master)
+>   * This function is following all initialisation steps described in the I3C
+>   * specification:
+>   *
+> - * 1. Attach I2C and statically defined I3C devs to the master so that the
+> - *    master can fill its internal device table appropriately
+> + * 1. Attach I2C devs to the master so that the master can fill its internal
+> + *    device table appropriately
+>   *
+>   * 2. Call &i3c_master_controller_ops->bus_init() method to initialize
+>   *    the master controller. That's usually where the bus mode is selected
+> @@ -1647,7 +1671,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+>  	enum i3c_addr_slot_status status;
+>  	struct i2c_dev_boardinfo *i2cboardinfo;
+>  	struct i3c_dev_boardinfo *i3cboardinfo;
+> -	struct i3c_dev_desc *i3cdev;
+>  	struct i2c_dev_desc *i2cdev;
+>  	int ret;
+>  
+> @@ -1679,34 +1702,6 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+>  			goto err_detach_devs;
+>  		}
+>  	}
+> -	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+> -		struct i3c_device_info info = {
+> -			.static_addr = i3cboardinfo->static_addr,
+> -		};
+> -
+> -		if (i3cboardinfo->init_dyn_addr) {
+> -			status = i3c_bus_get_addr_slot_status(&master->bus,
+> -						i3cboardinfo->init_dyn_addr);
+> -			if (status != I3C_ADDR_SLOT_FREE) {
+> -				ret = -EBUSY;
+> -				goto err_detach_devs;
+> -			}
+> -		}
+> -
+> -		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
+> -		if (IS_ERR(i3cdev)) {
+> -			ret = PTR_ERR(i3cdev);
+> -			goto err_detach_devs;
+> -		}
+> -
+> -		i3cdev->boardinfo = i3cboardinfo;
+> -
+> -		ret = i3c_master_attach_i3c_dev(master, i3cdev);
+> -		if (ret) {
+> -			i3c_master_free_i3c_dev(i3cdev);
+> -			goto err_detach_devs;
+> -		}
+> -	}
+>  
+>  	/*
+>  	 * Now execute the controller specific ->bus_init() routine, which
+> @@ -1746,8 +1741,8 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+>  	 * Pre-assign dynamic address and retrieve device information if
+>  	 * needed.
+>  	 */
+> -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
+> -		i3c_master_pre_assign_dyn_addr(i3cdev);
+> +	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node)
+> +		i3c_master_pre_assign_dyn_addr(master, i3cboardinfo);
+>  
+>  	ret = i3c_master_do_daa(master);
+>  	if (ret)
+> @@ -1811,7 +1806,7 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+>  {
+>  	struct i3c_device_info info = { .dyn_addr = addr };
+>  	struct i3c_dev_desc *newdev, *olddev;
+> -	u8 old_dyn_addr = addr, expected_dyn_addr;
+> +	u8 old_dyn_addr = addr;
+>  	struct i3c_ibi_setup ibireq = { };
+>  	bool enable_ibi = false;
+>  	int ret;
+> @@ -1866,39 +1861,25 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+>  		i3c_master_free_i3c_dev(olddev);
+>  	}
+>  
+> -	ret = i3c_master_reattach_i3c_dev(newdev, old_dyn_addr);
+> -	if (ret)
+> -		goto err_detach_dev;
+> -
+>  	/*
+>  	 * Depending on our previous state, the expected dynamic address might
+>  	 * differ:
+>  	 * - if the device already had a dynamic address assigned, let's try to
+> -	 *   re-apply this one
+> -	 * - if the device did not have a dynamic address and the firmware
+> -	 *   requested a specific address, pick this one
+> +	 *   re-apply this one. Device with dyn_addr participated in DAA ?
+>  	 * - in any other case, keep the address automatically assigned by the
+>  	 *   master
+>  	 */
+> -	if (old_dyn_addr && old_dyn_addr != newdev->info.dyn_addr)
+> -		expected_dyn_addr = old_dyn_addr;
+> -	else if (newdev->boardinfo && newdev->boardinfo->init_dyn_addr)
+> -		expected_dyn_addr = newdev->boardinfo->init_dyn_addr;
+> -	else
+> -		expected_dyn_addr = newdev->info.dyn_addr;
+> -
+> -	if (newdev->info.dyn_addr != expected_dyn_addr) {
+> +	if (old_dyn_addr && old_dyn_addr != newdev->info.dyn_addr) {
+>  		/*
+>  		 * Try to apply the expected dynamic address. If it fails, keep
+>  		 * the address assigned by the master.
+>  		 */
+>  		ret = i3c_master_setnewda_locked(master,
+>  						 newdev->info.dyn_addr,
+> -						 expected_dyn_addr);
+> +						 old_dyn_addr);
+>  		if (!ret) {
+> -			old_dyn_addr = newdev->info.dyn_addr;
+> -			newdev->info.dyn_addr = expected_dyn_addr;
+> -			i3c_master_reattach_i3c_dev(newdev, old_dyn_addr);
+> +			newdev->info.dyn_addr = old_dyn_addr;
+> +			i3c_master_reattach_i3c_dev(newdev, addr);
+>  		} else {
+>  			dev_err(&master->dev,
+>  				"Failed to assign reserved/old address to device %d%llx",
 
