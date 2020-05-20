@@ -4,75 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAAD20708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73894207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726576AbgETIBe (ORCPT
+        id S1726737AbgETIBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:01:34 -0400
-Received: from mail.windriver.com ([147.11.1.11]:56565 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETIBe (ORCPT
+        Wed, 20 May 2020 04:01:36 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:46530 "HELO
+        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1726224AbgETIBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:01:34 -0400
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 04K80btf009933
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Wed, 20 May 2020 01:00:38 -0700 (PDT)
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 20 May 2020 01:00:31 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
-        <bsegall@google.com>, <mgorman@suse.de>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] sched/rt: Add borrowing time condition
-Date:   Wed, 20 May 2020 16:09:11 +0800
-Message-ID: <20200520080911.27367-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+        Wed, 20 May 2020 04:01:35 -0400
+X-Greylist: delayed 718 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 04:01:33 EDT
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgDHKTyQ38ReuXHWAQ--.21063S4;
+        Wed, 20 May 2020 15:43:16 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: bq24190_charger: fix runtime pm imbalance
+Date:   Wed, 20 May 2020 15:43:09 +0800
+Message-Id: <20200520074309.19366-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgDHKTyQ38ReuXHWAQ--.21063S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW5ZF15Jr17CrWrKFy7trb_yoWfZrXEk3
+        48Xas2grs8Wr42vwnrGa1rZryI9ryfXFWxWa18tF13t3W29Fn8Jry8ZF98uF43WFWUCrs8
+        ta98KF9xArykujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbI8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+        AwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l
+        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWU
+        twCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+        fUOPEfUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
+pm_runtime_get_sync() increments the runtime PM usage counter even
+it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Add priority judgment to determine whether to borrow time from neighbors,
-ensure that the rt_runntime of rt_rq with higher priority tasks is not
-reduced
-
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- kernel/sched/rt.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/power/supply/bq24190_charger.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 4043abe45459..d2a1acad6687 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -711,8 +711,10 @@ static void do_balance_runtime(struct rt_rq *rt_rq)
- 			diff = div_u64((u64)diff, weight);
- 			if (rt_rq->rt_runtime + diff > rt_period)
- 				diff = rt_period - rt_rq->rt_runtime;
--			iter->rt_runtime -= diff;
--			rt_rq->rt_runtime += diff;
-+			if (rt_rq->highest_prio.curr < iter->highest_prio.curr) {
-+				iter->rt_runtime -= diff;
-+				rt_rq->rt_runtime += diff;
-+			}
- 			if (rt_rq->rt_runtime == rt_period) {
- 				raw_spin_unlock(&iter->rt_runtime_lock);
- 				break;
+diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
+index 453d6332d43a..4f7c6b6abb56 100644
+--- a/drivers/power/supply/bq24190_charger.c
++++ b/drivers/power/supply/bq24190_charger.c
+@@ -481,8 +481,10 @@ static ssize_t bq24190_sysfs_store(struct device *dev,
+ 		return ret;
+ 
+ 	ret = pm_runtime_get_sync(bdi->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(bdi->dev);
+ 		return ret;
++	}
+ 
+ 	ret = bq24190_write_mask(bdi, info->reg, info->mask, info->shift, v);
+ 	if (ret)
 -- 
-2.17.0
+2.17.1
 
