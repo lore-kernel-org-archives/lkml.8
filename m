@@ -2,109 +2,106 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6E120823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ru7fDmkV"
+	by mail.kernel.org (Postfix) with ESMTP id 1FA8620823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590010479;
+	bh=mZYBmYFSzuwIdlPqL5PrWyK4KZrx/AOhM8HEAkhiG2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d78M56Tnm2+cOTAmtDorj4DTeYPpNKVCq2/4tm9vtvWMRIlUYEAOlYqprEbSYOSiN
+	 Ty9X+fv2WYKpLjHfdgkUMhI0pAumJl5rzl0YxM9/h143lIYndJPFNXYdXfbNZ2+MaT
+	 jxC0gm6gYiAiuWi1lSgoVQQmAkwqcYNQzrpsVTK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgETVds (ORCPT
+        id S1728458AbgETVei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:33:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37960 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727976AbgETVdn (ORCPT
+        Wed, 20 May 2020 17:34:38 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45493 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgETVei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:33:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590010422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gB3w4R5SiN/csltSLBX+nnCVG1y+pWdmJzpsplak43k=;
-        b=Ru7fDmkVhOO6Y8U9WusHzvJBfJOjRFGx25YvxPUTwZ/nhWDCE1wc6475jzUXK14SGZz5Bv
-        Eg2AUOFrfPHOmteqfBf4l5lvrmzxowV2/8rUyvShDkQQZV0D5xzbmK0L9MhU45u7smHqWP
-        g2DQHOaVcVZcs1kRCl5ZRT+wx/tdQNo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-503-7Hph6OunPPqnFIAgEOFWDQ-1; Wed, 20 May 2020 17:33:40 -0400
-X-MC-Unique: 7Hph6OunPPqnFIAgEOFWDQ-1
-Received: by mail-ed1-f72.google.com with SMTP id bs5so1810546edb.18
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 14:33:40 -0700 (PDT)
+        Wed, 20 May 2020 17:34:38 -0400
+Received: by mail-il1-f196.google.com with SMTP id b15so4829925ilq.12;
+        Wed, 20 May 2020 14:34:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gB3w4R5SiN/csltSLBX+nnCVG1y+pWdmJzpsplak43k=;
-        b=YdEerK9twzyQvzAqQ2Wh2qG6QLHxxXQ0QKt4XIx48cNvh++K3+LUMoDwjwUXM1L6Wz
-         BJGeU0fYg8g7FAKPY/IiGTI2ZKpKqoCZNXX8klQLFMMz9nFHK5MhrarfhRrnIuDEkbi0
-         yu/Brp8OFldwzW7/l66ewX7miRVL56IiZ9MP1b99c1BDYRjG7GfkNCWTlfJ5wdo8qzp2
-         sqnUNQGYqlo/jSeoXuzMP1AMdm5OSkX4plaJoAkpSeIQgLN7ANydTDQwJCI+euN3fYEh
-         orAg4ksh/NZBEqW92ScubaIJheq65BxIhvnLlaoGL4jaWj2TN6UPwP4dbzSdB/udFsOd
-         ZVzg==
-X-Gm-Message-State: AOAM532c6E9iQ0iSMUsEnMfZL7R36hlQzHFBUvA3uFilSWz1YwBjoKR+
-        dwIVpWdKZZkROpRSq6GWpMsZncccq+1p5l43J9+UT/NQfpDvUnsBsu8KMHvVdY9ywmZS2BUmx3y
-        iqPpp8stoXrRC7/BjJGVz1LJE
-X-Received: by 2002:a17:906:d215:: with SMTP id w21mr914755ejz.383.1590010419590;
-        Wed, 20 May 2020 14:33:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzia0DvGV2lHMa6PwY6gsFkX7nDgcB6gFcJVQBCo+Mr3Y6LVk6Ks8id/A5l5WmsOsFCBc+UrQ==
-X-Received: by 2002:a17:906:d215:: with SMTP id w21mr914743ejz.383.1590010419391;
-        Wed, 20 May 2020 14:33:39 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:1c48:1dd8:fe63:e3da? ([2001:b07:6468:f312:1c48:1dd8:fe63:e3da])
-        by smtp.gmail.com with ESMTPSA id dk11sm2694388edb.67.2020.05.20.14.33.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 14:33:38 -0700 (PDT)
-Subject: Re: [PATCH 22/24] uaccess: add memzero_user
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
- <20200520172145.23284-23-pbonzini@redhat.com>
- <20200520204036.GA1335@infradead.org>
- <e2e23a99-f682-1556-dad0-408e78233eb6@redhat.com>
- <20200520212807.GD23230@ZenIV.linux.org.uk>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f08c1176-ed24-f578-5b81-360b1b28942c@redhat.com>
-Date:   Wed, 20 May 2020 23:33:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2/eHyYzBahdn3qW8t/qbKdgzArvvt9PLcDPFzWfN7iw=;
+        b=Y09C3B1cckuQqTCBYDEb64L/znn52kjYwWudOrafnSJBlubrOIGJ2fNMALM1oiigMM
+         DLd5PImrhRX8jCFC6lghu1oQ4ymL1Fty3fooUvMbdy6RHAlXcSGO5Jxyts9/Q1bBSSFV
+         impvfSnc4WNY+rrxdzoavrGnkqT041/yJa0IGP/vl85EXB1/tKVl4uN+i9T0nT4vaAwB
+         yE+vrp3TWWuvia6/YZmlGlZ/INMF+cD0hsjnYjT2a/ndPJSULDsgKkLbErvTqI+FoupK
+         Mu6rxzPQeFoUdx2ryluJ4q8P4ONDnrSDYdzZ/wN0920ucRAbz5IKWmDKRCLxCZCHWk25
+         y6rA==
+X-Gm-Message-State: AOAM531cwNZhk2O4pKHCO0gZg0whfeu1pKEtqr9ao/gsplaGrbG/W9EF
+        V1CFF/v+Nh03N7DAbwCuqg==
+X-Google-Smtp-Source: ABdhPJzKftdjlLVMTI+ImBLO4uTp+xrXfJIyzLp9JRWBEvw9KfywvQPPZEg7GO8i9fwFyIbrHDhAZA==
+X-Received: by 2002:a05:6e02:92d:: with SMTP id o13mr5836790ilt.142.1590010477107;
+        Wed, 20 May 2020 14:34:37 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id a20sm1642056iot.17.2020.05.20.14.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 14:34:36 -0700 (PDT)
+Received: (nullmailer pid 633250 invoked by uid 1000);
+        Wed, 20 May 2020 21:34:35 -0000
+Date:   Wed, 20 May 2020 15:34:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 07/14] PCI: cadence: Add new *ops* for CPU addr fixup
+Message-ID: <20200520213434.GA583923@bogus>
+References: <20200506151429.12255-1-kishon@ti.com>
+ <20200506151429.12255-8-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520212807.GD23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506151429.12255-8-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/20 23:28, Al Viro wrote:
-> Unless I'm seriously misreading that patch, it could've been done as
-> 
-> static inline __must_check int memzero_user(void __user *addr, size_t size)
-> {
-> 	return clear_user(addr, n) ? -EFAULT : 0;
-> }
-> 
-> What am I missing?
+On Wed, May 06, 2020 at 08:44:22PM +0530, Kishon Vijay Abraham I wrote:
+> Cadence driver uses "mem" memory resource to obtain the offset of
+> configuration space address region, memory space address region and
+> message space address region. The obtained offset is used to program
+> the Address Translation Unit (ATU). However certain platforms like TI's
+> J721E SoC require the absolute address to be programmed in the ATU and not
+> just the offset.
 
-Ok, I have a serious tunnel vision problem.  Thanks very much Al.
+Once again, Cadence host binding is broken (or at least the example is). 
+The 'mem' region shouldn't even exist. It is overlapping the config 
+space and 'ranges':
 
-Since I have your attention, would you take a look at
-https://lore.kernel.org/lkml/20200421135119.30007-1-eesposit@redhat.com/
-please?
+            reg = <0x0 0xfb000000  0x0 0x01000000>,
+                  <0x0 0x41000000  0x0 0x00001000>,
+                  <0x0 0x40000000  0x0 0x04000000>;
+            reg-names = "reg", "cfg", "mem";
 
-Thanks,
+            ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+                     <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
 
-Paolo
 
+16M of registers looks a bit odd. I guess it doesn't matter 
+unless you have a 32-bit platform and care about your virtual 
+space. Probably should have been 3 regions for LM, RP, and AT looking 
+at the driver.
+
+Whatever outbound address translation you need should be based on 
+'ranges'.
+
+Rob
