@@ -2,277 +2,203 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7563CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4615B20829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590012934;
-	bh=aHIwMpLNIUwrAoCIhPWxIan4ODVV6e70BRdbQbLMFcg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=NlD0IQD9aVCXLJ4qfN7Xu9n+/CQ4osS9u1kIiFDnlItFd6wpV3BIc3gqWifL6VK25
-	 pRr11Mf+jXMyFS1e6L3jEsevU50sC670f7GURO2XnLRB3nz4M4p+FgR8s61kykhqyD
-	 eqvYLDrBZjzhXYl6GMtPgDqOJpMsTQJNTJx+Zeyg=
+	by mail.kernel.org (Postfix) with ESMTP id 6A3C020829
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgETWPd (ORCPT
+        id S1728573AbgETWQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:15:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbgETWPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:15:33 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F60A20823;
-        Wed, 20 May 2020 22:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590012932;
-        bh=aHIwMpLNIUwrAoCIhPWxIan4ODVV6e70BRdbQbLMFcg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=wdRPJ8wvm3t3ksbcnLju8ASGrtoxZqDq9pQNi/VxTOGZ3T8kYVnOfXNaO2FAJAE35
-         wh6bNdVllBeVdLTH2O0Mh5AZ8E+CQDNQSHHeESZR9hbsEhrdk6oknsybFhgsUcbr9z
-         kAwUeIxk4+hKPA5wAt32L2V5FoaK7DgvoNN9vkIY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 88B863522A2B; Wed, 20 May 2020 15:15:31 -0700 (PDT)
-Date:   Wed, 20 May 2020 15:15:31 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V6 12/37] x86/entry: Provide
- idtentry_entry/exit_cond_rcu()
-Message-ID: <20200520221531.GW2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <87ftbv7nsd.fsf@nanos.tec.linutronix.de>
- <87a7237k3x.fsf@nanos.tec.linutronix.de>
- <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com>
- <874ksb7hbg.fsf@nanos.tec.linutronix.de>
- <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com>
- <20200520022353.GN2869@paulmck-ThinkPad-P72>
- <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com>
- <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
- <20200520180546.GQ2869@paulmck-ThinkPad-P72>
- <87o8qiv135.fsf@nanos.tec.linutronix.de>
+        Wed, 20 May 2020 18:16:08 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:56886 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbgETWQH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 18:16:07 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbX0J-0004ci-NS; Wed, 20 May 2020 16:15:59 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbX0I-0003hG-NN; Wed, 20 May 2020 16:15:59 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+Date:   Wed, 20 May 2020 17:12:10 -0500
+In-Reply-To: <877dx822er.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 18 May 2020 19:29:00 -0500")
+Message-ID: <87d06ygssl.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o8qiv135.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-XM-SPF: eid=1jbX0I-0003hG-NN;;;mid=<87d06ygssl.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18ZjgT5a7YJjLyuJqkSbC8pgMniL4vFhnY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 0/8] exec: Control flow simplifications
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 09:49:18PM +0200, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > On Wed, May 20, 2020 at 09:51:17AM -0700, Andy Lutomirski wrote:
-> >> Paul, the major change here is that if an IRQ hits normal kernel code
-> >> (i.e. code where RCU is watching and we're not in an EQS), the IRQ
-> >> won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
-> >> rcu_tickle() on entry and nothing on exit.  Does that cover all the
-> >> bases?
-> >
-> > From an RCU viewpoint, yes, give or take my concerns about someone
-> > putting rcu_tickle() on entry and rcu_irq_exit() on exit.  Perhaps
-> > I can bring some lockdep trickery to bear.
-> 
-> An surplus rcu_irq_exit() should already trigger alarms today.
 
-Fair point!
+I have pushed this out to:
 
-> > But I must defer to Thomas and Peter on the non-RCU/non-NO_HZ_FULL
-> > portions of this.
-> 
-> I don't see a problem. Let me write that into actual testable patch
-> form.
+git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-next
 
-Here is the RCU part, with my current best guess for the commit log.
+I have collected up the acks and reviewed-by's, and fixed a couple of
+typos but that is it.
 
-Please note that this is on top of my -rcu stack, so some adjustment
-will likely be needed to pull it underneath Joel's series that removes
-the special-purpose bits at the bottom of the ->dynticks counter.
+If we need comment fixes or additional cleanups we can apply that on top
+of this series.   This way the code can sit in linux-next until the
+merge window opens.
 
-But a starting point, anyway.
+Before I pushed this out I also tested this with Kees new test of
+binfmt_misc and did not find any problems.
 
-							Thanx, Paul
+Eric
 
-------------------------------------------------------------------------
+The git range-diff of the changes I applied before pushing this out:
 
-commit ca05838a9a1809fafee63f488a7be8b30e1c2a6a
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Wed May 20 15:03:07 2020 -0700
+1:  f6bb0d6563ca ! 1:  87b047d2be41 exec: Teach prepare_exec_creds how exec treats uids & gids
+    @@ Commit message
+         update bprm->cred are just need to handle special cases such
+         as setuid exec and change of domains.
+     
+    +    Link: https://lkml.kernel.org/r/871rng22dm.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## kernel/cred.c ##
+2:  d3b3594be22f ! 2:  b8bff599261c exec: Factor security_bprm_creds_for_exec out of security_bprm_set_creds
+    @@ Commit message
+         Add or upate comments a appropriate to bring them up to date and
+         to reflect this change.
+     
+    +    Link: https://lkml.kernel.org/r/87v9kszrzh.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Acked-by: Casey Schaufler <casey@schaufler-ca.com> # For the LSM and Smack bits
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## fs/exec.c ##
+3:  65c651a77967 ! 3:  d9d67b76eed6 exec: Convert security_bprm_set_creds into security_bprm_repopulate_creds
+    @@ Commit message
+         In short two renames and a move in the location of initializing
+         bprm->active_secureexec.
+     
+    +    Link: https://lkml.kernel.org/r/87o8qkzrxp.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## fs/exec.c ##
+4:  6d0d5da2b45e ! 4:  dbf17e846ea9 exec: Allow load_misc_binary to call prepare_binfmt unconditionally
+    @@ Metadata
+     Author: Eric W. Biederman <ebiederm@xmission.com>
+     
+      ## Commit message ##
+    -    exec: Allow load_misc_binary to call prepare_binfmt unconditionally
+    +    exec: Allow load_misc_binary to call prepare_binprm unconditionally
+     
+         Add a flag preserve_creds that binfmt_misc can set to prevent
+         credentials from being updated.  This allows binfmt_misc to always
+    -    call prepare_binfmt.  Allowing the credential computation logic to be
+    +    call prepare_binprm.  Allowing the credential computation logic to be
+         consolidated.
+     
+         Not replacing the credentials with the interpreters credentials is
+    @@ Commit message
+         exec sees.
+     
+         Ref: c407c033de84 ("[PATCH] binfmt_misc: improve calculation of interpreter's credentials")
+    +    Link: https://lkml.kernel.org/r/87imgszrwo.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## fs/binfmt_misc.c ##
+5:  af7db65c2483 ! 5:  8a8f3bb8ec41 exec: Move the call of prepare_binprm into search_binary_handler
+    @@ Commit message
+         search_binary_handler is called so move the call into search_binary_handler
+         itself to make the code simpler and easier to understand.
+     
+    +    Link: https://lkml.kernel.org/r/87d070zrvx.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+    +    Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## arch/alpha/kernel/binfmt_loader.c ##
+6:  69fccdf33a87 ! 6:  01dbc34d75bf exec/binfmt_script: Don't modify bprm->buf and then return -ENOEXEC
+    @@ Commit message
+         has been take that the logic of the parsing code (short of replacing
+         characters by '\0') remains the same.
+     
+    +    Link: https://lkml.kernel.org/r/874ksczru6.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## fs/binfmt_script.c ##
+7:  30fe957c6dce ! 7:  6962a6b4de92 exec: Generic execfd support
+    @@ Commit message
+         In binfmt_misc the movement of fd_install into generic code means
+         that it's special error exit path is no longer needed.
+     
+    +    Link: https://lkml.kernel.org/r/87y2poyd91.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## fs/binfmt_elf.c ##
+    @@ fs/exec.c: int begin_new_exec(struct linux_binprm * bprm)
+      	 */
+      	set_mm_exe_file(bprm->mm, bprm->file);
+      
+    -+	/* If the binary is not readable than enforce mm->dumpable=0 */
+    ++	/* If the binary is not readable then enforce mm->dumpable=0 */
+      	would_dump(bprm, bprm->file);
+     +	if (bprm->have_execfd)
+     +		would_dump(bprm, bprm->executable);
+8:  f0a27d0fde69 ! 8:  226ce5863881 exec: Remove recursion from search_binary_handler
+    @@ Commit message
+         reassignments of bprm->file moved to exec_binprm bprm->file can never
+         be NULL in search_binary_handler.
+     
+    +    Link: https://lkml.kernel.org/r/87sgfwyd84.fsf_-_@x220.int.ebiederm.org
+    +    Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+    +    Reviewed-by: Kees Cook <keescook@chromium.org>
+         Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+     
+      ## arch/alpha/kernel/binfmt_loader.c ##
 
-    rcu: Abstract out tickle_nohz_for_rcu() from rcu_nmi_enter()
-    
-    This commit splits out the nohz_full scheduler-tick enabling from the
-    rest of the rcu_nmi_enter() logic.  This allows short exception handlers
-    that interrupt kernel code regions that RCU is already watching to just
-    invoke tickle_nohz_for_rcu() at exception entry instead of having to
-    invoke rcu_nmi_enter() on entry and also rcu_nmi_exit() on all exit paths.
-    
-    Suggested-by: Andy Lutomirski <luto@kernel.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
-index 621556e..d4be42a 100644
---- a/include/linux/hardirq.h
-+++ b/include/linux/hardirq.h
-@@ -14,6 +14,10 @@ extern bool synchronize_hardirq(unsigned int irq);
- 
- #if defined(CONFIG_TINY_RCU)
- 
-+static inline void tickle_nohz_for_rcu(void)
-+{
-+}
-+
- static inline void rcu_nmi_enter(void)
- {
- }
-@@ -23,6 +27,7 @@ static inline void rcu_nmi_exit(void)
- }
- 
- #else
-+extern void tickle_nohz_for_rcu(void);
- extern void rcu_nmi_enter(void);
- extern void rcu_nmi_exit(void);
- #endif
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 7812574..0a3cad4 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -806,6 +806,67 @@ void noinstr rcu_user_exit(void)
- #endif /* CONFIG_NO_HZ_FULL */
- 
- /**
-+ * tickle_nohz_for_rcu - Enable scheduler tick on CPU if RCU needs it.
-+ *
-+ * The scheduler tick is not normally enabled when CPUs enter the kernel
-+ * from nohz_full userspace execution.  After all, nohz_full userspace
-+ * execution is an RCU quiescent state and the time executing in the kernel
-+ * is quite short.  Except of course when it isn't.  And it is not hard to
-+ * cause a large system to spend tens of seconds or even minutes looping
-+ * in the kernel, which can cause a number of problems, include RCU CPU
-+ * stall warnings.
-+ *
-+ * Therefore, if a nohz_full CPU fails to report a quiescent state
-+ * in a timely manner, the RCU grace-period kthread sets that CPU's
-+ * ->rcu_urgent_qs flag with the expectation that the next interrupt or
-+ * exception will invoke this function, which will turn on the scheduler
-+ * tick, which will enable RCU to detect that CPU's quiescent states,
-+ * for example, due to cond_resched() calls in CONFIG_PREEMPT=n kernels.
-+ * The tick will be disabled once a quiescent state is reported for
-+ * this CPU.
-+ *
-+ * Of course, in carefully tuned systems, there might never be an
-+ * interrupt or exception.  In that case, the RCU grace-period kthread
-+ * will eventually cause one to happen.  However, in less carefully
-+ * controlled environments, this function allows RCU to get what it
-+ * needs without creating otherwise useless interruptions.
-+ */
-+noinstr void tickle_nohz_for_rcu(void)
-+{
-+	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-+
-+	if (in_nmi())
-+		return; // Enabling tick is unsafe in NMI handlers.
-+	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
-+			 "Illegal tickle_nohz_for_rcu from extended quiescent state");
-+	instrumentation_begin();
-+	if (!tick_nohz_full_cpu(rdp->cpu) ||
-+	    !READ_ONCE(rdp->rcu_urgent_qs) ||
-+	    READ_ONCE(rdp->rcu_forced_tick)) {
-+		// RCU doesn't need nohz_full help from this CPU, or it is
-+		// already getting that help.
-+		instrumentation_end();
-+		return;
-+	}
-+
-+	// We get here only when not in an extended quiescent state and
-+	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
-+	// already watching and (2) The fact that we are in an interrupt
-+	// handler and that the rcu_node lock is an irq-disabled lock
-+	// prevents self-deadlock.  So we can safely recheck under the lock.
-+	// Note that the nohz_full state currently cannot change.
-+	raw_spin_lock_rcu_node(rdp->mynode);
-+	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-+		// A nohz_full CPU is in the kernel and RCU needs a
-+		// quiescent state.  Turn on the tick!
-+		WRITE_ONCE(rdp->rcu_forced_tick, true);
-+		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-+	}
-+	raw_spin_unlock_rcu_node(rdp->mynode);
-+	instrumentation_end();
-+}
-+
-+/**
-  * rcu_nmi_enter - inform RCU of entry to NMI context
-  * @irq: Is this call from rcu_irq_enter?
-  *
-@@ -835,7 +896,9 @@ noinstr void rcu_nmi_enter(void)
- 	 * is if the interrupt arrived in kernel mode; in this case we would
- 	 * be the outermost interrupt but still increment by 2 which is Ok.
- 	 */
--	if (rcu_dynticks_curr_cpu_in_eqs()) {
-+	if (!rcu_dynticks_curr_cpu_in_eqs()) {
-+		tickle_nohz_for_rcu();
-+	} else {
- 
- 		if (!in_nmi())
- 			rcu_dynticks_task_exit();
-@@ -851,28 +914,6 @@ noinstr void rcu_nmi_enter(void)
- 		}
- 
- 		incby = 1;
--	} else if (!in_nmi()) {
--		instrumentation_begin();
--		if (tick_nohz_full_cpu(rdp->cpu) &&
--		    READ_ONCE(rdp->rcu_urgent_qs) &&
--		    !READ_ONCE(rdp->rcu_forced_tick)) {
--			// We get here only if we had already exited the
--			// extended quiescent state and this was an
--			// interrupt (not an NMI).  Therefore, (1) RCU is
--			// already watching and (2) The fact that we are in
--			// an interrupt handler and that the rcu_node lock
--			// is an irq-disabled lock prevents self-deadlock.
--			// So we can safely recheck under the lock.
--			raw_spin_lock_rcu_node(rdp->mynode);
--			if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
--				// A nohz_full CPU is in the kernel and RCU
--				// needs a quiescent state.  Turn on the tick!
--				WRITE_ONCE(rdp->rcu_forced_tick, true);
--				tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
--			}
--			raw_spin_unlock_rcu_node(rdp->mynode);
--		}
--		instrumentation_end();
- 	}
- 	instrumentation_begin();
- 	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
