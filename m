@@ -2,121 +2,231 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C390EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A046B20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DVj0nkZ2"
+	by mail.kernel.org (Postfix) with ESMTP id 670B32070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETIGa (ORCPT
+        id S1726858AbgETIGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:06:30 -0400
-Received: from mail-eopbgr00049.outbound.protection.outlook.com ([40.107.0.49]:20014
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbgETIG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:06:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FdcFJeonoiGoS0iTJQ1lmoSzd+oKL+WJWvM+GNmJr2RTo3TScylqpgWLZe354FZtUaLfARfxXGC5bRZY0Elzt/6Xwn9/MY+icGPvUbqYGyg8/H8/Kmgn829nCbmt+/QHEbssQ+qXm9b46DJHBz3o5o9M42bfwQi6O1rkNkTLiaVDAQWvn2TRtzKxLcoJ15VxoSobxCK4xFDMyKTQxlq9RNeg5Z+7k6LhUfnqCyHA4I5Y/byHJiaofI2YTMVtt746edlJ63SnI1XATTt7NAO9Y/+a0+F9N6A52RRDc7NSlRG1OTmeqInljiHtfvEFsjm3cdmLxBUPLr756MY76eARyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uZaM9KIvbTZMAFXnRSAzRkrCr+uDwriaL1bHOM35y5k=;
- b=PoONAaBAM/oxh1BH5TlvVtcbIRSRaH2SjPwGkqnoIiMQv4I5BbyBfhCZ11AwTJbHbayJA27HNZmnD+R0NVPzNwdqx9CYYVaywXXREd/MWVV7JTtIjcr9RHbySEQrUGRGNNxDPi06yZg8adscgsP3WiM/tZ31tPSfomhU14LI0PY5H3OO/MskMl1Zm4cHL3LnPVB0vXU/hM4Moamk32MzShfsvq/sPrV36NQBGe8ZqoK6KWTqOkdrLp8dbMEJ1WzyIGKK3JPcb8r1EJlCNY3IKNgXcZrZ+q3VlBCZkXwNbb4CyCFvNeAd6KEbA92zPKzyY71j1jzJIAkINKggyw0FHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uZaM9KIvbTZMAFXnRSAzRkrCr+uDwriaL1bHOM35y5k=;
- b=DVj0nkZ2wX/E1tRlgr25O50v6hOf++ICjNDoOi0bYgCBJFUunPftAqezhhtztjoNGtvPFs/W8Y/AHv3nQ3pqdyLGkNi1VrYbxZXTT0afRLCh1VjP30YUTmmpAlug4iUdQnuft090+4T6wBjHcYTFNrWUryHs+ZsDUuGN+KpcTMU=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB5637.eurprd04.prod.outlook.com (2603:10a6:20b:ac::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Wed, 20 May
- 2020 08:06:25 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3000.034; Wed, 20 May 2020
- 08:06:25 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx: Make tempmon node as child of anatop node
-Thread-Topic: [PATCH] ARM: dts: imx: Make tempmon node as child of anatop node
-Thread-Index: AQHWLnGKahSSyBKEm0SO3VgjiRIl16iwl6BQgAABCwCAAASd8A==
-Date:   Wed, 20 May 2020 08:06:25 +0000
-Message-ID: <AM6PR04MB496661BDF6B5F966A218092380B60@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1589956216-22499-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB49663B517C218072B2845DBF80B60@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <DB3PR0402MB39167A0961963B73758F6CA9F5B60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39167A0961963B73758F6CA9F5B60@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: eb958955-d4e0-4407-2c98-08d7fc94b10e
-x-ms-traffictypediagnostic: AM6PR04MB5637:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB5637FB3821A673EB6EDA8F7E80B60@AM6PR04MB5637.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 04097B7F7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EoXeCz4jlnnierrDoRANxM3kFITQz3hkuErjv0MNGJ2UkzEjyJOR4cWcDrxwvDtYjG8hrWATYRFq/GbIFwNH4v0uxIoyEstsmLsd8c7FiOaPiiut2CfdEM1+9JNEDAQjiIsPHBZMR4URmEjBDyCaAtJxCG/c679iK3cU5G57wXBlZgoUAC8nsp5q11fa/9/Cm2LiuTERTxFABdFkrJfqDeHKjS3qalgHVWTNKYQafw900QAyN69c2Emdi4fTzj3o6hRJxxvAlnRE+cn2bOEWfQxL1CUG+EBtCLDcBLGbqGNJ3C1Zj+Cvv9xnC2H4ESXAIK6X7MEIwhm1pOtm64CszUREQD9wX858bO2HR5y73GFRclmpM9UXsAnSFHmQzZZIDwrvXvCNwHYryuH36amAm0diV4MC6utzWOe21ikAQKwoJVnkdcz9bYdPamdaJuJ5
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(396003)(376002)(346002)(55016002)(44832011)(8676002)(53546011)(4326008)(6506007)(7696005)(9686003)(33656002)(2906002)(52536014)(8936002)(5660300002)(26005)(110136005)(316002)(71200400001)(66446008)(478600001)(64756008)(86362001)(66556008)(66476007)(66946007)(186003)(4744005)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: b1mO4bxormPF3h6KKFLiCd1eTIh+aaMt3d2s6yHyhfS4ILpwa4zQo/HpP9/EKQfk1tdhJzig05YYXHdlCA31C8cphF3dyyGXieaBpWDLFk6vghdnqE64ubFJ97ZDuUpa26ohRqSRXxUl9ho4mVLpOtEC+o+fMewM9yiuReT1SpunNMN42RA6IXsCgzd7S94IjGTmMldPwuOjJqfm1WYVSkRbujioyUXdjWrKJHLUWtj0C6bcKNhuCI2uP3tmVawaE2pRj1U230GtQ1Yb1sCgF8PmdJANX0vVGV7zi8nKVyGMY/lffb4DYCMgIeySI97i/yvAFBe0k45XwDy6TxmMw88RhSiJg2AbNmImr4HlKTT5BOLOSDpeMzgm+BozhuR1/3dh12Uay3ligezaK7ndGeDmiEHy0EyV+iT43YabO9tUWlO/sRH82kjf6TUfVSWlEMtdOu1AmiC+Ozev5zUt5V0DZ0lfRKEq5q/BwbzXAiZAkH7mDFv2Idhpby62v44e
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 20 May 2020 04:06:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48682 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgETIGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 04:06:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 57470ACA7;
+        Wed, 20 May 2020 08:06:37 +0000 (UTC)
+Subject: Re: [patch V6 10/37] x86/entry: Switch XEN/PV hypercall entry to
+ IDTENTRY
+To:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20200515234547.710474468@linutronix.de>
+ <20200515235125.425810667@linutronix.de>
+ <CALCETrUqK6hv4AuGL=GtK+12TCmr5nBA7CBy=X7TNA=w_Jk0Qw@mail.gmail.com>
+ <87imgr7nwp.fsf@nanos.tec.linutronix.de>
+ <CALCETrW4BxfTVzv8mXntNXiAPnKxqdMEv7djUknGZcrno2WJHg@mail.gmail.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <3dd0e972-1b80-cd6b-6490-5b745ada68c8@suse.com>
+Date:   Wed, 20 May 2020 10:06:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb958955-d4e0-4407-2c98-08d7fc94b10e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2020 08:06:25.0441
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6CRgIOypIo5XuDuLJmn8uLiteu+eTa5e/5IAeeTsoa0RKLZ6JJXjevSc4dY3YIVZnt3uthTdo3SAB5z+ElXbww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5637
+In-Reply-To: <CALCETrW4BxfTVzv8mXntNXiAPnKxqdMEv7djUknGZcrno2WJHg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gU2VudDogV2VkbmVz
-ZGF5LCBNYXkgMjAsIDIwMjAgMzo0NyBQTQ0KPiANCj4gPiBTdWJqZWN0OiBSRTogW1BBVENIXSBB
-Uk06IGR0czogaW14OiBNYWtlIHRlbXBtb24gbm9kZSBhcyBjaGlsZCBvZg0KPiA+IGFuYXRvcCBu
-b2RlDQo+ID4NCj4gPiA+IEZyb206IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0K
-PiA+ID4gU2VudDogV2VkbmVzZGF5LCBNYXkgMjAsIDIwMjAgMjozMCBQTQ0KPiA+ID4NCj4gPiA+
-IGkuTVg2LzcgU29DcycgdGVtcGVyYXR1cmUgc2Vuc29yIGlzIGluc2lkZSBhbmF0b3AgbW9kdWxl
-IGZyb20gSFcNCj4gPiA+IHBlcnNwZWN0aXZlLCBzbyBpdCBzaG91bGQgYmUgYSBjaGlsZCBub2Rl
-IG9mIGFuYXRvcC4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5z
-b24uSHVhbmdAbnhwLmNvbT4NCj4gPg0KPiA+IFJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFp
-c2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+DQo+ID4gQlRXLCBJIHRoaW5rIHlvdSBhbHNvIG5lZWQg
-YSBiaW5kaW5nIGRvYyBmb3IgdGhpcyBjaGFuZ2UuDQo+IA0KPiBUaGUgYmluZGluZyBkb2MgaXMg
-dGhlIGlteC10aGVybWFsLnlhbWwgSSBzZW50IG91dCwgaXQgaXMgc3VnZ2VzdGVkIGJ5IFJvYiB0
-bw0KPiBtb3ZlIHRlbXBtb24gaW50byBhbmF0b3Agbm9kZSwgdGhhdCBpcyB3aHkgSSBkaWQgdGhp
-cyBwYXRjaCB0byBhbGlnbiB3aXRoIHRoZQ0KPiBiaW5kaW5nIGRvYy4NCg0KVGhhdCdzIHRoZXJt
-YWwgYmluZGluZyBkb2MuDQpXZSBuZWVkIGEgYmluZGluZyBkb2MgdG8gZGVzY3JpYmUgdGhlIGNv
-bnN0cmFpbnRzIGZvciBhbmF0b3AgYXMgd2VsbC4NCg0KUmVnYXJkcw0KQWlzaGVuZw0KDQo+IEFu
-c29uDQo=
+On 19.05.20 21:44, Andy Lutomirski wrote:
+> On Tue, May 19, 2020 at 11:58 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> Andy Lutomirski <luto@kernel.org> writes:
+>>> On Fri, May 15, 2020 at 5:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>>> @@ -573,6 +578,16 @@ static __always_inline void __idtentry_exit(struct pt_regs *regs)
+>>>>                                  instrumentation_end();
+>>>>                                  return;
+>>>>                          }
+>>>> +               } else if (IS_ENABLED(CONFIG_XEN_PV)) {
+>>>> +                       if (preempt_hcall) {
+>>>> +                               /* See CONFIG_PREEMPTION above */
+>>>> +                               instrumentation_begin();
+>>>> +                               rcu_irq_exit_preempt();
+>>>> +                               xen_maybe_preempt_hcall();
+>>>> +                               trace_hardirqs_on();
+>>>> +                               instrumentation_end();
+>>>> +                               return;
+>>>> +                       }
+>>>
+>>> Ewwwww!  This shouldn't be taken as a NAK -- it's just an expression
+>>> of disgust.
+>>
+>> I'm really not proud of it, but that was the least horrible thing I
+>> could come up with.
+>>
+>>> Shouldn't this be:
+>>>
+>>> instrumentation_begin();
+>>> if (!irq_needs_irq_stack(...))
+>>>    __blah();
+>>> else
+>>>    run_on_irqstack(__blah, NULL);
+>>> instrumentation_end();
+>>>
+>>> or even:
+>>>
+>>> instrumentation_begin();
+>>> run_on_irqstack_if_needed(__blah, NULL);
+>>> instrumentation_end();
+>>
+>> Yeah. In that case the instrumentation markers are not required as they
+>> will be inside the run....() function.
+>>
+>>> ****** BUT *******
+>>>
+>>> I think this is all arse-backwards.  This is a giant mess designed to
+>>> pretend we support preemption and to emulate normal preemption in a
+>>> non-preemptible kernel.  I propose one to two massive cleanups:
+>>>
+>>> A: Just delete all of this code.  Preemptible hypercalls on
+>>> non-preempt kernels will still process interrupts but won't get
+>>> preempted.  If you want preemption, compile with preemption.
+>>
+>> I'm happy to do so, but the XEN folks might have opinions on that :)
+
+Indeed. :-)
+
+>>
+>>> B: Turn this thing around.  Specifically, in the one and only case we
+>>> care about, we know pretty much exactly what context we got this entry
+>>> in: we're running in a schedulable context doing an explicitly
+>>> preemptible hypercall, and we have RIP pointing at a SYSCALL
+>>> instruction (presumably, but we shouldn't bet on it) in the hypercall
+>>> page.  Ideally we would change the Xen PV ABI so the hypercall would
+>>> return something like EAGAIN instead of auto-restarting and we could
+>>> ditch this mess entirely.  But the ABI seems to be set in stone or at
+>>> least in molasses, so how about just:
+>>>
+>>> idt_entry(exit(regs));
+>>> if (inhcall && need_resched())
+>>>    schedule();
+>>
+>> Which brings you into the situation that you call schedule() from the
+>> point where we just moved it out. If we would go there we'd need to
+>> ensure that RCU is watching as well. idtentry_exit() might have it
+>> turned off ....
+> 
+> I don't think this is possible.  Once you untangle all the wrappers,
+> the call sites are effectively:
+> 
+> __this_cpu_write(xen_in_preemptible_hcall, true);
+> CALL_NOSPEC to the hypercall page
+> __this_cpu_write(xen_in_preemptible_hcall, false);
+> 
+> I think IF=1 when this happens, but I won't swear to it.  RCU had
+> better be watching.
+
+Preemptible hypercalls are never done with interrupts off. To be more
+precise: they are only ever done during ioctl() processing.
+
+I can add an ASSERT() to xen_preemptible_hcall_begin() if you want.
+
+> 
+> As I understand it, the one and only situation Xen wants to handle is
+> that an interrupt gets delivered during the hypercall.  The hypervisor
+> is too clever for its own good and deals with this by rewinding RIP to
+> the beginning of whatever instruction did the hypercall and delivers
+> the interrupt, and we end up in this handler.  So, if this happens,
+> the idea is to not only handle the interrupt but to schedule if
+> scheduling would be useful.
+
+Correct. More precise: the hypercalls in question can last very long
+(up to several seconds) and so they need to be interruptible. As said
+before: the interface how this is done is horrible. :-(
+
+> 
+> So I don't think we need all this RCU magic.  This really ought to be
+> able to be simplified to:
+> 
+> idtentry_exit();
+> 
+> if (appropriate condition)
+>    schedule();
+> 
+> Obviously we don't want to schedule if this is a nested entry, but we
+> should be able to rule that out by checking that regs->flags &
+> X86_EFLAGS_IF and by handling the percpu variable a little more
+> intelligently.  So maybe the right approach is:
+> 
+> bool in_preemptible_hcall = __this_cpu_read(xen_in_preemptible_hcall);
+> __this_cpu_write(xen_in_preemptible_hcall, false);
+> idtentry_enter(...);
+> 
+> do the acutal work;
+> 
+> idtentry_exit(...);
+> 
+> if (in_preemptible_hcall) {
+>    assert regs->flags & X86_EFLAGS_IF;
+>    assert that RCU is watching;
+>    assert that we're on the thread stack;
+>    assert whatever else we feel like asserting;
+>    if (need_resched())
+>      schedule();
+> }
+> 
+> __this_cpu_write(xen_in_preemptible_hcall, in_preemptible_hcall);
+> 
+> And now we don't have a special idtentry_exit() case just for Xen, and
+> all the mess is entirely contained in the Xen PV code.  And we need to
+> mark all the preemptible hypercalls noinstr.  Does this seem
+> reasonable?
+
+ From my point of view this sounds fine.
+
+> 
+> That being said, right now, with or without your patch, I think we're
+> toast if the preemptible hypercall code gets traced.  So maybe the
+> right thing is to just drop all the magic preemption stuff from your
+> patch and let the Xen maintainers submit something new (maybe like
+> what I suggest above) if they want magic preemption back.
+> 
+
+I'd prefer to not break preemptible hypercall in between.
+
+IMO the patch should be modified along your suggestion. I'd be happy to
+test it.
+
+
+Juergen
