@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8542EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5944CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B70205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A707207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgETO1H (ORCPT
+        id S1728508AbgETO1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:27:07 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32988 "EHLO
+        Wed, 20 May 2020 10:27:10 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33046 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726999AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727020AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-00036F-3C; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbx-000376-Sl; Wed, 20 May 2020 15:22:21 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DQx-69; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbw-007DTU-3m; Wed, 20 May 2020 15:22:20 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Oliver Neukum" <oneukum@suse.com>, "Sean Young" <sean@mess.org>,
-        syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
-Date:   Wed, 20 May 2020 15:14:07 +0100
-Message-ID: <lsq.1589984008.29940681@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Johan Hovold" <johan@kernel.org>
+Date:   Wed, 20 May 2020 15:14:30 +0100
+Message-ID: <lsq.1589984008.819765862@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 39/99] media: iguanair: add sanity checks
+Subject: [PATCH 3.16 62/99] USB: serial: ir-usb: add missing endpoint
+ sanity check
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,55 +56,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit ab1cbdf159beba7395a13ab70bc71180929ca064 upstream.
+commit 2988a8ae7476fe9535ab620320790d1714bdad1d upstream.
 
-The driver needs to check the endpoint types, too, as opposed
-to the number of endpoints. This also requires moving the check earlier.
+Add missing endpoint sanity check to avoid dereferencing a NULL-pointer
+on open() in case a device lacks a bulk-out endpoint.
 
-Reported-by: syzbot+01a77b82edaa374068e1@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Note that prior to commit f4a4cbb2047e ("USB: ir-usb: reimplement using
+generic framework") the oops would instead happen on open() if the
+device lacked a bulk-in endpoint and on write() if it lacked a bulk-out
+endpoint.
+
+Fixes: f4a4cbb2047e ("USB: ir-usb: reimplement using generic framework")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/rc/iguanair.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/usb/serial/ir-usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/media/rc/iguanair.c
-+++ b/drivers/media/rc/iguanair.c
-@@ -430,6 +430,10 @@ static int iguanair_probe(struct usb_int
- 	int ret, pipein, pipeout;
- 	struct usb_host_interface *idesc;
+--- a/drivers/usb/serial/ir-usb.c
++++ b/drivers/usb/serial/ir-usb.c
+@@ -199,6 +199,9 @@ static int ir_startup(struct usb_serial
+ 	struct usb_irda_cs_descriptor *irda_desc;
+ 	int rates;
  
-+	idesc = intf->altsetting;
-+	if (idesc->desc.bNumEndpoints < 2)
++	if (serial->num_bulk_in < 1 || serial->num_bulk_out < 1)
 +		return -ENODEV;
 +
- 	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
- 	rc = rc_allocate_device();
- 	if (!ir || !rc) {
-@@ -444,18 +448,13 @@ static int iguanair_probe(struct usb_int
- 	ir->urb_in = usb_alloc_urb(0, GFP_KERNEL);
- 	ir->urb_out = usb_alloc_urb(0, GFP_KERNEL);
- 
--	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out) {
-+	if (!ir->buf_in || !ir->packet || !ir->urb_in || !ir->urb_out ||
-+	    !usb_endpoint_is_int_in(&idesc->endpoint[0].desc) ||
-+	    !usb_endpoint_is_int_out(&idesc->endpoint[1].desc)) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
- 
--	idesc = intf->altsetting;
--
--	if (idesc->desc.bNumEndpoints < 2) {
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	ir->rc = rc;
- 	ir->dev = &intf->dev;
- 	ir->udev = udev;
+ 	irda_desc = irda_usb_find_class_desc(serial, 0);
+ 	if (!irda_desc) {
+ 		dev_err(&serial->dev->dev,
 
