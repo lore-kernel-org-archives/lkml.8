@@ -2,132 +2,216 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C06C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B503205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B356207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KsJp4HgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgETH2K (ORCPT
+        id S1726561AbgETH2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:28:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
+        Wed, 20 May 2020 03:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETH2K (ORCPT
+        with ESMTP id S1726224AbgETH2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:28:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0F0C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:28:09 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jbJ8m-0005fd-1O; Wed, 20 May 2020 09:27:48 +0200
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jbJ8l-00021e-8e; Wed, 20 May 2020 09:27:47 +0200
-Date:   Wed, 20 May 2020 09:27:47 +0200
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 07/15] PCI: brcmstb: Add control of rescal reset
-Message-ID: <20200520072747.GB5213@pengutronix.de>
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-8-james.quinlan@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200519203419.12369-8-james.quinlan@broadcom.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:17:38 up 90 days, 14:48, 112 users,  load average: 0.07, 0.35,
- 0.32
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 20 May 2020 03:28:23 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B560BC08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:28:21 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id a7so2756816qvl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 00:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=cdxaRZ8/bLJ0hiCQFa/mZ4i8RBkML1CDuxtDfYtoS7E=;
+        b=KsJp4HgOm1YR3buC+GlraWqwPMQb539hDABZ/Nfwz8yv31xFdfQjzzivTD6XDX3Vmt
+         nAwono7Ocu56A8vywCzt3qTioDy//Obgjs3oSL5JKWQyyBZ1NMsc/sJCUbBhqMSGBkaA
+         +lvXpxMzJzxZXBpgmoRcCBw/oAeoRASXh9/owLwtjugNYiOoeTy9lBzPQwtR4zHWKIiw
+         6PWF4iGlsRE8VlP32j2e/eTWxbSg8/9TMNfR9Eih0SgThNOkk8t4iSABgQXLDNnkV4cg
+         GEaQqeA7jAlgBLpZ+r0NTJhBJFgjeBJAJYXKb8PQZp2qbVSpaV7VUBV+jN0IFbxq88ro
+         uzYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=cdxaRZ8/bLJ0hiCQFa/mZ4i8RBkML1CDuxtDfYtoS7E=;
+        b=pXHBvP5RRqk6f6czuRwQF3QpzkuMatKPd/GvO5kC4Y0MKiKxdB6qbOp0j3kdYthtIJ
+         61lHwi4D9dOUUX9tOwk86tb1h2vD2AM3gyBxAWE6pTAkirQpxXj/pHeT52xLpxm0qvWp
+         ReG4LabZ5iqBb6oMvaTR2Wjf2rxarJzSEU3UVsLDMs1FQ7l69XqWJZrvjbgPRbbIoWO+
+         G6DtQAOk/6oHAIwIVk3aGP4GLawjkahQKHnTSEPSN4/ZnTow0O4kHQ6RiTIhvCwPy5sT
+         y5esyYj7iDfZPVI8/1slwRxFRI7avB7s2y4X6DsjVoNwtuts6QAPivo0Wq5w1yZ2P6/H
+         6kWg==
+X-Gm-Message-State: AOAM532WBxwVEX3RKDpiuoaoMD0v5It8LHxAOOyHrs6D+6WlxI1OBZUg
+        nEPG0xcPwCItY6y7usCupm1DkNyPRXuH
+X-Google-Smtp-Source: ABdhPJznDrW41cQ4bY7/vsXD+gG1rnELqi+iRCkeb8YVsQEpxgZJCekqGg1Xr6ttcOHRCfkIYgKOEPoI27co
+X-Received: by 2002:a0c:e806:: with SMTP id y6mr3647862qvn.177.1589959700511;
+ Wed, 20 May 2020 00:28:20 -0700 (PDT)
+Date:   Wed, 20 May 2020 00:28:07 -0700
+Message-Id: <20200520072814.128267-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+Subject: [PATCH 0/7] Share events between metrics
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jim,
+Metric groups contain metrics. Metrics create groups of events to
+ideally be scheduled together. Often metrics refer to the same events,
+for example, a cache hit and cache miss rate. Using separate event
+groups means these metrics are multiplexed at different times and the
+counts don't sum to 100%. More multiplexing also decreases the
+accuracy of the measurement.
 
-On Tue, May 19, 2020 at 04:34:05PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Some STB chips have a special purpose reset controller named
-> RESCAL (reset calibration).  This commit adds the control
-> of RESCAL as well as the ability to start and stop its
-> operation for PCIe HW.
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 81 ++++++++++++++++++++++++++-
->  1 file changed, 80 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 2c470104ba38..0787e8f6f7e5 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-[...]
-> @@ -1100,6 +1164,21 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev, "could not enable clock\n");
->  		return ret;
->  	}
-> +	pcie->rescal = devm_reset_control_get_shared(&pdev->dev, "rescal");
-> +	if (IS_ERR(pcie->rescal)) {
-> +		if (PTR_ERR(pcie->rescal) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		pcie->rescal = NULL;
+This change orders metrics from groups or the command line, so that
+the ones with the most events are set up first. Later metrics see if
+groups already provide their events, and reuse them if
+possible. Unnecessary events and groups are eliminated.
 
-This is effectively an optional reset control, so it is better to use:
-↵
-	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev,
-							      "rescal");↵
-	if (IS_ERR(pcie->rescal))
-		return PTR_ERR(pcie->rescal);
+The option --metric-no-group is added so that metrics aren't placed in
+groups. This affects multiplexing and may increase sharing.
 
-> +	} else {
-> +		ret = reset_control_deassert(pcie->rescal);
-> +		if (ret)
-> +			dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-> +	}
+The option --metric-mo-merge is added and with this option the
+existing grouping behavior is preserved.
 
-reset_control_* can handle rstc == NULL parameters for optional reset
-controls, so this can be done unconditionally:
+Using skylakex metrics I ran the following shell code to count the
+number of events for each metric group (this ignores metric groups
+with a single metric, and one of the duplicated TopdownL1 and
+TopDownL1 groups):
 
-	ret = reset_control_deassert(pcie->rescal);↵
-	if (ret)↵
-		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");↵
+for i in all Branches BrMispredicts Cache_Misses FLOPS Instruction_Type Memory_BW Pipeline Power SMT Summary TopdownL1 TopdownL1_SMT
+do
+  echo Metric group: $i
+  echo -n " - No merging (old default, now --metric-no-merge): "
+  /tmp/perf/perf stat -a --metric-no-merge -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]" | wc -l
+  echo -n " - Merging over metrics (new default)             : "
+  /tmp/perf/perf stat -a -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
+  echo -n " - No event groups and merging (--metric-no-group): "
+  /tmp/perf/perf stat -a --metric-no-group -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
+done
 
-Is rescal handled by the reset-brcmstb-rescal driver? Since that only
-implements the .reset op, I would expect reset_control_reset() here.
-Otherwise this looks like it'd be missing a reset_control_assert in
-remove.
+Metric group: all
+ - No merging (old default, now --metric-no-merge): 193
+ - Merging over metrics (new default)             : 142
+ - No event groups and merging (--metric-no-group): 84
+Metric group: Branches
+ - No merging (old default, now --metric-no-merge): 8
+ - Merging over metrics (new default)             : 8
+ - No event groups and merging (--metric-no-group): 4
+Metric group: BrMispredicts
+ - No merging (old default, now --metric-no-merge): 11
+ - Merging over metrics (new default)             : 11
+ - No event groups and merging (--metric-no-group): 10
+Metric group: Cache_Misses
+ - No merging (old default, now --metric-no-merge): 11
+ - Merging over metrics (new default)             : 9
+ - No event groups and merging (--metric-no-group): 6
+Metric group: FLOPS
+ - No merging (old default, now --metric-no-merge): 18
+ - Merging over metrics (new default)             : 10
+ - No event groups and merging (--metric-no-group): 10
+Metric group: Instruction_Type
+ - No merging (old default, now --metric-no-merge): 6
+ - Merging over metrics (new default)             : 6
+ - No event groups and merging (--metric-no-group): 4
+Metric group: Pipeline
+ - No merging (old default, now --metric-no-merge): 6
+ - Merging over metrics (new default)             : 6
+ - No event groups and merging (--metric-no-group): 5
+Metric group: Power
+ - No merging (old default, now --metric-no-merge): 16
+ - Merging over metrics (new default)             : 16
+ - No event groups and merging (--metric-no-group): 10
+Metric group: SMT
+ - No merging (old default, now --metric-no-merge): 11
+ - Merging over metrics (new default)             : 8
+ - No event groups and merging (--metric-no-group): 7
+Metric group: Summary
+ - No merging (old default, now --metric-no-merge): 19
+ - Merging over metrics (new default)             : 17
+ - No event groups and merging (--metric-no-group): 17
+Metric group: TopdownL1
+ - No merging (old default, now --metric-no-merge): 16
+ - Merging over metrics (new default)             : 7
+ - No event groups and merging (--metric-no-group): 7
+Metric group: TopdownL1_SMT
+ - No merging (old default, now --metric-no-merge): 24
+ - Merging over metrics (new default)             : 7
+ - No event groups and merging (--metric-no-group): 7
 
-regards
-Philipp
+There are 5 out of 12 metric groups where no events are shared, such
+as Power, however, disabling grouping of events always reduces the
+number of events.
+
+The result for Memory_BW needs explanation:
+
+Metric group: Memory_BW
+ - No merging (old default, now --metric-no-merge): 9
+ - Merging over metrics (new default)             : 5
+ - No event groups and merging (--metric-no-group): 11
+
+Both with and without merging the groups fail to be set up and so the
+event counts here are for broken metrics. The --metric-no-group number
+is accurate as all the events are scheduled. Ideally a constraint
+would be added for these metrics in the json code to avoid grouping.
+
+v1. was prepared on kernel/git/acme/linux.git branch tmp.perf/core
+
+Compared to RFC v3: fix a bug where unnecessary commas were passed to
+parse-events and were echoed. Fix a bug where the same event could be
+matched more than once with --metric-no-group, causing there to be
+events missing.
+https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
+
+Ian Rogers (7):
+  perf metricgroup: Change evlist_used to a bitmap
+  perf metricgroup: Always place duration_time last
+  perf metricgroup: Delay events string creation
+  perf metricgroup: Order event groups by size
+  perf metricgroup: Remove duped metric group events
+  perf metricgroup: Add options to not group or merge
+  perf metricgroup: Remove unnecessary ',' from events
+
+ tools/perf/Documentation/perf-stat.txt |  19 ++
+ tools/perf/builtin-stat.c              |  11 +-
+ tools/perf/util/metricgroup.c          | 241 ++++++++++++++++++-------
+ tools/perf/util/metricgroup.h          |   6 +-
+ tools/perf/util/stat.h                 |   2 +
+ 5 files changed, 206 insertions(+), 73 deletions(-)
+
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
