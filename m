@@ -2,192 +2,154 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E84EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E14E420884
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E93207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:44:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HN5WshoE"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="luKthv+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgETIkj (ORCPT
+        id S1726650AbgETIoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETIki (ORCPT
+        Wed, 20 May 2020 04:44:04 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:63521 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726224AbgETIoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:40:38 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814E4C061A0E;
-        Wed, 20 May 2020 01:40:38 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id g9so2106449edr.8;
-        Wed, 20 May 2020 01:40:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mb7QfRxby7AgnFGtGNkrt8n1Z+I09eWHoPbIYOvFSUE=;
-        b=HN5WshoEENtUHC//XetSGUywgC89HQlw72WmFsFajL0zjP4iecy9anYCQDmaPm9hix
-         KPOSOkCNCc/L0NW4e3jomLfGoetbPVX82wmYqhfZakf5R3eZS4RSh6M7B9yide9u2vif
-         M2/wFct8hwORZ13KWjh/VOKY/BA8qMkKshiqJuETntg2YBxnxnb6kZxS3d50UPg+kRBh
-         lRypteSzxfVmFELrbz0slgBzdOVEjsZAO6nKJ3eebyNbxmDaNxXk6qkGkB4f2vLUWDjw
-         WhF7ATHumIOcOsWLZVaYmCpAu07w43byyjaC7cW20t/B/2VBMV37wNGI9n4pDCg1kKei
-         yVKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mb7QfRxby7AgnFGtGNkrt8n1Z+I09eWHoPbIYOvFSUE=;
-        b=GJbdjZ/fL83HukxIOdP+6bqN8BnKk3pUXqxwNriZACr4VqKiJBYCRkALyEooq0NNei
-         0dF2jshHuCVd0Cn+ezGRb3PoZtdCr6dO0mrYG55AYIHN5obh6pe62DsAG3aUZmO0+91w
-         5rMo+YUAha2DjVm7riOTvM5/Z2huua9MJTxv1Aym+N44Hd/dL5ZPWEjhUNqPUoyJR49y
-         pWBRJ0/xvhSPtxBUeyfXGsvyF/cIngdwHYuF7HsbqOmhuQ2eUvsHMro08p0rElt5wtcl
-         kJAETrcDpTaZgM8rLl3T3e7WFw/iNH6kgZfEt74U0G+owMvhg05hePCck/GnGp5zySpA
-         EvMw==
-X-Gm-Message-State: AOAM530848JKShE8NwIFtscUn6/DLjOW4uRQYlTWVYs02EayiA/5AzJv
-        nEZnaD4ceZ98XUYkOCTUB4A=
-X-Google-Smtp-Source: ABdhPJzG8f0TXlz0Nk/rGokoWRdNIDyW+F+nvg3m8ouKjflMeFxwi9VxHDp+21mYUW9jqy10ZbmoTg==
-X-Received: by 2002:a50:d0d7:: with SMTP id g23mr2455355edf.163.1589964037188;
-        Wed, 20 May 2020 01:40:37 -0700 (PDT)
-Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
-        by smtp.gmail.com with ESMTPSA id dh15sm1196510edb.35.2020.05.20.01.40.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 01:40:33 -0700 (PDT)
-Date:   Wed, 20 May 2020 10:40:32 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     Stephen Warren <swarren@wwwdotorg.org>, robh+dt@kernel.org,
-        robin.murphy@arm.com, devicetree@vger.kernel.org, talho@nvidia.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        afaerber@suse.de, arnd@arndb.de, gregkh@linuxfoundation.org
-Subject: Re: [PATCH 2/4] dt-bindings: sram: add documentation for
- reserved-only flag
-Message-ID: <20200520084032.GA2136208@ulmo>
-References: <20200512144803.24344-1-ykaukab@suse.de>
- <20200512144803.24344-2-ykaukab@suse.de>
- <52f099e4-5c03-2141-f049-cd3adeb04c5b@wwwdotorg.org>
- <20200513104127.GA2309@suse.de>
+        Wed, 20 May 2020 04:44:04 -0400
+X-UUID: d7b8e253527c43878f8fa023f1f7b048-20200520
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=u0K9CvT5HV61VJXYYwxkYfqIusTCbFNVtZQAS+tl34Q=;
+        b=luKthv+eR0xrTVxdbHlaDd4k9oQjtvxMr/QNDzQKGBVUKw9IbG4QylxeWXGAnoUEIq/uuYTOjxDKqm+S7hmCBRf1LP5w90XZzJ/qxaky9IISaUKd/S1BYII6L8HUemO/mjkt0y2GYvQKFekhcMC1h6UiyTaAxcoNwHWFRhpoCf4=;
+X-UUID: d7b8e253527c43878f8fa023f1f7b048-20200520
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1078213673; Wed, 20 May 2020 16:43:55 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 20 May
+ 2020 16:42:35 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 20 May 2020 16:42:34 +0800
+Message-ID: <1589964062.25512.67.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Joe Perches <joe@perches.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>, <leilk.liu@mediatek.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        "Linux I2C" <linux-i2c@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 20 May 2020 16:41:02 +0800
+In-Reply-To: <CAMuHMdXgp85PVteunxrHYcMTqFgQWHmXXCVJM_KX76xkCADMpw@mail.gmail.com>
+References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
+         <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
+         <CAMuHMdXjLakWDDEy=02prC7XjAs_xBnt2mArPFNwyHgUoWw6-g@mail.gmail.com>
+         <1589857073.25512.34.camel@mhfsdcap03>
+         <CAMuHMdXgp85PVteunxrHYcMTqFgQWHmXXCVJM_KX76xkCADMpw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
-In-Reply-To: <20200513104127.GA2309@suse.de>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+X-TM-SNTS-SMTP: 419D878692A456EACB25265C39EB5C4831837D6DCD95B04EF9B86113CAB6032B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SGkgR2VlcnQsDQoNCk9uIFR1ZSwgMjAyMC0wNS0xOSBhdCAwOToxNCArMDIwMCwgR2VlcnQgVXl0
+dGVyaG9ldmVuIHdyb3RlOg0KPiBIaSBRaWksDQo+IA0KPiBPbiBUdWUsIE1heSAxOSwgMjAyMCBh
+dCA0OjU5IEFNIFFpaSBXYW5nIDxxaWkud2FuZ0BtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+IE9u
+IE1vbiwgMjAyMC0wNS0xOCBhdCAxNzo0NCArMDIwMCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3Rl
+Og0KPiA+ID4gT24gVGh1LCBNYXkgMTQsIDIwMjAgYXQgMzoxMyBQTSBRaWkgV2FuZyA8cWlpLndh
+bmdAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPiA+ID4gVGhpcyBwYXRjaCBhZGRzIGEgYWxnb3Jp
+dGhtIHRvIGNhbGN1bGF0ZSBzb21lIGFjLXRpbWluZyBwYXJhbWV0ZXJzDQo+ID4gPiA+IHdoaWNo
+IGNhbiBmdWxseSBtZWV0IEkyQyBTcGVjLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
+OiBRaWkgV2FuZyA8cWlpLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4g
+IGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCAzMjggKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrLS0tLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDI3NyBpbnNl
+cnRpb25zKCspLCA1MSBkZWxldGlvbnMoLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJj
+LW10NjV4eC5jDQo+ID4gPiA+IGluZGV4IDBjYTZjMzhhLi43MDIwNjE4IDEwMDY0NA0KPiA+ID4g
+PiAtLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQo+ID4gPiA+ICsrKyBiL2Ry
+aXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4gPiA+DQo+ID4gPiA+ICsvKg0KPiA+ID4g
+PiArICogQ2hlY2sgYW5kIENhbGN1bGF0ZSBpMmMgYWMtdGltaW5nDQo+ID4gPiA+ICsgKg0KPiA+
+ID4gPiArICogSGFyZHdhcmUgZGVzaWduOg0KPiA+ID4gPiArICogc2FtcGxlX25zID0gKDEwMDAw
+MDAwMDAgKiAoc2FtcGxlX2NudCArIDEpKSAvIGNsa19zcmMNCj4gPiA+ID4gKyAqIHh4eF9jbnRf
+ZGl2ID0gIHNwZWMtPm1pbl94eHhfbnMgLyBzYW1wbGVfbnMNCj4gPiA+ID4gKyAqDQo+ID4gPiA+
+ICsgKiBTYW1wbGVfbnMgaXMgcm91bmRlZCBkb3duIGZvciB4eHhfY250X2RpdiB3b3VsZCBiZSBn
+cmVhdGVyDQo+ID4gPiA+ICsgKiB0aGFuIHRoZSBzbWFsbGVzdCBzcGVjLg0KPiA+ID4gPiArICog
+VGhlIHNkYV90aW1pbmcgaXMgY2hvc2VuIGFzIHRoZSBtaWRkbGUgdmFsdWUgYmV0d2Vlbg0KPiA+
+ID4gPiArICogdGhlIGxhcmdlc3QgYW5kIHNtYWxsZXN0Lg0KPiA+ID4gPiArICovDQo+ID4gPiA+
+ICtzdGF0aWMgaW50IG10a19pMmNfY2hlY2tfYWNfdGltaW5nKHN0cnVjdCBtdGtfaTJjICppMmMs
+DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgaW50
+IGNsa19zcmMsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5z
+aWduZWQgaW50IGNoZWNrX3NwZWVkLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHVuc2lnbmVkIGludCBzdGVwX2NudCwNCj4gPiA+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBpbnQgc2FtcGxlX2NudCkNCj4gPiA+ID4gK3sN
+Cj4gPiA+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzICpzcGVjOw0KPiA+
+ID4gPiArICAgICAgIHVuc2lnbmVkIGludCBzdV9zdGFfY250LCBsb3dfY250LCBoaWdoX2NudCwg
+bWF4X3N0ZXBfY250Ow0KPiA+ID4gPiArICAgICAgIHVuc2lnbmVkIGludCBzZGFfbWF4LCBzZGFf
+bWluLCBjbGtfbnMsIG1heF9zdGFfY250ID0gMHgzZjsNCj4gPiA+ID4gKyAgICAgICBsb25nIGxv
+bmcgc2FtcGxlX25zID0gKDEwMDAwMDAwMDAgKiAoc2FtcGxlX2NudCArIDEpKSAvIGNsa19zcmM7
+DQo+ID4gPg0KPiA+ID4gU28gc2FtcGxlX25zIGlzIGEgNjQtYml0IHZhbHVlLiBJcyB0aGF0IHJl
+YWxseSBuZWVkZWQ/DQo+ID4gPg0KPiA+DQo+ID4gKDEwMDAwMDAwMDAgKiAoc2FtcGxlX2NudCAr
+IDEpKSAvIGNsa19zcmMgdmFsdWUgaXMgYSAzMi1iaXQsICgxMDAwMDAwMDAwDQo+ID4gKiAoc2Ft
+cGxlX2NudCArIDEpKSB3aWxsIG92ZXIgMzItYml0IGlmIHNhbXBsZV9jbnQgaXMgNy4NCj4gDQo+
+IFRoZSBpbnRlcm1lZGlhdGUgdmFsdWUgd2lsbCBpbmRlZWQgbm90IGZpdCBpbiAzMi1iaXQuDQo+
+IEJ1dCB0aGF0IGRvZXNuJ3QgbWVhbiB0aGUgZW5kIHJlc3VsdCB3b24ndCBmaXQgaW4gMzItYml0
+Lg0KPiBBcyB5b3UgZGl2aWRlIHNwZWMtPm1pbl9sb3dfbnMgYW5kIHNwZWMtPm1pbl9zdV9kYXRf
+bnMgKHdoaWNoIEkgYXNzdW1lDQo+IGFyZSBzbWFsbCBudW1iZXJzKSBieSBzYW1wbGVfbnMgYmVs
+b3csIHNhbXBsZV9ucyBjYW5ub3QgYmUgdmVyeSBsYXJnZSwNCj4gb3IgdGhlIHF1b3RpZW50IHdp
+bGwgYmUgemVybyBhbnl3YXkuDQo+IFNvIGp1c3QgZG9pbmcgdGhlIG11bHRpcGxpY2F0aW9uIGlu
+IDY0LWJpdCwgZm9sbG93ZWQgYnkgYSA2NC1ieS0zMg0KPiBkaXZpc2lvbiBpcyBwcm9iYWJseSBm
+aW5lOg0KPiANCj4gICAgIHVuc2lnbmVkIGludCBzYW1wbGVfbnMgPSBkaXZfdTY0KDEwMDAwMDAw
+MDBVTEwgKiAoc2FtcGxlX2NudCArIDEpLCBjbGtfc3JjKTsNCj4gDQo+IFlvdSBtYXkgd2FudCB0
+byB0YWtlIHByZWNhdXRpb25zIGZvciB0aGUgY2FzZSB3aGVyZSB0aGUgcGFzc2VkIHZhbHVlIG9m
+DQo+IGNsa19zcmMgaXMgYSBzbWFsbCBudW1iZXIgKGNhbiB0aGF0IGhhcHBlbj8pLg0KPiANCj4g
+QlRXLCBjbGtfZ2V0X3JhdGUoKSByZXR1cm5zICJ1bnNpZ25lZCBsb25nIiwgd2hpbGUgbXRrX2ky
+Y19zZXRfc3BlZWQoKQ0KPiB0YWtlcyBhbiAidW5zaWduZWQgaW50IiBwYXJlbnRfY2xrLCB3aGlj
+aCBtYXkgY2F1c2UgZnV0dXJlIGlzc3Vlcy4NCj4gWW91IG1heSB3YW50IHRvIGNoYW5nZSB0aGF0
+IHRvICJ1bnNpZ25lZCBsb25nIiwgYWxvbmcgdGhlIHdob2xlDQo+IHByb3BhZ2F0aW9uIHBhdGgs
+IGFuZCB1c2UgZGl2NjRfdWwoKSBpbnN0ZWFkIG9mIGRpdl91NjQoKSBhYm92ZS4NCj4gDQoNClRo
+ZSByZXR1cm4gdHlwZSBvZiBkaXZfdTY0IGlzIHU2NCh1bnNpZ25lZCBsb25nIGxvbmcpLCB0aGVy
+ZSBpcyBhDQpjb21wdWxzb3J5IHR5cGUgY29udmVyc2lvbiBvcGVyYXRvci4gRG8geW91IHRoaW5r
+IGl0IGlzIG5lZWRlZD8NCkJUVywgd2UganVzdCBuZWVkIHRvIGNoYW5nZSB0aGUgdHlwZSBvZiBz
+YW1wbGVfbnMgdG8gdW5zaWduZWQgaW50LCBubw0KbWF0dGVyIHdoaWNoIG1ldGhvZCBpcyB1c2Vk
+LCB3aGF0IGlzIHlvdXIgb3Bpbmlvbj8NCg0KPiA+IEkgdGhpbmsgMTAwMDAwMDAwMCBhbmQgY2xr
+X3NyYyBpcyB0b28gYmlnLCBtYXliZSBJIGNhbiByZWR1Y2UgdGhlbiB3aXRoDQo+ID4gYmUgZGl2
+aWRlZCBhbGwgYnkgMTAwMC4NCj4gPiBleGFtcGxlOg0KPiA+DQo+ID4gdW5zaWduZWQgaW50IHNh
+bXBsZV9uczsNCj4gPiB1bnNpZ25lZCBpbnQgY2xrX3NyY19raHogPSBjbGtfc3JjIC8gMTAwMDsN
+Cj4gDQo+IFRoYXQgbWF5IGNhdXNlIHRvbyBtdWNoIGxvc3Mgb2YgcHJlY2lzaW9uLg0KPiANCg0K
+Y2xrX3NyYyBpcyBtb3JlIHRoYW4gTUh6IGFuZCBsZXNzIHRoYW4gR0haIGZvciBNVEsgaTJjIGNv
+bnRyb2xsZXIsIHNvIGl0DQp3b3VsZG4ndCBjYXVzZSB0b28gbXVjaCBsb3NzIG9mIHByZWNpc2lv
+bi4NCg0KPiA+DQo+ID4gaWYoY2xrX3NyY19raHopDQo+ID4gICAgICAgICBzYW1wbGVfbnMgPSAo
+MTAwMDAwMCAqIChzYW1wbGVfY250ICsgMSkpIC8gY2xrX3NyY19raHo7DQo+ID4gZWxzZQ0KPiA+
+ICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4NCj4gPiA+ID4gKyAgICAgICBpZiAoIWkyYy0+
+ZGV2X2NvbXAtPnRpbWluZ19hZGp1c3QpDQo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4g
+MDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGlmIChpMmMtPmRldl9jb21wLT5sdGltaW5n
+X2FkanVzdCkNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIG1heF9zdGFfY250ID0gMHgxMDA7DQo+
+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBzcGVjID0gbXRrX2kyY19nZXRfc3BlYyhjaGVja19z
+cGVlZCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBpZiAoaTJjLT5kZXZfY29tcC0+bHRp
+bWluZ19hZGp1c3QpDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBjbGtfbnMgPSAxMDAwMDAwMDAw
+IC8gY2xrX3NyYzsNCj4gPiA+ID4gKyAgICAgICBlbHNlDQo+ID4gPiA+ICsgICAgICAgICAgICAg
+ICBjbGtfbnMgPSBzYW1wbGVfbnMgLyAyOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgc3Vf
+c3RhX2NudCA9IERJVl9ST1VORF9VUChzcGVjLT5taW5fc3Vfc3RhX25zLCBjbGtfbnMpOw0KPiA+
+ID4gPiArICAgICAgIGlmIChzdV9zdGFfY250ID4gbWF4X3N0YV9jbnQpDQo+ID4gPiA+ICsgICAg
+ICAgICAgICAgICByZXR1cm4gLTE7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBsb3dfY250
+ID0gRElWX1JPVU5EX1VQKHNwZWMtPm1pbl9sb3dfbnMsIHNhbXBsZV9ucyk7DQo+ID4gPg0KPiA+
+ID4gU28gdGhpcyBpcyBhIDMyLWJpdCBieSA2NC1iaXQgZGl2aXNpb24gKGluZGVlZCwgbm90IDY0
+LWJ5LTMyISkNCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgR2VlcnQNCj4gDQoNCg==
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, May 13, 2020 at 12:41:27PM +0200, Mian Yousaf Kaukab wrote:
-> On Tue, May 12, 2020 at 01:45:28PM -0600, Stephen Warren wrote:
-> > On 5/12/20 8:48 AM, Mian Yousaf Kaukab wrote:
-> > > Add documentation for the new optional flag added for SRAM driver.
-> >=20
-> > > diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Docum=
-entation/devicetree/bindings/sram/sram.yaml
-> >=20
-> > > +  reserved-only:
-> > > +    description:
-> > > +      The flag indicating, that only SRAM reserved regions have to b=
-e remapped.
-> > > +      remapping type is selected depending upon no-memory-wc as usua=
-l.
-> > > +    type: boolean
-> >=20
-> > This feels a bit like a SW flag rather than a HW description, so I'm not
-> > sure it's appropriate to put it into DT.
->=20
-> Reserved regions themselves are software descriptions, no? Then we have '=
-pool'
-> flag which is again a software flag and so on. This flag falls into same
-> category and nothing out of ordinary.
-> >=20
-> > Are there any cases where the SW should map all of the SRAM, i.e. where
-> > we wouldn't expect to set reserved-only? [...]
->=20
-> Yes, here are a few examples:
-> arch/arm/boot/dts/aspeed-g*.dtsi
-
-Looking at the implementation of the sole user of this, which is in
-drivers/fsi/fsi-master-ast-cf.c, it looks like this really should've
-specified a partition because the driver basically goes on to allocate
-a fixed 4 KiB region of memory anyway.
-
-> arch/arm/boot/dts/at91*.dtsi
-
-While these define SRAM nodes, I don't see them referenced anywhere.
-
-> arch/arm/boot/dts/bcm7445.dtsi
-> Then arch/arm/boot/dts/dra7.dtsi is an example where we should map everyt=
-hing
-> except the reserved region.
-
-The driver currently maps everything, so if this relies on this
-particular reserved region not being mapped then that's already broken
-anyway.
-
-> > [...] I'd expect reserved-only to be
-> > the default, and perhaps only, mode of operation for the SRAM driver.
->=20
-> It will break compatibility with existing dtbs.
-
-Yes, that's a bit unfortunate. I think this driver may suffer from a
-slightly ambiguous device tree binding and then people just trying to
-fit it to their use-cases.
-
-However, I think we could preserve DTB backwards-compatibility while at
-the same time correcting course and establish some sort of consistency.
-
-Looking at the examples that you've provided and others, there are two
-classes of users: users that don't specify any partitions either use all
-of the available SRAM exclusively or manually allocate some part of it,
-whereas users that have specified partitions all seem to use only the
-defined partitions.
-
-Given that, I think what we could do is check if there are any child
-nodes and if not, keep the existing behaviour of mapping the whole SRAM
-area. For cases where child nodes exist we could decide to go with the
-default that Stephen suggested and only map regions for which a child
-node has been defined.
-
-This should allow both categories of users to work the way that they
-were probably expected to work.
-
-Any thoughts?
-
-Thierry
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7E7PsACgkQ3SOs138+
-s6HYyxAAkPk+vwNmlH7ETZWk+tDpu9p1jU53hBHo7thEwHCr+xFIaNlJFGmXWpOO
-62hcSRW2fLx8upTQ5D9z+/lB5q9G6Uu1vSWl3fLqDx7EkUBTo5V9llrbjUUmDNXJ
-rkMC3yYYfSPeXcQhkh+INMS3njREgduS3mJff6MbG6P6KTYd/sM67J5QxAX1CD0u
-rYH1mTanQW0CVRwY99yl1vIcYHL+PFNTDkQLt8zG2tvqTWYlHCbkNhHG2cQLFpoI
-wAwxgmnsD3ebq3/5UEH/1ba0x9XaRwMtzj/hNnG1EhqlQlpywfbOofy/xTz4LCgv
-Z1bBt6w2wvtAW665KtBUHPFVVqLdTmEiyAMyDfTcHeDUPuv6KjXTqZcFjTQ6cK/E
-MT0vPgePDZZ1CGqWa4vb6vWpkEvkAiXz5Bj3tZLHVyuKKtzLSjaneURKx8xYe6IH
-vrzQamDlLlooFHHM8vOLTKU0nA3vXgRN9bQZrrn4fZBMa+vUyM69xHuQ+/4l4VJg
-Aa0U0edhlzaX3067VcWJhZc+1VZ4OSLpH/JKEQfl3dPPM04e+yXtYelwpqaUWPwh
-tZ+vY6oS6MefZiXFvsskxbbHwhO71Sq7SCWdNrKE2qw5zFMx9LWskGFXGJehUIoT
-l54CPDD33NfU2N3T0j0Y6Pr5kPjKnaZq8NJQxMYBr3oZJZ/ix7s=
-=r/Os
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
