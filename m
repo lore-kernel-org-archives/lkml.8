@@ -2,144 +2,204 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A99C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27898206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD102207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B2+Ji2FF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bFbFCpyo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgETRur (ORCPT
+        id S1726838AbgETRv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:50:47 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13631 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726560AbgETRur (ORCPT
+        Wed, 20 May 2020 13:51:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14382 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETRv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:50:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589997046; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=MuJ6OyHDNvTOOsmTlh/Zlq7+mR2mQh3vcMAegcKB7GI=;
- b=B2+Ji2FF+K2YW9rJnjq6hm3sOET90vEH8rWF8vHbrNMMcWP3j2BUjrLZPNoFzrIMpuDFitlv
- jdW/A0cx07wf9L5LoeQ46nUr3IuVjquYbFULtI4tGnObRGlhZV8HqDDzHf7Oo5I4XcnxViAF
- 2+Yqt77yL+Guq2UezB/f3ZoVfc8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ec56de47171b6d7e444b846 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 17:50:28
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B6C92C433C6; Wed, 20 May 2020 17:50:27 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C1FCC433C8;
-        Wed, 20 May 2020 17:50:27 +0000 (UTC)
+        Wed, 20 May 2020 13:51:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec56e300001>; Wed, 20 May 2020 10:51:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 20 May 2020 10:51:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 20 May 2020 10:51:57 -0700
+Received: from [10.25.75.122] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May
+ 2020 17:51:53 +0000
+Subject: Re: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory
+ resource size >4GB
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Andrew Murray" <amurray@thegoodpenguin.co.uk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        "Alan Mikhak" <alan.mikhak@sifive.com>
+References: <20200513190855.23318-1-vidyas@nvidia.com>
+ <20200513223508.GA352288@bjorn-Precision-5520>
+ <20200518155435.GA2299@e121166-lin.cambridge.arm.com>
+ <cd62a9da-5c47-ceb2-10e7-4cf657f07801@nvidia.com>
+ <20200519145816.GB21261@e121166-lin.cambridge.arm.com>
+ <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <20200520110640.GA5300@e121166-lin.cambridge.arm.com>
+ <20200520131605.GD2141681@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ca4f4391-8fb1-2f45-1eac-334ba3d2b5dc@nvidia.com>
+Date:   Wed, 20 May 2020 23:21:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200520131605.GD2141681@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 May 2020 23:20:27 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v11] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-In-Reply-To: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
-References: <1589946996-31264-1-git-send-email-pillair@codeaurora.org>
-Message-ID: <2174d6b5ab066cf6fd080b5d3c27609f@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589997104; bh=QxlMINOTWlbAMjOcgNRGgLbQjDrdKdO/3VuJ+nICG84=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bFbFCpyo2q7HgOImZoqAMPpxFwmVGS2lLbJphiZsy0dOn8renkTuckhDgDug0Fs/r
+         V0UeWhwjv6/e11WbPHXosKAW1nYp6uzDez7VJ31dNjsldsRFaprPYW9mgug0/8LGt5
+         B+MhzmlVXnSyyPsXi2dAhKCCDBkSMNdKruCOySYxBSlYz571WFyvtu5rRfISw1hj73
+         EnZTMFQ+kUrmoRUrUFtbbfn6qOzfNb9iknvb7Y1FMOrUmBkXgSvcv8ML62yVBK/xh0
+         Bd6v6QIXDZ+VhoLl44ye2TxGn/tabv8y5b6z5vKfKQD0SOAXGevFa8ytTY8CZXONW2
+         H1QNaaIjBh6qg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 09:26, Rakesh Pillai wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
-> Changes from v10:
-> - Corrected the position of wifi node, as per address
-> - Removed the wlan_fw_mem from reserved memory, since
->   its already added as reserved memory in board DT file.
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 22 ++++++++++++++++++++++
->  2 files changed, 29 insertions(+)
+On 20-May-20 6:46 PM, Thierry Reding wrote:
+> On Wed, May 20, 2020 at 12:06:40PM +0100, Lorenzo Pieralisi wrote:
+>> On Tue, May 19, 2020 at 10:08:54PM +0000, Gustavo Pimentel wrote:
+>>
+>> [...]
+>>
+>>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>> index 42fbfe2a1b8f..a29396529ea4 100644
+>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>>> @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>>>>>                       pp->mem = win->res;
+>>>>>>>>                       pp->mem->name = "MEM";
+>>>>>>>>                       mem_size = resource_size(pp->mem);
+>>>>>>>> -                   if (upper_32_bits(mem_size))
+>>>>>>>> +                   if (upper_32_bits(mem_size) &&
+>>>>>>>> +                       !(win->res->flags & IORESOURCE_PREFETCH))
+>>>>>>>>                               dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+>>>>>>>>                       pp->mem_size = mem_size;
+>>>>>>>>                       pp->mem_bus_addr = pp->mem->start - win->offset;
+>>>>>>
+>>>>>> That warning was added for a reason - why should not we log legitimate
+>>>>>> warnings ? AFAIU having resources larger than 4GB can lead to undefined
+>>>>>> behaviour given the current ATU programming API.
+>>>>> Yeah. I'm all for a warning if the size is larger than 4GB in case of
+>>>>> non-prefetchable window as one of the ATU outbound translation
+>>>>> channels is being used,
+>>>>
+>>>> Is it true for all DWC host controllers ? Or there may be another
+>>>> exception whereby we would be forced to disable this warning altogether
+>>>> ?
+>>>>
+>>>>> but, we are not employing any ATU outbound translation channel for
+>>>>
+>>>> What does this mean ? "we are not employing any ATU outbound...", is
+>>>> this the tegra driver ? And what guarantees that this warning is not
+>>>> legitimate on DWC host controllers that do use the ATU outbound
+>>>> translation for prefetchable windows ?
+>>>>
+>>>> Can DWC maintainers chime in and clarify please ?
+>>>
+>>> Before this code section, there is the following function call
+>>> pci_parse_request_of_pci_ranges(), which performs a simple validation for
+>>> the IORESOURCE_MEM resource type.
+>>> This validation checks if the resource is marked as prefetchable, if so,
+>>> an error message "non-prefetchable memory resource required" is given and
+>>> a return code with the -EINVAL value.
+>>
+>> That code checks if there is *at least* a non-prefetchable resource,
+>> that's all it does.
+>>
+>>> In other words, to reach the code that Vidya is changing, it can be only
+>>> if the resource is a non-prefetchable, any prefetchable resource will be
+>>> blocked by the previous call, if I'm not mistaken.
+>>
+>> I think you are mistaken sorry.
+>>
+>>> Having this in mind, Vidya's change will not make the expected result
+>>> aimed by him.
+>>
+>> I think Vidya's patch does what he expects, the question is whether
+>> it is widely applicable to ALL DWC hosts, that's what I want to know.
+>>
+>>> I don't see any problem by having resources larger than 4GB, from what
+>>> I'm seeing in the databook there isn't any restricting related to that as
+>>> long they don't consume the maximum space that is addressable by the
+>>> system (depending on if they are 32-bit or 64-bit system address).
+>>>
+>>> To be honest, I'm not seeing a system that could have this resource
+>>> larger than 4GB, but it might exist some exception that I don't know of,
+>>> that's why I accepted Alan's patch to warn the user that the resource
+>>> exceeds the maximum for the 32 bits so that he can be aware that he
+>>> *might* be consuming the maximum space addressable.
+>>
+>> I think it is most certainly a possibility to have > 4GB prefetchable
+>> address spaces so we ought to fix this for good. I still have to
+>> understand how the DWC host detects the memory region to be programmed
+>> into the ATU given that there is more than one but only 1 ATU memory
+>> region AFAICS.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 4e9149d..38b102e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -389,6 +389,13 @@
->  	};
->  };
-> 
-> +&wifi {
-> +	status = "okay";
-> +	wifi-firmware {
-> +		iommus = <&apps_smmu 0xc2 0x1>;
-> +	};
-> +};
-> +
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
-> 
->  &qspi_clk {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 6b12c60..da79f8f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -2811,6 +2811,28 @@
-> 
->  			#freq-domain-cells = <1>;
->  		};
-> +
-> +		wifi: wifi@18800000 {
-> +			compatible = "qcom,wcn3990-wifi";
-> +			reg = <0 0x18800000 0 0x800000>;
-> +			reg-names = "membase";
-> +			iommus = <&apps_smmu 0xc0 0x1>;
-> +			interrupts =
-> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-> +			memory-region = <&wlan_mem>;
-> +			status = "disabled";
-> +		};
->  	};
-> 
->  	thermal-zones {
+> Probably best to wait for Vidya to confirm since I'm not altogether
+> familiar with PCI on Tegra194, but looking at the DTS files and the
+> Tegra194 TRM, the prefetchable memory regions are set to a range in
+> 0x1200000000-0x1fffffffff which is a region of the address map that
+> is reserved for "PCIe aperture for > 32-bit OS". Part of that is in
+> use for non-prefetchable memory (and ends up being programmed into
+> the ATU) whereas a much larger part is used for prefetchable memory
+> and is not programmed anywhere, as far as I can tell.Yes. That is true. In case of Tegra194, for 1-to-1 memory translations, 
+there is no need to use any ATU regions at all as the HW is capable of 
+generating a memory transaction on the bus on its own for any CPU 
+generated reads/writes falling in these apertures and are not captured 
+by ATU windows for generating other (config/IO) types of transactions. 
+Since a part of 64-bit region is used for mapping non-prefetchable BARs 
+of endpoints (which are only 32-bit in size), a translation is required 
+from 64-bit CPU/AXI address to 32-bit PCIe bus address and ATU region is 
+used precisely for this purpose. Since there is no need for ATU 
+translation to do 1-to-1 memory mapping, rest of the 64-bit aperture is 
+used for mapping prefetchable BARs. I'm not sure if this HW behavior is 
+same across DWC implementations. I took a quick look at the 'ranges' 
+property of other DWC implementations and none of them have a region 
+marked as prefetchable...! I'm not sure how kernel handles mapping an 
+endpoint's prefetchable BAR in this case (does it use the 
+'non-prefetchable' mapping of 'ranges' property for 'prefetchable' BARs 
+as well??)
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+> 
+> But I think given that this is a designated region of the address
+> map this is probably automatically redirected to the PCIe controller.
+> What I don't know is if that's something Tegra-specific or whether all
+> instantiations have something similar set up.
+> 
+> Thierry
+> 
