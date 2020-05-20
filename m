@@ -2,121 +2,117 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C800C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44932088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:30:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sN/5GAbL"
+	by mail.kernel.org (Postfix) with ESMTP id 6888B20890
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 22:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgETWaw (ORCPT
+        id S1728585AbgETWbC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 18:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbgETWaw (ORCPT
+        Wed, 20 May 2020 18:31:02 -0400
+Received: from mailoutvs40.siol.net ([185.57.226.231]:51865 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728270AbgETWbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 18:30:52 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEF4C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:30:52 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id o13so3897200otl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 15:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4meyUv3apA8iPicPJAJdGUiEC8vQmDAeMhqbnd2+eRA=;
-        b=sN/5GAbLyv5S/YTIO3jPXHKk/tSB1ZTxqYGNbtJc7wDZ2bZeQo5Q1J0aVDMkn89qOC
-         QYoeACQBxyB9swUKayNAX5GG3boQb7wfGXiZTggIkZtQK4tBUrgUtXBQ9iUdMHx5Zw+Y
-         6nF8/RGFZKwheRzR3Z+FPeIJEIBPXXbA/Tnhlv8fw38SnqdRUab44lVo1qdNhCQuja7j
-         /kVO7KGlAxNZdcZwuVI23DEXW7/3ShQRML4/PiBQ2o6czcKnFBrj80M4JiyQn5+vx9sg
-         uS1X94Pq1SX8DV1tFZPidkXnNieyCeKxMlUnHITPfz4ahGkYrVn80hopyvA/OcnITsp2
-         2afQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4meyUv3apA8iPicPJAJdGUiEC8vQmDAeMhqbnd2+eRA=;
-        b=Tjv/p+x2ttKJLRK11cKSYE9FRrX9zi4JvKe0/OTDgjFHP01ExcQdj437bZsyafHUvD
-         7GxlYXDYtFJrmG+tnhu0np00XoVNPlkHzx0FXUU8KyH1ex/AQeg1KsvYk62GeVH67iDa
-         s6LBYJczpDl+VzWn/NO4ZoPGBps92jpSdKmm9jHdq/Cq8opqpiUzYxBh/PLGe1R5eg1O
-         kfOx8lmDlbhsGatGzXaNNqTAdIXiIxwcnwBdTwVHG9gi4BexXYVuMG/31/V7zi2kvFw7
-         I6L/4i7wtIxAfeCyq/2clHZdKvgLtfClOHqnc1SDNXpapHqjjGPbIzi0BTKjDg26PHhD
-         hS9Q==
-X-Gm-Message-State: AOAM532PmDfO/MEpdh7sCdGc+XJ/l78a+YNjP6+Z0QBTiVRxwgII8Jfp
-        5J+Yoeo8XnJqxNXe3yVXFPvijLkp7kBVHflXdoM5nQ==
-X-Google-Smtp-Source: ABdhPJy4Jgra/VNng6E/OpyCiywEvyOQ+aFnAf0/rGeNsLRikA2hO5jssErrlOqsxruEzeJyspzmmfi2HrGN5TXfzyA=
-X-Received: by 2002:a9d:27a3:: with SMTP id c32mr5249187otb.233.1590013850956;
- Wed, 20 May 2020 15:30:50 -0700 (PDT)
+        Wed, 20 May 2020 18:31:02 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 5F0AD521CA5;
+        Thu, 21 May 2020 00:30:58 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id WVPCA-mzMnE8; Thu, 21 May 2020 00:30:58 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id E1B7A521CA2;
+        Thu, 21 May 2020 00:30:57 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 6D5FC521C9C;
+        Thu, 21 May 2020 00:30:57 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, paul.kocialkowski@bootlin.com,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org, wens@csie.org,
+        hverkuil-cisco@xs4all.nl, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] media: cedrus: Add support for VP8 decoding
+Date:   Thu, 21 May 2020 00:30:56 +0200
+Message-ID: <2875977.BS6FNRR2HQ@jernej-laptop>
+In-Reply-To: <ee0aa12fdf1655c4e563b8fc9753a5ab5e52f4cf.camel@ndufresne.ca>
+References: <20200520210129.132816-1-jernej.skrabec@siol.net> <ee0aa12fdf1655c4e563b8fc9753a5ab5e52f4cf.camel@ndufresne.ca>
 MIME-Version: 1.0
-References: <20200511204150.27858-18-will@kernel.org> <158929421358.390.2138794300247844367.tip-bot2@tip-bot2>
- <20200520221712.GA21166@zn.tnic>
-In-Reply-To: <20200520221712.GA21166@zn.tnic>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 21 May 2020 00:30:39 +0200
-Message-ID: <CANpmjNPsEMF8qq4qHoJEDb8mi211QzXODvnakh2fj3BOw+56MQ@mail.gmail.com>
-Subject: Re: [tip: locking/kcsan] READ_ONCE: Use data_race() to avoid KCSAN instrumentation
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 at 00:17, Borislav Petkov <bp@alien8.de> wrote:
->
-> Hi,
->
-> On Tue, May 12, 2020 at 02:36:53PM -0000, tip-bot2 for Will Deacon wrote:
-> > The following commit has been merged into the locking/kcsan branch of tip:
-> >
-> > Commit-ID:     cdd28ad2d8110099e43527e96d059c5639809680
-> > Gitweb:        https://git.kernel.org/tip/cdd28ad2d8110099e43527e96d059c5639809680
-> > Author:        Will Deacon <will@kernel.org>
-> > AuthorDate:    Mon, 11 May 2020 21:41:49 +01:00
-> > Committer:     Thomas Gleixner <tglx@linutronix.de>
-> > CommitterDate: Tue, 12 May 2020 11:04:17 +02:00
-> >
-> > READ_ONCE: Use data_race() to avoid KCSAN instrumentation
-> >
-> > Rather then open-code the disabling/enabling of KCSAN across the guts of
-> > {READ,WRITE}_ONCE(), defer to the data_race() macro instead.
-> >
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Cc: Marco Elver <elver@google.com>
-> > Link: https://lkml.kernel.org/r/20200511204150.27858-18-will@kernel.org
->
-> so this commit causes a kernel build slowdown depending on the .config
-> of between 50% and over 100%. I just bisected locking/kcsan and got
->
-> NOT_OK: cdd28ad2d811 READ_ONCE: Use data_race() to avoid KCSAN instrumentation
-> OK:     88f1be32068d kcsan: Rework data_race() so that it can be used by READ_ONCE()
->
-> with a simple:
->
-> $ git clean -dqfx && mk defconfig
-> $ time make -j<NUM_CORES+1>
->
-> I'm not even booting the kernels - simply checking out the above commits
-> and building the target kernels. I.e., something in that commit is
-> making gcc go nuts in the compilation phases.
+Dne sreda, 20. maj 2020 ob 23:43:40 CEST je Nicolas Dufresne napisal(a):
+> Le mercredi 20 mai 2020 à 23:01 +0200, Jernej Skrabec a écrit :
+> > VP8 in Cedrus shares same engine as H264.
+> > 
+> > Note that it seems necessary to call bitstream parsing functions,
+> > to parse frame header, otherwise decoded image is garbage. This is
+> > contrary to what is driver supposed to do. However, values are not
+> > really used, so this might be acceptable. It's possible that bitstream
+> 
+> Have you verified that all values passed through controls are not used
+> ? To remain a stateless driver, there is no requirement for parsed data
+> to be used, the only requirement is that the reference are used.
+> Otherwise doing parallel decoding of two stream of different stream
+> would be broken. Have you verified that parallel decoding is working as
+> expected ?
 
-This should be fixed when the series that includes this commit is applied:
-https://lore.kernel.org/lkml/20200515150338.190344-9-elver@google.com/
+I'm not sure if you understand what I meant. Although userspace app parses 
+frame header and fills all data in VP8 control, driver parses frame header 
+again, using HW bitstream parsing functionality in cedrus_read_header(). 
+Without that second header parsing in HW, decoded image is garbage. Note that 
+cedrus_read_header() discards all parsed values and relies on those provided 
+in controls.
 
-Thanks,
--- Marco
+This parsing doesn't cause any problems with parallel decoding or anything. 
+It's done during frame decoding job, so it doesn't affect any state. It's just 
+that we shouldn't need to parse header in driver because all data is already 
+provided in controls. It seems that Cedrus core was never tested without that 
+HW frame header parsing. I found out that HEVC and H264 frames can sometimes 
+also be wrongly decoded if no bitstream parsing function is triggered in HW 
+before final decoding.
+
+I spend a lot of time trying to avoid that header parsing, but I couldn't find 
+any way around it.
+
+In another words, Cedrus VPU provides two functionalities - HW bitstream 
+parsing (to speed up header parsing) and video decoding. One would thought 
+that video decoding can be used independently, if all data from header is 
+already known, but it can't be.
+
+Best regards,
+Jernej
+
+> 
+> > parsing functions set some internal VPU state, which is later necessary
+> > for proper decoding. Biggest suspect is "VP8 probs update" trigger.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/staging/media/sunxi/cedrus/Makefile   |   3 +-
+> >  drivers/staging/media/sunxi/cedrus/cedrus.c   |   8 +
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  15 +
+> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |   5 +
+> >  .../staging/media/sunxi/cedrus/cedrus_hw.c    |   1 +
+> >  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  80 ++
+> >  .../staging/media/sunxi/cedrus/cedrus_video.c |   9 +
+> >  .../staging/media/sunxi/cedrus/cedrus_vp8.c   | 699 ++++++++++++++++++
+> >  8 files changed, 819 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_vp8.c
+
+
+
