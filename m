@@ -2,239 +2,232 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EA0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D006C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE48205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1E7205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Tj9V6vdU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S8Cue+Vt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgETObQ (ORCPT
+        id S1726886AbgETOcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgETObO (ORCPT
+        Wed, 20 May 2020 10:32:15 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47907 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgETOcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:31:14 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B18AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:31:13 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r3so1477023wrn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HP7BIyw2Y/C8hkvgzZRIvmSm/MyaptHmyY6CakMJdU0=;
-        b=Tj9V6vdUREzHIKAIcpP3UNMkiwFZOfcPfxrRu9Xv38B5EuZqo0CIOpH5uP0XZ/JRTi
-         dVeKogHLAYHhyKOiXt062o/+fbm82eFp7zEgKhKW64uh3b6SCTshnMRYrSS+lWlvUMT/
-         fEtOzoXazBSk1EL3cd0pjluANGqfFdC4zEpaY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HP7BIyw2Y/C8hkvgzZRIvmSm/MyaptHmyY6CakMJdU0=;
-        b=dNHUXYerqWhzK74gGof27tERQU38RpQV80IInzPeauEkcooKCySbuH3g/H4GC29UqP
-         BRyJ4SDqxKXRKlz6ATQYji/wM1yF6eyxRPwzs/SL9f9TziUrm1P7jgVcC4FkZuBLH5Qy
-         mNjryeb27L8r1/SGM6ul5Z1SDOY3lYni6TMt8B4sfZ0MXUiStzrvtjiud/TED/7MKTu3
-         MXZhqgHI5O29dI1h5P9lgM8ilu72MD3/vjyPVyVKA89cuYIa/eA8cA/kbSkLCxM1TasQ
-         MCz1eREcZKnv9Vd0MfAXeJrEFbZEyBI9QLOsWJ5MW0k9rNflyT48NNiCzEYijH1YX5Zt
-         OXmg==
-X-Gm-Message-State: AOAM533uKBhtunZtQqP6XsxXdSghusE5JguVBOmQSR7tehBeBAD7hHcY
-        5fsvxhTTCwsottXy/1GCjfkmcjCVZ78uMk0U6m8Ycw==
-X-Google-Smtp-Source: ABdhPJwVIXTx8ngi6DSuNnR19unkLPjwJTEgk1hS1LqfoqkdWGyUpA/+44SVaMxijYJ6PhLELxTsrpH9bpACjNB88j0=
-X-Received: by 2002:adf:e688:: with SMTP id r8mr4324103wrm.274.1589985072196;
- Wed, 20 May 2020 07:31:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-5-james.quinlan@broadcom.com> <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
-In-Reply-To: <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Wed, 20 May 2020 10:30:59 -0400
-Message-ID: <CA+-6iNwE7CkD0r7Z0cKGXxE14Unf7ZGsr4q7Z8dPhgYYXHXHEg@mail.gmail.com>
-Subject: Re: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Wed, 20 May 2020 10:32:14 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200520143212euoutp0146d8734bdfb0951c00f3a830e80d90be~Qww3ZJoND2147721477euoutp01O;
+        Wed, 20 May 2020 14:32:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200520143212euoutp0146d8734bdfb0951c00f3a830e80d90be~Qww3ZJoND2147721477euoutp01O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589985132;
+        bh=OwUS0cq1oLEsjMCxXLMi+rfk4oqHeZVhLszgl/xO6oE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S8Cue+VtnXohCYgmbAB3vTJHl8wcHLpHgk0O8deQZZ4s1ao9OTmJsbp6uePrLPa7a
+         Jb/bE8pa+/r2QBF1x4yXEy/YA82gFKG2JeX6Kd3E72iCfzSdX3PqvKLuevsWizxy8I
+         JN9TRkal0XTHAlTZZx2MOYUqaKWWIL7T4zK8MG0k=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200520143212eucas1p1a5ad990bee7a07434384a79b7ac84891~Qww3FyCvP1912419124eucas1p1J;
+        Wed, 20 May 2020 14:32:12 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 0C.26.61286.C6F35CE5; Wed, 20
+        May 2020 15:32:12 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200520143211eucas1p21bd93be5c62726aa715db05bb6e7119b~Qww2ton0l1383613836eucas1p2J;
+        Wed, 20 May 2020 14:32:11 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200520143211eusmtrp118b198357d909262b6250f67cd27f0f7~Qww2snWjC2728727287eusmtrp1V;
+        Wed, 20 May 2020 14:32:11 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-d3-5ec53f6ce3e8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B8.C9.07950.B6F35CE5; Wed, 20
+        May 2020 15:32:11 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200520143211eusmtip165dc045c53f2e4711a914c093660cf52~Qww2hq-EB0678406784eusmtip1B;
+        Wed, 20 May 2020 14:32:11 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Stephan Mueller <smueller@chronox.de>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Wed, 20 May 2020 16:31:59 +0200
+In-Reply-To: <2041475.ybOAuNAZB8@tauon.chronox.de> (Stephan Mueller's
+        message of "Wed, 20 May 2020 13:53:04 +0200")
+Message-ID: <dleftj4ksa3cf4.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa1BMYRieb89lT42t01bTq2LMDjMu08Vo+NyZcTnufjAZIotTLu1mdtuI
+        H6WwSio1xrZCkcrSxcoiSiKLJktiVrShTLVEcm1ddzuZ8e953+d53u953/kYQlpE+zNblHG8
+        SimPkdHupOlOvyUoZmb9utBemxT/yr4jxhd05RQuPVRPYktqMYEd72+LccrpchoftAfizPa3
+        BLZYKsTY2P6Uwm22fhF+XJVHY52lRoTzczoonG/KQPhN7kUavz/XgfCRhlISm++mErO8uR+O
+        bMTp2xpprq+5WcRd1beKudPGGzRnqh3FGQ2pNHfj+Hkxd7EwkcuoNCAuo7sCceWVT0gu+b6W
+        4j4Zhy/3WO0+bRMfsyWeV4XMWO++2f7xGb29RbaztqWLSELWwDTkxgAbBl+sZjoNuTNStgRB
+        7617g8VnBGU3syih+ITA3N9O/7MkpxhEAlGMoCfvDBKKTgRV9nQiDTEMzQZDaekql8GHHQNP
+        tCcHxhLsAwp+HmsiXIQ3Ox8KrEWkC5PsKLAdzqdc2I3VQIvlOHJhCTsJ9iaXDOh92clQ2dUm
+        FvpecC+3Y8BLsArItbxDQrqXDLxzRLgyADsHrl+OENreYDdXigUcCA056aQgSYSc7ImuaMCm
+        IzDlfScFzVR48cDhzCx24tnwcYGg9gBrj5fwpgdkm44SQlsCB/ZLBd9IKMu8PjjDHw7ZSwZj
+        cVDcaxu85j4EWu15IguN0P+3iv6/VfTOsYTzbuVVIUJ7HBQVvCUEPB3Kyj6Q+YgyID9eo1ZE
+        8+rxSn5HsFquUGuU0cEbYxVG5PyxDb/NfVfQl6YNdYhlkGyIhGHr10kpebw6QVGHRjonva44
+        9xD5k8pYJS/zkRR4OmnJJnnCLl4VG6nSxPDqOhTAkDI/yYRT3WulbLQ8jt/G89t51T9WxLj5
+        J6GE+tXhjWdbd0clhwVF2g1e6c3mlMzC554eFfebCmKrq0/Ghdb82cp0Lkn8ZWgM950Xop2d
+        uX6bbljUiWvL+hboXlGjm301J4Z6xvtUdx9cEfqop2mKpbbGd6HX8jWP+i4tWmqV8UkPzXsW
+        z9Vdcmju2iKTvrUX8xNXfqXqnmvCVgVkyUj1Zvn4sYRKLf8LfVnr27kDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIKsWRmVeSWpSXmKPExsVy+t/xu7rZ9kfjDF7NsLD4O+kYu8XGGetZ
+        Ldb2HmWxON+5nNni17sj7BbNi9ezWXS/krHof/ya2eL8+Q3sFpseX2O1uH/vJ5PF5V1z2Cxm
+        nN/HZLFg8hNWiwXb+hgtns7czGbxbvUTRoupp9eyWBw/0cnsIOzx+9ckRo9Z98+yeXy6coXJ
+        Y+esu+weizftZ/PYdkDVY9OqTjaP/XPXsHtsXlLv0bdlFaNH38sNjB7rt1xl8Wg61c7q8XmT
+        XABflJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G
+        q4832QpuKVUcuPWCuYHxhkwXIyeHhICJRFPzKqYuRi4OIYGljBIXrlwAcjiAElISK+emQ9QI
+        S/y51sUGUfOUUWL2jzlgNWwCehJr10aA1IgIaEpcbZ8PVsMssItV4nb3NVaQhLCAu8TCG8tY
+        QGwhAUOJs2t72EFsFgFViXsTF4DVcAqUSnz73s4EYvMKmEu0NK1gBrFFBSwltry4zw4RF5Q4
+        OfMJ2BxmgWyJr6ufM09gFJiFJDULSWoW0HnMQDet36UPEdaWWLbwNTOEbSuxbt17lgWMrKsY
+        RVJLi3PTc4uN9IoTc4tL89L1kvNzNzECk8S2Yz+37GDsehd8iFGAg1GJh5dD4GicEGtiWXFl
+        7iFGFaAxjzasvsAoxZKXn5eqJMK7kB8ozZuSWFmVWpQfX1Sak1p8iNEU6M+JzFKiyfnAxJZX
+        Em9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHxGFdo58OHzJLOfzWk
+        RWt2bJwZNm+/57k5ETM5uNXVRazcd65iTDbytfePMXsY+Z3LLVrvTkPFVaFtDOu7nZWzmeSe
+        7Vhq5Far1Fdmee9EZrel51R5EZv/XYf6G5Q/BInwrluXIX/+7oS0ozee+D9fMeOSjuSl/zqy
+        e37P3N6dP1XMK2FjTJ4SS3FGoqEWc1FxIgB9qUtkNAMAAA==
+X-CMS-MailID: 20200520143211eucas1p21bd93be5c62726aa715db05bb6e7119b
+X-Msg-Generator: CA
+X-RootMTR: 20200520143211eucas1p21bd93be5c62726aa715db05bb6e7119b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200520143211eucas1p21bd93be5c62726aa715db05bb6e7119b
+References: <2041475.ybOAuNAZB8@tauon.chronox.de>
+        <CGME20200520143211eucas1p21bd93be5c62726aa715db05bb6e7119b@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 7:51 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+It was <2020-05-20 =C5=9Bro 13:53>, when Stephan Mueller wrote:
+> Am Mittwoch, 20. Mai 2020, 12:44:33 CEST schrieb Lukasz Stelmach:
+>> It was <2020-05-20 =C5=9Bro 11:18>, when Stephan Mueller wrote:
+>>> Am Mittwoch, 20. Mai 2020, 11:10:32 CEST schrieb Lukasz Stelmach:
+>>>> It was <2020-05-20 =C5=9Bro 08:23>, when Stephan Mueller wrote:
+>>>>> Am Dienstag, 19. Mai 2020, 23:25:51 CEST schrieb =C5=81ukasz Stelmach:
+>>>>>
+>>>>>> The value was estimaded with ea_iid[1] using on 10485760 bytes
+>>>>>> read from the RNG via /dev/hwrng. The min-entropy value
+>>>>>> calculated using the most common value estimate (NIST SP
+>>>>>> 800-90P[2], section 6.3.1) was 7.964464.
+>>>>>=20
+>>>>> I am sorry, but I think I did not make myself clear: testing
+>>>>> random numbers post-processing with the statistical tools does NOT
+>>>>> give any idea about the entropy rate. Thus, all that was
+>>>>> calculated is the proper implementation of the post-processing
+>>>>> operation and not the actual noise source.
+>>>>>=20
+>>>>> What needs to happen is that we need access to raw, unconditioned
+>>>>> data from the noise source that is analyzed with the statistical
+>>>>> methods.
+>>>>=20
+>>>> I did understand you and I assure you the data I tested were
+>>>> obtained directly from RNGs. As I pointed before[1], that is how
+>>>> /dev/hwrng works[2].
+>>>=20
+>>> I understand that /dev/hwrng pulls the data straight from the
+>>> hardware. But the data from the hardware usually is not obtained
+>>> straight from the noise source.
+>>>=20
+>>> Typically you have a noise source (e.g. a ring oscillator) whose data
+>>> is digitized then fed into a compression function like an LFSR or a
+>>> hash. Then a cryptographic operation like a CBC-MAC, hash or even a
+>>> DRBG is applied to that data when the caller wants to have random
+>>> numbers.
+
+[...]
+
+>>> In order to estimate entropy, we need the raw unconditioned data from
+>>> the, say, ring oscillator and not from the (cryptographic) output
+>>> operation.
+>>=20
+>> Can you tell, why it matters in this case? If I understand correctly,
+>> the quality field describes not the randomness created by the noise
+>> generator but the one delivered by the driver to other software
+>> components.
 >
-> Hi Jim,
+> The quality field is used by add_hwgenerator_randomness to increase
+> the Linux RNG entropy estimator accordingly. This is the issue.
 >
-> On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
-> > From: Jim Quinlan <jquinlan@broadcom.com>
-> >
-> > Add in compatibility strings and code for three Broadcom STB chips.
-> > Some of the register locations, shifts, and masks are different
-> > for certain chips, requiring the use of different constants based
-> > on of_id.
-> >
-> > We would like to add the following at this time to the match list
-> > but we need to wait until the end of this patchset so that
-> > everything works.
-> >
-> >     { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
-> >     { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-> >     { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-> >     { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
-> >
-> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 103 +++++++++++++++++++++++---
-> >  1 file changed, 91 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> > b/drivers/pci/controller/pcie-brcmstb.c
-> > index 73020b4ff090..c1cf4ea7d3d9 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -120,9 +120,8 @@
-> >  #define  PCIE_EXT_SLOT_SHIFT                         15
-> >  #define  PCIE_EXT_FUNC_SHIFT                         12
-> >
-> > -#define PCIE_RGR1_SW_INIT_1                          0x9210
-> >  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK                      0x1
-> > -#define  PCIE_RGR1_SW_INIT_1_INIT_MASK                       0x2
-> > +#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT             0x0
-> >
-> >  /* PCIe parameters */
-> >  #define BRCM_NUM_PCIE_OUT_WINS               0x4
-> > @@ -152,6 +151,69 @@
-> >  #define SSC_STATUS_SSC_MASK          0x400
-> >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
-> >
-> > +#define IDX_ADDR(pcie)       \
-> > +     (pcie->reg_offsets[EXT_CFG_INDEX])
-> > +#define DATA_ADDR(pcie)      \
-> > +     (pcie->reg_offsets[EXT_CFG_DATA])
-> > +#define PCIE_RGR1_SW_INIT_1(pcie) \
-> > +     (pcie->reg_offsets[RGR1_SW_INIT_1])
-> > +
-> > +enum {
-> > +     RGR1_SW_INIT_1,
-> > +     EXT_CFG_INDEX,
-> > +     EXT_CFG_DATA,
-> > +};
-> > +
-> > +enum {
-> > +     RGR1_SW_INIT_1_INIT_MASK,
-> > +     RGR1_SW_INIT_1_INIT_SHIFT,
-> > +};
-> > +
-> > +enum pcie_type {
-> > +     GENERIC,
-> > +     BCM7278,
-> > +};
-> > +
-> > +struct pcie_cfg_data {
-> > +     const int *reg_field_info;
-> > +     const int *offsets;
-> > +     const enum pcie_type type;
-> > +};
-> > +
-> > +static const int pcie_reg_field_info[] = {
-> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x2,
-> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
-> > +};
-> > +
-> > +static const int pcie_reg_field_info_bcm7278[] = {
-> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x1,
-> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
-> > +};
-> > +
-> > +static const int pcie_offsets[] = {
-> > +     [RGR1_SW_INIT_1] = 0x9210,
-> > +     [EXT_CFG_INDEX]  = 0x9000,
-> > +     [EXT_CFG_DATA]   = 0x9004,
-> > +};
-> > +
-> > +static const struct pcie_cfg_data generic_cfg = {
-> > +     .reg_field_info = pcie_reg_field_info,
-> > +     .offsets        = pcie_offsets,
-> > +     .type           = GENERIC,
-> > +};
-> > +
-> > +static const int pcie_offset_bcm7278[] = {
-> > +     [RGR1_SW_INIT_1] = 0xc010,
-> > +     [EXT_CFG_INDEX] = 0x9000,
-> > +     [EXT_CFG_DATA] = 0x9004,
-> > +};
-> > +
-> > +static const struct pcie_cfg_data bcm7278_cfg = {
-> > +     .reg_field_info = pcie_reg_field_info_bcm7278,
-> > +     .offsets        = pcie_offset_bcm7278,
-> > +     .type           = BCM7278,
-> > +};
+> And giving an entropy rate based on post-processed data is
+> meaningless.
 >
-> It's not essential, but if v2 is due I'd suggest factoring out the bcm2728
-> specific structures above, and moving them to patch #15. This will keep a
-> clearer division between the patch introducing the infrastructure and the one
-> adding the support for a new device.
-The problem is that one of the commits needs the 7278 type so it has
-to be declared earlier.
+> The concern is, for example, that you use a DRBG that you seeded with,
+> say, a zero buffer. You get perfect random data from it that no
+> statistical test can disprove. Yet we know this data stream has zero
+> entropy. Thus, we need to get to the source and assess its entropy.
+
+Of course, this makes sense.
+
+>>> That said, the illustrated example is typical for hardware RNGs. Yet
+>>> it is never guaranteed to work that way. Thus, if you can point to
+>>> architecture documentation of your specific hardware RNGs showing
+>>> that the data read from the hardware is pure unconditioned noise
+>>> data, then I have no objections to the patch.
+>>=20
+>> I can tell for sure that this is the case for exynos-trng[1].
 >
-> > +
-> >  struct brcm_msi {
-> >       struct device           *dev;
-> >       void __iomem            *base;
-> > @@ -176,6 +238,9 @@ struct brcm_pcie {
-> >       int                     gen;
-> >       u64                     msi_target_addr;
-> >       struct brcm_msi         *msi;
-> > +     const int               *reg_offsets;
-> > +     const int               *reg_field_info;
-> > +     enum pcie_type          type;
-> >  };
-> >
-> >  /*
-> > @@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops = {
-> >
-> >  static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32
-> > val)
-> >  {
-> > -     u32 tmp;
-> > +     u32 tmp, mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
-> > +     u32 shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
+> So you are saying that the output for the exynos-trng is straight from
+> a ring oscillator without any post-processing of any kind?
 >
-> I don't think you need shift here, IIUC u32p_replace_bits() will take care of
-> all the masking and shifting internally, moreover, you'd be able to drop the
-> shift entry from reg_field_info.
-Got it.
->
-> > -     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
-> > -     u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
-> > -     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
-> > +     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > +     tmp = (tmp & ~mask) | ((val << shift) & mask);
-> > +     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> >  }
->
-> Regards,
-> Nicolas
->
-Thanks!
-Jim
+> If this is the case, I would like to suggest you add that statement to
+> the git commit message with that reference. If so, then I would
+> withdraw my objection.
+
+Done. I will do some reaserch on iproc-rng200 and I will send v3 with
+the altered commit message.
+
+
+Thank you *very* much for your patience.
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl7FP18ACgkQsK4enJil
+gBCRAgf+J9WxfSzraFFchLmdRn7xYXcLCU8fETKwyjVn8RuVgy2D4/5/wTlZkq4O
+VA3mRSXTQp3fEUycd6boLFiyuv04760MnZqtLeTidosMTYlST38sPfQtCbb5jHlo
+e38K3LRyBwvj63bVcUfNo75peiEd5Xk5xuSKBgi26r/vqjKGgMEUTymrmIdQncgU
+DarqcJ1ZWdaLKKrQdlodneLOD+MhF/hRrFR4DSbM3ncmkrUV3foiVwcmyeo4w2E8
+sULMXa2+j6hbiTSsciB0EJj1WR1nZxUnfXprGjDvVrrzgNwZdTaqc0aAYfohiSvi
+tNmgrCY7BEQpS8o6/rVGQgEEdg/Bmg==
+=5VuY
+-----END PGP SIGNATURE-----
+--=-=-=--
