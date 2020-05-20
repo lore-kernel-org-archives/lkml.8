@@ -2,161 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9AF2207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QjMjZhbb"
+	by mail.kernel.org (Postfix) with ESMTP id 1E0A520578
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 03:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgETDeT (ORCPT
+        id S1728628AbgETDjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 23:34:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:41327 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727029AbgETDeS (ORCPT
+        Tue, 19 May 2020 23:39:54 -0400
+Received: from smtprelay0185.hostedemail.com ([216.40.44.185]:58208 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726352AbgETDjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 23:34:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589945657; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=kT7pJZVYUNeErjNCfzDEueg8X+vHXLZgH98ZFiEznHw=;
- b=QjMjZhbbZLFp67fyDWu7F9lu4yHDq9tl1fWlPg9AzWbOSgZ4MXc4EEgRnuqEiqOdnI5C0Wm4
- SUR28hWtwCKKNQfN++ktl9nV24MrPyE9aYUdq/TC+vUL/7Yz2yr5LdeSCBO0c3g7AYcRXr+w
- 3mSBxR/BFHgmaei1U9HXDbxjxIs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ec4a539c070baad3c48b125 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 03:34:17
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BA541C433CA; Wed, 20 May 2020 03:34:16 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AC015C433C8;
-        Wed, 20 May 2020 03:34:15 +0000 (UTC)
+        Tue, 19 May 2020 23:39:53 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id BEB2F1802DDF9;
+        Wed, 20 May 2020 03:39:52 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: twig72_020d59926d12
+X-Filterd-Recvd-Size: 1986
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 20 May 2020 03:39:51 +0000 (UTC)
+Message-ID: <8db90830ee62b7561641ac8ff6979cf33555c90f.camel@perches.com>
+Subject: [PATCH V2] lockdep: Use different indentation in
+ print_lock_class_header/print_lock_trace
+From:   Joe Perches <joe@perches.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+Date:   Tue, 19 May 2020 20:39:50 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 May 2020 09:04:15 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v10] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-In-Reply-To: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
-References: <1589914405-6674-1-git-send-email-pillair@codeaurora.org>
-Message-ID: <ce4c480a92a9162dd687a6ffcfc6a8c3@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Rakesh,
+This code that uses the printk return value in
+kernel/locking/lockdep.c is odd because the printk
+return value includes both the length of a KERN_<LEVEL>
+prefix and a newline.  depth is also double counted.
 
-On 2020-05-20 00:23, Rakesh Pillai wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
-> Changes from v9:
-> - Place the wlan_fw_mem under reserved-memory node
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  7 +++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 
-> +++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 4e9149d..38b102e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -389,6 +389,13 @@
->  	};
->  };
-> 
-> +&wifi {
-> +	status = "okay";
-> +	wifi-firmware {
-> +		iommus = <&apps_smmu 0xc2 0x1>;
-> +	};
-> +};
-> +
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
-> 
->  &qspi_clk {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index f1280e0..19bd7d0 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -106,6 +106,11 @@
->  			no-map;
->  		};
-> 
-> +		wlan_fw_mem: memory@94100000 {
-> +			reg = <0 0x94100000 0 0x200000>;
-> +			no-map;
-> +		};
-> +
+Change the code to use depth + 3 + strlen.
 
-You can skip ^^, its already
-present as wlan_mem in the
-board dts.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
 
->  		rmtfs_mem: memory@84400000 {
->  			compatible = "qcom,rmtfs-mem";
->  			reg = <0x0 0x84400000 0x0 0x200000>;
-> @@ -944,6 +949,28 @@
->  			};
->  		};
-> 
-> +		wifi: wifi@18800000 {
-> +			compatible = "qcom,wcn3990-wifi";
-> +			reg = <0 0x18800000 0 0x800000>;
-> +			reg-names = "membase";
-> +			iommus = <&apps_smmu 0xc0 0x1>;
-> +			interrupts =
-> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-> +			memory-region = <&wlan_fw_mem>;
+v2: sigh: add missing close parenthesis, dunno what happened
 
-Its named as wlan_mem in sc7180-idp.dts
+ kernel/locking/lockdep.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-> +			status = "disabled";
-> +		};
-> +
->  		config_noc: interconnect@1500000 {
->  			compatible = "qcom,sc7180-config-noc";
->  			reg = <0 0x01500000 0 0x28000>;
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 2fadc2635946..265227edc550 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1960,11 +1960,9 @@ static void print_lock_class_header(struct lock_class *class, int depth)
+ 
+ 	for (bit = 0; bit < LOCK_USAGE_STATES; bit++) {
+ 		if (class->usage_mask & (1 << bit)) {
+-			int len = depth;
+-
+-			len += printk("%*s   %s", depth, "", usage_str[bit]);
+-			len += printk(KERN_CONT " at:\n");
+-			print_lock_trace(class->usage_traces[bit], len);
++			printk("%*s   %s at:\n", depth, "", usage_str[bit]);
++			print_lock_trace(class->usage_traces[bit],
++					 depth + 3 + strlen(usage_str[bit]));
+ 		}
+ 	}
+ 	printk("%*s }\n", depth, "");
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+
+
+
