@@ -4,49 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2483120759
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C672065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgETQtb (ORCPT
+        id S1726890AbgETQte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:49:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:40344 "EHLO mga04.intel.com"
+        Wed, 20 May 2020 12:49:34 -0400
+Received: from mga03.intel.com ([134.134.136.65]:29689 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgETQtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726566AbgETQtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 12:49:31 -0400
-IronPort-SDR: j2OorsXcnBhStH+I12uwRWkIcPcllhhhCnBIjOwR3MuX0yDXyCPXVDiAArVXk5RX+iduL+YhoX
- SVR+5uJLn0YA==
+IronPort-SDR: pLP+2emcwG+cLwOCaYwGDlEHj4gn/y8BN1jOvbqrk0D5nJNdVviCSpTA1W0+I875yeRSW+k1U4
+ jYaj5FL6D7WA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 09:49:30 -0700
-IronPort-SDR: Y1SCKT2h35aN4PMn+Z5vjjoLC3V76rGwqdqdipFgCRF8odvuTmkfTZGaInNL0BwI72HHTYwQMZ
- uJ6PkIbukTmQ==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 09:49:30 -0700
+IronPort-SDR: HnYbro/NjAr0r6UV/+lTENLyp3LauNTVC0VU7/HiFcTTE//uwh/rrcGdz43CpkdAvUpwtX8HEl
+ hO+ACXxNj4aQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="466457865"
+   d="scan'208";a="299992956"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 20 May 2020 09:49:29 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 20 May 2020 09:49:29 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 5B9E514E; Wed, 20 May 2020 19:49:28 +0300 (EEST)
+        id 4EE4017E; Wed, 20 May 2020 19:49:28 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/3] irqdomain: Get rid of special treatment for ACPI in __irq_domain_add()
-Date:   Wed, 20 May 2020 19:49:26 +0300
-Message-Id: <20200520164927.39090-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/3] irqdomain: Make __irq_domain_add() less OF-dependent
+Date:   Wed, 20 May 2020 19:49:25 +0300
+Message-Id: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
-References: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,44 +51,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After change __irq_domain_add() to cooperate better with fwnodes
-we don't need to have special treatment for ACPI case.
-
-Get rid of the special treatment for ACPI.
+__irq_domain_add() in some places relies on the fact that fwnode
+can be only type of OF. This prevents refactoring of the code
+to support other types of fwnode. Make it less OF-dependent
+by switching to use fwnode directly where it makes sense.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- kernel/irq/irqdomain.c | 17 +----------------
- 1 file changed, 1 insertion(+), 16 deletions(-)
+ kernel/irq/irqdomain.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index d59a4224f920..c6204bc606a2 100644
+index 35b8d97c3a1d..d59a4224f920 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -161,22 +161,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
- 			domain->name = fwid->name;
- 			break;
- 		}
--#ifdef CONFIG_ACPI
--	} else if (is_acpi_device_node(fwnode)) {
--		struct acpi_buffer buf = {
--			.length = ACPI_ALLOCATE_BUFFER,
--		};
--		acpi_handle handle;
--
--		handle = acpi_device_handle(to_acpi_device_node(fwnode));
--		if (acpi_get_name(handle, ACPI_FULL_PATHNAME, &buf) == AE_OK) {
--			domain->name = buf.pointer;
--			domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
--		}
--
--		domain->fwnode = fwnode;
--#endif
--	} else if (is_of_node(fwnode)) {
-+	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode)) {
+@@ -132,14 +132,13 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 				    const struct irq_domain_ops *ops,
+ 				    void *host_data)
+ {
+-	struct device_node *of_node = to_of_node(fwnode);
+ 	struct irqchip_fwid *fwid;
+ 	struct irq_domain *domain;
+ 
+ 	static atomic_t unknown_domains;
+ 
+ 	domain = kzalloc_node(sizeof(*domain) + (sizeof(unsigned int) * size),
+-			      GFP_KERNEL, of_node_to_nid(of_node));
++			      GFP_KERNEL, of_node_to_nid(to_of_node(fwnode)));
+ 	if (!domain)
+ 		return NULL;
+ 
+@@ -177,15 +176,15 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 
+ 		domain->fwnode = fwnode;
+ #endif
+-	} else if (of_node) {
++	} else if (is_of_node(fwnode)) {
  		char *name;
  
  		/*
+-		 * DT paths contain '/', which debugfs is legitimately
++		 * fwnode paths contain '/', which debugfs is legitimately
+ 		 * unhappy about. Replace them with ':', which does
+ 		 * the trick and is not as offensive as '\'...
+ 		 */
+-		name = kasprintf(GFP_KERNEL, "%pOF", of_node);
++		name = kasprintf(GFP_KERNEL, "%pfw", fwnode);
+ 		if (!name) {
+ 			kfree(domain);
+ 			return NULL;
+@@ -210,7 +209,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+ 		domain->flags |= IRQ_DOMAIN_NAME_ALLOCATED;
+ 	}
+ 
+-	of_node_get(of_node);
++	fwnode_handle_get(fwnode);
+ 
+ 	/* Fill structure */
+ 	INIT_RADIX_TREE(&domain->revmap_tree, GFP_KERNEL);
+@@ -259,7 +258,7 @@ void irq_domain_remove(struct irq_domain *domain)
+ 
+ 	pr_debug("Removed domain %s\n", domain->name);
+ 
+-	of_node_put(irq_domain_get_of_node(domain));
++	fwnode_handle_put(domain->fwnode);
+ 	if (domain->flags & IRQ_DOMAIN_NAME_ALLOCATED)
+ 		kfree(domain->name);
+ 	kfree(domain);
 -- 
 2.26.2
 
