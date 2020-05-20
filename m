@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD82C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16B6205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A27205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgETO1p (ORCPT
+        id S1728305AbgETO16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:27:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32916 "EHLO
+        Wed, 20 May 2020 10:27:58 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:32902 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726959AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726946AbgETOW0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:22:27 -0400
+        Wed, 20 May 2020 10:22:26 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035k-OB; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-00035x-Sm; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbu-007DQ0-Nt; Wed, 20 May 2020 15:22:18 +0100
+        id 1jbPbu-007DQL-RA; Wed, 20 May 2020 15:22:18 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Kalle Valo" <kvalo@codeaurora.org>
-Date:   Wed, 20 May 2020 15:13:55 +0100
-Message-ID: <lsq.1589984008.724581902@decadent.org.uk>
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Chuhong Yuan" <hslester96@gmail.com>
+Date:   Wed, 20 May 2020 15:13:59 +0100
+Message-ID: <lsq.1589984008.761639691@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 27/99] orinoco_usb: fix interface sanity check
+Subject: [PATCH 3.16 31/99] crypto: picoxcell - adjust the position of
+ tasklet_init and fix missed tasklet_kill
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,37 +56,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit b73e05aa543cf8db4f4927e36952360d71291d41 upstream.
+commit 7f8c36fe9be46862c4f3c5302f769378028a34fa upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Since tasklet is needed to be initialized before registering IRQ
+handler, adjust the position of tasklet_init to fix the wrong order.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
+Besides, to fix the missed tasklet_kill, this patch adds a helper
+function and uses devm_add_action to kill the tasklet automatically.
 
-Fixes: 9afac70a7305 ("orinoco: add orinoco_usb driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[bwh: Backported to 3.16: adjust filename]
+Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/wireless/orinoco/orinoco_usb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/picoxcell_crypto.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/orinoco/orinoco_usb.c
-+++ b/drivers/net/wireless/orinoco/orinoco_usb.c
-@@ -1602,9 +1602,9 @@ static int ezusb_probe(struct usb_interf
- 	/* set up the endpoint information */
- 	/* check out the endpoints */
+--- a/drivers/crypto/picoxcell_crypto.c
++++ b/drivers/crypto/picoxcell_crypto.c
+@@ -1690,6 +1690,11 @@ static bool spacc_is_compatible(struct p
+ 	return false;
+ }
  
--	iface_desc = &interface->altsetting[0].desc;
-+	iface_desc = &interface->cur_altsetting->desc;
- 	for (i = 0; i < iface_desc->bNumEndpoints; ++i) {
--		ep = &interface->altsetting[0].endpoint[i].desc;
-+		ep = &interface->cur_altsetting->endpoint[i].desc;
++static void spacc_tasklet_kill(void *data)
++{
++	tasklet_kill(data);
++}
++
+ static int spacc_probe(struct platform_device *pdev)
+ {
+ 	int i, err, ret = -EINVAL;
+@@ -1730,6 +1735,14 @@ static int spacc_probe(struct platform_d
+ 		return -ENXIO;
+ 	}
  
- 		if (((ep->bEndpointAddress & USB_ENDPOINT_DIR_MASK)
- 		     == USB_DIR_IN) &&
++	tasklet_init(&engine->complete, spacc_spacc_complete,
++		     (unsigned long)engine);
++
++	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
++			      &engine->complete);
++	if (ret)
++		return ret;
++
+ 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
+ 			     engine->name, engine)) {
+ 		dev_err(engine->dev, "failed to request IRQ\n");
+@@ -1792,8 +1805,6 @@ static int spacc_probe(struct platform_d
+ 	INIT_LIST_HEAD(&engine->completed);
+ 	INIT_LIST_HEAD(&engine->in_progress);
+ 	engine->in_flight = 0;
+-	tasklet_init(&engine->complete, spacc_spacc_complete,
+-		     (unsigned long)engine);
+ 
+ 	platform_set_drvdata(pdev, engine);
+ 
 
