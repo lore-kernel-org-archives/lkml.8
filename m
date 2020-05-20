@@ -2,105 +2,116 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FBCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A80C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D88720758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079BE20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:11:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddIf/cCu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="loekasaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbgETMKD (ORCPT
+        id S1726851AbgETML6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34406 "EHLO
+        Wed, 20 May 2020 08:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETMKD (ORCPT
+        with ESMTP id S1726452AbgETMLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:10:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38CD3C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:10:03 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d3so1254483pln.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 05:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7s0+LV72ub/a+786F9odlZ55dRyq5sEXo2G9RCgt8/I=;
-        b=ddIf/cCurXvxmYq3gMSu1w93t13vVkRKqKC401hPmZ2fdF5ZqfyWLYaGkEw2tuhfJs
-         loefqdYAzxiT00WBLy9ijMDRMkrrUlkQRu6bk1Nh95QCjgGDuM6JKkMJGEzpHjn4TYTW
-         goT8f+uvMpJ8t164pzWkOAKeKZzh60BUfc3qySCQL8jsWj6YHJLK8U8K+qxu2MoYAPHB
-         SyJtWVTZum4LaR0ayDyCrArDkfbtNF1V+9lUnNEc9aVkiJGwrjyBLlVsoq74mHj1Ph3L
-         mOg1CjywCtsT2/EW1zIg9I/Os7nbWs94907hBCNUOqq2Fip4I723VbSWTyjFNDw8EKba
-         rsEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7s0+LV72ub/a+786F9odlZ55dRyq5sEXo2G9RCgt8/I=;
-        b=pxKqfuQ6NvqWsHQRfZjrfY1SHqaXjaV3VgekFZpijMy1JS5srYVxHDjmrUc4p0K798
-         juB5kqOo/71FnwiAg86HWFuzVBTITpWzNUK5kbVrhq5OqExA833zdw5wo7Gz7ZQC84u1
-         4cKrQf098oaacZcJVx7mNdsquia6u+6+z6wPTQU9jq364V6Elu6rldsm867u8B6NrXRJ
-         AVwm81wtJbAI8Lr3N1gVsnpZ4FxxdXI8EfAxeQbNLCjpGr5FTGMYuQcYZsXA7sIQR6o8
-         bwlacs9E0q8e8Svn+bT9jAtpERWv/h0sd+wAKg0e9X6oxHmYcpdwjYHTrFhBALXy0BiP
-         ktrQ==
-X-Gm-Message-State: AOAM5300l/XnVg/W21b5/IS7Cya76AZ5SfNytL5vGoLsWyJcGejEAH/T
-        1PLeEYqFetleYQkMhpXhUTg=
-X-Google-Smtp-Source: ABdhPJzi2bBmc8YGAITrH/1XYI3jcl6BANyQRxyQmioxkQNJWm7A4uip33O3jSynTRNaEIMB75dVZA==
-X-Received: by 2002:a17:90a:2305:: with SMTP id f5mr5087883pje.57.1589976602794;
-        Wed, 20 May 2020 05:10:02 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id n23sm1952562pjq.18.2020.05.20.05.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 05:10:02 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Wed, 20 May 2020 21:10:00 +0900
-To:     Joe Perches <joe@perches.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chenggang Wang <wangchenggang@vivo.com>,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC PATCH 2/2] init: Allow multi-line output of kernel command
- line
-Message-ID: <20200520121000.GF520@jagdpanzerIV.localdomain>
-References: <cover.1589916689.git.joe@perches.com>
- <2b3832fed9370f0f8dfd1ea33dddb1d05a36e265.1589916689.git.joe@perches.com>
- <20200520044127.GB938@jagdpanzerIV.localdomain>
- <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
+        Wed, 20 May 2020 08:11:49 -0400
+Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B27C061A0E;
+        Wed, 20 May 2020 05:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589976702;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=dxK4Z+9yHO4jSPBzrsgC+jQ7JJM6/ROZjhK04+QSi/s=;
+        b=loekasaQ58kKtS65SiEgMbCExdrlarRrN2LXfhbvpn916/r1eY32+fzUCo//cbUcVp
+        PUjksE3TEAorh4s8NRDzCaM6bh2Hb9RQx2D1mse4PLSNVsHwQkIwvGYLpurfvQ/cvxnl
+        0qhRBSJFGf26sj81y95Mgz6JnpgbesXgZ+ufVjDpkltvmBPocQAkqGNTQL8hA95QGa2C
+        62CsSCriKHIcp0YW/0WoYwI45TsH6KRUU6f+tGOcdXdk1FgKo1C0jn7ie5v4OcjTZRBd
+        YKZPp9/PY7YBytHFXTP9+gcA0+ggPx3aREDNYCqzIXUhiTz8NSKVYMgzk4S6Tbt02+2z
+        BpLg==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPbI/Sc5g=="
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.7.0 DYNA|AUTH)
+        with ESMTPSA id k09005w4KCBZ5LX
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 20 May 2020 14:11:35 +0200 (CEST)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lukasz Stelmach <l.stelmach@samsung.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Kukjin Kim <kgene@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 1/2] hwrng: iproc-rng200 - Set the quality value
+Date:   Wed, 20 May 2020 14:11:34 +0200
+Message-ID: <3322411.JsYv2Y6bm7@tauon.chronox.de>
+In-Reply-To: <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
+References: <15745285.MnsZKaK4VV@tauon.chronox.de> <2041475.ybOAuNAZB8@tauon.chronox.de> <CAJKOXPeBkZ3R2wT9-A8LWkFx0W9KY70VW7JNjwp0RMDRc7hkTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/05/19 21:58), Joe Perches wrote:
-[..]
-> >  Maybe we can
-> > use here something rather random and much shorter instead. E.g.
-> > 256 chars. Hmm. How 
+Am Mittwoch, 20. Mai 2020, 14:00:01 CEST schrieb Krzysztof Kozlowski:
+
+Hi Krzysztof,
+
+> On Wed, 20 May 2020 at 13:53, Stephan Mueller <smueller@chronox.de> wrote:
+> > > > That said, the illustrated example is typical for hardware RNGs. Yet
+> > > > it is never guaranteed to work that way. Thus, if you can point to
+> > > > architecture documentation of your specific hardware RNGs showing that
+> > > > the data read from the hardware is pure unconditioned noise data, then
+> > > > I have no objections to the patch.
+> > > 
+> > > I can tell for sure that this is the case for exynos-trng[1].
+> > 
+> > So you are saying that the output for the exynos-trng is straight from a
+> > ring oscillator without any post-processing of any kind?
 > 
-> 	min(some_max like 132/256, PRINTK_LOG_LINE_MAX)
+> Hi,
 > 
-> would work.
+> I think we will never be able to state this because the manual is
+> quite limited in sharing internals. What the driver does and probably
+> Lukasz wanted to say is that there is "post processing" block and
+> feature which can be disabled. The manual is saying the TRNG block
+> generates random data from thermal noise but not how much in a direct
+> way. There could be some simple post-processing or not (except the one
+> able to on/off). Also manual says this post processing block is there
+> to remove statistical weakness from the TRNG block. To me it does not
+> prove enough that raw data is really raw...
 
-An alternative approach would be to do what we do in the
-print_modules() (the list of modules which can definitely
-be longer than 1K chars).
+Unterstood, but can't that statement be added to the commit message?
+> 
+> Best regards,
+> Krzysztof
 
-We can split command line in a loop - memchr(pos, ' ') - and
-pr_cont() parts of the command line. pr_cont() has overflow
-control and it flushes cont buffer before it overflows, so
-we should not lose anything.
 
-	-ss
+Ciao
+Stephan
+
+
