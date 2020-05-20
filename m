@@ -2,147 +2,122 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD27207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F19207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ivjriBhP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RU4s/erR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgETUON (ORCPT
+        id S1727830AbgETUOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgETUOM (ORCPT
+        Wed, 20 May 2020 16:14:54 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26070 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726943AbgETUOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:14:12 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 609DCC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:14:11 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 145so2096035pfw.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=jNCjRptabh6f7dGyAbYdK74F2n0Wz/7WyriwNjKrYLo=;
-        b=ivjriBhPfAPW1WSo2qqkeu94jowUi6nmAulGkKdEMSYXycw4lYLpAifIExWjnM04yR
-         f7kqfS1Sax+wy0NqUUYQAT14DdKtsrsgZagfy1LYait88OZadQFM6NFX791z9ql3WjM/
-         mf5LF1IJ6f2yEHzlZuJagXi0OB10O2PNJrinD4zMF+/529iQ1+la1L1DuFkkMPiggGu/
-         GDzeTddXQ0mBYAIWTfn7q75JsrjVBqw+flSsCnjnmXplGveBSXePO/IsSumKp1vLgurJ
-         PbD5Sd3csw1XvTq5DmIZx8qYkdi3nqfoXof/Gonqg0AUudeQjADtHY+2AMKsi2vPGw08
-         esUQ==
+        Wed, 20 May 2020 16:14:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590005692;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TmIeOpvSLXXYOJ6jQiUjdVDS8jI79jLrqdKnHe80e6k=;
+        b=RU4s/erRaYX5Z2m/bWJjvPNmsj2frBTkT2mpESzTy6YuCuFjU7Dl5tnYP9gJ/r5q4GbVrz
+        3KjaCpG9cwezbdaXczyN86Z6vXZTVG6yp0HjavZZt0uwauzV7IcxPw9Kzs/ImC164pEgVh
+        4K5uY+0oEcXiA5D2olUVbDf8PbpQudo=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-wf2nKFKAPCmR5c-Ux2rUcA-1; Wed, 20 May 2020 16:14:50 -0400
+X-MC-Unique: wf2nKFKAPCmR5c-Ux2rUcA-1
+Received: by mail-ed1-f72.google.com with SMTP id m6so1737622eda.16
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 13:14:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=jNCjRptabh6f7dGyAbYdK74F2n0Wz/7WyriwNjKrYLo=;
-        b=QeqQmT3wjPqqB+u5UrDQ20uGy3/zf99RpmcgWH1TWNQQjBCIba8hPz7H1mW7WgKjV5
-         FZQs2JgsN1aNuntfEIW8sgJGI/96V93ATGZE9iJNWQp8cpxBrAgOeqkkD76P4x2zQoEH
-         CCmQH9Q1QLXUchHKrVetVLVqlieJEWgFAuX9+VgpS9cy3IhuXL6/ljqunn4bHU1nR1F+
-         4sULI+5zi8KOJ0us0CZte5Dg1M7gAg/pTysGGhmXX5w5aOEy1d+CMctDkp/rqlXGk9Q8
-         E8KutEcqSqM1S3Et4tfUrEL5pklDAXEJesm4BSzJutI/9Zuqkv0sK+VJ/Ka/V3tsbh99
-         EHSA==
-X-Gm-Message-State: AOAM530U7F4NTtKP/IuDRsG+FA2q9aLskdh9vsb43+RJsJXgZQw/evCI
-        +WmqcuNLF4OB5Q5V5OBLNAtHTg==
-X-Google-Smtp-Source: ABdhPJwQD66fWw4jqXZFOBJQ5H67GaEvcINWX0bzqGyZnVwJWLwMcccoKTBmcqopAvoL+DN3pcG0cA==
-X-Received: by 2002:a62:2f43:: with SMTP id v64mr5848809pfv.170.1590005650687;
-        Wed, 20 May 2020 13:14:10 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:6953:ad9a:addc:d616? ([2601:646:c200:1ef2:6953:ad9a:addc:d616])
-        by smtp.gmail.com with ESMTPSA id d2sm2730544pfa.164.2020.05.20.13.14.09
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TmIeOpvSLXXYOJ6jQiUjdVDS8jI79jLrqdKnHe80e6k=;
+        b=TYwbi7FgXb2M0WO4n9xKkm8CTczbwUfHO+nxFF5xkplEnXW1uFgyHACyVtHiHTdh46
+         9npxd5ka+5PECB0xl1IsbebT2fGkZVMTtXb56NUGxyJKCjqDEZqyix7RrILTQxeUXGfh
+         ddCHgwvcwHQStvci2bedUv40dgzm1K9EXexDCGiwgDi3lBSuxPum/dkWEZ/b9lI9hy+s
+         hawWL5HXx+e73cUBFiBHUvv3c/QVo93NCJbwuYoX1tcWDZc8FacAI4VxjvOSZln1oQH4
+         E5lQ4drGaHnj7O9Lw42HmAKtEA59PCoSR31gj4w1ApA3jqj3F9zhTOxCOVR7bcmUokAl
+         057g==
+X-Gm-Message-State: AOAM5308yvGnxQPtFWPHllii09IM+MITeFMfNJ/L1EZ6TL+VyRy8tQ3Y
+        CNlT7QSSlpyIyNQE+kygyBUItRRx/n4lslPAo2aOzFJF4O9BrQhYDJqjmX7uOF2cqCtUEI7QQUr
+        bLzWIPwDPdaLVjQVOVfNRgMur
+X-Received: by 2002:aa7:d312:: with SMTP id p18mr2277874edq.88.1590005689544;
+        Wed, 20 May 2020 13:14:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy9E4xDxfsyPrMh6r2RGpLUE9EPbfiGAvLfUmVbbGop5ohjJ6Ao+kQ7cZJbxuKy3kLG3IUc8A==
+X-Received: by 2002:aa7:d312:: with SMTP id p18mr2277856edq.88.1590005689332;
+        Wed, 20 May 2020 13:14:49 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:30f5:232:d7f0:1e71? ([2001:b07:6468:f312:30f5:232:d7f0:1e71])
+        by smtp.gmail.com with ESMTPSA id be12sm2584241edb.11.2020.05.20.13.14.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 13:14:09 -0700 (PDT)
+        Wed, 20 May 2020 13:14:48 -0700 (PDT)
+Subject: Re: [PATCH 21/24] KVM: x86: always update CR3 in VMCB
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
+References: <20200520172145.23284-1-pbonzini@redhat.com>
+ <20200520172145.23284-22-pbonzini@redhat.com>
+ <20200520182202.GB18102@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d85c2e1d-93b3-186d-7df4-80ae6aa03618@redhat.com>
+Date:   Wed, 20 May 2020 22:14:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200520182202.GB18102@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [patch V6 04/37] x86: Make hardware latency tracing explicit
-Date:   Wed, 20 May 2020 13:14:07 -0700
-Message-Id: <CF349A31-C401-4684-BA34-CD3359AF34E7@amacapital.net>
-References: <87imgqv055.fsf@nanos.tec.linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <JGross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>
-In-Reply-To: <87imgqv055.fsf@nanos.tec.linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-X-Mailer: iPhone Mail (17E262)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 20/05/20 20:22, Sean Christopherson wrote:
+> As an alternative fix, what about marking VCPU_EXREG_CR3 dirty in
+> __set_sregs()?  E.g.
+> 
+> 		/*
+> 		 * Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter, but
+> 		 * it can be explicitly dirtied by KVM_SET_SREGS.
+> 		 */
+> 		if (is_guest_mode(vcpu) &&
+> 		    !test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_dirty))
+> 
+> There's already a dependency on __set_sregs() doing
+> kvm_register_mark_available() before kvm_mmu_reset_context(), i.e. the
+> code is already a bit kludgy.  The dirty check would make the kludge less
+> subtle and provide explicit documentation.
 
+A comment in __set_sregs is certainly a good idea.  But checking for
+dirty seems worse since the caching of CR3 is a bit special in this
+respect (it's never marked dirty).
 
-> On May 20, 2020, at 1:10 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
->=20
-> =EF=BB=BFPeter Zijlstra <peterz@infradead.org> writes:
->>> On Mon, May 18, 2020 at 10:05:56AM +0200, Thomas Gleixner wrote:
->>> Peter Zijlstra <peterz@infradead.org> writes:
->>>> On Sat, May 16, 2020 at 01:45:51AM +0200, Thomas Gleixner wrote:
->>>>> --- a/arch/x86/kernel/nmi.c
->>>>> +++ b/arch/x86/kernel/nmi.c
->>>>> @@ -334,6 +334,7 @@ static noinstr void default_do_nmi(struc
->>>>>    __this_cpu_write(last_nmi_rip, regs->ip);
->>>>>=20
->>>>>    instrumentation_begin();
->>>>> +    ftrace_nmi_handler_enter();
->>>>>=20
->>>>>    handled =3D nmi_handle(NMI_LOCAL, regs);
->>>>>    __this_cpu_add(nmi_stats.normal, handled);
->>>>> @@ -420,6 +421,7 @@ static noinstr void default_do_nmi(struc
->>>>>        unknown_nmi_error(reason, regs);
->>>>>=20
->>>>> out:
->>>>> +    ftrace_nmi_handler_exit();
->>>>>    instrumentation_end();
->>>>> }
->>>>=20
->>>> Yeah, so I'm confused about this and the previous patch too. Why not
->>>> do just this? Remove that ftrace_nmi_handler.* crud from
->>>> nmi_{enter,exit}() and stick it here? Why do we needs the
->>>> nmi_{enter,exit}_notrace() thing?
->>>=20
->>> Because you then have to fixup _all_ architectures which use
->>> nmi_enter/exit().
->>=20
->> We probably have to anyway. But I can do that later I suppose.
->=20
-> Second thoughts. For #DB and #INT3 we can just keep nmi_enter(), needs
-> just annotation in nmi_enter() around that trace muck.
->=20
-> For #NMI and #MCE I rather avoid the early trace call and do it once we
-> have reached "stable" state, i.e. avoid it in the whole nested NMI mess.
->=20
->=20
+This patch should probably be split too, so that the Fixes tags are
+separate for Intel and AMD.
 
-What=E2=80=99s the issue?  The actual meat is mostly in the asm for NMI, and=
- for MCE it=E2=80=99s just the sync-all-the-cores thing. The actual simultan=
-eous NMI-and-MCE case is utterly busted regardless, and I=E2=80=99ve been th=
-inking about how to fix it. It won=E2=80=99t be pretty, but nmi_enter() will=
- have nothing to do with it.=
+Paolo
+
+>>  			guest_cr3 = vcpu->arch.cr3;
+> 
+> The comment that's just below the context is now stale, e.g. replace
+> vmcs01.GUEST_CR3 with vmcs.GUEST_CR3.
+> 
+>> -- 
+>> 2.18.2
+>>
+>>
+> 
+
