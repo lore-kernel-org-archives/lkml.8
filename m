@@ -2,66 +2,106 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC4820829
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BB2207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:08:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qvwd4GnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgETVIt (ORCPT
+        id S1728117AbgETVIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728046AbgETVIs (ORCPT
+        Wed, 20 May 2020 17:08:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27242 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727018AbgETVIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:08:48 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5684C061A0E;
-        Wed, 20 May 2020 14:08:48 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1EB0F1210A409;
-        Wed, 20 May 2020 14:08:45 -0700 (PDT)
-Date:   Wed, 20 May 2020 14:08:42 -0700 (PDT)
-Message-Id: <20200520.140842.1711606625827492143.davem@davemloft.net>
-To:     jhubbard@nvidia.com
-Cc:     syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com,
-        akpm@linux-foundation.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        rds-devel@oss.oracle.com, santosh.shilimkar@oracle.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] rds: fix crash in rds_info_getsockopt()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200520194147.127137-1-jhubbard@nvidia.com>
-References: <00000000000000d71e05a6185662@google.com>
-        <20200520194147.127137-1-jhubbard@nvidia.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 20 May 2020 17:08:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590008928;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NDXFwaANeSRgHjjtGuv6a9pUflLvS5TDaJmPMi98Sp4=;
+        b=Qvwd4GnDGvaxJJJZFXuUIR2iaYZpaH4RQa/tImfcOntwSrPCeimbODQhuuWsRwbehS04rQ
+        EoTt7KnHd0/AWkD10ZX1HxSFB/ghj1NBGwX7PjqHdJ+6SdCkX7fqCE5/aEHijGxwwGJ2ha
+        8mXCEK6nxF2UTpV/14GeRe6dU421frU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-160-B7Katbi6Pr26cOX6xyfFdA-1; Wed, 20 May 2020 17:08:46 -0400
+X-MC-Unique: B7Katbi6Pr26cOX6xyfFdA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89688461;
+        Wed, 20 May 2020 21:08:45 +0000 (UTC)
+Received: from starship (unknown [10.35.206.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 13015106F755;
+        Wed, 20 May 2020 21:08:43 +0000 (UTC)
+Message-ID: <2401913621cc7686d71f491ef55f30f78ebbb2eb.camel@redhat.com>
+Subject: Re: [PATCH 00/24] KVM: nSVM: event fixes and migration support
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
+Date:   Thu, 21 May 2020 00:08:42 +0300
+In-Reply-To: <cecf6c64-6828-5a3f-642a-11aac4cefa75@redhat.com>
+References: <20200520172145.23284-1-pbonzini@redhat.com>
+         <6b8674fa647d3b80125477dc344581ba7adfb931.camel@redhat.com>
+         <cecf6c64-6828-5a3f-642a-11aac4cefa75@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 20 May 2020 14:08:46 -0700 (PDT)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
-Date: Wed, 20 May 2020 12:41:47 -0700
-
-> The conversion to pin_user_pages() had a bug: it overlooked
-> the case of allocation of pages failing. Fix that by restoring
-> an equivalent check.
+On Wed, 2020-05-20 at 22:42 +0200, Paolo Bonzini wrote:
+> On 20/05/20 21:24, Maxim Levitsky wrote:
+> > Patch 24 doesn't apply cleanly on top of kvm/queue, I appplied it manually,
+> > due to missing KVM_STATE_NESTED_MTF_PENDING bit
+> > 
+> > Also patch 22 needes ALIGN_UP which is not on mainline.
+> > Probably in linux-next?
 > 
-> Reported-by: syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com
-> Fixes: dbfe7d74376e ("rds: convert get_user_pages() --> pin_user_pages()")
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> Just replace it with ALIGN.  (I tested it with memzero_user in
+> arch/x86/kvm/ for convenience, and the lib/ patch ended up out of sync
+> with the actual code).
+That is exactly what I did.
 
-Applied to net-next, thanks.
+> 
+> > With these fixes, I don't see #DE exceptions on a nested guest I try to run
+> > however it still hangs, right around the time it tries to access PS/2 keyboard/mouse.
+> 
+> IIRC you said that the bug appeared with the vintr rework, and then went
+> from hang to #DE and now back to hang?  And the hang is reported by L2,
+> not L1?
+Yes, and now the hang appears to be deterministic. The initial hang could happen
+randomally. I remember that once the nested guest got to getty prompt even and hanged
+on shutdown. Now hang is deterministic when kernel prints something about PS/2.
+I will re-check this tomorrow.
+
+> 
+> In order to debug the hang, a good start would be to understand if it
+> also happens with vgif=0.  This is because with vgif=1 we use VINTR
+> intercepts even while GIF=0, so the whole thing is a bit more complicated.
+I will check this tomorrow as well.
+
+
+Best regards,
+	Maxim Levitsky
+
+> 
+> Paolo
+> 
+
+
