@@ -2,137 +2,85 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32224C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F064207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED981207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgETUeV (ORCPT
+        id S1727801AbgETUgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:34:21 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:49257 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726860AbgETUeT (ORCPT
+        Wed, 20 May 2020 16:36:52 -0400
+Received: from smtprelay0233.hostedemail.com ([216.40.44.233]:54170 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726827AbgETUgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:34:19 -0400
-Received: (qmail 23997 invoked by uid 1000); 20 May 2020 16:34:17 -0400
-Date:   Wed, 20 May 2020 16:34:17 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-usb <linux-usb@vger.kernel.org>, alsa-devel@alsa-project.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: XHCI vs PCM2903B/PCM2904 part 2
-Message-ID: <20200520203417.GA23602@rowland.harvard.edu>
-References: <273cc1c074cc4a4058f31afe487fb233f5cf0351.camel@surriel.com>
- <20200520163840.GA11084@rowland.harvard.edu>
- <667d8d156fa5d8420ef1c3b1d08b94a10d2398cc.camel@surriel.com>
+        Wed, 20 May 2020 16:36:52 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id BD62F100E7B47;
+        Wed, 20 May 2020 20:36:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: shake90_010f55826d18
+X-Filterd-Recvd-Size: 2078
+Received: from XPS-9350 (unknown [172.58.35.10])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 20 May 2020 20:36:48 +0000 (UTC)
+Message-ID: <19a8c717f8d9dc76f2b09e6dd19f3fbb71bf29c5.camel@perches.com>
+Subject: Re: [RFC PATCH 2/2] init: Allow multi-line output of kernel command
+ line
+From:   Joe Perches <joe@perches.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chenggang Wang <wangchenggang@vivo.com>,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Wed, 20 May 2020 13:36:45 -0700
+In-Reply-To: <20200520121000.GF520@jagdpanzerIV.localdomain>
+References: <cover.1589916689.git.joe@perches.com>
+         <2b3832fed9370f0f8dfd1ea33dddb1d05a36e265.1589916689.git.joe@perches.com>
+         <20200520044127.GB938@jagdpanzerIV.localdomain>
+         <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
+         <20200520121000.GF520@jagdpanzerIV.localdomain>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <667d8d156fa5d8420ef1c3b1d08b94a10d2398cc.camel@surriel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:21:44PM -0400, Rik van Riel wrote:
-> On Wed, 2020-05-20 at 12:38 -0400, Alan Stern wrote:
-> > On Wed, May 20, 2020 at 07:26:57AM -0400, Rik van Riel wrote:
-> > > After a few more weeks of digging, I have come to the tentative
-> > > conclusion that either the XHCI driver, or the USB sound driver,
-> > > or both, fail to handle USB errors correctly.
-> > > 
-> > > I have some questions at the bottom, after a (brief-ish)
-> > > explanation
-> > > of exactly what seems to go wrong.
-> > > 
-> > > TL;DR: arecord from a misbehaving device can hang forever
-> > > after a USB error, due to poll on /dev/snd/timer never returning.
-> > > 
-> > > The details: under some mysterious circumstances, the PCM290x
-> > > family sound chips can send more data than expected during an
-> > > isochronous transfer, leading to a babble error. Those
+On Wed, 2020-05-20 at 21:10 +0900, Sergey Senozhatsky wrote:
+> On (20/05/19 21:58), Joe Perches wrote:
+> [..]
+> > >  Maybe we can
+> > > use here something rather random and much shorter instead. E.g.
+> > > 256 chars. Hmm. How 
 > > 
-> > Do these chips connect as USB-3 devices or as USB-2?  (I wouldn't
-> > expect 
-> > an audio device to use USB-3; it shouldn't need the higher
-> > bandwidth.)
-> 
-> USB-2
-
-Okay.  In that case, xhci-hcd should appear to act just like a USB-2 
-host controller.
-
-> > In general, errors such as babble are not supposed to stop
-> > isochronous 
-> > endpoints.
-> 
-> However, it seems that they do. The urb never
-> gets an answer after snd_complete_urb refiles
-> it with usb_submit_urb.
-> 
-> > > However, the USB sound driver seems to have no idea that this
-> > > error happened. The function retire_capture_urb looks at the
-> > > status of each isochronous frame, but seems to be under the
-> > > assumption that the sound device just keeps on running.
+> > 	min(some_max like 132/256, PRINTK_LOG_LINE_MAX)
 > > 
-> > This is appropriate, for the reason mentioned above.
+> > would work.
 > 
-> Having arecord get stuck forever does not seem like
-> the right behavior, though :)
-
-No, it isn't.
-
-> > > This leads me to a few questions:
-> > > - should retire_capture_urb call snd_pcm_stop_xrun,
-> > >   or another function like it, if it sees certain
-> > >   errors in the iso frame in the URB?
-> > 
-> > No.  Isochronous endpoints are expected to encounter errors from time
-> > to 
-> > time; that is the nature of isochronous communications.  You're
-> > supposed 
-> > to ignore the errors (skip over any bad data) and keep going.
+> An alternative approach would be to do what we do in the
+> print_modules() (the list of modules which can definitely
+> be longer than 1K chars).
 > 
-> ...
-> 
-> > The notion of "stopped state" is not part of USB-2.  As a result, it 
-> > should be handled entirely within the xhci-hcd driver.
-> 
-> Interesting. That makes me really curious why things are
-> getting stuck, now...
+> We can split command line in a loop - memchr(pos, ' ') - and
+> pr_cont() parts of the command line. pr_cont() has overflow
+> control and it flushes cont buffer before it overflows, so
+> we should not lose anything.
 
-This could be a bug in xhci-hcd.  Perhaps the controller's endpoint 
-state needs to be updated after one of these errors occurs.  Mathias 
-will know all about that.
+It doesn't matter much here, but I believe
+there's an 8k max buffer for pr_cont output.
 
-> > > - how should the USB sound driver recover from these
-> > >   occasional and/or one-off errors? stop the sound
-> > >   stream, or try to reinitialize the device and start
-> > >   recording again?
-> > 
-> > As far as I know, it should do its best to continue (perhaps fill in 
-> > missing data with zeros).
-> 
-> That was my first intuition as well, given the documented
-> behavior of isochronous frames.
-> 
-> However, given that the device appears to stop sending
-> frames after that error, at least usbmon is not seeing
-> any, I am not sure what needs to happen in order to get
-> that behavior.
+include/linux/printk.h:#define CONSOLE_EXT_LOG_MAX      8192
 
-The device won't send any data unless the host controller tells it to.  
-If something is wrong with the host controller then usbmon won't see any 
-data.
+Anyway, no worries, it simplifies the loop if
+done that way.
 
-Alan Stern
+
