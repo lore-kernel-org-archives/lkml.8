@@ -2,128 +2,120 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9933CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A63C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67157207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="arYIx2dm"
+	by mail.kernel.org (Postfix) with ESMTP id 81D292084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590009065;
+	bh=hflv9D/ewCbvGOGfUbWrB/6ZmXnSpNbs2fD9e+QeJ94=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sRrAtYMzSa0yM5evf0NlqZsc6qoaQWhAEqTrkXAWYSTZfK4XNB543k3FxmKomQcUV
+	 4fpl/y2xvLlLk6M31ucrjX/pfQF57HzqnYkScyNVyhgddL5yX3nzOna1MppKiEjkMa
+	 /CZd9ffNYcmflbQ51tIxNWx2gjknz+dqqNQ1k1Nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgETVJ5 (ORCPT
+        id S1728056AbgETVLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:09:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50638 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728023AbgETVJ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:09:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590008995;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rljt0JKhDnaA5kYo7V7yvh9gpRilhTrRqKa1LMsBGTA=;
-        b=arYIx2dmhwTfLofrXAow1qYu8OEbFWxRJIIDcWca1PMrBU1jrN++hzlwQc4jboGvEr54vc
-        NbPq6P1j5BOdHw2CX8mgeXRZ5bGLiOmKUJz3PExeFjVnnqzwwhgDQoUCseEVhe4LCpW3tu
-        YwYo+5f8L0XABIEYyG4INwxes2NWF2E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-VzS7pN-BP9KFN01tPauI1A-1; Wed, 20 May 2020 17:09:53 -0400
-X-MC-Unique: VzS7pN-BP9KFN01tPauI1A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 17:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727018AbgETVLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:11:04 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F06B9107ACCA;
-        Wed, 20 May 2020 21:09:52 +0000 (UTC)
-Received: from starship (unknown [10.35.206.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E3B1060C20;
-        Wed, 20 May 2020 21:09:51 +0000 (UTC)
-Message-ID: <8747006dabe787d5b4945f4dd9c2e2923335d87c.camel@redhat.com>
-Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL
- unconditionally
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Thu, 21 May 2020 00:09:50 +0300
-In-Reply-To: <b8ca9ea1-2958-3ab4-2e86-2edbee1ca9d9@redhat.com>
-References: <20200520160740.6144-1-mlevitsk@redhat.com>
-         <20200520160740.6144-3-mlevitsk@redhat.com>
-         <b8ca9ea1-2958-3ab4-2e86-2edbee1ca9d9@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        by mail.kernel.org (Postfix) with ESMTPSA id AB063207E8;
+        Wed, 20 May 2020 21:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590009063;
+        bh=hflv9D/ewCbvGOGfUbWrB/6ZmXnSpNbs2fD9e+QeJ94=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a0TTT5R8xkRSeM2zQlQhvG253SvNDGItqkYE38QJNR6i1n3ybBIwCqw2t1+CdtWxb
+         Q9rjhFYKJosr2calfx4BsUyiwyEf6pxMknMHs7JblAqqZjBZCxGZ21i48c6lDyZwGe
+         WwNZoMerkMWZeisk6P/c7v0hqiaTDB0rfgC3ci1w=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CF32740AFD; Wed, 20 May 2020 18:11:01 -0300 (-03)
+Date:   Wed, 20 May 2020 18:11:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/19] perf ftrace: show trace column header
+Message-ID: <20200520211101.GD32678@kernel.org>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200510150628.16610-16-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510150628.16610-16-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-20 at 23:05 +0200, Paolo Bonzini wrote:
-> On 20/05/20 18:07, Maxim Levitsky wrote:
-> > This msr is only available when the host supports WAITPKG feature.
-> > 
-> > This breaks a nested guest, if the L1 hypervisor is set to ignore
-> > unknown msrs, because the only other safety check that the
-> > kernel does is that it attempts to read the msr and
-> > rejects it if it gets an exception.
-> > 
-> > Fixes: 6e3ba4abce KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-> > 
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index fe3a24fd6b263..9c507b32b1b77 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -5314,6 +5314,10 @@ static void kvm_init_msr_list(void)
-> >  			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
-> >  			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
-> >  				continue;
-> > +			break;
-> > +		case MSR_IA32_UMWAIT_CONTROL:
-> > +			if (!kvm_cpu_cap_has(X86_FEATURE_WAITPKG))
-> > +				continue;
-> >  		default:
-> >  			break;
-> >  		}
-> 
-> The patch is correct, and matches what is done for the other entries of
-> msrs_to_save_all.  However, while looking at it I noticed that
-> X86_FEATURE_WAITPKG is actually never added, and that is because it was
-> also not added to the supported CPUID in commit e69e72faa3a0 ("KVM: x86:
-> Add support for user wait instructions", 2019-09-24), which was before
-> the kvm_cpu_cap mechanism was added.
-> 
-> So while at it you should also fix that.  The right way to do that is to
-> add a
-> 
->         if (vmx_waitpkg_supported())
->                 kvm_cpu_cap_check_and_set(X86_FEATURE_WAITPKG);
-> 
-> in vmx_set_cpu_caps.
-> 
-> Thanks,
+Em Sun, May 10, 2020 at 11:06:24PM +0800, Changbin Du escreveu:
+> This makes perf-ftrace display column header before printing trace.
 
-Thank you very much for finding this. I didn't expect this to be broken.
-I will send a new version with this fix as well tomorrow.
+[acme@five perf]$ perf report -h header
 
-Best regards,
-	Maxim Levitsky
+ Usage: perf report [<options>]
 
+        --header          Show data header.
+        --header-only     Show only data header.
 
+[acme@five perf]$
+
+Perhaps there is value in --header-only to show the default that will be
+setup when using some set of options.
+
+- Arnaldo
+
+> $ sudo perf ftrace
+> \# tracer: function
+> \#
+> \# entries-in-buffer/entries-written: 0/0   #P:8
+> \#
+> \#           TASK-PID     CPU#   TIMESTAMP  FUNCTION
+> \#              | |         |       |         |
+>            <...>-9246  [006]  10726.262760: mutex_unlock <-rb_simple_write
+>            <...>-9246  [006]  10726.262764: __fsnotify_parent <-vfs_write
+>            <...>-9246  [006]  10726.262765: fsnotify <-vfs_write
+>            <...>-9246  [006]  10726.262766: __sb_end_write <-vfs_write
+>            <...>-9246  [006]  10726.262767: fpregs_assert_state_consistent <-do_syscall_64
 > 
-> Paolo
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 64c22f367ba2..0b39b6a88026 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -614,6 +614,9 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  	fcntl(trace_fd, F_SETFL, O_NONBLOCK);
+>  	pollfd.fd = trace_fd;
+>  
+> +	/* display column headers */
+> +	read_tracing_file_to_stdout("trace");
+> +
+>  	if (write_tracing_file("tracing_on", "1") < 0) {
+>  		pr_err("can't enable tracing\n");
+>  		goto out_close_fd;
+> -- 
+> 2.25.1
 > 
 
+-- 
 
+- Arnaldo
