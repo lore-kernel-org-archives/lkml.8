@@ -2,79 +2,84 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16830C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82B06207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="iMRJmr2G"
+	by mail.kernel.org (Postfix) with ESMTP id 303A7206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgETHHv (ORCPT
+        id S1726717AbgETHIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:07:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgETHHv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:07:51 -0400
-Received: from valentin-vidic.from.hr (valentin-vidic.from.hr [IPv6:2001:470:1f0b:3b7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6542CC061A0E;
-        Wed, 20 May 2020 00:07:48 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
-Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
-        id 2F849543; Wed, 20 May 2020 09:07:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=valentin-vidic.from.hr; s=2020; t=1589958463;
-        bh=UuLjB4lUIXEJCTsjz0Aui6c45k/IBmfcpv9LSaqLVhE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iMRJmr2GHbRzqTq+5jQISZdb5afOot71nAXDKe+7yovTew6TrwuNjUJ1Yx9n4wv6U
-         pzD0vC0taVcmzPkEMZup/pgH0TgQnPgF6OEl8sL2QKJKT2anoPA6c3p02qJ/Q8+r7u
-         u6TUmWcy5h5HEkc/N7zW31HIlA0YiI91GvgfItXquE/+LDa36uAckZUImTumpXpsxe
-         cQZ2j+CLBzdJrVatqN6gc5ZhgEpdGJkNbW88sVpsTq+YaoDbNISmHsqySlZPrxc9X9
-         02CM6JP0vJNLb2Zv4FCTcZt3wRLaN1kF+ABSmK/PJ50LxELaagaTn4Ps86l8pWshu9
-         nWCajQF7IZpaMkegv6O1UHtFWeL2kBDob6qxKTCQSsuqUSIh9Jb71+KbCSHkbrRykT
-         nuPOmuc9QGGmIg1FDvDu7zAgbn5nwN69gBV/XDnEXQFW/sHWRKNCdpmkMa9AY0YUwh
-         SnegZSfj1ySzGoTNy8Zx/StQntry5/gOtfhyAjy0H44UuUxp/c5qTbw5oeCdby0uBW
-         xHcFUHeZ3bgDLiz//PjwHt56Y61g6OQmzSEiU7/paFGudGdYaQiUzd/c4px3mK+TDE
-         Ui7aPOqxpTSk3XIyR0nfwv4KuhB/D30pwMyjZYO2M/r+zPW4ujYWb/QeXADmVenQFz
-         jJA1cESmmngnhnirBa1WVwnc=
-Date:   Wed, 20 May 2020 09:07:43 +0200
-From:   Valentin =?utf-8?B?VmlkacSH?= <vvidic@valentin-vidic.from.hr>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] s390/sclp_vt220: Fix console name to match device
-Message-ID: <20200520070743.GO4974@valentin-vidic.from.hr>
-References: <20200519181654.16765-1-vvidic@valentin-vidic.from.hr>
- <65218cdb-d03f-29a8-1e78-42ff2d4f958d@de.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65218cdb-d03f-29a8-1e78-42ff2d4f958d@de.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 20 May 2020 03:08:10 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:51986 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725998AbgETHIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 03:08:10 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxJupT18ReLeE2AA--.121S2;
+        Wed, 20 May 2020 15:08:03 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] MIPS: SGI-IP27: Remove not used definition TICK_SIZE in ip27-timer.c
+Date:   Wed, 20 May 2020 15:08:02 +0800
+Message-Id: <1589958482-9948-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxJupT18ReLeE2AA--.121S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw1xAw1UKFy8Zry5KF1UGFg_yoWfGwc_Kr
+        s2kwsYgr95Wrnaya9I9ws5XFyrAw4xXa1fArn5JF1rJa4rtF45ZrWqyryUCrW3WanY9F4F
+        9ay5J348Ar4agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4x
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfpnQUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 07:25:06AM +0200, Christian Borntraeger wrote:
-> This is not as simple. ttyS1 is the the console name and ttysclp0 is the tty name.
-> This has mostly historic reasons and it obviously causes problems.
-> But there is  documentation out that that actually describes the use of 
-> console=ttyS1 console=ttyS0.
-> to have console output on both sclp consoles and there are probably scripts
-> using ttyS1.
-> 
-> I am wondering. The tty for ttyS0 is named sclp_line0. Does this work in LPAR?
+After commit f5ff0a280201 ("[MIPS] Use generic NTP code for all MIPS
+platforms"), TICK_SIZE is not used in ip27-timer.c for many years,
+remove it.
 
-I ran into this problem with qemu-system-s390x, so not sure about LPAR.
-Would changing the tty name also cause problems?
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
+Hi Thomas,
+
+I find this not used definition TICK_SIZE just now, maybe I should send
+these cleanup patches in a patch series, sorry for that if it is noisy.
+
+ arch/mips/sgi-ip27/ip27-timer.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/mips/sgi-ip27/ip27-timer.c b/arch/mips/sgi-ip27/ip27-timer.c
+index 115b1d9..c0e3363 100644
+--- a/arch/mips/sgi-ip27/ip27-timer.c
++++ b/arch/mips/sgi-ip27/ip27-timer.c
+@@ -28,8 +28,6 @@
+ 
+ #include "ip27-common.h"
+ 
+-#define TICK_SIZE (tick_nsec / 1000)
+-
+ static int rt_next_event(unsigned long delta, struct clock_event_device *evt)
+ {
+ 	unsigned int cpu = smp_processor_id();
 -- 
-Valentin
+2.1.0
+
