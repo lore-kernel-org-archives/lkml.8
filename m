@@ -2,158 +2,61 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C66CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC9E205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7KbmrbD"
+	by mail.kernel.org (Postfix) with ESMTP id D920E205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgETOdR (ORCPT
+        id S1727009AbgETOdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:33:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52627 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726619AbgETOdR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:33:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589985195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=iZRAuwcPJ6bPQYLnUJ9mjxQKZxaF5A67YUR0o6fULPg=;
-        b=X7KbmrbD90Z1OKdaUbMm7Bfgq3CEj2IabpTQUHgKvfsgXD+qPlQK80d6lvDfhKR8NnBTzm
-        yEM5tdLaY7c9yWHtah/+DkvGOdLt0fwW+k1C1S7g2LJLdh8du/AONhOoKMdQ7JqHmQIF2b
-        cBXj4cpLjEcXIC/rJ+OA5f/F2RsWVV0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-386-Jab3UwLJO9-n46HvmuAwxg-1; Wed, 20 May 2020 10:33:11 -0400
-X-MC-Unique: Jab3UwLJO9-n46HvmuAwxg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 10:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgETOds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:33:48 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83DB01B18BC3;
-        Wed, 20 May 2020 14:33:10 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.193.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 984F75D9E4;
-        Wed, 20 May 2020 14:33:09 +0000 (UTC)
-Date:   Wed, 20 May 2020 16:33:07 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        util-linux@vger.kernel.org
-Subject: [ANNOUNCE] util-linux v2.35.2
-Message-ID: <20200520143307.m46d5u3vdmtrkhd6@ws.net.home>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D39C205CB;
+        Wed, 20 May 2020 14:33:48 +0000 (UTC)
+Date:   Wed, 20 May 2020 10:33:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 0/3] tracing/kprobes: Fix event generation API etc.
+Message-ID: <20200520103346.53dcad9b@gandalf.local.home>
+In-Reply-To: <20200520232220.ec89497aab17d7e6507b9886@kernel.org>
+References: <158779373972.6082.16695832932765258919.stgit@devnote2>
+        <20200520232220.ec89497aab17d7e6507b9886@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 20 May 2020 23:22:20 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-The util-linux stable release v2.35.2 is available at
-                   
-  http://www.kernel.org/pub/linux/utils/util-linux/v2.35/
-                   
-Feedback and bug reports, as always, are welcomed.
-                   
-  Karel            
+> Hi Steve,
+> 
+> It seems this fixes are not picked up yet.
+> Would you have any consideration?
+> 
 
 
-util-linux 2.35.2 Release Notes
-===============================
+Ah, I missed your reply to my comment :-/
 
-bash-completion:
-   - umount explicitly needs gawk  [Wolfram Sang]
-blkdiscard:
-   - (man) offset and length must be sector aligned  [Lukas Czerner]
-blkzone:
-   - deny destructive ioctls on busy blockdev  [Johannes Thumshirn]
-chsh:
-   - (man) fix default behavior description  [Karel Zak]
-ctrlaltdel:
-   - display error message indicated by errno  [Sami Kerola]
-docs:
-   - Correct ChangeLog URL to history log.  [Anatoly Pugachev]
-   - Fix dead references to kernel documentation  [Yannick Le Pennec]
-   - add swap to 1st fstab field  [Karel Zak]
-   - kill.1 add note about shell-internal kill implementations  [Sami Kerola]
-   - update AUTHORS file  [Karel Zak]
-eject:
-   - fix compiler warning [-Wformat-overflow]  [Karel Zak]
-exfat:
-   - Fix parsing exfat label  [Pali Rohár]
-fstrim:
-   - do not use Protect setting in systemd service  [Karel Zak]
-hwclock:
-   - fix audit exit status  [Karel Zak]
-   - make glibc 2.31 compatible  [J William Piggott, Karel Zak]
-ipcs:
-   - ipcs.1 ipcs no longer needs read permission on IPC resources  [Michael Kerrisk]
-kill:
-   - include sys/types.h before checking SYS_pidfd_send_signal  [Sami Kerola]
-lib/mangle:
-   - check for the NULL string argument  [Gaël PORTAY]
-lib/strutils:
-   - remove redundant include  [Karel Zak]
-libblkid:
-   - Fix UTF-16 support in function blkid_encode_to_utf8()  [Pali Rohár]
-   - fix compiler warning [-Wsign-compare]  [Karel Zak]
-   - fix fstatat() use in blkid__scan_dir()  [Karel Zak]
-libfdisk:
-   - (script) accept sector-size, ignore unknown headers  [Karel Zak]
-   - (script) fix memory leak  [Karel Zak]
-   - (script) fix partno_from_devname()  [Karel Zak]
-   - (script) fix segmentation fault  [Gaël PORTAY]
-   - fix partition calculation for BLKPG_* ioctls  [Karel Zak]
-   - remove unwanted assert()  [Karel Zak]
-libmount:
-   - do not unnecessarily chmod utab.lock  [Tycho Andersen]
-   - fix mount -a EBUSY for cifs  [Roberto Bergantinos Corpas]
-   - improve smb{2,3} support  [Karel Zak]
-   - smb2 is unsupported alias  [Karel Zak]
-lsblk:
-   - Fall back to ID_SERIAL  [Sven Wiltink]
-   - Ignore hidden devices  [Ritika Srivastava]
-   - fix -P regression from v2.34  [Karel Zak]
-lscpu:
-   - Adapt MIPS cpuinfo  [Jiaxun Yang]
-   - fix SIGSEGV on archs without drawers & books  [Karel Zak]
-   - use official name for HiSilicon tsv110  [Karel Zak]
-po:
-   - merge changes  [Karel Zak]
-   - update hr.po (from translationproject.org)  [Božidar Putanec]
-   - update zh_CN.po (from translationproject.org)  [Boyuan Yang]
-pylibmount:
-   - cleanup and sync UL_RaiseExc  [Karel Zak]
-scriptlive:
-   - fix man page formatting  [Jakub Wilk]
-   - fix typo  [Jakub Wilk]
-sfdisk:
-   - (man) fix typo  [Gaël PORTAY]
-   - fix ref-counting for the script  [Karel Zak]
-   - only report I/O errors on --move-data  [Karel Zak]
-su, runuser:
-   - (man) add more info about PATH and PAM  [Karel Zak]
-tests:
-   - Fix for misc/fallocate test build failure.  [Mark Hindley]
-umount:
-   - don't try it as non-suid if not found mountinfo entry  [Karel Zak]
-wipefs:
-   - fix man page --no-headings short option  [Karel Zak]
-write:
-   - fix potential string overflow  [Sami Kerola]
+Yeah, I'll pull that in now and start testing it.
 
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+Thanks for the reminder.
 
+-- Steve
