@@ -2,86 +2,108 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC46C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57E4520756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C53207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589983274;
+	bh=BDNtqPfixaGPXHmy4aaEnNMCMcHQWxQTdhCB4L+54W4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mXgQyoRK1T+6b4fv6KGXX0VlicZodaMouRbY4qLqidVVZfXDgNXDO8AyxHgmQ1ezT
+	 +uVcIU6xmFV6m0csmX7o9ei43t2H4WVqDPzTsGUdoXH+xTGFJA3YFoYBZC9lqsG9lR
+	 dqEWK+o61D7PHrjEgrn97gCRY1unCuwiSXk/W9Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgETOA4 (ORCPT
+        id S1726823AbgETOBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:00:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:42179 "EHLO mga05.intel.com"
+        Wed, 20 May 2020 10:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETOAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:00:55 -0400
-IronPort-SDR: qzy7/cdMpUZ8dyCUFDUz2huK80ibYlYixSSNuwN1rRqgrLVTBhA5rFgQI8Fq8CX8LTK28RflbU
- XTmEe/AJY95g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 07:00:54 -0700
-IronPort-SDR: YxqroxTKwIzxY6ucUpAnsBTI86ASQQd6VG2HGha0NGmWLHK5WVOwbOqYDto+t9MKbXk4o3xVNm
- sBH+BSYuEiVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="268275311"
-Received: from ttluu1x-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.239])
-  by orsmga006.jf.intel.com with ESMTP; 20 May 2020 07:00:45 -0700
-Date:   Wed, 20 May 2020 17:00:44 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 01/20] x86/cpufeatures: x86/msr: Add Intel SGX
- hardware bits
-Message-ID: <20200520140044.GA34750@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-2-jarkko.sakkinen@linux.intel.com>
- <20200520121604.GF1457@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520121604.GF1457@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1726785AbgETOBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:01:13 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A922E20756;
+        Wed, 20 May 2020 14:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589983268;
+        bh=BDNtqPfixaGPXHmy4aaEnNMCMcHQWxQTdhCB4L+54W4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0TS6d83MvK9M9azZbyjEjOV13UPf0ijHKPiIJl5dhRUnxxkJD+aZLx+6p1NW94vFa
+         BGJYMMFeQTlXaTNkxnjUzBxyyjav4BaeA61XxPhcg/bL/zJFSaAabxQARtHLw8nZro
+         waynX92icbwJ86RCSKZ7URGqpykfkLTbHDjYTYPc=
+Date:   Wed, 20 May 2020 23:01:03 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     =?UTF-8?B?546L56iL5Yia?= <wangchenggang@vivo.com>
+Cc:     "'Steven Rostedt \(VMware'" <rostedt@goodmis.org>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>,
+        "'Kees Cook'" <keescook@chromium.org>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Dominik Brodowski'" <linux@dominikbrodowski.net>,
+        "'Arvind Sankar'" <nivedita@alum.mit.edu>,
+        "'Mike Rapoport'" <rppt@linux.ibm.com>,
+        "'Alexander Potapenko'" <glider@google.com>,
+        <linux-kernel@vger.kernel.org>, <kernel@vivo.com>
+Subject: Re: [PATCH] init/main.c: Print all command line when boot
+Message-Id: <20200520230103.4b34de53c7d5f62368ca30b5@kernel.org>
+In-Reply-To: <010201d62d8d$bf7605f0$3e6211d0$@vivo.com>
+References: <010201d62d8d$bf7605f0$3e6211d0$@vivo.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:16:21PM +0200, Borislav Petkov wrote:
-> On Fri, May 15, 2020 at 03:43:51AM +0300, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > Add X86_FEATURE_SGX from CPUID.(EAX=7, ECX=1), which informs whether the
-> > CPU has SGX.
-> > 
-> > Add X86_FEATURE_SGX1 and X86_FEATURE_SGX2 from CPUID.(EAX=12H, ECX=0),
-> > which describe the level of SGX support available [1].
-> > 
-> > Remap CPUID.(EAX=12H, ECX=0) bits to the Linux fake CPUID 8 in order to
-> > conserve some space. Keep the bit positions intact because KVM requires
-> > this. Reserve bits 0-7 for SGX in order to maintain this invariant also
-> > when new SGX specific feature bits get added.
+On Tue, 19 May 2020 11:29:46 +0800
+王程刚 <wangchenggang@vivo.com> wrote:
+
+> Function pr_notice print max length maybe less than the command line length,
+> need more times to print all.
+> For example, arm64 has 2048 bytes command line length, but printk maximum
+> length is only 1024 bytes.
+
+Good catch, and if you use bootconfig, you can expand it longer than that.
+
 > 
-> That paragraph needs dropping now.
-
-I dropped it (in my tree).
-
-> -- 
-> Regards/Gruss,
->     Boris.
+> Signed-off-by: Chenggang Wang <wangchenggang@vivo.com>
+> ---
+>  init/main.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 > 
-> https://people.kernel.org/tglx/notes-about-netiquette
+> diff --git a/init/main.c b/init/main.c
+> index 03371976d387..4cf676cc3305 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -825,6 +825,16 @@ void __init __weak arch_call_rest_init(void)
+>  	rest_init();
+>  }
+>  
+> +static void __init print_cmdline(void)
+> +{
+> +	const char *prefix = "Kernel command line: ";
+> +	int len = -strlen(prefix);
+> +
+> +	len += pr_notice("%s%s\n", prefix, boot_command_line);
 
-/Jarkko
+Why don't you use saved_command_line here? Those can be different
+and the effective one is saved_command_line.
+
+> +	while (boot_command_line[len])
+> +		len += pr_notice("%s\n", &boot_command_line[len]);
+
+Also, don't append "\n" unless you are sure there is an actual
+option separator (not a space, because the option can be quoted.)
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
