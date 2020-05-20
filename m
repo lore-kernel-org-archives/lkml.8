@@ -2,153 +2,133 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9840F205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB113205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cdQjBZ/m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L189PUp3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgETHaB (ORCPT
+        id S1726522AbgETHbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 03:30:01 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:33834 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726309AbgETHaA (ORCPT
+        Wed, 20 May 2020 03:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgETHbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:30:00 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04K7R4l3030676;
-        Wed, 20 May 2020 09:29:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=IMRVBLQ0AEUt0XOltEpT6Zor4zCeIp6mr6TUQS8qvRQ=;
- b=cdQjBZ/mX2n0JEfCgWFNEi0Ys1CBifFs7JeGaa4gCl4dwiy0eMdj61dfvmS9fcLraH5s
- edE75o7FWmIQ5Nud6pY5li2Ot+AbIMDDEEXgtkoe4dBXc7L8o8kebSKedmoJ1j1DWgAY
- TIcLaw/wCBOqpBI/CmtPmWoeEQDPrV4xDBkGVrp0vZKAWZZJGMUVchO/yBpG6BewyJQ9
- vqywWLgov7kYS5k/A4PYVSb80GSQk9F2g/rN+6m2760UJUVDjyPOgxs6U4b15a+oU34i
- OsGmCexT3UhxVJQJvOEvKDWVkEdosH3J696tHqcclxExOITXVvVzd7npEsQ17WEcUBzr uQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3125n3pn8g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 09:29:38 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC92A10002A;
-        Wed, 20 May 2020 09:29:37 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AAB032A5671;
-        Wed, 20 May 2020 09:29:37 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 20 May
- 2020 09:29:37 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 20 May 2020 09:29:37 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-CC:     "len.brown@intel.com" <len.brown@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Patrick Bellasi" <patrick.bellasi@arm.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Subject: Re: [Linux-stm32] [RFC 0/3] Introduce cpufreq minimum load QoS
-Thread-Topic: [Linux-stm32] [RFC 0/3] Introduce cpufreq minimum load QoS
-Thread-Index: AQHWGi06wBgeAQBseECYOK/U7Qvw76iQJdAAgAACCYCAAAQ3AIABBseAgAAT0wCAAE7QgIAADU2AgAARzICAAAO9AIAF2zaAgBkHbAA=
-Date:   Wed, 20 May 2020 07:29:37 +0000
-Message-ID: <d854844e-e651-5210-3e85-1be9f52d44d3@st.com>
-References: <20200424114058.21199-1-benjamin.gaignard@st.com>
- <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
- <70e743cf-b88e-346a-5114-939b8724c83d@arm.com>
- <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
- <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com>
- <a234e123-6c15-8e58-8921-614b58ca24ca@st.com> <jhjtv11cabk.mognet@arm.com>
- <a20c5214-211b-1f70-1162-57b32e60549b@st.com> <jhjmu6tc6rz.mognet@arm.com>
- <b8757472-c973-a32d-d5c9-a584d7d703f8@st.com>
-In-Reply-To: <b8757472-c973-a32d-d5c9-a584d7d703f8@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.49]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB271001AA377743824DE815E4C2B3FB@st.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_03:2020-05-19,2020-05-20 signatures=0
+        Wed, 20 May 2020 03:31:44 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76339C061A0E;
+        Wed, 20 May 2020 00:31:44 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id g20so876006qvb.9;
+        Wed, 20 May 2020 00:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gaIm9s4mEnVH3V4H05vGC7PBgBmldd3HetRyrOGTO80=;
+        b=L189PUp3M27waln66S1LOQ6RpRED5ip+iNlo+6Ir6BBRAqKKduEN9KAazXm+1sStZi
+         NS34SUYl4XnZj46lv3a1W8N5DHpJPGw7YLmFOcn7SG32MB6daHmhJWtRJJAHjZi7jAxl
+         fFgns6fyavA9TXenwre5zXrPSZ9rRaDsZHIlw/CkgbO2MJ68ETS/dapucXgLeo3u+SNv
+         ZmwArlEI4Kzblw07mdn3FAyrUfRAMH6SuycJRNcre5rNGITQYSelHQcFBTTluS6xN6C6
+         a+ADVlumVmrqNKkV3lJdbtYi+KIsdlUnUeNQc0dtT//JepgPRLMb/I7tHlSKwBRnQeiu
+         4sCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gaIm9s4mEnVH3V4H05vGC7PBgBmldd3HetRyrOGTO80=;
+        b=hzjX0lRaQAMTJasA4c8cy6H9KoA0rB63lKhJQb1YDpaeQj5UPKJ9Kf/JPymqk21o3/
+         DSnOf0lzMY4/ew1jmlDbCV1AeVghrwe+Wkv2Tpi5L4Sjrs9ZE2vviecrBW7hScyT7RjH
+         8vhRyKth5yRoibSfisZFqYpvlNaqV1Yp4Ggxipqb1E361WnXSXZtrevAOpjT4A58i4Wo
+         RkhlvprT1mq8nkVIcvZ2mhqhXOBh9UHBFcea+5/l4a9FJUur8rsgsUvHSu2BV5OgvXE7
+         HGE4MDCdAUi3o1mBypa5B5PwXZxEbT1UEo2ERNIrDivyCZGd3ir88G2wRASyiLt1yrPv
+         vMow==
+X-Gm-Message-State: AOAM531iumxRLr5PC+uiERO8r+aS6K5mcbKf00QrTieCFWmr+fI5lMa+
+        8t1k/R6bctKLQUXyzKFVDJa6iEVxb9+lkQ==
+X-Google-Smtp-Source: ABdhPJx7KDZ/cCn0kDH5eo1sxLGrfcympYeUIlyP1sLo07ELMWIpOYrAfxUorYSkK5wgsHqFgOYr0Q==
+X-Received: by 2002:ad4:5282:: with SMTP id v2mr3362063qvr.167.1589959903328;
+        Wed, 20 May 2020 00:31:43 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id w9sm1702540qtn.29.2020.05.20.00.31.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 00:31:42 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v4 0/4] iio: magnetometer: ak8975: Add gpio reset support
+Date:   Wed, 20 May 2020 09:31:12 +0200
+Message-Id: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDUvNC8yMCAxMToxNyBBTSwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+DQo+IE9u
-IDQvMzAvMjAgNTo1MCBQTSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPj4gT24gMzAvMDQv
-MjAgMTY6MzcsIEJlbmphbWluIEdBSUdOQVJEIHdyb3RlOg0KPj4+IE9uIDQvMzAvMjAgNDozMyBQ
-TSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPj4+PiBPbiAzMC8wNC8yMCAxNDo0NiwgQmVu
-amFtaW4gR0FJR05BUkQgd3JvdGU6DQo+Pj4+Pj4gVGhhdCdzIG5vdCB3aGF0IEkgbWVhbnQuDQo+
-Pj4+Pj4NCj4+Pj4+PiBJIHN1cHBvc2UgdGhhdCB0aGUgaW50ZXJydXB0IHByb2Nlc3NpbmcgaW4g
-cXVlc3Rpb24gdGFrZXMgcGxhY2UgaW4NCj4+Pj4+PiBwcm9jZXNzIGNvbnRleHQgYW5kIHNvIHlv
-dSBtYXkgc2V0IHRoZSBsb3dlciBjbGFtcCBvbiB0aGUgdXRpbGl6YXRpb24NCj4+Pj4+PiBvZiB0
-aGUgdGFzayBjYXJyeWluZyB0aGF0IG91dC4NCj4+Pj4+IEkgaGF2ZSB0cnkgdG8gYWRkIHRoaXMg
-Y29kZSB3aGVuIHN0YXJ0aW5nIHN0cmVhbWluZyAoYmVmb3JlIHRoZSBmaXJzdA0KPj4+Pj4gaW50
-ZXJydXB0KSB0aGUgZnJhbWVzIGZyb20gdGhlIHNlbnNvcjoNCj4+Pj4+IGNvbnN0IHN0cnVjdCBz
-Y2hlZF9hdHRyIHNjaGVkX2F0dHIgPSB7DQo+Pj4+PiAgICAgICAuc2NoZWRfdXRpbF9taW4gPSAx
-MDAwMCwgLyogMTAwJSBvZiB1c2FnZSAqLw0KPj4+PiBVbmxlc3MgeW91IHBsYXkgd2l0aCBTQ0hF
-RF9DQVBBQ0lUWV9TSElGVCwgdGhlIG1heCBzaG91bGQgYmUgMTAyNCAtDQo+Pj4+IGkuZS4gU0NI
-RURfQ0FQQUNJVFlfU0NBTEUuIFRoYXQncyBhIHJlYWxseSBiaWcgYm9vc3QsIGJ1dCB0aGF0J3Mg
-Zm9yIHlvdSB0bw0KPj4+PiBiZW5jaG1hcmsuDQo+Pj4+DQo+Pj4+PiAgICAgICAuc2NoZWRfZmxh
-Z3MgPSBTQ0hFRF9GTEFHX1VUSUxfQ0xBTVBfTUlOLA0KPj4+Pj4gICAgICB9Ow0KPj4+Pj4NCj4+
-Pj4+IHNjaGVkX3NldGF0dHIoY3VycmVudCwgJnNjaGVkX2F0dHIpOw0KPj4+Pj4NCj4+Pj4+IEkg
-ZG9uJ3Qgc2VlIGFueSBiZW5lZmljZXMgbWF5YmUgdGhlcmUgaXMgc29tZSBjb25maWd1cmF0aW9u
-IGZsYWdzIHRvIHNldC4NCj4+Pj4+DQo+Pj4+PiBIb3cgY2hhbmdpbmcgc2NoZWRfdXRpbF9taW4g
-Y291bGQgaW1wYWN0IGNwdWZyZXEgb25kZW1hbmQgZ292ZXJub3IgPw0KPj4+Pj4gRG9lcyBpdCBj
-aGFuZ2UgdGhlIHZhbHVlIHJldHVybmVkIHdoZW4gdGhlIGdvdmVybm9yIGNoZWNrIHRoZSBpZGxl
-IHRpbWUgPw0KPj4+Pj4NCj4+Pj4gWW91J2xsIGhhdmUgdG8gdXNlIHRoZSBzY2hlZHV0aWwgZ292
-ZXJub3IgZm9yIHVjbGFtcCB0byBoYXZlIGFuIGVmZmVjdC4gQW5kDQo+Pj4+IGFyZ3VhYmx5IHRo
-YXQncyB3aGF0IHlvdSBzaG91bGQgYmUgdXNpbmcsIHVubGVzcyBzb21ldGhpbmcgZXhwbGljaXRs
-eQ0KPj4+PiBwcmV2ZW50cyB5b3UgZnJvbSBkb2luZyB0aGF0Lg0KPj4+IEV2ZW4gd2l0aCBzY2hl
-ZHV0aWwgYW5kIFNDSEVEX0NBUEFDSVRZX1NDQUxFIHRoYXQgaXQgZG9lc24ndCB3b3JrLg0KPj4+
-IGNwdWZyZXEvY3B1aW5mb19jdXJfZnJlcSB2YWx1ZXMgYXJlIGFsd2F5cyBvbiB0aGUgbWF4IHZh
-bHVlIGV2ZW4gaWYgdGhlDQo+Pj4gc3RhdHMgc2hvdyB0cmFuc2l0aW9ucyBiZXR3ZWVuIHRoZSBh
-dmFpbGFibGUgZnJlcXVlbmNpZXMuDQo+Pj4NCj4+PiBJIHNlZSB0d28gcG9zc2libGVzIHJlYXNv
-bnMgdG8gZXhwbGFpbiB0aGF0Og0KPj4+IC0gc2NoZWRfc2V0YXR0cigpIGlzIGNhbGxlZCBpbiB1
-c2VybGFuZCBwcm9jZXNzIGNvbnRleHQsIGJ1dCB0aGUNCj4+PiB0aHJlYWRlZCBpcnEgaGFuZGxl
-ciBpcyBydW5uaW5nIGluIGFub3RoZXIgcHJvY2Vzcy4NCj4+IEFoIHllcywgdGhpcyBvbmx5IHdv
-cmtzIGlmIHRoZSB0YXNrIHlvdSBib29zdCBpcyB0aGUgb25lIHRoYXQgd2lsbCBoYW5kbGUNCj4+
-IHdoYXRldmVyIHdvcmsgeW91IGNhcmUgYWJvdXQgKGluIHRoaXMgY2FzZSBoYW5kbGluZyB0aGUg
-aXJxKS4gVGhhdCBzYWlkLCBpZg0KPj4geW91IGRvIHVzZSB0aHJlYWRlZCBJUlFzLCB0aGF0IHNo
-b3VsZCBnaXZlIHlvdSBhIFNDSEVEX0ZJRk8gdGhyZWFkLCB3aGljaA0KPj4gc2hvdWxkIGRyaXZl
-IHRoZSBmcmVxdWVuY3kgdG8gaXRzIG1heCB3aGVuIHVzaW5nIHNjaGVkdXRpbCAodW5yZWxhdGVk
-IHRvDQo+PiB1Y2xhbXApLg0KPiBDYW4gSSBjb25jbHVkZSB0aGF0IHNjaGVkX3NldGF0dHIoKSBp
-c24ndCB0aGUgZ29vZCB3YXkgdG8gc29sdmUgdGhpcw0KPiBwcm9ibGVtID8NCj4gRG9lcyBteSBw
-YXRjaGVzIG1ha2Ugc2Vuc2UgaW4gdGhpcyBjYXNlID8NCkdlbnRsZSB1cCBvbiB0aGlzIHNlcmll
-cyBiZWFjYXVzZSBJIGhhdmVuJ3QgZm91bmQgYW55IG90aGVyIHdheSB0byBzb2x2ZQ0KdGhpcyBw
-cm9ibGVtLg0KDQpUaGFua3MsDQpCZW5qYW1pbg0KPg0KPj4+IC0gYmVjYXVzZSB0aGlzIHVzZSBj
-YXNlIGlzIGFsbW9zdCBydW5uaW5nIGFsbCBpbiBoYXJkd2FyZSB0aGUgcHJvY2Vzcw0KPj4+IGlz
-bid0IGRvaW5nIGFueXRoaW5nIHNvIHRoZSBzY2hlZHVsZXIgZG9lc24ndCB0YWtlIGNhcmUgb2Yg
-aXQuDQo+Pj4NCj4+Pj4+PiBBbHRlcm5hdGl2ZWx5LCB0aGF0IHRhc2sgbWF5IGJlIGEgZGVhZGxp
-bmUgb25lLg0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Xw0KPiBMaW51eC1zdG0zMiBtYWlsaW5nIGxpc3QNCj4gTGludXgtc3RtMzJAc3QtbWQtbWFpbG1h
-bi5zdG9ybXJlcGx5LmNvbQ0KPiBodHRwczovL3N0LW1kLW1haWxtYW4uc3Rvcm1yZXBseS5jb20v
-bWFpbG1hbi9saXN0aW5mby9saW51eC1zdG0zMg0K
+v4:
+ - fix some typo
+ - use gpio's dt-bindings for more clarity in documentation
+ - set compatible properties without vendor prefix as deprecated
+
+v3:
+ - fix patch messages style
+ - align reset gpio comment to kernel doc reccomendation
+ - introduce changelog.
+https://lore.kernel.org/linux-iio/20200519124402.26076-1-jonathan.albrieux@gmail.com/
+
+v2:
+ - rewording of reset gpio comment and patch messages to better clarify
+   reset gpio behaviour.
+https://lore.kernel.org/linux-iio/20200518133645.19127-1-jonathan.albrieux@gmail.com/
+
+v1:
+ - initial patch submission.
+https://lore.kernel.org/linux-iio/20200519065749.4624-1-jonathan.albrieux@gmail.com/
+
+Convert documentation from txt format to yaml. Add documentation about
+reset-gpio.
+
+Deassert reset on ak8975_power_on(), assert reset on ak8975_power_off().
+
+Without reset's deassertion during ak8975_power_on(), driver's probe fails
+on ak8975_who_i_am() while checking for device identity for AK09911 chip.
+
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheet says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation.
+
+Jonathan Albrieux (4):
+  dt-bindings: iio: magnetometer: ak8975: convert txt format to yaml
+  dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+  iio: magnetometer: ak8975: Fix typo, uniform measurement unit style
+  iio: magnetometer: ak8975: Add gpio reset support
+
+ .../bindings/iio/magnetometer/ak8975.txt      | 30 --------
+ .../bindings/iio/magnetometer/ak8975.yaml     | 77 +++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c             | 22 +++++-
+ 3 files changed, 97 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.yaml
+
+-- 
+2.17.1
+
