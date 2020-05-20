@@ -2,89 +2,78 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A05A206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBD020708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iCZKQEyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgETPez (ORCPT
+        id S1726940AbgETPgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:34:55 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:50010 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726560AbgETPey (ORCPT
+        Wed, 20 May 2020 11:36:16 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:55332 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgETPgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:34:54 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-228-m9nY-k74MOCgdXhj5Ly8FA-1; Wed, 20 May 2020 16:34:51 +0100
-X-MC-Unique: m9nY-k74MOCgdXhj5Ly8FA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 20 May 2020 16:34:50 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 20 May 2020 16:34:50 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Dan Williams' <dan.j.williams@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, "X86 ML" <x86@kernel.org>,
-        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Subject: RE: [PATCH v3 1/2] x86, powerpc: Rename memcpy_mcsafe() to
- copy_mc_to_{user, kernel}()
-Thread-Topic: [PATCH v3 1/2] x86, powerpc: Rename memcpy_mcsafe() to
- copy_mc_to_{user, kernel}()
-Thread-Index: AQHWLrr3OGthQXUtsU6REk+fDuiGdKixGiVwgAAAsmA=
-Date:   Wed, 20 May 2020 15:34:50 +0000
-Message-ID: <6a7200e6c57843eb8c6c08db9f991064@AcuMS.aculab.com>
-References: <158992635164.403910.2616621400995359522.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158992635697.403910.6957168747147028694.stgit@dwillia2-desk3.amr.corp.intel.com>
- <87d06z7x1a.fsf@mpe.ellerman.id.au>
- <CAPcyv4igM-jK6OkPzd91ur_fNCaUxwbWTHhwWsWe-PJNjZdWGw@mail.gmail.com>
- <380699aca2424f5ab1fb55c220350908@AcuMS.aculab.com>
-In-Reply-To: <380699aca2424f5ab1fb55c220350908@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 20 May 2020 11:36:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Hr/v7CrPKy0D3t/BD3ZD7T4JRwoyIeHJHkahUfGLsTE=; b=iCZKQEyfjeyEyEvKf6sXVvInlW
+        YEQFgm52Z0H11/d9q+J+OUt3bq7IKdzgofPfBQYA5A2qTLlntw2/Yy5z9tDf/TfeZo879QmLATTKp
+        /itZqG+daVaWOTC4pcSKW8p4VhrfqMfViqNnXEy4XgMpUCjodaM/Nd+ugCleWNPN7ipFNiRDEnfc+
+        EuzR97LCJwBXmY3ZX78orsDxWelkxZzA/CRE/q28ATmsWyD2QqhgUBsHNaazpMs7HxfK/NygU2Ftc
+        mwe866Err3VsETUjK5p22cNSFnwRAmurojciN+t7oJWiI7M2sY3FSehbT0VXSP2rcU+pk6mJTNMD7
+        Vw7FL1hw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbQlQ-0004LN-0Y; Wed, 20 May 2020 15:36:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD303301A80;
+        Wed, 20 May 2020 17:36:03 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9FE5B29DB513D; Wed, 20 May 2020 17:36:03 +0200 (CEST)
+Date:   Wed, 20 May 2020 17:36:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Fox <afox@redhat.com>,
+        Stephen Johnston <sjohnsto@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] sched/cputime: make scale_stime() more precise
+Message-ID: <20200520153603.GP317569@hirez.programming.kicks-ass.net>
+References: <20190718131834.GA22211@redhat.com>
+ <20200127122817.GA10957@redhat.com>
+ <20200519172506.GA317395@hirez.programming.kicks-ass.net>
+ <20200520152439.GC26470@redhat.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520152439.GC26470@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBEYW4gV2lsbGlhbXMNCj4gPiBTZW50OiAyMCBNYXkgMjAyMCAxNjoyNg0KPiAuLi4N
-Cj4gPiA+ID4gKyNpZmRlZiBDT05GSUdfQVJDSF9IQVNfQ09QWV9NQw0KPiA+ID4gPiArZXh0ZXJu
-IHVuc2lnbmVkIGxvbmcgX19tdXN0X2NoZWNrDQo+ID4gPg0KPiA+ID4gV2UgdHJ5IG5vdCB0byBh
-ZGQgZXh0ZXJuIGluIGhlYWRlcnMgYW55bW9yZS4NCj4gPg0KPiA+IE9rLCBJIHdhcyBkb2luZyB0
-aGUgY29weS1wYXN0YSBkYW5jZSwgYnV0IEknbGwgcmVtb3ZlIHRoaXMuDQo+IA0KPiBJdCBpcyBk
-YXRhIG5vdCBjb2RlLCBpdCBuZWVkcyB0aGUgZXh0ZXJuIHRvIG5vdCBiZSAnY29tbW9uJy4NCj4g
-T1RPSCB3aGF0IGlzIGEgZ2xvYmFsIHZhcmlhYmxlIGJlaW5nIHVzZWQgZm9yPw0KDQpBYWFyZyBu
-b3QgZW5vdWdoIGNvbnRleHQuLi4NCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBC
-cmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdp
-c3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Wed, May 20, 2020 at 05:24:40PM +0200, Oleg Nesterov wrote:
+> Nevermind, I agree with your version. Will you send this patch or do you
+> want me to make V3 ?
 
+I got stuck at writing a Changelog, am more scatter brained than usual,
+due to lack of sleep. If you have Changelog that includes information
+rather than links to it, feel free to send it along and I'll frob the
+thing together, or just send a v3 with everything on.
+
+Otherwise, I'll try again tomorrow :-)
