@@ -2,94 +2,132 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED17C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E937C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3831207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2BA7207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioWZhImd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgETIcm (ORCPT
+        id S1726839AbgETIcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:32:42 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:47463 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETIcl (ORCPT
+        Wed, 20 May 2020 04:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETIcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:32:41 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MxDck-1iqvjr1ekS-00xexJ; Wed, 20 May 2020 10:32:39 +0200
-Received: by mail-qt1-f182.google.com with SMTP id m64so1921053qtd.4;
-        Wed, 20 May 2020 01:32:39 -0700 (PDT)
-X-Gm-Message-State: AOAM532/YEZMPDLymtXiAK8C+tZZNXDAYAgwZ5a3cNyYyCd4ue9lu+YG
-        x/5DHCbb9WLVFFDBNCKW1OmFzhFlkB2HlRZCS78=
-X-Google-Smtp-Source: ABdhPJwxHJfu9ad8fPRH3eY75VjvZPKl03jAeY6SOosBXI/bytpm+uNaMTBw34fhMdF542eIC1sItzGVn5tJJELnGhs=
-X-Received: by 2002:ac8:518f:: with SMTP id c15mr3966843qtn.142.1589963558179;
- Wed, 20 May 2020 01:32:38 -0700 (PDT)
+        Wed, 20 May 2020 04:32:45 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BCDFC061A0E;
+        Wed, 20 May 2020 01:32:45 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s10so1117264pgm.0;
+        Wed, 20 May 2020 01:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LdXCTub4Z9kDMOSy0ARQdskJN6lbu+XKJdQ8G1oxt2w=;
+        b=ioWZhImdJDpldT4SXJ9FDSvyluvAVlamd6Z0TPO1ZCr3WXm+XVbBYF9lRlMTGfKiKP
+         fwn6gWXg/dMeYxmVmC6VCbCS813r3sF8ENw447F9cDZN7o+4jwf/ATR4C4xfJlmDxPr6
+         VvHSR5zXvxwrCQdrSC+eNGxlXV8KtMFitR4k98f+Y0AFsYmu9xI/EeJblOAhUJIrQ5ti
+         HTZW/41UyGeg1taV1I3LZpMGDmng67TjVIn+9Hs+NVuh39gvBCX9vwCElmWiHsoRqEtd
+         arPVZp8aD9G1ASHPX4AFLYDGOMNVtJ61wePi0FfgHxsfz80qD6WMxu2KD0EaSyqsNnzG
+         iDww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LdXCTub4Z9kDMOSy0ARQdskJN6lbu+XKJdQ8G1oxt2w=;
+        b=C3l8BkhOJdmvflCPcVPjjshjZCKson+EJG8NP7+WTBU7exZ5yOPh2OJHtRjjviSRT6
+         s3TXMBJGcKzY798r0sxwCslebdjTpXaVQdVx1Y1QSHcIBKQIq+XC8z2+ookjvNrlXxZE
+         yiDZfhaddE+jPu+UxL3G1I4ofDJ+x44uHMC7XYHuj6820TSiRGNexJDrGQbJo8OZWLwl
+         boiUJmOll9o1vO3oPacxgplKyvJJixOsFYd14DTdtNy83rICsfqo+5k/UNFz2Rqg1x1t
+         066HnRZ3HZkudM9mbCja/Uygrzat/SxCpojKio+U5w3BxkIilH9NGbpSLTf7N3nnsN2P
+         GINg==
+X-Gm-Message-State: AOAM530Wb8RToELmJqzR3FBKQR9ahXBX+MUO+a0h6H3+/g+UYGHisNJC
+        WE9omyaJF/AkZN2wshbmrDfiFpN5xB0aFPKrh+M=
+X-Google-Smtp-Source: ABdhPJxyc7lGecCf47GbjoOmrlktPAZ4hEbvxvpm/3E/o9ZhCs/tLKv3L7khmH+4TruBr0WdnFND/2t3RPZbLKPE2F0=
+X-Received: by 2002:a65:6251:: with SMTP id q17mr3051810pgv.4.1589963564573;
+ Wed, 20 May 2020 01:32:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200519131327.1836482-1-arnd@arndb.de> <20200519181034.58c67eb5bea24aae24d33421@linux-foundation.org>
-In-Reply-To: <20200519181034.58c67eb5bea24aae24d33421@linux-foundation.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 20 May 2020 10:32:22 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a281ZLKwkWCKkAdQvA6=XA4=+mKWbwEzK_BR4Uu1c5DNQ@mail.gmail.com>
-Message-ID: <CAK8P3a281ZLKwkWCKkAdQvA6=XA4=+mKWbwEzK_BR4Uu1c5DNQ@mail.gmail.com>
-Subject: Re: [PATCH] sh: include linux/time_types.h for sockios
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200515212846.1347-1-mcgrof@kernel.org> <20200515212846.1347-13-mcgrof@kernel.org>
+ <2b74a35c726e451b2fab2b5d0d301e80d1f4cdc7.camel@sipsolutions.net>
+ <7306323c35e6f44d7c569e689b48f380f80da5e5.camel@sipsolutions.net>
+ <CA+ASDXOg9oKeMJP1Mf42oCMMM3sVe0jniaWowbXVuaYZ=ZpDjQ@mail.gmail.com>
+ <20200519140212.GT11244@42.do-not-panic.com> <CA+ASDXMUHOcvJ_7UWgyANMxSz15Ji7TcLDXVCtSPa+fOr=+FGA@mail.gmail.com>
+ <CANUX_P1pnV46gOo0aL6QV0b+49ubB7C5nuUOuOfoT7aOM+ye9w@mail.gmail.com>
+In-Reply-To: <CANUX_P1pnV46gOo0aL6QV0b+49ubB7C5nuUOuOfoT7aOM+ye9w@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 20 May 2020 11:32:32 +0300
+Message-ID: <CAHp75VfOvABsQyxdy9j-On6pTunM1+uisoWQOmoNa7wLWJ+CSw@mail.gmail.com>
+Subject: Re: [PATCH v2 12/15] ath10k: use new module_firmware_crashed()
+To:     Emmanuel Grumbach <egrumbach@gmail.com>
+Cc:     Brian Norris <briannorris@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        aquini@redhat.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Will Deacon <will@kernel.org>, Baoquan He <bhe@redhat.com>,
+        ath10k@lists.infradead.org, Takashi Iwai <tiwai@suse.de>,
+        Ingo Molnar <mingo@redhat.com>, Dave Young <dyoung@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, gpiccoli@canonical.com,
+        Steven Rostedt <rostedt@goodmis.org>, cai@lca.pw,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        schlad@suse.de, Linux Kernel <linux-kernel@vger.kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:r7q4B6sn5NDNHf0cUJuyd3+1Dx9OG521Z2awa++weaIQNrMRw7j
- 7G2xNSqzvvsexvR+IosDSi01VEZul/SrksXUAxkUMezDyTdIimNLJeK76xYW1jW9wNzHP09
- QXOD1rHs6cd4jdwvsNan568zUgSQDYwsiDVqkzxdSPGcMaT1ZGWTmhMhdZG9i3SklGB3RqV
- +5ZWx4MrASaBwE4h31aQQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9ZRZAO9Lg1g=:C4gWAUP+tl/Tap5d+XHgYe
- xYjVThaqPba6ka+0NWAAA52g99sJ73ROP3NpPcZw9kqg20i6f7isM0GKnohB0xp+Yn4kD4z5d
- XUdkQXmIGRw3G3PPJ95LH1xM0aa8zrr0jdfEGL1gWan9wi3Hirkj9Ar8pCizvGhGohjDk4Sj/
- /cGPPxmjf1a29BQlM5Z5Waa7RlfPKnC4WaDHmUsozc+Yhat2fVO/J7ehdDJRM7fkQ4yH0u57z
- VgeGeiuCcfGP4ioBS2jomfqSP8Nch0Xj9SKo1h6Znf9tzCZSEufcLQaDiSAMU9BrTxXo8tY+Q
- EBvhS+1fEydaop3LN137Bvfq6i/N4lfoJjth2QnsWotcgVmhudwHyKpLJOFzELhKF96012TJg
- DTK2bcwl89ffGX3k9K4GZ40JHVwMH8ksmWU/+OUkGWDVPako8KeLIkbVIJb2H5OQGEAO8pvBi
- C+AtISAucdED+4MhIqXIoFmtOFJNg6B1LLOU580CXYa8lyhc7JoHPNMH6iQs5nAasWKAQtJxO
- TKYnZq8hM1JBU/EVkRoIO0fbWTkJaCpbmyWKY2U/faahvtI96706ol5givhOEJ4QpLiqJRXNU
- FylAK7aTLq755/oIr64IIpkNFwRSF1DQfKFF4kPGBjlqcail2NV6eX0QBcza9OqxCE6Dbj8hO
- BCDRLiZ3Ezawyyo3ANJkVa3bMlEkl1KZBPBLfcdJ+6PPlUXx4uHYjL/ooEMWgzB6FFg/nb4iC
- lrYunllPD45K/snDuFoS0VDIfQoxmfbCTyOJewDFmfGaROLEFq75EOIPwylJADRvs7joimiHp
- D/yv/ovrjd4yq3BGVczcaQfilT3UdfZtap13K1ii/8cm+1DW6g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 3:10 AM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Tue, 19 May 2020 15:13:13 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
->
-> > Using the socket ioctls on arch/sh (and only there) causes build
-> > time problems when __kernel_old_timeval/__kernel_old_timespec are
-> > not already visible to the compiler.
-> >
-> > Add an explict include line for the header that defines these
-> > structures.
->
-> I can grab this.
+On Wed, May 20, 2020 at 8:40 AM Emmanuel Grumbach <egrumbach@gmail.com> wrote:
 
-Thanks!
-
-> > Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> > Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> > Fixes: 8c709f9a0693 ("y2038: sh: remove timeval/timespec usage from headers")
-> > Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
+> Since I have been involved quite a bit in the firmware debugging
+> features in iwlwifi, I think I can give a few insights here.
 >
-> cc:stable?
+> But before this, we need to understand that there are several sources of issues:
+> 1) the firmware may crash but the bus is still alive, you can still
+> use the bus to get the crash data
+> 2) the bus is dead, when that happens, the firmware might even be in a
+> good condition, but since the bus is dead, you stop getting any
+> information about the firmware, and then, at some point, you get to
+> the conclusion that the firmware is dead. You can't get the crash data
+> that resides on the other side of the bus (you may have gathered data
+> in the DRAM directly, but that's a different thing), and you don't
+> have much recovery to do besides re-starting the PCI enumeration.
+>
+> At Intel, we have seen both unfortunately. The bus issues are the ones
+> that are trickier obviously. Trickier to detect (because you just get
+> garbage from any request you issue on the bus), and trickier to
+> handle. One can argue that the kernel should *not* handle those and
+> let this in userspace hands. I guess it all depends on what component
+> you ship to your customer and what you customer asks from you  :).
 
-Yes, I missed that.
+Or the two best approaches:
+1) get rid of firmware completely;
+2) make it OSS (like SOF).
 
-     Arnd
+I think any of these is a right thing to do in long-term perspective.
+
+How many firmwares average computer has? 50? 100? Any of them is a
+burden and PITA.
+
+-- 
+With Best Regards,
+Andy Shevchenko
