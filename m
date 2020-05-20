@@ -2,174 +2,168 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09825C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405D9206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD201206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 15:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yPo65ZsZ"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="kkjK0TsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgETPPJ (ORCPT
+        id S1726851AbgETPPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 11:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgETPPJ (ORCPT
+        Wed, 20 May 2020 11:15:54 -0400
+Received: from sonic309-26.consmr.mail.ne1.yahoo.com ([66.163.184.152]:44173
+        "EHLO sonic309-26.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726688AbgETPPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 11:15:09 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3979C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:15:07 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id m18so844741vkk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 08:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sUX13WphyqqA1JYWe4oPUl+D3hHWw+xab91ouObbZCg=;
-        b=yPo65ZsZDmcGgXTMi8Zqn0vHf1QG5fau+JxpzprjaOHvXkYuRozdlqhT1xnYpP3ElV
-         AH0AB254mavFDsnn2ENcVcOZo/i+jaiA8B26CT1PKNPrgPOn9diSl13x4dWfCXDRLaCo
-         FO/s4hnEWdDEAPFj94khHQh7zIV79YGGhR80YKxGHVNNW9zrj1/jay/T8aTiMhKRmVPr
-         VmvpivF4+6x+2tu+YKaDn74EgFPwa2trf7Bk0NrKRCJokMzVpROLKtR/nt8paUG1/dJs
-         GBKbJweqAbEdfF2vx2h/M5AKbzGDwcK0+fuAaL4OGudDbhf2FaOfkvKf07ABltXdoPMP
-         Q+sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sUX13WphyqqA1JYWe4oPUl+D3hHWw+xab91ouObbZCg=;
-        b=CNzJbvAKKuJxJz8CQsEdOY7uo8ZE6EThxXpV8fd+F1Y4H3EGWAFKZA+uXMnPhMMicY
-         q9oJKFZzUrU8IriMfQQnPVxlqPR94MRU9LHIyylDc8EAT1aUN3lzOTw21wsYiXE8xDS8
-         8Pn4YhaxQu3+lgVHclGkAEo/G6Wl5Bm/torvYnNxwoFQzFzX27p6pPlayG9pwh8u/EHD
-         TKK54eJOycszEZyBOkgN8ysjdYPP/6wju1XlCoGdwxoLVWGEwD8ZPDUFSlgmfVH79WfB
-         FtZF92OzchUnZhTTNIjLGogNK5SCqTRqPr2fT/wJL/cVuWA0yU6HDZrfxHeLZGuAJbun
-         3mSA==
-X-Gm-Message-State: AOAM530ryjx+qjlgqtCUOIDpoO0vrpfMOF9zf3YqO2e60BevUhvTPL3T
-        /+kRzdYSvTP7Hu7xK9hl6n1UvlUXUKFJZBou/J910w==
-X-Google-Smtp-Source: ABdhPJxekvSrdTElq3vFqtOcb6dmQQbXPtS/x9d4e/JTZmJYMgPMlxOkOALq3DqJ5j0N09VRyGqEGXK1aiqfYw7b8QE=
-X-Received: by 2002:a1f:fc06:: with SMTP id a6mr4095706vki.101.1589987706806;
- Wed, 20 May 2020 08:15:06 -0700 (PDT)
+        Wed, 20 May 2020 11:15:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1589987752; bh=Zkd3rPDKtX3+qnFQjuOU8VFwF0nL19jUfZSYP4Q23R0=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=kkjK0TsXqKAHoENaKMCe5DQ5WVt+teqYZFSwjN8n6C0KLrUl05YAufGdMl7wuF2eKUbwjQs/DVbtDL6w8/2IWeNYwGNkHy2nEhwNiemtEAm8D6cCNO5TCFPlqBaBJRXUb6q37i22tmMRAdbVmZMQWMDjs6HrL0qg0f/O0GM2W+SN33RIND1IIbxhY7Z/CTRU0kgJAtGCKG04+zgahxzQp49QQ+ADyHiuZBpi3Bqc00Cj5kDCwmoOn1W2iC0OyUTmnm+P+8O26QSy+AZGIFCoafswkMXSfalviVVOCo83gnIGMHPHKTkDp61W1iKzugMXNXYZbusxTLY6OJ8pmxiMSQ==
+X-YMail-OSG: w71mDs0VM1m_FD37UiNuOJh4sfafztJ3GFPf3cfwUmAiw74SqOqea_Q5wzAohwI
+ b_tw5OkedXKObDxMPyVARBxDYyNX7m4s3yFpSC7FWoPFNxvKc8N40dTt8q9dgFpEg5xma2RdSsRx
+ Y39ZpKozkVYVvoFy60gdUsHmYsXbt2kjvYpTAVa8rmy9BbWKYCM8hSe6_.Dnkmmqk6es1E62842r
+ Pr6rELwQC6znto5cCkrCB72AtD8lU.9gLHq4MnIKJb1vjaXAbWUq6BfN_FMzsKbAn1JpOLjDBk7Y
+ birYEmmeCVY0eZfZpmxI8qS3C.l9OYG3p0g7.rxQNAu033FG9eXgzrt7CpFLgIkodzc_dy3pBtqI
+ zIBntmu5.8p2aEVKsns3k0cBfDXQvcdempClBpwhlRjh.miEwHBwTF0U_PbTvaRea8ZTYw6Vc8Sh
+ U2DRynxTAPZuAtudPB1cTLyXynFXbajG7LDHL87hlPnw0u8LSBlicj_bBiBr_Mx0gwNQEuBn0aBT
+ TZdAYa.zrQUb9tntQ9jGxlOBho6Ub.l2WWRWJoLwWU4jm5RcEXvONh3cfSNlR2M5M7yhamy6Gl89
+ 17TxRU5UMRPvpfRqU.ecOhvu1JriVPw9HGL1XO6wuKP_UZEtNp.gp3tF9VSQOtUtRR50LWYJMIyP
+ gVjhJNojFxvYsBvoucKmlfRiPlmH9NdJWWLLC8pDY7bdxPA4Q4pECbdbi8Ptun.UvBCabhxesEzM
+ IDdrXlyK8auysozw0NmBIBTl6UPNwWAQ7IbAH_jS8Pb..28rMNS.Re1OplTcu1DBXJ1vT8r74ASk
+ 6MBKOZMNY_cNsCSvvmA1owXQzW3iyLrj1qQ.1UOMMG5ctQTOk3EXcySospVoCrGvFsPteU01g5Ng
+ LiHJwF4fTdX3qEhtenhzLRE4vprgPlroaZ9m38PZTpBEkw5rPEwRHLwa2RVwTkYBacZZWSUad21X
+ x6LklUSetXgXrCbXFm81t_bNZSvij0FAHZy66o0LYh.V1Cg_T.DgMygF.U4vD1UODsZ7sfc6GBfC
+ v238odETVRAJb1SJ4bv82IzQEXT3cFhS_ccOkaa.PziIFpP33ciGOc3Efk9Z6cEryn4RM2uKyrBp
+ v.9GxEtFU_ymyj35eUFwJcHq_Z6ah9Q1gyw.hp5jiHOQ8t3a0RNISxnpO4CdFCNCe0UxNqO.4Nn2
+ jJ4ty1GysVIZMStulBJwWC9Nsv9edsCy2uH2CD2vnQgxkm1KQl_1FdD4z6ev.YZZGQVZ7bYbUfy5
+ NzW8qnNeyEaU1W84z0ieB686WUAPY6IanzbJ6hhnn6XpzaqiQeSTNVMTyNi0PBddqTtc2m8xjkEy
+ SWK8oOfY_A7flGvRVeMHuxt.uyGlpZqKBv2iQdUlnszsttxvCLYBESgW_ReAKiNJlL7JS0DeNpXw
+ 8Uo8BFrRqM5gFzDh6JNDHxHyYYix6lGCPZf4hYg--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Wed, 20 May 2020 15:15:52 +0000
+Received: by smtp403.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 0128c7c60599331edfc261e07b768c5e;
+          Wed, 20 May 2020 15:15:50 +0000 (UTC)
+Subject: Re: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
+To:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+References: <20200520125616.193765-1-kpsingh@chromium.org>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <5f540fb8-93ec-aa6b-eb30-b3907f5791ff@schaufler-ca.com>
+Date:   Wed, 20 May 2020 08:15:49 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <CGME20200520090109eucas1p17270805f81f6958cd5084a7b910efc6c@eucas1p1.samsung.com>
- <a9df7155-dd7a-752b-6d1c-3426837756b1@ti.com> <e9674719-0c86-63be-04a3-ee98bd884901@samsung.com>
- <f3c58dcd-b806-95ef-2434-3084e65e1afb@ti.com> <e3fa0b35-7cca-1e37-c2fa-63cc07e6bfda@samsung.com>
- <227465a5-c6e6-5b4d-abbd-7789727843a6@ti.com> <29a21e64-a63f-6721-c938-d713488767c1@samsung.com>
- <CAPDyKFq8-JYA_tKZmUZOY3mT-jeoWMHNpdj8SDGkqYmX7jJHVQ@mail.gmail.com> <9f72aeab-8d63-7fc1-d5ff-7d5c4f11012b@samsung.com>
-In-Reply-To: <9f72aeab-8d63-7fc1-d5ff-7d5c4f11012b@samsung.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 20 May 2020 17:14:29 +0200
-Message-ID: <CAPDyKFpgzYJzWR3mc-4XQDijtHVibDrFXazY0=P7TUs6rvE_hQ@mail.gmail.com>
-Subject: Re: Bad kfree of dma_parms in v5.7-rc5
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200520125616.193765-1-kpsingh@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.15960 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 at 15:28, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+
+On 5/20/2020 5:56 AM, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
 >
-> Hi Ulf,
+> secid_to_secctx is not stackable, and since the BPF LSM registers this
+> hook by default, the call_int_hook logic is not suitable which
+> "bails-on-fail" and casues issues when other LSMs register this hook and
+> eventually breaks Audit.
 >
-> On 20.05.2020 15:12, Ulf Hansson wrote:
-> > + Greg
-> >
-> > On Wed, 20 May 2020 at 14:54, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> >> On 20.05.2020 14:43, Tomi Valkeinen wrote:
-> >>> On 20/05/2020 12:22, Marek Szyprowski wrote:
-> >>>> On 20.05.2020 11:18, Tomi Valkeinen wrote:
-> >>>>> On 20/05/2020 12:13, Marek Szyprowski wrote:
-> >>>>>> On 20.05.2020 11:00, Tomi Valkeinen wrote:
-> >>>>>>> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core:
-> >>>>>>> platform: Initialize dma_parms for platform devices") v5.7-rc5 causes
-> >>>>>>> at least some v4l2 platform drivers to break when freeing resources.
-> >>>>>>>
-> >>>>>>> E.g. drivers/media/platform/ti-vpe/cal.c uses
-> >>>>>>> vb2_dma_contig_set_max_seg_size() and
-> >>>>>>> vb2_dma_contig_clear_max_seg_size() to manage the dma_params, and
-> >>>>>>> similar pattern is seen in other drivers too.
-> >>>>>>>
-> >>>>>>> After 9495b7e92f716ab2, vb2_dma_contig_set_max_seg_size() will not
-> >>>>>>> allocate anything, but vb2_dma_contig_clear_max_seg_size() will still
-> >>>>>>> kfree the dma_params.
-> >>>>>>>
-> >>>>>>> I'm not sure what's the proper fix here. A flag somewhere to indicate
-> >>>>>>> that vb2_dma_contig_set_max_seg_size() did allocate, and thus
-> >>>>>>> vb2_dma_contig_clear_max_seg_size() must free?
-> >>>>>>>
-> >>>>>>> Or drop the kzalloc and kfree totally, if dma_params is now supposed
-> >>>>>>> to always be there?
-> >>>>>> Thanks for reporting this issue!
-> >>>>>>
-> >>>>>> Once the mentioned commit has been merged, the code should assume that
-> >>>>>> the platform devices does have a struct dma_params allocated, so the
-> >>>>>> proper fix is to alloc dma_params only if the bus is not a platform
-> >>>>>> bus:
-> >>>>>>
-> >>>>>> if (!dev_is_platform(dev) && !dev->dma_parms) {
-> >>>>>>         dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
-> >>>>>>
-> >>>>>> same check for the free path.
-> >>>>> There is also "amba: Initialize dma_parms for amba devices". And the
-> >>>>> commit message says PCI devices do this too.
-> >>>>>
-> >>>>> Guessing this based on the device type doesn't sound like a good idea
-> >>>>> to me.
-> >>>> Indeed. Then replace the allocation with a simple check for NULL
-> >>>> dma_parms and return an error in such case. This should be enough for
-> >>>> v5.8. Later we can simply get rid of those helpers and inline setting
-> >>>> max segment size directly to the drivers.
-> > That seems like a good idea, in the long run.
-> >
-> >>> Is that valid either? Then we assume that dma_parms is always set up
-> >>> by someone else. That's true for platform devices and apparently some
-> >>> other devices, but is it true for all devices now?
-> >> # git grep vb2_dma_contig_set_max_seg_size | wc -l
-> >>
-> >> 18
-> >>
-> >> I've checked all clients of the vb2_dma_contig_set_max_seg_size
-> >> function. There are only 9 drivers, all of them are platform device
-> >> drivers. We don't care about off-tree users, so the proposed approach is
-> >> imho fine.
-> > Thanks for reporting and for looking into this. I apologize for the mess!
-> >
-> > There is one case, where the above solution could be a problem (unless
-> > I am wrong). That is, s5p_mfc_configure_2port_memory() that calls
-> > s5p_mfc_alloc_memdev(), which allocates/initializes an internal struct
-> > *device. Thus, this doesn't have the dev->dma_parms
-> > allocated/assigned.
-> Indeed, this one will fail.
-> > In other words, we would need to manage alloc/free for the
-> > dev->dma_parms to have a complete fix. Maybe in
-> > s5p_mfc_configure|unconfigure_2port_memory()!?
-> That would be the best place to allocate it.
-> > Additionally, I think reverting the offending commit, as discussed
-> > above, could cause even more issues, as it's even included for
-> > v5.6-stable kernels. I will go through all cases, more carefully this
-> > time, of how ->dma_parms is managed, to be sure there are no more
-> > conflicting cases.
+> In order to fix this, directly iterate over the security hooks instead
+> of using call_int_hook as suggested in:
 >
-> I've already posted a fix for ExynosDRM driver, which is also affected:
-> https://patchwork.kernel.org/patch/11559965/
+> https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
+>
+> Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+> Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
+> Reported-by: Alexei Starovoitov <ast@kernel.org>
+> Signed-off-by: KP Singh <kpsingh@google.com>
 
-Alright, thanks for helping out!
+This looks fine.
 
-Please add a fixes/stable tag to it.
-
-Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for
-platform devices")
-Cc: stable@vger.kernel.org
-
-Kind regards
-Uffe
+> ---
+>  security/security.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/security/security.c b/security/security.c
+> index 7fed24b9d57e..51de970fbb1e 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -1965,8 +1965,20 @@ EXPORT_SYMBOL(security_ismaclabel);
+>  
+>  int security_secid_to_secctx(u32 secid, char **secdata, u32 *seclen)
+>  {
+> -	return call_int_hook(secid_to_secctx, -EOPNOTSUPP, secid, secdata,
+> -				seclen);
+> +	struct security_hook_list *hp;
+> +	int rc;
+> +
+> +	/*
+> +	 * Currently, only one LSM can implement secid_to_secctx (i.e this
+> +	 * LSM hook is not "stackable").
+> +	 */
+> +	hlist_for_each_entry(hp, &security_hook_heads.secid_to_secctx, list) {
+> +		rc = hp->hook.secid_to_secctx(secid, secdata, seclen);
+> +		if (rc != LSM_RET_DEFAULT(secid_to_secctx))
+> +			return rc;
+> +	}
+> +
+> +	return LSM_RET_DEFAULT(secid_to_secctx);
+>  }
+>  EXPORT_SYMBOL(security_secid_to_secctx);
+>  
