@@ -2,126 +2,162 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDDA2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D64207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1TfS203"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hbw+Sxm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgETR1F (ORCPT
+        id S1727098AbgETR1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgETR1F (ORCPT
+        Wed, 20 May 2020 13:27:38 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44022 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgETR1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:27:05 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E735DC061A0E;
-        Wed, 20 May 2020 10:27:04 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 69so3147993otv.2;
-        Wed, 20 May 2020 10:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TIdxtTnUgO6aZDU4rUzN+MxaoaGI5auvg4NGS+KtfVI=;
-        b=H1TfS203qLstiBad7w4w4x5s/NZRO6u1JiyLu6YTE5qpP3qWrcid4Knf9zmmybv67z
-         JIgyUx7wZwQb9hW3+I82kYkyomvAHSD3eMm+XcsZBIM2ZlTBCtBSuDqKiD03PvFWPCvX
-         3nKH3vQAvEBFeulhswTQQ/lXhodlUQ/iEjLJoz4ZP+09e5SaFHUgKTPtxaSSFuTMYtWu
-         gAiSFoVLUjeENMZDu4NTSntgRE/yDbcOluB4VkegHbzH1cgMsX22yjK/tdSw3TK+vzMP
-         nX52zDSWdUuqzjaSfFU/QG57NwWn+Z1qXSJE7FT+CqCpXAWHKuClrSrLYd1bJe4UMONp
-         /zAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TIdxtTnUgO6aZDU4rUzN+MxaoaGI5auvg4NGS+KtfVI=;
-        b=iJDHdZn8IJmZH04ROj2fNy/zlNk4HS+J39NXCt/QcIMFuwYJgcsMEJe85dO0G+xf5B
-         vEFuErrWJ5jEzxLsaAY1MvOnDRJJ83gz71uPMJxs0Zzcv6OjsP4dK2BZHne8qDmqwhYS
-         YRV810DJIBYQTX9xfjMW5vj3rcnjE4cK0xLiVAArA4rE7E23xSg8B/7kFqRWk0WQ1KDO
-         D4wF3euTPGJjwTLFztRozhwjNd3QhQYwITEAzQ4I3dWuXMOzqYFMjkSqd+exdJiPNtFQ
-         7NrJtCBF/Fj2lghV7R/nq4shfyrTNH/Ffd5M/Plokd5dCmmilWVvt387ETf2KjSzKlb9
-         +ujg==
-X-Gm-Message-State: AOAM532CmnOARg2Nb+1ShYpi+AlBMepgZpScW0biPko7tMmvDiyqjyAv
-        Iv6BTX6QfIz3X3tfUUir7zJCELvF
-X-Google-Smtp-Source: ABdhPJx/7ljZX61LteZoqy3vrhiksvJT31pn9ZLt+0CrEEZoZNVjYhdFCa3ImExjuCRFXA7B4T+MZQ==
-X-Received: by 2002:a9d:2927:: with SMTP id d36mr4145661otb.317.1589995624055;
-        Wed, 20 May 2020 10:27:04 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:d5aa:9958:3110:547b? ([2601:282:803:7700:d5aa:9958:3110:547b])
-        by smtp.googlemail.com with ESMTPSA id t24sm875948otp.69.2020.05.20.10.27.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 10:27:03 -0700 (PDT)
-Subject: Re: [PATCH net-next] ipv6/route: inherit max_sizes from current netns
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200520145806.3746944-1-christian.brauner@ubuntu.com>
- <4b22a3bc-9dae-3f49-6748-ec45deb09a01@gmail.com>
- <20200520172417.4m7pyalpftdd2xrm@wittgenstein>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <dd09bef6-61c4-5217-4448-e58cd39dbad9@gmail.com>
-Date:   Wed, 20 May 2020 11:27:02 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Wed, 20 May 2020 13:27:38 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KHRQnD119589;
+        Wed, 20 May 2020 17:27:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ZI+6TF7yJH53zB2IfHHOio/WtJQNIx/nlTr5nUcwRyo=;
+ b=hbw+Sxm7GgFCtoB0oR+J7ScLExUTPpDmgmRf4XRgPt5ZZq0UbNZuo4tNT0gCwCdsgaXf
+ Zb3BNbolWjR02A2T8ZkQzrFAFg7O8tHMR6VSc2X0+0PLoQlmQUezlvDWZDiPuIROF4pO
+ Rr0//G2s33Tm0KzkAMhfsk/K+S4edYBBOVgqNZ6lbyqdQgXYOZd9x3uf1rGJtzOxTFqX
+ ODyILwoByLK6zyHlXqx/PPTEDDtAzcc+BUMxJOBvT67EZN3otvU/CWRSSEXoz8qrc8XU
+ W2G24P7P5DeEfq56RBJWtEnCqTM9eUlz/nv9ZRjUC/uCu4kGeCwoyL8xmLEAWclnwjGE cg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 31501raxu9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 17:27:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KHMTgo084411;
+        Wed, 20 May 2020 17:27:20 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 314gm7ej5k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 17:27:20 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KHRHeJ023238;
+        Wed, 20 May 2020 17:27:17 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 May 2020 10:27:17 -0700
+Subject: Re: kernel BUG at mm/hugetlb.c:LINE!
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Colin Walters <walters@verbum.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm <linux-mm@kvack.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <000000000000b4684e05a2968ca6@google.com>
+ <aa7812b8-60ae-8578-40db-e71ad766b4d3@oracle.com>
+ <CAJfpegtVca6H1JPW00OF-7sCwpomMCo=A2qr5K=9uGKEGjEp3w@mail.gmail.com>
+ <bb232cfa-5965-42d0-88cf-46d13f7ebda3@www.fastmail.com>
+ <9a56a79a-88ed-9ff4-115e-ec169cba5c0b@oracle.com>
+ <CAJfpegsNVB12MQ-Jgbb-f=+i3g0Xy52miT3TmUAYL951HVQS_w@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <78313ae9-8596-9cbe-f648-3152660be9b3@oracle.com>
+Date:   Wed, 20 May 2020 10:27:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200520172417.4m7pyalpftdd2xrm@wittgenstein>
+In-Reply-To: <CAJfpegsNVB12MQ-Jgbb-f=+i3g0Xy52miT3TmUAYL951HVQS_w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 11:24 AM, Christian Brauner wrote:
-> On Wed, May 20, 2020 at 10:54:21AM -0600, David Ahern wrote:
->> On 5/20/20 8:58 AM, Christian Brauner wrote:
->>> During NorthSec (cf. [1]) a very large number of unprivileged
->>> containers and nested containers are run during the competition to
->>> provide a safe environment for the various teams during the event. Every
->>> year a range of feature requests or bug reports come out of this and
->>> this year's no different.
->>> One of the containers was running a simple VPN server. There were about
->>> 1.5k users connected to this VPN over ipv6 and the container was setup
->>> with about 100 custom routing tables when it hit the max_sizes routing
->>> limit. After this no new connections could be established anymore,
->>> pinging didn't work anymore; you get the idea.
+On 5/20/20 4:20 AM, Miklos Szeredi wrote:
+> On Tue, May 19, 2020 at 2:35 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>
+>> On 5/18/20 4:41 PM, Colin Walters wrote:
+>>>
+>>> On Tue, May 12, 2020, at 11:04 AM, Miklos Szeredi wrote:
+>>>
+>>>>> However, in this syzbot test case the 'file' is in an overlayfs filesystem
+>>>>> created as follows:
+>>>>>
+>>>>> mkdir("./file0", 000)                   = 0
+>>>>> mount(NULL, "./file0", "hugetlbfs", MS_MANDLOCK|MS_POSIXACL, NULL) = 0
+>>>>> chdir("./file0")                        = 0
+>>>>> mkdir("./file1", 000)                   = 0
+>>>>> mkdir("./bus", 000)                     = 0
+>>>>> mkdir("./file0", 000)                   = 0
+>>>>> mount("\177ELF\2\1\1", "./bus", "overlay", 0, "lowerdir=./bus,workdir=./file1,u"...) = 0
+>>>
+>>> Is there any actual valid use case for mounting an overlayfs on top of hugetlbfs?  I can't think of one.  Why isn't the response to this to instead only allow mounting overlayfs on top of basically a set of whitelisted filesystems?
 >>>
 >>
->> should have been addressed by:
->>
->> commit d8882935fcae28bceb5f6f56f09cded8d36d85e6
->> Author: Eric Dumazet <edumazet@google.com>
->> Date:   Fri May 8 07:34:14 2020 -0700
->>     ipv6: use DST_NOCOUNT in ip6_rt_pcpu_alloc()
->>     We currently have to adjust ipv6 route gc_thresh/max_size depending
->>     on number of cpus on a server, this makes very little sense.
->>
->>
->> Did your tests include this patch?
+>> I can not think of a use case.  I'll let Miklos comment on adding whitelist
+>> capability to overlayfs.
 > 
-> No, it's also pretty hard to trigger. The conference was pretty good for
-> this.
-> I tested on top of rc6. I'm probably missing the big picture here, could
-> you briefy explain how this commit fixes the problem we ran into?
+> I've not heard of overlayfs being used over hugetlbfs.
+> 
+> Overlayfs on tmpfs is definitely used, I guess without hugepages.
+> But if we'd want to allow tmpfs _without_ hugepages but not tmpfs
+> _with_ hugepages, then we can't just whitelist based on filesystem
+> type, but need to look at mount options as well.  Which isn't really a
+> clean solution either.
+> 
+>> IMO - This BUG/report revealed two issues.  First is the BUG by mmap'ing
+>> a hugetlbfs file on overlayfs.  The other is that core mmap code will skip
+>> any filesystem specific get_unmapped area routine if on a union/overlay.
+>> My patch fixes both, but if we go with a whitelist approach and don't allow
+>> hugetlbfs I think we still need to address the filesystem specific
+>> get_unmapped area issue.  That is easy enough to do by adding a routine to
+>> overlayfs which calls the routine for the underlying fs.
+> 
+> I think the two are strongly related:  get_unmapped_area() adjusts the
+> address alignment, and the is_file_hugepages() call in
+> ksys_mmap_pgoff() adjusts the length alignment.
+> 
+> Is there any other purpose for which  f_op->get_unmapped_area() is
+> used by a filesystem?
 > 
 
-ipv6 still has limits on the number of dst_entry's that can be created.
-Eric traced the overflow to per-cpu caches in each FIB entry.
+I am fairly confident it is all about checking limits and alignment.  The
+filesystem knows if it can/should align to base or huge page size. DAX has
+some interesting additional restrictions, and several 'traditional' filesystems
+check if they are 'on DAX'.
 
-Larger systems (lots of cpus) x lots of unique connections = overflow
+In a previous e-mail, you suggested hugetlb_get_unmapped_area could do the
+length adjustment in hugetlb_get_unmapped_area (generic and arch specific).
+I agree, although there may be the need to add length overflow checks in
+these routines (after round up) as this is done in core code now.  However,
+this can be done as a separate cleanup patch.
 
-Eric's change removes the per-cpu dst caches from the counting, so only
-exceptions (mtu, redirect) are now counted towards the limit.
+In any case, we need to get the core mmap code to call filesystem specific
+get_unmapped_area if on a union/overlay.  The patch I suggested does this
+by simply calling real_file to determine if there is a filesystem specific
+get_unmapped_area.  The other approach would be to provide an overlayfs
+get_unmapped_area that calls the underlying filesystem get_unmapped_area.
+
+-- 
+Mike Kravetz
