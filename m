@@ -2,144 +2,183 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC03C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02AC42070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDB6207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="D2qZ2l/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETNUS (ORCPT
+        id S1726718AbgETN0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:20:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49754 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbgETNUR (ORCPT
+        Wed, 20 May 2020 09:26:38 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:33781 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726452AbgETN0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:20:17 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KD40Zn110410;
-        Wed, 20 May 2020 09:20:12 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 312cqpcwuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 09:20:12 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04KDIPS8007375;
-        Wed, 20 May 2020 13:20:10 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 313xehkpx2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 13:20:10 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04KDK88J54198456
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 13:20:08 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24A74A405F;
-        Wed, 20 May 2020 13:20:08 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8280BA4054;
-        Wed, 20 May 2020 13:20:07 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.206.2])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 20 May 2020 13:20:07 +0000 (GMT)
-Date:   Wed, 20 May 2020 16:20:05 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: arch/sparc/mm/srmmu.c:300:9: error: variable 'pud' set but not
- used
-Message-ID: <20200520132005.GM1059226@linux.ibm.com>
-References: <20200520005733.GB3101@intel.com>
+        Wed, 20 May 2020 09:26:37 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id bOjujbxAAdPgTbOjxjMhAf; Wed, 20 May 2020 15:26:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1589981194; bh=4/ctTwsXiPSb4NvmDrcyK5FdCsKojjn+cNP9JMI3QBg=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=D2qZ2l/Z28Uf7C5bqYrMpTwYRRn7vMimvP7piDPZS1zpq3KJb5DjRJWMrl5qyO6pw
+         vtfBQRZX5sFQwr21G9xgwl1kQzIJX0lCVf9sGxGrOwrqK04XZGfbbmZwHOAvAiMFHA
+         34CyqsALCVF4trphNCZ2K8OcJfHlzJqUIxaQeNPvWRP8/8eBCVAWdRw1dgqoG1KFzU
+         Zlf87K3Jln8jbJwQhzG/WbuNptt03ItLiM3OGLNhVakXLB2uWN+PrKlmeuKrPu91A/
+         ZGBCyXV/nKCZDcm2ZSi8yWdW0zmzY8xG8zaOcUwcpxpaXikA2C11a9McHSVxR1EI4f
+         UuMOnbAtNsc+w==
+Subject: Re: [PATCH v4 2/3] media: uapi: Add VP9 stateless decoder controls
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        gustavo.padovan@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+References: <20200518174011.15543-1-ezequiel@collabora.com>
+ <20200518174011.15543-3-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c9e71d67-746c-b71e-c8df-d41d7074c20a@xs4all.nl>
+Date:   Wed, 20 May 2020 15:26:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520005733.GB3101@intel.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_09:2020-05-19,2020-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 cotscore=-2147483648
- spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005200113
+In-Reply-To: <20200518174011.15543-3-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIJN1LDVCGpOOo4VPXXfFlMHaUJJAd/AzWJlRmvlAOexvk5d2LNhMkOV/xVHo+mBUAFmxCzGZBHvRsKcHAtPEfivxyjvjA2CpNqAtWQ8eppn2Djj/WnU
+ A7AVgS2PvvB4++xi6hR9XDeFHoImYe5u5JTZc9qpGjamLxsJYEDdhpGjH7XLpJRs5tIMrC4+hU5nap6FIA/gX20Svb82dcmMpAYm1BGsA6AsRY19C66K+2WW
+ 3K6DWb0HnHDuguuGcji+dv7PJcqB1mO5bXjCGPnszee7y/f1dGBN14lNaMgWk63GF5NAO3cSisZ0Z7Uil/5xaIXGWIBJZY4M8ZyAkDTo+LhFy4DO3lDBADYb
+ Ua9FtQPKCcU9RPyFiQ+uex0LD99XbJuSLlQZuAwdI74szKk2d/wvCXymBr4gqBQ7zS3oXfl5C6g/4cnlx3JR9BsxlHNNGDLj8S04DdPHpBRYI3WI9+oTgxjU
+ hUGlAZFlgkUAPKSEhalLm9bojCEbuPUEIaMVoqf3EZaxo6/oLlv7h4m++7qE7AwV7ywCElLoE1GBc4LN5/UeLjw2mvNA0r//RVyFJH9rhntz0UXXEGR2CjLJ
+ aM2ws8yzc6n2+6nWA5RhcNbx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:57:33AM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   642b151f45dd54809ea00ecd3976a56c1ec9b53d
-> commit: 7235db268a2777bc380b99b7db49ff7b19c8fb76 sparc32: use pgtable-nopud instead of 4level-fixup
-> config: sparc-defconfig (attached as .config)
-> compiler: sparc-linux-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 7235db268a2777bc380b99b7db49ff7b19c8fb76
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=sparc
+On 18/05/2020 19:40, Ezequiel Garcia wrote:
+> From: Boris Brezillon <boris.brezillon@collabora.com>
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
+> Add the VP9 stateless decoder controls plus the documentation that goes
+> with it.
 > 
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
+> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  .../userspace-api/media/v4l/biblio.rst        |  10 +
+>  .../media/v4l/ext-ctrls-codec.rst             | 550 ++++++++++++++++++
+>  drivers/media/v4l2-core/v4l2-ctrls.c          | 239 ++++++++
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+>  include/media/v4l2-ctrls.h                    |   1 +
+>  include/media/vp9-ctrls.h                     | 485 +++++++++++++++
+>  6 files changed, 1286 insertions(+)
+>  create mode 100644 include/media/vp9-ctrls.h
 > 
-> arch/sparc/mm/srmmu.c: In function 'srmmu_nocache_init':
-> >> arch/sparc/mm/srmmu.c:300:9: error: variable 'pud' set but not used [-Werror=unused-but-set-variable]
-> 300 |  pud_t *pud;
-> |         ^~~
 
-Here's the fix vs v5.7-rc6-mmots-2020-05-19-21-52:
+<snip>
 
-From 192848144e61e3ebacd34598386e4fa773d19ae9 Mon Sep 17 00:00:00 2001
-From: Mike Rapoport <rppt@linux.ibm.com>
-Date: Wed, 20 May 2020 15:39:22 +0300
-Subject: [PATCH] sparc32: use PUD rather than PGD to get PMD in
- srmmu_nocache_init()
+> +/**
+> + * struct v4l2_vp9_quantization - VP9 quantization parameters
+> + *
+> + * @base_q_idx: indicates the base frame qindex
+> + * @delta_q_y_dc: indicates the Y DC quantizer relative to base_q_idx
+> + * @delta_q_uv_dc: indicates the UV DC quantizer relative to base_q_idx
+> + * @delta_q_uv_ac indicates the UV AC quantizer relative to base_q_idx
+> + * @padding: padding bytes to align things on 64 bits. Must be set to 0
+> + *
+> + * Encodes the quantization parameters. See section '7.2.9 Quantization params
+> + * syntax' of the VP9 specification for more details.
+> + */
+> +struct v4l2_vp9_quantization {
+> +	__u8 base_q_idx;
+> +	__s8 delta_q_y_dc;
+> +	__s8 delta_q_uv_dc;
+> +	__s8 delta_q_uv_ac;
+> +	__u8 padding[4];
 
-The kbuild test robot reported the following warning:
+Are you sure this padding field is needed? What goes wrong if this is dropped?
 
-arch/sparc/mm/srmmu.c: In function 'srmmu_nocache_init':
->> arch/sparc/mm/srmmu.c:300:9: error: variable 'pud' set but not used
->> [-Werror=unused-but-set-variable]
-300 |  pud_t *pud;
+> +};
 
-This warning is caused by misprint in the page table traversal in
-srmmu_nocache_init() function which accessed a PMD entry using PGD rather
-than PUD.
-Since sparc32 has only 3 page table levels, the PGD and PUD are essentially
-the same and usage of __nocache_fix() removed the type checking.
+<snip>
 
-Use PUD for the consistency and to silence the compiler warning.
+> +struct v4l2_ctrl_vp9_frame_decode_params {
+> +	__u32 flags;
+> +	__u16 compressed_header_size;
+> +	__u16 uncompressed_header_size;
+> +	__u8 profile;
+> +	__u8 reset_frame_context;
+> +	__u8 frame_context_idx;
+> +	__u8 bit_depth;
+> +	__u8 interpolation_filter;
+> +	__u8 tile_cols_log2;
+> +	__u8 tile_rows_log2;
+> +	__u8 tx_mode;
+> +	__u8 reference_mode;
+> +	__u8 padding[6];
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/sparc/mm/srmmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This doesn't look right: this should be 7 if you want to align at 64 bits. Don't
+forget to update the documentation when you change this. In fact, the documentation
+doesn't mention the size of the array, it just says 'u8 padding'.
 
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index 6cb1ea2d2b5c..75b56bdd38ef 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -304,7 +304,7 @@ static void __init srmmu_nocache_init(void)
- 		pgd = pgd_offset_k(vaddr);
- 		p4d = p4d_offset(__nocache_fix(pgd), vaddr);
- 		pud = pud_offset(__nocache_fix(p4d), vaddr);
--		pmd = pmd_offset(__nocache_fix(pgd), vaddr);
-+		pmd = pmd_offset(__nocache_fix(pud), vaddr);
- 		pte = pte_offset_kernel(__nocache_fix(pmd), vaddr);
- 
- 		pteval = ((paddr >> 4) | SRMMU_ET_PTE | SRMMU_PRIV);
--- 
-2.26.2
+I thought pahole flags something like this?
 
+> +	__u16 frame_width_minus_1;
+> +	__u16 frame_height_minus_1;
+> +	__u16 render_width_minus_1;
+> +	__u16 render_height_minus_1;
+> +	__u64 refs[V4L2_REF_ID_CNT];
+> +	struct v4l2_vp9_loop_filter lf;
+
+sizeof(lf) is an odd-number of bytes, so...
+
+> +	struct v4l2_vp9_quantization quant;
+
+... even though sizeof(quant) == 8 with the padding bytes, that would still not
+align at 64 bits.
+
+> +	struct v4l2_vp9_segmentation seg;
+> +	struct v4l2_vp9_probabilities probs;
+> +};
+> +
+> +#define V4L2_VP9_NUM_FRAME_CTX	4
+> +
+> +/**
+> + * struct v4l2_ctrl_vp9_frame_ctx - VP9 frame context control
+> + *
+> + * @probs: VP9 probabilities
+> + *
+> + * This control is accessed in both direction. The user should initialize the
+> + * 4 contexts with default values just after starting the stream. Then before
+> + * decoding a frame it should query the current frame context (the one passed
+> + * through &v4l2_ctrl_vp9_frame_decode_params.frame_context_idx) to initialize
+> + * &v4l2_ctrl_vp9_frame_decode_params.probs. The probs are then adjusted based
+> + * on the bitstream info and passed to the kernel. The codec should update
+> + * the frame context after the frame has been decoded, so that next time
+> + * userspace query this context it contains the updated probabilities.
+> + */
+> +struct v4l2_ctrl_vp9_frame_ctx {
+> +	struct v4l2_vp9_probabilities probs;
+> +};
+> +
+> +#endif /* _VP9_CTRLS_H_ */
+> 
+
+Regards,
+
+	Hans
