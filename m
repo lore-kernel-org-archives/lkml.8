@@ -2,158 +2,183 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF66C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E44C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D461920885
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7962B20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PdzXTFni"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CH3r+ZBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgETUzY (ORCPT
+        id S1728164AbgETUzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:55:24 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35262 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgETUzY (ORCPT
+        Wed, 20 May 2020 16:55:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56626 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgETUzq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:55:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04KKtFwp073115;
-        Wed, 20 May 2020 15:55:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590008115;
-        bh=BmoSOnBCrUW4xWm9dGNe0tiNDhi185y+fKxf8IEICwc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PdzXTFniGDCKX9FwR6EU3H0fF+l+s4SZgO1uM37Qy2jCiiKmGEWSrRCfuqP5sdQ25
-         QVlwa/KnHuXNrGJHw2frEMzH2g+w22sJGTyOAGJr6UaYs0U1NHoOL1TVL2z+6TfQb8
-         eQWW7hGuwLzXBwuPuSSX15KDhonnck5mUhXD4T5A=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04KKtFte031224
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 15:55:15 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 15:55:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 15:55:15 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04KKtENm084063;
-        Wed, 20 May 2020 15:55:14 -0500
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add RGMII internal
- delay for DP83869
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200520135624.GC652285@lunn.ch>
- <770e42bb-a5d7-fb3e-3fc1-b6f97a9aeb83@ti.com>
- <20200520153631.GH652285@lunn.ch>
- <95ab99bf-2fb5-c092-ad14-1b0a47c782a4@ti.com>
- <20200520164313.GI652285@lunn.ch>
- <d5d46c21-0afa-0c51-9baf-4f99de94bbd5@ti.com>
- <41101897-5b29-4a9d-0c14-9b8080089850@gmail.com>
- <7e117c01-fa6e-45f3-05b7-4efe7a3c1943@ti.com>
- <20200520192719.GK652285@lunn.ch>
- <0bba1378-0847-491f-8f21-ac939ac48820@ti.com>
- <20200520204423.GA677363@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ecee51d5-a69e-4f7e-2a33-ae7aae63fec8@ti.com>
-Date:   Wed, 20 May 2020 15:55:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 16:55:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KKtPDF010579;
+        Wed, 20 May 2020 20:55:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=g+ZM0FtRsu6uuGyXTtuswARYr2m8xjEaULC0CTSnixc=;
+ b=CH3r+ZBc9wEToesDs3teA5VJNinDiofMQnf+k8EQPygFIP0mKwIJsTnIZajdlG9mcQZG
+ FClrSX5G41NPf2Hf+5IwLyIt9gYAuN+St5R3RVyY3MvceUagf4382PRiFa29DWnFBF5J
+ iNcAGuF558K6wVTTymBQ98p/cJ0S+SXe9vw8dgK2F+Bd/CEIzmn0It62l82sEaQU1F8u
+ ZZu9xgMlH0gL16iMCSM3rNaUTPfmYfJ42BeYqgv+YxXOTni8TpfKxMakntpf+14xqpvn
+ bGOcyF719QPS9fMh6lz58J4cB5YkEppS9DxROBLVeQrRWouTH1fPImff54O/gUd6oYTy GQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31284m5bxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 20:55:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04KKsT4h115013;
+        Wed, 20 May 2020 20:55:20 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 314gm7stq0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 20:55:19 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04KKtD3w007090;
+        Wed, 20 May 2020 20:55:13 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 May 2020 13:55:12 -0700
+Date:   Wed, 20 May 2020 13:55:09 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Andreas Dilger <adilger@dilger.ca>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Li Xi <lixi@ddn.com>
+Subject: Re: [PATCH V3 7/8] fs/ext4: Introduce DAX inode flag
+Message-ID: <20200520205509.GA17615@magnolia>
+References: <20200520055753.3733520-1-ira.weiny@intel.com>
+ <20200520055753.3733520-8-ira.weiny@intel.com>
+ <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
+ <20200520200242.GG3660833@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520204423.GA677363@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520200242.GG3660833@iweiny-DESK2.sc.intel.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=1
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005200166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+On Wed, May 20, 2020 at 01:02:42PM -0700, Ira Weiny wrote:
+> On Wed, May 20, 2020 at 01:26:44PM -0600, Andreas Dilger wrote:
+> > On May 19, 2020, at 11:57 PM, ira.weiny@intel.com wrote:
+> > > 
+> > > From: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+> > > 
+> > > Set the flag to be user visible and changeable.  Set the flag to be
+> > > inherited.  Allow applications to change the flag at any time with the
+> > > exception of if VERITY or ENCRYPT is set.
+> > > 
+> > > Disallow setting VERITY or ENCRYPT if DAX is set.
+> > > 
+> > > Finally, on regular files, flag the inode to not be cached to facilitate
+> > > changing S_DAX on the next creation of the inode.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > > 
+> > > ---
+> > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > > index 6235440e4c39..467c30a789b6 100644
+> > > --- a/fs/ext4/ext4.h
+> > > +++ b/fs/ext4/ext4.h
+> > > @@ -415,13 +415,16 @@ struct flex_groups {
+> > > #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
+> > > #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
+> > > /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
+> > > +
+> > > +#define EXT4_DAX_FL			0x01000000 /* Inode is DAX */
+> > > +
+> > > #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline data. */
+> > > #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+> > > #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
+> > > #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 lib */
+> > 
+> > Hi Ira,
+> > This flag value conflicts with the reserved flag in e2fsprogs for snapshots:
+> > 
+> > #define EXT4_SNAPFILE_FL                0x01000000  /* Inode is a snapshot */
+> 
+> Sure NP but is that new?  I'm building off of 5.7-rc4.
+> 
+> Just curious if I completely missed something.
 
-On 5/20/20 3:44 PM, Andrew Lunn wrote:
->> I think adding it in the core would be a bit of a challenge.  I think each
->> PHY driver needs to handle parsing and validating this property on its own
->> (like fifo-depth).  It is a PHY specific setting.
-> fifo-depth yes. But some delays follow a common pattern.
->
-> e.g.
-> Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
->
-> Device Tree Value     Delay   Pad Skew Register Value
->    -----------------------------------------------------
->          0               -840ps          0000
->          200             -720ps          0001
->          400             -600ps          0010
->          600             -480ps          0011
->          800             -360ps          0100
->          1000            -240ps          0101
->          1200            -120ps          0110
->          1400               0ps          0111
->          1600             120ps          1000
->          1800             240ps          1001
->          2000             360ps          1010
->          2200             480ps          1011
->          2400             600ps          1100
->          2600             720ps          1101
->          2800             840ps          1110
->          3000             960ps          1111
->
-> Documentation/devicetree/bindings/net/adi,adin.yaml
->
->   adi,rx-internal-delay-ps:
->      description: |
->        RGMII RX Clock Delay used only when PHY operates in RGMII mode with
->        internal delay (phy-mode is 'rgmii-id' or 'rgmii-rxid') in pico-seconds.
->      enum: [ 1600, 1800, 2000, 2200, 2400 ]
->      default: 2000
->
->    adi,tx-internal-delay-ps:
->      description: |
->        RGMII TX Clock Delay used only when PHY operates in RGMII mode with
->        internal delay (phy-mode is 'rgmii-id' or 'rgmii-txid') in pico-seconds.
->      enum: [ 1600, 1800, 2000, 2200, 2400 ]
->      default: 2000
->
-> Documentation/devicetree/bindings/net/apm-xgene-enet.txt
->
-> - tx-delay: Delay value for RGMII bridge TX clock.
->              Valid values are between 0 to 7, that maps to
->              417, 717, 1020, 1321, 1611, 1913, 2215, 2514 ps
->              Default value is 4, which corresponds to 1611 ps
-> - rx-delay: Delay value for RGMII bridge RX clock.
->              Valid values are between 0 to 7, that maps to
->              273, 589, 899, 1222, 1480, 1806, 2147, 2464 ps
->              Default value is 2, which corresponds to 899 ps
->
-> You could implement checking against a table of valid values, which is
-> something you need for your PHY. You could even consider making it a
-> 2D table, and return the register value, not the delay?
+Yeah, you missed that ... for some reason the kernel ext4 driver is
+missing flags that are in e2fsprogs.  (huh??)
 
-So provide a helper function that will just basically parse an array and 
-return the indexed value.
+I would say you could probably just take over the flag because the 2010s
+called and they don't want next3 back.  I guess that leaves 0x02000000
+as the sole unclaimed bit, but this seriously needs some cleaning.
 
-The outlier here is the AD device since the index to value is not 1-1 
-mapping.  Not sure we need a 2D table like the AD driver.
+--D
 
-I actually implemented this in the dp83869 a bit ago and have done this 
-in a few other non-PHY drivers.
-
-I guess I can look at making it a utility function in the networking space.
-
-Dan
-
->
-> 	  Andrew
+> > 
+> > Please change EXT4_DAX_FL and FS_DAX_FL to use 0x02000000, which is not used
+> > for anything in either case.
+> 
+> NP, thanks!
+> Ira
+> 
+> > 
+> > Cheers, Andreas
+> > 
+> > 
+> > > diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> > > index 379a612f8f1d..7c5f6eb51e2d 100644
+> > > --- a/include/uapi/linux/fs.h
+> > > +++ b/include/uapi/linux/fs.h
+> > > @@ -262,6 +262,7 @@ struct fsxattr {
+> > > #define FS_EA_INODE_FL			0x00200000 /* Inode used for large EA */
+> > > #define FS_EOFBLOCKS_FL			0x00400000 /* Reserved for ext4 */
+> > > #define FS_NOCOW_FL			0x00800000 /* Do not cow file */
+> > > +#define FS_DAX_FL			0x01000000 /* Inode is DAX */
+> > > #define FS_INLINE_DATA_FL		0x10000000 /* Reserved for ext4 */
+> > > #define FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+> > > #define FS_CASEFOLD_FL			0x40000000 /* Folder is case insensitive */
+> > > --
+> > > 2.25.1
+> > > 
+> > 
+> > 
+> > Cheers, Andreas
+> > 
+> > 
+> > 
+> > 
+> > 
+> 
+> 
