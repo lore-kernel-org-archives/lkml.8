@@ -2,144 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45886C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A07C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C56F20756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:17:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqSUplEY"
+	by mail.kernel.org (Postfix) with ESMTP id 6570720756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgETNRZ (ORCPT
+        id S1726822AbgETNTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgETNRY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:17:24 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8F2C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 06:17:24 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r3so1210497wrn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 06:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=fGa0ePTwdv/m0NymAGWNyChyMUYoL+GdKZwi/SDOG4c=;
-        b=bqSUplEYwA/RCSBYWLBLBoRMrka5UKxu4JdsV3O3IKD6mugXebHI7Krk9e1OSWC46v
-         viEzj/QNYk1/r/+YPaVUrfYRSrnWs9VcV+1Dhun9FknfeVrZmm3hxp8NZB6wM6BwSQLP
-         s0cDMD2qMfy3kAbguJwE2bimcSkCxVv3am3+EHmOSnfdjh3ON1x5vCtSRhJZg00F9KKB
-         H7XivkiDy+Gnj8hatIdczUhBIeEFrMbyFWjdCFoCkMOwwgNnCHiftDKVlwxC+PQWQqrY
-         xCveS2aJhwakv3/5ssvo7Hav7uroKAfiEHBZNXWh7nwUwfXCoV9af8Q/iWIfKNReSOsz
-         p7hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=fGa0ePTwdv/m0NymAGWNyChyMUYoL+GdKZwi/SDOG4c=;
-        b=rJswID6bfx25/O7Kt3vUaktqu6ZOF+93cJmG0SSWOixIcZRe09XgcgoXRz743cXoWZ
-         xRz97ciuZe5CfyzxIgjNDY7SitLG4xhDzvDTkdeTJOgTov2w6KtUuR/f5uH3XC2e38AD
-         rROh3QSp0RW27327iXwWu5SaUb3f00k0cCpSkCL8e4I4r0mLIBVk9HLcQ/Ll/DRoG/1g
-         FoOnamnGaPh7PTMaaqXzt7BCNvBBcai+M34H123a1pvGletbx2tcevXlX1VexK3cD3HB
-         pFwo27kryjMGu9dP8A/+1cCjlbjz0UBV0hKeb5+SRdx6IMdTnU2Qb1mJbY2XhHN8hrbR
-         nXSQ==
-X-Gm-Message-State: AOAM531I2WJwATT04B2PCN11BE1QQ6REGkjBFwDapa8BtZ/Yat7p2ykb
-        +AhAxmEDEG+Eikxz0+6OjiY=
-X-Google-Smtp-Source: ABdhPJxIRPdON3yN2mBj3oXYJ+y8eYNn3OzvKwNF0rMj51OaEur6eDbRF2Ts96mPK6kz8aaj9qMvCw==
-X-Received: by 2002:adf:fdc5:: with SMTP id i5mr4001007wrs.176.1589980642822;
-        Wed, 20 May 2020 06:17:22 -0700 (PDT)
-Received: from ?IPv6:2a00:23c6:9e09:2900:4423:7d1b:b637:c183? ([2a00:23c6:9e09:2900:4423:7d1b:b637:c183])
-        by smtp.gmail.com with ESMTPSA id 32sm3017267wrr.38.2020.05.20.06.17.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 May 2020 06:17:22 -0700 (PDT)
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <namit@vmware.com>,
+        Wed, 20 May 2020 09:19:39 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:13728 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726486AbgETNTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:19:39 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgC3wD1PLsVemdraAQ--.40219S4;
+        Wed, 20 May 2020 21:19:16 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Wojciech Kudla <wk.kernel@gmail.com>
-From:   Wojciech Kudla <wk.kernel@gmail.com>
-Subject: [PATCH] smp: generic ipi_raise tracepoint
-Message-ID: <02b57f31-fc0c-df35-57bf-e0a297a7e6c4@gmail.com>
-Date:   Wed, 20 May 2020 14:17:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwrng: exynos - fix runtime pm imbalance on error
+Date:   Wed, 20 May 2020 21:19:10 +0800
+Message-Id: <20200520131911.16813-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgC3wD1PLsVemdraAQ--.40219S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWfWFX_ur
+        45uFn7GF4agrnrZw1j9343Z3ySgFZxur4qgFs2q3Wak3yFvrs0grZrZrn8ZrW7u3ykGrnr
+        tFnFgr1xZr97ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbTxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW5GwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r
+        4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUb_gA7UUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preliminary discussion: https://lkml.org/lkml/2020/5/13/1327
-This patch avoids introducing arch-specific trace points by leveraging
-existing definition for ipi_raise.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-Issues to address in potential future work:
-- make ipi reason available on generic smp code level (possible?)
-- addition of ipi_entry/ipi_exit tracepoints in generic smp code
-
-Signed-off-by: Wojciech Kudla <wk.kernel@gmail.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- kernel/smp.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/char/hw_random/exynos-trng.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/smp.c b/kernel/smp.c
-index 7dbcb402c2fc..df6982a1d3f2 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -23,6 +23,11 @@
+diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
+index 8e1fe3f8dd2d..133e017db577 100644
+--- a/drivers/char/hw_random/exynos-trng.c
++++ b/drivers/char/hw_random/exynos-trng.c
+@@ -165,9 +165,8 @@ static int exynos_trng_probe(struct platform_device *pdev)
+ 	clk_disable_unprepare(trng->clk);
  
- #include "smpboot.h"
+ err_clock:
+-	pm_runtime_put_sync(&pdev->dev);
+-
+ err_pm_get:
++	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/ipi.h>
-+
-+static const char *ipi_reason_missing __tracepoint_string = "";
-+
- enum {
- 	CSD_FLAG_LOCK		= 0x01,
- 	CSD_FLAG_SYNCHRONOUS	= 0x02,
-@@ -34,6 +39,7 @@ struct call_function_data {
- 	cpumask_var_t		cpumask_ipi;
- };
- 
-+
- static DEFINE_PER_CPU_ALIGNED(struct call_function_data, cfd_data);
- 
- static DEFINE_PER_CPU_SHARED_ALIGNED(struct llist_head, call_single_queue);
-@@ -176,8 +182,12 @@ static int generic_exec_single(int cpu, call_single_data_t *csd,
- 	 * locking and barrier primitives. Generic code isn't really
- 	 * equipped to do the right thing...
- 	 */
--	if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu)))
-+	if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu))) {
-+		if (trace_ipi_raise_enabled())
-+			trace_ipi_raise(cpumask_of(cpu), ipi_reason_missing);
-+
- 		arch_send_call_function_single_ipi(cpu);
-+	}
- 
- 	return 0;
- }
-@@ -474,6 +484,8 @@ void smp_call_function_many(const struct cpumask *mask,
- 			__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
- 	}
- 
-+	trace_ipi_raise(cfd->cpumask_ipi, ipi_reason_missing);
-+
- 	/* Send a message to all CPUs in the map */
- 	arch_send_call_function_ipi_mask(cfd->cpumask_ipi);
- 
+ 	return ret;
 -- 
 2.17.1
+
