@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8A7207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8B7207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgETOZT (ORCPT
+        id S1728363AbgETOZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:19 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33000 "EHLO
+        Wed, 20 May 2020 10:25:22 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33036 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727006AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727017AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-00035l-Qt; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-000369-Vi; Wed, 20 May 2020 15:22:20 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DS2-Ki; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbv-007DQf-0f; Wed, 20 May 2020 15:22:19 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Anna Schumaker" <Anna.Schumaker@Netapp.com>
-Date:   Wed, 20 May 2020 15:14:20 +0100
-Message-ID: <lsq.1589984008.335231193@decadent.org.uk>
+        "YueHaibing" <yuehaibing@huawei.com>,
+        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
+        "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>,
+        "Lubomir Rintel" <lkundrak@v3.sk>
+Date:   Wed, 20 May 2020 15:14:03 +0100
+Message-ID: <lsq.1589984008.562400019@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 52/99] nfs: NFS_SWAP should depend on SWAP
+Subject: [PATCH 3.16 35/99] pxa168fb: Fix the function used to release
+ some memory in an error handling path
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,36 +58,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 474c4f306eefbb21b67ebd1de802d005c7d7ecdc upstream.
+commit 3c911fe799d1c338d94b78e7182ad452c37af897 upstream.
 
-If CONFIG_SWAP=n, it does not make much sense to offer the user the
-option to enable support for swapping over NFS, as that will still fail
-at run time:
+In the probe function, some resources are allocated using 'dma_alloc_wc()',
+they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
 
-    # swapon /swap
-    swapon: /swap: swapon failed: Function not implemented
+We already use 'dma_free_wc()' in the remove function, but not in the
+error handling path of the probe function.
 
-Fix this by adding a dependency on CONFIG_SWAP.
+Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
+PAGE_ALIGNed.
 
-Fixes: a564b8f0398636ba ("nfs: enable swap on NFS")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+CC: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-christophe.jaillet@wanadoo.fr
+[bwh: Backported to 3.16: Use dma_free_writecombine().]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/nfs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/fbdev/pxa168fb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -89,7 +89,7 @@ config NFS_V4
- config NFS_SWAP
- 	bool "Provide swap over NFS support"
- 	default n
--	depends on NFS_FS
-+	depends on NFS_FS && SWAP
- 	select SUNRPC_SWAP
- 	help
- 	  This option enables swapon to work on files located on NFS mounts.
+--- a/drivers/video/fbdev/pxa168fb.c
++++ b/drivers/video/fbdev/pxa168fb.c
+@@ -772,8 +772,8 @@ failed_free_cmap:
+ failed_free_clk:
+ 	clk_disable(fbi->clk);
+ failed_free_fbmem:
+-	dma_free_coherent(fbi->dev, info->fix.smem_len,
+-			info->screen_base, fbi->fb_start_dma);
++	dma_free_writecombine(fbi->dev, info->fix.smem_len,
++			      info->screen_base, fbi->fb_start_dma);
+ failed_free_info:
+ 	kfree(info);
+ failed_put_clk:
+@@ -809,7 +809,7 @@ static int pxa168fb_remove(struct platfo
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 
+-	dma_free_writecombine(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
++	dma_free_writecombine(fbi->dev, info->fix.smem_len,
+ 				info->screen_base, info->fix.smem_start);
+ 
+ 	clk_disable(fbi->clk);
 
