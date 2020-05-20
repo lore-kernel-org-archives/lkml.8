@@ -2,101 +2,90 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C739C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B080D20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C72206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 12:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgETMom (ORCPT
+        id S1726964AbgETMqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 08:44:42 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:55702 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgETMom (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 08:44:42 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jbO5F-0003RP-BL; Wed, 20 May 2020 06:44:29 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jbO5D-00014Z-VJ; Wed, 20 May 2020 06:44:29 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     James Morris <jmorris@namei.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <87o8qkzrxp.fsf_-_@x220.int.ebiederm.org>
-        <alpine.LRH.2.21.2005200750490.30843@namei.org>
-Date:   Wed, 20 May 2020 07:40:45 -0500
-In-Reply-To: <alpine.LRH.2.21.2005200750490.30843@namei.org> (James Morris's
-        message of "Wed, 20 May 2020 07:52:42 +1000 (AEST)")
-Message-ID: <871rnen5iq.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 20 May 2020 08:46:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:15615 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgETMqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 08:46:20 -0400
+IronPort-SDR: Eu2VlE2GRbcpXYVXmEuRhA+bOmmeTMOpzOtSTH6faSKoXPkPQuPEtLABpnhZHzIusBO1BxXltE
+ Kh7+Zj1g2+Lg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 05:46:16 -0700
+IronPort-SDR: V6E/Ng3sk5KplKOJ4ojalPDdqw5sr7/ivO8RmkZKGAyG8bBoS9rBKNudLOOSWl9jP9CFatvZ/G
+ 33VvxL6a2tcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
+   d="scan'208";a="289337876"
+Received: from mylly.fi.intel.com (HELO [10.237.72.161]) ([10.237.72.161])
+  by fmsmga004.fm.intel.com with ESMTP; 20 May 2020 05:46:12 -0700
+Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers glue
+ layer interface
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
+Date:   Wed, 20 May 2020 15:46:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jbO5D-00014Z-VJ;;;mid=<871rnen5iq.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18udNvJx+c1yIl5NydlUzC7C5ZchehH+PU=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 3/8] exec: Convert security_bprm_set_creds into security_bprm_repopulate_creds
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-James Morris <jmorris@namei.org> writes:
+Hi
 
-> On Mon, 18 May 2020, Eric W. Biederman wrote:
->
->> diff --git a/fs/exec.c b/fs/exec.c
->> index 9e70da47f8d9..8e3b93d51d31 100644
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1366,7 +1366,7 @@ int begin_new_exec(struct linux_binprm * bprm)
->>  	 * the final state of setuid/setgid/fscaps can be merged into the
->>  	 * secureexec flag.
->>  	 */
->> -	bprm->secureexec |= bprm->cap_elevated;
->> +	bprm->secureexec |= bprm->active_secureexec;
->
-> Which kernel tree are these patches for? Seems like begin_new_exec() is 
-> from a prerequisite patchset.
+On 5/10/20 12:50 PM, Serge Semin wrote:
+> Seeing the DW I2C platform driver is getting overcomplicated with a lot of
+> vendor-specific configs let's introduce a glue-layer interface so new
+> platforms which equipped with Synopsys Designware APB I2C IP-core would
+> be able to handle their peculiarities in the dedicated objects.
+> 
+Comment to this patch and patches 9/12 and 12/12:
 
-The base is:
-git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-next
+Currently i2c-designware-platdrv.c is about 500 lines of code so I don't 
+think it's too overcomplicated. But I feel we have already too many 
+Kconfig options and source modules for i2c-designware and obviously 
+would like to push back a little from adding more.
 
-I should have mentioned.  I am several round deep in cleaning up exec
-already.
+I don't think i2c-designware-platdrv.c becomes yet too complicated if 
+Baikal related code is added there, perhaps under #ifdef CONFIG_OF like 
+MSCC Ocelot code is currently.
 
-begin_new_exec is essentially forget_old_exec.
-
-Eric
-
-
+-- 
+Jarkko
