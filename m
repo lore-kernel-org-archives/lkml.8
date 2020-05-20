@@ -2,77 +2,108 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6201C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0CC0207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A992207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 13:40:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="L5IXSC6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgETNik (ORCPT
+        id S1726862AbgETNkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 09:38:40 -0400
-Received: from elvis.franken.de ([193.175.24.41]:60382 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgETNij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 09:38:39 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jbOvd-0002ik-00; Wed, 20 May 2020 15:38:37 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id D8600C014D; Wed, 20 May 2020 15:38:27 +0200 (CEST)
-Date:   Wed, 20 May 2020 15:38:27 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 18/20] mips: csrc-r4k: Decrease r4k-clocksource rating
- if CPU_FREQ enabled
-Message-ID: <20200520133827.GA17714@alpha.franken.de>
-References: <20200506174238.15385-19-Sergey.Semin@baikalelectronics.ru>
- <20200508154150.GB22247@alpha.franken.de>
- <20200511133121.cz5axbwynhmqkx7x@mobilestation>
- <20200515074827.6p5zx4sb3bmavjih@mobilestation>
- <20200515210647.GA22922@alpha.franken.de>
- <20200518134820.wedoumgbsllvhem6@mobilestation>
- <20200518163206.GA17800@alpha.franken.de>
- <20200518205752.txbylbjt2zkwdwwe@mobilestation>
- <20200519155053.GB15797@alpha.franken.de>
- <20200520121201.wohv6u646rx5otkf@mobilestation>
+        Wed, 20 May 2020 09:40:08 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:38294 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726829AbgETNkG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 09:40:06 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KDbH5s030392;
+        Wed, 20 May 2020 15:39:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=brO3sqZGXqcbkphnICTmMIGQeXj+VgY9J4aJQV0Xnww=;
+ b=L5IXSC6XTbj6vAGZut48J6hklJzk1CLGGBe+0eQnyopZgpBq3CojUc7bGcyqvCHUZCNk
+ K97H8FkfguiuziG2IAJB/IHadQCG0qtgf9wVy3Xoo6Psnlbe5KRAEfNu+PZK5mfWdC3T
+ 3tgRFETmEHz0OUcnQuS3cJTiFJAkB+zcC1zeSv6uYR8crBul4LpLGJupQ+y+6Wy2bK+3
+ bkZKeunIJzcbkPRYjezyhIpHse2Dg4Og0JNuE13BlRY0Bue9MURYgrbVgeDEjiwpiLV3
+ n2fLxwQrRoG8Sf2zWpUYcYB/VIf6Pk4fEtkauS1mD57Ybk8inuC2GG9Zew1uxwbETdQ2 bQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3125n3rnbn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 15:39:42 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9B95510002A;
+        Wed, 20 May 2020 15:39:41 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8D4CD2C38AA;
+        Wed, 20 May 2020 15:39:41 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 May 2020 15:39:41
+ +0200
+From:   Erwan Le Ray <erwan.leray@st.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+CC:     <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>,
+        Erwan Le Ray <erwan.leray@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/2] dt-bindings: serial: add generic DT binding for announcing RTS/CTS lines
+Date:   Wed, 20 May 2020 15:39:31 +0200
+Message-ID: <20200520133932.30441-2-erwan.leray@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200520133932.30441-1-erwan.leray@st.com>
+References: <20200520133932.30441-1-erwan.leray@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520121201.wohv6u646rx5otkf@mobilestation>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_09:2020-05-20,2020-05-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 03:12:01PM +0300, Serge Semin wrote:
-> Since you don't like the way I initially fixed it, suppose there we don't have
-> another way but to introduce something like CONFIG_MIPS_CPS_NS16550_WIDTH
-> parameter to select a proper accessors, like sw in our case, and sb by defaul).
-> Right?
+Add support of generic DT binding for annoucing RTS/CTS lines. The initial
+binding 'st,hw-flow-control' is not needed anymore since generic binding
+is available, but is kept for backward compatibility.
 
-to be on the safe side it's probably the best thing. But I don't know
-enough about CPS_NS16550 to judge whether shift value correlates with
-possible access width.
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
-Thomas.
-
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+index 75b8521eb7cb..06d5f251ec88 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
++++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+@@ -35,9 +35,11 @@ properties:
+     description: label associated with this uart
+ 
+   st,hw-flow-ctrl:
+-    description: enable hardware flow control
++    description: enable hardware flow control (deprecated)
+     $ref: /schemas/types.yaml#/definitions/flag
+ 
++  uart-has-rtscts: true
++
+   dmas:
+     minItems: 1
+     maxItems: 2
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.17.1
+
