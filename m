@@ -2,76 +2,97 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C888C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6A4207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8B6207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:58:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="gE41HbZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgETL5t (ORCPT
+        id S1726970AbgETL6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgETL5t (ORCPT
+        Wed, 20 May 2020 07:58:00 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17788 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726443AbgETL57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:57:49 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3709FC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:57:49 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jbNLx-00071O-Su; Wed, 20 May 2020 13:57:42 +0200
-Date:   Wed, 20 May 2020 13:57:41 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Song Bao Hua <song.bao.hua@hisilicon.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-        Seth Jennings <sjenning@redhat.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: Re: [PATCH 8/8] mm/zswap: Use local lock to protect per-CPU data
-Message-ID: <20200520115741.wy2qnmauxmjtrrzj@linutronix.de>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-9-bigeasy@linutronix.de>
- <B926444035E5E2439431908E3842AFD24AFEC5@DGGEMI525-MBS.china.huawei.com>
- <20200520102634.pin4mzyytmfqtuo2@linutronix.de>
- <B926444035E5E2439431908E3842AFD24B2058@DGGEMI525-MBS.china.huawei.com>
+        Wed, 20 May 2020 07:57:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589975853; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=p/SNiSfufx29MQuL58cLrWZB6QhUWSM1054M8OlDVbjvIpVIoGz/bOYCAqdDl87ymxhAIgSusDguFD95a6d7mpCKC6ZaadsTmreYe0VP9KTsQ6kd9iyJ638nAqlWqbX8xQMbrrQ7EnFt6CGY5rnjX5AVLanRlu/5cVNPwGP7ZyY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1589975853; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=eRM1Z8d5iAv6qyqsY9fzErt/J83QuBOH4Flqxzq3cCg=; 
+        b=p4cZkj1HuNqaj0fhypCbsuCqA/lbH7jJf2lqP5LNWplBFn3uQ3ZsBQpiQ5q1oViVvXpL4/8pIEsxO200JHow79CTtW9BqrT3aImn/pJfE1RCOTy8c+q243KHbVALcJy/p5sM5g3KQP8ue3Ni6sCvTI12MUZgXQ5luXFfbREJIbk=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589975853;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=eRM1Z8d5iAv6qyqsY9fzErt/J83QuBOH4Flqxzq3cCg=;
+        b=gE41HbZfLHGZVzmcDcEejnCbbZBAvYf8qNld3LrvVQuYRyygOCXa3reB/IaY8vUJ
+        tJ7TiyhfBctR0ENTK2RrGJj593EBSF0qHkTuCZBOpUqYS2zxytI910StUb3XL9zEEmn
+        sp/JvpuZIkAmmMmxwHgoxmq/vJ61cg19tjcJly/M=
+Received: from [127.0.0.1] (223.104.210.187 [223.104.210.187]) by mx.zoho.com.cn
+        with SMTPS id 158997585129542.79948251014355; Wed, 20 May 2020 19:57:31 +0800 (CST)
+Date:   Wed, 20 May 2020 19:57:29 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-pci@vger.kernel.org
+CC:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 2/5] PCI: Add Loongson PCI Controller support
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200514131650.3587281-2-jiaxun.yang@flygoat.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com> <20200514131650.3587281-1-jiaxun.yang@flygoat.com> <20200514131650.3587281-2-jiaxun.yang@flygoat.com>
+Message-ID: <AC29D474-D846-41AF-9900-759CE430A744@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <B926444035E5E2439431908E3842AFD24B2058@DGGEMI525-MBS.china.huawei.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 11:13:31 [+0000], Song Bao Hua wrote:
-> For example, on cpu1, once you begin to compress, you hold the percpu acomp-ctx and percpu destination buffer of CPU1, the below code makes sure you get the acomp and dstmem from the same core by disabling preemption with get_cpu_var and put_cpu_var:
-> dst = get_cpu_var(zswap_dstmem);
-> acomp_ctx = *this_cpu_ptr(entry->pool->acomp_ctx);
-> put_cpu_var(zswap_dstmem);
-> 
-> then there are two cases:
-> 
-> 1. after getting dst and acomp_ctx of cpu1, you might always work in cpu1, the mutex in per-cpu acomp-ctx will guarantee two compressions won't do at the same core in parallel, and it also makes certain compression and decompression won't do at the same core in parallel. Everything is like before.
 
-For readability I suggest not to mix per-CPU and per-CTX variables like
-that. If zswap_dstmem is protected by the mutex, please make it part of
-acomp_ctx.
 
-Sebastian
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8814=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=889=
+:16:38, Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom> =E5=86=99=E5=88=B0:
+>This controller can be found on Loongson-2K SoC, Loongson-3
+>systems with RS780E/LS7A PCH=2E
+>
+>The RS780E part of code was previously located at
+>arch/mips/pci/ops-loongson3=2Ec and now it can use generic PCI
+>driver implementation=2E
+>
+>Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>Reviewed-by: Rob Herring <robh@kernel=2Eorg>
+>
+
+Hi there,
+
+Is it possible to let this series go into next tree soon?
+
+As LS7A dts patch would depend on this series, and I want to
+make the whole LS7A basic support as a part of 5=2E8 release=2E
+
+Thanks!
+
+--=20
+Jiaxun Yang
