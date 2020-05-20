@@ -2,161 +2,136 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBFA9207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4077E2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="h9J16NzS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iRwmCRCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgETQv4 (ORCPT
+        id S1727830AbgETQwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgETQvz (ORCPT
+        Wed, 20 May 2020 12:52:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44544 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726829AbgETQwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:51:55 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46729C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:51:55 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id d7so3053769qtn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:51:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uCbIDnmbNb/xu62b5tooWAb+6qi8tujvE6x6ac0v/iU=;
-        b=h9J16NzSlg3JV6ahuk3Cz7vW9mS71GGHOJsvtWXV/OhEqA115o493JYJT5neianrkT
-         8nb/lO4XJjaix3BGuGg7pGmHyyrmqlSmT44lwrhNwmLORSVOHl0fjA+p6k7EF01If26v
-         Vtvc1KweE5OUCkM3/Por0KoMn8ykmOGsBB5H8z39O/Tb6axHXh6a+3ZMoky6Md6iuZk+
-         HDee2q5k6T0Dn4ugXpn9HlqPjl0wjA+VELcBuoY3l37PIObJdU8TvHkGglRjKiW0ODnb
-         JCizuvakRxoXGSr2L/HDSHWCk5lpVA13/B7kAR9YVydF2g7LZVdrsYh9+kchKd36A+a6
-         QhUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uCbIDnmbNb/xu62b5tooWAb+6qi8tujvE6x6ac0v/iU=;
-        b=W1QyTZPuET6XrHrI///VOD5fyaf/jF4BGNzlOtCidgi4fTidsBoc2A0LyhoPHpm0Xp
-         /uzBbrUS8NeDKwTwqf0wTOhepUHSn2u2Y34jQ7PWeAmqjqUKDABzacf+CHW588SJ95JS
-         wmzi3Of1Z6ahtfIytJ9Am7DaW7Y9RSAIw6m/IPfjnQjB3+L6iWKVZOb32gfcF10hxlbv
-         +bzdIgd7Rn78jY/ro3rLHPdYPWa/j8JQLCnZGAb3/hm3UuwKdw2DXE9keHGfyYq491n4
-         ZaiO0M2/9qHHwFNXFpgug7S83bfDqid1w78rkmdBdoadb2Wgmo0NybjyUjq2B++V7l3y
-         GIvg==
-X-Gm-Message-State: AOAM531zkVYFp7IyjuHIYD40olVXRfA+XG1zZd6za7wP9/3HO27m/pPB
-        A1fDGkGZvHAC8NkPJr5JzfsyXchniyc=
-X-Google-Smtp-Source: ABdhPJw6ggJ8wCSJvBlsLOuaKgIMkvBTDwzygxZftVoWK3+Q5wPJrDCRnCOYTf/UH4XJd5VTz0QvZw==
-X-Received: by 2002:aed:3949:: with SMTP id l67mr5993780qte.313.1589993514300;
-        Wed, 20 May 2020 09:51:54 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:4708])
-        by smtp.gmail.com with ESMTPSA id f198sm2663370qke.46.2020.05.20.09.51.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 09:51:53 -0700 (PDT)
-Date:   Wed, 20 May 2020 12:51:31 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200520165131.GB630613@cmpxchg.org>
-References: <20200520143712.GA749486@chrisdown.name>
- <20200520160756.GE6462@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520160756.GE6462@dhcp22.suse.cz>
+        Wed, 20 May 2020 12:52:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589993532;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=rM7hZmpECL8qLEqrdjdyQimVaHtfW73QhKyl/FZ1pAI=;
+        b=iRwmCRCdzBv61gfNOvtzs6LgT0zC0wZwobiw/UElbzykhCpHKbrXmGqaEy8UkjqY/uV8x7
+        rKUBkycaxGNspBa3T1tMaiEyfKbJicPyViKXlAZ1X5sY7LOVsq0dAyLEmR6oKpdNWHQ9z6
+        1U0qUYc7cVhEjQfLEeKlZbq9Ql5/t6c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-dPQRfS6aNfCV1XUTUYVImA-1; Wed, 20 May 2020 12:52:07 -0400
+X-MC-Unique: dPQRfS6aNfCV1XUTUYVImA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DF008015CF;
+        Wed, 20 May 2020 16:52:05 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 31E3B60BEC;
+        Wed, 20 May 2020 16:51:56 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        eparis@parisplace.org, tgraf@infradead.org,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak25 v6] audit: add subj creds to NETFILTER_CFG record to cover async unregister
+Date:   Wed, 20 May 2020 12:51:32 -0400
+Message-Id: <a585b9933896bc542347d8f3f26b08005344dd84.1589920939.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:07:56PM +0200, Michal Hocko wrote:
-> On Wed 20-05-20 15:37:12, Chris Down wrote:
-> > In Facebook production, we've seen cases where cgroups have been put
-> > into allocator throttling even when they appear to have a lot of slack
-> > file caches which should be trivially reclaimable.
-> > 
-> > Looking more closely, the problem is that we only try a single cgroup
-> > reclaim walk for each return to usermode before calculating whether or
-> > not we should throttle. This single attempt doesn't produce enough
-> > pressure to shrink for cgroups with a rapidly growing amount of file
-> > caches prior to entering allocator throttling.
-> > 
-> > As an example, we see that threads in an affected cgroup are stuck in
-> > allocator throttling:
-> > 
-> >     # for i in $(cat cgroup.threads); do
-> >     >     grep over_high "/proc/$i/stack"
-> >     > done
-> >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> > 
-> > ...however, there is no I/O pressure reported by PSI, despite a lot of
-> > slack file pages:
-> > 
-> >     # cat memory.pressure
-> >     some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
-> >     full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
-> >     # cat io.pressure
-> >     some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
-> >     full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
-> >     # grep _file memory.stat
-> >     inactive_file 1370939392
-> >     active_file 661635072
-> > 
-> > This patch changes the behaviour to retry reclaim either until the
-> > current task goes below the 10ms grace period, or we are making no
-> > reclaim progress at all. In the latter case, we enter reclaim throttling
-> > as before.
-> 
-> Let me try to understand the actual problem. The high memory reclaim has
-> a target which is proportional to the amount of charged memory. For most
-> requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
-> N is the number of memcgs in excess up the hierarchy). I can see to be
-> insufficient if the memcg is already in a large excess but if the
-> reclaim can make a forward progress this should just work fine because
-> each charging context should reclaim at least the contributed amount.
-> 
-> Do you have any insight on why this doesn't work in your situation?
-> Especially with such a large inactive file list I would be really
-> surprised if the reclaim was not able to make a forward progress.
+Some table unregister actions seem to be initiated by the kernel to
+garbage collect unused tables that are not initiated by any userspace
+actions.  It was found to be necessary to add the subject credentials to
+cover this case to reveal the source of these actions.  A sample record:
 
-The workload we observed this in was downloading a large file and
-writing it to disk, which means that a good chunk of that memory was
-dirty. The first reclaim pass appears to make little progress because
-it runs into dirty pages.
+The uid, auid, tty, ses and exe fields have not been included since they
+are in the SYSCALL record and contain nothing useful in the non-user
+context.
 
-> Now to your patch. I do not like it much to be honest.
-> MEM_CGROUP_RECLAIM_RETRIES is quite arbitrary and I neither like it in
-> memory_high_write because the that is an interruptible context so there
-> shouldn't be a good reason to give up after $FOO number of failed
-> attempts. try_charge and memory_max_write are slightly different because
-> we are invoking OOM killer based on the number of failed attempts.
+  type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
 
-The same is true for memory.high. We are invoking the userspace OOM
-killer when memory.high reclaim fails and we put tasks to sleep.
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+---
+Changelog:
+v6
+- remove uid, auid fields as duplicates or unset
 
-The actual number of retries is arbitrary, correct. That's because OOM
-is arbitrary. It's a sampled state, and this is our sampling period.
+v5
+- rebase on upstreamed ghak28 on audit/next v5.7-rc1
+- remove tty, ses and exe fields as duplicates or unset
+- drop upstreamed patches 1&2 from set
 
-But it's not that important. The much more important thing is that we
-continue reclaiming as long as there is forward progress. How many
-times we retry when there is no forward progress is less critical -
-but it's nice to have the same cutoff for OOM situations everywhere.
+v4
+- rebase on audit/next v5.7-rc1
+- fix checkpatch.pl errors/warnings in 1/3 and 2/3
 
-> Also if the current high reclaim scaling is insufficient then we should
-> be handling that via memcg_nr_pages_over_high rather than effectivelly
-> unbound number of reclaim retries.
+v3
+- rebase on v5.6-rc1 audit/next
+- change audit_nf_cfg to audit_log_nfcfg
+- squash 2,3,4,5 to 1 and update patch descriptions
+- add subject credentials to cover garbage collecting kernel threads
 
-???
+v2
+- Rebase (audit/next 5.5-rc1) to get audit_context access and ebt_register_table ret code
+- Split x_tables and ebtables updates
+- Check audit_dummy_context
+- Store struct audit_nfcfg params in audit_context, abstract to audit_nf_cfg() call
+- Restore back to "table, family, entries" from "family, table, entries"
+- Log unregistration of tables
+- Add "op=" at the end of the AUDIT_NETFILTER_CFG record
+- Defer nsid patch (ghak79) to once nsid patchset upstreamed (ghak32)
+- Add ghak refs
+- Ditch NETFILTER_CFGSOLO record
+
+ kernel/auditsc.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index cfe3486e5f31..e646055adb0b 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -2557,12 +2557,21 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+ 		       enum audit_nfcfgop op)
+ {
+ 	struct audit_buffer *ab;
++	const struct cred *cred;
++	struct tty_struct *tty;
++	char comm[sizeof(current->comm)];
+ 
+ 	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
+ 	if (!ab)
+ 		return;
+ 	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
+ 			 name, af, nentries, audit_nfcfgs[op].s);
++
++	cred = current_cred();
++	audit_log_format(ab, " pid=%u", task_pid_nr(current));
++	audit_log_task_context(ab); /* subj= */
++	audit_log_format(ab, " comm=");
++	audit_log_untrustedstring(ab, get_task_comm(comm, current));
+ 	audit_log_end(ab);
+ }
+ EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
+-- 
+1.8.3.1
+
