@@ -2,219 +2,189 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B370DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA6CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 764C9207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584942065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kDpKgVsm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuE0Wnos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgETJdE (ORCPT
+        id S1726548AbgETJgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:33:04 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19680 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726510AbgETJdE (ORCPT
+        Wed, 20 May 2020 05:36:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETJgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:33:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589967183; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=kj7KetK7iFPOosbvpCUKYMpyUHmudAmdvJ6fI1OKUq0=;
- b=kDpKgVsmXaHNAHFIvmUOe8eKnsfpy8IlL5XAkZ5Ru3rfuTdz4Pp0X9P/0s3AVzZK/82qbJKa
- nXA7OvPCmkTHHrRiKZitzBcqw7yDqTX+Crnatou3McfuVqlexNRrcADMGMmTQKrzQViSokEs
- /RNEhF1jluUlqgGZDmho63PoJIQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5ec4f940087f08818e57a78c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 09:32:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BCA7C433A1; Wed, 20 May 2020 09:32:47 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87D87C433CA;
-        Wed, 20 May 2020 09:32:45 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 May 2020 15:02:45 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS , Joerg Roedel <joro@8bytes.org>," 
-        <iommu@lists.linux-foundation.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Wed, 20 May 2020 05:36:04 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFA5C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:36:02 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s8so2399043wrt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:36:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bl2Z9rwd9yHv4ZpH+5LCcErhhFtMaEj+8e37h0oPQpc=;
+        b=QuE0WnosJ6J52vDdOA3INb6M2D/urfQeKgVAIc2+q2dNGq0Wq/5IWiFlaj7Slg/BcQ
+         UkRNgOmg57DHE5ZkeRPYdeTJmyl792iWRXudp5mLZW7GYT5f6Z75JC2tEh5cP16AK9mM
+         9OnhPiI+UzhVdzV372P9zNs8q0kNWC1QBhUm9nyeYgCiUdJM1byYFPmrB323ixUXyigO
+         Ms3mLPgYlvOQN/g4/7YyWLcb6IoaHawUgmFpsrT3A4H6ezgCPc6ft59u62qw45qlzcJz
+         PBDLrO/odZOjfn9GKDEZ92HbhH6TPhps3ypWSCfeRlzhtDjPzsTKCioPhSukD6/ku64U
+         zSvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bl2Z9rwd9yHv4ZpH+5LCcErhhFtMaEj+8e37h0oPQpc=;
+        b=UnALLgrjpJRt7fDc5YPG7ClS1M5h3NCwvK7bqV3AKV2WKLhhuS6qchrBfpLb41OiyX
+         /B1dGvOcxjm2PvMW7LZ8P657vAxgnsPG1Q0F6Ej6aTdoTkXtym/7UGXSjkAK4LbuWg45
+         sFklQoe7t5+phyxLUJaCuIY9ywNPI3dd+N0ah2cdI2L3JFVPn8+I/VoIisxhvJiy7U3a
+         VokUjwtxa4IW+l2WJC5pPBKk7AIeBTfuke/YNR/fvvabZq2aBrX6Jqi04/DXGMQTRBil
+         wYehTCcZXIxk0ZueuLbsyROocF2DMKRcSHtRRJ7xGZqNybNbam52Xk2ZN8VJIPILfl1F
+         TLBg==
+X-Gm-Message-State: AOAM530bY4sZaIuCiAAZZM9AVIYxxl3m61yFNpbLGXtGdGhB+T1yIAqs
+        2DScHCyfSOU2U+QuwjXeot2hBA==
+X-Google-Smtp-Source: ABdhPJwwOpwo1mP3WPWm+13T7s8/2dqpT8dfFYb3l/48EJ787rro1deSw2krhQQ+/T4/nODPrdVJYg==
+X-Received: by 2002:adf:e752:: with SMTP id c18mr3306165wrn.353.1589967360615;
+        Wed, 20 May 2020 02:36:00 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id g140sm2076523wmg.47.2020.05.20.02.35.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 02:35:59 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:35:57 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>, Sumit Garg <sumit.garg@linaro.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH] iomm/arm-smmu: Add stall implementation hook
-In-Reply-To: <CAF6AEGuzBtj+srindmOvhaom5BdS2adLaOF=v_MtguMja14V2w@mail.gmail.com>
-References: <20200421202004.11686-1-saiprakash.ranjan@codeaurora.org>
- <b491e02ad790a437115fdeab6b21bc48@codeaurora.org>
- <1ced023b-157c-21a0-ac75-1adef7f029f0@arm.com>
- <20200507125357.GA31783@willie-the-truck>
- <CAF6AEGuLU+_qP8HNO1s9PTPHqJnCMHzehmcT8NiJhiAwrfSH6w@mail.gmail.com>
- <CAF6AEGvuHKObTR97XdSXjmjKB+qjQ8N1_wxM=ZU8bEkF=cXp-A@mail.gmail.com>
- <20200511173008.GA24282@jcrouse1-lnx.qualcomm.com>
- <20200518154522.GN32394@willie-the-truck>
- <5a0ad639e272026c8be57393937cda22@codeaurora.org>
- <CAF6AEGuzBtj+srindmOvhaom5BdS2adLaOF=v_MtguMja14V2w@mail.gmail.com>
-Message-ID: <a801e79a0a75092c28a6646ae7fa5e36@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any
+ context
+Message-ID: <20200520093557.lwwxnhvgmacipdce@holly.lan>
+References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
+ <20200512142533.ta4uejwmq5gchtlx@holly.lan>
+ <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
+ <20200514084230.GO17734@linux-b0ei>
+ <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
+ <20200515085021.GS17734@linux-b0ei>
+ <20200515103308.GD42471@jagdpanzerIV.localdomain>
+ <20200515134806.5cw4xxnxw7k3223l@holly.lan>
+ <20200518092139.GK7340@linux-b0ei>
+ <20200520042102.GA938@jagdpanzerIV.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520042102.GA938@jagdpanzerIV.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-19 20:41, Rob Clark wrote:
-> On Tue, May 19, 2020 at 2:26 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi Will,
->> 
->> On 2020-05-18 21:15, Will Deacon wrote:
->> > On Mon, May 11, 2020 at 11:30:08AM -0600, Jordan Crouse wrote:
->> >> On Fri, May 08, 2020 at 08:40:40AM -0700, Rob Clark wrote:
->> >> > On Fri, May 8, 2020 at 8:32 AM Rob Clark <robdclark@gmail.com> wrote:
->> >> > >
->> >> > > On Thu, May 7, 2020 at 5:54 AM Will Deacon <will@kernel.org> wrote:
->> >> > > >
->> >> > > > On Thu, May 07, 2020 at 11:55:54AM +0100, Robin Murphy wrote:
->> >> > > > > On 2020-05-07 11:14 am, Sai Prakash Ranjan wrote:
->> >> > > > > > On 2020-04-22 01:50, Sai Prakash Ranjan wrote:
->> >> > > > > > > Add stall implementation hook to enable stalling
->> >> > > > > > > faults on QCOM platforms which supports it without
->> >> > > > > > > causing any kind of hardware mishaps. Without this
->> >> > > > > > > on QCOM platforms, GPU faults can cause unrelated
->> >> > > > > > > GPU memory accesses to return zeroes. This has the
->> >> > > > > > > unfortunate result of command-stream reads from CP
->> >> > > > > > > getting invalid data, causing a cascade of fail.
->> >> > > > >
->> >> > > > > I think this came up before, but something about this rationale doesn't add
->> >> > > > > up - we're not *using* stalls at all, we're still terminating faulting
->> >> > > > > transactions unconditionally; we're just using CFCFG to terminate them with
->> >> > > > > a slight delay, rather than immediately. It's really not clear how or why
->> >> > > > > that makes a difference. Is it a GPU bug? Or an SMMU bug? Is this reliable
->> >> > > > > (or even a documented workaround for something), or might things start
->> >> > > > > blowing up again if any other behaviour subtly changes? I'm not dead set
->> >> > > > > against adding this, but I'd *really* like to have a lot more confidence in
->> >> > > > > it.
->> >> > > >
->> >> > > > Rob mentioned something about the "bus returning zeroes" before, but I agree
->> >> > > > that we need more information so that we can reason about this and maintain
->> >> > > > the code as the driver continues to change. That needs to be a comment in
->> >> > > > the driver, and I don't think "but android seems to work" is a good enough
->> >> > > > justification. There was some interaction with HUPCF as well.
->> >> > >
->> >> > > The issue is that there are multiple parallel memory accesses
->> >> > > happening at the same time, for example CP (the cmdstream processor)
->> >> > > will be reading ahead and setting things up for the next draw or
->> >> > > compute grid, in parallel with some memory accesses from the shader
->> >> > > which could trigger a fault.  (And with faults triggered by something
->> >> > > in the shader, there are *many* shader threads running in parallel so
->> >> > > those tend to generate a big number of faults at the same time.)
->> >> > >
->> >> > > We need either CFCFG or HUPCF, otherwise what I have observed is that
->> >> > > while the fault happens, CP's memory access will start returning
->> >> > > zero's instead of valid cmdstream data, which triggers a GPU hang.  I
->> >> > > can't say whether this is something unique to qcom's implementation of
->> >> > > the smmu spec or not.
->> >> > >
->> >> > > *Often* a fault is the result of the usermode gl/vk/cl driver bug,
->> >> > > although I don't think that is an argument against fixing this in the
->> >> > > smmu driver.. I've been carrying around a local patch to set HUPCF for
->> >> > > *years* because debugging usermode driver issues is so much harder
->> >> > > without.  But there are some APIs where faults can be caused by the
->> >> > > user's app on top of the usermode driver.
->> >> > >
->> >> >
->> >> > Also, I'll add to that, a big wish of mine is to have stall with the
->> >> > ability to resume later from a wq context.  That would enable me to
->> >> > hook in the gpu crash dump handling for faults, which would make
->> >> > debugging these sorts of issues much easier.  I think I posted a
->> >> > prototype of this quite some time back, which would schedule a worker
->> >> > on the first fault (since there are cases where you see 1000's of
->> >> > faults at once), which grabbed some information about the currently
->> >> > executing submit and some gpu registers to indicate *where* in the
->> >> > submit (a single submit could have 100's or 1000's of draws), and then
->> >> > resumed the iommu cb.
->> >> >
->> >> > (This would ofc eventually be useful for svm type things.. I expect
->> >> > we'll eventually care about that too.)
->> >>
->> >> Rob is right about HUPCF. Due to the parallel nature of the command
->> >> processor
->> >> there is always a very good chance that a CP access is somewhere in
->> >> the bus so
->> >> any pagefault is usually a death sentence. The GPU context bank would
->> >> always
->> >> want HUPCF set to 1.
->> >
->> > So this sounds like an erratum to me, and I'm happy to set HUPCF if we
->> > detect the broken implementation. However, it will need an entry in
->> > Documentation/arm64/silicon-errata.rst and a decent comment in the
->> > driver
->> > to explain what we're doing and why.
->> >
->> 
->> AFAIK there is no erratum documented internally for this behaviour and
->> this
->> exists from MSM8996 SoC time and errata usually don't survive this 
->> long
->> across generation of SoCs and there is no point for us in disguising 
->> it.
+On Wed, May 20, 2020 at 01:21:02PM +0900, Sergey Senozhatsky wrote:
+> On (20/05/18 11:21), Petr Mladek wrote:
+> [..]
+> > > > Is this guaranteed that we never execute this path from NMI?
+> > 
+> > Good question!
+> > 
+> > > Absolutely not.
+> > > 
+> > > The execution context for kdb is pretty much unique... we are running a
+> > > debug mode with all CPUs parked in a holding loop with interrupts
+> > > disabled. One CPU is at an unknown exception state and the others are
+> > > either handling an IRQ or NMI depending on architecture[1].
+> > 
+> > This is similar to the situation in panic() when other CPUs are
+> > stopped. It is more safe when the CPUs are stopped using IRQ.
+> > There is higher danger of a deadlock when NMI is used.
+> > 
+> > bust_spinlock() is used in panic() to increase the chance to go over
+> > the deadlock and actually see the messages. It is not enough when
+> > more locks are used by the console (VT/TTY is good example). And
+> > it is not guaranteed that the console will still work after
+> > the hack is disabled by bust_spinlocks(0).
 > 
-> possibly longer, qcom_iommu sets CFCFG..
+> Good point. It's not guaranteed to help, but bust_spinlocks() does
+> help in general, many serial drivers do check oops_in_progress and
+> use a deadlock safe approach when locking port lock. I don't see
+> bust_spinlocks() being used in kdb, so it probably better start
+> doing so (along with general for_each_console() loop improvements,
+> like checking if console is enabled/available/etc).
+
+Agree.
+
+I am also interested in whether we can figure out a way to match
+consoles and polling drivers. It is better to use the polling
+driver rather than the console since the polling drivers "know"
+they will execute from all sorts of crazy places. For the most common
+use cases this would also result in no console handler ever being
+called.
+
+BTW for those asking how this issue an submarine for so long I think
+the main factor is that not all architectures implement NMI.
+
+There are exceptions but kdb is typically only useful when either:
+
+1. We have a real (e.g. not USB) serial port, or
+2. We have a real (e.g. not USB) keyboard
+
+On x86, where the SMP peers are rounded up using using an NMI, the
+above grows increasingly hard to find (although they are certainly
+still here). Combined with this very few commonly embedded
+architectures round up using an NMI so these problems cannot occur.
+
+This has allowed kdb to fall rather far behind the rest of the kernel
+w.r.t. NMI robustness whilst not being entirely useless.
+
+Sumit's recent work to exploit NMIs on arm64 is bringing some of our
+debt to the surface... happily I think that will also help us to tackle
+it!
+
+
+> [..]
+> > > > If so, can this please be added to the commit message? A more
+> > > > detailed commit message will help a lot.
+> > 
+> > What about?
+> > 
+> > "KDB has to get messages on consoles even when the system is stopped.
+> > It uses kdb_printf() internally and calls console drivers on its own.
+> > 
+> > It uses a hack to reuse an existing code. It sets "kdb_trap_printk"
+> > global variable to redirect even the normal printk() into the
+> > kdb_printf() variant.
+> > 
+> > The variable "kdb_trap_printk" is checked in printk_default() and
+> > it is ignored when printk is redirected to printk_safe in NMI context.
+> > Solve this by moving the check into printk_func().
+
+Maybe a "Currently" thrown in we switch from general background
+information to describing the problem the patch is about to fix helps us
+read it:
+
+  Currently the variable "kdb_trap_printk" is checked
+
+But other than that LGTM.
+
+
+Daniel.
+
+> > 
+> > It is obvious that it is not fully safe. But it does not make things
+> > worse. The console drivers are already called in this context by
+> > kdb_printf() direct calls."
 > 
-
-Oh right, I was still in college when those SoCs were released ;)
-
->> Is it OK if we clearly mention it as the "design limitation" or some
->> other
->> term which we can agree upon along with the description which Rob and
->> Jordan
->> provided for setting HUPCF in the driver when we add the set_hupcf
->> callback?
-> 
-> I'm not too picky on what we call it, but afaict it has been this way
-> since the beginning of time, rather than specific to a certain SoC or
-> generation of SoCs.  So it doesn't seem like the hw designers consider
-> it a bug.
-> 
-> (I'm not sure what the expected behavior is.. nor if any other SMMU
-> implementation encounters this sort of situation..)
-> 
-
-Yes, that was my point as well that its probably not counted as a bug
-by the hw designers. So I'm going to post setting HUPCF on QCOM
-implementation with clear comments based on yours and Jordan's 
-description
-of this problem, but I wanted to have a way to set this only for GPU 
-context
-bank and not GMU as Jordan mentioned earlier that GMU doesnt need HUPCF 
-set.
-I was checking as to how do we map cb to device, if it was possible then 
-we can have
-a compatibility thing like we did for identity mapping. Any ideas Robin?
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+> This looks more informative indeed. Thanks!
