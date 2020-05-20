@@ -2,382 +2,394 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC963C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA62C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8082075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20047207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:46:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IksOG6lq"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="lo2kBwbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgETEpQ (ORCPT
+        id S1726621AbgETEqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49610 "EHLO
+        Wed, 20 May 2020 00:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgETEpO (ORCPT
+        with ESMTP id S1726309AbgETEqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:45:14 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE05C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:45:13 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id fb16so763087qvb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:45:13 -0700 (PDT)
+        Wed, 20 May 2020 00:46:03 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F77C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:46:01 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id e10so1051474vsp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SNby9Ybh2Qrd4287Y3ZzbQLjxz1GHTGW0zNl9NdTkP0=;
-        b=IksOG6lqm3kxNh7uPbJz8mL/02gwoLveO2rUXhNLb950S584/AWZ8lopuGUFPJuWsM
-         Xa8/knGXPAI5S9yLJnkMnDS+0M2PGSERtmlhh5Vkx4+aMdTAUQsAwIFHKe6XgfrmJLN2
-         +HRxXQuHjLeq6DNH/8VesQgUOwMWBgakWYuhhob0ZEMnZbZGWliBOBau/jLhMc5NXF19
-         zT5N0Y7TQUdk4Fu0OEM+PYoTZdxA+PWAyozjisUPmA9iEk06hhhXJG+etiOTGEjvegmu
-         MVdrGShTbqqhWpqDwgtRLrKR19OUJc/OTdK3YEWM5ykam6MQmnVAfo1IDAiNNMtQ3oE+
-         ZSjw==
+        bh=geyjhTTlJftWX8UQfG2fkLC581cQsU8DALD+J4F3rGo=;
+        b=lo2kBwbptuGQr6e84fkmJtloK2uhJD9Db3mcADHHWh7JfxoAqyi2XQPmXa/eXY061z
+         tI9syCKMZEjoCHCRIPIq1TUrhu4+f5uJ+0NFYDyZkPAZWW/bYO3RV8pfTKJyDs8jL2mB
+         PYCTJ4jiGE6j3OXz0Nn65Iyi58PsUy1pfsu+Jek0xzWhUoPLZ/kCtNi2BktQrT8rUDxJ
+         fO8ShkKSCuyF/ZygNPjcMXjA5+fLB0zUvLe7oD5Yd7+AYLEd3HLlEACcxseZK0O3fN25
+         h+Gt/o5fiAoC1942o7l1uS89/3ZPkIhDqZCrcQkDpI5YGoAZAr+ECrEYaql4z5IEuvWG
+         yzmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SNby9Ybh2Qrd4287Y3ZzbQLjxz1GHTGW0zNl9NdTkP0=;
-        b=b7mEAu/BKC4nL/dDP6pGr7fjM57nZaPxY+zxSry7r6KxE7x1Sz1ijszuhZvipasNK+
-         qhfNsmRBffockVPV2Tq2k7Trak90fF2etnaa5WeRPlyKPmKDJGgJMdVSsUDJ784jImVc
-         FDBbyC7pTlptcIDZhT6OCAogTln0COsM6f09Iubd4dq9GkwEXK30oR4/C6hbUUDWukNq
-         GWAw7TgvsmOEx8L3gnRcdnhA3DIFfDv6AxSJgC9GLeRaWXBZk7rNpVxw0qK5Csr6qlZK
-         Ir8ut7kgGafPXqc/i23nwlpJtz0bFXJ/QPL5PTJGW+g9IsR9oxC8GYYCcX0zXBw9Cb+f
-         PGwQ==
-X-Gm-Message-State: AOAM530RhG9y6W+xBr2uvc7W6abfQu6XlGR5bdW5MwyO7wOD2v1nkixV
-        rs5q0a/po9MJT45JszNEs5YUYKtO4oWKPKX84f5GDA==
-X-Google-Smtp-Source: ABdhPJzcgfZnMxpvonX+fPxLM4xpBpLm8XlltEuajLADGFv3ZFOj8evWjq6+N6YWZxgf/DG5sL+RGRNz7I8Mq5yfcgc=
-X-Received: by 2002:a0c:db03:: with SMTP id d3mr3196334qvk.80.1589949911824;
- Tue, 19 May 2020 21:45:11 -0700 (PDT)
+        bh=geyjhTTlJftWX8UQfG2fkLC581cQsU8DALD+J4F3rGo=;
+        b=iE1pspGsn1Vk8l6gVrFByjGa9O2noNIzbo9iM5vY5SGJtpAws0QHyvf36vAiVajal9
+         L+PlAf4/9cmH7d0Dw1yYI7OQo8FbmpoQB/KZUiVfNQnKazPphABUS1orw9+zUPcwGQPW
+         42YHfeHdqF2P7Qu1Qf+yDgOIjebFNqBa2zJL7a7DIO1Rt3jyjV5amOm3eACkt7MzbPqI
+         HAExorFeCkIz2xFD81rKuuHO8E/0/MUQ/0OstaTQdQJ1ajHu/me2tHJ3Ut+JdezikdIe
+         RrpZZyaox1mVBXQNnvk9PCYhCErdarooiZCplDSXD0+jEm/cLNe1EyF69gpkhy2Vg7xv
+         vs5g==
+X-Gm-Message-State: AOAM533yTMzfSQWy+t+gAWyY9RBetj1/WznRVOrJZzIv+DStwMtLF41Q
+        +3G8NeH9LmxRi+Yp9AAS7zZvwy5dMB/VunofiGf+Fg==
+X-Google-Smtp-Source: ABdhPJwrpQ00oe/PnrpUwerPGDpzqKyoEaT7OhWK7OEI5FUp0bS+kYx+gUFaPtQLW9mX4o11ZV6aWgfGJLptaJ5cPq0=
+X-Received: by 2002:a67:407:: with SMTP id 7mr1867062vse.95.1589949960803;
+ Tue, 19 May 2020 21:46:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200519022517.24182-1-walter-zh.wu@mediatek.com>
- <CACT4Y+aJDO+2kSgNpcvHksfn+bZaFWPoGj3-55-dyjLHcHbFUg@mail.gmail.com> <1589947387.29577.35.camel@mtksdccf07>
-In-Reply-To: <1589947387.29577.35.camel@mtksdccf07>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 20 May 2020 06:45:00 +0200
-Message-ID: <CACT4Y+Zy0O3brZRvN5jbdXMosBv+aFgRGSubbhCwzOSUftGoeA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] kasan: record and print the free track
-To:     Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
+References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com> <20200504181616.175477-2-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20200504181616.175477-2-srinivas.pandruvada@linux.intel.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 20 May 2020 10:15:17 +0530
+Message-ID: <CAHLCerP4wtSM0mtFZ_vVVp7BYtUMcp0AS_2DassXSFw=XFUo2Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/5] thermal: Add support for /dev/thermal_notify
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        linux-mediatek@lists.infradead.org
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 6:03 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+On Mon, May 4, 2020 at 11:47 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
 >
-> > On Tue, May 19, 2020 at 4:25 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > >
-> > > Move free track from slub alloc meta-data to slub free meta-data in
-> > > order to make struct kasan_free_meta size is 16 bytes. It is a good
-> > > size because it is the minimal redzone size and a good number of
-> > > alignment.
-> > >
-> > > For free track in generic KASAN, we do the modification in struct
-> > > kasan_alloc_meta and kasan_free_meta:
-> > > - remove free track from kasan_alloc_meta.
-> > > - add free track into kasan_free_meta.
-> > >
-> > > [1]https://bugzilla.kernel.org/show_bug.cgi?id=198437
-> > >
-> > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-> > > Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> > > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > > Cc: Alexander Potapenko <glider@google.com>
-> > > ---
-> > >  mm/kasan/common.c  | 22 ++--------------------
-> > >  mm/kasan/generic.c | 18 ++++++++++++++++++
-> > >  mm/kasan/kasan.h   |  7 +++++++
-> > >  mm/kasan/report.c  | 20 --------------------
-> > >  mm/kasan/tags.c    | 37 +++++++++++++++++++++++++++++++++++++
-> > >  5 files changed, 64 insertions(+), 40 deletions(-)
-> > >
-> > > diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> > > index 8bc618289bb1..47b53912f322 100644
-> > > --- a/mm/kasan/common.c
-> > > +++ b/mm/kasan/common.c
-> > > @@ -51,7 +51,7 @@ depot_stack_handle_t kasan_save_stack(gfp_t flags)
-> > >         return stack_depot_save(entries, nr_entries, flags);
-> > >  }
-> > >
-> > > -static inline void set_track(struct kasan_track *track, gfp_t flags)
-> > > +void kasan_set_track(struct kasan_track *track, gfp_t flags)
-> > >  {
-> > >         track->pid = current->pid;
-> > >         track->stack = kasan_save_stack(flags);
-> > > @@ -299,24 +299,6 @@ struct kasan_free_meta *get_free_info(struct kmem_cache *cache,
-> > >         return (void *)object + cache->kasan_info.free_meta_offset;
-> > >  }
-> > >
-> > > -
-> > > -static void kasan_set_free_info(struct kmem_cache *cache,
-> > > -               void *object, u8 tag)
-> > > -{
-> > > -       struct kasan_alloc_meta *alloc_meta;
-> > > -       u8 idx = 0;
-> > > -
-> > > -       alloc_meta = get_alloc_info(cache, object);
-> > > -
-> > > -#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> > > -       idx = alloc_meta->free_track_idx;
-> > > -       alloc_meta->free_pointer_tag[idx] = tag;
-> > > -       alloc_meta->free_track_idx = (idx + 1) % KASAN_NR_FREE_STACKS;
-> > > -#endif
-> > > -
-> > > -       set_track(&alloc_meta->free_track[idx], GFP_NOWAIT);
-> > > -}
-> > > -
-> > >  void kasan_poison_slab(struct page *page)
-> > >  {
-> > >         unsigned long i;
-> > > @@ -492,7 +474,7 @@ static void *__kasan_kmalloc(struct kmem_cache *cache, const void *object,
-> > >                 KASAN_KMALLOC_REDZONE);
-> > >
-> > >         if (cache->flags & SLAB_KASAN)
-> > > -               set_track(&get_alloc_info(cache, object)->alloc_track, flags);
-> > > +               kasan_set_track(&get_alloc_info(cache, object)->alloc_track, flags);
-> > >
-> > >         return set_tag(object, tag);
-> > >  }
-> > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> > > index 3372bdcaf92a..763d8a13e0ac 100644
-> > > --- a/mm/kasan/generic.c
-> > > +++ b/mm/kasan/generic.c
-> > > @@ -344,3 +344,21 @@ void kasan_record_aux_stack(void *addr)
-> > >         alloc_info->aux_stack[1] = alloc_info->aux_stack[0];
-> > >         alloc_info->aux_stack[0] = kasan_save_stack(GFP_NOWAIT);
-> > >  }
-> > > +
-> > > +void kasan_set_free_info(struct kmem_cache *cache,
-> > > +                               void *object, u8 tag)
-> > > +{
-> > > +       struct kasan_free_meta *free_meta;
-> > > +
-> > > +       free_meta = get_free_info(cache, object);
-> > > +       kasan_set_track(&free_meta->free_track, GFP_NOWAIT);
-> > > +}
-> > > +
-> > > +struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
-> > > +                               void *object, u8 tag)
-> > > +{
-> > > +       struct kasan_free_meta *free_meta;
-> > > +
-> > > +       free_meta = get_free_info(cache, object);
-> > > +       return &free_meta->free_track;
-> > > +}
-> > > diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> > > index a7391bc83070..ad897ec36545 100644
-> > > --- a/mm/kasan/kasan.h
-> > > +++ b/mm/kasan/kasan.h
-> > > @@ -127,6 +127,9 @@ struct kasan_free_meta {
-> > >          * Otherwise it might be used for the allocator freelist.
-> > >          */
-> > >         struct qlist_node quarantine_link;
-> > > +#ifdef CONFIG_KASAN_GENERIC
-> > > +       struct kasan_track free_track;
-> > > +#endif
-> > >  };
-> > >
-> > >  struct kasan_alloc_meta *get_alloc_info(struct kmem_cache *cache,
-> > > @@ -168,6 +171,10 @@ void kasan_report_invalid_free(void *object, unsigned long ip);
-> > >  struct page *kasan_addr_to_page(const void *addr);
-> > >
-> > >  depot_stack_handle_t kasan_save_stack(gfp_t flags);
-> > > +void kasan_set_track(struct kasan_track *track, gfp_t flags);
-> > > +void kasan_set_free_info(struct kmem_cache *cache, void *object, u8 tag);
-> > > +struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
-> > > +                               void *object, u8 tag);
-> > >
-> > >  #if defined(CONFIG_KASAN_GENERIC) && \
-> > >         (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
-> > > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > > index 6f8f2bf8f53b..96d2657fe70f 100644
-> > > --- a/mm/kasan/report.c
-> > > +++ b/mm/kasan/report.c
-> > > @@ -159,26 +159,6 @@ static void describe_object_addr(struct kmem_cache *cache, void *object,
-> > >                 (void *)(object_addr + cache->object_size));
-> > >  }
-> > >
-> > > -static struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
-> > > -               void *object, u8 tag)
-> > > -{
-> > > -       struct kasan_alloc_meta *alloc_meta;
-> > > -       int i = 0;
-> > > -
-> > > -       alloc_meta = get_alloc_info(cache, object);
-> > > -
-> > > -#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> > > -       for (i = 0; i < KASAN_NR_FREE_STACKS; i++) {
-> > > -               if (alloc_meta->free_pointer_tag[i] == tag)
-> > > -                       break;
-> > > -       }
-> > > -       if (i == KASAN_NR_FREE_STACKS)
-> > > -               i = alloc_meta->free_track_idx;
-> > > -#endif
-> > > -
-> > > -       return &alloc_meta->free_track[i];
-> > > -}
-> > > -
-> > >  #ifdef CONFIG_KASAN_GENERIC
-> > >  static void print_stack(depot_stack_handle_t stack)
-> > >  {
-> > > diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
-> > > index 25b7734e7013..201dee5d6ae0 100644
-> > > --- a/mm/kasan/tags.c
-> > > +++ b/mm/kasan/tags.c
-> > > @@ -162,3 +162,40 @@ void __hwasan_tag_memory(unsigned long addr, u8 tag, unsigned long size)
-> > >         kasan_poison_shadow((void *)addr, size, tag);
-> > >  }
-> > >  EXPORT_SYMBOL(__hwasan_tag_memory);
-> > > +
-> > > +void kasan_set_free_info(struct kmem_cache *cache,
-> > > +                               void *object, u8 tag)
-> > > +{
-> > > +       struct kasan_alloc_meta *alloc_meta;
-> > > +       u8 idx = 0;
-> > > +
-> > > +       alloc_meta = get_alloc_info(cache, object);
-> > > +
-> > > +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> > > +       idx = alloc_meta->free_track_idx;
-> > > +       alloc_meta->free_pointer_tag[idx] = tag;
-> > > +       alloc_meta->free_track_idx = (idx + 1) % KASAN_NR_FREE_STACKS;
-> > > +#endif
-> > > +
-> > > +       kasan_set_track(&alloc_meta->free_track[idx], GFP_NOWAIT);
-> > > +}
-> > > +
-> > > +struct kasan_track *kasan_get_free_track(struct kmem_cache *cache,
-> > > +                               void *object, u8 tag)
-> > > +{
-> > > +       struct kasan_alloc_meta *alloc_meta;
-> > > +       int i = 0;
-> > > +
-> > > +       alloc_meta = get_alloc_info(cache, object);
-> > > +
-> > > +#ifdef CONFIG_KASAN_SW_TAGS_IDENTIFY
-> > > +       for (i = 0; i < KASAN_NR_FREE_STACKS; i++) {
-> > > +               if (alloc_meta->free_pointer_tag[i] == tag)
-> > > +                       break;
-> > > +       }
-> > > +       if (i == KASAN_NR_FREE_STACKS)
-> > > +               i = alloc_meta->free_track_idx;
-> > > +#endif
-> > > +
-> > > +       return &alloc_meta->free_track[i];
-> > > +}
-> >
-> > Hi Walter,
-> >
-> > FTR I've uploaded this for review purposes here:
-> > https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2458
-> >
-> > Diff from the previous version is available as:
-> > https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2458/1..2
-> >
-> > I've tested this locally and with syzkaller. This is :
-> >
-> > [   80.583021][    C3] Freed by task 0:
-> > [   80.583480][    C3]  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:49
-> > [   80.584056][    C3]  kasan_set_track+0x1c/0x30 mm/kasan/common.c:57
-> > [   80.584617][    C3]  kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:354
-> > [   80.585221][    C3]  __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:438
-> > [   80.585814][    C3]  __cache_free mm/slab.c:3426 [inline]
-> > [   80.585814][    C3]  kfree+0x10b/0x2b0 mm/slab.c:3757
-> > [   80.586291][    C3]  kasan_rcu_reclaim+0x16/0x43 [test_kasan]
-> > [   80.587009][    C3]  rcu_do_batch kernel/rcu/tree.c:2207 [inline]
-> > [   80.587009][    C3]  rcu_core+0x59f/0x1370 kernel/rcu/tree.c:2434
-> > [   80.587537][    C3]  __do_softirq+0x26c/0x9fa kernel/softirq.c:292
-> > [   80.588085][    C3]
-> > [   80.588367][    C3] Last one call_rcu() call stack:
-> > [   80.589052][    C3]  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:49
-> > [   80.589622][    C3]  kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:345
-> > [   80.590254][    C3]  __call_rcu kernel/rcu/tree.c:2672 [inline]
-> > [   80.590254][    C3]  call_rcu+0x14f/0x7f0 kernel/rcu/tree.c:2746
-> > [   80.590782][    C3]  kasan_rcu_uaf+0xe4/0xeb [test_kasan]
-> > [   80.591697][    C3]  kmalloc_tests_init+0xbc/0x1097 [test_kasan]
-> > [   80.592900][    C3]  do_one_initcall+0x10a/0x7d0 init/main.c:1196
-> > [   80.593494][    C3]  do_init_module+0x1e6/0x6d0 kernel/module.c:3539
-> > [   80.594066][    C3]  load_module+0x7464/0x9450 kernel/module.c:3890
-> > [   80.594626][    C3]  __do_sys_init_module+0x1e3/0x220 kernel/module.c:3953
-> > [   80.595265][    C3]  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
-> > [   80.595822][    C3]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> >
-> >
-> > Overall this looks very good to me.
-> > But there is one aspect that bothers me. In the previous patch you had
-> > code that returned NULL from kasan_get_free_track() if the object is
-> > live (which means free meta is not available, it's occupied by object
-> > data). Now you dropped that code, but I think we still need it.
-> > Otherwise we cast user object data to free meta and print the free
-> > stack/pid from whatever garbage is there. This may lead to very
-> > confusing output and potentially to crashes in stackdepot.
-> >
+> This change adds an optional feature to add a new device entry
+> /dev/thermal_notify.
 >
-> Yes, I totally agree with you. In the previous email I thought that
-> there is a problem with free track, but I did not point it out. Thank
-> you for pointing this problem. As you mentioned, we should fix it.
+> When config CONFIG_THERMAL_USER_EVENT_INTERFACE is selected, this new
+> device entry is created.
 >
-> > What do you think about this patch on top of your patches?
-> > https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2478
-> > This way we very precisely mark the period of time when the object has
-> > free track live and set.
-> > If it looks good to you, feel free to incorporate it into your series.
-> >
+> Thermal core or any thermal driver can use thermal_dev_send_event() interface
+
+Do you have any particular use case in mind where a platform driver
+will use this interface to send platform-specific events?
+
+IMO, we should probably try to keep this restricted to messages from
+thermal core if we are to have any hope of having a standard library
+in userspace capable of parsing these thermal events.
+
+> to send events. Each user events follows a standard format:
+> - zone_id
+> - event_id
+> - event_data
+> - reserved for future, currently 0s
 >
-> Thank you for providing good idea solution.
+> User space can basically:
+>         fd = open ("/dev/thermal_notify")
+>         In a loop
+>                 read (fd)
+>                         read and process event
 >
-> I saw this patch, that is a great patch. I think it can fix the issue
-> which has garbage stack. it should work as described below.
+> or
+>         fd = open ("/dev/thermal_notify")
+>         Set the fs as non blocking
+>         In a loop
+>                 Use poll() and wait
+>                         read and process event
 >
-> 1). When object is live, then don't print free stack.
-> 2). When object is NOT alive, after free object:
-> 2a). when object is in quarantine, then it can print free stack
-> 2b). when object is NOT in quarantine, then it can NOT print free stack.
+> There are predefined events added to thermal.h. Based on need they can
+> be extended.
 >
-> I have a question about 2), why we don't directly use
-> KASAN_KMALLOC_FREE? if we directly use it, then 2b) can print free
-> stack? 2b) may has use-after-free? so that it may need free stack.
-
-
-We can't use KASAN_KMALLOC_FREE because of this part:
-
-static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
-                  unsigned long ip, bool quarantine)
-{
-...
-    kasan_poison_shadow(object, rounded_up_size, KASAN_KMALLOC_FREE);
-
-    if ((IS_ENABLED(CONFIG_KASAN_GENERIC) && !quarantine) ||
-            unlikely(!(cache->flags & SLAB_KASAN)))
-        return false;
-
-    kasan_set_free_info(cache, object, tag);
-...
-
-
-We may set KASAN_KMALLOC_FREE, but not set the track (or even have
-memory for the track!).
-The object may not have free meta allocated at all, e.g. very large
-object with ctor (no place to store meta), or it may be in a mempool:
-https://elixir.bootlin.com/linux/v5.7-rc6/source/mm/mempool.c#L109
-and mempool may be using the object memory itself (for its own next
-link or something).
-
-KASAN_KMALLOC_FREETRACK very explicitly tracks the exact condition we
-want: we have meta info live now and we have free track set.
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  drivers/thermal/Kconfig          |   9 ++
+>  drivers/thermal/Makefile         |   3 +
+>  drivers/thermal/thermal_dev_if.c | 195 +++++++++++++++++++++++++++++++
+>  include/linux/thermal.h          |  24 ++++
+>  4 files changed, 231 insertions(+)
+>  create mode 100644 drivers/thermal/thermal_dev_if.c
+>
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 91af271e9bb0..27d05d62458e 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -78,6 +78,15 @@ config THERMAL_WRITABLE_TRIPS
+>           Say 'Y' here if you would like to allow userspace tools to
+>           change trip temperatures.
+>
+> +config THERMAL_USER_EVENT_INTERFACE
+> +       bool "Allow user space to read thermal events from a dev file"
+> +       help
+> +         This option allows a user space program to read thermal events
+> +         via /dev/thermal_notify file.
+> +
+> +         Say 'Y' here if you would like to allow userspace programs to
+> +         read thermal events.
+> +
+>  choice
+>         prompt "Default Thermal governor"
+>         default THERMAL_DEFAULT_GOV_STEP_WISE
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 8c8ed7b79915..8f65832d755a 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -11,6 +11,9 @@ thermal_sys-y                 += thermal_core.o thermal_sysfs.o \
+>  thermal_sys-$(CONFIG_THERMAL_HWMON)            += thermal_hwmon.o
+>  thermal_sys-$(CONFIG_THERMAL_OF)               += of-thermal.o
+>
+> +# Thermal user space events
+> +obj-$(CONFIG_THERMAL_USER_EVENT_INTERFACE)     += thermal_dev_if.o
+> +
+>  # governors
+>  thermal_sys-$(CONFIG_THERMAL_GOV_FAIR_SHARE)   += fair_share.o
+>  thermal_sys-$(CONFIG_THERMAL_GOV_BANG_BANG)    += gov_bang_bang.o
+> diff --git a/drivers/thermal/thermal_dev_if.c b/drivers/thermal/thermal_dev_if.c
+> new file mode 100644
+> index 000000000000..763bfe9eef9d
+> --- /dev/null
+> +++ b/drivers/thermal/thermal_dev_if.c
+> @@ -0,0 +1,195 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Thermal device file interface
+> + * Copyright (c) 2020, Intel Corporation.
+> + * All rights reserved.
+> + *
+> + * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/kfifo.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/poll.h>
+> +#include <linux/slab.h>
+> +#include <linux/thermal.h>
+> +#include <linux/wait.h>
+> +
+> +#define THERMAL_DEV_FIFO_SIZE  1024
+> +
+> +struct thermal_chdev_sample {
+> +       int zone_id;
+> +       int event;
+> +       u64 event_data;
+> +       u64 reserved;
+> +};
+> +
+> +struct thermal_chdev {
+> +       struct miscdevice therm_dev;
+> +       struct kfifo data_fifo;
+> +       unsigned long misc_opened;
+> +       wait_queue_head_t wait;
+> +};
+> +
+> +static DEFINE_MUTEX(thermal_chdev_mutex);
+> +static struct thermal_chdev *thermal_chdev;
+> +
+> +static int thermal_chdev_open(struct inode *inode, struct file *file)
+> +{
+> +       struct thermal_chdev *chdev;
+> +
+> +       chdev = container_of(file->private_data, struct thermal_chdev, therm_dev);
+> +
+> +       /* We essentially have single reader and writer */
+> +       if (test_and_set_bit(0, &chdev->misc_opened))
+> +               return -EBUSY;
+> +
+> +       return stream_open(inode, file);
+> +}
+> +
+> +static int thermal_chdev_release(struct inode *inode, struct file *file)
+> +{
+> +       struct thermal_chdev *chdev;
+> +
+> +       chdev = container_of(file->private_data, struct thermal_chdev, therm_dev);
+> +
+> +       clear_bit(0, &chdev->misc_opened);
+> +
+> +       return 0;
+> +}
+> +
+> +static __poll_t thermal_chdev_poll(struct file *file, struct poll_table_struct *wait)
+> +{
+> +       struct thermal_chdev *chdev;
+> +       __poll_t mask = 0;
+> +
+> +       chdev = container_of(file->private_data, struct thermal_chdev, therm_dev);
+> +
+> +       poll_wait(file, &chdev->wait, wait);
+> +
+> +       if (!kfifo_is_empty(&chdev->data_fifo))
+> +               mask = EPOLLIN | EPOLLRDNORM;
+> +
+> +       return mask;
+> +}
+> +
+> +static ssize_t thermal_chdev_read(struct file *file, char __user *buf, size_t count, loff_t *f_ps)
+> +{
+> +       struct thermal_chdev *chdev;
+> +       unsigned int copied;
+> +       int ret;
+> +
+> +       chdev = container_of(file->private_data, struct thermal_chdev, therm_dev);
+> +
+> +       if (count < sizeof(struct thermal_chdev_sample))
+> +               return -EINVAL;
+> +
+> +       do {
+> +               if (kfifo_is_empty(&chdev->data_fifo)) {
+> +                       if (file->f_flags & O_NONBLOCK)
+> +                               return -EAGAIN;
+> +
+> +                       ret = wait_event_interruptible(chdev->wait, !kfifo_is_empty(&chdev->data_fifo));
+> +                       if (ret)
+> +                               return ret;
+> +               }
+> +               ret = kfifo_to_user(&chdev->data_fifo, buf, count, &copied);
+> +               if (ret)
+> +                       return ret;
+> +
+> +       } while (copied == 0);
+> +
+> +       return copied;
+> +}
+> +
+> +static int thermal_chdev_capture_sample(struct thermal_chdev *chdev, struct thermal_chdev_sample *sample)
+> +{
+> +       int ret = 0;
+> +
+> +       if (!test_bit(0, &chdev->misc_opened))
+> +               return 0;
+> +
+> +       mutex_lock(&thermal_chdev_mutex);
+> +       if (kfifo_avail(&chdev->data_fifo) >= sizeof(*sample)) {
+> +               kfifo_in(&chdev->data_fifo, (unsigned char *)sample, sizeof(*sample));
+> +               wake_up(&chdev->wait);
+> +       } else {
+> +               ret =  -ENOMEM;
+> +       }
+> +       mutex_unlock(&thermal_chdev_mutex);
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct file_operations thermal_chdev_fops = {
+> +       .open =  thermal_chdev_open,
+> +       .read =  thermal_chdev_read,
+> +       .release = thermal_chdev_release,
+> +       .poll = thermal_chdev_poll,
+> +       .llseek = noop_llseek,
+> +};
+> +
+> +static int thermal_dev_if_add(void)
+> +{
+> +       int ret;
+> +
+> +       if (thermal_chdev)
+> +               return 0;
+> +
+> +       thermal_chdev = kzalloc(sizeof(*thermal_chdev), GFP_KERNEL);
+> +       if (!thermal_chdev)
+> +               return -ENOMEM;
+> +
+> +       ret = kfifo_alloc(&thermal_chdev->data_fifo, THERMAL_DEV_FIFO_SIZE, GFP_KERNEL);
+> +       if (ret)
+> +               goto free_mem;
+> +
+> +       init_waitqueue_head(&thermal_chdev->wait);
+> +
+> +       thermal_chdev->therm_dev.minor = MISC_DYNAMIC_MINOR;
+> +       thermal_chdev->therm_dev.name = "thermal_notify";
+> +       thermal_chdev->therm_dev.fops = &thermal_chdev_fops;
+> +       ret = misc_register(&thermal_chdev->therm_dev);
+> +       if (ret) {
+> +               kfifo_free(&thermal_chdev->data_fifo);
+> +               goto free_mem;
+> +       }
+> +
+> +       return 0;
+> +
+> +free_mem:
+> +       kfree(thermal_chdev);
+> +       thermal_chdev = NULL;
+> +       return ret;
+> +}
+> +
+> +/**
+> + * thermal_dev_send_event() - Send thermal event to user space
+> + * @zone_id:   Zone id of the caller
+> + * @event:     A predefined thermal event
+> + * @event_data: Event specific data
+> + *
+> + * An interface to send event to user space with an optional associated
+> + * data.
+> + *
+> + * Return: 0 on success, other values on error.
+> + */
+> +int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data)
+> +{
+> +       struct thermal_chdev_sample sample;
+> +
+> +       if (!thermal_chdev) {
+> +               int ret;
+> +
+> +               ret = thermal_dev_if_add();
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       sample.zone_id = zone_id;
+> +       sample.event = event;
+> +       sample.event_data = event_data;
+> +       sample.reserved = 0;
+> +       return thermal_chdev_capture_sample(thermal_chdev, &sample);
+> +}
+> +EXPORT_SYMBOL_GPL(thermal_dev_send_event);
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index c91b1e344d56..f5e1e7c6a9a2 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -543,4 +543,28 @@ static inline void thermal_notify_framework(struct thermal_zone_device *tz,
+>  { }
+>  #endif /* CONFIG_THERMAL */
+>
+> +enum thermal_device_events {
+> +       THERMAL_TEMP_SAMPLE = 0,
+> +       THERMAL_ZONE_CREATE,
+> +       THERMAL_ZONE_DELETE,
+> +       THERMAL_ZONE_DISABLED,
+> +       THERMAL_ZONE_ENABLED,
+> +       THERMAL_TEMP_LOW_THRES,
+> +       THERMAL_TEMP_HIGH_THRES,
+> +       THERMAL_TRIP_ADD,
+> +       THERMAL_TRIP_DELETE,
+> +       THERMAL_TRIP_UPDATE,
+> +       THERMAL_TRIP_REACHED,
+> +       THERMAL_PERF_CHANGED,
+> +};
+> +
+> +#ifdef CONFIG_THERMAL_USER_EVENT_INTERFACE
+> +int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data);
+> +#else
+> +int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data)
+> +{
+> +       return 0;
+> +}
+> +#endif
+> +
+>  #endif /* __THERMAL_H__ */
+> --
+> 2.25.4
+>
