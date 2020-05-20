@@ -2,113 +2,166 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF3820756
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:29:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="e4GAUZr0"
+	by mail.kernel.org (Postfix) with ESMTP id 74DBF20756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgETE3E (ORCPT
+        id S1726620AbgETE3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgETE3D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:29:03 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5EDC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:29:02 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id i5so828942uaq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 21:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+qZZbuT843G0ykcP4WOBCe4Afr8ELi6EnDD0MmBi+I4=;
-        b=e4GAUZr0pYYlAbmqzr5mBscJHnTVsJRtiQmpa37SgUxJp1nut8NqINekK2P+p9iHP8
-         0O+ePxYtdOc+NKNqX5iCCyYeaMcxzXYdc2rGBUwQmAJNAVZjRTNIGmOFuqSqQBoQdoDc
-         vVkWvI/cl4u/oHEQE2LiLFT1n4xReLm9wvYiSSNEBVZlI84Rp3leRcc/ydVcl6rz8RXQ
-         OHqexNizzlctGtaXQkZY/ODZ46zQbQxP0KN1o8J9TDQ63u0K2uYX4DSyIO/eRfmmMEZ7
-         xbjGDFDYdO0w/nzf5Axr6TV3MTMVWwXt3bjgcfJfvrV5rYofoDP51e8cLqlekQsJXb3s
-         8LDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+qZZbuT843G0ykcP4WOBCe4Afr8ELi6EnDD0MmBi+I4=;
-        b=ahJgAWwL30004sIuOyZbrbNPoiO9MHFH1kdcvPNvYXhUyBP7t/aXu/IwzCLFPNEyXS
-         XE5IrvdQtLm/Hpt6v/35RX4JMHxxq4Wkv5TBVzg50nG3sVzoT/JGZ5GD1tyiJbYczvWA
-         4tw27QUpdpwTiCda30aeBPrsKUCmq+Q3EkVs4Cw3uKfwpDF0klWorfeGewKrmBMiP/WH
-         s/dCI+n2OZxCjO/80GSu3puK5KR6FR3GiDhPGYPHnD0Sy2g+dK+HpGv6gIqSZRMQfF04
-         v7JYioPh/aWArvJmn2DcRxEgv+43ObiUbHDgkE4DfM33nTRvhwSYKFKV/kwqTw83qU3g
-         aOew==
-X-Gm-Message-State: AOAM533Obuh6lAAcQqFYynXx9/+eP0jIhIzcARst2Esasq0ImikVNmLC
-        aLNfksropLOYWZhPz/Vcg0ZUPfohUwCZa02lJmpYlA==
-X-Google-Smtp-Source: ABdhPJz/7dzzKIcOTkCfA7HyKaMiShlW5edXQ9UXQspFQ4VSXLLphRu+GFq2HxwSJt8TDxiIDqOwpBhdbeS8jtJjiB4=
-X-Received: by 2002:ab0:30ba:: with SMTP id b26mr2042602uam.77.1589948941382;
- Tue, 19 May 2020 21:29:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
- <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
- <a9af415d-9fd0-dcea-79ee-0fb90f45045e@linaro.org> <2cd6c73b890b3eab12420adf4ae29101672e6a0b.camel@linux.intel.com>
-In-Reply-To: <2cd6c73b890b3eab12420adf4ae29101672e6a0b.camel@linux.intel.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 20 May 2020 09:58:18 +0530
-Message-ID: <CAHLCerMfnHPuJnj6G4EvRPvODf1_Se4xM-OobA1o7eao5eetzg@mail.gmail.com>
-Subject: Re: [RFC][PATCH 3/5] thermal: Add support for setting notification thresholds
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 May 2020 00:29:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:54957 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726435AbgETE3m (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 00:29:42 -0400
+IronPort-SDR: 8clVySg12lH1KDgQrXuxuhvRRpmVoxGdqh8nCVH+z55NAVPxt5WzoHIWnwKxO/Te+OK6XRULYn
+ 99XoBb1ENwSw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 21:29:41 -0700
+IronPort-SDR: W+kMUcQes0TR/lgkk254tlp1t6f53rsjy2YvoMBGNm4jVX33Q6pJZl0n1tG/n7ozex6tA7uO1m
+ oqD7urS0UYMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
+   d="scan'208";a="289217283"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
+  by fmsmga004.fm.intel.com with ESMTP; 19 May 2020 21:29:38 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v6 0/5] perf stat: Support overall statistics for interval mode
+Date:   Wed, 20 May 2020 12:27:32 +0800
+Message-Id: <20200520042737.24160-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 5:10 AM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Mon, 2020-05-18 at 18:37 +0200, Daniel Lezcano wrote:
-> > On 04/05/2020 20:16, Srinivas Pandruvada wrote:
-> > > Add new attributes in thermal syfs when a thermal drivers provides
-> > > callbacks for them and CONFIG_THERMAL_USER_EVENT_INTERFACE is
-> > > defined.
-> > >
-> > > These attribute allow user space to stop polling for temperature.
-> > >
-> > > These attributes are:
-> > > - temp_thres_low: Specify a notification temperature for a low
-> > > temperature threshold event.
-> > > temp_thres_high: Specify a notification temperature for a high
-> > > temperature threshold event.
-> > > temp_thres_hyst: Specify a change in temperature to send
-> > > notification
-> > > again.
-> > >
-> > > This is implemented by adding additional sysfs attribute group. The
-> > > changes in this patch are trivial to add new attributes in thermal
-> > > sysfs as done for other attributes.
-> >
-> > Isn't it duplicate with the trip point?
-> A trip point is where an in-kernel governor takes some action. This is
-> not same as a notification temperature. For example at trip point
-> configured by ACPI at 85C, the thermal governor may start aggressive
-> throttling.
-> But a user space can set a notification threshold at 80C and start some
-> active controls like activate some fan to reduce the impact of passive
-> control on performance.
+Currently perf-stat supports to print counts at regular interval (-I),
+but it's not very easy for user to get the overall statistics.
 
-Then what is the use of thermal trip type "ACTIVE" ?
+With this patchset, it supports to report the summary at the end of
+interval output.
 
-> We need a way to distinguish between temperature notification threshold
-> and actual trip point. Changing a trip point means that user wants
-> kernel to throttle at temperature.
+For example,
+
+ root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000412064          2,281,114      cycles
+      2.001383658          2,547,880      cycles
+
+  Performance counter stats for 'system wide':
+
+          4,828,994      cycles
+
+        2.002860349 seconds time elapsed
+
+ root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000389902          1,536,093      cycles
+      1.000389902            420,226      instructions              #    0.27  insn per cycle
+      2.001433453          2,213,952      cycles
+      2.001433453            735,465      instructions              #    0.33  insn per cycle
+
+  Performance counter stats for 'system wide':
+
+          3,750,045      cycles
+          1,155,691      instructions              #    0.31  insn per cycle
+
+        2.003023361 seconds time elapsed
+
+ root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000435121            905,303      inst_retired.any          #      2.9 CPI
+      1.000435121          2,663,333      cycles
+      1.000435121            914,702      inst_retired.any          #      0.3 IPC
+      1.000435121          2,676,559      cpu_clk_unhalted.thread
+      2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
+      2.001615941          3,551,357      cycles
+      2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
+      2.001615941          3,551,044      cpu_clk_unhalted.thread
+
+  Performance counter stats for 'system wide':
+
+          2,856,395      inst_retired.any          #      2.2 CPI
+          6,214,690      cycles
+          2,865,539      inst_retired.any          #      0.5 IPC
+          6,227,603      cpu_clk_unhalted.thread
+
+        2.003403078 seconds time elapsed
+
+ v6:
+ ---
+ 1. Add comments in perf_evlist__save_aggr_prev_raw_counts.
+ 2. Move init_stats(&walltime_nsecs_stats) under interval condition check.
+
+ Following patches are changed in v6.
+    perf stat: Save aggr value to first member of prev_raw_counts
+    perf stat: Report summary for interval mode
+
+ v5:
+ ---
+ 1. Create new patch "perf stat: Save aggr value to first member
+    of prev_raw_counts".
+
+ 2. Call perf_evlist__save_aggr_prev_raw_counts to save aggr value
+    to first member of prev_raw_counts for AGGR_GLOBAL. Then next,
+    perf_stat_process_counter can create aggr values from per cpu
+    values.
+
+ Following patches are impacted in v5:
+    perf stat: Copy counts from prev_raw_counts to evsel->counts
+    perf stat: Save aggr value to first member of prev_raw_counts
+    perf stat: Report summary for interval mode
+
+ v4:
+ ---
+ 1. Create runtime_stat_reset.
+
+ 2. Zero the aggr in perf_counts__reset and use it to reset
+    prev_raw_counts.
+
+ 3. Move affinity setup and read_counter_cpu to a new function
+    read_affinity_counters. It's only called when stat_config.summary
+    is not set.
+
+ v3:
+ ---
+ 1. 'perf stat: Fix wrong per-thread runtime stat for interval mode'
+    is a new patch which fixes an existing issue found in test.
+
+ 2. We use the prev_raw_counts for summary counts. Drop the summary_counts in v2.
+
+ 3. Fix some issues.
+
+ v2:
+ ---
+ Rebase to perf/core branch
+
+Jin Yao (5):
+  perf stat: Fix wrong per-thread runtime stat for interval mode
+  perf counts: Reset prev_raw_counts counts
+  perf stat: Copy counts from prev_raw_counts to evsel->counts
+  perf stat: Save aggr value to first member of prev_raw_counts
+  perf stat: Report summary for interval mode
+
+ tools/perf/builtin-stat.c | 101 +++++++++++++++++++++++++-------------
+ tools/perf/util/counts.c  |   4 +-
+ tools/perf/util/counts.h  |   1 +
+ tools/perf/util/stat.c    |  53 +++++++++++++++++---
+ tools/perf/util/stat.h    |   3 ++
+ 5 files changed, 122 insertions(+), 40 deletions(-)
+
+-- 
+2.17.1
+
