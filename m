@@ -3,45 +3,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF36A206BE
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8A6206BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgETFuy (ORCPT
+        id S1726820AbgETFwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 01:50:54 -0400
-Received: from mga12.intel.com ([192.55.52.136]:44847 "EHLO mga12.intel.com"
+        Wed, 20 May 2020 01:52:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:10150 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgETFux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 01:50:53 -0400
-IronPort-SDR: X2xs1z5JYulKFcCh5nwefi/8dA6rUZrEKlOU+KcR2NgNyTxpcBKQnN+zavn1SUaFqKVXKQe4Cp
- wJNTX+r4MiNA==
+        id S1726309AbgETFwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 01:52:03 -0400
+IronPort-SDR: lrdCaAdTkJua9hqLRrQq0L0TMqrmqyz5+POZhsYZkBfkk+dYXrqC7ORTHpRabuNjTJBOxIV6ks
+ JwTGStossQcA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 22:50:53 -0700
-IronPort-SDR: NqUxgRIyi3F/0wIuxUY7v4g/Mmy/fN1KD9MUCV5R+2q39GBgXx2R41Oz6NSn2lPUEZEDPtSz+O
- xzZgf06b0jlA==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 22:52:02 -0700
+IronPort-SDR: r5a21e1UGa8uvQwbOrgxwRYa9n9yJ6VYUDSjaXU4SsFvqwDC3OcmMaeyPGmSNBUylXvoCFtS7v
+ Qv5ujDnITHGw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,412,1583222400"; 
-   d="scan'208";a="373969917"
+   d="scan'208";a="308623157"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 19 May 2020 22:50:52 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 19 May 2020 22:52:01 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jbHcx-000Ghm-DM; Wed, 20 May 2020 13:50:51 +0800
-Date:   Wed, 20 May 2020 13:50:40 +0800
+        id 1jbHe4-00061m-SD; Wed, 20 May 2020 13:52:00 +0800
+Date:   Wed, 20 May 2020 13:51:11 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 39f23ce07b9355d05a64ae303ce20d1c4b92b957
-Message-ID: <5ec4c530.yDZmEYMk1Cu3TTJ1%lkp@intel.com>
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ d7110a26e5905ec2fe3fc88bc6a538901accb72b
+Message-ID: <5ec4c54f.QZq357Y/t/W47Pmt%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,13 +51,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  sched/urgent
-branch HEAD: 39f23ce07b9355d05a64ae303ce20d1c4b92b957  sched/fair: Fix unthrottle_cfs_rq() for leaf_cfs_rq list
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  x86/urgent
+branch HEAD: d7110a26e5905ec2fe3fc88bc6a538901accb72b  x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
 
 elapsed time: 486m
 
 configs tested: 98
-configs skipped: 1
+configs skipped: 74
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
