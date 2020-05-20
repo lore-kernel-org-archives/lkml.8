@@ -2,175 +2,121 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A42C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806E8207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZNC1J5y"
+	by mail.kernel.org (Postfix) with ESMTP id 76FCC207FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589970863;
+	bh=XVubJRlPT96GrrZ5jDHQabf+HzfcQ2yoNEQJ9gYa29U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NuPEfgKfnK6Y8/VN0CpIHNZfhYxICkmKgqFjxBgJ3aMCafCDmbw6X50vZf64dbGpI
+	 9qCPYcwIXaS8cUwX1dLsbF6UUS9n1ojBmdjiGOhhExxc6cHuNDz1tNJ9XNyL1TgBxH
+	 hUWEfSYPqMI2wufl+YwDdPnsPcQW1C/cy/gS6Cbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgETKeU (ORCPT
+        id S1726436AbgETKeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:34:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgETKeT (ORCPT
+        Wed, 20 May 2020 06:34:23 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39913 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgETKeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:34:19 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34577C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:34:18 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f134so2073350wmf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wHwuK554VhbEDUoapI14azPz8Hgjvi50lBlxsWiVKX8=;
-        b=dZNC1J5ypymn1jU6Byg8EPaBtx0iN/1DIHceCLtkm5ZN62pZaAM6qLFo69H93K051w
-         nEFHjWsNPV4ljKXRdpDRbIC2GxHPUuneGdFOqCabJABeFbEy0qZNxTyUZWuFZXtPhR99
-         wwdZQtudQd/cHlInsliGMRW2QUx7CzktPvTf+BuhU4jurkcIzEs5qbRiHA8AWZAEjp6C
-         tUBhEENQN3hN8Ob/5r+eI+wuJ+/MghjTgXBB8HkB7aqzL8wuv8QiRuRJ3494heAyIw0a
-         WPD4KXjtaKv/JogXTODnC/Ip+MHz5vriC1ArcAq5dOXkzYPPdHABKpYeRBZMRq57iYHR
-         lgIg==
+        Wed, 20 May 2020 06:34:20 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d7so2048113ote.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:34:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wHwuK554VhbEDUoapI14azPz8Hgjvi50lBlxsWiVKX8=;
-        b=bdKQMs3lx77nAF26iEqnS4aw2YX8w4Y/mAXaNX31DmSHCkCM6Z0Yv4ciiQz9d6Hngl
-         qevdaSjzrPdfwbKHGz3fxXJi9SF5wwEZvube0O2mIle6W2m1JNjxQEDaqsNlahM5ORaV
-         7lpu8JLHfiFMHjuSHxMJPcvGOBPPY52SRISSzoJM3eAs1Oi4PWpU04MUtAL+k9WHdESq
-         z7tDECjlZGfStAkDlWY8d/intLufWBEvfs9RX1KBBbXMwCe2boKZP2UeDRmMkggArnYf
-         8SSszM+nKGlXJLLdbyJtJwRdyJuisneiuCJ/TYsfD56hH4XdLIgTq2Twce4kpoq76iHz
-         ejVg==
-X-Gm-Message-State: AOAM532+7iEnQ7S2p+IFY1B2RLLyAiGW6lmvkLxGrnmJZAri9T32tPNG
-        txIQ7QyxUrQANWw4c7F3gVy6uQ==
-X-Google-Smtp-Source: ABdhPJxo5njsQyNYOEuPCeVVUlNTJmBhexBhhghXeVryIeeckAHJiBoMUenYHQrPUA509KHduFahjg==
-X-Received: by 2002:a7b:ce08:: with SMTP id m8mr3869535wmc.97.1589970856782;
-        Wed, 20 May 2020 03:34:16 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id f8sm2314536wrm.8.2020.05.20.03.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 03:34:16 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:34:14 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-next@vger.kernel.org, sumit.garg@linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH] kgdboc: Disable all the early code when kgdboc is a
- module
-Message-ID: <20200520103414.bejflo3s4exrcyzk@holly.lan>
-References: <20200519084345.1.I91670accc8a5ddabab227eb63bb4ad3e2e9d2b58@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C9NRsCAHn82ubkftxUZ5kSJRCBH4nCc/jtP3ymsxx+c=;
+        b=FIIPxPPapDKTzAxu7UM0kIPF6vAts2ED9GSTZXHzgz6aJd3NdiuR9UFiMWipkFgUq+
+         pOi2dyR8Y/nkZ8bWcwWXHmfe3ZTgmdX0JtHNwfvNJYStxYfyI8DasW7z200jWo32MDt2
+         iy1NJYm+85F4t9jFji35kcqcHpragugG26HWd4sLVgpsmSuWqKJT8FTC5I2S9ukRk1Oy
+         Rl5ZQiBl56WSNs+UbAv7mMcvyV10PXuIOHWJOh/lCnLVu87L4XJ8WvIDfe2bXq2u/pMM
+         J4EKbaWWmXdbbfiIUb3nLhbohwusWIQoeJO1p3hXxKQYcAIs+N/b3uxlD9sdOgjiwGwz
+         0Bnw==
+X-Gm-Message-State: AOAM5312bxwdmdwQk5lF9tNLcBTb5th5eB7CZk5/KnROFAGvNsQtWBvr
+        +WdqcGESVDN0EUoY1lZ5/BhHWUeW0b9rC+eV7So=
+X-Google-Smtp-Source: ABdhPJxlgZArAm2RiUC1pmsRfzqwCNnAnn7Yu1P7DFwtZeQw7Ci04BDpbLAo0GnI06KfIHdKb6TZVpWlDqcNCgonvmg=
+X-Received: by 2002:a9d:6c0f:: with SMTP id f15mr1016333otq.118.1589970857339;
+ Wed, 20 May 2020 03:34:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519084345.1.I91670accc8a5ddabab227eb63bb4ad3e2e9d2b58@changeid>
+References: <20200520102959.34812-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200520102959.34812-1-andriy.shevchenko@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 May 2020 12:34:06 +0200
+Message-ID: <CAJZ5v0heg9w=k1yqkECNo9XLP2hZny_WJQv4EJq_Wh0dVT137g@mail.gmail.com>
+Subject: Re: [PATCH v1] drivers property: When no children in primary, try secondary
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:44:02AM -0700, Douglas Anderson wrote:
-> When kgdboc is compiled as a module all of the "ekgdboc" and
-> "kgdb_earlycon" code isn't useful and, in fact, breaks compilation.
-> This is because early_param() isn't defined for modules and that's how
-> this code gets configured.
-> 
-> It turns out that this was broken by commit eae3e19ca930 ("kgdboc:
-> Remove useless #ifdef CONFIG_KGDB_SERIAL_CONSOLE in kgdboc") and then
-> made worse by commit 220995622da5 ("kgdboc: Add kgdboc_earlycon to
-> support early kgdb using boot consoles").  I guess the #ifdef wasn't
-> so useless, even if it wasn't obvious why it was useful.  When kgdboc
-> was compiled as a module only "CONFIG_KGDB_SERIAL_CONSOLE_MODULE" was
-> defined, not "CONFIG_KGDB_SERIAL_CONSOLE".  That meant that the old
-> module.
-> 
-> Let's basically do the same thing that the old code (pre-removal of
-> the #ifdef) did but use "IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)" to
-> make it more obvious what the point of the check is.  We'll fix
-> kgdboc_earlycon in a similar way.
-> 
-> Fixes: 220995622da5 ("kgdboc: Add kgdboc_earlycon to support early kgdb using boot consoles")
-> Fixes: eae3e19ca930 ("kgdboc: Remove useless #ifdef CONFIG_KGDB_SERIAL_CONSOLE in kgdboc")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Wed, May 20, 2020 at 12:30 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Software firmware nodes can provide a child node to its parent.
+> Since software node can be secondary, we need a mechanism to access
+> the children. The idea is to list children of the primary node first
+> and when they are finished, continue with secondary node if available.
 
-Applied, thanks!
+Makes sense.
 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Daniel.
+Greg, do you want me to apply it?
 
+If you'd rather take it yourself, please feel free to add
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
 > ---
-> 
->  drivers/tty/serial/kgdboc.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> index 34b5e91dd245..fa6f7a3e73b9 100644
-> --- a/drivers/tty/serial/kgdboc.c
-> +++ b/drivers/tty/serial/kgdboc.c
-> @@ -43,9 +43,11 @@ static int			kgdb_tty_line;
->  
->  static struct platform_device *kgdboc_pdev;
->  
-> +#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
->  static struct kgdb_io		kgdboc_earlycon_io_ops;
->  static struct console		*earlycon;
->  static int                      (*earlycon_orig_exit)(struct console *con);
-> +#endif /* IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
->  
->  #ifdef CONFIG_KDB_KEYBOARD
->  static int kgdboc_reset_connect(struct input_handler *handler,
-> @@ -140,10 +142,19 @@ static void kgdboc_unregister_kbd(void)
->  #define kgdboc_restore_input()
->  #endif /* ! CONFIG_KDB_KEYBOARD */
->  
-> -static void cleanup_kgdboc(void)
-> +#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
-> +static void cleanup_earlycon(void)
+>  drivers/base/property.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 5f35c0ccf5e0..1e6d75e65938 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -708,14 +708,23 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+>                                                  struct fwnode_handle *child)
 >  {
->  	if (earlycon)
->  		kgdb_unregister_io_module(&kgdboc_earlycon_io_ops);
-> +}
-> +#else /* !IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
-> +static inline void cleanup_earlycon(void) { }
-> +#endif /* !IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
+>         struct acpi_device *adev = ACPI_COMPANION(dev);
+> -       struct fwnode_handle *fwnode = NULL;
+> +       struct fwnode_handle *fwnode = NULL, *next;
+>
+>         if (dev->of_node)
+>                 fwnode = &dev->of_node->fwnode;
+>         else if (adev)
+>                 fwnode = acpi_fwnode_handle(adev);
+>
+> -       return fwnode_get_next_child_node(fwnode, child);
+> +       /* Try to find a child in primary fwnode */
+> +       next = fwnode_get_next_child_node(fwnode, child);
+> +       if (next)
+> +               return next;
 > +
-> +static void cleanup_kgdboc(void)
-> +{
-> +	cleanup_earlycon();
->  
->  	if (configured != 1)
->  		return;
-> @@ -388,6 +399,7 @@ static struct kgdb_io kgdboc_io_ops = {
->  	.post_exception		= kgdboc_post_exp_handler,
->  };
->  
-> +#if IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE)
->  static int kgdboc_option_setup(char *opt)
->  {
->  	if (!opt) {
-> @@ -544,6 +556,7 @@ static int __init kgdboc_earlycon_init(char *opt)
+> +       /* When no more children in primary, continue with secondary */
+> +       if (!IS_ERR_OR_NULL(fwnode->secondary))
+> +               next = fwnode_get_next_child_node(fwnode->secondary, child);
+> +
+> +       return next;
 >  }
->  
->  early_param("kgdboc_earlycon", kgdboc_earlycon_init);
-> +#endif /* IS_BUILTIN(CONFIG_KGDB_SERIAL_CONSOLE) */
->  
->  module_init(init_kgdboc);
->  module_exit(exit_kgdboc);
-> -- 
-> 2.26.2.761.g0e0b3e54be-goog
-> 
+>  EXPORT_SYMBOL_GPL(device_get_next_child_node);
+>
+> --
+> 2.26.2
+>
