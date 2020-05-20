@@ -2,137 +2,115 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B824207F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:00:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwL7kSM3"
+	by mail.kernel.org (Postfix) with ESMTP id 4C399204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgETSAE (ORCPT
+        id S1726844AbgETSAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:00:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgETSAC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:00:02 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F85C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:00:02 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c11so2698937ljn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:00:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mtpCTLjeaytdekB4adxVz/e/JZwQHur4soi/tkekgkg=;
-        b=RwL7kSM3fz9MR6t5Ar2hYTR0dC+a68qyUw6+z9033WeXCAUoxY8PEL7x2rcKx9bIWT
-         l6A08Wjxs5sPfZMw5X09MFSUjE1qHLWgyYHW8VFFkTznN60/pkdMAWpnger7o85A8dVP
-         qTXxWNl+c9c6DyvNDvC0ebMsh3xbuJUKuQ8Rz44tF4eOqCus/XLjH8vxAcgNxnvE6ECD
-         vDEUVjfrmmgeklu12ukdEkM3ps7/O48UUdbhbzh08v+evhakhTrUIyOdzD4cM7odKyc2
-         jWOem0ysPrATgUJg9nMtB+WUY+Ngyots1DIicBIYLP8IlhqZc/3YjYx7aeu0g0fnDMxE
-         4bOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mtpCTLjeaytdekB4adxVz/e/JZwQHur4soi/tkekgkg=;
-        b=ZwYBrbt5y2QW7OZQ0sSDWreyJAkakldUebDBuWMymljR3omQYZ5/CWzrtkD593POh3
-         /oI3mIPS4T8x+eiVFWuo3ouSO3acn8OADDdsb9AYnGnGaRfA7b8hXoP5OrMzpjhpelL9
-         WeWf68dYWEMiqMKoycuoyXC8ccKF1UldSVVOG8otXwJei1ZfxLZ/H/I2NvN0oXITJwBg
-         0n7kumzHA79WFPTj8/QuKtiomk/QCyIuAxgP33rFHAlDC9F2Knrwvqaq94cGjewXLvw6
-         w6Qs8BBYw8polzmx+HN/utcDn44efjDlB62LOml7pUL7B3wvkTuTxrecOuX2F+mNQ924
-         4z7A==
-X-Gm-Message-State: AOAM531PoJuDHu5UEzQ3pIHPT+qZ540Bf0BaPFjsuuIgTnizDVDauSb5
-        /se1XkwbBdgNj9ACi3Fvru7rdRo51T97Vo43d8KCIQ==
-X-Google-Smtp-Source: ABdhPJxMVT2aazzajf86PZFdGt2E7whHDnP+nICKDm4NC6feIw0z4SprtT2do+git6kUcT4Xo3qaJQi4N/SBczqLtpU=
-X-Received: by 2002:a2e:3012:: with SMTP id w18mr3286415ljw.55.1589997600706;
- Wed, 20 May 2020 11:00:00 -0700 (PDT)
+        Wed, 20 May 2020 14:00:31 -0400
+Received: from v6.sk ([167.172.42.174]:33032 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726560AbgETSAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 14:00:31 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 89076610B3;
+        Wed, 20 May 2020 18:00:29 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [RESEND PATCH] media: marvell-ccic: Add support for runtime PM
+Date:   Wed, 20 May 2020 20:00:22 +0200
+Message-Id: <20200520180022.2130777-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
- <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
- <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
- <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
-In-Reply-To: <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 20 May 2020 23:29:49 +0530
-Message-ID: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-To:     Chris Down <chris@chrisdown.name>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Cc:     "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 at 17:26, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
->
-> This issue is specific on 32-bit architectures i386 and arm on linux-next tree.
-> As per the test results history this problem started happening from
-> Bad : next-20200430
-> Good : next-20200429
->
-> steps to reproduce:
-> dd if=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190504A00573
-> of=/dev/null bs=1M count=2048
-> or
-> mkfs -t ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190804A00BE5
->
->
-> Problem:
-> [   38.802375] dd invoked oom-killer: gfp_mask=0x100cc0(GFP_USER),
-> order=0, oom_score_adj=0
+On MMP3, the camera block lives on na separate power island. We want to
+turn it off if the CCIC is not in use to conserve power.
 
-As a part of investigation on this issue LKFT teammate Anders Roxell
-git bisected the problem and found bad commit(s) which caused this problem.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/media/platform/marvell-ccic/mcam-core.c  |  3 +++
+ drivers/media/platform/marvell-ccic/mmp-driver.c | 12 ++++++++----
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-The following two patches have been reverted on next-20200519 and retested the
-reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
-( invoked oom-killer is gone now)
-
-Revert "mm, memcg: avoid stale protection values when cgroup is above
-protection"
-    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
-
-Revert "mm, memcg: decouple e{low,min} state mutations from protection
-checks"
-    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
-
-i386 test log shows mkfs -t ext4 pass
-https://lkft.validation.linaro.org/scheduler/job/1443405#L1200
-
-ref:
-https://lore.kernel.org/linux-mm/cover.1588092152.git.chris@chrisdown.name/
-https://lore.kernel.org/linux-mm/CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com/T/#t
-
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
+index 09775b6624c6..c2cd1d461bd0 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -24,6 +24,7 @@
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
+ #include <linux/videodev2.h>
++#include <linux/pm_runtime.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+ #include <media/v4l2-ctrls.h>
+@@ -901,6 +902,7 @@ static void mcam_clk_enable(struct mcam_camera *mcam)
+ {
+ 	unsigned int i;
+ 
++	pm_runtime_get_sync(mcam->dev);
+ 	for (i = 0; i < NR_MCAM_CLK; i++) {
+ 		if (!IS_ERR(mcam->clk[i]))
+ 			clk_prepare_enable(mcam->clk[i]);
+@@ -915,6 +917,7 @@ static void mcam_clk_disable(struct mcam_camera *mcam)
+ 		if (!IS_ERR(mcam->clk[i]))
+ 			clk_disable_unprepare(mcam->clk[i]);
+ 	}
++	pm_runtime_put(mcam->dev);
+ }
+ 
+ /* ---------------------------------------------------------------------- */
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
+index 92b92255dac6..eec482d16805 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -24,6 +24,7 @@
+ #include <linux/list.h>
+ #include <linux/pm.h>
+ #include <linux/clk.h>
++#include <linux/pm_runtime.h>
+ 
+ #include "mcam-core.h"
+ 
+@@ -313,10 +314,12 @@ static int mmpcam_probe(struct platform_device *pdev)
+ 	cam->irq = res->start;
+ 	ret = devm_request_irq(&pdev->dev, cam->irq, mmpcam_irq, IRQF_SHARED,
+ 					"mmp-camera", mcam);
+-	if (ret == 0) {
+-		mmpcam_add_device(cam);
+-		return 0;
+-	}
++	if (ret)
++		goto out;
++
++	mmpcam_add_device(cam);
++	pm_runtime_enable(&pdev->dev);
++	return 0;
+ 
+ out:
+ 	fwnode_handle_put(mcam->asd.match.fwnode);
+@@ -332,6 +335,7 @@ static int mmpcam_remove(struct mmp_camera *cam)
+ 
+ 	mmpcam_remove_device(cam);
+ 	mccic_shutdown(mcam);
++	pm_runtime_force_suspend(mcam->dev);
+ 	return 0;
+ }
+ 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+2.26.2
+
