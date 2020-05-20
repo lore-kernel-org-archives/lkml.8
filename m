@@ -2,210 +2,306 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E784A207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:37:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="I+Q6F55H"
+	by mail.kernel.org (Postfix) with ESMTP id 41044207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgETOhR (ORCPT
+        id S1726868AbgETOhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgETOhP (ORCPT
+        Wed, 20 May 2020 10:37:46 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:34825 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbgETOhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:37:15 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C37C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:37:14 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id s21so4123394ejd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 07:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=k9a4yj0MuIquiuHcgLAuITw21En7MJN+VIITP5CpbD4=;
-        b=I+Q6F55Hv3hJbZ274sPb2I5KbpzXe2i29v/p+ck+988HySt5+6rJ3ADVXWWXkkAi0Y
-         7IC/Lfq0M9titHf/akcKXX3zsJ/TKYVDJVT196lf10ijRoYQN7cnGSWWvkfIXnXVVfAj
-         LDzPef6T7ZoMTtBUVPREtCsYhez7+WUwBHlcc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=k9a4yj0MuIquiuHcgLAuITw21En7MJN+VIITP5CpbD4=;
-        b=Mcnb0+PRdORj9yoGyW4M57Bj7N3ZjeMq07b82TYsJ1x20elvmg3TvXm9Kqj666E1cf
-         B8a4Cjorz2BNbOo8/tRUL451efMx9FooWnGRjzUgDY0Wy8CUg/wKET/45j0yxi6W7sp4
-         wld3ZI5ULKgcCaVxyR2KWlzrQwzmuJP7gF4WuelS/MgHGrer2Qaxvjt1dATj8Mbhkgwj
-         cpO8AbEE0br5RwsTCOEiIv0GlxF4ZYBeRAR4yxrdecBTmz4WOX6GaujVJodGqfHJP2Y8
-         6w73dd1Bia7rv1W+E0jK0L7nQD1F/d4TtKEXUMf2LovpuiCI6BSkKlK1r7jgZO9iR63x
-         ESXg==
-X-Gm-Message-State: AOAM532sLIRv/4Uod0SIYOtrHLKBNGEQ8uMwy7/zbNhtzu3N++Dgnjy1
-        wYhQtLC29yu0hJkEIDwKM5P1lQ==
-X-Google-Smtp-Source: ABdhPJzxIHGgH9nM6vQEvQqzcIrfRNGFqaqKcb9nqpgf8jN7KzaQ9t8o4DHx4z91ww3+I5uqZxSYGw==
-X-Received: by 2002:a17:906:f103:: with SMTP id gv3mr3868508ejb.226.1589985432937;
-        Wed, 20 May 2020 07:37:12 -0700 (PDT)
-Received: from localhost ([2620:10d:c093:400::5:758d])
-        by smtp.gmail.com with ESMTPSA id s20sm2060359eju.96.2020.05.20.07.37.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 07:37:12 -0700 (PDT)
-Date:   Wed, 20 May 2020 15:37:12 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] mm, memcg: reclaim more aggressively before high allocator
- throttling
-Message-ID: <20200520143712.GA749486@chrisdown.name>
+        Wed, 20 May 2020 10:37:45 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mhl0I-1j6lvS0nBY-00doud; Wed, 20 May 2020 16:37:42 +0200
+Received: by mail-qt1-f175.google.com with SMTP id n22so2640801qtv.12;
+        Wed, 20 May 2020 07:37:41 -0700 (PDT)
+X-Gm-Message-State: AOAM531uXSCF78PVPq9UExAuHUv8Mk23hiM5oqWUWToa3N7DfEFZ1R8Z
+        aREj99XumdzQc7R/nviF3kylWglIgu4fGq9ES+s=
+X-Google-Smtp-Source: ABdhPJwK69DLGTQm1ew09Tx3ieAV4bUG76cvGX5A2V+WrnHBW769WJQTOfdTdgV3HOoosoX6NyQXG6Qlso/22NfuIt0=
+X-Received: by 2002:ac8:691:: with SMTP id f17mr5450469qth.204.1589985460744;
+ Wed, 20 May 2020 07:37:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200520112523.30995-1-brgl@bgdev.pl> <20200520112523.30995-7-brgl@bgdev.pl>
+In-Reply-To: <20200520112523.30995-7-brgl@bgdev.pl>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 May 2020 16:37:23 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com>
+Message-ID: <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com>
+Subject: Re: [PATCH v4 06/11] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:QqMtx8CuXcHGDbqgkNMgVzQpNveXp+z3WKw9tvOq+6H81dNXXlT
+ D3GZJkD1wmXb9l6V7H0ms2jNbFYQHR8BeKc+BQSzr/NhFeDPKeb1j/gutGx0tOgnuheI+tL
+ IbeIaS0YB7f3JzyyjQdblfPSZgirB5PZu1rdtpziZmYSSowc5KlsRWDtJQ5f/dfbgS5A1OM
+ 2S2ghs93t6V2jtPD9vpmA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n16Z+a7OFkU=:x8ZHYakDBeSIU678yksPkO
+ kowJL4wOE3MbiXf/U1P28ueSsRhqQSMEp66LbpRWQojjyoLmEYLwR5qeWfaWwBuHq6wMnfpGe
+ VTlUUtLplDjG92ykFpP/5tv84KuYBIP5zjpXpiSMKXD9qmOSo8uVFES87ErNQIB4ogXMsX/TS
+ TJLA6O8S8qhkg8Jkq2lPLA0ylo9HLEJBf3uBmOzAQe72KagjtEZRNroveDKdm058PJ+lPGDxf
+ TRaJp54/9u7iMT0gsGEXjeHxXj622NAy4P5ATgAYWvoILEMZJWkmiZJMBbk4YIWADsWc26OfM
+ w/vtpRxkCNKB66JLzcSohlc9R8Bn1zp4NOmXLkH/PEMh3g8qEuXbiHxAsvf8pxY+CdrP1gh59
+ /odUwbcDs1RtyXzGIB1iq8Ammuq2XFt9ooU+PXLNrw6PkXAKFf98b1XUmOrYeNCUjOYRbWiRp
+ H+4yVhbecFwdkc53IPxpdL5oz0qochRxBJ5B0fpLYVLF9B1KfyOHbr9XWO6wSGv9oref3TXM6
+ Sqc4ukFicMhKt2YHxA3zakyHafr32+0iB9a9MNHUNQewLXMQSI0gbTqXUumHySBG6HzURhCLN
+ ohIY1u9rFMequCwHE9TuvB4P6DCcOmFiRdek8L/9pZYc7Ijfx2ocbJV2a8kwOA+Y66iDnOCcH
+ emPr7PYAA1xuj63uVhYsQkIPuhaKe06NPXBAn1WhCxBIkNgBLcxGsj6sEqH3ZkF19tqsvi4YK
+ N0Ex+FSYJLiahXSAY4C4ooEMm7bMeA/Ok46EdheW8dXtWrOk/ajqpiVAfg3joGG3ShLjPilG5
+ xB3r5BvdriI4mRhSHADf/MhBn7/lLPIkBjaAlMr3XeXFVPLIg4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Facebook production, we've seen cases where cgroups have been put
-into allocator throttling even when they appear to have a lot of slack
-file caches which should be trivially reclaimable.
+On Wed, May 20, 2020 at 1:25 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
+> family. For now we only support full-duplex.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Looking more closely, the problem is that we only try a single cgroup
-reclaim walk for each return to usermode before calculating whether or
-not we should throttle. This single attempt doesn't produce enough
-pressure to shrink for cgroups with a rapidly growing amount of file
-caches prior to entering allocator throttling.
+Looks much better, thanks for addressing my feedback. A few more things
+about this version:
 
-As an example, we see that threads in an affected cgroup are stuck in
-allocator throttling:
+> ---
+>  drivers/net/ethernet/mediatek/Kconfig       |    6 +
+>  drivers/net/ethernet/mediatek/Makefile      |    1 +
+>  drivers/net/ethernet/mediatek/mtk_eth_mac.c | 1668 +++++++++++++++++++
+>  3 files changed, 1675 insertions(+)
+>  create mode 100644 drivers/net/ethernet/mediatek/mtk_eth_mac.c
+>
+> diff --git a/drivers/net/ethernet/mediatek/Kconfig b/drivers/net/ethernet/mediatek/Kconfig
+> index 5079b8090f16..5c3793076765 100644
+> --- a/drivers/net/ethernet/mediatek/Kconfig
+> +++ b/drivers/net/ethernet/mediatek/Kconfig
+> @@ -14,4 +14,10 @@ config NET_MEDIATEK_SOC
+>           This driver supports the gigabit ethernet MACs in the
+>           MediaTek SoC family.
+>
+> +config NET_MEDIATEK_MAC
+> +       tristate "MediaTek Ethernet MAC support"
+> +       select PHYLIB
+> +       help
+> +         This driver supports the ethernet IP on MediaTek MT85** SoCs.
 
-    # for i in $(cat cgroup.threads); do
-    >     grep over_high "/proc/$i/stack"
-    > done
-    [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-    [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-    [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+I just noticed how the naming of NET_MEDIATEK_MAC and NET_MEDIATEK_SOC
+for two different drivers doing the same thing is really confusing.
 
-...however, there is no I/O pressure reported by PSI, despite a lot of
-slack file pages:
+Maybe someone can come up with a better name, such as one
+based on the soc it first showed up in.
 
-    # cat memory.pressure
-    some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
-    full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
-    # cat io.pressure
-    some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
-    full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
-    # grep _file memory.stat
-    inactive_file 1370939392
-    active_file 661635072
+> +       struct mtk_mac_ring_desc *desc = &ring->descs[ring->head];
+> +       unsigned int status;
+> +
+> +       status = desc->status;
+> +
+> +       ring->skbs[ring->head] = desc_data->skb;
+> +       ring->dma_addrs[ring->head] = desc_data->dma_addr;
+> +       desc->data_ptr = desc_data->dma_addr;
+> +
+> +       status |= desc_data->len;
+> +       if (flags)
+> +               status |= flags;
+> +       desc->status = status;
+> +
+> +       /* Flush previous modifications before ownership change. */
+> +       dma_wmb();
+> +       desc->status &= ~MTK_MAC_DESC_BIT_COWN;
 
-This patch changes the behaviour to retry reclaim either until the
-current task goes below the 10ms grace period, or we are making no
-reclaim progress at all. In the latter case, we enter reclaim throttling
-as before.
+You still do the read-modify-write on the word here, which is
+expensive on uncached memory. You have read the value already,
+so better use an assignment rather than &=, or (better)
+READ_ONCE() and WRITE_ONCE() to prevent the compiler
+from adding further accesses.
 
-To a user, there's no intuitive reason for the reclaim behaviour to
-differ from hitting memory.high as part of a new allocation, as opposed
-to hitting memory.high because someone lowered its value. As such this
-also brings an added benefit: it unifies the reclaim behaviour between
-the two.
 
-There's precedent for this behaviour: we already do reclaim retries when
-writing to memory.{high,max}, in max reclaim, and in the page allocator
-itself.
+> +static void mtk_mac_lock(struct mtk_mac_priv *priv)
+> +{
+> +       spin_lock_bh(&priv->lock);
+> +}
+> +
+> +static void mtk_mac_unlock(struct mtk_mac_priv *priv)
+> +{
+> +       spin_unlock_bh(&priv->lock);
+> +}
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Michal Hocko <mhocko@kernel.org>
----
- mm/memcontrol.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+I think open-coding the locks would make this more readable,
+and let you use spin_lock() instead of spin_lock_bh() in
+those functions that are already in softirq context.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 2df9510b7d64..b040951ccd6b 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -73,6 +73,7 @@ EXPORT_SYMBOL(memory_cgrp_subsys);
- 
- struct mem_cgroup *root_mem_cgroup __read_mostly;
- 
-+/* The number of times we should retry reclaim failures before giving up. */
- #define MEM_CGROUP_RECLAIM_RETRIES	5
- 
- /* Socket memory accounting disabled? */
-@@ -2228,17 +2229,22 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
- 	return 0;
- }
- 
--static void reclaim_high(struct mem_cgroup *memcg,
--			 unsigned int nr_pages,
--			 gfp_t gfp_mask)
-+static unsigned long reclaim_high(struct mem_cgroup *memcg,
-+				  unsigned int nr_pages,
-+				  gfp_t gfp_mask)
- {
-+	unsigned long nr_reclaimed = 0;
-+
- 	do {
- 		if (page_counter_read(&memcg->memory) <= READ_ONCE(memcg->high))
- 			continue;
- 		memcg_memory_event(memcg, MEMCG_HIGH);
--		try_to_free_mem_cgroup_pages(memcg, nr_pages, gfp_mask, true);
-+		nr_reclaimed += try_to_free_mem_cgroup_pages(memcg, nr_pages,
-+							     gfp_mask, true);
- 	} while ((memcg = parent_mem_cgroup(memcg)) &&
- 		 !mem_cgroup_is_root(memcg));
-+
-+	return nr_reclaimed;
- }
- 
- static void high_work_func(struct work_struct *work)
-@@ -2378,16 +2384,20 @@ void mem_cgroup_handle_over_high(void)
- {
- 	unsigned long penalty_jiffies;
- 	unsigned long pflags;
-+	unsigned long nr_reclaimed;
- 	unsigned int nr_pages = current->memcg_nr_pages_over_high;
-+	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
- 	struct mem_cgroup *memcg;
- 
- 	if (likely(!nr_pages))
- 		return;
- 
- 	memcg = get_mem_cgroup_from_mm(current->mm);
--	reclaim_high(memcg, nr_pages, GFP_KERNEL);
- 	current->memcg_nr_pages_over_high = 0;
- 
-+retry_reclaim:
-+	nr_reclaimed = reclaim_high(memcg, nr_pages, GFP_KERNEL);
-+
- 	/*
- 	 * memory.high is breached and reclaim is unable to keep up. Throttle
- 	 * allocators proactively to slow down excessive growth.
-@@ -2403,6 +2413,14 @@ void mem_cgroup_handle_over_high(void)
- 	if (penalty_jiffies <= HZ / 100)
- 		goto out;
- 
-+	/*
-+	 * If reclaim is making forward progress but we're still over
-+	 * memory.high, we want to encourage that rather than doing allocator
-+	 * throttling.
-+	 */
-+	if (nr_reclaimed || nr_retries--)
-+		goto retry_reclaim;
-+
- 	/*
- 	 * If we exit early, we're guaranteed to die (since
- 	 * schedule_timeout_killable sets TASK_KILLABLE). This means we don't
--- 
-2.26.2
+> +static void mtk_mac_intr_enable_tx(struct mtk_mac_priv *priv)
+> +{
+> +       regmap_update_bits(priv->regs, MTK_MAC_REG_INT_MASK,
+> +                          MTK_MAC_BIT_INT_STS_TNTC, 0);
+> +}
+> +static void mtk_mac_intr_enable_rx(struct mtk_mac_priv *priv)
+> +{
+> +       regmap_update_bits(priv->regs, MTK_MAC_REG_INT_MASK,
+> +                          MTK_MAC_BIT_INT_STS_FNRC, 0);
+> +}
 
+These imply reading the irq mask register and then writing it again,
+which is much more expensive than just writing it. It's also not
+atomic since the regmap does not use a lock.
+
+I don't think you actually need to enable/disable rx and tx separately,
+but if you do, then writing to the Ack register as I suggested instead
+of updating the mask would let you do this.
+
+> +/* All processing for TX and RX happens in the napi poll callback. */
+> +static irqreturn_t mtk_mac_handle_irq(int irq, void *data)
+> +{
+> +       struct mtk_mac_priv *priv;
+> +       struct net_device *ndev;
+> +       bool need_napi = false;
+> +       unsigned int status;
+> +
+> +       ndev = data;
+> +       priv = netdev_priv(ndev);
+> +
+> +       if (netif_running(ndev)) {
+> +               status = mtk_mac_intr_read(priv);
+> +
+> +               if (status & MTK_MAC_BIT_INT_STS_TNTC) {
+> +                       mtk_mac_intr_disable_tx(priv);
+> +                       need_napi = true;
+> +               }
+> +
+> +               if (status & MTK_MAC_BIT_INT_STS_FNRC) {
+> +                       mtk_mac_intr_disable_rx(priv);
+> +                       need_napi = true;
+> +               }
+
+I think you mixed up the rx and tx bits here: when you get
+an rx interrupt, that one is already blocked until it gets
+acked and you just need to disable tx until the end of the
+poll function.
+
+However, I suspect that the overhead of turning them off
+is higher than what  you can save, and simply ignoring
+the mask with
+
+if (status & (MTK_MAC_BIT_INT_STS_FNRC | MTK_MAC_BIT_INT_STS_TNTC))
+        napi_schedule(&priv->napi);
+
+would be simpler and faster.
+
+ +               /* One of the counters reached 0x8000000 - update stats and
+> +                * reset all counters.
+> +                */
+> +               if (unlikely(status & MTK_MAC_REG_INT_STS_MIB_CNT_TH)) {
+> +                       mtk_mac_intr_disable_stats(priv);
+> +                       schedule_work(&priv->stats_work);
+> +               }
+> + befor
+> +               mtk_mac_intr_ack_all(priv);
+
+The ack here needs to be dropped, otherwise you can get further
+interrupts before the bottom half has had a chance to run.
+
+You might be lucky because you had already disabled the individual
+bits earlier, but I don't think that was intentional here.
+
+> +static int mtk_mac_netdev_start_xmit(struct sk_buff *skb,
+> +                                    struct net_device *ndev)
+> +{
+> +       struct mtk_mac_priv *priv = netdev_priv(ndev);
+> +       struct mtk_mac_ring *ring = &priv->tx_ring;
+> +       struct device *dev = mtk_mac_get_dev(priv);
+> +       struct mtk_mac_ring_desc_data desc_data;
+> +
+> +       desc_data.dma_addr = mtk_mac_dma_map_tx(priv, skb);
+> +       if (dma_mapping_error(dev, desc_data.dma_addr))
+> +               goto err_drop_packet;
+> +
+> +       desc_data.skb = skb;
+> +       desc_data.len = skb->len;
+> +
+> +       mtk_mac_lock(priv);
+> +
+> +       mtk_mac_ring_push_head_tx(ring, &desc_data);
+> +
+> +       netdev_sent_queue(ndev, skb->len);
+> +
+> +       if (mtk_mac_ring_full(ring))
+> +               netif_stop_queue(ndev);
+> +
+> +       mtk_mac_unlock(priv);
+> +
+> +       mtk_mac_dma_resume_tx(priv);
+
+mtk_mac_dma_resume_tx() is an expensive read-modify-write
+on an mmio register, so it would make sense to defer it based
+on netdev_xmit_more(). (I had missed this in the previous
+review)
+
+> +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
+> +{
+> +       struct mtk_mac_ring *ring = &priv->tx_ring;
+> +       struct net_device *ndev = priv->ndev;
+> +       int ret, pkts_compl, bytes_compl;
+> +       bool wake = false;
+> +
+> +       mtk_mac_lock(priv);
+> +
+> +       for (pkts_compl = 0, bytes_compl = 0;;
+> +            pkts_compl++, bytes_compl += ret, wake = true) {
+> +               if (!mtk_mac_ring_descs_available(ring))
+> +                       break;
+> +
+> +               ret = mtk_mac_tx_complete_one(priv);
+> +               if (ret < 0)
+> +                       break;
+> +       }
+> +
+> +       netdev_completed_queue(ndev, pkts_compl, bytes_compl);
+> +
+> +       if (wake && netif_queue_stopped(ndev))
+> +               netif_wake_queue(ndev);
+> +
+> +       mtk_mac_intr_enable_tx(priv);
+
+No need to ack the interrupt here if napi is still active. Just
+ack both rx and tx when calling napi_complete().
+
+Some drivers actually use the napi budget for both rx and tx:
+if you have more than 'budget' completed tx frames, return
+early from this function and skip the napi_complete even
+when less than 'budget' rx frames have arrived.
+
+This way you get more fairness between devices and
+can run for longer with irqs disabled as long as either rx
+or tx is busy.
+
+         Arnd
