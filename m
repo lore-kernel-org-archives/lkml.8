@@ -2,209 +2,105 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC18C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301AB207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98616207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrTf9ZEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgETTxe (ORCPT
+        id S1727025AbgETTyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:53:34 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:56064 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgETTxd (ORCPT
+        Wed, 20 May 2020 15:54:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35311 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726805AbgETTys (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:53:33 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1jbUmL-0006t9-QY; Wed, 20 May 2020 15:53:25 -0400
-Message-ID: <438394b419955a430d884a175a6eda0a99ce4d08.camel@surriel.com>
-Subject: Re: XHCI vs PCM2903B/PCM2904 part 2
-From:   Rik van Riel <riel@surriel.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        linux-usb <linux-usb@vger.kernel.org>
-Cc:     alsa-devel@alsa-project.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Date:   Wed, 20 May 2020 15:53:25 -0400
-In-Reply-To: <296d1b03-fbc3-6107-950e-00d38633ea1f@linux.intel.com>
-References: <273cc1c074cc4a4058f31afe487fb233f5cf0351.camel@surriel.com>
-         <296d1b03-fbc3-6107-950e-00d38633ea1f@linux.intel.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MCFKym22daNl+Rfy42MS"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 20 May 2020 15:54:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590004487;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cgN7tmFj25tx6e5PNZ63Ky6t5MTHpxwjxxdlmrg0Pyc=;
+        b=WrTf9ZEz4t8s0utsIE5Bm5yBHBteu1mYAs44YCjwyhR6NYYscqDwHx2icBD3hho3Ip7lpb
+        jNNCifcWZLvR/aCuOtyZBmYqT/Gf+22Gun6CatKRS0nYlCqnRJB2nY40GWAFMwVbSIOAyD
+        szUrTk2xj3fz4QXJ8ulkFOHpQUunDN4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-f6ceAZVSNqGPNn9dNvUk0A-1; Wed, 20 May 2020 15:54:46 -0400
+X-MC-Unique: f6ceAZVSNqGPNn9dNvUk0A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED936100530A;
+        Wed, 20 May 2020 19:54:44 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-91.ams2.redhat.com [10.36.112.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D35941943D;
+        Wed, 20 May 2020 19:54:43 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH 2/8] virt: vbox: Fix guest capabilities mask check
+Date:   Wed, 20 May 2020 21:54:34 +0200
+Message-Id: <20200520195440.38759-2-hdegoede@redhat.com>
+In-Reply-To: <20200520195440.38759-1-hdegoede@redhat.com>
+References: <20200520195440.38759-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Check the passed in capabilities against VMMDEV_GUEST_CAPABILITIES_MASK
+instead of against VMMDEV_EVENT_VALID_EVENT_MASK.
+This tightens the allowed mask from 0x7ff to 0x7.
 
---=-MCFKym22daNl+Rfy42MS
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Fixes: 0ba002bc4393 ("virt: Add vboxguest driver for Virtual Box Guest integration")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/virt/vboxguest/vboxguest_core.c | 2 +-
+ drivers/virt/vboxguest/vmmdev.h         | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-On Wed, 2020-05-20 at 16:50 +0300, Mathias Nyman wrote:
-> On 20.5.2020 14.26, Rik van Riel wrote:
-> > After a few more weeks of digging, I have come to the tentative
-> > conclusion that either the XHCI driver, or the USB sound driver,
-> > or both, fail to handle USB errors correctly.
-> >=20
-> > I have some questions at the bottom, after a (brief-ish)
-> > explanation
-> > of exactly what seems to go wrong.
-> >=20
-> > TL;DR: arecord from a misbehaving device can hang forever
-> > after a USB error, due to poll on /dev/snd/timer never returning.
-> >=20
-> > The details: under some mysterious circumstances, the PCM290x
-> > family sound chips can send more data than expected during an
-> > isochronous transfer, leading to a babble error. Those
-> > circumstances seem to in part depend on the USB host controller
-> > and/or the electrical environment, since the chips work just
-> > fine for most people.
-> >=20
-> > Receiving data past the end of the isochronous transfer window
-> > scheduled for a device results in the XHCI controller throwing
-> > a babble error, which moves the endpoint into halted state.
-> >=20
-> > This is followed by the host controller software sending a
-> > reset endpoint command, and moving the endpoint into stopped
-> > state, as specified on pages 164-165 of the XHCI specification.
->=20
-> Note that isoch endpoints should generate buffer overrun instead of
-> babble detect error on TD babble conditions.=20
-> See xHCI spec 6.4.5 additional note 115.
-
-Maybe it should, but I'm hitting this printk in handle_tx_event:
-
-        case COMP_BABBLE_DETECTED_ERROR:
-                xhci_dbg(xhci, "Babble error for slot %u ep %u on
-endpoint\n",
-                         slot_id, ep_index);
-                status =3D -EOVERFLOW;
-                break;
-
-Tracing in the sound driver suggests that packet belongs to
-the sound data device (not the sync device), because the
-URB with -EOVERFLOW status for the isochronous packet in that
-URB is the last one seen there.
-
-> Or maybe a frame babble could halt an isoc endpoint, see xhci
-> 4.10.2.4.1
-> but then you should see a port error and port going to disabled
-> state.
->=20
-> Any logs of this?
->=20
-> mount -t debugfs none /sys/kernel/debug
-> echo 'module xhci_hcd =3Dp' >/sys/kernel/debug/dynamic_debug/control
-> echo 'module usbcore =3Dp' >/sys/kernel/debug/dynamic_debug/control
-> echo 81920 > /sys/kernel/debug/tracing/buffer_size_kb
-> echo 1 > /sys/kernel/debug/tracing/events/xhci-hcd/enable
-> < trigger the issue >
-> Send output of dmesg
-> Send content of /sys/kernel/debug/tracing/trace
-
-dmesg:=20
-https://drive.google.com/open?id=3D1S2Qc8lroqA5-RMukuLBLWFGx10vEjG-i
-
-usbtrace:=20
-https://drive.google.com/open?id=3D1cbLcOnAtQRW0Chgak6PNC0l4yJv__4uO
-
-> > However, the USB sound driver seems to have no idea that this
-> > error happened. The function retire_capture_urb looks at the
-> > status of each isochronous frame, but seems to be under the
-> > assumption that the sound device just keeps on running.
-> >=20
-> > The function snd_complete_urb seems to only detect that the
-> > device is not running if usb_submit_urb returns a failure.
-> >=20
-> >         err =3D usb_submit_urb(urb, GFP_ATOMIC);
-> >         if (err =3D=3D 0)
-> >                 return;
-> >=20
-> >         usb_audio_err(ep->chip, "cannot submit urb (err =3D %d)\n",
-> > err);
-> >=20
-> >         if (ep->data_subs && ep->data_subs->pcm_substream) {
-> >                 substream =3D ep->data_subs->pcm_substream;
-> >                 snd_pcm_stop_xrun(substream);
-> >         }
-> >=20
-> > However, the XHCI driver will happily submit an URB to a
-> > stopped device. Looking at the call trace usb_submit_urb ->
-> > xhci_urb_enqueue -> xhci_queue_isoc_tx_prepare -> prepare_ring,
-> > you can see this code:
-> >=20
-> >         /* Make sure the endpoint has been added to xHC schedule */
-> >         switch (ep_state) {
-> > ...
-> >         case EP_STATE_HALTED:
-> >                 xhci_dbg(xhci, "WARN halted endpoint, queueing URB
-> > anyway.\n");
-> >         case EP_STATE_STOPPED:
-> >         case EP_STATE_RUNNING:
-> >                 break;
-> >=20
-> > This leads me to a few questions:
-> > - should retire_capture_urb call snd_pcm_stop_xrun,
-> >   or another function like it, if it sees certain
-> >   errors in the iso frame in the URB?
-> > - should snd_complete_urb do something with these
-> >   errors, too, in case they happen on the sync frames
-> >   and not the data frames?
-> > - does the XHCI code need to ring the doorbell when
-> >   submitting an URB to a stopped device, or is it
-> >   always up to the higher-level driver to fully reset
-> >   the device before it can do anything useful?
->=20
-> xhci driver should ring the doorbell.
->=20
-> xhci_queue_isoc_tx()
->   giveback_first_trb()
->     xhci_ring_ep_doorbell()
->=20
-> when we are talking about babble or transaction errors the device
-> might be
-> completely unaware of the situation. Device side of the endpoint is
-> not necessarily halted.
-> xHC host will only halt its internal endpoint state, and it needs a
-> reset
-> endopoint command from the xhci driver to clear the internal halt
-> state.=20
-
-Interesting. I had no idea the endpoint on each side
-was controlled separately.
-
---=20
-All Rights Reversed.
-
---=-MCFKym22daNl+Rfy42MS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl7FirUACgkQznnekoTE
-3oMoKAf/erzL9vjQylVh7pfNIa1O//rcvujkIcOk+hfQlLRawA8DvrGCp1mbYosz
-EbUYMpvccIaXQSIYwRKic2YrSzhL/NFxvu9fk1om0RuMfbdZ1npBuzhl+pOrb6cl
-brPakWTKvcuJotTFtDWJ393okXp2wOR4+OJ62kyIz3suP3pZpXRQQeI+ox4qxDmn
-fK3ghFOsW9f7p3oXjfvtHvcBLTO+mvdmp9EzCAKF8795A74aO3FPkweq28XZOOSM
-QQiaKVE2aXoGJQV2Dg1UtokXSxyLQ6ytertV5PVzJDHcFS5JB/D0Pai56BQr8Sii
-Hsf39gC0j/ZW44Pxe1uWIzsDo5CMEw==
-=Qg0h
------END PGP SIGNATURE-----
-
---=-MCFKym22daNl+Rfy42MS--
+diff --git a/drivers/virt/vboxguest/vboxguest_core.c b/drivers/virt/vboxguest/vboxguest_core.c
+index 8fab04e76c14..18ebd7a6af98 100644
+--- a/drivers/virt/vboxguest/vboxguest_core.c
++++ b/drivers/virt/vboxguest/vboxguest_core.c
+@@ -1444,7 +1444,7 @@ static int vbg_ioctl_change_guest_capabilities(struct vbg_dev *gdev,
+ 	or_mask = caps->u.in.or_mask;
+ 	not_mask = caps->u.in.not_mask;
+ 
+-	if ((or_mask | not_mask) & ~VMMDEV_EVENT_VALID_EVENT_MASK)
++	if ((or_mask | not_mask) & ~VMMDEV_GUEST_CAPABILITIES_MASK)
+ 		return -EINVAL;
+ 
+ 	ret = vbg_set_session_capabilities(gdev, session, or_mask, not_mask,
+diff --git a/drivers/virt/vboxguest/vmmdev.h b/drivers/virt/vboxguest/vmmdev.h
+index 6337b8d75d96..21f408120e3f 100644
+--- a/drivers/virt/vboxguest/vmmdev.h
++++ b/drivers/virt/vboxguest/vmmdev.h
+@@ -206,6 +206,8 @@ VMMDEV_ASSERT_SIZE(vmmdev_mask, 24 + 8);
+  * not.
+  */
+ #define VMMDEV_GUEST_SUPPORTS_GRAPHICS                      BIT(2)
++/* The mask of valid capabilities, for sanity checking. */
++#define VMMDEV_GUEST_CAPABILITIES_MASK                      0x00000007U
+ 
+ /** struct vmmdev_hypervisorinfo - Hypervisor info structure. */
+ struct vmmdev_hypervisorinfo {
+-- 
+2.26.2
 
