@@ -2,135 +2,113 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3267CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD80206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A86206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iHbcc8RX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Enb7s1ty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgETTGw (ORCPT
+        id S1726827AbgETTHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:06:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25210 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726510AbgETTGw (ORCPT
+        Wed, 20 May 2020 15:07:16 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38242 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726688AbgETTHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:06:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590001610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vOhbEgMkocnxd/SuSd9QcQbSLlk7GuMIQKjrDzR/nDE=;
-        b=iHbcc8RXeqasNaRNJtVT2nUlMhtVUwvI7+kXqRwPFzsll8BfCIntCMbe7e957ck/KA9I/l
-        jMuhg0zb0ylDdaYro1ajcRaT1+aYXgfghKSBnqaETsOSt7y0EHl14Or1Mr6Qk8K9Z57wV4
-        viewOWg7awSWofAYL3Xif/SvF9HLNns=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-W9iIFHZwPcqY5lE551OJpQ-1; Wed, 20 May 2020 15:06:47 -0400
-X-MC-Unique: W9iIFHZwPcqY5lE551OJpQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 15:07:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590001635; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=QXlLEUKSHL/0UjZpVA1wNzA6wRLVED9Vpod9975E1rc=; b=Enb7s1ty908bUHK9DlRFlHpEDcb17XY3g5YQAnnnO71NzECPq/k+7fewqPdRPQMqz1QZHXaU
+ 2b+wsiyhdFpKkbx951zE2j3o3THqSxehSZF+L6AyAxVFkDhsRoCMOU20dhQMmnsLAwUHYwfg
+ eDmMqO+xWkcK18NAYvJI9qpy3Ao=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ec57fcd62ee3a3497b55603 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 19:06:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1E5A5C433C9; Wed, 20 May 2020 19:06:53 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 605481404;
-        Wed, 20 May 2020 19:06:46 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B49162932;
-        Wed, 20 May 2020 19:06:38 +0000 (UTC)
-Date:   Wed, 20 May 2020 15:06:35 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     linux-audit@redhat.com, Paul Moore <paul@paul-moore.com>,
-        fw@strlen.de, LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, twoerner@redhat.com,
-        Eric Paris <eparis@parisplace.org>, tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v6] audit: add subj creds to NETFILTER_CFG record
- to cover async unregister
-Message-ID: <20200520190635.z7iz2ivf53l4bxq6@madcap2.tricolour.ca>
-References: <a585b9933896bc542347d8f3f26b08005344dd84.1589920939.git.rgb@redhat.com>
- <20200520165510.4l4q47vq6fyx7hh6@madcap2.tricolour.ca>
- <CAHC9VhRERV9_kgpcn2LBptgXGY0BB4A9CHT+V4-HFMcNd9_Ncg@mail.gmail.com>
- <17476338.hsbNre52Up@x2>
- <20200520185922.vnutg5z3hwp7grjm@madcap2.tricolour.ca>
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A298C433C8;
+        Wed, 20 May 2020 19:06:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2A298C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v3 2/7] bus: mhi: core: Introduce independent voting
+ mechanism
+To:     bbhatt@codeaurora.org
+Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
+        hemantk@codeaurora.org, linux-kernel@vger.kernel.org
+References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
+ <1589832241-13867-3-git-send-email-bbhatt@codeaurora.org>
+ <a12e693d-a8bb-3ecf-e799-c46de7429b5d@codeaurora.org>
+ <574a4fe915f86608b59f10577eb960e9@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <a51d366e-5466-cbd0-b19c-61e76e8671b5@codeaurora.org>
+Date:   Wed, 20 May 2020 13:06:50 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520185922.vnutg5z3hwp7grjm@madcap2.tricolour.ca>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <574a4fe915f86608b59f10577eb960e9@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 14:59, Richard Guy Briggs wrote:
-> On 2020-05-20 14:51, Steve Grubb wrote:
-> > On Wednesday, May 20, 2020 2:40:45 PM EDT Paul Moore wrote:
-> > > On Wed, May 20, 2020 at 12:55 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > On 2020-05-20 12:51, Richard Guy Briggs wrote:
-> > > > > Some table unregister actions seem to be initiated by the kernel to
-> > > > > garbage collect unused tables that are not initiated by any userspace
-> > > > > actions.  It was found to be necessary to add the subject credentials
-> > > > > to cover this case to reveal the source of these actions.  A sample
-> > > > > record:
-> > > > > 
-> > > > > The uid, auid, tty, ses and exe fields have not been included since
-> > > > > they
-> > > > > are in the SYSCALL record and contain nothing useful in the non-user
-> > > > > context.
-> > > > > 
-> > > > >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat
-> > > > >   family=bridge entries=0 op=unregister pid=153
-> > > > >   subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
-> > >
-> > > FWIW, that record looks good.
-> > 
-> > It's severely broken
-> > 
-> > cat log.file
-> > type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat 
-> > family=bridge entries=0 op=unregister pid=153 
-> > subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2
-> > 
-> > ausearch -if log.file --format text
-> > At 19:33:40 12/31/1969  did-unknown 
-> > 
-> > ausearch -if log.file --format csv
-> > NODE,EVENT,DATE,TIME,SERIAL_NUM,EVENT_KIND,SESSION,SUBJ_PRIME,SUBJ_SEC,SUBJ_KIND,ACTION,RESULT,OBJ_PRIME,OBJ_SEC,OBJ_KIND,HOW
-> > error normalizing NETFILTER_CFG
-> > ,NETFILTER_CFG,12/31/1969,19:33:40,0,,,,,,,,,,
-> > 
-> > This is unusable. This is why the bug was filed in the first place.
+On 5/20/2020 12:43 PM, bbhatt@codeaurora.org wrote:
+> On 2020-05-20 09:54, Jeffrey Hugo wrote:
+>> On 5/18/2020 2:03 PM, Bhaumik Bhatt wrote:
+>>> Allow independent votes from clients such that they can choose to vote
+>>> for either the device or the bus or both. This helps in cases where the
+>>> device supports autonomous low power mode wherein it can move to M2
+>>> state without the need to notify the host. Clients can also vote only to
+>>> keep the underlying bus active without having the device in M0 state to
+>>> support offload use cases.
+>>>
+>>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+>>> ---
+>>
+>> I wonder, why doesn't this fit with runtimePM?
+> Hi Jeff,
 > 
-> Have you applied this patchset?
-> 	https://www.redhat.com/archives/linux-audit/2020-May/msg00072.html
+> Can you elaborate?
 > 
-> AUDIT_EVENT_LISTENER is also broken without this first patch.
+> In short, with this patch, MHI just wants to give controller the option to
+> choose the vote type so we can implement autonomous low power mode entries
+> on both host and device.
 
-And EVENT_LISTENER also needs this patch:
-	https://github.com/linux-audit/audit-userspace/pull/114/commits/27daa6fca534b30199040d0ad05420a8331ab421
+So, you are attempting to manage the power mode of the device.  The 
+standard mechanism to do so in Linux is runtime pm.
 
-> > -Steve
-> > 
-> > > > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > > > 
-> > > > Self-NACK.  I forgot to remove cred and tty declarations.
-> 
-> - RGB
+https://elixir.bootlin.com/linux/latest/source/Documentation/driver-api/pm/devices.rst
 
-- RGB
+I'm no runtime pm expert, but it feels like your whole voting mechanism, 
+etc is just reimplemeting that.  Reimplementing the wheel, when its been 
+a standard thing that the majority of the kernel uses is not usually 
+acceptable.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+IMO, you need some sort of justification why runtime pm is not 
+applicable for you, because I'm willing to bet Mani/Greg are going to 
+ask the same.
 
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
