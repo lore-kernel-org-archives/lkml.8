@@ -2,99 +2,142 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D766C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C09CC207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C9B2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 20:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590007628;
-	bh=9w0KILB7yrKu9yQFRYVVB7S4YciohzZHET6YkhesxmI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DC8JjihOVvJvJoyYaCdp36Ug8F7QsPFf6dVSvbL1FggPMaCSAik6YYcuJcNq++zcF
-	 oLdO8U2yx0JxTQJtz3DFQ8cW7VcIi8M4IYxeIK4U4Yqo3aMOaI3ExR4R9K74Bnlomx
-	 hvW1m0MT095qZoEDG2lQdQmPc3h4bKEQv5trsYqM=
+	s=default; t=1590007669;
+	bh=pFgqAYPdTivuUZr14bc7fno90C0BiU2RfDO4wiHaAio=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iQOVr1XXuJ/JWvEWmVJWlQCdVccQTHJ8qixbAZa/D4aXvQgQBQ5qKCi61DMq+GkKb
+	 SyMg4qOrrGrCW4YJK8DeF1JH299jnJzq7IByrAKtMSeV1qc3wfSsoaWK8/v2UP1mTr
+	 RgG5+kK6c29mPW4mG3mzQijavTrJ9NvMbhE+ysyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgETUrI (ORCPT
+        id S1728053AbgETUrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 16:47:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43430 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 16:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbgETUrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 16:47:07 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        id S1727018AbgETUrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 16:47:48 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 347C720823;
-        Wed, 20 May 2020 20:47:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4752207D8;
+        Wed, 20 May 2020 20:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590007627;
-        bh=9w0KILB7yrKu9yQFRYVVB7S4YciohzZHET6YkhesxmI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XSsCDLEy6apnsDX5MeBXi4Fk4509mpWMjOR8FzuS5GpWKtC9a1Ktet8OcT5KkctlW
-         SyY0wdh7zKcGLrk3nSZJuUvxHN3aCmJYGkg0OkBlGY1rDXNNjXrwzE6q6Q+rZJuPDM
-         BU3B02EeHwsi6Pb4aYNOe5xjxfUAtEO9XACaB38Q=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A366840AFD; Wed, 20 May 2020 17:47:04 -0300 (-03)
-Date:   Wed, 20 May 2020 17:47:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/19] perf ftrace: trace system wide if no target is
- given
-Message-ID: <20200520204704.GO32678@kernel.org>
-References: <20200510150628.16610-1-changbin.du@gmail.com>
- <20200510150628.16610-2-changbin.du@gmail.com>
+        s=default; t=1590007667;
+        bh=pFgqAYPdTivuUZr14bc7fno90C0BiU2RfDO4wiHaAio=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=tLct13YcQQztlMgsWhfmqelxdPnoUXZr/8o7FXEJqbxcId6ab55//VCBCeRv3xOsE
+         IEHdIuSxaCxcYqNmrqzhljKujCvKPuf5zACGA996C9MtZjcsZi/CuYgbC3hhdkW2xv
+         wOQc/tokPdONm0NXR+9SOL0nuB9ZnWw3R+azUk4Y=
+Date:   Wed, 20 May 2020 13:47:46 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Dominique Martinet <asmadeus@codewreck.org>
+cc:     Stefano Stabellini <sstabellini@kernel.org>, jgross@suse.com,
+        lucho@ionkov.net, ericvh@gmail.com, rminnich@sandia.gov,
+        linux-kernel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: Re: [V9fs-developer] [PATCH] 9p/xen: increase XEN_9PFS_RING_ORDER
+In-Reply-To: <20200520193647.GA17565@nautica>
+Message-ID: <alpine.DEB.2.21.2005201340310.27502@sstabellini-ThinkPad-T480s>
+References: <20200520184113.24727-1-sstabellini@kernel.org> <20200520193647.GA17565@nautica>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200510150628.16610-2-changbin.du@gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sun, May 10, 2020 at 11:06:10PM +0800, Changbin Du escreveu:
-> This align ftrace to other perf sub-commands that if no target specified
-> then we trace all functions.
-
-
-Thanks, applied,
-
-- Arnaldo
- 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  tools/perf/builtin-ftrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, 20 May 2020, Dominique Martinet wrote:
+> Stefano Stabellini wrote on Wed, May 20, 2020:
+> > From: Stefano Stabellini <stefano.stabellini@xilinx.com>
+> > 
+> > Increase XEN_9PFS_RING_ORDER to 9 for performance reason. Order 9 is the
+> > max allowed by the protocol.
+> > 
+> > We can't assume that all backends will support order 9. The xenstore
+> > property max-ring-page-order specifies the max order supported by the
+> > backend. We'll use max-ring-page-order for the size of the ring.
+> > 
+> > This means that the size of the ring is not static
+> > (XEN_FLEX_RING_SIZE(9)) anymore. Change XEN_9PFS_RING_SIZE to take an
+> > argument and base the calculation on the order chosen at setup time.
+> > 
+> > 
+> > Finally, modify p9_xen_trans.maxsize to be divided by 4 compared to the
+> > original value. We need to divide it by 2 because we have two rings
+> > coming off the same order allocation: the in and out rings. This was a
+> > mistake in the original code. Also divide it further by 2 because we
+> > don't want a single request/reply to fill up the entire ring. There can
+> > be multiple requests/replies outstanding at any given time and if we use
+> > the full ring with one, we risk forcing the backend to wait for the
+> > client to read back more replies before continuing, which is not
+> > performant.
 > 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index d5adc417a4ca..11fc02037899 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -493,7 +493,7 @@ int cmd_ftrace(int argc, const char **argv)
->  	argc = parse_options(argc, argv, ftrace_options, ftrace_usage,
->  			    PARSE_OPT_STOP_AT_NON_OPTION);
->  	if (!argc && target__none(&ftrace.target))
-> -		usage_with_options(ftrace_usage, ftrace_options);
-> +		ftrace.target.system_wide = true;
->  
->  	ret = target__validate(&ftrace.target);
->  	if (ret) {
-> -- 
-> 2.25.1
+> Sounds good to me overall. A couple of comments inline.
+> Also worth noting I need to rebuild myself a test setup so might take a
+> bit of time to actually run tests, but I might just trust you on this
+> one for now if it builds with no new warning... Looks like it would
+> probably work :p
 > 
+> > [...]
+> > @@ -264,7 +265,7 @@ static irqreturn_t xen_9pfs_front_event_handler(int irq, void *r)
+> >  
+> >  static struct p9_trans_module p9_xen_trans = {
+> >  	.name = "xen",
+> > -	.maxsize = 1 << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT),
+> > +	.maxsize = 1 << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT - 2),
+> >  	.def = 1,
+> >  	.create = p9_xen_create,
+> >  	.close = p9_xen_close,
+> > [...]
+> > @@ -401,8 +405,10 @@ static int xen_9pfs_front_probe(struct xenbus_device *dev,
+> >  		return -EINVAL;
+> >  	max_ring_order = xenbus_read_unsigned(dev->otherend,
+> >  					      "max-ring-page-order", 0);
+> > -	if (max_ring_order < XEN_9PFS_RING_ORDER)
+> > -		return -EINVAL;
+> > +	if (max_ring_order > XEN_9PFS_RING_ORDER)
+> > +		max_ring_order = XEN_9PFS_RING_ORDER;
+> 
+> (If there are backends with very small max_ring_orders, we no longer
+> error out when we encounter one, it might make sense to add a min
+> define? Although to be honest 9p works with pretty small maxsizes so I
+> don't see much reason to error out, and even order 0 will be one page
+> worth.. I hope there is no xenbus that small though :))
 
--- 
+Your point is valid but the size calculation (XEN_FLEX_RING_SIZE) should
+work correctly even with order 0:
 
-- Arnaldo
+    (1UL << ((0) + XEN_PAGE_SHIFT - 1)) = 1 << (12 - 1) = 2048
+
+So I am thinking that the protocol should still work correctly, although
+the performance might be undesirable.
+
+FYI The smallest backend I know of has order 6.
+
+
+> > +	if (p9_xen_trans.maxsize > XEN_FLEX_RING_SIZE(max_ring_order))
+> > +		p9_xen_trans.maxsize = XEN_FLEX_RING_SIZE(max_ring_order);
+> 
+> So base maxsize initial value is 1 << (order + page_shift - 2) ; but
+> this is 1 << (order + page_shift - 1) -- I agree with the logic you gave
+> in commit message so would think this needs to be shifted down one more
+> like the base value as well.
+> What do you think?
+
+Yes, you are right, thanks for noticing this! I meant to do that here
+too but somehow forgot. This should be:
+
+   p9_xen_trans.maxsize = XEN_FLEX_RING_SIZE(max_ring_order) / 2;
