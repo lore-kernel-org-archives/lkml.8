@@ -2,544 +2,169 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8F58207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1F5207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wenHAhdG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b3I6Hev2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgETLRD (ORCPT
+        id S1726826AbgETLRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:17:03 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53746 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbgETLRC (ORCPT
+        Wed, 20 May 2020 07:17:13 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43041 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726510AbgETLRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:17:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589973420; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=x2QeAKoeum0/WUVq47LRs8/u1TfnZeJl9NoUecmRu0w=; b=wenHAhdGpu02lXJQHMTjzJiG0noCmUodsTFSHLQGxGVlvD4GerSFBTZAU4eMnGExMnfNv2X3
- VEgBKpNbRknMMU+e3jqZzyY8HagKpJ3ul6TWjsmhMt+n5rahS0n5u+6oytVq4Knzt+W9sG/4
- 9LNfkj9odCxD3H5yVymzO+hQvFE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ec511ac087f08818e97d4ac (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 11:17:00
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 572E4C433CA; Wed, 20 May 2020 11:16:59 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [183.83.65.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 276B7C433C8;
-        Wed, 20 May 2020 11:16:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 276B7C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V1 2/3] mmc: sdhci-msm: Use internal voltage control
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1589541535-8523-3-git-send-email-vbadigan@codeaurora.org>
- <20200518195711.GH2165@builder.lan>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <1f546a8b-7f10-95e7-efc2-8e3d5787aee6@codeaurora.org>
-Date:   Wed, 20 May 2020 16:46:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 07:17:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589973431;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+3+XJ/Vfn9hEmmjKQHW1eZ3jCSPljvkuiuCcfSEsoMI=;
+        b=b3I6Hev28oYJqY5zzSx1p9YR9qKDukc7FcGpHw59oMZpTHBX/YFTOvKTrlaNZdBJiBjdHf
+        b889dFaeHmXjKzEkc7qkKzrKaycrg5vOUJbDCLNQ0KgIyAq/GG0on2MJ52OmJp8x4dc+j/
+        t8v8FBvw8Ug/K8mGgCPOh+8kfSsk1KA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-FFhbhdDqMVmrQVmA81gxRw-1; Wed, 20 May 2020 07:17:02 -0400
+X-MC-Unique: FFhbhdDqMVmrQVmA81gxRw-1
+Received: by mail-ej1-f71.google.com with SMTP id s7so1232709eji.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:17:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+3+XJ/Vfn9hEmmjKQHW1eZ3jCSPljvkuiuCcfSEsoMI=;
+        b=P1aOpoRUCJu3jF4Q0YVtSrxC82yesLVHS4GtJL4loKNoJmSlxsNGj76dsDj764SzDh
+         CadHoT0K1ufb7kYcXeUYo5+xMeRVEnA13hFDxCvQk/6md/uVW1dzmZrUoqiiRu8Mn/ZT
+         DCUQoIpml7IFDnUZGhpLa9HHfBG6ggQyUmoJCNNmVD19kqBvGwZdm+VLSV+A8VeYlZ7D
+         8HUnF0B9fz73VDaQaNyEbGQwJ+TVF28u+IbdZ+dqaklYZlZ3gXjTZzsed2F6hwogfm8E
+         y/CBbWmPFtNl1CXOdFZSGn/gRFToZA1k5YPyH8s/HrVywhKdVzqR08E7zZ1tbIFhTTfS
+         M18Q==
+X-Gm-Message-State: AOAM530EY8mvYcy/6Y6DffGs1vBhtVPvPxgbKd3z+0eK6AC9jqknCabR
+        xRvQDVAXdAWM/bovuSFhPWV8ig6fz5+gFqx6Bz6K6ry9Fzyz8HDHhbs7Em1VbjlRu1+lr8FFo0a
+        4zpD1isP1Sryv6hXQJkigGzex3b5NIQOY0rbySfBp
+X-Received: by 2002:aa7:dc49:: with SMTP id g9mr2772106edu.62.1589973421150;
+        Wed, 20 May 2020 04:17:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw9yaJKGnybcRqUxUy3GthqkOjqhNi4tj5jBm01HqNr4HhbfSnN0NrfDJG+uO9vI/xvh0Cix+t4RnN+OLDEWpE=
+X-Received: by 2002:aa7:dc49:: with SMTP id g9mr2772082edu.62.1589973420888;
+ Wed, 20 May 2020 04:17:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200518195711.GH2165@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200423170003.GT25745@shell.armlinux.org.uk> <CAGnkfhwOavaeUjcm4_+TG-xLxQA519o+fR8hxBCCfSy3qpcYhQ@mail.gmail.com>
+ <DM5PR18MB1146686527DE66495F75D0DAB0A30@DM5PR18MB1146.namprd18.prod.outlook.com>
+ <20200509114518.GB1551@shell.armlinux.org.uk> <CAGnkfhx8fEZCoLPzGxSzQnj1ZWcQtBMn+g_jO1Jxc4zF7pQwjQ@mail.gmail.com>
+ <20200509195246.GJ1551@shell.armlinux.org.uk> <20200509202050.GK1551@shell.armlinux.org.uk>
+ <20200519095330.GA1551@shell.armlinux.org.uk> <CAGnkfhzuyxJDo-DXPHPiNtP4RbRpry+3M9eoiTknGR0zvgPuoA@mail.gmail.com>
+ <20200519190534.78bb8389@turbo.teknoraver.net> <20200520111043.GK1551@shell.armlinux.org.uk>
+In-Reply-To: <20200520111043.GK1551@shell.armlinux.org.uk>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Wed, 20 May 2020 13:16:25 +0200
+Message-ID: <CAGnkfhx2qHVSBNTRQf+RQiRWBHxF5hPE=5m+YVKBv6C97P=BOw@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH net-next 3/5] net: mvpp2: cls: Use RSS contexts
+ to handle RSS tables
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev <netdev@vger.kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        Stefan Chulski <stefanc@marvell.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 1:11 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, May 19, 2020 at 07:05:34PM +0200, Matteo Croce wrote:
+> > On Tue, 19 May 2020 12:05:20 +0200
+> > Matteo Croce <mcroce@redhat.com> wrote:
+> >
+> > Hi,
+> >
+> > The patch seems to work. I'm generating traffic with random MAC and IP
+> > addresses, to have many flows:
+> >
+> > # tcpdump -tenni eth2
+> > 9a:a9:b1:3a:b1:6b > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.4.0 > 192.168.0.4.0: UDP, length 12
+> > 9e:92:fd:f8:7f:0a > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.4.0 > 192.168.0.4.0: UDP, length 12
+> > 66:b7:11:8a:c2:1f > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.1.0 > 192.168.0.1.0: UDP, length 12
+> > 7a:ba:58:bd:9a:62 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.1.0 > 192.168.0.1.0: UDP, length 12
+> > 7e:78:a9:97:70:3a > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.2.0 > 192.168.0.2.0: UDP, length 12
+> > b2:81:91:34:ce:42 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.2.0 > 192.168.0.2.0: UDP, length 12
+> > 2a:05:52:d0:d9:3f > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.3.0 > 192.168.0.3.0: UDP, length 12
+> > ee:ee:47:35:fa:81 > 00:51:82:11:22:02, ethertype IPv4 (0x0800), length 60: 10.0.0.3.0 > 192.168.0.3.0: UDP, length 12
+> >
+> > This is the default rate, with rxhash off:
+> >
+> > # utraf eth2
+> > tx: 0 bps 0 pps rx: 397.4 Mbps 827.9 Kpps
+> > tx: 0 bps 0 pps rx: 396.3 Mbps 825.7 Kpps
+> > tx: 0 bps 0 pps rx: 396.6 Mbps 826.3 Kpps
+> > tx: 0 bps 0 pps rx: 396.5 Mbps 826.1 Kpps
+> >
+> >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+> >       9 root      20   0       0      0      0 R  99.7   0.0   7:02.58 ksoftirqd/0
+> >      15 root      20   0       0      0      0 S   0.0   0.0   0:00.00 ksoftirqd/1
+> >      20 root      20   0       0      0      0 S   0.0   0.0   2:01.48 ksoftirqd/2
+> >      25 root      20   0       0      0      0 S   0.0   0.0   0:32.86 ksoftirqd/3
+> >
+> > and this with rx hashing enabled:
+> >
+> > # ethtool -K eth2 rxhash on
+> > # utraf eth2
+> > tx: 0 bps 0 pps rx: 456.4 Mbps 950.8 Kpps
+> > tx: 0 bps 0 pps rx: 458.4 Mbps 955.0 Kpps
+> > tx: 0 bps 0 pps rx: 457.6 Mbps 953.3 Kpps
+> > tx: 0 bps 0 pps rx: 462.2 Mbps 962.9 Kpps
+> >
+> >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+> >      20 root      20   0       0      0      0 R   0.7   0.0   2:02.34 ksoftirqd/2
+> >      25 root      20   0       0      0      0 S   0.3   0.0   0:33.25 ksoftirqd/3
+> >       9 root      20   0       0      0      0 S   0.0   0.0   7:52.57 ksoftirqd/0
+> >      15 root      20   0       0      0      0 S   0.0   0.0   0:00.00 ksoftirqd/1
+> >
+> >
+> > The throughput doesn't increase so much, maybe we hit an HW limit of
+> > the gigabit port. The interesting thing is how the global CPU usage
+> > drops from 25% to 1%.
+> > I can't explain this, it could be due to the reduced contention?
+>
+> Hi Matteo,
+>
+> Can I take that as a Tested-by ?
+>
+> Thanks.
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+>
 
-Thanks Bjorn for the review. For major comments I'm responding.
-Other comments, i will take care of them in my next patch-set.
+Tested-by: Matteo Croce <mcroce@redhat.com>
 
-On 5/19/2020 1:27 AM, Bjorn Andersson wrote:
-> On Fri 15 May 04:18 PDT 2020, Veerabhadrarao Badiganti wrote:
->
->> From: Vijay Viswanath <vviswana@codeaurora.org>
->>
->> On qcom SD host controllers voltage switching be done after the HW
->> is ready for it. The HW informs its readiness through power irq.
->> The voltage switching should happen only then.
->>
->> Use the internal voltage switching and then control the voltage
->> switching using power irq.
->>
->> Set the regulator load as well so that regulator can be configured
->> in LPM mode when in is not being used.
->>
->> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
->> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Please note that per Documentation/process/submitting-patches.rst
-> section 11) this states:
->
-> 1) You wrote the patch (From:) without stating that its Certificate of
-> origin.
->
-> 2) Then Asutosh took your patch (in full or part) and guarantees that
-> he's allowed to contribute it to the project.
->
-> 3) Then you took his patch (in full or part) and guarantee that you're
-> allowed to contribute it to the project.
->
-> 4) Then Veerabhadrarao took your patch (in full or part) and guarantees
-> that he's allowed to contribute it to the project
->
-> 5) Then somehow it came out of your inbox - even if Veerabhadrarao was
-> the one who handled it last.
->
->
-> As author you should be the first one to certify, and as poster to LKML
-> you should be the last one.
->
-> If you worked together on this, then list Asutosh and Veerabhadrarao as
-> Co-developed-by.
->
->> ---
->>   drivers/mmc/host/sdhci-msm.c | 215 +++++++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 207 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index 97758fa..a10e955 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -36,7 +36,9 @@
->>   #define CORE_PWRCTL_IO_LOW	BIT(2)
->>   #define CORE_PWRCTL_IO_HIGH	BIT(3)
->>   #define CORE_PWRCTL_BUS_SUCCESS BIT(0)
->> +#define CORE_PWRCTL_BUS_FAIL    BIT(1)
->>   #define CORE_PWRCTL_IO_SUCCESS	BIT(2)
->> +#define CORE_PWRCTL_IO_FAIL     BIT(3)
->>   #define REQ_BUS_OFF		BIT(0)
->>   #define REQ_BUS_ON		BIT(1)
->>   #define REQ_IO_LOW		BIT(2)
->> @@ -263,6 +265,9 @@ struct sdhci_msm_host {
->>   	bool use_cdr;
->>   	u32 transfer_mode;
->>   	bool updated_ddr_cfg;
->> +	u32 vmmc_load;
->> +	u32 vqmmc_load;
->> +	bool vqmmc_enabled;
->>   };
->>   
->>   static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
->> @@ -1298,6 +1303,78 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>   		sdhci_msm_hs400(host, &mmc->ios);
->>   }
->>   
->> +static int sdhci_msm_set_vmmc(struct sdhci_msm_host *msm_host,
->> +			      struct mmc_host *mmc, int level)
->> +{
->> +	int load, ret;
->> +
->> +	if (IS_ERR(mmc->supply.vmmc))
->> +		return 0;
->> +
->> +	if (msm_host->vmmc_load) {
->> +		load = level ? msm_host->vmmc_load : 0;
->> +		ret = regulator_set_load(mmc->supply.vmmc, load);
-> I started on the comment about regulator_set_load() that you can find
-> below...
->
->> +		if (ret)
->> +			goto out;
->> +	}
->> +
->> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
-> ...but I don't see that mmc->ios.vdd necessarily is in sync with
-> "level". Or do you here simply set the load based on what the hardware
-> tell you and then orthogonally to that let the core enable/disable the
-> regulator?
->
-> Perhaps I'm just missing something obvious, but if not I believe this
-> warrants a comment describing that you're lowering the power level
-> regardless of the actual power being disabled.
+probably also:
 
-ios.vdd will be in sync with level. Vdd will be either 0 or a valid 
-voltage (3v).
+Reported-by: Matteo Croce <mcroce@redhat.com>
 
-This indirectly gets triggered/invoked through power-irq when driver 
-writes 0
-or valid voltage to SDHCI_POWER_CONTROL register from 
-sdhci_set_power_noreg().
->> +out:
->> +	if (ret)
->> +		pr_err("%s: vmmc set load/ocr failed: %d\n",
->> +				mmc_hostname(mmc), ret);
-> Please use:
-> 	dev_err(mmc_dev(mmc), ...);
->
->> +
->> +	return ret;
->> +}
->> +
->> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
->> +			      struct mmc_host *mmc, int level)
-> vqmmc_enabled is a bool and "level" sounds like an int with several
-> possible values. So please make level bool here as well, to make it
-> easer to read..
->
->> +{
->> +	int load, ret;
->> +	struct mmc_ios ios;
->> +
->> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
->> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
->> +	    (msm_host->vqmmc_enabled == level))
->> +		return 0;
->> +
->> +	if (msm_host->vqmmc_load) {
->> +		load = level ? msm_host->vqmmc_load : 0;
->> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
-> Since v5.0 the "load" of a regulator consumer is only taken into
-> consideration if the consumer is enabled. So given that you're toggling
-> the regulator below there's no need to change this here.
->
-> Just specify the "active load" at probe time.
+Thanks,
+-- 
+Matteo Croce
+per aspera ad upstream
 
-For eMMC case, we don't disable this Vccq2 regulator by having always-on 
-flag
-in the regulator node. Only for SDcard Vccq2 will be disabled.
-Sice driver is common for both eMMC and SDcard, I have to set 0 load to make
-it generic and to ensure eMMC Vccq2 regulator will be in LPM mode.
-
->
->> +		if (ret)
->> +			goto out;
->> +	}
->> +
->> +	/*
->> +	 * The IO voltage regulator may not always support a voltage close to
->> +	 * vdd. Set IO voltage based on capability of the regulator.
->> +	 */
-> Is this comment related to the if/else-if inside the conditional? If so
-> please move it one line down.
->
->> +	if (level) {
->> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
->> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
->> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
->> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
-> Please add a space here, to indicate that the if statement on the next
-> line is unrelated to the if/elseif above.
->
->> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
->> +			pr_debug("%s: %s: setting signal voltage: %d\n",
->> +					mmc_hostname(mmc), __func__,
->> +					ios.signal_voltage);
-> I strongly believe you should replace these debug prints with
-> tracepoints, throughout the driver.
->
->> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
->> +			if (ret < 0)
->> +				goto out;
->> +		}
->> +		ret = regulator_enable(mmc->supply.vqmmc);
->> +	} else {
->> +		ret = regulator_disable(mmc->supply.vqmmc);
->> +	}
-> Given that you don't need to regulator_set_load() this function is now
-> just one large if/else condition on a constant passed as an argument.
-> Please split it into sdhci_msm_enable_vqmmc() and
-> sdhci_msm_disable_vqmmc().
-
-
-Same response as above
-For eMMC case, we don't disable this Vccq2 regulator by having always-on 
-flag
-in the regulator node. Only for SDcard Vccq2 will be disabled.
-Sice driver is common for both eMMC and SDcard, I have to set 0 load to make
-it generic and to ensure eMMC Vccq2 regulator will be in LPM mode.
-
->> +out:
->> +	if (ret)
->> +		pr_err("%s: vqmmc failed: %d\n", mmc_hostname(mmc), ret);
-> I think it would be useful to know if this error came from
-> mmc_regulator_set_vqmmc() or regulator_enable() - or
-> regulator_disable().
->
-> So please move this up and add some context in the error message, and
-> please use dev_err().
->
->> +	else
->> +		msm_host->vqmmc_enabled = level;
->> +
->> +	return ret;
->> +}
->> +
->>   static inline void sdhci_msm_init_pwr_irq_wait(struct sdhci_msm_host *msm_host)
->>   {
->>   	init_waitqueue_head(&msm_host->pwr_irq_wait);
->> @@ -1401,8 +1478,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->>   {
->>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>   	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	struct mmc_host *mmc = host->mmc;
->>   	u32 irq_status, irq_ack = 0;
->> -	int retry = 10;
->> +	int retry = 10, ret = 0;
-> There's no need to initialize ret, in all occasions it's assigned before
-> being read.
->
->>   	u32 pwr_state = 0, io_level = 0;
->>   	u32 config;
->>   	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
->> @@ -1438,14 +1516,35 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->>   
->>   	/* Handle BUS ON/OFF*/
->>   	if (irq_status & CORE_PWRCTL_BUS_ON) {
->> -		pwr_state = REQ_BUS_ON;
->> -		io_level = REQ_IO_HIGH;
->> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->> +		ret = sdhci_msm_set_vmmc(msm_host, mmc, 1);
->> +		if (!ret)
->> +			ret = sdhci_msm_set_vqmmc(msm_host, mmc, 1);
-> I find this quite complex to follow. Wouldn't it be cleaner to retain
-> the 4 checks on irq_status as they are and then before the writel of
-> irq_ack check pwr_state and io_level and call sdhci_msm_set_{vmmc,vqmmc}
-> accordingly?
-
-I will see if i can update as you suggested.
-
->> +
->> +		if (!ret) {
->> +			pwr_state = REQ_BUS_ON;
->> +			io_level = REQ_IO_HIGH;
->> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->> +		} else {
->> +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
->> +					mmc_hostname(mmc), ret, irq_status);
-> You already printed that this failed in sdhci_msm_set_{vmmc,vqmmc}, no
-> need to print again.
->
->> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
->> +			sdhci_msm_set_vmmc(msm_host, mmc, 0);
->> +		}
->>   	}
->>   	if (irq_status & CORE_PWRCTL_BUS_OFF) {
->> -		pwr_state = REQ_BUS_OFF;
->> -		io_level = REQ_IO_LOW;
->> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->> +		ret = sdhci_msm_set_vmmc(msm_host, mmc, 0);
->> +		if (!ret)
->> +			ret = sdhci_msm_set_vqmmc(msm_host, mmc, 0);
->> +
->> +		if (!ret) {
->> +			pwr_state = REQ_BUS_OFF;
->> +			io_level = REQ_IO_LOW;
->> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->> +		} else {
->> +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
->> +					mmc_hostname(mmc), ret, irq_status);
->> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
->> +		}
->>   	}
->>   	/* Handle IO LOW/HIGH */
->>   	if (irq_status & CORE_PWRCTL_IO_LOW) {
->> @@ -1457,6 +1556,15 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
->>   		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
->>   	}
->>   
->> +	if (io_level && !IS_ERR(mmc->supply.vqmmc) && !pwr_state) {
->> +		ret = mmc_regulator_set_vqmmc(mmc, &mmc->ios);
-> Didn't you already call this through sdhci_msm_set_vqmmc()?
-
-No.sdhci_msm_set_vqmmc handles only vqmmc ON/OFF. While turning it ON it 
-sets
-Vqmmc to possbile default IO level (1.8v or 3.0v).
-Where this is only to make IO lines high (3.0v) or Low (1.8v).
->> +		if (ret < 0)
->> +			pr_err("%s: IO_level setting failed(%d). signal_voltage: %d, vdd: %d irq_status: 0x%08x\n",
->> +					mmc_hostname(mmc), ret,
->> +					mmc->ios.signal_voltage, mmc->ios.vdd,
->> +					irq_status);
->> +	}
->> +
->>   	/*
->>   	 * The driver has to acknowledge the interrupt, switch voltages and
->>   	 * report back if it succeded or not to this register. The voltage
->> @@ -1833,6 +1941,91 @@ static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
->>   	sdhci_reset(host, mask);
->>   }
->>   
->> +static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
->> +{
->> +	int ret = 0;
-> No need to initialize ret, first use is an assignment.
->
->> +	struct mmc_host *mmc = msm_host->mmc;
->> +
->> +	ret = mmc_regulator_get_supply(msm_host->mmc);
->> +	if (ret)
->> +		return ret;
->> +	device_property_read_u32(&msm_host->pdev->dev,
->> +			"vmmc-max-load-microamp",
->> +			&msm_host->vmmc_load);
->> +	device_property_read_u32(&msm_host->pdev->dev,
->> +			"vqmmc-max-load-microamp",
->> +			&msm_host->vqmmc_load);
-> These properties are not documented. Do they vary enough to mandate
-> being read from DT or could they simply be approximated by a define
-> instead?
-
-I can use defines. But since these values are different for eMMC and SDcard
-I will have to maintain two sets and need to have logic during probe to
-identify SDcard or eMMC and use the assign the set accordingly.
-So we tought, getting from dt is simpler and clean.
-In case Rob didn't agree with dt entries, I will go with this approach.
-
->> +
->> +	sdhci_msm_set_regulator_caps(msm_host);
->> +	mmc->ios.power_mode = MMC_POWER_UNDEFINED;
->> +
->> +	return 0;
->> +
->> +}
->> +
->> +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
->> +				      struct mmc_ios *ios)
->> +{
->> +	struct sdhci_host *host = mmc_priv(mmc);
->> +	u16 ctrl;
->> +
->> +	/*
->> +	 * Signal Voltage Switching is only applicable for Host Controllers
->> +	 * v3.00 and above.
->> +	 */
->> +	if (host->version < SDHCI_SPEC_300)
->> +		return 0;
->> +
->> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +
->> +	switch (ios->signal_voltage) {
->> +	case MMC_SIGNAL_VOLTAGE_330:
->> +		if (!(host->flags & SDHCI_SIGNALING_330))
->> +			return -EINVAL;
->> +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
->> +		ctrl &= ~SDHCI_CTRL_VDD_180;
->> +		sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
->> +
->> +		/* 3.3V regulator output should be stable within 5 ms */
-> What mechanism ensures that the readw won't return withing 5ms from the
-> writew above?
-
-Thanks for pointing this. This delay got missed. I will add it in next 
-patchset.
->> +		ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +		if (!(ctrl & SDHCI_CTRL_VDD_180))
->> +			return 0;
->> +
->> +		pr_warn("%s: 3.3V regulator output did not became stable\n",
->> +			mmc_hostname(mmc));
->> +
->> +		return -EAGAIN;
-> The body of the 330 and 180 cases are quite similar, can you perhaps
-> deal with those after the switch, once?
-
-Sure. Will check this.
-
->> +	case MMC_SIGNAL_VOLTAGE_180:
->> +		if (!(host->flags & SDHCI_SIGNALING_180))
->> +			return -EINVAL;
->> +
->> +		/*
->> +		 * Enable 1.8V Signal Enable in the Host Control2
->> +		 * register
->> +		 */
->> +		ctrl |= SDHCI_CTRL_VDD_180;
->> +		sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
->> +
->> +		/* 1.8V regulator output should be stable within 5 ms */
->> +		ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +		if (ctrl & SDHCI_CTRL_VDD_180)
->> +			return 0;
->> +
->> +		pr_warn("%s: 1.8V regulator output did not became stable\n",
->> +			mmc_hostname(mmc));
->> +
->> +		return -EAGAIN;
->> +	case MMC_SIGNAL_VOLTAGE_120:
->> +		if (!(host->flags & SDHCI_SIGNALING_120))
->> +			return -EINVAL;
->> +		return 0;
->> +	default:
->> +		/* No signal voltage switch required */
->> +		return 0;
->> +	}
->> +
-> Empty line.
->
-> Regards,
-> Bjorn
->
->> +}
->> +
->>   static const struct sdhci_msm_variant_ops mci_var_ops = {
->>   	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
->>   	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
->> @@ -1880,6 +2073,7 @@ static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
->>   	.write_w = sdhci_msm_writew,
->>   	.write_b = sdhci_msm_writeb,
->>   	.irq	= sdhci_msm_cqe_irq,
->> +	.set_power = sdhci_set_power_noreg,
->>   };
->>   
->>   static const struct sdhci_pltfm_data sdhci_msm_pdata = {
->> @@ -2072,6 +2266,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->>   	if (core_major == 1 && core_minor >= 0x49)
->>   		msm_host->updated_ddr_cfg = true;
->>   
->> +	ret = sdhci_msm_register_vreg(msm_host);
->> +	if (ret)
->> +		goto clk_disable;
->> +
->>   	/*
->>   	 * Power on reset state may trigger power irq if previous status of
->>   	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
->> @@ -2116,6 +2314,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->>   					 MSM_MMC_AUTOSUSPEND_DELAY_MS);
->>   	pm_runtime_use_autosuspend(&pdev->dev);
->>   
->> +	host->mmc_host_ops.start_signal_voltage_switch =
->> +		sdhci_msm_start_signal_voltage_switch;
->>   	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
->>   	if (of_property_read_bool(node, "supports-cqe"))
->>   		ret = sdhci_msm_cqe_add_host(host, pdev);
->> @@ -2123,7 +2323,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->>   		ret = sdhci_add_host(host);
->>   	if (ret)
->>   		goto pm_runtime_disable;
->> -	sdhci_msm_set_regulator_caps(msm_host);
->>   
->>   	pm_runtime_mark_last_busy(&pdev->dev);
->>   	pm_runtime_put_autosuspend(&pdev->dev);
->> -- 
->> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
->>
