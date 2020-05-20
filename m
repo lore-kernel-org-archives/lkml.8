@@ -2,63 +2,62 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D78BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5121D204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE262204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="QKJkcBbx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="iA7PIL9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgETLou (ORCPT
+        id S1726914AbgETLoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:44:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58672 "EHLO
+        Wed, 20 May 2020 07:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgETLo2 (ORCPT
+        with ESMTP id S1726545AbgETLoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:44:28 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D73C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:44:27 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id w7so2759075wre.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:44:27 -0700 (PDT)
+        Wed, 20 May 2020 07:44:23 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9BCC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:44:23 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m185so2518997wme.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:44:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
-        b=QKJkcBbxZWCWLDG+YrYnBrkZXE/At601H5ASh1l5Ykv2TDwcxDwOGjyKJsXAUk5Ye6
-         u9JtDQ7XjNeR8tEvIJPP7Dsnsf/DOUsYU0eQ1O9/8p1dFPiOjfYAQ7gs2/qv2DaWHJ4Z
-         +jOzPTB+Cruz1bL6UuIiAubhlBSrq+VRpYTp04Nj55Wj8pVVVjXig9kitcMgGZ6q0YvQ
-         bCZ6WMB0VizDGqrwGTeiW4x63tgAFYMpcxaw2qIfhl5iQEgvmZEXm6jEeFI3aaICjzzO
-         G6Pxsib9tcNmBDhDTDV6DZqfrqxl3owEhBwBZOZpvRW9LCq4ua/rZhJZEuW9j91e6Zup
-         IrBQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6UO8846LBADOFjPscf273ixSDXaAAOc6agORXCpe8H8=;
+        b=iA7PIL9mvAGiJIzT2Pq6EhZQNK50yl9l6lgYY6TkjfmiyQO+FovVbAOv/7wzEq+1X9
+         mk2kx8kVrndLXYGlYRob3K37sWxWbqbnI8GWDIJLCTr5oUVIejD7J+mx3gMpB4DTpKoA
+         FaRG8wrpDNLkbm99XKF5izs/ettSvwFAAZmYaIAIsUjyqyNHUMtk4Qx46M6ANLR+w5F6
+         ezbE69fQTXSyyZKnlQbLkm9Hz8B7xUbu2oIoAQM7RfA9ZciAbdiNho0I/X5IwEbO3PFa
+         0jKUay9jsKzznzMRBfuWpuhc5UJyj2/R8Ql6/EQ+pOSBZzl4zjCE2czpVX94eI+feqOM
+         A9+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=85LArQ1FkfasqQwvTGBUsmFOdZ74xT3FAzPREvSXT3E=;
-        b=Xa8X2gNTtGcp8VT5XXH+vgjsgi9AT6OLn1cOeQPpdAPc+7tasyqj+xg1ryw61OFJPm
-         /hBBg2ib2QTpuX6koNRrjWWG9flditTK7YAlZUaFkTKuBeHbN3PRLaWgJuQL9iBqAGL1
-         D9BtgiiQIEAUJj4DsbB3BTzmc7iIEi2tVmfczXyiAE4tsmIXKPqV7JAgFP8/c35BIXSw
-         2pAIrPPKQDnXD/blxiXZagI7cLKYDbPjyfeVoDkFRdJ6BMVj4r2oTiLmvqUrHniFV2xA
-         Cw7DKvIjxmcm69pTeqMcDw9JyWKJUTItNF/erqnUu5aA3v16DCDIj2B+lRW7nUXWDw9z
-         lm3Q==
-X-Gm-Message-State: AOAM533+Oed2eu9vkRt8CxdD7o5OAWB3i5XLzPmwvD71jYAkFsfrPlWX
-        9XH9d/5j+iKEy2h4aECxrwcNVQ==
-X-Google-Smtp-Source: ABdhPJypM/wspBT4F6w8EO4JCWTG6tul8aOv8l7s4hm9WSskupdfPjKVvCbnp9cT4bd0cBC63dS4xg==
-X-Received: by 2002:adf:9447:: with SMTP id 65mr3890042wrq.331.1589975066452;
-        Wed, 20 May 2020 04:44:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6UO8846LBADOFjPscf273ixSDXaAAOc6agORXCpe8H8=;
+        b=S8xHbj9EU/GbUaZFAWoBSTciDJoWw99Ruisd4+skC0xSrn/voyPnqZKlNhc6jsIl4q
+         Sy9iT2byNSk/NeiWC2v/CFSXi2b1Dw7JT1cyI9AMn45ETHjo58mv/ulystu+qzCro7Sp
+         Ic0DMjoKZAobZ9Go1gFtGlkDw8/GbeWqZUSbTcqpy4/TciAGyWwV1HMqrkZmAzlVVWuw
+         dgfFmrYFWdkQ0bmubIq318364MTSyVTXZtGWiXOFrtHkQyvfEEUVtB5AWQbFAgw1fsDH
+         3JfbkcAZzjNdMPycaHA1L+t2418qhenoV+VrPm13DbYsAi99xjhMdGwS2ZEp2bTiwx7/
+         XrVA==
+X-Gm-Message-State: AOAM5322CePMA+ngO688OYiz8jFdz9RAZ1y47cULoxKvu7M6TEOtglIj
+        //KWTl5fZvvzFsbUg922b+IK+Q==
+X-Google-Smtp-Source: ABdhPJzM9bN56A7SVl3pNrO/Ahl7zhy4npY69zCHarKqOc0WKvc7Va3/fmdS0rKJeLhFamtGgdLgcQ==
+X-Received: by 2002:a05:600c:147:: with SMTP id w7mr4321322wmm.89.1589975062340;
+        Wed, 20 May 2020 04:44:22 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id q2sm2530782wrx.60.2020.05.20.04.44.25
+        by smtp.gmail.com with ESMTPSA id q2sm2530782wrx.60.2020.05.20.04.44.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 04:44:25 -0700 (PDT)
+        Wed, 20 May 2020 04:44:21 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,12 +77,10 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 3/5] net: devres: define a separate devres structure for devm_alloc_etherdev()
-Date:   Wed, 20 May 2020 13:44:13 +0200
-Message-Id: <20200520114415.13041-4-brgl@bgdev.pl>
+Subject: [PATCH 0/5] net: provide a devres variant of register_netdev()
+Date:   Wed, 20 May 2020 13:44:10 +0200
+Message-Id: <20200520114415.13041-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200520114415.13041-1-brgl@bgdev.pl>
-References: <20200520114415.13041-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,64 +90,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Not using a proxy structure to store struct net_device doesn't save
-anything in terms of compiled code size or memory usage but significantly
-decreases the readability of the code with all the pointer casting.
+This series applies on top of my mtk-eth-mac series[1].
 
-Define struct net_device_devres and use it in devm_alloc_etherdev_mqs().
+Using devres helpers allows to shrink the probing code, avoid memory leaks in
+error paths make sure the order in which resources are freed is the exact
+opposite of their allocation. This series proposes to add a devres variant
+of register_netdev() that will only work with net_device structures whose
+memory is also managed.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- net/devres.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+First we add the missing documentation entry for the only other networking
+devres helper: devm_alloc_etherdev().
 
-diff --git a/net/devres.c b/net/devres.c
-index c1465d9f9019..b97b0c5a8216 100644
---- a/net/devres.c
-+++ b/net/devres.c
-@@ -7,30 +7,34 @@
- #include <linux/etherdevice.h>
- #include <linux/netdevice.h>
- 
--static void devm_free_netdev(struct device *dev, void *res)
-+struct net_device_devres {
-+	struct net_device *ndev;
-+};
-+
-+static void devm_free_netdev(struct device *dev, void *this)
- {
--	free_netdev(*(struct net_device **)res);
-+	struct net_device_devres *res = this;
-+
-+	free_netdev(res->ndev);
- }
- 
- struct net_device *devm_alloc_etherdev_mqs(struct device *dev, int sizeof_priv,
- 					   unsigned int txqs, unsigned int rxqs)
- {
--	struct net_device **dr;
--	struct net_device *netdev;
-+	struct net_device_devres *dr;
- 
- 	dr = devres_alloc(devm_free_netdev, sizeof(*dr), GFP_KERNEL);
- 	if (!dr)
- 		return NULL;
- 
--	netdev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
--	if (!netdev) {
-+	dr->ndev = alloc_etherdev_mqs(sizeof_priv, txqs, rxqs);
-+	if (!dr->ndev) {
- 		devres_free(dr);
- 		return NULL;
- 	}
- 
--	*dr = netdev;
- 	devres_add(dev, dr);
- 
--	return netdev;
-+	return dr->ndev;
- }
- EXPORT_SYMBOL(devm_alloc_etherdev_mqs);
+Next we move devm_alloc_etherdev() into a separate source file.
+
+We then use a proxy structure in devm_alloc_etherdev() to improve readability.
+
+Last: we implement devm_register_netdev() and use it in mtk-eth-mac driver.
+
+[1] https://lkml.org/lkml/2020/5/20/507
+
+Bartosz Golaszewski (5):
+  Documentation: devres: add a missing section for networking helpers
+  net: move devres helpers into a separate source file
+  net: devres: define a separate devres structure for
+    devm_alloc_etherdev()
+  net: devres: provide devm_register_netdev()
+  net: ethernet: mtk_eth_mac: use devm_register_netdev()
+
+ .../driver-api/driver-model/devres.rst        |  5 +
+ drivers/net/ethernet/mediatek/mtk_eth_mac.c   | 17 +---
+ include/linux/netdevice.h                     |  2 +
+ net/Makefile                                  |  2 +-
+ net/devres.c                                  | 95 +++++++++++++++++++
+ net/ethernet/eth.c                            | 28 ------
+ 6 files changed, 104 insertions(+), 45 deletions(-)
+ create mode 100644 net/devres.c
+
 -- 
 2.25.0
 
