@@ -2,147 +2,168 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C73C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9722EC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D60F206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661D920708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589994290;
+	bh=EpX/OrXPLd151MAlOFD9zeQjHS9VZGaiAsGo8Z19sVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O2boALIbDJKTYrHNJMZv5BMoSS7jsTipNZHteV+mjrpZ05BODxCnwtvqITVLGOuqV
+	 bdxZH+bPxVCV+ush/JobD06wWpRk/VShog7E8JYyIqvs7VPqk4GApctGPPSEVIK1Qz
+	 ptyhdqTYWf2EnHUmzqqSdX14RPkl3cW8EgJU+IAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgETREl (ORCPT
+        id S1728046AbgETREs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:04:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:41831 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbgETREa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:04:30 -0400
-IronPort-SDR: oAatfq2e2if+0VvXLVy39JWc9aLewljZReNKZ89T9QKknf4oc72q9jCsbbUc6vvUyIDPyRCFj9
- hBDLV/iMJxQw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 10:04:27 -0700
-IronPort-SDR: pdyaneSE1SvFnjbNJYj7WcmrqJFzGGDCv+m7p2ndD56MwaYdM7hDKuQLI0Isy44nsaoySN/B36
- BeHx6RP12Ovg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,414,1583222400"; 
-   d="scan'208";a="264752424"
-Received: from kskolet-mobl1.amr.corp.intel.com (HELO [10.255.228.207]) ([10.255.228.207])
-  by orsmga003.jf.intel.com with ESMTP; 20 May 2020 10:04:26 -0700
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     Yicong Yang <yangyicong@hisilicon.com>, bhelgaas@google.com
-Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
-Date:   Wed, 20 May 2020 10:04:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 13:04:48 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:43058 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727975AbgETREf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 13:04:35 -0400
+Received: by mail-ej1-f66.google.com with SMTP id a2so4815953ejb.10;
+        Wed, 20 May 2020 10:04:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CKAKs6M+xNNbpSPK3MJ4q3ECcAhYBkNGaDaHvUvffAI=;
+        b=m9hRbchndHeslfXhoMg/Mv1clGOmYJmuYqp33IrMygOj52oFeA05Pz//544VTAZaJg
+         gxWU+K9F5WrPk973PeDypbYx4saBvWTx3aNRnVNnboUMd8QU/jcwWoyjHQCgleUtIqLP
+         jBiw95j5uB84y/p6KVlshlxv1M3sqCHuZ+69H6csoEpwlVA+YS8W2tG0e4+bB/eP/AQU
+         occSbxooBL0q/JCyWee5edgsqcnneySoqOKqppCIcHpicz5t7tl5gh7YpcbuA729l0rK
+         QYugQuHZmdn3F6LYskrh794GfcbhpQV9LD6v7OofbgaOT2tkcrHt/Fwyju9B7qeKYiON
+         caeQ==
+X-Gm-Message-State: AOAM530l2TnJT9dojU+Xpk1SLQ+HCqWYft9B14QTxyrmJ4Cr/bE+qOjR
+        v0YkQo5voChFqWcbd55qtMY=
+X-Google-Smtp-Source: ABdhPJzqWwufjnHkD8jYZguqLqj575Aq4c2shzdQXyx4VVRTNVsIf3LPCCbL8tdzsKopnGIHXMVIgQ==
+X-Received: by 2002:a17:907:a98:: with SMTP id by24mr10749ejc.365.1589994272954;
+        Wed, 20 May 2020 10:04:32 -0700 (PDT)
+Received: from localhost (ip-37-188-251-131.eurotel.cz. [37.188.251.131])
+        by smtp.gmail.com with ESMTPSA id m8sm2364861ejk.100.2020.05.20.10.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 10:04:32 -0700 (PDT)
+Date:   Wed, 20 May 2020 19:04:30 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200520170430.GG6462@dhcp22.suse.cz>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520165131.GB630613@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520165131.GB630613@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 20-05-20 12:51:31, Johannes Weiner wrote:
+> On Wed, May 20, 2020 at 06:07:56PM +0200, Michal Hocko wrote:
+> > On Wed 20-05-20 15:37:12, Chris Down wrote:
+> > > In Facebook production, we've seen cases where cgroups have been put
+> > > into allocator throttling even when they appear to have a lot of slack
+> > > file caches which should be trivially reclaimable.
+> > > 
+> > > Looking more closely, the problem is that we only try a single cgroup
+> > > reclaim walk for each return to usermode before calculating whether or
+> > > not we should throttle. This single attempt doesn't produce enough
+> > > pressure to shrink for cgroups with a rapidly growing amount of file
+> > > caches prior to entering allocator throttling.
+> > > 
+> > > As an example, we see that threads in an affected cgroup are stuck in
+> > > allocator throttling:
+> > > 
+> > >     # for i in $(cat cgroup.threads); do
+> > >     >     grep over_high "/proc/$i/stack"
+> > >     > done
+> > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> > > 
+> > > ...however, there is no I/O pressure reported by PSI, despite a lot of
+> > > slack file pages:
+> > > 
+> > >     # cat memory.pressure
+> > >     some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
+> > >     full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
+> > >     # cat io.pressure
+> > >     some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
+> > >     full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
+> > >     # grep _file memory.stat
+> > >     inactive_file 1370939392
+> > >     active_file 661635072
+> > > 
+> > > This patch changes the behaviour to retry reclaim either until the
+> > > current task goes below the 10ms grace period, or we are making no
+> > > reclaim progress at all. In the latter case, we enter reclaim throttling
+> > > as before.
+> > 
+> > Let me try to understand the actual problem. The high memory reclaim has
+> > a target which is proportional to the amount of charged memory. For most
+> > requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
+> > N is the number of memcgs in excess up the hierarchy). I can see to be
+> > insufficient if the memcg is already in a large excess but if the
+> > reclaim can make a forward progress this should just work fine because
+> > each charging context should reclaim at least the contributed amount.
+> > 
+> > Do you have any insight on why this doesn't work in your situation?
+> > Especially with such a large inactive file list I would be really
+> > surprised if the reclaim was not able to make a forward progress.
+> 
+> The workload we observed this in was downloading a large file and
+> writing it to disk, which means that a good chunk of that memory was
+> dirty. The first reclaim pass appears to make little progress because
+> it runs into dirty pages.
 
+OK, I see but why does the subsequent reclaim attempt makes a forward
+progress? Is this just because dirty pages are flushed in the mean time?
+Because if this is the case then the underlying problem seems to be that
+the reclaim should be throttled on dirty data.
 
-On 5/20/20 1:28 AM, Yicong Yang wrote:
-> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> If there are non-hotplug capable devices connected to a given
->> port, then during the fatal error recovery(triggered by DPC or
->> AER), after calling reset_link() function, we cannot rely on
->> hotplug handler to detach and re-enumerate the device drivers
->> in the affected bus. Instead, we will have to let the error
->> recovery handler call report_slot_reset() for all devices in
->> the bus to notify about the reset operation. Although this is
->> only required for non hot-plug capable devices, doing it for
->> hotplug capable devices should not affect the functionality.
->>
->> Along with above issue, this fix also applicable to following
->> issue.
->>
->> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->> reset_link()") added support to store status of reset_link()
->> call. Although this fixed the error recovery issue observed if
->> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->> result from report_frozen_detected. This can cause a failure to
->> recover if _NEED_RESET is returned by report_frozen_detected and
->> report_slot_reset is not invoked.
->>
->> Such an event can be induced for testing purposes by reducing the
->> Max_Payload_Size of a PCIe bridge to less than that of a device
->> downstream from the bridge, and then initiating I/O through the
->> device, resulting in oversize transactions.  In the presence of DPC,
->> this results in a containment event and attempted reset and recovery
->> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->> invoked, and the device does not recover.
->>
->> [original patch is from jay.vosburgh@canonical.com]
->> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/pcie/err.c | 19 +++++++++++++++----
->>   1 file changed, 15 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 14bb8f54723e..db80e1ecb2dc 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>   	pci_dbg(dev, "broadcast error_detected message\n");
->>   	if (state == pci_channel_io_frozen) {
->>   		pci_walk_bus(bus, report_frozen_detected, &status);
->> -		status = reset_link(dev);
->> -		if (status != PCI_ERS_RESULT_RECOVERED) {
->> +		status = PCI_ERS_RESULT_NEED_RESET;
->> +	} else {
->> +		pci_walk_bus(bus, report_normal_detected, &status);
->> +	}
->> +
->> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
->> +		if (reset_link) {
->> +			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+> > Now to your patch. I do not like it much to be honest.
+> > MEM_CGROUP_RECLAIM_RETRIES is quite arbitrary and I neither like it in
+> > memory_high_write because the that is an interruptible context so there
+> > shouldn't be a good reason to give up after $FOO number of failed
+> > attempts. try_charge and memory_max_write are slightly different because
+> > we are invoking OOM killer based on the number of failed attempts.
 > 
-> we'll call reset_link() only if link is frozen. so it may have problem here.
-you mean before this change right?
-After this change, reset_link() will be called as long as status is
-PCI_ERS_RESULT_NEED_RESET.
+> The same is true for memory.high. We are invoking the userspace OOM
+> killer when memory.high reclaim fails and we put tasks to sleep.
+
+Right but there is no way to indicate that the reclaim has failed when
+writing to memory.high.
+
+> The actual number of retries is arbitrary, correct. That's because OOM
+> is arbitrary. It's a sampled state, and this is our sampling period.
 > 
-> Thanks,
-> Yicong
+> But it's not that important. The much more important thing is that we
+> continue reclaiming as long as there is forward progress. How many
+> times we retry when there is no forward progress is less critical -
+> but it's nice to have the same cutoff for OOM situations everywhere.
 > 
+> > Also if the current high reclaim scaling is insufficient then we should
+> > be handling that via memcg_nr_pages_over_high rather than effectivelly
+> > unbound number of reclaim retries.
 > 
->> +				status = PCI_ERS_RESULT_DISCONNECT;
->> +		} else {
->> +			if (pci_bus_error_reset(dev))
->> +				status = PCI_ERS_RESULT_DISCONNECT;
->> +		}
->> +
->> +		if (status == PCI_ERS_RESULT_DISCONNECT) {
->>   			pci_warn(dev, "link reset failed\n");
->>   			goto failed;
->>   		}
->> -	} else {
->> -		pci_walk_bus(bus, report_normal_detected, &status);
->>   	}
->>   
->>   	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-> 
+> ???
+
+I am not sure what you are asking here.
+
+-- 
+Michal Hocko
+SUSE Labs
