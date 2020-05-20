@@ -2,130 +2,131 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2919C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3490C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81299205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qGcAh6zK"
+	by mail.kernel.org (Postfix) with ESMTP id B288F207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589985019;
+	bh=bMsUrfEBhqQ2ZdF+Y8Gv8Gqh8iNsHpYp6jNM1nM5kOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i8X0s2rWFaUYfrI/+e21zj9ZabSYfXvw9uBjGeftPGtZZUThrJ3nF19s1e5ZMJwXz
+	 +Y6Qmxizczrop0R6xTlFka309L+OGAFI2ldX+OIJUJYancaEALwIo1qt9Q26h9emt5
+	 NhSo5h2g13hNKHP2018dfrfvpFBR2NSys/0Hgwpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgETOaK (ORCPT
+        id S1728021AbgETOaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgETOaK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 10:30:10 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA62BC061A0E;
-        Wed, 20 May 2020 07:30:09 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 142so3714352qkl.6;
-        Wed, 20 May 2020 07:30:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wnlZoevgT2PApLtssSG5/dDA/6NMSDx5IuYHuh8rwQQ=;
-        b=qGcAh6zKpxjPoqmOHri3tXoMSOSyjaMG9ePXTwJBItYxsEIB6i1R9UAXx4KrVWcFbB
-         pS+BDbRLq08x3uozXcjZf0xUZSa6XDlyhA67H2IYsxj3VZRFA8sATk3O9C/QJV+ipVO3
-         zFppRGiOu4JDc4UtTkumPi0BB4ytaMqXlwX2pEXGRD5Tj2AIRY2ZxLdm9oXasnAFmUdz
-         C5eB7YatIYW3oYH+xyBufZA7c2keh26EkYQ6u+zie6QfjdAsrTi38gpNEVS4Z0VAm+qz
-         sPKYwv3VjnrcAT/yCwcfElaKpQ871WKU2VSLHyOqKoVaBSCi7VJ1TMqkgw39xEjn1+MY
-         YCWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wnlZoevgT2PApLtssSG5/dDA/6NMSDx5IuYHuh8rwQQ=;
-        b=TyyZzYpZxkAfDvo0b/Ug7CFGwnX7XM9e1CnAm9SylLawVROJlv9rYMgyuGCrKp67aX
-         U/ZjRQda1craPgeB1s79k6Pnnp/ixF27FHTtqSXIIynTZoNFeVSB4DvWG58WnhOj4L+f
-         1E/QcB1HnglowaA8FQnVmoQhXwH5/Bj0Q9lybJQWvC40vL4JMd965F1KghykwInTNc30
-         o4TpkY8DAk2ajDQ7h1leYZfm0HhqTHwr8USBY8IahuH4svV/aCcdF0GegNw/pAXNf4hF
-         ZcgBujDv9zOdUDzza5yjd7Roca54o9eMCOWRf/s31kAexMMSNPnxaWzxThrYn1KFl1uD
-         V/6w==
-X-Gm-Message-State: AOAM533XwSMnzArhFdu7l+XC/eOzhLvlx5pEWZA/kip9DvpwR/huAPe2
-        GNQGlkKp7OfGyxQ72kxadkw=
-X-Google-Smtp-Source: ABdhPJzA6/XHH/E6E8lr686JCngM6pwIMIniACTyHxdAXyEDE3MaXy/JRhRp2sZiDeEhGG9f7XYdDw==
-X-Received: by 2002:a05:620a:1379:: with SMTP id d25mr4972883qkl.173.1589985008726;
-        Wed, 20 May 2020 07:30:08 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id n7sm2347513qtr.40.2020.05.20.07.30.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 May 2020 07:30:07 -0700 (PDT)
-Date:   Wed, 20 May 2020 16:29:50 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Allison Randal <allison@lohutok.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: iio: magnetometer: ak8975: convert
- txt format to yaml
-Message-ID: <20200520142950.GA22222@ict14-OptiPlex-980>
-References: <20200520073125.30808-1-jonathan.albrieux@gmail.com>
- <20200520073125.30808-2-jonathan.albrieux@gmail.com>
- <CAHp75VcWBe=3j68t9pmRk=xigsym_f_EHG4HLLKe_cmQi5E6mA@mail.gmail.com>
- <20200520134416.GA6875@ict14-OptiPlex-980>
- <20200520135401.GS1634618@smile.fi.intel.com>
+        Wed, 20 May 2020 10:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgETOaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 10:30:18 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64206205CB;
+        Wed, 20 May 2020 14:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589985017;
+        bh=bMsUrfEBhqQ2ZdF+Y8Gv8Gqh8iNsHpYp6jNM1nM5kOw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a1bWiQwGLeEtWfAIKT8KsxIp2IslN1LO7MUduJYWar1HTcCTeM3d4Ezc5JNBAsHCK
+         rnGNB8PhtKB5u1+Zqvj43iEvKE3bjuuTIGPpj+YeanbhhQaULqz2KHIDG9/zGHbxw5
+         mpqsV/5ILxloh74L23h6n+c9hrF0GV38iICkmozI=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7646040AFD; Wed, 20 May 2020 11:30:14 -0300 (-03)
+Date:   Wed, 20 May 2020 11:30:14 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, cj.chengjian@huawei.com,
+        huawei.libin@huawei.com, xiexiuqi@huawei.com, mark.rutland@arm.com,
+        guohanjun@huawei.com, alexander.shishkin@linux.intel.com,
+        wangnan0@huawei.com, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf bpf-loader: Add missing '*' for key_scan_pos
+Message-ID: <20200520143014.GJ32678@kernel.org>
+References: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
+ <20200520070551.GC110644@krava>
+ <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200520135401.GS1634618@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 04:54:01PM +0300, Andy Shevchenko wrote:
-> On Wed, May 20, 2020 at 03:44:16PM +0200, Jonathan Albrieux wrote:
-> > On Wed, May 20, 2020 at 11:23:18AM +0300, Andy Shevchenko wrote:
-> > > On Wed, May 20, 2020 at 10:32 AM Jonathan Albrieux
-> > > <jonathan.albrieux@gmail.com> wrote:
+Em Wed, May 20, 2020 at 06:22:12PM +0800, Wangshaobo (bobo) escreveu:
+> 
+> 在 2020/5/20 15:05, Jiri Olsa 写道:
+> > On Wed, May 20, 2020 at 11:32:16AM +0800, Wang ShaoBo wrote:
+> > > key_scan_pos is a pointer for getting scan position in
+> > > bpf__obj_config_map() for each BPF map configuration term,
+> > > but it's misused when error not happened.
 > > > 
-> > > > +maintainers:
-> > > > +  - can't find a maintainer, author is Laxman Dewangan <ldewangan@nvidia.com>
+> > > Fixes: 066dacbf2a32 ("perf bpf: Add API to set values to map entries in a bpf object")
+> > > Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+> > > ---
+> > >   tools/perf/util/bpf-loader.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
 > > > 
-> > > Alas, you'll never go forward with this.
-> > > One (easiest way) is to drop this patch completely if you won't be a
-> > > maintainer of the binding.
-> > >
+> > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > > index 10c187b8b8ea..460056bc072c 100644
+> > > --- a/tools/perf/util/bpf-loader.c
+> > > +++ b/tools/perf/util/bpf-loader.c
+> > > @@ -1225,7 +1225,7 @@ bpf__obj_config_map(struct bpf_object *obj,
+> > >   out:
+> > >   	free(map_name);
+> > >   	if (!err)
+> > > -		key_scan_pos += strlen(map_opt);
+> > > +		*key_scan_pos += strlen(map_opt);
+> > seems good, was there something failing because of this?
 > > 
-> > That's too bad. How can I be a maintainer of the binding?
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > 
+> > thanks,
+> > jirka
 > 
-> Put your name there as Jonathan and me suggested. :-)
+>   I found this problem when i checked this code, I think it is
 > 
-> maintainers:
->   - Jonathan Albrieux <jonathan.albrieux@gmail.com>
+>   an implicit question, but if we delete the two line,  the problem
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+>   also no longer exists.
 
-Ok I'll prepare a new patch then :-)
+The point is that the only user of this is:
 
-Thank you!!
-Best regards,
-Jonathan Albrieux
+  tools/perf/util/parse-events.c
+    err = bpf__config_obj(obj, term, parse_state->evlist, &error_pos);
+      if (err) bpf__strerror_config_obj(obj, term, parse_state->evlist, &error_pos, err, errbuf, sizeof(errbuf));
+
+
+And then:
+
+int bpf__strerror_config_obj(struct bpf_object *obj __maybe_unused,
+                             struct parse_events_term *term __maybe_unused,
+                             struct evlist *evlist __maybe_unused,
+                             int *error_pos __maybe_unused, int err,
+                             char *buf, size_t size)
+{
+        bpf__strerror_head(err, buf, size);
+        bpf__strerror_entry(BPF_LOADER_ERRNO__OBJCONF_MAP_TYPE,
+                            "Can't use this config term with this map type");
+        bpf__strerror_end(buf, size);
+        return 0;
+}
+
+        
+So this is infrastructure that Wang Nan put in place for providing
+better error messages but that he ended up not using, so I'll apply the
+fix, its correct even not fixing any real problem at this time.
+
+- Arnaldo
