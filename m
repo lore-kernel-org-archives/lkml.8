@@ -2,106 +2,167 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C51C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54BB2207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:08:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qvwd4GnD"
+	by mail.kernel.org (Postfix) with ESMTP id ACE3620874
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 21:09:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590008958;
+	bh=ptqItCDH9o9pF0WAAEe7vrVWcF72lf1db3H1PlvvZBI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R0CHUglQorCktNLCyXOgaioTi1YrS3N4Q+CI97WwaPKTVE6ZMW9dhZV2KqHsP7XiE
+	 GyTXsxsE5IVV2OcjKlxLcTG2MgZxrG7owJoDzoXvZtpFDbbFeDsEOieDtbsftIRQ6T
+	 aFt453T/bb5comr+UQJOtdmD0telz5ILJkPg33tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgETVIv (ORCPT
+        id S1728267AbgETVJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 17:08:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27242 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727018AbgETVIt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 17:08:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590008928;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NDXFwaANeSRgHjjtGuv6a9pUflLvS5TDaJmPMi98Sp4=;
-        b=Qvwd4GnDGvaxJJJZFXuUIR2iaYZpaH4RQa/tImfcOntwSrPCeimbODQhuuWsRwbehS04rQ
-        EoTt7KnHd0/AWkD10ZX1HxSFB/ghj1NBGwX7PjqHdJ+6SdCkX7fqCE5/aEHijGxwwGJ2ha
-        8mXCEK6nxF2UTpV/14GeRe6dU421frU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-B7Katbi6Pr26cOX6xyfFdA-1; Wed, 20 May 2020 17:08:46 -0400
-X-MC-Unique: B7Katbi6Pr26cOX6xyfFdA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 May 2020 17:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbgETVJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 17:09:17 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89688461;
-        Wed, 20 May 2020 21:08:45 +0000 (UTC)
-Received: from starship (unknown [10.35.206.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 13015106F755;
-        Wed, 20 May 2020 21:08:43 +0000 (UTC)
-Message-ID: <2401913621cc7686d71f491ef55f30f78ebbb2eb.camel@redhat.com>
-Subject: Re: [PATCH 00/24] KVM: nSVM: event fixes and migration support
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Date:   Thu, 21 May 2020 00:08:42 +0300
-In-Reply-To: <cecf6c64-6828-5a3f-642a-11aac4cefa75@redhat.com>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
-         <6b8674fa647d3b80125477dc344581ba7adfb931.camel@redhat.com>
-         <cecf6c64-6828-5a3f-642a-11aac4cefa75@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        by mail.kernel.org (Postfix) with ESMTPSA id A1549207E8;
+        Wed, 20 May 2020 21:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590008956;
+        bh=ptqItCDH9o9pF0WAAEe7vrVWcF72lf1db3H1PlvvZBI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BIX6dy2uSkCaZ2ZWGiTohSWyIBcIUVDfHCgMwKaYLKy/xHaqmVCqC+QEm7GCJtqgE
+         hM7FAdVBM0uSXlrg3366o6ZRc6IhD9ONoKGuXHJJdasKurTCFEJKcmNrsQvGZSu1jW
+         1gJMaXGRSwH/nGj978U79DnXinPmbxQAy0rqhzUA=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D4B9A40AFD; Wed, 20 May 2020 18:09:14 -0300 (-03)
+Date:   Wed, 20 May 2020 18:09:14 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/19] perf ftrace: add option -P/--no-pager to disable
+ pager
+Message-ID: <20200520210914.GC32678@kernel.org>
+References: <20200510150628.16610-1-changbin.du@gmail.com>
+ <20200510150628.16610-15-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200510150628.16610-15-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-20 at 22:42 +0200, Paolo Bonzini wrote:
-> On 20/05/20 21:24, Maxim Levitsky wrote:
-> > Patch 24 doesn't apply cleanly on top of kvm/queue, I appplied it manually,
-> > due to missing KVM_STATE_NESTED_MTF_PENDING bit
-> > 
-> > Also patch 22 needes ALIGN_UP which is not on mainline.
-> > Probably in linux-next?
-> 
-> Just replace it with ALIGN.  (I tested it with memzero_user in
-> arch/x86/kvm/ for convenience, and the lib/ patch ended up out of sync
-> with the actual code).
-That is exactly what I did.
+Em Sun, May 10, 2020 at 11:06:23PM +0800, Changbin Du escreveu:
+> Sometimes we want perf displays trace immediately. So this adds an option
+> '-P/--no-pager' to disable pager if needed.
+
+
+Try:
+
+perf record sleep 5
+perf script
+
+Then:
+
+perf --no-pager script
+
+I.e. its there already.
+
+- Arnaldo
 
 > 
-> > With these fixes, I don't see #DE exceptions on a nested guest I try to run
-> > however it still hangs, right around the time it tries to access PS/2 keyboard/mouse.
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
 > 
-> IIRC you said that the bug appeared with the vintr rework, and then went
-> from hang to #DE and now back to hang?  And the hang is reported by L2,
-> not L1?
-Yes, and now the hang appears to be deterministic. The initial hang could happen
-randomally. I remember that once the nested guest got to getty prompt even and hanged
-on shutdown. Now hang is deterministic when kernel prints something about PS/2.
-I will re-check this tomorrow.
-
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index a93fbdac6aa4..64c22f367ba2 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -48,6 +48,7 @@ struct perf_ftrace {
+>  	unsigned		tracing_thresh;
+>  	bool			trace_children;
+>  	unsigned		buffer_size_kb;
+> +	bool			no_pager;
+>  };
+>  
+>  struct filter_entry {
+> @@ -56,6 +57,7 @@ struct filter_entry {
+>  };
+>  
+>  static volatile int workload_exec_errno;
+> +static bool interrupted;
+>  static bool done;
+>  
+>  static void sig_handler(int sig __maybe_unused)
+> @@ -63,6 +65,12 @@ static void sig_handler(int sig __maybe_unused)
+>  	done = true;
+>  }
+>  
+> +static void sig_handler_int(int sig __maybe_unused)
+> +{
+> +	sig_handler(sig);
+> +	interrupted = 1;
+> +}
+> +
+>  /*
+>   * perf_evlist__prepare_workload will send a SIGUSR1 if the fork fails, since
+>   * we asked by setting its exec_error to the function below,
+> @@ -492,7 +500,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  		return -1;
+>  	}
+>  
+> -	signal(SIGINT, sig_handler);
+> +	signal(SIGINT, sig_handler_int);
+>  	signal(SIGUSR1, sig_handler);
+>  	signal(SIGCHLD, sig_handler);
+>  	signal(SIGPIPE, sig_handler);
+> @@ -585,7 +593,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  		goto out_reset;
+>  	}
+>  
+> -	setup_pager();
+> +	if (!ftrace->no_pager)
+> +		setup_pager();
+>  
+>  	trace_file = get_tracing_file("trace_pipe");
+>  	if (!trace_file) {
+> @@ -636,7 +645,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+>  	}
+>  
+>  	/* read remaining buffer contents */
+> -	while (true) {
+> +	while (true && !interrupted) {
+>  		int n = read(trace_fd, buf, sizeof(buf));
+>  		if (n <= 0)
+>  			break;
+> @@ -731,6 +740,8 @@ int cmd_ftrace(int argc, const char **argv)
+>  		    "Trace children processes"),
+>  	OPT_UINTEGER('b', "buffer-size", &ftrace.buffer_size_kb,
+>  		     "size of per cpu buffer in kb"),
+> +	OPT_BOOLEAN('P', "no-pager", &ftrace.no_pager,
+> +		    "Do not use pager"),
+>  	OPT_END()
+>  	};
+>  
+> -- 
+> 2.25.1
 > 
-> In order to debug the hang, a good start would be to understand if it
-> also happens with vgif=0.  This is because with vgif=1 we use VINTR
-> intercepts even while GIF=0, so the whole thing is a bit more complicated.
-I will check this tomorrow as well.
 
+-- 
 
-Best regards,
-	Maxim Levitsky
-
-> 
-> Paolo
-> 
-
-
+- Arnaldo
