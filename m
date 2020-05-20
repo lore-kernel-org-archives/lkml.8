@@ -2,154 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E84EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0713C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E93207FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="luKthv+e"
+	by mail.kernel.org (Postfix) with ESMTP id D96D7207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgETIoE (ORCPT
+        id S1726803AbgETIoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:44:04 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:63521 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726224AbgETIoE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:44:04 -0400
-X-UUID: d7b8e253527c43878f8fa023f1f7b048-20200520
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=u0K9CvT5HV61VJXYYwxkYfqIusTCbFNVtZQAS+tl34Q=;
-        b=luKthv+eR0xrTVxdbHlaDd4k9oQjtvxMr/QNDzQKGBVUKw9IbG4QylxeWXGAnoUEIq/uuYTOjxDKqm+S7hmCBRf1LP5w90XZzJ/qxaky9IISaUKd/S1BYII6L8HUemO/mjkt0y2GYvQKFekhcMC1h6UiyTaAxcoNwHWFRhpoCf4=;
-X-UUID: d7b8e253527c43878f8fa023f1f7b048-20200520
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1078213673; Wed, 20 May 2020 16:43:55 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 20 May
- 2020 16:42:35 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 20 May 2020 16:42:34 +0800
-Message-ID: <1589964062.25512.67.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/2] i2c: mediatek: Add i2c ac-timing adjust support
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Joe Perches <joe@perches.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>, <leilk.liu@mediatek.com>,
+        Wed, 20 May 2020 04:44:55 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2233 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726224AbgETIoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 04:44:55 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 71C196872E1953858488;
+        Wed, 20 May 2020 09:44:51 +0100 (IST)
+Received: from [127.0.0.1] (10.210.167.247) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 20 May
+ 2020 09:44:50 +0100
+Subject: Re: BUG: sleeping function called from atomic due to "Balance initial
+ LPI affinity across CPUs"
+To:     Qian Cai <cai@lca.pw>, Marc Zyngier <maz@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Linux I2C" <linux-i2c@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 20 May 2020 16:41:02 +0800
-In-Reply-To: <CAMuHMdXgp85PVteunxrHYcMTqFgQWHmXXCVJM_KX76xkCADMpw@mail.gmail.com>
-References: <1589461844-15614-1-git-send-email-qii.wang@mediatek.com>
-         <1589461844-15614-3-git-send-email-qii.wang@mediatek.com>
-         <CAMuHMdXjLakWDDEy=02prC7XjAs_xBnt2mArPFNwyHgUoWw6-g@mail.gmail.com>
-         <1589857073.25512.34.camel@mhfsdcap03>
-         <CAMuHMdXgp85PVteunxrHYcMTqFgQWHmXXCVJM_KX76xkCADMpw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <CAG=TAF6hJL-wfGLq3oa-ZGk3-YGEtuMyO2V9ePFUcbv99NWVSw@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <81796a6e-718a-aa93-d183-6747e0654c8c@huawei.com>
+Date:   Wed, 20 May 2020 09:43:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 419D878692A456EACB25265C39EB5C4831837D6DCD95B04EF9B86113CAB6032B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAG=TAF6hJL-wfGLq3oa-ZGk3-YGEtuMyO2V9ePFUcbv99NWVSw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.167.247]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFR1ZSwgMjAyMC0wNS0xOSBhdCAwOToxNCArMDIwMCwgR2VlcnQgVXl0
-dGVyaG9ldmVuIHdyb3RlOg0KPiBIaSBRaWksDQo+IA0KPiBPbiBUdWUsIE1heSAxOSwgMjAyMCBh
-dCA0OjU5IEFNIFFpaSBXYW5nIDxxaWkud2FuZ0BtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+IE9u
-IE1vbiwgMjAyMC0wNS0xOCBhdCAxNzo0NCArMDIwMCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3Rl
-Og0KPiA+ID4gT24gVGh1LCBNYXkgMTQsIDIwMjAgYXQgMzoxMyBQTSBRaWkgV2FuZyA8cWlpLndh
-bmdAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPiA+ID4gVGhpcyBwYXRjaCBhZGRzIGEgYWxnb3Jp
-dGhtIHRvIGNhbGN1bGF0ZSBzb21lIGFjLXRpbWluZyBwYXJhbWV0ZXJzDQo+ID4gPiA+IHdoaWNo
-IGNhbiBmdWxseSBtZWV0IEkyQyBTcGVjLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5
-OiBRaWkgV2FuZyA8cWlpLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4g
-IGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCAzMjggKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrLS0tLS0tLQ0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDI3NyBpbnNl
-cnRpb25zKCspLCA1MSBkZWxldGlvbnMoLSkNCj4gPiA+ID4NCj4gPiA+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJj
-LW10NjV4eC5jDQo+ID4gPiA+IGluZGV4IDBjYTZjMzhhLi43MDIwNjE4IDEwMDY0NA0KPiA+ID4g
-PiAtLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQo+ID4gPiA+ICsrKyBiL2Ry
-aXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCj4gPiA+DQo+ID4gPiA+ICsvKg0KPiA+ID4g
-PiArICogQ2hlY2sgYW5kIENhbGN1bGF0ZSBpMmMgYWMtdGltaW5nDQo+ID4gPiA+ICsgKg0KPiA+
-ID4gPiArICogSGFyZHdhcmUgZGVzaWduOg0KPiA+ID4gPiArICogc2FtcGxlX25zID0gKDEwMDAw
-MDAwMDAgKiAoc2FtcGxlX2NudCArIDEpKSAvIGNsa19zcmMNCj4gPiA+ID4gKyAqIHh4eF9jbnRf
-ZGl2ID0gIHNwZWMtPm1pbl94eHhfbnMgLyBzYW1wbGVfbnMNCj4gPiA+ID4gKyAqDQo+ID4gPiA+
-ICsgKiBTYW1wbGVfbnMgaXMgcm91bmRlZCBkb3duIGZvciB4eHhfY250X2RpdiB3b3VsZCBiZSBn
-cmVhdGVyDQo+ID4gPiA+ICsgKiB0aGFuIHRoZSBzbWFsbGVzdCBzcGVjLg0KPiA+ID4gPiArICog
-VGhlIHNkYV90aW1pbmcgaXMgY2hvc2VuIGFzIHRoZSBtaWRkbGUgdmFsdWUgYmV0d2Vlbg0KPiA+
-ID4gPiArICogdGhlIGxhcmdlc3QgYW5kIHNtYWxsZXN0Lg0KPiA+ID4gPiArICovDQo+ID4gPiA+
-ICtzdGF0aWMgaW50IG10a19pMmNfY2hlY2tfYWNfdGltaW5nKHN0cnVjdCBtdGtfaTJjICppMmMs
-DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgaW50
-IGNsa19zcmMsDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5z
-aWduZWQgaW50IGNoZWNrX3NwZWVkLA0KPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHVuc2lnbmVkIGludCBzdGVwX2NudCwNCj4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBpbnQgc2FtcGxlX2NudCkNCj4gPiA+ID4gK3sN
-Cj4gPiA+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzICpzcGVjOw0KPiA+
-ID4gPiArICAgICAgIHVuc2lnbmVkIGludCBzdV9zdGFfY250LCBsb3dfY250LCBoaWdoX2NudCwg
-bWF4X3N0ZXBfY250Ow0KPiA+ID4gPiArICAgICAgIHVuc2lnbmVkIGludCBzZGFfbWF4LCBzZGFf
-bWluLCBjbGtfbnMsIG1heF9zdGFfY250ID0gMHgzZjsNCj4gPiA+ID4gKyAgICAgICBsb25nIGxv
-bmcgc2FtcGxlX25zID0gKDEwMDAwMDAwMDAgKiAoc2FtcGxlX2NudCArIDEpKSAvIGNsa19zcmM7
-DQo+ID4gPg0KPiA+ID4gU28gc2FtcGxlX25zIGlzIGEgNjQtYml0IHZhbHVlLiBJcyB0aGF0IHJl
-YWxseSBuZWVkZWQ/DQo+ID4gPg0KPiA+DQo+ID4gKDEwMDAwMDAwMDAgKiAoc2FtcGxlX2NudCAr
-IDEpKSAvIGNsa19zcmMgdmFsdWUgaXMgYSAzMi1iaXQsICgxMDAwMDAwMDAwDQo+ID4gKiAoc2Ft
-cGxlX2NudCArIDEpKSB3aWxsIG92ZXIgMzItYml0IGlmIHNhbXBsZV9jbnQgaXMgNy4NCj4gDQo+
-IFRoZSBpbnRlcm1lZGlhdGUgdmFsdWUgd2lsbCBpbmRlZWQgbm90IGZpdCBpbiAzMi1iaXQuDQo+
-IEJ1dCB0aGF0IGRvZXNuJ3QgbWVhbiB0aGUgZW5kIHJlc3VsdCB3b24ndCBmaXQgaW4gMzItYml0
-Lg0KPiBBcyB5b3UgZGl2aWRlIHNwZWMtPm1pbl9sb3dfbnMgYW5kIHNwZWMtPm1pbl9zdV9kYXRf
-bnMgKHdoaWNoIEkgYXNzdW1lDQo+IGFyZSBzbWFsbCBudW1iZXJzKSBieSBzYW1wbGVfbnMgYmVs
-b3csIHNhbXBsZV9ucyBjYW5ub3QgYmUgdmVyeSBsYXJnZSwNCj4gb3IgdGhlIHF1b3RpZW50IHdp
-bGwgYmUgemVybyBhbnl3YXkuDQo+IFNvIGp1c3QgZG9pbmcgdGhlIG11bHRpcGxpY2F0aW9uIGlu
-IDY0LWJpdCwgZm9sbG93ZWQgYnkgYSA2NC1ieS0zMg0KPiBkaXZpc2lvbiBpcyBwcm9iYWJseSBm
-aW5lOg0KPiANCj4gICAgIHVuc2lnbmVkIGludCBzYW1wbGVfbnMgPSBkaXZfdTY0KDEwMDAwMDAw
-MDBVTEwgKiAoc2FtcGxlX2NudCArIDEpLCBjbGtfc3JjKTsNCj4gDQo+IFlvdSBtYXkgd2FudCB0
-byB0YWtlIHByZWNhdXRpb25zIGZvciB0aGUgY2FzZSB3aGVyZSB0aGUgcGFzc2VkIHZhbHVlIG9m
-DQo+IGNsa19zcmMgaXMgYSBzbWFsbCBudW1iZXIgKGNhbiB0aGF0IGhhcHBlbj8pLg0KPiANCj4g
-QlRXLCBjbGtfZ2V0X3JhdGUoKSByZXR1cm5zICJ1bnNpZ25lZCBsb25nIiwgd2hpbGUgbXRrX2ky
-Y19zZXRfc3BlZWQoKQ0KPiB0YWtlcyBhbiAidW5zaWduZWQgaW50IiBwYXJlbnRfY2xrLCB3aGlj
-aCBtYXkgY2F1c2UgZnV0dXJlIGlzc3Vlcy4NCj4gWW91IG1heSB3YW50IHRvIGNoYW5nZSB0aGF0
-IHRvICJ1bnNpZ25lZCBsb25nIiwgYWxvbmcgdGhlIHdob2xlDQo+IHByb3BhZ2F0aW9uIHBhdGgs
-IGFuZCB1c2UgZGl2NjRfdWwoKSBpbnN0ZWFkIG9mIGRpdl91NjQoKSBhYm92ZS4NCj4gDQoNClRo
-ZSByZXR1cm4gdHlwZSBvZiBkaXZfdTY0IGlzIHU2NCh1bnNpZ25lZCBsb25nIGxvbmcpLCB0aGVy
-ZSBpcyBhDQpjb21wdWxzb3J5IHR5cGUgY29udmVyc2lvbiBvcGVyYXRvci4gRG8geW91IHRoaW5r
-IGl0IGlzIG5lZWRlZD8NCkJUVywgd2UganVzdCBuZWVkIHRvIGNoYW5nZSB0aGUgdHlwZSBvZiBz
-YW1wbGVfbnMgdG8gdW5zaWduZWQgaW50LCBubw0KbWF0dGVyIHdoaWNoIG1ldGhvZCBpcyB1c2Vk
-LCB3aGF0IGlzIHlvdXIgb3Bpbmlvbj8NCg0KPiA+IEkgdGhpbmsgMTAwMDAwMDAwMCBhbmQgY2xr
-X3NyYyBpcyB0b28gYmlnLCBtYXliZSBJIGNhbiByZWR1Y2UgdGhlbiB3aXRoDQo+ID4gYmUgZGl2
-aWRlZCBhbGwgYnkgMTAwMC4NCj4gPiBleGFtcGxlOg0KPiA+DQo+ID4gdW5zaWduZWQgaW50IHNh
-bXBsZV9uczsNCj4gPiB1bnNpZ25lZCBpbnQgY2xrX3NyY19raHogPSBjbGtfc3JjIC8gMTAwMDsN
-Cj4gDQo+IFRoYXQgbWF5IGNhdXNlIHRvbyBtdWNoIGxvc3Mgb2YgcHJlY2lzaW9uLg0KPiANCg0K
-Y2xrX3NyYyBpcyBtb3JlIHRoYW4gTUh6IGFuZCBsZXNzIHRoYW4gR0haIGZvciBNVEsgaTJjIGNv
-bnRyb2xsZXIsIHNvIGl0DQp3b3VsZG4ndCBjYXVzZSB0b28gbXVjaCBsb3NzIG9mIHByZWNpc2lv
-bi4NCg0KPiA+DQo+ID4gaWYoY2xrX3NyY19raHopDQo+ID4gICAgICAgICBzYW1wbGVfbnMgPSAo
-MTAwMDAwMCAqIChzYW1wbGVfY250ICsgMSkpIC8gY2xrX3NyY19raHo7DQo+ID4gZWxzZQ0KPiA+
-ICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4NCj4gPiA+ID4gKyAgICAgICBpZiAoIWkyYy0+
-ZGV2X2NvbXAtPnRpbWluZ19hZGp1c3QpDQo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4g
-MDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIGlmIChpMmMtPmRldl9jb21wLT5sdGltaW5n
-X2FkanVzdCkNCj4gPiA+ID4gKyAgICAgICAgICAgICAgIG1heF9zdGFfY250ID0gMHgxMDA7DQo+
-ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBzcGVjID0gbXRrX2kyY19nZXRfc3BlYyhjaGVja19z
-cGVlZCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBpZiAoaTJjLT5kZXZfY29tcC0+bHRp
-bWluZ19hZGp1c3QpDQo+ID4gPiA+ICsgICAgICAgICAgICAgICBjbGtfbnMgPSAxMDAwMDAwMDAw
-IC8gY2xrX3NyYzsNCj4gPiA+ID4gKyAgICAgICBlbHNlDQo+ID4gPiA+ICsgICAgICAgICAgICAg
-ICBjbGtfbnMgPSBzYW1wbGVfbnMgLyAyOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgc3Vf
-c3RhX2NudCA9IERJVl9ST1VORF9VUChzcGVjLT5taW5fc3Vfc3RhX25zLCBjbGtfbnMpOw0KPiA+
-ID4gPiArICAgICAgIGlmIChzdV9zdGFfY250ID4gbWF4X3N0YV9jbnQpDQo+ID4gPiA+ICsgICAg
-ICAgICAgICAgICByZXR1cm4gLTE7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBsb3dfY250
-ID0gRElWX1JPVU5EX1VQKHNwZWMtPm1pbl9sb3dfbnMsIHNhbXBsZV9ucyk7DQo+ID4gPg0KPiA+
-ID4gU28gdGhpcyBpcyBhIDMyLWJpdCBieSA2NC1iaXQgZGl2aXNpb24gKGluZGVlZCwgbm90IDY0
-LWJ5LTMyISkNCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgR2VlcnQNCj4gDQoNCg==
+On 19/05/2020 23:09, Qian Cai wrote:
+> Reverted the linux-next commit f068a62c548c ("irqchip/gic-v3-its:
+> Balance initial LPI affinity across CPUs") fixed these warnings during
+> boot,
+
+Thanks for the notice. So we need the following set to see this:
+CONFIG_CPUMASK_OFFSTACK=y
+CONFIG_DEBUG_ATOMIC_SLEEP=y
+CONFIG_DEBUG_PER_CPU_MAPS=y
+
+> 
+> its_select_cpu at drivers/irqchip/irq-gic-v3-its.c:1572
+> 
+> [  332.819381][ T3359] BUG: sleeping function called from invalid
+> context at mm/slab.h:568
+> [  332.827405][ T3359] in_atomic(): 1, irqs_disabled(): 128,
+> non_block: 0, pid: 3359, name: irqbalance
+> [  332.836455][ T3359] INFO: lockdep is turned off.
+> [  332.841076][ T3359] irq event stamp: 0
+> [  332.844836][ T3359] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+> [  332.851828][ T3359] hardirqs last disabled at (0):
+> [<ffff9000101ea65c>] copy_process+0x98c/0x1f34
+> [  332.860710][ T3359] softirqs last  enabled at (0):
+> [<ffff9000101ea690>] copy_process+0x9c0/0x1f34
+> [  332.869586][ T3359] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [  332.876560][ T3359] CPU: 155 PID: 3359 Comm: irqbalance Tainted: G
+>        W    L    5.7.0-rc6-next-20200519 #1
+> [  332.886563][ T3359] Hardware name: HPE Apollo 70
+> /C01_APACHE_MB         , BIOS L50_5.13_1.11 06/18/2019
+> [  332.897000][ T3359] Call trace:
+> [  332.900151][ T3359]  dump_backtrace+0x0/0x22c
+> [  332.904514][ T3359]  show_stack+0x28/0x34
+> [  332.908543][ T3359]  dump_stack+0x104/0x194
+> [  332.912738][ T3359]  ___might_sleep+0x314/0x328
+> [  332.917274][ T3359]  __might_sleep+0x7c/0xe0
+> [  332.921563][ T3359]  slab_pre_alloc_hook+0x44/0x8c
+> [  332.926360][ T3359]  __kmalloc_node+0xb0/0x618
+> [  332.930811][ T3359]  alloc_cpumask_var_node+0x48/0x94
+
+We could use GFP_ATOMIC flag at the callsite here, but maybe there is a 
+better solution.
+
+> [  332.935868][ T3359]  alloc_cpumask_var+0x10/0x1c
+> [  332.940496][ T3359]  its_select_cpu+0x58/0x2e4
+> [  332.944945][ T3359]  its_set_affinity+0xe8/0x27c
+> [  332.949576][ T3359]  msi_domain_set_affinity+0x78/0x114
+> [  332.954813][ T3359]  irq_do_set_affinity+0x84/0x198
+> [  332.959697][ T3359]  irq_set_affinity_locked+0x80/0x1a8
+> [  332.964927][ T3359]  __irq_set_affinity+0x54/0x84
+> [  332.969637][ T3359]  write_irq_affinity+0x16c/0x198
+> [  332.974520][ T3359]  irq_affinity_proc_write+0x34/0x44
+> [  332.979672][ T3359]  pde_write+0x5c/0x78
+> [  332.983602][ T3359]  proc_reg_write+0x74/0xc0
+> [  332.987974][ T3359]  __vfs_write+0x84/0x1d8
+> [  332.992163][ T3359]  vfs_write+0x13c/0x1b8
+> [  332.996265][ T3359]  ksys_write+0xb0/0x120
+> [  333.000385][ T3359]  __arm64_sys_write+0x54/0x88
+> [  333.005017][ T3359]  do_el0_svc+0x128/0x1dc
+> [  333.009213][ T3359]  el0_sync_handler+0xd0/0x268
+> [  333.013836][ T3359]  el0_sync+0x164/0x180
+> [  336.527739][ T3356] mlx5_core 0000:0b:00.1 enp11s0f1np1: Link down
+> .
+> 
 
