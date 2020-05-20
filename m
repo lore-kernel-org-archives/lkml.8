@@ -2,190 +2,87 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A648C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2B70206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:03:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gCn4N7N3"
+	by mail.kernel.org (Postfix) with ESMTP id 8BAD02070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726850AbgETLDb (ORCPT
+        id S1726799AbgETLFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbgETLD1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:03:27 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BE5C08C5C0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:03:25 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j5so2717854wrq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ct4iwtkqSx7W80DKvDt8WvEkiq9KjVIacJ0yr7BAVII=;
-        b=gCn4N7N304bnLXil/a63o+C7lXWE4O+dUD5kr4U/QwkYok3WIYIss7MpTiwkIvDJDu
-         Yb14/i8NGGvtiwnPpTQWB1oc/MHjv9gyvs+HjkbrsA9GEiFTSWKwCkg07hWlb9e22xpX
-         cG1iXAAYqHj6N5FDXXS8FFy8ELfjoCREHTKlM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=ct4iwtkqSx7W80DKvDt8WvEkiq9KjVIacJ0yr7BAVII=;
-        b=HkFqrFajZ48/vHE5A5h+e9GW/PKsEh4/wBPC9oGx8xy0R9AMVrT2lmSTN99BsQNYSC
-         6tf2FLiDjQw6U7A8TGnWgOLokJKJ9Tlbb8ttj3mnOm4uGm6uqXFOieBlSyB6/JMjl+Vx
-         txo6sqhSoHRb1e0U7UZQsvs9zZNwBXzw4s3y+Tz3BboyMVoG10E82t8xyK7KDOa0n146
-         Kjl/ibaEyUwFPKnf3+qDM8DdhRNg9z1is4aW8SztltbweKp7EgYmjSw1Dsn4TT79bjrK
-         uWrlvi65lAkuzpDfIN4RXV1a1a+MKA7YryIX9474SfSYvddMqAe7rnjPl9/+HKPMubsX
-         Y75w==
-X-Gm-Message-State: AOAM531uHjBxEXXPjZydBLpbNG10fWwOJFoc8i7zb5HfMIzG7RWJM0W7
-        ahRHR6cUCpG4zfbvT1dGhcimzw==
-X-Google-Smtp-Source: ABdhPJzCd29Xl/wTekkJzbG2hFf7ELniw9c+535re3/QWPV7VzmtBOKv2TwjIms44WqcPc+fmic+SA==
-X-Received: by 2002:adf:fe90:: with SMTP id l16mr3672440wrr.222.1589972604221;
-        Wed, 20 May 2020 04:03:24 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id u65sm2743050wmg.8.2020.05.20.04.03.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 04:03:23 -0700 (PDT)
-Date:   Wed, 20 May 2020 13:03:20 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH] dma-fence: add might_sleep annotation to _wait()
-Message-ID: <20200520110320.GT206103@phenom.ffwll.local>
-Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20200519132756.682888-1-daniel.vetter@ffwll.ch>
- <be86b73c-2fb3-a6c0-5a12-004af051210f@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be86b73c-2fb3-a6c0-5a12-004af051210f@amd.com>
-X-Operating-System: Linux phenom 5.6.0-1-amd64 
+        Wed, 20 May 2020 07:05:32 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:60272 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726435AbgETLFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:05:31 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgAneBLhDsVe5_OMAQ--.58394S4;
+        Wed, 20 May 2020 19:05:08 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/panfrost: fix runtime pm imbalance on error
+Date:   Wed, 20 May 2020 19:05:04 +0800
+Message-Id: <20200520110504.24388-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgAneBLhDsVe5_OMAQ--.58394S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWDGrc_ur
+        1UZr9xWw42yr1qgw40va13ZryS9Fy5X3Wxuw10g34akryDAa1DCry2vrZ8Zr4xW343Ar1D
+        ta1vgF1ayrsrujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbT8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r4kMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfU0PEfUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:54:36AM +0200, Christian König wrote:
-> Am 19.05.20 um 15:27 schrieb Daniel Vetter:
-> > Do it uncontionally, there's a separate peek function with
-> > dma_fence_is_signalled() which can be called from atomic context.
-> > 
-> > v2: Consensus calls for an unconditional might_sleep (Chris,
-> > Christian)
-> > 
-> > Full audit:
-> > - dma-fence.h: Uses MAX_SCHEDULE_TIMOUT, good chance this sleeps
-> > - dma-resv.c: Timeout always at least 1
-> > - st-dma-fence.c: Save to sleep in testcases
-> > - amdgpu_cs.c: Both callers are for variants of the wait ioctl
-> > - amdgpu_device.c: Two callers in vram recover code, both right next
-> >    to mutex_lock.
-> > - amdgpu_vm.c: Use in the vm_wait ioctl, next to _reserve/unreserve
-> > - remaining functions in amdgpu: All for test_ib implementations for
-> >    various engines, caller for that looks all safe (debugfs, driver
-> >    load, reset)
-> > - etnaviv: another wait ioctl
-> > - habanalabs: another wait ioctl
-> > - nouveau_fence.c: hardcoded 15*HZ ... glorious
-> > - nouveau_gem.c: hardcoded 2*HZ ... so not even super consistent, but
-> >    this one does have a WARN_ON :-/ At least this one is only a
-> >    fallback path for when kmalloc fails. Maybe this should be put onto
-> >    some worker list instead, instead of a work per unamp ...
-> > - i915/selftests: Hardecoded HZ / 4 or HZ / 8
-> > - i915/gt/selftests: Going up the callchain looks safe looking at
-> >    nearby callers
-> > - i915/gt/intel_gt_requests.c. Wrapped in a mutex_lock
-> > - i915/gem_i915_gem_wait.c: The i915-version which is called instead
-> >    for i915 fences already has a might_sleep() annotation, so all good
-> > 
-> > Cc: Alex Deucher <alexander.deucher@amd.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> > Cc: Ben Skeggs <bskeggs@redhat.com>
-> > Cc: "VMware Graphics" <linux-graphics-maintainer@vmware.com>
-> > Cc: Oded Gabbay <oded.gabbay@gmail.com>
-> > Cc: linux-media@vger.kernel.org
-> > Cc: linaro-mm-sig@lists.linaro.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: amd-gfx@lists.freedesktop.org
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Christian König <christian.koenig@amd.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> 
-> Reviewed-by: Christian König <christian.koenig@amd.com>
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-intel-gfx-ci approves too, thanks to both of you for reviews, patch merged
-to drm-misc-next.
--Daniel
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/gpu/drm/panfrost/panfrost_job.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> 
-> > ---
-> >   drivers/dma-buf/dma-fence.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-> > index 90edf2b281b0..656e9ac2d028 100644
-> > --- a/drivers/dma-buf/dma-fence.c
-> > +++ b/drivers/dma-buf/dma-fence.c
-> > @@ -208,6 +208,8 @@ dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
-> >   	if (WARN_ON(timeout < 0))
-> >   		return -EINVAL;
-> > +	might_sleep();
-> > +
-> >   	trace_dma_fence_wait_start(fence);
-> >   	if (fence->ops->wait)
-> >   		ret = fence->ops->wait(fence, intr, timeout);
-> 
-
+diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
+index 7914b1570841..5719e356c969 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_job.c
++++ b/drivers/gpu/drm/panfrost/panfrost_job.c
+@@ -146,8 +146,10 @@ static void panfrost_job_hw_submit(struct panfrost_job *job, int js)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(pfdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_sync_autosuspend(pfdev->dev);
+ 		return;
++	}
+ 
+ 	if (WARN_ON(job_read(pfdev, JS_COMMAND_NEXT(js)))) {
+ 		pm_runtime_put_sync_autosuspend(pfdev->dev);
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.1
+
