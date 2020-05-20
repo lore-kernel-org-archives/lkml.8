@@ -2,114 +2,93 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D017C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41508207C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589942087;
-	bh=5TX6blDXQ6f+6hKSGCxomiV/h9BfQhuTdQ1tm+sld0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HAoDaSlJJxbgRNF9oHy1fWUW5YcPGvn26xvCezGmATf9Rwn3OcNcztYziC9V2jXYz
-	 8SJLQdD8+eOWV6tZLc7+a+MQblkCW039IDT5SAGR217/L43Gw9POPCzPBiS0BoiGfG
-	 /SB0JaLLCiR840/KDGzqmK0/+/vy+G0lM0Oqb+zg=
+	by mail.kernel.org (Postfix) with ESMTP id E68D220756
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 02:37:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0VG26ibh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgETCeq (ORCPT
+        id S1728491AbgETChX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 May 2020 22:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbgETCep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 May 2020 22:34:45 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19D9F2075F;
-        Wed, 20 May 2020 02:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589942085;
-        bh=5TX6blDXQ6f+6hKSGCxomiV/h9BfQhuTdQ1tm+sld0Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=klTWpgECYRftIP9DfV5mt0U3/nHgbW3YxUGGev8YNKgKYSbR6PX904dQj9BXy+wwR
-         Z57gcVqNNDl8oZQ0XqQt4jR8uStgPIqDNn91m1Hty6nAQEazs44wW6mpqpznPL70Lr
-         2SM+1MGRt9qkjE38McwUKkvY60bdDnwI6cC1wIjI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0C7C740AFD; Tue, 19 May 2020 23:34:43 -0300 (-03)
-Date:   Tue, 19 May 2020 23:34:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v3 6/7] perf test: Improve pmu event metric testing
-Message-ID: <20200520023443.GE32678@kernel.org>
-References: <20200515221732.44078-1-irogers@google.com>
- <20200515221732.44078-7-irogers@google.com>
- <20200519190602.GB28228@kernel.org>
- <CAP-5=fVdDjazSdzfTXeuWwqCSh0zURp3M8QZpYK=qd92GeyrRw@mail.gmail.com>
- <20200520011548.GD28228@kernel.org>
+        Tue, 19 May 2020 22:37:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33586 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgETChW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 May 2020 22:37:22 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K2RFM8084713;
+        Wed, 20 May 2020 02:30:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=kUGQDr/v7sUBLEwDb3Xz/wcZpIxXeDLcJONr9yOjouM=;
+ b=0VG26ibhj4o06wk5NIrulWnIbUFLGsNIIdbQxMijaOKLRluFV/d2rrBlv+CSOu/M1gV5
+ qQ/mbVtPg4m6fsoryBM0fApAWQ/O4r+pk1QAWQV3RS8z77XQTwrIgElSedcHo4Z86DpQ
+ QGAW/DJvIE/f4w/GcfA0X/5DRuk9dWrN1UVNGjEbWMTykR+9S7AXsr2ZxPPgTspRzVi6
+ HWnCEbcGvs8/O/vkLMBlzLbgA7YajdcGK8z8QZP0eDpVFEzhBhmJi11EOyzBUw6oifIJ
+ +UNtA95siBDFG1SpeeYvaTErkSOdlJ/XA3xjVqEzC0c5P0LTXd8PvXInvI8gTqsdajWC MQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 3127kr8n9u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 02:30:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04K2SZ5v064335;
+        Wed, 20 May 2020 02:30:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 313gj2mf8r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 02:30:24 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04K2UNTS011820;
+        Wed, 20 May 2020 02:30:23 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 May 2020 19:30:22 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Ye Bin <yebin10@huawei.com>, jejb@linux.ibm.com
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: Refactor scsi_mq_setup_tags function
+Date:   Tue, 19 May 2020 22:30:10 -0400
+Message-Id: <158994171818.20861.13541589109613423066.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200518074732.39679-1-yebin10@huawei.com>
+References: <20200518074732.39679-1-yebin10@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520011548.GD28228@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=952
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9626 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=998 malwarescore=0 cotscore=-2147483648
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005200018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 19, 2020 at 10:15:48PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, May 19, 2020 at 01:15:41PM -0700, Ian Rogers escreveu:
-> > On Tue, May 19, 2020 at 12:06 PM Arnaldo Carvalho de Melo
-> > errno != 0 for both cases as the man page notes suggest doing this.
-> > The tests using v are necessary to avoid the unused result, but
-> > presumably any errno case should return false here? I guess testing
-> > that is redundant as the return below will catch it. Perhaps this
-> > should be:
-> > 
-> > errno = 0;
-> > v = strtod(str, &end_ptr);
-> > (void)v;  /* We don't care for the value of the double, just that it
-> > converts. Avoid unused result warnings. */
-> > return errno == 0 && end_ptr != str;
-> 
-> Ok, I'll try that one.
+On Mon, 18 May 2020 15:47:32 +0800, Ye Bin wrote:
 
-What I have is in my tmp.perf/core branch, this and the hashmap.h
-__WORDSIZE fixups, with those all the alpine Linux containers, that use
-Musl libc passed, waiting for the remaining 80 other containers to
-finish, now lots of these containers build with and without NO_LIBBPF=1
-to make sure we test both variants,
+>   "shost->tag_set" is used too many times, introduce temporary parameter
+> "tag_set" instead of "&shost->tag_set".
 
-- Arnaldo
+Applied to 5.8/scsi-queue, thanks!
+
+[1/1] scsi: core: Refactor scsi_mq_setup_tags function
+      https://git.kernel.org/mkp/scsi/c/840e1b55bb75
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
