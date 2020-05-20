@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57466C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D924205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE71205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 14:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgETOZd (ORCPT
+        id S1727897AbgETOZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 10:25:33 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33092 "EHLO
+        Wed, 20 May 2020 10:25:36 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33086 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727044AbgETOW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727030AbgETOW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 10:22:27 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbw-00035l-2E; Wed, 20 May 2020 15:22:20 +0100
+        id 1jbPbz-00037W-Ji; Wed, 20 May 2020 15:22:23 +0100
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1jbPbv-007DSU-Rm; Wed, 20 May 2020 15:22:19 +0100
+        id 1jbPbx-007DVO-6a; Wed, 20 May 2020 15:22:21 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Christoffer Dall" <christoffer.dall@arm.com>
-Date:   Wed, 20 May 2020 15:14:24 +0100
-Message-ID: <lsq.1589984008.139003611@decadent.org.uk>
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Chen Yucong" <slaoub@gmail.com>
+Date:   Wed, 20 May 2020 15:14:49 +0100
+Message-ID: <lsq.1589984009.998060719@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 56/99] KVM: arm64: Only sign-extend MMIO up to
- register width
+Subject: [PATCH 3.16 81/99] kvm: x86: use macros to compute bank MSRs
 In-Reply-To: <lsq.1589984008.673931885@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,127 +55,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christoffer Dall <christoffer.dall@arm.com>
+From: Chen Yucong <slaoub@gmail.com>
 
-commit b6ae256afd32f96bec0117175b329d0dd617655e upstream.
+commit 81760dccf8d1fe5b128b58736fe3f56a566133cb upstream.
 
-On AArch64 you can do a sign-extended load to either a 32-bit or 64-bit
-register, and we should only sign extend the register up to the width of
-the register as specified in the operation (by using the 32-bit Wn or
-64-bit Xn register specifier).
+Avoid open coded calculations for bank MSRs by using well-defined
+macros that hide the index of higher bank MSRs.
 
-As it turns out, the architecture provides this decoding information in
-the SF ("Sixty-Four" -- how cute...) bit.
+No semantic changes.
 
-Let's take advantage of this with the usual 32-bit/64-bit header file
-dance and do the right thing on AArch64 hosts.
-
-Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191212195055.5541-1-christoffer.dall@arm.com
-[bwh: Backported to 3.16:
- - Use ESR_EL2_SF
- - Adjust filename, context]
+Signed-off-by: Chen Yucong <slaoub@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/arm/include/asm/kvm_emulate.h   | 5 +++++
- arch/arm/include/asm/kvm_mmio.h      | 2 ++
- arch/arm/kvm/mmio.c                  | 6 ++++++
- arch/arm64/include/asm/kvm_emulate.h | 5 +++++
- arch/arm64/include/asm/kvm_mmio.h    | 6 ++----
- 5 files changed, 20 insertions(+), 4 deletions(-)
+ arch/x86/kvm/x86.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/arm/include/asm/kvm_emulate.h
-+++ b/arch/arm/include/asm/kvm_emulate.h
-@@ -105,6 +105,11 @@ static inline bool kvm_vcpu_dabt_issext(
- 	return kvm_vcpu_get_hsr(vcpu) & HSR_SSE;
- }
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1915,7 +1915,7 @@ static int set_msr_mce(struct kvm_vcpu *
+ 		break;
+ 	default:
+ 		if (msr >= MSR_IA32_MC0_CTL &&
+-		    msr < MSR_IA32_MC0_CTL + 4 * bank_num) {
++		    msr < MSR_IA32_MCx_CTL(bank_num)) {
+ 			u32 offset = msr - MSR_IA32_MC0_CTL;
+ 			/* only 0 or all 1s can be written to IA32_MCi_CTL
+ 			 * some Linux kernels though clear bit 10 in bank 4 to
+@@ -2276,7 +2276,7 @@ int kvm_set_msr_common(struct kvm_vcpu *
  
-+static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
-+{
-+	return false;
-+}
-+
- static inline int kvm_vcpu_dabt_get_rd(struct kvm_vcpu *vcpu)
- {
- 	return (kvm_vcpu_get_hsr(vcpu) & HSR_SRT_MASK) >> HSR_SRT_SHIFT;
---- a/arch/arm/include/asm/kvm_mmio.h
-+++ b/arch/arm/include/asm/kvm_mmio.h
-@@ -26,6 +26,8 @@
- struct kvm_decode {
- 	unsigned long rt;
- 	bool sign_extend;
-+	/* Not used on 32-bit arm */
-+	bool sixty_four;
- };
+ 	case MSR_IA32_MCG_CTL:
+ 	case MSR_IA32_MCG_STATUS:
+-	case MSR_IA32_MC0_CTL ... MSR_IA32_MC0_CTL + 4 * KVM_MAX_MCE_BANKS - 1:
++	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
+ 		return set_msr_mce(vcpu, msr, data);
  
- /*
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -140,6 +140,11 @@ static inline bool kvm_vcpu_dabt_issext(
- 	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_EL2_SSE);
- }
- 
-+static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
-+{
-+	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_EL2_SF);
-+}
-+
- static inline int kvm_vcpu_dabt_get_rd(const struct kvm_vcpu *vcpu)
- {
- 	return (kvm_vcpu_get_hsr(vcpu) & ESR_EL2_SRT_MASK) >> ESR_EL2_SRT_SHIFT;
---- a/arch/arm64/include/asm/kvm_mmio.h
-+++ b/arch/arm64/include/asm/kvm_mmio.h
-@@ -22,13 +22,11 @@
- #include <asm/kvm_asm.h>
- #include <asm/kvm_arm.h>
- 
--/*
-- * This is annoying. The mmio code requires this, even if we don't
-- * need any decoding. To be fixed.
-- */
- struct kvm_decode {
- 	unsigned long rt;
- 	bool sign_extend;
-+	/* Witdth of the register accessed by the faulting instruction is 64-bits */
-+	bool sixty_four;
- };
- 
- /*
---- a/arch/arm/kvm/mmio.c
-+++ b/arch/arm/kvm/mmio.c
-@@ -112,6 +112,9 @@ int kvm_handle_mmio_return(struct kvm_vc
- 			data = (data ^ mask) - mask;
- 		}
- 
-+		if (!vcpu->arch.mmio_decode.sixty_four)
-+			data = data & 0xffffffff;
-+
- 		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
- 			       &data);
- 		data = vcpu_data_host_to_guest(vcpu, data, len);
-@@ -127,6 +130,7 @@ static int decode_hsr(struct kvm_vcpu *v
- 	unsigned long rt;
- 	int len;
- 	bool is_write, sign_extend;
-+	bool sixty_four;
- 
- 	if (kvm_vcpu_dabt_isextabt(vcpu)) {
- 		/* cache operation on I/O addr, tell guest unsupported */
-@@ -146,6 +150,7 @@ static int decode_hsr(struct kvm_vcpu *v
- 
- 	is_write = kvm_vcpu_dabt_iswrite(vcpu);
- 	sign_extend = kvm_vcpu_dabt_issext(vcpu);
-+	sixty_four = kvm_vcpu_dabt_issf(vcpu);
- 	rt = kvm_vcpu_dabt_get_rd(vcpu);
- 
- 	mmio->is_write = is_write;
-@@ -153,6 +158,7 @@ static int decode_hsr(struct kvm_vcpu *v
- 	mmio->len = len;
- 	vcpu->arch.mmio_decode.sign_extend = sign_extend;
- 	vcpu->arch.mmio_decode.rt = rt;
-+	vcpu->arch.mmio_decode.sixty_four = sixty_four;
- 
- 	/*
- 	 * The MMIO instruction is emulated and should not be re-executed
+ 	/* Performance counters are not protected by a CPUID bit,
+@@ -2442,7 +2442,7 @@ static int get_msr_mce(struct kvm_vcpu *
+ 		break;
+ 	default:
+ 		if (msr >= MSR_IA32_MC0_CTL &&
+-		    msr < MSR_IA32_MC0_CTL + 4 * bank_num) {
++		    msr < MSR_IA32_MCx_CTL(bank_num)) {
+ 			u32 offset = msr - MSR_IA32_MC0_CTL;
+ 			data = vcpu->arch.mce_banks[offset];
+ 			break;
+@@ -2628,7 +2628,7 @@ int kvm_get_msr_common(struct kvm_vcpu *
+ 	case MSR_IA32_MCG_CAP:
+ 	case MSR_IA32_MCG_CTL:
+ 	case MSR_IA32_MCG_STATUS:
+-	case MSR_IA32_MC0_CTL ... MSR_IA32_MC0_CTL + 4 * KVM_MAX_MCE_BANKS - 1:
++	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
+ 		return get_msr_mce(vcpu, msr_info->index, &msr_info->data);
+ 	case MSR_K7_CLK_CTL:
+ 		/*
 
