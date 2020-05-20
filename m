@@ -2,150 +2,175 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C283FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4C22065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF71207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 06:56:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfnFCgj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgETGzh (ORCPT
+        id S1726560AbgETG4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 02:55:37 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2142 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725998AbgETGzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 02:55:37 -0400
-Received: from dggemi403-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 95C145F520C0C3C105A5;
-        Wed, 20 May 2020 14:55:28 +0800 (CST)
-Received: from DGGEMI525-MBS.china.huawei.com ([169.254.6.191]) by
- dggemi403-hub.china.huawei.com ([10.3.17.136]) with mapi id 14.03.0487.000;
- Wed, 20 May 2020 14:55:23 +0800
-From:   Song Bao Hua <song.bao.hua@hisilicon.com>
-To:     Alexandru Elisei <alexandru.elisei@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lecopzer Chen <lecopzer@gmail.com>
-CC:     Sumit Garg <sumit.garg@linaro.org>,
-        Jian-Lin Chen <lecopzer.chen@mediatek.com>,
-        Will Deacon <will@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "yj.chiang@mediatek.com" <yj.chiang@mediatek.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
-Thread-Topic: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
-Thread-Index: AQHWK4CVzuSk3r9OTUuU9MOLmvQA7qis0jIAgAALFQCAAEh6AIAACRWAgANe+vA=
-Date:   Wed, 20 May 2020 06:55:22 +0000
-Message-ID: <B926444035E5E2439431908E3842AFD24B1D3C@DGGEMI525-MBS.china.huawei.com>
-References: <20200516124857.75004-1-lecopzer@gmail.com>
- <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
- <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
- <20200518104524.GA1224@C02TD0UTHF1T.local>
- <a9002b5e-aec5-b6e0-7174-87b93351d60c@arm.com>
-In-Reply-To: <a9002b5e-aec5-b6e0-7174-87b93351d60c@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.203.16]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 20 May 2020 02:56:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgETG4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 02:56:30 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A24AC061A0E;
+        Tue, 19 May 2020 23:56:30 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so1741088qts.9;
+        Tue, 19 May 2020 23:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TB5FjjudCnoVQlZCNJ7wIvh0DQ8onthhTDmqoaW0vQQ=;
+        b=lfnFCgj5KUFNLZCdbrRAbiYgN4J25MNk1LUL2HnYGLen+N2nwKXDuHtH5CJxpWJk1M
+         iLDjRZUCxkuaDDAcB2K4tUWGe+EeprYuW9HfUu+QCemg7YTMImD/OF9IPjbBnoYnVKyx
+         hfkHtXI68iCtQI8tM270nE9xhucB9ZAg9QZ149HpeFhFVkvaSvTfbMN65We74dhBEl9C
+         lDQG9udVbiattf64yOAkZQFcjH1UoKVsV7Kz7mHWGJ2g/yLDADBj1FTeiFFchP50GAPt
+         CAQbbqDnjW/+SWwymOrCPmDwpAm5xAzhCVfpCLSVXPg2+2sqk0Xyk2nEtOUrDgS2SOn1
+         2qJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TB5FjjudCnoVQlZCNJ7wIvh0DQ8onthhTDmqoaW0vQQ=;
+        b=LN94G3SkYqcCvRYYJL1QKJfLgRGpkGgx7zCcfUdeH02+IJIHQs/sULP3x9r9ITspns
+         JKtuaZJBfTePPT+537bS5FchVahMo0EUEbDtohhk7krXL2PuHa5kED9nWpRxpsNuEV2N
+         YbC1RrYh+5ImuOh0tFw30Y/oYF+TXgN1U6+HzsUd8OdM3kKOqck6JESdNj25E1PUx5nV
+         lXKtoUyc0LI8Z92a3ONYQ+vuGz8rSFed5PpNYSFXqwLCaywvn04g1xy6efKlvFPoSWNG
+         KI4blxeZJJ1fcwCkkfzyVozMzHwzmNOtHt4HXcmN1kVnE3FoKc6X04u3xevaQADFLb3u
+         oBKA==
+X-Gm-Message-State: AOAM532T+C1E+N+UngyMyB1pWXO/wRfeuOaje45pzrhBUV0PrW9WlXx2
+        uH/mayFpyRVLrOT6O+Lu8zU=
+X-Google-Smtp-Source: ABdhPJzZGRauvO9SJPW3cGCfiyGEjVM/OHM40naBh5ery73Gai7ADtfx+kYda7Yzt+XEoE2OZ2O4WA==
+X-Received: by 2002:ac8:302f:: with SMTP id f44mr3722990qte.121.1589957789285;
+        Tue, 19 May 2020 23:56:29 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id l186sm1497247qkf.89.2020.05.19.23.56.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 May 2020 23:56:28 -0700 (PDT)
+Date:   Wed, 20 May 2020 08:56:06 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: magnetometer: ak8975: convert
+ txt format to yaml
+Message-ID: <20200520065606.GA3361@ict14-OptiPlex-980>
+References: <20200519124402.26076-1-jonathan.albrieux@gmail.com>
+ <20200519124402.26076-2-jonathan.albrieux@gmail.com>
+ <20200519132207.GA4623@gerhold.net>
+ <20200519140354.GB30573@ict14-OptiPlex-980>
+ <20200519160137.GJ1634618@smile.fi.intel.com>
+ <20200519164433.GA8726@ict14-OptiPlex-980>
+ <20200519183705.000040e5@Huawei.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519183705.000040e5@Huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiANCj4gT24gNS8xOC8yMCAxMTo0NSBBTSwgTWFyayBSdXRsYW5kIHdyb3RlOg0KPiA+IEhpIGFs
-bCwNCj4gPg0KPiA+IE9uIE1vbiwgTWF5IDE4LCAyMDIwIGF0IDAyOjI2OjAwUE0gKzA4MDAsIExl
-Y29wemVyIENoZW4gd3JvdGU6DQo+ID4+IEhJIFN1bWl0LA0KPiA+Pg0KPiA+PiBUaGFua3MgZm9y
-IHlvdXIgaW5mb3JtYXRpb24uDQo+ID4+DQo+ID4+IEkndmUgYWxyZWFkeSBpbXBsZW1lbnRlZCBJ
-UEkgKHNhbWUgYXMgeW91IGRpZCBbMV0sIGxpdHRsZSBkaWZmZXJlbmNlDQo+ID4+IGluIGRldGFp
-bCksIGhhcmRsb2NrdXAgZGV0ZWN0b3IgYW5kIHBlcmYgaW4gbGFzdCB5ZWFyKDIwMTkpIGZvcg0K
-PiA+PiBkZWJ1Z2dhYmlsaXR5Lg0KPiA+PiBBbmQgbm93IHdlIHRlbmQgdG8gdXBzdHJlYW0gdG8g
-cmVkdWNlIGtlcm5lbCBtYWludGFpbmluZyBlZmZvcnQuDQo+ID4+IEknbSBnbGFkIGlmIHNvbWVv
-bmUgaW4gQVJNIGNhbiBkbyB0aGlzIHdvcmsgOikNCj4gPj4NCj4gPj4gSGkgSnVsaWVuLA0KPiA+
-Pg0KPiA+PiBEb2VzIGFueSBBcm0gbWFpbnRhaW5lcnMgY2FuIHByb2NlZWQgdGhpcyBhY3Rpb24/
-DQo+ID4gQWxleGFuZHJ1IChDYydkKSBoYXMgYmVlbiByZWJhc2luZyBhbmQgcmV3b3JraW5nIEp1
-bGllbidzIHBhdGNoZXMsDQo+ID4gd2hpY2ggaXMgbXkgcHJlZmVycmVkIGFwcHJvYWNoLg0KPiA+
-DQo+ID4gSSB1bmRlcnN0YW5kIHRoYXQncyBub3QgcXVpdGUgcmVhZHkgZm9yIHBvc3Rpbmcgc2lu
-Y2UgaGUncw0KPiA+IGludmVzdGlnYXRpbmcgc29tZSBvZiB0aGUgbmFzdGllciBzdWJ0bGV0aWVz
-IChlLmcuIG11dHVhbCBleGNsdXNpb24NCj4gPiB3aXRoIHRoZSBOTUkpLCBidXQgbWF5YmUgd2Ug
-Y2FuIHB1dCB0aGUgd29yay1pbi1wcm9ncmVzcyBwYXRjaGVzDQo+ID4gc29tZXdoZXJlIGluIHRo
-ZSBtZWFuIHRpbWUuDQo+ID4NCj4gPiBBbGV4YW5kcnUsIGRvIHlvdSBoYXZlIGFuIGlkZWEgb2Yg
-d2hhdCBuZWVkcyB0byBiZSBkb25lLCBhbmQvb3Igd2hlbg0KPiA+IHlvdSBleHBlY3QgeW91IGNv
-dWxkIHBvc3QgdGhhdD8NCj4gDQo+IEknbSBjdXJyZW50bHkgd29ya2luZyBvbiByZWJhc2luZyB0
-aGUgcGF0Y2hlcyBvbiB0b3Agb2YgNS43LXJjNSwgd2hlbiBJIGhhdmUNCj4gc29tZXRoaW5nIHVz
-YWJsZSBJJ2xsIHBvc3QgYSBsaW5rIChzaG91bGQgYmUgYSBjb3VwbGUgb2YgZGF5cykuIEFmdGVy
-IHRoYXQgSSB3aWxsDQo+IGFkZHJlc3MgdGhlIHJldmlldyBjb21tZW50cywgYW5kIEkgcGxhbiB0
-byBkbyBhIHRob3JvdWdoIHRlc3RpbmcgYmVjYXVzZSBJJ20NCj4gbm90IDEwMCUgY29uZmlkZW50
-IHRoYXQgc29tZSBvZiB0aGUgYXNzdW1wdGlvbnMgYXJvdW5kIHRoZSBsb2NrcyB0aGF0IHdlcmUN
-Cj4gcmVtb3ZlZCBhcmUgY29ycmVjdC4gTXkgZ3Vlc3MgaXMgdGhpcyB3aWxsIHRha2UgYSBmZXcg
-d2Vla3MuDQoNCisxDQpJIHdvdWxkIGJlIGF3ZXNvbWUgaWYgcGVyZiBOTUkgcGF0Y2hlcyBjb3Vs
-ZCBiZSByZS1hY3RpdmF0ZWQuIFJpZ2h0IG5vdywgaXQgc2VlbXMgaXQgaXMgaGFyZCB0bw0KZG8g
-InBlcmYgYW5ub3RhdGUiIG9uIGEga2VybmVsIGZ1bmN0aW9uIHdpdGggbG9jYWxfaXJxIGRpc2Fi
-bGVkLg0KDQpmdW5jKCkNCnsNCmxvY2FsX2lycV9zYXZlKCk7DQouLi4uLg0KLi4uLg0KbG9jYWxf
-aXJxX3Jlc3RvcmUoKTsNCnJldHVybjsNCn0NCg0KUGVyZiB3aWxsIHJlcG9ydCBhbGwgY3ljbGVz
-IGFyZSB1c2VkIGJ5IHRoZSBsYXN0IG1vbWVudCBvZiB0aGUgZnVuYygpLg0KDQpUaGFua3MsDQpC
-YXJyeQ0KDQo+IA0KPiBUaGFua3MsDQo+IEFsZXgNCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBNYXJr
-Lg0KPiA+DQo+ID4+IFRoaXMgaXMgcmVhbGx5IHVzZWZ1bCBpbiBkZWJ1Z2dpbmcuDQo+ID4+IFRo
-YW5rIHlvdSEhDQo+ID4+DQo+ID4+DQo+ID4+DQo+ID4+IFsxXSBodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAyMC80LzI0LzMyOA0KPiA+Pg0KPiA+Pg0KPiA+PiBMZWNvcHplcg0KPiA+Pg0KPiA+PiBT
-dW1pdCBHYXJnIDxzdW1pdC5nYXJnQGxpbmFyby5vcmc+IOaWvCAyMDIw5bm0NeaciDE45pelIOmA
-seS4gCDkuIvljYgNCj4gMTo0NuWvq+mBk++8mg0KPiA+Pj4gKyBKdWxpZW4NCj4gPj4+DQo+ID4+
-PiBIaSBMZWNvcHplciwNCj4gPj4+DQo+ID4+PiBPbiBTYXQsIDE2IE1heSAyMDIwIGF0IDE4OjIw
-LCBMZWNvcHplciBDaGVuIDxsZWNvcHplckBnbWFpbC5jb20+DQo+IHdyb3RlOg0KPiA+Pj4+IFRo
-ZXNlIHNlcmllcyBpbXBsZW1lbnQgUGVyZiBOTUkgZnVueHRpb25hbGl0eSBhbmQgZGVwZW5kcyBv
-biBQc2V1ZG8NCj4gPj4+PiBOTUkgWzFdIHdoaWNoIGhhcyBiZWVuIHVwc3RyZWFtZWQuDQo+ID4+
-Pj4NCj4gPj4+PiBJbiBhcm02NCB3aXRoIEdJQ3YzLCBQc2V1ZG8gTk1JIHdhcyBpbXBsZW1lbnRl
-ZCBmb3IgTk1JLWxpa2UNCj4gaW50ZXJydXRzLg0KPiA+Pj4+IFRoYXQgY2FuIGJlIGV4dGVuZGVk
-IHRvIFBlcmYgTk1JIHdoaWNoIGlzIHRoZSBwcmVyZXF1aXNpdGUgZm9yDQo+ID4+Pj4gaGFyZC1s
-b2NrdXAgZGV0ZWN0b3Igd2hpY2ggaGFkIGFscmVhZHkgYSBzdGFuZGFyZCBpbnRlcmZhY2UgaW5z
-aWRlIExpbnV4Lg0KPiA+Pj4+DQo+ID4+Pj4gVGh1cyB0aGUgZmlyc3Qgc3RlcCB3ZSBuZWVkIHRv
-IGltcGxlbWVudCBwZXJmIE5NSSBpbnRlcmZhY2UgYW5kDQo+ID4+Pj4gbWFrZSBzdXJlIGl0IHdv
-cmtzIGZpbmUuDQo+ID4+Pj4NCj4gPj4+IFRoaXMgaXMgc29tZXRoaW5nIHRoYXQgaXMgYWxyZWFk
-eSBpbXBsZW1lbnRlZCB2aWEgSnVsaWVuJ3MgcGF0Y2gtc2V0DQo+ID4+PiBbMV0uIEl0cyB2NCBo
-YXMgYmVlbiBmbG9hdGluZyBzaW5jZSBKdWx5LCAyMDE5IGFuZCBJIGNvdWxkbid0IGZpbmQNCj4g
-Pj4+IGFueSBtYWpvciBibG9ja2luZyBjb21tZW50cyBidXQgbm90IHN1cmUgd2h5IHRoaW5ncyBo
-YXZlbid0DQo+ID4+PiBwcm9ncmVzc2VkIGZ1cnRoZXIuDQo+ID4+Pg0KPiA+Pj4gTWF5YmUgSnVs
-aWVuIG9yIEFybSBtYWludGFpbmVycyBjYW4gcHJvdmlkZSB1cGRhdGVzIG9uIGV4aXN0aW5nDQo+
-ID4+PiBwYXRjaC1zZXQgWzFdIGFuZCBob3cgd2Ugc2hvdWxkIHByb2NlZWQgZnVydGhlciB3aXRo
-IHRoaXMNCj4gPj4+IGludGVyZXN0aW5nIGZlYXR1cmUuDQo+ID4+Pg0KPiA+Pj4gQW5kIHJlZ2Fy
-ZGluZyBoYXJkLWxvY2t1cCBkZXRlY3Rpb24sIEkgaGF2ZSBiZWVuIGFibGUgdG8gZW5hYmxlIGl0
-DQo+ID4+PiBiYXNlZCBvbiBwZXJmIE5NSSBldmVudHMgdXNpbmcgSnVsaWVuJ3MgcGVyZiBwYXRj
-aC1zZXQgWzFdLiBIYXZlIGENCj4gPj4+IGxvb2sgYXQgdGhlIHBhdGNoIGhlcmUgWzJdLg0KPiA+
-Pj4NCj4gPj4+IFsxXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVyLzExMDQ3NDA3
-Lw0KPiA+Pj4gWzJdDQo+ID4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwv
-bGludXgtYXJtLWtlcm5lbC8yMDIwLU1heS83MzIyMg0KPiA+Pj4gNy5odG1sDQo+ID4+Pg0KPiA+
-Pj4gLVN1bWl0DQo+ID4+Pg0KPiA+Pj4+IFBlcmYgTk1JIGhhcyBiZWVuIHRlc3QgYnkgZGQgaWY9
-L2Rldi91cmFuZG9tIG9mPS9kZXYvbnVsbCBsaWtlIHRoZQ0KPiA+Pj4+IGxpbmsgWzJdIGRpZC4N
-Cj4gPj4+Pg0KPiA+Pj4+IFsxXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8xLzMxLzUzNQ0K
-PiA+Pj4+IFsyXSBodHRwczovL3d3dy5saW5hcm8ub3JnL2Jsb2cvZGVidWdnaW5nLWFybS1rZXJu
-ZWxzLXVzaW5nLW5taWZpcQ0KPiA+Pj4+DQo+ID4+Pj4NCj4gPj4+PiBMZWNvcHplciBDaGVuICgz
-KToNCj4gPj4+PiAgIGFybV9wbXU6IEFkZCBzdXBwb3J0IGZvciBwZXJmIE5NSSBpbnRlcnJ1cHRz
-IHJlZ2lzdHJhdGlvbg0KPiA+Pj4+ICAgYXJtNjQ6IHBlcmY6IFN1cHBvcnQgTk1JIGNvbnRleHQg
-Zm9yIHBlcmYgZXZlbnQgSVNSDQo+ID4+Pj4gICBhcm02NDogS2NvbmZpZzogQWRkIHN1cHBvcnQg
-Zm9yIHRoZSBQZXJmIE5NSQ0KPiA+Pj4+DQo+ID4+Pj4gIGFyY2gvYXJtNjQvS2NvbmZpZyAgICAg
-ICAgICAgICB8IDEwICsrKysrKysNCj4gPj4+PiAgYXJjaC9hcm02NC9rZXJuZWwvcGVyZl9ldmVu
-dC5jIHwgMzYgKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ID4+Pj4gIGRyaXZlcnMvcGVyZi9h
-cm1fcG11LmMgICAgICAgICB8IDUxDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0t
-LS0NCj4gPj4+PiAgaW5jbHVkZS9saW51eC9wZXJmL2FybV9wbXUuaCAgIHwgIDYgKysrKw0KPiA+
-Pj4+ICA0IGZpbGVzIGNoYW5nZWQsIDg4IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQ0K
-PiA+Pj4+DQo+ID4+Pj4gLS0NCj4gPj4+PiAyLjI1LjENCg0K
+On Tue, May 19, 2020 at 06:37:05PM +0100, Jonathan Cameron wrote:
+> On Tue, 19 May 2020 18:44:33 +0200
+> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> 
+> > On Tue, May 19, 2020 at 07:01:37PM +0300, Andy Shevchenko wrote:
+> > > On Tue, May 19, 2020 at 04:03:54PM +0200, Jonathan Albrieux wrote:  
+> > > > On Tue, May 19, 2020 at 03:22:07PM +0200, Stephan Gerhold wrote:  
+> > > > > On Tue, May 19, 2020 at 02:43:51PM +0200, Jonathan Albrieux wrote:  
+> > > 
+> > > ...
+> > >   
+> > > > > > +maintainers:
+> > > > > > +  - can't find a mantainer, author is Laxman Dewangan <ldewangan@nvidia.com>  
+> > > > > 
+> > > > > Should probably add someone here, although I'm not sure who either.
+> > > > >   
+> > > > 
+> > > > Yep I couldn't find a maintainer for that driver..what to do in this case?  
+> > > 
+> > > Volunteer yourself!
+> > >   
+> > 
+> > While I'd really like to, I have to decline the offer as I currently don't have
+> > enought knowledge to become a maintainer :-) but thank you! (Who knows, maybe in
+> > a couple of year!) Now I'll make the final edits and will submit a new
+> > patchset soon with all the changes
+> 
+> Don't be so hard on yourself.  We all get thrown in at the deep end :)
+> 
+> Note that being a driver maintainer (or even just the binding) really
+> just means you get cc'd on the patches and I'll make sure you've had time
+> to review them if you wish.   Best of all, if you have hardware (and time)
+> being able to test them, that is extremely useful (whether you are
+> maintaining the driver or not!) 
+> 
+> I closely review the majority of stuff that comes through IIO and in
+> the case of bindings we also have Rob and co. doing an amazing job.
+> We have some excellent additional reviewers who review IIO stuff all the
+> time, some of which have reviewed your patch I see.  Without them I'd
+> never survive the deluge.
+> 
+> Of course it's entirely your decision, but I'd definitely encourage you
+> to give it a go.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+
+Thank you for your encouraging words and for the trust! As a tester I will
+be very pleased to give an help on this hardware but as a maintainer I
+could contribute little to nothing at the moment and I'm not being hard
+with myself but currently I really have to focus on the basic concepts first
+and I'm lucky enought to have willing people helping me to do so :-)
+
+Accepting to become the maintainer after the first contribution let me feels
+like I'm burning some foundamental stage. I really hope you understand!
+
+> 
+> 
+> > 
+> > > -- 
+> > > With Best Regards,
+> > > Andy Shevchenko
+> > > 
+> > >   
+> > 
+> > Best regards,
+> > Jonathan Albrieux
+> 
+> 
+
+Best regards,
+Jonathan Albrieux
