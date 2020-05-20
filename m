@@ -2,118 +2,174 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F864C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECA3207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589959222;
-	bh=SXgEtfxKmct0eDA3yau5H+tNXIa1d422vsThZsv347w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=is2M0ApUDaiuyMz01lts05OGysORMBCemNNQs1yX0oEBBfGmP15FLiyX1WbrVniEo
-	 67wvj6c9BaSN3ShpNjAHocYZnXTGLe3W2QxLYZZQysVYW3cRfJKQP+7g8U7tNCiU3n
-	 miQaeEoiwyw4rzB768ugHv+WtEWSE2tnPELrPbCs=
+	by mail.kernel.org (Postfix) with ESMTP id 18F45207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 07:20:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRZrq5BE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgETHUV (ORCPT
+        id S1726574AbgETHU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 20 May 2020 03:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgETHUV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 03:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgETHUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 03:20:20 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE52020872;
-        Wed, 20 May 2020 07:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589959220;
-        bh=SXgEtfxKmct0eDA3yau5H+tNXIa1d422vsThZsv347w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b99+g+fFfFLI3xBxK+bTyg3lUh2qtzgaCUEd2ms8JNVOXmqeiEZif51/JxuSs1Owr
-         mdrSDmIdS7ubqdjbIUZ7DAwP0f80T+Zjtji2ahMpyZ52Y8/0aRLggnWMYIay9Kg84F
-         lhdVMM637IM49u7qbEiZYGMqhvLRwln0jMy9ghHg=
-Received: by mail-io1-f50.google.com with SMTP id q8so692737iow.7;
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C38C061A0E;
+        Wed, 20 May 2020 00:20:21 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b6so2559354qkh.11;
+        Wed, 20 May 2020 00:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KJJ3CIQ3eS61c6M1oqeo99mJ8m4fWRgRHozAzbIZeNM=;
+        b=LRZrq5BEyc8bsZPFvTw8/Wu6UQ/FDzriYjDgYmAilB1y/RnF4cqCKzpQeaFqngy6NK
+         M83IoTQsHmgJKX25w0U3tspNjEpLwBukbNEVx4TFGfz3TQNU9X8AtcYqjHTXM7u20HYY
+         zdL3fLf5nf+gLLahG8Mi+prKatIT+GSuC3pZm4ehhSAIj6nOCU1gGqpptlPVyNodhd5K
+         fcLKfWPjf3ytMkzqMSa5zB1X6z6KbXoM6B6rZa9PizgBFIQqEwj9s3t+cD8DGkb0OquZ
+         OShh/t7JGj65Nf1aFV+nVnIQs4TeaPpUeQGt5+t1nJAXcgpH0SZKftobuDPV5zCo+1/B
+         7DCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KJJ3CIQ3eS61c6M1oqeo99mJ8m4fWRgRHozAzbIZeNM=;
+        b=sP8G53OTN6ZDf52w8F1Vznu4z64re8W7G39v3IkdTd0xg8rH6aYrEwSbwJ7kqo7kuQ
+         xPb0+gi9m7OUYFIvVeJou1iMw+fwoGdIfJ0MAPMGWfDiVn+UFbjyQnNyVg1ZKxeAsRf+
+         WlGQ5AESlS59IZ57ipcArUOIu689aySWOaBzkNJaLxW6X7ECwbRKZ5vw9FJ095Y3Hlbq
+         DNl0U6LnmoqRMWh3HtSfaT82e2/wiPQ2lBUQKVVZ5a8B5IZPoPZJbLi6YBjY2FwcPCkq
+         vxo1Ei9zHe6cuUr4SMcNFKKI+/wTHAGlOLPRbz6NOyGuNOMohsI6HgTWf5iRgppsxZuo
+         zdEg==
+X-Gm-Message-State: AOAM532D5SVjii/57ou+OuwZ3d1blAWru63bM2P3H+2c5uBtRyh8KX0E
+        p4RFfvs8y7GGAdvE8kWrQXY=
+X-Google-Smtp-Source: ABdhPJxEm+ebMl1NpyyksnKC0RvO58VE9kJ94OYNhzvdAI2zttvffrHTV4nrp9WEfore2u7EJ0s7aw==
+X-Received: by 2002:a05:620a:1524:: with SMTP id n4mr3381252qkk.490.1589959220413;
+        Wed, 20 May 2020 00:20:20 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id j188sm754003qkd.118.2020.05.20.00.20.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
         Wed, 20 May 2020 00:20:19 -0700 (PDT)
-X-Gm-Message-State: AOAM532QYag88tU9GLnET1FAFQA/x+CP8KHAujYB1meyqWcwUbchVvG2
-        HfOSytyC4wPP5FFpU3Ce1Cqxu55GSvWMMY+c0bY=
-X-Google-Smtp-Source: ABdhPJw05tnFfSOvRAkXz+h5U0QJRqhTK7ZjdBO4cz7uENzxe95mquCpdd6t6kLi1OZD+ZoIYT05X38lf3alWdwWcZc=
-X-Received: by 2002:a02:3341:: with SMTP id k1mr3278568jak.74.1589959219151;
- Wed, 20 May 2020 00:20:19 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:20:16 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 4/4] iio: imu: bmi160: added mount-matrix support
+Message-ID: <20200520072016.GE3361@ict14-OptiPlex-980>
+References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
+ <20200519075111.6356-5-jonathan.albrieux@gmail.com>
+ <20200519185711.00003308@Huawei.com>
 MIME-Version: 1.0
-References: <20200508180157.1816-1-ardb@kernel.org> <CAMj1kXHwj4SkoBH7Ft5Oa1DzL7jU0FhyTg2FUCz2aLaLXP91tw@mail.gmail.com>
-In-Reply-To: <CAMj1kXHwj4SkoBH7Ft5Oa1DzL7jU0FhyTg2FUCz2aLaLXP91tw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 20 May 2020 09:20:08 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG7T9Fg6zSOOwhe+2WnvmDB4PV=UpxCSAGrMCZ_FKW7Lg@mail.gmail.com>
-Message-ID: <CAMj1kXG7T9Fg6zSOOwhe+2WnvmDB4PV=UpxCSAGrMCZ_FKW7Lg@mail.gmail.com>
-Subject: Re: [GIT PULL 00/15] More EFI changes for v5.8
-To:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519185711.00003308@Huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 at 11:05, Ard Biesheuvel <ardb@kernel.org> wrote:
+On Tue, May 19, 2020 at 06:57:11PM +0100, Jonathan Cameron wrote:
+> On Tue, 19 May 2020 09:51:00 +0200
+> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
+> 
+> > Add mount-matrix binding support. As chip could have different orientations
+> > a mount matrix support is needed to correctly translate these differences
+> > 
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> Hi Jonathan,
+> 
+> Looks good to me. I'll pick this up once 1-3 are tidied up and
+> we have a device tree review in for the binding doc.  I'm rubbish
+> at reviewing those as Rob will certify so may well have missed something!
+> 
+> Jonathan
+> 
 >
-> On Fri, 8 May 2020 at 20:02, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > The following changes since commit 4da0b2b7e67524cc206067865666899bc02e1cb0:
-> >
-> >   efi/libstub: Re-enable command line initrd loading for x86 (2020-04-25 12:26:32 +0200)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git efi-next
-> >
-> > for you to fetch changes up to 4026229934f6ca0cb44af7b9df00e647b2f1f787:
-> >
-> >   efi/libstub: Correct comment typos (2020-05-06 11:27:55 +0200)
-> >
-> > ----------------------------------------------------------------
-> > More EFI changes for v5.8:
-> > - Rename pr_efi/pr_efi_err to efi_info/efi_err, and use them consistently
-> > - Simplify and unify initrd loading
-> > - Parse the builtin command line on x86 (if provided)
-> > - Some fixes for issues introduced by the first batch of v5.8 changes
-> >
-> > ----------------------------------------------------------------
-> > Ard Biesheuvel (2):
-> >       efi/libstub/x86: Work around LLVM ELF quirk build regression
-> >       efi/libstub: Make efi_printk() input argument const char*
-> >
-> > Arvind Sankar (12):
-> >       efi/x86: Use correct size for boot_params
-> >       efi/libstub: Add a helper function to split 64-bit values
-> >       efi/libstub: Move pr_efi/pr_efi_err into efi namespace
-> >       efi/x86: Use efi_err for error messages
-> >       efi/gop: Use efi_err for error messages
-> >       efi/tpm: Use efi_err for error messages
-> >       efi/libstub: Upgrade ignored dtb= argument message to error
-> >       efi/x86: Move command-line initrd loading to efi_main
-> >       efi/libstub: Unify initrd loading across architectures
-> >       efi/x86: Support builtin command line
-> >       efi/libstub: Check return value of efi_parse_options
-> >       efi/libstub: Fix mixed mode boot issue after macro refactor
-> >
-> > Joe Perches (1):
-> >       efi/libstub: Correct comment typos
-> >
->
-> Ping?
 
-Ping again?
+Thank you! I'm going to work on suggestions now,
+
+Best regards,
+Jonathan Albrieux
+ 
+> 
+> > ---
+> >  drivers/iio/imu/bmi160/bmi160.h      |  1 +
+> >  drivers/iio/imu/bmi160/bmi160_core.c | 20 ++++++++++++++++++++
+> >  2 files changed, 21 insertions(+)
+> > 
+> > diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
+> > index 923c3b274fde..a82e040bd109 100644
+> > --- a/drivers/iio/imu/bmi160/bmi160.h
+> > +++ b/drivers/iio/imu/bmi160/bmi160.h
+> > @@ -9,6 +9,7 @@ struct bmi160_data {
+> >  	struct regmap *regmap;
+> >  	struct iio_trigger *trig;
+> >  	struct regulator_bulk_data supplies[2];
+> > +	struct iio_mount_matrix orientation;
+> >  };
+> >  
+> >  extern const struct regmap_config bmi160_regmap_config;
+> > diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+> > index 9bbe0d8e6720..78c8ca962359 100644
+> > --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> > +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> > @@ -110,6 +110,7 @@
+> >  		.storagebits = 16,				\
+> >  		.endianness = IIO_LE,				\
+> >  	},							\
+> > +	.ext_info = bmi160_ext_info,				\
+> >  }
+> >  
+> >  /* scan indexes follow DATA register order */
+> > @@ -265,6 +266,20 @@ static const struct  bmi160_odr_item bmi160_odr_table[] = {
+> >  	},
+> >  };
+> >  
+> > +static const struct iio_mount_matrix *
+> > +bmi160_get_mount_matrix(const struct iio_dev *indio_dev,
+> > +			const struct iio_chan_spec *chan)
+> > +{
+> > +	struct bmi160_data *data = iio_priv(indio_dev);
+> > +
+> > +	return &data->orientation;
+> > +}
+> > +
+> > +static const struct iio_chan_spec_ext_info bmi160_ext_info[] = {
+> > +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_DIR, bmi160_get_mount_matrix),
+> > +	{ }
+> > +};
+> > +
+> >  static const struct iio_chan_spec bmi160_channels[] = {
+> >  	BMI160_CHANNEL(IIO_ACCEL, X, BMI160_SCAN_ACCEL_X),
+> >  	BMI160_CHANNEL(IIO_ACCEL, Y, BMI160_SCAN_ACCEL_Y),
+> > @@ -840,6 +855,11 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
+> >  		return ret;
+> >  	}
+> >  
+> > +	ret = iio_read_mount_matrix(dev, "mount-matrix",
+> > +				    &data->orientation);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> >  	ret = bmi160_chip_init(data, use_spi);
+> >  	if (ret)
+> >  		return ret;
+> 
+> 
