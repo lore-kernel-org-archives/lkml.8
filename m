@@ -2,194 +2,157 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE62C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A18206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9200207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:16:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZZaYFFR7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d4CC/yyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgETQP6 (ORCPT
+        id S1726845AbgETQQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:15:58 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:36767 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726791AbgETQP5 (ORCPT
+        Wed, 20 May 2020 12:16:09 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20818 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726486AbgETQQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:15:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589991356; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=W+H+ZNLN/PeeQd0HYlXgSjXVcP3NRkRb7E2OQ2VXotk=; b=ZZaYFFR77lS8tbSB/KMARhK8BENAfWBD1SJkaZmfsEcDKKXsEF0CWCx7aSb978Ij6hkB1Yg6
- ty+BzOVbu/ZFAStwMhiaCzX4ezXZLeFKHRPcHtmwFwNGC0m04u7UdcNTEj1ACZX4fMysVmB0
- NJkT5Wfrb3Y/9AJGI8To8PkQtyk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ec557a9e79e24225d646352 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 20 May 2020 16:15:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0DF59C433C9; Wed, 20 May 2020 16:15:36 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0DD45C433C6;
-        Wed, 20 May 2020 16:15:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0DD45C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [RFC PATCH 0/8] Qualcomm Cloud AI 100 driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Olof Johansson <olof.johansson@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Airlie <airlied@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <CAKMK7uG-oP-tcOcNz-ZzTmGondEo-17BCN1kpFBPwb7F8QcM5w@mail.gmail.com>
- <20200520051536.GA2141566@kroah.com>
- <CAKMK7uEbwTK68sxhf452fPHzAreQqRbRc7=RLGX-9SesXnJnLQ@mail.gmail.com>
- <5701b299-7800-1584-4b3a-6147e7ad3fca@codeaurora.org>
- <20200520155943.GB3916378@kroah.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <543f7692-7b0e-eeab-fc6e-a292f1bc7640@codeaurora.org>
-Date:   Wed, 20 May 2020 10:15:33 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 20 May 2020 12:16:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589991366;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+MQD7bLAeWpGadatG4/J3oyu4QcEuGAp5bNd5T2B1Jw=;
+        b=d4CC/yycOkwyy9Nsn3Nax0MsqvNXlOJJvhhHXmrX5/sVB2V+SFRfxwZO1S4w73eITfclWX
+        +aF0GG8WncW4xYTrFasCKjjIsoOPS8WRzyHF1w23rghfh+nq36buiSJKDRr/xzq76NJSGi
+        YGFwJf+OCU+RobcKNHYzECemOeFGh9A=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-ayMapM5ZMs-hiuJmY0LrJg-1; Wed, 20 May 2020 12:16:04 -0400
+X-MC-Unique: ayMapM5ZMs-hiuJmY0LrJg-1
+Received: by mail-ej1-f71.google.com with SMTP id pj20so1561258ejb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 09:16:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+MQD7bLAeWpGadatG4/J3oyu4QcEuGAp5bNd5T2B1Jw=;
+        b=p13LihAKc0Qt11EppfxGaUuoJAfu+hN/ErVBPuh5AYhwhW+gjPv56mcgSxdy8C9wy6
+         cRiVbzcXg5BPHvMGmmhnFGK+IJSWpvnyruJWXWrDV/IoS8a+ZWgOVp9kV/Ol/n4ke0M2
+         B5OaUq6RyArEPYjMR8mfrhaWPeMwE2s2J3Yw1p9+R/ebVaXmEt9omQjEWPiQ4O03QWkm
+         dcRLquMy+tRrVWCYCMeqLMwnPxFFvwjOlMMWUNfAzbTiygmU2v5wRwQcNWugsVwjhrlv
+         ir5W/dnXsuzNNN3fdFHUrWTVFvk9kqol9lND/rWKPn+3pmYY4txkluhtwO9jrlGhp5zd
+         GgFw==
+X-Gm-Message-State: AOAM530RDb8AsW1NMm5hdQLeIYHWk++K5GG4Cnzvt0fd5FUorjckyIqV
+        /DjGQPAa59H/ofjKKgfxan544Z+ML2yB1GbOYCLwz584Kj15wDvwAoq1g/bhoIWa2EPfANPKn5m
+        TIfoEeFgt+MWVhLXPwW7z1ZB+
+X-Received: by 2002:a17:906:3943:: with SMTP id g3mr4316534eje.454.1589991363489;
+        Wed, 20 May 2020 09:16:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy2hnM4vetLABm37y0fKnboEQ3oCgaMK3/TvHOMdlFMHyR+fDIP2LFNfyoNCg7yrAhnQSRTuQ==
+X-Received: by 2002:a17:906:3943:: with SMTP id g3mr4316513eje.454.1589991363274;
+        Wed, 20 May 2020 09:16:03 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id h12sm2186513ejj.40.2020.05.20.09.16.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 09:16:02 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] xen: move xen_setup_callback_vector() definition to include/xen/hvm.h
+Date:   Wed, 20 May 2020 18:16:00 +0200
+Message-Id: <20200520161600.361895-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20200520155943.GB3916378@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/2020 9:59 AM, Greg Kroah-Hartman wrote:
-> On Wed, May 20, 2020 at 08:48:13AM -0600, Jeffrey Hugo wrote:
->> On 5/20/2020 2:34 AM, Daniel Vetter wrote:
->>> On Wed, May 20, 2020 at 7:15 AM Greg Kroah-Hartman
->>> <gregkh@linuxfoundation.org> wrote:
->>>>
->>>> On Tue, May 19, 2020 at 10:41:15PM +0200, Daniel Vetter wrote:
->>>>> On Tue, May 19, 2020 at 07:41:20PM +0200, Greg Kroah-Hartman wrote:
->>>>>> On Tue, May 19, 2020 at 08:57:38AM -0600, Jeffrey Hugo wrote:
->>>>>>> On 5/18/2020 11:08 PM, Dave Airlie wrote:
->>>>>>>> On Fri, 15 May 2020 at 00:12, Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->>>>>>>>>
->>>>>>>>> Introduction:
->>>>>>>>> Qualcomm Cloud AI 100 is a PCIe adapter card which contains a dedicated
->>>>>>>>> SoC ASIC for the purpose of efficently running Deep Learning inference
->>>>>>>>> workloads in a data center environment.
->>>>>>>>>
->>>>>>>>> The offical press release can be found at -
->>>>>>>>> https://www.qualcomm.com/news/releases/2019/04/09/qualcomm-brings-power-efficient-artificial-intelligence-inference
->>>>>>>>>
->>>>>>>>> The offical product website is -
->>>>>>>>> https://www.qualcomm.com/products/datacenter-artificial-intelligence
->>>>>>>>>
->>>>>>>>> At the time of the offical press release, numerious technology news sites
->>>>>>>>> also covered the product.  Doing a search of your favorite site is likely
->>>>>>>>> to find their coverage of it.
->>>>>>>>>
->>>>>>>>> It is our goal to have the kernel driver for the product fully upstream.
->>>>>>>>> The purpose of this RFC is to start that process.  We are still doing
->>>>>>>>> development (see below), and thus not quite looking to gain acceptance quite
->>>>>>>>> yet, but now that we have a working driver we beleive we are at the stage
->>>>>>>>> where meaningful conversation with the community can occur.
->>>>>>>>
->>>>>>>>
->>>>>>>> Hi Jeffery,
->>>>>>>>
->>>>>>>> Just wondering what the userspace/testing plans for this driver.
->>>>>>>>
->>>>>>>> This introduces a new user facing API for a device without pointers to
->>>>>>>> users or tests for that API.
->>>>>>>
->>>>>>> We have daily internal testing, although I don't expect you to take my word
->>>>>>> for that.
->>>>>>>
->>>>>>> I would like to get one of these devices into the hands of Linaro, so that
->>>>>>> it can be put into KernelCI.  Similar to other Qualcomm products. I'm trying
->>>>>>> to convince the powers that be to make this happen.
->>>>>>>
->>>>>>> Regarding what the community could do on its own, everything but the Linux
->>>>>>> driver is considered proprietary - that includes the on device firmware and
->>>>>>> the entire userspace stack.  This is a decision above my pay grade.
->>>>>>
->>>>>> Ok, that's a decision you are going to have to push upward on, as we
->>>>>> really can't take this without a working, open, userspace.
->>>>>
->>>>> Uh wut.
->>>>>
->>>>> So the merge criteria for drivers/accel (atm still drivers/misc but I
->>>>> thought that was interim until more drivers showed up) isn't actually
->>>>> "totally-not-a-gpu accel driver without open source userspace".
->>>>>
->>>>> Instead it's "totally-not-a-gpu accel driver without open source
->>>>> userspace" _and_ you have to be best buddies with Greg. Or at least
->>>>> not be on the naughty company list. Since for habanalabs all you
->>>>> wanted is a few test cases to exercise the ioctls. Not the entire
->>>>> userspace.
->>>>
->>>> Also, to be fair, I have changed my mind after seeing the mess of
->>>> complexity that these "ioctls for everyone!" type of pass-through
->>>> these kinds of drivers are creating.  You were right, we need open
->>>> userspace code in order to be able to properly evaluate and figure out
->>>> what they are doing is right or not and be able to maintain things over
->>>> time correctly.
->>>>
->>>> So I was wrong, and you were right, my apologies for my previous
->>>> stubbornness.
->>>
->>> Awesome and don't worry, I'm pretty sure we've all been stubborn
->>> occasionally :-)
->>>
->>>   From a drivers/gpu pov I think still not quite there since we also
->>> want to see the compiler for these programmable accelerator thingies.
->>> But just having a fairly good consensus that "userspace library with
->>> all the runtime stuff excluding compiler must be open" is a huge step
->>> forward. Next step may be that we (kernel overall, drivers/gpu will
->>> still ask for the full thing) have ISA docs for these programmable
->>> things, so that we can also evaluate that aspect and gauge how many
->>> security issues there might be. Plus have a fighting chance to fix up
->>> the security leaks when (post smeltdown I don't really want to
->>> consider this an if) someone finds a hole in the hw security wall. At
->>> least in drivers/gpu we historically have a ton of drivers with
->>> command checkers to validate what userspace wants to run on the
->>> accelerator thingie. Both in cases where the hw was accidentally too
->>> strict, and not strict enough.
->>
->> I think this provides a pretty clear guidance on what you/the community are
->> looking for, both now and possibly in the future.
->>
->> Thank you.
->>
->>  From my perspective, it would be really nice if there was something like
->> Mesa that was a/the standard for these sorts of accelerators.  Its somewhat
->> the wild west, and we've struggled with it.
-> 
-> Put a first cut at such a thing out there and see how it goes!  Nothing
-> is preventing you from starting such a project, and it would be most
-> welcome as you have seen.
+Kbuild test robot reports the following problem on ARM:
 
-I wish.  I'll float the idea, but don't hold your breath.
+>> drivers/xen/events/events_base.c:1664:6: warning: no previous prototype
+  for 'xen_setup_callback_vector' [-Wmissing-prototypes]
+1664 | void xen_setup_callback_vector(void) {}
+|      ^~~~~~~~~~~~~~~~~~~~~~~~~
+The problem is that xen_setup_callback_vector is a x86 only thing, its
+definition is present in arch/x86/xen/xen-ops.h but not on ARM. In
+events_base.c we have a stub for !CONFIG_XEN_PVHVM but it is not
+declared as 'static'.
 
+On x86 the situation is hardly better: drivers/xen/events/events_base.c
+doesn't include 'xen-ops.h' from arch/x86/xen/, it includes its namesake
+from include/xen/ so we also get the 'no previous prototype' warning.
+
+Currently, xen_setup_callback_vector() has two call sites: one in
+drivers/xen/events_base.c and another in arch/x86/xen/suspend_hvm.c. The
+former is placed under #ifdef CONFIG_X86 and the later is only compiled
+in when CONFIG_XEN_PVHVM.
+
+Resolve the issue by moving xen_setup_callback_vector() declaration to
+arch neutral 'include/xen/hvm.h' as the implementation lives in arch
+neutral drivers/xen/events/events_base.c.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+- The patch needs to be applied on top of 'x86/xen: Split HVM vector callback
+ setup and interrupt gate allocation' ('tip/entry' branch currently). This
+ patch doesn't introduce the issue (and that's why I don't add 'Fixes:' tag)
+ but it renames xen_callback_vector() -> xen_setup_callback_vector().
+---
+ arch/x86/xen/suspend_hvm.c | 1 +
+ arch/x86/xen/xen-ops.h     | 1 -
+ include/xen/hvm.h          | 2 ++
+ 3 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/xen/suspend_hvm.c b/arch/x86/xen/suspend_hvm.c
+index 5152afe16876..9d548b0c772f 100644
+--- a/arch/x86/xen/suspend_hvm.c
++++ b/arch/x86/xen/suspend_hvm.c
+@@ -2,6 +2,7 @@
+ #include <linux/types.h>
+ 
+ #include <xen/xen.h>
++#include <xen/hvm.h>
+ #include <xen/features.h>
+ #include <xen/interface/features.h>
+ 
+diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+index 1cc1568bfe04..937a53e73ea5 100644
+--- a/arch/x86/xen/xen-ops.h
++++ b/arch/x86/xen/xen-ops.h
+@@ -55,7 +55,6 @@ void xen_enable_sysenter(void);
+ void xen_enable_syscall(void);
+ void xen_vcpu_restore(void);
+ 
+-void xen_setup_callback_vector(void);
+ void xen_hvm_init_shared_info(void);
+ void xen_unplug_emulated_devices(void);
+ 
+diff --git a/include/xen/hvm.h b/include/xen/hvm.h
+index 0b15f8cb17fc..b7fd7fc9ad41 100644
+--- a/include/xen/hvm.h
++++ b/include/xen/hvm.h
+@@ -58,4 +58,6 @@ static inline int hvm_get_parameter(int idx, uint64_t *value)
+ #define HVM_CALLBACK_VECTOR(x) (((uint64_t)HVM_CALLBACK_VIA_TYPE_VECTOR)<<\
+ 		HVM_CALLBACK_VIA_TYPE_SHIFT | (x))
+ 
++void xen_setup_callback_vector(void);
++
+ #endif /* XEN_HVM_H__ */
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.25.4
+
