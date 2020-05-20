@@ -2,142 +2,213 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32B3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D490AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF0B2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 04:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27EA2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 05:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ikdRrS9I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oV7qcWIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgETE7z (ORCPT
+        id S1726850AbgETFAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 00:59:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59536 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726309AbgETE7y (ORCPT
+        Wed, 20 May 2020 01:00:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgETFAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 00:59:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589950792;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NzRuCXGE7RhfvXL+xzJ6ifDK+x2b4dBICd6MmzRaGuA=;
-        b=ikdRrS9IO2PLnCNTnILSI8pK9uijQBTcRFEC2w2ZcfUTgoz8Ffx88DzrWcXKND9vzLmZ+B
-        /KZ+Fiw5OfGtL1HvPL5+ii38R+/NhssTY+ojZj7MDn5dEmaH913M4r3kmor3fuCc4kzF8O
-        WLkRb4vugCCKAKuUtPdf+wn87ORd7hs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-tFFgHWsFOBaAec_iH28Mfg-1; Wed, 20 May 2020 00:59:47 -0400
-X-MC-Unique: tFFgHWsFOBaAec_iH28Mfg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0791835B44;
-        Wed, 20 May 2020 04:59:44 +0000 (UTC)
-Received: from mail (ovpn-112-106.rdu2.redhat.com [10.10.112.106])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CD1783841;
-        Wed, 20 May 2020 04:59:39 +0000 (UTC)
-Date:   Wed, 20 May 2020 00:59:38 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, timmurray@google.com,
-        minchan@google.com, sspatil@google.com, lokeshgidra@google.com
-Subject: Re: [PATCH 2/2] Add a new sysctl knob:
- unprivileged_userfaultfd_user_mode_only
-Message-ID: <20200520045938.GC26186@redhat.com>
-References: <20200423002632.224776-1-dancol@google.com>
- <20200423002632.224776-3-dancol@google.com>
- <20200508125054-mutt-send-email-mst@kernel.org>
- <20200508125314-mutt-send-email-mst@kernel.org>
+        Wed, 20 May 2020 01:00:17 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB792C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:00:17 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id e11so29480pfn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 May 2020 22:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QaxIGFD8jHmVVWBDhurC80V7YJ3c6OZJikPPga/xLT8=;
+        b=oV7qcWIq+QUjh+p5X2N6/qwDruyKEBc1dUFlvyWKdI5MvoC9swHpy5J08pS/2gqkhT
+         CFA2Tg/O2eV3xr73Ofgocvy5rS91QDhGnB+WeHTyMKrqq1aHNIgBw7Dh0GqHGoSwoDhL
+         amnI4YwTZycIwJ80VU1ZhuTj0qX+t8BPQmYfkhGrFi+M4OhlZ1jnsZXu+/Uo/YW7BPll
+         BzsxP7dEkSCWxuEJKW5cQW/8ee79LzgovnPDSYaLaFBpDT7gkcAeHKIQtMa2MTc+9m/+
+         AibzcIXzbTGFj5TufSgWEVH+uPASB4jV93yGWFODYoIRYsZ9OaBn6b3vuzYu/sgLP12x
+         CHIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QaxIGFD8jHmVVWBDhurC80V7YJ3c6OZJikPPga/xLT8=;
+        b=VhfnD2khb82gQrqSJFU46qJMFHJ/vn0MPdUpttJ2EJ1GIskKj0W9gPU5+UtJ9wH/Iu
+         1UFBAZmfPsqGrK/aJzhB86Q3t53TKDVqBXKtjkpBiRyl0oBKJ7L820hpvbF1EUb+KVQH
+         I4jLirk0R8qe6QkoZdJCxbMoUC3nrYVRZmRvfZw17xmECImC1KlcodRn1k1SURxwJmkJ
+         cdPoqeRCbMbQyJvfONQsXZ5i15fC9ZKTwuDA3CwK6MpJ0nRsmHaltAcS2Cdw7L1DKCMX
+         NwUJc4IqDzCmKARyUgGjPgoCfdwW4g8nqUVnOic+Kxd3C+q7CPxz9ZMdS5O8EJBnN8So
+         4RYA==
+X-Gm-Message-State: AOAM531MI5WGbqBKdt2Ea5gNIUbKOz1koGCQArZHeUwmNGJo1Nsk7vRZ
+        gs7MaWqZaStnlHDcPyCB9zfShw==
+X-Google-Smtp-Source: ABdhPJyfKsbIaXqxVGHZTQx2Y4OfuMFdkbnDNsj1D8KQxFQoEnTjtiS+OPtTZhhMSEdByg8AHiPaag==
+X-Received: by 2002:a62:5ac5:: with SMTP id o188mr2597090pfb.37.1589950817112;
+        Tue, 19 May 2020 22:00:17 -0700 (PDT)
+Received: from localhost ([122.167.130.103])
+        by smtp.gmail.com with ESMTPSA id p62sm926052pfb.93.2020.05.19.22.00.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 22:00:16 -0700 (PDT)
+Date:   Wed, 20 May 2020 10:30:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     rjw@rjwysocki.net, Souvik.Chakravarty@arm.com,
+        Thanu.Rangarajan@arm.com, Sudeep.Holla@arm.com,
+        guohanjun@huawei.com, john.garry@huawei.com,
+        jonathan.cameron@huawei.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 2/2] CPPC: add support for SW BOOST
+Message-ID: <20200520050014.qpnnmyas2z7mvcss@vireshk-i7>
+References: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1589888489-13828-3-git-send-email-wangxiongfeng2@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508125314-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.14.0 (2020-05-02)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <1589888489-13828-3-git-send-email-wangxiongfeng2@huawei.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
-
-On Fri, May 08, 2020 at 12:54:03PM -0400, Michael S. Tsirkin wrote:
-> On Fri, May 08, 2020 at 12:52:34PM -0400, Michael S. Tsirkin wrote:
-> > On Wed, Apr 22, 2020 at 05:26:32PM -0700, Daniel Colascione wrote:
-> > > This sysctl can be set to either zero or one. When zero (the default)
-> > > the system lets all users call userfaultfd with or without
-> > > UFFD_USER_MODE_ONLY, modulo other access controls. When
-> > > unprivileged_userfaultfd_user_mode_only is set to one, users without
-> > > CAP_SYS_PTRACE must pass UFFD_USER_MODE_ONLY to userfaultfd or the API
-> > > will fail with EPERM. This facility allows administrators to reduce
-> > > the likelihood that an attacker with access to userfaultfd can delay
-> > > faulting kernel code to widen timing windows for other exploits.
-> > > 
-> > > Signed-off-by: Daniel Colascione <dancol@google.com>
-> > 
-> > The approach taken looks like a hard-coded security policy.
-> > For example, it won't be possible to set the sysctl knob
-> > in question on any sytem running kvm. So this is
-> > no good for any general purpose system.
-> > 
-> > What's wrong with using a security policy for this instead?
+On 19-05-20, 19:41, Xiongfeng Wang wrote:
+> To add SW BOOST support for CPPC, we need to get the max frequency of
+> boost mode and non-boost mode. ACPI spec 6.2 section 8.4.7.1 describe
+> the following two CPC registers.
 > 
-> In fact I see the original thread already mentions selinux,
-> so it's just a question of making this controllable by
-> selinux.
+> "Highest performance is the absolute maximum performance an individual
+> processor may reach, assuming ideal conditions. This performance level
+> may not be sustainable for long durations, and may only be achievable if
+> other platform components are in a specific state; for example, it may
+> require other processors be in an idle state.
+> 
+> Nominal Performance is the maximum sustained performance level of the
+> processor, assuming ideal operating conditions. In absence of an
+> external constraint (power, thermal, etc.) this is the performance level
+> the platform is expected to be able to maintain continuously. All
+> processors are expected to be able to sustain their nominal performance
+> state simultaneously."
+> 
+> To add SW BOOST support for CPPC, we can use Highest Performance as the
+> max performance in boost mode and Nominal Performance as the max
+> performance in non-boost mode. If the Highest Performance is greater
+> than the Nominal Performance, we assume SW BOOST is supported.
+> 
+> The current CPPC driver does not support SW BOOST and use 'Highest
+> Performance' as the max performance the CPU can achieve. 'Nominal
+> Performance' is used to convert 'performance' to 'frequency'. That
+> means, if firmware enable boost and provide a value for Highest
+> Performance which is greater than Nominal Performance, boost feature is
+> enabled by default.
+> 
+> Because SW BOOST is disabled by default, so, after this patch, boost
+> feature is disabled by default even if boost is enabled by firmware.
+> 
+> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> ---
+>  drivers/cpufreq/cppc_cpufreq.c | 39 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 37 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index bda0b24..792ed9e 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -37,6 +37,7 @@
+>   * requested etc.
+>   */
+>  static struct cppc_cpudata **all_cpu_data;
+> +static bool boost_supported;
+>  
+>  struct cppc_workaround_oem_info {
+>  	char oem_id[ACPI_OEM_ID_SIZE + 1];
+> @@ -310,7 +311,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	 * Section 8.4.7.1.1.5 of ACPI 6.1 spec)
+>  	 */
+>  	policy->min = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_nonlinear_perf);
+> -	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
+> +	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
+>  
+>  	/*
+>  	 * Set cpuinfo.min_freq to Lowest to make the full range of performance
+> @@ -318,7 +319,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  	 * nonlinear perf
+>  	 */
+>  	policy->cpuinfo.min_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_perf);
+> -	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
+> +	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
+>  
+>  	policy->transition_delay_us = cppc_cpufreq_get_transition_delay_us(cpu_num);
+>  	policy->shared_type = cpu->shared_type;
+> @@ -343,6 +344,13 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  
+>  	cpu->cur_policy = policy;
+>  
+> +	/*
+> +	 * If 'highest_perf' is greater than 'nominal_perf', we assume CPU Boost
+> +	 * is supported.
+> +	 */
+> +	if (cpu->perf_caps.highest_perf > cpu->perf_caps.nominal_perf)
+> +		boost_supported = true;
+> +
+>  	/* Set policy->cur to max now. The governors will adjust later. */
+>  	policy->cur = cppc_cpufreq_perf_to_khz(cpu,
+>  					cpu->perf_caps.highest_perf);
+> @@ -410,6 +418,32 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>  	return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
+>  }
+>  
+> +static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
+> +{
+> +	struct cppc_cpudata *cpudata;
+> +	int ret = 0;
 
-I agree it'd be preferable if it was not hardcoded, but then this
-patchset is also much simpler than the previous controlling it through
-selinux..
+No need to initialize this.
 
-I was thinking, an alternative policy that could control it without
-hard-coding it, is a seccomp-bpf filter, then you can drop 2/2 as
-well, not just 1/6-4/6.
+> +
+> +	if (!boost_supported) {
+> +		pr_err("BOOST not supported by CPU or firmware\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	cpudata = all_cpu_data[policy->cpu];
+> +	if (state)
+> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
+> +					cpudata->perf_caps.highest_perf);
+> +	else
+> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
+> +					cpudata->perf_caps.nominal_perf);
+> +	policy->cpuinfo.max_freq = policy->max;
+> +
+> +	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static struct cpufreq_driver cppc_cpufreq_driver = {
+>  	.flags = CPUFREQ_CONST_LOOPS,
+>  	.verify = cppc_verify_policy,
+> @@ -417,6 +451,7 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>  	.get = cppc_cpufreq_get_rate,
+>  	.init = cppc_cpufreq_cpu_init,
+>  	.stop_cpu = cppc_cpufreq_stop_cpu,
+> +	.set_boost = cppc_cpufreq_set_boost,
+>  	.name = "cppc_cpufreq",
+>  };
+>  
+> -- 
+> 1.7.12.4
 
-If you keep only 1/2, can't seccomp-bpf enforce userfaultfd to be
-always called with flags==0x1 without requiring extra modifications in
-the kernel?
-
-Can't you get the feature party with the CAP_SYS_PTRACE capability
-too, if you don't wrap those tasks with the ptrace capability under
-that seccomp filter?
-
-As far as I can tell, it's unprecedented to create a flag for a
-syscall API, with the only purpose of implementing a seccomp-bpf
-filter verifying such flag is set, but then if you want to control it
-with LSM it's even more complex than doing it with seccomp-bpf, and it
-requires more kernel code too. We could always add 2/2 later, such
-possibility won't disappear, in fact we could also add 1/6-4/6 later
-too if that is not enough.
-
-If we could begin by merging only 1/2 from this new series and be done
-with the kernel changes, because we offload the rest of the work to
-the kernel eBPF JIT, I think it'd be ideal.
-
-Thanks,
-Andrea
-
+-- 
+viresh
