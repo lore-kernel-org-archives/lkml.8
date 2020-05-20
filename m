@@ -2,202 +2,117 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D946C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1761C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC7F42075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DnLHnQ5s"
+	by mail.kernel.org (Postfix) with ESMTP id CC7712075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 17:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgETRnC (ORCPT
+        id S1726903AbgETRng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 13:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgETRnB (ORCPT
+        Wed, 20 May 2020 13:43:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32574 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgETRnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 13:43:01 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC33C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:43:01 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f13so4478966qkh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 10:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VBRfAgii8K8/gCukCvu8XCg+o66x9P2+cPM+CVImvio=;
-        b=DnLHnQ5sjW0TrKjPiSFQuJoNHu1nh52R7i4YKRaAtQGIFAYQyxlX2Xr8mJrcX3jKww
-         xuOXyXA3HijuVMJvaJw+QBdSvvEH/Kbpth1JAtrqv2DaK3zYrFXS5SN4dshFnhcvFDsj
-         8S0tIUvfnho9IxPjeojIhpUzb1HuBd0c/NWqU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VBRfAgii8K8/gCukCvu8XCg+o66x9P2+cPM+CVImvio=;
-        b=GEvSUMqwfZZkeqpLnxohfnT/ihNyxArTwu9bA//FUrwJaWZeOGWITuunX1wpyVse9v
-         Qsc/VBMnlkWSlOfb5c4E69cq2fOrwz8ovvvsiX+9IOiXbXmdLNu1PCkiaWfO4Kj06nHr
-         22dnA5jxhm5t1Hy9Qa2NSXuZueZDWN0LfgZiGhGAPzFBtjWIGz5DtdtHxFQJDltP4XEr
-         t847OTp+RNixRDVXIGJysk6rWneFqbkWIaAOP0IDpobJP4z54xS6qnrCLN1HuihCL4/F
-         CiPJsaT277qZGyvvxbSWHoMtmsCj/tMev/vS7uacwi0/r9T1ed/DySMPm0dGKbn/gIxv
-         b0ug==
-X-Gm-Message-State: AOAM532MVDOBOr541v/g0gy4iSTcJxgTmptgqL3wc0s61mMbVRs1wZJ9
-        4Yf9r0dgxCDeHIem46WxiGirXA==
-X-Google-Smtp-Source: ABdhPJzX7+Xf26Khmb4D57YmI7QsAFvWHZ0SZ9/Q8msbMYR9tHpafxHNv4nq0+H1vkQ4JM6GKMoMbw==
-X-Received: by 2002:a37:688c:: with SMTP id d134mr6066461qkc.450.1589996580324;
-        Wed, 20 May 2020 10:43:00 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id r18sm2863194qtn.1.2020.05.20.10.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 10:42:59 -0700 (PDT)
-Date:   Wed, 20 May 2020 13:42:59 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org
-Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
- access
-Message-ID: <20200520174259.GA247557@google.com>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-4-bigeasy@linutronix.de>
- <20200520102407.GF317569@hirez.programming.kicks-ass.net>
- <20200520120608.mwros5jurmidxxfv@linutronix.de>
+        Wed, 20 May 2020 13:43:35 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KHY4Nc081243;
+        Wed, 20 May 2020 13:43:15 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312bg8rjrb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 13:43:14 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04KHfGB7019054;
+        Wed, 20 May 2020 17:43:12 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 313x2j1q2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 17:43:12 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04KHhADf1900976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 17:43:10 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3914111C04A;
+        Wed, 20 May 2020 17:43:10 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8FF411C04C;
+        Wed, 20 May 2020 17:43:09 +0000 (GMT)
+Received: from pomme.tlslab.ibm.com (unknown [9.145.151.133])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 May 2020 17:43:09 +0000 (GMT)
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, paulus@samba.org
+Cc:     groug@kaod.org, mpe@ellerman.id.au, sukadev@linux.ibm.com,
+        linuxram@us.ibm.com
+Subject: [PATCH v2] KVM: PPC: Book3S HV: relax check on H_SVM_INIT_ABORT
+Date:   Wed, 20 May 2020 19:43:08 +0200
+Message-Id: <20200520174308.77820-1-ldufour@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200520193259.0b66db32@bahia.lan>
+References: <20200520193259.0b66db32@bahia.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520120608.mwros5jurmidxxfv@linutronix.de>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_13:2020-05-20,2020-05-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 cotscore=-2147483648 malwarescore=0
+ mlxscore=0 suspectscore=0 spamscore=0 phishscore=0 impostorscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+The commit 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_*
+Hcalls") added checks of secure bit of SRR1 to filter out the Hcall
+reserved to the Ultravisor.
 
-On Wed, May 20, 2020 at 02:06:08PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-05-20 12:24:07 [+0200], Peter Zijlstra wrote:
-> > On Tue, May 19, 2020 at 10:19:07PM +0200, Sebastian Andrzej Siewior wrote:
-> > 
-> > > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> > > index 0c71505f0e19c..8d2b5f75145d7 100644
-> > > --- a/kernel/rcu/srcutree.c
-> > > +++ b/kernel/rcu/srcutree.c
-> > > @@ -25,6 +25,7 @@
-> > >  #include <linux/delay.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/srcu.h>
-> > > +#include <linux/locallock.h>
-> > >  
-> > >  #include "rcu.h"
-> > >  #include "rcu_segcblist.h"
-> > > @@ -735,6 +736,7 @@ static void srcu_flip(struct srcu_struct *ssp)
-> > >  	smp_mb(); /* D */  /* Pairs with C. */
-> > >  }
-> > >  
-> > > +static DEFINE_LOCAL_LOCK(sda_lock);
-> > >  /*
-> > >   * If SRCU is likely idle, return true, otherwise return false.
-> > >   *
-> > > @@ -765,13 +767,13 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
-> > >  	unsigned long tlast;
-> > >  
-> > >  	/* If the local srcu_data structure has callbacks, not idle.  */
-> > > -	local_irq_save(flags);
-> > > +	local_lock_irqsave(sda_lock, flags);
-> > >  	sdp = this_cpu_ptr(ssp->sda);
-> > >  	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
-> > > -		local_irq_restore(flags);
-> > > +		local_unlock_irqrestore(sda_lock, flags);
-> > >  		return false; /* Callbacks already present, so not idle. */
-> > >  	}
-> > > -	local_irq_restore(flags);
-> > > +	local_unlock_irqrestore(sda_lock, flags);
-> > 
-> > Would it perhaps make sense to stick the local_lock in struct srcu_data ?
-> 
-> In that case we would need something for pointer stability before the
-> lock is acquired.
+However, the Hcall H_SVM_INIT_ABORT is made by the Ultravisor passing the
+context of the VM calling UV_ESM. This allows the Hypervisor to return to
+the guest without going through the Ultravisor. Thus the Secure bit of SRR1
+is not set in that particular case.
 
-For pointer stability, can we just use get_local_ptr() and put_local_ptr()
-instead of adding an extra lock? This keeps the pointer stable while keeping
-the section preemptible on -rt. And we already have a lock in rcu_data, I
-prefer not to add another lock if possible.
+In the case a regular VM is calling H_SVM_INIT_ABORT, this hcall will be
+filtered out in kvmppc_h_svm_init_abort() because kvm->arch.secure_guest is
+not set in that case.
 
-I wrote a diff below with get_local_ptr() (just build tested). Does this
-solve your issue?
+Fixes: 8c47b6ff29e3 ("KVM: PPC: Book3S HV: Check caller of H_SVM_* Hcalls")
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+---
+ arch/powerpc/kvm/book3s_hv.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> I remember Paul looked at that patch a few years ago and he said that
-> that disabling interrupts here is important and matches the other part
-> instance where the interrupts are disabled. Looking at it now, it seems
-> that there is just pointer stability but I can't tell if
-> rcu_segcblist_pend_cbs() needs more than just this.
-
-Which 'other part' are you referring to? Your patch removed local_irq_save()
-from other places as well right?
-
-thanks,
-
- - Joel
-
----8<-----------------------
-
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index 8ff71e5d0fe8b..5f49919205317 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -778,13 +778,17 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
- 	unsigned long tlast;
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 93493f0cbfe8..6ad1a3b14300 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -1099,9 +1099,12 @@ int kvmppc_pseries_do_hcall(struct kvm_vcpu *vcpu)
+ 			ret = kvmppc_h_svm_init_done(vcpu->kvm);
+ 		break;
+ 	case H_SVM_INIT_ABORT:
+-		ret = H_UNSUPPORTED;
+-		if (kvmppc_get_srr1(vcpu) & MSR_S)
+-			ret = kvmppc_h_svm_init_abort(vcpu->kvm);
++		/*
++		 * Even if that call is made by the Ultravisor, the SSR1 value
++		 * is the guest context one, with the secure bit clear as it has
++		 * not yet been secured. So we can't check it here.
++		 */
++		ret = kvmppc_h_svm_init_abort(vcpu->kvm);
+ 		break;
  
- 	/* If the local srcu_data structure has callbacks, not idle.  */
--	local_irq_save(flags);
--	sdp = this_cpu_ptr(ssp->sda);
-+	sdp = get_local_ptr(ssp->sda);
-+	spin_lock_irqsave_rcu_node(sdp, flags);
-+
- 	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
--		local_irq_restore(flags);
-+		spin_unlock_irqrestore_rcu_node(sdp, flags);
-+		put_local_ptr(sdp);
- 		return false; /* Callbacks already present, so not idle. */
- 	}
--	local_irq_restore(flags);
-+
-+	spin_unlock_irqrestore_rcu_node(sdp, flags);
-+	put_local_ptr(sdp);
- 
- 	/*
- 	 * No local callbacks, so probabalistically probe global state.
-@@ -864,9 +868,8 @@ static void __call_srcu(struct srcu_struct *ssp, struct rcu_head *rhp,
- 	}
- 	rhp->func = func;
- 	idx = srcu_read_lock(ssp);
--	local_irq_save(flags);
--	sdp = this_cpu_ptr(ssp->sda);
--	spin_lock_rcu_node(sdp);
-+	sdp = get_local_ptr(ssp->sda);
-+	spin_lock_irqsave_rcu_node(sdp, flags);
- 	rcu_segcblist_enqueue(&sdp->srcu_cblist, rhp);
- 	rcu_segcblist_advance(&sdp->srcu_cblist,
- 			      rcu_seq_current(&ssp->srcu_gp_seq));
-@@ -886,6 +889,8 @@ static void __call_srcu(struct srcu_struct *ssp, struct rcu_head *rhp,
- 	else if (needexp)
- 		srcu_funnel_exp_start(ssp, sdp->mynode, s);
- 	srcu_read_unlock(ssp, idx);
-+
-+	put_local_ptr(sdp);
- }
- 
- /**
+ 	default:
+-- 
+2.26.2
+
