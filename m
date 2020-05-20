@@ -2,189 +2,247 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 584942065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:36:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuE0Wnos"
+	by mail.kernel.org (Postfix) with ESMTP id BE1D82075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 09:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgETJgE (ORCPT
+        id S1726576AbgETJi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 05:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38484 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETJgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 05:36:04 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFA5C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:36:02 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s8so2399043wrt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 02:36:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bl2Z9rwd9yHv4ZpH+5LCcErhhFtMaEj+8e37h0oPQpc=;
-        b=QuE0WnosJ6J52vDdOA3INb6M2D/urfQeKgVAIc2+q2dNGq0Wq/5IWiFlaj7Slg/BcQ
-         UkRNgOmg57DHE5ZkeRPYdeTJmyl792iWRXudp5mLZW7GYT5f6Z75JC2tEh5cP16AK9mM
-         9OnhPiI+UzhVdzV372P9zNs8q0kNWC1QBhUm9nyeYgCiUdJM1byYFPmrB323ixUXyigO
-         Ms3mLPgYlvOQN/g4/7YyWLcb6IoaHawUgmFpsrT3A4H6ezgCPc6ft59u62qw45qlzcJz
-         PBDLrO/odZOjfn9GKDEZ92HbhH6TPhps3ypWSCfeRlzhtDjPzsTKCioPhSukD6/ku64U
-         zSvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bl2Z9rwd9yHv4ZpH+5LCcErhhFtMaEj+8e37h0oPQpc=;
-        b=UnALLgrjpJRt7fDc5YPG7ClS1M5h3NCwvK7bqV3AKV2WKLhhuS6qchrBfpLb41OiyX
-         /B1dGvOcxjm2PvMW7LZ8P657vAxgnsPG1Q0F6Ej6aTdoTkXtym/7UGXSjkAK4LbuWg45
-         sFklQoe7t5+phyxLUJaCuIY9ywNPI3dd+N0ah2cdI2L3JFVPn8+I/VoIisxhvJiy7U3a
-         VokUjwtxa4IW+l2WJC5pPBKk7AIeBTfuke/YNR/fvvabZq2aBrX6Jqi04/DXGMQTRBil
-         wYehTCcZXIxk0ZueuLbsyROocF2DMKRcSHtRRJ7xGZqNybNbam52Xk2ZN8VJIPILfl1F
-         TLBg==
-X-Gm-Message-State: AOAM530bY4sZaIuCiAAZZM9AVIYxxl3m61yFNpbLGXtGdGhB+T1yIAqs
-        2DScHCyfSOU2U+QuwjXeot2hBA==
-X-Google-Smtp-Source: ABdhPJwwOpwo1mP3WPWm+13T7s8/2dqpT8dfFYb3l/48EJ787rro1deSw2krhQQ+/T4/nODPrdVJYg==
-X-Received: by 2002:adf:e752:: with SMTP id c18mr3306165wrn.353.1589967360615;
-        Wed, 20 May 2020 02:36:00 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id g140sm2076523wmg.47.2020.05.20.02.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 02:35:59 -0700 (PDT)
-Date:   Wed, 20 May 2020 10:35:57 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>, Sumit Garg <sumit.garg@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH] printk/kdb: Redirect printk messages into kdb in any
- context
-Message-ID: <20200520093557.lwwxnhvgmacipdce@holly.lan>
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
- <20200512142533.ta4uejwmq5gchtlx@holly.lan>
- <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
- <20200514084230.GO17734@linux-b0ei>
- <CAFA6WYPSsgdAB-wJC0e2YkVkW0XsqQsu5wrn4iB4M-cwvS7z2g@mail.gmail.com>
- <20200515085021.GS17734@linux-b0ei>
- <20200515103308.GD42471@jagdpanzerIV.localdomain>
- <20200515134806.5cw4xxnxw7k3223l@holly.lan>
- <20200518092139.GK7340@linux-b0ei>
- <20200520042102.GA938@jagdpanzerIV.localdomain>
+        Wed, 20 May 2020 05:38:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44332 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETJi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 05:38:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EFB83AC61;
+        Wed, 20 May 2020 09:38:57 +0000 (UTC)
+Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
+To:     rananta@codeaurora.org, Greg KH <gregkh@linuxfoundation.org>
+Cc:     andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200428032601.22127-1-rananta@codeaurora.org>
+ <20200506094851.GA2787548@kroah.com>
+ <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
+ <20200510064819.GB3400311@kroah.com>
+ <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
+ <20200511073913.GA1347819@kroah.com>
+ <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
+ <20200512082551.GA3526567@kroah.com>
+ <417b1d320bda37410788430979dd708d@codeaurora.org>
+ <20200513070403.GB764901@kroah.com>
+ <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <cb5bd2b2-f33a-b541-ed3c-70da14c7252d@suse.cz>
+Date:   Wed, 20 May 2020 11:38:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520042102.GA938@jagdpanzerIV.localdomain>
+In-Reply-To: <0ab0b49f19b824ac1c4db4c4937ed388@codeaurora.org>
+Content-Type: multipart/mixed;
+ boundary="------------37BE8DE752E63BA265E3EAA7"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 01:21:02PM +0900, Sergey Senozhatsky wrote:
-> On (20/05/18 11:21), Petr Mladek wrote:
-> [..]
-> > > > Is this guaranteed that we never execute this path from NMI?
-> > 
-> > Good question!
-> > 
-> > > Absolutely not.
-> > > 
-> > > The execution context for kdb is pretty much unique... we are running a
-> > > debug mode with all CPUs parked in a holding loop with interrupts
-> > > disabled. One CPU is at an unknown exception state and the others are
-> > > either handling an IRQ or NMI depending on architecture[1].
-> > 
-> > This is similar to the situation in panic() when other CPUs are
-> > stopped. It is more safe when the CPUs are stopped using IRQ.
-> > There is higher danger of a deadlock when NMI is used.
-> > 
-> > bust_spinlock() is used in panic() to increase the chance to go over
-> > the deadlock and actually see the messages. It is not enough when
-> > more locks are used by the console (VT/TTY is good example). And
-> > it is not guaranteed that the console will still work after
-> > the hack is disabled by bust_spinlocks(0).
-> 
-> Good point. It's not guaranteed to help, but bust_spinlocks() does
-> help in general, many serial drivers do check oops_in_progress and
-> use a deadlock safe approach when locking port lock. I don't see
-> bust_spinlocks() being used in kdb, so it probably better start
-> doing so (along with general for_each_console() loop improvements,
-> like checking if console is enabled/available/etc).
+This is a multi-part message in MIME format.
+--------------37BE8DE752E63BA265E3EAA7
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8bit
 
-Agree.
+On 15. 05. 20, 1:22, rananta@codeaurora.org wrote:
+> On 2020-05-13 00:04, Greg KH wrote:
+>> On Tue, May 12, 2020 at 02:39:50PM -0700, rananta@codeaurora.org wrote:
+>>> On 2020-05-12 01:25, Greg KH wrote:
+>>> > On Tue, May 12, 2020 at 09:22:15AM +0200, Jiri Slaby wrote:
+>>> > > commit bdb498c20040616e94b05c31a0ceb3e134b7e829
+>>> > > Author: Jiri Slaby <jslaby@suse.cz>
+>>> > > Date:   Tue Aug 7 21:48:04 2012 +0200
+>>> > >
+>>> > >     TTY: hvc_console, add tty install
+>>> > >
+>>> > > added hvc_install but did not move 'tty->driver_data = NULL;' from
+>>> > > hvc_open's fail path to hvc_cleanup.
+>>> > >
+>>> > > IOW hvc_open now NULLs tty->driver_data even for another task which
+>>> > > opened the tty earlier. The same holds for
+>>> > > "tty_port_tty_set(&hp->port,
+>>> > > NULL);" there. And actually "tty_port_put(&hp->port);" is also
+>>> > > incorrect
+>>> > > for the 2nd task opening the tty.
+>>> > >
 
-I am also interested in whether we can figure out a way to match
-consoles and polling drivers. It is better to use the polling
-driver rather than the console since the polling drivers "know"
-they will execute from all sorts of crazy places. For the most common
-use cases this would also result in no console handler ever being
-called.
+...
 
-BTW for those asking how this issue an submarine for so long I think
-the main factor is that not all architectures implement NMI.
+> These are the traces you get when the issue happens:
+> [  154.212291] hvc_install called for pid: 666
+> [  154.216705] hvc_open called for pid: 666
+> [  154.233657] hvc_open: request_irq failed with rc -22.
+> [  154.238934] hvc_open called for pid: 678
+> [  154.243012] Unable to handle kernel NULL pointer dereference at
+> virtual address 00000000000000c4
+> # hvc_install isn't called for pid: 678 as the file wasn't closed yet.
 
-There are exceptions but kdb is typically only useful when either:
+Nice. Does the attached help?
 
-1. We have a real (e.g. not USB) serial port, or
-2. We have a real (e.g. not USB) keyboard
+I wonder how comes the tty_port_put in hvc_open does not cause a UAF? I
+would say hvc_open fails, tty_port_put is called. It decrements the
+reference taken in hvc_install. So far so good.
 
-On x86, where the SMP peers are rounded up using using an NMI, the
-above grows increasingly hard to find (although they are certainly
-still here). Combined with this very few commonly embedded
-architectures round up using an NMI so these problems cannot occur.
+Now, this should happen IMO:
+tty_open
+  -> hvc_open (fails)
+    -> tty_port_put
+  -> tty_release
+    -> tty_release_struct
+      -> tty_kref_put
+        -> queue_release_one_tty
+SCHEDULED WORKQUEUE
+release_one_tty
+  -> hvc_cleanup
+    -> tty_port_put (should die terrible death now)
 
-This has allowed kdb to fall rather far behind the rest of the kernel
-w.r.t. NMI robustness whilst not being entirely useless.
+What am I missing?
 
-Sumit's recent work to exploit NMIs on arm64 is bringing some of our
-debt to the surface... happily I think that will also help us to tackle
-it!
+thanks,
+-- 
+js
+suse labs
+
+--------------37BE8DE752E63BA265E3EAA7
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-hvc_console-fix-open.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="0001-hvc_console-fix-open.patch"
+
+From d891cdfcbd3b41eb23ddfc8d9e6cbe038ff8fb72 Mon Sep 17 00:00:00 2001
+From: Jiri Slaby <jslaby@suse.cz>
+Date: Wed, 20 May 2020 11:29:25 +0200
+Subject: [PATCH] hvc_console: fix open
+
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ drivers/tty/hvc/hvc_console.c | 23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
+index 436cc51c92c3..cdcc64ea2554 100644
+--- a/drivers/tty/hvc/hvc_console.c
++++ b/drivers/tty/hvc/hvc_console.c
+@@ -371,15 +371,14 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
+ 	 * tty fields and return the kref reference.
+ 	 */
+ 	if (rc) {
+-		tty_port_tty_set(&hp->port, NULL);
+-		tty->driver_data = NULL;
+-		tty_port_put(&hp->port);
+ 		printk(KERN_ERR "hvc_open: request_irq failed with rc %d.\n", rc);
+-	} else
++	} else {
+ 		/* We are ready... raise DTR/RTS */
+ 		if (C_BAUD(tty))
+ 			if (hp->ops->dtr_rts)
+ 				hp->ops->dtr_rts(hp, 1);
++		tty_port_set_initialized(&hp->port, true);
++	}
+ 
+ 	/* Force wakeup of the polling thread */
+ 	hvc_kick();
+@@ -389,22 +388,12 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
+ 
+ static void hvc_close(struct tty_struct *tty, struct file * filp)
+ {
+-	struct hvc_struct *hp;
++	struct hvc_struct *hp = tty->driver_data;
+ 	unsigned long flags;
+ 
+ 	if (tty_hung_up_p(filp))
+ 		return;
+ 
+-	/*
+-	 * No driver_data means that this close was issued after a failed
+-	 * hvc_open by the tty layer's release_dev() function and we can just
+-	 * exit cleanly because the kref reference wasn't made.
+-	 */
+-	if (!tty->driver_data)
+-		return;
+-
+-	hp = tty->driver_data;
+-
+ 	spin_lock_irqsave(&hp->port.lock, flags);
+ 
+ 	if (--hp->port.count == 0) {
+@@ -412,6 +401,9 @@ static void hvc_close(struct tty_struct *tty, struct file * filp)
+ 		/* We are done with the tty pointer now. */
+ 		tty_port_tty_set(&hp->port, NULL);
+ 
++		if (!tty_port_initialized(&hp->port))
++			return;
++
+ 		if (C_HUPCL(tty))
+ 			if (hp->ops->dtr_rts)
+ 				hp->ops->dtr_rts(hp, 0);
+@@ -428,6 +420,7 @@ static void hvc_close(struct tty_struct *tty, struct file * filp)
+ 		 * waking periodically to check chars_in_buffer().
+ 		 */
+ 		tty_wait_until_sent(tty, HVC_CLOSE_WAIT);
++		tty_port_set_initialized(&hp->port, false);
+ 	} else {
+ 		if (hp->port.count < 0)
+ 			printk(KERN_ERR "hvc_close %X: oops, count is %d\n",
+-- 
+2.26.2
 
 
-> [..]
-> > > > If so, can this please be added to the commit message? A more
-> > > > detailed commit message will help a lot.
-> > 
-> > What about?
-> > 
-> > "KDB has to get messages on consoles even when the system is stopped.
-> > It uses kdb_printf() internally and calls console drivers on its own.
-> > 
-> > It uses a hack to reuse an existing code. It sets "kdb_trap_printk"
-> > global variable to redirect even the normal printk() into the
-> > kdb_printf() variant.
-> > 
-> > The variable "kdb_trap_printk" is checked in printk_default() and
-> > it is ignored when printk is redirected to printk_safe in NMI context.
-> > Solve this by moving the check into printk_func().
-
-Maybe a "Currently" thrown in we switch from general background
-information to describing the problem the patch is about to fix helps us
-read it:
-
-  Currently the variable "kdb_trap_printk" is checked
-
-But other than that LGTM.
-
-
-Daniel.
-
-> > 
-> > It is obvious that it is not fully safe. But it does not make things
-> > worse. The console drivers are already called in this context by
-> > kdb_printf() direct calls."
-> 
-> This looks more informative indeed. Thanks!
+--------------37BE8DE752E63BA265E3EAA7--
