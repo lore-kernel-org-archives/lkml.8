@@ -2,79 +2,190 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1725C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A648C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7505A206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B70206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HACMClLg"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gCn4N7N3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgETLDY (ORCPT
+        id S1726850AbgETLDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52168 "EHLO
+        Wed, 20 May 2020 07:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgETLDY (ORCPT
+        with ESMTP id S1726827AbgETLD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:03:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52835C061A0E;
+        Wed, 20 May 2020 07:03:27 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BE5C08C5C0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:03:25 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j5so2717854wrq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 04:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ct4iwtkqSx7W80DKvDt8WvEkiq9KjVIacJ0yr7BAVII=;
+        b=gCn4N7N304bnLXil/a63o+C7lXWE4O+dUD5kr4U/QwkYok3WIYIss7MpTiwkIvDJDu
+         Yb14/i8NGGvtiwnPpTQWB1oc/MHjv9gyvs+HjkbrsA9GEiFTSWKwCkg07hWlb9e22xpX
+         cG1iXAAYqHj6N5FDXXS8FFy8ELfjoCREHTKlM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=ct4iwtkqSx7W80DKvDt8WvEkiq9KjVIacJ0yr7BAVII=;
+        b=HkFqrFajZ48/vHE5A5h+e9GW/PKsEh4/wBPC9oGx8xy0R9AMVrT2lmSTN99BsQNYSC
+         6tf2FLiDjQw6U7A8TGnWgOLokJKJ9Tlbb8ttj3mnOm4uGm6uqXFOieBlSyB6/JMjl+Vx
+         txo6sqhSoHRb1e0U7UZQsvs9zZNwBXzw4s3y+Tz3BboyMVoG10E82t8xyK7KDOa0n146
+         Kjl/ibaEyUwFPKnf3+qDM8DdhRNg9z1is4aW8SztltbweKp7EgYmjSw1Dsn4TT79bjrK
+         uWrlvi65lAkuzpDfIN4RXV1a1a+MKA7YryIX9474SfSYvddMqAe7rnjPl9/+HKPMubsX
+         Y75w==
+X-Gm-Message-State: AOAM531uHjBxEXXPjZydBLpbNG10fWwOJFoc8i7zb5HfMIzG7RWJM0W7
+        ahRHR6cUCpG4zfbvT1dGhcimzw==
+X-Google-Smtp-Source: ABdhPJzCd29Xl/wTekkJzbG2hFf7ELniw9c+535re3/QWPV7VzmtBOKv2TwjIms44WqcPc+fmic+SA==
+X-Received: by 2002:adf:fe90:: with SMTP id l16mr3672440wrr.222.1589972604221;
         Wed, 20 May 2020 04:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VNz0a2EJj80b4yeRQXHVRRn3nEHHKr03ijj9QvQzWgw=; b=HACMClLgVKLQEUF7EKFXvEb1cy
-        1Lk9V8pnMfXwLY407L0lnny9mSZtKC8kQ7gw1b+b+D8D0SBJWuLPqCm8Pr5cuCVy6Brer5QF5bUx6
-        8rGK+97dKCunJglGFg6pLAP66awTkvWhqgMKUxv/EYi4YdTN19YiUGU9E3MhxA8IsvpO7nEzI+8nn
-        dbQGU9XfqCPcjfN8EUHXFQlRUGVL1UWH8VvFBUuZfZLkdZTwK4l1VASFU9VPPsFZm+IPvmPJbAKyt
-        fa/tK6UrAQyhCU09gXfUrmNcRbVwYKn5rihAXcnAY3OQf3bMS/DwlXg2/E4w8P+gm+Iysk6XWZqRc
-        voQxD5jg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbMVI-0004qO-T0; Wed, 20 May 2020 11:03:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 152FD306089;
-        Wed, 20 May 2020 13:03:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F1A6629D896D8; Wed, 20 May 2020 13:03:14 +0200 (CEST)
-Date:   Wed, 20 May 2020 13:03:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <umgwanakikbuti@gmail.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH 6/8] connector/cn_proc: Protect send_msg() with a local
- lock
-Message-ID: <20200520110314.GI317569@hirez.programming.kicks-ass.net>
-References: <20200519201912.1564477-1-bigeasy@linutronix.de>
- <20200519201912.1564477-7-bigeasy@linutronix.de>
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id u65sm2743050wmg.8.2020.05.20.04.03.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 04:03:23 -0700 (PDT)
+Date:   Wed, 20 May 2020 13:03:20 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH] dma-fence: add might_sleep annotation to _wait()
+Message-ID: <20200520110320.GT206103@phenom.ffwll.local>
+Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>, linux-media@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+References: <20200519132756.682888-1-daniel.vetter@ffwll.ch>
+ <be86b73c-2fb3-a6c0-5a12-004af051210f@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200519201912.1564477-7-bigeasy@linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <be86b73c-2fb3-a6c0-5a12-004af051210f@amd.com>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:19:10PM +0200, Sebastian Andrzej Siewior wrote:
-> @@ -40,10 +41,11 @@ static struct cb_id cn_proc_event_id = { CN_IDX_PROC, CN_VAL_PROC };
->  
->  /* proc_event_counts is used as the sequence number of the netlink message */
->  static DEFINE_PER_CPU(__u32, proc_event_counts) = { 0 };
-> +static DEFINE_LOCAL_LOCK(send_msg_lock);
+On Wed, May 20, 2020 at 08:54:36AM +0200, Christian König wrote:
+> Am 19.05.20 um 15:27 schrieb Daniel Vetter:
+> > Do it uncontionally, there's a separate peek function with
+> > dma_fence_is_signalled() which can be called from atomic context.
+> > 
+> > v2: Consensus calls for an unconditional might_sleep (Chris,
+> > Christian)
+> > 
+> > Full audit:
+> > - dma-fence.h: Uses MAX_SCHEDULE_TIMOUT, good chance this sleeps
+> > - dma-resv.c: Timeout always at least 1
+> > - st-dma-fence.c: Save to sleep in testcases
+> > - amdgpu_cs.c: Both callers are for variants of the wait ioctl
+> > - amdgpu_device.c: Two callers in vram recover code, both right next
+> >    to mutex_lock.
+> > - amdgpu_vm.c: Use in the vm_wait ioctl, next to _reserve/unreserve
+> > - remaining functions in amdgpu: All for test_ib implementations for
+> >    various engines, caller for that looks all safe (debugfs, driver
+> >    load, reset)
+> > - etnaviv: another wait ioctl
+> > - habanalabs: another wait ioctl
+> > - nouveau_fence.c: hardcoded 15*HZ ... glorious
+> > - nouveau_gem.c: hardcoded 2*HZ ... so not even super consistent, but
+> >    this one does have a WARN_ON :-/ At least this one is only a
+> >    fallback path for when kmalloc fails. Maybe this should be put onto
+> >    some worker list instead, instead of a work per unamp ...
+> > - i915/selftests: Hardecoded HZ / 4 or HZ / 8
+> > - i915/gt/selftests: Going up the callchain looks safe looking at
+> >    nearby callers
+> > - i915/gt/intel_gt_requests.c. Wrapped in a mutex_lock
+> > - i915/gem_i915_gem_wait.c: The i915-version which is called instead
+> >    for i915 fences already has a might_sleep() annotation, so all good
+> > 
+> > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> > Cc: Ben Skeggs <bskeggs@redhat.com>
+> > Cc: "VMware Graphics" <linux-graphics-maintainer@vmware.com>
+> > Cc: Oded Gabbay <oded.gabbay@gmail.com>
+> > Cc: linux-media@vger.kernel.org
+> > Cc: linaro-mm-sig@lists.linaro.org
+> > Cc: linux-rdma@vger.kernel.org
+> > Cc: amd-gfx@lists.freedesktop.org
+> > Cc: intel-gfx@lists.freedesktop.org
+> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > Cc: Christian König <christian.koenig@amd.com>
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> 
+> Reviewed-by: Christian König <christian.koenig@amd.com>
 
-Put it in a struct ?
+intel-gfx-ci approves too, thanks to both of you for reviews, patch merged
+to drm-misc-next.
+-Daniel
+
+> 
+> > ---
+> >   drivers/dma-buf/dma-fence.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
+> > index 90edf2b281b0..656e9ac2d028 100644
+> > --- a/drivers/dma-buf/dma-fence.c
+> > +++ b/drivers/dma-buf/dma-fence.c
+> > @@ -208,6 +208,8 @@ dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
+> >   	if (WARN_ON(timeout < 0))
+> >   		return -EINVAL;
+> > +	might_sleep();
+> > +
+> >   	trace_dma_fence_wait_start(fence);
+> >   	if (fence->ops->wait)
+> >   		ret = fence->ops->wait(fence, intr, timeout);
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
