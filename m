@@ -2,149 +2,97 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7651C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C332C20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3D62072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:12:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="en14y1JQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgETSMW (ORCPT
+        id S1726925AbgETSMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:12:22 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:48196 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgETSMS (ORCPT
+        Wed, 20 May 2020 14:12:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28275 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726510AbgETSMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:12:18 -0400
-Received: by mail-io1-f72.google.com with SMTP id c15so2817348iom.15
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:12:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=+ftmxr79gDcB9k8pr/AIQ9vrfM5009Yqd32Ubdl2t9g=;
-        b=mF1sHwkGi9kj5/Cc1If8mZ8Vl3D2rvhZSq7bhZnzXkBMPR8htqLVGFotBzI6SNX5MT
-         1eQ3TmY3wI9AYBD1MX99A5RPQ1DKFujlorsPjjEn7J+3uGOyAgbEeysZHdTS7FY2PpQR
-         i7Xv5mHgmxLpgcwb3oeDKXJrC0JjsBsTPIIyR7GmMBCtg6n0Lndw2zETshP1r30MNnL7
-         C1gh/8f80gDLgO9xMtzUOjovorakoBnawj3gPRn5Qfw4FXRCvK1Hv7rsgmemV7JS8t5n
-         OqqVKMXJ/vLLzFLs+/9/uG0dkBiYy9SIInkd0YDApulRHpgASugMnia2caIoHImnOsOt
-         2E7A==
-X-Gm-Message-State: AOAM5313u3e5zXktwWgM8wP5z9RYKTfRQ7S5J+LoFla0XhhCXZHhX+Uh
-        aMKyKvMV3/V5JAso6rv4BBfZyNRBnMXuKnjeickczw+vTeZw
-X-Google-Smtp-Source: ABdhPJzXSZ/EqbcKubHsOn2N59N7VYkouBS+q85pvXnoAF9hczJOPQFJMSNbnH6SCiHnOONuuEfDC4j+bzVTnG4BgLqkvmmC/T2T
+        Wed, 20 May 2020 14:12:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589998369;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zrw5y7kLFs3H7gZeyqDRl7rn5ygDIp8+n8h/0YJPWVI=;
+        b=en14y1JQNWzwggXzvgvh6+U6jPeJwtESz8PdT6B37WjSBUIRdWXCSrwytMluxyTEKC36lM
+        ijnDNyH0JGTvFvLHiXg3kpg2YNKGeMxEmwKE/IquNg+L6/r0hBbXh+JyqJB2H+zOhu3lUz
+        bONeShXiZzZBS8CbfetnSwP+08qnkg0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-CrulUyWvP3-cx0zX3tnSag-1; Wed, 20 May 2020 14:12:45 -0400
+X-MC-Unique: CrulUyWvP3-cx0zX3tnSag-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01DD11800D42;
+        Wed, 20 May 2020 18:12:44 +0000 (UTC)
+Received: from starship.redhat.com (unknown [10.35.207.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A2C2010640E1;
+        Wed, 20 May 2020 18:12:41 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        linux-usb@vger.kernel.org (open list:THUNDERBOLT DRIVER),
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-kernel@vger.kernel.org (open list),
+        Jiri Kosina <trivial@kernel.org>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Subject: [PATCH 0/1] RFC: Make thunderbolt NHI driver work with kexec
+Date:   Wed, 20 May 2020 21:12:39 +0300
+Message-Id: <20200520181240.118559-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1616:: with SMTP id x22mr4594960iow.70.1589998335872;
- Wed, 20 May 2020 11:12:15 -0700 (PDT)
-Date:   Wed, 20 May 2020 11:12:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000000d71e05a6185662@google.com>
-Subject: general protection fault in unpin_user_pages
-From:   syzbot <syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, davem@davemloft.net,
-        jhubbard@nvidia.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        santosh.shilimkar@oracle.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+While trying to use kexec on my desktop,=0D
+which has Titan Ridge Thunderbolt add-on card,=0D
+I noticed that after a kexec, system hangs=0D
+for about a minute in the 'wating for udev devices=0D
+to settle' phase of the boot.=0D
+=0D
+I found out that if I unload the thunderbolt driver=0D
+prior to the kexec, then it works just fine.=0D
+=0D
+Looking at the code I see that the driver doeesn't=0D
+implement .shutdown method, so this on-liner patch=0D
+points it to the same method that is used on device removal.=0D
+=0D
+I don't know if this is the right solution,=0D
+but it does appear to work just fine with this patch.=0D
+=0D
+What do you think?=0D
+=0D
+Best regards,=0D
+	Maxim Levitsky=0D
+=0D
+Maxim Levitsky (1):=0D
+  thunderbolt: add trivial .shutdown=0D
+=0D
+ drivers/thunderbolt/nhi.c | 1 +=0D
+ 1 file changed, 1 insertion(+)=0D
+=0D
+-- =0D
+2.25.4=0D
+=0D
 
-syzbot found the following crash on:
-
-HEAD commit:    dbfe7d74 rds: convert get_user_pages() --> pin_user_pages()
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10218e6e100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3df83be5e281f34b
-dashboard link: https://syzkaller.appspot.com/bug?extid=118ac0af4ac7f785a45b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=117ca33a100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a9044a100000
-
-The bug was bisected to:
-
-commit dbfe7d74376e187f3c6eaff822e85176bc2cd06e
-Author: John Hubbard <jhubbard@nvidia.com>
-Date:   Sun May 17 01:23:36 2020 +0000
-
-    rds: convert get_user_pages() --> pin_user_pages()
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10e3d84a100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12e3d84a100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e3d84a100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+118ac0af4ac7f785a45b@syzkaller.appspotmail.com
-Fixes: dbfe7d74376e ("rds: convert get_user_pages() --> pin_user_pages()")
-
-RBP: 0000000000000004 R08: 0000000020000000 R09: 00007ffcb8e40031
-R10: 0000000020c35fff R11: 0000000000000246 R12: 0000000000401e40
-R13: 0000000000401ed0 R14: 0000000000000000 R15: 0000000000000000
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 1 PID: 7038 Comm: syz-executor593 Not tainted 5.7.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:unpin_user_pages+0x38/0x80 mm/gup.c:338
-Code: 56 d3 ff 31 ff 4c 89 e6 e8 a5 57 d3 ff 4d 85 e4 74 3f 49 bd 00 00 00 00 00 fc ff df 31 ed e8 ff 55 d3 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 75 2b 48 8b 3b 48 83 c5 01 48 83 c3 08 e8 51 f8 ff
-RSP: 0018:ffffc90002537cc8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff819fdc9b
-RDX: 0000000000000000 RSI: ffffffff819fdcb1 RDI: 0000000000000007
-RBP: 0000000000000000 R08: ffff88809ff6e0c0 R09: ffffed1015ce7164
-R10: ffff8880ae738b1b R11: ffffed1015ce7163 R12: 0000000000000011
-R13: dffffc0000000000 R14: 0000000000000011 R15: 0000000020c35fff
-FS:  0000000000d95880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6870abd000 CR3: 000000009a8e7000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- rds_info_getsockopt+0x291/0x410 net/rds/info.c:237
- rds_getsockopt+0x172/0x2d0 net/rds/af_rds.c:502
- __sys_getsockopt+0x14b/0x2e0 net/socket.c:2172
- __do_sys_getsockopt net/socket.c:2187 [inline]
- __se_sys_getsockopt net/socket.c:2184 [inline]
- __x64_sys_getsockopt+0xba/0x150 net/socket.c:2184
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x440559
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffcb8e48ea8 EFLAGS: 00000246 ORIG_RAX: 0000000000000037
-RAX: ffffffffffffffda RBX: 00007ffcb8e48eb0 RCX: 0000000000440559
-RDX: 0000000000002710 RSI: 0000000000000114 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000020000000 R09: 00007ffcb8e40031
-R10: 0000000020c35fff R11: 0000000000000246 R12: 0000000000401e40
-R13: 0000000000401ed0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace c9d832ffc8da59ec ]---
-RIP: 0010:unpin_user_pages+0x38/0x80 mm/gup.c:338
-Code: 56 d3 ff 31 ff 4c 89 e6 e8 a5 57 d3 ff 4d 85 e4 74 3f 49 bd 00 00 00 00 00 fc ff df 31 ed e8 ff 55 d3 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 28 00 75 2b 48 8b 3b 48 83 c5 01 48 83 c3 08 e8 51 f8 ff
-RSP: 0018:ffffc90002537cc8 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff819fdc9b
-RDX: 0000000000000000 RSI: ffffffff819fdcb1 RDI: 0000000000000007
-RBP: 0000000000000000 R08: ffff88809ff6e0c0 R09: ffffed1015ce7164
-R10: ffff8880ae738b1b R11: ffffed1015ce7163 R12: 0000000000000011
-R13: dffffc0000000000 R14: 0000000000000011 R15: 0000000020c35fff
-FS:  0000000000d95880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fbc58039178 CR3: 000000009a8e7000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
