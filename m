@@ -2,176 +2,492 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C61C5207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hl2Fd0li"
+	by mail.kernel.org (Postfix) with ESMTP id 439A02072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 18:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgETSrV (ORCPT
+        id S1726840AbgETSrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 14:47:21 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44546 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726650AbgETSrU (ORCPT
+        Wed, 20 May 2020 14:47:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50828 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726510AbgETSrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 14:47:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590000438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jSG/oozEGBB+wreBtcOAcaklJS2J1XYJf5hXt9QTC0I=;
-        b=hl2Fd0liDzoWxhm0jNqiqiV2ESCxTYNGI+qNlypmh4y7BVrBftKSqrGxU8gvPuKCqihK/P
-        6S3t14ABDzp5cEEw+0aJS5Ox6Iya+q2yVqhclpDRQ5ZtWhkGd/NJxVBvCyaeeeZa0wnjkH
-        2QDLTXj7EjlPFECowEqAc71PI5D+LDI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-dhM2DisFOkyZ3EHAJxPJCQ-1; Wed, 20 May 2020 14:47:16 -0400
-X-MC-Unique: dhM2DisFOkyZ3EHAJxPJCQ-1
-Received: by mail-wr1-f71.google.com with SMTP id c14so621344wrm.15
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 11:47:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jSG/oozEGBB+wreBtcOAcaklJS2J1XYJf5hXt9QTC0I=;
-        b=Mn1OUIWvkmvaFvE8iG+0xbQUMkJQYj+OXKhEuGO5HbatFR8GDOHrkYsqCQD8B4XDao
-         otHszhkYRzxkBIPDiEvTDZVPxRo7u9wZQr2IZnY92BUd0uGmyZbn/rfxsVfZ7FdBQxtu
-         x4Xft7cdM6XB7hHh+7fJTgoAwdIwOvAFlP+I1S1ZbcVve/xLHxDRvAB4uiIeeRb73vXH
-         DRXAzi/x0PZtFxvq0jj6g4uo13sksGBAgrtNXNN6tnxBhsR8vuvVGO7cq3mTiKx3XLwe
-         siwz3n9jLHUKF8LKHA0lqKzob8EIvTaYUqdd/lzdz0h7q/pxsknX0jiRFq12GB5sL5Sa
-         MuTA==
-X-Gm-Message-State: AOAM5319E+BIx0TU0KnmhkojIE07sePdoGSB+gl80njEdKeoKk3YdaQM
-        IHKb0PRgkq9txgQx9T7Z31KinUt7QXWAvu8jZ3+36jACJ+WZ8q/dMr37ESCt/GIpC2Ww0jYDIMd
-        7awmHcVU0W6qgDrD69MxXYYGK
-X-Received: by 2002:adf:e707:: with SMTP id c7mr1623845wrm.131.1590000434925;
-        Wed, 20 May 2020 11:47:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx/444M6gu2lvxnsKEHp57G+dEY7Zs3tO1KVHc9YAOP3hFZ7wUijx67VIx/qTzNLIBRBH2vFA==
-X-Received: by 2002:adf:e707:: with SMTP id c7mr1623828wrm.131.1590000434600;
-        Wed, 20 May 2020 11:47:14 -0700 (PDT)
-Received: from localhost.localdomain ([151.68.137.74])
-        by smtp.gmail.com with ESMTPSA id j2sm3642693wrp.47.2020.05.20.11.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 11:47:13 -0700 (PDT)
-Date:   Wed, 20 May 2020 20:47:10 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
- is cleared
-Message-ID: <20200520184710.GO10078@localhost.localdomain>
-References: <20200520140402.358880-1-juri.lelli@redhat.com>
- <20200520162400.GA8800@lenoir>
- <20200520164925.GM10078@localhost.localdomain>
- <20200520170215.GB8800@lenoir>
+        Wed, 20 May 2020 14:47:52 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KIXVV2138512;
+        Wed, 20 May 2020 14:47:17 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312c8q7uux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 14:47:17 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04KIVE7B025479;
+        Wed, 20 May 2020 18:37:46 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 313x4xhpqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 May 2020 18:37:45 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04KIbhLR60227640
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 May 2020 18:37:43 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7080C4C052;
+        Wed, 20 May 2020 18:37:43 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BCDA54C046;
+        Wed, 20 May 2020 18:37:40 +0000 (GMT)
+Received: from vajain21-in-ibm-com (unknown [9.199.32.8])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 20 May 2020 18:37:40 +0000 (GMT)
+Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Thu, 21 May 2020 00:07:39 +0530
+From:   Vaibhav Jain <vaibhav@linux.ibm.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RESEND PATCH v7 4/5] ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
+In-Reply-To: <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com>
+References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-5-vaibhav@linux.ibm.com> <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com>
+Date:   Thu, 21 May 2020 00:07:39 +0530
+Message-ID: <87o8qiwiz0.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520170215.GB8800@lenoir>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-20_14:2020-05-20,2020-05-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 mlxscore=0 suspectscore=8
+ lowpriorityscore=0 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005200149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/05/20 19:02, Frederic Weisbecker wrote:
-> On Wed, May 20, 2020 at 06:49:25PM +0200, Juri Lelli wrote:
-> > On 20/05/20 18:24, Frederic Weisbecker wrote:
-> > 
-> > Hummm, so I enabled 'timer:*', anything else you think I should be
-> > looking at?
-> 
-> Are you sure you also enabled timer_expire_entry?
-> Because:
 
-I run with
+Thanks for reviewing this patch Ira. My responses below:
 
-trace-cmd record -e sched_switch -e sched_wakeup -e sched_migrate_task \
--e 'timer:*' -e 'irq_vectors:*' -e 'irq:softirq*' \
--e 'irq:irq_handler*' taskset --cpu-list 4-35 ./sysjitter/sysjitter \
---runtime 10 200
+Ira Weiny <ira.weiny@intel.com> writes:
 
-And
+> On Wed, May 20, 2020 at 12:30:57AM +0530, Vaibhav Jain wrote:
+>> Introduce support for Papr nvDimm Specific Methods (PDSM) in papr_scm
+>> modules and add the command family to the white list of NVDIMM command
+>> sets. Also advertise support for ND_CMD_CALL for the dimm
+>> command mask and implement necessary scaffolding in the module to
+>> handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+>> 
+>> The layout of the PDSM request as we expect from libnvdimm/libndctl is
+>> described in newly introduced uapi header 'papr_scm_pdsm.h' which
+>> defines a new 'struct nd_pdsm_cmd_pkg' header. This header is used
+>> to communicate the PDSM request via member
+>> 'nd_pkg_papr_scm->nd_command' and size of payload that need to be
+>> sent/received for servicing the PDSM.
+>> 
+>> A new function is_cmd_valid() is implemented that reads the args to
+>> papr_scm_ndctl() and performs sanity tests on them. A new function
+>> papr_scm_service_pdsm() is introduced and is called from
+>> papr_scm_ndctl() in case of a PDSM request is received via ND_CMD_CALL
+>> command from libnvdimm.
+>> 
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+>> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+>> ---
+>> Changelog:
+>> 
+>> Resend:
+>> * None
+>> 
+>> v6..v7 :
+>> * Removed the re-definitions of __packed macro from papr_scm_pdsm.h
+>>   [Mpe].
+>> * Removed the usage of __KERNEL__ macros in papr_scm_pdsm.h [Mpe].
+>> * Removed macros that were unused in papr_scm.c from papr_scm_pdsm.h
+>>   [Mpe].
+>> * Made functions defined in papr_scm_pdsm.h as static inline. [Mpe]
+>> 
+>> v5..v6 :
+>> * Changed the usage of the term DSM to PDSM to distinguish it from the
+>>   ACPI term [ Dan Williams ]
+>> * Renamed papr_scm_dsm.h to papr_scm_pdsm.h and updated various struct
+>>   to reflect the new terminology.
+>> * Updated the patch description and title to reflect the new terminology.
+>> * Squashed patch to introduce new command family in 'ndctl.h' with
+>>   this patch [ Dan Williams ]
+>> * Updated the papr_scm_pdsm method starting index from 0x10000 to 0x0
+>>   [ Dan Williams ]
+>> * Removed redundant license text from the papr_scm_psdm.h file.
+>>   [ Dan Williams ]
+>> * s/envelop/envelope/ at various places [ Dan Williams ]
+>> * Added '__packed' attribute to command package header to gaurd
+>>   against different compiler adding paddings between the fields.
+>>   [ Dan Williams]
+>> * Converted various pr_debug to dev_debug [ Dan Williams ]
+>> 
+>> v4..v5 :
+>> * None
+>> 
+>> v3..v4 :
+>> * None
+>> 
+>> v2..v3 :
+>> * Updated the patch prefix to 'ndctl/uapi' [Aneesh]
+>> 
+>> v1..v2 :
+>> * None
+>> ---
+>>  arch/powerpc/include/uapi/asm/papr_scm_pdsm.h | 134 ++++++++++++++++++
+>>  arch/powerpc/platforms/pseries/papr_scm.c     | 101 ++++++++++++-
+>>  include/uapi/linux/ndctl.h                    |   1 +
+>>  3 files changed, 230 insertions(+), 6 deletions(-)
+>>  create mode 100644 arch/powerpc/include/uapi/asm/papr_scm_pdsm.h
+>> 
+>> diff --git a/arch/powerpc/include/uapi/asm/papr_scm_pdsm.h b/arch/powerpc/include/uapi/asm/papr_scm_pdsm.h
+>> new file mode 100644
+>> index 000000000000..671693439c1c
+>> --- /dev/null
+>> +++ b/arch/powerpc/include/uapi/asm/papr_scm_pdsm.h
+>> @@ -0,0 +1,134 @@
+>> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+>> +/*
+>> + * PAPR-SCM Dimm specific methods (PDSM) and structs for libndctl
+>> + *
+>> + * (C) Copyright IBM 2020
+>> + *
+>> + * Author: Vaibhav Jain <vaibhav at linux.ibm.com>
+>> + */
+>> +
+>> +#ifndef _UAPI_ASM_POWERPC_PAPR_SCM_PDSM_H_
+>> +#define _UAPI_ASM_POWERPC_PAPR_SCM_PDSM_H_
+>> +
+>> +#include <linux/types.h>
+>> +
+>> +/*
+>> + * PDSM Envelope:
+>> + *
+>> + * The ioctl ND_CMD_CALL transfers data between user-space and kernel via
+>> + * 'envelopes' which consists of a header and user-defined payload sections.
+>> + * The header is described by 'struct nd_pdsm_cmd_pkg' which expects a
+>> + * payload following it and offset of which relative to the struct is provided
+>> + * by 'nd_pdsm_cmd_pkg.payload_offset'. *
+>> + *
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  |   64-Bytes  |       8-Bytes       |       Max 184-Bytes       |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  |               nd_pdsm_cmd_pkg |                           |
+>> + *  |-------------+                     |                           |
+>> + *  |  nd_cmd_pkg |                     |                           |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *  | nd_family   |			|			    |
+>> + *  | nd_size_out | cmd_status          |			    |
+>> + *  | nd_size_in  | payload_version     |      PAYLOAD		    |
+>> + *  | nd_command  | payload_offset ----->			    |
+>> + *  | nd_fw_size  |                     |			    |
+>> + *  +-------------+---------------------+---------------------------+
+>> + *
+>> + * PDSM Header:
+>> + *
+>> + * The header is defined as 'struct nd_pdsm_cmd_pkg' which embeds a
+>> + * 'struct nd_cmd_pkg' instance. The PDSM command is assigned to member
+>> + * 'nd_cmd_pkg.nd_command'. Apart from size information of the envelope which is
+>> + * contained in 'struct nd_cmd_pkg', the header also has members following
+>> + * members:
+>> + *
+>> + * 'cmd_status'		: (Out) Errors if any encountered while servicing PDSM.
+>> + * 'payload_version'	: (In/Out) Version number associated with the payload.
+>> + * 'payload_offset'	: (In)Relative offset of payload from start of envelope.
+>> + *
+>> + * PDSM Payload:
+>> + *
+>> + * The layout of the PDSM Payload is defined by various structs shared between
+>> + * papr_scm and libndctl so that contents of payload can be interpreted. During
+>> + * servicing of a PDSM the papr_scm module will read input args from the payload
+>> + * field by casting its contents to an appropriate struct pointer based on the
+>> + * PDSM command. Similarly the output of servicing the PDSM command will be
+>> + * copied to the payload field using the same struct.
+>> + *
+>> + * 'libnvdimm' enforces a hard limit of 256 bytes on the envelope size, which
+>> + * leaves around 184 bytes for the envelope payload (ignoring any padding that
+>> + * the compiler may silently introduce).
+>> + *
+>> + * Payload Version:
+>> + *
+>> + * A 'payload_version' field is present in PDSM header that indicates a specific
+>> + * version of the structure present in PDSM Payload for a given PDSM command.
+>> + * This provides backward compatibility in case the PDSM Payload structure
+>> + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
+>> + *
+>> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
+>> + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
+>> + * module when servicing the PDSM envelope checks the 'payload_version' and then
+>> + * uses 'payload struct version' == MIN('payload_version field',
+>> + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
+>> + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
+>> + * struct in returned 'payload_version' field.
+>
+> FWIW many people believe using a size rather than version is more sustainable.
+> It is expected that new payload structures are larger (more features) than the
+> previous payload structure.
+>
+> I can't find references at the moment through.
+>
+> What does payload_version provide us that the command size in/out does
+> not?
 
-$ grep ' timer_expire_entry:' trace.txt | wc -l
-1173
+Taking constrains 1 & 2 mentioned below in section "Backward
+Compatibility" into account, there should be a 1:1 mapping between set of
+valid 'payload_versions' and set of corrosponding in/out sizes.
 
-seems to confirm that the event was indeed enabled, e.g.
+However its much more intutive and convenient to figure out the struct
+type to use from version number rather than sizes. For example:
 
-ksoftirqd/11-100   [011]   159.270023: timer_expire_entry:   timer=0xffff9807df8a5a60 function=delayed_work_timer_fn now=4294826418 baseclk=4294825984
+struct v1 { u64 a; };    sizeof(v1) == 8
+struct v2 { u64 a, b; }; sizeof(v2) == 16
 
-> 
-> > 
-> > ...
-> > ksoftirqd/13-117   [013]   148.265945: softirq_entry:        vec=1 [action=TIMER]
-> 
-> ...the timer softirq keep triggering without any timer callback executed. If that's the
-> case, we may be dealing with an interesting issue.
-> 
-> Thanks.
-> 
-> > ksoftirqd/13-117   [013]   148.265947: softirq_exit:         vec=1 [action=TIMER]
-> > ksoftirqd/13-117   [013]   148.265948: softirq_entry:        vec=7 [action=SCHED]
-> > ksoftirqd/13-117   [013]   148.265950: softirq_exit:         vec=7 [action=SCHED]
-> > ksoftirqd/13-117   [013]   148.265952: sched_switch:         ksoftirqd/13:117 [120] S ==> sysjitter:2536 [120]
-> >    sysjitter-2536  [013]   148.266912: local_timer_entry:    vector=236
-> >    sysjitter-2536  [013]   148.266914: hrtimer_cancel:       hrtimer=0xffff9807df91bee0
-> >    sysjitter-2536  [013]   148.266916: hrtimer_expire_entry: hrtimer=0xffff9807df91bee0 now=148249107837 function=tick_sched_timer/0x0
-> >    sysjitter-2536  [013]   148.266918: softirq_raise:        vec=1 [action=TIMER]
-> >    sysjitter-2536  [013]   148.266920: softirq_raise:        vec=7 [action=SCHED]
-> >    sysjitter-2536  [013]   148.266922: hrtimer_expire_exit:  hrtimer=0xffff9807df91bee0
-> >    sysjitter-2536  [013]   148.266924: hrtimer_start:        hrtimer=0xffff9807df91bee0 function=tick_sched_timer/0x0 expires=148250105422 softexpires=148250105422
-> >    sysjitter-2536  [013]   148.266926: local_timer_exit:     vector=236
-> >    sysjitter-2536  [013]   148.266930: sched_wakeup:         ksoftirqd/13:117 [120] success=1 CPU:013
-> >    sysjitter-2536  [013]   148.266932: tick_stop:            success=0 dependency=SCHED
-> >    sysjitter-2536  [013]   148.266934: irq_work_entry:       vector=246
-> >    sysjitter-2536  [013]   148.266936: irq_work_exit:        vector=246
-> >    sysjitter-2536  [013]   148.266937: tick_stop:            success=0 dependency=SCHED
-> >    sysjitter-2536  [013]   148.266940: sched_switch:         sysjitter:2536 [120] R ==> ksoftirqd/13:117 [120]
-> > ksoftirqd/13-117   [013]   148.266943: softirq_entry:        vec=1 [action=TIMER]
-> > ksoftirqd/13-117   [013]   148.266946: softirq_exit:         vec=1 [action=TIMER]
-> > ksoftirqd/13-117   [013]   148.266946: softirq_entry:        vec=7 [action=SCHED]
-> > ksoftirqd/13-117   [013]   148.266948: softirq_exit:         vec=7 [action=SCHED]
-> > ksoftirqd/13-117   [013]   148.266950: sched_switch:         ksoftirqd/13:117 [120] S ==> sysjitter:2536 [120]
-> >    sysjitter-2536  [013]   148.267912: local_timer_entry:    vector=236
-> >    sysjitter-2536  [013]   148.267914: hrtimer_cancel:       hrtimer=0xffff9807df91bee0
-> >    sysjitter-2536  [013]   148.267916: hrtimer_expire_entry: hrtimer=0xffff9807df91bee0 now=148250107750 function=tick_sched_timer/0x0
-> >    sysjitter-2536  [013]   148.267918: softirq_raise:        vec=1 [action=TIMER]
-> >    sysjitter-2536  [013]   148.267920: softirq_raise:        vec=7 [action=SCHED]
-> >    sysjitter-2536  [013]   148.267922: hrtimer_expire_exit:  hrtimer=0xffff9807df91bee0
-> >    sysjitter-2536  [013]   148.267924: hrtimer_start:        hrtimer=0xffff9807df91bee0 function=tick_sched_timer/0x0 expires=148251105422 softexpires=148251105422
-> >    sysjitter-2536  [013]   148.267926: local_timer_exit:     vector=236
-> >    sysjitter-2536  [013]   148.267929: sched_wakeup:         ksoftirqd/13:117 [120] success=1 CPU:013
-> >    sysjitter-2536  [013]   148.267931: tick_stop:            success=0 dependency=SCHED
-> >    sysjitter-2536  [013]   148.267934: irq_work_entry:       vector=246
-> >    sysjitter-2536  [013]   148.267936: irq_work_exit:        vector=246
-> >    sysjitter-2536  [013]   148.267937: tick_stop:            success=0 dependency=SCHED
-> >    sysjitter-2536  [013]   148.267940: sched_switch:         sysjitter:2536 [120] R ==> ksoftirqd/13:117 [120]
-> > ksoftirqd/13-117   [013]   148.267943: softirq_entry:        vec=1 [action=TIMER]
-> > ksoftirqd/13-117   [013]   148.267945: softirq_exit:         vec=1 [action=TIMER]
-> > ksoftirqd/13-117   [013]   148.267946: softirq_entry:        vec=7 [action=SCHED]
-> > ksoftirqd/13-117   [013]   148.267947: softirq_exit:         vec=7 [action=SCHED]
-> > ksoftirqd/13-117   [013]   148.267949: sched_switch:         ksoftirqd/13:117 [120] S ==> sysjitter:2536 [120]
-> >    sysjitter-2536  [013]   148.268865: call_function_single_entry: vector=251
-> >    sysjitter-2536  [013]   148.268867: call_function_single_exit: vector=251
-> >    sysjitter-2536  [013]   148.268870: tick_stop:            success=1 dependency=NONE
-> >    sysjitter-2536  [013]   148.268872: hrtimer_cancel:       hrtimer=0xffff9807df91bee0
-> >    sysjitter-2536  [013]   148.268876: call_function_single_entry: vector=251
-> >    sysjitter-2536  [013]   148.268878: call_function_single_exit: vector=251
-> > ...
-> > 
-> > it looks like tick sched timer is kept armed until tick_stop
-> > succedes (because of the check performed after _single_exit)?
-> > 
-> > Thanks for your quick reply!
-> > 
-> 
+With version numbers its easy to figure out which type to use. However
+with in/out size an extra lookup is needed to identify the type to be used.
 
+>
+>> + *
+>> + * Libndctl on receiving the envelope back from papr_scm again checks the
+>> + * 'payload_version' field and based on it use the appropriate version dsm
+>> + * struct to parse the results.
+>> + *
+>> + * Backward Compatibility:
+>> + *
+>> + * Above scheme of exchanging different versioned PDSM struct between libndctl
+>> + * and papr_scm should provide backward compatibility until following two
+>> + * assumptions/conditions when defining new PDSM structs hold:
+>> + *
+>> + * Let T(X) = { set of attributes in PDSM struct 'T' versioned X }
+>> + *
+>> + * 1. T(X) is a proper subset of T(Y) if X > Y.
+>
+> Proper superset?  Or Y > X?
+>
+Good catch. This should be Y > X. Will get this fixed.
+
+> Ira
+>
+>> + *    i.e Each new version of PDSM struct should retain existing struct
+>> + *    attributes from previous version
+>> + *
+>> + * 2. If an entity (libndctl or papr_scm) supports a PDSM struct T(X) then
+>> + *    it should also support T(1), T(2)...T(X - 1).
+>> + *    i.e When adding support for new version of a PDSM struct, libndctl
+>> + *    and papr_scm should retain support of the existing PDSM struct
+>> + *    version they support.
+>> + */
+>> +
+>> +/* Papr-scm-header + payload expected with ND_CMD_CALL ioctl from libnvdimm */
+>> +struct nd_pdsm_cmd_pkg {
+>> +	struct nd_cmd_pkg hdr;	/* Package header containing sub-cmd */
+>> +	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
+>> +	__u16 payload_offset;	/* In: offset from start of struct */
+>> +	__u16 payload_version;	/* In/Out: version of the payload */
+>> +	__u8 payload[];		/* In/Out: Sub-cmd data buffer */
+>> +} __packed;
+>> +
+>> +/*
+>> + * Methods to be embedded in ND_CMD_CALL request. These are sent to the kernel
+>> + * via 'nd_pdsm_cmd_pkg.hdr.nd_command' member of the ioctl struct
+>> + */
+>> +enum papr_scm_pdsm {
+>> +	PAPR_SCM_PDSM_MIN = 0x0,
+>> +	PAPR_SCM_PDSM_MAX,
+>> +};
+>> +
+>> +/* Convert a libnvdimm nd_cmd_pkg to pdsm specific pkg */
+>> +static inline struct nd_pdsm_cmd_pkg *nd_to_pdsm_cmd_pkg(struct nd_cmd_pkg *cmd)
+>> +{
+>> +	return (struct nd_pdsm_cmd_pkg *) cmd;
+>> +}
+>> +
+>> +/* Return the payload pointer for a given pcmd */
+>> +static inline void *pdsm_cmd_to_payload(struct nd_pdsm_cmd_pkg *pcmd)
+>> +{
+>> +	if (pcmd->hdr.nd_size_in == 0 && pcmd->hdr.nd_size_out == 0)
+>> +		return NULL;
+>> +	else
+>> +		return (void *)((__u8 *) pcmd + pcmd->payload_offset);
+>> +}
+>> +
+>> +#endif /* _UAPI_ASM_POWERPC_PAPR_SCM_PDSM_H_ */
+>> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+>> index 142636e1a59f..ed4b49a6f1e1 100644
+>> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+>> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+>> @@ -15,13 +15,15 @@
+>>  #include <linux/seq_buf.h>
+>>  
+>>  #include <asm/plpar_wrappers.h>
+>> +#include <asm/papr_scm_pdsm.h>
+>>  
+>>  #define BIND_ANY_ADDR (~0ul)
+>>  
+>>  #define PAPR_SCM_DIMM_CMD_MASK \
+>>  	((1ul << ND_CMD_GET_CONFIG_SIZE) | \
+>>  	 (1ul << ND_CMD_GET_CONFIG_DATA) | \
+>> -	 (1ul << ND_CMD_SET_CONFIG_DATA))
+>> +	 (1ul << ND_CMD_SET_CONFIG_DATA) | \
+>> +	 (1ul << ND_CMD_CALL))
+>>  
+>>  /* DIMM health bitmap bitmap indicators */
+>>  /* SCM device is unable to persist memory contents */
+>> @@ -350,16 +352,97 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
+>>  	return 0;
+>>  }
+>>  
+>> +/*
+>> + * Validate the inputs args to dimm-control function and return '0' if valid.
+>> + * This also does initial sanity validation to ND_CMD_CALL sub-command packages.
+>> + */
+>> +static int is_cmd_valid(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>> +		       unsigned int buf_len)
+>> +{
+>> +	unsigned long cmd_mask = PAPR_SCM_DIMM_CMD_MASK;
+>> +	struct nd_pdsm_cmd_pkg *pkg = nd_to_pdsm_cmd_pkg(buf);
+>> +	struct papr_scm_priv *p;
+>> +
+>> +	/* Only dimm-specific calls are supported atm */
+>> +	if (!nvdimm)
+>> +		return -EINVAL;
+>> +
+>> +	/* get the provider date from struct nvdimm */
+>> +	p = nvdimm_provider_data(nvdimm);
+>> +
+>> +	if (!test_bit(cmd, &cmd_mask)) {
+>> +		dev_dbg(&p->pdev->dev, "Unsupported cmd=%u\n", cmd);
+>> +		return -EINVAL;
+>> +	} else if (cmd == ND_CMD_CALL) {
+>> +
+>> +		/* Verify the envelope package */
+>> +		if (!buf || buf_len < sizeof(struct nd_pdsm_cmd_pkg)) {
+>> +			dev_dbg(&p->pdev->dev, "Invalid pkg size=%u\n",
+>> +				buf_len);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		/* Verify that the PDSM family is valid */
+>> +		if (pkg->hdr.nd_family != NVDIMM_FAMILY_PAPR_SCM) {
+>> +			dev_dbg(&p->pdev->dev, "Invalid pkg family=0x%llx\n",
+>> +				pkg->hdr.nd_family);
+>> +			return -EINVAL;
+>> +
+>> +		}
+>> +
+>> +		/* We except a payload with all PDSM commands */
+>> +		if (pdsm_cmd_to_payload(pkg) == NULL) {
+>> +			dev_dbg(&p->pdev->dev,
+>> +				"Empty payload for sub-command=0x%llx\n",
+>> +				pkg->hdr.nd_command);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	/* Command looks valid */
+>> +	return 0;
+>> +}
+>> +
+>> +static int papr_scm_service_pdsm(struct papr_scm_priv *p,
+>> +				struct nd_pdsm_cmd_pkg *call_pkg)
+>> +{
+>> +	/* unknown subcommands return error in packages */
+>> +	if (call_pkg->hdr.nd_command <= PAPR_SCM_PDSM_MIN ||
+>> +	    call_pkg->hdr.nd_command >= PAPR_SCM_PDSM_MAX) {
+>> +		dev_dbg(&p->pdev->dev, "Invalid PDSM request 0x%llx\n",
+>> +			call_pkg->hdr.nd_command);
+>> +		call_pkg->cmd_status = -EINVAL;
+>> +		return 0;
+>> +	}
+>> +
+>> +	/* Depending on the DSM command call appropriate service routine */
+>> +	switch (call_pkg->hdr.nd_command) {
+>> +	default:
+>> +		dev_dbg(&p->pdev->dev, "Unsupported PDSM request 0x%llx\n",
+>> +			call_pkg->hdr.nd_command);
+>> +		call_pkg->cmd_status = -ENOENT;
+>> +		return 0;
+>> +	}
+>> +}
+>> +
+>>  static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>>  			  struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+>>  			  unsigned int buf_len, int *cmd_rc)
+>>  {
+>>  	struct nd_cmd_get_config_size *get_size_hdr;
+>>  	struct papr_scm_priv *p;
+>> +	struct nd_pdsm_cmd_pkg *call_pkg = NULL;
+>> +	int rc;
+>>  
+>> -	/* Only dimm-specific calls are supported atm */
+>> -	if (!nvdimm)
+>> -		return -EINVAL;
+>> +	/* Use a local variable in case cmd_rc pointer is NULL */
+>> +	if (cmd_rc == NULL)
+>> +		cmd_rc = &rc;
+>> +
+>> +	*cmd_rc = is_cmd_valid(nvdimm, cmd, buf, buf_len);
+>> +	if (*cmd_rc) {
+>> +		pr_debug("Invalid cmd=0x%x. Err=%d\n", cmd, *cmd_rc);
+>> +		return *cmd_rc;
+>> +	}
+>>  
+>>  	p = nvdimm_provider_data(nvdimm);
+>>  
+>> @@ -381,13 +464,19 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
+>>  		*cmd_rc = papr_scm_meta_set(p, buf);
+>>  		break;
+>>  
+>> +	case ND_CMD_CALL:
+>> +		call_pkg = nd_to_pdsm_cmd_pkg(buf);
+>> +		*cmd_rc = papr_scm_service_pdsm(p, call_pkg);
+>> +		break;
+>> +
+>>  	default:
+>> -		return -EINVAL;
+>> +		dev_dbg(&p->pdev->dev, "Unknown command = %d\n", cmd);
+>> +		*cmd_rc = -EINVAL;
+>>  	}
+>>  
+>>  	dev_dbg(&p->pdev->dev, "returned with cmd_rc = %d\n", *cmd_rc);
+>>  
+>> -	return 0;
+>> +	return *cmd_rc;
+>>  }
+>>  
+>>  static ssize_t flags_show(struct device *dev,
+>> diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
+>> index de5d90212409..99fb60600ef8 100644
+>> --- a/include/uapi/linux/ndctl.h
+>> +++ b/include/uapi/linux/ndctl.h
+>> @@ -244,6 +244,7 @@ struct nd_cmd_pkg {
+>>  #define NVDIMM_FAMILY_HPE2 2
+>>  #define NVDIMM_FAMILY_MSFT 3
+>>  #define NVDIMM_FAMILY_HYPERV 4
+>> +#define NVDIMM_FAMILY_PAPR_SCM 5
+>>  
+>>  #define ND_IOCTL_CALL			_IOWR(ND_IOCTL, ND_CMD_CALL,\
+>>  					struct nd_cmd_pkg)
+>> -- 
+>> 2.26.2
+>> _______________________________________________
+>> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
+>> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
+
+-- 
+Cheers
+~ Vaibhav
