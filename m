@@ -3,97 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E186C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8944920657
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A1020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 11:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgETLr4 (ORCPT
+        id S1726757AbgETLt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 07:47:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46138 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETLr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 07:47:56 -0400
-Received: by mail-oi1-f196.google.com with SMTP id b3so2597253oib.13;
-        Wed, 20 May 2020 04:47:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hGKgEc8JFQSK2cOGhTfN/cpJyk+jh7gfz8G43N9Kzzc=;
-        b=cDXM+lI4BqskeTI+MTtD9mHJ+Zj+oT1oRrSAjHkP5bHECWbLfJ+NGxLU2AcacDs/op
-         +lI14WGTd6F+/WNoxwmilrktqjMkJ9o8W2uxptNQDESdYSTG1K3oPumwwBGnOj7HFg1I
-         RE762BJ6RvacwRfY25af6ynMiyXtseLx4D0p/gGEDW+qUjj4/unAD4GYoI9YY+d6OGXD
-         M2qZCz8AnRVNo3Dwtwr0AKTQnnHMNeh+vthp6OVoylYrDGeEfB6AXa48AJRUtxFvoyP7
-         q6YtqeTrDlLB2W5K5zP02Vtx1XXLGrKU/inYjUvb0qoRUeRaqwjqVqMxkSNMybSZkhf6
-         UzpA==
-X-Gm-Message-State: AOAM532yqDgjME3gYu4hVZqcMlf26BpAQPHG2iW935p2YBkLhk1LVRvn
-        0b2hmAxI8VtAntqeTUtebPwmH6Nr4AfiwL3Cp6dZKw==
-X-Google-Smtp-Source: ABdhPJxCwAPXRwC2Gghh4mWbgs1jlLKyh+c1OcmCEMOWi6+fZ/7AfNEOOZs8vDIeh1EJvdz0jC1m52WC6eQoJiOiAPQ=
-X-Received: by 2002:aca:210a:: with SMTP id 10mr1403518oiz.153.1589975275508;
- Wed, 20 May 2020 04:47:55 -0700 (PDT)
+        Wed, 20 May 2020 07:49:28 -0400
+Received: from mga06.intel.com ([134.134.136.31]:34265 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETLt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 07:49:28 -0400
+IronPort-SDR: luJ9WmqpTkppN5ANoXkKYFNr6zVaLQf4/WRuOkByLeWokAi01j5vhmVeqMd+cbIOMoG2bUJOB5
+ IUMiyNIW4IUQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 04:49:27 -0700
+IronPort-SDR: a/+Fpg54o+8PTDC2WA+m5PdUJa0V8mJpZ3R5KEtl27Vp1YaBQPYo9Gd+f4hN621W9nP6OxLRAh
+ AaEUA68Jxk4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,413,1583222400"; 
+   d="scan'208";a="253582839"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 20 May 2020 04:49:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jbNDx-007pYn-Jd; Wed, 20 May 2020 14:49:25 +0300
+Date:   Wed, 20 May 2020 14:49:25 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Avi Fishman <avifishman70@gmail.com>
+Cc:     Tali Perry <tali.perry1@gmail.com>, ofery@google.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Tomer Maimon <tmaimon77@gmail.com>, kfting@nuvoton.com,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Rob Herring <robh+dt@kernel.org>, wsa@the-dreams.de,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-i2c@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v11 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
+ driver
+Message-ID: <20200520114925.GQ1634618@smile.fi.intel.com>
+References: <20200520095113.185414-1-tali.perry1@gmail.com>
+ <20200520095113.185414-3-tali.perry1@gmail.com>
+ <20200520102452.GP1634618@smile.fi.intel.com>
+ <CAKKbWA5L_n7iC6-d22Am62SOoDBwNWO87+sXtRbwxwuVdjmRYA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200519131327.1836482-1-arnd@arndb.de> <20200519181034.58c67eb5bea24aae24d33421@linux-foundation.org>
- <CAK8P3a281ZLKwkWCKkAdQvA6=XA4=+mKWbwEzK_BR4Uu1c5DNQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a281ZLKwkWCKkAdQvA6=XA4=+mKWbwEzK_BR4Uu1c5DNQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 May 2020 13:47:44 +0200
-Message-ID: <CAMuHMdUx9zKbc7n164Gi+N9k-NhmbgXtU+Z4yZ9SvdxeCMtJKw@mail.gmail.com>
-Subject: Re: [PATCH] sh: include linux/time_types.h for sockios
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKKbWA5L_n7iC6-d22Am62SOoDBwNWO87+sXtRbwxwuVdjmRYA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd, Andrew,
-
-On Wed, May 20, 2020 at 10:32 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wed, May 20, 2020 at 3:10 AM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > On Tue, 19 May 2020 15:13:13 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
-> > > Using the socket ioctls on arch/sh (and only there) causes build
-> > > time problems when __kernel_old_timeval/__kernel_old_timespec are
-> > > not already visible to the compiler.
-> > >
-> > > Add an explict include line for the header that defines these
-> > > structures.
+On Wed, May 20, 2020 at 02:37:13PM +0300, Avi Fishman wrote:
+> On Wed, May 20, 2020 at 1:24 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > I can grab this.
->
-> Thanks!
->
-> > > Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> > > Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> > > Fixes: 8c709f9a0693 ("y2038: sh: remove timeval/timespec usage from headers")
-> > > Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
+> > On Wed, May 20, 2020 at 12:51:12PM +0300, Tali Perry wrote:
+> > > Add Nuvoton NPCM BMC I2C controller driver.
 > >
-> > cc:stable?
->
-> Yes, I missed that.
+> > ...
+> >
+> > > +#ifdef CONFIG_DEBUG_FS
+> >
+> > Why?!
+> 
+> It is made to save code size if CONFIG_DEBUG_FS is not defined?
 
-Doesn't matter, the stable bots will pick it up anyway, based on the Fixes tag.
+Nope (in cases I have commented on). Try again.
 
-Gr{oetje,eeting}s,
+> We see a lot of kernel code that is doing it.
 
-                        Geert
+Cargo cult, okay. So, somebody should try to understand what they are doing.
+
+> So could you elaborate what is the problem?
+
+Problem 1: ugly code.
+Problem 2: some of the code is not guarded (seems never been tested with disabled debugfs).
+Problem 3: it's not needed.
+
+> > > +#include <linux/debugfs.h>
+> > > +#endif
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
