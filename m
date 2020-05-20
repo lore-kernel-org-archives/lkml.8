@@ -6,86 +6,97 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77958C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E02FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 453DE2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003B420708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 23:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="cVDVhHg2"
+	dkim=pass (2048-bit key) header.d=zededa.com header.i=@zededa.com header.b="VKLJf4RM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgETXuA (ORCPT
+        id S1726806AbgETXvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 19:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59400 "EHLO
+        Wed, 20 May 2020 19:51:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgETXuA (ORCPT
+        with ESMTP id S1726619AbgETXvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 19:50:00 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9507EC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:49:58 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id f13so4582143edr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:49:58 -0700 (PDT)
+        Wed, 20 May 2020 19:51:35 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5FD0C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:51:35 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id t25so4169701qtc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 16:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RUfnz+3+Nkh58pbHAS8sjZcUPVeApODwUMmXr4NI2ZY=;
-        b=cVDVhHg2q1D6nCUuevO4L9GrF42LCXBhesqGp2oqY+Szm4s6/HGyDkVnnMedHOHVZK
-         LykgwAJlryPBcvuXF2ra2GGQUtGGoixKRuBRkoY1hdDKfDap9f7d9cIDRAT5LFl2IHF2
-         KeOEFtHXVSe0jQ+iHUDUT/yqM7+JGeJa+akrM=
+        d=zededa.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DOijWyKqJLxNwQeBpPWMP+0S3cV6uReedydSlpIjzL4=;
+        b=VKLJf4RMzZ8GKwYeh9OqRDk2QVWEm43naydQATItag3YW/jJ5eONuUaMTKh0s95LEh
+         8rgDtmyH+0qrLmnklWxl1XWFSu7uIlM30DG0fONhO/30xcMrA6IMw8Zp6a7iaB3GIqn2
+         S7IELd0Jg+esKrNB0DzDvAW/KK7ppEp87NWuSKApP6O63Xls3m8QUJAMgaygYnYm93JH
+         sKzRJByGxKC1qNzWU2XCfC5b2NoVQARZfqn0YAbJsqUIM8KzV+mGq5Cgw0NRP8JV1Gnv
+         Pe07AyDl+Q9k1ZW888U5f6HrlwhBFRIzybMwFGkFQVHj4NGMi0CcWVFYiQP29KvhkdNb
+         S3NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RUfnz+3+Nkh58pbHAS8sjZcUPVeApODwUMmXr4NI2ZY=;
-        b=gz/wyoZ4ktrAG7YWHMEFyRuQyqCunwEHKNAexDFZjV4OLvqM3Jtl4Oy/voS84KQ2cH
-         W1S1SpS+qD+JTdQsO3EcszN7FW/rITC7J+bk6VGwGxy2kYJ4KK27BpIfQN1x3DUfKxbw
-         8yVZiF343T/yTX91GmRCjzly99AfDByYOkQa8s+XwPYDROlkGkuUWKh7SwBFhQtR25Ut
-         8EWpccozIVxjENThQQXh8M9+Ci3P3MFSXRGs90iX80lMRenZ9dzaLf0PdYr3a6RjbOKX
-         74VFQNcEw5fw/1pKuljgk1n68N9tXNX/FesH4Cyp+9WiEZ16Q3Bk8PVlMsXigpir7r43
-         lTFg==
-X-Gm-Message-State: AOAM5316XbGNg+Z9kIfInvKCgXy9smpYvZfkZb39uoHsHyhzGq0D0vgL
-        osnDGBP1lZcYndc/9ksmZrRXQXcL6JrSnvAc
-X-Google-Smtp-Source: ABdhPJznwU1I3lqQRpLIzH8obpgeUm97jbOZSvYmp+dcp94Vi9i1I3/6JvVjoaU3Frm22nn60f3clw==
-X-Received: by 2002:a50:b586:: with SMTP id a6mr5514320ede.292.1590018597141;
-        Wed, 20 May 2020 16:49:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c093:400::5:4262])
-        by smtp.gmail.com with ESMTPSA id x8sm3268142edj.53.2020.05.20.16.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 16:49:56 -0700 (PDT)
-Date:   Thu, 21 May 2020 00:49:56 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: unify reclaim retry limits with page allocator
-Message-ID: <20200520234956.GA892595@chrisdown.name>
-References: <20200520163142.GA808793@chrisdown.name>
- <20200520164037.e3598bc902e39415f4c263e7@linux-foundation.org>
- <20200520164243.56133fa135f65cc708e70ec0@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DOijWyKqJLxNwQeBpPWMP+0S3cV6uReedydSlpIjzL4=;
+        b=f2Lw1INJkjZZkb6RU0tTEyxUnGwoBbwSQcnh/EljMQ2usJL1BmtGzhtSVvTdOYKbzq
+         a7AQ7VeHHoReJfsSLK7G9TPLDsM3JXDb6lBndhZbU1Zv3My0l2/ryZRzkffQKbxr6ZgA
+         lb0uaj4+GCGyn7izTi9H0pxbm/ROuvSbEe8I38FQ+3ClVIT6f5c7tnRC/wIyYtr/V5UH
+         Givt5AOgGrtJO58PHDvsD0s4voLkIqt/ajWX/CQmmM6o9GS4N+iJ22+6ahnbcsIVaZr2
+         zFFlMKF6+PyGe109QKDxQ2GROXe5DazmcZlUwe9Lzubz93Y8gChxJHf9khCq4HWOPAbj
+         Bqqg==
+X-Gm-Message-State: AOAM5314Sgz/4uw8UMRDxZ5tefpnl+xZ2ClCutV5MptBAtessv1deSPS
+        sPVy581gGSCPniWBx35UeG05TO4gJ9Rn++fBYcqKUg==
+X-Google-Smtp-Source: ABdhPJxt2EESLU8nhk5tsHgnFk3RvF6RDw6Vldmiq55JHPOjOD9uPQTlMBvIBmWRF0NacS8L88rfoIbWTF1pRYQwj0s=
+X-Received: by 2002:ac8:670b:: with SMTP id e11mr8166734qtp.365.1590018694922;
+ Wed, 20 May 2020 16:51:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200520164243.56133fa135f65cc708e70ec0@linux-foundation.org>
+References: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
+In-Reply-To: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
+From:   Roman Shaposhnik <roman@zededa.com>
+Date:   Wed, 20 May 2020 16:51:23 -0700
+Message-ID: <CAMmSBy9VBxjSCRcfyiZ-RY8eyYOooeNfCqrvirhWzfpSbAQyuw@mail.gmail.com>
+Subject: Re: [PATCH 00/10] fix swiotlb-xen for RPi4
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Konrad Wilk <konrad.wilk@oracle.com>,
+        Xen-devel <xen-devel@lists.xenproject.org>,
+        linux-kernel@vger.kernel.org, tamas@tklengyel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Andrew,
-
-Andrew Morton writes:
->Ah, my habit of working in reverse time order sometimes does this ;)
+On Wed, May 20, 2020 at 4:45 PM Stefano Stabellini
+<sstabellini@kernel.org> wrote:
 >
->I suggest that "mm, memcg: reclaim more aggressively before high
->allocator throttling" and this patch become a two-patch series?
+> Hi all,
+>
+> This series is a collection of fixes to get Linux running on the RPi4 as
+> dom0.
+>
+> Conceptually there are only two significant changes:
+>
+> - make sure not to call virt_to_page on vmalloc virt addresses (patch
+>   #1)
+> - use phys_to_dma and dma_to_phys to translate phys to/from dma
+>   addresses (all other patches)
+>
+> In particular in regards to the second part, the RPi4 is the first
+> board where Xen can run that has the property that dma addresses are
+> different from physical addresses, and swiotlb-xen was written with the
+> assumption that phys addr == dma addr.
+>
+> This series adds the phys_to_dma and dma_to_phys calls to make it work.
 
-Sure, they can do (sorry, I meant to add a comment mentioning the dependency, 
-but forgot). I just didn't want to conflate discussion for both of them, since 
-they are separate in nature :-)
+Great to see this! Stefano, any chance you can put it in a branch some place
+so I can test the final version?
 
-I'll hold off on sending v2 until the discussion with Michal is finished.
+Thanks,
+Roman.
