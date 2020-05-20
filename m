@@ -2,170 +2,168 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCF0C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDD22065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lS/OubPC"
+	by mail.kernel.org (Postfix) with ESMTP id A501F2072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgETQj5 (ORCPT
+        id S1726846AbgETQlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgETQj5 (ORCPT
+        Wed, 20 May 2020 12:41:03 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:48081 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726545AbgETQlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:39:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D41C061A0E;
-        Wed, 20 May 2020 09:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=AnGXWlpEOu4iqWXGhr7iWfL5p65eGbwcAaVhmmCOm0U=; b=lS/OubPCMJGTT8oh1axlCTHnDs
-        Ihm0CtyV7yRVusP4pNf4C2LpVNTuFo5cJ7Quhr/2Dz46tiXw1xLyoqHA5NrSYYPmnLvoUAkQ09hWa
-        Jdol0k1UXDfosww1ICtI1jSi2TvkNW0v6Mg5GU+mfdOQGdvv46MsSs1BpN4OFKkxI5Z0KttgNs7fZ
-        Z864lDjMJ508imL6bRCTASR2nL8AQjmKojA178Lwi3oC5mkjgwDJtWbzfEfkn71NI9U19s3VeyTEk
-        myb2n4kG8ocUil2HSPUzVnmRoEY0VrQbj01l9rYyvRP6Si1OcIy2fVwNOBOEcNAVXWenkJ7beFwI/
-        A/fPVung==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbRl4-0003rI-1L; Wed, 20 May 2020 16:39:54 +0000
-Subject: Re: kernel BUG at fs/inode.c:531!
-To:     nirinA raseliarison <nirina.raseliarison@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Theodore Ts'o <tytso@mit.edu>
-References: <CANsGL8Mb31NWVSgj=B2fNtT3x4oYm3tDKYZxpBCKfNC9ROLcGA@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <29a960db-734a-a5bc-1f4c-1833bd9eb1d8@infradead.org>
-Date:   Wed, 20 May 2020 09:39:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 20 May 2020 12:41:02 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Wed, 20 May 2020 09:40:59 -0700
+Received: from localhost (unknown [10.200.192.41])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 1862D40448;
+        Wed, 20 May 2020 09:41:02 -0700 (PDT)
+Date:   Wed, 20 May 2020 09:41:01 -0700
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     Julien Thierry <jthierry@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 3/3] objtool: Enable compilation of objtool for all
+ architectures
+Message-ID: <20200520164101.GU9040@rlwimi.vmware.com>
+Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
+        Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <cover.1589913349.git.mhelsley@vmware.com>
+ <96252a8eee50710f4fe115ca516f0e6058b9f66b.1589913349.git.mhelsley@vmware.com>
+ <b27ee658-2886-107c-a367-632467ec6929@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CANsGL8Mb31NWVSgj=B2fNtT3x4oYm3tDKYZxpBCKfNC9ROLcGA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <b27ee658-2886-107c-a367-632467ec6929@redhat.com>
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[adding Cc:s]
-
-Kernel is 5.7.0-rc6.20200519.
-
-
-On 5/20/20 5:57 AM, nirinA raseliarison wrote:
-> hello ,
+On Wed, May 20, 2020 at 09:31:46AM +0100, Julien Thierry wrote:
 > 
-> i repeatedly hit this bug since gcc-10.1.0:
 > 
-> May 20 05:06:25 supernova kernel: [16312.604136] ------------[ cut
-> here ]------------
-> May 20 05:06:25 supernova kernel: [16312.604139] kernel BUG at fs/inode.c:531!
-> May 20 05:06:25 supernova kernel: [16312.604145] invalid opcode: 0000
-> [#1] SMP PTI
-> May 20 05:06:25 supernova kernel: [16312.604148] CPU: 1 PID: 149 Comm:
-> kswapd0 Not tainted 5.7.0-rc6.20200519 #1
-> May 20 05:06:25 supernova kernel: [16312.604150] Hardware name: To be
-> filled by O.E.M. To be filled by O.E.M./ONDA H61V Ver:4.01, BIOS 4.6.5
-> 01/07/2013
-> May 20 05:06:25 supernova kernel: [16312.604155] RIP: 0010:clear_inode+0x75/0x80
-> May 20 05:06:25 supernova kernel: [16312.604157] Code: a8 20 74 2a a8
-> 40 75 28 48 8b 83 28 01 00 00 48 8d 93 28 01 00 00 48 39 c2 75 17 48
-> c7 83 98 00 00 00 60 00 00 00 5b c3 0f 0b <0f> 0b 0f 0b 0f 0b 0f 0b 0f
-> 0b 90 0f 1f 44 00 00 53 ba 48 02 00 00
-> May 20 05:06:25 supernova kernel: [16312.604158] RSP:
-> 0000:ffffc9000048fb50 EFLAGS: 00010006
-> May 20 05:06:25 supernova kernel: [16312.604160] RAX: 0000000000000000
-> RBX: ffff88808c5f9e38 RCX: 0000000000000000
-> May 20 05:06:25 supernova kernel: [16312.604161] RDX: 0000000000000001
-> RSI: 0000000000000000 RDI: ffff88808c5f9fb8
-> May 20 05:06:25 supernova kernel: [16312.604162] RBP: ffff88808c5f9e38
-> R08: ffffffffffffffff R09: ffffc9000048fcd8
-> May 20 05:06:25 supernova kernel: [16312.604163] R10: 0000000000000000
-> R11: 0000000000000520 R12: ffff88808c5f9fb0
-> May 20 05:06:25 supernova kernel: [16312.604164] R13: ffff88820f14d000
-> R14: ffff88820f14d070 R15: 0000000000000122
-> May 20 05:06:25 supernova kernel: [16312.604166] FS:
-> 0000000000000000(0000) GS:ffff888217700000(0000)
-> knlGS:0000000000000000
-> May 20 05:06:25 supernova kernel: [16312.604167] CS:  0010 DS: 0000
-> ES: 0000 CR0: 0000000080050033
-> May 20 05:06:25 supernova kernel: [16312.604168] CR2: 00007f7849e58000
-> CR3: 000000001e676006 CR4: 00000000001606e0
-> May 20 05:06:25 supernova kernel: [16312.604169] Call Trace:
-> May 20 05:06:25 supernova kernel: [16312.604174]  ext4_clear_inode+0x16/0x80
-> May 20 05:06:25 supernova kernel: [16312.604177]  ext4_evict_inode+0x58/0x4c0
-> May 20 05:06:25 supernova kernel: [16312.604180]  evict+0xbf/0x180
-> May 20 05:06:25 supernova kernel: [16312.604183]  prune_icache_sb+0x7e/0xb0
-> May 20 05:06:25 supernova kernel: [16312.604186]  super_cache_scan+0x161/0x1e0
-> May 20 05:06:25 supernova kernel: [16312.604189]  do_shrink_slab+0x146/0x290
-> May 20 05:06:25 supernova kernel: [16312.604191]  shrink_slab+0xac/0x2a0
-> May 20 05:06:25 supernova kernel: [16312.604194]  ? __switch_to_asm+0x40/0x70
-> May 20 05:06:25 supernova kernel: [16312.604196]  shrink_node+0x16f/0x660
-> May 20 05:06:25 supernova kernel: [16312.604199]  balance_pgdat+0x2cf/0x5b0
-> May 20 05:06:25 supernova kernel: [16312.604201]  kswapd+0x1dc/0x3a0
-> May 20 05:06:25 supernova kernel: [16312.604204]  ? __schedule+0x217/0x710
-> May 20 05:06:25 supernova kernel: [16312.604206]  ? wait_woken+0x80/0x80
-> May 20 05:06:25 supernova kernel: [16312.604208]  ? balance_pgdat+0x5b0/0x5b0
-> May 20 05:06:25 supernova kernel: [16312.604210]  kthread+0x118/0x130
-> May 20 05:06:25 supernova kernel: [16312.604212]  ?
-> kthread_create_worker_on_cpu+0x70/0x70
-> May 20 05:06:25 supernova kernel: [16312.604214]  ret_from_fork+0x35/0x40
-> May 20 05:06:25 supernova kernel: [16312.604215] Modules linked in:
-> nct6775 hwmon_vid rfkill ipv6 nf_defrag_ipv6 snd_pcm_oss snd_mixer_oss
-> fuse hid_generic usbhid hid i2c_dev snd_hda_codec_hdmi
-> snd_hda_codec_realtek snd_hda_codec_generic coretemp hwmon
-> x86_pkg_temp_thermal intel_powerclamp i915 kvm_intel kvm irqbypass
-> evdev crc32_pclmul serio_raw r8169 drm_kms_helper snd_hda_intel
-> snd_intel_dspcfg realtek snd_hda_codec libphy snd_hwdep syscopyarea
-> sysfillrect sysimgblt snd_hda_core fan fb_sys_fops thermal snd_pcm drm
-> 8250 mei_me snd_timer drm_panel_orientation_quirks 8250_base
-> serial_core intel_gtt video snd ehci_pci lpc_ich ehci_hcd mei agpgart
-> soundcore button i2c_algo_bit i2c_i801 loop
-> May 20 05:06:25 supernova kernel: [16312.604237] ---[ end trace
-> 6d45434b7eb1e097 ]---
-> May 20 05:06:25 supernova kernel: [16312.604240] RIP: 0010:clear_inode+0x75/0x80
-> May 20 05:06:25 supernova kernel: [16312.604241] Code: a8 20 74 2a a8
-> 40 75 28 48 8b 83 28 01 00 00 48 8d 93 28 01 00 00 48 39 c2 75 17 48
-> c7 83 98 00 00 00 60 00 00 00 5b c3 0f 0b <0f> 0b 0f 0b 0f 0b 0f 0b 0f
-> 0b 90 0f 1f 44 00 00 53 ba 48 02 00 00
-> May 20 05:06:25 supernova kernel: [16312.604242] RSP:
-> 0000:ffffc9000048fb50 EFLAGS: 00010006
-> May 20 05:06:25 supernova kernel: [16312.604244] RAX: 0000000000000000
-> RBX: ffff88808c5f9e38 RCX: 0000000000000000
-> May 20 05:06:25 supernova kernel: [16312.604245] RDX: 0000000000000001
-> RSI: 0000000000000000 RDI: ffff88808c5f9fb8
-> May 20 05:06:25 supernova kernel: [16312.604246] RBP: ffff88808c5f9e38
-> R08: ffffffffffffffff R09: ffffc9000048fcd8
-> May 20 05:06:25 supernova kernel: [16312.604246] R10: 0000000000000000
-> R11: 0000000000000520 R12: ffff88808c5f9fb0
-> May 20 05:06:25 supernova kernel: [16312.604247] R13: ffff88820f14d000
-> R14: ffff88820f14d070 R15: 0000000000000122
-> May 20 05:06:25 supernova kernel: [16312.604249] FS:
-> 0000000000000000(0000) GS:ffff888217700000(0000)
-> knlGS:0000000000000000
-> May 20 05:06:25 supernova kernel: [16312.604250] CS:  0010 DS: 0000
-> ES: 0000 CR0: 0000000080050033
-> May 20 05:06:25 supernova kernel: [16312.604251] CR2: 00007f7849e58000
-> CR3: 000000001e676006 CR4: 00000000001606e0
+> On 5/19/20 9:55 PM, Matt Helsley wrote:
+> > objtool currently only compiles for x86 architectures. This is
+> > fine as it presently does not support tooling for other
+> > architectures. However, we would like to be able to convert other
+> > kernel tools to run as objtool sub commands because they too
+> > process ELF object files. This will allow us to convert tools
+> > such as recordmcount to use objtool's ELF code.
+> > 
+> > Since much of recordmcount's ELF code is copy-paste code to/from
+> > a variety of other kernel tools (look at modpost for example) this
+> > means that if we can convert recordmcount we can convert more.
+> > 
+> > We define "missing" weak definitions for subcommand entry functions
+> > and other weak definitions for shared functions critical to
+> > building existing subcommands. These return 127 when the command is
+> > missing which signify tools that do not exist on all architectures.
+> > In this case the "check" and "orc" tools do not exist on all
+> > architectures so we only add them for x86. Future changes adding
+> > support for "check", to arm64 for example, can then modify the
+> > SUBCMD_CHECK variable when building for arm64.
+> > 
+> > objtool is not currently wired in to KConfig to be built for other
+> > architectures because it's not needed for those architectures and
+> > there are no commands it supports other than those for x86. As more
+> > command support is enabled on various architectures the necessary
+> > KConfig changes can be made (e.g. adding "STACK_VALIDATION") to
+> > trigger building objtool.
+> > 
+> > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
+> > Cc: Julien Thierry <jthierry@redhat.com>
+> > ---
+> >   tools/objtool/Build           | 13 +++++++++----
+> >   tools/objtool/Makefile        | 11 ++++++++++-
+> >   tools/objtool/arch.h          |  4 +++-
+> >   tools/objtool/builtin-check.c |  2 +-
+> >   tools/objtool/builtin-orc.c   |  3 +--
+> >   tools/objtool/check.c         |  4 ++--
+> >   tools/objtool/check.h         |  4 ----
+> >   tools/objtool/objtool.h       | 14 ++++++++++++++
+> >   tools/objtool/orc.h           | 18 ------------------
+> >   tools/objtool/orc_dump.c      |  3 ++-
+> >   tools/objtool/orc_gen.c       |  1 -
+> >   tools/objtool/weak.c          | 35 +++++++++++++++++++++++++++++++++++
+> >   12 files changed, 77 insertions(+), 35 deletions(-)
+> >   delete mode 100644 tools/objtool/orc.h
+> >   create mode 100644 tools/objtool/weak.c
+> > 
+> > diff --git a/tools/objtool/Build b/tools/objtool/Build
+> > index 66f44f5cd2a6..b7222d5cc7bc 100644
+> > --- a/tools/objtool/Build
+> > +++ b/tools/objtool/Build
+> > @@ -1,11 +1,16 @@
+> >   objtool-y += arch/$(SRCARCH)/
+> > +
+> > +objtool-y += weak.o
+> > +
+> > +objtool-$(SUBCMD_CHECK) += check.o
+> > +objtool-$(SUBCMD_CHECK) += special.o
+> > +objtool-$(SUBCMD_ORC) += check.o
+> > +objtool-$(SUBCMD_ORC) += orc_gen.o
+> > +objtool-$(SUBCMD_ORC) += orc_dump.o
+> > +
+> >   objtool-y += builtin-check.o
+> >   objtool-y += builtin-orc.o
+> > -objtool-y += check.o
+> > -objtool-y += orc_gen.o
+> > -objtool-y += orc_dump.o
+> >   objtool-y += elf.o
+> > -objtool-y += special.o
+> >   objtool-y += objtool.o
+> >   objtool-y += libstring.o
+> > diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+> > index 6b91388aecbb..12686e2f1a56 100644
+> > --- a/tools/objtool/Makefile
+> > +++ b/tools/objtool/Makefile
+> > @@ -46,7 +46,16 @@ elfshdr := $(shell echo '$(pound)include <libelf.h>' | $(CC) $(CFLAGS) -x c -E -
+> >   CFLAGS += $(if $(elfshdr),,-DLIBELF_USE_DEPRECATED)
+> >   AWK = awk
+> > -export srctree OUTPUT CFLAGS SRCARCH AWK
+> > +
+> > +SUBCMD_CHECK := n
+> > +SUBCMD_ORC := n
+> > +
+> > +ifeq ($(SRCARCH),x86)
+> > +	SUBCMD_CHECK := y
+> > +	SUBCMD_ORC := y
+> > +endif
+> > +
+> > +export srctree OUTPUT CFLAGS SRCARCH AWK SUBCMD_CHECK SUBCMD_ORC
 > 
-> --
-> nirinA
-> 
+> Nit: I was thinking, since the list of SUBCMD_* is only going to grow
+> maybe it would be nicer to have a single export line for the SUBCMD_*
+> variables and leave the export line of [srctree..AWK] untouched.
 
+That's a really good idea actually. Glad to see Josh included it in the
+changed patch.
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Just a suggestion, and only in case you respin this taking into account
+> Josh's comment.
+> 
+> Otherwise things look good to me.
+
+Thanks for all the reviews and good ideas!
+
+Cheers,
+    -Matt Helsley
