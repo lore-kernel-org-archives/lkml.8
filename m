@@ -2,95 +2,140 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ECAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2257C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB0332075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A568207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:02:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="E0onSRN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgETKBx convert rfc822-to-8bit (ORCPT
+        id S1726833AbgETKCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:01:53 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:33174 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETKBx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:01:53 -0400
-Received: by mail-ej1-f65.google.com with SMTP id n24so3029234ejd.0;
-        Wed, 20 May 2020 03:01:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=v8EDRqZtXtnh/hEmyxqDkZdYj8yN54lWYsJ0qEqpF+c=;
-        b=q3Av2KcQKLfM8FcPKMb1krPXMRzDrxZyeSl/fuSlyfFu0TEc84+XdQ/5YzwnJb1+zB
-         Y8jw433zvAYHxFU59htqTNd5Puy13H1oKfPvb393N8RLd96EGiSsCsySzQSgJWSGM8bB
-         LzJPBUwy0TfjcpZKq+6JyhaFF4/WTzqgfWlr+hMrZffxa6KJEqeCJZE8uPxJWQcEJ3a3
-         YjK52l6rQ4Vy3JcRQZjNQ/+6A3qu2vHV/2u2TtT6p7vvtcFxDz77yuFuSPwxX5zxInk+
-         Ego2NOdtr5miCEIlqWTrVjH7kvKHPl1PkhIczKcaGhSlQcEb/aMO6YRNDd2vAg313Hbv
-         k+2w==
-X-Gm-Message-State: AOAM532mjR0UOtV2rczK6u5jpiPZfTNoS404LQqNjV0qiIXEgAz8vtU/
-        BmrzIGfp3JxHVfnxrXHSGM/tbJAS/p+A8KUnLBwrST2b
-X-Google-Smtp-Source: ABdhPJyNMixBtXdsQ4k57fw3AEyBZlSv9U9g0emO85Y2ome8aOFC6N6r+KX70ZONLl/mh44PO3rHaqf1AN3ao0AZz7s=
-X-Received: by 2002:a17:907:9492:: with SMTP id dm18mr3116869ejc.328.1589968911424;
- Wed, 20 May 2020 03:01:51 -0700 (PDT)
+        Wed, 20 May 2020 06:02:00 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:47008 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgETKCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 06:02:00 -0400
+Received: from [192.168.1.4] (212-5-158-12.ip.btc-net.bg [212.5.158.12])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 90A62CFEB;
+        Wed, 20 May 2020 13:01:57 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1589968918; bh=DzcUAhFL6G6Vzz7vTvgr6Z/dAJBJLJKn2F3Wqs3Pvzo=;
+        h=Subject:To:Cc:From:Date:From;
+        b=E0onSRN5ou33/t/JrfYkn/kTvcKP3EdES429TX7TYKkOGaqg/2jk0NJFlz6/t9qIe
+         +8l2DqFT36DdjVm0Zm0te3gQh4cZCUTgMra5XppOYwsnwQQi4qykoQtZXAQvj/97c6
+         AA9lGia5yEOlDUBqZOfPgL1uSOuiWtt4Brq1vMgHK5wzAQGkdErBX6QrQzN9hdYt0R
+         JbBwp0Fa/No29c1jstjT4fyRTKVt6QUktBYsBoFHdfBLd/3XpCgCf+71q8to4XcIuo
+         +Jvy4Geib5IGjUkmou+R8LjWvUM2d8LjMicd9Cm3QnkUBK0BffKZ46vuyoJsNNtgmu
+         2hXlM0KaDbkiQ==
+Subject: Re: R: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF
+ params bindings
+To:     ansuelsmth@gmail.com, 'Rob Herring' <robh@kernel.org>
+Cc:     'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Andy Gross' <agross@kernel.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-9-ansuelsmth@gmail.com> <20200507181044.GA15159@bogus>
+ <062301d624a6$8be610d0$a3b23270$@gmail.com> <20200512154544.GA823@bogus>
+ <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
+ <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <72c588ec-5dd3-6c8a-5ebf-1e01bf2fa96a@mm-sol.com>
+Date:   Wed, 20 May 2020 13:01:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200519212230.313365-1-paul@crapouillou.net> <20200520064520.GB7630@alpha.franken.de>
- <CAAdtpL4cZ4==07=kNJf6Xkhnzy6jiqgMc1XzG0NV6RZi1KqgXA@mail.gmail.com> <20200520092757.GA12701@alpha.franken.de>
-In-Reply-To: <20200520092757.GA12701@alpha.franken.de>
-From:   =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>
-Date:   Wed, 20 May 2020 12:01:39 +0200
-Message-ID: <CAAdtpL76AOoc+cLOP+khtLGOx6j81Ss3uqDKkuZXjeoqsdE72g@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: ingenic: Add missing include
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Paul Cercueil <paul@crapouillou.net>, od@zcrc.me,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:28 AM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Wed, May 20, 2020 at 11:19:49AM +0200, Philippe Mathieu-Daudé wrote:
-> > Hi Thomas,
-> >
-> > On Wed, May 20, 2020 at 8:50 AM Thomas Bogendoerfer
-> > <tsbogend@alpha.franken.de> wrote:
-> > >
-> > > On Tue, May 19, 2020 at 11:22:30PM +0200, Paul Cercueil wrote:
-> > > > Add missing include which adds the prototype to plat_time_init().
-> > > >
-> > > > Fixes: f932449c11da ("MIPS: ingenic: Drop obsolete code, merge the rest in setup.c")
-> > > > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > > ---
-> > > >  arch/mips/jz4740/setup.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > >
-> > > applied to mips-next.
-> >
-> > Since mips-next is not merged, can you simply squash the fix to the
-> > incomplete f932449c11da please?
->
-> no, I don't rebase mips-next.
+Hi,
 
-OK. I had the understanding that mips-fixes was the stable branch not rebased,
-and mips-next was not considered stable until merged in mainstream.
-I took note of the changes, thanks.
+On 5/13/20 3:56 PM, ansuelsmth@gmail.com wrote:
+>> On 5/12/20 6:45 PM, Rob Herring wrote:
+>>> On Thu, May 07, 2020 at 09:34:35PM +0200, ansuelsmth@gmail.com
+>> wrote:
+>>>>> On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
+>>>>>> It is now supported the editing of Tx De-Emphasis, Tx Swing and
+>>>>>> Rx equalization params on ipq8064. Document this new optional
+>> params.
+>>>>>>
+>>>>>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/pci/qcom,pcie.txt     | 36
+>> +++++++++++++++++++
+>>>>>>  1 file changed, 36 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>>>> index 6efcef040741..8cc5aea8a1da 100644
+>>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>>>> @@ -254,6 +254,42 @@
+>>>>>>  			- "perst-gpios"	PCIe endpoint reset signal line
+>>>>>>  			- "wake-gpios"	PCIe endpoint wake signal line
+>>>>>>
+>>>>>> +- qcom,tx-deemph-gen1:
+>>>>>> +	Usage: optional (available for ipq/apq8064)
+>>>>>> +	Value type: <u32>
+>>>>>> +	Definition: Gen1 De-emphasis value.
+>>>>>> +		    For ipq806x should be set to 24.
+>>>>>
+>>>>> Unless these need to be tuned per board, then the compatible string
+>> for
+>>>>> ipq806x should imply all these settings.
+>>>>>
+>>>>
+>>>> It was requested by v2 to make this settings tunable. These don't change
+>> are
+>>>> all the same for every ipq806x SoC. The original implementation had this
+>>>> value hardcoded for ipq806x. Should I restore this and drop this patch?
+>>>
+>>> Yes, please.
+>>
+>> I still think that the values for tx deemph and tx swing should be
+>> tunable. But I can live with them in the driver if they not break
+>> support for apq8064.
+>>
+>> The default values in the registers for apq8064 and ipq806x are:
+>>
+>> 			default		your change
+>> TX_DEEMPH_GEN1		21		24
+>> TX_DEEMPH_GEN2_3_5DB	21		24
+>> TX_DEEMPH_GEN2_6DB	32		34
+>>
+>> TX_SWING_FULL		121		120
+>> TX_SWING_LOW		121		120
+>>
+>> So until now (without your change) apq8064 worked with default values.
+>>
+> 
+> I will limit this to ipq8064(-v2) if this could be a problem.
 
->
-> Thomas.
->
-> --
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+I guess you can do it that way, but if new board appear in the future
+with slightly different parameters (for example deemph_gen1 = 23 and so
+on) do we need to add another compatible for that? At the end we will
+have compatibles per board but not per SoC. :(
+
+-- 
+regards,
+Stan
