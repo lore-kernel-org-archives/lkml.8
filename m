@@ -2,378 +2,131 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C323C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF22C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1310320709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64EB2072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 16:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589991846;
+	bh=5E16tIAp8xQG71YS0BbGpK4xyAiCK1wiPDEQlUT8K5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ir1cfACAuow8YUEKfHHRxHrbha1v3htQvq0eV7Mn4J+Xku1vdiiI14zFMdfE4eEdZ
+	 e/xH8U5dGeW9os6aQNlk92Fqgu3IXm1xB7lSVG1qKeDtINoSQ1vUtzVeAh3T2Bcp8o
+	 3HY6KTnWNBASHfmTaD1fsn8/CciVVHjWtJIpvKY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgETQXk (ORCPT
+        id S1726905AbgETQYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 12:23:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54612 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726791AbgETQXj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 12:23:39 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04KG2lt9060301;
-        Wed, 20 May 2020 12:23:38 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 314rxdmbuf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 12:23:38 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04KGLGDs028160;
-        Wed, 20 May 2020 16:23:36 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma02wdc.us.ibm.com with ESMTP id 313wgsay8h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 May 2020 16:23:36 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04KGNa3d29884892
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 May 2020 16:23:36 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47EEDAC060;
-        Wed, 20 May 2020 16:23:36 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17E49AC05B;
-        Wed, 20 May 2020 16:23:36 +0000 (GMT)
-Received: from localhost (unknown [9.65.222.154])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 20 May 2020 16:23:35 +0000 (GMT)
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@kernel.org
-Subject: [PATCH v2] perf config: Add stat.big-num support
-Date:   Wed, 20 May 2020 11:23:35 -0500
-Message-Id: <1589991815-17951-1-git-send-email-pc@us.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-20_10:2020-05-20,2020-05-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 cotscore=-2147483648 malwarescore=0
- impostorscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005200131
+        Wed, 20 May 2020 12:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726486AbgETQYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 12:24:05 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5160B20709;
+        Wed, 20 May 2020 16:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589991844;
+        bh=5E16tIAp8xQG71YS0BbGpK4xyAiCK1wiPDEQlUT8K5g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W2NRIVGEoxaaE8OcK5W2zDxtbj5cgaNID8SH/DVwwi5x0Cg50Y9aRfx9570J71zTe
+         PqAF6v8pMMFan5BEBSpieyh/8VuHgB0RRHMuADOSFRbucJvv5fxboalxq24oOh2fYZ
+         tf4Gun3C8il8YQ1eKwa1XDc9HlyjOr08y7wJXiRM=
+Date:   Wed, 20 May 2020 18:24:02 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
+        linux-rt-users@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
+ is cleared
+Message-ID: <20200520162400.GA8800@lenoir>
+References: <20200520140402.358880-1-juri.lelli@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520140402.358880-1-juri.lelli@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul A. Clarke" <pc@us.ibm.com>
-
-Add support for new "stat.big-num" boolean option.
-
-This allows a user to set a default for "--no-big-num" for "perf stat"
-commands.
-
---
-$ perf config stat.big-num
-$ perf stat --event cycles /bin/true
-
- Performance counter stats for '/bin/true':
-
-           778,849      cycles
-[...]
-$ perf config stat.big-num=false
-$ perf config stat.big-num
-stat.big-num=false
-$ perf stat --event cycles /bin/true
-
- Performance counter stats for '/bin/true':
-
-            769622      cycles
-[...]
---
-
-There is an interaction with "--field-separator" that must be
-accommodated, such that specifying "--big-num --field-separator={x}"
-still reports an invalid combination of options.
-
-Documentation for perf-config and perf-stat updated.
-
-Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
----
-v2:
-- Documentation updates for perf-config and perf-stat.
-- Changed from using 0/1 to false/true in the examples and documentation.
-
-Testing results with a matrix of:
-- nothing in .perfconfig, stat.big-num=false, stat.big-num=true
-- --field-separator not set, --field-separator=:
-- no "--big-num", --big-num, --no-big-num
-
-$ perf config stat.big-num
-$ perf stat --event cycles /bin/true
-
- Performance counter stats for '/bin/true':
-
-           778,849      cycles                                                      
-
-       0.000570037 seconds time elapsed
-
-       0.000619000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --big-num /bin/true
-
- Performance counter stats for '/bin/true':
-
-           763,003      cycles                                                      
-
-       0.000546281 seconds time elapsed
-
-       0.000597000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --no-big-num /bin/true
-
- Performance counter stats for '/bin/true':
-
-            810753      cycles                                                      
-
-       0.000582670 seconds time elapsed
-
-       0.000638000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --field-separator=: /bin/true
-759523::cycles:333196:100.00::
-$ perf stat --event cycles --big-num --field-separator=: /bin/true
--B option not supported with -x
-
- Usage: perf stat [<options>] [<command>]
-
-    -B, --big-num         print large numbers with thousands' separators
-    -x, --field-separator <separator>
-                          print counts with custom separator
-$ perf stat --event cycles --no-big-num --field-separator=: /bin/true
-782610::cycles:343606:100.00::
-$ perf config stat.big-num=false
-$ perf config stat.big-num
-stat.big-num=false
-$ perf stat --event cycles /bin/true
-
- Performance counter stats for '/bin/true':
-
-            769622      cycles                                                      
-
-       0.000545743 seconds time elapsed
-
-       0.000600000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --big-num /bin/true
-
- Performance counter stats for '/bin/true':
-
-           788,694      cycles                                                      
-
-       0.000565276 seconds time elapsed
-
-       0.000622000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --no-big-num /bin/true
-
- Performance counter stats for '/bin/true':
-
-            808283      cycles                                                      
-
-       0.000575508 seconds time elapsed
-
-       0.000632000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --field-separator=: /bin/true
-809296::cycles:355486:100.00::
-$ perf stat --event cycles --big-num --field-separator=: /bin/true
--B option not supported with -x
-
- Usage: perf stat [<options>] [<command>]
-
-    -B, --big-num         print large numbers with thousands' separators
-    -x, --field-separator <separator>
-                          print counts with custom separator
-$ perf stat --event cycles --no-big-num --field-separator=: /bin/true
-795679::cycles:349824:100.00::
-$ perf config stat.big-num=true
-$ perf config stat.big-num
-stat.big-num=true
-$ perf stat --event cycles /bin/true
-
- Performance counter stats for '/bin/true':
-
-           823,114      cycles                                                      
-
-       0.000577809 seconds time elapsed
-
-       0.000643000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --big-num /bin/true
-
- Performance counter stats for '/bin/true':
-
-           778,824      cycles                                                      
-
-       0.000551584 seconds time elapsed
-
-       0.000603000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --no-big-num /bin/true
-
- Performance counter stats for '/bin/true':
-
-            789190      cycles                                                      
-
-       0.000574797 seconds time elapsed
-
-       0.000637000 seconds user
-       0.000000000 seconds sys
-
-
-$ perf stat --event cycles --field-separator=: /bin/true
-780405::cycles:343394:100.00::
-$ perf stat --event cycles --big-num --field-separator=: /bin/true
--B option not supported with -x
-
- Usage: perf stat [<options>] [<command>]
-
-    -B, --big-num         print large numbers with thousands' separators
-    -x, --field-separator <separator>
-                          print counts with custom separator
-$ perf stat --event cycles --no-big-num --field-separator=: /bin/true
-802656::cycles:353182:100.00::
-$ 
----
- tools/perf/Documentation/perf-config.txt |  5 +++++
- tools/perf/Documentation/perf-stat.txt   |  4 +++-
- tools/perf/builtin-stat.c                |  6 ++++++
- tools/perf/util/config.c                 | 13 +++++++++++++
- tools/perf/util/stat.h                   |  2 ++
- 5 files changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index f16d8a71d3f5..790003158648 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -667,6 +667,11 @@ convert.*::
- 		Limit the size of ordered_events queue, so we could control
- 		allocation size of perf data files without proper finished
- 		round events.
-+stat.*::
-+
-+	stat.big-num::
-+		(boolean) Change the default for "--big-num". To make
-+		"--no-big-num" the default, set "stat.big-num=false".
- 
- intel-pt.*::
- 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 3fb5028aef08..77081283856d 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -93,7 +93,9 @@ report::
- 
- -B::
- --big-num::
--        print large numbers with thousands' separators according to locale
-+        print large numbers with thousands' separators according to locale.
-+	Enabled by default. Use "--no-big-num" to disable.
-+	Default setting can be changed with "perf config stat.big-num=false".
- 
- -C::
- --cpu=::
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index e0c1ad23c768..c39305907940 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -821,10 +821,16 @@ static void sig_atexit(void)
- 	kill(getpid(), signr);
- }
- 
-+void perf_stat__set_big_num(int set)
-+{
-+	stat_config.big_num = (set != 0);
-+}
-+
- static int stat__set_big_num(const struct option *opt __maybe_unused,
- 			     const char *s __maybe_unused, int unset)
- {
- 	big_num_opt = unset ? 0 : 1;
-+	perf_stat__set_big_num(!unset);
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index ef38eba56ed0..8e65f1fa421f 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -17,6 +17,7 @@
- #include "util/event.h"  /* proc_map_timeout */
- #include "util/hist.h"  /* perf_hist_config */
- #include "util/llvm-utils.h"   /* perf_llvm_config */
-+#include "util/stat.h"  /* perf_stat__set_big_num */
- #include "build-id.h"
- #include "debug.h"
- #include "config.h"
-@@ -452,6 +453,15 @@ static int perf_ui_config(const char *var, const char *value)
- 	return 0;
- }
- 
-+static int perf_stat_config(const char *var, const char *value)
-+{
-+	if (!strcmp(var, "stat.big-num"))
-+		perf_stat__set_big_num(perf_config_bool(var, value));
-+
-+	/* Add other config variables here. */
-+	return 0;
-+}
-+
- int perf_default_config(const char *var, const char *value,
- 			void *dummy __maybe_unused)
- {
-@@ -473,6 +483,9 @@ int perf_default_config(const char *var, const char *value,
- 	if (strstarts(var, "buildid."))
- 		return perf_buildid_config(var, value);
- 
-+	if (strstarts(var, "stat."))
-+		return perf_stat_config(var, value);
-+
- 	/* Add other config variables here. */
- 	return 0;
- }
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..4bd6dc6cb6aa 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -132,6 +132,8 @@ struct perf_stat_config {
- 	struct rblist		 metric_events;
- };
- 
-+void perf_stat__set_big_num(int set);
-+
- void update_stats(struct stats *stats, u64 val);
- double avg_stats(struct stats *stats);
- double stddev_stats(struct stats *stats);
--- 
-2.18.2
-
+Hi Juri,
+
+On Wed, May 20, 2020 at 04:04:02PM +0200, Juri Lelli wrote:
+> After tasks enter or leave a runqueue (wakeup/block) SCHED full_nohz
+> dependency is checked (via sched_update_tick_dependency()). In case tick
+> can be stopped on a CPU (see sched_can_stop_tick() for details), SCHED
+> dependency for such CPU is cleared. However, this new information is not
+> used right away to actually stop the tick.
+> 
+> In CONFIG_PREEMPT systems booted with threadirqs option, sched clock
+> tick is serviced by an actual task (ksoftirqd corresponding to the CPU
+> where tick timer fired).
+
+I must confess I haven't tested threaded IRQs but I was
+pretty sure that the timer tick is always serviced on hardirq.
+
+Now the timer list callbacks are executed on softirqs. So if the
+tick itself, executed on hardirq, sees pending timers, it raise
+the softirq which wakes up ksoftirqd on forced irq thread mode
+while calling irq_exit(). Then tick_nohz_irq_exit() sees ksoftirqd
+and the current task on the runqueue, which together can indeed prevent
+from turning off the tick. But then the root cause is pending timer
+list callbacks.
+
+> So, in case a CPU was running a single task,
+> servicing the timer involves exiting full nozh mode. Problem at this
+> point is that we might lose chances to enter back into full nozh mode,
+> since info about ksoftirqd thread going back to sleep is not used (as
+> mentioned above).
+
+It should enter into nohz_full mode in the next tick, which is usually
+a reasonable delay. If you need guarantee that the tick is stopped before
+resuming userspace, you need a stronger machinery such as the task isolation
+patchset.
+
+Let's have a look at the trace below:
+
+> ksoftirqd/19-125   [019]   170.700754: softirq_entry:        vec=1 [action=TIMER]
+> ksoftirqd/19-125   [019]   170.700755: softirq_exit:         vec=1 [action=TIMER]
+> ksoftirqd/19-125   [019]   170.700756: softirq_entry:        vec=7 [action=SCHED]
+> ksoftirqd/19-125   [019]   170.700757: softirq_exit:         vec=7 [action=SCHED]
+> ksoftirqd/19-125   [019]   170.700759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
+>    sysjitter-2459  [019]   170.701740: local_timer_entry:    vector=236
+>    sysjitter-2459  [019]   170.701742: softirq_raise:        vec=1 [action=TIMER]
+
+See here the tick sees pending timer callbacks so it raises the timer softirq.
+
+>    sysjitter-2459  [019]   170.701743: softirq_raise:        vec=7 [action=SCHED]
+
+Oh and the scheduler tick activates the scheduler softirq as well.
+
+>    sysjitter-2459  [019]   170.701744: local_timer_exit:     vector=236
+>    sysjitter-2459  [019]   170.701747: sched_wakeup:         ksoftirqd/19:125 [120] success=1 CPU:019
+>    sysjitter-2459  [019]   170.701748: tick_stop:            success=0 dependency=SCHED
+>    sysjitter-2459  [019]   170.701749: irq_work_entry:       vector=246
+>    sysjitter-2459  [019]   170.701750: irq_work_exit:        vector=246
+>    sysjitter-2459  [019]   170.701751: tick_stop:            success=0 dependency=SCHED
+>    sysjitter-2459  [019]   170.701753: sched_switch:         sysjitter:2459 [120] R ==> ksoftirqd/19:125 [120]
+> ksoftirqd/19-125   [019]   170.701754: softirq_entry:        vec=1 [action=TIMER]
+> ksoftirqd/19-125   [019]   170.701756: softirq_exit:         vec=1 [action=TIMER]
+> ksoftirqd/19-125   [019]   170.701756: softirq_entry:        vec=7 [action=SCHED]
+> ksoftirqd/19-125   [019]   170.701758: softirq_exit:         vec=7 [action=SCHED]
+> ksoftirqd/19-125   [019]   170.701759: sched_switch:         ksoftirqd/19:125 [120] S ==> sysjitter:2459 [120]
+>    sysjitter-2459  [019]   170.702740: local_timer_entry:    vector=236
+>    sysjitter-2459  [019]   170.702742: softirq_raise:        vec=1 [action=TIMER]
+
+A new tick but we still have pending timer callback so we'll need to wakeup ksoftirqd
+again.
+
+I think you should trace timers and check which one is concerned here.
+
+Thanks.
