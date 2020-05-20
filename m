@@ -2,146 +2,88 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7ED207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B8B207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 08:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtRBYrRE"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qLA4joqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgETIid (ORCPT
+        id S1726805AbgETIjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 04:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
+        Wed, 20 May 2020 04:39:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETIic (ORCPT
+        with ESMTP id S1726403AbgETIjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 04:38:32 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C8E4C061A0E;
-        Wed, 20 May 2020 01:38:31 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 5so928130pjd.0;
-        Wed, 20 May 2020 01:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ap2gSx8RAWzWLVwD6Tc4OJXYQCR8SRmRpHbQHDWKYkk=;
-        b=QtRBYrREh6UAZguNh5JPzWfnGvJipSVvZbogY4alm4Gl1FezpDfJWx7zqsAfXnEXEd
-         95ExcEtZlS9ke5+OzibIBncJG30307vsBmgI0SjN0u+QYYvekQ4Cy1fGEmGKdsXAZbE6
-         NGa6SKag7CGmMoTn61ecSuT7cIRsh+l+0yBRxQZHw0VWy/qKFczridL7mIYWsFw1EjQw
-         WyqLHCswhnbjESTb7aRf4ZYOzrn6+ynTvVwBHzTsx52nIUetkLwDTcQ4SBxcN2cvtubz
-         gyWXu2jHaAAPcnl3R8YgcwuwrohOKs7yf5BXIUKEcBSzJ8Svlz3x0TzbHUspxIGw+xSc
-         3pNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ap2gSx8RAWzWLVwD6Tc4OJXYQCR8SRmRpHbQHDWKYkk=;
-        b=ST1DGPki4w+PGKGtuM9PUn+sfFVrbYWz/etyiKIxYbtZMQrhEab1Ka4ZbjxriAHKbb
-         S8eedFH5ogW7HufBwFH8hglnQxqNAwvG57aQtDI28brveaqEPVwnfLninFbQ+6FbCpGm
-         oVX8wQiRzGIyAl98AcGUnj98dAbh8dcNE1d/NTxWMP/IYYuQM9IdYjvexAFFjy/d3yck
-         3qQzRV9i1M+cOjx2ksN8+8rA8AiZz6U6uHzngyG375yoMvRPAncRUTVXzoI//AlWSA78
-         ZTA52hqaeJI/LuYBM+rlwJCpHXmA0dW/R5OS00dLMKkuV7xaeFOD/KH/a5sfcFW12hbm
-         gijw==
-X-Gm-Message-State: AOAM530sbF44nr+04us7NdoibKx9KHxShkYlVu3C4b6+vHRE4LJknAr4
-        7Y/h0rPXbg66GhReJ19WDZh/mbgwNh8=
-X-Google-Smtp-Source: ABdhPJz1eo/jZw0ES7EKGj6KcXHMzOap+J2odaB8TyYyC4lm1IKfgce3VTuDGG2hac2nE5vAfjYQWg==
-X-Received: by 2002:a17:902:7802:: with SMTP id p2mr3652424pll.38.1589963910986;
-        Wed, 20 May 2020 01:38:30 -0700 (PDT)
-Received: from bj616583pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 206sm1552037pfy.97.2020.05.20.01.38.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 01:38:30 -0700 (PDT)
-From:   gengcixi@gmail.com
-To:     oberpar@linux.ibm.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jslaby@suse.com,
-        gregkh@linuxfoundation.org, orsonzhai@gmail.com,
-        zhang.lyra@gmail.com
-Cc:     Cixi Geng <cixi.geng1@unisoc.com>
-Subject: [RFC][PATCH V2] GCOV: profile by modules
-Date:   Wed, 20 May 2020 16:38:21 +0800
-Message-Id: <20200520083821.9602-1-gengcixi@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 20 May 2020 04:39:24 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 483ABC061A0E;
+        Wed, 20 May 2020 01:39:24 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0bab00d907527c3c1e360d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ab00:d907:527c:3c1e:360d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9037A1EC0338;
+        Wed, 20 May 2020 10:39:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589963962;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YX9Pp+HGX2R8KL/HZG2RZHgK1Ctz9Fvmsyms+8ol70E=;
+        b=qLA4joqtuBMCHg5cXvQ4cREAOohc95SEb+ExpzLag8qTlOve3Dm8KYCQpqSmvzx71S1cU7
+        QOV8tPBXUKpSYUvUiVqTauAxE/EA921kK8zsjJIsWSdFUH7uOZ3xM/aeCzlTRcyXUlBlN9
+        Tj4O6kdPTUIWncMNmZFRye/GrgHjwiY=
+Date:   Wed, 20 May 2020 10:39:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 38/75] x86/sev-es: Add SEV-ES Feature Detection
+Message-ID: <20200520083916.GB1457@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-39-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-39-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cixi Geng <cixi.geng1@unisoc.com>
+On Tue, Apr 28, 2020 at 05:16:48PM +0200, Joerg Roedel wrote:
+> +bool sev_es_active(void)
+> +{
+> +	return !!(sev_status & MSR_AMD64_SEV_ES_ENABLED);
+> +}
+> +EXPORT_SYMBOL_GPL(sev_es_active);
 
----
-Replace symbol GCOV_PROFILE_MODULES with GCOV_PROFILE_PREREQS
----
-The CONFIG_GCOV_PROFILE_ALL will compile kernel by profiling entire
-kernel which will lead to kernel run slower.Use GCOV_PROFILE_PREREQS
-to control part of the kernel modules to open gcov.
+I don't see this being used in modules anywhere in the patchset. Or am I
+missing something?
 
-Only add SERIAL_GCOV for an example.
-
-Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
----
- drivers/tty/serial/Kconfig  |  6 ++++++
- drivers/tty/serial/Makefile |  1 +
- kernel/gcov/Kconfig         | 14 ++++++++++++++
- 3 files changed, 21 insertions(+)
-
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index adf9e80e7dc9..964df1a2989c 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1566,3 +1566,9 @@ endmenu
- 
- config SERIAL_MCTRL_GPIO
- 	tristate
-+
-+config SERIAL_GCOV
-+       bool "open gcov for serial"
-+       depends on GCOV_PROFILE_PREREQS
-+       help
-+         Say Y here to enable gcov in serial.
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index d056ee6cca33..7be1202286d2 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -2,6 +2,7 @@
- #
- # Makefile for the kernel serial device drivers.
- #
-+GCOV_PROFILE := $(CONFIG_SERIAL_GCOV)
- 
- obj-$(CONFIG_SERIAL_CORE) += serial_core.o
- 
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 3941a9c48f83..91cc8f3c7c43 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -51,6 +51,20 @@ config GCOV_PROFILE_ALL
- 	larger and run slower. Also be sure to exclude files from profiling
- 	which are not linked to the kernel image to prevent linker errors.
- 
-+config GCOV_PROFILE_PREREQS
-+	bool "Profile Kernel subsytem"
-+	depends on !COMPILE_TEST
-+	depends on GCOV_KERNEL
-+	default n
-+	help
-+	This options activates profiling for the specified kernel modules.
-+
-+	If unsure, say N.
-+
-+	When some modules need Gcov data, enable this config, then configure
-+	with gcov on the corresponding modules configs.The directories or files
-+	of these modules will be added profiling flags after kernel compile.
-+
- choice
- 	prompt "Specify GCOV format"
- 	depends on GCOV_KERNEL
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
