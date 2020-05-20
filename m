@@ -2,122 +2,102 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95620C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC24C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A13207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092B6207F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 10:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="ThEl8Oxv"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="GcyRcfEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgETKLo (ORCPT
+        id S1726747AbgETKMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 06:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44030 "EHLO
+        Wed, 20 May 2020 06:12:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgETKLn (ORCPT
+        with ESMTP id S1726560AbgETKMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 06:11:43 -0400
-Received: from mail-lf1-x163.google.com (mail-lf1-x163.google.com [IPv6:2a00:1450:4864:20::163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72900C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:11:43 -0700 (PDT)
-Received: by mail-lf1-x163.google.com with SMTP id h188so1949264lfd.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:11:43 -0700 (PDT)
+        Wed, 20 May 2020 06:12:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8738AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:12:19 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k13so2558153wrx.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 03:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=yp51Q0sOB5VzCHGDErAd468gZKoo7fbqGFyeoX1zhRY=;
-        b=ThEl8Oxvvu2EpOgExjI1uw9IJaWrOTyN6TeoIOAx66gl8ZXbMJfUAKKMeLsAnRwDKe
-         9+61cEz99V0JnrapuBITGj08OB2JjzLIQmmHGMvzul/KNjYnomamrTG45VavwijuJAaX
-         fnTCW+XQdTt7EzgQQitb7oA966p5UrUDMKCFjcOHlPn8zuejMQ/l6Oko6ApauFyyJKyD
-         /OnfLeowMAHn9WlDNpsbv/K4GwI8Tk0t9MfetoG5KNcPHHJtLbIG4GKXqS/5gjBOQe/H
-         YDmm+DvGX+3VBGHnrFJdhzqGZFyOX/d4IeO70/MdrJtL6P//p4z6i7yuesLlLI8yoZsV
-         D1Uw==
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iBcqQ8zxIDDNjlNpFLw9XT6VQWod6ur15qrla/UFJIM=;
+        b=GcyRcfEjdfbUfF8SYp6YXFCUiSmHxZEnby3pNjehHWcDBnLM95xiIR946clqhMIo8v
+         q+v5u3uDiDhe8BwtjxlihKWI+8U1pWzeM5cAq/iINiMV6zxZz02aD80JLlLBqtdpOr6i
+         wADkaP6IfmQ9s+UGfWXE0NcUcb45UtiO5o1CH2/VfQs3ReRWTB16/pQ8rSpnVwBHlAHS
+         u7oV2A5AJ6a62eVFO4EYeZjkfGG4F2rfUpPXPh7KKl/I8GnbAZyKp3mlRc5DePAyoJ6s
+         uGDQT5aedJV3pbX0QlcaREnlFnSIG4Dm0ONnZ4ppugikoVr/9w451geilvvnMm3tREOk
+         0PPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yp51Q0sOB5VzCHGDErAd468gZKoo7fbqGFyeoX1zhRY=;
-        b=Ly5s3FslVxFxxZghrZPWjXG4ZL+2/SGTHEHCFv1tyHYnN3v/J1+dxCNS1ifuVgp23y
-         ZaQrITqDEBPTtZgZSyyOuS26PxF/rfTQ6bUffcoZRt1XXC6dDOxmFXeedkj0bXOa3ovD
-         cmDeu563NIMmKYriIdxOHPNHWcwj5cLFarRPWCe7sWAdHq3+WSWaHCgJ5w7bQpIzRP7J
-         zvuG4OmUsZzASosOAfYJ+cflzZRKWj38yIFTS13tzWotCaBJH447dUIV7SYovGB1ReAD
-         t3Ng3nfTqv1fV3Hn9Oo2DJxVkGmOpxDKATQsCTzv5F+zrgERummSW5Fj8iQJhPiSA72s
-         idTw==
-X-Gm-Message-State: AOAM5321MhQkK/RkC0CuYZKGEVUH+slzugbu/uLc/WI02iI1NDp6dZoH
-        x3A0LK/OsRIdlPCCs/Yn5/8S2A8Iaat0EbwYdjNnGN5IphLU
-X-Google-Smtp-Source: ABdhPJy2NKKbUt6o8dwz2I3/kDRRKV+s2TFbEoOUyNC+W7l4M+gSyIhS7fKhPsOMazs4jPjQDBaXZWKDlgm3
-X-Received: by 2002:a19:3855:: with SMTP id d21mr2248332lfj.156.1589969501504;
-        Wed, 20 May 2020 03:11:41 -0700 (PDT)
-Received: from mail.besancon.parkeon.com ([185.149.63.251])
-        by smtp-relay.gmail.com with ESMTPS id a25sm12902lfl.26.2020.05.20.03.11.41
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 20 May 2020 03:11:41 -0700 (PDT)
-X-Relaying-Domain: flowbird.group
-Received: from [172.16.13.226] (port=44934 helo=PC12445-BES.dynamic.besancon.parkeon.com)
-        by mail.besancon.parkeon.com with esmtp (Exim 4.71)
-        (envelope-from <martin.fuzzey@flowbird.group>)
-        id 1jbLhM-0001dH-QH; Wed, 20 May 2020 12:11:40 +0200
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     stable@vger.kernel.org,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        etnaviv@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/etnaviv: fix memory leak when mapping prime imported buffers
-Date:   Wed, 20 May 2020 12:10:02 +0200
-Message-Id: <1589969500-6554-1-git-send-email-martin.fuzzey@flowbird.group>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iBcqQ8zxIDDNjlNpFLw9XT6VQWod6ur15qrla/UFJIM=;
+        b=sSrOIA3MxePrFFZ1qWvXVEFGcE74pVq4vwj/TejCKfsz0zQMrIhH9SSavd4RpLM3wO
+         b37NejIpBapEa/Z66i84lN7GOrCkYwYsMIXaCtbu5qjeazpL6Yd1Qk1IhFEi10iraIMG
+         d6t9Gk8pkURg3CMXqXcuqqyYdWBCP7S5bW3ZF7oMUl9r/AcsleWk/0tg9d6fTiyeDxuQ
+         eOFh4wNQ7knycZ6jImeDXSO1Y6WwDJxSNYjZCmUFsM9wCYPqqFc9mqv6+vZ0LQ22pZHe
+         a55jIei9OXJDcEBEnOvXSvNKl4ojGOev+5zdlPlYv82To6EW90gcqSNbhzXzPI8OEVne
+         0hkw==
+X-Gm-Message-State: AOAM531A0AcgD83uwZsHKVAJMUFVSV1rj8B5uHzQKnsITgcvxMD7dNWo
+        7mncoGT5qFcvEHJVLYr45LfWWDW6buc6hKroMtzz2bU=
+X-Google-Smtp-Source: ABdhPJypgX0CYZ1BPyRbnRWRWfBgtSJZTe/P5PsSECo15WsGXB6uu7WRt6MROF7Juxl784icOyfURtWML4iF6b7GMoM=
+X-Received: by 2002:adf:cc81:: with SMTP id p1mr3338025wrj.192.1589969538224;
+ Wed, 20 May 2020 03:12:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200520040354.3e619918@canb.auug.org.au> <86962843-e786-4a3f-0b85-1e06fbdbd76a@infradead.org>
+In-Reply-To: <86962843-e786-4a3f-0b85-1e06fbdbd76a@infradead.org>
+From:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
+Date:   Wed, 20 May 2020 12:12:07 +0200
+Message-ID: <CAHg0Huww=oyj0DSuLSKOrJp5vtG_2xLLqM27MAHWNJdLWNeB3A@mail.gmail.com>
+Subject: Re: linux-next: Tree for May 19 (block/rnbd/)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using mmap() on a prime imported buffer allocated by a
-different driver (such as imx-drm) the later munmap() does
-not correctly decrement the refcount of the original enaviv_gem_object,
-leading to a leak.
+Hi Randy,
 
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc: stable@vger.kernel.org
----
- drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+On Tue, May 19, 2020 at 8:59 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 5/19/20 11:03 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > News: there will be no linux-next release tomorrow.
+> >
+> > Changes since 20200518:
+> >
+>
+> seen on i386:
+>
+> when CONFIG_MODULES is not set/enabled:
+>
+> ../drivers/block/rnbd/rnbd-clt-sysfs.c: In function 'rnbd_clt_remove_dev_symlink':
+> ../drivers/block/rnbd/rnbd-clt-sysfs.c:435:39: error: implicit declaration of function 'module_is_live'; did you mean 'module_driver'? [-Werror=implicit-function-declaration]
+>   if (strlen(dev->blk_symlink_name) && module_is_live(THIS_MODULE))
+>                                        ^~~~~~~~~~~~~~
+>                                        module_driver
+>
+>
+> --
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-index f24dd21..28a01b8 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-@@ -93,7 +93,25 @@ static void *etnaviv_gem_prime_vmap_impl(struct etnaviv_gem_object *etnaviv_obj)
- static int etnaviv_gem_prime_mmap_obj(struct etnaviv_gem_object *etnaviv_obj,
- 		struct vm_area_struct *vma)
- {
--	return dma_buf_mmap(etnaviv_obj->base.dma_buf, vma, 0);
-+	int ret;
-+
-+	ret = dma_buf_mmap(etnaviv_obj->base.dma_buf, vma, 0);
-+
-+	/* drm_gem_mmap_obj() has already been called before this function
-+	 * and has incremented our refcount, expecting it to be decremented
-+	 * on unmap() via drm_gem_vm_close().
-+	 * However dma_buf_mmap() invokes drm_gem_cma_prime_mmap()
-+	 * that ends up updating the vma->vma_private_data to point to the
-+	 * dma_buf's gem object.
-+	 * Hence our gem object here will not have its refcount decremented
-+	 * when userspace does unmap().
-+	 * So decrement the refcount here to avoid a memory leak if the dma
-+	 * buf mapping was successful.
-+	 */
-+	if (!ret)
-+		drm_gem_object_put_unlocked(&etnaviv_obj->base);
-+
-+	return ret;
- }
- 
- static const struct etnaviv_gem_ops etnaviv_gem_prime_ops = {
--- 
-1.9.1
-
+Looking into this, thank you
