@@ -2,152 +2,119 @@ Return-Path: <SRS0=sqqi=7C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC23C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D17C720709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hN1wHufP"
+	by mail.kernel.org (Postfix) with ESMTP id AC4BA20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 May 2020 19:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgETTYY (ORCPT
+        id S1726853AbgETTZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 15:24:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51999 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726691AbgETTYX (ORCPT
+        Wed, 20 May 2020 15:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbgETTZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 15:24:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590002661;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SHISqFlqCMxvBm5+qETPogyLCEcwxqXzDOwnrmZ88k0=;
-        b=hN1wHufP1oeRLChaUAKwA7l4OAiJsaSx4InVRcFAy166XOQPutWEoOj3oPm5+NZnt4CEWo
-        vS4k2V9MAzb6fFJdKSPovaP1QSWXTOwmIKGD+rTlKNt0sCB6ySwjHJyS8jQqbWapksfJ7Z
-        OV9N7Lm9eBtIMo6W08nrDEsYaumuYxc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-Sxjlh7nDMouZhFlG0GrY4w-1; Wed, 20 May 2020 15:24:19 -0400
-X-MC-Unique: Sxjlh7nDMouZhFlG0GrY4w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CEA71A0C05;
-        Wed, 20 May 2020 19:24:18 +0000 (UTC)
-Received: from starship (unknown [10.35.206.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 596B85C1BE;
-        Wed, 20 May 2020 19:24:17 +0000 (UTC)
-Message-ID: <6b8674fa647d3b80125477dc344581ba7adfb931.camel@redhat.com>
-Subject: Re: [PATCH 00/24] KVM: nSVM: event fixes and migration support
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, Joerg Roedel <jroedel@suse.de>
-Date:   Wed, 20 May 2020 22:24:16 +0300
-In-Reply-To: <20200520172145.23284-1-pbonzini@redhat.com>
-References: <20200520172145.23284-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 20 May 2020 15:25:09 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF9DC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 12:25:09 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbUKd-00017y-BU; Wed, 20 May 2020 21:24:47 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B925D100C99; Wed, 20 May 2020 21:24:46 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V6 12/37] x86/entry: Provide idtentry_entry/exit_cond_rcu()
+In-Reply-To: <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+References: <20200515234547.710474468@linutronix.de> <20200515235125.628629605@linutronix.de> <CALCETrWnkuwvTuJKr8Vuecgr_q+1ReBDrTv4XOqGaw7-ZpEeQQ@mail.gmail.com> <87ftbv7nsd.fsf@nanos.tec.linutronix.de> <87a7237k3x.fsf@nanos.tec.linutronix.de> <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com> <874ksb7hbg.fsf@nanos.tec.linutronix.de> <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com> <20200520022353.GN2869@paulmck-ThinkPad-P72> <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com> <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com>
+Date:   Wed, 20 May 2020 21:24:46 +0200
+Message-ID: <87y2pmv281.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-20 at 13:21 -0400, Paolo Bonzini wrote:
-> Large parts of this series were posted before (patches 1, 3-4-5 and
-> 6-7-8-12-13-14).  This is basically what I'd like to get into 5.8 as
-> far as nested SVM is concerned; the fix for exception vmexits is related
-> to migration support, because it gets rid of the exit_required flag
-> and therefore consolidates the SVM migration format.
-> 
-> There are a couple more bugfixes (2 and 21), the latter of which actually
-> affects VMX as well.
-> 
-> The SVM migration data consists of:
-> 
-> - the GIF state
-> 
-> - the guest mode and nested-run-pending flags
-> 
-> - the host state from before VMRUN
-> 
-> - the nested VMCB control state
-> 
-> The last two items are conveniently packaged in VMCB format.  Compared
-> to the previous prototype, HF_HIF_MASK is removed since it is part of
-> "the host state from before VMRUN".
-> 
-> The patch has been tested with the QEMU changes after my signature,
-> where it also fixes system_reset while x86/svm.flat runs.
-> 
-> Paolo
-> 
-> Paolo Bonzini (24):
->   KVM: nSVM: fix condition for filtering async PF
->   KVM: nSVM: leave ASID aside in copy_vmcb_control_area
->   KVM: nSVM: inject exceptions via svm_check_nested_events
->   KVM: nSVM: remove exit_required
->   KVM: nSVM: correctly inject INIT vmexits
->   KVM: nSVM: move map argument out of enter_svm_guest_mode
->   KVM: nSVM: extract load_nested_vmcb_control
->   KVM: nSVM: extract preparation of VMCB for nested run
->   KVM: nSVM: clean up tsc_offset update
->   KVM: nSVM: pass vmcb_control_area to copy_vmcb_control_area
->   KVM: nSVM: remove trailing padding for struct vmcb_control_area
->   KVM: nSVM: save all control fields in svm->nested
->   KVM: nSVM: do not reload pause filter fields from VMCB
->   KVM: nSVM: remove HF_VINTR_MASK
->   KVM: nSVM: remove HF_HIF_MASK
->   KVM: nSVM: split nested_vmcb_check_controls
->   KVM: nSVM: do all MMU switch work in init/uninit functions
->   KVM: nSVM: leave guest mode when clearing EFER.SVME
->   KVM: nSVM: extract svm_set_gif
->   KVM: MMU: pass arbitrary CR0/CR4/EFER to kvm_init_shadow_mmu
->   KVM: x86: always update CR3 in VMCB
->   uaccess: add memzero_user
->   selftests: kvm: add a SVM version of state-test
->   KVM: nSVM: implement KVM_GET_NESTED_STATE and KVM_SET_NESTED_STATE
-> 
->  arch/x86/include/asm/kvm_host.h               |   2 -
->  arch/x86/include/asm/svm.h                    |   9 +-
->  arch/x86/include/uapi/asm/kvm.h               |  17 +-
->  arch/x86/kvm/cpuid.h                          |   5 +
->  arch/x86/kvm/irq.c                            |   1 +
->  arch/x86/kvm/mmu.h                            |   2 +-
->  arch/x86/kvm/mmu/mmu.c                        |  14 +-
->  arch/x86/kvm/svm/nested.c                     | 525 +++++++++++-------
->  arch/x86/kvm/svm/svm.c                        | 107 ++--
->  arch/x86/kvm/svm/svm.h                        |  32 +-
->  arch/x86/kvm/vmx/nested.c                     |   5 -
->  arch/x86/kvm/vmx/vmx.c                        |   5 +-
->  arch/x86/kvm/x86.c                            |   3 +-
->  include/linux/uaccess.h                       |   1 +
->  lib/usercopy.c                                |  63 +++
->  .../testing/selftests/kvm/x86_64/state_test.c |  65 ++-
->  16 files changed, 549 insertions(+), 307 deletions(-)
-> 
+Andy Lutomirski <luto@kernel.org> writes:
+> On Wed, May 20, 2020 at 8:36 AM Andy Lutomirski <luto@kernel.org> wrote:
+>     if (user_mode(regs)) {
+>         enter_from_user_mode();
+>     } else {
+>         if (!__rcu_is_watching()) {
+>             /*
+>              * If RCU is not watching then the same careful
+>              * sequence vs. lockdep and tracing is required.
+>              *
+>              * This only happens for IRQs that hit the idle loop, and
+>              * even that only happens if we aren't using the sane
+>              * MWAIT-while-IF=0 mode.
+>              */
+>             lockdep_hardirqs_off(CALLER_ADDR0);
+>             rcu_irq_enter();
+>             instrumentation_begin();
+>             trace_hardirqs_off_prepare();
+>             instrumentation_end();
+>             return true;
+>         } else {
+>             /*
+>              * If RCU is watching then the combo function
+>              * can be used.
+>              */
+>             instrumentation_begin();
+>             trace_hardirqs_off();
+>             rcu_tickle();
+>             instrumentation_end();
+>         }
+>     }
+>     return false;
+>
+> This is exactly what you have except that the cond_rcu part is gone
+> and I added rcu_tickle().
+>
+> Paul, the major change here is that if an IRQ hits normal kernel code
+> (i.e. code where RCU is watching and we're not in an EQS), the IRQ
+> won't call rcu_irq_enter() and rcu_irq_exit().  Instead it will call
+> rcu_tickle() on entry and nothing on exit.  Does that cover all the
+> bases?
 
-I just smoke-tested this patch series on my system.
+Just chatted with Paul on IRC and he thinks this should work, but he's
+not sure whether it's actually sane :)
 
-Patch 24 doesn't apply cleanly on top of kvm/queue, I appplied it manually,
-due to missing KVM_STATE_NESTED_MTF_PENDING bit
+Thanks,
 
-Also patch 22 needes ALIGN_UP which is not on mainline.
-Probably in linux-next?
-
-With these fixes, I don't see #DE exceptions on a nested guest I try to run
-however it still hangs, right around the time it tries to access PS/2 keyboard/mouse.
-
-Best regards,
-	Maxim Levitsky
-
+        tglx
