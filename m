@@ -2,137 +2,169 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C3EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2AF2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B77020721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590064584;
+	bh=kvXZ5Ar3iD8sz53DrMiw67s4i3oP26P5U8RIKu85m7w=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sLdLMRzawPh6LLTFzZkKZzU/Cl4gbvBjI9w7ri9XlY4zH2TMcAAkQVNs3OtRn6ukF
+	 oPcbwzhV5AXcWo6j4xUUa96ZXUfgUve/nnBzAxpX21Hz/PiI2tXA2Pm9gInsI21N25
+	 tA0ayZDaGnupu6wCwyan5qGZySH/FyRKlW0ndM94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgEUMfi (ORCPT
+        id S1729366AbgEUMgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:35:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:45608 "EHLO foss.arm.com"
+        Thu, 21 May 2020 08:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728133AbgEUMfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:35:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 929EF30E;
-        Thu, 21 May 2020 05:35:36 -0700 (PDT)
-Received: from [192.168.0.110] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3591B3F305;
-        Thu, 21 May 2020 05:35:34 -0700 (PDT)
-Subject: Re: [PATCH 0/3] arm64: perf: Add support for Perf NMI interrupts
-To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lecopzer Chen <lecopzer@gmail.com>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        Jian-Lin Chen <lecopzer.chen@mediatek.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "yj.chiang@mediatek.com" <yj.chiang@mediatek.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linuxarm <linuxarm@huawei.com>
-References: <20200516124857.75004-1-lecopzer@gmail.com>
- <CAFA6WYNwp+_ENiS8QDao5+RXyt5ofJZyq6c5CKG_d0CNEmBNYg@mail.gmail.com>
- <CANr2M19unLW8n0P2DiOYEZ=GZcaD-L2ygPht_5HNtNZ6e4h6xQ@mail.gmail.com>
- <20200518104524.GA1224@C02TD0UTHF1T.local>
- <a9002b5e-aec5-b6e0-7174-87b93351d60c@arm.com>
- <8a1022c0-da2b-c83d-81cd-44b11149496b@arm.com>
- <B926444035E5E2439431908E3842AFD24B2728@DGGEMI525-MBS.china.huawei.com>
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-Message-ID: <1d615c32-89f0-d9ba-43db-3d90c7d53e15@arm.com>
-Date:   Thu, 21 May 2020 13:36:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1728133AbgEUMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:36:22 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DD3E2070A;
+        Thu, 21 May 2020 12:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590064581;
+        bh=kvXZ5Ar3iD8sz53DrMiw67s4i3oP26P5U8RIKu85m7w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rWCdezUNKHzqfIMCzRYS+XVS5/oyB7Bb1P0TzT1i+QsqYY41xOuR0eRhrY0IrUWEK
+         CyWN/a2Ra2tYZUMoYN8HOWW0jHEAKnZwUpircKK1XnSq+kEE2Uu1Od28c3lt+yWjK2
+         wICBqFuF61FHmyefppz+GySgXfPqCr4oiEL0MNpU=
+Received: by pali.im (Postfix)
+        id 98A6734B; Thu, 21 May 2020 14:36:19 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mwifiex: Add support for NL80211_ATTR_MAX_AP_ASSOC_STA
+Date:   Thu, 21 May 2020 14:35:59 +0200
+Message-Id: <20200521123559.29028-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <B926444035E5E2439431908E3842AFD24B2728@DGGEMI525-MBS.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+SD8997 firmware sends TLV_TYPE_MAX_CONN with struct hw_spec_max_conn to
+inform kernel about maximum number of p2p connections and stations in AP
+mode.
 
-On 5/21/20 4:00 AM, Song Bao Hua (Barry Song) wrote:
+During initialization of SD8997 wifi chip kernel prints warning:
 
->
->> -----Original Message-----
->> From: linux-arm-kernel [mailto:linux-arm-kernel-bounces@lists.infradead.org]
->> On Behalf Of Alexandru Elisei
->> Sent: Wednesday, May 20, 2020 10:31 PM> 
->> Hi,
->>
->> On 5/18/20 12:17 PM, Alexandru Elisei wrote:
->>> Hi,
->>>
->>> On 5/18/20 11:45 AM, Mark Rutland wrote:
->>>> Hi all,
->>>>
->>>> On Mon, May 18, 2020 at 02:26:00PM +0800, Lecopzer Chen wrote:
->>>>> HI Sumit,
->>>>>
->>>>> Thanks for your information.
->>>>>
->>>>> I've already implemented IPI (same as you did [1], little difference
->>>>> in detail), hardlockup detector and perf in last year(2019) for
->>>>> debuggability.
->>>>> And now we tend to upstream to reduce kernel maintaining effort.
->>>>> I'm glad if someone in ARM can do this work :)
->>>>>
->>>>> Hi Julien,
->>>>>
->>>>> Does any Arm maintainers can proceed this action?
->>>> Alexandru (Cc'd) has been rebasing and reworking Julien's patches,
->>>> which is my preferred approach.
->>>>
->>>> I understand that's not quite ready for posting since he's
->>>> investigating some of the nastier subtleties (e.g. mutual exclusion
->>>> with the NMI), but maybe we can put the work-in-progress patches
->>>> somewhere in the mean time.
->>>>
->>>> Alexandru, do you have an idea of what needs to be done, and/or when
->>>> you expect you could post that?
->>> I'm currently working on rebasing the patches on top of 5.7-rc5, when
->>> I have something usable I'll post a link (should be a couple of days).
->>> After that I will address the review comments, and I plan to do a
->>> thorough testing because I'm not 100% confident that some of the
->>> assumptions around the locks that were removed are correct. My guess is
->> this will take a few weeks.
->>
->> Pushed a WIP branch on linux-arm.org [1]:
->>
->> git clone -b WIP-pmu-nmi git://linux-arm.org/linux-ae
->>
->> Practically untested, I only did perf record on a defconfig kernel running on the
->> model.
->>
->> [1]
->> http://www.linux-arm.org/git?p=linux-ae.git;a=shortlog;h=refs/heads/WIP-pm
->> u-nmi
-> Fortunately, it does work. I used this tree to perf annotate arm_smmu_cmdq_issue_cmdlist() which
-> is completely disabling IRQ. Luckily, it reports correct data. Before that, it reported all time was spent by
-> the code which enabled IRQ .
+  mwifiex_sdio mmc0:0001:1: Unknown GET_HW_SPEC TLV type: 0x217
 
-That's good news that it works for you, thanks for letting me know.
+This patch adds support for parsing TLV_TYPE_MAX_CONN (0x217) and sets
+appropriate cfg80211 member 'max_ap_assoc_sta' from retrieved structure.
 
-Alex
+It allows userspace to retrieve NL80211_ATTR_MAX_AP_ASSOC_STA attribute.
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c |  5 +++++
+ drivers/net/wireless/marvell/mwifiex/cmdevt.c   | 12 ++++++++++++
+ drivers/net/wireless/marvell/mwifiex/fw.h       |  8 ++++++++
+ drivers/net/wireless/marvell/mwifiex/main.h     |  1 +
+ 4 files changed, 26 insertions(+)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 12bfd653a..7998e91c9 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -4339,6 +4339,11 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
+ 		wiphy->iface_combinations = &mwifiex_iface_comb_ap_sta;
+ 	wiphy->n_iface_combinations = 1;
+ 
++	if (adapter->max_sta_conn > adapter->max_p2p_conn)
++		wiphy->max_ap_assoc_sta = adapter->max_sta_conn;
++	else
++		wiphy->max_ap_assoc_sta = adapter->max_p2p_conn;
++
+ 	/* Initialize cipher suits */
+ 	wiphy->cipher_suites = mwifiex_cipher_suites;
+ 	wiphy->n_cipher_suites = ARRAY_SIZE(mwifiex_cipher_suites);
+diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+index 589cc5eb1..d068b9075 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
++++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+@@ -1495,6 +1495,7 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
+ 	struct mwifiex_adapter *adapter = priv->adapter;
+ 	struct mwifiex_ie_types_header *tlv;
+ 	struct hw_spec_api_rev *api_rev;
++	struct hw_spec_max_conn *max_conn;
+ 	u16 resp_size, api_id;
+ 	int i, left_len, parsed_len = 0;
+ 
+@@ -1604,6 +1605,17 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
+ 					break;
+ 				}
+ 				break;
++			case TLV_TYPE_MAX_CONN:
++				max_conn = (struct hw_spec_max_conn *)tlv;
++				adapter->max_p2p_conn = max_conn->max_p2p_conn;
++				adapter->max_sta_conn = max_conn->max_sta_conn;
++				mwifiex_dbg(adapter, INFO,
++					    "max p2p connections: %u\n",
++					    adapter->max_p2p_conn);
++				mwifiex_dbg(adapter, INFO,
++					    "max sta connections: %u\n",
++					    adapter->max_sta_conn);
++				break;
+ 			default:
+ 				mwifiex_dbg(adapter, FATAL,
+ 					    "Unknown GET_HW_SPEC TLV type: %#x\n",
+diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+index 6f86f5b96..8047e3078 100644
+--- a/drivers/net/wireless/marvell/mwifiex/fw.h
++++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+@@ -220,6 +220,7 @@ enum MWIFIEX_802_11_PRIVACY_FILTER {
+ #define TLV_TYPE_BSS_MODE           (PROPRIETARY_TLV_BASE_ID + 206)
+ #define TLV_TYPE_RANDOM_MAC         (PROPRIETARY_TLV_BASE_ID + 236)
+ #define TLV_TYPE_CHAN_ATTR_CFG      (PROPRIETARY_TLV_BASE_ID + 237)
++#define TLV_TYPE_MAX_CONN           (PROPRIETARY_TLV_BASE_ID + 279)
+ 
+ #define MWIFIEX_TX_DATA_BUF_SIZE_2K        2048
+ 
+@@ -2388,4 +2389,11 @@ struct mwifiex_opt_sleep_confirm {
+ 	__le16 action;
+ 	__le16 resp_ctrl;
+ } __packed;
++
++struct hw_spec_max_conn {
++	struct mwifiex_ie_types_header header;
++	u8 max_p2p_conn;
++	u8 max_sta_conn;
++} __packed;
++
+ #endif /* !_MWIFIEX_FW_H_ */
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
+index afaffc325..5923c5c14 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.h
++++ b/drivers/net/wireless/marvell/mwifiex/main.h
+@@ -1022,6 +1022,7 @@ struct mwifiex_adapter {
+ 	bool ext_scan;
+ 	u8 fw_api_ver;
+ 	u8 key_api_major_ver, key_api_minor_ver;
++	u8 max_p2p_conn, max_sta_conn;
+ 	struct memory_type_mapping *mem_type_mapping_tbl;
+ 	u8 num_mem_types;
+ 	bool scan_chan_gap_enabled;
+-- 
+2.20.1
 
