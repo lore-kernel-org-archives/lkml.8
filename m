@@ -2,208 +2,107 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7234AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3605120748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:00:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YfIck0fB"
+	by mail.kernel.org (Postfix) with ESMTP id A192020748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbgEUWAt (ORCPT
+        id S1730479AbgEUWBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbgEUWAs (ORCPT
+        Thu, 21 May 2020 18:01:49 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:52852 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729308AbgEUWBs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:00:48 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7EC4C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:00:48 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id z5so2564925ybg.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=aKUpBFPk5Djn/rrzBrR97m/tGbj33/YMXzpAfYT/Utg=;
-        b=YfIck0fBt7ZzzuTMrr5pga7iKwpjiyj+4n/07wlqGVK9mgcIabVUzrNa4nO4j7OtP+
-         reVeuIbakaXGmwIynLZ8dYPg7eMq9ZhCF/fwU1gHuwru6vq+uvWVsJBgo6yQMRiQk2VO
-         gqlaLQwxWr15H6Wi/Tv+vEnL7/nTmz3K3rJd0V0y7aMEd+JNBAK8uxalc8ZSqzD2IPmn
-         0nrb3LhcgjJ0LpMYcWNfSsswtnXMzh99mH1u8/c13xBp/9b7aH1bGNncdV/T2PxPgsPE
-         bER9J08JrOXSQKnziH2/fuMX4ZscwDwa2XrjoN8noC1kFcSMRdJdngd1QGCUTqQOpJnE
-         758w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=aKUpBFPk5Djn/rrzBrR97m/tGbj33/YMXzpAfYT/Utg=;
-        b=Btgt7wkYcNDwdxgxwuNF36ap3NT0RJETSOPNIYg/UyW6YeqEbt1ZSDLJO6RhH9jvtv
-         x8BT0hXl559ru9KXHOG29P1iU9in3vFWAC8Hhvu83VHPkfLHwbke9xPRDyg4FN86C9aD
-         Pt7Qv6sCvMwV+VIVOwGL4Dm+unZGH1Xvm/5LWQoMnMTVMQ0PMz/Zp+T2cAFsYQFv7z0d
-         45trPd7u5cJHV8XM7bnvnnbppWQ48jmI8dbP6siLze3U+x4rWw7MsSKP3NUXMFy7snZ1
-         Wc2NrJdw2dTzAwpa3qlTPLYYlnDqyfpXL/xlJz3RfTW1xnq2NSjLC4+5xNCQus/u2bxa
-         +THQ==
-X-Gm-Message-State: AOAM533r9KQZDynqp+ftvtES+aOkK+fOvkO6i1qiigT6pBilZhqpjcn8
-        qYqWLXIlpkuZGIePvKtZCNICG2CzA3irPKv9yeQ=
-X-Google-Smtp-Source: ABdhPJxWbiv3OFdS/gVrZqGmjfHKBwB+yz9rWYVA+P3KukhI6r49sD9dEtv7tc/9vEuxkF4xjN2PcOAPuI0dz9JEc2s=
-X-Received: by 2002:a25:4207:: with SMTP id p7mr17146898yba.424.1590098447910;
- Thu, 21 May 2020 15:00:47 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:00:40 -0700
-In-Reply-To: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
-Message-Id: <20200521220041.87368-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-Subject: [PATCH v3] Makefile: support compressed debug info
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Clifton <nickc@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Blaikie <blaikie@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 21 May 2020 18:01:48 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2A8CF82075E;
+        Fri, 22 May 2020 08:01:45 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jbtFz-0000Vf-A3; Fri, 22 May 2020 08:01:39 +1000
+Date:   Fri, 22 May 2020 08:01:39 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 10/36] fs: Make page_mkwrite_check_truncate thp-aware
+Message-ID: <20200521220139.GS2005@dread.disaster.area>
+References: <20200515131656.12890-1-willy@infradead.org>
+ <20200515131656.12890-11-willy@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200515131656.12890-11-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
+        a=KGgwbdxBNGb1bfa4TRwA:9 a=axUvvhqyyT9HjbU9:21 a=46PWhYHqkOUzt59A:21
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As debug information gets larger and larger, it helps significantly save
-the size of vmlinux images to compress the information in the debug
-information sections. Note: this debug info is typically split off from
-the final compressed kernel image, which is why vmlinux is what's used
-in conjunction with GDB. Minimizing the debug info size should have no
-impact on boot times, or final compressed kernel image size.
+On Fri, May 15, 2020 at 06:16:30AM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> If the page is compound, check the last index in the page and return
+> the appropriate size.  Change the return type to ssize_t in case we ever
+> support pages larger than 2GB.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  include/linux/pagemap.h | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 1a0bb387948c..c75d7fb7ccbc 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -827,22 +827,22 @@ static inline unsigned long dir_pages(struct inode *inode)
+>   * @page: the page to check
+>   * @inode: the inode to check the page against
+>   *
+> - * Returns the number of bytes in the page up to EOF,
+> + * Return: The number of bytes in the page up to EOF,
+>   * or -EFAULT if the page was truncated.
+>   */
+> -static inline int page_mkwrite_check_truncate(struct page *page,
+> +static inline ssize_t page_mkwrite_check_truncate(struct page *page,
+>  					      struct inode *inode)
+>  {
+>  	loff_t size = i_size_read(inode);
+>  	pgoff_t index = size >> PAGE_SHIFT;
+> -	int offset = offset_in_page(size);
+> +	unsigned long offset = offset_in_thp(page, size);
+>  
+>  	if (page->mapping != inode->i_mapping)
+>  		return -EFAULT;
+>  
+>  	/* page is wholly inside EOF */
+> -	if (page->index < index)
+> -		return PAGE_SIZE;
+> +	if (page->index + hpage_nr_pages(page) - 1 < index)
+> +		return thp_size(page);
 
-All of the debug sections will have a `C` flag set.
-$ readelf -S <object file>
+Can we make these interfaces all use the same namespace prefix?
+Here we have a mix of thp and hpage and I have no clue how hpages
+are different to thps. If they refer to the same thing (i.e. huge
+pages) then can we please make the API consistent before splattering
+it all over the filesystem code?
 
-$ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
-    vmlinux.gcc75.uncompressed.dwarf4
+Cheers,
 
-    FILE SIZE        VM SIZE
- --------------  --------------
-  +0.0%     +18  [ = ]       0    [Unmapped]
- -73.3%  -114Ki  [ = ]       0    .debug_aranges
- -76.2% -2.01Mi  [ = ]       0    .debug_frame
- -73.6% -2.89Mi  [ = ]       0    .debug_str
- -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
- -82.9% -4.88Mi  [ = ]       0    .debug_ranges
- -70.5% -9.04Mi  [ = ]       0    .debug_line
- -79.3% -10.9Mi  [ = ]       0    .debug_loc
- -39.5% -88.6Mi  [ = ]       0    .debug_info
- -18.2%  -123Mi  [ = ]       0    TOTAL
-
-$ bloaty vmlinux.clang11.compressed.dwarf4 -- \
-    vmlinux.clang11.uncompressed.dwarf4
-
-    FILE SIZE        VM SIZE
- --------------  --------------
-  +0.0%     +23  [ = ]       0    [Unmapped]
- -65.6%    -871  [ = ]       0    .debug_aranges
- -77.4% -1.84Mi  [ = ]       0    .debug_frame
- -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
- -73.1% -2.43Mi  [ = ]       0    .debug_str
- -84.8% -3.07Mi  [ = ]       0    .debug_ranges
- -65.9% -8.62Mi  [ = ]       0    .debug_line
- -86.2% -40.0Mi  [ = ]       0    .debug_loc
- -42.0% -64.1Mi  [ = ]       0    .debug_info
- -22.1%  -122Mi  [ = ]       0    TOTAL
-
-For x86_64 defconfig + LLVM=1 (before):
-Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
-Maximum resident set size (kbytes): 43856
-
-For x86_64 defconfig + LLVM=1 (after):
-Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
-Maximum resident set size (kbytes): 1566776
-
-Suggested-by: David Blaikie <blaikie@google.com>
-Suggested-by: Nick Clifton <nickc@redhat.com>
-Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Changes V2 -> V3:
-* Fix blaikie@'s email addr.
-* Fix Fangrui's Reviewed-by tag as per Masahiro.
-* Fix help text as per Masahiro.
-* Fix -Wa$(comma)foo as per Masahiro.
-
-Changes V1 -> V2:
-* rebase on linux-next.
-* Add assembler flags as per Fangrui.
-* Add note about KDEB_COMPRESS+scripts/package/builddeb
-  as per Sedat and Masahiro.
-* Add note about bintutils version requirements as per Nick C.
-* Add note about measured increased build time and max RSS.
- Makefile          |  6 ++++++
- lib/Kconfig.debug | 17 +++++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/Makefile b/Makefile
-index 71687bfe1cd9..be8835296754 100644
---- a/Makefile
-+++ b/Makefile
-@@ -822,6 +822,12 @@ DEBUG_CFLAGS	+= $(call cc-option, -femit-struct-debug-baseonly) \
- 		   $(call cc-option,-fno-var-tracking)
- endif
- 
-+ifdef CONFIG_DEBUG_INFO_COMPRESSED
-+DEBUG_CFLAGS	+= -gz=zlib
-+KBUILD_AFLAGS	+= -Wa,--compress-debug-sections=zlib
-+KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
-+endif
-+
- KBUILD_CFLAGS += $(DEBUG_CFLAGS)
- export DEBUG_CFLAGS
- 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index b8f023e054b9..7fc82dcf814b 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -225,6 +225,23 @@ config DEBUG_INFO_REDUCED
- 	  DEBUG_INFO build and compile times are reduced too.
- 	  Only works with newer gcc versions.
- 
-+config DEBUG_INFO_COMPRESSED
-+	bool "Compressed debugging information"
-+	depends on DEBUG_INFO
-+	depends on $(cc-option,-gz=zlib)
-+	depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
-+	depends on $(ld-option,--compress-debug-sections=zlib)
-+	help
-+	  Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-+	  5.0+, binutils 2.26+, and zlib.
-+
-+	  Users of dpkg-deb via scripts/package/builddeb may find an increase in
-+	  size of their debug .deb packages with this config set, due to the
-+	  debug info being compressed with zlib, then the object files being
-+	  recompressed with a different compression scheme. But this is still
-+	  preferable to setting $KDEB_COMPRESS to "none" which would be even
-+	  larger.
-+
- config DEBUG_INFO_SPLIT
- 	bool "Produce split debuginfo in .dwo files"
- 	depends on DEBUG_INFO
+Dave.
 -- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+Dave Chinner
+david@fromorbit.com
