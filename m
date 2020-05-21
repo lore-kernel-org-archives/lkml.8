@@ -4,203 +4,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47531C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE9E320748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B5D2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dXPScmAf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agJptvDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730542AbgEUV5t (ORCPT
+        id S1730552AbgEUV6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40678 "EHLO
+        Thu, 21 May 2020 17:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729370AbgEUV5r (ORCPT
+        with ESMTP id S1729370AbgEUV6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:57:47 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A731DC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:57:47 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t8so1882068pju.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:57:47 -0700 (PDT)
+        Thu, 21 May 2020 17:58:16 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA42BC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:58:16 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id v17so6802618ote.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:58:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TSxKnnFyDzr5TIHifuloj5+MkU6+ljp348ta4rzKVFY=;
-        b=dXPScmAfnnkj9oY/tpSN6s3fJBAyh5t4mLgKXCVK2k9C2HWkYwHDlsyOSnA66Lc1wL
-         DB+PCswLKQvb4ERWbQ7d0MauTLwD7VmEJpoB7iOvzLNhLgb+v9MM2ALex8qL7yejKFC8
-         zvEv3AJh5U/NYpcqCbu1Ca5zJfJwz3GiybXXZvONi1eKvlg60oi01n7PO7EABV7ACRWG
-         QBARStGvuBoTIjbo4OPEhppS9Qm8kjrvgzbdn6C35l+0fF14fiS/8liemSwfPkOZ6jW8
-         bz1oCACwbRm+9e2WjFxNJ3h4LDE8kksrFNNiV75bZu5rWCaREs3htKCCpPLgzd2IelvM
-         bGxQ==
+        bh=OC7pxxrJMqItGQPkx3AN3oqBodwXwxXMLvm54F0Ovsc=;
+        b=agJptvDPSQjxg/DsE2tCtsnV2z/LvokUuBh021Hk7gHFmAeZIaFSMroK1vn1omWhzK
+         uFr2ZIZgIJQVUiio0NurWPJDb/T/iB2P4NjYCAOjtLYAu9xdTTRpKU8tS6j63ZCaMSm/
+         r6ssH40PnZaTQ7986SY+MZc2bh6QefQ6ccGGp9qpDtBOIicwF/UrWPZKn2aVGvkek/U9
+         Bf3CjuUiy36of9wsCRLuG1eH2Q7Nk665kfzcKRdh5Y06k/FBYKuxaoSzdbGR15Wxwnkw
+         FDmkMBg0cAUByhFBo3dW0x5zVYW1PxWdLEkAC6KDTWHfaJOF8vWe9qd0ibxXAmWgRMs5
+         ug6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TSxKnnFyDzr5TIHifuloj5+MkU6+ljp348ta4rzKVFY=;
-        b=beU7nQjveDRC8Xr+kVlWSRnm0rShEUzjKtCx4QWxPYjsYsU3DwuPw3EYicDLkM1BSj
-         Zj2eiRZatmi/LRpUJTC82mp0oE819IuH4jTvi7DJpIyU/SIhf6/t0ofSgNZa+09eLgsH
-         IL0qS7d9vAe3vHtPXSWaKT460zkxzRc9ewVka+sjXZXjaMQu+dRe1JqsFFc2jGH6vvX+
-         6Jj9esInQVNSsNsQVG9s2PrK7BnpWch+1J/6QPkUae8XpJbXaBakgzjof3QXiS5ixPZ4
-         aRIV7kSgDfUd2J/NKMnGNzVyxxYgwivJ7tThp7+VjzNZ9eQotj/9Ho0P/lsbNs+TzinK
-         PSHA==
-X-Gm-Message-State: AOAM530H7BpU/eVej8LUU3N5Gplu3au967otlwx4RAkCgYTq2E2OM8Bp
-        2PIHAsxrSd2XhNmMNaW/Km5IzEf1MLDIJDhL6MhSDQ==
-X-Google-Smtp-Source: ABdhPJwcxYwlDtUvYmfrQ2zA/sDeHoaekf+9/G8kXzhN7oimGZllsEK1KOn7uZZQ+Ay0tgfc5cAMR+k+4Sfd9KxH1yU=
-X-Received: by 2002:a17:90b:4c47:: with SMTP id np7mr679103pjb.101.1590098266861;
- Thu, 21 May 2020 14:57:46 -0700 (PDT)
+        bh=OC7pxxrJMqItGQPkx3AN3oqBodwXwxXMLvm54F0Ovsc=;
+        b=LCcVRYJ7sIw1RTCHZNDN8H8vtGmFyUF0nV0oiTZNPYv6vZznhGVXRow6Rfq6/+U2VQ
+         vkJzMKDoi3YSs1mbUHRoyzAARWBbboqIVIrN2RGbjcwZ8XlGXL7poOs6i9lJ1u3ESO/X
+         TJwj4Ic+DafWFIBdKTHDgE1Cb/0B7hZ2pGVRSi+8M0xOKaqaCf18oC0/U7nAV3AS+5ij
+         hbQSxXyWBAI3zBaALPyjH+Rz8u4+yirQM3ud/FUew2ZaQJswhiwyUsECcqlmMWJ+vFM1
+         E9zMkLA7zLPfwHz16A6JMSxuAC9MJeFQ7JM/Sv35+QzjOH+dTUdwDEsFSNlfnrVnrVVt
+         IXvw==
+X-Gm-Message-State: AOAM532xYdCKp/rL5cAg97PBtYHw7429o292UZyi/1+XxuhHt028O4Ay
+        X46irHH24S7toprsF1kbMirrnGURXGRBe4/lmt/PLw==
+X-Google-Smtp-Source: ABdhPJxDMM+6Ji1T4X6OwV6GPysEiOItkB0Kq3KQo8S9lFwpkxcBDW1FZjeQiE79nQx+TxwbCYIlUB28dephPUquI6o=
+X-Received: by 2002:a05:6830:22d6:: with SMTP id q22mr8634292otc.274.1590098295812;
+ Thu, 21 May 2020 14:58:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <10f4fb0b-1012-b0e6-af05-0aa5a906de21@redhat.com>
- <20200520193637.6015-1-ndesaulniers@google.com> <CAK7LNAS_PMz9r3e1UcuM+r18JC2KeM2RqGOms1u3kVzN_N1MmA@mail.gmail.com>
-In-Reply-To: <CAK7LNAS_PMz9r3e1UcuM+r18JC2KeM2RqGOms1u3kVzN_N1MmA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 21 May 2020 14:57:34 -0700
-Message-ID: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
-Subject: Re: [PATCH v2] Makefile: support compressed debug info
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Clifton <nickc@redhat.com>,
-        David Blaikie <blakie@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520222642.70679-1-joel@joelfernandes.org> <CAHk-=wjUXRG53S0mLd8UVG2+cMC=2YLJGB-K_h2TkqHGZ-VSoA@mail.gmail.com>
+ <20200521204044.GD140701@google.com>
+In-Reply-To: <20200521204044.GD140701@google.com>
+From:   Jesse Barnes <jsbarnes@google.com>
+Date:   Thu, 21 May 2020 14:58:04 -0700
+Message-ID: <CAJmaN=nq7qaLRdN6CTAqtYy4nfMe4NvAutF5m2v-Ng+5Kijx_A@mail.gmail.com>
+Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        vpillai <vpillai@digitalocean.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 7:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Thu, May 21, 2020 at 1:45 PM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> > Suggested-by: Fangrui Song <maskray@google.com>
+> Hi Linus,
 >
+> On Thu, May 21, 2020 at 11:31:38AM -0700, Linus Torvalds wrote:
+> > On Wed, May 20, 2020 at 3:26 PM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > Generally throughput benchmarks are much easier to do, how do you do
+> > this latency benchmark, and is it perhaps something that could be run
+> > more widely (ie I'm thinking that if it's generic enough and stable
+> > enough to be run by some of the performance regression checking
+> > robots, it would be a much more interesting test-case than some of the
+> > ones they run right now...)
 >
-> Suggested-by -> Reviewed-by
+> Glad you like it! The metric is calculated with a timestamp of when the
+> driver says the key was pressed, up until when the GPU says we've drawn
+> pixels in response.
 >
-> https://patchwork.kernel.org/patch/11524939/#23349551
+> The test requires a mostly only requires Chrome browser. It opens some
+> pre-existing test URLs (a google doc, a window that opens a camera stream and
+> another window that decodes video). This metric is already calculated in
+> Chrome, we just scrape it from
+> chrome://histograms/Event.Latency.EndToEnd.KeyPress.  If you install Chrome,
+> you can goto this link and see the histogram.  We open a Google docs window
+> and synthetically input keys into it with a camera stream and video decoding
+> running in other windows which gives the CPUs a good beating. Then we collect
+> roughly the 90th percentile keypress latency from the above histogram and the
+> camera and decoded video's FPS, among other things. There is a test in the
+> works that my colleagues are writing to run the full Google hangout video
+> chatting stack to stress the system more (versus just the camera stream).  I
+> guess if the robots can somehow input keys into the Google docs and open the
+> right windows, then it is just a matter of scraping the histogram.
 
-Yes, my mistake.
+Expanding on this a little, we're working on a couple of projects that
+should provide results like these for upstream.  One is continuously
+rebasing our upstream backlog onto new kernels for testing purposes
+(the idea here is to make it easier for us to update kernels on
+Chromebooks), and the second is to drive more stuff into the
+kernelci.org infrastructure.  Given the test environments we have in
+place now, we can probably get results from our continuous rebase
+project first and provide those against -rc releases if that's
+something you'd be interested in.  Going forward, I hope we can
+extract several of our tests and put them into kernelci as well, so we
+get more general coverage without the potential impact of our (still
+somewhat large) upstream backlog of patches.
 
-> > Suggested-by: Nick Clifton <nickc@redhat.com>
->
->
-> I do not know where this tag came from.
->
-> Nick Clifton taught us the version rule of binutils,but did not state
-> anything about this patch itself.
->
-> https://patchwork.kernel.org/patch/11524939/#23355175
->
->
-> > Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
->
-> I do not see the source of this tag, either...
+To Joel's point, there are a few changes we'll have to make to get
+similar results outside of our environment, but I think that's doable
+without a ton of work.  And if anyone is curious, I think most of this
+stuff is already public in the tast and autotest repos of the
+chromiumos tree.  Just let us know if you want to make changes or port
+to another environment so we can try to stay in sync wrt new features,
+etc.
 
-Not all contributions to open source need to be in the form of
-patches.  Both Sedat and Nick gave suggestions which ultimately
-informed the contents of this patch.  They should be rewarded for
-their efforts, and incentivized to help improve the code base further.
-I think suggested by tags are a good way to do that; but if it's
-against a written convention or if you still disagree, it's not the
-end of the world to me, and you may drop those tags from the v3.
-
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -225,6 +225,21 @@ config DEBUG_INFO_REDUCED
-> >           DEBUG_INFO build and compile times are reduced too.
-> >           Only works with newer gcc versions.
-> >
-> > +config DEBUG_INFO_COMPRESSED
-> > +       bool "Compressed debugging information"
-> > +       depends on DEBUG_INFO
-> > +       depends on $(cc-option,-gz=zlib)
-> > +       depends on $(as-option,-Wa,--compress-debug-sections=zlib)
->
-> This does not work. (always false)
-
-Technically, always true. `-Wa` disables all warnings from the
-assembler.  Also, I did test this via `make menuconfig`.
-
-> You cannot enable this option.
->
-> The comma between -Wa and --compress-debug-sections=zlib
-> is eaten by Kconfig parser because commas are delimiters
-> of function parameters.
->
->
-> Please write like this.
->
->     depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
-
-You're right, I knew this bug forgot. Will fix in v3.
-
-> > +       depends on $(ld-option,--compress-debug-sections=zlib)
-> > +       help
-> > +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-> > +         5.0+, binutils 2.26+, and zlib.
-> > +
-> > +         Users of dpkg-deb via scripts/package/builddeb may
-> > +         wish to set the $KDEB_COMPRESS env var to "none" to avoid recompressing
-> > +         the debug info again with a different compression scheme, which can
-> > +         result in larger binaries.
->
-> No. This is not correct.
->
-> CONFIG_DEBUG_INFO_COMPRESSED compresses the only debug info part.
-> The other parts still get by benefit from the default KDEB_COMPRESS=xz.
->
->
-> The numbers are here:
->
->
-> CONFIG_DEBUG_INFO_COMPRESSED=y
-> -rw-r--r-- 1 masahiro masahiro 209077584 May 21 11:19
-> linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-26_amd64.deb
->
->
-> CONFIG_DEBUG_INFO_COMPRESSED=y and KDEB_COMPRESS=none
-> -rw-r--r-- 1 masahiro masahiro 643051712 May 21 11:22
-> linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-27_amd64.deb
->
->
-> CONFIG_DEBUG_INFO_COMPRESSED=n
-> -rw-r--r-- 1 masahiro masahiro 112200308 May 21 11:40
-> linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-30_amd64.deb
->
->
->
->
-> For the deb package size perspective,
-> it is better to keep KDEB_COMPRESS as default.
->
-> The main motivation for changing KDEB_COMPRESS
-> is the build speed.  (see commit 1a7f0a34ea7d05)
->
->
->
->
-> CONFIG_DEBUG_INFO_COMPRESSED has a downside
-> for the debug deb package, but we need to accept it.
-
-Ah, I see. Thank you for those measurements.  I'll send a v3 with
-fixed up help text, but ultimately, I don't really care what it says
-here.  Please feel empowered to reword it should you choose to accept
-+ apply it.
--- 
 Thanks,
-~Nick Desaulniers
+Jesse
