@@ -2,276 +2,152 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F5FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E44A220759
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D952120826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B1edwXeQ"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="EmO62saU";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="if1oIQF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730402AbgEUVOL (ORCPT
+        id S1730543AbgEUVO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730026AbgEUVOK (ORCPT
+        Thu, 21 May 2020 17:14:28 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:31916 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726814AbgEUVO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:14:10 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB73EC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:14:10 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x2so4062887pfx.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XZZ5vGtImoL01xyzR64KCWDKUfIuis772xDEHmF3ldI=;
-        b=B1edwXeQk42Z1UZf7gfSthKXb4bIu1l9sihaGaa2vq6i4vtytY9bF5qGzoIrZtPfQZ
-         2fc1l3wCb6wiviHILp6lflGHUcIiulV00r1Ba3iJ7MdKuH2TB63+4Oojgy/ZExBIxvPi
-         9W8NbphL55tG1O+Q+rdZWeUa5k2IvGMec5tmM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XZZ5vGtImoL01xyzR64KCWDKUfIuis772xDEHmF3ldI=;
-        b=gqc8pvogOQmjOH0rcRh+MlYbVletlNU84f67pIvGCEdHZ9u6IAnRmaFU9ffm3NXJ8H
-         curPwCiheqGQ87BxQMjkhtQiUshiHZaZWkzAP4z012MI1mmab6IqYNSEhIQ7hWL7iFeu
-         Lhyp0EUG6T/taLcMmft8RmefVdpj+bVUEb38yGdurw+lwxYrRw4d6mSIIlqz8foCNxEe
-         YxmLNoiLZoc+XOy6h58ceD3UazvGPJdr55ObVq7cV6S5GGGadJC9JQeagesUomM37SZs
-         EcQuYnmpDgoTUU/ZfobfkAbnjwWG4dhCigtdLYFxsveyDw0kbToY4lcEV2Qfe1+3VfBN
-         Hbew==
-X-Gm-Message-State: AOAM5325ruJBLG5USAwuLamFHo5dBg5SqrJpD2LGd1+DrY17UpfOJDLS
-        ja9RMhrQ0LpsxeT6vp2M62HQJU7ljFYuxg==
-X-Google-Smtp-Source: ABdhPJz5ZgIVwn633Wd8ontnJLCwdyIuRN7Je5MIDycy8URZX6MgTMECk1Rzp83xOtKruPX7kkcYfA==
-X-Received: by 2002:a62:760e:: with SMTP id r14mr644628pfc.92.1590095650015;
-        Thu, 21 May 2020 14:14:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m4sm5377315pje.47.2020.05.21.14.14.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 14:14:09 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:14:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com, Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v2 8/9] kallsyms: Hide layout
-Message-ID: <202005211409.3C314DF@keescook>
-References: <20200521165641.15940-1-kristen@linux.intel.com>
- <20200521165641.15940-9-kristen@linux.intel.com>
-MIME-Version: 1.0
+        Thu, 21 May 2020 17:14:27 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04LLCE4M021261;
+        Thu, 21 May 2020 14:14:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=6fLLjVrnE8/3C1FnIziNiGSluEVU8jCr8sbsksmTkHs=;
+ b=EmO62saU6zyrDDYTO1vYeTLwLUo1TAg5eWi1QgYFyDb8uvdeD1pIAeSRKC3xRM1ZXkGB
+ 5SD4PBGnF69i/FipxsAK1emR8ZP67r89hrHIAA2iU2OW7/mCbuJmM4JZ5atvnOGfix1Z
+ vrAayKMUOwXLdbWG3ZVEudTVj1DQztrLQK0= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 315bt2k8uc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 21 May 2020 14:14:20 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 21 May 2020 14:14:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KVC2GNvkuZOFlMdAkIKpA6DvgBHwHKtJswgfwSttNWBkNtHDX4B67vsBUvynYg4+PSpCc/LMJLiM5GIR+cjC0C8NMajw8AcIaIuK2NWWs0Je9lyGujAtA3HFt6MOFkQHk0knJ8nvmHNLmhmXQCS/026FM62kYavHATCZrtaRIU8Y0nnSm+97MCWd5h/CQfcGOSJK6pu6zKhfF1UxvqwdyW+jD4kMdUlugoHmf4JxOglxq/imF0dmTMJizTCBLMO1JaHv2g+mSkXs4xVsy+AUY7nwDD4McfMKcTmKJdkRTNQn/EADcJCfqpA66GXJtYI4fIJYUg2M9+/gvAxnyyV5og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6fLLjVrnE8/3C1FnIziNiGSluEVU8jCr8sbsksmTkHs=;
+ b=HzN/rqpFLAM/EBdXpaTrvBX+/Kq8HS5h6teV5WxMF+2ik7OcjniMUCP0eBTKtMq8jpzS1wrMAKSabxEWb6lx9I9XA1p4CLX4x1kbLxeTPbpY30IxtpwaPZlhQb0TECNHGfoA4RBJoQbd90V6wu8kqaiPvB8JGHf95wF1Wyw/gciRz7+Wcf4oXBvsufRy5D7Epp5KO2WvoA8GHGM9BkvK8Q6SDiwoXtHV/wnitVZfQDB02HgFGpDQUkXzdzOPvggUsbjRhb0tpRiM9xD7ZyrVTz0jVfdvJmjhXdoHk5J+jVGghVmisk6glvJ0iV6qdooRz160a+BGHIpwU5sI7IgHmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6fLLjVrnE8/3C1FnIziNiGSluEVU8jCr8sbsksmTkHs=;
+ b=if1oIQF42YUfskhscvu2s3HbtETYQwGLZL8QBRezCIr+DxUvLwA1JwRYOAhaujUoYe8s3f35A7sPOzOykaQY9YmQP7hDwz4otAzc49j6K6a5J39cZGvMZZxQcCTSbi0XH5VOONuJ3R0a+RFd/YjIl5omx1aOvgPK5Gd9nOCTafU=
+Authentication-Results: suse.cz; dkim=none (message not signed)
+ header.d=none;suse.cz; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB4101.namprd15.prod.outlook.com (2603:10b6:a02:ce::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
+ 2020 21:14:18 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.3021.020; Thu, 21 May 2020
+ 21:14:18 +0000
+Date:   Thu, 21 May 2020 14:14:14 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 03/19] mm: memcg: convert vmstat slab counters to bytes
+Message-ID: <20200521211414.GB339999@carbon.DHCP.thefacebook.com>
+References: <20200422204708.2176080-1-guro@fb.com>
+ <20200422204708.2176080-4-guro@fb.com>
+ <b72ff85a-22aa-f55d-41ee-2ddee00674a7@suse.cz>
+ <20200520192652.GA278395@carbon.dhcp.thefacebook.com>
+ <21975f76-f58f-14ef-9547-7e32afac1681@suse.cz>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521165641.15940-9-kristen@linux.intel.com>
+In-Reply-To: <21975f76-f58f-14ef-9547-7e32afac1681@suse.cz>
+X-ClientProxiedBy: BY5PR20CA0033.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::46) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:edd) by BY5PR20CA0033.namprd20.prod.outlook.com (2603:10b6:a03:1f4::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Thu, 21 May 2020 21:14:17 +0000
+X-Originating-IP: [2620:10d:c090:400::5:edd]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ce924f10-e641-447c-c519-08d7fdcbec1d
+X-MS-TrafficTypeDiagnostic: BYAPR15MB4101:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB4101C90E69A2A9E6C066A9C6BEB70@BYAPR15MB4101.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ho2tIswiXi0yi3XJims7nOKVWxH/nKECSZMSYnIGJ+D8D2NP2S4of/zvc+GWdOteHEipLHM85OQ8jwsSqan+AxdTIjjWvbpSO/t1B07cx7XAaQcnvDNJqWGU866zgOVA0O2sCfEIg9OU55EDPPenwmLSCnZQbK+/87Q+rh6NgGXN7kPktEh0BiDrzsXTgD1aczew09AscsJanLb9+qXZApyNHx+8xanTZiOLQbC8RQ0x4WDRiZ1w86EMUnq4+POHden24v/5JjV0N6az8mozL8d27/J46ZgbNo3m9UvnfesISdqbKf1vAEayoPb8jkG1YY+5KhZ6o9SevZ+Ia+hUYA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(39860400002)(136003)(366004)(376002)(53546011)(52116002)(16526019)(8936002)(316002)(8676002)(7696005)(478600001)(4326008)(86362001)(33656002)(54906003)(9686003)(55016002)(1076003)(6666004)(6506007)(186003)(6916009)(66556008)(5660300002)(66476007)(2906002)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: HLdytQW2zoqECIK5JNuDfzGIp7QVhoiVrQcG7eG1lUvrNUjnaDfByFNIX4Sk9YX8NSjKTMpQKzK6rz+Nk8Bd3cSN1t7xn3cbPdj3ISEdct/uK4H7XMEfJErpADc+Q60ALy0v5w2o2mccrhs4/wA3Phw8/8IQTk1iQzS56O7Ai4mgk5JTvJ16AO64UFUjiilu6tYtnC2VRqaKBXC3Q3gI4t0FcSaGKD3tP8sTpKh4ARPAdaVRY4LYIM3c5gc3WTTe/HmsC1J9MtHxiruPSt9pk361gTjqzcNFbC0q8hC+VREisI98yle7agvYbegHYeESKF2iczkYmlCdk8Nnl6ayg0SsxDTo9Vh6CN46ga3b6hOYcVo54kUdHZmle3WiGfQHG6bqwwb23ffoLeF3KmESu0g86OVUkD88sTH0n+fW5lYrX2gYs5n4afVN/1Pyi2056VN1LX2PGIKpXeWSsCkeydHybaM+PYei/CSCJWM68Udl4EhCYkmByUVm2xSYmwxEBZGuirKNHrHrlQ5sa0XXjw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce924f10-e641-447c-c519-08d7fdcbec1d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 21:14:17.9855
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PLJU41cHuu7j9GGfC4rWJBf3n741eKD7/0YXxDCCurxOY26m5ciqZUKpOlUA5j/v
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB4101
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-21_14:2020-05-21,2020-05-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ spamscore=0 mlxscore=0 malwarescore=0 adultscore=0 mlxlogscore=872
+ impostorscore=0 bulkscore=0 cotscore=-2147483648 phishscore=0
+ priorityscore=1501 suspectscore=1 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210158
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 09:56:39AM -0700, Kristen Carlson Accardi wrote:
-> This patch makes /proc/kallsyms display alphabetically by symbol
-> name rather than sorted by address in order to hide the newly
-> randomized address layout.
+On Thu, May 21, 2020 at 11:57:12AM +0200, Vlastimil Babka wrote:
+> On 5/20/20 9:26 PM, Roman Gushchin wrote:
+> > On Wed, May 20, 2020 at 02:25:22PM +0200, Vlastimil Babka wrote:
+> >> 
+> >> However __mod_node_page_state() and mode_node_state() will now branch always. I
+> >> wonder if the "API clean" goal is worth it...
+> > 
+> > You mean just adding a special write-side helper which will perform a conversion
+> > and put VM_WARN_ON_ONCE() into generic write-side helpers?
 > 
-> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Tested-by: Tony Luck <tony.luck@intel.com>
-> ---
->  kernel/kallsyms.c | 138 +++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 137 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-> index 16c8c605f4b0..558963b275ec 100644
-> --- a/kernel/kallsyms.c
-> +++ b/kernel/kallsyms.c
-> @@ -25,6 +25,7 @@
->  #include <linux/filter.h>
->  #include <linux/ftrace.h>
->  #include <linux/compiler.h>
-> +#include <linux/list_sort.h>
->  
->  /*
->   * These will be re-linked against their real values
-> @@ -446,6 +447,11 @@ struct kallsym_iter {
->  	int show_value;
->  };
->  
-> +struct kallsyms_iter_list {
-> +	struct kallsym_iter iter;
-> +	struct list_head next;
-> +};
-> +
->  int __weak arch_get_kallsym(unsigned int symnum, unsigned long *value,
->  			    char *type, char *name)
->  {
-> @@ -660,6 +666,121 @@ int kallsyms_show_value(void)
->  	}
->  }
->  
-> +static int sorted_show(struct seq_file *m, void *p)
-> +{
-> +	struct list_head *list = m->private;
-> +	struct kallsyms_iter_list *iter;
-> +	int rc;
-> +
-> +	if (list_empty(list))
-> +		return 0;
-> +
-> +	iter = list_first_entry(list, struct kallsyms_iter_list, next);
-> +
-> +	m->private = iter;
-> +	rc = s_show(m, p);
-> +	m->private = list;
-> +
-> +	list_del(&iter->next);
-> +	kfree(iter);
-> +
-> +	return rc;
-> +}
-> +
-> +static void *sorted_start(struct seq_file *m, loff_t *pos)
-> +{
-> +	return m->private;
-> +}
-> +
-> +static void *sorted_next(struct seq_file *m, void *p, loff_t *pos)
-> +{
-> +	struct list_head *list = m->private;
-> +
-> +	(*pos)++;
-> +
-> +	if (list_empty(list))
-> +		return NULL;
-> +
-> +	return p;
-> +}
-> +
-> +static const struct seq_operations kallsyms_sorted_op = {
-> +	.start = sorted_start,
-> +	.next = sorted_next,
-> +	.stop = s_stop,
-> +	.show = sorted_show
-> +};
-> +
-> +static int kallsyms_list_cmp(void *priv, struct list_head *a,
-> +			     struct list_head *b)
-> +{
-> +	struct kallsyms_iter_list *iter_a, *iter_b;
-> +
-> +	iter_a = list_entry(a, struct kallsyms_iter_list, next);
-> +	iter_b = list_entry(b, struct kallsyms_iter_list, next);
-> +
-> +	return strcmp(iter_a->iter.name, iter_b->iter.name);
-> +}
-> +
-> +int get_all_symbol_name(void *data, const char *name, struct module *mod,
-> +			unsigned long addr)
-> +{
-> +	unsigned long sym_pos;
-> +	struct kallsyms_iter_list *node, *last;
-> +	struct list_head *head = (struct list_head *)data;
-> +
-> +	node = kmalloc(sizeof(*node), GFP_KERNEL);
-> +	if (!node)
-> +		return -ENOMEM;
-> +
-> +	if (list_empty(head)) {
-> +		sym_pos = 0;
-> +		memset(node, 0, sizeof(*node));
-> +		reset_iter(&node->iter, 0);
-> +		node->iter.show_value = kallsyms_show_value();
-> +	} else {
-> +		last = list_first_entry(head, struct kallsyms_iter_list, next);
-> +		memcpy(node, last, sizeof(*node));
-> +		sym_pos = last->iter.pos;
-> +	}
-> +
-> +	INIT_LIST_HEAD(&node->next);
-> +	list_add(&node->next, head);
-> +
-> +	/*
-> +	 * update_iter returns false when at end of file
-> +	 * which in this case we don't care about and can
-> +	 * safely ignore. update_iter() will increment
-> +	 * the value of iter->pos, for ksymbol_core.
-> +	 */
-> +	if (sym_pos >= kallsyms_num_syms)
-> +		sym_pos++;
-> +
-> +	(void)update_iter(&node->iter, sym_pos);
-> +
-> +	return 0;
-> +}
-> +
-> +static int kallsyms_sorted_open(struct inode *inode, struct file *file)
-> +{
-> +	int ret;
-> +	struct list_head *list;
-> +
-> +	list = __seq_open_private(file, &kallsyms_sorted_op, sizeof(*list));
-> +	if (!list)
-> +		return -ENOMEM;
-> +
-> +	INIT_LIST_HEAD(list);
-> +
-> +	ret = kallsyms_on_each_symbol(get_all_symbol_name, list);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	list_sort(NULL, list, kallsyms_list_cmp);
-> +
-> +	return 0;
-> +}
-> +
->  static int kallsyms_open(struct inode *inode, struct file *file)
->  {
->  	/*
-> @@ -704,9 +825,24 @@ static const struct proc_ops kallsyms_proc_ops = {
->  	.proc_release	= seq_release_private,
->  };
->  
-> +static const struct proc_ops kallsyms_sorted_proc_ops = {
-> +	.proc_open = kallsyms_sorted_open,
-> +	.proc_read = seq_read,
-> +	.proc_lseek = seq_lseek,
-> +	.proc_release = seq_release_private,
-> +};
-> +
->  static int __init kallsyms_init(void)
->  {
-> -	proc_create("kallsyms", 0444, NULL, &kallsyms_proc_ops);
-> +	/*
-> +	 * When fine grained kaslr is enabled, we need to
-> +	 * print out the symbols sorted by name rather than by
-> +	 * by address, because this reveals the randomization order.
-> +	 */
-> +	if (!IS_ENABLED(CONFIG_FG_KASLR))
-> +		proc_create("kallsyms", 0444, NULL, &kallsyms_proc_ops);
-> +	else
-> +		proc_create("kallsyms", 0444, NULL, &kallsyms_sorted_proc_ops);
->  	return 0;
+> What I mean is that maybe node/global helpers should assume page granularity,
+> and lruvec/memcg helpers do the check is they should convert from bytes to pages
+> when calling node/global helpers. Then there would be no extra branches in
+> node/global helpers. But maybe it's not worth saving those branches, dunno.
 
-Since this is compile-time selected, instead of the separate name and
-test here, how about just redefine kallsyms_open initializer instead?
+The problem is with helpers like mod_lruvec_state(), which do modify both global
+and memcg-level counters. Also memcg- and global counters share idxes, so
+it will be confusing to have NR_SLAB_RECLAIMABLE in bytes on one level and
+in pages on the other.
 
-#ifdef CONFIG_FG_KASLR
-...sorting routines...
-static int kallsyms_open(struct inode *inode, struct file *file)
-{ ... sorted version ... }
-#else
-static int kallsyms_open(struct inode *inode, struct file *file)
-{ ... normal version ... }
-#endif
+So, idk, maybe there is a better way of organizing these counters in a less
+complicated manner, but I've no ideas at the moment. But if you do, I'll appreciate it.
 
-(And then just move the comment to the sorted open version.)
-
--- 
-Kees Cook
+Thanks!
