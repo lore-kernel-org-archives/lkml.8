@@ -2,113 +2,85 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F85C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E10DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 002DC2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e4L267jw"
+	by mail.kernel.org (Postfix) with ESMTP id 01F0820756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbgEUMGL (ORCPT
+        id S1729166AbgEUMGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:06:11 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48352 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgEUMGL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:06:11 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LC3kQ4031241;
-        Thu, 21 May 2020 12:06:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=/dSwQBMQ9edVQjkiT3Bt0WIXXVOZp3v9OdMj2sZjdRM=;
- b=e4L267jwZlTFvTG9JpcIULqEeEQocx0mw6IjjEz8r1uelXohYCcNYQWm63MmNdFiJFMC
- YifX1o3XyvBF6x/rZGDZ1mNd9Y1laKRbFpuSPYp1EzuE/I9zJY1WGqS9TXAK4MfHwu+Y
- 0gwJ13GqRKQEYr5LTnoW4lijkInJxlkDlN/zCILV0qkW95J8mSbAFLWIIohhAEiib35A
- Y/bMYNVm4Xa9beWQRWNjcqLR8ClhlV50qsVlmYjOXJePHIFHQEXRT5LiKmECMpc0vjBp
- 5li9q5LQEEvdqCcWoouQxJbifnkjTbx7ZT7gt9sO7vG9RX0dbxqdA90NKV04CK6UYKiV FA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31501ren20-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 12:06:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LC3D2E106767;
-        Thu, 21 May 2020 12:03:59 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 312t3ay20b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 12:03:59 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04LC3rgH020890;
-        Thu, 21 May 2020 12:03:53 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 05:03:53 -0700
-Date:   Thu, 21 May 2020 15:03:45 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     dinghao.liu@zju.edu.cn
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-tegra@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thu, 21 May 2020 08:06:41 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:12008 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727905AbgEUMGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:06:41 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app2 (Coremail) with SMTP id by_KCgCXlTC9bsZeH1KdAQ--.33787S4;
+        Thu, 21 May 2020 20:06:25 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Todor Tomov <todor.too@gmail.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: Re: [PATCH] [v2] media: staging: tegra-vde: fix runtime pm
- imbalance on error
-Message-ID: <20200521120344.GH30374@kadam>
-References: <20200521062746.6656-1-dinghao.liu@zju.edu.cn>
- <20200521112131.GG30374@kadam>
- <4b400526.bbc83.172370b23a0.Coremail.dinghao.liu@zju.edu.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b400526.bbc83.172370b23a0.Coremail.dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=2 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210091
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005210091
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: camss: ispif: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 20:06:21 +0800
+Message-Id: <20200521120621.2658-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgCXlTC9bsZeH1KdAQ--.33787S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWftFb_ur
+        s5XrWfXF4Ygr1vvr4Utw43urWIqaykZw18u3WftFWay3yjyFykGrykZr98ZrnxZw1jyF17
+        GFZ8ZFyfCr97ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
+        uYvjfUeWlkDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0HBlZdtOPdcwAEs4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 07:42:56PM +0800, dinghao.liu@zju.edu.cn wrote:
-> We need to make sure if pm_runtime_get_sync() is designed with
-> such behavior before modifying it.  
-> 
-> I received a response from Rafael when I commited a similar patch:
-> https://lkml.org/lkml/2020/5/20/1100
-> It seems that this behavior is intentional and needs to be kept.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Yes.  This is why I have said twice or three times to not change
-pm_runtime_get_sync() but instead to write a replacement.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/media/platform/qcom/camss/camss-ispif.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-A large percent of the callers are buggy.  The pm_runtime_get_sync() is
-a -4 on Rusty's API scale.
-http://sweng.the-davies.net/Home/rustys-api-design-manifesto
-One could argue that anything above a -4 is really a 2 if you read
-the implementation thouroughly enough...
-
-regards,
-dan carpenter
-
+diff --git a/drivers/media/platform/qcom/camss/camss-ispif.c b/drivers/media/platform/qcom/camss/camss-ispif.c
+index 1f33b4eb198c..5722e971b184 100644
+--- a/drivers/media/platform/qcom/camss/camss-ispif.c
++++ b/drivers/media/platform/qcom/camss/camss-ispif.c
+@@ -344,8 +344,10 @@ static int ispif_set_power(struct v4l2_subdev *sd, int on)
+ 		}
+ 
+ 		ret = pm_runtime_get_sync(dev);
+-		if (ret < 0)
++		if (ret < 0) {
++			pm_runtime_put_sync(dev);
+ 			goto exit;
++		}
+ 
+ 		ret = camss_enable_clocks(ispif->nclocks, ispif->clock, dev);
+ 		if (ret < 0) {
+-- 
+2.17.1
 
