@@ -2,55 +2,57 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C3DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F18E020826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A96920814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590085668;
-	bh=/WDW8VQf6iHXjI83NrrhTGfMoMsExmF4WWAKY8AsnD4=;
+	s=default; t=1590085824;
+	bh=cEtHLgmqiR/ZzB3dv+ig2X/60et5/g/vGFhgnoGd0xI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hkPMaoRbCZ8zn+jydw2W+eiE0w+pUk1vtJhF0VP9DjdwW5okbMeEX/OcwVKC3jlzt
-	 a8lNbFFIT94FlxpRKFEJ8S99iEUnc1atpk8Jdghsu1pRkX7Qo4vAJQpGKzbBt9PjNy
-	 gpIDXlTjwqgEXWNQYnK0Q0jgemRmL5EwDxxXxpdU=
+	b=a1XI8W49PmKPOjbIJci8I4+G662LWm1NoAuQU+iD314JeAgusS1ZmvK55hMCeZyUU
+	 UUBYmNbbWqZ2DvD168kCT6mCKMnymC48+w0cdCzp26clABnN6HG6ERJsOfT0RHdtVI
+	 XQA9A7yqWK8lN2B4+jy+9jIXIEH+jWDVlp6KpId8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgEUS1r (ORCPT
+        id S1729555AbgEUSaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:27:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 14:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728240AbgEUS1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:27:46 -0400
+        id S1728240AbgEUSaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:30:23 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCBD720814;
-        Thu, 21 May 2020 18:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1718C207D3;
+        Thu, 21 May 2020 18:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590085666;
-        bh=/WDW8VQf6iHXjI83NrrhTGfMoMsExmF4WWAKY8AsnD4=;
+        s=default; t=1590085822;
+        bh=cEtHLgmqiR/ZzB3dv+ig2X/60et5/g/vGFhgnoGd0xI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eqzbcY7HsMUAYzkWVdfcRaT91gC/TZyEUicnStmo+ommIAhbivnvn8bxVE+UpaB/C
-         IqB9zXAduOKiblcU/15eO8iaPW16NseBHN2F5rub4EE4m3fMeIYXTJqRfZB1DC0oFO
-         qg21wdU6b32Qb0G4zPbANPByPYNE36HWCp8nIqI0=
-Date:   Thu, 21 May 2020 13:32:35 -0500
+        b=BMkPbNM5O0EfxnzMohPO1kjZeVhu6o2AJ7ibPWDWi+rr8GL6fI3ea0f22QVTbOj3T
+         0GYVyZxOTxBHPi6JeUD9EOJYMMuISdZsp5flWY8mYML6m5ON1waZYSfr4FbEcTIb7G
+         niE02H0Wfvq0KKhEbVXUQnkMXRoKqL+4L7xDdF0U=
+Date:   Thu, 21 May 2020 13:35:11 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Jones <pjones@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ibft: Replace zero-length array with flexible-array
-Message-ID: <20200521183235.GA29907@embeddedor>
-References: <20200507185544.GA14695@embeddedor>
+To:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iwlwifi: Replace zero-length array with flexible-array
+Message-ID: <20200521183511.GB29907@embeddedor>
+References: <20200507185538.GA14674@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507185544.GA14695@embeddedor>
+In-Reply-To: <20200507185538.GA14674@embeddedor>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,7 +67,7 @@ Thanks
 --
 Gustavo
 
-On Thu, May 07, 2020 at 01:55:44PM -0500, Gustavo A. R. Silva wrote:
+On Thu, May 07, 2020 at 01:55:38PM -0500, Gustavo A. R. Silva wrote:
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
 > variable-length types such as these ones is a flexible array member[1][2],
@@ -103,20 +105,130 @@ On Thu, May 07, 2020 at 01:55:44PM -0500, Gustavo A. R. Silva wrote:
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/firmware/iscsi_ibft.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/net/wireless/intel/iwlwifi/dvm/commands.h   |   12 ++++++------
+>  drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h |    4 ++--
+>  drivers/net/wireless/intel/iwlwifi/fw/debugfs.c     |    2 +-
+>  drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h    |    2 +-
+>  drivers/net/wireless/intel/iwlwifi/iwl-trans.h      |    2 +-
+>  5 files changed, 11 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
-> index 96758b71a8db..7127a04bca19 100644
-> --- a/drivers/firmware/iscsi_ibft.c
-> +++ b/drivers/firmware/iscsi_ibft.c
-> @@ -104,7 +104,7 @@ struct ibft_control {
->  	u16 tgt0_off;
->  	u16 nic1_off;
->  	u16 tgt1_off;
-> -	u16 expansion[0];
-> +	u16 expansion[];
->  } __attribute__((__packed__));
+> diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+> index 0f4be4be181c..fdcc1292a92b 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
+> @@ -1023,7 +1023,7 @@ struct iwl_wep_cmd {
+>  	u8 global_key_type;
+>  	u8 flags;
+>  	u8 reserved;
+> -	struct iwl_wep_key key[0];
+> +	struct iwl_wep_key key[];
+>  } __packed;
 >  
->  struct ibft_initiator {
+>  #define WEP_KEY_WEP_TYPE 1
+> @@ -1305,7 +1305,7 @@ struct iwl_tx_cmd {
+>  	 * length is 26 or 30 bytes, followed by payload data
+>  	 */
+>  	u8 payload[0];
+> -	struct ieee80211_hdr hdr[0];
+> +	struct ieee80211_hdr hdr[];
+>  } __packed;
+>  
+>  /*
+> @@ -2380,7 +2380,7 @@ struct iwl_scan_cmd {
+>  	 * for one scan to complete (i.e. receive SCAN_COMPLETE_NOTIFICATION)
+>  	 * before requesting another scan.
+>  	 */
+> -	u8 data[0];
+> +	u8 data[];
+>  } __packed;
+>  
+>  /* Can abort will notify by complete notification with abort status. */
+> @@ -2475,7 +2475,7 @@ struct iwl_tx_beacon_cmd {
+>  	__le16 tim_idx;
+>  	u8 tim_size;
+>  	u8 reserved1;
+> -	struct ieee80211_hdr frame[0];	/* beacon frame */
+> +	struct ieee80211_hdr frame[];	/* beacon frame */
+>  } __packed;
+>  
+>  /******************************************************************************
+> @@ -3188,7 +3188,7 @@ struct iwl_calib_hdr {
+>  
+>  struct iwl_calib_cmd {
+>  	struct iwl_calib_hdr hdr;
+> -	u8 data[0];
+> +	u8 data[];
+>  } __packed;
+>  
+>  struct iwl_calib_xtal_freq_cmd {
+> @@ -3216,7 +3216,7 @@ struct iwl_calib_temperature_offset_v2_cmd {
+>  /* IWL_PHY_CALIBRATE_CHAIN_NOISE_RESET_CMD */
+>  struct iwl_calib_chain_noise_reset_cmd {
+>  	struct iwl_calib_hdr hdr;
+> -	u8 data[0];
+> +	u8 data[];
+>  };
+>  
+>  /* IWL_PHY_CALIBRATE_CHAIN_NOISE_GAIN_CMD */
+> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h b/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
+> index 97b49843e318..397ac89a04c2 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
+> @@ -351,7 +351,7 @@ struct iwl_mcc_update_resp_v3 {
+>  	__le16 time;
+>  	__le16 geo_info;
+>  	__le32 n_channels;
+> -	__le32 channels[0];
+> +	__le32 channels[];
+>  } __packed; /* LAR_UPDATE_MCC_CMD_RESP_S_VER_3 */
+>  
+>  /**
+> @@ -380,7 +380,7 @@ struct iwl_mcc_update_resp {
+>  	u8 source_id;
+>  	u8 reserved[3];
+>  	__le32 n_channels;
+> -	__le32 channels[0];
+> +	__le32 channels[];
+>  } __packed; /* LAR_UPDATE_MCC_CMD_RESP_S_VER_4 */
+>  
+>  /**
+> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c b/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c
+> index 89f74116569d..cc1d93606d9b 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/fw/debugfs.c
+> @@ -261,7 +261,7 @@ struct hcmd_write_data {
+>  	__be32 cmd_id;
+>  	__be32 flags;
+>  	__be16 length;
+> -	u8 data[0];
+> +	u8 data[];
+>  } __packed;
+>  
+>  static ssize_t iwl_dbgfs_send_hcmd_write(struct iwl_fw_runtime *fwrt, char *buf,
+> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h b/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h
+> index 3008a5246be8..b35b8920941b 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-op-mode.h
+> @@ -175,7 +175,7 @@ void iwl_opmode_deregister(const char *name);
+>  struct iwl_op_mode {
+>  	const struct iwl_op_mode_ops *ops;
+>  
+> -	char op_mode_specific[0] __aligned(sizeof(void *));
+> +	char op_mode_specific[] __aligned(sizeof(void *));
+>  };
+>  
+>  static inline void iwl_op_mode_stop(struct iwl_op_mode *op_mode)
+> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+> index bba527b339b5..3fbbbac0953d 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+> @@ -878,7 +878,7 @@ struct iwl_trans {
+>  
+>  	/* pointer to trans specific struct */
+>  	/*Ensure that this pointer will always be aligned to sizeof pointer */
+> -	char trans_specific[0] __aligned(sizeof(void *));
+> +	char trans_specific[] __aligned(sizeof(void *));
+>  };
+>  
+>  const char *iwl_get_cmd_string(struct iwl_trans *trans, u32 id);
 > 
