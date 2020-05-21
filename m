@@ -2,99 +2,142 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97728C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A57620748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6A220756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ifaeD5kr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwpQzUaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgEUC0l (ORCPT
+        id S1727873AbgEUC2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:26:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgEUC0k (ORCPT
+        Wed, 20 May 2020 22:28:06 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44542 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726871AbgEUC2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:26:40 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD19AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 19:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AQAUQIhz6SqBbHGlDEdDO7YRyc583EZtNH+fi0JhOnE=; b=ifaeD5kroRd/pg4bLz7jN/XLLB
-        24s4q/bsYF++8aYyezv8cokcKu+WD/hZrpLUbHTlKnTjD6hW74FM8TrnKUbeFGn4eFyM45w4IKXyx
-        ezbJjWLew8N86eaP2nowALIAff5ceiTIWylAWtiW763IPK0l+62dxzIfbpgofkuiGe/xZ7BzR+ch2
-        MA8+mG00jCMq8151XmnIzj+YKevgflB27ZShQL0Fw2HIU0kgJWg492JPECQmnRYdhFeA0JGNLzS8Y
-        AM5hzNtriG8TRn1NwAxUdL2Ak7EI2CeDCA0mOGlRyBiKgRGjaZzuXmOWN4eIleMLAPAebHkmiiNrG
-        xYzANe4A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbaui-0003R9-PO; Thu, 21 May 2020 02:26:28 +0000
-Date:   Wed, 20 May 2020 19:26:28 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     gregkh@linuxfoundation.org, Arnd Bergmann <arnd@arndb.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3] /dev/mem: Revoke mappings when a driver claims the
- region
-Message-ID: <20200521022628.GE16070@bombadil.infradead.org>
-References: <159002475918.686697.11844615159862491335.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Wed, 20 May 2020 22:28:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590028084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HiJAaDRSg5DnM9NEbapqZa54OkdMt62Nfi59/wxsSTk=;
+        b=hwpQzUazhe24rfDk9LqbVJ1q5DQqcyKOgp080qZhlLv4wNSagQG7go5xh8ipDiqqhoUSqy
+        4tf7LiuaRcCJ+qLuQQtyECtQ4CM6hZd6UGu6JwSSm7EqFeaAXVWT0nN4nrfgy//y50YV5c
+        fvTtwg+bSyx4nmiwMipmjpi/uZRxj+o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-FDsArPCQMPSgD6E4nTNMkg-1; Wed, 20 May 2020 22:28:00 -0400
+X-MC-Unique: FDsArPCQMPSgD6E4nTNMkg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D12F800688;
+        Thu, 21 May 2020 02:27:59 +0000 (UTC)
+Received: from T590 (ovpn-13-123.pek2.redhat.com [10.72.13.123])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5350382A24;
+        Thu, 21 May 2020 02:27:50 +0000 (UTC)
+Date:   Thu, 21 May 2020 10:27:46 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
+ data->ctx and data->hctx in blk_mq_alloc_request_hctx
+Message-ID: <20200521022746.GA730422@T590>
+References: <20200519015420.GA70957@T590>
+ <20200519153000.GB22286@lst.de>
+ <20200520011823.GA415158@T590>
+ <20200520030424.GI416136@T590>
+ <20200520080357.GA4197@lst.de>
+ <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
+ <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
+ <87tv0av1gu.fsf@nanos.tec.linutronix.de>
+ <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
+ <87eereuudh.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159002475918.686697.11844615159862491335.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <87eereuudh.fsf@nanos.tec.linutronix.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:35:25PM -0700, Dan Williams wrote:
-> +static struct inode *devmem_inode;
-> +
-> +#ifdef CONFIG_IO_STRICT_DEVMEM
-> +void revoke_devmem(struct resource *res)
-> +{
-> +	struct inode *inode = READ_ONCE(devmem_inode);
-> +
-> +	/*
-> +	 * Check that the initialization has completed. Losing the race
-> +	 * is ok because it means drivers are claiming resources before
-> +	 * the fs_initcall level of init and prevent /dev/mem from
-> +	 * establishing mappings.
-> +	 */
-> +	smp_rmb();
-> +	if (!inode)
-> +		return;
+On Thu, May 21, 2020 at 12:14:18AM +0200, Thomas Gleixner wrote:
+> Jens Axboe <axboe@kernel.dk> writes:
+> 
+> > On 5/20/20 1:41 PM, Thomas Gleixner wrote:
+> >> Jens Axboe <axboe@kernel.dk> writes:
+> >>> On 5/20/20 8:45 AM, Jens Axboe wrote:
+> >>>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
+> >>>> they just break affinity if that CPU goes offline.
+> >>>
+> >>> Just checked, and it works fine for me. If I create an SQPOLL ring with
+> >>> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
+> >>> just appears unbound but runs just fine. When CPU 3 comes online again,
+> >>> the mask appears correct.
+> >> 
+> >> When exactly during the unplug operation is it unbound?
+> >
+> > When the CPU has been fully offlined. I check the affinity mask, it
+> > reports 0. But it's still being scheduled, and it's processing work.
+> > Here's an example, PID 420 is the thread in question:
+> >
+> > [root@archlinux cpu3]# taskset -p 420
+> > pid 420's current affinity mask: 8
+> > [root@archlinux cpu3]# echo 0 > online 
+> > [root@archlinux cpu3]# taskset -p 420
+> > pid 420's current affinity mask: 0
+> > [root@archlinux cpu3]# echo 1 > online 
+> > [root@archlinux cpu3]# taskset -p 420
+> > pid 420's current affinity mask: 8
+> >
+> > So as far as I can tell, it's working fine for me with the goals
+> > I have for that kthread.
+> 
+> Works for me is not really useful information and does not answer my
+> question:
+> 
+> >> When exactly during the unplug operation is it unbound?
+> 
+> The problem Ming and Christoph are trying to solve requires that the
+> thread is migrated _before_ the hardware queue is shut down and
+> drained. That's why I asked for the exact point where this happens.
+> 
+> When the CPU is finally offlined, i.e. the CPU cleared the online bit in
+> the online mask is definitely too late simply because it still runs on
+> that outgoing CPU _after_ the hardware queue is shut down and drained.
 
-But we don't need the smp_rmb() here, right?  READ_ONCE and WRITE_ONCE
-are a DATA DEPENDENCY barrier (in Documentation/memory-barriers.txt parlance)
-so the smp_rmb() is superfluous ...
+IMO, the patch in Christoph's blk-mq-hotplug.2 still works for percpu
+kthread.
 
-> +	/*
-> +	 * Use a unified address space to have a single point to manage
-> +	 * revocations when drivers want to take over a /dev/mem mapped
-> +	 * range.
-> +	 */
-> +	inode->i_mapping = devmem_inode->i_mapping;
-> +	inode->i_mapping->host = devmem_inode;
+It is just not optimal in the retrying, but it should be fine. When the
+percpu kthread is scheduled on the CPU to be offlined:
 
-umm ... devmem_inode->i_mapping->host doesn't already point to devmem_inode?
+- if the kthread doesn't observe the INACTIVE flag, the allocated request
+will be drained.
 
-> +
-> +	/* publish /dev/mem initialized */
-> +	smp_wmb();
-> +	WRITE_ONCE(devmem_inode, inode);
+- otherwise, the kthread just retries and retries to allocate & release,
+and sooner or later, its time slice is consumed, and migrated out, and the
+cpu hotplug handler will get chance to run and move on, then the cpu is
+shutdown.
 
-As above, unnecessary barrier, I think.
+- After the cpu is shutdown, the percpu kthread becomes unbound, and
+the allocation from new online cpu will succeed.
+
+Thanks,
+Ming
 
