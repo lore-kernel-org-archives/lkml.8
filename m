@@ -2,152 +2,107 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F002DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E7620721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E3120721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgEUKXy (ORCPT
+        id S1728947AbgEUKYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 06:23:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59106 "EHLO mga18.intel.com"
+        Thu, 21 May 2020 06:24:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:43980 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727009AbgEUKXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 06:23:53 -0400
-IronPort-SDR: o3ib3vPecimzU9mzkF8RO4jFtd59f+xTHP+EWWDa2DoX+pySusRFDc2aEQ1mN8qFwzk1VqSRWw
- 1UFIptqrYtzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 03:23:52 -0700
-IronPort-SDR: OvzjCwo1pOHa2LToFMqHaLpR0vxt0elBvEJ28LPE3rKa36dgGkVkUIcCQE9n08O0NgqzFXJ3BW
- mNj7DHy6gyEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
-   d="scan'208";a="283003271"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 21 May 2020 03:23:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jbiMh-0080w2-1A; Thu, 21 May 2020 13:23:51 +0300
-Date:   Thu, 21 May 2020 13:23:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
+        id S1727009AbgEUKY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 06:24:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6518230E;
+        Thu, 21 May 2020 03:24:26 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.114])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EBEE3F68F;
+        Thu, 21 May 2020 03:24:23 -0700 (PDT)
+Date:   Thu, 21 May 2020 11:24:20 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/16] spi: dw: Parameterize the DMA Rx/Tx burst length
-Message-ID: <20200521102351.GI1634618@smile.fi.intel.com>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
- <20200521012206.14472-7-Sergey.Semin@baikalelectronics.ru>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+Message-ID: <20200521102420.GC6425@bogus>
+References: <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus>
+ <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+ <20200521075755.GA4668@willie-the-truck>
+ <20200521081055.GD1131@bogus>
+ <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
+ <20200521091736.GA5091@willie-the-truck>
+ <20200521092627.GB6425@bogus>
+ <20200521101437.GB5360@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200521012206.14472-7-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200521101437.GB5360@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 04:21:56AM +0300, Serge Semin wrote:
-> It isn't good to have numeric literals in the code especially if there
-> are multiple of them and they are related. Let's replace the Tx and Rx
-> burst level literals with the corresponding constants.
+On Thu, May 21, 2020 at 11:14:38AM +0100, Will Deacon wrote:
+> On Thu, May 21, 2020 at 10:26:27AM +0100, Sudeep Holla wrote:
+> > On Thu, May 21, 2020 at 10:17:39AM +0100, Will Deacon wrote:
+> > > On Thu, May 21, 2020 at 11:06:23AM +0200, Arnd Bergmann wrote:
+> > > > On Thu, May 21, 2020 at 10:11 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > > /me confused. Do you need the fix for this warning or you are happy to ignore?
+> > > > 
+> > > > I want a fix for that, as I hope we can eventually turn this warning on by
+> > > > default and stop playing whack-a-mole when they come up. Most of these
+> > > > warnings are harmless, but occasionally the prototypes don't match exactly
+> > > > and cause real bugs depending on the configuration, and ensuring both
+> > > > sides include a common header file is an easy way to make it work
+> > > > more reliably.
+> > > > 
+> > > > Note that the warning should come up for either W=1 or C=1, and I also
+> > > > think that
+> > > > new code should generally be written sparse-clean and have no warnings with
+> > > > 'make C=1' as a rule.
+> > > 
+> > > Fair enough. Is anybody working on a tree-wide sweep for this, like we've
+> > > done for other things such as zero-length arrays? If so, I can start
+> > > enforcing this in the arch code as well (I haven't been so far, even though
+> > > I do run sparse on every commit).
+> > > 
+> > > Anyway, I've dropped the last patch from the branch, and we can put a fix
+> > > for the missing prototype on top.
+> > > 
+> > 
+> > Thanks Will, sorry for the trouble. Though I can send the fix for the
+> > missing prototype right away, I would like to get my clang setup working
+> > as an opportunity. clang-8 that I have is failing vanilla v5.7-rc6
+> > when expanding arm_smccc_1_1_*
+> 
+> No trouble at all, really. I also saw this from Nathan the other day, which
+> may help you get up and running with clang:
+> 
+> https://lore.kernel.org/r/20200520024736.GA854786@ubuntu-s3-xlarge-x86
+> 
 
-Thanks!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> 
-> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-> Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - Discard the dws->fifo_len utilization in the Tx FIFO DMA threshold
->   setting.
-> ---
->  drivers/spi/spi-dw-mid.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-> index 7bba774885cd..be02fedd87cb 100644
-> --- a/drivers/spi/spi-dw-mid.c
-> +++ b/drivers/spi/spi-dw-mid.c
-> @@ -19,7 +19,9 @@
->  
->  #define WAIT_RETRIES	5
->  #define RX_BUSY		0
-> +#define RX_BURST_LEVEL	16
->  #define TX_BUSY		1
-> +#define TX_BURST_LEVEL	16
->  
->  static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
->  {
-> @@ -214,7 +216,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
->  	memset(&txconf, 0, sizeof(txconf));
->  	txconf.direction = DMA_MEM_TO_DEV;
->  	txconf.dst_addr = dws->dma_addr;
-> -	txconf.dst_maxburst = 16;
-> +	txconf.dst_maxburst = TX_BURST_LEVEL;
->  	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
->  	txconf.device_fc = false;
-> @@ -288,7 +290,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
->  	memset(&rxconf, 0, sizeof(rxconf));
->  	rxconf.direction = DMA_DEV_TO_MEM;
->  	rxconf.src_addr = dws->dma_addr;
-> -	rxconf.src_maxburst = 16;
-> +	rxconf.src_maxburst = RX_BURST_LEVEL;
->  	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
->  	rxconf.device_fc = false;
-> @@ -313,8 +315,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
->  {
->  	u16 imr = 0, dma_ctrl = 0;
->  
-> -	dw_writel(dws, DW_SPI_DMARDLR, 0xf);
-> -	dw_writel(dws, DW_SPI_DMATDLR, 0x10);
-> +	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
-> +	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
->  
->  	if (xfer->tx_buf) {
->  		dma_ctrl |= SPI_DMA_TDMAE;
-> -- 
-> 2.25.1
-> 
+Thanks for the link, I will try some other time(may be next time I run
+into clang issue 😄). Anyway upgrading to clang-11 fixed the build issue.
+I will soon post the patch for missing prototype.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Sudeep
