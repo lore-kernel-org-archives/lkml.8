@@ -2,133 +2,365 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8471C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF469C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1ACA207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7787A20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qj42Hkoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbgEUXoR (ORCPT
+        id S1729820AbgEUXsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 19:44:17 -0400
-Received: from mga01.intel.com ([192.55.52.88]:39943 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728537AbgEUXoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 19:44:16 -0400
-IronPort-SDR: eWok/4OKyfebVvYXBafPF0P+dqRI69LicDPbeOBfHnpvJH0QdAXbs14DqivfcrDAXpclbVor7b
- xnbe8d+GDIRg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 16:44:15 -0700
-IronPort-SDR: 0Ms5Qy+jno190pF+/VTAi0QhFUMONNvfXaCA2V4ASdMuxWdGUsEUQ+7ZP1RgIq5Zf8SXnKN58n
- zUjnknN4USiA==
-X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
-   d="scan'208";a="255448928"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.147.236])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 16:44:14 -0700
-Message-ID: <7540b2c7b5b037922bd235203d406acd27a9bd7f.camel@linux.intel.com>
-Subject: Re: [PATCH v2 0/9] Function Granular KASLR
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     mingo@redhat.com, bp@alien8.de, arjan@linux.intel.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com
-Date:   Thu, 21 May 2020 16:44:12 -0700
-In-Reply-To: <202005211604.86AE1C2@keescook>
-References: <20200521165641.15940-1-kristen@linux.intel.com>
-         <87367sudpl.fsf@nanos.tec.linutronix.de> <202005211604.86AE1C2@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 21 May 2020 19:48:50 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:2772 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728537AbgEUXst (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 19:48:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590104928; x=1621640928;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=bFBcoGFNtJUXMRWNnV/gDxB1SnY31ZK3eObGVk9SRlM=;
+  b=qj42HkoyoBD9tie3/kL2q0rfWX5hTH8Bkf5ooO085JuG+XPFapvkFnMn
+   x91peWD2G8mH5SRxRn9ncZ8CqkdQfrvmgmiKDFNpftTdpxz3J4lhmRigb
+   u+GMzp62pl7czcBTBdhh2h1PvcwDGUfAsw/h5lXo4ZhEp89RhpgxqhvGI
+   8=;
+IronPort-SDR: KEECJbF89LVvbmK/V5gpwOiRljggN8CQxES2EGUodOb5EvSvt9pIHqMEIklMg34dBV4oIlMtKE
+ TxW9oTB6jSeQ==
+X-IronPort-AV: E=Sophos;i="5.73,419,1583193600"; 
+   d="scan'208";a="31681872"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 21 May 2020 23:48:33 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id 15A63223F24;
+        Thu, 21 May 2020 23:48:31 +0000 (UTC)
+Received: from EX13D05UWC004.ant.amazon.com (10.43.162.223) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 21 May 2020 23:48:23 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D05UWC004.ant.amazon.com (10.43.162.223) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 21 May 2020 23:48:23 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Thu, 21 May 2020 23:48:22 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 4F1A240712; Thu, 21 May 2020 23:48:23 +0000 (UTC)
+Date:   Thu, 21 May 2020 23:48:23 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
+        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
+        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
+        <anchalag@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>
+Subject: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and
+ hibernation
+Message-ID: <20200521234823.GA2131@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <ad580b4d5b76c18fe2fe409704f25622e01af361.1589926004.git.anchalag@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ad580b4d5b76c18fe2fe409704f25622e01af361.1589926004.git.anchalag@amazon.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-21 at 16:30 -0700, Kees Cook wrote:
-> On Fri, May 22, 2020 at 12:26:30AM +0200, Thomas Gleixner wrote:
-> > I understand how this is supposed to work, but I fail to find an
-> > explanation how all of this is preserving the text subsections we
-> > have,
-> > i.e. .kprobes.text, .entry.text ...?
-> 
-> I had the same question when I first started looking at earlier
-> versions
-> of this series! :)
+From: Munehisa Kamata <kamatam@amazon.com>
 
-Thanks for responding - clearly I do need to update the cover letter
-and documentation.
+S4 power transisiton states are much different than xen
+suspend/resume. Former is visible to the guest and frontend drivers should
+be aware of the state transistions and should be able to take appropriate
+actions when needed. In transition to S4 we need to make sure that at least
+all the in-flight blkif requests get completed, since they probably contain
+bits of the guest's memory image and that's not going to get saved any
+other way. Hence, re-issuing of in-flight requests as in case of xen resume
+will not work here. This is in contrast to xen-suspend where we need to
+freeze with as little processing as possible to avoid dirtying RAM late in
+the migration cycle and we know that in-flight data can wait.
 
-> 
-> > I assume that the functions in these subsections are reshuffled
-> > within
-> > their own randomized address space so that __xxx_text_start and
-> > __xxx_text_end markers still make sense, right?
-> 
-> No, but perhaps in the future. Right now, they are entirely ignored
-> and
-> left untouched. The current series only looks at the sections
-> produced
-> by -ffunction-sections, which is to say only things named
-> ".text.$thing"
-> (e.g. ".text.func1", ".text.func2"). Since the "special" text
-> sections
-> in the kernel are named ".$thing.text" (specifically to avoid other
-> long-standing linker logic that does similar .text.* pattern matches)
-> they get ignored by FGKASLR right now too.
-> 
-> Even more specifically, they're ignored because all of these special
-> _input_ sections are actually manually collected by the linker script
-> into the ".text" _output_ section, which FGKASLR ignores -- it can
-> only
-> randomize the final output sections (and has no basic block
-> visibility
-> into the section contents), so everything in .text is untouched.
-> Because
-> these special sections are collapsed into the single .text output
-> section is why we've needed the __$thing_start and __$thing_end
-> symbols
-> manually constructed by the linker scripts: we lose input section
-> location/size details once the linker collects them into an output
-> section.
-> 
-> > I'm surely too tired to figure it out from the patches, but you
-> > really
-> > want to explain that very detailed for mere mortals who are not
-> > deep
-> > into this magic as you are.
-> 
-> Yeah, it's worth calling out, especially since it's an area of future
-> work -- I think if we can move the special sections out of .text into
-> their own output sections that can get randomized and we'll have
-> section
-> position/size information available without the manual ..._start/_end
-> symbols. But this will require work with the compiler and linker to
-> get
-> what's needed relative to -ffunction-sections, teach the kernel about
-> the new way of getting _start/_end, etc etc.
-> 
-> So, before any of that, just .text.* is a good first step, and after
-> that I think next would be getting .text randomized relative to the
-> other
-> .text.* sections (IIUC, it is entirely untouched currently, so only
-> the
-> standard KASLR base offset moves it around). Only after that do we
-> start
-> poking around trying to munge the special section contents (which
-> requires use solving a few problems simultaneously). :)
-> 
+Add freeze, thaw and restore callbacks for PM suspend and hibernation
+support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
+events, need to implement these xenbus_driver callbacks. The freeze handler
+stops block-layer queue and disconnect the frontend from the backend while
+freeing ring_info and associated resources. Before disconnecting from the
+backend, we need to prevent any new IO from being queued and wait for
+existing IO to complete. Freeze/unfreeze of the queues will guarantee that
+there are no requests in use on the shared ring. However, for sanity we
+should check state of the ring before disconnecting to make sure that there
+are no outstanding requests to be processed on the ring. The restore
+handler re-allocates ring_info, unquiesces and unfreezes the queue
+and re-connect to the backend, so that rest of the kernel can continue
+to use the block device transparently.
 
-That's right - we keep .text unrandomized, so any special sections that
-are collected into .text are still in their original layout. Like you
-said, they still get to take advantage of normal KASLR (base address
-randomization).
+Note:For older backends,if a backend doesn't have commit'12ea729645ace'
+xen/blkback: unmap all persistent grants when frontend gets disconnected,
+the frontend may see massive amount of grant table warning when freeing
+resources.
+[   36.852659] deferring g.e. 0xf9 (pfn 0xffffffffffffffff)
+[   36.855089] xen:grant_table: WARNING:e.g. 0x112 still in use!
 
+In this case, persistent grants would need to be disabled.
+
+[Anchal Changelog: Removed timeout/request during blkfront freeze.
+Reworked the whole patch to work with blk-mq and incorporate upstream's
+comments]
+
+Fixes: Build errors reported by kbuild due to linebreak
+Reported-by: kbuild test robot <lkp@intel.com>
+
+Signed-off-by: Anchal Agarwal <anchalag@amazon.com>
+Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
+---
+ drivers/block/xen-blkfront.c | 118 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 112 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+index 3b889ea950c2..34b0e51697b6 100644
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -48,6 +48,8 @@
+ #include <linux/list.h>
+ #include <linux/workqueue.h>
+ #include <linux/sched/mm.h>
++#include <linux/completion.h>
++#include <linux/delay.h>
+ 
+ #include <xen/xen.h>
+ #include <xen/xenbus.h>
+@@ -80,6 +82,8 @@ enum blkif_state {
+ 	BLKIF_STATE_DISCONNECTED,
+ 	BLKIF_STATE_CONNECTED,
+ 	BLKIF_STATE_SUSPENDED,
++	BLKIF_STATE_FREEZING,
++	BLKIF_STATE_FROZEN
+ };
+ 
+ struct grant {
+@@ -219,6 +223,7 @@ struct blkfront_info
+ 	struct list_head requests;
+ 	struct bio_list bio_list;
+ 	struct list_head info_list;
++	struct completion wait_backend_disconnected;
+ };
+ 
+ static unsigned int nr_minors;
+@@ -1005,6 +1010,7 @@ static int xlvbd_init_blk_queue(struct gendisk *gd, u16 sector_size,
+ 	info->sector_size = sector_size;
+ 	info->physical_sector_size = physical_sector_size;
+ 	blkif_set_queue_limits(info);
++	init_completion(&info->wait_backend_disconnected);
+ 
+ 	return 0;
+ }
+@@ -1057,7 +1063,7 @@ static int xen_translate_vdev(int vdevice, int *minor, unsigned int *offset)
+ 		case XEN_SCSI_DISK5_MAJOR:
+ 		case XEN_SCSI_DISK6_MAJOR:
+ 		case XEN_SCSI_DISK7_MAJOR:
+-			*offset = (*minor / PARTS_PER_DISK) + 
++			*offset = (*minor / PARTS_PER_DISK) +
+ 				((major - XEN_SCSI_DISK1_MAJOR + 1) * 16) +
+ 				EMULATED_SD_DISK_NAME_OFFSET;
+ 			*minor = *minor +
+@@ -1072,7 +1078,7 @@ static int xen_translate_vdev(int vdevice, int *minor, unsigned int *offset)
+ 		case XEN_SCSI_DISK13_MAJOR:
+ 		case XEN_SCSI_DISK14_MAJOR:
+ 		case XEN_SCSI_DISK15_MAJOR:
+-			*offset = (*minor / PARTS_PER_DISK) + 
++			*offset = (*minor / PARTS_PER_DISK) +
+ 				((major - XEN_SCSI_DISK8_MAJOR + 8) * 16) +
+ 				EMULATED_SD_DISK_NAME_OFFSET;
+ 			*minor = *minor +
+@@ -1353,6 +1359,8 @@ static void blkif_free(struct blkfront_info *info, int suspend)
+ 	unsigned int i;
+ 	struct blkfront_ring_info *rinfo;
+ 
++	if (info->connected == BLKIF_STATE_FREEZING)
++		goto free_rings;
+ 	/* Prevent new requests being issued until we fix things up. */
+ 	info->connected = suspend ?
+ 		BLKIF_STATE_SUSPENDED : BLKIF_STATE_DISCONNECTED;
+@@ -1360,6 +1368,7 @@ static void blkif_free(struct blkfront_info *info, int suspend)
+ 	if (info->rq)
+ 		blk_mq_stop_hw_queues(info->rq);
+ 
++free_rings:
+ 	for_each_rinfo(info, rinfo, i)
+ 		blkif_free_ring(rinfo);
+ 
+@@ -1563,8 +1572,10 @@ static irqreturn_t blkif_interrupt(int irq, void *dev_id)
+ 	struct blkfront_ring_info *rinfo = (struct blkfront_ring_info *)dev_id;
+ 	struct blkfront_info *info = rinfo->dev_info;
+ 
+-	if (unlikely(info->connected != BLKIF_STATE_CONNECTED))
++	if (unlikely(info->connected != BLKIF_STATE_CONNECTED
++		&& info->connected != BLKIF_STATE_FREEZING)){
+ 		return IRQ_HANDLED;
++	}
+ 
+ 	spin_lock_irqsave(&rinfo->ring_lock, flags);
+  again:
+@@ -2027,6 +2038,7 @@ static int blkif_recover(struct blkfront_info *info)
+ 	unsigned int segs;
+ 	struct blkfront_ring_info *rinfo;
+ 
++	bool frozen = info->connected == BLKIF_STATE_FROZEN;
+ 	blkfront_gather_backend_features(info);
+ 	/* Reset limits changed by blk_mq_update_nr_hw_queues(). */
+ 	blkif_set_queue_limits(info);
+@@ -2048,6 +2060,9 @@ static int blkif_recover(struct blkfront_info *info)
+ 		kick_pending_request_queues(rinfo);
+ 	}
+ 
++	if (frozen)
++		return 0;
++
+ 	list_for_each_entry_safe(req, n, &info->requests, queuelist) {
+ 		/* Requeue pending requests (flush or discard) */
+ 		list_del_init(&req->queuelist);
+@@ -2364,6 +2379,7 @@ static void blkfront_connect(struct blkfront_info *info)
+ 
+ 		return;
+ 	case BLKIF_STATE_SUSPENDED:
++	case BLKIF_STATE_FROZEN:
+ 		/*
+ 		 * If we are recovering from suspension, we need to wait
+ 		 * for the backend to announce it's features before
+@@ -2481,12 +2497,36 @@ static void blkback_changed(struct xenbus_device *dev,
+ 		break;
+ 
+ 	case XenbusStateClosed:
+-		if (dev->state == XenbusStateClosed)
++		if (dev->state == XenbusStateClosed) {
++			if (info->connected == BLKIF_STATE_FREEZING) {
++				blkif_free(info, 0);
++				info->connected = BLKIF_STATE_FROZEN;
++				complete(&info->wait_backend_disconnected);
++				break;
++			}
++
++			break;
++		}
++
++		/*
++		 * We may somehow receive backend's Closed again while thawing
++		 * or restoring and it causes thawing or restoring to fail.
++		 * Ignore such unexpected state regardless of the backend state.
++		 */
++		if (info->connected == BLKIF_STATE_FROZEN) {
++			dev_dbg(&dev->dev,
++					"ignore the backend's Closed state: %s",
++					dev->nodename);
+ 			break;
++		}
+ 		/* fall through */
+ 	case XenbusStateClosing:
+-		if (info)
+-			blkfront_closing(info);
++		if (info) {
++			if (info->connected == BLKIF_STATE_FREEZING)
++				xenbus_frontend_closed(dev);
++			else
++				blkfront_closing(info);
++		}
+ 		break;
+ 	}
+ }
+@@ -2630,6 +2670,69 @@ static void blkif_release(struct gendisk *disk, fmode_t mode)
+ 	mutex_unlock(&blkfront_mutex);
+ }
+ 
++static int blkfront_freeze(struct xenbus_device *dev)
++{
++	unsigned int i;
++	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
++	struct blkfront_ring_info *rinfo;
++	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
++	unsigned int timeout = 5 * HZ;
++	unsigned long flags;
++	int err = 0;
++
++	info->connected = BLKIF_STATE_FREEZING;
++
++	blk_mq_freeze_queue(info->rq);
++	blk_mq_quiesce_queue(info->rq);
++
++	for_each_rinfo(info, rinfo, i) {
++		/* No more gnttab callback work. */
++		gnttab_cancel_free_callback(&rinfo->callback);
++		/* Flush gnttab callback work. Must be done with no locks held. */
++		flush_work(&rinfo->work);
++	}
++
++	for_each_rinfo(info, rinfo, i) {
++		spin_lock_irqsave(&rinfo->ring_lock, flags);
++		if (RING_FULL(&rinfo->ring)
++			|| RING_HAS_UNCONSUMED_RESPONSES(&rinfo->ring)) {
++			xenbus_dev_error(dev, err, "Hibernation Failed.The ring is still busy");
++			info->connected = BLKIF_STATE_CONNECTED;
++			spin_unlock_irqrestore(&rinfo->ring_lock, flags);
++			return -EBUSY;
++		}
++		spin_unlock_irqrestore(&rinfo->ring_lock, flags);
++	}
++	/* Kick the backend to disconnect */
++	xenbus_switch_state(dev, XenbusStateClosing);
++
++	/*
++	 * We don't want to move forward before the frontend is diconnected
++	 * from the backend cleanly.
++	 */
++	timeout = wait_for_completion_timeout(&info->wait_backend_disconnected,
++					      timeout);
++	if (!timeout) {
++		err = -EBUSY;
++		xenbus_dev_error(dev, err, "Freezing timed out;"
++				 "the device may become inconsistent state");
++	}
++	return err;
++}
++
++static int blkfront_restore(struct xenbus_device *dev)
++{
++	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
++	int err = 0;
++
++	err = talk_to_blkback(dev, info);
++	blk_mq_unquiesce_queue(info->rq);
++	blk_mq_unfreeze_queue(info->rq);
++	if (!err)
++		blk_mq_update_nr_hw_queues(&info->tag_set, info->nr_rings);
++	return err;
++}
++
+ static const struct block_device_operations xlvbd_block_fops =
+ {
+ 	.owner = THIS_MODULE,
+@@ -2653,6 +2756,9 @@ static struct xenbus_driver blkfront_driver = {
+ 	.resume = blkfront_resume,
+ 	.otherend_changed = blkback_changed,
+ 	.is_ready = blkfront_is_ready,
++	.freeze = blkfront_freeze,
++	.thaw = blkfront_restore,
++	.restore = blkfront_restore
+ };
+ 
+ static void purge_persistent_grants(struct blkfront_info *info)
+-- 
+2.24.1.AMZN
 
