@@ -2,226 +2,325 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD089C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0878207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B5A207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:00:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A3LM59OK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgEURAV (ORCPT
+        id S1730026AbgEURAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:00:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45586 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728632AbgEURAV (ORCPT
+        Thu, 21 May 2020 13:00:32 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56421 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729787AbgEURAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:00:21 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04LGXXKn069939;
-        Thu, 21 May 2020 12:59:48 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 313x65g0y0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 May 2020 12:59:48 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04LGt9j3004809;
-        Thu, 21 May 2020 16:59:46 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 313wne2gmw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 May 2020 16:59:46 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04LGxhs910289500
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 16:59:43 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37241A4059;
-        Thu, 21 May 2020 16:59:43 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 43E2BA404D;
-        Thu, 21 May 2020 16:59:40 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.79.187.27])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Thu, 21 May 2020 16:59:39 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Thu, 21 May 2020 22:29:38 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Michael Ellerman <michaele@au1.ibm.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, linux-nvdimm@lists.01.org
-Subject: Re: [RESEND PATCH v7 3/5] powerpc/papr_scm: Fetch nvdimm health information from PHYP
-In-Reply-To: <87k115gy0i.fsf@mpe.ellerman.id.au>
-References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-4-vaibhav@linux.ibm.com> <20200520145430.GB3660833@iweiny-DESK2.sc.intel.com> <87tv0awmr5.fsf@linux.ibm.com> <87k115gy0i.fsf@mpe.ellerman.id.au>
-Date:   Thu, 21 May 2020 22:29:38 +0530
-Message-ID: <87imgpw7et.fsf@linux.ibm.com>
+        Thu, 21 May 2020 13:00:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590080429;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/LXBXwbTK2rHLXTE9mi+4/1lGs2ONoQJhTy1lLnSHyI=;
+        b=A3LM59OKvaGHzbfpD/i09fdBZdItuSdzvShIU9t2puL30Y10R/ROHnjAWauaKO444BwJT5
+        STQBKYz/pE+IChXbRq2VK6Uw+WJUYcKHBk41jZhyqI4Hwd59cdyPNwVeWXvPrqkjejr4IE
+        OaUSiA8TA+542/EFplK+dQTVrSltSfA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-yvr62wbENvGl_cNiBGzO1Q-1; Thu, 21 May 2020 13:00:27 -0400
+X-MC-Unique: yvr62wbENvGl_cNiBGzO1Q-1
+Received: by mail-wr1-f72.google.com with SMTP id e1so677403wrm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 10:00:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/LXBXwbTK2rHLXTE9mi+4/1lGs2ONoQJhTy1lLnSHyI=;
+        b=JxJgZQtesxwss64J/1YDFF76I6TCPSeLfANz4TzZ3fp+4w6Ns1L0Vy52HzMfvhm+m1
+         yOHK3F99d3EwmA/fGmo/pW3mIfnvEHD+t9KxBLAjUDpMzg9ALsUTNIqIuYjs9knTRYP7
+         3IQ8ob5dk+BsSwuwjBC247IHVY9qPp/RpVh4HI3OJHlq34dm9rmZEJIPANHONto6QLFY
+         7ybKdv9wNUy8uOZKuDXgDHcShRZh7AGuq9cb6NTh372RTDfwLhL4ywWjWnu87zbKTu2k
+         sKVrkOe3xzZ3MuqvqQcXH3cNqA0KqZXerdhb75AzPN8iqRS64gxifWRWlMzgKqvm+LtE
+         v1zw==
+X-Gm-Message-State: AOAM531CJky19IKBAGLoI3pubhu7+YtnrU7uO99BWPJMii49YCDJFJKY
+        tFuDmAJr+CEYtBZR7GYORU+AqEfsLMP0tXlUhwWgzfjaCweDmY/22zW9+Twl4Oir51zrRSO1yAO
+        TwXfvv3mBOhf/ExLtq/WqQYUB
+X-Received: by 2002:a5d:4806:: with SMTP id l6mr9440153wrq.121.1590080425802;
+        Thu, 21 May 2020 10:00:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyIgwHKdT5gdyYAvDv69oDTdDDb8uuyHn8pAGm9gWt1/4l5gMCUTkaudkh420RYru/iWZAWuw==
+X-Received: by 2002:a5d:4806:: with SMTP id l6mr9440124wrq.121.1590080425424;
+        Thu, 21 May 2020 10:00:25 -0700 (PDT)
+Received: from localhost.localdomain ([151.36.36.242])
+        by smtp.gmail.com with ESMTPSA id u23sm7454750wmu.20.2020.05.21.10.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 10:00:24 -0700 (PDT)
+Date:   Thu, 21 May 2020 19:00:20 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
+        linux-rt-users@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
+ is cleared
+Message-ID: <20200521170020.GQ10078@localhost.localdomain>
+References: <20200520140402.358880-1-juri.lelli@redhat.com>
+ <20200520162400.GA8800@lenoir>
+ <20200520164925.GM10078@localhost.localdomain>
+ <20200520170215.GB8800@lenoir>
+ <20200520184710.GO10078@localhost.localdomain>
+ <20200521004443.GB15455@lenoir>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-21_10:2020-05-21,2020-05-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 cotscore=-2147483648 malwarescore=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521004443.GB15455@lenoir>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <michaele@au1.ibm.com> writes:
+On 21/05/20 02:44, Frederic Weisbecker wrote:
+> On Wed, May 20, 2020 at 08:47:10PM +0200, Juri Lelli wrote:
+> > On 20/05/20 19:02, Frederic Weisbecker wrote:
+> > > On Wed, May 20, 2020 at 06:49:25PM +0200, Juri Lelli wrote:
+> > > > On 20/05/20 18:24, Frederic Weisbecker wrote:
+> > > > 
+> > > > Hummm, so I enabled 'timer:*', anything else you think I should be
+> > > > looking at?
+> > > 
+> > > Are you sure you also enabled timer_expire_entry?
+> > > Because:
+> > 
+> > I run with
+> > 
+> > trace-cmd record -e sched_switch -e sched_wakeup -e sched_migrate_task \
+> > -e 'timer:*' -e 'irq_vectors:*' -e 'irq:softirq*' \
+> > -e 'irq:irq_handler*' taskset --cpu-list 4-35 ./sysjitter/sysjitter \
+> > --runtime 10 200
+> > 
+> > And
+> > 
+> > $ grep ' timer_expire_entry:' trace.txt | wc -l
+> > 1173
+> > 
+> > seems to confirm that the event was indeed enabled, e.g.
+> > 
+> > ksoftirqd/11-100   [011]   159.270023: timer_expire_entry:   timer=0xffff9807df8a5a60 function=delayed_work_timer_fn now=4294826418 baseclk=4294825984
+> 
+> That's interesting! I'll see if I can reproduce that with threaded irqs. If not we'll
+> have to investigate on your machine. We really don't want to trigger timer softirqs
+> when it's not necessary.
+> 
 
-> Vaibhav Jain <vaibhav@linux.ibm.com> writes:
->> Thanks for reviewing this this patch Ira. My responses below:
->> Ira Weiny <ira.weiny@intel.com> writes:
->>> On Wed, May 20, 2020 at 12:30:56AM +0530, Vaibhav Jain wrote:
->>>> Implement support for fetching nvdimm health information via
->>>> H_SCM_HEALTH hcall as documented in Ref[1]. The hcall returns a pair
->>>> of 64-bit big-endian integers, bitwise-and of which is then stored in
->>>> 'struct papr_scm_priv' and subsequently partially exposed to
->>>> user-space via newly introduced dimm specific attribute
->>>> 'papr/flags'. Since the hcall is costly, the health information is
->>>> cached and only re-queried, 60s after the previous successful hcall.
-> ...
->>>> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
->>>> index f35592423380..142636e1a59f 100644
->>>> --- a/arch/powerpc/platforms/pseries/papr_scm.c
->>>> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
->>>> @@ -39,6 +78,15 @@ struct papr_scm_priv {
->>>>  	struct resource res;
->>>>  	struct nd_region *region;
->>>>  	struct nd_interleave_set nd_set;
->>>> +
->>>> +	/* Protect dimm health data from concurrent read/writes */
->>>> +	struct mutex health_mutex;
->>>> +
->>>> +	/* Last time the health information of the dimm was updated */
->>>> +	unsigned long lasthealth_jiffies;
->>>> +
->>>> +	/* Health information for the dimm */
->>>> +	u64 health_bitmap;
->>>
->>> I wonder if this should be typed big endian as you mention that it is in the
->>> commit message?
->> This was discussed in an earlier review of the patch series at
->> https://lore.kernel.org/linux-nvdimm/878sjetcis.fsf@mpe.ellerman.id.au
->>
->> Even though health bitmap is returned in big endian format (For ex
->> value 0xC00000000000000 indicates bits 0,1 set), its value is never
->> used. Instead only test for specific bits being set in the register is
->> done.
->
-> This has already caused a lot of confusion, so let me try and clear it
-> up. I will probably fail :)
->
-> The value is not big endian.
->
-> It's returned in a GPR (a register), from the hypervisor. The ordering
-> of bytes in a register is not dependent on what endian we're executing
-> in.
->
-> It's true that the hypervisor will have been running big endian, and
-> when it returns to us we will now be running little endian. But the
-> value is unchanged, it was 0xC00000000000000 in the GPR while the HV was
-> running and it's still 0xC00000000000000 when we return to Linux. You
-> can see this in mambo, see below for an example.
->
->
-> _However_, the specification of the bits in the bitmap value uses MSB 0
-> ordering, as is traditional for IBM documentation. That means the most
-> significant bit, aka. the left most bit, is called "bit 0".
->
-> See: https://en.wikipedia.org/wiki/Bit_numbering#MSB_0_bit_numbering
->
-> That is the opposite numbering from what most people use, and in
-> particular what most code in Linux uses, which is that bit 0 is the
-> least significant bit.
->
-> Which is where the confusion comes in. It's not that the bytes are
-> returned in a different order, it's that the bits are numbered
-> differently in the IBM documentation.
->
-> The way to fix this kind of thing is to read the docs, and convert all
-> the bits into correct numbering (LSB=0), and then throw away the docs ;)
->
-> cheers
-Thanks a lot for clarifying this Mpe and for this detailed explaination.
+So, I managed to get a bit more info on this, please check the following
+(which I edited a bit to hopefully make it clearer and apologies for
+long lines, but I believe trimming them would mess things up)
 
-I have removed the term Big-Endian from v8 patch description to avoid
-any further confusion.
+---
+ksoftirqd/3-26    [003]    99.942485: timer_expire_entry:   timer=0xffffffffa55a9d20 function=clocksource_watchdog now=4294759328 baseclk=4294759328
+ksoftirqd/3-26    [003]    99.942489: timer_start:          timer=0xffffffffa55a9d20 function=clocksource_watchdog expires=4294759822 [timeout=494] cpu=4 idx=114 flags=D|P|I
+ksoftirqd/3-26    [003]    99.942491: timer_expire_exit:    timer=0xffffffffa55a9d20
+  sysjitter-2377  [004]    99.942491: call_function_single_entry: vector=251
+  sysjitter-2377  [004]    99.942492: call_function_single_exit: vector=251
+ksoftirqd/3-26    [003]    99.942493: softirq_exit:         vec=1 [action=TIMER]
+ksoftirqd/3-26    [003]    99.942494: softirq_entry:        vec=7 [action=SCHED]
+  sysjitter-2377  [004]    99.942494: hrtimer_start:        hrtimer=0xffff92e9df91fd20 function=tick_sched_timer/0x0 expires=92630457385 softexpires=92630457385
+---
 
->
->
->
-> In mambo we can set a breakpoint just before the kernel enters skiboot,
-> towards the end of __opal_call. The kernel is running LE and skiboot
-> runs BE.
->
->   systemsim-p9 [~/skiboot/skiboot/external/mambo] b 0xc0000000000c1744
->   breakpoint set at [0:0:0]: 0xc0000000000c1744 (0x00000000000C1744) Enc:0x2402004C : hrfid
->
-> Then run:
->
->   systemsim-p9 [~/skiboot/skiboot/external/mambo] c
->   [0:0:0]: 0xC0000000000C1744 (0x00000000000C1744) Enc:0x2402004C : hrfid
->   INFO: 121671618: (121671618): ** Execution stopped: user (tcl),  **
->   121671618: ** finished running 121671618 instructions **
->
-> And we stop there, on an hrfid that we haven't executed yet.
-> We can print r0, to see the OPAL token:
->
->   systemsim-p9 [~/skiboot/skiboot/external/mambo] p r0
->   0x0000000000000019
->
-> ie. we're calling OPAL_CONSOLE_WRITE_BUFFER_SPACE (25).
->
-> And we can print the MSR:
->
->   systemsim-p9 [~/skiboot/skiboot/external/mambo] p msr
->   0x9000000002001033
->   
->                      64-bit mode (SF): 0x1 [64-bit mode]
->                 Hypervisor State (HV): 0x1
->                Vector Available (VEC): 0x1
->   Machine Check Interrupt Enable (ME): 0x1
->             Instruction Relocate (IR): 0x1
->                    Data Relocate (DR): 0x1
->            Recoverable Interrupt (RI): 0x1
->               Little-Endian Mode (LE): 0x1 [little-endian]
->
-> ie. we're little endian.
->
-> We then step one instruction:
->
->   systemsim-p9 [~/skiboot/skiboot/external/mambo] s
->   [0:0:0]: 0x0000000030002BF0 (0x0000000030002BF0) Enc:0x7D9FFAA6 : mfspr   r12,PIR
->
-> Now we're in skiboot. Print the MSR again:
->
->   systemsim-p9 [~/skiboot/skiboot/external/mambo] p msr
->   0x9000000002001002
->   
->                      64-bit mode (SF): 0x1 [64-bit mode]
->                 Hypervisor State (HV): 0x1
->                Vector Available (VEC): 0x1
->   Machine Check Interrupt Enable (ME): 0x1
->            Recoverable Interrupt (RI): 0x1
->
-> We're big endian.
-> Print r0:
->
->   systemsim-p9 [~/skiboot/skiboot/external/mambo] p r0
->   0x0000000000000019
->
-> r0 is unchanged!
-Got it. Thanks again.
+So, my understanding is that clock gets reactivated on CPU 4 to run
+clocksource watchdog (indeed if I use tsc=nowatchdog this above doesn't
+happen, but the potential issue is still there I guess).
 
--- 
-Cheers
-~ Vaibhav
+---
+  sysjitter-2377  [004]   100.438455: local_timer_entry:    vector=236
+  sysjitter-2377  [004]   100.438456: hrtimer_cancel:       hrtimer=0xffff92e9df91fd20
+  sysjitter-2377  [004]   100.438458: hrtimer_expire_entry: hrtimer=0xffff92e9df91fd20 now=92630461337 function=tick_sched_timer/0x0
+  sysjitter-2377  [004]   100.438460: kernel_stack:         <stack trace>
+=> __ftrace_trace_stack (ffffffffa37da921)
+=> __raise_softirq_irqoff (ffffffffa36daf50)
+=> raise_softirq (ffffffffa36db0fe)
+=> update_process_times (ffffffffa3768f9d)
+=> tick_sched_handle (ffffffffa377aaa2)
+=> tick_sched_timer (ffffffffa377ad53)
+=> __hrtimer_run_queues (ffffffffa3769cf0)
+=> hrtimer_interrupt (ffffffffa376a58a)
+=> smp_apic_timer_interrupt (ffffffffa40028f8)
+=> apic_timer_interrupt (ffffffffa4001b7f)
+  sysjitter-2377  [004]   100.438461: softirq_raise:        vec=1 [action=TIMER]
+  sysjitter-2377  [004]   100.438464: kernel_stack:         <stack trace>
+=> __ftrace_trace_stack (ffffffffa37da921)
+=> __raise_softirq_irqoff (ffffffffa36daf50)
+=> raise_softirq (ffffffffa36db0fe)
+=> trigger_load_balance (ffffffffa371cb9c)
+=> update_process_times (ffffffffa3768fc7)
+=> tick_sched_handle (ffffffffa377aaa2)
+=> tick_sched_timer (ffffffffa377ad53)
+=> __hrtimer_run_queues (ffffffffa3769cf0)
+=> hrtimer_interrupt (ffffffffa376a58a)
+=> smp_apic_timer_interrupt (ffffffffa40028f8)
+=> apic_timer_interrupt (ffffffffa4001b7f)
+  sysjitter-2377  [004]   100.438465: softirq_raise:        vec=7 [action=SCHED]
+---
+
+Tick fires, the two softirq_raise (which you wondered about) seems to
+come from
+
+ 1. update_process_times::run_local_timers (TIMER_SOFTIRQ)
+ 2. update_process_times::scheduler_tick::trigger_load_balance (SCHED_SOFTIRQ)
+
+---
+  sysjitter-2377  [004]   100.438468: hrtimer_expire_exit:  hrtimer=0xffff92e9df91fd20
+  sysjitter-2377  [004]   100.438470: local_timer_exit:     vector=236
+  sysjitter-2377  [004]   100.438473: sched_wakeup:         ksoftirqd/4:31 [120] success=1 CPU:004
+  sysjitter-2377  [004]   100.438474: tick_stop:            success=0 dependency=SCHED
+  sysjitter-2377  [004]   100.438476: hrtimer_start:        hrtimer=0xffff92e9df91fd20 function=tick_sched_timer/0x0 expires=92630512937 softexpires=92630512937
+  sysjitter-2377  [004]   100.438484: irq_work_entry:       vector=246
+  sysjitter-2377  [004]   100.438491: irq_work_exit:        vector=246
+  sysjitter-2377  [004]   100.438492: tick_stop:            success=0 dependency=SCHED
+  sysjitter-2377  [004]   100.438495: sched_switch:         sysjitter:2377 [120] R ==> ksoftirqd/4:31 [120]
+ksoftirqd/4-31    [004]   100.438497: softirq_entry:        vec=1 [action=TIMER]
+ksoftirqd/4-31    [004]   100.438499: timer_cancel:         timer=0xffffffffa55a9d20
+ksoftirqd/4-31    [004]   100.438501: timer_expire_entry:   timer=0xffffffffa55a9d20 function=clocksource_watchdog now=4294759824 baseclk=4294759824
+ksoftirqd/4-31    [004]   100.438504: timer_start:          timer=0xffffffffa55a9d20 function=clocksource_watchdog expires=4294760322 [timeout=498] cpu=5 idx=113 flags=D|P|I
+---
+
+Queueing clocksource watchdog on CPU5.
+
+---
+ksoftirqd/4-31    [004]   100.438506: timer_expire_exit:    timer=0xffffffffa55a9d20
+ksoftirqd/4-31    [004]   100.438507: local_timer_entry:    vector=236
+---
+
+Back to back timer?
+
+---
+ksoftirqd/4-31    [004]   100.438509: hrtimer_cancel:       hrtimer=0xffff92e9df91fd20
+ksoftirqd/4-31    [004]   100.438511: hrtimer_expire_entry: hrtimer=0xffff92e9df91fd20 now=92630515022 function=tick_sched_timer/0x0
+ksoftirqd/4-31    [004]   100.438515: kernel_stack:         <stack trace>
+=> __ftrace_trace_stack (ffffffffa37da921)
+=> __raise_softirq_irqoff (ffffffffa36daf50)
+=> raise_softirq (ffffffffa36db0fe)
+=> rcu_sched_clock_irq (ffffffffa375af4a)
+=> update_process_times (ffffffffa3768fa4)
+=> tick_sched_handle (ffffffffa377aaa2)
+=> tick_sched_timer (ffffffffa377ad53)
+=> __hrtimer_run_queues (ffffffffa3769cf0)
+=> hrtimer_interrupt (ffffffffa376a58a)
+=> smp_apic_timer_interrupt (ffffffffa40028f8)
+=> apic_timer_interrupt (ffffffffa4001b7f)
+=> filter_pred_32 (ffffffffa37f3357)
+=> filter_match_preds (ffffffffa37f3510)
+=> trace_event_buffer_commit (ffffffffa37dc7eb)
+=> trace_event_raw_event_softirq (ffffffffa36dab77)
+=> __do_softirq (ffffffffa420025a)
+=> run_ksoftirqd (ffffffffa36dadc6)
+=> smpboot_thread_fn (ffffffffa36ffdb8)
+=> kthread (ffffffffa36f9fb7)
+=> ret_from_fork (ffffffffa4000215)
+ksoftirqd/4-31    [004]   100.438516: softirq_raise:        vec=9 [action=RCU]
+ksoftirqd/4-31    [004]   100.438520: kernel_stack:         <stack trace>
+=> __ftrace_trace_stack (ffffffffa37da921)
+=> __raise_softirq_irqoff (ffffffffa36daf50)
+=> raise_softirq (ffffffffa36db0fe)
+=> trigger_load_balance (ffffffffa371cb9c)
+=> update_process_times (ffffffffa3768fc7)
+=> tick_sched_handle (ffffffffa377aaa2)
+=> tick_sched_timer (ffffffffa377ad53)
+=> __hrtimer_run_queues (ffffffffa3769cf0)
+=> hrtimer_interrupt (ffffffffa376a58a)
+=> smp_apic_timer_interrupt (ffffffffa40028f8)
+=> apic_timer_interrupt (ffffffffa4001b7f)
+=> filter_pred_32 (ffffffffa37f3357)
+=> filter_match_preds (ffffffffa37f3510)
+=> trace_event_buffer_commit (ffffffffa37dc7eb)
+=> trace_event_raw_event_softirq (ffffffffa36dab77)
+=> __do_softirq (ffffffffa420025a)
+=> run_ksoftirqd (ffffffffa36dadc6)
+=> smpboot_thread_fn (ffffffffa36ffdb8)
+=> kthread (ffffffffa36f9fb7)
+=> ret_from_fork (ffffffffa4000215)
+ksoftirqd/4-31    [004]   100.438520: softirq_raise:        vec=7 [action=SCHED]
+ksoftirqd/4-31    [004]   100.438521: hrtimer_expire_exit:  hrtimer=0xffff92e9df91fd20
+ksoftirqd/4-31    [004]   100.438523: hrtimer_start:        hrtimer=0xffff92e9df91fd20 function=tick_sched_timer/0x0 expires=92631512937 softexpires=92631512937
+ksoftirqd/4-31    [004]   100.438525: local_timer_exit:     vector=236
+ksoftirqd/4-31    [004]   100.438527: tick_stop:            success=0 dependency=SCHED
+---
+
+At this point (I think) ksoftirqd is already going to sleep, so only
+sysjitter will be eventually executing on CPU4, but tick_stop check
+still sees nr_running == 2.
+
+---
+ksoftirqd/4-31    [004]   100.438530: softirq_exit:         vec=1 [action=TIMER]
+ksoftirqd/4-31    [004]   100.438531: softirq_entry:        vec=7 [action=SCHED]
+ksoftirqd/4-31    [004]   100.438533: softirq_exit:         vec=7 [action=SCHED]
+ksoftirqd/4-31    [004]   100.438534: softirq_entry:        vec=7 [action=SCHED]
+ksoftirqd/4-31    [004]   100.438535: softirq_exit:         vec=7 [action=SCHED]
+ksoftirqd/4-31    [004]   100.438536: softirq_entry:        vec=9 [action=RCU]
+ksoftirqd/4-31    [004]   100.438537: softirq_exit:         vec=9 [action=RCU]
+ksoftirqd/4-31    [004]   100.438540: sched_switch:         ksoftirqd/4:31 [120] S ==> sysjitter:2377 [120]
+---
+
+And tick again fires below.
+
+---
+  sysjitter-2377  [004]   100.439509: local_timer_entry:    vector=236
+  sysjitter-2377  [004]   100.439511: hrtimer_cancel:       hrtimer=0xffff92e9df91fd20
+  sysjitter-2377  [004]   100.439512: hrtimer_expire_entry: hrtimer=0xffff92e9df91fd20 now=92631515408 function=tick_sched_timer/0x0
+  sysjitter-2377  [004]   100.439514: kernel_stack:         <stack trace>
+=> __ftrace_trace_stack (ffffffffa37da921)
+=> __raise_softirq_irqoff (ffffffffa36daf50)
+=> raise_softirq (ffffffffa36db0fe)
+=> update_process_times (ffffffffa3768f9d)
+=> tick_sched_handle (ffffffffa377aaa2)
+=> tick_sched_timer (ffffffffa377ad53)
+=> __hrtimer_run_queues (ffffffffa3769cf0)
+=> hrtimer_interrupt (ffffffffa376a58a)
+=> smp_apic_timer_interrupt (ffffffffa40028f8)
+=> apic_timer_interrupt (ffffffffa4001b7f)
+sysjitter-2377  [004]   100.439515: softirq_raise:        vec=1 [action=TIMER]
+sysjitter-2377  [004]   100.439517: kernel_stack:         <stack trace>
+=> __ftrace_trace_stack (ffffffffa37da921)
+=> __raise_softirq_irqoff (ffffffffa36daf50)
+=> raise_softirq (ffffffffa36db0fe)
+=> trigger_load_balance (ffffffffa371cb9c)
+=> update_process_times (ffffffffa3768fc7)
+=> tick_sched_handle (ffffffffa377aaa2)
+=> tick_sched_timer (ffffffffa377ad53)
+=> __hrtimer_run_queues (ffffffffa3769cf0)
+=> hrtimer_interrupt (ffffffffa376a58a)
+=> smp_apic_timer_interrupt (ffffffffa40028f8)
+=> apic_timer_interrupt (ffffffffa4001b7f)
+  sysjitter-2377  [004]   100.439518: softirq_raise:        vec=7 [action=SCHED]
+  sysjitter-2377  [004]   100.439520: hrtimer_expire_exit:  hrtimer=0xffff92e9df91fd20
+  sysjitter-2377  [004]   100.439521: hrtimer_start:        hrtimer=0xffff92e9df91fd20 function=tick_sched_timer/0x0 expires=92632512937 softexpires=92632512937
+  sysjitter-2377  [004]   100.439522: local_timer_exit:     vector=236
+  sysjitter-2377  [004]   100.439525: sched_wakeup:         ksoftirqd/4:31 [120] success=1 CPU:004
+  sysjitter-2377  [004]   100.439527: tick_stop:            success=0 dependency=SCHED
+  sysjitter-2377  [004]   100.439529: irq_work_entry:       vector=246
+  sysjitter-2377  [004]   100.439531: irq_work_exit:        vector=246
+  sysjitter-2377  [004]   100.439532: tick_stop:            success=0 dependency=SCHED
+  sysjitter-2377  [004]   100.439534: sched_switch:         sysjitter:2377 [120] R ==> ksoftirqd/4:31 [120]
+ksoftirqd/4-31    [004]   100.439536: softirq_entry:        vec=1 [action=TIMER]
+ksoftirqd/4-31    [004]   100.439537: softirq_exit:         vec=1 [action=TIMER]
+ksoftirqd/4-31    [004]   100.439538: softirq_entry:        vec=7 [action=SCHED]
+ksoftirqd/4-31    [004]   100.439540: softirq_exit:         vec=7 [action=SCHED]
+ksoftirqd/4-31    [004]   100.439541: sched_switch:         ksoftirqd/4:31 [120] S ==> sysjitter:2377 [120]
+---
+
+History seems to repeat itself until ~2s later (this is one of the
+pathological runs) when an ipi fires on CPU4 and SCHED dependecy is seen
+as cleared (as only sysjitter thread was is running at that point).
+
+Does this make sense and help in any way? Suggestions for debugging this
+further? :-)
+
+Thanks!
+
+Juri
+
