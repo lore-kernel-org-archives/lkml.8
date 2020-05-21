@@ -7,127 +7,136 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753BAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F24DE2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE0A2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRekUtaW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iebxwsjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgEUMtB (ORCPT
+        id S1729361AbgEUMt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39116 "EHLO
+        Thu, 21 May 2020 08:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729077AbgEUMtA (ORCPT
+        with ESMTP id S1729077AbgEUMt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:49:00 -0400
+        Thu, 21 May 2020 08:49:28 -0400
 Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B08C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:49:00 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q9so2981464pjm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:49:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C01C061A0E;
+        Thu, 21 May 2020 05:49:27 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id 5so2983613pjd.0;
+        Thu, 21 May 2020 05:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ThicM2MINEcLmZzXQZhlZBSaO4KVfv3Uo4/fCOM5QbM=;
-        b=nRekUtaW1++FK1DM8dhcPPdCGdgFZMRJQshCPLZ1SbxcqEzPFkK6IIaRe6CHJuhj0V
-         c3X9OdUqHHn9T75yReCLaYm2z/NY9bmNplKLhDj5YQxXw851VQZULFxU1DbJQW365BSH
-         s0xzs6LKpqORMynObYwnRUNbXcbmImuw3AWgooyozs1Agne5cMm6WTUzN8iW7FnJBPOk
-         VHlzl2WAQZ2X1ebO3BJ2YzrSS0ulaov9j/c64miMmH3HwdrGdP+1VKP0oR2rHwJ4Qyev
-         ZhtVaN3gCebGT10uiXLE3yp/LBv6jdLbHcItA5MTAmnKSRC3sb7MHTt3bvKB3IkA3i8k
-         pMbQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=afUW27qJQI6L1BqqdvJMIc66fON07qLZGi9GUZOv8ik=;
+        b=Iebxwsjrefxk79lRwX2J8Ay+BytWYfinZA9yX5UhwQZEbYU7Qxx4WRoyHsGy0Zam9T
+         d1hqJX5b37L0aONdsg5eNcpcjTiDB9yvzk8hzfLKjyD1TbKIA/5sAJBa5CNneKY6zTWQ
+         MfzQwEKJQdFIdx9F7wGcfcXmk9tYB7uoNFDDhzRjrgBo51hnh4IwxVBia7ria/pUETWu
+         1LVBitiSJJH4KxVa9wwLGxqibX8OfMimyCgbbq2qDdknYOMMXjBiT1BTRf9e/ZzBzrOM
+         vxqmP+bVfhOtUdCQlJabhyac9/yyb98T1O7zkoSBhs49u/mAebeIBAtHWmu+2L7r5OAX
+         Ocsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ThicM2MINEcLmZzXQZhlZBSaO4KVfv3Uo4/fCOM5QbM=;
-        b=f/BEcuEtCBHUo5DrnJ6bcuJStAnl2xBaDMOGecqTCjRFlxO5ToLWy7e8fPzd2sQYVN
-         hR56jI+ZofYHlTdHpBdv2YBJ/7ULhA6JVzcokip7sMIAEKwDxYSjv7UuK45EOXZ3ynpN
-         jL3p0XOauRWDZuAo1GsWHl3G8fsKh2NkpiFi1SsoWQIb6MQAlXfTZJ+asuDKcSRL7L6g
-         jiGmdkltEd4k3zDAViygFxMqcP7d4rd6/vvDWqaeHabWftDIi2z6+0Y6taMSt3Ai7mpV
-         N6DNWBV6/gstyn+PN0RXZCa9FtJLOCY0FNXBkp95EpedS/SYKlKRpundPp05HfDjQCXf
-         DMjg==
-X-Gm-Message-State: AOAM5307wwnANZYCf5V6bYH2a+x7q9II+ly89mxJJXDC3gN51skCPYWg
-        qOHnJYmF8gLuqetLwb5bB44=
-X-Google-Smtp-Source: ABdhPJygYBJKYJFujhKJtGYj/sIM/7VF9BtAYwJyYx2TAp9yLJhnpvaLsSTl3wqkiacMVMNw2Kp/zQ==
-X-Received: by 2002:a17:90a:734b:: with SMTP id j11mr10996145pjs.108.1590065339983;
-        Thu, 21 May 2020 05:48:59 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id q189sm4680196pfc.112.2020.05.21.05.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 05:48:59 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Thu, 21 May 2020 21:48:56 +0900
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Chenggang Wang <wangchenggang@vivo.com>,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC PATCH 2/2] init: Allow multi-line output of kernel command
- line
-Message-ID: <20200521124856.GC755@jagdpanzerIV.localdomain>
-References: <cover.1589916689.git.joe@perches.com>
- <2b3832fed9370f0f8dfd1ea33dddb1d05a36e265.1589916689.git.joe@perches.com>
- <20200520044127.GB938@jagdpanzerIV.localdomain>
- <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
- <20200520121000.GF520@jagdpanzerIV.localdomain>
- <19a8c717f8d9dc76f2b09e6dd19f3fbb71bf29c5.camel@perches.com>
- <20200520180028.8fc1b7890774c6f92a6c2623@linux-foundation.org>
- <20200521043628.GB755@jagdpanzerIV.localdomain>
- <20200520214007.86f36f61e1fc0329b66758ed@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=afUW27qJQI6L1BqqdvJMIc66fON07qLZGi9GUZOv8ik=;
+        b=KccRzhN7GulWQNsSI6Bn5lnQaFDjykZPc+kNocmCj5QSfMA50szCkIzVCAxTXg87V6
+         CYjb2oa899WxSKop3rpej4VgrQ1etDrwNUW76e0KIFaWfmj57jBRyYYDdSVlbwutf15h
+         cWkJlK4YBZlnbSJ+yP/NMg7S2ma3K5PBWFu7S1kSklBCIaComnde2+UvkMmeP5qmTRZX
+         7S19tzUpCs1k3dLFJhzdz4aRzkt6HdFpGW3b32BNmdEW3+Iu7Jgwt2uYc7+1MmX4eHfy
+         iWCKP/ON7Y3ug+I+0WCCWn8lJ8uM2dNocVu7l1peQ/cHRaZt8awXaTiRuxqf+KbbVzfB
+         OALQ==
+X-Gm-Message-State: AOAM532cydcsbtUnf3FSQJyTDZ78pzAmLKpRI3MNtQ97xsx5V+RtvFPG
+        SRWnxk9CiywaRf09TPgXQTT0aMmaaqkGW+S0/zg=
+X-Google-Smtp-Source: ABdhPJy1auqg02ic06nl0aIxcRQqYxvrGRv1Zyix0E5OxAP2IKGL2uJlyU/UaGEVw0y4+EwNAKMzkE5a4FyiOsuTpD0=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr10976564pjd.181.1590065367229;
+ Thu, 21 May 2020 05:49:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520214007.86f36f61e1fc0329b66758ed@linux-foundation.org>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com> <20200521121228.aqplh6eftylnys3p@mobilestation>
+In-Reply-To: <20200521121228.aqplh6eftylnys3p@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 21 May 2020 15:49:10 +0300
+Message-ID: <CAHp75VcPSBBZu+bhnpojry3SFK7-qF7Tuif2MnsPEfbMf72_JA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/05/20 21:40), Andrew Morton wrote:
-> > On (20/05/20 18:00), Andrew Morton wrote:
-> > [..]
-> > > I'm wondering if we shold add a kernel puts() (putsk()?  yuk) which can
-> > > puts() a string of any length.
-> > > 
-> > > I'm counting around 150 instances of printk("%s", ...) and pr_foo("%s",
-> > > ...) which could perhaps be converted, thus saving an argument.
-> > 
-> > Can you point me at some examples?
-> > 
-> 
-> ./arch/powerpc/kernel/udbg.c:           printk("%s", s);
-> ./arch/powerpc/xmon/nonstdio.c:         printk("%s", xmon_outbuf);
-> ./arch/um/os-Linux/drivers/ethertap_user.c:             printk("%s", output);
-> ./arch/um/os-Linux/drivers/ethertap_user.c:             printk("%s", output);
-> ./arch/um/os-Linux/drivers/tuntap_user.c:                       printk("%s", out
+On Thu, May 21, 2020 at 3:12 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Thu, May 21, 2020 at 12:57:17PM +0300, Andy Shevchenko wrote:
+> > On Thu, May 21, 2020 at 4:23 AM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
 
-Hmm, interesting.
+...
 
-	output = uml_kmalloc(UM_KERN_PAGE_SIZE, UM_GFP_KERNEL);
-	read_output(fd, output, UM_KERN_PAGE_SIZE);
-	printk("%s", output);
-	kfree(output);
+> > Thanks for an update, but that's not what I asked for...
+> >
+> > > -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
+> > > -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
+> >
+> > >  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+> > >  {
+> > > +       struct dw_dma_slave slave = {
+> > > +               .src_id = 0,
+> > > +               .dst_id = 0
+> > > +       };
 
-> etc.
+> > > -       struct dw_dma_slave *tx = dws->dma_tx;
+> > > -       struct dw_dma_slave *rx = dws->dma_rx;
+> >
+> > May we simple do
+> >
+> > struct dw_dma_slave tx = { .dst_id = 1 };
+> > struct dw_dma_slave rx = { .src_id = 0 };
+> >
+> > please?
 >
-> My point is, if we created a length-unlimited puts() function for printing the
-> kernel command line, it could be reused in such places
+> Well, for me both solutions are equal
 
-A function that prints the kernel command line is a bit different
-in the way that we can split command line arguments - they are
-space separated, which is very convenient - so we would pr_cont()
-parts of command line individually. This has an advantage that we
-won't \r\n in the middle of the parameter.
+I don't think so.
 
-Looking at examples, it seems that most of them simply do a single
-printk() with arbitrary sized buffers that contain random data,
-not necessarily space separated. So same problem - we truncate
-messages (maybe?), but needs a slightly different solution (?).
+> except mine consumes less stack memory.
 
-	-ss
+And brought confusion and less readability. :-(
+
+> The only reason why your solution might be better is that if DW DMA driver or
+> the DMA engine subsystem changed the dw_dma_slave structure instance passed to
+> the dma_request_channel() method, which non of them do. So I'll leave this for
+> Mark to decide. Mark, could you give us your final word about this?
+
+I explained already why I prefer to see them in that form. Reader can
+easily understand what request line is used for what channel.
+In your code it's hidden somewhere and on top of that that _one_
+structure on the stack adds more confusion.
+
+-- 
+With Best Regards,
+Andy Shevchenko
