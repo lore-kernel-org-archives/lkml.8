@@ -2,81 +2,123 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACCDE20814
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E82204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590089998;
+	bh=A87nXZPrP2o3hNWLnYeOPP8qGoiYrt+huTJ4ATJileo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q7TwnaQJF3kfFX24RXRr66P90dZVBnnh79bWRqclsflETjA1FJ0huNjhZ4b0U87ov
+	 UmH1yqV127GKtDcZWCHy2EAb6nLj2kiueNxomgWkpiHljW1N3BsxZWIbHOkkBUIc+h
+	 xzv8ifnCmXm3hk2L0BtNACP9TbyCoD9Ry5xgYtqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgEUTiF (ORCPT
+        id S1729845AbgEUTj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:38:05 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:54079 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgEUTiE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:38:04 -0400
-Received: by mail-il1-f197.google.com with SMTP id m17so6536386ilq.20
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:38:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=NkM41cRyykyrTcXhuRq+Uqt1euBLz5q82M1iSb3aSkc=;
-        b=Vyq4FjcfL0G4ry/noXxTse6IGLn7PbvdlsKNgB76LjmqsY+8C33TaCHl+euugT/B7L
-         tb7mvd+7GgSuKw6ZyPIL/f9SvWX36GNRKbrVn/gL9ssod/Mu6OomNm1GfCc0A/s4ZUTG
-         t7eIlP96rbPpN5qTL8rA1/UdjBc3pt6JyR2LeS0IZaZt7y9Rc8ZnrxJ9V76CLqVp8x8B
-         9CLMphxAA/c0QzJoQrv4bfjUWhm7UVT1Ob+7CwAs6Zz6ViaaHQvs5uTr1racdWymcwar
-         eEqJTjN3mbvH31/D1f9cUKJWIzq+Ukk8EQpErmyMCRte+xEKjnVokQ4Sz9DaN4fkA2vu
-         tOQA==
-X-Gm-Message-State: AOAM532pveHq35ZUXs2qoE9TycTy4O/2/mhjhQbrOpBzPT/NITTNEypn
-        uOyEJBh12rfOFc10GE/i+5yHTMOz2wQGktmJqUIv6x3TRO0Z
-X-Google-Smtp-Source: ABdhPJz1FMid2HBzS6OeC8X8s51lXhWDo/4NiVC0UQXz/KcfgeapJlPG+XCp1SR4JS6Dx+SAezbEtWn4NTX3HiGc7Kjpjzv7X1zA
+        Thu, 21 May 2020 15:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728692AbgEUTj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 15:39:57 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6F6620823;
+        Thu, 21 May 2020 19:39:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590089997;
+        bh=A87nXZPrP2o3hNWLnYeOPP8qGoiYrt+huTJ4ATJileo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d5SVOXBeT2BGCoQYD3IJl9dmDgwbMNEfOgy97H6TqrAwtodElOwVPr5fe7r7XYiYh
+         aQzXyU6MDrfDLgSQyO59ioJu/2Aq/U2PXh/ytbMPJwNmhOAtIMprk5pQOQNlCqEtw0
+         XnAXfnblbb7KwKjbWlqZjmaPTo3gGh+AB5QMUf1M=
+Date:   Thu, 21 May 2020 14:44:45 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Sam Creasey <sammy@sammy.net>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ethernet: i825xx: sun3_82586: Replace zero-length array
+ with flexible-array
+Message-ID: <20200521194445.GC29907@embeddedor>
+References: <20200507192456.GA16458@embeddedor>
 MIME-Version: 1.0
-X-Received: by 2002:a92:40ca:: with SMTP id d71mr10291945ill.200.1590089883386;
- Thu, 21 May 2020 12:38:03 -0700 (PDT)
-Date:   Thu, 21 May 2020 12:38:03 -0700
-In-Reply-To: <0000000000004a72f505a5a16525@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a9080105a62da6e4@google.com>
-Subject: Re: WARNING in media_create_pad_link
-From:   syzbot <syzbot+dd320d114deb3f5bb79b@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, balbi@kernel.org,
-        gregkh@linuxfoundation.org, laurent.pinchart@ideasonboard.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507192456.GA16458@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hi Andrew,
 
-commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
-Author: Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon Feb 24 16:13:03 2020 +0000
+I wonder if you could take this in your tree.
 
-    usb: gadget: add raw-gadget interface
+Apparently, Sam hasn't been active since 2007.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=126d2b81100000
-start commit:   b85051e7 Merge tag 'fixes-for-5.7-rc6' of git://git.kernel..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=116d2b81100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=166d2b81100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c33c7f7c5471fd39
-dashboard link: https://syzkaller.appspot.com/bug?extid=dd320d114deb3f5bb79b
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16accd06100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1680ce5e100000
+Thanks
+--
+Gustavo
 
-Reported-by: syzbot+dd320d114deb3f5bb79b@syzkaller.appspotmail.com
-Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+On Thu, May 07, 2020 at 02:24:56PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/ethernet/i825xx/sun3_82586.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/i825xx/sun3_82586.h b/drivers/net/ethernet/i825xx/sun3_82586.h
+> index 79aef681ac85..451cb3d26cb5 100644
+> --- a/drivers/net/ethernet/i825xx/sun3_82586.h
+> +++ b/drivers/net/ethernet/i825xx/sun3_82586.h
+> @@ -250,7 +250,7 @@ struct mcsetup_cmd_struct
+>    unsigned short cmd_cmd;
+>    unsigned short cmd_link;
+>    unsigned short mc_cnt;		/* number of bytes in the MC-List */
+> -  unsigned char  mc_list[0][6];  	/* pointer to 6 bytes entries */
+> +  unsigned char  mc_list[][6];  	/* pointer to 6 bytes entries */
+>  };
+>  
+>  /*
+> 
