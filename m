@@ -2,243 +2,187 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D81D20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E59B20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Yjtf/Eh3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mBJyET4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgEUCYA (ORCPT
+        id S1727915AbgEUCYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:24:00 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46547 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbgEUCX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:23:59 -0400
-IronPort-SDR: uGmPsinJ16QQfdgIzopFFckkiDWBt6bYmXU2R0v20INCDzizC4gPw//ptdU/d6u0hXIMkzRsPO
- akHRuJUSc38g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 19:23:57 -0700
-IronPort-SDR: XXWFx2rPMn2mywLuv2IQ4opdsLwYMF4rp8ODCR8ISRi9BR55nONQzNuld6jtrVDcitDepJKiEl
- wTUUv97OgYEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
-   d="scan'208";a="300147627"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga002.fm.intel.com with ESMTP; 20 May 2020 19:23:57 -0700
-Received: from fmsmsx123.amr.corp.intel.com (10.18.125.38) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 20 May 2020 19:23:57 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx123.amr.corp.intel.com (10.18.125.38) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 20 May 2020 19:23:57 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.54) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 20 May 2020 19:23:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gledo44VJoa0SyJsTDMKOtMh7aiLxAOrZHWhuskgXMN/s/2kfqHo/LCniBaEDdF/8bLUZNNJaBYuL5ddasotki48qDuhMrKk4VRqwBJEdbi1o+JNfVscOkbY6egTnArGYW0ecntMPrWhBXA7ZffI5C6FYUaueGowwE16S5432c9OBGOQDB+G0LIsyU6xqrvpv6eSyQ2Dq8Y61THDkiLrXAH4w1sbt6Z9vEYEe6KcSx8snlxH7QHimt8edQO/tPB5Ezlu2LVpqQrcjjyWRXcbgym1j0x3WhYmWdlInaImvOXtvSUjShQrui94Tr2yR3SQxjOe0JLkv+MGr4oz58p79A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zqnpvI7ZpvTpXqF5VdWY03FRy/Fo+jtKAGOA1OPsNjc=;
- b=TVbom+yis9f9osg0qyg8m8s4W2J0aM0MU/YJNNhCq8ly0LVOsTDExoIz9FbVFs+JzgZ9LHIm/FYhzEbN2bZG5eLPOxwJazDMewsWzPhbaRBDJFmy3raAZpqcJSP1Pd46bzeZd7xL4E5iOQCsxNq4Qv2Mm4/QPT4pqLncs9St/c1RnO4aZ9IeErSJoWX6FCAwHyoJX0JgUYabfvG/KWk6q0pKifsgfzxEmqi3gHRc9bczkvTUuYZRG5B2uEdvOuJ4C53HpJAZdSFKYVr6tc72GJloUIHpu/oK0a2aSaNa7W5iosBvq/24tlI3AozKAo/CCjj7F/Ix2QyIOwmC0h6OGQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zqnpvI7ZpvTpXqF5VdWY03FRy/Fo+jtKAGOA1OPsNjc=;
- b=Yjtf/Eh3V+a+qO0rvee5v6ayb715OXdcEj7dXwEjpPhpl5UBC4O2IEwKzkq06yk52HsyC8qZ38WFDSM7T1BD+hX1F71iLSLqXDLZ/nmzXTduZxNRS+mctUXQpsJvnrsnq6PPJorswd/+Hx19h2aEdKpEZMWM1ynOEEu3PF80EtE=
-Received: from DM6PR11MB4074.namprd11.prod.outlook.com (2603:10b6:5:5::11) by
- DM6PR11MB2538.namprd11.prod.outlook.com (2603:10b6:5:be::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3000.26; Thu, 21 May 2020 02:23:55 +0000
-Received: from DM6PR11MB4074.namprd11.prod.outlook.com
- ([fe80::6921:e03e:b890:fd53]) by DM6PR11MB4074.namprd11.prod.outlook.com
- ([fe80::6921:e03e:b890:fd53%7]) with mapi id 15.20.3021.024; Thu, 21 May 2020
- 02:23:55 +0000
-From:   "Liao, Bard" <bard.liao@intel.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jank@cadence.com" <jank@cadence.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
-        "ranjani.sridharan@linux.intel.com" 
-        <ranjani.sridharan@linux.intel.com>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "pierre-louis.bossart@linux.intel.com" 
-        <pierre-louis.bossart@linux.intel.com>,
-        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
-        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
-        "Lin, Mengdong" <mengdong.lin@intel.com>
-Subject: RE: [PATCH 2/2] soundwire: intel: transition to 3 steps
- initialization
-Thread-Topic: [PATCH 2/2] soundwire: intel: transition to 3 steps
- initialization
-Thread-Index: AQHWLnZHNMkaCkFFVUyGMtyK/ck+QKiw/2uAgADQzaA=
-Date:   Thu, 21 May 2020 02:23:54 +0000
-Message-ID: <DM6PR11MB4074165599273350FF7CA83EFFB70@DM6PR11MB4074.namprd11.prod.outlook.com>
-References: <20200519191903.6557-1-yung-chuan.liao@linux.intel.com>
- <20200519191903.6557-2-yung-chuan.liao@linux.intel.com>
- <20200520135425.GX374218@vkoul-mobl.Dlink>
-In-Reply-To: <20200520135425.GX374218@vkoul-mobl.Dlink>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [220.133.4.96]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 46d36b78-8975-445d-02fb-08d7fd2e02ac
-x-ms-traffictypediagnostic: DM6PR11MB2538:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB25382F048C0B408BA865A6B0FFB70@DM6PR11MB2538.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 041032FF37
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WXZiB/S/UtJrnjbkTHcALZDy6Q6yW4QBCPGBvDPlwtLmJfs6llSHYMiXFzcIkPpGg6JcRgJtadjZOSfGAtv2X5w2oKryCELfGzJ+Dgz0YFfa4+32NSlfzCdxXuZKsSP6iCeb1/QwMDZvZQ7AcrY9FF4KLFu5x4EmqzthQYCz25lFTYrmmS+VL2pAoR0svOcXXC+0ZHuM64OKk+lOz5iuHMeV4T9l+XXFXIMAAJIfqDaDqYxD5fG7I1/zY64cycMf4v2QhMyJkGe13BiU06bFPnikNeLwcg8LgObj2TuyXLv9QpHNEWKjvAoSH46ZtHGmfxogqeLZk2hJZ0h9FDvMVOz86RSZ052tr7CUTkk6Oi1b93UtWA4kne1IiaFdrXckU4sSNB0uVekMoRlEkoJkXX6S+Fu3n61NDGJJKELTVrfddpfNjw7o1swhQSLtUrv2
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4074.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(366004)(346002)(396003)(376002)(55016002)(8676002)(9686003)(33656002)(53546011)(4326008)(6506007)(7696005)(2906002)(7416002)(54906003)(86362001)(52536014)(66446008)(71200400001)(8936002)(26005)(5660300002)(110136005)(64756008)(66946007)(66556008)(186003)(66476007)(316002)(76116006)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: wspCy47vlrKfndXxWSRWubOv0XRFzgblHqWh4y23dfdhHfbFjtB5QMzOBBZiZmsqhW+WT2bn5xMacfSY1wEEyeQeUCKBoaxXnrKXV78pLbLL2x2b0SaCU5QqaAY/shUzB8UJ0Phm7QmeSEYOlbG5LzZDUgghJw6O5VvByAISrsSiI+Zg5+vsqHpxxAyt2VXQCJYtiR6Wi5I1LMAD7+jDbEM5XC1/4e4XRfn2fRopSkcrtaieiE602UAb70ya+s/AbTjuM0I+B83HQ5mlKToHeSYPvTslW4luew7fU98QWNOu24kBqkNFkE4qZazkNAhjxrsdsyYFDRMQVJYtElBmRPHhOZuXpCl1QE6TlP0niMw+4QOfPyFVe3anvjNqFTxG7sLTmny+MwNSEL/0WAwOY6OmWLqrapK/1gC26bX7/8JNqfAwmMG/KD3lqvJTZzQcByTaxik8XT0SloC+ua9xAz6qFUe5MbV8s3BEE8+5qpw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 May 2020 22:24:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41408 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgEUCYm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 22:24:42 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04L2LT2K140473;
+        Thu, 21 May 2020 02:23:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=sjv951Mwz1KlDbA2aHMtYQ4ZJ1fMCxPzRrPRJ+lyiU0=;
+ b=mBJyET4FmEHYHVjTsvVl4NZiUnJRto8cAgDwccf4he3OJ7fszDGni6bRhc81DfepmlXh
+ tI4zxRt5y2R5EJmv10MYp5ev4ygPRKxT3KM5TRsqUBKXIcgcWGukErvP2eUX9FglVCoi
+ tPDQ/UB55gN6To1xN7WmWz7kWoiqeT7V76M4y5PS9CWc7LUCiLkCMdDmGdesEe2Dy9lt
+ CZIyy+SowT7ayzfo22BlP5K1EkOKIFJZMeY1XH5PNIUwhXQBO/v+THyccasXOZc9bYDI
+ rjbBsbhEXVyF+N9EZbSuhnb9zfktyu8/Vm2kxvyGzUErg5tkfICEs1G+mC+7/cVzIghF 7A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31501rcq5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 02:23:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04L2NCgg186450;
+        Thu, 21 May 2020 02:23:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 312t39m80n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 02:23:28 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04L2NMMj010852;
+        Thu, 21 May 2020 02:23:22 GMT
+Received: from [10.39.204.179] (/10.39.204.179)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 May 2020 19:23:22 -0700
+Subject: Re: [patch V6 10/37] x86/entry: Switch XEN/PV hypercall entry to
+ IDTENTRY
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20200515234547.710474468@linutronix.de>
+ <20200515235125.425810667@linutronix.de>
+ <CALCETrUqK6hv4AuGL=GtK+12TCmr5nBA7CBy=X7TNA=w_Jk0Qw@mail.gmail.com>
+ <87imgr7nwp.fsf@nanos.tec.linutronix.de>
+ <CALCETrW4BxfTVzv8mXntNXiAPnKxqdMEv7djUknGZcrno2WJHg@mail.gmail.com>
+ <87y2pm4ruh.fsf@nanos.tec.linutronix.de>
+ <CALCETrUvH5DQvL6Lo6EkM04pr7wWj+7eZbTg3H_eLNXcZsH0FA@mail.gmail.com>
+ <CALCETrX4Zy2iuc39XTifYd_mvezCEUtW2ax3=ec1TF=yZxAHDg@mail.gmail.com>
+ <871rnewh5w.fsf@nanos.tec.linutronix.de>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <3a1eb682-948e-aaa9-bda0-0e99152ed623@oracle.com>
+Date:   Wed, 20 May 2020 22:23:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46d36b78-8975-445d-02fb-08d7fd2e02ac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 02:23:54.9466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vT/uAdZrwjqBMvsgTuUi87AecQzzROMjz6ensNWjJv4BJypsP1VLzgVzt0Eq+JQzT0JfmBBWUqcRVsikF0SSRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2538
-X-OriginatorOrg: intel.com
+In-Reply-To: <871rnewh5w.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210007
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005210007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Wednesday, May 20, 2020 9:54 PM
-> To: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; tiwai@suse=
-.de;
-> broonie@kernel.org; gregkh@linuxfoundation.org; jank@cadence.com;
-> srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
-> ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
-> louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>;
-> Blauciak, Slawomir <slawomir.blauciak@intel.com>; Lin, Mengdong
-> <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
-> Subject: Re: [PATCH 2/2] soundwire: intel: transition to 3 steps initiali=
-zation
->=20
-> On 20-05-20, 03:19, Bard Liao wrote:
-> > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> >
-> > Rather than a plain-vanilla init/exit, this patch provides 3 steps in
-> > the initialization (ACPI scan, probe, startup) which makes it easier to
-> > detect platform support for SoundWire, allocate required resources as
-> > early as possible, and conversely help make the startup() callback
-> > lighter-weight with only hardware register setup.
->=20
-> Okay but can you add details in changelog on what each step would do?
+On 5/20/20 3:16 PM, Thomas Gleixner wrote:
 
-Sure. Will do.
 
->=20
-> > @@ -1134,25 +1142,15 @@ static int intel_probe(struct platform_device
-> *pdev)
-> >
-> >  	intel_pdi_ch_update(sdw);
-> >
-> > -	/* Acquire IRQ */
-> > -	ret =3D request_threaded_irq(sdw->link_res->irq,
-> > -				   sdw_cdns_irq, sdw_cdns_thread,
-> > -				   IRQF_SHARED, KBUILD_MODNAME, &sdw-
-> >cdns);
->=20
-> This is removed here but not added anywhere else, do we have no irq
-> after this patch?
+> +__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+> +{
+> +	struct pt_regs *old_regs;
+> +	bool inhcall;
+> +
+> +	idtentry_enter(regs);
+> +	old_regs = set_irq_regs(regs);
+> +
+> +	run_on_irqstack(__xen_pv_evtchn_do_upcall, NULL, regs);
 
-We use a single irq for all Intel Audio DSP events and it will
-be requested in the SOF driver.
 
->=20
-> > @@ -1205,5 +1201,5 @@ static struct platform_driver sdw_intel_drv =3D {
-> >  module_platform_driver(sdw_intel_drv);
-> >
-> >  MODULE_LICENSE("Dual BSD/GPL");
-> > -MODULE_ALIAS("platform:int-sdw");
-> > +MODULE_ALIAS("sdw:intel-sdw");
->=20
-> it is still a platform device, so does sdw: tag make sense?
-> This is used by modprobe to load the driver!
+We need to handle nested case (i.e. !irq_needs_irq_stack(), like in your
+original version). Moving get_and_clear_inhcall() up should prevent
+scheduling when this happens.
 
-Will fix it
 
->=20
-> > +/**
-> > + * sdw_intel_probe() - SoundWire Intel probe routine
-> > + * @res: resource data
-> > + *
-> > + * This creates SoundWire Master and Slave devices below the controlle=
-r.
->=20
-> I dont think the comment is correct, this is done in intel_master_probe
-> which is platform device probe...
+-boris
 
-Thanks. Will fix it.
 
->=20
-> > + * All the information necessary is stored in the context, and the res
-> > + * argument pointer can be freed after this step.
-> > + */
-> > +struct sdw_intel_ctx
-> > +*sdw_intel_probe(struct sdw_intel_res *res)
-> > +{
-> > +	return sdw_intel_probe_controller(res);
-> > +}
-> > +EXPORT_SYMBOL(sdw_intel_probe);
->=20
-> I guess this would be called by SOF driver, question is when..?
+> +
+> +	set_irq_regs(old_regs);
+> +
+> +	inhcall = get_and_clear_inhcall();
+> +	__idtentry_exit(regs, inhcall);
+> +	restore_inhcall(inhcall);
+>  }
 
-Will document it, thanks.
-
->=20
-> > +/**
-> > + * sdw_intel_startup() - SoundWire Intel startup
-> > + * @ctx: SoundWire context allocated in the probe
-> > + *
-> > + */
-> > +int sdw_intel_startup(struct sdw_intel_ctx *ctx)
-> > +{
-> > +	return sdw_intel_startup_controller(ctx);
-> > +}
-> > +EXPORT_SYMBOL(sdw_intel_startup);
->=20
-> when is this called, pls do document that
-
-Will document it, thanks.
-
->=20
-> --
-> ~Vinod
