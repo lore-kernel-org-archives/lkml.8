@@ -2,146 +2,87 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A57C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38E462065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:02:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwNszkEC"
+	by mail.kernel.org (Postfix) with ESMTP id 0E92820748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgEUHC3 (ORCPT
+        id S1728242AbgEUHFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:02:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbgEUHCU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:02:20 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60E7C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:02:19 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w64so5248157wmg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:02:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/J+QSCnpCz+dK7a2CTZvs1hYwiiujWP44h1PKOVX/6Y=;
-        b=OwNszkECZJFOIvu74Y9eydjyHX7pOhDFAGPl4TJPF7UkdVx9cBk5DeGUw7r56ShvKV
-         zW2riszf3QMm1u7ASnxm0YBdRVnUumjDvWEpWcnlT+RN5cymWYFnZd60i/l30PbKreS7
-         W0Qk7+YLi40gFQY6+5pKGCzgLl0kz3WkqDx9+GOJGhs2dgyXIiqiwf8Q11SqPRsOBuGn
-         HKQ0VkYfw88EQAPs7T67lkBi5pD3sfroSaOwMTUUTJGvXSOiVWUXWtvKclXVQpnomdA0
-         DWLhILIaDW3xxPYZaM9CkZ7YGhKkGFBO+NhrjFehuMAsn28Uuaz0gW9JiDYLOtqAmEqB
-         DCWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/J+QSCnpCz+dK7a2CTZvs1hYwiiujWP44h1PKOVX/6Y=;
-        b=BWdVJBPdPsNwaK5gbVqqAX0/L2stYWAHjatvFBOwaL8OwVSzgpxN9zHutNc5jv6l07
-         rx9mhhVV737l1/W+2/ywB9P2lwIjIXSuHzxvlwyIB2FsxjzfhDnFMAy3dA5Tfstj4Yp0
-         oq3iLqi9NiVEoW12AMPUdMgszxZgvXy80XnrifYocrO8EpnCythqqI5QjOHrt715NkbK
-         bZ3fLnhdDCvEnAJ+4bFiURkNizWv1V/Gr166oS/qj4QPvB43ELi/1OLiwAfp97QDqEL2
-         7kpoKF0S+ASlxG6deVwymXpYBGyRjN5am557iUT0Xo6+ZrxU4AnGQLCLH3+G33gAE+uN
-         gGUw==
-X-Gm-Message-State: AOAM531/OpNdeQga/JzmO4BAtrL83Lfa+W+Q19+PTm+SI6iYaFeE1m8h
-        Ah5KgLtV4vrHlherjUyItqlFkFx/
-X-Google-Smtp-Source: ABdhPJzuIZ/WW6Is6+GUaMpmDLmoPeZCXBe6/p46FMF5Lgkmrjl5MBuTP2l6Z5HlGAGFXKl+TyzDzw==
-X-Received: by 2002:a1c:408:: with SMTP id 8mr7171592wme.147.1590044538002;
-        Thu, 21 May 2020 00:02:18 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id w20sm5448205wmk.25.2020.05.21.00.02.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 00:02:17 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 4/4] habanalabs: don't allow hard reset with open processes
-Date:   Thu, 21 May 2020 10:02:05 +0300
-Message-Id: <20200521070205.26673-4-oded.gabbay@gmail.com>
+        Thu, 21 May 2020 03:05:36 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:38702 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727003AbgEUHFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 03:05:36 -0400
+X-Greylist: delayed 62331 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 May 2020 03:05:33 EDT
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgB3DkElKMZe57rmAA--.11558S4;
+        Thu, 21 May 2020 15:05:13 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: stm32f7: Fix runtime PM imbalance in stm32f7_i2c_reg_slave
+Date:   Thu, 21 May 2020 15:05:07 +0800
+Message-Id: <20200521070507.13015-1-dinghao.liu@zju.edu.cn>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200521070205.26673-1-oded.gabbay@gmail.com>
-References: <20200521070205.26673-1-oded.gabbay@gmail.com>
+X-CM-TRANSID: cC_KCgB3DkElKMZe57rmAA--.11558S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWfAwc_Gr
+        1kWw17uwn0g395Aw1UJF98Z34F9rZ5W34rCr10yFySkrWYv3srWr4UZr93Ar47Xr47Kr12
+        g3Wku3WfArsrCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
+        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
+        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15
+        McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+        1lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCF
+        04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_
+        Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+        U9o7NUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPIswAAsl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-When the MMU is heavily used by the engines, unmapping might take a lot of
-time due to a full MMU cache invalidation done as part of the unmap flow.
-Hence we might not be able to kill all open processes before going to hard
-reset the device, as it involves unmapping of all user memory.
-In case of a failure in killing all open processes, we should stop the
-hard reset flow as it might lead to a kernel crash - one thread (killing
-of a process) is updating MMU structures that other thread (hard reset) is
-freeing.
-Stopping a hard reset flow leaves the device as nonoperational and the
-user can then initiate a hard reset via sysfs to reinitialize the device.
-
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- drivers/misc/habanalabs/device.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-stm32f7.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 4a4a446f479e..2b38a119704c 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -726,7 +726,7 @@ int hl_device_resume(struct hl_device *hdev)
- 	return rc;
- }
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 330ffed011e0..602cf35649c8 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1767,8 +1767,10 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+ 		return ret;
  
--static void device_kill_open_processes(struct hl_device *hdev)
-+static int device_kill_open_processes(struct hl_device *hdev)
- {
- 	u16 pending_total, pending_cnt;
- 	struct hl_fpriv	*hpriv;
-@@ -779,9 +779,7 @@ static void device_kill_open_processes(struct hl_device *hdev)
- 		ssleep(1);
- 	}
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev);
+ 		return ret;
++	}
  
--	if (!list_empty(&hdev->fpriv_list))
--		dev_crit(hdev->dev,
--			"Going to hard reset with open user contexts\n");
-+	return list_empty(&hdev->fpriv_list) ? 0 : -EBUSY;
- }
- 
- static void device_hard_reset_pending(struct work_struct *work)
-@@ -908,7 +906,12 @@ int hl_device_reset(struct hl_device *hdev, bool hard_reset,
- 		 * process can't really exit until all its CSs are done, which
- 		 * is what we do in cs rollback
- 		 */
--		device_kill_open_processes(hdev);
-+		rc = device_kill_open_processes(hdev);
-+		if (rc) {
-+			dev_crit(hdev->dev,
-+				"Failed to kill all open processes, stopping hard reset\n");
-+			goto out_err;
-+		}
- 
- 		/* Flush the Event queue workers to make sure no other thread is
- 		 * reading or writing to registers during the reset
-@@ -1391,7 +1394,9 @@ void hl_device_fini(struct hl_device *hdev)
- 	 * can't really exit until all its CSs are done, which is what we
- 	 * do in cs rollback
- 	 */
--	device_kill_open_processes(hdev);
-+	rc = device_kill_open_processes(hdev);
-+	if (rc)
-+		dev_crit(hdev->dev, "Failed to kill all open processes\n");
- 
- 	hl_cb_pool_fini(hdev);
- 
+ 	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
+ 		stm32f7_i2c_enable_wakeup(i2c_dev, true);
 -- 
 2.17.1
 
