@@ -2,201 +2,132 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8478AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6421D2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590065091;
-	bh=3F5dC6wyEp8L1T30G/MM+VlTT7Frh8v3T33HyZdYRuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=or0d/+JR99O7bymvq8ngzOWUxg0jW2mpkpN0r+RGX4+T84pjX2/EczE9zuG8QQwOn
-	 ulNj8uC+piJqFO8ah0mWwcoFYDjyMVTeV+iv0TD3Ay7sHZpMsaTk2tIOcmlePow6um
-	 ipKAZ8btrQZPMZToDXK4HWhl/PfVt+hF8ZkAAx+U=
+	by mail.kernel.org (Postfix) with ESMTP id F24DE2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:49:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRekUtaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbgEUMou (ORCPT
+        id S1729296AbgEUMtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:44:50 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41032 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbgEUMou (ORCPT
+        Thu, 21 May 2020 08:49:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729077AbgEUMtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:44:50 -0400
-Received: by mail-ed1-f66.google.com with SMTP id g9so6553206edr.8;
-        Thu, 21 May 2020 05:44:47 -0700 (PDT)
+        Thu, 21 May 2020 08:49:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B08C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:49:00 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q9so2981464pjm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ThicM2MINEcLmZzXQZhlZBSaO4KVfv3Uo4/fCOM5QbM=;
+        b=nRekUtaW1++FK1DM8dhcPPdCGdgFZMRJQshCPLZ1SbxcqEzPFkK6IIaRe6CHJuhj0V
+         c3X9OdUqHHn9T75yReCLaYm2z/NY9bmNplKLhDj5YQxXw851VQZULFxU1DbJQW365BSH
+         s0xzs6LKpqORMynObYwnRUNbXcbmImuw3AWgooyozs1Agne5cMm6WTUzN8iW7FnJBPOk
+         VHlzl2WAQZ2X1ebO3BJ2YzrSS0ulaov9j/c64miMmH3HwdrGdP+1VKP0oR2rHwJ4Qyev
+         ZhtVaN3gCebGT10uiXLE3yp/LBv6jdLbHcItA5MTAmnKSRC3sb7MHTt3bvKB3IkA3i8k
+         pMbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7B+zSNVUKDMX+EtrLfhKx/b5Dlg1GLXsdTK5UK1C/wA=;
-        b=LBqqAvMYl75xgaIVDJECJkKkNuhp+yAPLz3GbT3cvKtdR9yxaOWFx7+NwQ1V7lIu89
-         IhoQ5Qqx3afyoOV2S6tJVVXJz2R/hb9YPGWNAsVO79/r4E+5KUbj01GfU2ztwZ2UCoRU
-         3Sxq6Z+gzllNB1O6eACV25UiyqiKLLEi69xBJQuOpTo6Q8Ji/NzT/YWV183rP3bI0vvm
-         tCd8FfYdn6oo0hWmVpiHnVJnKuqrf0yu9H5t/6keNS0wpXSMiuxrbpIE+NhUrzyvr9+D
-         krL+f62PI9u6T17I6MTw08G3ow587zerfVgtAZ5Z0NH8ldkugTDU2x4AbkyOyioSJqYF
-         wYaA==
-X-Gm-Message-State: AOAM530aGm4cCbKdujFEm/18iwXiee6fDQrYZmAOpmDHKIg+3K9J1Kh4
-        cPD5ZY83nvJQgTEs2P/Nfno=
-X-Google-Smtp-Source: ABdhPJyFmwAVPZkzShA2BCWpmRd1w2Y3qvQQ3fG96wsb/P2EJuekC35u1D4g78CqUn7CegdanQGqrg==
-X-Received: by 2002:a05:6402:203a:: with SMTP id ay26mr7259622edb.205.1590065086406;
-        Thu, 21 May 2020 05:44:46 -0700 (PDT)
-Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
-        by smtp.gmail.com with ESMTPSA id rn17sm4757851ejb.115.2020.05.21.05.44.45
+        bh=ThicM2MINEcLmZzXQZhlZBSaO4KVfv3Uo4/fCOM5QbM=;
+        b=f/BEcuEtCBHUo5DrnJ6bcuJStAnl2xBaDMOGecqTCjRFlxO5ToLWy7e8fPzd2sQYVN
+         hR56jI+ZofYHlTdHpBdv2YBJ/7ULhA6JVzcokip7sMIAEKwDxYSjv7UuK45EOXZ3ynpN
+         jL3p0XOauRWDZuAo1GsWHl3G8fsKh2NkpiFi1SsoWQIb6MQAlXfTZJ+asuDKcSRL7L6g
+         jiGmdkltEd4k3zDAViygFxMqcP7d4rd6/vvDWqaeHabWftDIi2z6+0Y6taMSt3Ai7mpV
+         N6DNWBV6/gstyn+PN0RXZCa9FtJLOCY0FNXBkp95EpedS/SYKlKRpundPp05HfDjQCXf
+         DMjg==
+X-Gm-Message-State: AOAM5307wwnANZYCf5V6bYH2a+x7q9II+ly89mxJJXDC3gN51skCPYWg
+        qOHnJYmF8gLuqetLwb5bB44=
+X-Google-Smtp-Source: ABdhPJygYBJKYJFujhKJtGYj/sIM/7VF9BtAYwJyYx2TAp9yLJhnpvaLsSTl3wqkiacMVMNw2Kp/zQ==
+X-Received: by 2002:a17:90a:734b:: with SMTP id j11mr10996145pjs.108.1590065339983;
+        Thu, 21 May 2020 05:48:59 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id q189sm4680196pfc.112.2020.05.21.05.48.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 05:44:45 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:44:44 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Chris Down <chris@chrisdown.name>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200521124444.GP6462@dhcp22.suse.cz>
-References: <20200519075213.GF32497@dhcp22.suse.cz>
- <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz>
- <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name>
- <20200521095515.GK6462@dhcp22.suse.cz>
- <CA+G9fYvAB9F+Xo0vUsSveKnExkv3cV9-oOG9gBqGEcXsO95m0w@mail.gmail.com>
- <20200521105801.GL6462@dhcp22.suse.cz>
- <alpine.LSU.2.11.2005210504110.1185@eggly.anvils>
+        Thu, 21 May 2020 05:48:59 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Thu, 21 May 2020 21:48:56 +0900
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Chenggang Wang <wangchenggang@vivo.com>,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC PATCH 2/2] init: Allow multi-line output of kernel command
+ line
+Message-ID: <20200521124856.GC755@jagdpanzerIV.localdomain>
+References: <cover.1589916689.git.joe@perches.com>
+ <2b3832fed9370f0f8dfd1ea33dddb1d05a36e265.1589916689.git.joe@perches.com>
+ <20200520044127.GB938@jagdpanzerIV.localdomain>
+ <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
+ <20200520121000.GF520@jagdpanzerIV.localdomain>
+ <19a8c717f8d9dc76f2b09e6dd19f3fbb71bf29c5.camel@perches.com>
+ <20200520180028.8fc1b7890774c6f92a6c2623@linux-foundation.org>
+ <20200521043628.GB755@jagdpanzerIV.localdomain>
+ <20200520214007.86f36f61e1fc0329b66758ed@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2005210504110.1185@eggly.anvils>
+In-Reply-To: <20200520214007.86f36f61e1fc0329b66758ed@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 21-05-20 05:24:27, Hugh Dickins wrote:
-> On Thu, 21 May 2020, Michal Hocko wrote:
-> > On Thu 21-05-20 16:11:11, Naresh Kamboju wrote:
-> > > On Thu, 21 May 2020 at 15:25, Michal Hocko <mhocko@kernel.org> wrote:
-> > > >
-> > > > On Wed 20-05-20 20:09:06, Chris Down wrote:
-> > > > > Hi Naresh,
-> > > > >
-> > > > > Naresh Kamboju writes:
-> > > > > > As a part of investigation on this issue LKFT teammate Anders Roxell
-> > > > > > git bisected the problem and found bad commit(s) which caused this problem.
-> > > > > >
-> > > > > > The following two patches have been reverted on next-20200519 and retested the
-> > > > > > reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
-> > > > > > ( invoked oom-killer is gone now)
-> > > > > >
-> > > > > > Revert "mm, memcg: avoid stale protection values when cgroup is above
-> > > > > > protection"
-> > > > > >    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
-> > > > > >
-> > > > > > Revert "mm, memcg: decouple e{low,min} state mutations from protection
-> > > > > > checks"
-> > > > > >    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
-> > > > >
-> > > > > Thanks Anders and Naresh for tracking this down and reverting.
-> > > > >
-> > > > > I'll take a look tomorrow. I don't see anything immediately obviously wrong
-> > > > > in either of those commits from a (very) cursory glance, but they should
-> > > > > only be taking effect if protections are set.
-> > > >
-> > > > Agreed. If memory.{low,min} is not used then the patch should be
-> > > > effectively a nop. Btw. do you see the problem when booting with
-> > > > cgroup_disable=memory kernel command line parameter?
+On (20/05/20 21:40), Andrew Morton wrote:
+> > On (20/05/20 18:00), Andrew Morton wrote:
+> > [..]
+> > > I'm wondering if we shold add a kernel puts() (putsk()?  yuk) which can
+> > > puts() a string of any length.
 > > > 
-> > > With extra kernel command line parameters, cgroup_disable=memory
-> > > I have noticed a differ problem now.
-> > > 
-> > > + mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8NRK0BPF6XF
-> > > mke2fs 1.43.8 (1-Jan-2018)
-> > > Creating filesystem with 244190646 4k blocks and 61054976 inodes
-> > > Filesystem UUID: 3bb1a285-2cb4-44b4-b6e8-62548f3ac620
-> > > Superblock backups stored on blocks:
-> > > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
-> > > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-> > > 102400000, 214990848
-> > > Allocating group tables:    0/7453                           done
-> > > Writing inode tables:    0/7453                           done
-> > > Creating journal (262144 blocks): [   35.502102] BUG: kernel NULL
-> > > pointer dereference, address: 000000c8
-> > > [   35.508372] #PF: supervisor read access in kernel mode
-> > > [   35.513506] #PF: error_code(0x0000) - not-present page
-> > > [   35.518638] *pde = 00000000
-> > > [   35.521514] Oops: 0000 [#1] SMP
-> > > [   35.524652] CPU: 0 PID: 145 Comm: kswapd0 Not tainted
-> > > 5.7.0-rc6-next-20200519+ #1
-> > > [   35.532121] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > > 2.2 05/23/2018
-> > > [   35.539507] EIP: mem_cgroup_get_nr_swap_pages+0x28/0x60
+> > > I'm counting around 150 instances of printk("%s", ...) and pr_foo("%s",
+> > > ...) which could perhaps be converted, thus saving an argument.
 > > 
-> > Could you get faddr2line for this offset?
+> > Can you point me at some examples?
+> > 
 > 
-> No need for that, I can help with the "cgroup_disabled=memory" crash:
-> I've been happily running with the fixup below, but haven't got to
-> send it in yet (and wouldn't normally be reading mail at this time!)
-> because of busy chasing a couple of other bugs (not necessarily mm);
-> and maybe the fix would be better with explicit mem_cgroup_disabled()
-> test, or maybe that should be where cgroup_memory_noswap is decided -
-> up to Johannes.
+> ./arch/powerpc/kernel/udbg.c:           printk("%s", s);
+> ./arch/powerpc/xmon/nonstdio.c:         printk("%s", xmon_outbuf);
+> ./arch/um/os-Linux/drivers/ethertap_user.c:             printk("%s", output);
+> ./arch/um/os-Linux/drivers/ethertap_user.c:             printk("%s", output);
+> ./arch/um/os-Linux/drivers/tuntap_user.c:                       printk("%s", out
 
-Thanks Hugh. I can see what is the problem now. I was looking at the
-Linus' tree and we have a different code there
+Hmm, interesting.
 
-	long nr_swap_pages = get_nr_swap_pages();
+	output = uml_kmalloc(UM_KERN_PAGE_SIZE, UM_GFP_KERNEL);
+	read_output(fd, output, UM_KERN_PAGE_SIZE);
+	printk("%s", output);
+	kfree(output);
 
-        if (!do_swap_account || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
-                return nr_swap_pages;
+> etc.
+>
+> My point is, if we created a length-unlimited puts() function for printing the
+> kernel command line, it could be reused in such places
 
-which would be impossible to crash so I was really wondering what is
-going on here. But there are other changes in the mmotm which I haven't
-reviewed yet. Looking at the next tree now it is a fallout from "mm:
-memcontrol: prepare swap controller setup for integration".
+A function that prints the kernel command line is a bit different
+in the way that we can split command line arguments - they are
+space separated, which is very convenient - so we would pr_cont()
+parts of command line individually. This has an advantage that we
+won't \r\n in the middle of the parameter.
 
-!memcg check slightly more cryptic than an explicit mem_cgroup_disabled
-but I would just leave it to Johannes as well.
+Looking at examples, it seems that most of them simply do a single
+printk() with arbitrary sized buffers that contain random data,
+not necessarily space separated. So same problem - we truncate
+messages (maybe?), but needs a slightly different solution (?).
 
-> 
-> ---
-> 
->  mm/memcontrol.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> --- 5.7-rc6-mm1/mm/memcontrol.c	2020-05-20 12:21:56.109693740 -0700
-> +++ linux/mm/memcontrol.c	2020-05-20 12:26:15.500478753 -0700
-> @@ -6954,7 +6954,8 @@ long mem_cgroup_get_nr_swap_pages(struct
->  {
->  	long nr_swap_pages = get_nr_swap_pages();
->  
-> -	if (cgroup_memory_noswap || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
-> +	if (!memcg || cgroup_memory_noswap ||
-> +            !cgroup_subsys_on_dfl(memory_cgrp_subsys))
->  		return nr_swap_pages;
->  	for (; memcg != root_mem_cgroup; memcg = parent_mem_cgroup(memcg))
->  		nr_swap_pages = min_t(long, nr_swap_pages,
-
--- 
-Michal Hocko
-SUSE Labs
+	-ss
