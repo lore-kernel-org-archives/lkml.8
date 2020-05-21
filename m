@@ -4,46 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186642075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45962075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgEUAfh (ORCPT
+        id S1727864AbgEUAfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:35:37 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33222 "EHLO
+        Wed, 20 May 2020 20:35:40 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33048 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgEUAfe (ORCPT
+        with ESMTP id S1727798AbgEUAfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:35:34 -0400
+        Wed, 20 May 2020 20:35:36 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id AC62080307CB;
-        Thu, 21 May 2020 00:35:30 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E97E38030791;
+        Thu, 21 May 2020 00:35:33 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XqmJ54gs4KeK; Thu, 21 May 2020 03:35:30 +0300 (MSK)
+        with ESMTP id w9zTcyg2r2ci; Thu, 21 May 2020 03:35:33 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
         <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 12/14] mips: Add udelay lpj numbers adjustment
-Date:   Thu, 21 May 2020 03:34:41 +0300
-Message-ID: <20200521003443.11385-13-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 14/14] mips: cevt-r4k: Update the r4k-clockevent frequency in sync with CPU
+Date:   Thu, 21 May 2020 03:34:43 +0300
+Message-ID: <20200521003443.11385-15-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -55,119 +53,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Loops-per-jiffies is a special number which represents a number of
-noop-loop cycles per CPU-scheduler quantum - jiffies. As you
-understand aside from CPU-specific implementation it depends on
-the CPU frequency. So when a platform has the CPU frequency fixed,
-we have no problem and the current udelay interface will work
-just fine. But as soon as CPU-freq driver is enabled and the cores
-frequency changes, we'll end up with distorted udelay's. In order
-to fix this we have to accordinly adjust the per-CPU udelay_val
-(the same as the global loops_per_jiffy) number. This can be done
-in the CPU-freq transition event handler. We subscribe to that event
-in the MIPS arch time-inititalization method.
+Due to being embedded into the CPU cores MIPS count/compare timer
+frequency is changed together with the CPU clocks alteration.
+In case if frequency really changes the kernel clockevent framework
+must be notified, otherwise the kernel timers won't work correctly.
+Fix this by calling clockevents_update_freq() for each r4k clockevent
+handlers registered per available CPUs.
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Traditionally MIPS r4k-clock are clocked with CPU frequency divided by 2.
+But this isn't true for some of the platforms. Due to this we have to save
+the basic CPU frequency, so then use it to scale the initial timer
+frequency (mips_hpt_frequency) and pass the updated value further to the
+clockevent framework.
+
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org
----
- arch/mips/kernel/time.c | 70 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
 
-diff --git a/arch/mips/kernel/time.c b/arch/mips/kernel/time.c
-index 37e9413a393d..caa01457dce6 100644
---- a/arch/mips/kernel/time.c
-+++ b/arch/mips/kernel/time.c
-@@ -18,12 +18,82 @@
- #include <linux/smp.h>
- #include <linux/spinlock.h>
- #include <linux/export.h>
+---
+
+Changelog v3:
+- Add r4k_ prefix to the cpufreq change notifier methods.
+---
+ arch/mips/kernel/cevt-r4k.c | 44 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
+index 17a9cbb8b3df..995ad9e69ded 100644
+--- a/arch/mips/kernel/cevt-r4k.c
++++ b/arch/mips/kernel/cevt-r4k.c
+@@ -8,6 +8,7 @@
+  */
+ #include <linux/clockchips.h>
+ #include <linux/interrupt.h>
 +#include <linux/cpufreq.h>
-+#include <linux/delay.h>
- 
- #include <asm/cpu-features.h>
- #include <asm/cpu-type.h>
- #include <asm/div64.h>
- #include <asm/time.h>
+ #include <linux/percpu.h>
+ #include <linux/smp.h>
+ #include <linux/irq.h>
+@@ -250,6 +251,49 @@ unsigned int __weak get_c0_compare_int(void)
+ 	return MIPS_CPU_IRQ_BASE + cp0_compare_irq;
+ }
  
 +#ifdef CONFIG_CPU_FREQ
 +
-+static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref);
-+static DEFINE_PER_CPU(unsigned long, pcp_lpj_ref_freq);
-+static unsigned long glb_lpj_ref;
-+static unsigned long glb_lpj_ref_freq;
++static unsigned long mips_ref_freq;
 +
-+static int cpufreq_callback(struct notifier_block *nb,
-+			    unsigned long val, void *data)
++static int r4k_cpufreq_callback(struct notifier_block *nb,
++				unsigned long val, void *data)
 +{
 +	struct cpufreq_freqs *freq = data;
-+	struct cpumask *cpus = freq->policy->cpus;
-+	unsigned long lpj;
++	struct clock_event_device *cd;
++	unsigned long rate;
 +	int cpu;
 +
-+	/*
-+	 * Skip lpj numbers adjustment if the CPU-freq transition is safe for
-+	 * the loops delay. (Is this possible?)
-+	 */
-+	if (freq->flags & CPUFREQ_CONST_LOOPS)
-+		return NOTIFY_OK;
++	if (!mips_ref_freq)
++		mips_ref_freq = freq->old;
 +
-+	/* Save the initial values of the lpjes for future scaling. */
-+	if (!glb_lpj_ref) {
-+		glb_lpj_ref = boot_cpu_data.udelay_val;
-+		glb_lpj_ref_freq = freq->old;
++	if (val == CPUFREQ_POSTCHANGE) {
++		rate = cpufreq_scale(mips_hpt_frequency, mips_ref_freq,
++				     freq->new);
 +
-+		for_each_online_cpu(cpu) {
-+			per_cpu(pcp_lpj_ref, cpu) =
-+				cpu_data[cpu].udelay_val;
-+			per_cpu(pcp_lpj_ref_freq, cpu) = freq->old;
++		for_each_cpu(cpu, freq->policy->cpus) {
++			cd = &per_cpu(mips_clockevent_device, cpu);
++
++			clockevents_update_freq(cd, rate);
 +		}
 +	}
 +
-+	/*
-+	 * Adjust global lpj variable and per-CPU udelay_val number in
-+	 * accordance with the new CPU frequency.
-+	 */
-+	if ((val == CPUFREQ_PRECHANGE  && freq->old < freq->new) ||
-+	    (val == CPUFREQ_POSTCHANGE && freq->old > freq->new)) {
-+		loops_per_jiffy = cpufreq_scale(glb_lpj_ref,
-+						glb_lpj_ref_freq,
-+						freq->new);
-+
-+		for_each_cpu(cpu, cpus) {
-+			lpj = cpufreq_scale(per_cpu(pcp_lpj_ref, cpu),
-+					    per_cpu(pcp_lpj_ref_freq, cpu),
-+					    freq->new);
-+			cpu_data[cpu].udelay_val = (unsigned int)lpj;
-+		}
-+	}
-+
-+	return NOTIFY_OK;
++	return 0;
 +}
 +
-+static struct notifier_block cpufreq_notifier = {
-+	.notifier_call  = cpufreq_callback,
++static struct notifier_block r4k_cpufreq_notifier = {
++	.notifier_call  = r4k_cpufreq_callback,
 +};
 +
-+static int __init register_cpufreq_notifier(void)
++static int __init r4k_register_cpufreq_notifier(void)
 +{
-+	return cpufreq_register_notifier(&cpufreq_notifier,
++	return cpufreq_register_notifier(&r4k_cpufreq_notifier,
 +					 CPUFREQ_TRANSITION_NOTIFIER);
++
 +}
-+core_initcall(register_cpufreq_notifier);
++core_initcall(r4k_register_cpufreq_notifier);
 +
-+#endif /* CONFIG_CPU_FREQ */
++#endif /* !CONFIG_CPU_FREQ */
 +
- /*
-  * forward reference
-  */
+ int r4k_clockevent_init(void)
+ {
+ 	unsigned long flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
 -- 
 2.25.1
 
