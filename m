@@ -2,124 +2,167 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771F520738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:11:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iiOwP15g"
+	by mail.kernel.org (Postfix) with ESMTP id BDB4D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgEUTLC (ORCPT
+        id S1730219AbgEUTLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:11:02 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13876 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729856AbgEUTLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:11:02 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec6d1b50000>; Thu, 21 May 2020 12:08:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 21 May 2020 12:11:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 21 May 2020 12:11:02 -0700
-Received: from [10.2.48.182] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 May
- 2020 19:11:01 +0000
-Subject: Re: [PATCH 0/4] mm/gup, drm/i915: refactor gup_fast, convert to
- pin_user_pages()
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-References: <20200519002124.2025955-1-jhubbard@nvidia.com>
- <159008745422.32320.5724805750977048669@build.alporthouse.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b907c1d5-b95a-3d00-cafa-0a321f0141d8@nvidia.com>
-Date:   Thu, 21 May 2020 12:11:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 15:11:36 -0400
+Received: from mga11.intel.com ([192.55.52.93]:19619 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729600AbgEUTLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 15:11:35 -0400
+IronPort-SDR: maLjh0r2EZlqqjIjIriJ+oUX0H682Zgx+FEfV0VdNBzwLC2/lZJVfzHqRt9vPJyup9FaQ6tyac
+ DKBZaHMydaLA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 12:11:34 -0700
+IronPort-SDR: M2uM81xHsIDBAngYqcyS5CezqP/4gMRRL2Po6CAnz7jzgwtwBnjoEFPQVngT9UVeUmAteoNyei
+ xWkHjXDaLfcw==
+X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
+   d="scan'208";a="309143304"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.254.97.114])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 12:11:24 -0700
+Message-ID: <8f8731690b52266cf87050844e34af93349b54df.camel@linux.intel.com>
+Subject: Re: [RFC][PATCH 3/5] thermal: Add support for setting notification
+ thresholds
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Date:   Thu, 21 May 2020 12:11:12 -0700
+In-Reply-To: <CAHLCerOsZrrZYcRLH+iZFT9FPL8zfmy2Y-Py6f61YXUrMrkcbg@mail.gmail.com>
+References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
+         <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
+         <a9af415d-9fd0-dcea-79ee-0fb90f45045e@linaro.org>
+         <2cd6c73b890b3eab12420adf4ae29101672e6a0b.camel@linux.intel.com>
+         <CAHLCerMfnHPuJnj6G4EvRPvODf1_Se4xM-OobA1o7eao5eetzg@mail.gmail.com>
+         <703fcf3b2b6769f5e469f0b035846ee95193ef7d.camel@linux.intel.com>
+         <CAHLCerOsZrrZYcRLH+iZFT9FPL8zfmy2Y-Py6f61YXUrMrkcbg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <159008745422.32320.5724805750977048669@build.alporthouse.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590088117; bh=aBRert5zTUjO3CDnuWETRlzl2UkyVdUVUVTCJIf9+7M=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=iiOwP15g5WTdYZsrZXzHQiwkXMR7CF90OctL3JsApwPFGvyE44Gcmf7EM1pO3ECnc
-         OJzF6eau+CefBy6Ad////MwpNwmH4SJPVKtl0VEe+76F45oxwAKJtzJ8P+M48rzcrt
-         Glhwp/ft/bEKWBo8jTcnZFpeUmktlboEh18+FRG9SXBq3i13BoPfkoZth1DvQUXbxq
-         /76ilrAZ0PCTX/QC+7qUQWS5gD0kas/fTD2u8V5E87L1Hk8YABJQXUAGBV8O3IeCND
-         cs6Co7+1vU4sf+4mQ4YJUyMLVkUyLmHFiWoYZFchzbFik7uZTSQfBmjBPVZcb+sE0m
-         qssa/GT7C0RCg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-21 11:57, Chris Wilson wrote:
-> Quoting John Hubbard (2020-05-19 01:21:20)
->> This needs to go through Andrew's -mm tree, due to adding a new gup.c
->> routine. However, I would really love to have some testing from the
->> drm/i915 folks, because I haven't been able to run-time test that part
->> of it.
-> 
-> CI hit
-> 
-> <4> [185.667750] WARNING: CPU: 0 PID: 1387 at mm/gup.c:2699 internal_get_user_pages_fast+0x63a/0xac0
-> <4> [185.667752] Modules linked in: vgem snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic i915 mei_hdcp x86_pkg_temp_thermal coretemp snd_hda_intel snd_intel_dspcfg crct10dif_pclmul snd_hda_codec crc32_pclmul snd_hwdep snd_hda_core ghash_clmulni_intel cdc_ether usbnet mii snd_pcm e1000e mei_me ptp pps_core mei intel_lpss_pci prime_numbers
-> <4> [185.667774] CPU: 0 PID: 1387 Comm: gem_userptr_bli Tainted: G     U            5.7.0-rc5-CI-Patchwork_17704+ #1
-> <4> [185.667777] Hardware name: Intel Corporation Ice Lake Client Platform/IceLake U DDR4 SODIMM PD RVP, BIOS ICLSFWR1.R00.3234.A01.1906141750 06/14/2019
-> <4> [185.667782] RIP: 0010:internal_get_user_pages_fast+0x63a/0xac0
-> <4> [185.667785] Code: 24 40 08 48 39 5c 24 38 49 89 df 0f 85 74 fc ff ff 48 83 44 24 50 08 48 39 5c 24 58 49 89 dc 0f 85 e0 fb ff ff e9 14 fe ff ff <0f> 0b b8 ea ff ff ff e9 36 fb ff ff 4c 89 e8 48 21 e8 48 39 e8 0f
-> <4> [185.667789] RSP: 0018:ffffc90001133c38 EFLAGS: 00010206
-> <4> [185.667792] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff8884999ee800
-> <4> [185.667795] RDX: 00000000000c0001 RSI: 0000000000000100 RDI: 00007f419e774000
-> <4> [185.667798] RBP: ffff888453dbf040 R08: 0000000000000000 R09: 0000000000000001
-> <4> [185.667800] R10: 0000000000000000 R11: 0000000000000000 R12: ffff888453dbf380
-> <4> [185.667803] R13: ffff8884999ee800 R14: ffff888453dbf3e8 R15: 0000000000000040
-> <4> [185.667806] FS:  00007f419e875e40(0000) GS:ffff88849fe00000(0000) knlGS:0000000000000000
-> <4> [185.667808] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4> [185.667811] CR2: 00007f419e873000 CR3: 0000000458bd2004 CR4: 0000000000760ef0
-> <4> [185.667814] PKRU: 55555554
-> <4> [185.667816] Call Trace:
-> <4> [185.667912]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
-> <4> [185.667918]  ? mark_held_locks+0x49/0x70
-> <4> [185.667998]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
-> <4> [185.668073]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
-> 
-> and then panicked, across a range of systems.
-> -Chris
-> 
+Hi Amit,
 
-Thanks for this report! I'm looking into it now.
+On Thu, 2020-05-21 at 10:41 +0530, Amit Kucheria wrote:
+> Hi Srinivas,
+> 
+> On Wed, May 20, 2020 at 11:46 PM Srinivas Pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> > On Wed, 2020-05-20 at 09:58 +0530, Amit Kucheria wrote:
+> > > On Tue, May 19, 2020 at 5:10 AM Srinivas Pandruvada
+> > > <srinivas.pandruvada@linux.intel.com> wrote:
+> > > > On Mon, 2020-05-18 at 18:37 +0200, Daniel Lezcano wrote:
+> > > > > On 04/05/2020 20:16, Srinivas Pandruvada wrote:
+> > > > > > Add new attributes in thermal syfs when a thermal drivers
+> > > > > > provides
+> > > > > > callbacks for them and CONFIG_THERMAL_USER_EVENT_INTERFACE
+> > > > > > is
+> > > > > > defined.
+> > > > > > 
+> > > > > > These attribute allow user space to stop polling for
+> > > > > > temperature.
+> > > > > > 
+> > > > > > These attributes are:
+> > > > > > - temp_thres_low: Specify a notification temperature for a
+> > > > > > low
+> > > > > > temperature threshold event.
+> > > > > > temp_thres_high: Specify a notification temperature for a
+> > > > > > high
+> > > > > > temperature threshold event.
+> > > > > > temp_thres_hyst: Specify a change in temperature to send
+> > > > > > notification
+> > > > > > again.
+> > > > > > 
+> > > > > > This is implemented by adding additional sysfs attribute
+> > > > > > group.
+> > > > > > The
+> > > > > > changes in this patch are trivial to add new attributes in
+> > > > > > thermal
+> > > > > > sysfs as done for other attributes.
+> > > > > 
+> > > > > Isn't it duplicate with the trip point?
+> > > > A trip point is where an in-kernel governor takes some action.
+> > > > This
+> > > > is
+> > > > not same as a notification temperature. For example at trip
+> > > > point
+> > > > configured by ACPI at 85C, the thermal governor may start
+> > > > aggressive
+> > > > throttling.
+> > > > But a user space can set a notification threshold at 80C and
+> > > > start
+> > > > some
+> > > > active controls like activate some fan to reduce the impact of
+> > > > passive
+> > > > control on performance.
+> > > 
+> > > Then what is the use of thermal trip type "ACTIVE" ?
+> > This is an example.
+> > The defaults are set by the OEMs via ACPI. User can't modify that
+> > if
+> > they want to optimize for their usage on Linux. There are fan
+> > control
+> > daemon's which user use on top.
+> 
+> -ENOPARSE. Are you saying users "can" modify these?
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Most of the x86 laptops will not have an active trip as the fan control
+is done by embedded controller. This is a safety and regulatory issue.
+Even when you have an active trip it will be read only and also ACPI
+fan cooling device will have few fix states to control.
+
+There are fine grain controls on top are available outside of thermal
+drivers via hwmon or others.
+https://wiki.archlinux.org/index.php/Fan_speed_control#ThinkPad_laptops
+
+Like in thermald we have XML config, which can be used to set different
+speed levels at different temperatures. Instead of polling of
+temperature, these attributes allow notification of temperature
+threshold. We currently mimic this behavior via adding a RW passive
+trip (The RW passive trips has a well defined usage different than what
+we are using for).
+There can be already existing RO passive/active trips in that zone
+already bound to some cooling device. So from user space we search for
+some RW passive trip and hope this is will give notifications. This I
+believe is a hack to use a fake trip point for notifications for
+temperature thresholds.
+
+Thanks,
+Srinivas
+
+
+> 
+> In any case, how is what you described earlier not possible with an
+> ACTIVE trip point directly wired to the fan as a cooling device or
+> with a HOT trip point that causes the platform driver to send
+> notification to userspace where a fan control daemon can do what it
+> needs to?
+> 
+> Basically, I think the issue of polling is orthogonal to the
+> introduction of the new attributes introduced in this patch and I
+> don't understand the reason for these attributes from your commit
+> description.
+> 
+> > > > We need a way to distinguish between temperature notification
+> > > > threshold
+> > > > and actual trip point. Changing a trip point means that user
+> > > > wants
+> > > > kernel to throttle at temperature.
+
