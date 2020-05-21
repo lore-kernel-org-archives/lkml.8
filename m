@@ -2,114 +2,124 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA97C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9506620748
+	by mail.kernel.org (Postfix) with ESMTP id DFF132070A
 	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hGUqCzpG"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A/WHOQ4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgEUEvZ (ORCPT
+        id S1727069AbgEUEvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 00:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49788 "EHLO
+        Thu, 21 May 2020 00:51:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgEUEvY (ORCPT
+        with ESMTP id S1726506AbgEUEvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 00:51:24 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E3AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:51:24 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id 67so2146615ybn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XTDSy6rQtPM6ksLHsWDHpGE71vgFWJ3nMNjkQ/CXVsc=;
-        b=hGUqCzpGfR+u0MkAe5AX25MsKCkjqfikrQ3WjNa4O7zFIIelSFfn7DX+0N646NurFz
-         Fuu23lzgTNOO+3+4bssM3UW6fnzt4GHCJpy4IZBzQ1/Tpu4Z/Gu23YBg7/IhNRxP+vZ8
-         MIXWFAKygECI9ygSikqb+mO5sD+/v9C3TqC0mDzWOS8SQNOCjyoyaSzGSHsF/k/8eJyI
-         Wa8KfVRNrFbl9+CiLc04tUKYMCixhIeDvs8APaAaEJq3si/TQBBaOgfiIj77C12CPHRK
-         QpvgLXmj30cBw8uBNBlCyGRteapNuIiuS+QOBkFL7sEfwpl4svKLaa3lbG/ojwoTdpM2
-         ucjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XTDSy6rQtPM6ksLHsWDHpGE71vgFWJ3nMNjkQ/CXVsc=;
-        b=czkrzWtK1EhTKAzwfpJ6WZWEAouRUYDPjEGzNVUUnjxuM2jxL8Y2YBgI/y8VL7B46e
-         850QmmpyLaxinw7bAogiwzWoZjX77TPLgERRyIa7x8ucqbNJnKy3Z1TAVKOKcIYX/agw
-         qKfKLZEPeaSC4Ci1vtPIyBaW2uj7lHg7MuPzz1XDcHBU8lNNXd0QFHTCuO0rdltmh+xS
-         iCaiG4g544I3YO8ZL9VvQlqM2knZu9bN+4+3+nMmkUtRBVvbpDE5rVkhDX2RNfXpiI13
-         nRDchooS7Hp2WNlSsbp6uF4U4ugtK6hAcfOoom80qArBcr/Snnot3yldLEe5wSUbCkox
-         uS2A==
-X-Gm-Message-State: AOAM5319w0zNFR+DIeLTvOGYQn84fH4BzOVEeRkVZJb/xZ5ovUlzQIIL
-        3L8fLtyOImDwklx7nWHq5Mv6B9WaMGxtGxCKssJSGg==
-X-Google-Smtp-Source: ABdhPJyTg+h4Mp9qx20ejrQ1XyNdJKAepDavp8xDV1eNDH0UWEvC7YXBqwff1EqnjJEaElBj2JOy2JdxlbhSs8fFir4=
-X-Received: by 2002:a25:ab4c:: with SMTP id u70mr11640352ybi.298.1590036683550;
- Wed, 20 May 2020 21:51:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200520052908.204642-1-walken@google.com> <20200520052908.204642-13-walken@google.com>
- <20200520202242.dec6b520f0bab4a66a510d73@linux-foundation.org>
-In-Reply-To: <20200520202242.dec6b520f0bab4a66a510d73@linux-foundation.org>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Wed, 20 May 2020 21:51:11 -0700
-Message-ID: <CANN689EDRgw=NDFStgubWZLJxssirt-JY80GbjWcmKi6cU4EbA@mail.gmail.com>
-Subject: Re: [PATCH v6 12/12] mmap locking API: convert mmap_sem comments
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thu, 21 May 2020 00:51:37 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76185C061A0E;
+        Wed, 20 May 2020 21:51:37 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SHJg6pG4z9sRK;
+        Thu, 21 May 2020 14:51:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590036695;
+        bh=Vvjbw6Q5rxtxSmTSpphFOU/PwAYYBFFB40vqqXq++1c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A/WHOQ4Gh5Q6ACmyswDHgE6Cva2c1JIxTmXl24lnY5DMA/IDX8TAE4q+75ZHcD8Bp
+         KyrX856ksyYk6lEeNko/P3s2ox5fx4QKtHRrbMqEMr63nlvn7jOGMMJsxaAbsVRHXR
+         rXM4BdfdN4Z8QeDyiS3jWr9q0RFO6IX7RSYsQcyPXM5rbRpKcZ3nyB27AuRxiintBf
+         7AGWw1YgDhKwQ/f6yMcnMkNVDabwBJAxmiHhRxX7307OsWrah5sSxCFwYukRGp/Hrf
+         qvdODddKGdEfINH9SX2gRo8PthC2AYkzYkvTlOIXK4+exk6VML7oZBvch/aR2yn4+z
+         JqyiZm/uQhvfQ==
+Date:   Thu, 21 May 2020 14:51:24 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: linux-next: manual merge of the rcu tree with the powerpc tree
+Message-ID: <20200521145124.48ae408b@canb.auug.org.au>
+In-Reply-To: <20200519172316.3b37cbae@canb.auug.org.au>
+References: <20200519172316.3b37cbae@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/CQMfjLSTVZpJuWvNZ/.x1qE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good, thanks !
+--Sig_/CQMfjLSTVZpJuWvNZ/.x1qE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 20, 2020 at 8:22 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Tue, 19 May 2020 22:29:08 -0700 Michel Lespinasse <walken@google.com> wrote:
-> > Convert comments that reference mmap_sem to reference mmap_lock instead.
->
-> This may not be complete..
->
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: mmap-locking-api-convert-mmap_sem-comments-fix
->
-> fix up linux-next leftovers
->
-> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Cc: Davidlohr Bueso <dbueso@suse.de>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jerome Glisse <jglisse@redhat.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Laurent Dufour <ldufour@linux.ibm.com>
-> Cc: Liam Howlett <Liam.Howlett@oracle.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Michel Lespinasse <walken@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Ying Han <yinghan@google.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Hi all,
 
-Reviewed-by: Michel Lespinasse <walken@google.com>
+On Tue, 19 May 2020 17:23:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the rcu tree got a conflict in:
+>=20
+>   arch/powerpc/kernel/traps.c
+>=20
+> between commit:
+>=20
+>   116ac378bb3f ("powerpc/64s: machine check interrupt update NMI accounti=
+ng")
+>=20
+> from the powerpc tree and commit:
+>=20
+>   187416eeb388 ("hardirq/nmi: Allow nested nmi_enter()")
+>=20
+> from the rcu tree.
+>=20
+> I fixed it up (I used the powerpc tree version for now) and can carry the
+> fix as necessary. This is now fixed as far as linux-next is concerned,
+> but any non trivial conflicts should be mentioned to your upstream
+> maintainer when your tree is submitted for merging.  You may also want
+> to consider cooperating with the maintainer of the conflicting tree to
+> minimise any particularly complex conflicts.
+
+This is now a conflict between the powerpc commit and commit
+
+  69ea03b56ed2 ("hardirq/nmi: Allow nested nmi_enter()")
+
+from the tip tree.  I assume that the rcu and tip trees are sharing
+some patches (but not commits) :-(
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CQMfjLSTVZpJuWvNZ/.x1qE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7GCMwACgkQAVBC80lX
+0GxDgAgAjBhkbXjQw6c4H9zUJ/eMzz46ZhGjxATiSVcRL9djbp+Vc/KpQO1tkjif
+bJ0tP19uatDYyD/6eEzPotCk+htDR/rVSJv1kEQlOILCXxWxR6EmccmJryRyIeAc
+ARG/q+iSSPQrCzT8bPRK20ToK6FQEoX0wAE+c9eScTlI2OO6x6LbeYwKPphzLvZj
+FjNiUZffxnOJrCc/ru7++ga/YIhNn8YVXKjdk9dNzlS0G5LH87wz4syI8f4T8Pks
+CK0aH65PfcV+F923TsGDB3+r+GQD5zAZDxhsY2T1moDbVloNx9Cab3EHj1/djDQ6
+Y/EBDv6+GEF5EV/D49ExqoET5sa0XQ==
+=wTU9
+-----END PGP SIGNATURE-----
+
+--Sig_/CQMfjLSTVZpJuWvNZ/.x1qE--
