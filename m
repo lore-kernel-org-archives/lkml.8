@@ -2,80 +2,123 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46DD62070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BCB2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgEUJIS (ORCPT
+        id S1728704AbgEUJKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:08:18 -0400
-Received: from verein.lst.de ([213.95.11.211]:53789 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728702AbgEUJIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:08:18 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B08C668BEB; Thu, 21 May 2020 11:08:12 +0200 (CEST)
-Date:   Thu, 21 May 2020 11:08:12 +0200
-From:   'Christoph Hellwig' <hch@lst.de>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Christoph Hellwig' <hch@lst.de>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "vyasevich@gmail.com" <vyasevich@gmail.com>,
-        "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>,
-        "jmaloy@redhat.com" <jmaloy@redhat.com>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 31/33] sctp: add sctp_sock_set_nodelay
-Message-ID: <20200521090812.GA8330@lst.de>
-References: <20200520195509.2215098-1-hch@lst.de> <20200520195509.2215098-32-hch@lst.de> <20200520231001.GU2491@localhost.localdomain> <20200520.162355.2212209708127373208.davem@davemloft.net> <20200520233913.GV2491@localhost.localdomain> <20200521083442.GA7771@lst.de> <0a6839ab0ba04fcf9b9c92784c9564aa@AcuMS.aculab.com>
+        Thu, 21 May 2020 05:10:03 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41068 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728545AbgEUJKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:10:02 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 63so4957827oto.8;
+        Thu, 21 May 2020 02:10:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zsv1Lh0K7M59VV4w388XD6WcsG+ryCs8PrcoBNRfD4M=;
+        b=X7r2YGNSu7W81D5sXhBazL0VT8ZKFlbTBI5lYTFrUHKc4adJZt52e+hI8ctQE+4pvT
+         dWsZl4gfDgcDFBbm5m6YzDrZEQa50dyzmPxJi2cQFG+61Aaw0hBGvuCejr2EYYSCAhct
+         Fa9ZC/mDu21gz0w+C1KOI7PjAtG0ZeVh8TdJ+baD0yxUT2Nzcqo//qxCKcVzDTGYLqFl
+         CSI/OfvaVweBgHmxg6n0iwwj/k/h+oFwVjHIX85Oucl8Ew5B5IyALgmOeKh9j4DmY4DN
+         JAji6Cy8EPa6MJ0YPtO9J+YYmuk+2G5NkBMLa+DMG24gFUvk/AFGqJ2XTTWxm7/ubdUs
+         4jbQ==
+X-Gm-Message-State: AOAM5313VpUr7UzPdLeZeFzBexmmGL7Gusbj9yngE+omFoPRnyKnNkt9
+        jeqi1wU/RYyHpOBC9WUZFErG+4h/0cUR1rGKWWQ=
+X-Google-Smtp-Source: ABdhPJwm5hpnt7eWP1EGK7Mtgxjgzq8Xk87gNuPRLtNpSmjQNXuMv1lV/nvEbiXSLKYWEk/r7B5rKl5rIAchj2hnwqo=
+X-Received: by 2002:a9d:7e92:: with SMTP id m18mr6210653otp.145.1590052201359;
+ Thu, 21 May 2020 02:10:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a6839ab0ba04fcf9b9c92784c9564aa@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200521005321.12129-1-Sergey.Semin@baikalelectronics.ru> <20200521005321.12129-8-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200521005321.12129-8-Sergey.Semin@baikalelectronics.ru>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 21 May 2020 11:09:50 +0200
+Message-ID: <CAMuHMdW5TqfDTZZCscXCK-Fkd7Gq1Ciyu1_sDzzR0B+_W-2hfg@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] clocksource: mips-gic-timer: Mark GIC timer as
+ unstable if ref clock changes
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Paul Cercueil <paul@crapouillou.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 09:06:19AM +0000, David Laight wrote:
-> > > The comment still applies, though. (re the duplication)
-> > 
-> > Where do you see duplication?
-> 
-> The whole thing just doesn't scale.
-> 
-> As soon as you get to the slightly more complex requests
-> like SCTP_INITMSG (which should probably be called to
-> set the required number of data streams) you've either
-> got replicated code or nested wrappers.
+Hi Serge,
 
-None of that is relevant to setting the nodelay option.  If you actually
-read through the series you'd say that whenever there was non-trivial
-logic it is shared with getopt.  However sharing just for purpose of
-sharing doesn't make sense, so where the kernel API ended up just
-setting a flag after taking the sock lock I did not opt for it.
+On Thu, May 21, 2020 at 2:54 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> Currently clocksource framework doesn't support the clocks with variable
+> frequency. Since MIPS GIC timer ticks rate might be unstable on some
+> platforms, we must make sure that it justifies the clocksource
+> requirements. MIPS GIC timer is incremented with the CPU cluster reference
+> clocks rate. So in case if CPU frequency changes, the MIPS GIC tick rate
+> changes synchronously. Due to this the clocksource subsystem can't rely on
+> the timer to measure system clocks anymore. This commit marks the MIPS GIC
+> based clocksource as unstable if reference clock (normally it's a CPU
+> reference clocks) rate changes. The clocksource will execute a watchdog
+> thread, which lowers the MIPS GIC timer rating to zero and fallbacks to a
+> new stable one.
+>
+> Note we don't need to set the CLOCK_SOURCE_MUST_VERIFY flag to the MIPS
+> GIC clocksource since normally the timer is stable. The only reason why
+> it gets unstable is due to the ref clock rate change, which event we
+> detect here in the driver by means of the clocks event notifier.
+>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+
+Thanks for your patch!
+
+> --- a/drivers/clocksource/mips-gic-timer.c
+> +++ b/drivers/clocksource/mips-gic-timer.c
+> @@ -24,6 +24,9 @@
+>  static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
+>  static int gic_timer_irq;
+>  static unsigned int gic_frequency;
+> +static bool __read_mostly gic_clock_unstable;
+> +
+> +static void git_clocksource_unstable(char *reason);
+
+gic_clocksource_unstable? (everywhere)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
