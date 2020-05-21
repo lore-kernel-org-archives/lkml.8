@@ -2,198 +2,202 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53437C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A321FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 359D42053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB06206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4sfz7hF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgEUBki (ORCPT
+        id S1727009AbgEUBoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 21:40:38 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34324 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgEUBki (ORCPT
+        Wed, 20 May 2020 21:44:18 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45677 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726840AbgEUBoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 21:40:38 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 74C798030779;
-        Thu, 21 May 2020 01:40:33 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id d9QIbRN94f6e; Thu, 21 May 2020 04:40:32 +0300 (MSK)
-Date:   Thu, 21 May 2020 04:40:31 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200521014031.7r54unsig477csfu@mobilestation>
-References: <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
- <20200511210714.GO185537@smile.fi.intel.com>
- <20200511210800.GP185537@smile.fi.intel.com>
- <20200512124206.l3uv5hg2zimi24dq@mobilestation>
- <20200515063039.GH333670@vkoul-mobl>
- <20200517192347.h3hiibsifwfyyr7z@mobilestation>
- <20200519170246.GS374218@vkoul-mobl.Dlink>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200519170246.GS374218@vkoul-mobl.Dlink>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Wed, 20 May 2020 21:44:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590025455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=CCEasa2J5evFTeUb/BLxZS5fCWTF6bLrwK37bZkjLbI=;
+        b=e4sfz7hFvszewDYZAtBBPdSlyz2Sxo46mvZR7yrMw3S7yD576RKODWzPQ6E0oXhSpileTT
+        vSsHQv51waw8VgwLXr27yhjDP1tlQwCe+UzUuHHVAdZlP6/VnHuSSSFnJ/hh++geSfrnKQ
+        pWpSmhWLHMIQoJsQZFhWR/WOLrr9A+0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-EPUs-rCnNV-k72o9zYjVGg-1; Wed, 20 May 2020 21:44:13 -0400
+X-MC-Unique: EPUs-rCnNV-k72o9zYjVGg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5904C1005510;
+        Thu, 21 May 2020 01:44:12 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-86.pek2.redhat.com [10.72.12.86])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B7535C1D0;
+        Thu, 21 May 2020 01:44:08 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, cai@lca.pw,
+        mgorman@suse.de, mhocko@kernel.org, rppt@linux.ibm.com,
+        bhe@redhat.com
+Subject: [PATCH] mm/compaction: Fix the incorrect hole in fast_isolate_freepages()
+Date:   Thu, 21 May 2020 09:44:07 +0800
+Message-Id: <20200521014407.29690-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:32:46PM +0530, Vinod Koul wrote:
-> On 17-05-20, 22:23, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 12:00:39PM +0530, Vinod Koul wrote:
-> > > Hi Serge,
-> > > 
-> > > On 12-05-20, 15:42, Serge Semin wrote:
-> > > > Vinod,
-> > > > 
-> > > > Could you join the discussion for a little bit?
-> > > > 
-> > > > In order to properly fix the problem discussed in this topic, we need to
-> > > > introduce an additional capability exported by DMA channel handlers on per-channel
-> > > > basis. It must be a number, which would indicate an upper limitation of the SG list
-> > > > entries amount.
-> > > > Something like this would do it:
-> > > > struct dma_slave_caps {
-> > > > ...
-> > > > 	unsigned int max_sg_nents;
-> > > > ...
-> > > 
-> > > Looking at the discussion, I agree we should can this up in the
-> > > interface. The max_dma_len suggests the length of a descriptor allowed,
-> > > it does not convey the sg_nents supported which in the case of nollp is
-> > > one.
-> > > 
-> > > Btw is this is a real hardware issue, I have found that value of such
-> > > hardware is very less and people did fix it up in subsequent revs to add
-> > > llp support.
-> > 
-> > Yes, it is. My DW DMAC doesn't support LLP and there isn't going to be new SoC
-> > version produced.(
-> 
-> Ouch
-> 
-> > > Also, another question is why this cannot be handled in driver, I agree
-> > > your hardware does not support llp but that does not stop you from
-> > > breaking a multi_sg list into N hardware descriptors and keep submitting
-> > > them (for this to work submission should be done in isr and not in bh,
-> > > unfortunately very few driver take that route).
-> > 
-> > Current DW DMA driver does that, but this isn't enough. The problem is that
-> > in order to fix the issue in the DMA hardware driver we need to introduce
-> > an inter-dependent channels abstraction and synchronously feed both Tx and
-> > Rx DMA channels with hardware descriptors (LLP entries) one-by-one. This hardly
-> > needed by any slave device driver rather than SPI, which Tx and Rx buffers are
-> > inter-dependent. So Andy's idea was to move the fix to the SPI driver (feed
-> > the DMA engine channels with Tx and Rx data buffers synchronously), but DMA
-> > engine would provide an info whether such fix is required. This can be
-> > determined by the maximum SG entries capability.
-> 
-> Okay but having the sw limitation removed would also be a good idea, you
-> can handle any user, I will leave it upto you, either way is okay
-> 
-> > 
-> > (Note max_sg_ents isn't a limitation on the number of SG entries supported by
-> > the DMA driver, but the number of SG entries handled by the DMA engine in a
-> > single DMA transaction.)
-> > 
-> > > TBH the max_sg_nents or
-> > > max_dma_len are HW restrictions and SW *can* deal with then :-)
-> > 
-> > Yes, it can, but it only works for the cases when individual DMA channels are
-> > utilized. DMA hardware driver doesn't know that the target and source slave
-> > device buffers (SPI Tx and Rx FIFOs) are inter-dependent, that writing to one
-> > you will implicitly push data to another. So due to the interrupts handling
-> > latency Tx DMA channel is restarted faster than Rx DMA channel is reinitialized.
-> > This causes the SPI Rx FIFO overflow and data loss.
-> > 
-> > > 
-> > > In an idea world, you should break the sw descriptor submitted into N hw
-> > > descriptors and submit to hardware and let user know when the sw
-> > > descriptor is completed. Of course we do not do that :(
-> > 
-> > Well, the current Dw DMA driver does that. But due to the two slave device
-> > buffers inter-dependency this isn't enough to perform safe DMA transactions.
-> > Due to the interrupts handling latency Tx DMA channel pushes data to the slave
-> > device buffer faster than Rx DMA channel starts to handle incoming data. This
-> > causes the SPI Rx FIFO overflow.
-> > 
-> > > 
-> > > > };
-> > > > As Andy suggested it's value should be interpreted as:
-> > > > 0          - unlimited number of entries,
-> > > > 1:MAX_UINT - actual limit to the number of entries.
-> > > 
-> > 
-> > > Hmm why 0, why not MAX_UINT for unlimited?
-> > 
-> > 0 is much better for many reasons. First of all MAX_UINT is a lot, but it's
-> > still a number. On x64 platform this might be actual limit if for instance
-> > the block-size register is 32-bits wide. Secondly interpreting 0 as unlimited
-> > number of entries would be more suitable since most of the drivers support
-> > LLP functionality and we wouldn't need to update their code to set MAX_UINT.
-> > Thirdly DMA engines, which don't support LLPs would need to set this parameter
-> > as 1. So if we do as you say and interpret unlimited number of LLPs as MAX_UINT,
-> > then 0 would left unused.
-> > 
-> > To sum up I also think that using 0 as unlimited number SG entries supported is
-> > much better.
-> 
-> ok
-> 
-> > > > In addition to that seeing the dma_get_slave_caps() method provide the caps only
-> > > > by getting them from the DMA device descriptor, while we need to have an info on
-> > > > per-channel basis, it would be good to introduce a new DMA-device callback like:
-> > > > struct dma_device {
-> > > > ...
-> > > > 	int (*device_caps)(struct dma_chan *chan,
-> > > > 			   struct dma_slave_caps *caps);
-> > > 
-> > 
-> > > Do you have a controller where channel caps are on per-channel basis?
-> > 
-> > Yes, I do. Our DW DMA controller has got the maximum burst length non-uniformly
-> > distributed per DMA channels. There are eight channels our controller supports,
-> > among which first two channels can burst up to 32 transfer words, but the rest
-> > of the channels support bursting up to 4 transfer words.
-> > 
-> > So having such device_caps() callback to customize the device capabilities on
-> > per-DMA-channel basis would be very useful! What do you think?
-> 
-> Okay looks like per-ch basis is the way forward!
+Qian reported that a crash happened in compaction.
+http://lkml.kernel.org/r/8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw
 
-Great! Thanks. I'll send v3 with updates we've come up to in this discussion.
+LTP: starting swapping01 (swapping01 -i 5)
+page:ffffea0000aa0000 refcount:1 mapcount:0 mapping:000000002243743b index:0x0
+flags: 0x1fffe000001000(reserved)
+raw: 001fffe000001000 ffffea0000aa0008 ffffea0000aa0008 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn))
+page_owner info is not present (never set?)
+------------[ cut here ]------------
+kernel BUG at mm/page_alloc.c:533!
+...
+CPU: 17 PID: 218 Comm: kcompactd0 Not tainted 5.7.0-rc2-next-20200423+ #7
+...
+RIP: 0010:set_pfnblock_flags_mask+0x150/0x210
+...
+RSP: 0018:ffffc900042ff858 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffffff9a002382
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8884535b8e6c
+RBP: ffffc900042ff8b8 R08: ffffed108a6b8459 R09: ffffed108a6b8459
+R10: ffff8884535c22c7 R11: ffffed108a6b8458 R12: 000000000002a800
+R13: ffffea0000aa0000 R14: ffff88847fff3000 R15: ffff88847fff3040
+FS:  0000000000000000(0000) GS:ffff888453580000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd1eb4a1000 CR3: 000000083154c000 CR4: 00000000003406e0
+Call Trace:
+ isolate_freepages+0xb20/0x1140
+ ? isolate_freepages_block+0x730/0x730
+ ? mark_held_locks+0x34/0xb0
+ ? free_unref_page+0x7d/0x90
+ ? free_unref_page+0x7d/0x90
+ ? check_flags.part.28+0x86/0x220
+ compaction_alloc+0xdd/0x100
+ migrate_pages+0x304/0x17e0
+ ? __ClearPageMovable+0x100/0x100
+ ? isolate_freepages+0x1140/0x1140
+ compact_zone+0x1249/0x1e90
+ ? compaction_suitable+0x260/0x260
+ kcompactd_do_work+0x231/0x650
+ ? sysfs_compact_node+0x80/0x80
+ ? finish_wait+0xe6/0x110
+ kcompactd+0x162/0x490
+ ? kcompactd_do_work+0x650/0x650
+ ? finish_wait+0x110/0x110
+ ? __kasan_check_read+0x11/0x20
+ ? __kthread_parkme+0xd4/0xf0
+ ? kcompactd_do_work+0x650/0x650
+ kthread+0x1f7/0x220
+ ? kthread_create_worker_on_cpu+0xc0/0xc0
+ ret_from_fork+0x27/0x50
 
--Sergey
+After investigation, it turns out that this is introduced by commit of
+linux-next: commit f6edbdb71877 ("mm: memmap_init: iterate over memblock
+regions rather that check each PFN").
 
-> 
-> -- 
-> ~Vinod
+After investigation, it turns out that this is introduced by commit of
+linux-next, the patch subject is:
+  "mm: memmap_init: iterate over memblock regions rather that check each PFN".
+
+Qian added debugging code. The debugging log shows that the fault page is
+0x2a800000. From the system e820 map which is pasted at bottom, the page
+is in e820 reserved range:
+	BIOS-e820: [mem 0x0000000029ffe000-0x000000002a80afff] reserved
+And it's in section [0x28000000, 0x2fffffff]. In that secion, there are
+several usable ranges and some e820 reserved ranges.
+
+For this kind of e820 reserved range, it won't be added to memblock allocator.
+However, init_unavailable_mem() will initialize to add them into node 0,
+zone 0. Before that commit, later, memmap_init() will add e820 reserved
+ranges into the zone where they are contained, because it can pass
+the checking of early_pfn_valid() and early_pfn_in_nid(). In this case,
+the e820 reserved range where fault page 0x2a800000 is located is added
+into DMA32 zone. After that commit, the e820 reserved rgions are kept
+in node 0, zone 0, since we iterate over memblock regions to iniatialize
+in memmap_init() instead, their node and zone won't be changed.
+
+Now, fast_isolate_freepages() will use min mark directly as the migration
+target if no page is found from buddy. However, the min mark is not checked
+carefully, it could be in e820 reserved range, and trigger the
+VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn)) when try to mark it
+as skip.
+
+Here, let's call pageblock_pfn_to_page() to get page of min_pfn, since it
+will do careful checks and return NULL if the pfn is not qualified.
+
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000008bfff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000008c000-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000028328fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000028329000-0x0000000028568fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000028569000-0x0000000028d85fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000028d86000-0x0000000028ee5fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000028ee6000-0x0000000029a04fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000029a05000-0x0000000029a08fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000029a09000-0x0000000029ee4fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000029ee5000-0x0000000029ef2fff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000029ef3000-0x0000000029f22fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000029f23000-0x0000000029f23fff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000029f24000-0x0000000029f24fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000029f25000-0x0000000029f28fff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000029f29000-0x0000000029f29fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000029f2a000-0x0000000029f2bfff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000029f2c000-0x0000000029f2cfff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000029f2d000-0x0000000029f2ffff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000029f30000-0x0000000029ffdfff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000029ffe000-0x000000002a80afff] reserved
+[    0.000000] BIOS-e820: [mem 0x000000002a80b000-0x000000002a80efff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x000000002a80f000-0x000000002a81ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x000000002a820000-0x000000002a822fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x000000002a823000-0x0000000033a22fff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000033a23000-0x0000000033a32fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000033a33000-0x0000000033a42fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x0000000033a43000-0x0000000033a52fff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x0000000033a53000-0x0000000077ffffff] usable
+[    0.000000] BIOS-e820: [mem 0x0000000078000000-0x000000008fffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fed80000-0x00000000fed80fff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000087effffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000087f000000-0x000000087fffffff] reserved
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ mm/compaction.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 67fd317f78db..9ce4cff4d407 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1418,7 +1418,9 @@ fast_isolate_freepages(struct compact_control *cc)
+ 				cc->free_pfn = highest;
+ 			} else {
+ 				if (cc->direct_compaction && pfn_valid(min_pfn)) {
+-					page = pfn_to_page(min_pfn);
++					page = pageblock_pfn_to_page(min_pfn,
++						pageblock_end_pfn(min_pfn),
++						cc->zone);
+ 					cc->free_pfn = min_pfn;
+ 				}
+ 			}
+-- 
+2.17.2
+
