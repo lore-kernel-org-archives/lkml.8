@@ -2,138 +2,91 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A33F20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:38:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="J1Z4F9XG"
+	by mail.kernel.org (Postfix) with ESMTP id 9E1952065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgEUHi6 (ORCPT
+        id S1728472AbgEUHjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgEUHi6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:38:58 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D27F6C061A0E;
-        Thu, 21 May 2020 00:38:57 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SM1p0SX0z9sRK;
-        Thu, 21 May 2020 17:38:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1590046736;
-        bh=KRzHDOmfMwlaMt726UpqEu3b+oSfQAbmI4Tg50xYIik=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=J1Z4F9XG13Cdg81A5YXPatjOCGOJGjrbCIl7emvLoWP8hT7DNDtKVvXOT+CHC/N3A
-         AXVqHxKsBXPwydnwBJp37FU9sc2zHkZULjUVmqFv1I7ojLL661ZPnr70PLZHd2130Z
-         e8a8vn4ZYyJgD2x49ssPHCJepew46JI6a4fY6LnG/yRGNIe/ZXGU9nxBT7sj9Blhfp
-         V/ropzRK4CQxJtoGKKPgZa/Ws+fswwWoTOtK76R4sGayCKBGWz057AHKo4RxAyMqLr
-         7kOhBvAFPTb4UiiAnnojRx3Wb7YQCm3frLi/yHa7PgwjWvw7badmwtXv85jF82QtR+
-         HqJOBSC2Syl5g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] input: i8042: Remove special PowerPC handling
-In-Reply-To: <20200520171618.GT89269@dtor-ws>
-References: <87a7254bxd.fsf@mpe.ellerman.id.au> <20200518181043.3363953-1-natechancellor@gmail.com> <87ftbv87i3.fsf@mpe.ellerman.id.au> <20200520171618.GT89269@dtor-ws>
-Date:   Thu, 21 May 2020 17:39:13 +1000
-Message-ID: <87wo557n4u.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 21 May 2020 03:39:47 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:43928 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728300AbgEUHjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 03:39:47 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgDnX7cuMMZe2PjmAA--.15363S4;
+        Thu, 21 May 2020 15:39:30 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Pawel Laszczak <pawell@cadence.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Roger Quadros <rogerq@ti.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: cdns3: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 15:39:19 +0800
+Message-Id: <20200521073925.19633-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgDnX7cuMMZe2PjmAA--.15363S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWDGFc_Ww
+        4ruw47GF1YgF9rXw4UCw13ZryIgFnFqF1kWF40qF1agryUur1kCry8ZrZ5Crsruw4UtryD
+        tF92grWfurZ7ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbI8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l
+        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v2
+        6r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj
+        fUeAwIDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAAJsr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Torokhov <dmitry.torokhov@gmail.com> writes:
-> Hi Michael,
->
-> On Wed, May 20, 2020 at 04:07:00PM +1000, Michael Ellerman wrote:
->> [ + Dmitry & linux-input ]
->> 
->> Nathan Chancellor <natechancellor@gmail.com> writes:
->> > This causes a build error with CONFIG_WALNUT because kb_cs and kb_data
->> > were removed in commit 917f0af9e5a9 ("powerpc: Remove arch/ppc and
->> > include/asm-ppc").
->> >
->> > ld.lld: error: undefined symbol: kb_cs
->> >> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> >> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> >> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >> referenced by i8042-ppcio.h:28 (drivers/input/serio/i8042-ppcio.h:28)
->> >> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >
->> > ld.lld: error: undefined symbol: kb_data
->> >> referenced by i8042.c:309 (drivers/input/serio/i8042.c:309)
->> >> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >> referenced by i8042-ppcio.h:33 (drivers/input/serio/i8042-ppcio.h:33)
->> >> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >> referenced by i8042.c:319 (drivers/input/serio/i8042.c:319)
->> >> input/serio/i8042.o:(__i8042_command) in archive drivers/built-in.a
->> >> referenced 15 more times
->> >
->> > Presumably since nobody has noticed this for the last 12 years, there is
->> > not anyone actually trying to use this driver so we can just remove this
->> > special walnut code and use the generic header so it builds for all
->> > configurations.
->> >
->> > Fixes: 917f0af9e5a9 ("powerpc: Remove arch/ppc and include/asm-ppc")
->> > Reported-by: kbuild test robot <lkp@intel.com>
->> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->> > ---
->> >  drivers/input/serio/i8042-ppcio.h | 57 -------------------------------
->> >  drivers/input/serio/i8042.h       |  2 --
->> >  2 files changed, 59 deletions(-)
->> >  delete mode 100644 drivers/input/serio/i8042-ppcio.h
->> 
->> This LGTM.
->> 
->> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
->> 
->> I assumed drivers/input/serio would be pretty quiet, but there's
->> actually some commits to it in linux-next. So perhaps this should go via
->> the input tree.
->> 
->> Dmitry do you want to take this, or should I take it via powerpc?
->> 
->> Original patch is here:
->>   https://lore.kernel.org/lkml/20200518181043.3363953-1-natechancellor@gmail.com
->
-> I'm fine with you taking it through powerpc.
->
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Thanks.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/usb/cdns3/cdns3-ti.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> Also, while I have your attention ;), could you please ack or take
-> https://lore.kernel.org/lkml/20191002214854.GA114387@dtor-ws/ as I
-> believe this is the last user or input_polled_dev API and I would like
-> to drop it from the tree.
+diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
+index 5685ba11480b..e701ab56b0a7 100644
+--- a/drivers/usb/cdns3/cdns3-ti.c
++++ b/drivers/usb/cdns3/cdns3-ti.c
+@@ -138,7 +138,7 @@ static int cdns_ti_probe(struct platform_device *pdev)
+ 	error = pm_runtime_get_sync(dev);
+ 	if (error < 0) {
+ 		dev_err(dev, "pm_runtime_get_sync failed: %d\n", error);
+-		goto err_get;
++		goto err;
+ 	}
+ 
+ 	/* assert RESET */
+@@ -185,7 +185,6 @@ static int cdns_ti_probe(struct platform_device *pdev)
+ 
+ err:
+ 	pm_runtime_put_sync(data->dev);
+-err_get:
+ 	pm_runtime_disable(data->dev);
+ 
+ 	return error;
+-- 
+2.17.1
 
-Ooof. Sorry, you are very patient :)
-
-I have put it in my next-test.
-
-In future feel free to send me mail off-list, or ping me on irc, if I
-haven't picked something up after several months!
-
-cheers
