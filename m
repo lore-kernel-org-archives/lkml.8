@@ -2,126 +2,118 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE53BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE142072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F882072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IGMUFSuZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dWqsN7Om"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgEUQCa (ORCPT
+        id S1729596AbgEUQCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 12:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41294 "EHLO
+        Thu, 21 May 2020 12:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgEUQC3 (ORCPT
+        with ESMTP id S1728339AbgEUQCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 12:02:29 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49315C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 09:02:29 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t8so2529126wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 09:02:29 -0700 (PDT)
+        Thu, 21 May 2020 12:02:44 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1224BC061A0E;
+        Thu, 21 May 2020 09:02:44 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id s69so3289810pjb.4;
+        Thu, 21 May 2020 09:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FFgD33+aNouNGQWGPAQ82q8pOVxArb54Ymtj9k6c/CI=;
-        b=IGMUFSuZHglbq89dE4lbiHY6u0LsaqFDfzsLsjDKYGX4etHufoYeD8MS2j3VMbQ2PM
-         QYQ2wFMBSsxWjwvI7O4lhXaSNIwjtur44RocetRNs9sxRMWwWs7HxhKmb6El1eqr43uc
-         qj5WC8JdzADa1cvKlTb2t6+rKtlh1XdmkFwVg=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/BLwnYkqoaG4VSk3NtlQU7fBYhqtOMjc6lr5gP631Rc=;
+        b=dWqsN7OmQL0R0obRqAungpLixVGrXzEeLC0is7oEl5MRLcfRQlmWFNlaS4ppUECPny
+         Gqr9X9njPV6p9RTEBXlLoFxCToW39ej2ntTRhpzaygCIKMSz37au8z9wA/fFuWkna7a+
+         zUG/5+GIUE/1ydmEQGjiNZlwS1+qJvJV2wtb4yG7uvRzPbDFBQbMIWmgkpVmCJsCzTfY
+         JxjMFHvjXUiJZ8D6vbqWOECMx94pEznfElX8HLj5hoRNMKeqTfGZ2qjYjB6ekl/hDu0N
+         AipVm8Kk7vgP9d5ClaREUxqt+n+cIygUW/h5rIqjufYW+yJmhmCPJgqw+ArO1nsTQDlF
+         snCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FFgD33+aNouNGQWGPAQ82q8pOVxArb54Ymtj9k6c/CI=;
-        b=JfdqL7x7AjkIsHkOi/v0O8kTJK/Bk6RrkOw7ehN7hBApE/M4SPTdS303zAYgK77scS
-         AKjOVuGof9hda+bIDCss9obPJVE9HBGlrmmNncS2lGOIOEXfOmv1R+qq9A36Gm3CGc/K
-         NScOmSsIHcd81gS0Pfa9amNfgNbEFfZPSyrbYFLkLQs22RksHfmfaBrysOL80kSViYld
-         +NV619nUAZgwSEDWX+OK9rrQ/1brZo1nUEhD1PBwrlvcfy3z0zrmBGLh+zl9663j7jqZ
-         CeB9XyVd4rtw+xdJaZGa6Ia/iQxfQMSRF5a1DUtSzZfqlJrO51DIXJJeg49NJG6TMO7v
-         fudQ==
-X-Gm-Message-State: AOAM5305lT/kmsXNCk4xJ8QfXBhBdA2y3NjIUoDsaFnmWzHwsSbMphaa
-        RqAlpfLfuAeCNth+f/K9JTMqpg==
-X-Google-Smtp-Source: ABdhPJyvZZpk19V7dcx34aHKaL1bXMZY4n4ffWiVEXRuCg9hQzx9AwjLNVAy7P/eRQEZ4BCf3LkRUw==
-X-Received: by 2002:a7b:c207:: with SMTP id x7mr9976002wmi.79.1590076948087;
-        Thu, 21 May 2020 09:02:28 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id x10sm7147943wrn.54.2020.05.21.09.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 09:02:27 -0700 (PDT)
-Date:   Thu, 21 May 2020 16:02:26 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH v8 13/14] media: platform: Rename jpeg dec file name
-Message-ID: <20200521160226.GK209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
- <20200403094033.8288-14-xia.jiang@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/BLwnYkqoaG4VSk3NtlQU7fBYhqtOMjc6lr5gP631Rc=;
+        b=j/qzdGpKrRybQAyHeh3kVDOIqCVuJ9LVXBCAmrdEYxLv4hv0uc2kG6n1Il427SmZgh
+         T9GaXfsKnK/w7m71XeKqRCSFjywF0IsrzSba1rrVG+hjNQuqj3evc5w+Eq2jbdpG8Alb
+         w6di9/Q13rjMu8LNbwclyasJzIZiUNEZl2R/TvUCSyZNTxdUB1UJOstTNCkDlFeP4k6D
+         n4JBO/inhI/XuGnJLlz35XfJgFdbW8ICTZZ2oBW/cttdctERtyTNjD4WANChBJGN/ULW
+         6pEKtVxM3WsTyuPgEAH5Syw/invR1ssXu+sKABqObAGz2zpotacyL5nO3k5ErPj/lyoW
+         913w==
+X-Gm-Message-State: AOAM531NHW91hS8qaeCKJ+76VZtdrq+sfVys1fIVWi7p5TEHpCfphUap
+        2+LNQ2L4JR/8du9D2x18pu54SuoMOnk2mGvRz4s=
+X-Google-Smtp-Source: ABdhPJwucelyYO7GsggYWr7ec9Pafxw6XccHHHJtfTTflZIfh2CR8isb1SxBpC43l5TtiraVelVG3AyWY6t8Sawq8Vg=
+X-Received: by 2002:a17:90b:113:: with SMTP id p19mr12591489pjz.129.1590076963484;
+ Thu, 21 May 2020 09:02:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403094033.8288-14-xia.jiang@mediatek.com>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
+ <20200521121228.aqplh6eftylnys3p@mobilestation> <20200521155143.GE4770@sirena.org.uk>
+ <20200521155804.qgaaqc23h2nll7r3@mobilestation>
+In-Reply-To: <20200521155804.qgaaqc23h2nll7r3@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 21 May 2020 19:02:32 +0300
+Message-ID: <CAHp75VcY9HG3=wft9VFWKJD9PG6TiSbmOyjgYZyue+z3PW_eCQ@mail.gmail.com>
+Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+On Thu, May 21, 2020 at 6:58 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Thu, May 21, 2020 at 04:51:43PM +0100, Mark Brown wrote:
+> > On Thu, May 21, 2020 at 03:12:28PM +0300, Serge Semin wrote:
+> >
+> > > Well, for me both solutions are equal except mine consumes less stack memory.
+> > > The only reason why your solution might be better is that if DW DMA driver or
+> > > the DMA engine subsystem changed the dw_dma_slave structure instance passed to
+> > > the dma_request_channel() method, which non of them do. So I'll leave this for
+> > > Mark to decide. Mark, could you give us your final word about this?
+> >
+> > Honestly I'm struggling to care either way.  I guess saving a bit of
+> > stack is potentially useful.
+>
+> Settled then.
 
-On Fri, Apr 03, 2020 at 05:40:32PM +0800, Xia Jiang wrote:
-> Rename the files which are for decode feature. This is preparing
-> path since the jpeg enc patch will be added later.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v8: no changes
-> 
-> v7: no changes
-> 
-> v6: no changes
-> 
-> v5: no changes
-> 
-> v4: no changes
-> 
-> v3: no changes
-> 
-> v2: no changes
-> ---
->  drivers/media/platform/mtk-jpeg/Makefile                      | 2 +-
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c               | 4 ++--
->  .../platform/mtk-jpeg/{mtk_jpeg_hw.c => mtk_jpeg_dec_hw.c}    | 2 +-
->  .../platform/mtk-jpeg/{mtk_jpeg_hw.h => mtk_jpeg_dec_hw.h}    | 2 +-
->  .../mtk-jpeg/{mtk_jpeg_parse.c => mtk_jpeg_dec_parse.c}       | 2 +-
->  .../mtk-jpeg/{mtk_jpeg_parse.h => mtk_jpeg_dec_parse.h}       | 2 +-
->  .../platform/mtk-jpeg/{mtk_jpeg_reg.h => mtk_jpeg_dec_reg.h}  | 0
->  7 files changed, 7 insertions(+), 7 deletions(-)
->  rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_hw.c => mtk_jpeg_dec_hw.c} (99%)
->  rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_hw.h => mtk_jpeg_dec_hw.h} (98%)
->  rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_parse.c => mtk_jpeg_dec_parse.c} (98%)
->  rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_parse.h => mtk_jpeg_dec_parse.h} (92%)
->  rename drivers/media/platform/mtk-jpeg/{mtk_jpeg_reg.h => mtk_jpeg_dec_reg.h} (100%)
-> 
+With whom?
 
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> Let's leave the patch as is.
 
-Best regards,
-Tomasz
+Mark, should I send a partial revert afterwards in this case?
+I'm not fully satisfied with it.
+
+-- 
+With Best Regards,
+Andy Shevchenko
