@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD743C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B12C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B232075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6F2C2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:37:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgEUAhs (ORCPT
+        id S1728152AbgEUAhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38542 "EHLO
+        Wed, 20 May 2020 20:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbgEUAh0 (ORCPT
+        with ESMTP id S1728008AbgEUAh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 May 2020 20:37:26 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F804C08C5C1;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA5BC08C5C3;
         Wed, 20 May 2020 17:37:25 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jbZD9-00Cgem-Vn; Thu, 21 May 2020 00:37:24 +0000
+        id 1jbZDA-00Cgf0-A8; Thu, 21 May 2020 00:37:24 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 13/19] get rid of compat_mc_setsockopt()
-Date:   Thu, 21 May 2020 01:37:15 +0100
-Message-Id: <20200521003721.3023783-13-viro@ZenIV.linux.org.uk>
+Subject: [PATCH net-next 15/19] atm: separate ATM_GETNAMES handling from the rest of atm_dev_ioctl()
+Date:   Thu, 21 May 2020 01:37:17 +0100
+Message-Id: <20200521003721.3023783-15-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200521003721.3023783-1-viro@ZenIV.linux.org.uk>
 References: <20200521003657.GE23230@ZenIV.linux.org.uk>
@@ -45,130 +45,158 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-not used anymore
+atm_dev_ioctl() does copyin in two different ways - one for
+ATM_GETNAMES, another for everything else.  Start with separating
+the former into a new helper (atm_getnames()).  The next step
+will be to lift the copyin into the callers.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- include/net/compat.h |  4 ---
- net/compat.c         | 90 ----------------------------------------------------
- 2 files changed, 94 deletions(-)
+ net/atm/ioctl.c     |  6 +++-
+ net/atm/resources.c | 88 +++++++++++++++++++++++++++--------------------------
+ net/atm/resources.h |  1 +
+ 3 files changed, 51 insertions(+), 44 deletions(-)
 
-diff --git a/include/net/compat.h b/include/net/compat.h
-index d714076d63d5..f241666117d8 100644
---- a/include/net/compat.h
-+++ b/include/net/compat.h
-@@ -67,10 +67,6 @@ int put_cmsg_compat(struct msghdr*, int, int, int, void *);
- int cmsghdr_from_user_compat_to_kern(struct msghdr *, struct sock *,
- 				     unsigned char *, int);
+diff --git a/net/atm/ioctl.c b/net/atm/ioctl.c
+index d955b683aa7c..0b4b07740fe4 100644
+--- a/net/atm/ioctl.c
++++ b/net/atm/ioctl.c
+@@ -162,7 +162,11 @@ static int do_vcc_ioctl(struct socket *sock, unsigned int cmd,
+ 	if (error != -ENOIOCTLCMD)
+ 		goto done;
  
--int compat_mc_setsockopt(struct sock *, int, int, char __user *, unsigned int,
--			 int (*)(struct sock *, int, int, char __user *,
--				 unsigned int));
--
- struct compat_group_req {
- 	__u32				 gr_interface;
- 	struct __kernel_sockaddr_storage gr_group
-diff --git a/net/compat.c b/net/compat.c
-index 7bdfda2b382a..afd7b444e0bf 100644
---- a/net/compat.c
-+++ b/net/compat.c
-@@ -448,96 +448,6 @@ COMPAT_SYSCALL_DEFINE5(getsockopt, int, fd, int, level, int, optname,
- 	return __compat_sys_getsockopt(fd, level, optname, optval, optlen);
+-	error = atm_dev_ioctl(cmd, argp, compat);
++	if (cmd == ATM_GETNAMES) {
++		error = atm_getnames(argp, compat);
++	} else {
++		error = atm_dev_ioctl(cmd, argp, compat);
++	}
+ 
+ done:
+ 	return error;
+diff --git a/net/atm/resources.c b/net/atm/resources.c
+index 889349c6d90d..a2ab75929eec 100644
+--- a/net/atm/resources.c
++++ b/net/atm/resources.c
+@@ -193,61 +193,63 @@ static int fetch_stats(struct atm_dev *dev, struct atm_dev_stats __user *arg,
+ 	return error ? -EFAULT : 0;
  }
  
--#define __COMPAT_GF0_SIZE (sizeof(struct compat_group_filter) - \
--			sizeof(struct __kernel_sockaddr_storage))
--
--int compat_mc_setsockopt(struct sock *sock, int level, int optname,
--	char __user *optval, unsigned int optlen,
--	int (*setsockopt)(struct sock *, int, int, char __user *, unsigned int))
--{
--	char __user	*koptval = optval;
--	int		koptlen = optlen;
--
--	switch (optname) {
--	case MCAST_JOIN_GROUP:
--	case MCAST_LEAVE_GROUP:
--	{
--		struct compat_group_req __user *gr32 = (void __user *)optval;
--		struct group_req __user *kgr =
--			compat_alloc_user_space(sizeof(struct group_req));
--		u32 interface;
--
--		if (!access_ok(gr32, sizeof(*gr32)) ||
--		    !access_ok(kgr, sizeof(struct group_req)) ||
--		    __get_user(interface, &gr32->gr_interface) ||
--		    __put_user(interface, &kgr->gr_interface) ||
--		    copy_in_user(&kgr->gr_group, &gr32->gr_group,
--				sizeof(kgr->gr_group)))
--			return -EFAULT;
--		koptval = (char __user *)kgr;
--		koptlen = sizeof(struct group_req);
--		break;
--	}
--	case MCAST_JOIN_SOURCE_GROUP:
--	case MCAST_LEAVE_SOURCE_GROUP:
--	case MCAST_BLOCK_SOURCE:
--	case MCAST_UNBLOCK_SOURCE:
--	{
--		struct compat_group_source_req __user *gsr32 = (void __user *)optval;
--		struct group_source_req __user *kgsr = compat_alloc_user_space(
--			sizeof(struct group_source_req));
--		u32 interface;
--
--		if (!access_ok(gsr32, sizeof(*gsr32)) ||
--		    !access_ok(kgsr,
--			sizeof(struct group_source_req)) ||
--		    __get_user(interface, &gsr32->gsr_interface) ||
--		    __put_user(interface, &kgsr->gsr_interface) ||
--		    copy_in_user(&kgsr->gsr_group, &gsr32->gsr_group,
--				sizeof(kgsr->gsr_group)) ||
--		    copy_in_user(&kgsr->gsr_source, &gsr32->gsr_source,
--				sizeof(kgsr->gsr_source)))
--			return -EFAULT;
--		koptval = (char __user *)kgsr;
--		koptlen = sizeof(struct group_source_req);
--		break;
--	}
--	case MCAST_MSFILTER:
--	{
--		struct compat_group_filter __user *gf32 = (void __user *)optval;
--		struct group_filter __user *kgf;
--		u32 interface, fmode, numsrc;
--
--		if (!access_ok(gf32, __COMPAT_GF0_SIZE) ||
--		    __get_user(interface, &gf32->gf_interface) ||
--		    __get_user(fmode, &gf32->gf_fmode) ||
--		    __get_user(numsrc, &gf32->gf_numsrc))
--			return -EFAULT;
--		koptlen = optlen + sizeof(struct group_filter) -
--				sizeof(struct compat_group_filter);
--		if (koptlen < GROUP_FILTER_SIZE(numsrc))
--			return -EINVAL;
--		kgf = compat_alloc_user_space(koptlen);
--		if (!access_ok(kgf, koptlen) ||
--		    __put_user(interface, &kgf->gf_interface) ||
--		    __put_user(fmode, &kgf->gf_fmode) ||
--		    __put_user(numsrc, &kgf->gf_numsrc) ||
--		    copy_in_user(&kgf->gf_group, &gf32->gf_group,
--				sizeof(kgf->gf_group)) ||
--		    (numsrc && copy_in_user(kgf->gf_slist, gf32->gf_slist,
--				numsrc * sizeof(kgf->gf_slist[0]))))
--			return -EFAULT;
--		koptval = (char __user *)kgf;
--		break;
--	}
--
+-int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat)
++int atm_getnames(void __user *arg, int compat)
+ {
+ 	void __user *buf;
+-	int error, len, number, size = 0;
++	int error, len, size = 0;
+ 	struct atm_dev *dev;
+ 	struct list_head *p;
+ 	int *tmp_buf, *tmp_p;
+-	int __user *sioc_len;
+ 	int __user *iobuf_len;
+ 
+-	switch (cmd) {
+-	case ATM_GETNAMES:
+-		if (IS_ENABLED(CONFIG_COMPAT) && compat) {
++	if (IS_ENABLED(CONFIG_COMPAT) && compat) {
+ #ifdef CONFIG_COMPAT
+-			struct compat_atm_iobuf __user *ciobuf = arg;
+-			compat_uptr_t cbuf;
+-			iobuf_len = &ciobuf->length;
+-			if (get_user(cbuf, &ciobuf->buffer))
+-				return -EFAULT;
+-			buf = compat_ptr(cbuf);
++		struct compat_atm_iobuf __user *ciobuf = arg;
++		compat_uptr_t cbuf;
++		iobuf_len = &ciobuf->length;
++		if (get_user(cbuf, &ciobuf->buffer))
++			return -EFAULT;
++		buf = compat_ptr(cbuf);
+ #endif
+-		} else {
+-			struct atm_iobuf __user *iobuf = arg;
+-			iobuf_len = &iobuf->length;
+-			if (get_user(buf, &iobuf->buffer))
+-				return -EFAULT;
+-		}
+-		if (get_user(len, iobuf_len))
++	} else {
++		struct atm_iobuf __user *iobuf = arg;
++		iobuf_len = &iobuf->length;
++		if (get_user(buf, &iobuf->buffer))
+ 			return -EFAULT;
+-		mutex_lock(&atm_dev_mutex);
+-		list_for_each(p, &atm_devs)
+-			size += sizeof(int);
+-		if (size > len) {
+-			mutex_unlock(&atm_dev_mutex);
+-			return -E2BIG;
+-		}
+-		tmp_buf = kmalloc(size, GFP_ATOMIC);
+-		if (!tmp_buf) {
+-			mutex_unlock(&atm_dev_mutex);
+-			return -ENOMEM;
+-		}
+-		tmp_p = tmp_buf;
+-		list_for_each(p, &atm_devs) {
+-			dev = list_entry(p, struct atm_dev, dev_list);
+-			*tmp_p++ = dev->number;
+-		}
++	}
++	if (get_user(len, iobuf_len))
++		return -EFAULT;
++	mutex_lock(&atm_dev_mutex);
++	list_for_each(p, &atm_devs)
++		size += sizeof(int);
++	if (size > len) {
+ 		mutex_unlock(&atm_dev_mutex);
+-		error = ((copy_to_user(buf, tmp_buf, size)) ||
+-			 put_user(size, iobuf_len))
+-			? -EFAULT : 0;
+-		kfree(tmp_buf);
+-		return error;
 -	default:
 -		break;
--	}
--	return setsockopt(sock, level, optname, koptval, koptlen);
--}
--EXPORT_SYMBOL(compat_mc_setsockopt);
--
- /* Argument list sizes for compat_sys_socketcall */
- #define AL(x) ((x) * sizeof(u32))
- static unsigned char nas[21] = {
++		return -E2BIG;
+ 	}
++	tmp_buf = kmalloc(size, GFP_ATOMIC);
++	if (!tmp_buf) {
++		mutex_unlock(&atm_dev_mutex);
++		return -ENOMEM;
++	}
++	tmp_p = tmp_buf;
++	list_for_each(p, &atm_devs) {
++		dev = list_entry(p, struct atm_dev, dev_list);
++		*tmp_p++ = dev->number;
++	}
++	mutex_unlock(&atm_dev_mutex);
++	error = ((copy_to_user(buf, tmp_buf, size)) ||
++		 put_user(size, iobuf_len))
++		? -EFAULT : 0;
++	kfree(tmp_buf);
++	return error;
++}
++
++int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat)
++{
++	void __user *buf;
++	int error, len, number, size = 0;
++	struct atm_dev *dev;
++	int __user *sioc_len;
+ 
+ 	if (IS_ENABLED(CONFIG_COMPAT) && compat) {
+ #ifdef CONFIG_COMPAT
+diff --git a/net/atm/resources.h b/net/atm/resources.h
+index 048232e4d4c6..18f8e5948ce4 100644
+--- a/net/atm/resources.h
++++ b/net/atm/resources.h
+@@ -14,6 +14,7 @@
+ extern struct list_head atm_devs;
+ extern struct mutex atm_dev_mutex;
+ 
++int atm_getnames(void __user *arg, int compat);
+ int atm_dev_ioctl(unsigned int cmd, void __user *arg, int compat);
+ 
+ 
 -- 
 2.11.0
 
