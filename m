@@ -2,194 +2,98 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9045DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7633A20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5D520748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgEUGZj (ORCPT
+        id S1728213AbgEUG2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 02:25:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4831 "EHLO huawei.com"
+        Thu, 21 May 2020 02:28:09 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:33482 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbgEUGZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 02:25:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1BDDE98CBFABEE69D726;
-        Thu, 21 May 2020 14:25:35 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.101) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 21 May 2020
- 14:25:26 +0800
-Subject: Re: [RFC PATCH v3 2/2] CPPC: add support for SW BOOST
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <rjw@rjwysocki.net>, <Souvik.Chakravarty@arm.com>,
-        <Thanu.Rangarajan@arm.com>, <Sudeep.Holla@arm.com>,
-        <guohanjun@huawei.com>, <john.garry@huawei.com>,
-        <jonathan.cameron@huawei.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
- <1589888489-13828-3-git-send-email-wangxiongfeng2@huawei.com>
- <20200520050014.qpnnmyas2z7mvcss@vireshk-i7>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <161082be-0df8-0128-bc77-58aee8d43bf6@huawei.com>
-Date:   Thu, 21 May 2020 14:25:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200520050014.qpnnmyas2z7mvcss@vireshk-i7>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.101]
-X-CFilter-Loop: Reflected
+        id S1726506AbgEUG2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 02:28:09 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgCnr0NjH8Ze2nbmAA--.28907S4;
+        Thu, 21 May 2020 14:27:51 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] media: staging: tegra-vde: fix runtime pm imbalance on error
+Date:   Thu, 21 May 2020 14:27:45 +0800
+Message-Id: <20200521062746.6656-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgCnr0NjH8Ze2nbmAA--.28907S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWkAwc_Cr
+        s0gwnru34Yyw4xtw17K3W5ZrySvFWDWF40qa1FyF43Gw4jvFy3GrykZr1DCa1Duay29342
+        vrZ3uF1avrn3CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbaAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
+        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
+        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
+        McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+        1lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAF
+        wVW8AwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4I
+        kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+        WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+        0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW8
+        JVW3JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr
+        UvcSsGvfC2KfnxnUUI43ZEXa7VUjY0PDUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsHBlZdtOPFuAACsr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-On 2020/5/20 13:00, Viresh Kumar wrote:
-> On 19-05-20, 19:41, Xiongfeng Wang wrote:
->> To add SW BOOST support for CPPC, we need to get the max frequency of
->> boost mode and non-boost mode. ACPI spec 6.2 section 8.4.7.1 describe
->> the following two CPC registers.
->>
->> "Highest performance is the absolute maximum performance an individual
->> processor may reach, assuming ideal conditions. This performance level
->> may not be sustainable for long durations, and may only be achievable if
->> other platform components are in a specific state; for example, it may
->> require other processors be in an idle state.
->>
->> Nominal Performance is the maximum sustained performance level of the
->> processor, assuming ideal operating conditions. In absence of an
->> external constraint (power, thermal, etc.) this is the performance level
->> the platform is expected to be able to maintain continuously. All
->> processors are expected to be able to sustain their nominal performance
->> state simultaneously."
->>
->> To add SW BOOST support for CPPC, we can use Highest Performance as the
->> max performance in boost mode and Nominal Performance as the max
->> performance in non-boost mode. If the Highest Performance is greater
->> than the Nominal Performance, we assume SW BOOST is supported.
->>
->> The current CPPC driver does not support SW BOOST and use 'Highest
->> Performance' as the max performance the CPU can achieve. 'Nominal
->> Performance' is used to convert 'performance' to 'frequency'. That
->> means, if firmware enable boost and provide a value for Highest
->> Performance which is greater than Nominal Performance, boost feature is
->> enabled by default.
->>
->> Because SW BOOST is disabled by default, so, after this patch, boost
->> feature is disabled by default even if boost is enabled by firmware.
->>
->> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
->> ---
->>  drivers/cpufreq/cppc_cpufreq.c | 39 +++++++++++++++++++++++++++++++++++++--
->>  1 file changed, 37 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
->> index bda0b24..792ed9e 100644
->> --- a/drivers/cpufreq/cppc_cpufreq.c
->> +++ b/drivers/cpufreq/cppc_cpufreq.c
->> @@ -37,6 +37,7 @@
->>   * requested etc.
->>   */
->>  static struct cppc_cpudata **all_cpu_data;
->> +static bool boost_supported;
->>  
->>  struct cppc_workaround_oem_info {
->>  	char oem_id[ACPI_OEM_ID_SIZE + 1];
->> @@ -310,7 +311,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->>  	 * Section 8.4.7.1.1.5 of ACPI 6.1 spec)
->>  	 */
->>  	policy->min = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_nonlinear_perf);
->> -	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
->> +	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
->>  
->>  	/*
->>  	 * Set cpuinfo.min_freq to Lowest to make the full range of performance
->> @@ -318,7 +319,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->>  	 * nonlinear perf
->>  	 */
->>  	policy->cpuinfo.min_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_perf);
->> -	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
->> +	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
->>  
->>  	policy->transition_delay_us = cppc_cpufreq_get_transition_delay_us(cpu_num);
->>  	policy->shared_type = cpu->shared_type;
->> @@ -343,6 +344,13 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
->>  
->>  	cpu->cur_policy = policy;
->>  
->> +	/*
->> +	 * If 'highest_perf' is greater than 'nominal_perf', we assume CPU Boost
->> +	 * is supported.
->> +	 */
->> +	if (cpu->perf_caps.highest_perf > cpu->perf_caps.nominal_perf)
->> +		boost_supported = true;
->> +
->>  	/* Set policy->cur to max now. The governors will adjust later. */
->>  	policy->cur = cppc_cpufreq_perf_to_khz(cpu,
->>  					cpu->perf_caps.highest_perf);
->> @@ -410,6 +418,32 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
->>  	return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
->>  }
->>  
->> +static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
->> +{
->> +	struct cppc_cpudata *cpudata;
->> +	int ret = 0;
-> 
-> No need to initialize this.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
-I will change it in the next version.
+Changelog:
 
-Thanks for your advice. I will add your 'Suggested-by' for these two patches.
+v2: - Remove unused label 'unlock'
+---
+ drivers/staging/media/tegra-vde/vde.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-
-Thanks,
-Xiongfeng
-
-> 
->> +
->> +	if (!boost_supported) {
->> +		pr_err("BOOST not supported by CPU or firmware\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	cpudata = all_cpu_data[policy->cpu];
->> +	if (state)
->> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
->> +					cpudata->perf_caps.highest_perf);
->> +	else
->> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
->> +					cpudata->perf_caps.nominal_perf);
->> +	policy->cpuinfo.max_freq = policy->max;
->> +
->> +	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return 0;
->> +}
->> +
->>  static struct cpufreq_driver cppc_cpufreq_driver = {
->>  	.flags = CPUFREQ_CONST_LOOPS,
->>  	.verify = cppc_verify_policy,
->> @@ -417,6 +451,7 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
->>  	.get = cppc_cpufreq_get_rate,
->>  	.init = cppc_cpufreq_cpu_init,
->>  	.stop_cpu = cppc_cpufreq_stop_cpu,
->> +	.set_boost = cppc_cpufreq_set_boost,
->>  	.name = "cppc_cpufreq",
->>  };
->>  
->> -- 
->> 1.7.12.4
-> 
+diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
+index d3e63512a765..3fdf2cd0b99e 100644
+--- a/drivers/staging/media/tegra-vde/vde.c
++++ b/drivers/staging/media/tegra-vde/vde.c
+@@ -777,7 +777,7 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+ 
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0)
+-		goto unlock;
++		goto put_runtime_pm;
+ 
+ 	/*
+ 	 * We rely on the VDE registers reset value, otherwise VDE
+@@ -843,8 +843,6 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+ put_runtime_pm:
+ 	pm_runtime_mark_last_busy(dev);
+ 	pm_runtime_put_autosuspend(dev);
+-
+-unlock:
+ 	mutex_unlock(&vde->lock);
+ 
+ release_dpb_frames:
+-- 
+2.17.1
 
