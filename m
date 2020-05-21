@@ -2,138 +2,108 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C55DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E01620721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE5C20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590070079;
-	bh=oodOFHxHqkfsWv0Xyp8W0ZMy0H+lEXTILnMXNepIF+Q=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MlPmf055XU8Ufqx8GCVtIB0DQPoB8KEPt+dK4BoaCg3JeLNXXUq7y/hupMmRqrSZ2
-	 QWmyNoz9BDyzOgffztFbsie6DBNzOHC8yIZG49mcp2JFmJP3cZ0iD5AaogxSbDvnMT
-	 oDsxTnNj1XcVLjE5T/LQHT4UNdcduOj8dWZhaQ04=
+	s=default; t=1590070102;
+	bh=fb5z/8KTImUs11oTnP3VReDVj9J6VaGdo2+ddgr1rpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c6+xKl2xmAvidmCfNQTZM6EooGGtndAzDIIxt9BE9qgfvOeZCAstmjhg4lslEARKU
+	 1lgt1XSoxO6ebgb31rVjG7lpAyCRyeTv7q5+008gUI8Rhsznt72iOw+dXaOZ/bJrVa
+	 ++Hsu3XLiGr/M/Y4RcFbHnqBSCuGJbcAupaKXqbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgEUOH6 (ORCPT
+        id S1729709AbgEUOIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:07:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44588 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729784AbgEUOH6 (ORCPT
+        Thu, 21 May 2020 10:08:22 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42128 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729524AbgEUOIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:07:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w19so2856607ply.11;
-        Thu, 21 May 2020 07:07:57 -0700 (PDT)
+        Thu, 21 May 2020 10:08:21 -0400
+Received: by mail-io1-f68.google.com with SMTP id e18so7529789iog.9;
+        Thu, 21 May 2020 07:08:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JoNp2Y7zz0yJJeDFRUhzITUSQI74mvmrMIPrAd1z6ao=;
-        b=iXRMyycckLPFlAxzxaQ0vY442HBL7Y+U/PZd3hnAnFGWM6DXyawdSqL5rITEv9KlTv
-         naThp8QPSHtKKrR7L8oWdYdhiumrt4pfLpbbIAI2nItUY6tFQmAxxUmYIxfXdHM+Ky9U
-         brsJTlQITGNPpc0gKvhY1h5zJx9qF97L0DYshJ6VtYibAHo+3vGTtd+sjSeizKY80erE
-         uL1ythqRrlJRvsSxYVakSvmTUc9R4PO+wv9BarjqpmqA88axBnB31Yo/+FkGXkg0bK/i
-         WtJUb78E1NawfCaTy0NQG/USoD4J9tsZdAVI0iSx3HnuYr41jWaMFZMUGEjBhyhFeB8B
-         UQFQ==
-X-Gm-Message-State: AOAM531SRgW7+Bdmln86ESFhhM7hdfpkGd8g3VMH6ANs3FXwdwvaZBGS
-        BmBQ0vadMHxFti5H2kOWQ6NT5jWg
-X-Google-Smtp-Source: ABdhPJzDGF9DJTORsBVEnMP8Hw6YVRUo6pmf6G69G8j1zrKhS8KG1Y3mnbVONHFbMgBusKU35FP/sQ==
-X-Received: by 2002:a17:902:c403:: with SMTP id k3mr9919096plk.12.1590070077224;
-        Thu, 21 May 2020 07:07:57 -0700 (PDT)
-Received: from localhost.localdomain ([221.146.116.86])
-        by smtp.gmail.com with ESMTPSA id w14sm4287763pgi.12.2020.05.21.07.07.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hkdAaLYIc0WsgyOtF7HphxQvDajMRAVCt9ecUnq6cSs=;
+        b=Fbiiu2fJG9C7TBtudUc6SxEodeeZc1NkCWFT6jwPHtAfhtI5ygQsRlaXOXAf0H1g2o
+         wzFev57NiThIJ9vPKelCXm5/MlPK3HqiJ14TGc0VaXXyqVcUQqdhkpQOOjsCjOHMAsUl
+         B4AuoksHZjRUiiqONa31wAQnzZeofLXGu3/g9q1mcve+RfzVA8u/BqKBRsmAMYwd6NSw
+         o6En09gD8DzaqvOcjgvtOyPn2GQJEBWbRE8OknT5jaGu5n8H4HhkkfrNSAUsXwavX6Te
+         VmEMg3mkbpJ2kMQQ/l/wtb8wMR8269+Nx+ePy0pyFAw5LpMhzzCYc5RrbBbalkBgxulQ
+         Z13w==
+X-Gm-Message-State: AOAM530vSK1+XB70e+TlBcGtAPVCeX0lt4oVbLnvpqm4W+SuWOKomF3E
+        S/GKb9AnOB6mpoNcjlLzqA==
+X-Google-Smtp-Source: ABdhPJzuJXTY4mbZgkKCxsK6OiELIu9X1jZKqPMjnJt3n48gVbBt7CPOXr61k8mGVP/9ied0TyLdOw==
+X-Received: by 2002:a02:90cd:: with SMTP id c13mr3832204jag.83.1590070100265;
+        Thu, 21 May 2020 07:08:20 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c13sm3060220ilu.81.2020.05.21.07.08.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 07:07:56 -0700 (PDT)
-From:   Namjae Jeon <linkinjeon@kernel.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        Namjae Jeon <linkinjeon@kernel.org>
-Subject: [PATCH v2] exfat: add the dummy mount options to be backward compatible with staging/exfat
-Date:   Thu, 21 May 2020 23:05:02 +0900
-Message-Id: <20200521140502.2409-1-linkinjeon@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 21 May 2020 07:08:18 -0700 (PDT)
+Received: (nullmailer pid 2308939 invoked by uid 1000);
+        Thu, 21 May 2020 14:08:17 -0000
+Date:   Thu, 21 May 2020 08:08:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     robh+dt@kernel.org, ofery@google.com, venture@google.com,
+        wsa@the-dreams.de, yuenn@google.com, devicetree@vger.kernel.org,
+        linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, avifishman70@gmail.com,
+        andriy.shevchenko@linux.intel.com, tmaimon77@gmail.com,
+        benjaminfair@google.com, kfting@nuvoton.com,
+        brendanhiggins@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C
+ controller
+Message-ID: <20200521140817.GA2308392@bogus>
+References: <20200520095113.185414-1-tali.perry1@gmail.com>
+ <20200520095113.185414-2-tali.perry1@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520095113.185414-2-tali.perry1@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Ubuntu and Fedora release new version used kernel version equal to or
-higher than v5.4, They started to support kernel exfat filesystem.
+On Wed, 20 May 2020 12:51:11 +0300, Tali Perry wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM I2C controller.
+> 
+> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> ---
+>  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+> 
 
-Linus Torvalds reported mount error with new version of exfat on Fedora.
 
-	exfat: Unknown parameter 'namecase'
+My bot found errors running 'make dt_binding_check' on your patch:
 
-This is because there is a difference in mount option between old
-staging/exfat and new exfat.
-And utf8, debug, and codepage options as well as namecase have been
-removed from new exfat.
+Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-This patch add the dummy mount options as deprecated option to be backward
-compatible with old one.
+See https://patchwork.ozlabs.org/patch/1294210
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Namjae Jeon <linkinjeon@kernel.org>
----
-v2:
- - fix checkpatch.pl warning(Missing Signed-off-by).
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
- fs/exfat/super.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index 0565d5539d57..26b0db5b20de 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -203,6 +203,12 @@ enum {
- 	Opt_errors,
- 	Opt_discard,
- 	Opt_time_offset,
-+
-+	/* Deprecated options */
-+	Opt_utf8,
-+	Opt_debug,
-+	Opt_namecase,
-+	Opt_codepage,
- };
- 
- static const struct constant_table exfat_param_enums[] = {
-@@ -223,6 +229,10 @@ static const struct fs_parameter_spec exfat_parameters[] = {
- 	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
- 	fsparam_flag("discard",			Opt_discard),
- 	fsparam_s32("time_offset",		Opt_time_offset),
-+	fsparam_flag("utf8",			Opt_utf8),
-+	fsparam_flag("debug",			Opt_debug),
-+	fsparam_u32("namecase",			Opt_namecase),
-+	fsparam_u32("codepage",			Opt_codepage),
- 	{}
- };
- 
-@@ -278,6 +288,18 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 			return -EINVAL;
- 		opts->time_offset = result.int_32;
- 		break;
-+	case Opt_utf8:
-+		pr_warn("exFAT-fs: 'utf8' mount option is deprecated and has no effect\n");
-+		break;
-+	case Opt_debug:
-+		pr_warn("exFAT-fs: 'debug' mount option is deprecated and has no effect\n");
-+		break;
-+	case Opt_namecase:
-+		pr_warn("exFAT-fs: 'namecase' mount option is deprecated and has no effect\n");
-+		break;
-+	case Opt_codepage:
-+		pr_warn("exFAT-fs: 'codepage' mount option is deprecated and has no effect\n");
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
--- 
-2.25.1
+Please check and re-submit.
 
