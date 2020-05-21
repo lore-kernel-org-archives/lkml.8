@@ -2,111 +2,255 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C106DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDF220721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F9020721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="lm15zqD7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoQvM8t8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgEUNFg (ORCPT
+        id S1729413AbgEUNGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41690 "EHLO
+        Thu, 21 May 2020 09:06:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729197AbgEUNFd (ORCPT
+        with ESMTP id S1729197AbgEUNGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:05:33 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6ADC061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:05:33 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id s19so6576515edt.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:05:33 -0700 (PDT)
+        Thu, 21 May 2020 09:06:25 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E23C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:06:23 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id j2so6996755ilr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lIVlACF4LDO220gEGSvhc/aauhEeT3bDk/ER46APYDY=;
-        b=lm15zqD7bQsCw4wiTNv6NzVw1jCgcLOsWTU1x6wfuW5NkSlsXD99ZPhpzoFHTLPOU8
-         b29eUZlH28mu05WYQ2aUGv31+3wJp8CLc5ANp+8VlL/Yd5xKTarIVPKSxWu3uJWSpvsU
-         I9xvM12xty15SeSsxedimd/k5ql9zjCbFIxvA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2Nba/iQzCaQZaoQ9dfuHPIBatK3UepU1/Wzggh2dhaQ=;
+        b=uoQvM8t8pCAi5A7WQf5EuOlVQSD2njRfV5FxYDsNigQBp0J766Cm69DVqjS7jxqNye
+         vRIB7oh/lrU17H37lyC7VJH5xzn7CWhym+x3BgdomzJuMUbv7JyzXN9vEPuEsVvodBKX
+         xUvkDkltprMtoQpMNUkucHJ8/RJ0Hd6GFFgyPMxiSHe1C/w8GVnSrP8Z8/fgabpYFeL8
+         hwlU3aXBvq7k22p4lOvTFulmvEccTUwk5hL6lp1sUcT2CJ9iqnu9wdqHZ5omyUX/D4ad
+         FCPpKud3fqogjtn/NW8rlzq5O2buxGycST2/xBXNm2kx76yL08lh5Lq5sdkUOaJyxGHK
+         L24A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lIVlACF4LDO220gEGSvhc/aauhEeT3bDk/ER46APYDY=;
-        b=UZOofYKmPAozKX3Xwn8WG0MjDvIHc9hN+Y7NPA9kmYQiftrdtMyAYI/+bundPP/SUr
-         FEcoCFZFm0HHZmBjrVWbzd12rVjPQ+2hI6CoisNJ19gprcopNzsHxSHoXvgSUripkVPn
-         SFLPkMHRX1DYE+uESm37UzL4Y4JwYNCgoAZIJRHyGTDw2Xuq9iLQj0JiFtolRPasDdJE
-         9EMIY/JxfcXRcv9N6Kn5NRfO3/LbPDpECmLidEWzF92Wui+NStf9GN/DhoKSRAZwDO2R
-         6AbEib/Xiw4YXbv5u01rjIkXptlD12uT/T8EcQC4MnWSVw/pEmQU/M4K5rlx/t0XHD4a
-         C+Jw==
-X-Gm-Message-State: AOAM530J85OtoR6KVuvPwV/1kxOMx7aoLYTOH4cKElQVyZF5c/K9M73w
-        8V3bXwtaunXMOWah71zNhd3W/Q==
-X-Google-Smtp-Source: ABdhPJw3rAmdCOdWp+3NYJhOme20reqKS4bSnIvR84PMg8X2oYRibYSG/X+k07nw/mVqMFTIJed2HQ==
-X-Received: by 2002:aa7:d1c6:: with SMTP id g6mr7728524edp.303.1590066331942;
-        Thu, 21 May 2020 06:05:31 -0700 (PDT)
-Received: from localhost ([2620:10d:c093:400::5:4262])
-        by smtp.gmail.com with ESMTPSA id r1sm4850187ejz.59.2020.05.21.06.05.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 06:05:31 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:05:30 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200521130530.GE990580@chrisdown.name>
-References: <20200520143712.GA749486@chrisdown.name>
- <20200520160756.GE6462@dhcp22.suse.cz>
- <20200520202650.GB558281@chrisdown.name>
- <20200521071929.GH6462@dhcp22.suse.cz>
- <20200521112711.GA990580@chrisdown.name>
- <20200521120455.GM6462@dhcp22.suse.cz>
- <20200521122327.GB990580@chrisdown.name>
- <20200521123742.GO6462@dhcp22.suse.cz>
- <20200521125759.GD990580@chrisdown.name>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2Nba/iQzCaQZaoQ9dfuHPIBatK3UepU1/Wzggh2dhaQ=;
+        b=HdXoGZDZu2F6d24tUboP295XWCC1MWDQs3lTzCbGDOURKpzZ6EdPaFTZvVJLH1XrWO
+         y4aebJWvHX9U7fwYkUk/Lhh9nUe7ZMO6wgWWAP9zeNgun689VqkJ32HZj0zziIZGJ4Ce
+         5unx1FJpWUcGAwftlsdbsPUmixrAd9q73K/zzC5Fpw9vx6pWXhGUOUJDIk0zAt0EPwDm
+         pHwuQVpK8PeT14mtlWq/iG85z+CmPAKo1n3wTqhOZi8z9gHvmzC1KOfr2JsQk9mnUt8u
+         xJ2CsFR5CM0ta5YwVteQQHsXm2C/LA/CeZSMmJ7ONp3GsZqGN1xJfpdGvEVi3KIiE8rl
+         /KIw==
+X-Gm-Message-State: AOAM532zsk/ko63ldugtn/5JTAPPqiFRlSXTDnOubpWR86LKHKe8UFZo
+        xg3R/ue4sIKbQpM59s2gm/ubXbnFItQsTcAoq2jX6XR66Q==
+X-Google-Smtp-Source: ABdhPJyu3EjZVcNJY1VmFqmg/K4QV9T3untcZqdj8mahG++KI35YWwW2RUhufOJF1tA5DbEO1gfMKZWPtssMRuX8v2g=
+X-Received: by 2002:a92:4a09:: with SMTP id m9mr7897673ilf.27.1590066383167;
+ Thu, 21 May 2020 06:06:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200521125759.GD990580@chrisdown.name>
+References: <20200517152916.3146539-1-brgerst@gmail.com> <20200517152916.3146539-3-brgerst@gmail.com>
+ <CAKwvOdnCcpS_9A2y9tMqeiAg2NfcVx=gNeA2V=+zHknit7wGkg@mail.gmail.com>
+ <CAMzpN2gGbZABjtLQyiTdtaL5LYW-cfVQZqj6w=oZNa9Fw9GdCQ@mail.gmail.com> <CAKwvOdmwh92BP2=-d4Apr07i6uKb21M15MAz-v4S5RfQ16-fPA@mail.gmail.com>
+In-Reply-To: <CAKwvOdmwh92BP2=-d4Apr07i6uKb21M15MAz-v4S5RfQ16-fPA@mail.gmail.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Thu, 21 May 2020 09:06:12 -0400
+Message-ID: <CAMzpN2hp3HYKriW6p-m3hLJ8v79Og9emu5xPQvb7aWqXq4wUbA@mail.gmail.com>
+Subject: Re: [PATCH 2/7] x86/percpu: Clean up percpu_to_op()
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Down writes:
->>I believe I have asked in other email in this thread. Could you explain
->>why enforcint the requested target (memcg_nr_pages_over_high) is
->>insufficient for the problem you are dealing with? Because that would
->>make sense for large targets to me while it would keep relatively
->>reasonable semantic of the throttling - aka proportional to the memory
->>demand rather than the excess.
+On Wed, May 20, 2020 at 1:26 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
->memcg_nr_pages_over_high is related to the charge size. As such, if 
->you're way over memory.high as a result of transient reclaim failures, 
->but the majority of your charges are small, it's going to hard to make 
->meaningful progress:
+> On Mon, May 18, 2020 at 8:38 PM Brian Gerst <brgerst@gmail.com> wrote:
+> >
+> > On Mon, May 18, 2020 at 5:15 PM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > >
+> > > On Sun, May 17, 2020 at 8:29 AM Brian Gerst <brgerst@gmail.com> wrote=
+:
+> > > >
+> > > > The core percpu macros already have a switch on the data size, so t=
+he switch
+> > > > in the x86 code is redundant and produces more dead code.
+> > > >
+> > > > Also use appropriate types for the width of the instructions.  This=
+ avoids
+> > > > errors when compiling with Clang.
+> > > >
+> > > > Signed-off-by: Brian Gerst <brgerst@gmail.com>
+> > > > ---
+> > > >  arch/x86/include/asm/percpu.h | 90 ++++++++++++++-----------------=
+----
+> > > >  1 file changed, 35 insertions(+), 55 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/p=
+ercpu.h
+> > > > index 89f918a3e99b..233c7a78d1a6 100644
+> > > > --- a/arch/x86/include/asm/percpu.h
+> > > > +++ b/arch/x86/include/asm/percpu.h
+> > > > @@ -117,37 +117,17 @@ extern void __bad_percpu_size(void);
+> > > >  #define __pcpu_reg_imm_4(x) "ri" (x)
+> > > >  #define __pcpu_reg_imm_8(x) "re" (x)
+> > > >
+> > > > -#define percpu_to_op(qual, op, var, val)               \
+> > > > -do {                                                   \
+> > > > -       typedef typeof(var) pto_T__;                    \
+> > > > -       if (0) {                                        \
+> > > > -               pto_T__ pto_tmp__;                      \
+> > > > -               pto_tmp__ =3D (val);                      \
+> > > > -               (void)pto_tmp__;                        \
+> > > > -       }                                               \
+> > > > -       switch (sizeof(var)) {                          \
+> > > > -       case 1:                                         \
+> > > > -               asm qual (op "b %1,"__percpu_arg(0)     \
+> > > > -                   : "+m" (var)                        \
+> > > > -                   : "qi" ((pto_T__)(val)));           \
+> > > > -               break;                                  \
+> > > > -       case 2:                                         \
+> > > > -               asm qual (op "w %1,"__percpu_arg(0)     \
+> > > > -                   : "+m" (var)                        \
+> > > > -                   : "ri" ((pto_T__)(val)));           \
+> > > > -               break;                                  \
+> > > > -       case 4:                                         \
+> > > > -               asm qual (op "l %1,"__percpu_arg(0)     \
+> > > > -                   : "+m" (var)                        \
+> > > > -                   : "ri" ((pto_T__)(val)));           \
+> > > > -               break;                                  \
+> > > > -       case 8:                                         \
+> > > > -               asm qual (op "q %1,"__percpu_arg(0)     \
+> > > > -                   : "+m" (var)                        \
+> > > > -                   : "re" ((pto_T__)(val)));           \
+> > > > -               break;                                  \
+> > > > -       default: __bad_percpu_size();                   \
+> > > > -       }                                               \
+> > > > +#define percpu_to_op(size, qual, op, _var, _val)                  =
+     \
+> > > > +do {                                                              =
+     \
+> > > > +       __pcpu_type_##size pto_val__ =3D __pcpu_cast_##size(_val); =
+       \
+> > > > +       if (0) {                                                   =
+     \
+> > > > +               typeof(_var) pto_tmp__;                            =
+     \
+> > > > +               pto_tmp__ =3D (_val);                              =
+       \
+> > > > +               (void)pto_tmp__;                                   =
+     \
+> > > > +       }                                                          =
+     \
+> > >
+> > > Please replace the whole `if (0)` block with:
+> > > ```c
+> > > __same_type(_var, _val);
+> > > ```
+> > > from include/linux/compiler.h.
+> >
+> > The problem with __builtin_types_compatible_p() is that it considers
+> > unsigned long and u64 (aka unsigned long long) as different types even
+> > though they are the same width on x86-64.  While this may be a good
+> > cleanup to look at in the future, it's not a simple drop-in
+> > replacement.
 >
->1. Most nr_pages will be MEMCG_CHARGE_BATCH, which is not enough to help;
->2. Large allocations will only get a single reclaim attempt to succeed.
->
->As such, in many cases we're either doomed to successfully reclaim a 
->paltry amount of pages, or fail to reclaim a lot of pages. Asking 
->try_to_free_pages() to deal with those huge allocations is generally 
->not reasonable, regardless of the specifics of why it doesn't work in 
->this case.
+> Does it trigger errors in this case?
 
-Oh, I somehow elided the "enforcing" part of your proposal. Still, there's no 
-guarantee even if large allocations are reclaimed fully that we will end up 
-going back below memory.high, because even a single other large allocation 
-which fails to reclaim can knock us out of whack again.
+Yes, see boot_init_stack_canary().  That code looks a bit sketchy but
+it's not wrong, for x86-64 at least.
+
+It also doesn't seem to like "void *" compared to any other pointer type:
+
+In function =E2=80=98fpregs_deactivate=E2=80=99,
+    inlined from =E2=80=98fpu__drop=E2=80=99 at arch/x86/kernel/fpu/core.c:=
+285:3:
+./include/linux/compiler.h:379:38: error: call to
+=E2=80=98__compiletime_assert_317=E2=80=99 declared with attribute error: B=
+UILD_BUG_ON
+failed: !__same_type((fpu_fpregs_owner_ctx), ((void *)0))
+  379 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |                                      ^
+./include/linux/compiler.h:360:4: note: in definition of macro
+=E2=80=98__compiletime_assert=E2=80=99
+  360 |    prefix ## suffix();    \
+      |    ^~~~~~
+./include/linux/compiler.h:379:2: note: in expansion of macro
+=E2=80=98_compiletime_assert=E2=80=99
+  379 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
+ER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro
+=E2=80=98compiletime_assert=E2=80=99
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg=
+)
+      |                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98BUIL=
+D_BUG_ON_MSG=E2=80=99
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+./arch/x86/include/asm/percpu.h:105:2: note: in expansion of macro
+=E2=80=98BUILD_BUG_ON=E2=80=99
+  105 |  BUILD_BUG_ON(!__same_type(_var, _val));    \
+      |  ^~~~~~~~~~~~
+./arch/x86/include/asm/percpu.h:338:37: note: in expansion of macro
+=E2=80=98percpu_to_op=E2=80=99
+  338 | #define this_cpu_write_8(pcp, val)  percpu_to_op(8, volatile,
+"mov", (pcp), val)
+      |                                     ^~~~~~~~~~~~
+./include/linux/percpu-defs.h:380:11: note: in expansion of macro
+=E2=80=98this_cpu_write_8=E2=80=99
+  380 |   case 8: stem##8(variable, __VA_ARGS__);break;  \
+      |           ^~~~
+./include/linux/percpu-defs.h:508:34: note: in expansion of macro
+=E2=80=98__pcpu_size_call=E2=80=99
+  508 | #define this_cpu_write(pcp, val)
+__pcpu_size_call(this_cpu_write_, pcp, val)
+      |                                  ^~~~~~~~~~~~~~~~
+./arch/x86/include/asm/fpu/internal.h:525:2: note: in expansion of
+macro =E2=80=98this_cpu_write=E2=80=99
+  525 |  this_cpu_write(fpu_fpregs_owner_ctx, NULL);
+      |  ^~~~~~~~~~~~~~
+
+>
+> It's interesting to know how this trick differs from
+> __builtin_types_compatible_p().  Might even be helpful to wrap this
+> pattern in a macro with a comment with the pros/cons of this approach
+> vs __same_type.
+
+I think the original code is more to catch a mismatch between pointers
+and integers.  It doesn't seem to care about truncation
+
+> On the other hand, the use of `long` seems tricky in x86 code as x86
+> (32b) is ILP32 but x86_64 (64b) is LP64.  So the use of `long` is
+> ambiguous in the sense that it's a different size depending on the
+> target ABI.  Wouldn't it potentially be a bug for x86 kernel code to
+> use `long` percpu variables (or rather mix `long` and `long long` in
+> the same operation) in that case, since the sizes of the two would be
+> different for i386?
+
+Not necessarily.  Some things like registers are naturally 32-bit on a
+32-bit kernel and 64-bit on a 64-bit kernel, so 'long' is appropriate
+there.
+
+--
+Brian Gerst
