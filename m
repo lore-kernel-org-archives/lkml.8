@@ -2,235 +2,154 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A44EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22AB120738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arG8xAF1"
+	by mail.kernel.org (Postfix) with ESMTP id 3FB9F20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgEUDlZ (ORCPT
+        id S1728349AbgEUDnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:41:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgEUDlY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:41:24 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C44C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:41:23 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x15so2651271pfa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zPOt+rZy3yVqIjlCQ22SZH1YNq9iJkRuAJAifhQaXQY=;
-        b=arG8xAF127Ec6yLkr0Mn2iYX5jMh506ig9Tb9Iu3xoEVFlPK7xDYbZvAoqzk/mKg9j
-         pn2xPk7/cfFHbj/FpHbBWnjOad5Uq3pAWv+hj254jZkuoORgzybGVMFLrIIt2OOvcQWu
-         iMDltWkBowSJZSY3sD1CARTEIyKi4BtehtcyBBwiklp8iCRMoaNDVupN/iU1AaZNufip
-         JixdVc6pPOHJADjCaHDsy4UDwFlt68FhbrWv6kf0HCAwo41kY0ax3k6zV6RlhpcBA7Gi
-         2kJkKaPCsszTQu/PY9MWJhs+owCQtNA/paNlyUNKxyyYll2bHuO1RpeiHE1b7475we8i
-         Z8rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zPOt+rZy3yVqIjlCQ22SZH1YNq9iJkRuAJAifhQaXQY=;
-        b=c174W1XGnaRPMTLcwwNqGOF0jyoihWMgWl/xAXjBCUtZ3BRt9nqJCQY6cn6Z5vaDCu
-         2/wcl25ZThmZIrLeeZqimHQKlWu8SUVQ6DZwOiFDfoX3dAP6t5koSmT1Yju83MrEX1Vx
-         6wIJP4wS9caprWUlSmM28vadzgP269cfgESkcQ2HREEL9ZklDWe7pjYEHN+emiBckMOQ
-         BMET9Fe3MEBgy6MFP3OMpEehckKD89k6x+g5MJnKjge62bmVoNEuKGuHinjsJOYvkn/e
-         /rZbisn2a1yYs6Eb5hGIVi0QuAA/9feX6Its8B8wvWl8hpSDHjum7+Nzf6MVlnMR45GV
-         eB7g==
-X-Gm-Message-State: AOAM530GyKD7Uq2UNBa8Sb2rmV8LGnywmdIl6+wU1+TD1nP6b/dLfphO
-        8JVC23kZ+9JBTO5ValGh77ekUByb
-X-Google-Smtp-Source: ABdhPJxsbWe9rftealA9Dk7wU/jTJwfBW3Wbvjzfe6ktSPJa+Yp1n1rEjxtRqqEgOs6OKEdABBja1A==
-X-Received: by 2002:a63:7d3:: with SMTP id 202mr6772464pgh.279.1590032483032;
-        Wed, 20 May 2020 20:41:23 -0700 (PDT)
-Received: from localhost ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id d126sm3271454pfc.81.2020.05.20.20.41.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 May 2020 20:41:22 -0700 (PDT)
-From:   zhouchuangao <chuangaozhou@gmail.com>
-X-Google-Original-From: zhouchuangao <zhouchuangao@xiaomi.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux@dominikbrodowski.net, zhouchuangao@xiaomi.com, tytso@mit.edu,
-        davem@davemloft.net, pc@cjr.nz, dhowells@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] init/do_mounts: fix a coding style error
-Date:   Thu, 21 May 2020 11:41:12 +0800
-Message-Id: <1590032472-16082-1-git-send-email-zhouchuangao@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 May 2020 23:43:33 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:14028 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728327AbgEUDnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:43:31 -0400
+X-Greylist: delayed 72007 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 May 2020 23:43:28 EDT
+Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 11:42:55
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Thu, 21 May 2020 11:42:55 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Dan Carpenter" <dan.carpenter@oracle.com>
+Cc:     "Dmitry Osipenko" <digetx@gmail.com>, kjlu@umn.edu,
+        devel@driverdev.osuosl.org,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Pavel Machek" <pavel@ucw.cz>, "Len Brown" <len.brown@intel.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
+ on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200520150230.GC30374@kadam>
+References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
+ <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
+ <20200520150230.GC30374@kadam>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Message-ID: <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgBHkD6_+MVeENzlAQ--.38589W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwAHsl
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtIS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
+        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
+        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
+        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
+        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r
+        48MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS
+        07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14
+        v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWU
+        tVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r4j6F4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvE
+        x4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix code style errors reported by scripts/checkpatch.pl.
-
-Signed-off-by: zhouchuangao <zhouchuangao@xiaomi.com>
----
- init/do_mounts.c | 52 ++++++++++++++++++++++++++--------------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
-
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 29d326b..2f8bd41 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -249,7 +249,7 @@ dev_t name_to_dev_t(const char *name)
- #endif
- 
- 	if (strncmp(name, "/dev/", 5) != 0) {
--		unsigned maj, min, offset;
-+		unsigned int maj, min, offset;
- 		char dummy;
- 
- 		if ((sscanf(name, "%u:%u%c", &maj, &min, &dummy) == 2) ||
-@@ -412,8 +412,7 @@ static int __init do_mount_root(const char *name, const char *fs,
- 	ksys_chdir("/root");
- 	s = current->fs->pwd.dentry->d_sb;
- 	ROOT_DEV = s->s_dev;
--	printk(KERN_INFO
--	       "VFS: Mounted root (%s filesystem)%s on device %u:%u.\n",
-+	pr_info("VFS: Mounted root (%s filesystem)%s on device %u:%u.\n",
- 	       s->s_type->name,
- 	       sb_rdonly(s) ? " readonly" : "",
- 	       MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
-@@ -437,25 +436,26 @@ void __init mount_block_root(char *name, int flags)
- retry:
- 	for (p = fs_names; *p; p += strlen(p)+1) {
- 		int err = do_mount_root(name, p, flags, root_mount_data);
-+
- 		switch (err) {
--			case 0:
--				goto out;
--			case -EACCES:
--			case -EINVAL:
--				continue;
-+		case 0:
-+			goto out;
-+		case -EACCES:
-+		case -EINVAL:
-+			continue;
- 		}
--	        /*
-+		/*
- 		 * Allow the user to distinguish between failed sys_open
- 		 * and bad superblock on root device.
- 		 * and give them a list of the available devices
- 		 */
--		printk("VFS: Cannot open root device \"%s\" or %s: error %d\n",
-+		pr_info("VFS: Cannot open root device \"%s\" or %s: error %d\n",
- 				root_device_name, b, err);
--		printk("Please append a correct \"root=\" boot option; here are the available partitions:\n");
-+		pr_info("Please append a correct \"root=\" boot option; here are the available partitions:\n");
- 
- 		printk_all_partitions();
- #ifdef CONFIG_DEBUG_BLOCK_EXT_DEVT
--		printk("DEBUG_BLOCK_EXT_DEVT is enabled, you need to specify "
-+		pr_info("DEBUG_BLOCK_EXT_DEVT is enabled, you need to specify "
- 		       "explicit textual name for \"root=\" boot option.\n");
- #endif
- 		panic("VFS: Unable to mount root fs on %s", b);
-@@ -465,17 +465,17 @@ void __init mount_block_root(char *name, int flags)
- 		goto retry;
- 	}
- 
--	printk("List of all partitions:\n");
-+	pr_info("List of all partitions:\n");
- 	printk_all_partitions();
--	printk("No filesystem could mount root, tried: ");
-+	pr_info("No filesystem could mount root, tried: ");
- 	for (p = fs_names; *p; p += strlen(p)+1)
--		printk(" %s", p);
--	printk("\n");
-+		pr_info(" %s", p);
-+	pr_info("\n");
- 	panic("VFS: Unable to mount root fs on %s", b);
- out:
- 	put_page(page);
- }
-- 
-+
- #ifdef CONFIG_ROOT_NFS
- 
- #define NFSROOT_TIMEOUT_MIN	5
-@@ -560,6 +560,7 @@ void __init change_floppy(char *fmt, ...)
- 	char c;
- 	int fd;
- 	va_list args;
-+
- 	va_start(args, fmt);
- 	vsprintf(buf, fmt, args);
- 	va_end(args);
-@@ -568,7 +569,7 @@ void __init change_floppy(char *fmt, ...)
- 		ksys_ioctl(fd, FDEJECT, 0);
- 		ksys_close(fd);
- 	}
--	printk(KERN_NOTICE "VFS: Insert %s and press ENTER\n", buf);
-+	pr_notice("VFS: Insert %s and press ENTER\n", buf);
- 	fd = ksys_open("/dev/console", O_RDWR, 0);
- 	if (fd >= 0) {
- 		ksys_ioctl(fd, TCGETS, (long)&termios);
-@@ -585,27 +586,27 @@ void __init change_floppy(char *fmt, ...)
- void __init mount_root(void)
- {
- #ifdef CONFIG_ROOT_NFS
--	if (ROOT_DEV == Root_NFS) {
-+	if (Root_NFS == ROOT_DEV) {
- 		if (mount_nfs_root())
- 			return;
- 
--		printk(KERN_ERR "VFS: Unable to mount root fs via NFS, trying floppy.\n");
-+		pr_err("VFS: Unable to mount root fs via NFS, trying floppy.\n");
- 		ROOT_DEV = Root_FD0;
- 	}
- #endif
- #ifdef CONFIG_CIFS_ROOT
--	if (ROOT_DEV == Root_CIFS) {
-+	if (Root_CIFS == ROOT_DEV) {
- 		if (mount_cifs_root())
- 			return;
- 
--		printk(KERN_ERR "VFS: Unable to mount root fs via SMB, trying floppy.\n");
-+		pr_err("VFS: Unable to mount root fs via SMB, trying floppy.\n");
- 		ROOT_DEV = Root_FD0;
- 	}
- #endif
- #ifdef CONFIG_BLK_DEV_FD
- 	if (MAJOR(ROOT_DEV) == FLOPPY_MAJOR) {
- 		/* rd_doload is 2 for a dual initrd/ramload setup */
--		if (rd_doload==2) {
-+		if (rd_doload == 2) {
- 			if (rd_load_disk(1)) {
- 				ROOT_DEV = Root_RAM1;
- 				root_device_name = NULL;
-@@ -633,7 +634,7 @@ void __init prepare_namespace(void)
- 	int is_floppy;
- 
- 	if (root_delay) {
--		printk(KERN_INFO "Waiting %d sec before mounting root device...\n",
-+		pr_info("Waiting %d sec before mounting root device...\n",
- 		       root_delay);
- 		ssleep(root_delay);
- 	}
-@@ -666,8 +667,7 @@ void __init prepare_namespace(void)
- 
- 	/* wait for any asynchronous scanning to complete */
- 	if ((ROOT_DEV == 0) && root_wait) {
--		printk(KERN_INFO "Waiting for root device %s...\n",
--			saved_root_name);
-+		pr_info("Waiting for root device %s...\n", saved_root_name);
- 		while (driver_probe_done() != 0 ||
- 			(ROOT_DEV = name_to_dev_t(saved_root_name)) == 0)
- 			msleep(5);
--- 
-2.7.4
-
+SGksIERhbiwKCkkgYWdyZWUgdGhlIGJlc3Qgc29sdXRpb24gaXMgdG8gZml4IF9fcG1fcnVudGlt
+ZV9yZXN1bWUoKS4gQnV0IHRoZXJlIGFyZSBhbHNvIAptYW55IGNhc2VzIHRoYXQgYXNzdW1lIHBt
+X3J1bnRpbWVfZ2V0X3N5bmMoKSB3aWxsIGNoYW5nZSBQTSB1c2FnZSAKY291bnRlciBvbiBlcnJv
+ci4gQWNjb3JkaW5nIHRvIG15IHN0YXRpYyBhbmFseXNpcyByZXN1bHRzLCB0aGUgbnVtYmVyIG9m
+IHRoZXNlIAoicmlnaHQiIGNhc2VzIGFyZSBsYXJnZXIuIEFkanVzdGluZyBfX3BtX3J1bnRpbWVf
+cmVzdW1lKCkgZGlyZWN0bHkgd2lsbCBpbnRyb2R1Y2UgCm1vcmUgbmV3IGJ1Z3MuIFRoZXJlZm9y
+ZSBJIHRoaW5rIHdlIHNob3VsZCByZXNvbHZlIHRoZSAiYnVnIiBjYXNlcyBpbmRpdmlkdWFsbHku
+CgpJIHRoaW5rIHRoYXQgRG1pdHJ5J3MgcGF0Y2ggaXMgbW9yZSByZWFzb25hYmxlIHRoYW4gbWlu
+ZS4gCgpEaW5naGFvCgomcXVvdDtEYW4gQ2FycGVudGVyJnF1b3Q7ICZsdDtkYW4uY2FycGVudGVy
+QG9yYWNsZS5jb20mZ3Q75YaZ6YGT77yaCj4gT24gV2VkLCBNYXkgMjAsIDIwMjAgYXQgMDE6MTU6
+NDRQTSArMDMwMCwgRG1pdHJ5IE9zaXBlbmtvIHdyb3RlOg0KPiA+IDIwLjA1LjIwMjAgMTI6NTEs
+IERpbmdoYW8gTGl1INC/0LjRiNC10YI6DQo+ID4gPiBwbV9ydW50aW1lX2dldF9zeW5jKCkgaW5j
+cmVtZW50cyB0aGUgcnVudGltZSBQTSB1c2FnZSBjb3VudGVyIGV2ZW4NCj4gPiA+IGl0IHJldHVy
+bnMgYW4gZXJyb3IgY29kZS4gVGh1cyBhIHBhaXJpbmcgZGVjcmVtZW50IGlzIG5lZWRlZCBvbg0K
+PiA+ID4gdGhlIGVycm9yIGhhbmRsaW5nIHBhdGggdG8ga2VlcCB0aGUgY291bnRlciBiYWxhbmNl
+ZC4NCj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1
+QHpqdS5lZHUuY24+DQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJzL3N0YWdpbmcvbWVkaWEvdGVn
+cmEtdmRlL3ZkZS5jIHwgMiArLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
+KSwgMSBkZWxldGlvbigtKQ0KPiA+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFn
+aW5nL21lZGlhL3RlZ3JhLXZkZS92ZGUuYyBiL2RyaXZlcnMvc3RhZ2luZy9tZWRpYS90ZWdyYS12
+ZGUvdmRlLmMNCj4gPiA+IGluZGV4IGQzZTYzNTEyYTc2NS4uZGQxMzRhM2ExNWM3IDEwMDY0NA0K
+PiA+ID4gLS0tIGEvZHJpdmVycy9zdGFnaW5nL21lZGlhL3RlZ3JhLXZkZS92ZGUuYw0KPiA+ID4g
+KysrIGIvZHJpdmVycy9zdGFnaW5nL21lZGlhL3RlZ3JhLXZkZS92ZGUuYw0KPiA+ID4gQEAgLTc3
+Nyw3ICs3NzcsNyBAQCBzdGF0aWMgaW50IHRlZ3JhX3ZkZV9pb2N0bF9kZWNvZGVfaDI2NChzdHJ1
+Y3QgdGVncmFfdmRlICp2ZGUsDQo+ID4gPiAgDQo+ID4gPiAgCXJldCA9IHBtX3J1bnRpbWVfZ2V0
+X3N5bmMoZGV2KTsNCj4gPiA+ICAJaWYgKHJldCA8IDApDQo+ID4gPiAtCQlnb3RvIHVubG9jazsN
+Cj4gPiA+ICsJCWdvdG8gcHV0X3J1bnRpbWVfcG07DQo+ID4gPiAgDQo+ID4gPiAgCS8qDQo+ID4g
+PiAgCSAqIFdlIHJlbHkgb24gdGhlIFZERSByZWdpc3RlcnMgcmVzZXQgdmFsdWUsIG90aGVyd2lz
+ZSBWREUNCj4gPiA+IA0KPiA+IA0KPiA+IEhlbGxvIERpbmdoYW8sDQo+ID4gDQo+ID4gVGhhbmsg
+eW91IGZvciB0aGUgcGF0Y2guIEkgc2VudCBvdXQgYSBzaW1pbGFyIHBhdGNoIGEgd2VlayBhZ28g
+WzFdLg0KPiA+IA0KPiA+IFsxXQ0KPiA+IGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcHJv
+amVjdC9saW51eC10ZWdyYS9wYXRjaC8yMDIwMDUxNDIxMDg0Ny45MjY5LTItZGlnZXR4QGdtYWls
+LmNvbS8NCj4gPiANCj4gPiBUaGUgcG1fcnVudGltZV9wdXRfbm9pZGxlKCkgc2hvdWxkIGhhdmUg
+dGhlIHNhbWUgZWZmZWN0IGFzIHlvdXJzDQo+ID4gdmFyaWFudCwgYWx0aG91Z2ggbXkgdmFyaWFu
+dCB3b24ndCBjaGFuZ2UgdGhlIGxhc3RfYnVzeSBSUE0gdGltZSwgd2hpY2gNCj4gPiBJIHRoaW5r
+IGlzIGEgYml0IG1vcmUgYXBwcm9wcmlhdGUgYmVoYXZpb3IuDQo+IA0KPiBJIGRvbid0IHRoaW5r
+IGVpdGhlciBwYXRjaCBpcyBjb3JyZWN0LiAgVGhlIHJpZ2h0IHRoaW5nIHRvIGRvIGlzIHRvIGZp
+eA0KPiBfX3BtX3J1bnRpbWVfcmVzdW1lKCkgc28gaXQgZG9lc24ndCBsZWFrIGEgcmVmZXJlbmNl
+IGNvdW50IG9uIGVycm9yLg0KPiANCj4gVGhlIHByb2JsZW0gaXMgdGhhdCBhIGxvdCBvZiBmdW5j
+dGlvbnMgZG9uJ3QgY2hlY2sgdGhlIHJldHVybiBzbw0KPiBwb3NzaWJseSB3ZSBhcmUgcmVseWlu
+ZyBvbiB0aGF0IGJlaGF2aW9yLiAgV2UgbWF5IG5lZWQgdG8gaW50cm9kdWNlIGENCj4gbmV3IGZ1
+bmN0aW9uIHdoaWNoIGNsZWFucyB1cCBwcm9wZXJseSBpbnN0ZWFkIG9mIGxlYWtpbmcgcmVmZXJl
+bmNlDQo+IGNvdW50cz8NCj4gDQo+IEFsc28gaXQncyBub3QgZG9jdW1lbnRlZCB0aGF0IHBtX3J1
+bnRpbWVfZ2V0X3N5bmMoKSByZXR1cm5zIDEgc29tZXRpbWVzDQo+IG9uIHN1Y2Nlc3Mgc28gaXQg
+bGVhZHMgdG8gYSBmZXcgYnVncy4NCj4gDQo+IGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jOiAg
+ICAgICAgICAgICByZXQgPSBwbV9ydW50aW1lX2dldF9zeW5jKGRkZXYtPmRldik7DQo+IGRyaXZl
+cnMvZ3B1L2RybS9zdG0vbHRkYy5jLSAgICAgICAgICAgICBpZiAocmV0KSB7DQo+IC0tDQo+IGRy
+aXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jOiAgICAgICAgICAgICByZXQgPSBwbV9ydW50aW1lX2dl
+dF9zeW5jKGRkZXYtPmRldik7DQo+IGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jLSAgICAgICAg
+ICAgICBpZiAocmV0KSB7DQo+IA0KPiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMv
+bXRrX3Zjb2RlY19kZWNfcG0uYzogIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMocG0tPmRldik7
+DQo+IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy9tdGtfdmNvZGVjX2RlY19wbS5j
+LSAgaWYgKHJldCkNCj4gDQo+IGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdGktdnBlL2NhbC5jOiAg
+ICByZXQgPSBwbV9ydW50aW1lX2dldF9zeW5jKCZwZGV2LT5kZXYpOw0KPiBkcml2ZXJzL21lZGlh
+L3BsYXRmb3JtL3RpLXZwZS9jYWwuYy0gICAgaWYgKHJldCkNCj4gDQo+IGRyaXZlcnMvbWZkL2Fy
+aXpvbmEtY29yZS5jOiAgICAgICAgICAgICAgICAgICAgIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5
+bmMoYXJpem9uYS0+ZGV2KTsNCj4gZHJpdmVycy9tZmQvYXJpem9uYS1jb3JlLmMtICAgICAgICAg
+ICAgICAgICAgICAgaWYgKHJldCAhPSAwKQ0KPiANCj4gZHJpdmVycy9yZW1vdGVwcm9jL3Fjb21f
+cTZ2NV9hZHNwLmM6ICAgIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoYWRzcC0+ZGV2KTsNCj4g
+ZHJpdmVycy9yZW1vdGVwcm9jL3Fjb21fcTZ2NV9hZHNwLmMtICAgIGlmIChyZXQpDQo+IA0KPiBk
+cml2ZXJzL3NwaS9zcGktaW1nLXNwZmkuYzogICAgIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMo
+ZGV2KTsNCj4gZHJpdmVycy9zcGkvc3BpLWltZy1zcGZpLmMtICAgICBpZiAocmV0KQ0KPiANCj4g
+ZHJpdmVycy91c2IvZHdjMy9kd2MzLXBjaS5jOiAgICByZXQgPSBwbV9ydW50aW1lX2dldF9zeW5j
+KCZkd2MzLT5kZXYpOw0KPiBkcml2ZXJzL3VzYi9kd2MzL2R3YzMtcGNpLmMtICAgIGlmIChyZXQp
+DQo+IA0KPiBkcml2ZXJzL3dhdGNoZG9nL3J0aV93ZHQuYzogICAgIHJldCA9IHBtX3J1bnRpbWVf
+Z2V0X3N5bmMoZGV2KTsNCj4gZHJpdmVycy93YXRjaGRvZy9ydGlfd2R0LmMtICAgICBpZiAocmV0
+KSB7DQo+IA0KPiByZWdhcmRzLA0KPiBkYW4gY2FycGVudGVyDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9iYXNlL3Bvd2VyL3J1bnRpbWUuYyBiL2RyaXZlcnMvYmFzZS9wb3dlci9ydW50aW1l
+LmMNCj4gaW5kZXggOTljN2RhMTEyYzk1Li5lMjgwOTkxYTk3N2QgMTAwNjQ0DQo+IC0tLSBhL2Ry
+aXZlcnMvYmFzZS9wb3dlci9ydW50aW1lLmMNCj4gKysrIGIvZHJpdmVycy9iYXNlL3Bvd2VyL3J1
+bnRpbWUuYw0KPiBAQCAtMTA4Miw2ICsxMDgyLDkgQEAgaW50IF9fcG1fcnVudGltZV9yZXN1bWUo
+c3RydWN0IGRldmljZSAqZGV2LCBpbnQgcnBtZmxhZ3MpDQo+ICAJcmV0dmFsID0gcnBtX3Jlc3Vt
+ZShkZXYsIHJwbWZsYWdzKTsNCj4gIAlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZkZXYtPnBvd2Vy
+LmxvY2ssIGZsYWdzKTsNCj4gIA0KPiArCWlmIChyZXR2YWwgPCAwICYmIHJwbWZsYWdzICYgUlBN
+X0dFVF9QVVQpDQo+ICsJCWF0b21pY19kZWMoJmRldi0+cG93ZXIudXNhZ2VfY291bnQpOw0KPiAr
+DQo+ICAJcmV0dXJuIHJldHZhbDsNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0xfR1BMKF9fcG1fcnVu
+dGltZV9yZXN1bWUpOw0K
