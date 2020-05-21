@@ -2,150 +2,173 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B228DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D310204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E8E204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:33:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p/q6amQY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C6Qnseph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgEUPcQ (ORCPT
+        id S1728295AbgEUPdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36542 "EHLO
+        Thu, 21 May 2020 11:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729789AbgEUPcP (ORCPT
+        with ESMTP id S1726938AbgEUPdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:32:15 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97829C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:32:15 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p21so3315533pgm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:32:15 -0700 (PDT)
+        Thu, 21 May 2020 11:33:01 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F22C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:33:01 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id n5so6801927wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:33:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+L6yMgj6SF412wxBrlIvpshzc4kgoWA+VMhfhRUlVRs=;
-        b=p/q6amQYHbeWvUMuWV8BWlNvYitmVYExKiYUbdqWdS/RIHPFjC0D7KSnjAQ3Vsiuot
-         pAo9OHxUXoiEjwGn/Qa8YsiYl8QbK4R0jl4q6MN00xn4PPsooPgrFs/DIkxaiKR6Oaw+
-         QggFTCvHrCfhpzbed8BBeB0vy3Ewtvau7CeGec4qF13qB3K3WeSx7Jiw+JjKQM1ArCdj
-         j2Tdw7TPFVfOTcriqkuIc5Hvcb+6qQuog8h2umBG3WsexWEpEvdF887dDCmn7ecCbj8U
-         pN/RPtImXVEQCrGRYkXUrMp4y2HH5AWxGyH86aa6kKS/+bu0uD2JkZfdttVNu6gk0Ako
-         CFtQ==
+         :content-disposition:in-reply-to;
+        bh=a+XGEo7RdRLWXaBT5I1D5SW4Aa/jygWE9YUzvCS9gvI=;
+        b=C6QnsephZ4AXYbZbM1y/Cghfe4u+luUWsgG6OhW+RMXWdsfoZHD3nxlNwa1hYOht3T
+         WTfDVrMB9YUP/UOKUCF8OVzgeCtW2v5g8iWYm18a9M2nlHg/NnB8Ir6MPtJ5w+UhTuNZ
+         xvN1sB6mgklbOCg7LJog22flxrih0eY9gDBhU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+L6yMgj6SF412wxBrlIvpshzc4kgoWA+VMhfhRUlVRs=;
-        b=rJ24dE942oo/G9Qz79Ol8hTrAfMP+Jbaf/nbNBonXPbNVyhapj8LuigxXGYZRngW3Q
-         fhuHWqKm5bMJqD5gROl3uQJI+h6lkeDjonkq+WjYAnOIDR4YAVqAgnTVIIIQg8vjjeCo
-         OoFZzvibsuuFQLXoYE22FUxVbrzkvUjwUolZAy4ecozAro1lJIQBS2JjTKOoPaSwMca4
-         rlaTCkUlPz1WIOkPsTW4sUJ6FcINUXoo3743FZseSvbgh63fI+X5sb0KVMAImO5B0wCW
-         2z5w4R+u57Uz/V6+04M9B2tIJuCNhJDKxh+JP3PgjAU9P8wn8eiEOlXFZVMvM0TUnYgK
-         IrWg==
-X-Gm-Message-State: AOAM530AflzuEdBO1+Ytxt6ggItMccmmE6OVKkn2ut0UDIlnu0dAeMqR
-        QsD6K1pUEUQ3isp8Llm2jbfY
-X-Google-Smtp-Source: ABdhPJxVBBy9yBW/WE8YGP4H2DxszJRV6L7CHDKqB4fy5/Z98hD7jA8/4zKVUuYdSmtOCG2J8BXsmQ==
-X-Received: by 2002:a62:4e88:: with SMTP id c130mr10082114pfb.122.1590075134984;
-        Thu, 21 May 2020 08:32:14 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:69f:45f2:3d8d:3719:f568:7ee9])
-        by smtp.gmail.com with ESMTPSA id g27sm5034156pfr.51.2020.05.21.08.32.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 May 2020 08:32:14 -0700 (PDT)
-Date:   Thu, 21 May 2020 21:02:08 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] Introduce features and debugfs/sysfs entries for
- MHI
-Message-ID: <20200521153208.GB16101@Mani-XPS-13-9360>
-References: <1589832241-13867-1-git-send-email-bbhatt@codeaurora.org>
- <20200521132318.GA3797@Mani-XPS-13-9360>
+         :mime-version:content-disposition:in-reply-to;
+        bh=a+XGEo7RdRLWXaBT5I1D5SW4Aa/jygWE9YUzvCS9gvI=;
+        b=chTxzlrUXiL1H6C3IJaXmkdEt4Dfqyez2pzrKGyh25eRa9qF2V65drbAaXMnkx8izo
+         JOQ80DN7osV7jWggWcOS8iu1wN26LmEYggXsSHJ+Tuw0/3GrOaoZIWtMgMelaEAelaxH
+         NpxsLPk2z8INQR3BaUW5TMwbRlCeOD00+4uDz1WO8e7SvSIcDhcVvXGZUz8ITiUP9xz/
+         cIxfC9VrGHYclrLfzSuVDU/sXjUHvhI9eQoBzZR/I88KyO0V7aHX6neUpc0AHhmx8Vp7
+         aRLOf0+IUtcZFWu3E9Oc118gI2qrHRz5xNpv7xq6xvMqPSimnKF+jbd83BQQA9MKCtwX
+         gzxw==
+X-Gm-Message-State: AOAM532qQirveFEt6/kATez8kRn1MkXoWzQFvXrMI31+Gb04H9o+OxsN
+        F+Jjjn4jTDae8dW19fo2G1nlKA==
+X-Google-Smtp-Source: ABdhPJx2S+yj9zmPBMi83WiNn64bblaOIC/n37oVO4cTDq4iHNfMT2oRcmN73GTSL9Yc4JsMWCaKAA==
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr9202139wmk.168.1590075179928;
+        Thu, 21 May 2020 08:32:59 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id i11sm7245926wrc.35.2020.05.21.08.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 08:32:59 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:32:57 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH v8 06/14] media: platform: Improve the implementation of
+ the system PM ops
+Message-ID: <20200521153257.GF209565@chromium.org>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+ <20200403094033.8288-7-xia.jiang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521132318.GA3797@Mani-XPS-13-9360>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200403094033.8288-7-xia.jiang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 06:53:18PM +0530, Manivannan Sadhasivam wrote:
-> Hi,
-> 
-> On Mon, May 18, 2020 at 01:03:54PM -0700, Bhaumik Bhatt wrote:
-> > Introduce independent bus and device voting mechanism for clients and save
-> > hardware information from BHI.
-> > Allow reading and modifying some MHI variables for debug, test, and
-> > informational purposes using debugfs.
-> > Read values for device specific hardware information to be used by OEMs in
-> > factory testing such as serial number and PK hash using sysfs.
-> > 
-> 
-> I think this series is not yet ready. So will not merge any patches in this
-> series for 5.8.
-> 
-> Or let me know if there are any independent patches which should get merged.
-> I'm planning to send the final 5.8 series to Greg by Friday.
-> 
+Hi Xia,
 
-Sorry. I just realised that we are running out of time as we are ending rc6. So
-I've sent the 5.8 series to Greg.
+On Fri, Apr 03, 2020 at 05:40:25PM +0800, Xia Jiang wrote:
+> Cancel reset hw operation in suspend and resume function because this
+> will be done in device_run().
 
-Thanks,
-Mani
+This and...
 
-> Thanks,
-> Mani
+> Add spin_lock and unlock operation in irq and resume function to make
+> sure that the current frame is processed completely before suspend.
+
+...this are two separate changes. Please split.
+
 > 
-> > This set of patches was tested on arm64 and x86.
-> > 
-> > v3:
-> > -Add patch to check for pending packets in suspend as a dependency for the
-> > independent voting mechanism introduction
-> > -Include register dump entry for debugfs to dump MHI, BHI, and BHIe registers
-> > -Update commit message for the debugfs patch
-> > -Updated Documentation/ABI with the required info for sysfs
-> > -Updated debugfs patch to include a new KConfig entry and dependencies
-> > -Updated reviewed-by for some patches
-> > 
-> > v2:
-> > -Added a new debugfs.c file for specific debugfs entries and code
-> > -Updated commit text and addressed some comments for voting change
-> > -Made sure sysfs is only used for serial number and OEM PK hash usage
-> > 
-> > Bhaumik Bhatt (7):
-> >   bus: mhi: core: Abort suspends due to outgoing pending packets
-> >   bus: mhi: core: Introduce independent voting mechanism
-> >   bus: mhi: core: Use generic name field for an MHI device
-> >   bus: mhi: core: Introduce helper function to check device state
-> >   bus: mhi: core: Introduce debugfs entries and counters for MHI
-> >   bus: mhi: core: Read and save device hardware information from BHI
-> >   bus: mhi: core: Introduce sysfs entries for MHI
-> > 
-> >  Documentation/ABI/stable/sysfs-bus-mhi |  25 ++
-> >  MAINTAINERS                            |   1 +
-> >  drivers/bus/mhi/Kconfig                |   8 +
-> >  drivers/bus/mhi/core/Makefile          |   5 +-
-> >  drivers/bus/mhi/core/boot.c            |  17 +-
-> >  drivers/bus/mhi/core/debugfs.c         | 501 +++++++++++++++++++++++++++++++++
-> >  drivers/bus/mhi/core/init.c            |  80 +++++-
-> >  drivers/bus/mhi/core/internal.h        |  29 ++
-> >  drivers/bus/mhi/core/main.c            |   6 +-
-> >  drivers/bus/mhi/core/pm.c              |  79 ++++--
-> >  include/linux/mhi.h                    |  39 ++-
-> >  11 files changed, 745 insertions(+), 45 deletions(-)
-> >  create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
-> >  create mode 100644 drivers/bus/mhi/core/debugfs.c
-> > 
-> > -- 
-> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > a Linux Foundation Collaborative Project
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index dd5cadd101ef..2fa3711fdc9b 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -911,6 +911,8 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+>  	u32 dec_ret;
+>  	int i;
+>  
+> +	spin_lock(&jpeg->hw_lock);
+> +
+
+nit: For consistency, it is recommended to always use the same, i.e. the
+strongest, spin_(un)lock_ primitives when operating on the same spinlock.
+In this case it would be the irqsave(restore) variants.
+
+>  	dec_ret = mtk_jpeg_dec_get_int_status(jpeg->dec_reg_base);
+>  	dec_irq_ret = mtk_jpeg_dec_enum_result(dec_ret);
+>  	ctx = v4l2_m2m_get_curr_priv(jpeg->m2m_dev);
+> @@ -941,6 +943,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+>  	v4l2_m2m_buf_done(src_buf, buf_state);
+>  	v4l2_m2m_buf_done(dst_buf, buf_state);
+>  	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+> +	spin_unlock(&jpeg->hw_lock);
+>  	pm_runtime_put_sync(ctx->jpeg->dev);
+>  	return IRQ_HANDLED;
+>  }
+> @@ -1191,7 +1194,6 @@ static __maybe_unused int mtk_jpeg_pm_suspend(struct device *dev)
+>  {
+>  	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
+>  
+> -	mtk_jpeg_dec_reset(jpeg->dec_reg_base);
+>  	mtk_jpeg_clk_off(jpeg);
+>  
+>  	return 0;
+> @@ -1202,19 +1204,24 @@ static __maybe_unused int mtk_jpeg_pm_resume(struct device *dev)
+>  	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
+>  
+>  	mtk_jpeg_clk_on(jpeg);
+> -	mtk_jpeg_dec_reset(jpeg->dec_reg_base);
+>  
+>  	return 0;
+>  }
+>  
+>  static __maybe_unused int mtk_jpeg_suspend(struct device *dev)
+>  {
+> +	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
+> +	unsigned long flags;
+>  	int ret;
+>  
+>  	if (pm_runtime_suspended(dev))
+>  		return 0;
+>  
+> +	spin_lock_irqsave(&jpeg->hw_lock, flags);
+
+What does this spinlock protect us from? I can see that it would prevent
+the interrupt handler from being called, but is it okay to suspend the
+system without handling the interrupt?
+
+> +
+>  	ret = mtk_jpeg_pm_suspend(dev);
+> +
+
+Looking at the implementation of mtk_jpeg_pm_suspend(), all it does is
+disabling the clock. How do we make sure that there is no frame currently
+being processed by the hardware?
+
+Best regards,
+Tomasz
