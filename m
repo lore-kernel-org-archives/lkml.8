@@ -2,191 +2,190 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F42C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8902075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F29207C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:23:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r/Jk5vrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgEUBXK (ORCPT
+        id S1728109AbgEUBXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 21:23:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33946 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgEUBXH (ORCPT
+        Wed, 20 May 2020 21:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbgEUBXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 21:23:07 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 72DF38030776;
-        Thu, 21 May 2020 01:23:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id I4drmhQPIpzI; Thu, 21 May 2020 04:23:03 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 07/16] spi: dw: Use DMA max burst to set the request thresholds
-Date:   Thu, 21 May 2020 04:21:57 +0300
-Message-ID: <20200521012206.14472-8-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+        Wed, 20 May 2020 21:23:06 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1727C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 18:23:05 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id v15so2359487qvr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 18:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GMtVJCbEkgZEzF1ZBLwMVt1cXESOIC8nVZA92hfRjqg=;
+        b=r/Jk5vrcSB3KOhVo3r3+GMSVZKwb4XxUm7Va/OGQ74reFpHxmw0Gaclxys3Ptme1uP
+         UvxVu0JcGhJUPGmpbaLHLWLw9vNHFKZI6/qpCDfmM6LN/95XtsMdOTbm/dq9Hnfm7s0o
+         MGmF1+Izrxltv0meQR5wJgbfzBsNsKiYaSwF8HjsMZAr/ZnCFXEsAfAWRAjlKMS+ma3k
+         H3GtqGWxbe1E8U/+ZvXM2TRyP1kAf5PrKnVwEscnJLob7sIhoMt13rjzo7//vxAlETkf
+         fegfNHIrt1dR9WkPCItxFWGBhl0ZEpJG/dwLjtpO6fsjuNJVh3YRhVcpz9kkFwMWHWdQ
+         3dcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GMtVJCbEkgZEzF1ZBLwMVt1cXESOIC8nVZA92hfRjqg=;
+        b=OeXiSd9wOhNMOrMkHS/3YIpAeGUHUcDrQoZPx2up7HJkIwxrZSApXoqxpMigcyYLDb
+         oWSVuMkmE66rNXN0C6VGo9ciPZldbSEN4wwAqr8iopbXXd6W+qGefXXsFtm3inEczNrB
+         hYtjVwv5hu+1jf8vSMQ3kjCPGD0VWuc54KV3Zkd6NLBExJ/A/RHwIsdt83oOCFohJs5K
+         ccX0h2xhfW/hl5gMcwmAn+A6VNNP8ZxsPrs43Uq9cdgfZKhItpFHSsm9ZUzltJLW6bWW
+         1pIhseWIEYURhB9qvG0WUHS9X/7m0XuiwxHVUSp4YYoEJARxq4i9G0bVtoQYiPJVn1RO
+         KFyQ==
+X-Gm-Message-State: AOAM533hGZFt1FnvawntW1G1yuiX+A5TjrogC92ahXL6YCvsK8mGAVzD
+        q9NAEkT6eStAWSAyqXFbpFotuviLtHlhV5cGLtI=
+X-Google-Smtp-Source: ABdhPJzbHRVGo23tLtEGTMcZdTYgdnp2ZMXPEnEBO/hnKIpKb0mugizf+vf4GkyhoMbTLVzY0h1wGGzK9l7+TlRzSj0=
+X-Received: by 2002:a0c:f3ca:: with SMTP id f10mr8036835qvm.66.1590024184723;
+ Wed, 20 May 2020 18:23:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1589764857-6800-5-git-send-email-iamjoonsoo.kim@lge.com> <20200521004608.GC317575@carbon.dhcp.thefacebook.com>
+In-Reply-To: <20200521004608.GC317575@carbon.dhcp.thefacebook.com>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Thu, 21 May 2020 10:22:51 +0900
+Message-ID: <CAAmzW4NmZ4L1DePauuFthmwH9-4AkviGOSbwRD46VMpJzJqU2g@mail.gmail.com>
+Subject: Re: [PATCH 04/11] mm/hugetlb: unify hugetlb migration callback function
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each channel of DMA controller may have a limited length of burst
-transaction (number of IO operations performed at ones in a single
-DMA client request). This parameter can be used to setup the most
-optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
-overrun we can set the DMA Tx level to be of FIFO depth minus the
-maximum burst transactions length. To prevent the Rx buffer underflow
-the DMA Rx level should be set to the maximum burst transactions length.
-This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
-in accordance with these rules.
+2020=EB=85=84 5=EC=9B=94 21=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 9:46, R=
+oman Gushchin <guro@fb.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Mon, May 18, 2020 at 10:20:50AM +0900, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > There is no difference between two migration callback functions,
+> > alloc_huge_page_node() and alloc_huge_page_nodemask(), except
+> > __GFP_THISNODE handling. This patch adds one more field on to
+> > the alloc_control and handles this exception.
+> >
+> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > ---
+> >  include/linux/hugetlb.h |  8 --------
+> >  mm/hugetlb.c            | 23 ++---------------------
+> >  mm/internal.h           |  1 +
+> >  mm/mempolicy.c          |  3 ++-
+> >  4 files changed, 5 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> > index 6da217e..4892ed3 100644
+> > --- a/include/linux/hugetlb.h
+> > +++ b/include/linux/hugetlb.h
+> > @@ -505,8 +505,6 @@ struct huge_bootmem_page {
+> >
+> >  struct page *alloc_migrate_huge_page(struct hstate *h,
+> >                               struct alloc_control *ac);
+> > -struct page *alloc_huge_page_node(struct hstate *h,
+> > -                             struct alloc_control *ac);
+> >  struct page *alloc_huge_page_nodemask(struct hstate *h,
+> >                               struct alloc_control *ac);
+>
+> Maybe drop _nodemask suffix in the remaining function?
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+We cannot remove the suffix since there is already the same named function,
+alloc_huge_page().
 
----
+> >  struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_stru=
+ct *vma,
+> > @@ -755,12 +753,6 @@ static inline void huge_ptep_modify_prot_commit(st=
+ruct vm_area_struct *vma,
+> >  struct hstate {};
+> >
+> >  static inline struct page *
+> > -alloc_huge_page_node(struct hstate *h, struct alloc_control *ac)
+> > -{
+> > -     return NULL;
+> > -}
+> > -
+> > -static inline struct page *
+> >  alloc_huge_page_nodemask(struct hstate *h, struct alloc_control *ac)
+> >  {
+> >       return NULL;
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index 859dba4..60b0983 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -1981,31 +1981,12 @@ struct page *alloc_buddy_huge_page_with_mpol(st=
+ruct hstate *h,
+> >  }
+> >
+> >  /* page migration callback function */
+> > -struct page *alloc_huge_page_node(struct hstate *h,
+> > -                             struct alloc_control *ac)
+> > -{
+> > -     struct page *page =3D NULL;
+> > -
+> > -     ac->gfp_mask |=3D htlb_alloc_mask(h);
+> > -     if (ac->nid !=3D NUMA_NO_NODE)
+> > -             ac->gfp_mask |=3D __GFP_THISNODE;
+> > -
+> > -     spin_lock(&hugetlb_lock);
+> > -     if (h->free_huge_pages - h->resv_huge_pages > 0)
+> > -             page =3D dequeue_huge_page_nodemask(h, ac);
+> > -     spin_unlock(&hugetlb_lock);
+> > -
+> > -     if (!page)
+> > -             page =3D alloc_migrate_huge_page(h, ac);
+> > -
+> > -     return page;
+> > -}
+> > -
+> > -/* page migration callback function */
+> >  struct page *alloc_huge_page_nodemask(struct hstate *h,
+> >                               struct alloc_control *ac)
+> >  {
+> >       ac->gfp_mask |=3D htlb_alloc_mask(h);
+> > +     if (ac->thisnode && ac->nid !=3D NUMA_NO_NODE)
+> > +             ac->gfp_mask |=3D __GFP_THISNODE;
+> >
+> >       spin_lock(&hugetlb_lock);
+> >       if (h->free_huge_pages - h->resv_huge_pages > 0) {
+> > diff --git a/mm/internal.h b/mm/internal.h
+> > index 75b3f8e..574722d0 100644
+> > --- a/mm/internal.h
+> > +++ b/mm/internal.h
+> > @@ -618,6 +618,7 @@ struct alloc_control {
+> >       int nid;
+> >       nodemask_t *nmask;
+> >       gfp_t gfp_mask;
+> > +     bool thisnode;
+> >  };
+>
+> Can you, please, add some comments what each field exactly mean?
 
-Changelog v3:
-- Use min() method to calculate the optimal burst values.
----
- drivers/spi/spi-dw-mid.c | 37 +++++++++++++++++++++++++++++++++----
- drivers/spi/spi-dw.h     |  2 ++
- 2 files changed, 35 insertions(+), 4 deletions(-)
+Will do.
 
-diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-index be02fedd87cb..0e95d8bc85c5 100644
---- a/drivers/spi/spi-dw-mid.c
-+++ b/drivers/spi/spi-dw-mid.c
-@@ -34,6 +34,31 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
- 	return true;
- }
- 
-+static void mid_spi_maxburst_init(struct dw_spi *dws)
-+{
-+	struct dma_slave_caps caps;
-+	u32 max_burst, def_burst;
-+	int ret;
-+
-+	def_burst = dws->fifo_len / 2;
-+
-+	ret = dma_get_slave_caps(dws->rxchan, &caps);
-+	if (!ret && caps.max_burst)
-+		max_burst = caps.max_burst;
-+	else
-+		max_burst = RX_BURST_LEVEL;
-+
-+	dws->rxburst = min(max_burst, def_burst);
-+
-+	ret = dma_get_slave_caps(dws->txchan, &caps);
-+	if (!ret && caps.max_burst)
-+		max_burst = caps.max_burst;
-+	else
-+		max_burst = TX_BURST_LEVEL;
-+
-+	dws->txburst = min(max_burst, def_burst);
-+}
-+
- static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
- {
- 	struct dw_dma_slave slave = {
-@@ -69,6 +94,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
- 	dws->master->dma_rx = dws->rxchan;
- 	dws->master->dma_tx = dws->txchan;
- 
-+	mid_spi_maxburst_init(dws);
-+
- 	return 0;
- 
- free_rxchan:
-@@ -94,6 +121,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
- 	dws->master->dma_rx = dws->rxchan;
- 	dws->master->dma_tx = dws->txchan;
- 
-+	mid_spi_maxburst_init(dws);
-+
- 	return 0;
- }
- 
-@@ -216,7 +245,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
- 	memset(&txconf, 0, sizeof(txconf));
- 	txconf.direction = DMA_MEM_TO_DEV;
- 	txconf.dst_addr = dws->dma_addr;
--	txconf.dst_maxburst = TX_BURST_LEVEL;
-+	txconf.dst_maxburst = dws->txburst;
- 	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
- 	txconf.device_fc = false;
-@@ -290,7 +319,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
- 	memset(&rxconf, 0, sizeof(rxconf));
- 	rxconf.direction = DMA_DEV_TO_MEM;
- 	rxconf.src_addr = dws->dma_addr;
--	rxconf.src_maxburst = RX_BURST_LEVEL;
-+	rxconf.src_maxburst = dws->rxburst;
- 	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
- 	rxconf.device_fc = false;
-@@ -315,8 +344,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
- {
- 	u16 imr = 0, dma_ctrl = 0;
- 
--	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
--	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
-+	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
-+	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
- 
- 	if (xfer->tx_buf) {
- 		dma_ctrl |= SPI_DMA_TDMAE;
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 4902f937c3d7..d0c8b7d3a5d2 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -141,7 +141,9 @@ struct dw_spi {
- 
- 	/* DMA info */
- 	struct dma_chan		*txchan;
-+	u32			txburst;
- 	struct dma_chan		*rxchan;
-+	u32			rxburst;
- 	unsigned long		dma_chan_busy;
- 	dma_addr_t		dma_addr; /* phy address of the Data register */
- 	const struct dw_spi_dma_ops *dma_ops;
--- 
-2.25.1
-
+Thanks.
