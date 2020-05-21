@@ -2,83 +2,116 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 226A220759
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE3E207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:51:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jfInfF5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgEUHuE (ORCPT
+        id S1728485AbgEUHvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:50:04 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:45686 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726208AbgEUHuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:50:03 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgB3DkGbMsZeJw3nAA--.12301S4;
-        Thu, 21 May 2020 15:49:51 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: tegra20-slink: Fix runtime PM imbalance on error
-Date:   Thu, 21 May 2020 15:49:46 +0800
-Message-Id: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgB3DkGbMsZeJw3nAA--.12301S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWfGFb_Cr
-        s8X3WxGr4S9r4kJF17u343ZrySv3Z8Xr1vgrs7tFy3K390vF47CryDZrn8Cr45uw4UAFyq
-        kr93KF1xArZ8CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbI8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l
-        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v2
-        6r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvj
-        fUeAwIDUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAANsv
+        Thu, 21 May 2020 03:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgEUHvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 03:51:10 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7535C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:51:10 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id i16so2375815ybq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3cTYxMrSpTH1mIGr8IELAXemAW00cOr39cI8SC00UUE=;
+        b=jfInfF5Vaq1mZYqYs8FyBhwBLOKmCd4a/4uLJStVBxanYTxpkTlKh1W2dzjaslTv5/
+         DgSbzp9xZ2C3OzEP/86Lq1iTi60P4TIhoV8RFGX2m/TSGWTOqaGlJvYbmfiDng56l8HE
+         kElvZWD9Dsv7UIAdDOlriuXjPw/p4nlC/MfiFqCDD7VS5AziCXLouPNMPhXdoi1+njSn
+         5Kq9USdaxKow8NDx5ctFyf73MicYJNmt5MGFzXZUJQTIRyvOJKklOLdY0WN7XK8zgKVL
+         gMiLVjtXjCnYmfQDcEuGzcWZdCyi58MGTCFEtlLXQs4dTFln74NIvD9dkxZxebWXRHrN
+         TlCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3cTYxMrSpTH1mIGr8IELAXemAW00cOr39cI8SC00UUE=;
+        b=gtNpaPqG8zCOt03Pf0oduS9niN6PuY1k+05gIzQjjvIRSosLFfJP8NYzR8Lcp2E37k
+         U/m5i7p6G3umNYQ3uMJNKNHfLCCeFJj2syQsii4nzeF64tGL4TcqG/pSDqU2CA8OyTcN
+         Z8CvBojzxIOzlaLY3xg7UHhDbpaBU2GZMdu6uBcSIJhNrU9q9b4RZNvE7ng1YaU861rm
+         m4apeb08c3B5f8bSibfqm+ODtUjuoMyYANqBAB5+SzB6+mJlW4hWOMUzrbLthR38XbiE
+         kroaznkiaaD76mho4dGh4pIsV6ZfkY4QThTRq1DXhsbIHGSoRfGhZVB5BKEx0K9IuTHR
+         J/Jg==
+X-Gm-Message-State: AOAM531nVFqmXAfaqF5A5lExSlmhqAHCvH+zpl1X7M6CSdbICjq8XoeT
+        s6Qfg94y9kmR3zcNGmkKzDRQQyaOCXqprDE2QrvhgA==
+X-Google-Smtp-Source: ABdhPJyQgfCui8+ZbyhTJRLwncCPT4GDdW7VWSscqDMZqF1XY4ezNuE9uYBObDdaHkFHfxCjWtEIQIWzksQA0BCBWTs=
+X-Received: by 2002:a5b:383:: with SMTP id k3mr13411552ybp.332.1590047469660;
+ Thu, 21 May 2020 00:51:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200520052908.204642-1-walken@google.com> <20200520052908.204642-13-walken@google.com>
+ <e01060e9-6f00-7fa8-5da0-c9250c951d10@suse.cz>
+In-Reply-To: <e01060e9-6f00-7fa8-5da0-c9250c951d10@suse.cz>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Thu, 21 May 2020 00:50:56 -0700
+Message-ID: <CANN689GXWS9yHTw0aN-tAkd9tyA-vRn0GbJgC+Td=1r13KBZzA@mail.gmail.com>
+Subject: Re: [PATCH v6 12/12] mmap locking API: convert mmap_sem comments
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Thu, May 21, 2020 at 12:42 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+> On 5/20/20 7:29 AM, Michel Lespinasse wrote:
+> > Convert comments that reference mmap_sem to reference mmap_lock instead.
+> >
+> > Signed-off-by: Michel Lespinasse <walken@google.com>
+>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+>
+> But:
+>
+> > diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> > index a1247d3553da..1bf46e2e0cec 100644
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -224,7 +224,7 @@ static int mpol_new_bind(struct mempolicy *pol, const nodemask_t *nodes)
+> >   * handle an empty nodemask with MPOL_PREFERRED here.
+> >   *
+> >   * Must be called holding task's alloc_lock to protect task's mems_allowed
+> > - * and mempolicy.  May also be called holding the mmap_semaphore for write.
+> > + * and mempolicy.  May also be called holding the mmap_lockaphore for write.
+> >   */
+> >  static int mpol_set_nodemask(struct mempolicy *pol,
+> >                    const nodemask_t *nodes, struct nodemask_scratch *nsc)
+>
+> :)
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/spi/spi-tegra20-slink.c | 1 +
- 1 file changed, 1 insertion(+)
+Haha, good catch !
 
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 7f4d932dade7..15361db00982 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -1118,6 +1118,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
-+		pm_runtime_put(&pdev->dev);
- 		goto exit_pm_disable;
- 	}
- 	tspi->def_command_reg  = SLINK_M_S;
 -- 
-2.17.1
-
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
