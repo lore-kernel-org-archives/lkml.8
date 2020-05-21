@@ -2,107 +2,120 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A192020748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6FC206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:06:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="bxpp78PW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730479AbgEUWBt (ORCPT
+        id S1730371AbgEUWGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:01:49 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:52852 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729308AbgEUWBs (ORCPT
+        Thu, 21 May 2020 18:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729822AbgEUWGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:01:48 -0400
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2A8CF82075E;
-        Fri, 22 May 2020 08:01:45 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jbtFz-0000Vf-A3; Fri, 22 May 2020 08:01:39 +1000
-Date:   Fri, 22 May 2020 08:01:39 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 10/36] fs: Make page_mkwrite_check_truncate thp-aware
-Message-ID: <20200521220139.GS2005@dread.disaster.area>
-References: <20200515131656.12890-1-willy@infradead.org>
- <20200515131656.12890-11-willy@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515131656.12890-11-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
-        a=KGgwbdxBNGb1bfa4TRwA:9 a=axUvvhqyyT9HjbU9:21 a=46PWhYHqkOUzt59A:21
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        Thu, 21 May 2020 18:06:17 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613EBC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:06:16 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id a13so3533677pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OhAMbFkeBYkh1YD4II233lD+yGJ3K0G9Oci8yZ/ZBA0=;
+        b=bxpp78PWsbxwSFm6fyiRLWCl3wvWThr8h5f6oLQhDzrgcsFD/DEKoS7oK7x73h0A/T
+         jkNibCb1jeIWkzy3aP6PUgSiyo949bJH8y5SprysWFZIm0TDKU7RGvQBn33uwRkJh/DS
+         w/vFLbaIY20+q/biEmbBhYNgWajV+Fk2/gAYNIFmDHFsd5p59Wx5H484OmlaYPbjPym3
+         sU2LetexScCIAqh6kkrHgoU1XctXZ50V31VsXmQRuTxWZbfSfJCOz5ubNXYZGK0wDSCE
+         czWKmK0JYYzhmO0Xxs3ezU17nwQHdInAS2MJUDhzjKmXUL2kqju4Gh/ZtM1k6KWtl6KL
+         6Mvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=OhAMbFkeBYkh1YD4II233lD+yGJ3K0G9Oci8yZ/ZBA0=;
+        b=oGAxkVX/h6OMXiFGL2JaoRJBvzqt92GnFTKI6qaGW5Ce42yKDVz4kq0Kam0T0X/sqm
+         Np2TUr5nml6BHDLT9okwAj32NGqA2XW/4AK3ADbK+m3BMVY/evzQdZHCQpk6n2gWoijX
+         Aj/hKpEhxEj87lRWQQnOWSI/PimNlz0RuqNnov3muknCCHpkfQhke817E8OF2Javdiyw
+         uXJC+lKzL5OISIt3K7v6r74ZolzUtN+mhCV7Nd97S1SzqksaIoCfYlAfF3aR9yL3UBI6
+         Iiz/Lb14yMUwwyTOHNOXM5y9iquewM41c6WQQSDxE/WUTijNJe0Cu/hHlvHEV/+EJ/2e
+         5A4Q==
+X-Gm-Message-State: AOAM532PYf3PmqapiMSSBGb/jxqupKeVyPv9JAsMFAFrMTRto0o5n5wL
+        8PiTvc4ImAcKOJg0TIfOg7JyCg==
+X-Google-Smtp-Source: ABdhPJwN1m6K9hPFs82tA6eWxV2r1TLL4YbjntnvjsyVqmjBlB6uawDniHorXAEwxlNqOq1bJjqFxA==
+X-Received: by 2002:a17:90b:23d4:: with SMTP id md20mr776706pjb.164.1590098775476;
+        Thu, 21 May 2020 15:06:15 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id d4sm2888946pjo.43.2020.05.21.15.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 15:06:14 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:06:14 -0700 (PDT)
+X-Google-Original-Date: Thu, 21 May 2020 14:36:15 PDT (-0700)
+Subject:     Re: [PATCH v2 1/3] irqchip/sifive-plic: Set default irq affinity in plic_irqdomain_map()
+In-Reply-To: <20200518091441.94843-2-anup.patel@wdc.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, tglx@linutronix.de,
+        jason@lakedaemon.net, Marc Zyngier <maz@kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        anup@brainfault.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anup Patel <Anup.Patel@wdc.com>,
+        stable@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Message-ID: <mhng-724b2ebd-3b41-4b3e-8685-26860402e663@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 06:16:30AM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> If the page is compound, check the last index in the page and return
-> the appropriate size.  Change the return type to ssize_t in case we ever
-> support pages larger than 2GB.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+On Mon, 18 May 2020 02:14:39 PDT (-0700), Anup Patel wrote:
+> For multiple PLIC instances, each PLIC can only target a subset of
+> CPUs which is represented by "lmask" in the "struct plic_priv".
+>
+> Currently, the default irq affinity for each PLIC interrupt is all
+> online CPUs which is illegal value for default irq affinity when we
+> have multiple PLIC instances. To fix this, we now set "lmask" as the
+> default irq affinity in for each interrupt in plic_irqdomain_map().
+>
+> Fixes: f1ad1133b18f ("irqchip/sifive-plic: Add support for multiple PLICs")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
 > ---
->  include/linux/pagemap.h | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 1a0bb387948c..c75d7fb7ccbc 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -827,22 +827,22 @@ static inline unsigned long dir_pages(struct inode *inode)
->   * @page: the page to check
->   * @inode: the inode to check the page against
->   *
-> - * Returns the number of bytes in the page up to EOF,
-> + * Return: The number of bytes in the page up to EOF,
->   * or -EFAULT if the page was truncated.
->   */
-> -static inline int page_mkwrite_check_truncate(struct page *page,
-> +static inline ssize_t page_mkwrite_check_truncate(struct page *page,
->  					      struct inode *inode)
+>  drivers/irqchip/irq-sifive-plic.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index 822e074c0600..9f7f8ce88c00 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -176,9 +176,12 @@ static struct irq_chip plic_chip = {
+>  static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
+>  			      irq_hw_number_t hwirq)
 >  {
->  	loff_t size = i_size_read(inode);
->  	pgoff_t index = size >> PAGE_SHIFT;
-> -	int offset = offset_in_page(size);
-> +	unsigned long offset = offset_in_thp(page, size);
->  
->  	if (page->mapping != inode->i_mapping)
->  		return -EFAULT;
->  
->  	/* page is wholly inside EOF */
-> -	if (page->index < index)
-> -		return PAGE_SIZE;
-> +	if (page->index + hpage_nr_pages(page) - 1 < index)
-> +		return thp_size(page);
+> +	struct plic_priv *priv = d->host_data;
+> +
+>  	irq_domain_set_info(d, irq, hwirq, &plic_chip, d->host_data,
+>  			    handle_fasteoi_irq, NULL, NULL);
 
-Can we make these interfaces all use the same namespace prefix?
-Here we have a mix of thp and hpage and I have no clue how hpages
-are different to thps. If they refer to the same thing (i.e. huge
-pages) then can we please make the API consistent before splattering
-it all over the filesystem code?
+If you're going to re-spin this, d->host_data could be priv here.
 
-Cheers,
+>  	irq_set_noprobe(irq);
+> +	irq_set_affinity(irq, &priv->lmask);
+>  	return 0;
+>  }
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
