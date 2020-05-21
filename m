@@ -1,51 +1,93 @@
 Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.4 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82990C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F351C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547DA20678
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3F320748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:19:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=tencent.com header.i=@tencent.com header.b="T1r/i0Pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgEUEKr (ORCPT
+        id S1726882AbgEUETG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 00:10:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:39934 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgEUEKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 00:10:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20E7C30E;
-        Wed, 20 May 2020 21:10:46 -0700 (PDT)
-Received: from [10.163.75.69] (unknown [10.163.75.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7D623F68F;
-        Wed, 20 May 2020 21:10:43 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [RFC V2] mm/vmstat: Add events for PMD based THP migration
- without split
-To:     =?UTF-8?B?SE9SSUdVQ0hJIE5BT1lBKOWggOWPo+OAgOebtOS5nyk=?= 
-        <naoya.horiguchi@nec.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1589784156-28831-1-git-send-email-anshuman.khandual@arm.com>
- <20200520071521.GA29616@hori.linux.bs1.fc.nec.co.jp>
-Message-ID: <d20494ac-5039-6956-c70b-f78e51b4f6eb@arm.com>
-Date:   Thu, 21 May 2020 09:40:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200520071521.GA29616@hori.linux.bs1.fc.nec.co.jp>
-Content-Type: text/plain; charset=iso-2022-jp
+        Thu, 21 May 2020 00:19:06 -0400
+Received: from mail4.tencent.com ([183.57.53.109]:34018 "EHLO
+        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbgEUETG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 00:19:06 -0400
+X-Greylist: delayed 550 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 May 2020 00:19:03 EDT
+Received: from EX-SZ018.tencent.com (unknown [10.28.6.39])
+        by mail4.tencent.com (Postfix) with ESMTP id 62AC3722D9;
+        Thu, 21 May 2020 12:09:51 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tencent.com;
+        s=s202002; t=1590034191;
+        bh=0J/Iyor6JI7kRj1E77ZmS5fAyQEZe9jJ3ekKIr2jbXE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=T1r/i0PzgUJ5D5/W/TEnUAd9CFz+RI7PKOjiIvW7trPFyeqjvCrianLh5Z2edQOM9
+         26iOF8GPEygYRhvMtQC1wYkZElc7rtI0oajiMu0uGpyUeuYEYyCuCyVNEXbkpiWMYc
+         bdOFn6Bfiv4GKY//cF6GL3oCWSIrwUGUwUEmldzs=
+Received: from EX-SZ006.tencent.com (10.28.6.30) by EX-SZ018.tencent.com
+ (10.28.6.39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Thu, 21 May
+ 2020 12:09:51 +0800
+Received: from EX-SZ012.tencent.com (10.28.6.36) by EX-SZ006.tencent.com
+ (10.28.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1847.3; Thu, 21 May
+ 2020 12:09:51 +0800
+Received: from EX-SZ012.tencent.com ([fe80::704d:4b2e:562c:22c]) by
+ EX-SZ012.tencent.com ([fe80::704d:4b2e:562c:22c%3]) with mapi id
+ 15.01.1847.007; Thu, 21 May 2020 12:09:51 +0800
+From:   =?iso-2022-jp?B?YmVuYmppYW5nKBskQj5VSTcbKEIp?= 
+        <benbjiang@tencent.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+CC:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pjt@google.com" <pjt@google.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        vpillai <vpillai@digitalocean.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kerrnel@google.com" <kerrnel@google.com>,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "aubrey.li@linux.intel.com" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>
+Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling
+ interface(Internet mail)
+Thread-Topic: [PATCH RFC] sched: Add a per-thread core scheduling
+ interface(Internet mail)
+Thread-Index: AQHWLvXKFOwpUhEtgUmeB0cRYW4c1KixZ1AA
+Date:   Thu, 21 May 2020 04:09:50 +0000
+Message-ID: <71B72E96-CD6E-43C3-B22B-ADE0EC78C550@tencent.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520222642.70679-1-joel@joelfernandes.org>
+In-Reply-To: <20200520222642.70679-1-joel@joelfernandes.org>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.28.2.16]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <C4E62B49377D9046850931CE6C01E8F1@tencent.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,55 +95,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 05/20/2020 12:45 PM, HORIGUCHI NAOYA(堀口　直也) wrote:
-> On Mon, May 18, 2020 at 12:12:36PM +0530, Anshuman Khandual wrote:
->> This adds the following two new VM events which will help in validating PMD
->> based THP migration without split. Statistics reported through these events
->> will help in performance debugging.
->>
->> 1. THP_PMD_MIGRATION_SUCCESS
->> 2. THP_PMD_MIGRATION_FAILURE
->>
->> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->> Cc: Zi Yan <ziy@nvidia.com>
->> Cc: John Hubbard <jhubbard@nvidia.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> Hi Anshuman,
+> On May 21, 2020, at 6:26 AM, Joel Fernandes (Google) <joel@joelfernandes.=
+org> wrote:
+>=20
+> Add a per-thread core scheduling interface which allows a thread to tag
+> itself and enable core scheduling. Based on discussion at OSPM with
+> maintainers, we propose a prctl(2) interface accepting values of 0 or 1.
+> 1 - enable core scheduling for the task.
+> 0 - disable core scheduling for the task.
+>=20
+> Special cases:
+> (1)
+> The core-scheduling patchset contains a CGroup interface as well. In
+> order for us to respect users of that interface, we avoid overriding the
+> tag if a task was CGroup-tagged because the task becomes inconsistent
+> with the CGroup tag. Instead return -EBUSY.
+>=20
+> (2)
+> If a task is prctl-tagged, allow the CGroup interface to override
+> the task's tag.
+>=20
+> ChromeOS will use core-scheduling to securely enable hyperthreading.
+> This cuts down the keypress latency in Google docs from 150ms to 50ms
+> while improving the camera streaming frame rate by ~3%.
+Hi,
+Are the performance improvements compared to the hyperthreading disabled sc=
+enario or not?
+Could you help to explain how the keypress latency improvement comes with c=
+ore-scheduling?
 
-Hi Naoya,
+Thanks a lot.
 
-> 
-> I'm neutral for additinal lines in /proc/vmstat. It's a classic (so widely
-> used) but inflexible interface. Users disabling thp are not happy with many
-> thp-related lines, but judging from the fact that we already have many
+Regards,
+Jiang
 
-Right, for similar reason, I am not too keen on enabling these counters
-without migration being enabled with ARCH_ENABLE_THP_MIGRATION.
-
-> thp-related lines some users really need them. So I feel hard to decide to
-> agree or disagree with additional lines.
-
-Currently these are conditional on ARCH_ENABLE_THP_MIGRATION. So we are
-not adding these new lines unless it migration is available and enabled.
-
-> 
-> I think that tracepoints are the more flexible interfaces for monitoring,
-> so I'm interested more in whether thp migration could be monitorable via
-> tracepoint. Do you have any idea/plan on it?
-
-Sure, we can add some trace points as well which can give more granular
-details regarding THP migration mechanism itself e.g setting and removing
-PMD migration entries etc probably with (vaddr, pmdp, pmd) details.
-
-But we will still need /proc/vmstat entries that will be available right
-away without requiring additional steps. This simplicity is essential for
-folks to consider using these events more often.
-
-Sure, will look into what trace points can be added for THP migration but
-in a subsequent patch.
-
-- Anshuman
