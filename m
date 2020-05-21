@@ -2,69 +2,94 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC52BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0193C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F874207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DKXGp2Rt"
+	by mail.kernel.org (Postfix) with ESMTP id C1DAF207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590074541;
+	bh=uw/ECKoYgz/YxRjuJpnhpsZS31S0r5IQsD1sVVnFwsk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q8TZiuDGC4j+OqV4/n0eS1BsOuGRfsk/jB5LjlVTXqBE0G0D3Ktw5FlpCa7/934Kb
+	 ZmWK2/+HHGexbLYRkgx50Sielf+87LbQk0koD8dm+0jRR1KaGYUcnGI26+hH0T1f9f
+	 MtzlJi5C1aBsX/mCEZP8vcYYvM3/cDt7ug6CKR3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgEUPVg (ORCPT
+        id S1729972AbgEUPWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgEUPVf (ORCPT
+        Thu, 21 May 2020 11:22:21 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33521 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727898AbgEUPWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:21:35 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750F5C061A0E;
-        Thu, 21 May 2020 08:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=q0/V8y0Nv8zA7Pp8oKLblpvhLC3VMtOQmusIqCMTC7g=; b=DKXGp2RtTdyH8/q8s6RUq1anmn
-        vJwQd0AvOKxBpp0Q8kSMcneF8wUZA1uqNZd3kTiAb8dVQohGM8Ayhhje/Jn23xXFo49/a4BMstDH6
-        PW9xzhRJ9kbCsK1TPiuUvzuY1yhGhp2NtK577cARhvmyMcyibgB92G+rTwVMHgdPG+//N3KfWdNMg
-        TXtHeamDEE2wpRAwZAT+/6p+ng4gV4rKLtcP9PTVq9rH9JLilKLoTWzCojtnb0q82vtpaKRIFwnRZ
-        Y/K6d7GqMG7/4SPrsn+0r1FQCGLG3T8EHoM0/hZ850+OXsEgcmHwMZZHPazRwLI62UAbKFXFe7z4s
-        5SmXbAsQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn0X-0003oT-R1; Thu, 21 May 2020 15:21:18 +0000
-Date:   Thu, 21 May 2020 08:21:17 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     adobriyan@gmail.com, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        ebiederm@xmission.com, bernd.edlinger@hotmail.de,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] files: Use rcu lock to get the file structures for
- better performance
-Message-ID: <20200521152117.GC28818@bombadil.infradead.org>
-References: <20200521123835.70069-1-songmuchun@bytedance.com>
+        Thu, 21 May 2020 11:22:20 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v17so5830848ote.0;
+        Thu, 21 May 2020 08:22:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uw/ECKoYgz/YxRjuJpnhpsZS31S0r5IQsD1sVVnFwsk=;
+        b=aATRAxRprz6cP3SJWzCbj6vv5f5/aWhXdwGGlhXlq41jqU+FEmgtxviTj6MR0imbUV
+         xoN5Ov1RqrzIA7Ea2vpshUsoqshXANhmL0SOUHZ0Sidpbe96vRv6/NHgumz0Q/0R02OF
+         mzBlpdj4cuxASDz2NSxAm96UqU/unyXNYi1ouc42Io5haqPWynj4NZm6EktEDa+h3YqA
+         KMQruSltnEGwl2+e0FpyW+FOD+wNPu4m6no68c3QyaUJPvU1NWX30suephwnlv8Q+0Z7
+         tP8Hd+WY7DRyrB1BB8USJdd0mVsQaRsMkeQ5yjH0e30mh0OyUs7oHL74eH0sotUg+/ny
+         lSDw==
+X-Gm-Message-State: AOAM532fZAGLkPY3QrV2yAdX2sIMobqqJg1CLoPRuIIa3gL+xUGfX4dB
+        R77Bv2j4lownfYVjYMvDiHdkdYvyRTh9iqU9CqQ=
+X-Google-Smtp-Source: ABdhPJySYHHfJZQzmSAFX4YreFFQLn9SDcqp+e2Kz8pIAQ/fKPfh6o6bUIqNhlRZ/GFZaNjXxDQc9ZETXw93O7R/z84=
+X-Received: by 2002:a9d:3d05:: with SMTP id a5mr7537138otc.262.1590074539694;
+ Thu, 21 May 2020 08:22:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521123835.70069-1-songmuchun@bytedance.com>
+References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
+ <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com> <20200520150230.GC30374@kadam>
+ <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn> <20200521091505.GF30374@kadam>
+In-Reply-To: <20200521091505.GF30374@kadam>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 21 May 2020 17:22:05 +0200
+Message-ID: <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
+Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
+ on error
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     dinghao.liu@zju.edu.cn, devel@driverdev.osuosl.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>, Kangjie Lu <kjlu@umn.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 08:38:35PM +0800, Muchun Song wrote:
-> There is another safe way to get the file structure without
-> holding the files->file_lock. That is rcu lock, and this way
-> has better performance. So use the rcu lock instead of the
-> files->file_lock.
+On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
+> > Hi, Dan,
+> >
+> > I agree the best solution is to fix __pm_runtime_resume(). But there are also
+> > many cases that assume pm_runtime_get_sync() will change PM usage
+> > counter on error. According to my static analysis results, the number of these
+> > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
+> > more new bugs. Therefore I think we should resolve the "bug" cases individually.
+> >
+>
+> That's why I was saying that we may need to introduce a new replacement
+> function for pm_runtime_get_sync() that works as expected.
+>
+> There is no reason why we have to live with the old behavior.
 
-What makes you think this is safe?  Are you actually seeing contention
-on this spinlock?
-
+What exactly do you mean by "the old behavior"?
