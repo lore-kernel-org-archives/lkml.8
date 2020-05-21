@@ -2,107 +2,148 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24257C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9925920849
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038872072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPscTpCp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ADhQPTFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgEUPJL (ORCPT
+        id S1729846AbgEUPKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:09:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32906 "EHLO
+        Thu, 21 May 2020 11:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729633AbgEUPJK (ORCPT
+        with ESMTP id S1728136AbgEUPKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:09:10 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815E1C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:09:10 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id i15so6951023wrx.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:09:10 -0700 (PDT)
+        Thu, 21 May 2020 11:10:51 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B736BC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:10:51 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id g34so1877068uah.4
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:10:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vwv9YjY9guLjv65YlrZItemJRbw+X/+RvIECQVKRC5I=;
-        b=LPscTpCp2Rda7uIQnN2/xW5SngvxOgSeMI2dHNHzpb86O0isdpj1bGAiEFAj/0a4Di
-         u6euyum93hM9ZN2iGxzaJ56fbo8am92vqPCsUJR5fax/87OeRiA73l247Om6l1IZJrwS
-         ow4tCqDUm2/+hxQElKMw55dk2SYUvHSM++EMn10qjtnEP7HOQzIKOwXzrKtXmb8tMbbw
-         Wf/xeXg5cdl8zTWGmQrnUlvHxC5h44py6Tf4d6l7s4y4lV4fIEAcrrMKtPh0WriEOLv0
-         mhW1OuWMlXxq+svHtaPIOKyx+LpaUcYAZlWkEJ7/s9pJosdzG6KujRA++BvDrwms/Efz
-         46nw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ffe0xz9XMcB5mRpVbSZxAWF/UEfoDxZNXD2x44f+aIg=;
+        b=ADhQPTFdZEYLsxid6o5adOvSYnvHO06MEAcMIK9vt6NakkFzT7SJoRfUfS/VVY2uBN
+         sBf7Rg3UZ+KjLHtkaHd4bEORQOOVJ/qIZSn7J0HVFPd812RpgZPZxFrPxAe55+M2gl9T
+         R70cOP577H7YotMi3d7OptNRcJWyVeW+oc7lM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vwv9YjY9guLjv65YlrZItemJRbw+X/+RvIECQVKRC5I=;
-        b=LvofdRwz/MyjDZBYyoy7IXqJ5I51scFJAJBszSl/TCOCJiEo6DgOtbUo0+9Lkc2Utd
-         5W2SfMX0LwRb563ay4qSrrlKEPiejYklqxYwLGBuvNqEmuQL1hZrPZeJ34ayjmOB57nQ
-         vDY8dHaHiXkV6dWduWNyQHMtHne2fnYzyQlduA5HS2nslaYdjuClN4tc0JNlcfXnEMbV
-         XQtyJsOenW1/eRIPRrHa0dob2oyssCHPJdI0DTMROIv0fd6Wa9636BA8TtycDDLqsJg9
-         rjA6zzebBQkDCJSuf3+03MFt9uJpM3oGh5mIFcG3TM1L2mOswXFA1eQBI+h3suoaChH2
-         A1xg==
-X-Gm-Message-State: AOAM532tkBjVvaJSEnSTJ9J1kJqeIscQsOQ3WEAbF/DsxEbItFPvZ9Pa
-        HXOKb8SRwNA2Tw5U1UnH3L7m8Q==
-X-Google-Smtp-Source: ABdhPJzXRn5kvssS7EyvqkEiE2aDDSrDc7EPJsA/kEJ5Mk1y+PyoY2cjR62eT8qVoizMUjT4dQWdjQ==
-X-Received: by 2002:adf:8b47:: with SMTP id v7mr5777961wra.238.1590073749170;
-        Thu, 21 May 2020 08:09:09 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id x22sm6601980wmi.32.2020.05.21.08.09.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 08:09:08 -0700 (PDT)
-Date:   Thu, 21 May 2020 16:09:06 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>
-Subject: Re: linux-next: Tree for May 21
-Message-ID: <20200521150906.u2obtw5qcybkjjxz@holly.lan>
-References: <20200522001209.07c19400@canb.auug.org.au>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ffe0xz9XMcB5mRpVbSZxAWF/UEfoDxZNXD2x44f+aIg=;
+        b=VlIdPVryliykI9XwhVpW78pLqJxkPrHqVM5JEDqKpNJ29c0QGDU6ZmUfy+vP0w0rOs
+         hGiIZvhql92Ng7WHw3a4gabTE6uMZ4edAfQGZ6wHoVPZkfomFvO3ibWfdvaUnEZwPIDX
+         HDrD10QUkNTn6ZbrKWxVc6YnJH5Yndj2can6zQPRfwBty7TxqtVejY7Mjv47EWrd8jXq
+         mC/iVRVwJ/7qqZpbrBEEPQmMb19KMiSnioNfdXpJZV+5nHPI57CK9CNhHwhMmv+piFht
+         Y0p3xmT8WywRCx6bkdBb3pKoL6s11v2wtZ5GAtd+x2lrHwDpJ+yVdv07RU2RIVzrd9BX
+         6MXw==
+X-Gm-Message-State: AOAM532PbYExyykmDvHRbWUnfkZ2DL0C1yDY/KSCrpsjUMVpZjvbgD4a
+        cNJDdM+r42K3BuvoAHQPj37pvH1OEak=
+X-Google-Smtp-Source: ABdhPJyIG6BKMswwi7dOnabT9qLnKXXBJL/N19SrC4yie/bm6OKneRjRIzbjuqVTs3QMQbuq8yBFog==
+X-Received: by 2002:ab0:48ea:: with SMTP id y39mr7293333uac.21.1590073849501;
+        Thu, 21 May 2020 08:10:49 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id 2sm103950vsj.3.2020.05.21.08.10.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 08:10:48 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id 1so4183694vsl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:10:47 -0700 (PDT)
+X-Received: by 2002:a67:e884:: with SMTP id x4mr7424096vsn.106.1590073847105;
+ Thu, 21 May 2020 08:10:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522001209.07c19400@canb.auug.org.au>
+References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
+ <1589307480-27508-3-git-send-email-rbokka@codeaurora.org> <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
+ <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org> <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
+ <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org> <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
+ <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
+ <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org> <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
+ <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org>
+In-Reply-To: <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 21 May 2020 08:10:35 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
+Message-ID: <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
+Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse support
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 12:12:09AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20200519:
-> 
-> My fixes tree contains:
-> 
->   cd2b06ec45d6 ("device_cgroup: Fix RCU list debugging warning")
-> 
-> The f2fs tree gained a conflict against the fscrypt tree.
-> 
-> The drm-msm tree still had its build failure so I applied a patch.
-> 
-> The kvm tree gained a semantic conflict against the tip tree.
-> 
-> The usb-gadget tree gained a conflict against the usb tree.
-> 
-> The userns tree gained a build failure so I used ther version from
-> next-20200519.
-> 
-> The kgdb tree still had its build failure so I used the version from
-> next-20200518.
+Hi,
 
-Doh... I have updated my pre-push tests, merged the fix and tested.
-Unfortunately I then pushed the results to the wrong git server :-(.
+On Thu, May 21, 2020 at 8:01 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> On 20/05/2020 23:48, Doug Anderson wrote:
+> >> Is this only applicable for corrected address space?
+> > I guess I was proposing a two dts-node / two drive approach here.
+> >
+> > dts node #1:just covers the memory range for accessing the FEC-corrected data
+> > driver #1: read-only and reads the FEC-corrected data
+> >
+> > dts node #2: covers the memory range that's_not_  the FEC-corrected
+> > memory range.
+> > driver #2: read-write.  reading reads uncorrected data
+> >
+> > Does that seem sane?
+>
+> I see your point but it does not make sense to have two node for same thing.
 
-Thanks, and should be all set for tomorrow.
+OK, so that sounds as if we want to go with the proposal where we
+"deprecate the old driver and/or bindings and say that there really
+should just be one node and one driver".
+
+Would this be acceptable to you?
+
+1. Officially mark the old bindings as deprecated.
+
+2. Leave the old driver there to support the old deprecated bindings,
+at least until everyone can be transferred over.  There seem to be
+quite a few existing users of "qcom,qfprom" and we're supposed to make
+an attempt at keeping the old device trees working, at least for a
+little while.  Once everyone is transferred over we could decide to
+delete the old driver.
+
+3. We will have a totally new driver here.
+
+4. A given device tree will _not_ be allowed to have both
+"qcom,qfprom" specified and "qcom,SOC-qfprom" specified.  ...and by
+"qcom,SOC-qfprom" I mean that SOC should be replaced by the SoC name,
+so "qcom,sc7180-qfprom" or "qcom,sdm845-qfprom".  So once you switch
+to the new node it replaces the old node.
 
 
-Daniel.
+> Isn't the raw address space reads used to for blowing and checking the
+> fuses if they are blown correctly or not and software usage of these
+> fuses should only be done from correct address space?
+>
+> the read interface to user should be always from corrected address space
+> and write interface should be to raw address space.
+
+Great.  That sounds right to me.  Presumably the driver could add some
+sort of "debugfs" access to read the raw address space if needed.
+
+-Doug
