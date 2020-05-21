@@ -2,110 +2,106 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B314C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B3F20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEE5207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgEUOBQ (ORCPT
+        id S1729616AbgEUODi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:01:16 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2238 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729532AbgEUOBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:01:16 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 3CC2F38420F11539B82D;
-        Thu, 21 May 2020 15:01:14 +0100 (IST)
-Received: from [127.0.0.1] (10.47.6.132) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 21 May
- 2020 15:01:13 +0100
-Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for
- userspace
-To:     Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>
-CC:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-2-qiangqing.zhang@nxp.com>
- <20200519185125.GB453195@bogus> <20200520073304.GA23534@willie-the-truck>
- <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
- <20200521130415.GB5949@willie-the-truck>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <c3be06c5-781f-384f-768b-d809da99b7e0@huawei.com>
-Date:   Thu, 21 May 2020 15:00:13 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 21 May 2020 10:03:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:47426 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728630AbgEUODi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 10:03:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 935A4D6E;
+        Thu, 21 May 2020 07:03:37 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F97D3F305;
+        Thu, 21 May 2020 07:03:36 -0700 (PDT)
+References: <20200519161755.209565-1-maz@kernel.org> <20200519161755.209565-4-maz@kernel.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com
+Subject: Re: [PATCH 03/11] arm64: Allow IPIs to be handled as normal interrupts
+In-reply-to: <20200519161755.209565-4-maz@kernel.org>
+Date:   Thu, 21 May 2020 15:03:29 +0100
+Message-ID: <jhjlfllxu4u.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521130415.GB5949@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.6.132]
-X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2020 14:04, Will Deacon wrote:
-> On Wed, May 20, 2020 at 09:23:41AM -0600, Rob Herring wrote:
->> On Wed, May 20, 2020 at 1:33 AM Will Deacon <will@kernel.org> wrote:
->>>
->>> On Tue, May 19, 2020 at 12:51:25PM -0600, Rob Herring wrote:
->>>> On Tue, May 12, 2020 at 03:31:13PM +0800, Joakim Zhang wrote:
->>>>> +static ssize_t ddr_perf_identifier_show(struct device *dev,
->>>>> +                                   struct device_attribute *attr,
->>>>> +                                   char *page)
->>>>> +{
->>>>> +   struct ddr_pmu *pmu = dev_get_drvdata(dev);
->>>>> +
->>>>> +   return sprintf(page, "%s\n", pmu->devtype_data->identifier);
->>>>
->>>> Why do we need yet another way to identify the SoC from userspace?
->>>
->>> I also really dislike this. What's the preferred way to identify the SoC
->>> from userspace?
->>
->> /proc/cpuinfo? ;)
-> 
-> The *SoC*!
-> 
->> For an non-firmware specific case, I'd say soc_device should be. I'd
->> guess ACPI systems don't use it and for them it's dmidecode typically.
->> The other problem I have with soc_device is it is optional.
-> 
 
-Hi Will,
+On 19/05/20 17:17, Marc Zyngier wrote:
+> In order to deal with IPIs as normal interrupts, let's add
+> a new way to register them with the architecture code.
+>
+> set_smp_ipi_range() takes a range of interrupts, and allows
+> the arch code to request them as if the were normal interrupts.
+                                      ^^^
+                                  s/the/they/
 
-> John -- what do you think about using soc_device to expose this information,
-> with ACPI systems using DMI data instead?
+> A standard handler is then called by the core IRQ code to deal
+> with the IPI.
+>
+> This means that we don't need to call irq_enter/irq_exit, and
+> that we don't need to deal with set_irq_regs either. So let's
+> move the dispatcher into its own function, and leave handle_IPI()
+> as a compatibility function.
+>
+> On the sending side, let's make use of ipi_send_mask, which
+> already exists for this purpose.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  arch/arm64/Kconfig           |  1 +
+>  arch/arm64/include/asm/smp.h |  5 ++
+>  arch/arm64/kernel/smp.c      | 92 +++++++++++++++++++++++++++++++-----
+>  3 files changed, 86 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 061f60fe452f..93ba0025e7b9 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -247,6 +254,8 @@ asmlinkage notrace void secondary_start_kernel(void)
+>        */
+>       notify_cpu_starting(cpu);
+>
+> +	ipi_setup(cpu);
+> +
+>       store_cpu_topology(cpu);
+>       numa_add_cpu(cpu);
+>
+> @@ -374,6 +383,8 @@ void cpu_die(void)
+>
+>       local_daif_mask();
+>
+> +	ipi_teardown(cpu);
+> +
 
-Generally I don't think that DMI is reliable, and I saw this as the 
-least preferred choice. I'm looking at the sysfs DMI info for my dev 
-board, and I don't even see anything like a SoC identifier.
+Would it make sense to move it up to say __cpu_disable()? I'm thinking it
+would make sense to bunch this up with the toggling of the cpu_online_mask
+bit, and FWIW it'd match with the comment atop the cpuhp callsite.
 
-As for the event_source device sysfs identifier file, it would not 
-always contain effectively the same as the SoC ID.
+Once the CPU is set as offline, all it has left to do is to go die in
+do_idle(), so AFAICT we can do that IPI teardown anywhere inbetween.
 
-Certain PMUs which I'm interested in plan to have probe-able 
-identification info available in future.
-
-Thanks,
-John
-
-
-
+>       /* Tell __cpu_die() that this CPU is now safe to dispose of */
+>       (void)cpu_report_death();
+>
