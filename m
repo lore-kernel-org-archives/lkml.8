@@ -2,141 +2,133 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5A61207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69A72070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SyVYQSfy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jyzicPHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgEULnl (ORCPT
+        id S1729072AbgEULqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:43:41 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38569 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729100AbgEULnk (ORCPT
+        Thu, 21 May 2020 07:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728348AbgEULqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:43:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590061419;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ttU7JtT4mKmdr4XaUlZUh0aIyxlnlTBW6EDoHbcH2pA=;
-        b=SyVYQSfyx/L04v0au7evRZSVkSB1w10BsS7xpQRZiUjmLZhUe6+XUjQXzcM94h0K5gebm2
-        llql2ItyRpw72qe0cLL7xF/IRV21fmGja+f3ydfhq+Vq5PkhPBepE0ErAV6nPezLqp+8rD
-        EbbwVvlzwB7DWL7Njt6Hxj+j5wSBCs4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-7lJ8VI4JOqiE4HJAsjrIEw-1; Thu, 21 May 2020 07:43:34 -0400
-X-MC-Unique: 7lJ8VI4JOqiE4HJAsjrIEw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04A14A0C03;
-        Thu, 21 May 2020 11:43:31 +0000 (UTC)
-Received: from krava (unknown [10.40.195.217])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3FC8F5C1B0;
-        Thu, 21 May 2020 11:43:26 +0000 (UTC)
-Date:   Thu, 21 May 2020 13:43:25 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 21 May 2020 07:46:18 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700DBC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 04:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rsieF57gufe7ou9V7L0Dwppgjn2RE0LWW3aj4epHibE=; b=jyzicPHNA03f4JzG2fuRl4fCA
+        YDU9nB+jas7c6+LLf0xryPU806VK8AaddWAoYgPjLoXhQNq4ZWX2vB5XDz4oabalOKFNLqCTEAhAT
+        kp8U3++R/5dxFUqi1ocSGPR6KeeMTHY3pDJf5nPdVuKPC+RU3aFQOYJ/KUiI0wgZ/6ctl8KwNBE75
+        M2Kp4JHyjF8PN5I53ibZSpB0gi5/Q6pPnzzqYi7W15PqyuzICvVlteXaHyib27cFhTnRbiQLmuiRb
+        bbUN4HsWB69tKtUgBqd73iNdK/qr4SAdE1T0sSy7ulWGOKD/ZAuemESLH2HAeuHUUvPXGM8RMedY9
+        cWnWtxUgQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:60832)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jbjeM-0002Ki-Dr; Thu, 21 May 2020 12:46:10 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jbjeJ-0000Ab-BN; Thu, 21 May 2020 12:46:07 +0100
+Date:   Thu, 21 May 2020 12:46:07 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 0/7] Share events between metrics
-Message-ID: <20200521114325.GT157452@krava>
-References: <20200520182011.32236-1-irogers@google.com>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+Message-ID: <20200521114607.GP1551@shell.armlinux.org.uk>
+References: <20200518091222.27467-1-sudeep.holla@arm.com>
+ <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus>
+ <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+ <20200521075755.GA4668@willie-the-truck>
+ <20200521081055.GD1131@bogus>
+ <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
+ <20200521101422.GO1551@shell.armlinux.org.uk>
+ <CAK8P3a3cPPiprEpF_k-GWAgWSZiP3Qp3v++jvS_8W17Ns4_HGw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520182011.32236-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <CAK8P3a3cPPiprEpF_k-GWAgWSZiP3Qp3v++jvS_8W17Ns4_HGw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:20:04AM -0700, Ian Rogers wrote:
+On Thu, May 21, 2020 at 12:31:32PM +0200, Arnd Bergmann wrote:
+> On Thu, May 21, 2020 at 12:14 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Thu, May 21, 2020 at 11:06:23AM +0200, Arnd Bergmann wrote:
+> > > Note that the warning should come up for either W=1 or C=1, and I also
+> > > think that
+> > > new code should generally be written sparse-clean and have no warnings with
+> > > 'make C=1' as a rule.
+> >
+> > No, absolutely not, that's a stupid idea, there are corner cases
+> > where hiding a sparse warning is the wrong thing to do.  Look at
+> > many of the cases in fs/ for example.
+> >
+> > See https://lkml.org/lkml/2004/9/12/249 which should make anyone
+> > who sees a use of __force in some random code stop and question
+> > why it is there, and whether it is actually correct, or just there
+> > to hide a sparse warning.
+> >
+> > Remember, sparse is there to warn that something isn't quite right,
+> > and the view taken is, if it isn't right, then we don't "cast the
+> > warning away" with __force, even if we intend not to fix the code
+> > immediately.
+> >
+> > So, going for "sparse-clean" is actually not correct. Going for
+> > "no unnecessary warnings" is.
+> >
+> > And don't think what I've said above doesn't happen; I've rejected
+> > patches from people who've gone around trying to fix every sparse
+> > warning that they see by throwing __force incorrectly at it.
+> >
+> > The thing is, if you hide all the warnings, even for incorrect code,
+> > then sparse becomes completely useless to identify where things in
+> > the code are not quite correct.
+> 
+> Adding __force is almost always the wrong solution, and I explictly
+> was not talking about existing code here where changing it would
+> risk introducing bugs or require bad hacks.
 
-SNIP
+I'm using existing code to illustrate the problem with your idea of
+"sparse-clean" new code, trying to show you that it is not about
+being sparse clean, but about being correct.
 
-> There are 5 out of 12 metric groups where no events are shared, such
-> as Power, however, disabling grouping of events always reduces the
-> number of events.
-> 
-> The result for Memory_BW needs explanation:
-> 
-> Metric group: Memory_BW
->  - No merging (old default, now --metric-no-merge): 9
->  - Merging over metrics (new default)             : 5
->  - No event groups and merging (--metric-no-group): 11
-> 
-> Both with and without merging the groups fail to be set up and so the
-> event counts here are for broken metrics. The --metric-no-group number
-> is accurate as all the events are scheduled. Ideally a constraint
-> would be added for these metrics in the json code to avoid grouping.
-> 
-> v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
-> missing comma with metric lists (reported-by Jiri Olsa
-> <jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
-> (suggested-by Jiri Olsa).
+> However, when writing a new driver, sparse warnings usually
+> indicate that you are doing something wrong that is better addressed
+> by doing something different that does not involve adding __force.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Right, but if you lay down a rule that says "new submissions must be
+sparse clean" you will get people using __force to shut sparse up.
 
-thanks,
-jirka
-
-> 
-> v1. was prepared on kernel/git/acme/linux.git branch tmp.perf/core
-> 
-> Compared to RFC v3: fix a bug where unnecessary commas were passed to
-> parse-events and were echoed. Fix a bug where the same event could be
-> matched more than once with --metric-no-group, causing there to be
-> events missing.
-> https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
-> 
-> Ian Rogers (7):
->   perf metricgroup: Always place duration_time last
->   perf metricgroup: Use early return in add_metric
->   perf metricgroup: Delay events string creation
->   perf metricgroup: Order event groups by size
->   perf metricgroup: Remove duped metric group events
->   perf metricgroup: Add options to not group or merge
->   perf metricgroup: Remove unnecessary ',' from events
-> 
->  tools/perf/Documentation/perf-stat.txt |  19 ++
->  tools/perf/builtin-stat.c              |  11 +-
->  tools/perf/util/metricgroup.c          | 239 ++++++++++++++++++-------
->  tools/perf/util/metricgroup.h          |   6 +-
->  tools/perf/util/stat.h                 |   2 +
->  5 files changed, 207 insertions(+), 70 deletions(-)
-> 
-> -- 
-> 2.26.2.761.g0e0b3e54be-goog
-> 
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
