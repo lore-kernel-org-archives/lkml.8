@@ -2,104 +2,86 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24342C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D154C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7E02070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A68207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgEULrs (ORCPT
+        id S1729162AbgEULst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:47:48 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37058 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729077AbgEULrr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:47:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3D2D4803087B;
-        Thu, 21 May 2020 11:47:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jNgJJc_VL4Gx; Thu, 21 May 2020 14:47:38 +0300 (MSK)
-Date:   Thu, 21 May 2020 14:47:36 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Feng Tang <feng.tang@intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Grant Likely <grant.likely@secretlab.ca>,
-        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
-        Linus Walleij <linus.walleij@stericsson.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
- MID DMA
-Message-ID: <20200521114736.b2azyfvym372vkdl@mobilestation>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
- <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
- <20200521030924.GA12568@shbuild999.sh.intel.com>
+        Thu, 21 May 2020 07:48:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:45072 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729002AbgEULst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 07:48:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A938E30E;
+        Thu, 21 May 2020 04:48:48 -0700 (PDT)
+Received: from [10.57.0.164] (unknown [10.57.0.164])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C46A3F52E;
+        Thu, 21 May 2020 04:48:47 -0700 (PDT)
+Subject: Re: [RFC PATCH] arm64: dts: rockchip: fix dmas dma-names for rk3308
+ i2s node
+To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+References: <20200520064816.3954-1-jbx6244@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <543270ad-dd11-2bd4-8959-e898834c19e5@arm.com>
+Date:   Thu, 21 May 2020 12:48:42 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200521030924.GA12568@shbuild999.sh.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200520064816.3954-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Feng,
-
-On Thu, May 21, 2020 at 11:09:24AM +0800, Feng Tang wrote:
-> Hi Serge,
+On 2020-05-20 07:48, Johan Jonker wrote:
+> One of the current rk3308 'i2s' nodes has a different dma layout
+> with only 1 item. Table 9-2 DMAC1 Request Mapping Table shows that
+> there 2 dma sources available, so fix the dmas and dma-names
+> for the rk3308 'i2s' node.
 > 
-> On Thu, May 21, 2020 at 04:21:51AM +0300, Serge Semin wrote:
+> 10 I2S/PCM_2CH_1 tx High level
+> 11 I2S/PCM_2CH_1 rx High level
 
-[nip]
+...however table 1-5 in the same manual (at least that I could find) 
+says request 10 is reserved. Does that mean it was intended to be wired 
+up for this, but ended up broken for some reason?
 
-> >  /*
-> >   * dws->dma_chan_busy is set before the dma transfer starts, callback for rx
-> >   * channel will clear a corresponding bit.
-> > @@ -200,6 +267,8 @@ static void dw_spi_dma_rx_done(void *arg)
-> >  {
-> >  	struct dw_spi *dws = arg;
-> >  
-> > +	dw_spi_dma_wait_rx_done(dws);
+Do you have hardware to confirm whether this works reliably or not?
+
+Robin.
+
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>   arch/arm64/boot/dts/rockchip/rk3308.dtsi | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> I can understand the problem about TX, but I don't see how RX
-> will get hurt, can you elaborate more? thanks
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> index ac7f69407..79c1dd1fe 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
+> @@ -564,8 +564,8 @@
+>   		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+>   		clocks = <&cru SCLK_I2S1_2CH>, <&cru HCLK_I2S1_2CH>;
+>   		clock-names = "i2s_clk", "i2s_hclk";
+> -		dmas = <&dmac1 11>;
+> -		dma-names = "rx";
+> +		dmas = <&dmac1 10>, <&dmac1 11>;
+> +		dma-names = "tx", "rx";
+>   		resets = <&cru SRST_I2S1_2CH_M>, <&cru SRST_I2S1_2CH_H>;
+>   		reset-names = "reset-m", "reset-h";
+>   		status = "disabled";
 > 
-> - Feng
-
-Your question is correct. You are right with your hypothesis. Ideally upon the
-dw_spi_dma_rx_done() execution Rx FIFO must be already empty. That's why the
-commit log signifies the error being mostly related with Tx FIFO. But
-practically there are many reasons why Rx FIFO might be left with data:
-DMA engine failures, incorrect DMA configuration (if DW SPI or DW DMA driver
-messed something up), controller hanging up, and so on. It's better to catch
-an error at this stage while propagating it up to the SPI device drivers.
-Especially seeing the wait-check implementation doesn't gives us much of the
-execution overhead in normal conditions. So by calling dw_spi_dma_wait_rx_done()
-we make sure that all the data has been fetched and we may freely get the
-buffers back to the client driver.
-
--Sergey
