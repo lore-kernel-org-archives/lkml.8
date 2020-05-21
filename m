@@ -2,42 +2,43 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5925BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB48207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385CD207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EEJCEnoh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i6l6MGdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgEUPXL (ORCPT
+        id S1730026AbgEUPXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35078 "EHLO
+        Thu, 21 May 2020 11:23:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgEUPXL (ORCPT
+        with ESMTP id S1730008AbgEUPXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:23:11 -0400
+        Thu, 21 May 2020 11:23:14 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21EAEC061A0E;
-        Thu, 21 May 2020 08:23:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F3CC061A0E;
+        Thu, 21 May 2020 08:23:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=YqSSwt2eEcfdPvUAJEANUMpS+LY40r0n4Vfg5+OG7wQ=; b=EEJCEnohLFlkeBK40BapbvBN8B
-        STzhDvoXDi6tKlY0y9EJyn9cirSq8jAFNVOnAudZkOqwZw1AmD7q/TODvpr9c9vXbt/wp1uyiKDrL
-        JnXNH0f/a2eGVzzMvif5JYp9g8Q2nIkTHG0J0DaB/RdnLYlUTkNMv3wfnys2TXfQoGngUeetWOBh2
-        49EjI/2ECxzLrR6L3IN6772XB/UeBe7cuoKvQGFoXmoftQ0OU4m9M+BN7p1LZLHCWYJebf2w/GMB9
-        oOZWBeR82AWRsWyIILbr0CtUMwxyV8pzt+lJchXXL6fCPVBtyGnXT7GEMCYvYogWI0/8PbRZUTy+t
-        ZFUTdkOQ==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=FhwjB9eDi0xwZgnRZDImeNjcc9cNIZkOcwQVq4y1nSU=; b=i6l6MGdRC6JXPYBg8m9hgS5gXs
+        ZKwD1lvGetzP5DFZyyR4TEX7zeay+toBlWO3Ntu10fSDEs/ncYpf08Lmw1qKfY/EA904OYlQu4FY+
+        zEY0BV2z16Q+exDeUj4IvpoxQUaEaXXhxbrO+IfuFYgokh7lfwmm2wYzCt6sXtWJDFtQrqz6SAzhF
+        DQ9Hr2akG0qdkzXoJ//hlNTIYX1BxZhHcMLPkJqmc8H6L2pMXo5uiLlPiVUwjYN/4YyfAKZfXJ7Qm
+        ggIrOAcxFsjCuYGgGeIVDiUd8WVZPxBjbVAoYGoi6dg6yRO3qlhvGWsRi4BWueDnVC+ZdDUlziWac
+        DJ6J7/Yg==;
 Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn2F-0003xo-7d; Thu, 21 May 2020 15:23:03 +0000
+        id 1jbn2K-00042u-Lv; Thu, 21 May 2020 15:23:09 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -47,10 +48,12 @@ To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
 Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: clean up and streamline probe_kernel_* and friends v4
-Date:   Thu, 21 May 2020 17:22:38 +0200
-Message-Id: <20200521152301.2587579-1-hch@lst.de>
+Subject: [PATCH 02/23] maccess: remove various unused weak aliases
+Date:   Thu, 21 May 2020 17:22:40 +0200
+Message-Id: <20200521152301.2587579-3-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
+References: <20200521152301.2587579-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -59,29 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+maccess tends to define lots of underscore prefixed symbols that then
+have other weak aliases.  But except for two cases they are never
+actually used, so remove them.
 
-this series start cleaning up the safe kernel and user memory probing
-helpers in mm/maccess.c, and then allows architectures to implement
-the kernel probing without overriding the address space limit and
-temporarily allowing access to user memory.  It then switches x86
-over to this new mechanism by reusing the unsafe_* uaccess logic.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/uaccess.h |  3 ---
+ mm/maccess.c            | 19 +++----------------
+ 2 files changed, 3 insertions(+), 19 deletions(-)
 
-This version also switches to the saner copy_{from,to}_kernel_nofault
-naming suggested by Linus.
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 67f016010aad5..a2c606a403745 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -324,7 +324,6 @@ extern long __probe_kernel_read(void *dst, const void *src, size_t size);
+  * happens, handle that and return -EFAULT.
+  */
+ extern long probe_user_read(void *dst, const void __user *src, size_t size);
+-extern long __probe_user_read(void *dst, const void __user *src, size_t size);
+ 
+ /*
+  * probe_kernel_write(): safely attempt to write to a location
+@@ -336,7 +335,6 @@ extern long __probe_user_read(void *dst, const void __user *src, size_t size);
+  * happens, handle that and return -EFAULT.
+  */
+ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+-extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
+ 
+ /*
+  * probe_user_write(): safely attempt to write to a location in user space
+@@ -348,7 +346,6 @@ extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size
+  * happens, handle that and return -EFAULT.
+  */
+ extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
+-extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
+ 
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+ extern long strncpy_from_unsafe_strict(char *dst, const void *unsafe_addr,
+diff --git a/mm/maccess.c b/mm/maccess.c
+index cf21e604f78cb..4e7f3b6eb05ae 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -79,11 +79,7 @@ EXPORT_SYMBOL_GPL(probe_kernel_read);
+  * Safely read from user address @src to the buffer at @dst. If a kernel fault
+  * happens, handle that and return -EFAULT.
+  */
+-
+-long __weak probe_user_read(void *dst, const void __user *src, size_t size)
+-    __attribute__((alias("__probe_user_read")));
+-
+-long __probe_user_read(void *dst, const void __user *src, size_t size)
++long probe_user_read(void *dst, const void __user *src, size_t size)
+ {
+ 	long ret = -EFAULT;
+ 	mm_segment_t old_fs = get_fs();
+@@ -106,11 +102,7 @@ EXPORT_SYMBOL_GPL(probe_user_read);
+  * Safely write to address @dst from the buffer at @src.  If a kernel fault
+  * happens, handle that and return -EFAULT.
+  */
+-
+-long __weak probe_kernel_write(void *dst, const void *src, size_t size)
+-    __attribute__((alias("__probe_kernel_write")));
+-
+-long __probe_kernel_write(void *dst, const void *src, size_t size)
++long probe_kernel_write(void *dst, const void *src, size_t size)
+ {
+ 	long ret;
+ 	mm_segment_t old_fs = get_fs();
+@@ -131,11 +123,7 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
+  * Safely write to address @dst from the buffer at @src.  If a kernel fault
+  * happens, handle that and return -EFAULT.
+  */
+-
+-long __weak probe_user_write(void __user *dst, const void *src, size_t size)
+-    __attribute__((alias("__probe_user_write")));
+-
+-long __probe_user_write(void __user *dst, const void *src, size_t size)
++long probe_user_write(void __user *dst, const void *src, size_t size)
+ {
+ 	long ret = -EFAULT;
+ 	mm_segment_t old_fs = get_fs();
+@@ -171,7 +159,6 @@ long __probe_user_write(void __user *dst, const void *src, size_t size)
+  * probing memory on a user address range where strncpy_from_unsafe_user() is
+  * supposed to be used instead.
+  */
+-
+ long __weak strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
+     __attribute__((alias("__strncpy_from_unsafe")));
+ 
+-- 
+2.26.2
 
-I kept the x86 helpers as-is without calling unsage_{get,put}_user as
-that avoids a number of hard to trace casts, and it will still work
-with the asm-goto based version easily.
-
-Changes since v3:
- - cleanup how bpf and trace_kprobe perform the TASK_SIZE checks
- - remove the unused dst argument to probe_kernel_read_allowed
- - document the -ERANGE return value
-
-Changes since v2:
- - rebased on 5.7-rc6 with the bpf trace format string changes
- - rename arch_kernel_read to __get_kernel_nofault and arch_kernel_write
-   to __put_kernel_nofault
- - clean up the tracers to only allowd "mixed" reads when the kernel
-   has non-overlapping address spaces
