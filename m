@@ -2,104 +2,149 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBD3C20756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 292632078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590063639;
-	bh=ibFoIIyMF1Cq5K82d+d9TeF08+OR/OuKj6IPDBv1eCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iQmfh4sQj6z8F5rXlj7M/pAMubaj5Nc0d6Gh3ky+Tw4GbOu1X8Bgzdu+5eAr4lo6H
-	 Zap/aaZl/rhvHhtzNlBAwXDOa/VdoobYA2+W5gUTPXc8UG1CYCUTh6atTOrBPPaNDe
-	 +j/m3dSvpZZV0MsInVy5SQYGx5Ap0wbtr0eAS2zI=
+	s=default; t=1590063656;
+	bh=ajfo6P7BYx287i+EILRdYZT2mOSu7ADSA6cIK6mA8yY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=J7ipWFCg/gWxs3nGC/tbmBl7kDs3Bzdy1uJlFoHSJqONFsZurkVqCEPwP4/xdKqKP
+	 1CrmL53jsDe2E91aFw4p+GCulF5kUEc7yfpbDRWnf6HC5toBScmf9X3B75UNXGC6CS
+	 m0PftOGYPpuyVBEAUuoaPP5Rx6qklGnanUi97AjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgEUMUj (ORCPT
+        id S1729295AbgEUMUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbgEUMUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:20:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE5702070A;
-        Thu, 21 May 2020 12:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590063638;
-        bh=ibFoIIyMF1Cq5K82d+d9TeF08+OR/OuKj6IPDBv1eCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S6sdA04cTnvXYoly+hZLJSJzYe2wasbfZ02IuM3wTto6o/oXeugLu+X+5sUrImmdA
-         +XeyGwWZyprjvvHR395Cpu/yvFuSgjMoJiwts0sj7M+0lU9rLk07V8SXNnJG7k6UHK
-         9eXkLBREWeFM4y3W5VdZgw4K19OjDmMvaAfJULZ8=
-Date:   Thu, 21 May 2020 13:20:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, vigneshr@ti.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-Message-ID: <20200521122035.GB4770@sirena.org.uk>
-References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200520124329.GF4823@sirena.org.uk>
- <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
- <20200521105646.GA4770@sirena.org.uk>
- <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
-Content-Disposition: inline
-In-Reply-To: <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 21 May 2020 08:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729214AbgEUMUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:20:54 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CDAC061A0E;
+        Thu, 21 May 2020 05:20:54 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a5so2987007pjh.2;
+        Thu, 21 May 2020 05:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=stWt/FkAV3whglFbcJ+xccRha/qYgrl6lOTok0wajJI=;
+        b=CiG6I0E9MNcMSok6mI8B8l0WOE1Jhf4njbivNxYqT7m/509HAlg43f4SsWgLClFI3k
+         fPmF/ufGTX6mkSwQC/igr02SXod+141NPaGRZ7sLICSHsL56s0ik5TAAa8y30cKSOPRM
+         CMoxuY75TWChVAaVKQiZaRHVRuk+Y1YaOtjNLsSWyrie6gnUkakPWqR1Jqjq6Tq1y+D6
+         kghA+TLKRNzgzGEXpUfiVJE4Wuv032OxkssdEaGuAwD4q8UITu0Fizu9isEYlXfPd0zE
+         zWvAx5Zj2RCqSjoe6pczEQzxw4AGTaK7gn5LiQ3kJ3i2OrSwLfppVw88uzoC+63qzH7G
+         0w9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=stWt/FkAV3whglFbcJ+xccRha/qYgrl6lOTok0wajJI=;
+        b=alzrpHBfpS17gAdnoMtVlMiqRdGcnGT1VJUMRIIdkuQtIi4H9h2DuF5LX5Hjm0XjRa
+         OGrg+XE9zEcQUdYpScE5noHeaTfpf6+0glE/3L5hjaJ2nq+buv2rLj6ptxLPJoiQT3dD
+         Tj7pVKMNHfJ6xpYe1ilcEJW2U/6VZ+NfvQ3vRCfeUB1wYsiZhzVD/Hukn32vjdcaIpUS
+         UbbnustAyuZKK0eSZuoGptiZ37BhHnnGdALKWSWaVdRqYyifI5suXtGi6T10b6rqRxgb
+         Tl2xeXeuBWydz18CmW02nEGJX6ukQFqk3Jlp6znl/Sox8OCGt761uGdiAOwQVv6i9sDc
+         xDCg==
+X-Gm-Message-State: AOAM530slUdHSXjpqmus1N9ab1vCnVl1GzzyHvVU4Q/apW1GMl0svFNK
+        aYRCni2I6WNRQqCbBVNdafzSIdRp
+X-Google-Smtp-Source: ABdhPJyFihLfVSUUClYWBD16iRFax2GMCdIhiO8QpL/RTTsIlojruoS1SI49pxTjv8nLltLWKBHuMA==
+X-Received: by 2002:a17:902:6bcb:: with SMTP id m11mr9164799plt.264.1590063653750;
+        Thu, 21 May 2020 05:20:53 -0700 (PDT)
+Received: from localhost.localdomain ([221.146.116.86])
+        by smtp.gmail.com with ESMTPSA id m12sm4142169pgj.46.2020.05.21.05.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 05:20:53 -0700 (PDT)
+From:   Namjae Jeon <linkinjeon@kernel.org>
+X-Google-Original-From: Namjae Jeon <namjae.jeon@samsung.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH] exfat: add the dummy mount options to be backward compatible with staging/exfat
+Date:   Thu, 21 May 2020 21:20:34 +0900
+Message-Id: <20200521122034.2254-1-namjae.jeon@samsung.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As Ubuntu and Fedora release new version used kernel version equal to or
+higher than v5.4, They started to support kernel exfat filesystem.
 
---JP+T4n/bALQSJXh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Linus Torvalds reported mount error with new version of exfat on Fedora.
 
-On Thu, May 21, 2020 at 08:14:04PM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> On 21/5/2020 6:56 pm, Mark Brown wrote:
+	exfat: Unknown parameter 'namecase'
 
-> > That doesn't address either of the issues.  The removal of the old
-> > bindings and addition of the YAML ones needs to be in a single patch
-> > doing that conversion.  What I'm suggesting should be done separately is
-> > whatever changes to the semantics of the bindings you are (according to
-> > your changelog) doing.
+This is because there is a difference in mount option between old
+staging/exfat and new exfat.
+And utf8, debug, and codepage options as well as namecase have been
+removed from new exfat.
 
-> You mean semantics of the binding as a single patch you are suggesting me,
-> right? , Thanks!
+This patch add the dummy mount options as deprecated option to be backward
+compatible with old one.
 
-I mean that any changes to the bindings ought to be split out into
-separate patches, if there's multiple changes it may make sense for
-there to be multiple patches.
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+---
+ fs/exfat/super.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
---JP+T4n/bALQSJXh8
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index 0565d5539d57..26b0db5b20de 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -203,6 +203,12 @@ enum {
+ 	Opt_errors,
+ 	Opt_discard,
+ 	Opt_time_offset,
++
++	/* Deprecated options */
++	Opt_utf8,
++	Opt_debug,
++	Opt_namecase,
++	Opt_codepage,
+ };
+ 
+ static const struct constant_table exfat_param_enums[] = {
+@@ -223,6 +229,10 @@ static const struct fs_parameter_spec exfat_parameters[] = {
+ 	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
+ 	fsparam_flag("discard",			Opt_discard),
+ 	fsparam_s32("time_offset",		Opt_time_offset),
++	fsparam_flag("utf8",			Opt_utf8),
++	fsparam_flag("debug",			Opt_debug),
++	fsparam_u32("namecase",			Opt_namecase),
++	fsparam_u32("codepage",			Opt_codepage),
+ 	{}
+ };
+ 
+@@ -278,6 +288,18 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 			return -EINVAL;
+ 		opts->time_offset = result.int_32;
+ 		break;
++	case Opt_utf8:
++		pr_warn("exFAT-fs: 'utf8' mount option is deprecated and has no effect\n");
++		break;
++	case Opt_debug:
++		pr_warn("exFAT-fs: 'debug' mount option is deprecated and has no effect\n");
++		break;
++	case Opt_namecase:
++		pr_warn("exFAT-fs: 'namecase' mount option is deprecated and has no effect\n");
++		break;
++	case Opt_codepage:
++		pr_warn("exFAT-fs: 'codepage' mount option is deprecated and has no effect\n");
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+-- 
+2.25.1
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7GchIACgkQJNaLcl1U
-h9BBmwf/TAx18MCyJnkJz/cUdXiSZ/+3KxoqHwPbafjuXp6qJnMplcEAKFr4GKRQ
-PTqDr6x+1BLU9teHxr+zvvTjM291hIaF9Nvrf/UxkM3IpOAmBUSzPV1frd0hN2sZ
-eGhxkeI9d/+Vke4/koh+o4e89xis1Rk197LwrBSCBqS17mnXXu9CcJxxCOAmGlQn
-0PPfp8vz+tLT400Cf9QaP5U4cpKom24uz5GbjmOaq7mIHs+U+PZdjFJJ6gxKxV3K
-uUsaW2MnVnkPmgQlC0jMdaOYvxwduiCYCH4nT1zLLs+iSqJkoOiB4uMI0/QuFm4c
-kPWfhUXiqDm2eSA4sTcD4e/5YvDhfg==
-=I4eQ
------END PGP SIGNATURE-----
-
---JP+T4n/bALQSJXh8--
