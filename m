@@ -2,97 +2,118 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7488CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C28C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34FEA20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D379020759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TD2fDeKC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R7/X4G5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgEUGs2 (ORCPT
+        id S1727964AbgEUG4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 02:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgEUGs2 (ORCPT
+        Thu, 21 May 2020 02:56:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47274 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726938AbgEUG4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 02:48:28 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E72AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 23:48:28 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 21 May 2020 02:56:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590044210;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NEPsuI322n1SfGdGZ1bt40k2iNByP761ppUmMqLTrT4=;
+        b=R7/X4G5HPbTYF0t4n82ddLeeCn5TE5VhTYA8mBa5yVzmObHFH6Y0o6xPAbdvTtk6QVRrOT
+        oGJwhnA9BXFTLOvKpPI0Xy7NzSwYRdqhhjWlfcp5rN6Z6MZRuWco72zg4r8GdvBOffziGi
+        ZwP7uAKwN18b/6bFoetT0wD7Kv809ps=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-bpOhwA4xPfyJjo_ViOMyPg-1; Thu, 21 May 2020 02:56:46 -0400
+X-MC-Unique: bpOhwA4xPfyJjo_ViOMyPg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SKvV6hDcz9sT9;
-        Thu, 21 May 2020 16:48:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1590043704;
-        bh=mylN82RMn5av9mlUtP03Bq7JN7H0txBfw8gjg+ZMQ7s=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=TD2fDeKCARBDrWHY+VsGAe2iNnjSqQg60E3P1g7BHV/e9JoUek2xU6OXtkwdaFBlG
-         aGsN7rfCMbH628gOSdZXEoRypdxmeNdDtrpbG4z8i41l8g31J3EgJqZna48GJKwC2D
-         5bRYia+7Z03muiVkvkWqj3ePOGlgXK0kW3acfngvbgMdQClEMJRRQ5Z8x3nV+qRPyX
-         EraBdtFn9TliOy7sS163c8RGPhBZnu6NStAC3CIu4NHNsMKW+KtIsGQQxbHCcvH6dx
-         4yVgcFUs0HZ2rGH7IcJSH/rK0vExeIUOkgCbyQhjDX2DlL14cZeT9FW4/IsS3D9Hip
-         vvOPM4L7nSzmA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RESEND PATCH v7 4/5] ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
-In-Reply-To: <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com>
-References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-5-vaibhav@linux.ibm.com> <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com>
-Date:   Thu, 21 May 2020 16:48:40 +1000
-Message-ID: <87367t941j.fsf@mpe.ellerman.id.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 235A580183C;
+        Thu, 21 May 2020 06:56:45 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 54C4E5D9CA;
+        Thu, 21 May 2020 06:56:44 +0000 (UTC)
+Subject: [PATCH net 0/3] rxrpc: Fix retransmission timeout and ACK discard
+ [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 May 2020 07:56:43 +0100
+Message-ID: <159004420353.66254.3034741691675793468.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ira Weiny <ira.weiny@intel.com> writes:
-> On Wed, May 20, 2020 at 12:30:57AM +0530, Vaibhav Jain wrote:
->> Introduce support for Papr nvDimm Specific Methods (PDSM) in papr_scm
->> modules and add the command family to the white list of NVDIMM command
->> sets. Also advertise support for ND_CMD_CALL for the dimm
->> command mask and implement necessary scaffolding in the module to
->> handle ND_CMD_CALL ioctl and PDSM requests that we receive.
-...
->> + *
->> + * Payload Version:
->> + *
->> + * A 'payload_version' field is present in PDSM header that indicates a specific
->> + * version of the structure present in PDSM Payload for a given PDSM command.
->> + * This provides backward compatibility in case the PDSM Payload structure
->> + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
->> + *
->> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
->> + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
->> + * module when servicing the PDSM envelope checks the 'payload_version' and then
->> + * uses 'payload struct version' == MIN('payload_version field',
->> + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
->> + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
->> + * struct in returned 'payload_version' field.
->
-> FWIW many people believe using a size rather than version is more sustainable.
-> It is expected that new payload structures are larger (more features) than the
-> previous payload structure.
->
-> I can't find references at the moment through.
 
-I think clone_args is a good modern example:
+Here are a couple of fixes and an extra tracepoint for AF_RXRPC:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/sched.h#n88
+ (1) Calculate the RTO pretty much as TCP does, rather than making
+     something up, including an initial 4s timeout (which causes return
+     probes from the fileserver to fail if a packet goes missing), and add
+     backoff.
 
-cheers
+ (2) Fix the discarding of out-of-order received ACKs.  We mustn't let the
+     hard-ACK point regress, nor do we want to do unnecessary
+     retransmission because the soft-ACK list regresses.  This is not
+     trivial, however, due to some loose wording in various old protocol
+     specs, the ACK field that should be used for this sometimes has the
+     wrong information in it.
+
+ (3) Add a tracepoint to log a discarded ACK.
+
+[V2] Fixed a "Fixes" line in a commit message.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	rxrpc-fixes-20200520
+
+and can also be found on the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David
+---
+David Howells (1):
+      rxrpc: Fix ack discard
+
+
+ fs/afs/fs_probe.c            |  18 ++--
+ fs/afs/vl_probe.c            |  18 ++--
+ include/net/af_rxrpc.h       |   2 +-
+ include/trace/events/rxrpc.h |  52 +++++++++---
+ net/rxrpc/Makefile           |   1 +
+ net/rxrpc/ar-internal.h      |  25 ++++--
+ net/rxrpc/call_accept.c      |   2 +-
+ net/rxrpc/call_event.c       |  22 ++---
+ net/rxrpc/input.c            |  44 ++++++++--
+ net/rxrpc/misc.c             |   5 --
+ net/rxrpc/output.c           |   9 +-
+ net/rxrpc/peer_event.c       |  46 ----------
+ net/rxrpc/peer_object.c      |  12 +--
+ net/rxrpc/proc.c             |   8 +-
+ net/rxrpc/rtt.c              | 195 +++++++++++++++++++++++++++++++++++++++++++
+ net/rxrpc/sendmsg.c          |  26 ++----
+ net/rxrpc/sysctl.c           |   9 --
+ 17 files changed, 335 insertions(+), 159 deletions(-)
+ create mode 100644 net/rxrpc/rtt.c
+
+
