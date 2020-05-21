@@ -2,137 +2,139 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6871FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA502075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34ECF207C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:10:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n5JQIU7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgEUAKT (ORCPT
+        id S1726839AbgEUAKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgEUAKS (ORCPT
+        Wed, 20 May 2020 20:10:23 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48434 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgEUAKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:10:18 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD09C061A0E;
-        Wed, 20 May 2020 17:10:18 -0700 (PDT)
-Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <a.darwish@linutronix.de>)
-        id 1jbYmC-0006mO-Af; Thu, 21 May 2020 02:09:32 +0200
-Date:   Thu, 21 May 2020 02:09:30 +0200
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= 
-        <ckoenig.leichtzumerken@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v1 13/25] dma-buf: Use sequence counter with associated
- wound/wait mutex
-Message-ID: <20200521000930.GA359643@debian-buster-darwi.lab.linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-14-a.darwish@linutronix.de>
- <e28c251e-5771-598c-37dd-c6be2de4b9e1@gmail.com>
+        Wed, 20 May 2020 20:10:21 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L0ADbv039943;
+        Wed, 20 May 2020 19:10:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590019813;
+        bh=ST8Yem8ialn5243k7YW5yffQxZOhgWPUoOpWLgWxyRw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=n5JQIU7UxlsY3NiSOI8nNHRycPR0E7RssEID8o8Vlhkzd2RH0zm+qlXm5YU6NxBZ7
+         2UrA9QiJU5E0sLHe9XF6/tSveVbY0pZW1kfgFhnaSveg9YBwExPch5wfCTMkKtyG/I
+         UGsUQILAlsEY4tjmEseKrk0cYOAm7VeY/wLqhM9o=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04L0ADaR053697
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 19:10:13 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 19:10:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 19:10:13 -0500
+Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L0ADTr065310;
+        Wed, 20 May 2020 19:10:13 -0500
+Received: from localhost ([10.250.48.148])
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 04L0ACKH084879;
+        Wed, 20 May 2020 19:10:12 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH v2 1/4] remoteproc: Introduce rproc_of_parse_firmware() helper
+Date:   Wed, 20 May 2020 19:10:03 -0500
+Message-ID: <20200521001006.2725-2-s-anna@ti.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200521001006.2725-1-s-anna@ti.com>
+References: <20200521001006.2725-1-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e28c251e-5771-598c-37dd-c6be2de4b9e1@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020, Christian König wrote:
-> Am 19.05.20 um 23:45 schrieb Ahmed S. Darwish:
-> > A sequence counter write side critical section must be protected by some
-> > form of locking to serialize writers. If the serialization primitive is
-> > not disabling preemption implicitly, preemption has to be explicitly
-> > disabled before entering the sequence counter write side critical
-> > section.
-> >
-> > The dma-buf reservation subsystem uses plain sequence counters to manage
-> > updates to reservations. Writer serialization is accomplished through a
-> > wound/wait mutex.
-> >
-> > Acquiring a wound/wait mutex does not disable preemption, so this needs
-> > to be done manually before and after the write side critical section.
-> >
-> > Use the newly-added seqcount_ww_mutex_t instead:
-> >
-> >    - It associates the ww_mutex with the sequence count, which enables
-> >      lockdep to validate that the write side critical section is properly
-> >      serialized.
-> >
-> >    - It removes the need to explicitly add preempt_disable/enable()
-> >      around the write side critical section because the write_begin/end()
-> >      functions for this new data type automatically do this.
-> >
-> > If lockdep is disabled this ww_mutex lock association is compiled out
-> > and has neither storage size nor runtime overhead.
->
-> Mhm, is the dma_resv object the only user of this new seqcount_ww_mutex
-> variant ?
->
-> If yes we are trying to get rid of this sequence counter for quite some
-> time, so I would rather invest the additional time to finish this.
->
+Add a new helper function rproc_of_parse_firmware() to the remoteproc
+core that can be used by various remoteproc drivers to look up the
+the "firmware-name" property from a rproc device node. This property
+is already being used by multiple drivers, so this helper can avoid
+repeating equivalent code in remoteproc drivers.
 
-In this patch series, each extra "seqcount with associated lock" data
-type costs us, exactly:
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+v2: New patch
 
-  - 1 typedef definition, seqcount_ww_mutex_t
-  - 1 static initializer, SEQCNT_WW_MUTEX_ZERO()
-  - 1 runtime initializer, seqcount_ww_mutex_init()
+ drivers/remoteproc/remoteproc_core.c     | 23 +++++++++++++++++++++++
+ drivers/remoteproc/remoteproc_internal.h |  2 ++
+ 2 files changed, 25 insertions(+)
 
-Definitions for the typedef and the 2 initializers above are
-template-code one liners.
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 9f04c30c4aaf..c458b218d524 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1034,6 +1034,29 @@ rproc_of_resm_mem_entry_init(struct device *dev, u32 of_resm_idx, size_t len,
+ }
+ EXPORT_SYMBOL(rproc_of_resm_mem_entry_init);
+ 
++/**
++ * rproc_of_parse_firmware() - parse and return the firmware-name
++ * @dev: pointer on device struct representing a rproc
++ * @index: index to use for the firmware-name retrieval
++ * @fw_name: pointer to a character string, in which the firmware
++ *           name is returned on success and unmodified otherwise.
++ *
++ * This is an OF helper function that parses a device's DT node for
++ * the "firmware-name" property and returns the firmware name pointer
++ * in @fw_name on success.
++ *
++ * Return: 0 on success, or an appropriate failure.
++ */
++int rproc_of_parse_firmware(struct device *dev, int index, const char **fw_name)
++{
++	int ret;
++
++	ret = of_property_read_string_index(dev->of_node, "firmware-name",
++					    index, fw_name);
++	return ret ? ret : 0;
++}
++EXPORT_SYMBOL(rproc_of_parse_firmware);
++
+ /*
+  * A lookup table for resource handlers. The indices are defined in
+  * enum fw_resource_type.
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index 4ba7cb59d3e8..e5341e91d2fc 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -28,6 +28,8 @@ struct rproc_debug_trace {
+ void rproc_release(struct kref *kref);
+ irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
+ void rproc_vdev_release(struct kref *ref);
++int rproc_of_parse_firmware(struct device *dev, int index,
++			    const char **fw_name);
+ 
+ /* from remoteproc_virtio.c */
+ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id);
+-- 
+2.26.0
 
-The logic which automatically disables preemption upon entering a
-seqcount_ww_mutex_t write side critical section is also already shared
-with seqcount_mutex_t and any future, preemptible, associated lock.
-
-So, yes, dma-resv is the only user of seqcount_ww_mutex.
-
-But even in that case, given the one liner template code nature of
-seqcount_ww_mutex_t logic, it does not make sense to block the dma_resv
-and amdgpu change until at some point in the future the sequence counter
-is completely removed.
-
-**If and when** the sequence counter gets removed, please just remove
-the seqcount_ww_mutex_t data type with it. It will be extremely simple.
-
-> Regards,
-> Christian.
->
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
