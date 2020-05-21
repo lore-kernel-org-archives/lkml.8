@@ -2,119 +2,205 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 885E020748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9E320748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iw1k6LzK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dXPScmAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgEUV4P (ORCPT
+        id S1730542AbgEUV5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40438 "EHLO
+        Thu, 21 May 2020 17:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730402AbgEUV4P (ORCPT
+        with ESMTP id S1729370AbgEUV5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:56:15 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7547FC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:56:15 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id f6so3961133pgm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:56:15 -0700 (PDT)
+        Thu, 21 May 2020 17:57:47 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A731DC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:57:47 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t8so1882068pju.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zj7wlorajH5QEGOvmukt5Ng2y7zQi2o9lvN+n4B6Bus=;
-        b=iw1k6LzKCJq6WK0AdVAgBoDK+EWjot2oTJVT/KHAX7p+eCdQiphbcxF431SUFyUI4i
-         OyNpBrzqs2JiBAUnOWvTfHFcLdrtbDfwHI0P8kYg1cNuFbcPVY16iDo0GxR2hmo1uu6A
-         4SJ2dB17qspfCpVczaxcW/+IpJ0p3zGfCZKBk=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TSxKnnFyDzr5TIHifuloj5+MkU6+ljp348ta4rzKVFY=;
+        b=dXPScmAfnnkj9oY/tpSN6s3fJBAyh5t4mLgKXCVK2k9C2HWkYwHDlsyOSnA66Lc1wL
+         DB+PCswLKQvb4ERWbQ7d0MauTLwD7VmEJpoB7iOvzLNhLgb+v9MM2ALex8qL7yejKFC8
+         zvEv3AJh5U/NYpcqCbu1Ca5zJfJwz3GiybXXZvONi1eKvlg60oi01n7PO7EABV7ACRWG
+         QBARStGvuBoTIjbo4OPEhppS9Qm8kjrvgzbdn6C35l+0fF14fiS/8liemSwfPkOZ6jW8
+         bz1oCACwbRm+9e2WjFxNJ3h4LDE8kksrFNNiV75bZu5rWCaREs3htKCCpPLgzd2IelvM
+         bGxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zj7wlorajH5QEGOvmukt5Ng2y7zQi2o9lvN+n4B6Bus=;
-        b=aSGSgV8EUG5//POjoH6nYatDpD+Wxp/yTvwv2Iq4LVdcsHeR/D+TuuAORQkSc21C1T
-         kKTbnhxkvO/5dT90I9hXD6idlml8I7m/rFM6oH9bMUCiXfB/4p6ORak85h0ONsB5ht3Q
-         3U6B7D07vfeeIIF8q4faXUz3Fh1mVdzksgBwZJNi6ORecJ0fmCLJ0EcYoVBMzVM7yVnM
-         TLtfnRuUO6D/sGdb5/+g73nDRyY8SdfvSsb3Xxvh5voWndK6rtA5GmyXC3czIlsahGWA
-         +4U+WY02jqSCUJN4smRrdgj6UETtGxw/A+vyQqoXhrFdw8H02otHXQZgRUsmLnmqX7XF
-         cYTw==
-X-Gm-Message-State: AOAM533G00gA1kE/NF0i42WQqGRNcnvKKfCzyHa7iFqD7Dtb6avUxqzq
-        X8EXl22VxO3D/gZIcGfmmJclsg==
-X-Google-Smtp-Source: ABdhPJzCsFW0nm2Qct8yq42nWr1ZTuEp7ugkiSONj0p2gPfJLVqnYoYCLzuzUC+EeKuwrFn+US6BPQ==
-X-Received: by 2002:a63:715a:: with SMTP id b26mr10709591pgn.433.1590098175026;
-        Thu, 21 May 2020 14:56:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y14sm5137607pjr.31.2020.05.21.14.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 14:56:14 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:56:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] pstore/ram: Undefine the correct macro after a
- recent renaming
-Message-ID: <202005211456.F9125761@keescook>
-References: <20200521205223.175957-1-tyhicks@linux.microsoft.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TSxKnnFyDzr5TIHifuloj5+MkU6+ljp348ta4rzKVFY=;
+        b=beU7nQjveDRC8Xr+kVlWSRnm0rShEUzjKtCx4QWxPYjsYsU3DwuPw3EYicDLkM1BSj
+         Zj2eiRZatmi/LRpUJTC82mp0oE819IuH4jTvi7DJpIyU/SIhf6/t0ofSgNZa+09eLgsH
+         IL0qS7d9vAe3vHtPXSWaKT460zkxzRc9ewVka+sjXZXjaMQu+dRe1JqsFFc2jGH6vvX+
+         6Jj9esInQVNSsNsQVG9s2PrK7BnpWch+1J/6QPkUae8XpJbXaBakgzjof3QXiS5ixPZ4
+         aRIV7kSgDfUd2J/NKMnGNzVyxxYgwivJ7tThp7+VjzNZ9eQotj/9Ho0P/lsbNs+TzinK
+         PSHA==
+X-Gm-Message-State: AOAM530H7BpU/eVej8LUU3N5Gplu3au967otlwx4RAkCgYTq2E2OM8Bp
+        2PIHAsxrSd2XhNmMNaW/Km5IzEf1MLDIJDhL6MhSDQ==
+X-Google-Smtp-Source: ABdhPJwcxYwlDtUvYmfrQ2zA/sDeHoaekf+9/G8kXzhN7oimGZllsEK1KOn7uZZQ+Ay0tgfc5cAMR+k+4Sfd9KxH1yU=
+X-Received: by 2002:a17:90b:4c47:: with SMTP id np7mr679103pjb.101.1590098266861;
+ Thu, 21 May 2020 14:57:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521205223.175957-1-tyhicks@linux.microsoft.com>
+References: <10f4fb0b-1012-b0e6-af05-0aa5a906de21@redhat.com>
+ <20200520193637.6015-1-ndesaulniers@google.com> <CAK7LNAS_PMz9r3e1UcuM+r18JC2KeM2RqGOms1u3kVzN_N1MmA@mail.gmail.com>
+In-Reply-To: <CAK7LNAS_PMz9r3e1UcuM+r18JC2KeM2RqGOms1u3kVzN_N1MmA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 21 May 2020 14:57:34 -0700
+Message-ID: <CAKwvOd=jOr4ZaLx-dSNTqZnGRATY1PZktUfu4JGWKRwRH=Ujnw@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: support compressed debug info
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        David Blaikie <blakie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 03:52:23PM -0500, Tyler Hicks wrote:
-> Undefine parse_u32, instead of parse_size, as the name of the macro
-> recently changed but the #undef directive wasn't updated at that time.
-> 
-> Fixes: 6b31e99b85b0 ("pstore/ram: Refactor DT size parsing")
-> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> ---
-> 
-> Hi Kees - Here's a minor fixup that I noticed was needed while reviewing
-> your for-next/pstore branch. It is only build-tested but I think that's
-> all that's needed here.
+On Wed, May 20, 2020 at 7:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> > Suggested-by: Fangrui Song <maskray@google.com>
+>
+>
+> Suggested-by -> Reviewed-by
+>
+> https://patchwork.kernel.org/patch/11524939/#23349551
 
-Whoops! Thanks; applied!
+Yes, my mistake.
 
--Kees
+> > Suggested-by: Nick Clifton <nickc@redhat.com>
+>
+>
+> I do not know where this tag came from.
+>
+> Nick Clifton taught us the version rule of binutils,but did not state
+> anything about this patch itself.
+>
+> https://patchwork.kernel.org/patch/11524939/#23355175
+>
+>
+> > Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+>
+> I do not see the source of this tag, either...
 
-> 
-> Tyler
-> 
->  fs/pstore/ram.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index df8965817c7b..ca6d8a867285 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -674,7 +674,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->  	parse_u32("flags", pdata->flags, 0);
->  	parse_u32("max-reason", pdata->max_reason, pdata->max_reason);
->  
-> -#undef parse_size
-> +#undef parse_u32
->  
->  	/*
->  	 * Some old Chromebooks relied on the kernel setting the
-> -- 
-> 2.25.1
-> 
+Not all contributions to open source need to be in the form of
+patches.  Both Sedat and Nick gave suggestions which ultimately
+informed the contents of this patch.  They should be rewarded for
+their efforts, and incentivized to help improve the code base further.
+I think suggested by tags are a good way to do that; but if it's
+against a written convention or if you still disagree, it's not the
+end of the world to me, and you may drop those tags from the v3.
 
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -225,6 +225,21 @@ config DEBUG_INFO_REDUCED
+> >           DEBUG_INFO build and compile times are reduced too.
+> >           Only works with newer gcc versions.
+> >
+> > +config DEBUG_INFO_COMPRESSED
+> > +       bool "Compressed debugging information"
+> > +       depends on DEBUG_INFO
+> > +       depends on $(cc-option,-gz=zlib)
+> > +       depends on $(as-option,-Wa,--compress-debug-sections=zlib)
+>
+> This does not work. (always false)
+
+Technically, always true. `-Wa` disables all warnings from the
+assembler.  Also, I did test this via `make menuconfig`.
+
+> You cannot enable this option.
+>
+> The comma between -Wa and --compress-debug-sections=zlib
+> is eaten by Kconfig parser because commas are delimiters
+> of function parameters.
+>
+>
+> Please write like this.
+>
+>     depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
+
+You're right, I knew this bug forgot. Will fix in v3.
+
+> > +       depends on $(ld-option,--compress-debug-sections=zlib)
+> > +       help
+> > +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
+> > +         5.0+, binutils 2.26+, and zlib.
+> > +
+> > +         Users of dpkg-deb via scripts/package/builddeb may
+> > +         wish to set the $KDEB_COMPRESS env var to "none" to avoid recompressing
+> > +         the debug info again with a different compression scheme, which can
+> > +         result in larger binaries.
+>
+> No. This is not correct.
+>
+> CONFIG_DEBUG_INFO_COMPRESSED compresses the only debug info part.
+> The other parts still get by benefit from the default KDEB_COMPRESS=xz.
+>
+>
+> The numbers are here:
+>
+>
+> CONFIG_DEBUG_INFO_COMPRESSED=y
+> -rw-r--r-- 1 masahiro masahiro 209077584 May 21 11:19
+> linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-26_amd64.deb
+>
+>
+> CONFIG_DEBUG_INFO_COMPRESSED=y and KDEB_COMPRESS=none
+> -rw-r--r-- 1 masahiro masahiro 643051712 May 21 11:22
+> linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-27_amd64.deb
+>
+>
+> CONFIG_DEBUG_INFO_COMPRESSED=n
+> -rw-r--r-- 1 masahiro masahiro 112200308 May 21 11:40
+> linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-30_amd64.deb
+>
+>
+>
+>
+> For the deb package size perspective,
+> it is better to keep KDEB_COMPRESS as default.
+>
+> The main motivation for changing KDEB_COMPRESS
+> is the build speed.  (see commit 1a7f0a34ea7d05)
+>
+>
+>
+>
+> CONFIG_DEBUG_INFO_COMPRESSED has a downside
+> for the debug deb package, but we need to accept it.
+
+Ah, I see. Thank you for those measurements.  I'll send a v3 with
+fixed up help text, but ultimately, I don't really care what it says
+here.  Please feel empowered to reword it should you choose to accept
++ apply it.
 -- 
-Kees Cook
+Thanks,
+~Nick Desaulniers
