@@ -2,109 +2,204 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F19C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2763C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D97020814
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:25:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n4N7mbnz"
+	by mail.kernel.org (Postfix) with ESMTP id A8F09206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbgEUWZ5 (ORCPT
+        id S1730711AbgEUW0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:25:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730381AbgEUWZ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:25:57 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C437DC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:25:56 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id z1so8641783qvd.23
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=IcMIWpTIuJhOXe3roKCgk3KWh3umIrVN5sjlOXmENmE=;
-        b=n4N7mbnzd+X7RmLijocF1fab6W7WtoTITGMbGY3Qfn/byG9EcJvqHVnka2hmpyYVFs
-         rrHb82CqiSaztzWuWl0w7CIIP8DtJXCCjTxqcM3hq5jGM3rBWTv5rANe3FfJKLNYxwot
-         7eDFZbmuU2AtPzrRNgSiW0T2vIRfOnzNVfzTu4qo4fekYNBE/X9INuOeJb9+AeMBy6YY
-         nvB4yQSetAr+59/y4rOaLDupbgJosev9HUrAX1n04wBq7Ubd7S309nMztfO9TSkHpmqO
-         dQ82SxMi/0nL3nX6HoqKVmKBkqDmSlVI0Ny3VKBsV0YmRdXAIeC3EFMOMwKMf/5Y7ogg
-         Ry+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=IcMIWpTIuJhOXe3roKCgk3KWh3umIrVN5sjlOXmENmE=;
-        b=L/nh+fX89v2u3zrpswhOBSCV5Gq4L/zbwmUAH1nHmuh2tuwBJZoWh4C/tGwrI4cbly
-         ooI8WMWl3raIgZm/9VsnT0fWUUkV/OC8hm4wK7OBKpp+lT9cfPZFt86+8xmN37TtiCXj
-         +k4egXmw2dmwWOqdYeCwDCktTQp5c+hCKI2eKjbSAIXxy6DaMxwPmj3+OflMGSXpZtj8
-         gHo86IIs9Q3SBNf7fTyyj3NVo3ykwuhwEVgVz2DRR+5RwM/myERFNQMf7XBixziDemLW
-         SAseySxMSk5ID2ohNxAUssdn5UMpZDmOble0ax6MG6FXUdA0urts6xng26iu25rLN0nW
-         1FsQ==
-X-Gm-Message-State: AOAM5311N/sDBArs7dGNU13/Nz6bMzsLwI+MY5EyZcQynIIUJK6ZEHhZ
-        HSa5dY5b+SbqBtzl4fCO/X5guMbLeNtB
-X-Google-Smtp-Source: ABdhPJy7zMpHMw3vtshTDzUFBDK8SKAjdIyya1+LREbYnNfVWw7HiFYhgZ5eGU1W+DninwgUHDkpcJ8rEx/b
-X-Received: by 2002:ad4:43e3:: with SMTP id f3mr908752qvu.115.1590099955922;
- Thu, 21 May 2020 15:25:55 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:25:51 -0700
-Message-Id: <20200521222551.259804-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-Subject: [PATCH] proc.5: add "wf" to VmFlags in /proc/[pid]/smaps
-From:   Ian Rogers <irogers@google.com>
-To:     Rik van Riel <riel@redhat.com>, mtk.manpages@gmail.com
-Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org, nilal@redhat.com,
-        Florian Weimer <fweimer@redhat.com>,
-        "=?UTF-8?q?Colm=20MacC=C3=A1rtaigh?=" <colm@allcosts.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Ian Rogers <irogers@google.com>
+        Thu, 21 May 2020 18:26:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:2767 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730381AbgEUW0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 18:26:15 -0400
+IronPort-SDR: mXppxR+o1pIIF+7uwP2cZyoXkhot2UJfE3eadQdON8bIbImSVUSrfLQkdWKYf+/qbo7wF5Mlhg
+ waOpF5GUBxUg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 15:26:15 -0700
+IronPort-SDR: 2mTeLmnU3/Kfnrn+4Xc/jiPTqnzmxEh1PYS/rDfrOfCo2vLWZaQXAdXO/hlBAk8F/jwtO1er++
+ ltPXcl6+M1Jg==
+X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
+   d="scan'208";a="255431509"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.254.97.114])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 15:26:13 -0700
+Message-ID: <939d1f9031fc4be6c0a8745938322d2722d977f1.camel@linux.intel.com>
+Subject: Re: [RFC][PATCH 4/5] thermal: Add support for setting polling
+ interval
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Date:   Thu, 21 May 2020 15:26:11 -0700
+In-Reply-To: <3898cf1a-8e4c-def4-73f7-9ef4954e88b8@linaro.org>
+References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
+         <20200504181616.175477-5-srinivas.pandruvada@linux.intel.com>
+         <c2aad548-32c2-f008-5ce4-97b76a19271d@linaro.org>
+         <b74767964b028c297840aefc166e2384333afd3b.camel@linux.intel.com>
+         <3898cf1a-8e4c-def4-73f7-9ef4954e88b8@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents a flag added in the following kernel commit:
+On Tue, 2020-05-19 at 12:25 +0200, Daniel Lezcano wrote:
+> On 19/05/2020 01:46, Srinivas Pandruvada wrote:
+> > On Mon, 2020-05-18 at 18:51 +0200, Daniel Lezcano wrote:
+> > > On 04/05/2020 20:16, Srinivas Pandruvada wrote:
+> > > > Add new attribute in the thermal syfs for setting temperature
+> > > > sampling
+> > > > interval when CONFIG_THERMAL_USER_EVENT_INTERFACE is defined.
+> > > > The
+> > > > default
+> > > > value is 0, which means no polling.
+> > > > 
+> > > > At this interval user space will get an event
+> > > > THERMAL_TEMP_SAMPLE
+> > > > with
+> > > > temperature sample. This reuses existing polling mecahnism when
+> > > > polling
+> > > > or passive delay is specified during zone registry. To avoid
+> > > > interference
+> > > > with passive and polling delay, this new polling attribute
+> > > > can't be
+> > > > used
+> > > > for those zones.
+> > > 
+> > > The userspace can get the temperature whenever it wants via the
+> > > temperature file. The polling is designed for a specific hardware
+> > > and
+> > > the slope of the temperature graphic.
+> > > 
+> > > The userspace has the alternative of reading the temperature
+> > > based on
+> > > its own timer or wait for (and stick to) the thermal framework
+> > > sampling
+> > > rate. Adding a notification in the update is enough IMO.
+> > > 
+> > The problem with this approach is that the user can't change
+> > sampling
+> > interval. Those polling intervals are fixed during thermal-zone
+> > register. Is there any way to change those defaults from user
+> > space?
+> 
+> No, we can't but the userspace can decide when to read the
+> temperature
+> (via sysfs or netlink) and thus decide its own sampling rate.
 
-commit d2cd9ede6e193dd7d88b6d27399e96229a551b19
-Author: Rik van Riel <riel@redhat.com>
-Date:   Wed Sep 6 16:25:15 2017 -0700
+Yes, if we poll for temperature from user space, no change is required
+neighter netlink nor kfifo.
 
-    mm,fork: introduce MADV_WIPEONFORK
+The average time to read CPU temperature and convert to int from sysfs
+takes 45us vs 7us for push via Kfifo. I haven't looked at your patches
+and checked this time. If it is comparable then netlink is better.
 
-This was already documented in man2/madvise.2 in the commit:
 
-commit c0c4f6c29c494c466f3a2a6273c5b55b76a72927
-Author: Rik van Riel <riel@redhat.com>
-Date:   Tue Sep 19 20:32:00 2017 +0200
+> 
+> Otherwise, we are talking about an userspace governor, so the
+> platform
+> is setup with the desired sampling rate + userspace governor.
+> 
+> > Kernel can start with some long polling interval and user space can
+> > change close to some trip.
+> 
+> Ok, let me rephrase it. This (big) comment encompass also patch 3/5.
+> 
+> I understood now the initial need of adding user trip points.
+> 
+> There are platforms where the interrupt mode does not exist so
+> setting
+> an user trip point does not set the interrupt for the closer
+> temperature, hence we end up with a kernel sampling rate and in this
+> case adding a trip point + new user sampling rate is pointless as the
+> userspace can poll the temperature at its convenient rate.
+> 
+> If we summarize the different combinations we have:
+> 
+> 1. monitoring : interrupt mode, mitigation : interrupt mode
+> 
+> There are no thermal zone update until an interrupt fires. The
+> mitigation is based on trip point crossed.
 
-    madvise.2: Document MADV_WIPEONFORK and MADV_KEEPONFORK
+Yes. Basically daemon sleeps, till it gets a netlink notification
+currently.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- man5/proc.5 | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> 2. monitoring : interrupt mode, mitigation : polling
+> 
+> There are no thermal zone update until an interrupt fires. The
+> mitigation happens with a sampling rate specified with the polling
+> rate.
+> 
+More complex than this. interrupt fires but it will fire flood for any
+change (+/- around threshold) so after the first trigger, just disable
+interrupt for an interval and start polling from user space as this is
+more efficient.
 
-diff --git a/man5/proc.5 b/man5/proc.5
-index 46d603f28..3e5b91af0 100644
---- a/man5/proc.5
-+++ b/man5/proc.5
-@@ -2020,6 +2020,7 @@ encoded using the following two-letter codes:
-     ht  - area uses huge tlb pages
-     nl  - non-linear mapping
-     ar  - architecture specific flag
-+    wf  - wipe on fork
-     dd  - do not include area into core dump
-     sd  - soft-dirty flag
-     mm  - mixed map area
--- 
-2.27.0.rc0.183.gde8f92d652-goog
+> 3. monitoring : polling, mitigation : polling
+> 
+> The thermal zone is updated at the polling rate, the mitigation
+> occurs
+> with an update at the second polling rate.
+> 
+Yes.
+
+> IIUC, the RFC proposes to add a new type of temperature threshold,
+> followed a new polling rate to update the userspace.
+> 
+> IMHO, it is not a good thing to delegate to the kernel what the
+> userspace can handle easily.
+> 
+> I suggest:
+> 
+>  - Not add another polling rate. If the thermal zone has a polling
+> rate
+> or supports the interrupt mode, then the user trip point setup
+> succeed
+> otherwise it fails and up to the userspace to read the temperature at
+> its convenient rate. (Note multiple process may want to get
+> temperature,
+> so one should not set the rate of others).
+
+Fine.
+
+> 
+>  - Not add another temp threshold structure but add a new trip type
+> "user" and keep using the existing trip structures, so the
+> notification
+> can happen in the handle_trip_point function. The sysfs only reflects
+> the setup via the "trip_point_x_hyst", "trip_point_0_temp",
+> "trip_point_x_type"
+
+Fine. It is better than what we re-purpose a passive trip currently.
+
+> 
+>  - Do not use sysfs for setup but rely on the genetlink for one
+> message
+> setup instead of multiple sysfs file writing. Adding a trip point
+> will
+
+Fine.
+
+> 
+> 
+> What do you think?
+Looks good.
+
+Thanks,
+Srinivas
+
+> 
+> 
 
