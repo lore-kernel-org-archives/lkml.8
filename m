@@ -2,141 +2,306 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC03C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFAF20756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590062606;
-	bh=LpB02I5eBFUMwM9seaNk4TqXui3r3ylDezMHPo1rCfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UX7/wdUepAG3ORWILt8O1PiEhYSSUJays5/PIy96+FCK2VKdkM8YszOr33MZ0WkVg
-	 LKfhvQ/ewOGA1EwBQJgxRYNJkMEBRAQv8bC25JV3I0H9M1rgKUzeqxwdhxzceQwUpV
-	 3MmfqNqJiUtC/SwlkqUKyJ+sQwHDRnEg43Ms6BoY=
+	by mail.kernel.org (Postfix) with ESMTP id 01C6520721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbgEUMDZ (ORCPT
+        id S1729291AbgEUMDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbgEUMDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:03:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63AB32078B;
-        Thu, 21 May 2020 12:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590062604;
-        bh=LpB02I5eBFUMwM9seaNk4TqXui3r3ylDezMHPo1rCfI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qNnEc0kho/7Iw6ReNSlHYUFIrUWSNjmPHvo/jqD7RFQ6lBXsowh1kPCgr7APuHFe5
-         XdU+OQS63BCUUqy2HbkvO2mp+8ZWUr5FyWbLKRGjAAS98VRfiiKbvOMVIZxcqm2AuT
-         8vYO5fwEUmjVxVfCCcePw9q0bt5V4Z4RAmJdnLcQ=
-Date:   Thu, 21 May 2020 14:03:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Vinayak Menon <vinmenon@codeaurora.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Liang Chen <cl@rock-chips.com>
-Subject: Re: [PATCH] kthread: Use TASK_IDLE state for newly created kernel
- threads
-Message-ID: <20200521120322.GA3126694@kroah.com>
-References: <1589975710-9283-1-git-send-email-pkondeti@codeaurora.org>
- <20200520181858.GA343493@kroah.com>
- <20200521013544.GC31725@codeaurora.org>
- <20200521055639.GA2337399@kroah.com>
- <20200521095125.GD31725@codeaurora.org>
+        Thu, 21 May 2020 08:03:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48312 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729100AbgEUMDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:03:35 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 2E32D2A333F
+Subject: Re: [PATCH v3 2/4] media: v4l2-common: add helper functions to call
+ s_stream() callbacks
+To:     Helen Koike <helen.koike@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
+        skhan@linuxfoundation.org, niklas.soderlund@ragnatech.se,
+        mchehab@kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+References: <20200415013044.1778572-1-helen.koike@collabora.com>
+ <20200415013044.1778572-3-helen.koike@collabora.com>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <31557623-2b8c-6cfe-19f7-7854ed51bc86@collabora.com>
+Date:   Thu, 21 May 2020 14:03:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521095125.GD31725@codeaurora.org>
+In-Reply-To: <20200415013044.1778572-3-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 03:21:25PM +0530, Pavan Kondeti wrote:
-> On Thu, May 21, 2020 at 07:56:39AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, May 21, 2020 at 07:05:44AM +0530, Pavan Kondeti wrote:
-> > > On Wed, May 20, 2020 at 08:18:58PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Wed, May 20, 2020 at 05:25:09PM +0530, Pavankumar Kondeti wrote:
-> > > > > When kernel threads are created for later use, they will be in
-> > > > > TASK_UNINTERRUPTIBLE state until they are woken up. This results
-> > > > > in increased loadavg and false hung task reports. To fix this,
-> > > > > use TASK_IDLE state instead of TASK_UNINTERRUPTIBLE when
-> > > > > a kernel thread schedules out for the first time.
-> > > > > 
-> > > > > Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
-> > > > > ---
-> > > > >  kernel/kthread.c | 6 +++---
-> > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > > > 
-> > > > > diff --git a/kernel/kthread.c b/kernel/kthread.c
-> > > > > index bfbfa48..b74ed8e 100644
-> > > > > --- a/kernel/kthread.c
-> > > > > +++ b/kernel/kthread.c
-> > > > > @@ -250,7 +250,7 @@ static int kthread(void *_create)
-> > > > >  	current->vfork_done = &self->exited;
-> > > > >  
-> > > > >  	/* OK, tell user we're spawned, wait for stop or wakeup */
-> > > > > -	__set_current_state(TASK_UNINTERRUPTIBLE);
-> > > > > +	__set_current_state(TASK_IDLE);
-> > > > >  	create->result = current;
-> > > > >  	/*
-> > > > >  	 * Thread is going to call schedule(), do not preempt it,
-> > > > > @@ -428,7 +428,7 @@ static void __kthread_bind(struct task_struct *p, unsigned int cpu, long state)
-> > > > >  
-> > > > >  void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
-> > > > >  {
-> > > > > -	__kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
-> > > > > +	__kthread_bind_mask(p, mask, TASK_IDLE);
-> > > > >  }
-> > > > >  
-> > > > >  /**
-> > > > > @@ -442,7 +442,7 @@ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
-> > > > >   */
-> > > > >  void kthread_bind(struct task_struct *p, unsigned int cpu)
-> > > > >  {
-> > > > > -	__kthread_bind(p, cpu, TASK_UNINTERRUPTIBLE);
-> > > > > +	__kthread_bind(p, cpu, TASK_IDLE);
-> > > > >  }
-> > > > >  EXPORT_SYMBOL(kthread_bind);
-> > > > 
-> > > > It's as if people never read mailing lists:
-> > > > 	https://lore.kernel.org/r/DM6PR11MB3531D3B164357B2DC476102DDFC90@DM6PR11MB3531.namprd11.prod.outlook.com
-> > > > 
-> > > > Given that this is an identical resend of the previous patch, why are
-> > > > you doing so, and what has changed since that original rejection?
-> > > > 
-> > > I did not know that it is attempted before. Thanks for pointing to the
-> > > previous discussion. 
-> > > 
-> > > We have seen hung task reports from customers and it is due to a downstream
-> > > change which create bunch of kernel threads for later use.
-> > 
-> > Do you have a pointer to that specific change?
-> > 
-> Here it is
-> https://source.codeaurora.org/quic/la/kernel/msm-4.19/commit/drivers/staging/android/ion/ion_system_heap.c?h=LA.UM.8.12.r1-11300-sm8250.0&id=0734b477f1e77cb9f91f5e5c0d7742d3113f2cd3
+Hi
 
-Ick, ion system heaps :(
+On 15.04.20 03:30, Helen Koike wrote:
+> Add v4l2_pipeline_stream_{enable,disable} helper functions to iterate
+> through the subdevices in a given stream (i.e following links from sink
+> to source) and call .s_stream() callback.
+> 
+> Add stream_count on the subdevice object for simultaneous streaming from
+> different video devices which shares subdevices.
+> 
+> Prevent calling .s_stream(true) if it was already called previously by
+> another stream.
+> 
+> Prevent calling .s_stream(false) from one stream when there are still
+> others active.
+> 
+> If .s_stream(true) fails, call .s_stream(false) in the reverse order.
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> ---
+> 
+> Changes in v3:
+> - re-write helpers to use media walkers as in v1, but with
+> v4l2_pipeline_subdevs_get() to reverse the order we call s_stream(true)
+> in subdevices.
+> - rename size to max_size (and update docs) in v4l2_pipeline_subdevs_get() to
+> reflect the meaning of the argument.
+> - add if defined(CONFIG_MEDIA_CONTROLLER) around helpers
+> 
+> Changes in v2:
+> - re-write helpers to not use media walkers
+> 
+>   drivers/media/v4l2-core/v4l2-common.c | 125 ++++++++++++++++++++++++++
+>   include/media/v4l2-common.h           |  43 +++++++++
+>   include/media/v4l2-subdev.h           |   2 +
+>   3 files changed, 170 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> index 9e8eb45a5b03c..2f991a1a57d7c 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -442,3 +442,128 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
+> +
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +
+> +/*
+> + * v4l2_pipeline_subdevs_get - Assemble a list of subdevices in a pipeline
+> + * @subdevs: the array to be filled.
+> + * @max_size: max number of elements that can fit in subdevs array.
+> + *
+> + * Walk from a video node, following links from sink to source and fill the
+> + * array with subdevices in the path.
+> + * The walker performs a depth-first traversal, which means that, in a topology
+> + * sd1->sd2->sd3->vdev, sd1 will be the first element placed in the array.
+> + *
+> + * Return the number of subdevices filled in the array.
+> + */
+> +static int v4l2_pipeline_subdevs_get(struct video_device *vdev,
+> +				     struct media_pipeline *pipe,
+> +				     struct v4l2_subdev **subdevs,
+> +				     unsigned int max_size)
+> +{
+> +	struct media_entity *entity = &vdev->entity;
+> +	struct media_device *mdev = entity->graph_obj.mdev;
+> +	int idx = 0;
+> +	int ret;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +
+> +	if (!pipe->streaming_count) {
+> +		ret = media_graph_walk_init(&pipe->graph, mdev);
+> +		if (ret) {
+> +			mutex_unlock(&mdev->graph_mutex);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	media_graph_walk_start(&pipe->graph, entity);
+> +
+> +	while ((entity = media_graph_walk_next_stream(&pipe->graph))) {
+> +		if (!is_media_entity_v4l2_subdev(entity))
+> +			continue;
+> +		if (WARN_ON(idx >= max_size)) {
+> +			mutex_unlock(&mdev->graph_mutex);
+> +			return -EINVAL;
+> +		}
+> +		subdevs[idx++] = media_entity_to_v4l2_subdev(entity);
+> +	}
+> +
+> +	if (!pipe->streaming_count)
+> +		media_graph_walk_cleanup(&pipe->graph);
+> +
+> +	mutex_unlock(&mdev->graph_mutex);
+> +
+> +	return idx;
+> +}
+> +
+> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
+> +					     struct media_pipeline *pipe)
+> +{
+> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
+> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
+> +	struct v4l2_subdev *sd;
+> +	int i, size, ret;
+> +
+> +	size = v4l2_pipeline_subdevs_get(vdev, pipe,
+> +					 subdevs, ARRAY_SIZE(subdevs));
+> +	if (size <= 0)
+> +		return size;
+> +
+> +	/* Call s_stream() in reverse order to enable sensors last */
+> +	for (i = size - 1; i >= 0; i--) {
+> +		sd = subdevs[i];
+> +		if (sd->stream_count++)
+> +			continue;
+> +		dev_dbg(mdev->dev,
+> +			"enabling stream for '%s'\n", sd->entity.name);
+> +		ret = v4l2_subdev_call(sd, video, s_stream, true);
+> +		if (ret && ret != -ENOIOCTLCMD) {
+> +			sd->stream_count = 0;
+> +			goto err_stream_disable;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err_stream_disable:
+> +	for (i++; i < size; i++) {
+> +		sd = subdevs[i];
+> +		if (--sd->stream_count)
+> +			continue;
+> +		dev_dbg(mdev->dev,
+> +			"disabling stream for '%s'\n", sd->entity.name);
+> +		v4l2_subdev_call(sd, video, s_stream, false);
+> +	};
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_enable);
+> +
+> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
+> +				  struct media_pipeline *pipe)
+> +{
+> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
+> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
+> +	unsigned int i;
+> +	int size;
+> +
+> +	size = v4l2_pipeline_subdevs_get(vdev, pipe,
+> +					 subdevs, ARRAY_SIZE(subdevs));
+> +	if (WARN_ON(size < 0))
+> +		return;
+> +
+> +	/* Call s_stream() in order to disable sensors first */
+> +	for (i = 0; i < size; i++) {
+> +		struct v4l2_subdev *sd = subdevs[i];
+> +
+> +		if (--sd->stream_count)
+> +			continue;
+> +		dev_dbg(mdev->dev,
+> +			"disabling stream for '%s'\n", sd->entity.name);
+> +		v4l2_subdev_call(sd, video, s_stream, false);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_disable);
+> +
+> +#endif /* CONFIG_MEDIA_CONTROLLER */
+> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> index 150ee16ebd811..dc46812120cdc 100644
+> --- a/include/media/v4l2-common.h
+> +++ b/include/media/v4l2-common.h
+> @@ -539,4 +539,47 @@ static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
+>   	buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
+>   }
+>   
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +
+> +/**
+> + * v4l2_pipeline_stream_enable - Call .s_stream(true) callbacks in the stream
+> + * @vdev: Starting video device.
+> + * @pipe: Pipeline this entity belongs to.
+> + *
+> + * Call .s_stream(true) callback in all the subdevices participating in the
+> + * stream, i.e. following links from sink to source.
+> + *
+> + * .s_stream(true) is also called from sink to source, i.e. in a topology
+> + * sd1->sd2->sd3->vdev, .s_stream(true) of sd3 is called first.
+> + *
+> + * Calls to this function can be nested, in which case the same number of
+> + * v4l2_pipeline_stream_disable() calls will be required to disable streaming
+> + * through subdevices in the pipeline.
+> + * The  pipeline pointer must be identical for all nested calls to
+> + * v4l2_pipeline_stream_enable().
+> + */
+> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
+> +					     struct media_pipeline *pipe);
+> +
+> +/**
+> + * v4l2_pipeline_stream_disable - Call .s_stream(false) callbacks in the stream
+> + * @vdev: Starting video device.
+> + * @pipe: Pipeline this entity belongs to.
+> + *
+> + * Call .s_stream(false) callback in all the subdevices participating in the
+> + * stream, i.e. following links from sink to source.
+> + *
+> + * s_stream(false) is called in a reverse order from
+> + * v4l2_pipeline_stream_enable(), i.e. in a topology sd1->sd2->sd3->vdev,
+> + * .s_stream(false) of sd1 is called first.
+> + *
+> + * If multiple calls to v4l2_pipeline_stream_enable() have been made, the same
+> + * number of calls to this function are required to disable streaming through
+> + * subdevices in the pipeline.
+> + */
+> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
+> +				  struct media_pipeline *pipe);
+> +
+> +#endif /* CONFIG_MEDIA_CONTROLLER */
+> +
+>   #endif /* V4L2_COMMON_H_ */
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index a4848de598521..20f913a9f70c5 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -838,6 +838,7 @@ struct v4l2_subdev_platform_data {
+>    * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
+>    *		     device using v4l2_device_register_sensor_subdev().
+>    * @pdata: common part of subdevice platform data
+> + * @stream_count: Stream count for the subdevice.
+>    *
+>    * Each instance of a subdev driver should create this struct, either
+>    * stand-alone or embedded in a larger struct.
+> @@ -869,6 +870,7 @@ struct v4l2_subdev {
+>   	struct v4l2_async_notifier *notifier;
+>   	struct v4l2_async_notifier *subdev_notifier;
+>   	struct v4l2_subdev_platform_data *pdata;
+> +	unsigned int stream_count;
+I wonder if it is worth it to add a new field to v4l2_subdev that is used only
+for the specific case, it seems that except of rkisp1 and vimc, the other drivers you pointed to that
+could use the helpers don't need this counter and they call s_stream without checking if it was already called.
+This counter is updated only by the new introduced functions and not when s_stream is called from other places.
+Maybe we can add a helper that just return the next subdevice connected to the current entity as a source, and drivers can
+iterate it and can decide themselves if s_stream should be called or not
 
-Anyway, why not just use a workqueue for this, why a full kernel thread?
-What does that help with?  It also might fix those crazy hacks you have
-in there for "cpu affinity" as all of that would be taken care of for
-you automatically with a workqueue, right?
+Thanks,
+Dafna
 
-good luck!
-
-greg k-h
+>   };
+>   
+>   
+> 
