@@ -2,126 +2,187 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3D3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77114C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC8D20849
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:52:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cElemK5/"
+	by mail.kernel.org (Postfix) with ESMTP id 5309520885
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgEUQwB (ORCPT
+        id S1728728AbgEUQzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 12:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728546AbgEUQwA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 12:52:00 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85C5C061A0E;
-        Thu, 21 May 2020 09:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=2O1Tg2zoC7nFEvMcg7+Gz3j7SsEauO9Urp+9H16pJrI=; b=cElemK5/V2BTVGAUY1OEd8YFBE
-        wVe6bTbyqcTfFhBPQQ94dhs6L3uc7xHKr8Igx9ZCou9LCI0vJh9N6RCzGgEoLHj+rzG0YS9JMF5RN
-        zklJBrX9ZB4hF6F2rJohSt32DE+yMcR9Cm1RaLKpkTuxcrdlE/LJ0cwprM98cb5Cc0vduMNZi0lXm
-        G/z99A6Y3PWh6LXL4n1j9xildH68k3fmlmrnMDS4wG+kAqJP/VY5oUqdfJkz7BxfMt41vSf5TIWgN
-        tNLTiMZQFoxjC+QhplitUyFiUfy97zwb8hNeR1LD/O2pFR/ytUwC32Yxk5oF9isA0PBYzjJmy1JxE
-        lpAGm3lQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jboQI-0003AV-At; Thu, 21 May 2020 16:51:59 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] nvdimm: fixes to maintainter-entry-profile
-Message-ID: <103a0e71-28b5-e4c2-fdf2-80d2dd005b44@infradead.org>
-Date:   Thu, 21 May 2020 09:51:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 21 May 2020 12:55:55 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:49504 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728464AbgEUQzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 12:55:55 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49SbNP3xptz9tyFq;
+        Thu, 21 May 2020 18:55:49 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id t1vK45dStyxb; Thu, 21 May 2020 18:55:49 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49SbNP33vLz9v125;
+        Thu, 21 May 2020 18:55:49 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BBF548B7DB;
+        Thu, 21 May 2020 18:55:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id OyFS_cgZ7i-a; Thu, 21 May 2020 18:55:51 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 705198B778;
+        Thu, 21 May 2020 18:55:51 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3959665A53; Thu, 21 May 2020 16:55:51 +0000 (UTC)
+Message-Id: <cover.1590079968.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v5 00/13] Modernise powerpc 40x
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, michal.simek@xilinx.com,
+        arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 21 May 2020 16:55:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+v1 and v2 of this series were aiming at removing 40x entirely,
+but it led to protests.
 
-Fix punctuation and wording in a few places.
+v3 is trying to start modernising powerpc 40x:
+- Rework TLB miss handlers to not use PTE_ATOMIC_UPDATES and _PAGE_HWWRITE
+- Remove old versions of 40x processors, namely 403 and 405GP and associated
+errata.
+- Last two patches are trivial changes in TLB miss handlers to reduce number
+of scratch registers.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: linux-nvdimm@lists.01.org
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
----
- Documentation/nvdimm/maintainer-entry-profile.rst |   14 ++++++------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+v4:
+- Fixing a build failure with patch 2 due to a missing ;
+- There was in patch 5 some stuff belonging to patch 6. Moved them.
+- Rebased to today's powerpc/merge
 
---- linux-next-20200521.orig/Documentation/nvdimm/maintainer-entry-profile.rst
-+++ linux-next-20200521/Documentation/nvdimm/maintainer-entry-profile.rst
-@@ -4,15 +4,15 @@ LIBNVDIMM Maintainer Entry Profile
- Overview
- --------
- The libnvdimm subsystem manages persistent memory across multiple
--architectures. The mailing list, is tracked by patchwork here:
-+architectures. The mailing list is tracked by patchwork here:
- https://patchwork.kernel.org/project/linux-nvdimm/list/
- ...and that instance is configured to give feedback to submitters on
- patch acceptance and upstream merge. Patches are merged to either the
--'libnvdimm-fixes', or 'libnvdimm-for-next' branch. Those branches are
-+'libnvdimm-fixes' or 'libnvdimm-for-next' branch. Those branches are
- available here:
- https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/
- 
--In general patches can be submitted against the latest -rc, however if
-+In general patches can be submitted against the latest -rc; however, if
- the incoming code change is dependent on other pending changes then the
- patch should be based on the libnvdimm-for-next branch. However, since
- persistent memory sits at the intersection of storage and memory there
-@@ -35,12 +35,12 @@ getting the test environment set up.
- 
- ACPI Device Specific Methods (_DSM)
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--Before patches enabling for a new _DSM family will be considered it must
-+Before patches enabling a new _DSM family will be considered, it must
- be assigned a format-interface-code from the NVDIMM Sub-team of the ACPI
- Specification Working Group. In general, the stance of the subsystem is
--to push back on the proliferation of NVDIMM command sets, do strongly
-+to push back on the proliferation of NVDIMM command sets, so do strongly
- consider implementing support for an existing command set. See
--drivers/acpi/nfit/nfit.h for the set of support command sets.
-+drivers/acpi/nfit/nfit.h for the set of supported command sets.
- 
- 
- Key Cycle Dates
-@@ -48,7 +48,7 @@ Key Cycle Dates
- New submissions can be sent at any time, but if they intend to hit the
- next merge window they should be sent before -rc4, and ideally
- stabilized in the libnvdimm-for-next branch by -rc6. Of course if a
--patch set requires more than 2 weeks of review -rc4 is already too late
-+patch set requires more than 2 weeks of review, -rc4 is already too late
- and some patches may require multiple development cycles to review.
- 
- 
+v5:
+- Rebase on top of 35a26089dd1c Automatic merge of 'next-test' into merge-test (2020-05-22 00:14)
+
+I would have liked to test it with QEMU, but I get the following error when
+trying to start QEMU for machine ref405ep.
+
+	qemu-system-ppc: Could not load PowerPC BIOS 'ppc405_rom.bin'
+
+Can someone help with that ?
+
+Christophe Leroy (12):
+  powerpc/40x: Rework 40x PTE access and TLB miss
+  powerpc/pgtable: Drop PTE_ATOMIC_UPDATES
+  powerpc/40x: Remove support for IBM 403GCX
+  powerpc/40x: Remove STB03xxx
+  powerpc/40x: Remove WALNUT
+  powerpc/40x: Remove EP405
+  powerpc/40x: Remove support for ISS Simulator
+  powerpc/40x: Remove support for IBM 405GP
+  powerpc/40x: Remove IBM405 Erratum #51
+  powerpc: Remove IBM405 Erratum #77
+  powerpc/40x: Avoid using r12 in TLB miss handlers
+  powerpc/40x: Don't save CR in SPRN_SPRG_SCRATCH6
+
+Michal Simek (1):
+  powerpc: Remove Xilinx PPC405/PPC440 support
+
+ Documentation/devicetree/bindings/xilinx.txt | 143 ------
+ Documentation/powerpc/bootwrapper.rst        |  28 +-
+ arch/powerpc/Kconfig.debug                   |   2 +-
+ arch/powerpc/boot/Makefile                   |  14 +-
+ arch/powerpc/boot/dts/Makefile               |   1 -
+ arch/powerpc/boot/dts/ep405.dts              | 230 ---------
+ arch/powerpc/boot/dts/virtex440-ml507.dts    | 406 ----------------
+ arch/powerpc/boot/dts/virtex440-ml510.dts    | 466 -------------------
+ arch/powerpc/boot/dts/walnut.dts             | 246 ----------
+ arch/powerpc/boot/ep405.c                    |  71 ---
+ arch/powerpc/boot/ops.h                      |   1 -
+ arch/powerpc/boot/serial.c                   |   5 -
+ arch/powerpc/boot/treeboot-walnut.c          |  81 ----
+ arch/powerpc/boot/uartlite.c                 |  79 ----
+ arch/powerpc/boot/virtex.c                   |  97 ----
+ arch/powerpc/boot/virtex405-head.S           |  31 --
+ arch/powerpc/boot/wrapper                    |   8 -
+ arch/powerpc/configs/40x/acadia_defconfig    |   1 -
+ arch/powerpc/configs/40x/ep405_defconfig     |  62 ---
+ arch/powerpc/configs/40x/kilauea_defconfig   |   1 -
+ arch/powerpc/configs/40x/klondike_defconfig  |   1 -
+ arch/powerpc/configs/40x/makalu_defconfig    |   1 -
+ arch/powerpc/configs/40x/obs600_defconfig    |   1 -
+ arch/powerpc/configs/40x/virtex_defconfig    |  75 ---
+ arch/powerpc/configs/44x/virtex5_defconfig   |  74 ---
+ arch/powerpc/configs/ppc40x_defconfig        |   9 -
+ arch/powerpc/configs/ppc44x_defconfig        |   8 -
+ arch/powerpc/include/asm/asm-405.h           |  19 -
+ arch/powerpc/include/asm/atomic.h            |  11 -
+ arch/powerpc/include/asm/bitops.h            |   4 -
+ arch/powerpc/include/asm/cache.h             |   2 +-
+ arch/powerpc/include/asm/cmpxchg.h           |  11 -
+ arch/powerpc/include/asm/futex.h             |   3 -
+ arch/powerpc/include/asm/nohash/32/pgtable.h |  16 -
+ arch/powerpc/include/asm/nohash/32/pte-40x.h |  23 +-
+ arch/powerpc/include/asm/nohash/pgtable.h    |   2 -
+ arch/powerpc/include/asm/reg_booke.h         |  54 ---
+ arch/powerpc/include/asm/spinlock.h          |   4 -
+ arch/powerpc/include/asm/time.h              |  12 -
+ arch/powerpc/include/asm/xilinx_intc.h       |  16 -
+ arch/powerpc/include/asm/xilinx_pci.h        |  21 -
+ arch/powerpc/kernel/cputable.c               | 102 ----
+ arch/powerpc/kernel/entry_32.S               |  11 -
+ arch/powerpc/kernel/head_40x.S               | 316 +++----------
+ arch/powerpc/kernel/misc_32.S                |   9 -
+ arch/powerpc/kernel/setup-common.c           |   4 -
+ arch/powerpc/mm/nohash/40x.c                 |   4 +-
+ arch/powerpc/platforms/40x/Kconfig           |  76 ---
+ arch/powerpc/platforms/40x/Makefile          |   3 -
+ arch/powerpc/platforms/40x/ep405.c           | 123 -----
+ arch/powerpc/platforms/40x/virtex.c          |  54 ---
+ arch/powerpc/platforms/40x/walnut.c          |  65 ---
+ arch/powerpc/platforms/44x/Kconfig           |  40 +-
+ arch/powerpc/platforms/44x/Makefile          |   2 -
+ arch/powerpc/platforms/44x/virtex.c          |  60 ---
+ arch/powerpc/platforms/44x/virtex_ml510.c    |  30 --
+ arch/powerpc/platforms/Kconfig               |   4 -
+ arch/powerpc/sysdev/Makefile                 |   2 -
+ arch/powerpc/sysdev/xilinx_intc.c            |  88 ----
+ arch/powerpc/sysdev/xilinx_pci.c             | 132 ------
+ drivers/char/Kconfig                         |   2 +-
+ drivers/video/fbdev/Kconfig                  |   2 +-
+ 62 files changed, 83 insertions(+), 3386 deletions(-)
+ delete mode 100644 arch/powerpc/boot/dts/ep405.dts
+ delete mode 100644 arch/powerpc/boot/dts/virtex440-ml507.dts
+ delete mode 100644 arch/powerpc/boot/dts/virtex440-ml510.dts
+ delete mode 100644 arch/powerpc/boot/dts/walnut.dts
+ delete mode 100644 arch/powerpc/boot/ep405.c
+ delete mode 100644 arch/powerpc/boot/treeboot-walnut.c
+ delete mode 100644 arch/powerpc/boot/uartlite.c
+ delete mode 100644 arch/powerpc/boot/virtex.c
+ delete mode 100644 arch/powerpc/boot/virtex405-head.S
+ delete mode 100644 arch/powerpc/configs/40x/ep405_defconfig
+ delete mode 100644 arch/powerpc/configs/40x/virtex_defconfig
+ delete mode 100644 arch/powerpc/configs/44x/virtex5_defconfig
+ delete mode 100644 arch/powerpc/include/asm/asm-405.h
+ delete mode 100644 arch/powerpc/include/asm/xilinx_intc.h
+ delete mode 100644 arch/powerpc/include/asm/xilinx_pci.h
+ delete mode 100644 arch/powerpc/platforms/40x/ep405.c
+ delete mode 100644 arch/powerpc/platforms/40x/virtex.c
+ delete mode 100644 arch/powerpc/platforms/40x/walnut.c
+ delete mode 100644 arch/powerpc/platforms/44x/virtex.c
+ delete mode 100644 arch/powerpc/platforms/44x/virtex_ml510.c
+ delete mode 100644 arch/powerpc/sysdev/xilinx_intc.c
+ delete mode 100644 arch/powerpc/sysdev/xilinx_pci.c
+
+-- 
+2.25.0
 
