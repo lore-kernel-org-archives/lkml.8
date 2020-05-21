@@ -2,109 +2,98 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B56C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB43120721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF1220721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgEUL43 (ORCPT
+        id S1729216AbgEUL51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:56:29 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:11258 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729002AbgEUL42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:56:28 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgA3jwlYbMZeX4LtAQ--.44757S4;
-        Thu, 21 May 2020 19:56:13 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Todor Tomov <todor.too@gmail.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: camss: vfe: Fix runtime PM imbalance on error
-Date:   Thu, 21 May 2020 19:56:07 +0800
-Message-Id: <20200521115607.32733-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgA3jwlYbMZeX4LtAQ--.44757S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1fury5tFWrJFWUJwb_yoW8Xw4rpr
-        40q3s3Cr1xXrWjqw1Utr1Duas5G393tasrKrWYk3WfAws5CF97GF48KFyFqFWjkrWIy3W7
-        Ja17Xa43ZF1Y9FJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvS1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
-        6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF04k20xvY0x0EwIxG
-        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43
-        ZEXa7VUbjYLPUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0HBlZdtOPdcwACs+
+        Thu, 21 May 2020 07:57:27 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:47184 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729002AbgEUL51 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 07:57:27 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbjpB-0002UN-NE; Thu, 21 May 2020 05:57:21 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jbjpA-00053F-6i; Thu, 21 May 2020 05:57:21 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87d06ygssl.fsf@x220.int.ebiederm.org>
+        <202005201642.E1C6B4A457@keescook>
+Date:   Thu, 21 May 2020 06:53:36 -0500
+In-Reply-To: <202005201642.E1C6B4A457@keescook> (Kees Cook's message of "Wed,
+        20 May 2020 16:43:28 -0700")
+Message-ID: <875zcph5bz.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1jbjpA-00053F-6i;;;mid=<875zcph5bz.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+oiz5qlPjrQa2T3u47CbOQrej8gssp24I=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 0/8] exec: Control flow simplifications
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Kees Cook <keescook@chromium.org> writes:
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/media/platform/qcom/camss/camss-vfe.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+> On Wed, May 20, 2020 at 05:12:10PM -0500, Eric W. Biederman wrote:
+>> 
+>> I have pushed this out to:
+>> 
+>> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-next
+>> 
+>> I have collected up the acks and reviewed-by's, and fixed a couple of
+>> typos but that is it.
+>
+> Awesome!
+>
+>> If we need comment fixes or additional cleanups we can apply that on top
+>> of this series.   This way the code can sit in linux-next until the
+>> merge window opens.
+>> 
+>> Before I pushed this out I also tested this with Kees new test of
+>> binfmt_misc and did not find any problems.
+>
+> Did this mean to say binfmt_script? It'd be nice to get a binfmt_misc
+> test too, though.
 
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
-index a8c542fa647d..fc31c2c169cd 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe.c
-@@ -1265,12 +1265,12 @@ static int vfe_get(struct vfe_device *vfe)
- 
- 		ret = vfe_set_clock_rates(vfe);
- 		if (ret < 0)
--			goto error_clocks;
-+			goto error_pm_runtime_get;
- 
- 		ret = camss_enable_clocks(vfe->nclocks, vfe->clock,
- 					  vfe->camss->dev);
- 		if (ret < 0)
--			goto error_clocks;
-+			goto error_pm_runtime_get;
- 
- 		ret = vfe_reset(vfe);
- 		if (ret < 0)
-@@ -1282,7 +1282,7 @@ static int vfe_get(struct vfe_device *vfe)
- 	} else {
- 		ret = vfe_check_clock_rates(vfe);
- 		if (ret < 0)
--			goto error_clocks;
-+			goto error_pm_runtime_get;
- 	}
- 	vfe->power_count++;
- 
-@@ -1293,10 +1293,8 @@ static int vfe_get(struct vfe_device *vfe)
- error_reset:
- 	camss_disable_clocks(vfe->nclocks, vfe->clock);
- 
--error_clocks:
--	pm_runtime_put_sync(vfe->camss->dev);
--
- error_pm_runtime_get:
-+	pm_runtime_put_sync(vfe->camss->dev);
- 	camss_pm_domain_off(vfe->camss, vfe->id);
- 
- error_pm_domain:
--- 
-2.17.1
+Yes.  Sorry.  I meant your binfmt_script test.
 
+Eric
