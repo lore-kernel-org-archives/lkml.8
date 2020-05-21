@@ -2,133 +2,130 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0208C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56527C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E96E20759
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35EA520738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590086425;
+	bh=WilSX/tvB1ZgGJHt9Z4h/gS/HMv0mGFmgDv17bIMFdM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wv3JhcmbM4VdcrIbDjyGTKRG7etwHSt35KSAkWEtfUY4D2XTlHUXI7jSEQVgjojVo
+	 MQFwT2BHUPdFLG6tMRiYMHlqGJaeqxjgSIqabP9A2Fur+vAKXWNxK8bxW20Edj/MAf
+	 SK60XHz8BALZWQQrKEgewmKjegAWbWbOazejYJqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbgEUSjh (ORCPT
+        id S1729677AbgEUSkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728240AbgEUSjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:39:36 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDB0C061A0E;
-        Thu, 21 May 2020 11:39:36 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbq6A-0006og-PX; Thu, 21 May 2020 20:39:19 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E386A100C2D; Thu, 21 May 2020 20:39:16 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
-In-Reply-To: <20200521092340.GA751297@T590>
-References: <20200520011823.GA415158@T590> <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de> <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk> <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk> <87tv0av1gu.fsf@nanos.tec.linutronix.de> <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk> <87eereuudh.fsf@nanos.tec.linutronix.de> <20200521022746.GA730422@T590> <87367tvh6g.fsf@nanos.tec.linutronix.de> <20200521092340.GA751297@T590>
-Date:   Thu, 21 May 2020 20:39:16 +0200
-Message-ID: <87pnaxt9nv.fsf@nanos.tec.linutronix.de>
+        Thu, 21 May 2020 14:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728240AbgEUSkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:40:24 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ABF9206C3;
+        Thu, 21 May 2020 18:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590086423;
+        bh=WilSX/tvB1ZgGJHt9Z4h/gS/HMv0mGFmgDv17bIMFdM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=o99OUrvH4iYPkWT7frQqqRHqpSAXvHUYPWpLTmutilY/rrnU/eCuzE+ZEN845PEgE
+         tNbEooJ7WgIYj+EUrpLRebb5Pi/hTpb1ySFBB31cJyXzOq3djpfuEv5wSF/BQUcIpd
+         Gs19tOIwzIA71N6ORfOgwcc/zYWZpMpKn5Qnyp2Y=
+Date:   Thu, 21 May 2020 19:40:20 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <ak@it-klinger.de>
+Subject: Re: [PATCH v2] iio: proximity: ping: pass reference to IIO device
+ as param to ping_read()
+Message-ID: <20200521194020.5cb1ac16@archlinux>
+In-Reply-To: <20200518133813.403903-1-alexandru.ardelean@analog.com>
+References: <20200518133813.403903-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,
+On Mon, 18 May 2020 16:38:13 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Ming Lei <ming.lei@redhat.com> writes:
-> On Thu, May 21, 2020 at 10:13:59AM +0200, Thomas Gleixner wrote:
->> Ming Lei <ming.lei@redhat.com> writes:
->> > On Thu, May 21, 2020 at 12:14:18AM +0200, Thomas Gleixner wrote:
->> > - otherwise, the kthread just retries and retries to allocate & release,
->> > and sooner or later, its time slice is consumed, and migrated out, and the
->> > cpu hotplug handler will get chance to run and move on, then the cpu is
->> > shutdown.
->> 
->> 1) This is based on the assumption that the kthread is in the SCHED_OTHER
->>    scheduling class. Is that really a valid assumption?
->
-> Given it is unlikely path, we can add msleep() before retrying when INACTIVE bit
-> is observed by current thread, and this way can avoid spinning and should work
-> for other schedulers.
+> Since there will be some changes to how iio_priv_to_dev() is implemented,
+> it could be that the helper becomes a bit slower, as it will be hidden away
+> in the IIO core.
+> 
+> But even without that rework, this looks like it can pass the 'indio_dev'
+> object to ping_read() and obtain the state struct via iio_priv() which is a
+> preferred practice than going back-n-forth (getting the state-struct, then
+> using iio_priv_to_dev() to get the indio_dev object back).
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Seems trivial and unlikely to have any issues so I'll take this one
+without waiting any longer.
 
-That should work, but pretty is something else
-
->> 
->> 2) What happens in the following scenario:
->> 
->>    unplug
->> 
->>      mq_offline
->>        set_ctx_inactive()
->>        drain_io()
->>        
->>    io_kthread()
->>        try_queue()
->>        wait_on_ctx()
->> 
->>    Can this happen and if so what will wake up that thread?
->
-> drain_io() releases all tag of this hctx, then wait_on_ctx() will be waken up
-> after any tag is released.
-
-drain_io() is already done ...
-
-So looking at that thread function:
-
-static int io_sq_thread(void *data)
-{
-	struct io_ring_ctx *ctx = data;
-
-        while (...) {
-              ....
-	      to_submit = io_sqring_entries(ctx);
-
---> preemption
-
-hotplug runs
-   mq_offline()
-      set_ctx_inactive();
-      drain_io();
-      finished();
-
---> thread runs again
-
-      mutex_lock(&ctx->uring_lock);
-      ret = io_submit_sqes(ctx, to_submit, NULL, -1, true);
-      mutex_unlock(&ctx->uring_lock);
-
-      ....
-
-      if (!to_submit || ret == -EBUSY)
-          ...
-      	  wait_on_ctx();
-
-Can this happen or did drain_io() already take care of the 'to_submit'
-items and the call to io_submit_sqes() turns into a zero action ?
-
-If the above happens then nothing will wake it up because the context
-draining is done and finished.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
 Thanks,
 
-        tglx
+Jonathan
+
+> ---
+> 
+> Changelog v1 -> v2:
+> * split away from series
+> * pass 'indio_dev' to ping_read() and get the info via iio_priv()
+> 
+>  drivers/iio/proximity/ping.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/ping.c b/drivers/iio/proximity/ping.c
+> index 12b893c5b0ee..2e99eeb27f2e 100644
+> --- a/drivers/iio/proximity/ping.c
+> +++ b/drivers/iio/proximity/ping.c
+> @@ -89,14 +89,14 @@ static irqreturn_t ping_handle_irq(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static int ping_read(struct ping_data *data)
+> +static int ping_read(struct iio_dev *indio_dev)
+>  {
+> +	struct ping_data *data = iio_priv(indio_dev);
+>  	int ret;
+>  	ktime_t ktime_dt;
+>  	s64 dt_ns;
+>  	u32 time_ns, distance_mm;
+>  	struct platform_device *pdev = to_platform_device(data->dev);
+> -	struct iio_dev *indio_dev = iio_priv_to_dev(data);
+>  
+>  	/*
+>  	 * just one read-echo-cycle can take place at a time
+> @@ -228,7 +228,6 @@ static int ping_read_raw(struct iio_dev *indio_dev,
+>  			    struct iio_chan_spec const *channel, int *val,
+>  			    int *val2, long info)
+>  {
+> -	struct ping_data *data = iio_priv(indio_dev);
+>  	int ret;
+>  
+>  	if (channel->type != IIO_DISTANCE)
+> @@ -236,7 +235,7 @@ static int ping_read_raw(struct iio_dev *indio_dev,
+>  
+>  	switch (info) {
+>  	case IIO_CHAN_INFO_RAW:
+> -		ret = ping_read(data);
+> +		ret = ping_read(indio_dev);
+>  		if (ret < 0)
+>  			return ret;
+>  		*val = ret;
+
