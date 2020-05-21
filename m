@@ -2,109 +2,85 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA25C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034F42072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:27:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Q88Uz8n8"
+	by mail.kernel.org (Postfix) with ESMTP id 9B0D52072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbgEUR1F (ORCPT
+        id S1728955AbgEUR1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:27:05 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54824 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728864AbgEUR1E (ORCPT
+        Thu, 21 May 2020 13:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgEUR1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:27:04 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LHQlch012436;
-        Thu, 21 May 2020 12:26:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590082007;
-        bh=5sbZFMXFyR6R0M8wgkVp71flez8Gasc4Z5KA2W8N+4U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Q88Uz8n8XFOimF1DN2mSKKhcwrafBNj5pONsJ20IssohVHQp/5QhGUuJifhF124qU
-         F2raO0vuZAtZjMQWr3GIVnobvapohPdCbcgObPy051uA7r2/XnsZELrD+bh4Rj9DUe
-         3o/AO66KI0VZ3ANwh60Xyh4Zc11aJAy+5N0IsLZg=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LHQlTj058716
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 12:26:47 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 12:26:46 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 12:26:46 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LHQheW043615;
-        Thu, 21 May 2020 12:26:44 -0500
-Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
-To:     Robert Nelson <robertcnelson@gmail.com>
-CC:     Drew Fustini <drew@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux kernel <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>
-References: <20200520214757.GA362547@x1>
- <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
- <CAOCHtYiw2jJuzbnW02FUmPy-xmmtErMmow46QQJUMs0VtX=cKg@mail.gmail.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <cdf82f9c-48fb-49a0-99e4-926dc292c109@ti.com>
-Date:   Thu, 21 May 2020 20:26:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 13:27:38 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A06C061A0E;
+        Thu, 21 May 2020 10:27:38 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jboyG-00D3FP-QE; Thu, 21 May 2020 17:27:04 +0000
+Date:   Thu, 21 May 2020 18:27:04 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
+ pagefault/preempt twice
+Message-ID: <20200521172704.GF23230@ZenIV.linux.org.uk>
+References: <20200507150004.1423069-8-ira.weiny@intel.com>
+ <20200518184843.3029640-1-ira.weiny@intel.com>
+ <20200519165422.GA5838@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <CAOCHtYiw2jJuzbnW02FUmPy-xmmtErMmow46QQJUMs0VtX=cKg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519165422.GA5838@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 21/05/2020 17:41, Robert Nelson wrote:
->> Not sure if it should be in am335x-bone-common.dtsi.
->>
->> For example:
->> am335x-boneblack.dts
->>    #include "am335x-bone-common.dtsi"
->>    #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
+On Tue, May 19, 2020 at 09:54:22AM -0700, Guenter Roeck wrote:
+> On Mon, May 18, 2020 at 11:48:43AM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > The kunmap_atomic clean up failed to remove one set of pagefault/preempt
+> > enables when vaddr is not in the fixmap.
+> > 
+> > Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> Ah crap, yeah that's a good point.. So if we stick it in...
-> am335x-boneblack-common.dtsi
-> 
-> Then the Black-Wireless now has Ethernet...
-> 
-> am335x-boneblack-wireless.dts
-> #include "am335x-bone-common.dtsi"
-> #include "am335x-boneblack-common.dtsi"
-> 
-> It's going to be ugly, copy and paste mess, but i guess we might as
-> well stick it in the device " am335x-boneblack.dts"?
+> microblazeel works with this patch, as do the nosmp sparc32 boot tests,
+> but sparc32 boot tests with SMP enabled still fail with lots of messages
+> such as:
 
-Seems like.
-
-Unfortunately, there is no way to partially overwrite "gpio-line-names"
-property.
-
--- 
-Best regards,
-grygorii
+BTW, what's your setup for sparc32 boot tests?  IOW, how do you manage to
+shrink the damn thing enough to have the loader cope with it?  I hadn't
+been able to do that for the current mainline ;-/
