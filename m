@@ -2,152 +2,132 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA696C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE882072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978AD20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="baeKJz4Y"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="bLOzNR/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbgEUM5Z (ORCPT
+        id S1729376AbgEUM6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40412 "EHLO
+        Thu, 21 May 2020 08:58:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbgEUM5Y (ORCPT
+        with ESMTP id S1728133AbgEUM6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:57:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B74FC061A0E;
-        Thu, 21 May 2020 05:57:23 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id j21so3117868pgb.7;
-        Thu, 21 May 2020 05:57:23 -0700 (PDT)
+        Thu, 21 May 2020 08:58:02 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0479FC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:58:02 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id x1so8672622ejd.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WJ2J0c4nx8VwKRs6VsjA2J0n5LxLHAUWuS116Ks5Rxk=;
-        b=baeKJz4Ye6sCcUqw0mYZm3toOvCphLbBet+iXy2gD6hSx0mqks6gXQw5XmWCr3+l1v
-         731E8MF8jJwB7lm+3iL6eZ9UlKvtj9RuLAim/ZMZb8pQOdT2ETuDaVnyG8O19I/T4IBf
-         MiJsHE3mLhekeYRCmEqeoZDJCd5qkZ5i62v4NHZbBSZHObwfQVHf4Pi33X3bsoOGyunc
-         DYimoYpdKz04+JIbDaQZz7OdP+BBaj6IIqMcNixaDZ3kwZ7XBeQba5WOnKf5ZHzjq9w0
-         z7pmwM4GJO/90Lfy0LPOnoiWLWHkQ70l9MhHIvFc1nEbq0N9hB8zkjsaggM8srH7q67C
-         t8Tg==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zE0q+anVt0YABBKa0iOm9d1qeItC3z2sLcxqGncBVQI=;
+        b=bLOzNR/s9S7I+d6/VAHg3FcIB91TnIH4PTsQDruoSc+fbSfnEh3cUbmsQecHLhLaOX
+         4vj+ItRpXsQBcQkYDtk35GJ237GUVOK950cf+h6475GY+7lSmLi/9YcoCmEDa9fwkyN1
+         veDn1mKKC0Xc4FQ/FjilKO0iTyrz98Xo8C16s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WJ2J0c4nx8VwKRs6VsjA2J0n5LxLHAUWuS116Ks5Rxk=;
-        b=dqDvT/FpZnH4XnkS8mTG1+ccV4wkaUXtjBxJayHug5xEwXHG48fNLrzB8wXvLdIXMY
-         7jTm+XT9PkOW2WopesyXdLVnzOSMH0dxnQW1H/lUGdTyCev03AxSvJ4aR3T47hjXkvhE
-         4NLFBmlfpnFmon1bXgWL+MwSui4ATgwYRB8JOf3YN+Y5cbti0RZkIWwhF6KiYg/yjsLj
-         BBp1UYj/xLuqvHCfQuNXGLACuy1qOxCq5JSKWjoFArr0MYpafCQli2G0GR95vClMQ+2N
-         agWIKctcZgabsm+HryXyDMA5jIb6qtq7u3W60WFToDywCu/P/4T4RvnvgAQeBC35lXFz
-         ftRw==
-X-Gm-Message-State: AOAM531RAeYtWTsJy0up7zfNrG9y91OtvCCB4MK+OOdFFPLdprQTsMVf
-        5dVDZxQhmJTGNKVpRCLBAKpA/2Ht
-X-Google-Smtp-Source: ABdhPJzEO1+MVotmNCehwqbZS7wpwLsfnFq+lJ94EZvXDqteSGkWgjKVuIEnnSEhi97Q/08lwuRQRw==
-X-Received: by 2002:a63:d547:: with SMTP id v7mr8713272pgi.413.1590065842630;
-        Thu, 21 May 2020 05:57:22 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l4sm3975682pgo.92.2020.05.21.05.57.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 05:57:21 -0700 (PDT)
-Subject: Re: [PATCH] watchdog: Fix runtime PM imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200521080141.24373-1-dinghao.liu@zju.edu.cn>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <7c20e9da-18df-8476-5029-9441cc7ebccf@roeck-us.net>
-Date:   Thu, 21 May 2020 05:57:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zE0q+anVt0YABBKa0iOm9d1qeItC3z2sLcxqGncBVQI=;
+        b=XZmTU3JrIJnFmuE8Rt3B76lF1H3mnGiB8Xejny9yDm866b2N9vzc34gAKjBDCrBDz2
+         JLASzUcYduRtnohbBI2qzR6Lfrb235D7cs5xDD4YpIDdjJwv1weQntl2qzov5BPt+wh5
+         2I/tXDoznUsNvAwdnqYBtqBqjzlSwit3XV5oc48QW5dRHj7V8zpAS/mZBDK+oXqByX74
+         rWWUzVB86t6mI3Z2e6+iTizmUgn5un5HhiJfcM1G5DVy7vySaJd7RynOJte86s8y8qqP
+         fWi8tmjCyhEIfOU4j/YlfQNHkwr2sFPDs5K2YTSwl9JBvzuUthugu++NfrePp1p/5h/o
+         FCpg==
+X-Gm-Message-State: AOAM53126Mwg+AEEAxiR18yBkPM5QiqU//5QDjETkcJ+nGRkEULnf17I
+        rZf3xHipJfRT3xxlQtoTJ+VQfQ==
+X-Google-Smtp-Source: ABdhPJwUlPCcc8nSFDOxIqSfKdRpccOkuvlBZZUOzHd1MhWNz7hN6UxMTNyjgr9XgEoNGyCUvOKvaA==
+X-Received: by 2002:a17:906:ae18:: with SMTP id le24mr3597119ejb.155.1590065880626;
+        Thu, 21 May 2020 05:58:00 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:4262])
+        by smtp.gmail.com with ESMTPSA id o2sm4806631eja.68.2020.05.21.05.58.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 05:58:00 -0700 (PDT)
+Date:   Thu, 21 May 2020 13:57:59 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521125759.GD990580@chrisdown.name>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520202650.GB558281@chrisdown.name>
+ <20200521071929.GH6462@dhcp22.suse.cz>
+ <20200521112711.GA990580@chrisdown.name>
+ <20200521120455.GM6462@dhcp22.suse.cz>
+ <20200521122327.GB990580@chrisdown.name>
+ <20200521123742.GO6462@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200521080141.24373-1-dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200521123742.GO6462@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/20 1:01 AM, Dinghao Liu wrote:
-> When watchdog_register_device() returns an error code,
-> a pairing runtime PM usage counter decrement is needed
-> to keep the counter balanced.
-> 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Michal Hocko writes:
+>> A cgroup is a unit and breaking it down into "reclaim fairness" for
+>> individual tasks like this seems suspect to me. For example, if one task in
+>> a cgroup is leaking unreclaimable memory like crazy, everyone in that cgroup
+>> is going to be penalised by allocator throttling as a result, even if they
+>> aren't "responsible" for that reclaim.
+>
+>You are right, but that doesn't mean that it is desirable that some
+>tasks would be throttled unexpectedly too long because of the other's activity.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Are you really talking about throttling, or reclaim? If throttling, tasks are 
+already throttled proportionally to how much this allocation is contributing to 
+the overage in calculate_high_delay.
 
-> ---
->  drivers/watchdog/omap_wdt.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
-> index 9b91882fe3c4..1616f93dfad7 100644
-> --- a/drivers/watchdog/omap_wdt.c
-> +++ b/drivers/watchdog/omap_wdt.c
-> @@ -273,6 +273,7 @@ static int omap_wdt_probe(struct platform_device *pdev)
->  
->  	ret = watchdog_register_device(&wdev->wdog);
->  	if (ret) {
-> +		pm_runtime_put(wdev->dev);
->  		pm_runtime_disable(wdev->dev);
->  		return ret;
->  	}
-> 
+If you're talking about reclaim, trying to reason about whether the overage is 
+the result of some other task in this cgroup or the task that's allocating 
+right now is something that we already know doesn't work well (eg. global OOM). 
 
+>> So the options here are as follows when a cgroup is over memory.high and a
+>> single reclaim isn't enough:
+>>
+>> 1. Decline further reclaim. Instead, throttle for up to 2 seconds.
+>> 2. Keep on reclaiming. Only throttle if we can't get back under memory.high.
+>>
+>> The outcome of your suggestion to decline further reclaim is case #1, which
+>> is significantly more practically "unfair" to that task. Throttling is
+>> extremely disruptive to tasks and should be a last resort when we've
+>> exhausted all other practical options. It shouldn't be something you get
+>> just because you didn't try to reclaim hard enough.
+>
+>I believe I have asked in other email in this thread. Could you explain
+>why enforcint the requested target (memcg_nr_pages_over_high) is
+>insufficient for the problem you are dealing with? Because that would
+>make sense for large targets to me while it would keep relatively
+>reasonable semantic of the throttling - aka proportional to the memory
+>demand rather than the excess.
+
+memcg_nr_pages_over_high is related to the charge size. As such, if you're way 
+over memory.high as a result of transient reclaim failures, but the majority of 
+your charges are small, it's going to hard to make meaningful progress:
+
+1. Most nr_pages will be MEMCG_CHARGE_BATCH, which is not enough to help;
+2. Large allocations will only get a single reclaim attempt to succeed.
+
+As such, in many cases we're either doomed to successfully reclaim a paltry 
+amount of pages, or fail to reclaim a lot of pages. Asking try_to_free_pages() 
+to deal with those huge allocations is generally not reasonable, regardless of 
+the specifics of why it doesn't work in this case.
