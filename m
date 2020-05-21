@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA536C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F34C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F57220826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFFC20826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbgEUUdx (ORCPT
+        id S1730620AbgEUUd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:33:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
+        Thu, 21 May 2020 16:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729620AbgEUUbx (ORCPT
+        with ESMTP id S1729517AbgEUUbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:31:53 -0400
+        Thu, 21 May 2020 16:31:51 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B2DC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:31:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E25EC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:31:51 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jbrqj-0000Ru-B2; Thu, 21 May 2020 22:31:29 +0200
+        id 1jbrqa-0000Kv-58; Thu, 21 May 2020 22:31:20 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4EE2F100606;
-        Thu, 21 May 2020 22:31:28 +0200 (CEST)
-Message-Id: <20200521202117.962199649@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 96EB0100C2D;
+        Thu, 21 May 2020 22:31:19 +0200 (CEST)
+Message-Id: <20200521202117.289548561@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 21 May 2020 22:05:25 +0200
+Date:   Thu, 21 May 2020 22:05:18 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Andy Lutomirski <luto@kernel.org>,
@@ -60,7 +60,7 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V9 12/39] x86/entry: Split out idtentry_exit_cond_resched()
+Subject: [patch V9 05/39] x86/entry: Provide idtentry_enter/exit_user()
 References: <20200521200513.656533920@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -73,63 +73,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The XEN PV hypercall requires the ability of conditional rescheduling when
-preemption is disabled because some hypercalls take ages.
-
-Split out the rescheduling code from idtentry_exit_cond_rcu() so it can
-be reused for that.
+As there are exceptions which already handle entry from user mode and from
+kernel mode separately having an explicit user handling makes sense and
+makes the code easier to understand.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
 V9: New patch
 ---
- arch/x86/entry/common.c |   30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ arch/x86/entry/common.c         |   31 +++++++++++++++++++++++++++++++
+ arch/x86/include/asm/idtentry.h |    3 +++
+ 2 files changed, 34 insertions(+)
 
 --- a/arch/x86/entry/common.c
 +++ b/arch/x86/entry/common.c
-@@ -580,6 +580,20 @@ bool noinstr idtentry_enter_cond_rcu(str
- 	return false;
+@@ -655,3 +655,34 @@ void noinstr idtentry_exit_cond_rcu(stru
+ 			rcu_irq_exit();
+ 	}
  }
- 
-+static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
++
++/**
++ * idtentry_enter_user - Handle state tracking on idtentry from user mode
++ * @regs:	Pointer to pt_regs of interrupted context
++ *
++ * Invokes enter_from_user_mode() to establish the proper context for
++ * NOHZ_FULL. Otherwise scheduling on exit would not be possible.
++ */
++void noinstr idtentry_enter_user(struct pt_regs *regs)
 +{
-+	if (may_sched && !preempt_count()) {
-+		/* Sanity check RCU and thread stack */
-+		rcu_irq_exit_check_preempt();
-+		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
-+			WARN_ON_ONCE(!on_thread_stack());
-+		if (need_resched())
-+			preempt_schedule_irq();
-+	}
-+	/* Covers both tracing and lockdep */
-+	trace_hardirqs_on();
++	enter_from_user_mode();
 +}
 +
- /**
-  * idtentry_exit_cond_rcu - Handle return from exception with conditional RCU
-  *			    handling
-@@ -621,21 +635,7 @@ void noinstr idtentry_exit_cond_rcu(stru
- 		}
++/**
++ * idtentry_exit_user - Handle return from exception to user mode
++ * @regs:	Pointer to pt_regs (exception entry regs)
++ *
++ * Runs the necessary preemption and work checks and returns to the caller
++ * with interrupts disabled and no further work pending.
++ *
++ * This is the last action before returning to the low level ASM code which
++ * just needs to return to the appropriate context.
++ *
++ * Counterpart to idtentry_enter_user().
++ */
++void noinstr idtentry_exit_user(struct pt_regs *regs)
++{
++	lockdep_assert_irqs_disabled();
++
++	prepare_exit_to_usermode(regs);
++}
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -7,6 +7,9 @@
  
- 		instrumentation_begin();
--
--		/* Check kernel preemption, if enabled */
--		if (IS_ENABLED(CONFIG_PREEMPTION)) {
--			if (!preempt_count()) {
--				/* Sanity check RCU and thread stack */
--				rcu_irq_exit_check_preempt();
--				if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
--					WARN_ON_ONCE(!on_thread_stack());
--				if (need_resched())
--					preempt_schedule_irq();
--			}
--		}
--		/* Covers both tracing and lockdep */
--		trace_hardirqs_on();
--
-+		idtentry_exit_cond_resched(regs, IS_ENABLED(CONFIG_PREEMPTION));
- 		instrumentation_end();
- 	} else {
- 		/*
+ #ifndef __ASSEMBLY__
+ 
++void idtentry_enter_user(struct pt_regs *regs);
++void idtentry_exit_user(struct pt_regs *regs);
++
+ bool idtentry_enter_cond_rcu(struct pt_regs *regs, bool cond_rcu);
+ void idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit);
+ 
 
