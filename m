@@ -2,141 +2,167 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F93C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 109752084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590090079;
-	bh=V7Rxedh2MenOwI8XK4KoWriB9ieXIxOg9p/fYNUmu6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=dQ9Eqw1Sqw96KXRoIenufdjk0U7sIoxJhkbxEhoUczi4ETO1fejsozvK4a24YqLJL
-	 KESRuI2fvJ7a+SYLsVCBOqmVgpIZNuhliMHVIvmkTLM8ZQAz3YmKESCzQcKIxmp41e
-	 D4kd0ygqkMsu0iH9uykOIEPV+nieGAfso/m4L6QU=
+	by mail.kernel.org (Postfix) with ESMTP id CD61920826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LaEMkyjk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgEUTlS (ORCPT
+        id S1729949AbgEUTmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgEUTlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:41:18 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74A8A2065F;
-        Thu, 21 May 2020 19:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590090077;
-        bh=V7Rxedh2MenOwI8XK4KoWriB9ieXIxOg9p/fYNUmu6o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DGrKWPYF4T61W/bPMJjljuNf8dXTHk0f6MkZK2ldwJgILEIsVJksvKR9Ef0tXf/Mm
-         /v1VApdxpv0cJTjhytbqfnysZVkWTwx8Gte2VacSGA8MWFcyB34b+jg8pX6rCQInJz
-         56CdXIhZgakIXA9UioojzKLvEfweY5Zp+71czsoo=
-Date:   Thu, 21 May 2020 14:41:15 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Xen Development List <xen-devel@lists.xenproject.org>,
-        linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, x86@kernel.org,
-        sstabellini@kernel.org, Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] x86/xen: drop an unused parameter gsi_override
-Message-ID: <20200521194115.GA1169412@bjorn-Precision-5520>
+        Thu, 21 May 2020 15:42:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41448 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728635AbgEUTmA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 15:42:00 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LJfXvW046430;
+        Thu, 21 May 2020 14:41:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590090093;
+        bh=PNXaUPHJ9MT7IaWjYaNMQgErZ+4WK83l/f5BSRG5/Zg=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=LaEMkyjkNTDCDEWDDp31lORujmHiVKA/2vJtN2mJjXFkjy1sOkxZsAm82Xw7wGuui
+         69EZD96vjmoNJRVE95cZQrm9dtQPYwjpoRz7B3rw8KKyjIe3gt1un5O6xP4Cb2A8mB
+         3R79KcPi8SHUP7bB+deqAqZihVbBjFg13aghM+2o=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LJfXPa013452
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 14:41:33 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 14:41:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 14:41:32 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LJfWZ9096717;
+        Thu, 21 May 2020 14:41:32 -0500
+Date:   Fri, 22 May 2020 01:11:31 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: Re: [PATCH v6 04/19] spi: spi-mem: allow specifying a command's
+ extension
+Message-ID: <20200521194129.3lqdormmcs4zadh2@ti.com>
+References: <20200520163053.24357-1-p.yadav@ti.com>
+ <20200520163053.24357-5-p.yadav@ti.com>
+ <20200521202256.5816eb32@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200428153640.76476-1-wei.liu@kernel.org>
+In-Reply-To: <20200521202256.5816eb32@collabora.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 03:36:40PM +0000, Wei Liu wrote:
-> All callers within the same file pass in -1 (no override).
+On 21/05/20 08:22PM, Boris Brezillon wrote:
+> On Wed, 20 May 2020 22:00:38 +0530
+> Pratyush Yadav <p.yadav@ti.com> wrote:
 > 
-> Signed-off-by: Wei Liu <wei.liu@kernel.org>
-
-Applied to pci/virtualization for v5.8, thanks!
-
-I don't see anything else in linux-next that touches this file, but if
-somebody wants to merge this via another tree, just let me know.
-
-> ---
->  arch/x86/pci/xen.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
+> > In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
+> > the "command extension". There can be 3 types of extensions in xSPI:
+> > repeat, invert, and hex. When the extension type is "repeat", the same
+> > opcode is sent twice. When it is "invert", the second byte is the
+> > inverse of the opcode. When it is "hex" an additional opcode byte based
+> > is sent with the command whose value can be anything.
+> > 
+> > So, make opcode a 16-bit value and add a 'nbytes', similar to how
+> > multiple address widths are handled.
+> > 
+> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > ---
+> >  include/linux/spi/spi-mem.h | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+> > index e3dcb956bf61..731bb64c6ba6 100644
+> > --- a/include/linux/spi/spi-mem.h
+> > +++ b/include/linux/spi/spi-mem.h
+> > @@ -69,6 +69,8 @@ enum spi_mem_data_dir {
+> >  
+> >  /**
+> >   * struct spi_mem_op - describes a SPI memory operation
+> > + * @cmd.nbytes: number of opcode bytes (only 1 or 2 are valid). The opcode is
+> > + *		sent MSB-first.
+> >   * @cmd.buswidth: number of IO lines used to transmit the command
+> >   * @cmd.opcode: operation opcode
+> >   * @cmd.dtr: whether the command opcode should be sent in DTR mode or not
+> > @@ -94,9 +96,10 @@ enum spi_mem_data_dir {
+> >   */
+> >  struct spi_mem_op {
+> >  	struct {
+> > +		u8 nbytes;
+> >  		u8 buswidth;
+> >  		u8 dtr : 1;
+> > -		u8 opcode;
+> > +		u16 opcode;
+> >  	} cmd;
+> >  
+> >  	struct {
 > 
-> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-> index 91220cc25854..e3f1ca316068 100644
-> --- a/arch/x86/pci/xen.c
-> +++ b/arch/x86/pci/xen.c
-> @@ -60,8 +60,7 @@ static int xen_pcifront_enable_irq(struct pci_dev *dev)
->  }
+> As mentioned in one of my previous review, you should patch the mxic
+> driver before extending the opcode field:
+
+IIUC, this patchset doesn't break original functionality of the driver. 
+It will work like before with 1-byte opcodes. So I don't think it is the 
+responsibility of this patchset to enhance the driver. It didn't work 
+before with 2-byte opcodes, it won't work now. IMO this should be a 
+separate, independent change.
+ 
+> --->8---
+> diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
+> index 69491f3a515d..c3f4136a7c1d 100644
+> --- a/drivers/spi/spi-mxic.c
+> +++ b/drivers/spi/spi-mxic.c
+> @@ -356,6 +356,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+>         int nio = 1, i, ret;
+>         u32 ss_ctrl;
+>         u8 addr[8];
+> +       u8 cmd[2];
 >  
->  #ifdef CONFIG_ACPI
-> -static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
-> -			     bool set_pirq)
-> +static int xen_register_pirq(u32 gsi, int triggering, bool set_pirq)
->  {
->  	int rc, pirq = -1, irq = -1;
->  	struct physdev_map_pirq map_irq;
-> @@ -94,9 +93,6 @@ static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
->  		name = "ioapic-level";
->  	}
+>         ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
+>         if (ret)
+> @@ -393,7 +394,10 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
+>         writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
+>                mxic->regs + HC_CFG);
 >  
-> -	if (gsi_override >= 0)
-> -		gsi = gsi_override;
-> -
->  	irq = xen_bind_pirq_gsi_to_irq(gsi, map_irq.pirq, shareable, name);
->  	if (irq < 0)
->  		goto out;
-> @@ -112,12 +108,12 @@ static int acpi_register_gsi_xen_hvm(struct device *dev, u32 gsi,
->  	if (!xen_hvm_domain())
->  		return -1;
+> -       ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
+> +       for (i = 0; i < op->cmd.nbytes; i++)
+> +               cmd[i] = op->cmd.opcode >> (8 * (op->cmd.nbytes - i - 1));
+> +
+> +       ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
+>         if (ret)
+>                 goto out;
 >  
-> -	return xen_register_pirq(gsi, -1 /* no GSI override */, trigger,
-> +	return xen_register_pirq(gsi, trigger,
->  				 false /* no mapping of GSI to PIRQ */);
->  }
->  
->  #ifdef CONFIG_XEN_DOM0
-> -static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polarity)
-> +static int xen_register_gsi(u32 gsi, int triggering, int polarity)
->  {
->  	int rc, irq;
->  	struct physdev_setup_gsi setup_gsi;
-> @@ -128,7 +124,7 @@ static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polar
->  	printk(KERN_DEBUG "xen: registering gsi %u triggering %d polarity %d\n",
->  			gsi, triggering, polarity);
->  
-> -	irq = xen_register_pirq(gsi, gsi_override, triggering, true);
-> +	irq = xen_register_pirq(gsi, triggering, true);
->  
->  	setup_gsi.gsi = gsi;
->  	setup_gsi.triggering = (triggering == ACPI_EDGE_SENSITIVE ? 0 : 1);
-> @@ -148,7 +144,7 @@ static int xen_register_gsi(u32 gsi, int gsi_override, int triggering, int polar
->  static int acpi_register_gsi_xen(struct device *dev, u32 gsi,
->  				 int trigger, int polarity)
->  {
-> -	return xen_register_gsi(gsi, -1 /* no GSI override */, trigger, polarity);
-> +	return xen_register_gsi(gsi, trigger, polarity);
->  }
->  #endif
->  #endif
-> @@ -491,7 +487,7 @@ int __init pci_xen_initial_domain(void)
->  		if (acpi_get_override_irq(irq, &trigger, &polarity) == -1)
->  			continue;
->  
-> -		xen_register_pirq(irq, -1 /* no GSI override */,
-> +		xen_register_pirq(irq,
->  			trigger ? ACPI_LEVEL_SENSITIVE : ACPI_EDGE_SENSITIVE,
->  			true /* Map GSI to PIRQ */);
->  	}
-> -- 
-> 2.20.1
-> 
+
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments India
