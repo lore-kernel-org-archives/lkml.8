@@ -2,160 +2,120 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F59C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3770CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FB2207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oeUOIdLB"
+	by mail.kernel.org (Postfix) with ESMTP id 108B420826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgEURhR (ORCPT
+        id S1728694AbgEURhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:37:17 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:47663 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728798AbgEURhQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:37:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590082635; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=F30tIyEfBVh5g5gaTce6ZjrM4vzM0/dihF/CEEqfqwE=; b=oeUOIdLBpIQvnK9WqzYt2m9Y4HvESSykxrdn6G7+wUwO0pXiVZZl/hJ3VX9rTA/v/XOFChWD
- rE1zwvrZElDdW/Y29jHTf2Xnq2UncOdRnWUfQFkVJvDicRiP2vR2V9B122VOra+yjlqzErPQ
- Hbn0P27j+h/RZnxKNCTgU0ks2c0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5ec6bc497c3c9cd06989ea66 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 17:37:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3E976C433CB; Thu, 21 May 2020 17:37:13 +0000 (UTC)
-Received: from [10.110.95.251] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E707DC433C6;
-        Thu, 21 May 2020 17:37:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E707DC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        balbi@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org
-References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <1e2e9c1b-fcd9-9e03-da86-a46e541a1480@codeaurora.org>
-Date:   Thu, 21 May 2020 10:37:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 13:37:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:50828 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728019AbgEURhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:37:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E4F530E;
+        Thu, 21 May 2020 10:37:45 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 790E43F68F;
+        Thu, 21 May 2020 10:37:44 -0700 (PDT)
+Date:   Thu, 21 May 2020 18:37:38 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     guohanjun@huawei.com, rjw@rjwysocki.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com
+Subject: Re: arm64/acpi: NULL dereference reports from UBSAN at boot
+Message-ID: <20200521173738.GA29590@e121166-lin.cambridge.arm.com>
+References: <20200521100952.GA5360@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521100952.GA5360@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 21, 2020 at 11:09:53AM +0100, Will Deacon wrote:
+> Hi folks,
+> 
+> I just tried booting the arm64 for-kernelci branch under QEMU (version
+> 4.2.50 (v4.2.0-779-g4354edb6dcc7)) with UBSAN enabled, and I see a
+> couple of NULL pointer dereferences reported at boot. I think they're
+> both GIC related (log below). I don't see a panic with UBSAN disabled,
+> so something's fishy here.
 
+May I ask you the QEMU command line please - just to make sure I can
+replicate it.
 
-On 5/21/2020 1:36 AM, Wesley Cheng wrote:
-> Changes in V2:
->  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
->    FIFO.
->  - Removed dev_dbg() prints and fixed typos from patches
->  - Added some more description on the dt-bindings commit message
->
+> Please can you take a look when you get a chance? I haven't had time to see
+> if this is a regression or not, but I don't think it's particularly serious
+> as I have all sorts of horrible stuff enabled in my .config, since I'm
+> trying to chase down another bug:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/plain/arch/arm64/configs/fuzzing.config?h=fuzzing/arm64-kernelci-20200519&id=c149cf6a51aa4f72d53fc681c6661094e93ef660
+> 
+> (on top of defconfig)
+> 
+> CONFIG_FAIL_PAGE_ALLOC may be to blame.
 
+Not sure about that, they are both quite cryptic, I wonder if UBSAN
+is not tricked by the ACPI_OFFSET macro - need to debug it further
+to understand what's going on here.
 
-> Reviewed-by: Felipe Balbi <balbi@kernel.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+Thanks,
+Lorenzo
 
-Sorry, please disregard the Reviewed-by tags in the patches.  I added
-those mistakenly.
-
-> Currently, there is no functionality to allow for resizing the TXFIFOs, and
-> relying on the HW default setting for the TXFIFO depth.  In most cases, the
-> HW default is probably sufficient, but for USB compositions that contain
-> multiple functions that require EP bursting, the default settings
-> might not be enough.  Also to note, the current SW will assign an EP to a
-> function driver w/o checking to see if the TXFIFO size for that particular
-> EP is large enough. (this is a problem if there are multiple HW defined
-> values for the TXFIFO size)
+> Cheers,
 > 
-> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
-> is required for an EP that supports bursting.  Otherwise, there may be
-> frequent occurences of bursts ending.  For high bandwidth functions,
-> such as data tethering (protocols that support data aggregation), mass
-> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
-> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
-> throughput. (which can be associated to system access latency, etc...)  It
-> allows for a more consistent burst of traffic, w/o any interruptions, as
-> data is readily available in the FIFO.
+> Will
 > 
-> With testing done using the mass storage function driver, the results show
-> that with a larger TXFIFO depth, the bandwidth increased significantly.
+> --->8
 > 
-> Test Parameters:
->  - Platform: Qualcomm SM8150
->  - bMaxBurst = 6
->  - USB req size = 256kB
->  - Num of USB reqs = 16
->  - USB Speed = Super-Speed
->  - Function Driver: Mass Storage (w/ ramdisk)
->  - Test Application: CrystalDiskMark
+> [    0.000000][    T0] ================================================================================
+> [    0.000000][    T0] UBSAN: null-ptr-deref in drivers/acpi/acpica/tbfadt.c:459:37
+> [    0.000000][    T0] member access within null pointer of type 'struct acpi_table_fadt'
+> [    0.000000][    T0] CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc6-00124-g96bc42ff0a82 #1
+> [    0.000000][    T0] Call trace:
+> [    0.000000][    T0]  dump_backtrace+0x0/0x384
+> [    0.000000][    T0]  show_stack+0x28/0x38
+> [    0.000000][    T0]  dump_stack+0xec/0x174
+> [    0.000000][    T0]  handle_null_ptr_deref+0x134/0x174
+> [    0.000000][    T0]  __ubsan_handle_type_mismatch_v1+0x84/0xa4
+> [    0.000000][    T0]  acpi_tb_create_local_fadt+0x1d4/0x1418
+> [    0.000000][    T0]  acpi_tb_parse_fadt+0x108/0x4b8
+> [    0.000000][    T0]  acpi_tb_parse_root_table+0x380/0x578
+> [    0.000000][    T0]  acpi_initialize_tables+0x140/0x194
+> [    0.000000][    T0]  acpi_table_init+0x90/0xcc
+> [    0.000000][    T0]  acpi_boot_table_init+0xfc/0x1c8
+> [    0.000000][    T0]  setup_arch+0x2b4/0x3ec
+> [    0.000000][    T0]  start_kernel+0x98/0x6f4
+> [    0.000000][    T0] ================================================================================
 > 
-> Results:
-> 
-> TXFIFO Depth = 3 max packets
-> 
-> Test Case | Data Size | AVG tput (in MB/s)
-> -------------------------------------------
-> Sequential|1 GB x     | 
-> Read      |9 loops    | 193.60
-> 	  |           | 195.86
->           |           | 184.77
->           |           | 193.60
-> -------------------------------------------
-> 
-> TXFIFO Depth = 6 max packets
-> 
-> Test Case | Data Size | AVG tput (in MB/s)
-> -------------------------------------------
-> Sequential|1 GB x     | 
-> Read      |9 loops    | 287.35
-> 	  |           | 304.94
->           |           | 289.64
->           |           | 293.61
-> -------------------------------------------
-> 
-> Wesley Cheng (3):
->   usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
->   arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
->   dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
-> 
->  Documentation/devicetree/bindings/usb/dwc3.txt |   2 +-
->  arch/arm64/boot/dts/qcom/sm8150.dtsi           |   1 +
->  drivers/usb/dwc3/core.c                        |   2 +
->  drivers/usb/dwc3/core.h                        |   8 ++
->  drivers/usb/dwc3/ep0.c                         |  37 ++++++++-
->  drivers/usb/dwc3/gadget.c                      | 111 +++++++++++++++++++++++++
->  6 files changed, 159 insertions(+), 2 deletions(-)
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> [    0.000000][    T0] ================================================================================
+> [    0.000000][    T0] UBSAN: null-ptr-deref in arch/arm64/kernel/smp.c:596:6
+> [    0.000000][    T0] member access within null pointer of type 'struct acpi_madt_generic_interrupt'
+> [    0.000000][    T0] CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc6-00124-g96bc42ff0a82 #1
+> [    0.000000][    T0] Call trace:
+> [    0.000000][    T0]  dump_backtrace+0x0/0x384
+> [    0.000000][    T0]  show_stack+0x28/0x38
+> [    0.000000][    T0]  dump_stack+0xec/0x174
+> [    0.000000][    T0]  handle_null_ptr_deref+0x134/0x174
+> [    0.000000][    T0]  __ubsan_handle_type_mismatch_v1+0x84/0xa4
+> [    0.000000][    T0]  acpi_parse_gic_cpu_interface+0x60/0xe8
+> [    0.000000][    T0]  acpi_parse_entries_array+0x288/0x498
+> [    0.000000][    T0]  acpi_table_parse_entries_array+0x178/0x1b4
+> [    0.000000][    T0]  acpi_table_parse_madt+0xa4/0x110
+> [    0.000000][    T0]  acpi_parse_and_init_cpus+0x38/0x100
+> [    0.000000][    T0]  smp_init_cpus+0x74/0x258
+> [    0.000000][    T0]  setup_arch+0x350/0x3ec
+> [    0.000000][    T0]  start_kernel+0x98/0x6f4
+> [    0.000000][    T0] ================================================================================
