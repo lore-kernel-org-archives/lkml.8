@@ -2,204 +2,188 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3006C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0D420748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351B220826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="slV1NT9K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iR3pZfkK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbgEUP4R (ORCPT
+        id S1729549AbgEUP4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40310 "EHLO
+        Thu, 21 May 2020 11:56:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgEUP4R (ORCPT
+        with ESMTP id S1728266AbgEUP4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:56:17 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 260CFC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:56:17 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id r25so6621327oij.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:56:17 -0700 (PDT)
+        Thu, 21 May 2020 11:56:23 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8B7C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:56:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c3so2910740wru.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8vYYXmeN5jPKZ8yHl1zcQTrk3+2MBfEvZOrsg6uMWz0=;
-        b=slV1NT9Kmw9gIGPFL64AKgnZtLSVTVxRMvTeUjYnQctDiz/6T8czmC8Q3Ok+HDigX5
-         1o5tk5qs9S8evmRNALsJRSQRmIj5vVxTU6dVNIYK+UmM/YU3cNy8YuO0AE+YS2PnMzBE
-         f+Z8wOIiXlnpnYOtkZNn9/LWFqoixCsaVY3LZRBoe7o4whn1qo7J8eWFXIBGZJXY3lpk
-         tXWL2zGiF2WIDZJWLX5AcnkSBZFI0pGmMlEXP+NlirYU6HKGTuBcSNSc1tDLDtJpIo3r
-         WOLGBP9ud/kFhAZpqMuhShW/4CGzi0RRkt4VpBawsZAfzlPCYBrUclxGvj0dtSk7t+qw
-         aIRg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uLCMRTyOXjE9erVUxBDc3PTKU9Yt55p8AR+4yWGIsbg=;
+        b=iR3pZfkKbiToIz1N7ufbr2Ugkp9DSrnwW2AOdbebzNhEOZ7YdsnlO9drTxWjtbxpfL
+         BuXCNhnKsSaB+XWrfXNOIWyGeT19lgVwoEqDobqhDWNIabOOj65L55nGxewmeylThkmR
+         lFBgxEJsbafCqXo1njqHmm7SsBEHYG30/1s7aPy1O+04VDrALmmv/vDzJxohtyxo8lqb
+         Vjrv71oCYP4DHJo+dJbZiV/lLn/QvPEMPda0hMvOE3IfPQgJMtBfvYHNYFKZDDCRPD4U
+         2eKE7djjuKS49cG4Db9rPchi+xDoEEtjuLW6PoN42cTLWcKlBWtiCi33inM1sQW7EhQn
+         0azQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8vYYXmeN5jPKZ8yHl1zcQTrk3+2MBfEvZOrsg6uMWz0=;
-        b=KD1mVhlUcx4TzU0PcUQV5ilTAeJN0O+VN4OLx7sKVTbUa3Kwt07dm596LXrjyt5GA4
-         MXKwYIdKp15vGQurGHq/FBYmYHbj1CZDs1yt7Ql/ZML+mrSNkK/kZ9cDyi2kFU+ECXvl
-         8z2n666kFI3C/I/nb2EjZGbSfi+Hudq9dMN72lGlf/62Dp20E22fcMxkAAy5Fs/hJqOM
-         ++AB+n5dkvdekWBCexsZl75zMZDeMKwORqqLSxfYc1ipBnuDQe6JyEzNSh/yFLZHw/Zo
-         bpLVVsiaDugHWnCpFsN/F9CeyEllHOA5+Qad9HElCXAm0S2nm6EM8pebCxzGaoOZGUTk
-         CW+g==
-X-Gm-Message-State: AOAM531Ysln+9YiWmrtatl6D7r5yUELTl5/gFwdqeznatf5I3+woXJfg
-        Lx5HVpnf6EqMgditwb1043cFccizVrb8B7eRjq6yQg==
-X-Google-Smtp-Source: ABdhPJy1z6pfeCPw1pWfVSSf1a0FvzBy/xV8oCNlLV6yNes/xmwH+hthAwIjJ/mwMj5W2DsBfYqcAq1aV1CAlY5JPvI=
-X-Received: by 2002:aca:534c:: with SMTP id h73mr6942846oib.52.1590076576468;
- Thu, 21 May 2020 08:56:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uLCMRTyOXjE9erVUxBDc3PTKU9Yt55p8AR+4yWGIsbg=;
+        b=nsu8Njdhcvz50K1m18SuXd9Q/n6lh1ll8yHEFQSjhdh2IgbDo+YWv0ipD/LdxRZPrE
+         lPuZpfzAWA/9GsINGgjylbBMPGO4sBsAgdROTkzNF5DKqSg2irUviGR+OpeKv9Pn4w3L
+         FqydWtSbYyN3OEcNyj2XNv9v+FyLDrP1uyjNvM8VMzgoIxkE3sH3stGKPKtLO5xE0eGA
+         cJtAzHbgptkQpw4Z1vPY7GGvAroo+BxHYH+KWFSJbncGvzR7WLw5Z0HyFCdFHl/TWFls
+         JttcQi+hE8FBNqzPHKWqUdrKusF/eXwUNJQVo6AiXmNaiEMUYY+eDmFu7XU1k2K3piLq
+         N5+Q==
+X-Gm-Message-State: AOAM532Qz5ZB/l0N8Hh2DSsvIx/LVPjs/nBGvMFYtM9pzzhb/vXWlMve
+        zvLD0gGC44I7oMVxGRjgxiS98g==
+X-Google-Smtp-Source: ABdhPJxrMTmt7fxRkq9YsSfm7JKgRhRnDtp9kr90marbvWZjRQ6V/3vd0FugA1b6W6TJcs6AhSlm1g==
+X-Received: by 2002:a5d:4c49:: with SMTP id n9mr2020191wrt.266.1590076551258;
+        Thu, 21 May 2020 08:55:51 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id m3sm6778597wrn.96.2020.05.21.08.55.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 May 2020 08:55:50 -0700 (PDT)
+Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse
+ support
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        dhavalp@codeaurora.org, mturney@codeaurora.org,
+        sparate@codeaurora.org, c_rbokka@codeaurora.org,
+        mkurumel@codeaurora.org
+References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
+ <1589307480-27508-3-git-send-email-rbokka@codeaurora.org>
+ <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
+ <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org>
+ <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
+ <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org>
+ <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
+ <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
+ <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org>
+ <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
+ <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org>
+ <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <9ecb5790-47fe-583b-6fc3-8f4f3ce7860e@linaro.org>
+Date:   Thu, 21 May 2020 16:55:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1587999532-30006-1-git-send-email-abel.vesa@nxp.com>
- <0d301ed303faea4895d30b682133ec5c9d44bd8b.camel@pengutronix.de>
- <AM6PR04MB504745F6EB1FB17F6DBDD9A387AF0@AM6PR04MB5047.eurprd04.prod.outlook.com>
- <97aa62e8aaf8fa1c462c7db117fca9b6ea9bfec0.camel@pengutronix.de>
-In-Reply-To: <97aa62e8aaf8fa1c462c7db117fca9b6ea9bfec0.camel@pengutronix.de>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Thu, 21 May 2020 08:56:04 -0700
-Message-ID: <CAJ+vNU3oMSpbysJ+BXyGGFknZs6BHH6hZ_qLpnsxmSBJ1Log7A@mail.gmail.com>
-Subject: Re: [PATCH] soc: imx: Add power domain driver support for i.mx8m family
-To:     Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Adam Ford <aford173@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 2:19 AM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Am Montag, den 27.04.2020, 15:37 +0000 schrieb Jacky Bai:
-> > > -----Original Message-----
-> > > From: Lucas Stach <l.stach@pengutronix.de>
-> > > Sent: Monday, April 27, 2020 11:11 PM
-> > > To: Abel Vesa <abel.vesa@nxp.com>; Jacky Bai <ping.bai@nxp.com>; Shaw=
-n
-> > > Guo <shawnguo@kernel.org>; Sascha Hauer <kernel@pengutronix.de>; Liam
-> > > Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel.org>
-> > > Cc: Aisheng Dong <aisheng.dong@nxp.com>; dl-linux-imx
-> > > <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.org; Linux Kern=
-el
-> > > Mailing List <linux-kernel@vger.kernel.org>
-> > > Subject: Re: [PATCH] soc: imx: Add power domain driver support for i.=
-mx8m
-> > > family
-> > >
-> > > Am Montag, den 27.04.2020, 17:58 +0300 schrieb Abel Vesa:
-> > > > From: Jacky Bai <ping.bai@nxp.com>
-> > > >
-> > > > The i.MX8M family is a set of NXP product focus on delivering the
-> > > > latest and greatest video and audio experience combining
-> > > > state-of-the-art media-specific features with high-performance
-> > > > processing while optimized for lowest power consumption.
-> > > >
-> > > > i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all belong =
-to
-> > > > this family. A GPC module is used to manage all the PU power domain
-> > > > on/off. But the situation is that the number of power domains & the
-> > > > power up sequence has significate difference on those SoCs. Even on
-> > > > the same SoC. The power up sequence still has big difference. It ma=
-kes
-> > > > us hard to reuse the GPCv2 driver to cover the whole i.MX8M family.
-> > > > Each time a new SoC is supported in the mainline kernel, we need to
-> > > > modify the GPCv2 driver to support it. We need to add or modify
-> > > > hundred lines of code in worst case.
-> > > > It is a bad practice for the driver maintainability.
-> > > >
-> > > > This driver add a more generic power domain driver that the actual
-> > > > power on/off is done by TF-A code. the abstraction give us the
-> > > > possibility that using one driver to cover the whole i.MX8M family =
-in
-> > > > kernel side.
-> > > >
-> > >
-> > > Again: what does this driver bring to the table, other than moving a =
-fraction of
-> > > the power domain functionality into the firmware?
-> > >
-> > > The discussions on the last submissions of this driver already establ=
-ished that
-> > > we can't move all functionality for the power domains into the firmwa=
-re, as
-> > > controlling regulators is probably not easy to do from this context. =
-Also the
-> > > TF-A side implementation of this driver is "interesting" IMHO, it doe=
-s stuff like
-> > > accessing the clock controller registers without any locking or other=
- means of
-> > > mutual exclusion with the Linux kernel clock controller driver.
-> > >
-> >
-> > The clock handling is in kernel side through CCF, not in ATF. See the p=
-atch below.
-> >
-> > > Why can't we just extend the existing GPCv2 driver with support for t=
-he other
-> > > i.MX8M family members?
-> > >
-> >
-> > The reason that why I don=E2=80=99t like to extend the GPCv2 is that wh=
-en doing domain on/off,
-> > We need to access some special control register in each domain & do som=
-e special flow,
-> > These control register(mediamix block control, vpumix block control) is=
- not in GPC
-> > module's address range. No benefit to reuse the GPCv2. Only bring compl=
-exity to the
-> > GPCv2 driver each time a new SoC is added.
-> >
-> > Yes, the i.MX8M power domain support has been pending for a while. ARM =
-guys rejected this patchset
-> > because they suggest us to use SCMI rather than SiP. But SCMI is only p=
-artial suitable for our
-> > case.
->
-> Can you please point me to the most resent version of the TF-A side
-> implementation of this? The i.MX8MM implementation in the
-> imx_5.4.3_2.0.0 branch in the codeaurora imx-atf repo still contains
-> writes to the clock controller register range.
->
-> Also I would love to learn why the GPC needs to access Mediamix and
-> VPUmix domain registers. If you are talking about the NOC configuration
-> I would strongly suggest that those should be handled by a Linux side
-> interconnect driver, this has nothing to do with the power domain
-> sequencing, it just happens to lose state over the power down and needs
-> to be reprogrammed after power on. The NOC configuration though is use-
-> case dependent, so this should be properly handled in a rich OS driver.
->
-> Sure we needs to extend the Linux side GPC driver for each new SoC
-> generation, but that's no different from any other hardware driver in
-> Linux. Drivers are the abstraction around the hardware, there is no
-> need to invent another one if there are no clear benefits.
->
 
-Jacky / Abel,
 
-Any movement on this? As I see it the lack of imx8mm power-domain
-support in the kernel is holding up USB, PCIe, VPU, and perhaps
-GPU/CSI as well. I would tend to agree that hiding this functionality
-in the TF-A is probably not the best approach especially as that
-requires a NXP version of the TF-A. I really don't see the issue with
-the gpc driver getting a little more complicated if it needs to. There
-is bound to be some complication as there is such a large variation of
-IMX8 products out there! (talk about confusing!).
+On 21/05/2020 16:10, Doug Anderson wrote:
+>> On 20/05/2020 23:48, Doug Anderson wrote:
+>>>> Is this only applicable for corrected address space?
+>>> I guess I was proposing a two dts-node / two drive approach here.
+>>>
+>>> dts node #1:just covers the memory range for accessing the FEC-corrected data
+>>> driver #1: read-only and reads the FEC-corrected data
+>>>
+>>> dts node #2: covers the memory range that's_not_  the FEC-corrected
+>>> memory range.
+>>> driver #2: read-write.  reading reads uncorrected data
+>>>
+>>> Does that seem sane?
+>> I see your point but it does not make sense to have two node for same thing.
+> OK, so that sounds as if we want to go with the proposal where we
+> "deprecate the old driver and/or bindings and say that there really
+> should just be one node and one driver".
+> 
+> Would this be acceptable to you?
+> 
+> 1. Officially mark the old bindings as deprecated.
 
-Best Regards,
+Possibly Yes for some reasons below!
 
-Tim
+> 
+> 2. Leave the old driver there to support the old deprecated bindings,
+> at least until everyone can be transferred over.  There seem to be
+> quite a few existing users of "qcom,qfprom" and we're supposed to make
+> an attempt at keeping the old device trees working, at least for a
+> little while.  Once everyone is transferred over we could decide to
+> delete the old driver.
+we could consider "qcom,qfrom" to be only passing corrected address 
+space. Till we transition users to new bindings!
+
+> 
+Yes.
+
+> 3. We will have a totally new driver here.
+No, we should still be using the same driver. But the exiting driver 
+seems to incorrect and is need of fixing.
+
+Having a look at the memory map for old SoCs like msm8996 and msm8916 
+shows that memory map that was passed to qfprom driver is corrected 
+address space. Writes will not obviously work!
+
+This should also be true with sdm845 or sc7180
+
+That needs to be fixed first!
+
+> 
+> 4. A given device tree will_not_  be allowed to have both
+> "qcom,qfprom" specified and "qcom,SOC-qfprom" specified.  ...and by
+> "qcom,SOC-qfprom" I mean that SOC should be replaced by the SoC name,
+> so "qcom,sc7180-qfprom" or "qcom,sdm845-qfprom".  So once you switch
+> to the new node it replaces the old node.
+
+Secondly, this IP is clearly an integral part of Secure Control Block, 
+which clearly has versioning information.
+
+Versioning information should be part of compatible string in msm8996 it 
+should be "qcom,qfprom-5.1.0"
+for msm8916 it should be "qcom,qfprom-4.0.0" this translates to 
+"qcom,qfprom-<MAJOR-NUMBER>-<MINOR-NUMBER>-<STEP>"
+
+Thirdly we should be able to have common read for all these as they tend 
+to just read from corrected address space.
+
+Offsets to corrected address space seems to always constant across SoCs too.
+
+platform specific device tree nodes should also be able to specify 
+"read-only" property to not allow writes on to this raw area.
+
+Does this make sense ?
+
+Thanks,
+srini
+> 
+> 
+>> Isn't the raw address space reads used to for blowing and checking the
+>> fuses if they are blown correctly or not and software usage of these
+>> fuses should only be done from correct address space?
+>>
+>> the read interface to user should be always from corrected address space
+>> and write interface should be to raw address space.
+> Great.  That sounds right to me.  Presumably the driver could add some
+> sort of "debugfs" access to read the raw address space if needed.
