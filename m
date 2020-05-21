@@ -2,234 +2,166 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A86EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB6F82070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4D6207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:15:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MaaiESZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgEUJOm (ORCPT
+        id S1728988AbgEUJPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:14:42 -0400
-Received: from v6.sk ([167.172.42.174]:34954 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbgEUJOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:14:41 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 394F661303;
-        Thu, 21 May 2020 09:14:09 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 5/9] dt-bindings: media: Convert marvell,mmp2-ccic to json-schema
-Date:   Thu, 21 May 2020 11:13:52 +0200
-Message-Id: <20200521091356.2211020-6-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521091356.2211020-1-lkundrak@v3.sk>
-References: <20200521091356.2211020-1-lkundrak@v3.sk>
+        Thu, 21 May 2020 05:15:03 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53910 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbgEUJPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:15:02 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L9EdMR013665;
+        Thu, 21 May 2020 04:14:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590052479;
+        bh=6TWapEuxg8nAckEhBpE445YKmDj0TJ/xlqg6Fj94UN0=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=MaaiESZ6aMqcrpmJHO1mfIi6xcBPy89FLOWsTC7LaSKeRbpKblQVGffGtUkHPmsGz
+         KtTJ6G2zE9wgGcvBYU37tyagCvHpizRCMMgOcroPyoWwWwrT8AucyU/I2e2Pw/IwO9
+         c3yoOkpPkfW2mWbh18+Ej1+oCaJOw0jBQh2uczPA=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04L9EdvO010693
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 04:14:39 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 04:14:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 04:14:39 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L9EcT0062434;
+        Thu, 21 May 2020 04:14:39 -0500
+Date:   Thu, 21 May 2020 14:44:36 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     <masonccyang@mxic.com.tw>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mark Brown <broonie@kernel.org>, <juliensu@mxic.com.tw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v5 09/19] mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+Message-ID: <20200521091434.rigqlyuwszyyikj4@ti.com>
+References: <20200519142642.24131-1-p.yadav@ti.com>
+ <20200519142642.24131-10-p.yadav@ti.com>
+ <OF83616464.480FA751-ON4825856E.002A4483-4825856E.002BE6AF@mxic.com.tw>
+ <20200520085534.yra4f5ww5xs23c4j@ti.com>
+ <OF98344913.4BF4C313-ON4825856E.0032A810-4825856E.00352141@mxic.com.tw>
+ <20200520103728.jtbslowdfrv3o5yz@ti.com>
+ <OFF5A6BA99.395182B5-ON4825856F.002B2F98-4825856F.002CD973@mxic.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <OFF5A6BA99.395182B5-ON4825856F.002B2F98-4825856F.002CD973@mxic.com.tw>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the marvell,mmp2-ccic binding to DT schema format using
-json-schema. While at that this drops the "func" and "phy" clocks.
+On 21/05/20 04:09PM, masonccyang@mxic.com.tw wrote:
+> 
+> Hi Pratyush, 
+> 
+> > > > > > +   /* Get 8D-8D-8D fast read opcode and dummy cycles. */
+> > > > > > +   opcode = FIELD_GET(PROFILE1_DWORD1_RD_FAST_CMD, table[0]);
+> > > > > > +
+> > > > > > +   /*
+> > > > > > +    * Update the fast read settings. We set the default dummy 
+> > > cycles to 
+> > > > > 20
+> > > > > > +    * here. Flashes can change this value if they need to when 
+> > > enabling
+> > > > > > +    * octal mode.
+> > > > > > +    */
+> > > > > > + 
+> spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_8_8_8_DTR],
+> > > > > > +              0, 20, opcode,
+> > > > > > +              SNOR_PROTO_8_8_8_DTR);
+> > > > > > +
+> > > > > 
+> > > > > 
+> > > > > I thought we have a agreement that only do parse here, no other 
+> read 
+> > > > > parameters setting.
+> > > > 
+> > > > Yes, and I considered it. But it didn't make much sense to me to 
+> > > > introduce an extra member in struct spi_nor just to make this call 
+> in 
+> > > > some other function later.
+> > > > 
+> > > > Why exactly do you think doing this here is bad? The way I see it, 
+> we 
+> > > > avoid carrying around an extra member in spi_nor and this also 
+> allows 
+> > > > flashes to change the read settings easily in a post-sfdp hook. The 
+> > > > 4bait parsing function does something similar.
+> > > 
+> > > I think it's not a question for good or bad. 
+> > > 
+> > > 4bait parsing function parse the 4-Byte Address Instruction Table
+> > > and set up read/pp parameters there for sure.
+> > > 
+> > > Here we give the function name spi_nor_parse_profile1() but also 
+> > 
+> > But the function that parses 4bait table is also called 
+> > spi_nor_parse_4bait(). 
+> > 
+> > > do others setting that has nothing to do with it, 
+> > 
+> > Why has setting read opcode and dummy cycles got nothing to do with it? 
+> > The purpose of the Profile 1.0 table is to tell us the Read Fast 
+> > command and dummy cycles, among other things. I think it _does_ have 
+> > something to do with it.
+> 
+> As you know I mean this function just do parse parameter of profile 1 
+> table
+> and keep these value data for later usage.
+> 
+> A device supports xSPI profile table could work in either 8S-8S-8S or 
+> 8D-8D-8D mode.
+> It seems to setup these parameters somewhere out here is betters.
 
-The driver consumes clocks with those names, but it's not clear
-what are they for and they are not used in DT systems. "phy" is
-probably a clock for the sensor and it would belong in the sensor
-node.
+As far as I know, the Profile 1.0 table only describes 8D-8D-8D mode. I 
+see no mention of 8S-8S-8S in JESD251 or JESD216D.01. No field in the 
+table describes anything related to 8S. In fact, searching for "8S" in 
+the JESD251 spec yields 0 results. 
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Anyway, you should set up 8S parameters in SNOR_CMD_READ_8_8_8, not 
+SNOR_CMD_READ_8_8_8_DTR. 8D configuration is independent of 8S 
+configuration.
 
----
-Changes since v1:
-- Fix indentation
-- Drop clocks other than "axi"
-- s/GPL-2.0-or-later/GPL-2.0-only/
+PS: If you have any more comments, please send them now. The merge 
+window is getting close, and I'd like to see this make it in.
 
- .../bindings/media/marvell,mmp2-ccic.txt      | 50 ----------
- .../bindings/media/marvell,mmp2-ccic.yaml     | 97 +++++++++++++++++++
- 2 files changed, 97 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
- create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-deleted file mode 100644
-index 7ec2c8c8a3b9..000000000000
---- a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--Marvell MMP2 camera host interface
--
--Required properties:
-- - compatible: Should be "marvell,mmp2-ccic".
-- - reg: Register base and size.
-- - interrupts: The interrupt number.
-- - #clock-cells: Must be 0.
--
--Optional properties:
-- - clocks: Reference to the input clock as specified by
--           Documentation/devicetree/bindings/clock/clock-bindings.txt.
-- - clock-names: Names of the clocks used; "axi" for the AXI bus interface,
--                "func" for the peripheral clock and "phy" for the parallel
--                video bus interface.
-- - clock-output-names: Optional clock source for sensors. Shall be "mclk".
--
--Required subnodes:
-- - port: The parallel bus interface port with a single endpoint linked to
--         the sensor's endpoint as described in
--         Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Required endpoint properties:
-- - bus-type: data bus type, <5> or <6> for Parallel or Bt.656 respectively
-- - pclk-sample: pixel clock polarity
-- - hsync-active: horizontal synchronization polarity (only required for
--   parallel bus)
-- - vsync-active: vertical synchronization polarity (only required for
--   parallel bus)
--
--Example:
--
--	camera0: camera@d420a000 {
--		compatible = "marvell,mmp2-ccic";
--		reg = <0xd420a000 0x800>;
--		interrupts = <42>;
--		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
--		clock-names = "axi";
--		#clock-cells = <0>;
--		clock-output-names = "mclk";
--
--		port {
--			camera0_0: endpoint {
--				remote-endpoint = <&ov7670_0>;
--                                bus-type = <5>;      /* Parallel */
--                                hsync-active = <1>;  /* Active high */
--                                vsync-active = <1>;  /* Active high */
--                                pclk-sample = <0>;   /* Falling */
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-new file mode 100644
-index 000000000000..fb399de668bb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/marvell,mmp2-ccic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell MMP2 camera host interface bindings
-+
-+maintainers:
-+  - Lubomir Rintel <lkundrak@v3.sk>
-+
-+properties:
-+  $nodename:
-+    pattern: '^camera@[a-f0-9]+$'
-+
-+  compatible:
-+    const: marvell,mmp2-ccic
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      endpoint:
-+        type: object
-+        additionalProperties: false
-+
-+        # Properties described in
-+        # Documentation/devicetree/bindings/media/video-interfaces.txt
-+        properties:
-+          remote-endpoint: true
-+          hsync-active: true
-+          vsync-active: true
-+          pclk-sample: true
-+          bus-type: true
-+
-+        required:
-+          - remote-endpoint
-+
-+    required:
-+      - endpoint
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - description: AXI bus interface clock
-+      - description: Peripheral clock
-+      - description: Parallel video bus interface clock
-+
-+  clock-names:
-+    const: axi
-+
-+  '#clock-cells':
-+    const: 0
-+
-+  clock-output-names:
-+    const: mclk
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - port
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/marvell,mmp2.h>
-+
-+    camera@d420a000 {
-+      compatible = "marvell,mmp2-ccic";
-+      reg = <0xd420a000 0x800>;
-+      interrupts = <42>;
-+      clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-+      clock-names = "axi";
-+      #clock-cells = <0>;
-+      clock-output-names = "mclk";
-+
-+      port {
-+        camera0_0: endpoint {
-+          remote-endpoint = <&ov7670_0>;
-+          bus-type = <5>;      /* Parallel */
-+          hsync-active = <1>;  /* Active high */
-+          vsync-active = <1>;  /* Active high */
-+          pclk-sample = <0>;   /* Falling */
-+        };
-+      };
-+    };
-+
-+...
 -- 
-2.26.2
-
+Regards,
+Pratyush Yadav
+Texas Instruments India
