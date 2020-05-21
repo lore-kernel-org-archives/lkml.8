@@ -2,130 +2,210 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56527C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE34C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EA520738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590086425;
-	bh=WilSX/tvB1ZgGJHt9Z4h/gS/HMv0mGFmgDv17bIMFdM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wv3JhcmbM4VdcrIbDjyGTKRG7etwHSt35KSAkWEtfUY4D2XTlHUXI7jSEQVgjojVo
-	 MQFwT2BHUPdFLG6tMRiYMHlqGJaeqxjgSIqabP9A2Fur+vAKXWNxK8bxW20Edj/MAf
-	 SK60XHz8BALZWQQrKEgewmKjegAWbWbOazejYJqI=
+	by mail.kernel.org (Postfix) with ESMTP id 938BA206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgEUSkY (ORCPT
+        id S1729793AbgEUSkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728240AbgEUSkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:40:24 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ABF9206C3;
-        Thu, 21 May 2020 18:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590086423;
-        bh=WilSX/tvB1ZgGJHt9Z4h/gS/HMv0mGFmgDv17bIMFdM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o99OUrvH4iYPkWT7frQqqRHqpSAXvHUYPWpLTmutilY/rrnU/eCuzE+ZEN845PEgE
-         tNbEooJ7WgIYj+EUrpLRebb5Pi/hTpb1ySFBB31cJyXzOq3djpfuEv5wSF/BQUcIpd
-         Gs19tOIwzIA71N6ORfOgwcc/zYWZpMpKn5Qnyp2Y=
-Date:   Thu, 21 May 2020 19:40:20 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <ak@it-klinger.de>
-Subject: Re: [PATCH v2] iio: proximity: ping: pass reference to IIO device
- as param to ping_read()
-Message-ID: <20200521194020.5cb1ac16@archlinux>
-In-Reply-To: <20200518133813.403903-1-alexandru.ardelean@analog.com>
-References: <20200518133813.403903-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 21 May 2020 14:40:40 -0400
+Received: from smtprelay0218.hostedemail.com ([216.40.44.218]:37268 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728240AbgEUSkk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:40:40 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 5D245182CED2A;
+        Thu, 21 May 2020 18:40:39 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: class39_3a05a3526d20
+X-Filterd-Recvd-Size: 5863
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 21 May 2020 18:40:38 +0000 (UTC)
+Message-ID: <a21d75fce03991d3c8eb1f4d130572d8a04f8686.camel@perches.com>
+Subject: [PATCH] printk: Move and rename maximum printk output line length
+ defines
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Chenggang Wang <wangchenggang@vivo.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Thu, 21 May 2020 11:40:35 -0700
+In-Reply-To: <cover.1589916689.git.joe@perches.com>
+References: <cover.1589916689.git.joe@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 16:38:13 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Make the printk output maximum line length globally available.
 
-> Since there will be some changes to how iio_priv_to_dev() is implemented,
-> it could be that the helper becomes a bit slower, as it will be hidden away
-> in the IIO core.
-> 
-> But even without that rework, this looks like it can pass the 'indio_dev'
-> object to ping_read() and obtain the state struct via iio_priv() which is a
-> preferred practice than going back-n-forth (getting the state-struct, then
-> using iio_priv_to_dev() to get the indio_dev object back).
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Seems trivial and unlikely to have any issues so I'll take this one
-without waiting any longer.
+This can be used to emit logging messages lines that exceed
+the single printk maximum length line.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+e.g.: the kernel boot command on ARM can be up to 2048 chars
 
-Thanks,
+Miscellanea:
 
-Jonathan
+o Prefix the defines with PRINTK_
 
-> ---
-> 
-> Changelog v1 -> v2:
-> * split away from series
-> * pass 'indio_dev' to ping_read() and get the info via iio_priv()
-> 
->  drivers/iio/proximity/ping.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/ping.c b/drivers/iio/proximity/ping.c
-> index 12b893c5b0ee..2e99eeb27f2e 100644
-> --- a/drivers/iio/proximity/ping.c
-> +++ b/drivers/iio/proximity/ping.c
-> @@ -89,14 +89,14 @@ static irqreturn_t ping_handle_irq(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> -static int ping_read(struct ping_data *data)
-> +static int ping_read(struct iio_dev *indio_dev)
->  {
-> +	struct ping_data *data = iio_priv(indio_dev);
->  	int ret;
->  	ktime_t ktime_dt;
->  	s64 dt_ns;
->  	u32 time_ns, distance_mm;
->  	struct platform_device *pdev = to_platform_device(data->dev);
-> -	struct iio_dev *indio_dev = iio_priv_to_dev(data);
->  
->  	/*
->  	 * just one read-echo-cycle can take place at a time
-> @@ -228,7 +228,6 @@ static int ping_read_raw(struct iio_dev *indio_dev,
->  			    struct iio_chan_spec const *channel, int *val,
->  			    int *val2, long info)
->  {
-> -	struct ping_data *data = iio_priv(indio_dev);
->  	int ret;
->  
->  	if (channel->type != IIO_DISTANCE)
-> @@ -236,7 +235,7 @@ static int ping_read_raw(struct iio_dev *indio_dev,
->  
->  	switch (info) {
->  	case IIO_CHAN_INFO_RAW:
-> -		ret = ping_read(data);
-> +		ret = ping_read(indio_dev);
->  		if (ret < 0)
->  			return ret;
->  		*val = ret;
+Signed-off-by: Joe Perches <joe@perches.com>
+Acked-by: Petr Mladek <pmladek@suse.com>
+---
+ include/linux/printk.h | 18 ++++++++++++++++++
+ kernel/printk/printk.c | 28 ++++++++++------------------
+ 2 files changed, 28 insertions(+), 18 deletions(-)
+
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 38beb97e7018..850dc4d4356f 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -43,6 +43,24 @@ static inline const char *printk_skip_headers(const char *buffer)
+ 
+ #define CONSOLE_EXT_LOG_MAX	8192
+ 
++/* Maximum length of a single printk */
++
++#ifdef CONFIG_PRINTK
++
++#ifdef CONFIG_PRINTK_CALLER
++#define PRINTK_PREFIX_MAX	48
++#else
++#define PRINTK_PREFIX_MAX	32
++#endif
++#define PRINTK_LOG_LINE_MAX	(1024 - PRINTK_PREFIX_MAX)
++
++#else
++
++#define PRINTK_PREFIX_MAX	0
++#define PRINTK_LOG_LINE_MAX	0
++
++#endif
++
+ /* printk's without a loglevel use this.. */
+ #define MESSAGE_LOGLEVEL_DEFAULT CONFIG_MESSAGE_LOGLEVEL_DEFAULT
+ 
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 4f1cc4acef41..fc22a494ef0c 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -443,13 +443,6 @@ static u64 exclusive_console_stop_seq;
+ static u64 clear_seq;
+ static u32 clear_idx;
+ 
+-#ifdef CONFIG_PRINTK_CALLER
+-#define PREFIX_MAX		48
+-#else
+-#define PREFIX_MAX		32
+-#endif
+-#define LOG_LINE_MAX		(1024 - PREFIX_MAX)
+-
+ #define LOG_LEVEL(v)		((v) & 0x07)
+ #define LOG_FACILITY(v)		((v) >> 3 & 0xff)
+ 
+@@ -825,7 +818,7 @@ static ssize_t devkmsg_write(struct kiocb *iocb, struct iov_iter *from)
+ 	size_t len = iov_iter_count(from);
+ 	ssize_t ret = len;
+ 
+-	if (!user || len > LOG_LINE_MAX)
++	if (!user || len > PRINTK_LOG_LINE_MAX)
+ 		return -EINVAL;
+ 
+ 	/* Ignore when user logging is disabled. */
+@@ -1341,7 +1334,7 @@ static size_t msg_print_text(const struct printk_log *msg, bool syslog,
+ 	const char *text = log_text(msg);
+ 	size_t text_size = msg->text_len;
+ 	size_t len = 0;
+-	char prefix[PREFIX_MAX];
++	char prefix[PRINTK_PREFIX_MAX];
+ 	const size_t prefix_len = print_prefix(msg, syslog, time, prefix);
+ 
+ 	do {
+@@ -1382,7 +1375,7 @@ static int syslog_print(char __user *buf, int size)
+ 	struct printk_log *msg;
+ 	int len = 0;
+ 
+-	text = kmalloc(LOG_LINE_MAX + PREFIX_MAX, GFP_KERNEL);
++	text = kmalloc(PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX, GFP_KERNEL);
+ 	if (!text)
+ 		return -ENOMEM;
+ 
+@@ -1412,7 +1405,7 @@ static int syslog_print(char __user *buf, int size)
+ 		skip = syslog_partial;
+ 		msg = log_from_idx(syslog_idx);
+ 		n = msg_print_text(msg, true, syslog_time, text,
+-				   LOG_LINE_MAX + PREFIX_MAX);
++				   PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX);
+ 		if (n - syslog_partial <= size) {
+ 			/* message fits into buffer, move forward */
+ 			syslog_idx = log_next(syslog_idx);
+@@ -1454,7 +1447,7 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 	u32 idx;
+ 	bool time;
+ 
+-	text = kmalloc(LOG_LINE_MAX + PREFIX_MAX, GFP_KERNEL);
++	text = kmalloc(PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX, GFP_KERNEL);
+ 	if (!text)
+ 		return -ENOMEM;
+ 
+@@ -1492,7 +1485,8 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
+ 	while (len >= 0 && seq < next_seq) {
+ 		struct printk_log *msg = log_from_idx(idx);
+ 		int textlen = msg_print_text(msg, true, time, text,
+-					     LOG_LINE_MAX + PREFIX_MAX);
++					     PRINTK_LOG_LINE_MAX +
++					     PRINTK_PREFIX_MAX);
+ 
+ 		idx = log_next(idx);
+ 		seq++;
+@@ -1845,7 +1839,7 @@ static inline u32 printk_caller_id(void)
+  * reached the console in case of a kernel crash.
+  */
+ static struct cont {
+-	char buf[LOG_LINE_MAX];
++	char buf[PRINTK_LOG_LINE_MAX];
+ 	size_t len;			/* length == 0 means unused buffer */
+ 	u32 caller_id;			/* printk_caller_id() of first print */
+ 	u64 ts_nsec;			/* time of first print */
+@@ -1931,7 +1925,7 @@ int vprintk_store(int facility, int level,
+ 		  const char *dict, size_t dictlen,
+ 		  const char *fmt, va_list args)
+ {
+-	static char textbuf[LOG_LINE_MAX];
++	static char textbuf[PRINTK_LOG_LINE_MAX];
+ 	char *text = textbuf;
+ 	size_t text_len;
+ 	enum log_flags lflags = 0;
+@@ -2088,8 +2082,6 @@ EXPORT_SYMBOL(printk);
+ 
+ #else /* CONFIG_PRINTK */
+ 
+-#define LOG_LINE_MAX		0
+-#define PREFIX_MAX		0
+ #define printk_time		false
+ 
+ static u64 syslog_seq;
+@@ -2396,7 +2388,7 @@ static inline int can_use_console(void)
+ void console_unlock(void)
+ {
+ 	static char ext_text[CONSOLE_EXT_LOG_MAX];
+-	static char text[LOG_LINE_MAX + PREFIX_MAX];
++	static char text[PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX];
+ 	unsigned long flags;
+ 	bool do_cond_resched, retry;
+ 
 
