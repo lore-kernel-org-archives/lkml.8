@@ -2,196 +2,203 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F236FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D691C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B698220756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D6420756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wKnrlt7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbgEUV0B (ORCPT
+        id S1730581AbgEUV0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:26:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35684 "EHLO
+        Thu, 21 May 2020 17:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgEUV0B (ORCPT
+        with ESMTP id S1726814AbgEUV0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:26:01 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43149C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:26:01 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbsh3-00025X-L4; Thu, 21 May 2020 23:25:33 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2804E100C2D; Thu, 21 May 2020 23:25:32 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     paulmck@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V9 02/39] rcu: Abstract out rcu_irq_enter_check_tick() from rcu_nmi_enter()
-In-Reply-To: <20200521210339.GC2869@paulmck-ThinkPad-P72>
-References: <20200521200513.656533920@linutronix.de> <20200521202116.996113173@linutronix.de> <20200521210339.GC2869@paulmck-ThinkPad-P72>
-Date:   Thu, 21 May 2020 23:25:32 +0200
-Message-ID: <87blmht1yr.fsf@nanos.tec.linutronix.de>
+        Thu, 21 May 2020 17:26:35 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9F5C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:26:35 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so4106698pfa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sNxVZlCt5dJC4vJhuBkpvXmZzzYVLjMtc81k2G0ucts=;
+        b=wKnrlt7dZ0AvB56IYc2LjlLTzqfrJ3PwmXb1LvRDCIsfjvh03rt6qqW6RaYbHnJhKR
+         1bXsI1Rql2xrHyEDMaNgHFYXuEgH+gC/4y1zIosCnCeCgZSI0Z5DeGrDUGVOkYeywBSV
+         3pg3C1mN/shwWUHjN2AD5CiISjt8M+UWNKreTgvpJFQWjToBzYx35mieruyGZov7XKj2
+         9zZD3+PkVzEbY2zkH4Atnmj7OC0lfG3UsLhoL+oBjhTdj7tXLYR7aQ8tPanxeHewD//2
+         l1nbPvshBG74JJ1/5S7b3/Ok5IS2D/H+kg0AqQHGt83z1xU9otG27difHMnPRib0yfO3
+         5m8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sNxVZlCt5dJC4vJhuBkpvXmZzzYVLjMtc81k2G0ucts=;
+        b=qk7zgC00sQ3SrJnRdWHBRRqjmhhHWL64+Iaa5e+9AbniZvc1oeyclKDvwlkQ6mZRUu
+         0Bs7JqQUZhhGWplMrJvOQcNOnr4pD5Ubq3jwTJCOSbzd3cshjDjiOazAJeXW8qbRCdk3
+         kb/cbstobvKw9pq4QXoB5LyIXKXbqekpXbRmYEA1lD3KT+KbGvXvVLixTD3lU4/6Z2gc
+         0HptyiQaZxCeD7XjxPMNosctuMNZ74Q2qr7LlZk24QPWYut2pSUi/BUPBcq8LzipdygH
+         P+iV+rdNw0YSJckbFaLcGUTtwIgyMnGSXJVlyiPli+9oHXq217iPyJT6SYIx1U37WokT
+         Uy2w==
+X-Gm-Message-State: AOAM530fpZQ3cbtXK7qSLPtKrm6Ua/YUan1qmedvoqMgn1x72bxtPGcJ
+        CFApPz6VUPuIiIrc6AFg/3sZtg==
+X-Google-Smtp-Source: ABdhPJzPVTeNIa7Dd7sCbijNk5bhe2lPxQCPWQsLYj7m8pHQ/fNLg1yprsF38+74EGarJ5APFecNOg==
+X-Received: by 2002:aa7:9f5a:: with SMTP id h26mr642830pfr.51.1590096395038;
+        Thu, 21 May 2020 14:26:35 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id d18sm5201678pfq.136.2020.05.21.14.26.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 14:26:34 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:26:32 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org
+Subject: Re: [PATCH v3 3/3] remoteproc: Add coredump debugfs entry
+Message-ID: <20200521212632.GA19013@xps15>
+References: <1589486856-23440-1-git-send-email-rishabhb@codeaurora.org>
+ <1589486856-23440-4-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589486856-23440-4-git-send-email-rishabhb@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
-> On Thu, May 21, 2020 at 10:05:15PM +0200, Thomas Gleixner wrote:
->> +void __rcu_irq_enter_check_tick(void);
->> +
->> +static __always_inline void rcu_irq_enter_check_tick(void)
->> +{
->> +	if (context_tracking_enabled())
->> +		__rcu_irq_enter_check_tick();
->
-> I suggest moving the WARN_ON_ONCE(in_nmi()) check here to avoid calling
-> in_nmi() twice.  Because of the READ_ONCE(), the compiler cannot (had
-> better not!) eliminate the double call.
+On Thu, May 14, 2020 at 01:07:36PM -0700, Rishabh Bhatnagar wrote:
+> Add coredump debugfs entry to configure the type of dump that will
+> be collected during recovery. User can select between default or
+> inline coredump functionality. Also coredump collection can be
+> disabled through this interface.
+> This functionality can be configured differently for different
+> remote processors.
+> 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> ---
+>  drivers/remoteproc/remoteproc_debugfs.c | 86 +++++++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+> index 732770e..2f611de 100644
+> --- a/drivers/remoteproc/remoteproc_debugfs.c
+> +++ b/drivers/remoteproc/remoteproc_debugfs.c
+> @@ -28,6 +28,90 @@
+>  static struct dentry *rproc_dbg;
+>  
+>  /*
+> + * A coredump-configuration-to-string lookup table, for exposing a
+> + * human readable configuration via debugfs. Always keep in sync with
+> + * enum rproc_coredump_mechanism
+> + */
+> +static const char * const rproc_coredump_str[] = {
+> +	[COREDUMP_DEFAULT]	= "default",
+> +	[COREDUMP_INLINE]	= "inline",
+> +	[COREDUMP_DISABLED]	= "disabled",
+> +};
+> +
+> +/* Expose the current coredump configuration via debugfs */
+> +static ssize_t rproc_coredump_read(struct file *filp, char __user *userbuf,
+> +				    size_t count, loff_t *ppos)
+> +{
+> +	struct rproc *rproc = filp->private_data;
+> +	const char *buf = rproc_coredump_str[rproc->dump_conf];
+> +
+> +	return simple_read_from_buffer(userbuf, count, ppos, buf, strlen(buf));
+> +}
+> +
+> +/*
+> + * By writing to the 'coredump' debugfs entry, we control the behavior of the
+> + * coredump mechanism dynamically. The default value of this entry is "default".
+> + *
+> + * The 'coredump' debugfs entry supports these commands:
+> + *
+> + * default:	This is the default coredump mechanism. When the remoteproc
+> + *		crashes the entire coredump will be copied to a separate buffer
+> + *		and exposed to userspace.
+> + *
+> + * inline:	The coredump will not be copied to a separate buffer and the
+> + *		recovery process will have to wait until data is read by
+> + *		userspace. But this avoid usage of extra memory.
+> + *
+> + * disabled:	This will disable coredump. Recovery will proceed without
+> + *		collecting any dump.
+> + */
+> +static ssize_t rproc_coredump_write(struct file *filp,
+> +				     const char __user *user_buf, size_t count,
+> +				     loff_t *ppos)
+> +{
+> +	struct rproc *rproc = filp->private_data;
+> +	int ret, err = 0;
+> +	char buf[20];
+> +
+> +	if (count > sizeof(buf))
+> +		return -EINVAL;
+> +
+> +	ret = copy_from_user(buf, user_buf, count);
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	/* remove end of line */
+> +	if (buf[count - 1] == '\n')
+> +		buf[count - 1] = '\0';
+> +
+> +	if (rproc->state == RPROC_CRASHED) {
+> +		dev_err(&rproc->dev, "can't change coredump configuration\n");
+> +		err = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	if (!strncmp(buf, "disable", count))
+> +		rproc->dump_conf = COREDUMP_DISABLED;
+> +	else if (!strncmp(buf, "inline", count))
+> +		rproc->dump_conf = COREDUMP_INLINE;
+> +	else if (!strncmp(buf, "default", count))
+> +		rproc->dump_conf = COREDUMP_DEFAULT;
+> +	else {
+> +		dev_err(&rproc->dev, "Invalid coredump configuration\n");
+> +		err = -EINVAL;
+> +	}
+> +out:
+> +	return err ? err : count;
+> +}
+> +
+> +static const struct file_operations rproc_coredump_fops = {
+> +	.read = rproc_coredump_read,
+> +	.write = rproc_coredump_write,
+> +	.open = simple_open,
+> +	.llseek = generic_file_llseek,
+> +};
+> +
+> +/*
+>   * Some remote processors may support dumping trace logs into a shared
+>   * memory buffer. We expose this trace buffer using debugfs, so users
+>   * can easily tell what's going on remotely.
+> @@ -337,6 +421,8 @@ void rproc_create_debug_dir(struct rproc *rproc)
+>  			    rproc, &rproc_rsc_table_fops);
+>  	debugfs_create_file("carveout_memories", 0400, rproc->dbg_dir,
+>  			    rproc, &rproc_carveouts_fops);
+> +	debugfs_create_file("coredump", 0600, rproc->dbg_dir,
+> +			    rproc, &rproc_coredump_fops);
 
-Makes sense.
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
->> +void __rcu_irq_enter_check_tick(void)
->> +{
->> +	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
->> +
->> +	 // Enabling the tick is unsafe in NMI handlers.
->
-> There is an extra space before the "//", probably the one that used to
-> be after the ";" below.  ;-)
-
-This is caused by my fundamental and not suppressible disgust of tail
-comments. They really disturb the reading flow for me.
-
-          if (foo)
-          	return; // Because ...
-
-makes my pattern recognition stop because the semicolon is usually the
-end of the statement. But that's not the only reason.
-
-         // Because ....
-         if (foo)
-         	return;
-
-makes more sense to me because then the comment is explaining the
-condition and not the outcome. The outcome is obvious when the condition
-is well explained.
-
-There are a few exceptions where I adjusted, e.g. in macros:
-
-        foo();				\
-        bar_or_something_else();	\
-
-but only when the trailing backslash is properly aligned.
-
-        foo();		\
-        bar_or_something_else();	\
-
-That stops the parser as well.
-
-I know that this is a pet pieve but I can't help it to adjust it when I
-have a chance to do so :)
-
->> +	if (WARN_ON_ONCE(in_nmi()))
->> +		return;
->> +
->> +	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
->> +			 "Illegal rcu_irq_enter_check_tick() from extended quiescent state");
->
-> The instrumentation_begin() has disappeared, presumably because
-> instrumentation is already enabled in the non-RCU code that directly calls
-> rcu_irq_enter_check_tick().  (I do see the calls in rcu_nmi_enter()
-> below.)
-
-Yes. The intention here is to make sure that the caller does not
-misplace it. So if the call is in a non-instrumentable code path then
-objtool will complain and the developer will hopefully think twice
-whether this is the right place to wrap the call with instrumentation_*
-annotations. I know it's based on hope :)
-
->> +
->> +	if (!tick_nohz_full_cpu(rdp->cpu) ||
->> +	    !READ_ONCE(rdp->rcu_urgent_qs) ||
->> +	    READ_ONCE(rdp->rcu_forced_tick)) {
->> +		// RCU doesn't need nohz_full help from this CPU, or it is
->> +		// already getting that help.
->> +		return;
->> +	}
->> +
->> +	// We get here only when not in an extended quiescent state and
->> +	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
->> +	// already watching and (2) The fact that we are in an interrupt
->> +	// handler and that the rcu_node lock is an irq-disabled lock
->> +	// prevents self-deadlock.  So we can safely recheck under the lock.
->> +	// Note that the nohz_full state currently cannot change.
->> +	raw_spin_lock_rcu_node(rdp->mynode);
->> +	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
->> +		// A nohz_full CPU is in the kernel and RCU needs a
->> +		// quiescent state.  Turn on the tick!
->> +		WRITE_ONCE(rdp->rcu_forced_tick, true);
->> +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
->> +	}
->> +	raw_spin_unlock_rcu_node(rdp->mynode);
->> +}
->>  #endif /* CONFIG_NO_HZ_FULL */
->>  
->>  /**
->> @@ -894,26 +955,7 @@ noinstr void rcu_nmi_enter(void)
->>  		incby = 1;
->>  	} else if (!in_nmi()) {
->
-> This can just be "else" given the in_nmi() check in
-> __rcu_irq_enter_check_tick(), right?  Ah, that check got a
-> WARN_ON_ONCE(), so never mind!
->
-> I guess that will discourage NMI-handler calls to
-> rcu_irq_enter_check_tick().  ;-)
-
-Exactly.
-
-> It does mean a double call to in_nmi(), though, so should that
-> WARN_ON_ONCE(in_nmi()) check go into the rcu_irq_enter_check_tick()
-> wrapper?  Or do modern compilers figure this one out?  Given the
-> READ_ONCE() in preempt_count(), I have to say that I hope not.
-> So see my comment above on rcu_irq_enter_check_tick().
-
-Moving it to the wrapper is the right thing to do. Will fix.
-
-Thanks,
-
-        tglx
+>  }
+>  
+>  void __init rproc_init_debugfs(void)
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
