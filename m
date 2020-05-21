@@ -2,82 +2,91 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C456AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73297207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831A920721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:36:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oNKZkiKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgEUIes (ORCPT
+        id S1728707AbgEUIgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:34:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:53663 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbgEUIer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:34:47 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2946668BEB; Thu, 21 May 2020 10:34:43 +0200 (CEST)
-Date:   Thu, 21 May 2020 10:34:42 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     David Miller <davem@davemloft.net>, hch@lst.de, kuba@kernel.org,
-        edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        vyasevich@gmail.com, nhorman@tuxdriver.com, jmaloy@redhat.com,
-        ying.xue@windriver.com, drbd-dev@lists.linbit.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
-        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 31/33] sctp: add sctp_sock_set_nodelay
-Message-ID: <20200521083442.GA7771@lst.de>
-References: <20200520195509.2215098-1-hch@lst.de> <20200520195509.2215098-32-hch@lst.de> <20200520231001.GU2491@localhost.localdomain> <20200520.162355.2212209708127373208.davem@davemloft.net> <20200520233913.GV2491@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520233913.GV2491@localhost.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Thu, 21 May 2020 04:36:18 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21360 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728611AbgEUIgR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 04:36:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590050176; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=1hyDgIykoZJ9DSC+C5mC832OZycm4ondX9+/X9rRqhM=; b=oNKZkiKlqvf8MwpUfEtot2yB/PQfFVdM5fNT8ajDgYV5/tNFOJ3J/QRSdQw6pMsablZRcYF0
+ Ji5PMWWhQuL1z65nOsAmWUn/jRRPAchvx2rK8uHpS+8iCqaTo1epR2KJpq/cGCRUkifICWUI
+ //b9uZRhiw7TxNOSFG+1DmwmMWY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ec63d7f45598550e60c749d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 08:36:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 29CA6C43391; Thu, 21 May 2020 08:36:15 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F329C433CB;
+        Thu, 21 May 2020 08:36:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F329C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v2 2/3] arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
+Date:   Thu, 21 May 2020 01:36:08 -0700
+Message-Id: <1590050169-30747-3-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
+References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:39:13PM -0300, Marcelo Ricardo Leitner wrote:
-> On Wed, May 20, 2020 at 04:23:55PM -0700, David Miller wrote:
-> > From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> > Date: Wed, 20 May 2020 20:10:01 -0300
-> > 
-> > > The duplication with sctp_setsockopt_nodelay() is quite silly/bad.
-> > > Also, why have the 'true' hardcoded? It's what dlm uses, yes, but the
-> > > API could be a bit more complete than that.
-> > 
-> > The APIs are being designed based upon what in-tree users actually
-> > make use of.  We can expand things later if necessary.
-> 
-> Sometimes expanding things later can be though, thus why the worry.
-> But ok, I get it. Thanks.
-> 
-> The comment still applies, though. (re the duplication)
+Enable the flexible TX FIFO resize logic on SM8150.  Using a larger TX FIFO
+SZ can help account for situations when system latency is greater than the
+USB bus transmission latency.
 
-Where do you see duplication?
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-sctp_setsockopt_nodelay does the following things:
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index a36512d..c285233 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -708,6 +708,7 @@
+ 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+ 				snps,dis_u2_susphy_quirk;
+ 				snps,dis_enblslpm_quirk;
++				tx-fifo-resize;
+ 				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+ 				phy-names = "usb2-phy", "usb3-phy";
+ 			};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
- - verifies optlen, returns -EINVAL if it doesn't match
- - calls get_user, returns -EFAULT on error
- - converts the value from get_user to a boolean and assigns it
-   to sctp_sk(sk)->nodelay
- - returns 0.
-
-sctp_sock_set_nodelay does:
-
- - call lock_sock
- - assign true to sctp_sk(sk)->nodelay
- - call release_sock
- - does not return an error code
