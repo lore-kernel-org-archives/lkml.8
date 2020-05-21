@@ -2,419 +2,104 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC66C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54499C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD4E220759
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 370AB20759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590084029;
-	bh=z9MepzJ6ZNQUQkrqqoKwuMeSqvPaF+N8KbeuA0F0/5o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nGLfYN3C23G/ZOdqyAFIjqbrgm5g6N09pE9XAbASUXx+87hsL4bC7QicBQ1Yc0Kh1
-	 H1pefDhSqwQaeiNdCGJh1tSzaJmUDxUVTgII4VWGvV6ROZMiqcjdsdK/o5rh5+Bsm3
-	 qr2+t3cmQ0MtejKDV80RiC9/B/Z1TnCilP1/XLhw=
+	s=default; t=1590084248;
+	bh=niEMPau5fW33ciK7opyh8p6Qii22izrIZJYhauAi/0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YyXAklqYfXenljAndGmoCbpRokKgGGZFtjC5e/3BgbeeGTe7rHCW7U5YSoNHeibsy
+	 6Nkxd6WRc7PA3T5AQvC3lV48uuPQYGBW5uczN3/R79hi9zRfgWzuQEwNP+D8Hq6pJV
+	 QyLcuTQP22rPVRjjDVyi7f5WBJO/1gdbP+St427A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgEUSA3 (ORCPT
+        id S1729201AbgEUSEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:00:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727966AbgEUSA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:00:28 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4FB52070A;
-        Thu, 21 May 2020 18:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590084027;
-        bh=z9MepzJ6ZNQUQkrqqoKwuMeSqvPaF+N8KbeuA0F0/5o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hkjski19BrZmNGcn6uSiu5wleTTKQPKr7LKe3Vk62h6ewiBuDdOWnFYka8gCT2qBQ
-         xiElla7GT3mKvfuvbw4R078ElVXbwwkQcnJGGv/FBlQOyqD3uaUmtV6wYNRA8MxwO0
-         GYNR8MAdD/mdRPI3Olo5Y9VQfyLj7Po/bjxwrhHQ=
-Date:   Thu, 21 May 2020 19:00:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: core: wrap IIO device into a iio_dev_priv
- object
-Message-ID: <20200521190023.37188145@archlinux>
-In-Reply-To: <fa3d836fb91c0b6e7ee57cb059775c9ec0cefd4d.camel@analog.com>
-References: <20200508141306.17222-1-alexandru.ardelean@analog.com>
-        <20200508164015.0000223f@Huawei.com>
-        <20200508164430.00001741@Huawei.com>
-        <b667b10489c65b541aacadd7975b0a6352672153.camel@analog.com>
-        <20200511184213.0000003c@Huawei.com>
-        <fa44556e2c10440a4b354591a3ebe379397a1f7e.camel@analog.com>
-        <20200516172913.38f05fc1@archlinux>
-        <fa3d836fb91c0b6e7ee57cb059775c9ec0cefd4d.camel@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 21 May 2020 14:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729044AbgEUSEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:04:05 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 605E6C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 11:04:05 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id l15so9042933lje.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 11:04:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Gg4b4CDCsETMIm4Edj1Xv31p6ZdZ0NWSz903G/X2Po=;
+        b=C+6xQYv405ppXq81KjYUQtltgLKHhtWFV7DfKyUQgnD/o5JsMIaX3ld48tDI1ZlD7K
+         U7kuhQvl7mdKFxmVsF/c3fYz37gu4oWx14U5jtAODWIsK4FqzsUCdodSWDq8PJADqJQN
+         fxp/doyT7dYvEricBmr9oFTSOXixPbh/BPwNs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Gg4b4CDCsETMIm4Edj1Xv31p6ZdZ0NWSz903G/X2Po=;
+        b=thyBg5J7sjHJhW0RQ1nbg/16mJgOiJ8FUkcAi4EdKioyTYLVuKvZWHol3wlvAhrYHa
+         kEacA8lDiBf+rCOwCy97AOoCfbob4aac4c7hhvtQXMYfJXoZWCeSzsROF/QovhhD7ukX
+         ToZ2kj8O4dRYzRAfPN55WLJtrHVIABzvah8d9mZLlTSMSuntjqAx1Gkwb1uE0rHD0b6t
+         eU75G0yKSLxo4a3ffmPR25MbY8RwFs4E9fGgNEfbtMM9n7gDeJ6yT+Z0WhxK2FzlcJof
+         PAIrWFFOE/P84+PfjoBNJlel55qbGcBikxuSLBlHcOJJQVrvJkUjIIcuig8i4jlaP79P
+         YNog==
+X-Gm-Message-State: AOAM5333zQnHDaSSjZcn4PIyNhFTymSd2eca7B40MhkPQgIUO/CrJgy3
+        Rdy8tJMiofYm+eFTlwkVQo2CWQ5DmIc=
+X-Google-Smtp-Source: ABdhPJwbaRRtRBCXLI6jIRrYJSTBJko/5cIUUGo3OuiiVH32Sunh1hmBQhWjF3ksW8tKPkntqPXjWw==
+X-Received: by 2002:a2e:9acb:: with SMTP id p11mr3449223ljj.432.1590084242571;
+        Thu, 21 May 2020 11:04:02 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id n14sm1406256lfi.97.2020.05.21.11.04.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 11:04:01 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id u15so9427941ljd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 11:04:01 -0700 (PDT)
+X-Received: by 2002:a2e:9891:: with SMTP id b17mr3748342ljj.312.1590084240602;
+ Thu, 21 May 2020 11:04:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200521152301.2587579-1-hch@lst.de>
+In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 21 May 2020 11:03:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiQa3GNytJDdN=RKzSKfGQdPBvso+2Lmi+BpOP=BA_n6A@mail.gmail.com>
+Message-ID: <CAHk-=wiQa3GNytJDdN=RKzSKfGQdPBvso+2Lmi+BpOP=BA_n6A@mail.gmail.com>
+Subject: Re: clean up and streamline probe_kernel_* and friends v4
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 08:07:21 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+On Thu, May 21, 2020 at 8:23 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> this series start cleaning up the safe kernel and user memory probing
+> helpers in mm/maccess.c, and then allows architectures to implement
+> the kernel probing without overriding the address space limit and
+> temporarily allowing access to user memory.  It then switches x86
+> over to this new mechanism by reusing the unsafe_* uaccess logic.
 
-> On Sat, 2020-05-16 at 17:29 +0100, Jonathan Cameron wrote:
-> > [External]
-> > 
-> > On Tue, 12 May 2020 11:26:08 +0000
-> > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-> >   
-> > > On Mon, 2020-05-11 at 18:42 +0100, Jonathan Cameron wrote:  
-> > > > [External]
-> > > > 
-> > > > On Mon, 11 May 2020 09:16:32 +0000
-> > > > "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-> > > >     
-> > > > > On Fri, 2020-05-08 at 16:44 +0100, Jonathan Cameron wrote:    
-> > > > > > [External]
-> > > > > > 
-> > > > > > On Fri, 8 May 2020 16:40:15 +0100
-> > > > > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > > > > >       
-> > > > > > > On Fri, 8 May 2020 17:13:04 +0300
-> > > > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> > > > > > >       
-> > > > > > > > There are plenty of bad designs we want to discourage or not have
-> > > > > > > > to
-> > > > > > > > review
-> > > > > > > > manually usually about accessing private (marked as [INTERN])
-> > > > > > > > fields
-> > > > > > > > of
-> > > > > > > > 'struct iio_dev'.        
-> > > > > > > 
-> > > > > > > This has been on the todo list for many years so great you are
-> > > > > > > having a
-> > > > > > > go.
-> > > > > > >        
-> > > > > > > > This is difficult, as a lot of users copy drivers, and not always
-> > > > > > > > the
-> > > > > > > > best
-> > > > > > > > examples.
-> > > > > > > > 
-> > > > > > > > A better idea is to hide those fields into the framework.
-> > > > > > > > For 'struct iio_dev' this is a 'struct iio_dev_priv' which wraps a
-> > > > > > > > public
-> > > > > > > > 'struct iio_dev' object.
-> > > > > > > > 
-> > > > > > > > In the next patches, some fields will be moved to this new struct,
-> > > > > > > > each
-> > > > > > > > with it's own rework.
-> > > > > > > > 
-> > > > > > > > This rework will not be complete[-able] for a while, as many
-> > > > > > > > fields
-> > > > > > > > need
-> > > > > > > > some drivers to be reworked in order to finalize them
-> > > > > > > > (e.g. 'indio_dev->mlock').
-> > > > > > > > 
-> > > > > > > > But some fields can already be moved, and in time, all of them may
-> > > > > > > > get
-> > > > > > > > there (in the 'struct iio_dev_priv' object).
-> > > > > > > > 
-> > > > > > > > We also need to hide the implementations for 'iio_priv()' &
-> > > > > > > > 'iio_priv_to_dev()', as the pointer arithmetic will not match once
-> > > > > > > > things
-> > > > > > > > are moved.        
-> > > > > > > 
-> > > > > > > This last bit has the disadvantage of potentially putting a function
-> > > > > > > call in some fast paths where there wasn't one before.      
-> > > > > 
-> > > > > Hmm.
-> > > > > I think we can change this to have a void *ptr in the public iio.h
-> > > > > header
-> > > > > and
-> > > > > that points to the private data in the private struct, and we compute it
-> > > > > once,
-> > > > > and just return it.
-> > > > > 
-> > > > > so:
-> > > > > 
-> > > > > struct iio_dev_opaque;
-> > > > > 
-> > > > > struct iio_dev {
-> > > > >     struct iio_dev_opaque *opaque;  // compute this during
-> > > > > iio_device_alloc()
-> > > > >     void *priv;                     // compute this during
-> > > > > iio_device_alloc()
-> > > > > };
-> > > > > 
-> > > > > static inline void *iio_priv(const struct iio_dev *indio_dev)
-> > > > > {
-> > > > >         return indio_dev->priv;
-> > > > > }
-> > > > > 
-> > > > > [ or even just convert it to a macro ; no preference ]    
-> > > > 
-> > > > That works for me and avoids any of the messy stuff below.
-> > > > 
-> > > > Make sure to add a comment that the region that points to is guaranteed
-> > > > to maintain cacheline alignment as thats hidden now.    
-> > > 
-> > > 1 note: I would still need to hide the iio_priv_to_dev() implementation.
-> > > It's a bit hard not to; or I can't come up with a good idea now, like for
-> > > iio_priv().
-> > > Thing is, not many drivers use it, and it looks a bit funky that they use
-> > > it.
-> > > It looks like each driver should just keep (or use) a reference to the
-> > > iio_dev
-> > > object, since it should be in the driver somewhere.
-> > > 
-> > > Maybe this series needs to be extended to clean-up those uses
-> > > of iio_priv_to_dev().  
-> > 
-> > I never liked that interface.  IIRC we removed it once before but
-> > it snuck back in because one of those cases was really fiddly with out it
-> > (I can't remember which though :(
-> >   
-> > > And a question; since I am not clear.
-> > > On the 'to_iio_dev_opaque()' : is it preferred to access it via 'indio_dev-  
-> > > > opaque' or via pointer arithmentic?    
-> > > i.e. the classic 
-> > > #define to_iio_dev_opaque(indio_dev)            \
-> > >         container_of(indio_dev, struct iio_dev_opaque, indio_dev)  
-> > 
-> > container of I think. Though I'm not quite sure what you mean by
-> > pointer arithmetic as an alternative..  
-> 
-> I was referring to container_of as pointer-arithmetic.
+I could not see anything to object to in this version. So Ack from me,
+but obviously I'm hoping others will try to read it through as well.
 
-Ah. Got you. Given we aren't moving things into opaque until only
-the core is accessing them, I think we should use the container_of
-approach for this one.
-
-> 
-> >   
-> > > either is fine from my side; i'll just do the macro, and then the
-> > > implementation
-> > > can be changed as i get the answer;
-> > >   
-> > > >     
-> > > > > > > We may not need to 'forcefully' hide the internal parts.  May be
-> > > > > > > enough to just make their use really obvious.  If you have to cast
-> > > > > > > to an iio_dev_priv then you are doing something very wrong.      
-> > > > > > 
-> > > > > > Note, definitely keep the to_* macro only in the private core header.
-> > > > > >       
-> > > > > > > The old stick __ in front of it may make that even more obvious.
-> > > > > > > 
-> > > > > > > Naming is a bit confusing though.  iio_dev_priv sounds like private
-> > > > > > > to the device... iio_dev_opaque maybe?      
-> > > > > 
-> > > > > regarding the 'opaque' part, that would be a 'struct iio_dev_opaque {'
-> > > > > that
-> > > > > lives somewhere like
-> > > > > 
-> > > > > struct iio_dev_opaque {
-> > > > >     struct iio_dev   indio_dev;  // public IIO device part
-> > > > >     ... // opaque IIO device parts
-> > > > >     ... // iio_priv data
-> > > > > }
-> > > > > 
-> > > > > The stick __ in front, may work just fine as well.
-> > > > > 
-> > > > > Personally, I would prefer to forcefully hide stuff, because then the
-> > > > > compiler
-> > > > > could also be useful in telling people not to use some private fields.
-> > > > > People [juniors usually] listen to compilers more than they listen to
-> > > > > review-
-> > > > > comments. 
-> > > > > We could move the 'struct iio_dev_opaque' in 'include/linux/iio/iio-
-> > > > > opaque.h',
-> > > > > so that if they need to access some fields for some advanced/hacky
-> > > > > debugging, it
-> > > > > should work as well.
-> > > > > 
-> > > > > Still, if it's more preferred to prefix them, I can do that as well.
-> > > > > But we should prefix them as we manage to somehow make the more opaque,
-> > > > > or
-> > > > > remove the fields from places they should be used.
-> > > > > Otherwise it is pointless, as people would copy 'indio_dev->__mlock'
-> > > > > anyway.
-> > > > > 
-> > > > >     
-> > > > > > >       
-> > > > > > > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > > > > > > ---
-> > > > > > > > 
-> > > > > > > > Just as a note here, I've been running this patchset without a
-> > > > > > > > problem
-> > > > > > > > for 2 weeks now in a work branch.
-> > > > > > > > But it's only been a setup, so no idea if some other thing may
-> > > > > > > > cause
-> > > > > > > > bigger issues.
-> > > > > > > > 
-> > > > > > > > This small patchset is meant to kickstart this, for GSoC people or
-> > > > > > > > for
-> > > > > > > > people wanting to start contributing to IIO.
-> > > > > > > > 
-> > > > > > > >  drivers/iio/iio_core.h          | 11 +++++++++++
-> > > > > > > >  drivers/iio/industrialio-core.c | 32 +++++++++++++++++++++++++++-
-> > > > > > > > ----
-> > > > > > > >  include/linux/iio/iio.h         | 12 ++----------
-> > > > > > > >  3 files changed, 40 insertions(+), 15 deletions(-)
-> > > > > > > > 
-> > > > > > > > diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-> > > > > > > > index fd9a5f1d5e51..84f3b4590c05 100644
-> > > > > > > > --- a/drivers/iio/iio_core.h
-> > > > > > > > +++ b/drivers/iio/iio_core.h
-> > > > > > > > @@ -17,6 +17,17 @@ struct iio_dev;
-> > > > > > > >  
-> > > > > > > >  extern struct device_type iio_device_type;
-> > > > > > > >  
-> > > > > > > > +/**
-> > > > > > > > + * struct iio_dev_priv - industrial I/O device private
-> > > > > > > > information
-> > > > > > > > + * @indio_dev:			public IIO device object
-> > > > > > > > + */
-> > > > > > > > +struct iio_dev_priv {
-> > > > > > > > +	struct iio_dev			indio_dev;
-> > > > > > > > +};
-> > > > > > > > +
-> > > > > > > > +#define to_iio_dev_priv(indio_dev)	\
-> > > > > > > > +	container_of(indio_dev, struct iio_dev_priv, indio_dev)
-> > > > > > > > +
-> > > > > > > >  int __iio_add_chan_devattr(const char *postfix,
-> > > > > > > >  			   struct iio_chan_spec const *chan,
-> > > > > > > >  			   ssize_t (*func)(struct device *dev,
-> > > > > > > > diff --git a/drivers/iio/industrialio-core.c
-> > > > > > > > b/drivers/iio/industrialio-
-> > > > > > > > core.c
-> > > > > > > > index 462d3e810013..f0888dd84d3d 100644
-> > > > > > > > --- a/drivers/iio/industrialio-core.c
-> > > > > > > > +++ b/drivers/iio/industrialio-core.c
-> > > > > > > > @@ -164,6 +164,23 @@ static const char * const
-> > > > > > > > iio_chan_info_postfix[]
-> > > > > > > > = {
-> > > > > > > >  	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
-> > > > > > > >  };
-> > > > > > > >  
-> > > > > > > > +
-> > > > > > > > +void *iio_priv(const struct iio_dev *indio_dev)
-> > > > > > > > +{
-> > > > > > > > +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-> > > > > > > > +	return (char *)iio_dev_priv + ALIGN(sizeof(struct iio_dev_priv),
-> > > > > > > > IIO_ALIGN);
-> > > > > > > > +}
-> > > > > > > > +EXPORT_SYMBOL_GPL(iio_priv);
-> > > > > > > > +
-> > > > > > > > +struct iio_dev *iio_priv_to_dev(void *priv)
-> > > > > > > > +{
-> > > > > > > > +	struct iio_dev_priv *iio_dev_priv =
-> > > > > > > > +		(struct iio_dev_priv *)((char *)priv -
-> > > > > > > > +				  ALIGN(sizeof(struct iio_dev_priv),
-> > > > > > > > IIO_ALIGN));
-> > > > > > > > +	return &iio_dev_priv->indio_dev;
-> > > > > > > > +}
-> > > > > > > > +EXPORT_SYMBOL_GPL(iio_priv_to_dev);
-> > > > > > > > +
-> > > > > > > >  /**
-> > > > > > > >   * iio_find_channel_from_si() - get channel from its scan index
-> > > > > > > >   * @indio_dev:		device
-> > > > > > > > @@ -1476,6 +1493,8 @@ static void
-> > > > > > > > iio_device_unregister_sysfs(struct
-> > > > > > > > iio_dev *indio_dev)
-> > > > > > > >  static void iio_dev_release(struct device *device)
-> > > > > > > >  {
-> > > > > > > >  	struct iio_dev *indio_dev = dev_to_iio_dev(device);
-> > > > > > > > +	struct iio_dev_priv *iio_dev_priv = to_iio_dev_priv(indio_dev);
-> > > > > > > > +
-> > > > > > > >  	if (indio_dev->modes & INDIO_ALL_TRIGGERED_MODES)
-> > > > > > > >  		iio_device_unregister_trigger_consumer(indio_dev);
-> > > > > > > >  	iio_device_unregister_eventset(indio_dev);
-> > > > > > > > @@ -1484,7 +1503,7 @@ static void iio_dev_release(struct device
-> > > > > > > > *device)
-> > > > > > > >  	iio_buffer_put(indio_dev->buffer);
-> > > > > > > >  
-> > > > > > > >  	ida_simple_remove(&iio_ida, indio_dev->id);
-> > > > > > > > -	kfree(indio_dev);
-> > > > > > > > +	kfree(iio_dev_priv);
-> > > > > > > >  }
-> > > > > > > >  
-> > > > > > > >  struct device_type iio_device_type = {
-> > > > > > > > @@ -1498,10 +1517,11 @@ struct device_type iio_device_type = {
-> > > > > > > >   **/
-> > > > > > > >  struct iio_dev *iio_device_alloc(int sizeof_priv)
-> > > > > > > >  {
-> > > > > > > > +	struct iio_dev_priv *iio_dev_priv;
-> > > > > > > >  	struct iio_dev *dev;
-> > > > > > > >  	size_t alloc_size;
-> > > > > > > >  
-> > > > > > > > -	alloc_size = sizeof(struct iio_dev);
-> > > > > > > > +	alloc_size = sizeof(struct iio_dev_priv);
-> > > > > > > >  	if (sizeof_priv) {
-> > > > > > > >  		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
-> > > > > > > >  		alloc_size += sizeof_priv;
-> > > > > > > > @@ -1509,10 +1529,12 @@ struct iio_dev *iio_device_alloc(int
-> > > > > > > > sizeof_priv)
-> > > > > > > >  	/* ensure 32-byte alignment of whole construct ? */
-> > > > > > > >  	alloc_size += IIO_ALIGN - 1;
-> > > > > > > >  
-> > > > > > > > -	dev = kzalloc(alloc_size, GFP_KERNEL);
-> > > > > > > > -	if (!dev)
-> > > > > > > > +	iio_dev_priv = kzalloc(alloc_size, GFP_KERNEL);
-> > > > > > > > +	if (!iio_dev_priv)
-> > > > > > > >  		return NULL;
-> > > > > > > >  
-> > > > > > > > +	dev = &iio_dev_priv->indio_dev;
-> > > > > > > > +
-> > > > > > > >  	dev->dev.groups = dev->groups;
-> > > > > > > >  	dev->dev.type = &iio_device_type;
-> > > > > > > >  	dev->dev.bus = &iio_bus_type;
-> > > > > > > > @@ -1526,7 +1548,7 @@ struct iio_dev *iio_device_alloc(int
-> > > > > > > > sizeof_priv)
-> > > > > > > >  	if (dev->id < 0) {
-> > > > > > > >  		/* cannot use a dev_err as the name isn't available */
-> > > > > > > >  		pr_err("failed to get device id\n");
-> > > > > > > > -		kfree(dev);
-> > > > > > > > +		kfree(iio_dev_priv);
-> > > > > > > >  		return NULL;
-> > > > > > > >  	}
-> > > > > > > >  	dev_set_name(&dev->dev, "iio:device%d", dev->id);
-> > > > > > > > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> > > > > > > > index 5f9f439a4f01..38c4ea505394 100644
-> > > > > > > > --- a/include/linux/iio/iio.h
-> > > > > > > > +++ b/include/linux/iio/iio.h
-> > > > > > > > @@ -678,16 +678,8 @@ static inline void
-> > > > > > > > *iio_device_get_drvdata(struct
-> > > > > > > > iio_dev *indio_dev)
-> > > > > > > >  #define IIO_ALIGN L1_CACHE_BYTES
-> > > > > > > >  struct iio_dev *iio_device_alloc(int sizeof_priv);
-> > > > > > > >  
-> > > > > > > > -static inline void *iio_priv(const struct iio_dev *indio_dev)
-> > > > > > > > -{
-> > > > > > > > -	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev),
-> > > > > > > > IIO_ALIGN);
-> > > > > > > > -}
-> > > > > > > > -
-> > > > > > > > -static inline struct iio_dev *iio_priv_to_dev(void *priv)
-> > > > > > > > -{
-> > > > > > > > -	return (struct iio_dev *)((char *)priv -
-> > > > > > > > -				  ALIGN(sizeof(struct iio_dev),
-> > > > > > > > IIO_ALIGN));
-> > > > > > > > -}
-> > > > > > > > +void *iio_priv(const struct iio_dev *indio_dev);
-> > > > > > > > +struct iio_dev *iio_priv_to_dev(void *priv);
-> > > > > > > >  
-> > > > > > > >  void iio_device_free(struct iio_dev *indio_dev);
-> > > > > > > >  struct iio_dev *devm_iio_device_alloc(struct device *dev, int
-> > > > > > > > sizeof_priv);        
-> > > > > > 
-> > > > > >       
-> > > > 
-> > > >     
-
+              Linus
