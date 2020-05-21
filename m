@@ -2,57 +2,108 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2856AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDB5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B8F2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FAA207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590020662;
+	bh=so+02LeLE1MjLDY4FVscmq2Bc9Vlqajs1T7f42XyVzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aU8dcx3/tQqvOCqrrcTZuknwxAfsc9pP5GEgKYFzgKQvryDaetkTz/JwQJZvKI8jN
+	 xpJhNvtht7x9H9XA2QCQnZj7J8ZRCFmA+MMs6xBEtGouYjD+8S23DA+QT7Mc7z3l+0
+	 mDaUJ/eypvGkm+olkeQDNxSO5lKY6Qhz6TODXz64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgEUARd (ORCPT
+        id S1726837AbgEUAYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:17:33 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:45466 "EHLO gloria.sntech.de"
+        Wed, 20 May 2020 20:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgEUARd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:17:33 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jbYtq-0005Re-SD; Thu, 21 May 2020 02:17:26 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: fix pinctrl-names for gpio-leds node on rk3326-odroid-go2
-Date:   Thu, 21 May 2020 02:17:25 +0200
-Message-Id: <159002021954.2754417.8270198597807714801.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200519111444.2208-1-jbx6244@gmail.com>
-References: <20200519111444.2208-1-jbx6244@gmail.com>
+        id S1726737AbgEUAYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 20:24:21 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15881205CB;
+        Thu, 21 May 2020 00:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590020661;
+        bh=so+02LeLE1MjLDY4FVscmq2Bc9Vlqajs1T7f42XyVzU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=plmatdw9xMdFVvPnxMzUj7O296h9pEw9c2BEakKQ2nbJJ2lhlCq6CRIJ3QKgPgEyS
+         uoGKwyCYmYXxv+L9AURVWQxZPE6f1rktSaHCjzPVgoSn3tcsaOrpLCRgdEiczwfMNr
+         u7kswe98o2IVWBhLnROPkuxl+PNB+aqZ5Ab4N56U=
+Date:   Wed, 20 May 2020 20:24:20 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Christian Gromm <christian.gromm@microchip.com>,
+        devel@driverdev.osuosl.org
+Subject: Re: [PATCH AUTOSEL 5.6 16/62] most: core: use function
+ subsys_initcall()
+Message-ID: <20200521002420.GH33628@sasha-vm>
+References: <20200514185147.19716-1-sashal@kernel.org>
+ <20200514185147.19716-16-sashal@kernel.org>
+ <20200515065914.GB1006524@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200515065914.GB1006524@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 13:14:44 +0200, Johan Jonker wrote:
-> The 'pinctrl-names' property should contain a list of names
-> to the assigned states. The value 'led_pins' in the gpio-leds
-> node on rk3326-odroid-go2 is not a state that is normally used,
-> so change it the common name 'default'.
+On Fri, May 15, 2020 at 08:59:14AM +0200, Greg Kroah-Hartman wrote:
+>On Thu, May 14, 2020 at 02:51:01PM -0400, Sasha Levin wrote:
+>> From: Christian Gromm <christian.gromm@microchip.com>
+>>
+>> [ Upstream commit 5e56bc06e18dfc8a66180fa369384b36e2ab621a ]
+>>
+>> This patch replaces function module_init() with subsys_initcall().
+>> It is needed to ensure that the core module of the driver is
+>> initialized before a component tries to register with the core. This
+>> leads to a NULL pointer dereference if the driver is configured as
+>> in-tree.
+>>
+>> Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Link: https://lore.kernel.org/r/1587741394-22021-1-git-send-email-christian.gromm@microchip.com
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/staging/most/core.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
+>> index 0c4ae6920d77d..409c48c597f2f 100644
+>> --- a/drivers/staging/most/core.c
+>> +++ b/drivers/staging/most/core.c
+>> @@ -1484,7 +1484,7 @@ static void __exit most_exit(void)
+>>  	ida_destroy(&mdev_id);
+>>  }
+>>
+>> -module_init(most_init);
+>> +subsys_initcall(most_init);
+>>  module_exit(most_exit);
+>>  MODULE_LICENSE("GPL");
+>>  MODULE_AUTHOR("Christian Gromm <christian.gromm@microchip.com>");
+>
+>This is not needed in 5.6 and older kernels due to the most/core.c code
+>being in staging for these releases.  It only became an issue when it
+>moved out of staging.
+>
+>So please drop this from here and any older trees you might have
+>selected it for.
 
-Applied, thanks!
+Now dropped, thanks!
 
-[1/1] arm64: dts: rockchip: fix pinctrl-names for gpio-leds node on rk3326-odroid-go2
-      commit: b2cb68e864222eb3cc1d7c3c06edc40469699983
-
-Best regards,
 -- 
-Heiko Stuebner <heiko@sntech.de>
+Thanks,
+Sasha
