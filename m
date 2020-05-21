@@ -2,124 +2,139 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC387C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E74C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC742084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50EC720759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gEzEaxet"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EV5SVn70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgEUS7w (ORCPT
+        id S1730074AbgEUTA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:59:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46702 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729555AbgEUS7v (ORCPT
+        Thu, 21 May 2020 15:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729555AbgEUTA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:59:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LIxkUn037038;
-        Thu, 21 May 2020 13:59:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590087586;
-        bh=qHgIZ1jeMMAGpyygK6081zktw2WUM4w1JQMRrYptymU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gEzEaxetknGbpkdpFF815hUys3+9q7H1azD62EpI9qENEpnRLoqRtK2zWzyFbhCKJ
-         vg+Lr0PuyWwOIBa1T1675VNVARmOSbmUdHwNKw1pj4OnMawWZmEZh7YtgCa+60aARM
-         +etEaADW7eeGo0aApndqgZfXMERzng4XGCBD5ylQ=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LIxkYH082066;
-        Thu, 21 May 2020 13:59:46 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 13:59:45 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 13:59:46 -0500
-Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LIxjLX055152;
-        Thu, 21 May 2020 13:59:45 -0500
-Subject: Re: [PATCH v2 0/4] TI K3 DSP remoteproc driver for C66x DSPs
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200521001006.2725-1-s-anna@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <5f84465e-8f63-51b4-4758-59c85d3ad597@ti.com>
-Date:   Thu, 21 May 2020 13:59:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 15:00:28 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34091C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:00:27 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z6so9575964ljm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AXqOJl5SmNS23EUn7DmXTUU6aYLgyfPvo+AUamH08Ps=;
+        b=EV5SVn70MuPiXaA+/GpI4b2qrg0jB93InY/vaKKkvXw3rt6V19F3iaEfufdWjb2vSa
+         LFgwuEMLZ0kF+u4vLem/Ho+YYOlDTSymGzxy0FWxZiHOsB3Pb3GSFPQ6THq8MehoMw81
+         61D12qPxoVMXCVN5YnrMpoSh0ZCOqjVhvK2/icCRVt/PPsd4BcWFGL0kAP/7zDq1hN3x
+         a1rzoPThWH5HcKX0GiUC4cxi3kkuCMXpV76kYKiXipe6YgwkiIKVt/YehTDSxdT8FKMQ
+         CKv5YcXmrRHEWyhnCcxlLCZV3yGZBNkQfBJxwnNbBjgGPVYWSZIk3apxM0beTrE2kQJt
+         vtEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AXqOJl5SmNS23EUn7DmXTUU6aYLgyfPvo+AUamH08Ps=;
+        b=gTlZwe7vrEKV5Vlz75imjEc3s7y6p3v6WbpoZCODBu9Nml4zV33XnepPKaacfLB47q
+         TMkFvj4UvcMwkxMZhEVI1WTlvsY4+MirULaoL/U4ywipsgsRUiJKnof+LtZtnDtZUdsW
+         EAKJDyQKgmBiPG0N8srM17Xly7Pkb8RSWUnsgkOq3GLdmbZ4Hci11z8NCN/9o7Fv4/qZ
+         K7yX1Z9nWPOZKqz2zNseXNB9em27Bte1jolWksLEALszlGAtacelfFtjb/nxoBnenat+
+         /BRPTlD+BK/FpLz8og9zqTZa4RKmM1nUJy2guABzjnZzSfF/znxkDAd6/EUaZDcb08FM
+         aGrQ==
+X-Gm-Message-State: AOAM5339ps9dhUnfc+Zm8VkX/IKuJzbTX/xmLUQHHV8Fg3I3eyvlo1Vd
+        JD3ivXtoUKcrG2rLjdKxVjq1h8UH1Oa+XSoFRTQpgg==
+X-Google-Smtp-Source: ABdhPJztzAYrR/hpe1uRAGQjKmg0ls00XHM6k9/5+3Vj5L9HrQE3V1E3er3ujQPjsfP8Tn3nR1o1fnGVTi8pnw7kWuo=
+X-Received: by 2002:a2e:6c0c:: with SMTP id h12mr5664520ljc.266.1590087625478;
+ Thu, 21 May 2020 12:00:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200521001006.2725-1-s-anna@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
+ <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
+ <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+ <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name> <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz>
+In-Reply-To: <20200521163450.GV6462@dhcp22.suse.cz>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 22 May 2020 00:30:13 +0530
+Message-ID: <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Thu, 21 May 2020 at 22:04, Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 21-05-20 11:55:16, Michal Hocko wrote:
+> > On Wed 20-05-20 20:09:06, Chris Down wrote:
+> > > Hi Naresh,
+> > >
+> > > Naresh Kamboju writes:
+> > > > As a part of investigation on this issue LKFT teammate Anders Roxell
+> > > > git bisected the problem and found bad commit(s) which caused this problem.
+> > > >
+> > > > The following two patches have been reverted on next-20200519 and retested the
+> > > > reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
+> > > > ( invoked oom-killer is gone now)
+> > > >
+> > > > Revert "mm, memcg: avoid stale protection values when cgroup is above
+> > > > protection"
+> > > >    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
+> > > >
+> > > > Revert "mm, memcg: decouple e{low,min} state mutations from protection
+> > > > checks"
+> > > >    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
+> > >
+> > > Thanks Anders and Naresh for tracking this down and reverting.
+> > >
+> > > I'll take a look tomorrow. I don't see anything immediately obviously wrong
+> > > in either of those commits from a (very) cursory glance, but they should
+> > > only be taking effect if protections are set.
+> >
+> > Agreed. If memory.{low,min} is not used then the patch should be
+> > effectively a nop.
+>
+> I was staring into the code and did not see anything.  Could you give the
+> following debugging patch a try and see whether it triggers?
 
-On 5/20/20 7:10 PM, Suman Anna wrote:
-> Hi All,
-> 
-> The following is v2 of the K3 DSP remoteproc driver supporting the C66x DSPs
-> on the TI K3 J721E SoCs. The patches are based on the latest commit on the
-> rproc-next branch, 7dcef3988eed ("remoteproc: Fix an error code in
-> devm_rproc_alloc()").
+These code paths did not touch it seems. but still see the reported problem.
+Please find a detailed test log output [1]
 
-I realized I also had the R5F patches on my branch, so the third patch 
-won't apply cleanly (conflict on Makefile). Let me know if you want a 
-new revision posted for you to pick up the series.
+And
+One more test log with cgroup_disable=memory [2]
 
-regards
-Suman
-
-> 
-> v2 includes a new remoteproc core patch (patch 1) that adds an OF helper
-> for parsing the firmware-name property. This is refactored out to avoid
-> replicating the code in various remoteproc drivers. Please see the
-> individual patches for detailed changes.
-> 
-> The main dependent patches from the previous series are now staged in
-> rproc-next branch. The only dependency for this series is the common
-> ti-sci-proc helper between R5 and DSP drivers [1]. Please see the initial
-> cover-letter [2] for v1 details.
-> 
-> regards
-> Suman
-> 
-> [1] https://patchwork.kernel.org/patch/11456379/
-> [2] https://patchwork.kernel.org/cover/11458573/
-> 
-> Suman Anna (4):
->    remoteproc: Introduce rproc_of_parse_firmware() helper
->    dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
->    remoteproc/k3-dsp: Add a remoteproc driver of K3 C66x DSPs
->    remoteproc/k3-dsp: Add support for L2RAM loading on C66x DSPs
-> 
->   .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 190 +++++
->   drivers/remoteproc/Kconfig                    |  13 +
->   drivers/remoteproc/Makefile                   |   1 +
->   drivers/remoteproc/remoteproc_core.c          |  23 +
->   drivers/remoteproc/remoteproc_internal.h      |   2 +
->   drivers/remoteproc/ti_k3_dsp_remoteproc.c     | 773 ++++++++++++++++++
->   6 files changed, 1002 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
->   create mode 100644 drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> 
-
+Test log link,
+[1] https://pastebin.com/XJU7We1g
+[2] https://pastebin.com/BZ0BMUVt
