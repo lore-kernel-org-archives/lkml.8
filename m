@@ -2,147 +2,219 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47531C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B70BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B5D2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F389A20884
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agJptvDP"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="tfzseeFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgEUV6R (ORCPT
+        id S1730558AbgEUV7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40770 "EHLO
+        Thu, 21 May 2020 17:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729370AbgEUV6Q (ORCPT
+        with ESMTP id S1729370AbgEUV7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:58:16 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA42BC08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:58:16 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id v17so6802618ote.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:58:16 -0700 (PDT)
+        Thu, 21 May 2020 17:59:20 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36421C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:59:20 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id a23so6843638qto.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:59:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OC7pxxrJMqItGQPkx3AN3oqBodwXwxXMLvm54F0Ovsc=;
-        b=agJptvDPSQjxg/DsE2tCtsnV2z/LvokUuBh021Hk7gHFmAeZIaFSMroK1vn1omWhzK
-         uFr2ZIZgIJQVUiio0NurWPJDb/T/iB2P4NjYCAOjtLYAu9xdTTRpKU8tS6j63ZCaMSm/
-         r6ssH40PnZaTQ7986SY+MZc2bh6QefQ6ccGGp9qpDtBOIicwF/UrWPZKn2aVGvkek/U9
-         Bf3CjuUiy36of9wsCRLuG1eH2Q7Nk665kfzcKRdh5Y06k/FBYKuxaoSzdbGR15Wxwnkw
-         FDmkMBg0cAUByhFBo3dW0x5zVYW1PxWdLEkAC6KDTWHfaJOF8vWe9qd0ibxXAmWgRMs5
-         ug6w==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5B1+HMIDvT7snVXiXmhhirfPbIUt2RcF6P9jK7VVgzk=;
+        b=tfzseeFRapr6mzYIpyevbB2Jr0bnMxnhrggEPvTJwKT1cNJUmOyzhNEEPC7YfmFN10
+         Leq8bJtwR9By5lcHPu1Udo3g0bnQUdDLbiLyiUxWzyBaErEnqpb7zOsiDxNzuM2DY5m3
+         9i2yn71sn05AqTGZbUV3FNlQ7ZJDjxLEs00cKA6PCnWfel6WSALIg9RBtqLJgEXELCof
+         VnDtHFb0fobUgITmj7IgRam7lmriUKw5hSI013/Y1R8qjEoh55ee/UDqIrEF3v9Q5HYU
+         QhDt6u4wHbqDq6tuAnx5yRdXaCqWqT71EZvmB6MnGSWGJ8dz1OAmtQO3ti3WC/Sg3XO+
+         PZAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OC7pxxrJMqItGQPkx3AN3oqBodwXwxXMLvm54F0Ovsc=;
-        b=LCcVRYJ7sIw1RTCHZNDN8H8vtGmFyUF0nV0oiTZNPYv6vZznhGVXRow6Rfq6/+U2VQ
-         vkJzMKDoi3YSs1mbUHRoyzAARWBbboqIVIrN2RGbjcwZ8XlGXL7poOs6i9lJ1u3ESO/X
-         TJwj4Ic+DafWFIBdKTHDgE1Cb/0B7hZ2pGVRSi+8M0xOKaqaCf18oC0/U7nAV3AS+5ij
-         hbQSxXyWBAI3zBaALPyjH+Rz8u4+yirQM3ud/FUew2ZaQJswhiwyUsECcqlmMWJ+vFM1
-         E9zMkLA7zLPfwHz16A6JMSxuAC9MJeFQ7JM/Sv35+QzjOH+dTUdwDEsFSNlfnrVnrVVt
-         IXvw==
-X-Gm-Message-State: AOAM532xYdCKp/rL5cAg97PBtYHw7429o292UZyi/1+XxuhHt028O4Ay
-        X46irHH24S7toprsF1kbMirrnGURXGRBe4/lmt/PLw==
-X-Google-Smtp-Source: ABdhPJxDMM+6Ji1T4X6OwV6GPysEiOItkB0Kq3KQo8S9lFwpkxcBDW1FZjeQiE79nQx+TxwbCYIlUB28dephPUquI6o=
-X-Received: by 2002:a05:6830:22d6:: with SMTP id q22mr8634292otc.274.1590098295812;
- Thu, 21 May 2020 14:58:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5B1+HMIDvT7snVXiXmhhirfPbIUt2RcF6P9jK7VVgzk=;
+        b=csARpv/M/aHe5a4oxpRqHI8JPJaTZYDfMhVbvG++U1qoAiLIlADcIx3fGqAPw3AhgL
+         5bfxM8+9mhz28gsOnOeDl4LUXginf4urTjtUPFmAemHAoA0aU0FLNc5g7wPkRvh/joC7
+         NmMVkPtLu95f9z0DsOK0BhP9mJySUJpQ9VA+LZlKUMOjS0VinX9S6q8YXlejyFrdZp0r
+         WEGWNgrKpUMES4bzz+QtFLzyEYSooImtHokmG0QiSc8A6iQjdNROyf4l8uGlUC5oTY/S
+         +m2OEC8/b4oKEs7ram+96i7D7zfF/SF2gbukdC3vET8Odh5IEqWQTD6UVBS619FdjhbV
+         S9Mg==
+X-Gm-Message-State: AOAM5318762ERT3Fp+vxIq6JdZ9cka9DRIDcOvRVppOmE+7Q80rPU+R8
+        scv68CHJA532TDJyxTJZS6xY5Q==
+X-Google-Smtp-Source: ABdhPJynOwwPxmTuGwW6Ugcajsa54FPAHyhnkQZPzhAlPWSvWI/s5UNhYFanefxUXztWg+08MxKYyg==
+X-Received: by 2002:aed:37e7:: with SMTP id j94mr12705571qtb.57.1590098359373;
+        Thu, 21 May 2020 14:59:19 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:4708])
+        by smtp.gmail.com with ESMTPSA id m13sm6939518qtm.12.2020.05.21.14.59.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 14:59:18 -0700 (PDT)
+Date:   Thu, 21 May 2020 17:58:55 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200521215855.GB815153@cmpxchg.org>
+References: <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name>
+ <20200521095515.GK6462@dhcp22.suse.cz>
+ <CA+G9fYvAB9F+Xo0vUsSveKnExkv3cV9-oOG9gBqGEcXsO95m0w@mail.gmail.com>
+ <20200521105801.GL6462@dhcp22.suse.cz>
+ <alpine.LSU.2.11.2005210504110.1185@eggly.anvils>
+ <20200521124444.GP6462@dhcp22.suse.cz>
+ <20200521191746.GB815980@cmpxchg.org>
+ <alpine.LSU.2.11.2005211250130.1158@eggly.anvils>
 MIME-Version: 1.0
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <20200520222642.70679-1-joel@joelfernandes.org> <CAHk-=wjUXRG53S0mLd8UVG2+cMC=2YLJGB-K_h2TkqHGZ-VSoA@mail.gmail.com>
- <20200521204044.GD140701@google.com>
-In-Reply-To: <20200521204044.GD140701@google.com>
-From:   Jesse Barnes <jsbarnes@google.com>
-Date:   Thu, 21 May 2020 14:58:04 -0700
-Message-ID: <CAJmaN=nq7qaLRdN6CTAqtYy4nfMe4NvAutF5m2v-Ng+5Kijx_A@mail.gmail.com>
-Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        vpillai <vpillai@digitalocean.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2005211250130.1158@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 1:45 PM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> Hi Linus,
->
-> On Thu, May 21, 2020 at 11:31:38AM -0700, Linus Torvalds wrote:
-> > On Wed, May 20, 2020 at 3:26 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > Generally throughput benchmarks are much easier to do, how do you do
-> > this latency benchmark, and is it perhaps something that could be run
-> > more widely (ie I'm thinking that if it's generic enough and stable
-> > enough to be run by some of the performance regression checking
-> > robots, it would be a much more interesting test-case than some of the
-> > ones they run right now...)
->
-> Glad you like it! The metric is calculated with a timestamp of when the
-> driver says the key was pressed, up until when the GPU says we've drawn
-> pixels in response.
->
-> The test requires a mostly only requires Chrome browser. It opens some
-> pre-existing test URLs (a google doc, a window that opens a camera stream and
-> another window that decodes video). This metric is already calculated in
-> Chrome, we just scrape it from
-> chrome://histograms/Event.Latency.EndToEnd.KeyPress.  If you install Chrome,
-> you can goto this link and see the histogram.  We open a Google docs window
-> and synthetically input keys into it with a camera stream and video decoding
-> running in other windows which gives the CPUs a good beating. Then we collect
-> roughly the 90th percentile keypress latency from the above histogram and the
-> camera and decoded video's FPS, among other things. There is a test in the
-> works that my colleagues are writing to run the full Google hangout video
-> chatting stack to stress the system more (versus just the camera stream).  I
-> guess if the robots can somehow input keys into the Google docs and open the
-> right windows, then it is just a matter of scraping the histogram.
+On Thu, May 21, 2020 at 01:06:28PM -0700, Hugh Dickins wrote:
+> On Thu, 21 May 2020, Johannes Weiner wrote:
+> > do_memsw_account() used to be automatically false when the cgroup
+> > controller was disabled. Now that it's replaced by
+> > cgroup_memory_noswap, for which this isn't true, make the
+> > mem_cgroup_disabled() checks explicit in the swap control API.
+> > 
+> > [hannes@cmpxchg.org: use mem_cgroup_disabled() in all API functions]
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Debugged-by: Hugh Dickins <hughd@google.com>
+> > Debugged-by: Michal Hocko <mhocko@kernel.org>
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > ---
+> >  mm/memcontrol.c | 47 +++++++++++++++++++++++++++++++++++++++++------
+> >  1 file changed, 41 insertions(+), 6 deletions(-)
+> 
+> I'm certainly not against a mem_cgroup_disabled() check in the only
+> place that's been observed to need it, as a fixup to merge into your
+> original patch; but this seems rather an over-reaction - and I'm a
+> little surprised that setting mem_cgroup_disabled() doesn't just
+> force cgroup_memory_noswap, saving repetitious checks elsewhere
+> (perhaps there's a difficulty in that, I haven't looked).
 
-Expanding on this a little, we're working on a couple of projects that
-should provide results like these for upstream.  One is continuously
-rebasing our upstream backlog onto new kernels for testing purposes
-(the idea here is to make it easier for us to update kernels on
-Chromebooks), and the second is to drive more stuff into the
-kernelci.org infrastructure.  Given the test environments we have in
-place now, we can probably get results from our continuous rebase
-project first and provide those against -rc releases if that's
-something you'd be interested in.  Going forward, I hope we can
-extract several of our tests and put them into kernelci as well, so we
-get more general coverage without the potential impact of our (still
-somewhat large) upstream backlog of patches.
+Fair enough, I changed it to set the flag at initialization time if
+mem_cgroup_disabled(). I was never a fan of the old flags, where it
+was never clear what was commandline, and what was internal runtime
+state - do_swap_account? really_do_swap_account? But I think it's
+straight-forward in this case now.
 
-To Joel's point, there are a few changes we'll have to make to get
-similar results outside of our environment, but I think that's doable
-without a ton of work.  And if anyone is curious, I think most of this
-stuff is already public in the tast and autotest repos of the
-chromiumos tree.  Just let us know if you want to make changes or port
-to another environment so we can try to stay in sync wrt new features,
-etc.
+> Historically, I think we've added mem_cgroup_disabled() checks
+> (accessing a cacheline we'd rather avoid) where they're necessary,
+> rather than at every "interface".
 
-Thanks,
-Jesse
+To me that always seemed like bugs waiting to happen. Like this one!
+
+It's a jump label nowadays, so I've been liberal with these to avoid
+subtle bugs.
+
+> And you seem to be in a very "goto out" mood today - we all have
+> our "goto out" days, alternating with our "return 0" days :)
+
+:-)
+
+But I agree, best to keep this fixup self-contained and defer anything
+else to separate cleanup patches.
+
+How about the below? It survives a swaptest with cgroup_disable=memory
+for me.
+
+Hugh, I started with your patch, which is why I kept you as the
+author, but as the patch now (and arguably the previous one) is
+sufficiently different, I dropped that now. I hope that's okay.
+
+---
+From d9e7ed15d1c9248a3fd99e35e82437549154dac7 Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Thu, 21 May 2020 17:44:25 -0400
+Subject: [PATCH] mm: memcontrol: prepare swap controller setup for integration
+ fix
+
+Fix crash with cgroup_disable=memory:
+
+> > > > + mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8NRK0BPF6XF
+> > > > mke2fs 1.43.8 (1-Jan-2018)
+> > > > Creating filesystem with 244190646 4k blocks and 61054976 inodes
+> > > > Filesystem UUID: 3bb1a285-2cb4-44b4-b6e8-62548f3ac620
+> > > > Superblock backups stored on blocks:
+> > > > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+> > > > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+> > > > 102400000, 214990848
+> > > > Allocating group tables:    0/7453                           done
+> > > > Writing inode tables:    0/7453                           done
+> > > > Creating journal (262144 blocks): [   35.502102] BUG: kernel NULL
+> > > > pointer dereference, address: 000000c8
+> > > > [   35.508372] #PF: supervisor read access in kernel mode
+> > > > [   35.513506] #PF: error_code(0x0000) - not-present page
+> > > > [   35.518638] *pde = 00000000
+> > > > [   35.521514] Oops: 0000 [#1] SMP
+> > > > [   35.524652] CPU: 0 PID: 145 Comm: kswapd0 Not tainted
+> > > > 5.7.0-rc6-next-20200519+ #1
+> > > > [   35.532121] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > > > 2.2 05/23/2018
+> > > > [   35.539507] EIP: mem_cgroup_get_nr_swap_pages+0x28/0x60
+
+Swap accounting used to be implied-disabled when the cgroup controller
+was disabled. Restore that for the new cgroup_memory_noswap, so that
+we bail out of this function instead of dereferencing a NULL memcg.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Debugged-by: Hugh Dickins <hughd@google.com>
+Debugged-by: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ mm/memcontrol.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 3e000a316b59..e3b785d6e771 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -7075,7 +7075,11 @@ static struct cftype memsw_files[] = {
+ 
+ static int __init mem_cgroup_swap_init(void)
+ {
+-	if (mem_cgroup_disabled() || cgroup_memory_noswap)
++	/* No memory control -> no swap control */
++	if (mem_cgroup_disabled())
++		cgroup_memory_noswap = true;
++
++	if (cgroup_memory_noswap)
+ 		return 0;
+ 
+ 	WARN_ON(cgroup_add_dfl_cftypes(&memory_cgrp_subsys, swap_files));
+-- 
+2.26.2
+
