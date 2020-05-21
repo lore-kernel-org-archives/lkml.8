@@ -2,166 +2,85 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B693C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62983207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590074734;
-	bh=7YhnYRDSk0jdsjUR8qMgiSF5JevkDSKMkL/fGxyOeIk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bzOqW5h98k05Ug2H2KtWXz6SqEJ9yRHaM0/9fhRWv5pMaSbYACUtmaYX7hXgNmUsR
-	 PqAu5y8OFjIk4GdUv3+CULXdFANfbfHFwEMtKKshZ0fyCgpzYP/F59poACXQ4NTGwq
-	 ZHG4KRTwC+6RyXSAF0/T4ObWFDLLN01QQ7nKmGyg=
+	by mail.kernel.org (Postfix) with ESMTP id 0F3CB207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OX42L2FK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgEUPZd (ORCPT
+        id S1730100AbgEUPXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:25:33 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35001 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729977AbgEUPZ3 (ORCPT
+        Thu, 21 May 2020 11:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35128 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730045AbgEUPX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:25:29 -0400
-Received: by mail-oi1-f196.google.com with SMTP id z9so1668421oid.2;
-        Thu, 21 May 2020 08:25:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D0uWGFCD5V34lH8VbU4HglTn4XGZ0Xtya8FxjiL3tQs=;
-        b=iuvaiZEVuNWpi7op0mAKu2ftRLLYgUXDtg6JN+452XA1lMwry4Jm+RLgFd3tQXqXYF
-         nYGgnjqZ6vgWkIQTHIcES9xz0Az/aSFshHUrRHY0xZ5WQhdgmvYVobl8ymEOCzaTdI7i
-         Tx7BCY8kJHZebXSkQcWrfzKNgHW+fQ47vdMpbd3uuBIeqKcBgfFuLwUisXlMhdfSCdRd
-         8V89Odll0vMNuI1YyTtAk7QBCiJyF3Qlo9OrSotVlawHEPtCvubEwa3GJe37+6U5SnR+
-         FrpjFRcctrGW4HEHVnfFlXZ8JK8WTOXHnK2TDnVTGQ1GiUgGMvwfa8hzfd3k8zt5CPKA
-         U9Yw==
-X-Gm-Message-State: AOAM532bfjpjACXuf7JvYfC37LGA+A9uba9JiBl1RyxSDxoyivCJ7CWP
-        tIFRkuSupf6pr8gb4GPRXShle45NtTzkTZyvGPw=
-X-Google-Smtp-Source: ABdhPJzx65YPgki0LhoHsio0Vu+PQ4w0tRMbmKkwz5UC1wTNSZn2a2KZQZdxQKh4XLArhWOniQwE0ntdBIMKQ3qvU94=
-X-Received: by 2002:aca:4254:: with SMTP id p81mr6799233oia.68.1590074728219;
- Thu, 21 May 2020 08:25:28 -0700 (PDT)
+        Thu, 21 May 2020 11:23:26 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0AB2C061A0E;
+        Thu, 21 May 2020 08:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=8xYqhlaf56AodBMEMHzZf5wu40Wrvnh8K80Ep72Z4QE=; b=OX42L2FK5DlrY0ihmHgVpYvF4n
+        /GNueyuT6/F28jhKA0sN+lPvS0kuV7S0qwVUss8qpoExx09VimF/GY5WKMpzOvtDDnGqMI/TnuDu6
+        eT2ABDPSAWZ0zSUQG3IWr0fJj2VIetRUNBqwA3zWJEY5T6vdbigsqzpdjIKJlP/SaYYnG5nBzpsHV
+        MoW1s/a8Iqp6ojh11hFiPwtLsbneMpWfGzu3Nl1PdSzDenh4YIvnsayl8fqrl2/bfClINm+mwrgB8
+        CjHjBJPGs0gt6eX38YWgB60pfoS043GbwKHXBPEEoKffTV2nECiywDHi2g46xT1vIS0UVEO9VfBqc
+        8wPytSxA==;
+Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbn2T-0004B4-Q6; Thu, 21 May 2020 15:23:18 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 05/23] maccess: update the top of file comment
+Date:   Thu, 21 May 2020 17:22:43 +0200
+Message-Id: <20200521152301.2587579-6-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
+References: <20200521152301.2587579-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200521031355.7022-1-dinghao.liu@zju.edu.cn> <20200521151620.GA1135365@bjorn-Precision-5520>
-In-Reply-To: <20200521151620.GA1135365@bjorn-Precision-5520>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 21 May 2020 17:25:14 +0200
-Message-ID: <CAJZ5v0g1-WrBskdBHQ0vpWEk2E-dSaZcQsZngn84rcjcemoAAA@mail.gmail.com>
-Subject: Re: [PATCH] [v2] PCI: tegra194: Fix runtime PM imbalance on error
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Kangjie Lu <kjlu@umn.edu>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 5:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rafael, linux-pm]
->
-> On Thu, May 21, 2020 at 11:13:49AM +0800, Dinghao Liu wrote:
-> > pm_runtime_get_sync() increments the runtime PM usage counter even
-> > when it returns an error code. Thus a pairing decrement is needed on
-> > the error handling path to keep the counter balanced.
->
-> I didn't realize there were so many drivers with the exact same issue.
-> Can we just squash these all into a single patch so we can see them
-> all together?
->
-> Hmm.  There are over 1300 callers of pm_runtime_get_sync(), and it
-> looks like many of them have similar issues, i.e., they have a pattern
-> like this
->
->   ret = pm_runtime_get_sync(dev);
->   if (ret < 0)
->     return;
->
->   pm_runtime_put(dev);
->
-> where there is not a pm_runtime_put() to match every
-> pm_runtime_get_sync().  Random sample:
->
->   nds32_pmu_reserve_hardware
->   sata_rcar_probe
->   exynos_trng_probe
->   ks_sa_rng_probe
->   omap_aes_probe
->   sun8i_ss_probe
->   omap_aes_probe
->   zynq_gpio_probe
->   amdgpu_hwmon_show_power_avg
->   mtk_crtc_ddp_hw_init
->   ...
->
-> Surely I'm missing something and these aren't all broken, right?
+This file now also contains several helpers for accessing user memory.
 
-If they do what you've said, they are all broken I'm afraid.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ mm/maccess.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-They should all be doing something like
+diff --git a/mm/maccess.c b/mm/maccess.c
+index 747581ac50dc9..65880ba2ca376 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Access kernel memory without faulting.
++ * Access kernel or user memory without faulting.
+  */
+ #include <linux/export.h>
+ #include <linux/mm.h>
+-- 
+2.26.2
 
-    ret = pm_runtime_get_sync(dev);
-    if (ret < 0)
-        goto out;
-
-    ...
-
-out:
-    pm_runtime_put(dev);
-
-> Maybe we could put together a coccinelle script to scan the tree for
-> this issue?
->
-> > Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-tegra194.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > index ae30a2fd3716..2c0d2ce16b47 100644
-> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > @@ -1623,7 +1623,7 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
-> >       ret = pinctrl_pm_select_default_state(dev);
-> >       if (ret < 0) {
-> >               dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
-> > -             goto fail_pinctrl;
-> > +             goto fail_pm_get_sync;
-> >       }
-> >
-> >       tegra_pcie_init_controller(pcie);
-> > @@ -1650,9 +1650,8 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
-> >
-> >  fail_host_init:
-> >       tegra_pcie_deinit_controller(pcie);
-> > -fail_pinctrl:
-> > -     pm_runtime_put_sync(dev);
-> >  fail_pm_get_sync:
-> > +     pm_runtime_put_sync(dev);
-
-Why not pm_runtime_put()?
-
-> >       pm_runtime_disable(dev);
-> >       return ret;
-> >  }
-> > --
-> > 2.17.1
-> >
