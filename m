@@ -2,107 +2,158 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D41C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78DD220826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C91E2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bEbn9QbN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgEUPX0 (ORCPT
+        id S1730112AbgEUPXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:23:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:48946 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730045AbgEUPXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:23:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4ED61063;
-        Thu, 21 May 2020 08:23:19 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 259183F305;
-        Thu, 21 May 2020 08:23:18 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        Jan Beulich <jbeulich@suse.com>
-Cc:     Steven Price <steven.price@arm.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 2/2] mm: ptdump: Expand type of 'val' in note_page()
-Date:   Thu, 21 May 2020 16:23:08 +0100
-Message-Id: <20200521152308.33096-3-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200521152308.33096-1-steven.price@arm.com>
-References: <20200521152308.33096-1-steven.price@arm.com>
+        Thu, 21 May 2020 11:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730092AbgEUPXa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:23:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F9CC061A0E;
+        Thu, 21 May 2020 08:23:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=vJr8Nd36WTtjRbTcnMJfPCvQoz7VGVQf3j70KzB4hjE=; b=bEbn9QbNOVE9suBDx6d2SO907K
+        1heGAnNZL235o+TekEQF9PpbsHn80dSP5/Gu0u6Z9fzZd12167rNulj8MJWEZnpjUr3JGD/ocx3uc
+        bXaawAo/grVpUYYKfJpBsfQN/DpWxVCxlgzqKAZPLsuLgE0k9Nt3DAo+5ksqphlfkF1iyGe1dHRJI
+        GprJuHAjvLpeTcK2cblyUlqIQ957IHmkq3M+qy6ObWdjZ3U7QFq/5dUDBdK/3pE+BxD83Ho6rfb8P
+        C3vNVpnJUglkh8IppVPrwB3+iJmadBb1pm9e775zZwCu+RQuav6QeRQrPmMzl8Px7hnSQAuD/j4d9
+        eI2FU0MA==;
+Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbn2a-0004Gg-VU; Thu, 21 May 2020 15:23:25 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 07/23] maccess: rename strncpy_from_unsafe_strict to strncpy_from_kernel_nofault
+Date:   Thu, 21 May 2020 17:22:45 +0200
+Message-Id: <20200521152301.2587579-8-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
+References: <20200521152301.2587579-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The page table entry is passed in the 'val' argument to note_page(),
-however this was previously an "unsigned long" which is fine on 64-bit
-platforms. But for 32 bit x86 it is not always big enough to contain a
-page table entry which may be 64 bits.
+This matches the naming of strncpy_from_user_nofault, and also makes it
+more clear what the function is supposed to do.
 
-Change the type to u64 to ensure that it is always big enough.
-
-Reported-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/arm64/mm/dump.c          | 2 +-
- arch/x86/mm/dump_pagetables.c | 2 +-
- include/linux/ptdump.h        | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/mm/maccess.c    | 2 +-
+ include/linux/uaccess.h  | 4 ++--
+ kernel/trace/bpf_trace.c | 4 ++--
+ mm/maccess.c             | 6 +++---
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index 860c00ec8bd3..d4313bc0c4c1 100644
---- a/arch/arm64/mm/dump.c
-+++ b/arch/arm64/mm/dump.c
-@@ -247,7 +247,7 @@ static void note_prot_wx(struct pg_state *st, unsigned long addr)
+diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
+index f5b85bdc0535c..62c4017a2473d 100644
+--- a/arch/x86/mm/maccess.c
++++ b/arch/x86/mm/maccess.c
+@@ -34,7 +34,7 @@ long probe_kernel_read_strict(void *dst, const void *src, size_t size)
+ 	return __probe_kernel_read(dst, src, size);
  }
  
- static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
--		      unsigned long val)
-+		      u64 val)
+-long strncpy_from_unsafe_strict(char *dst, const void *unsafe_addr, long count)
++long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
  {
- 	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
- 	static const char units[] = "KMGTPE";
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index 199bbb7fbd79..17aa7ac94a34 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -273,7 +273,7 @@ static void effective_prot(struct ptdump_state *pt_st, int level, u64 val)
-  * print what we collected so far.
+ 	if (unlikely(invalid_probe_range((unsigned long)unsafe_addr)))
+ 		return -EFAULT;
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index b983cb1c1216a..134ff9c1c151b 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -310,8 +310,8 @@ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+ extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
+ 
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+-extern long strncpy_from_unsafe_strict(char *dst, const void *unsafe_addr,
+-				       long count);
++long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr,
++		long count);
+ extern long __strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
+ 		long count);
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 4e20bf1d95832..f5231ffea85b9 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -240,7 +240,7 @@ bpf_probe_read_kernel_str_common(void *dst, u32 size, const void *unsafe_ptr,
+ 	 * is returned that can be used for bpf_perf_event_output() et al.
+ 	 */
+ 	ret = compat ? strncpy_from_unsafe(dst, unsafe_ptr, size) :
+-	      strncpy_from_unsafe_strict(dst, unsafe_ptr, size);
++	      strncpy_from_kernel_nofault(dst, unsafe_ptr, size);
+ 	if (unlikely(ret < 0))
+ out:
+ 		memset(dst, 0, size);
+@@ -412,7 +412,7 @@ BPF_CALL_5(bpf_trace_printk, char *, fmt, u32, fmt_size, u64, arg1,
+ 				break;
+ #endif
+ 			case 'k':
+-				strncpy_from_unsafe_strict(buf, unsafe_ptr,
++				strncpy_from_kernel_nofault(buf, unsafe_ptr,
+ 							   sizeof(buf));
+ 				break;
+ 			case 'u':
+diff --git a/mm/maccess.c b/mm/maccess.c
+index 457d8f9bf714f..c8748c2809096 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -159,7 +159,7 @@ long probe_user_write(void __user *dst, const void *src, size_t size)
+  * If @count is smaller than the length of the string, copies @count-1 bytes,
+  * sets the last byte of @dst buffer to NUL and returns @count.
+  *
+- * Same as strncpy_from_unsafe_strict() except that for architectures with
++ * Same as strncpy_from_kernel_nofault() except that for architectures with
+  * not fully separated user and kernel address spaces this function also works
+  * for user address tanges.
+  *
+@@ -170,7 +170,7 @@ long __weak strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
+     __attribute__((alias("__strncpy_from_unsafe")));
+ 
+ /**
+- * strncpy_from_unsafe_strict: - Copy a NUL terminated string from unsafe
++ * strncpy_from_kernel_nofault: - Copy a NUL terminated string from unsafe
+  *				 address.
+  * @dst:   Destination address, in kernel space.  This buffer must be at
+  *         least @count bytes long.
+@@ -187,7 +187,7 @@ long __weak strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
+  * If @count is smaller than the length of the string, copies @count-1 bytes,
+  * sets the last byte of @dst buffer to NUL and returns @count.
   */
- static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
--		      unsigned long val)
-+		      u64 val)
- {
- 	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
- 	pgprotval_t new_prot, new_eff;
-diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
-index ac01502763bf..2a3a95586425 100644
---- a/include/linux/ptdump.h
-+++ b/include/linux/ptdump.h
-@@ -13,7 +13,7 @@ struct ptdump_range {
- struct ptdump_state {
- 	/* level is 0:PGD to 4:PTE, or -1 if unknown */
- 	void (*note_page)(struct ptdump_state *st, unsigned long addr,
--			  int level, unsigned long val);
-+			  int level, u64 val);
- 	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
- 	const struct ptdump_range *range;
- };
+-long __weak strncpy_from_unsafe_strict(char *dst, const void *unsafe_addr,
++long __weak strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr,
+ 				       long count)
+     __attribute__((alias("__strncpy_from_unsafe")));
+ 
 -- 
-2.20.1
+2.26.2
 
