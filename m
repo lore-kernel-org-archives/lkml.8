@@ -2,176 +2,165 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9270C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE987206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEC9206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:54:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j6FR1biL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MadH9FDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgEUNxN (ORCPT
+        id S1729586AbgEUNyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:53:13 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:43618 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729415AbgEUNxN (ORCPT
+        Thu, 21 May 2020 09:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgEUNyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:53:13 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200521135310euoutp012ec60fdbed0cda17e2b7d3cad3c9823d~RD4EMlap00262402624euoutp01C;
-        Thu, 21 May 2020 13:53:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200521135310euoutp012ec60fdbed0cda17e2b7d3cad3c9823d~RD4EMlap00262402624euoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590069190;
-        bh=YfRtVo8/rtlJ19IErtdjlJ6JVjpxclDbDa34stjlnO8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6FR1biLt8D+cfQ+J7u1OupmI2veRnVbgvB+flxRmCCMO1JyKgbMloYzT7+YW6l9B
-         gP7BrtVHJJcohh04Hz//3ZsH1SegnO4Zgr3w8jjREuSQkei53TW03Bqfh52vOTsrtZ
-         9p8F5wIvgeOp/ZbAhnWkAYYfOSdYdJFi9K9JuAyU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200521135310eucas1p21b83ff5816dc51b51e4155298e15dfd5~RD4D-U-pn1391613916eucas1p2l;
-        Thu, 21 May 2020 13:53:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 85.D2.60679.6C786CE5; Thu, 21
-        May 2020 14:53:10 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60~RD4Dp5vXT2496524965eucas1p10;
-        Thu, 21 May 2020 13:53:09 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200521135309eusmtrp2aa4fddb17d67739dcf9feec5996efb4b~RD4DpNwcT1832118321eusmtrp2K;
-        Thu, 21 May 2020 13:53:09 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-49-5ec687c6951f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E9.A5.07950.5C786CE5; Thu, 21
-        May 2020 14:53:09 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200521135309eusmtip2b27232232bd46d20d6f1afbec6d9c609~RD4DbB-7K0157001570eusmtip2N;
-        Thu, 21 May 2020 13:53:09 +0000 (GMT)
-From:   Lukasz Stelmach <l.stelmach@samsung.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwrng: exynos - fix runtime pm imbalance on error
-Date:   Thu, 21 May 2020 15:52:56 +0200
-In-Reply-To: <20200520131911.16813-1-dinghao.liu@zju.edu.cn> (Dinghao Liu's
-        message of "Wed, 20 May 2020 21:19:10 +0800")
-Message-ID: <dleftjmu61z96v.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 21 May 2020 09:54:47 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A73B3C061A0E;
+        Thu, 21 May 2020 06:54:47 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id z18so5525526qto.2;
+        Thu, 21 May 2020 06:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4AWH1AUEd7Au/qvsJAY3f3OpE4viRwDzW+yF47F593Y=;
+        b=MadH9FDDGvoxe4fUbjh7p4mwB3ng32aoog6jBUA4hFSZAKoaWEKqesMpS8Mdgd0nR2
+         mDTgZteXtTpdXw8EluT3/45VBYy3VnVHtEsyutIuba5pFOT1ONq06EfpFZxfbAM+uqBt
+         ivy6cbOcjc9wKcedTtgupAWJ4hGHRK6MDbC5Mf63igyieBqM3YqmiNMYpXIlyth7uy+c
+         dK6YjZCUy66fZodoZfuNm2c+b7Jy5HP8GX2o3qqoiVU9U/KOnqcAZfrpq9vj9G7eqhyl
+         9Xb6Y7o7onhxN0YVZPLVzb6piACyAq9ppSHsg5oJrX7hlGZSAgGYua7uGRRSN/cVwcZH
+         Oc1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4AWH1AUEd7Au/qvsJAY3f3OpE4viRwDzW+yF47F593Y=;
+        b=mXMOWKlrZvLCbcgKEzph9yyz/zTs5isoK66wATfJh4htpPeKHv9j922MHlgkRCSFeb
+         jsFsuGxaZOyUke0tX674r9G4tD3ccKyuUo/pw9mvzHbfbTD6fjHgeIPtLD95vmYwS/wx
+         SkJfTD58bRl5DdguxYlLT0uIixgFP20ugPlC+tjU7amlB4c3PXDiQuwl35lwovMjYuiy
+         LAmdqKcnvHhsWS3Et2O74KYp7kbfy3TDe44xsolC5oW4rF67BioH+iuD8Rgnbsn02tlO
+         llqE5r+rulEaOcRpgc0TWksYyPKJ21CRsb1qXBwshVRpmVukG9YmLrAKq4VakQFBmR5Y
+         YkUA==
+X-Gm-Message-State: AOAM533saCmpPiGdq7RPXkKb8Lgp9xNnmbAGiGgFtSSlbCNzvyEcL5g/
+        UoPZbSH1K43bxPlfb8g8DyI=
+X-Google-Smtp-Source: ABdhPJwr1XLsFhpL67QfydZyYFncpQXNqgVtdQK2lUSy7K4tdF1oTZiVeuf1ITYdnePhr53SYWBElg==
+X-Received: by 2002:ac8:4c8b:: with SMTP id j11mr10385232qtv.58.1590069286825;
+        Thu, 21 May 2020 06:54:46 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.48.225])
+        by smtp.gmail.com with ESMTPSA id n85sm1682417qkn.31.2020.05.21.06.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 06:54:46 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 7AEDAC0BEB; Thu, 21 May 2020 10:54:43 -0300 (-03)
+Date:   Thu, 21 May 2020 10:54:43 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
+        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 32/33] net: add a new bind_add method
+Message-ID: <20200521135443.GY2491@localhost.localdomain>
+References: <20200520195509.2215098-1-hch@lst.de>
+ <20200520195509.2215098-33-hch@lst.de>
+ <20200520230025.GT2491@localhost.localdomain>
+ <20200521084224.GA7859@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTURjGOd67e6/D2XEavi2LGArZh1pa3uibpC4RGYgQQdZqN5W2GVtm
-        5R9+ZOXMUpcfJas008R0mcnaVErEViK6orKCUsnM7ywNTGua8yr03+99nue8530PhyGkIyIZ
-        E6s5zWs1CpWcEpNm22T7WttlW1TQ4xGCdRhsNPtkIoVkL5Q8pNgrgz5sVs8Qwb683Uazdns1
-        zdb0dIjYrs5JF/ZNnZFib9ifurBF5mtohxv3Z8qAOHOjH1dToae4Z7cqae7xvSTu2kA14t4V
-        p9LceM1yTl83Qh1wPSTeouRVsWd4beC2o+KY/PcO4lTmorOWtxY6GWVJMpArAzgErji+URlI
-        zEhxOYLCtp+EUPxCcKGvnBSKcQTPLqeIFo7MGK4iwbiP4G++nXYaUtyHwKoPy0AMQ+EAqKo6
-        6JS98Eqo702lnXkC6wkoaxgnnYYn3g0T3wuQk0nsBy3TVsLJrjgRsnO75zISHArTQ5mUkxfj
-        TVDb30ULuge03Pw6lyGwGm7ah+cGAqxnoNRqooVJwyB14M08e8Lgi9p59oEZ6x0X56CAk+C6
-        YaNwNhOB2fibFDKb4VP7FCXwTmjsrSeEvDt8GPEQ7nUHg7lgXpZA+iWpkPYFU1bDfBcZXB0s
-        RwJzUF9gEQnvloUgx5ROZaMVhf+tU/jfOoWzbQnsDw/rAgV5NZQVDxECbwWTaZQsQqIK5M3H
-        69TRvG69hk8I0CnUunhNdMDxOHUNmv14rdMvfllQ3d9jTQgzSO4m6T5ui5KKFGd059RNyHe2
-        05fqB6+QjNTEaXi5l6R40fMoqUSpOHee18Yd0careF0TWsqQcm9J8N2Bw1IcrTjNn+T5U7x2
-        wXVhXGXJyMznVPw4S4d4BIWHIyLQ4h+xPSdt1C/vsF/yBs/SUOPH4f1t1mW1pS3v+8aC80YV
-        31WOye7E8p5lXrtO7O1MSVvCRirz1ktXl3Ss2rMzcE14c0Ra60VT2T5Za3NLztGKhMrUgUna
-        N9241qOrn8lLGgvyfm2OfKQc+3wp18cY+7xBTupiFOtWEVqd4h9uZsX1gAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xe7pH24/FGXy6pGHxd9Ixdovt3xtZ
-        LJoXr2ez6H4lY9H/+DWzxYl5Z9ktzp/fwG6x6fE1Vov7934yWVzeNYfNYsb5fUwWC7b1MTrw
-        ePz+NYnRY9sBVY9NqzrZPPbPXcPusXlJvUffyw2MHlcXNrF7fN4k59G56y1bAGeUnk1RfmlJ
-        qkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsa063+ZC3r4K3Zc
-        2cHewNjP28XIySEhYCLxf1IvYxcjF4eQwFJGiYn/ZgI5HEAJKYmVc9MhaoQl/lzrYoOoecoo
-        ce19LxtIDZuAnsTatREgNSICGhK7nzaxg9QwC/xnkljy8QojSEJYwE3i+7vpYLaQgLXEme5D
-        YDaLgKrEyX87mUFsToFqiQlTHrCA2LwC5hL/XvewgdiiApYSW17cZ4eIC0qcnPkErIZZIFvi
-        6+rnzBMYBWYhSc1CkpoFdB6zgKbE+l36EGFtiWULXzND2LYS69a9Z1nAyLqKUSS1tDg3PbfY
-        SK84Mbe4NC9dLzk/dxMjMFq3Hfu5ZQdj17vgQ4wCHIxKPLwPko/FCbEmlhVX5h5iVAEa82jD
-        6guMUix5+XmpSiK8C/mPxgnxpiRWVqUW5ccXleakFh9iNAX6cyKzlGhyPjDB5JXEG5oamltY
-        GpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYNR+GrfUnHO7adfF19qMc+YsaHG5
-        9/eXyqSnk3Kddp15PeFldIiSqpJLjYTO20lXdxRM//JWbcvZ9jgWQZYVQqwPvzEUaclt6hQX
-        YvQ6vuTmZM3j9Qa1RbFqV59JL9grzNcpVaizx5HFydZ2Tszri6lt9mGT8if9s3S3/vGl3MBW
-        //JihZj2EiWW4oxEQy3mouJEAKZFW3z4AgAA
-X-CMS-MailID: 20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60
-X-Msg-Generator: CA
-X-RootMTR: 20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60
-References: <20200520131911.16813-1-dinghao.liu@zju.edu.cn>
-        <CGME20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521084224.GA7859@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 21, 2020 at 10:42:24AM +0200, Christoph Hellwig wrote:
+> On Wed, May 20, 2020 at 08:00:25PM -0300, Marcelo Ricardo Leitner wrote:
+> > > +	if (err)
+> > > +		return err;
+> > > +
+> > > +	lock_sock(sk);
+> > > +	err = sctp_do_bind(sk, (union sctp_addr *)addr, af->sockaddr_len);
+> > > +	if (!err)
+> > > +		err = sctp_send_asconf_add_ip(sk, addr, 1);
+> > 
+> > Some problems here.
+> > - addr may contain a list of addresses
+> > - the addresses, then, are not being validated
+> > - sctp_do_bind may fail, on which it requires some undoing
+> >   (like sctp_bindx_add does)
+> > - code duplication with sctp_setsockopt_bindx.
+> 
+> sctp_do_bind and thus this function only support a single address, as
+> that is the only thing that the DLM code requires.  I could move the
 
-It was <2020-05-20 =C5=9Bro 21:19>, when Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> the call returns an error code. Thus a pairing decrement is needed
-> on the error handling path to keep the counter balanced.
->
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/char/hw_random/exynos-trng.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_rando=
-m/exynos-trng.c
-> index 8e1fe3f8dd2d..133e017db577 100644
-> --- a/drivers/char/hw_random/exynos-trng.c
-> +++ b/drivers/char/hw_random/exynos-trng.c
-> @@ -165,9 +165,8 @@ static int exynos_trng_probe(struct platform_device *=
-pdev)
->  	clk_disable_unprepare(trng->clk);
->=20=20
->  err_clock:
-> -	pm_runtime_put_sync(&pdev->dev);
-> -
->  err_pm_get:
-> +	pm_runtime_put_sync(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->=20=20
->  	return ret;
+I see.
 
-You are right. I will accept the patch, when you remove the err_clock
-label and and change goto instructions above to point to
-err_pm_get. There is no point in having two labels.
+> user copy out of sctp_setsockopt_bindx and reuse that, but it is a
+> rather rcane API.
 
-Thank you.
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
+Yes. With David's patch, which is doing that, it can be as simple as:
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+static int sctp_bind_add(struct sock *sk, struct sockaddr *addr,
+               int addrlen)
+{
+	int ret;
+	lock_sock(sk);
+	ret = sctp_setsockopt_bindx(sk, addr, addrlen, SCTP_BINDX_ADD_ADDR);
+	release_sock(sk);
+	return ret;
+}
 
------BEGIN PGP SIGNATURE-----
+and then dlm would be using code that we can test through sctp-only tests as
+well.
 
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl7Gh7kACgkQsK4enJil
-gBBm2Af/SrD1GVby/I1q7EfWsefc/fbhflA6BuaxaeBQftAotiqgfdhW4fSiUyjb
-6eG0I7Yq9kppEWBOyUi1qEUypzN9KFvBQ20ey9mqNtj+g+xVXTxmHMjZMrszb41U
-tO7ePEx15hrnjro40NmDMlObuJU1PMVb3EZuZbkoM2qiC9S8ktAar1Cuiw2etyMf
-yFWlwmjb+H+RsjVokVyQxW+UgZ9BgRFBXgifvHixN4ngrVB6ANSZAjjhNE66v0R3
-/8V9R+Z562uWyoqser/x4Nm9ygmBvtB9cKWiHgODK5sycgwuGQYlaFGWWTdZ6P7L
-7pFWPeP4nd73lk8OQwAz7w6E9U7Crw==
-=o590
------END PGP SIGNATURE-----
---=-=-=--
+> 
+> > 
+> > This patch will conflict with David's one,
+> > [PATCH net-next] sctp: Pull the user copies out of the individual sockopt functions.
+> 
+> Do you have a link?  A quick google search just finds your mail that
+> I'm replying to.
+
+https://lore.kernel.org/netdev/fd94b5e41a7c4edc8f743c56a04ed2c9%40AcuMS.aculab.com/T/
+
+> 
+> > (I'll finish reviewing it in the sequence)
+> > 
+> > AFAICT, this patch could reuse/build on his work in there. The goal is
+> > pretty much the same and would avoid the issues above.
+> > 
+> > This patch could, then, point the new bind_add proto op to the updated
+> > sctp_setsockopt_bindx almost directly.
+> > 
+> > Question then is: dlm never removes an addr from the bind list. Do we
+> > want to add ops for both? Or one that handles both operations?
+> > Anyhow, having the add operation but not the del seems very weird to
+> > me.
+> 
+> We generally only add operations for things that we actually use.
+> bind_del is another logical op, but we can trivially add that when we
+> need it.
+
+Right, okay.
