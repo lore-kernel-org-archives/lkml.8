@@ -2,247 +2,86 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1935C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCAAE2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:42:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FJGEwQA7"
+	by mail.kernel.org (Postfix) with ESMTP id 891492070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgEULmH (ORCPT
+        id S1729096AbgEULnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728348AbgEULmG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:42:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984D4C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 04:42:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cm5rOd27FgXfN7VmtOGwF1egJaEfLVL7cmoGCUCmRe4=; b=FJGEwQA7azNd5f/JZMdxS0OsvB
-        jR6fZHV2pN8f37GH2bLV1HvMDFGHhtEFaLudZBkLO3WdWpL5aWzgHUWx0HGVtZsC98zP/Erf8BpNE
-        MmAsbmsF9NBUYoQqcTcXhG+YlTx9D6BdkyMf1zfiUuwRdVz7FB94DGnyD/S6o4DurPxC7/jw13DOG
-        DPjNteJf8a5ItKoitcci2/QLf7XnFIrXKRlINl3L2RFNbpxag9A47dceNOhsRw41OnjeaApYYg/uB
-        0aGiXby4fBk99O0gbM6/PZna3v/rpLcbi0Vt/8AGUY38iBpmbZXC1pDsCbH1PcuygGCn8FDou9Olc
-        4v3fSDxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbjZv-00083U-1w; Thu, 21 May 2020 11:41:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 72A71305EEE;
-        Thu, 21 May 2020 13:41:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5088C20BE0DF7; Thu, 21 May 2020 13:41:32 +0200 (CEST)
-Date:   Thu, 21 May 2020 13:41:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
-        riel@surriel.com
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200521114132.GI325280@hirez.programming.kicks-ass.net>
-References: <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
- <20200508092212.GE3758@techsingularity.net>
- <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
- <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
- <20200513153023.GF3758@techsingularity.net>
- <20200514153122.GE2978@hirez.programming.kicks-ass.net>
- <20200515084740.GJ3758@techsingularity.net>
- <20200515111732.GS2957@hirez.programming.kicks-ass.net>
- <20200515142444.GK3001@hirez.programming.kicks-ass.net>
- <20200521103816.GA7167@techsingularity.net>
+        Thu, 21 May 2020 07:43:25 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:10160 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729027AbgEULnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 07:43:24 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 19:42:56
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Thu, 21 May 2020 19:42:56 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Dan Carpenter" <dan.carpenter@oracle.com>
+Cc:     kjlu@umn.edu, devel@driverdev.osuosl.org,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org, "Dmitry Osipenko" <digetx@gmail.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: Re: [PATCH] [v2] media: staging: tegra-vde: fix runtime pm
+ imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200521112131.GG30374@kadam>
+References: <20200521062746.6656-1-dinghao.liu@zju.edu.cn>
+ <20200521112131.GG30374@kadam>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521103816.GA7167@techsingularity.net>
+Message-ID: <4b400526.bbc83.172370b23a0.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCnjwpAacZerVjtAQ--.39871W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0HBlZdtOPdcwAAs8
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbK0S07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVW8JVWxJwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVACI402YVCY1x02628vn2kIc2xKxwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14
+        v_Gw4lV2xY6xkI7II2jI8vz4vEwIxGrwCS07vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1U
+        MIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14v26r106r1rMIAIbVC2zVAF1VAY17CE14v2
+        6r1q6r43MIAIbVCI42IY6xIIjxv20xvE14v26r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Gr0_Cr1lV2xY6IIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCS07vEIxAI
+        cVC2z280aVAFwI0_Gr0_Cr1lV2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCT
+        nIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:38:16AM +0100, Mel Gorman wrote:
-> IIUC, this patch front-loads as much work as possible before checking if
-> the task is on_rq and then the waker/wakee shares a cache, queue task on
-> the wake_list and otherwise do a direct wakeup.
-> 
-> The advantage is that spinning is avoided on p->on_rq when p does not
-> share a cache. The disadvantage is that it may result in tasks being
-> stacked but this should only happen when the domain is overloaded and
-> select_task_eq() is unlikely to find an idle CPU. The load balancer would
-> soon correct the situation anyway.
-> 
-> In terms of netperf for my testing, the benefit is marginal because the
-> wakeups are primarily between tasks that share cache. It does trigger as
-> perf indicates that some time is spent in ttwu_queue_remote with this
-> patch, it's just that the overall time spent spinning on p->on_rq is
-> very similar. I'm still waiting on other workloads to complete to see
-> what the impact is.
-
-So it might make sense to play with the exact conditions under which
-we'll attempt this remote queue, if we see a large 'local' p->on_cpu
-spin time, it might make sense to attempt the queue even in this case.
-
-We could for example change it to:
-
-	if (REAC_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags | WF_ON_CPU))
-		goto unlock;
-
-and then use that in ttwu_queue_remote() to differentiate between these
-two cases.
-
-Anyway, if it's a wash (atomic op vs spinning) then it's probably not
-worth it.
-
-Another optimization might be to forgo the IPI entirely in this case and
-instead stick a sched_ttwu_pending() at the end of __schedule() or
-something like that.
-
-> However, intuitively at least, it makes sense to avoid spinning on p->on_rq
-> when it's unnecessary and the other changes appear to be safe.  Even if
-> wake_list should be used in some cases for local wakeups, it would make
-> sense to put that on top of this patch. Do you want to slap a changelog
-> around this and update the comments or do you want me to do it? I should
-> have more results in a few hours even if they are limited to one machine
-> but ideally Rik would test his workload too.
-
-I've written you a Changelog, but please carry it in your set to
-evaluate if it's actually worth it.
-
----
-Subject: sched: Optimize ttwu() spinning on p->on_cpu
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Fri, 15 May 2020 16:24:44 +0200
-
-Both Rik and Mel reported seeing ttwu() spend significant time on:
-
-  smp_cond_load_acquire(&p->on_cpu, !VAL);
-
-Attempt to avoid this by queueing the wakeup on the CPU that own's the
-p->on_cpu value. This will then allow the ttwu() to complete without
-further waiting.
-
-Since we run schedule() with interrupts disabled, the IPI is
-guaranteed to happen after p->on_cpu is cleared, this is what makes it
-safe to queue early.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/sched/core.c |   45 ++++++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 21 deletions(-)
-
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2312,7 +2312,7 @@ static void wake_csd_func(void *info)
- 	sched_ttwu_pending();
- }
- 
--static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-+static void __ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
- {
- 	struct rq *rq = cpu_rq(cpu);
- 
-@@ -2354,6 +2354,17 @@ bool cpus_share_cache(int this_cpu, int
- {
- 	return per_cpu(sd_llc_id, this_cpu) == per_cpu(sd_llc_id, that_cpu);
- }
-+
-+static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-+{
-+	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-+		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
-+		__ttwu_queue_remote(p, cpu, wake_flags);
-+		return true;
-+	}
-+
-+	return false;
-+}
- #endif /* CONFIG_SMP */
- 
- static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
-@@ -2362,11 +2373,8 @@ static void ttwu_queue(struct task_struc
- 	struct rq_flags rf;
- 
- #if defined(CONFIG_SMP)
--	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
--		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
--		ttwu_queue_remote(p, cpu, wake_flags);
-+	if (ttwu_queue_remote(p, cpu, wake_flags))
- 		return;
--	}
- #endif
- 
- 	rq_lock(rq, &rf);
-@@ -2550,7 +2558,15 @@ try_to_wake_up(struct task_struct *p, un
- 	if (p->on_rq && ttwu_remote(p, wake_flags))
- 		goto unlock;
- 
-+	if (p->in_iowait) {
-+		delayacct_blkio_end(p);
-+		atomic_dec(&task_rq(p)->nr_iowait);
-+	}
-+
- #ifdef CONFIG_SMP
-+	p->sched_contributes_to_load = !!task_contributes_to_load(p);
-+	p->state = TASK_WAKING;
-+
- 	/*
- 	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
- 	 * possible to, falsely, observe p->on_cpu == 0.
-@@ -2581,15 +2597,10 @@ try_to_wake_up(struct task_struct *p, un
- 	 * This ensures that tasks getting woken will be fully ordered against
- 	 * their previous state and preserve Program Order.
- 	 */
--	smp_cond_load_acquire(&p->on_cpu, !VAL);
--
--	p->sched_contributes_to_load = !!task_contributes_to_load(p);
--	p->state = TASK_WAKING;
-+	if (READ_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags))
-+		goto unlock;
- 
--	if (p->in_iowait) {
--		delayacct_blkio_end(p);
--		atomic_dec(&task_rq(p)->nr_iowait);
--	}
-+	smp_cond_load_acquire(&p->on_cpu, !VAL);
- 
- 	cpu = select_task_rq(p, p->wake_cpu, SD_BALANCE_WAKE, wake_flags);
- 	if (task_cpu(p) != cpu) {
-@@ -2597,14 +2608,6 @@ try_to_wake_up(struct task_struct *p, un
- 		psi_ttwu_dequeue(p);
- 		set_task_cpu(p, cpu);
- 	}
--
--#else /* CONFIG_SMP */
--
--	if (p->in_iowait) {
--		delayacct_blkio_end(p);
--		atomic_dec(&task_rq(p)->nr_iowait);
--	}
--
- #endif /* CONFIG_SMP */
- 
- 	ttwu_queue(p, cpu, wake_flags);
+V2UgbmVlZCB0byBtYWtlIHN1cmUgaWYgcG1fcnVudGltZV9nZXRfc3luYygpIGlzIGRlc2lnbmVk
+IHdpdGgKc3VjaCBiZWhhdmlvciBiZWZvcmUgbW9kaWZ5aW5nIGl0LiAgCgpJIHJlY2VpdmVkIGEg
+cmVzcG9uc2UgZnJvbSBSYWZhZWwgd2hlbiBJIGNvbW1pdGVkIGEgc2ltaWxhciBwYXRjaDoKaHR0
+cHM6Ly9sa21sLm9yZy9sa21sLzIwMjAvNS8yMC8xMTAwCkl0IHNlZW1zIHRoYXQgdGhpcyBiZWhh
+dmlvciBpcyBpbnRlbnRpb25hbCBhbmQgbmVlZHMgdG8gYmUga2VwdC4KClJlZ2FyZHMsCkRpbmdo
+YW8KCiZxdW90O0RhbiBDYXJwZW50ZXImcXVvdDsgJmx0O2Rhbi5jYXJwZW50ZXJAb3JhY2xlLmNv
+bSZndDvlhpnpgZPvvJoKPiBPbiBUaHUsIE1heSAyMSwgMjAyMCBhdCAwMjoyNzo0NVBNICswODAw
+LCBEaW5naGFvIExpdSB3cm90ZToNCj4gPiBwbV9ydW50aW1lX2dldF9zeW5jKCkgaW5jcmVtZW50
+cyB0aGUgcnVudGltZSBQTSB1c2FnZSBjb3VudGVyIGV2ZW4NCj4gPiB0aGUgY2FsbCByZXR1cm5z
+IGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBuZWVkZWQNCj4gPiBv
+biB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCB0byBrZWVwIHRoZSBjb3VudGVyIGJhbGFuY2VkLg0K
+PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1
+LmNuPg0KPiANCj4gTGV0J3Mgc3RvcCB3b3JraW5nIGFyb3VuZCB0aGUgYnVnIGluIHBtX3J1bnRp
+bWVfZ2V0X3N5bmMoKSBhbmQgd3JpdGUNCj4gYSByZXBsYWNlbWVudCBmb3IgaXQgaW5zdGVhZC4N
+Cj4gDQo+IHJlZ2FyZHMsDQo+IGRhbiBjYXJwZW50ZXINCg==
