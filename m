@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C25207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D705520748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="joJLl5J1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="axxi3Qx/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgEUOXF (ORCPT
+        id S1729630AbgEUOWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53748 "EHLO
+        Thu, 21 May 2020 10:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729652AbgEUOWl (ORCPT
+        with ESMTP id S1726965AbgEUOWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:22:41 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904ABC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:41 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id d7so5448853ybp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:41 -0700 (PDT)
+        Thu, 21 May 2020 10:22:32 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9306DC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:32 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id y8so5467869ybn.20
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=2MIiys78gGheOmgr5sadClIeI2A+sMpKPCOuDS/ESKE=;
-        b=joJLl5J1SFsKoRJrjXUDcmh8qcs04F+6FwFKkVywrcnW7KuMYcookU54rJf5+8CxBU
-         jMcwH8Dy8k4JHN8jzYmaf1sIN4mhdK44x4cJjc+ebvK/VWsZMrLdnOkL+UlLCNUs4aV9
-         yYWlqI+RJLHZo4EII9VFD4DUAl81+0P1sqOZm+Wi3L0huYztYhhXDHbuVkwZczt+kfnq
-         vBVLUvjKXpIqm7YD2QSP9AK4y1TfGq/Ttorfoye6zY2EMVBPSTpwTP0GJanKX9ohyS6w
-         i5K6Dv6qkWVLyxDiXjhgghb1/ESB2AGq9buw/mw/W8ncpqrXs6kvtzNB2PcZ45+M4nex
-         Safw==
+        bh=H2uRSUohXbn7nWhU1m6/8O/OIPFFeT1jA5i34XsZ7o0=;
+        b=axxi3Qx/8vKlKRkFvuD31M8fwf7LrlOkxHIrZdlDjzY38oPfn+O2cNDswnD+BhSupD
+         JlwQ51nDCg7UbeW4wdTiT/dp8lH9WhF+0iqP4AHedX+6ef9TtcCRnFfIlDuLbBk0qzKM
+         70ee6zQUY7I1EQ+xKnkJvn0nhAk3B3aw2SZZir69jsEY5hlKh8INutX42YZXmaGVTxMf
+         51YAOYXfi+yz3ZWZv91OaGVrLBgXT4wG/fwE6HXc8GKccSTt6UD5bALGltQ/1/UKN0SY
+         Jt3x1z8fGTWLhHGQxAqVOI+xfiSEBSaZqQ2q4ko7JORQ3LCAkNAc+G8NkxXyp/cXoAH5
+         wLlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=2MIiys78gGheOmgr5sadClIeI2A+sMpKPCOuDS/ESKE=;
-        b=RikgyHUjoOQqPwcrgdci67BjWvLwslIFlwjO86SAoO3nlIV39e+ngyHIDbfiv1PZUF
-         ER766Ah3c/RW+ddknmXpmCGE2y8S9jyweu5FZcR8SidnURzuoT4uvAfgZHaf3vB5hoAd
-         zrHJjv+KuibibdZDJufIIIXzV0Cv61fmDGjMoGR5A8kLoDKcxIi5sSDRePo/JtrU06b6
-         hO5xgmuPZkyzokQr+JU+e9cvVOTWrGR4wXVyK7ZfwII0mr0w4aa09hp+dSdwcheaXBDc
-         Cc1rrDE6kv4pEKfZiXf5RiMvUfuHt9Ww0uQ7g1G8KRhwEPcJm0qiTKvfDInvG7fQZTOp
-         Vg0A==
-X-Gm-Message-State: AOAM530tKtcD913BN/CF0bmHdHGeYWScckTKcsCwwPXYdrs26gOHPvKz
-        5ZBjmBDEsLf8gd2JMdsGerEv6LonBQ==
-X-Google-Smtp-Source: ABdhPJxBdd/PJ/l0pmbr2bj8AZZmXbcBbSQ4T1JSFjAYQMfu6rBVOZq6XAPfzUPajdaBTfa4OC2pTwynow==
-X-Received: by 2002:a25:3608:: with SMTP id d8mr16539361yba.11.1590070960816;
- Thu, 21 May 2020 07:22:40 -0700 (PDT)
-Date:   Thu, 21 May 2020 16:20:45 +0200
+        bh=H2uRSUohXbn7nWhU1m6/8O/OIPFFeT1jA5i34XsZ7o0=;
+        b=agJCYFgmsU2+0HDfmrDcIi4gzBrJvTRmS3NuNyfIzQ2r2aKT1eA/Zl8l+Qgtq8eJFe
+         j/VRycoUHLjHyQjmOE6L/e9zINW0/lfqSo3hSmEu34hZyIGehPNOPNSGBSbTUG++H/aF
+         CrdR4bc3BCP/cpcmfjCdOGuoMrBDSiNMVuYc9849Cr2ofX4JHObMT94Gy/UKVt5se+of
+         srNLXzcwr9WNjzJ2hYNOm/osYdCcZYC9H/hYGOLioF7XAqr9+/ZJtpFOKJfX/Dx3XDnJ
+         Od3M4QtG6SEfQbumIEXn3GlF4HKmdYrQuszQo3X3filcCIm3oUPGGF0yMxF9W5GoF/AE
+         i/ow==
+X-Gm-Message-State: AOAM533bnSKaN7RalubNlUJegaG5UyYfApipT/n7M/JOTvAiu9uLNFJX
+        Um/ZBO2L1IY3v5LQ/RyCDsEAc0uKHQ==
+X-Google-Smtp-Source: ABdhPJxNZLxnN2ElHcnIQLnQrEgbdR+8u1uOdrPm5b7Uw3WUmW5JKKQjrkM3CzIr9Vt38KnL7G2y4CyUDA==
+X-Received: by 2002:a25:3610:: with SMTP id d16mr15626055yba.222.1590070951790;
+ Thu, 21 May 2020 07:22:31 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:20:41 +0200
 In-Reply-To: <20200521142047.169334-1-elver@google.com>
-Message-Id: <20200521142047.169334-10-elver@google.com>
+Message-Id: <20200521142047.169334-6-elver@google.com>
 Mime-Version: 1.0
 References: <20200521142047.169334-1-elver@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH -tip v3 09/11] data_race: Avoid nested statement expression
+Subject: [PATCH -tip v3 05/11] kcsan: Remove 'noinline' from __no_kcsan_or_inline
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
@@ -75,45 +75,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears that compilers have trouble with nested statement
-expressions. Therefore remove one level of statement expression nesting
-from the data_race() macro. This will help us avoid potential problems
-in future as its usage increases.
+Some compilers incorrectly inline small __no_kcsan functions, which then
+results in instrumenting the accesses. For this reason, the 'noinline'
+attribute was added to __no_kcsan_or_inline. All known versions of GCC
+are affected by this. Supported version of Clang are unaffected, and
+never inlines a no_sanitize function.
 
-Link: https://lkml.kernel.org/r/20200520221712.GA21166@zn.tnic
+However, the attribute 'noinline' in __no_kcsan_or_inline causes
+unexpected code generation in functions that are __no_kcsan and call a
+__no_kcsan_or_inline function.
+
+In certain situations it is expected that the __no_kcsan_or_inline
+function is actually inlined by the __no_kcsan function, and *no* calls
+are emitted. By removing the 'noinline' attribute we give the compiler
+the ability to inline and generate the expected code in __no_kcsan
+functions.
+
+Link: https://lkml.kernel.org/r/CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com
 Acked-by: Will Deacon <will@kernel.org>
 Signed-off-by: Marco Elver <elver@google.com>
 ---
-v3:
-* Fix for 'const' non-scalar expressions.
-v2:
-* Add patch to series in response to above linked discussion.
----
- include/linux/compiler.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/compiler.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 7444f026eead..379a5077e9c6 100644
+index e24cc3a2bc3e..17c98b215572 100644
 --- a/include/linux/compiler.h
 +++ b/include/linux/compiler.h
-@@ -211,12 +211,12 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-  */
- #define data_race(expr)							\
- ({									\
--	__kcsan_disable_current();					\
--	({								\
--		__unqual_scalar_typeof(({ expr; })) __v = ({ expr; });	\
--		__kcsan_enable_current();				\
--		__v;							\
-+	__unqual_scalar_typeof(({ expr; })) __v = ({			\
-+		__kcsan_disable_current();				\
-+		expr;							\
- 	});								\
-+	__kcsan_enable_current();					\
-+	__v;								\
- })
- 
+@@ -276,11 +276,9 @@ do {									\
+ #ifdef __SANITIZE_THREAD__
  /*
+  * Rely on __SANITIZE_THREAD__ instead of CONFIG_KCSAN, to avoid not inlining in
+- * compilation units where instrumentation is disabled. The attribute 'noinline'
+- * is required for older compilers, where implicit inlining of very small
+- * functions renders __no_sanitize_thread ineffective.
++ * compilation units where instrumentation is disabled.
+  */
+-# define __no_kcsan_or_inline __no_kcsan noinline notrace __maybe_unused
++# define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
+ # define __no_sanitize_or_inline __no_kcsan_or_inline
+ #else
+ # define __no_kcsan_or_inline __always_inline
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
