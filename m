@@ -2,122 +2,97 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ADBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3746C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA120738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7C520738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728586AbgEUILC (ORCPT
+        id S1728527AbgEUIOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:11:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:42080 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbgEUILC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:11:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 863E7D6E;
-        Thu, 21 May 2020 01:11:01 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.114])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D689D3F52E;
-        Thu, 21 May 2020 01:10:58 -0700 (PDT)
-Date:   Thu, 21 May 2020 09:10:55 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
- ARCH_SOC_ID support
-Message-ID: <20200521081055.GD1131@bogus>
-References: <20200518091222.27467-1-sudeep.holla@arm.com>
- <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
- <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
- <20200521070629.GB1131@bogus>
- <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
- <20200521075755.GA4668@willie-the-truck>
+        Thu, 21 May 2020 04:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgEUIOV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 04:14:21 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65600C061A0E;
+        Thu, 21 May 2020 01:14:21 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbgL2-0004jF-Gl; Thu, 21 May 2020 10:14:00 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B6DB5100C2D; Thu, 21 May 2020 10:13:59 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
+In-Reply-To: <20200521022746.GA730422@T590>
+References: <20200519015420.GA70957@T590> <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590> <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de> <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk> <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk> <87tv0av1gu.fsf@nanos.tec.linutronix.de> <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk> <87eereuudh.fsf@nanos.tec.linutronix.de> <20200521022746.GA730422@T590>
+Date:   Thu, 21 May 2020 10:13:59 +0200
+Message-ID: <87367tvh6g.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521075755.GA4668@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 08:57:56AM +0100, Will Deacon wrote:
-> On Thu, May 21, 2020 at 09:34:10AM +0200, Arnd Bergmann wrote:
-> > On Thu, May 21, 2020 at 9:07 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > On Wed, May 20, 2020 at 11:54:16PM +0200, Arnd Bergmann wrote:
-> > > > On Wed, May 20, 2020 at 11:29 PM Will Deacon <will@kernel.org> wrote:
-> > > > > Applied to arm64 (for-next/smccc), thanks!
-> > > > >
-> > > > > Arnd -- Sudeep's reply to you about the sysfs groups seemed reasonable to me,
-> > > > > but please shout if you'd rather I dropped this in order to pursue an
-> > > > > alternative approach.
-> > > >
-> > > > I missed the reply earlier, thanks for pointing me to it again.
-> 
-> D'oh, I took your silence as "no objections". Oh well!
-> 
-> > > > I'm not entirely convinced, but don't revert it for now because of that,
-> > > > I assume we can find a solution.
-> 
-> Ok, cheers. It's on a separate branch so it's easy enough to drop if
-> necessary (i.e. no reverts needed). Sudeep -- please send any extra patches
-> on top of the branch.
+Ming Lei <ming.lei@redhat.com> writes:
+> On Thu, May 21, 2020 at 12:14:18AM +0200, Thomas Gleixner wrote:
+>> When the CPU is finally offlined, i.e. the CPU cleared the online bit in
+>> the online mask is definitely too late simply because it still runs on
+>> that outgoing CPU _after_ the hardware queue is shut down and drained.
 >
+> IMO, the patch in Christoph's blk-mq-hotplug.2 still works for percpu
+> kthread.
+>
+> It is just not optimal in the retrying, but it should be fine. When the
+> percpu kthread is scheduled on the CPU to be offlined:
+>
+> - if the kthread doesn't observe the INACTIVE flag, the allocated request
+> will be drained.
+>
+> - otherwise, the kthread just retries and retries to allocate & release,
+> and sooner or later, its time slice is consumed, and migrated out, and the
+> cpu hotplug handler will get chance to run and move on, then the cpu is
+> shutdown.
 
-Indeed, it is also last patch in the series. However if Arnd is happy
-with the sysfs names, we can move to generic code later without breaking
-anything.
+1) This is based on the assumption that the kthread is in the SCHED_OTHER
+   scheduling class. Is that really a valid assumption?
 
-We need not revert or drop it now. I will leave that to you or Arnd to
-decide. Just that it may be too late to get acks for all the soc sysfs
-drivers in time for v5.8
+2) What happens in the following scenario:
 
-I am fine if you want to drop the last patch.
+   unplug
 
-> > > I liked your idea of making this generic and hardcode values if required
-> > > for other drivers. I will take a look at that/
-> > >
-> > > > However, please have a look at the build failure report for patch 5
-> > > > and fix it if you can see what went wrong.
-> > > >
-> > >
-> > > Any pointers for that failure ? I seem to have missed them. I pushed
-> > > branch couple of times to my tree but got build success both times.
-> > > Any specific config or compilers ?
-> > 
-> > See below for the reply from the 0day build bot to your email. It seems it
-> > was not sent to the mailing list, but you were on Cc. Looking at it now,
-> > the fix should be trivial.
-> 
-> [...]
-> 
-> > >> drivers/firmware/smccc/smccc.c:14:13: warning: no previous prototype for function 'arm_smccc_version_init' [-Wmissing-prototypes]
-> > void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
-> > ^
-> > drivers/firmware/smccc/smccc.c:14:1: note: declare 'static' if the
-> > function is not intended to be used outside of this translation unit
-> > void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
-> 
-> I saw that when I applied the patches, but since the function is called from
-> another compilation unit (psci/psci.o), I just ignored it as we have loads
-> of these already and it only screams if you build with W=1.
-> 
+     mq_offline
+       set_ctx_inactive()
+       drain_io()
+       
+   io_kthread()
+       try_queue()
+       wait_on_ctx()
 
-/me confused. Do you need the fix for this warning or you are happy to ignore?
+   Can this happen and if so what will wake up that thread?
 
--- 
-Regards,
-Sudeep
+I'm not familiar enough with that code to answer #2, but this really
+wants to be properly described and documented.
+
+Thanks,
+
+        tglx
