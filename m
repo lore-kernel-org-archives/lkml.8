@@ -2,131 +2,181 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F438C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FA8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBF1207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FEA20826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Le6cJcuo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ID1dvrYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgEUPrp (ORCPT
+        id S1728294AbgEUPuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38960 "EHLO
+        Thu, 21 May 2020 11:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgEUPrp (ORCPT
+        with ESMTP id S1726814AbgEUPuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:47:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822D2C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:47:43 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id n5so6858207wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:47:43 -0700 (PDT)
+        Thu, 21 May 2020 11:50:03 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E07CC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:50:02 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x14so1746210wrp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ygXdshwZ6sqhNV/RMFYuAUef1d1MehMWLgDXSG2EHPs=;
-        b=Le6cJcuobanbwKgpp8zSivcyXze9t07R/UHYuERqTibtsy7X/7SAiRx3kKbE9q+2t7
-         a8LBUq/lE7CMVR3EFaUHcSr6o0pkzVkQudm8mbe8Brwi3sfop8yoJ0l/GyFhcrZqAQ89
-         OOtxQ24xQK1ODH4tvY+VAqxgZEWS0RFpiQGMo1SvpLsrxxJNEyA/2/ly+qvNOrvJDcnb
-         DJeOIaYP2xcpraV7aoTkNImBo83FCkvNbnqOlSTZk5cESrtBKP1XP9WZ/MsN9k+v2K4a
-         Uyhm1gX5Cn6BH6d+FSF9oaRhFniCeNWam4cS6kt+Om7gD86vLeCEhg32UKpaUKqtbDPb
-         zKEw==
+        bh=I5QXaX52IPaG+95gPfmlZ0rD63JTAUJslTJmrnwNjQc=;
+        b=ID1dvrYmYK5R1R7a0Cw6H9ckAbwIgzD1jEh8cLijWGS6z4cOVQD8npfgacuW3YzbTR
+         6p53ASb2F8xqyBMI8KhptHeaQt1pyG6j16NzI19RwIF22j7IKpB1vdhv2vKICxvPmIGS
+         L9IwRDjpD8PgKAcggZu7EgMhLsHQK5hYnPirU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ygXdshwZ6sqhNV/RMFYuAUef1d1MehMWLgDXSG2EHPs=;
-        b=e4gjaAQOenkJ75/4/r+medt7tew2IE9OErYMtOAVcH7QA6nhtf+qobYruUkwKDndfZ
-         UaOvO/mkpFg9+GNCVhnBHKQ3PY8tj7dNNrxwR6XA4FgjOysSLhgbhi54D4mvNr5La11v
-         oLjJoI9QnLflei+2spcQ2cMKVJjEh3WOBkoy8IBhQuA8tiZCf80vw3IjmFrPTlWUNhwX
-         UN7ah3xsfZ5ew6mq8p41dCSqtsGV0rYQvnk6dZElR+RTKki/q2zwfdKSbExiYCvn7efb
-         6H/4u02bJN2BXZ8aZ5Qq3twujlrg0j/GNyEGbYcHeszbY3XBna+8OvZMzmcH1zlyxNIW
-         oq2w==
-X-Gm-Message-State: AOAM531orW1JghCjJRBIKlNbyKnisc/gDCCHa5Qrmx3YKGxmTfN7+70N
-        ZrNJ96l4f65zxwm+hmLMWFDn4L244qA=
-X-Google-Smtp-Source: ABdhPJw5aqhrGaCS0GkssHgUIq4kYKj48KGgn6bMqFfY0W6t9kiBEGtCB7dkNiSteJamudE6T3LTbA==
-X-Received: by 2002:a7b:c205:: with SMTP id x5mr9933734wmi.135.1590076062001;
-        Thu, 21 May 2020 08:47:42 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id a10sm7076374wmf.46.2020.05.21.08.47.40
+        bh=I5QXaX52IPaG+95gPfmlZ0rD63JTAUJslTJmrnwNjQc=;
+        b=Xe/hf71Ky/xHkSg7dVUqas/OUis3C/k5EJJQ2JLy80G6/Y91Sm/Dtng9ugbw9lAVlj
+         gnQGrYXrUQ8W++ULDGLcCTuwY1cMoARYXQAPDsOo0IWyvt2/szZkPIDbZWtekZ31uVlJ
+         n8yWUmsaluThhuGa3DkpvWl4J5OgR+e+Afbq5NAl5XeVrSjuA7hN85vsl2KRgxyhFLrz
+         RscjghJa1cXJtFiP+eP8gIlIaD6QJ7F8r23UVza2OHToxm7DIquqh0NLMwvDack02BBK
+         N3po1V2ZOs64QrMKRrAu17r2F3Xhu7i2GzOH0Rce4Yvm2RjGpU6H5vOmfNpvG+9H0wj7
+         9CmQ==
+X-Gm-Message-State: AOAM5316tU5Gpne1i7N95V3tEC++c4Yu9Hqi7jlF9F5gP53NK9xOuu+B
+        2iZZ+187tTAbgj+IitC7y5fHqg==
+X-Google-Smtp-Source: ABdhPJw5KfY6ZCQuAckjsE5E7cfiDb7ScpWMpUV7bgUyKbpKFR20CCu1lyQfVtv8YMw85K8xToqg9w==
+X-Received: by 2002:adf:ec87:: with SMTP id z7mr9942589wrn.149.1590076200716;
+        Thu, 21 May 2020 08:50:00 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id r3sm6663037wmh.48.2020.05.21.08.50.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 08:47:40 -0700 (PDT)
-Date:   Thu, 21 May 2020 16:47:39 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Wei Li <liwei391@huawei.com>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [Kgdb-bugreport] [PATCH v3] kdb: Remove the misfeature 'KDBFLAGS'
-Message-ID: <20200521154739.ukfro4uuxpmnrpsx@holly.lan>
-References: <20200521072125.21103-1-liwei391@huawei.com>
+        Thu, 21 May 2020 08:50:00 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:49:58 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH v8 10/14] media: platform: Delete redundant code for
+ improving code quality
+Message-ID: <20200521154958.GI209565@chromium.org>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+ <20200403094033.8288-11-xia.jiang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521072125.21103-1-liwei391@huawei.com>
+In-Reply-To: <20200403094033.8288-11-xia.jiang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 03:21:25PM +0800, Wei Li wrote:
-> Currently, 'KDBFLAGS' is an internal variable of kdb, it is combined
-> by 'KDBDEBUG' and state flags. It will be shown only when 'KDBDEBUG'
-> is set, and the user can define an environment variable named 'KDBFLAGS'
-> too. These are puzzling indeed.
+Hi Xia,
+
+On Fri, Apr 03, 2020 at 05:40:29PM +0800, Xia Jiang wrote:
+> Delete unused member variables annotation.
+> Delete unused variable definition.
+> Delete redundant log print, because V4L2 debug logs already print it.
 > 
-> After communication with Daniel, it seems that 'KDBFLAGS' is a misfeature.
-> So let's replace 'KDBFLAGS' with 'KDBDEBUG' to just show the value we
-> wrote into. After this modification, we can use `md4c1 kdb_flags` instead,
-> to observe the state flags.
-> 
-> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Signed-off-by: Wei Li <liwei391@huawei.com>
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
 > ---
-> v2 -> v3:
->  - Change to replace the internal env 'KDBFLAGS' with 'KDBDEBUG'.
-> v1 -> v2:
->  - Fix lack of braces.
+> v8: no changes
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 16 ++--------------
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  5 +++--
+>  2 files changed, 5 insertions(+), 16 deletions(-)
 > 
->  kernel/debug/kdb/kdb_main.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index 4fc43fb17127..392029287083 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -418,8 +418,7 @@ int kdb_set(int argc, const char **argv)
->  				    argv[2]);
->  			return 0;
->  		}
-> -		kdb_flags = (kdb_flags &
-> -			     ~(KDB_DEBUG_FLAG_MASK << KDB_DEBUG_FLAG_SHIFT))
-> +		kdb_flags = (kdb_flags & ~KDB_DEBUG(MASK))
->  			| (debugflags << KDB_DEBUG_FLAG_SHIFT);
+
+Thank you for the patch. Please see my comments inline.
+
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index 4e64046a6854..9e59b9a51ef0 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -182,7 +182,6 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
+>  				   struct mtk_jpeg_ctx *ctx, int q_type)
+>  {
+>  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+> -	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+>  	int i;
 >  
->  		return 0;
-> @@ -2081,7 +2080,8 @@ static int kdb_env(int argc, const char **argv)
+>  	memset(pix_mp->reserved, 0, sizeof(pix_mp->reserved));
+> @@ -190,7 +189,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
+>  
+>  	if (ctx->state != MTK_JPEG_INIT) {
+>  		mtk_jpeg_adjust_fmt_mplane(ctx, f);
+> -		goto end;
+> +		return 0;
 >  	}
 >  
->  	if (KDB_DEBUG(MASK))
-> -		kdb_printf("KDBFLAGS=0x%x\n", kdb_flags);
-> +		kdb_printf("KDBDEBUG=0x%x\n",
-> +			(kdb_flags & KDB_DEBUG(MASK)) >> KDB_DEBUG_FLAG_SHIFT);
+>  	pix_mp->num_planes = fmt->colplanes;
+> @@ -210,7 +209,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
+>  		pfmt->sizeimage = round_up(pfmt->sizeimage, 128);
+>  		if (pfmt->sizeimage == 0)
+>  			pfmt->sizeimage = MTK_JPEG_DEFAULT_SIZEIMAGE;
+> -		goto end;
+> +		return 0;
+>  	}
+>  
+>  	/* type is MTK_JPEG_FMT_TYPE_CAPTURE */
+> @@ -224,20 +223,9 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
+>  		u32 stride = pix_mp->width * fmt->h_sample[i] / 4;
+>  		u32 h = pix_mp->height * fmt->v_sample[i] / 4;
+>  
+> -		memset(pfmt->reserved, 0, sizeof(pfmt->reserved));
 
-For this expression to work correctly, kdb_flags, need to be unsigned
-(otherwise we get an arithmetic right shift and mis-report when
-KDBDEBUG == 0xfff).
+This change is not mentioned in the description. I'd suggest moving it
+to a separate patch, because it's a functional change.
 
-This is just FYI, I think I can fix this up when applying...
+>  		pfmt->bytesperline = stride;
+>  		pfmt->sizeimage = stride * h;
+>  	}
+> -end:
+> -	v4l2_dbg(2, debug, &jpeg->v4l2_dev, "wxh:%ux%u\n",
+> -		 pix_mp->width, pix_mp->height);
+> -	for (i = 0; i < pix_mp->num_planes; i++) {
+> -		v4l2_dbg(2, debug, &jpeg->v4l2_dev,
+> -			 "plane[%d] bpl=%u, size=%u\n",
+> -			 i,
+> -			 pix_mp->plane_fmt[i].bytesperline,
+> -			 pix_mp->plane_fmt[i].sizeimage);
+> -	}
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> index 64a731261214..9bbd615b1067 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> @@ -30,6 +30,9 @@
+>  
+>  #define MTK_JPEG_DEFAULT_SIZEIMAGE	(1 * 1024 * 1024)
+>  
+> +/**
+> + * enum mtk_jpeg_ctx_state - contex state of jpeg
 
+typo: s/contex/context/
 
-Daniel.
+But I'd rephrase it to "states of the context state machine".
+
+> + */
+
+Not mentioned in the description. Also, the documentation of an enum
+should have descriptions for the values.
+
+Best regards,
+Tomasz
