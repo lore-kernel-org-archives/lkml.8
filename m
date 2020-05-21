@@ -2,142 +2,112 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBDAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC24C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEF020671
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0056620671
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNauZCE4"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MbNJli3r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbgEUOnp (ORCPT
+        id S1729878AbgEUOn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgEUOnp (ORCPT
+        Thu, 21 May 2020 10:43:57 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:42918 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728229AbgEUOn4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:43:45 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF582C061A0E;
-        Thu, 21 May 2020 07:43:44 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g1so8551581ljk.7;
-        Thu, 21 May 2020 07:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tuQ1zvOklpezgOq1qrrrAXi9Q/2zL0O9meBuAgy373s=;
-        b=hNauZCE4ZyQrnO0nntQayyVk53MtCYFx0x+QupMIZuQorwHuDn4bhd0+45d7gZ6d8m
-         L6FJKZwUbwT0yCAebmlFe/U6MIDVfJOulUCJ9E6SQ5+CZAc5oTbh9r4VX1H+J+9/unKS
-         OtVccceu5GPEqBPyaLM8ED/+C7SRnRPsQL+dDOic0gp0369C/z+gCWjmEsqcMLSXWCyR
-         xny6xU29xdDdJPSNElcbiaSIP3X8p+JpzsMp8hNSzPEJra2Ys18vzOJkZcgtxG4AIRzr
-         r4c9E/zTfdzTR9j8Bx5HE4BOlhs5/j7qSSM0Q7hagrta2JhNIsPXZXw0yNeOAqCIV5hp
-         G74g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tuQ1zvOklpezgOq1qrrrAXi9Q/2zL0O9meBuAgy373s=;
-        b=nf9WtUNQu5/kwZbTY0UUDsOyIc0GqrM5geapikU22pHO/ksvx9SCnlkKDMHP2I7h2J
-         75SD5ekFfD7TZwKik6HS8T5qpEZIfRU7NIZZHHQcbGc8mUCXJ9DS17CKPtdPi2aNOHZV
-         ioiZ4H7Lb1M9AvqNKGB68q/iY50io9kVwrx4kHVu8hJ9mPnlEdNfxRU4O4S6TxuNv4Qg
-         r4NtwX+7IKjIEd8Vn0mLNDbtbBt7mQyKLDKvNRzSbYIq5a4YR71m4bYwlJdeD8GBdK7Q
-         Z725/3/iFoRg4wWyUUWzty9xEsHqYVSbBPgSVxmZWYvmPx14BbmME6z7ZTkMNRdAzR9L
-         5NPA==
-X-Gm-Message-State: AOAM531JqQV1ngvmiCCMbfa2mKTGBXGu3x9eneLr1I5KVzwmXEh5qjd8
-        4hl5+D6IVFO5zOozICpYoEt/p5USK2LieCtfP8w=
-X-Google-Smtp-Source: ABdhPJzExRJlbujUemJvxqwrl+G4Cgtl0pUnc8oJA7iFqXep0LQNN0QQax7qtdllV0ZY5aX2u0RW9gWAArQn88T9G+4=
-X-Received: by 2002:a2e:6c0c:: with SMTP id h12mr5222291ljc.266.1590072223382;
- Thu, 21 May 2020 07:43:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521110910.45518-1-tali.perry1@gmail.com> <20200521110910.45518-3-tali.perry1@gmail.com>
- <20200521142340.GM1634618@smile.fi.intel.com> <20200521143100.GA16812@ninjato>
-In-Reply-To: <20200521143100.GA16812@ninjato>
-From:   Tali Perry <tali.perry1@gmail.com>
-Date:   Thu, 21 May 2020 17:45:03 +0300
-Message-ID: <CAHb3i=vcVLWHjdiJoNZQrwJCqzszpOL7e9SAjqObsZCRH4ifwg@mail.gmail.com>
-Subject: Re: [PATCH v12 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ofer Yehielli <ofery@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
-        kfting@nuvoton.com, Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 21 May 2020 10:43:56 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B87DF40933;
+        Thu, 21 May 2020 14:43:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1590072236; bh=rgL44EnEgrpVVzhE3b5dAwCouZZTfZFny+fv4sxR10g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MbNJli3rsFLOYILTocxmw4hGxLMGpRQ/dx3kRpIi6AUiLGkOYxMrGRFVubygMVnNs
+         2KAdczyTpCjeni42oDinNO8FvMeD/Zt+cWMRnrN4oy2zOS4E+ZVfaB6y7W4AjvpoYy
+         uAnbXV4zQviuTIINuXBBEeKCmdQmIV2nn03gG115YXQjXEctreEbGbp5Rdsrh+dC59
+         +bPGQYtdTFF+I1iuJv7p95NTHExCLuduYi4c4ZZNQhQ6gpz056DQlTNr7XZQxGz3oC
+         mAOycLf+70XNk7YlnT1vUAfC+xstdfiPBm8rYEI7T+m4DlAo2WX9Ah17v/zZWPDcFQ
+         RFLNSgfoznnmw==
+Received: from ru20arcgnu1.internal.synopsys.com (ru20arcgnu1.internal.synopsys.com [10.121.9.48])
+        by mailhost.synopsys.com (Postfix) with ESMTP id CB578A005B;
+        Thu, 21 May 2020 14:43:46 +0000 (UTC)
+From:   Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+To:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        linux-snps-arc@lists.infradead.org,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Subject: [PATCH v3] Kernel selftests: Add check if TPM devices are supported
+Date:   Thu, 21 May 2020 17:43:44 +0300
+Message-Id: <20200521144344.1886-1-Nikita.Sobolev@synopsys.com>
+X-Mailer: git-send-email 2.16.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 5:31 PM Wolfram Sang <wsa@the-dreams.de> wrote:
->
-> Hi Tali, Andy!
->
-> On Thu, May 21, 2020 at 05:23:40PM +0300, Andy Shevchenko wrote:
-> > On Thu, May 21, 2020 at 02:09:09PM +0300, Tali Perry wrote:
-> > > Add Nuvoton NPCM BMC I2C controller driver.
-> >
-> > Thanks. My comments below.
-> > After addressing them, FWIW,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> Thanks, Andy, for all the review!
->
+TPM2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
+are available. In case, when these devices are not available test
+fails, but expected behaviour is skipped test.
 
-Highly appreciate your time and patience for a newbie :)
+Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+---
+Changes for v2:
+    - Coding Style cleanup
 
-> From a glimpse, this looks good to go. I will have a close look later
-> today.
->
-> > > +#ifdef CONFIG_DEBUG_FS
-> >
-> > Again, why is this here?
-> >
-> > Have you checked debugfs.h for !CONFIG_DEBUG_FS case?
+Changes for v3:
+    - Commit text message cleanup
 
-I compiled both options. I removed the ifdef in most places, except in the
-struct itself. Users that don't use the debugfs don't need this in the struct.
+ tools/testing/selftests/tpm2/test_smoke.sh | 5 +++++
+ tools/testing/selftests/tpm2/test_space.sh | 5 +++++
+ 2 files changed, 10 insertions(+)
 
->
-> I wondered also about DEBUG_FS entries. I can see their value when
-> developing the driver. But since this is done now, do they really help a
-> user to debug a difficult case? I am not sure, and then I wonder if we
-> should have that code in upstream. I am open for discussion, though.
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index 8155c2ea7ccb..663062701d5a 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -1,6 +1,11 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++[ -f /dev/tpm0 ] || exit $ksft_skip
++
+ python -m unittest -v tpm2_tests.SmokeTest
+ python -m unittest -v tpm2_tests.AsyncTest
+ 
+diff --git a/tools/testing/selftests/tpm2/test_space.sh b/tools/testing/selftests/tpm2/test_space.sh
+index a6f5e346635e..36c9d030a1c6 100755
+--- a/tools/testing/selftests/tpm2/test_space.sh
++++ b/tools/testing/selftests/tpm2/test_space.sh
+@@ -1,4 +1,9 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+ 
++# Kselftest framework requirement - SKIP code is 4.
++ksft_skip=4
++
++[ -f /dev/tpmrm0 ] || exit $ksft_skip
++
+ python -m unittest -v tpm2_tests.SpaceTest
+-- 
+2.16.2
 
-The user wanted to have health monitor implemented on top of the driver.
-The user has 16 channels connected the multiple devices. All are operated
-using various daemons in the system. Sometimes the slave devices are power down.
-Therefor the user wanted to track the health status of the devices.
-
->
-> > > +MODULE_VERSION("0.1.3");
-> >
-> > Module version is defined by kernel commit hash. But it's up to you and
-> > subsystem maintainer to decide.
->
-> Please drop it. I also think commit id's (or even kernel versions) are a
-> more precise description.
-
-will remove.
-
->
-> Regards,
->
->    Wolfram
->
-
-BR,
-Tali
