@@ -2,181 +2,163 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA011C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A995920748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B6720748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:40:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HEehV5TE"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oHMIim3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgEUUkl (ORCPT
+        id S1730041AbgEUUkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:40:41 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8058 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728869AbgEUUkk (ORCPT
+        Thu, 21 May 2020 16:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728547AbgEUUkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:40:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec6e6f80000>; Thu, 21 May 2020 13:39:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 21 May 2020 13:40:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 21 May 2020 13:40:40 -0700
-Received: from [10.2.48.182] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 May
- 2020 20:40:39 +0000
-Subject: Solved: [PATCH 0/4] mm/gup, drm/i915: refactor gup_fast, convert to
- pin_user_pages()
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-References: <20200519002124.2025955-1-jhubbard@nvidia.com>
- <159008745422.32320.5724805750977048669@build.alporthouse.com>
- <b907c1d5-b95a-3d00-cafa-0a321f0141d8@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7d79c089-7b21-cf7f-66ea-078d44c5e007@nvidia.com>
-Date:   Thu, 21 May 2020 13:40:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 16:40:47 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4211AC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:40:46 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 190so8719835qki.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nS/3XCQOUwQxkN/+ybpYVJRq8cwnaFFhp9azEcrkODs=;
+        b=oHMIim3byaor6v3ZOguZWXdnh+aajwbaJCFu5DLMfxfl5MOL4MlgN0f0n+0gXLAtRo
+         dL9XoP25uUv0vns46WvKuc01jyYub3cCtN3cFHe51Hno/DngdoK49tRXOuwW1DUqwYvc
+         4wMrbqxAb7/9U7fOiM68zzQ7JxvSl0BM3pZ4Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nS/3XCQOUwQxkN/+ybpYVJRq8cwnaFFhp9azEcrkODs=;
+        b=sfrt9kV14vcHOAqPRZHy0MZgXlkXx4bmMKjLTq/mnFt2Xkri8l8kOSmIuCH0PSf7qk
+         baX8V/flumziG4Q43LLHXzO02E+UsxIwB+U6oL+ddHc/bZE7tHtGQbWPoF7oljtGiQLn
+         CIgWsNe3s7rx4dOicDFqI+avcEHfraeQqL+fKWDOlOG6mQ7tT0yVMR0M9R4YT7qO+i8g
+         qy4Fu3VR8HTX8A37FCc6pQhdQCSMLDjHWgc/XjuGMgIZCQw41Kpswji52oR/WzQL/9Ew
+         itS3xi6MZWeVoy4cfyT2FyHb7kpSK2l1nc/dus3eaB7TZfQwtch0LVAdaWKIAhnvQQOv
+         uzpw==
+X-Gm-Message-State: AOAM530bNFXbfQY067A4SzERzejm6tNbkH4GUvNBRlN5x7QQNiuttdQ7
+        bMUgmgysBBOmTllVa8qTOHOC3Q==
+X-Google-Smtp-Source: ABdhPJwjzzw5Do5lIeNozUjhmvb/VRgfWAX80KXERbyevUvc+ufUCRzhw7QDXx0FyMxAVzVNxqUQjg==
+X-Received: by 2002:a05:620a:1472:: with SMTP id j18mr10680271qkl.363.1590093645264;
+        Thu, 21 May 2020 13:40:45 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y21sm5777319qkb.95.2020.05.21.13.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 13:40:44 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:40:44 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        vpillai <vpillai@digitalocean.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
+Message-ID: <20200521204044.GD140701@google.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520222642.70679-1-joel@joelfernandes.org>
+ <CAHk-=wjUXRG53S0mLd8UVG2+cMC=2YLJGB-K_h2TkqHGZ-VSoA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b907c1d5-b95a-3d00-cafa-0a321f0141d8@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590093560; bh=R00sEmekZJ8u338i/al5pR/bnMoqlwFIj15sC5O7Tb0=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HEehV5TEO95q9SZZIw94tj9i8A1ZHRKg/VVw2mM1WbQii8ZoxWDLYpPGI8JZlmyTE
-         bHp0aCT2uYsQTO30z0juH470+/qQiTLEOl76kEibLolBDUxvBjyH28W5YWkuGp02BN
-         Hdmsc8q6FKDac9PYGELJ/3wJK6IiwGHGgN+Et2XA70z51BIE7ubIHSLvisNG9Vs1yx
-         +lzHxw+OtEJEzSUk6opuAjcCHpYlwiBayNhAwGWOJGIBESU1Vcee8UjNwpYFwG3INr
-         2isZCbqFqafbsyQl+cXjBrlG+X+72PTLeCFFpHGWD8n7M6ApU7d7IJXQeJXeYcDfRG
-         cE+N7LFn2e0MQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjUXRG53S0mLd8UVG2+cMC=2YLJGB-K_h2TkqHGZ-VSoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-21 12:11, John Hubbard wrote:
-> On 2020-05-21 11:57, Chris Wilson wrote:
->> Quoting John Hubbard (2020-05-19 01:21:20)
->>> This needs to go through Andrew's -mm tree, due to adding a new gup.c
->>> routine. However, I would really love to have some testing from the
->>> drm/i915 folks, because I haven't been able to run-time test that part
->>> of it.
->>
->> CI hit
->>
->> <4> [185.667750] WARNING: CPU: 0 PID: 1387 at mm/gup.c:2699=20
->> internal_get_user_pages_fast+0x63a/0xac0
+Hi Linus,
 
+On Thu, May 21, 2020 at 11:31:38AM -0700, Linus Torvalds wrote:
+> On Wed, May 20, 2020 at 3:26 PM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
+> >
+> > ChromeOS will use core-scheduling to securely enable hyperthreading.
+> > This cuts down the keypress latency in Google docs from 150ms to 50ms
+> > while improving the camera streaming frame rate by ~3%.
+> 
+> I'm assuming this is "compared to SMT disabled"?
 
-OK, what happened here is that it's WARN()'ing due to passing in the new
-FOLL_FAST_ONLY flag, which was not added to the whitelist.
+Yes this is compared to SMT disabled, I'll improve the commit message.
 
-So the fix is easy, and should be applied to the refactoring patch. I'll
-send out a v2 of the series, which will effectively have this applied:
+> What is the cost compared to "SMT enabled but no core scheduling"?
 
+With SMT enabled and no core scheduling, it is around 40ms in the higher
+percentiles. Also one more thing I wanted to mention, this is the 90th
+percentile.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 6cbe98c93466..4f0ca3f849d1 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2696,7 +2696,8 @@ static int internal_get_user_pages_fast(unsigned long=
- start,=20
-int nr_pages,
-  	int nr_pinned =3D 0, ret =3D 0;
+> But the real reason I'm piping up is that your  latency benchmark
+> sounds very cool.
+> 
+> Generally throughput benchmarks are much easier to do, how do you do
+> this latency benchmark, and is it perhaps something that could be run
+> more widely (ie I'm thinking that if it's generic enough and stable
+> enough to be run by some of the performance regression checking
+> robots, it would be a much more interesting test-case than some of the
+> ones they run right now...)
 
-  	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
--				       FOLL_FORCE | FOLL_PIN | FOLL_GET)))
-+				       FOLL_FORCE | FOLL_PIN | FOLL_GET |
-+				       FOLL_FAST_ONLY)))
-  		return -EINVAL;
+Glad you like it! The metric is calculated with a timestamp of when the
+driver says the key was pressed, up until when the GPU says we've drawn
+pixels in response.
 
-  	start =3D untagged_addr(start) & PAGE_MASK;
+The test requires a mostly only requires Chrome browser. It opens some
+pre-existing test URLs (a google doc, a window that opens a camera stream and
+another window that decodes video). This metric is already calculated in
+Chrome, we just scrape it from
+chrome://histograms/Event.Latency.EndToEnd.KeyPress.  If you install Chrome,
+you can goto this link and see the histogram.  We open a Google docs window
+and synthetically input keys into it with a camera stream and video decoding
+running in other windows which gives the CPUs a good beating. Then we collect
+roughly the 90th percentile keypress latency from the above histogram and the
+camera and decoded video's FPS, among other things. There is a test in the
+works that my colleagues are writing to run the full Google hangout video
+chatting stack to stress the system more (versus just the camera stream).  I
+guess if the robots can somehow input keys into the Google docs and open the
+right windows, then it is just a matter of scraping the histogram.
 
+> I'm looking at that "threaded phoronix gzip performance regression"
+> thread due to a totally unrelated scheduling change ("sched/fair:
+> Rework load_balance()"), and then I see this thread and my reaction is
+> "the keypress latency thing sounds like a much more interesting
+> performance test than threaded gzip from clear linux".
+> 
+> But the threaded gzip test is presumably trivial to script, while your
+> latency test is perhaps very specific to one particular platform and
+> setuip?
 
->> <4> [185.667752] Modules linked in: vgem snd_hda_codec_hdmi snd_hda_code=
-c_realtek=20
->> snd_hda_codec_generic i915 mei_hdcp x86_pkg_temp_thermal coretemp snd_hd=
-a_intel=20
->> snd_intel_dspcfg crct10dif_pclmul snd_hda_codec crc32_pclmul snd_hwdep s=
-nd_hda_core=20
->> ghash_clmulni_intel cdc_ether usbnet mii snd_pcm e1000e mei_me ptp pps_c=
-ore mei=20
->> intel_lpss_pci prime_numbers
->> <4> [185.667774] CPU: 0 PID: 1387 Comm: gem_userptr_bli Tainted: G=C2=A0=
-=C2=A0=C2=A0=C2=A0 U           =20
->> 5.7.0-rc5-CI-Patchwork_17704+ #1
->> <4> [185.667777] Hardware name: Intel Corporation Ice Lake Client Platfo=
-rm/IceLake=20
->> U DDR4 SODIMM PD RVP, BIOS ICLSFWR1.R00.3234.A01.1906141750 06/14/2019
->> <4> [185.667782] RIP: 0010:internal_get_user_pages_fast+0x63a/0xac0
->> <4> [185.667785] Code: 24 40 08 48 39 5c 24 38 49 89 df 0f 85 74 fc ff f=
-f 48 83 44=20
->> 24 50 08 48 39 5c 24 58 49 89 dc 0f 85 e0 fb ff ff e9 14 fe ff ff <0f> 0=
-b b8 ea ff=20
->> ff ff e9 36 fb ff ff 4c 89 e8 48 21 e8 48 39 e8 0f
->> <4> [185.667789] RSP: 0018:ffffc90001133c38 EFLAGS: 00010206
->> <4> [185.667792] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff88=
-84999ee800
->> <4> [185.667795] RDX: 00000000000c0001 RSI: 0000000000000100 RDI: 00007f=
-419e774000
->> <4> [185.667798] RBP: ffff888453dbf040 R08: 0000000000000000 R09: 000000=
-0000000001
->> <4> [185.667800] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88=
-8453dbf380
->> <4> [185.667803] R13: ffff8884999ee800 R14: ffff888453dbf3e8 R15: 000000=
-0000000040
->> <4> [185.667806] FS:=C2=A0 00007f419e875e40(0000) GS:ffff88849fe00000(00=
-00)=20
->> knlGS:0000000000000000
->> <4> [185.667808] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> <4> [185.667811] CR2: 00007f419e873000 CR3: 0000000458bd2004 CR4: 000000=
-0000760ef0
->> <4> [185.667814] PKRU: 55555554
->> <4> [185.667816] Call Trace:
->> <4> [185.667912]=C2=A0 ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
->> <4> [185.667918]=C2=A0 ? mark_held_locks+0x49/0x70
->> <4> [185.667998]=C2=A0 ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
->> <4> [185.668073]=C2=A0 ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
->>
->> and then panicked, across a range of systems.
->> -Chris
->>
+Yes it is specifically a ChromeOS running on a pixel book running a 7th Gen
+Intel Core i7 with 4 hardware threads.
+https://store.google.com/us/product/google_pixelbook
 
-btw, the panic seems to indicate an additional, pre-existing problem:
-i915_gem_userptr_get_pages(), in this case at least, is not able to
-recover from a get_user_pages/pin_user_pages failure.
-
+I could try to make it a synthetic test but it might be difficult for a robot
+to run it if it does not have graphics support and a camera connected to it.
+It would then need a fake/emulated camera connected to it. These robots run
+Linux in a non-GUI environment in qemu instances right?
 
 thanks,
---=20
-John Hubbard
-NVIDIA
+
+ - Joel
+
