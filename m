@@ -2,168 +2,106 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D71C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E250C20826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268FD2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ULbE8NFE"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="s+fpMnTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728955AbgEURa4 (ORCPT
+        id S1729378AbgEURbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:30:56 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:23378 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgEURaz (ORCPT
+        Thu, 21 May 2020 13:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgEURbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:30:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590082255; x=1621618255;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Jy/N3rXBqaPkEkb9eg+3JzspSpEQo1U1nxztCbeYZ9U=;
-  b=ULbE8NFEXrtZAeYWavM34nGAjZQL2VJIlOZuhwnAAFtnvEDjSnjoX/Z4
-   nHaWe6KBzWLIgiJnm2cyuOWhxoi89ejNUTyVv2q2Tqd6kSQ3+ym22Fflb
-   lrqXvlACL5wRZrxMdmaVkeVBocGDaaZx8VzEmVTS4oHLNxIaDJDwPsHyW
-   R7gqFjC6UDRnrZVNK8xAIeftUv7Yjzt3IZ/IkyNP/0TbqWChls/63erVj
-   vO1nOlgzhlwc5ZEy82P+5sGClM6/k5XPTsC73EKE+iv1wnc13Dju8ttSD
-   sHZwPGSRaL4tDpWurU74bhOKPeP2+8U8SxLl6ef+Q7sNcQM8U4dpBZ4Fr
-   w==;
-IronPort-SDR: fQGe2TnqJy/y13jXVDIOYviAEYOuT8hwN8rTE5UdkE1usCD6xgCxudqs4v8nIN4lOtTkmdBAw4
- E/dekCYJdfpF9kvvd9cJ+qeMrvEMFOLnuZeftgL4icKRrnfJzkyJoVo0w0bUzxsmzG72GlcaEz
- yC2v7OCyBdWBz8gbdgFdl4qKuI8CphAp5+XFJjUAMQD8CxkiUK4UtkhqX441gf18h5RnWzC2UX
- Gg/ibsiqFBc2qNhyegRe0coMnFGZrLKobSzkWTk7Wj9U0DZMFdSK1jhcV3yzYDcYHqxuUYIlm7
- JIg=
-X-IronPort-AV: E=Sophos;i="5.73,418,1583218800"; 
-   d="scan'208";a="76664518"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 May 2020 10:30:55 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 21 May 2020 10:30:53 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 21 May 2020 10:30:53 -0700
-Date:   Thu, 21 May 2020 19:30:33 +0000
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <jiri@resnulli.us>, <ivecera@redhat.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <roopa@cumulusnetworks.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-Subject: Re: [PATCH 1/3] bridge: mrp: Add br_mrp_unique_ifindex function
-Message-ID: <20200521193033.3f553xieh2a7eapl@soft-dev3.localdomain>
-References: <20200520130923.3196432-1-horatiu.vultur@microchip.com>
- <20200520130923.3196432-2-horatiu.vultur@microchip.com>
- <cecbdbf0-bb49-1e3c-c163-8e7412c6fcec@cumulusnetworks.com>
- <20200521181337.ory6lxyswatqhoej@soft-dev3.localdomain>
- <39ba5110-2c2a-6fd9-a3e3-000b52a366dc@cumulusnetworks.com>
+        Thu, 21 May 2020 13:31:00 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2A87C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 10:30:59 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id e16so252359qtg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 10:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oCCuryYDlFG9YsC0tOz8Jhkle66x4DRPsKGwzs4uWUY=;
+        b=s+fpMnTFFKbXedSk7ek0RZ/NmBP09zX/j/kZh3APCiqxD3VYd3tyNmjbY2ApPNIlGN
+         VQuv8NzLXi/wf23hNmcDqwGwhxS4MW3dA2FFR6bMX0zhXU/Zo1C9FmqECPyrRzcoLFw/
+         sjyaScMHcTRYUj5k/d3WpxiCksLHpMmp7SsCMV3vFIR+L8F0ktzcm49jgxdjk2UMOS/T
+         cOatk7DTmS2A9a7n6fi2V5CYbNy3vXKlqoy5sHvlpoq5ke0I1goOxpJ2gOmGqC4zWR5L
+         1XONoL1+2rx7Qp/aZxO/aVPdP9r4X4kQ4R1/5cQdiCqMxTaweZy9NSPCJXY6uSJgtvsp
+         2cmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oCCuryYDlFG9YsC0tOz8Jhkle66x4DRPsKGwzs4uWUY=;
+        b=gBqx3IkE0bQ6O0uUfaRZ1HNLIKnqdNKGhXkxwReqC+eykTQ59cBNXpZxUQmX1LgKld
+         FpBwcack5w6OgusSGFkJc6XKT+ixcF0vSBDoXxhQSl0+Yfzc2ZLc+puKcCyYv9rALVvy
+         k+6/t5P0beuFW9F3NNIjy1tpzS/WDsM2RUB43OndPj4I8qVyxteBSbvUO8YPC3/XrtKy
+         HJf91+LTIVRJpDs8OHuQtgpox34MVbHqDcgmX/YLq4YyqDAXVxaQCjXBhHkdbXIEUf/z
+         Eu8I4u1hJ/GGV2IHllWJox+FBuF3Zzp1pWXMRlw9FCrQlVM+Niy5ElEO3tP7R6DNSWYK
+         u62Q==
+X-Gm-Message-State: AOAM531Mgp0bGhQeSsKG/fM2/x/pofz8liud0hvvt4I7dOs7o5pNEpvq
+        0cUINXSt2Vu6wxw5ixy1ESJuBXctxhqoPritY29szQBRtMKOlQ==
+X-Google-Smtp-Source: ABdhPJwtq62EZUQyrC/40B7qqncuvtCEeEnHVUBc2Y5SeI8XY5V7uRJHlrv8zqb1D1OrgskedaqEIMoG9MvNfFgCsow=
+X-Received: by 2002:ac8:37a7:: with SMTP id d36mr12285965qtc.375.1590082259124;
+ Thu, 21 May 2020 10:30:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <39ba5110-2c2a-6fd9-a3e3-000b52a366dc@cumulusnetworks.com>
+References: <20200521162518.1809995-1-lma@semihalf.com> <3c89e614-81f5-ba87-19a9-fbe9f5c73925@linux.intel.com>
+ <CAFJ_xbr8TN3ynfELJ3NQnkuRg0VRbkjB7=Cyb8yu2L==JGXJiw@mail.gmail.com> <475fb5c0-9b26-a8f6-c102-25c7775bc2ca@linux.intel.com>
+In-Reply-To: <475fb5c0-9b26-a8f6-c102-25c7775bc2ca@linux.intel.com>
+From:   =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@semihalf.com>
+Date:   Thu, 21 May 2020 19:30:48 +0200
+Message-ID: <CAFJ_xbq-QotvPG=AxSp7=Etc5P5f4ePRWLCvSNnTkzUO9o_qjQ@mail.gmail.com>
+Subject: Re: [PATCH v3] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
+ be_hw_params_fixup function
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, Jie Yang <yang.jie@linux.intel.com>,
+        Radoslaw Biernacki <rad@semihalf.com>,
+        Ross Zwisler <zwisler@google.com>,
+        linux-kernel@vger.kernel.org,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Bob Brandt <brndt@google.com>, Marcin Wojtas <mw@semihalf.com>,
+        Alex Levin <levinale@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 05/21/2020 19:58, Nikolay Aleksandrov wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On 21/05/2020 21:49, Horatiu Vultur wrote:
-> > The 05/21/2020 11:16, Nikolay Aleksandrov wrote:
-> >> On 20/05/2020 16:09, Horatiu Vultur wrote:
-> >>> It is not allow to have the same net bridge port part of multiple MRP
-> >>> rings. Therefore add a check if the port is used already in a different
-> >>> MRP. In that case return failure.
-> >>>
-> >>> Fixes: 9a9f26e8f7ea ("bridge: mrp: Connect MRP API with the switchdev API")
-> >>> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> >>> ---
-> >>>  net/bridge/br_mrp.c | 31 +++++++++++++++++++++++++++++++
-> >>>  1 file changed, 31 insertions(+)
-> >>>
-> >>> diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-> >>> index d7bc09de4c139..a5a3fa59c078a 100644
-> >>> --- a/net/bridge/br_mrp.c
-> >>> +++ b/net/bridge/br_mrp.c
-> >>> @@ -37,6 +37,32 @@ static struct br_mrp *br_mrp_find_id(struct net_bridge *br, u32 ring_id)
-> >>>       return res;
-> >>>  }
-> >>>
-> >>> +static bool br_mrp_unique_ifindex(struct net_bridge *br, u32 ifindex)
-> >>> +{
-> >>> +     struct br_mrp *mrp;
-> >>> +     bool res = true;
-> >>> +
-> >>> +     rcu_read_lock();
-> >>
-> >> Why do you need the rcu_read_lock() here when lockdep_rtnl_is_held() is used?
-> >> You should be able to just do rtnl_dereference() below as this is used only
-> >> under rtnl.
-> >
-> > Hi Nik,
-> >
-> > Also initially I thought that is not needed, but when I enabled all the
-> > RCU debug configs to see if I use correctly the RCU, I got a warning
-> > regarding suspicious RCU usage.
-> > And that is the reason why I have put it.
-> >
-> 
-> Did you try using rtnl_dereference() instead of rcu_dereference() ?
+Hi Pierre
 
-I have just tried it now and that seems to work fine.
-I will redo the patch and send a new patch series.
+If you will take a look at the original kabylake_ssp_fixup() you will
+see that it is checking whether the related FE is "Kbl Audio Port",
+"Kbl Audio Headset Playback", "Kbl Audio Capture Port" or "Kbl Audio
+DMIC cap" - then for the first 3 cases it sets min/max channels to 2
+while for the "Kbl DMIC cap" it can be 2 or 4, that's is why I'm
+trying to split this, but maybe I'm missing here something.
 
-> 
-> >>
-> >>> +     list_for_each_entry_rcu(mrp, &br->mrp_list, list,
-> >>> +                             lockdep_rtnl_is_held()) {
-> >>> +             struct net_bridge_port *p;
-> >>> +
-> >>> +             p = rcu_dereference(mrp->p_port);
-> >>> +             if (p && p->dev->ifindex == ifindex) {
-> >>> +                     res = false;
-> >>> +                     break;
-> >>> +             }
-> >>> +
-> >>> +             p = rcu_dereference(mrp->s_port);
-> >>> +             if (p && p->dev->ifindex == ifindex) {
-> >>> +                     res = false;
-> >>> +                     break;
-> >>> +             }
-> >>> +     }
-> >>> +     rcu_read_unlock();
-> >>> +     return res;
-> >>> +}
-> >>> +
-> >>>  static struct br_mrp *br_mrp_find_port(struct net_bridge *br,
-> >>>                                      struct net_bridge_port *p)
-> >>>  {
-> >>> @@ -255,6 +281,11 @@ int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance)
-> >>>           !br_mrp_get_port(br, instance->s_ifindex))
-> >>>               return -EINVAL;
-> >>>
-> >>> +     /* It is not possible to have the same port part of multiple rings */
-> >>> +     if (!br_mrp_unique_ifindex(br, instance->p_ifindex) ||
-> >>> +         !br_mrp_unique_ifindex(br, instance->s_ifindex))
-> >>> +             return -EINVAL;
-> >>> +
-> >>>       mrp = kzalloc(sizeof(*mrp), GFP_KERNEL);
-> >>>       if (!mrp)
-> >>>               return -ENOMEM;
-> >>>
-> >>
-> >
-> 
+Best regards,
+Lukasz
 
--- 
-/Horatiu
+czw., 21 maj 2020 o 19:17 Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> napisa=C5=82(a):
+>
+>
+>
+> On 5/21/20 12:08 PM, =C5=81ukasz Majczak wrote:
+> >>
+> >> don't add a new dailink, this is not right.
+> >>
+> > Can you advise a better solution how to assign different fixup
+> > functions to mic and to speakers? I was looking at "dmic01" dailink in
+> > skl_nau88l25_max98357a.c as an example.
+>
+> I am not sure I follow. the DMICs are handled on a shared SSP, so how
+> would one set a different fixup? The word length have to be the same.
