@@ -2,231 +2,121 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24097207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590086312;
-	bh=zuqfqinIjtMlw1CY3fb+lDpVP6odkssn12yJq7ZJnzw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ggcupKjyinNAut/7u1Y79RrusgkGGIFa72GjBJB2vrtYG7U2OTu7e9jtOt3N5b4Io
-	 BleqRgtHDXRf8xeFaAIKrq70LYYRmKnhtl1uC/olB3Aah+urOK8u/pQtY0ZojDS8GT
-	 V84Pb9+PKAoOmAAyPu12lxx5imcMH25JGAVHLrbc=
+	by mail.kernel.org (Postfix) with ESMTP id 8AD9220829
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:38:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c7TJ36+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbgEUSib (ORCPT
+        id S1729782AbgEUSij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:38:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728240AbgEUSia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:38:30 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 21 May 2020 14:38:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40126 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728240AbgEUSij (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:38:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590086317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6xn++Cf4HTyCSbGYh8HNPobkxrKx2sAl2lxN9hs9ouI=;
+        b=c7TJ36+NLFWSfBQjkAw6Oh77SIWV4iG2khbeCR5NCcQd/maU9A0ZAqNZcsTfjFPmg5YCtN
+        PfUTFmNma6FRnW/UN5yvosyUVwERmP2tvs2NtJIX2f1XcpEQshIzaG4o/prgRcQ1D01sb3
+        E/665ZhC8ve4SDo/x0tgYFHMivoEME8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-103-5bnbrclkMYKsSWfsdSTzWw-1; Thu, 21 May 2020 14:38:35 -0400
+X-MC-Unique: 5bnbrclkMYKsSWfsdSTzWw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D7AC20738;
-        Thu, 21 May 2020 18:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590086309;
-        bh=zuqfqinIjtMlw1CY3fb+lDpVP6odkssn12yJq7ZJnzw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nZWlIzxLzbRSdZ6FAN4Hd9Idl5vZAD5WKydXdgYX2QcKrN0zbWdHshHc78e9BhDRl
-         rhKyWvZRGqDt4IG1RTqOyRShBcpFv5Epa6YAMWR6DXU7ibEIfU1iE75zEd4qG+N8v6
-         Y8+ZNz4ykFnCknkbOxJpLYq/P8LiX+8MYlLddmKg=
-Date:   Thu, 21 May 2020 19:38:25 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2] iio: dac: ad5592r-base: Replace indio_dev->mlock
- with own device lock
-Message-ID: <20200521193825.76c36f8a@archlinux>
-In-Reply-To: <20200520120207.46034-1-sergiu.cuciurean@analog.com>
-References: <20200520061819.29056-1-sergiu.cuciurean@analog.com>
-        <20200520120207.46034-1-sergiu.cuciurean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF6E6EC1B2;
+        Thu, 21 May 2020 18:38:32 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-233.rdu2.redhat.com [10.10.116.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 96E7212A4D;
+        Thu, 21 May 2020 18:38:32 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 0D80322036E; Thu, 21 May 2020 14:38:32 -0400 (EDT)
+Date:   Thu, 21 May 2020 14:38:32 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+Message-ID: <20200521183832.GB46035@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-3-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511164752.2158645-3-vkuznets@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 15:02:01 +0300
-Sergiu Cuciurean <sergiu.cuciurean@analog.com> wrote:
-
-> As part of the general cleanup of indio_dev->mlock, this change replaces
-> it with a local lock on the device's state structure.
-> This also removes unused iio_dev pointers.
+On Mon, May 11, 2020 at 06:47:46PM +0200, Vitaly Kuznetsov wrote:
+> Currently, APF mechanism relies on the #PF abuse where the token is being
+> passed through CR2. If we switch to using interrupts to deliver page-ready
+> notifications we need a different way to pass the data. Extent the existing
+> 'struct kvm_vcpu_pv_apf_data' with token information for page-ready
+> notifications.
 > 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
+> The newly introduced apf_put_user_ready() temporary puts both reason
+> and token information, this will be changed to put token only when we
+> switch to interrupt based notifications.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  drivers/iio/dac/ad5592r-base.c | 30 +++++++++++++++---------------
->  drivers/iio/dac/ad5592r-base.h |  1 +
->  2 files changed, 16 insertions(+), 15 deletions(-)
+>  arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
+>  arch/x86/kvm/x86.c                   | 17 +++++++++++++----
+>  2 files changed, 15 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
-> index e2110113e884..410e90e5f75f 100644
-> --- a/drivers/iio/dac/ad5592r-base.c
-> +++ b/drivers/iio/dac/ad5592r-base.c
-> @@ -156,7 +156,6 @@ static void ad5592r_gpio_cleanup(struct ad5592r_state *st)
->  static int ad5592r_reset(struct ad5592r_state *st)
->  {
->  	struct gpio_desc *gpio;
-> -	struct iio_dev *iio_dev = iio_priv_to_dev(st);
+> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> index 2a8e0b6b9805..e3602a1de136 100644
+> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
 >  
->  	gpio = devm_gpiod_get_optional(st->dev, "reset", GPIOD_OUT_LOW);
->  	if (IS_ERR(gpio))
-> @@ -166,10 +165,10 @@ static int ad5592r_reset(struct ad5592r_state *st)
->  		udelay(1);
->  		gpiod_set_value(gpio, 1);
->  	} else {
-> -		mutex_lock(&iio_dev->mlock);
-> +		mutex_lock(&st->lock);
->  		/* Writing this magic value resets the device */
->  		st->ops->reg_write(st, AD5592R_REG_RESET, 0xdac);
-> -		mutex_unlock(&iio_dev->mlock);
-> +		mutex_unlock(&st->lock);
->  	}
->  
->  	udelay(250);
-> @@ -197,7 +196,6 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
->  	const struct ad5592r_rw_ops *ops = st->ops;
->  	int ret;
->  	unsigned i;
-> -	struct iio_dev *iio_dev = iio_priv_to_dev(st);
->  	u8 pulldown = 0, tristate = 0, dac = 0, adc = 0;
->  	u16 read_back;
->  
-> @@ -247,7 +245,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
->  		}
->  	}
->  
-> -	mutex_lock(&iio_dev->mlock);
-> +	mutex_lock(&st->lock);
->  
->  	/* Pull down unused pins to GND */
->  	ret = ops->reg_write(st, AD5592R_REG_PULLDOWN, pulldown);
-> @@ -285,7 +283,7 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
->  		ret = -EIO;
->  
->  err_unlock:
-> -	mutex_unlock(&iio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  	return ret;
->  }
->  
-> @@ -314,11 +312,11 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
->  		if (!chan->output)
->  			return -EINVAL;
->  
-> -		mutex_lock(&iio_dev->mlock);
-> +		mutex_lock(&st->lock);
->  		ret = st->ops->write_dac(st, chan->channel, val);
->  		if (!ret)
->  			st->cached_dac[chan->channel] = val;
-> -		mutex_unlock(&iio_dev->mlock);
-> +		mutex_unlock(&st->lock);
->  		return ret;
->  	case IIO_CHAN_INFO_SCALE:
->  		if (chan->type == IIO_VOLTAGE) {
-> @@ -333,12 +331,12 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
->  			else
->  				return -EINVAL;
->  
-> -			mutex_lock(&iio_dev->mlock);
-> +			mutex_lock(&st->lock);
->  
->  			ret = st->ops->reg_read(st, AD5592R_REG_CTRL,
->  						&st->cached_gp_ctrl);
->  			if (ret < 0) {
-> -				mutex_unlock(&iio_dev->mlock);
-> +				mutex_unlock(&st->lock);
->  				return ret;
->  			}
->  
-> @@ -360,7 +358,7 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
->  
->  			ret = st->ops->reg_write(st, AD5592R_REG_CTRL,
->  						 st->cached_gp_ctrl);
-> -			mutex_unlock(&iio_dev->mlock);
-> +			mutex_unlock(&st->lock);
->  
->  			return ret;
->  		}
-> @@ -382,7 +380,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
->  
->  	switch (m) {
->  	case IIO_CHAN_INFO_RAW:
-> -		mutex_lock(&iio_dev->mlock);
-> +		mutex_lock(&st->lock);
->  
->  		if (!chan->output) {
->  			ret = st->ops->read_adc(st, chan->channel, &read_val);
-> @@ -419,7 +417,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
->  		} else {
->  			int mult;
->  
-> -			mutex_lock(&iio_dev->mlock);
-> +			mutex_lock(&st->lock);
->  
->  			if (chan->output)
->  				mult = !!(st->cached_gp_ctrl &
-> @@ -437,7 +435,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
->  	case IIO_CHAN_INFO_OFFSET:
->  		ret = ad5592r_get_vref(st);
->  
-> -		mutex_lock(&iio_dev->mlock);
-> +		mutex_lock(&st->lock);
->  
->  		if (st->cached_gp_ctrl & AD5592R_REG_CTRL_ADC_RANGE)
->  			*val = (-34365 * 25) / ret;
-> @@ -450,7 +448,7 @@ static int ad5592r_read_raw(struct iio_dev *iio_dev,
->  	}
->  
->  unlock:
-> -	mutex_unlock(&iio_dev->mlock);
-> +	mutex_unlock(&st->lock);
->  	return ret;
->  }
->  
-> @@ -625,6 +623,8 @@ int ad5592r_probe(struct device *dev, const char *name,
->  	iio_dev->info = &ad5592r_info;
->  	iio_dev->modes = INDIO_DIRECT_MODE;
->  
-> +	mutex_init(&st->lock);
-> +
->  	ad5592r_init_scales(st, ad5592r_get_vref(st));
->  
->  	ret = ad5592r_reset(st);
-> diff --git a/drivers/iio/dac/ad5592r-base.h b/drivers/iio/dac/ad5592r-base.h
-> index 4774e4cd9c11..23dac2f1ff8a 100644
-> --- a/drivers/iio/dac/ad5592r-base.h
-> +++ b/drivers/iio/dac/ad5592r-base.h
-> @@ -52,6 +52,7 @@ struct ad5592r_state {
->  	struct regulator *reg;
->  	struct gpio_chip gpiochip;
->  	struct mutex gpio_lock;	/* Protect cached gpio_out, gpio_val, etc. */
-> +	struct mutex lock;
->  	unsigned int num_channels;
->  	const struct ad5592r_rw_ops *ops;
->  	int scale_avail[2][2];
+>  struct kvm_vcpu_pv_apf_data {
+>  	__u32 reason;
+
+Hi Vitaly,
+
+Given we are redoing it, can we convert "reason" into a flag instead
+and use bit 0 for signalling "page not present" Then rest of the 31
+bits can be used for other purposes. I potentially want to use one bit to
+signal error (if it is known at the time of injecting #PF).
+
+> -	__u8 pad[60];
+> +	__u32 pageready_token;
+> +	__u8 pad[56];
+
+Given token is 32 bit, for returning error in "page ready" type messages,
+I will probably use padding bytes and create pagready_flag and use one
+of the bits to signal error.
+
+Thanks
+Vivek
 
