@@ -2,135 +2,128 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B97C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D55C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034FF20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Oz9GsFMn"
+	by mail.kernel.org (Postfix) with ESMTP id 2208120738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590091073;
+	bh=hYC1vjaGETl/3CgA0n/a57NPosACCQiHCX0L1n9aqOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cXKhU68VEW87o8QA6/TkZJ34F+Lt3fM2QlXCWRo9d0zv1z4L7ES3SXZnfUvZydF/j
+	 A4LO2GEXLqqDuoP6LNEHU8rNmN0xJ0wi1yk1lTWRZAkkc6OzxGgXn9iVPA4ejEJZlE
+	 OntO615Cg0VRPT7Cac+ae8TWx+M43e5Evc2+oZ0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730130AbgEUT5D (ORCPT
+        id S1730170AbgEUT5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:57:03 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17071 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbgEUT5C (ORCPT
+        Thu, 21 May 2020 15:57:52 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46184 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728635AbgEUT5w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:57:02 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec6dc7d0003>; Thu, 21 May 2020 12:54:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 21 May 2020 12:57:02 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 21 May 2020 12:57:02 -0700
-Received: from [10.2.48.182] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 May
- 2020 19:57:02 +0000
-Subject: Re: [PATCH] scsi: st: convert convert get_user_pages() -->
- pin_user_pages()
-To:     Bart Van Assche <bvanassche@acm.org>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>
-References: <20200519045525.2446851-1-jhubbard@nvidia.com>
- <494478b6-9a8c-5271-fc9f-fd758af850c0@acm.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <2fa00c72-5ffb-9bc6-df25-a87a863a6d62@nvidia.com>
-Date:   Thu, 21 May 2020 12:57:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 15:57:52 -0400
+Received: by mail-il1-f193.google.com with SMTP id w18so8408092ilm.13;
+        Thu, 21 May 2020 12:57:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OAy8ldgBATiWXiqryhQTwFQBaNcYrHCCh+yz1e4niZQ=;
+        b=L36FnRruIWci6VHq5N1626IrG24qkuWsOcOLNyQDbDVmsB6WGF2kSCVQ3nkO+mS7im
+         lP4RWzQYg8tSSjSLdyPeMPhMSssebJImN8XImM7EvegdMvq6Sk5sYI1cseDpkHtjmAx+
+         KQ3kKYKQWnTmwuLQtSXYozUx5X3q0ixqmo7trPvviAw9IwetroRqeNQRX6EQj3DmniPP
+         Cplbi501y/sdKs/o9PqMrR/zEg+rdKwPjHqAmGcaQoFDkwXJ9LCMw9Am4W9dy2LrNxHt
+         CT9NcvyE+DKpF/0e3hD/YZaVO3FKUP4NiwwZiGC2o4I9yOvYjS988ABiDRtov6zsTaSY
+         i6xw==
+X-Gm-Message-State: AOAM532cNkElnCtjPgq1RmVwIOpaAyIAdp2vTNbZdVSx3ZH87i9UtXi4
+        DaeAywptdkZShfQKWfiR1PDmmJU=
+X-Google-Smtp-Source: ABdhPJwHyDis2WG1KGFNitaZrgzusOwKaK2iwSdk9rFkjUCecu87kyYn6kFxi+8OsazkPT2U1tEWWw==
+X-Received: by 2002:a92:ce01:: with SMTP id b1mr9931451ilo.55.1590091071311;
+        Thu, 21 May 2020 12:57:51 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l3sm2919083iow.55.2020.05.21.12.57.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 12:57:50 -0700 (PDT)
+Received: (nullmailer pid 2796469 invoked by uid 1000);
+        Thu, 21 May 2020 19:57:48 -0000
+Date:   Thu, 21 May 2020 13:57:48 -0600
+From:   robh@kernel.org
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/9] dt-bindings: gpio: Convert mrvl-gpio to
+ json-schema
+Message-ID: <20200521195748.GA2795626@bogus>
+References: <20200521091356.2211020-1-lkundrak@v3.sk>
+ <20200521091356.2211020-3-lkundrak@v3.sk>
 MIME-Version: 1.0
-In-Reply-To: <494478b6-9a8c-5271-fc9f-fd758af850c0@acm.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590090878; bh=7cEuukJFvnz/9s6hpg5DMIacgnLOUaLP+0TTObIGU0E=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Oz9GsFMn6PDszwZOpTHP8j0on3bP6QhuGuI5OfQ1/usrvgl/0ZltkNhRDvZlsuX7e
-         +bAew0LRexR2r3tx+KqUK2NTqK8ZAfqdYLv3fSwlhAYX9TxnGDO7AyX37kM4FpPQ8C
-         WZ/jP32uAcF828jC/kiHHhTwd/ter9jtVF2qHk1H12MnTdFj2uBBLnlah8uqX/uMnj
-         C7ze0nRYN4iv0ayhjZMYdKZS4eoPOOPEv9epeYagx2WrJeLiAktdWLuya1+zwutagg
-         sMRHyq0voBxMMHf+7jBkWrl4v52YrdcQgmZNRst1vVUOA6Cjl1C8XagQvzWAx+XrIf
-         gjSncIN+F7GUg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521091356.2211020-3-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-21 12:47, Bart Van Assche wrote:
-> On 2020-05-18 21:55, John Hubbard wrote:
->> This code was using get_user_pages*(), in a "Case 2" scenario
->> (DMA/RDMA), using the categorization from [1]. That means that it's
->> time to convert the get_user_pages*() + put_page() calls to
->> pin_user_pages*() + unpin_user_pages() calls.
->>
->> There is some helpful background in [2]: basically, this is a small
->> part of fixing a long-standing disconnect between pinning pages, and
->> file systems' use of those pages.
->>
->> Note that this effectively changes the code's behavior as well: it now
->> ultimately calls set_page_dirty_lock(), instead of SetPageDirty().This
->> is probably more accurate.
->>
->> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
->> dealing with a file backed page where we have reference on the inode it
->> hangs off." [3]
->>
->> Also, this deletes one of the two FIXME comments (about refcounting),
->> because there is nothing wrong with the refcounting at this point.
->>
->> [1] Documentation/core-api/pin_user_pages.rst
->>
->> [2] "Explicit pinning of user-space pages":
->>      https://lwn.net/Articles/807108/
->>
->> [3] https://lore.kernel.org/r/20190723153640.GB720@lst.de
+On Thu, 21 May 2020 11:13:49 +0200, Lubomir Rintel wrote:
+> This converts the mrvl-gpio binding to DT schema format using json-schema.
 > 
-> Kai, why is the st driver calling get_user_pages_fast() directly instead
-> of calling blk_rq_map_user()? blk_rq_map_user() is already used in
-> st_scsi_execute(). I think that the blk_rq_map_user() implementation is
-> also based on get_user_pages_fast(). See also iov_iter_get_pages_alloc()
-> in lib/iov_iter.c.
+> Various fixes were done during the conversion, such as adding more
+> properties that are in fact mandatory or extending the examples to
+> include child nodes with extra GPIO blocks.
 > 
-> John, why are the get_user_pages_fast() calls in the st driver modified
-> but not the blk_rq_map_user() call? Are you sure that the modified code
-> is a "case 2" scenario and not a "case 1" scenario?
+> The compatible strings are a mess. It is not clear why so many of them
+> are needed; the driver doesn't really seem to differentiate between the
+> models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
+> are not used at all, so it's not known how many interrupts they utilize.
+> On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
+> doesn't end up in any actual DTB file.
+> 
+> In any case -- the schema merely copies whatever was in the original
+> binding document, so it's hopefully no more wrong that the original.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> 
+> ---
+> Changes since v1:
+> - Drop marvell,pxa1928-gpio
+> - Drop ranges from example with no gcb child nodes
+> - Add default GPL-2.0-only license tag
+> - Fill in maintainers from MAINTAINERS file
+> 
+>  .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
+>  .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 174 ++++++++++++++++++
+>  2 files changed, 174 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
 > 
 
-No, I am not sure. I thought this was a DMA case (I'm not a SCSI Tape user,
-so it *seemed* reasonable that a DMA engine was involved), but if it's really
-direct IO, then we need to just drop this patch entirely. Because: I need to
-convert the block/biovec code, including iov_iter_get_pages_alloc() and
-friends, in order to handle direct IO. I'm working on that but it's not
-ready yet.
 
-(I was trying to get the smaller, non-direct-IO cases converted first.)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Thanks for spotting the discrepancy, and apologies for the confusion on this
-end.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/mrvl-gpio.example.dt.yaml: gpio@40e00000: 'ranges' is a required property
 
-Also, I doubt if it's worth it, but do you want a patch to change SetPageDirty()
-to set_page_dirty_lock(), meanwhile? It seems like if that's never come up, then
-it's mostly a theoretical bug.
+See https://patchwork.ozlabs.org/patch/1295044
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
