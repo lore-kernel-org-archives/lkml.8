@@ -2,104 +2,136 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C43C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0BF2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF382078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590064659;
-	bh=XzY9Vu3vZDIMRqhC2Uec8ljVnAJkU8kHTGL8ax+6XUw=;
+	s=default; t=1590064668;
+	bh=EaMTjLDSfcEsLkiHEfi/LnD8MXfMIL/ZY1UGeY/B9gU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=StbfN5IdIwiYgFdK5ZquuwG+XBlTQJ2Hn+IPp6fQpI7lFOemkVcerYh0Qy5BXK6bt
-	 Qq911iDa1wonUjzzVPjlJH6hdh8qwYVxNRa5wp2w4GoYqc6/7mITDk6thEgcGgnuHh
-	 x9nBn5LvBOI4xkAQx+bC4siTCYqRjgQTXqQA1F9k=
+	b=KlbYH7osvZCwHq+O7nyJYeDBpe7Tk5CEKM61tAYVmVdp81RH8a1856GqRhrKubYHQ
+	 fJBNABMdS3CKfA4fpR/0IbG2zmSS//5rb8TEd2vfvqrd8ob3xuBmswkQey0HEWOOG5
+	 hX3FVSCgq7rIcgX+qlsBpUrXP5V3G3OCosjbpALY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgEUMhi (ORCPT
+        id S1729341AbgEUMhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgEUMhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:37:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 547DD2070A;
-        Thu, 21 May 2020 12:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590064657;
-        bh=XzY9Vu3vZDIMRqhC2Uec8ljVnAJkU8kHTGL8ax+6XUw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1Hh7R91MXepY8cJaTBq4r9BBHcCknRHA4kdtVwWZGAoahyEhDYtZUpVhR2+huC2ip
-         hR/cvCRBcGfdmuFUvqWfmOB6yYDafJQcIKkuSdnmwxQEdI7Lc6ZJ8WOZVPHkTiFu+6
-         zXB74atNrHZCB3MQ5YyiYn7J01c7AwODVBRHTw8M=
-Date:   Thu, 21 May 2020 13:37:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, vigneshr@ti.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-Message-ID: <20200521123735.GC4770@sirena.org.uk>
-References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200520124329.GF4823@sirena.org.uk>
- <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
- <20200521105646.GA4770@sirena.org.uk>
- <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
- <20200521122035.GB4770@sirena.org.uk>
- <463b24a4-0a6a-9fcf-7eb9-8fde602c0c13@linux.intel.com>
+        Thu, 21 May 2020 08:37:47 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:44425 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgEUMhq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:37:46 -0400
+Received: by mail-ej1-f66.google.com with SMTP id x20so8566421ejb.11;
+        Thu, 21 May 2020 05:37:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2vhA5VZC0nBvo7ys++OSqz3+TT1aqRd8PraCHE7WA7k=;
+        b=U6/k5ElFSdZME2o5n7me/vMJMF0YoXJvrpKyg3z2aPljSwtldN699JLNHL1FZVpg+R
+         UsOZlQu1c0lL24UDvOEesP184yfPNmSlqhrM2kvewi3cHVWYmh+ky5de4pUus9ZwV1Mu
+         bQN3pvfxfERnfuGfwGJIOGG725jSLCys8EGm8Y1iYlkCWLzeh8uDjji0JRfCRQLQIf8m
+         yG+i3eINvP1f9fsu1rUvOLheEt0ZLz5K58a6VuoMWh6LqHqTOrCr2HxVpBUptOSJj2os
+         jDEexTAcCjK9HuCrJMJVsJGDwG1ayPCh9DrfcWeIkAFkVj3zlqpNRoOtbuB6/ADK4eQI
+         eQZg==
+X-Gm-Message-State: AOAM531TI9xQkKUzwuRTulJpjUMduKjNRYI7kbULCKfATVe8k+wqub/t
+        vUJeFl/J+JWGw0S5gphV174=
+X-Google-Smtp-Source: ABdhPJz3IWgvzhsJwT+nI7vhlMqWbOUJ8KKpNxjwtDjBUDZk1awt/EAZFDeW9+LNiq9SeMvb8vZp2g==
+X-Received: by 2002:a17:906:9518:: with SMTP id u24mr3393542ejx.137.1590064664511;
+        Thu, 21 May 2020 05:37:44 -0700 (PDT)
+Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
+        by smtp.gmail.com with ESMTPSA id lx8sm4721542ejb.75.2020.05.21.05.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 05:37:43 -0700 (PDT)
+Date:   Thu, 21 May 2020 14:37:42 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521123742.GO6462@dhcp22.suse.cz>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520202650.GB558281@chrisdown.name>
+ <20200521071929.GH6462@dhcp22.suse.cz>
+ <20200521112711.GA990580@chrisdown.name>
+ <20200521120455.GM6462@dhcp22.suse.cz>
+ <20200521122327.GB990580@chrisdown.name>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Bu8it7iiRSEf40bY"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <463b24a4-0a6a-9fcf-7eb9-8fde602c0c13@linux.intel.com>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200521122327.GB990580@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 21-05-20 13:23:27, Chris Down wrote:
+> (I'll leave the dirty throttling discussion to Johannes, because I'm not so
+> familiar with that code or its history.)
+> 
+> Michal Hocko writes:
+> > > > The main problem I see with that approach is that the loop could easily
+> > > > lead to reclaim unfairness when a heavy producer which doesn't leave the
+> > > > kernel (e.g. a large read/write call) can keep a different task doing
+> > > > all the reclaim work. The loop is effectivelly unbound when there is a
+> > > > reclaim progress and so the return to the userspace is by no means
+> > > > proportional to the requested memory/charge.
+> > > 
+> > > It's not unbound when there is reclaim progress, it stops when we are within
+> > > the memory.high throttling grace period. Right after reclaim, we check if
+> > > penalty_jiffies is less than 10ms, and abort and further reclaim or
+> > > allocator throttling:
+> > 
+> > Just imagine that you have parallel producers increasing the high limit
+> > excess while somebody reclaims those. Sure in practice the loop will be
+> > bounded but the reclaimer might perform much more work on behalf of
+> > other tasks.
+> 
+> A cgroup is a unit and breaking it down into "reclaim fairness" for
+> individual tasks like this seems suspect to me. For example, if one task in
+> a cgroup is leaking unreclaimable memory like crazy, everyone in that cgroup
+> is going to be penalised by allocator throttling as a result, even if they
+> aren't "responsible" for that reclaim.
 
---Bu8it7iiRSEf40bY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You are right, but that doesn't mean that it is desirable that some
+tasks would be throttled unexpectedly too long because of the other's activity.
+We already have that behavior for the direct reclaim and I have to say I
+really hate it and had to spend a lot of time debugging latency issues.
+Our excuse has been that the system is struggling at that time so any
+quality of service is simply out of picture. I do not think the same
+argument can be applied to memory.high which doesn't really represent a
+mark when the memcg is struggling so hard to drop any signs of fairness
+on the floor.
 
-On Thu, May 21, 2020 at 08:34:43PM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> On 21/5/2020 8:20 pm, Mark Brown wrote:
+> So the options here are as follows when a cgroup is over memory.high and a
+> single reclaim isn't enough:
+> 
+> 1. Decline further reclaim. Instead, throttle for up to 2 seconds.
+> 2. Keep on reclaiming. Only throttle if we can't get back under memory.high.
+> 
+> The outcome of your suggestion to decline further reclaim is case #1, which
+> is significantly more practically "unfair" to that task. Throttling is
+> extremely disruptive to tasks and should be a last resort when we've
+> exhausted all other practical options. It shouldn't be something you get
+> just because you didn't try to reclaim hard enough.
 
-> > I mean that any changes to the bindings ought to be split out into
-> > separate patches, if there's multiple changes it may make sense for
-> > there to be multiple patches.
-
-> Got it, we do not have multiple changes since it is new YAML file.
-> in case if we feel anything to be added , we add as separate patches.
-
-If this is just a conversion to YAML then your changelog is wildly
-inaccurate and needs to be improved, your changelog says you are adding
-new things.
-
---Bu8it7iiRSEf40bY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Gdg4ACgkQJNaLcl1U
-h9CEowf/QMYDfB1WRpIHtE540R46+Mt+m6ieiujeMi72a0tdEVaExwPeBNHvHAfr
-JeVWeL+H6//8H2NcR5NwR6kVDFYNlx7h1JSNKhOpMedxsT72sJxj62hadMgF18Nm
-laUg+q/bz+kPN6qOpAb6iY9ocf6vo9qWcYcKK00DDrrEfkLVF2KbLdft9dGzs75O
-VApz+3bfiMY4ROV3Kc08V7xEGyJbXRWnAtiA21+9XrWjiuqYtfuLue+2qeFiE9Hu
-3eacgVdd0pGiBjrEi/WbwRUoAnbQBFpRisqkNz/OGtt3d/8mvjF2prNW9QwsPH+g
-zugQEeTYSCDR4Nm36ZHyuqzau9hAvA==
-=zxZ7
------END PGP SIGNATURE-----
-
---Bu8it7iiRSEf40bY--
+I believe I have asked in other email in this thread. Could you explain
+why enforcint the requested target (memcg_nr_pages_over_high) is
+insufficient for the problem you are dealing with? Because that would
+make sense for large targets to me while it would keep relatively
+reasonable semantic of the throttling - aka proportional to the memory
+demand rather than the excess.
+-- 
+Michal Hocko
+SUSE Labs
