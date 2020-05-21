@@ -2,116 +2,138 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34152C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF7220721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:13:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWnBYZb3"
+	by mail.kernel.org (Postfix) with ESMTP id 0E03A2067B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:13:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgEUDNA (ORCPT
+        id S1728064AbgEUDNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgEUDNA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:13:00 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 858BCC061A0E;
-        Wed, 20 May 2020 20:12:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m12so4063094ljc.6;
-        Wed, 20 May 2020 20:12:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v4w0EkZBcNC3I1R8tbgMmRIZQyQCAyGziqLkw7YCEjc=;
-        b=gWnBYZb3onOFrzELuM1INXXs0nCvU8m+5CTkmIoEEz9dzfUaZz22FVdxFCFRJlwF9S
-         E7cLYf54O14YKC/OGnn8wcDpLT3KSunrgp7Uxn6j8FgU4N3vcLE3nQixkXDPx9yjC/OU
-         ZHgug6gAKpBPj+Wg+i3Ffj1GlARsGF6Jl+WLkittPFW7+/mJOWCBv9xSEzLdH0lauqgG
-         +pQ+2HE7r1vnJ6wYYJdO51yAWAZLS0IWNsW6NKouFCNkFNv2DD0nqFWAhI8zwg33JrqR
-         4fH+nCwyiUZ2XHVf9/Z2OkgI1NlOMBZrYS+OHpdvgCaMFyX3zsL/MYs5eWAidEN1qgk7
-         yYDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v4w0EkZBcNC3I1R8tbgMmRIZQyQCAyGziqLkw7YCEjc=;
-        b=nMQHG1PxmZjCOz+pI61gwsw7l404H2ho+pWzIWnpM/oJT1ayYLQFo5zReXpllx2JS8
-         hAhWHwCC8jUEWwJld2vdzJRd3tQL+iwmSER+7Z7BnsoR0OFTJ0NcjTIHRJahVJQdK0IK
-         8mQdTjS1kSI7jMnz99eCIILIzQdfA5RQMOX04a6Jw/vuV+5qDQqOWQdI2ScmaFXtFjUS
-         i+XhYghF7L9FkvMKulsiLjtyrcT5QtiBBEK2O8PQlQl3zj07nEXw8dIuijUL5wPVCiFV
-         R7cIsXskEttIGrfxZ6r1Co+uu+V6CxN/MAoy7AbM5xav6gT1N/+mdvj8yIN1zvycKyJJ
-         39nA==
-X-Gm-Message-State: AOAM530G6Hhf7M6ahyHLLZlKS6rtVA9Q8iycoygEjyyWht2JsqLjpcjk
-        ngFiAwK4sz1uZLpmHjw4UazI9MJau+Jouk6uBQo=
-X-Google-Smtp-Source: ABdhPJxLA2patLywIkWv3BWBro2GnAYR+4B7stOdBJVWlU/h2QfV+fKcWnOXSTMdOMdE+WFjadzsXFAFHXzQy0Ankj0=
-X-Received: by 2002:a05:651c:2de:: with SMTP id f30mr2024329ljo.450.1590030777589;
- Wed, 20 May 2020 20:12:57 -0700 (PDT)
+        Wed, 20 May 2020 23:13:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:39406 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727825AbgEUDNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:13:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B45230E;
+        Wed, 20 May 2020 20:13:13 -0700 (PDT)
+Received: from [10.163.75.69] (unknown [10.163.75.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 944B03F52E;
+        Wed, 20 May 2020 20:13:11 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH] arm64/cpufeature: Move BUG_ON() inside
+ get_arm64_ftr_reg()
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+References: <1589937774-20479-1-git-send-email-anshuman.khandual@arm.com>
+ <20200520122012.GA25815@willie-the-truck>
+Message-ID: <7bb0b88a-d551-463c-b777-68fb1c7f3c2c@arm.com>
+Date:   Thu, 21 May 2020 08:42:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200520125616.193765-1-kpsingh@chromium.org> <5f540fb8-93ec-aa6b-eb30-b3907f5791ff@schaufler-ca.com>
- <CAADnVQL_j3vGMTiQTfKWOZKhhuZxAQBQpU6W-BBeO+biTXrzSQ@mail.gmail.com> <alpine.LRH.2.21.2005211201410.2368@namei.org>
-In-Reply-To: <alpine.LRH.2.21.2005211201410.2368@namei.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 20 May 2020 20:12:46 -0700
-Message-ID: <CAADnVQLFhSTVQ_ArMaQdABD6A4goiw6wx-d_KyJUFJRfcSMC9A@mail.gmail.com>
-Subject: Re: [PATCH bpf] security: Fix hook iteration for secid_to_secctx
-To:     James Morris <jmorris@namei.org>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        KP Singh <kpsingh@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200520122012.GA25815@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 7:02 PM James Morris <jmorris@namei.org> wrote:
->
-> On Wed, 20 May 2020, Alexei Starovoitov wrote:
->
-> > On Wed, May 20, 2020 at 8:15 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> > >
-> > >
-> > > On 5/20/2020 5:56 AM, KP Singh wrote:
-> > > > From: KP Singh <kpsingh@google.com>
-> > > >
-> > > > secid_to_secctx is not stackable, and since the BPF LSM registers this
-> > > > hook by default, the call_int_hook logic is not suitable which
-> > > > "bails-on-fail" and casues issues when other LSMs register this hook and
-> > > > eventually breaks Audit.
-> > > >
-> > > > In order to fix this, directly iterate over the security hooks instead
-> > > > of using call_int_hook as suggested in:
-> > > >
-> > > > https: //lore.kernel.org/bpf/9d0eb6c6-803a-ff3a-5603-9ad6d9edfc00@schaufler-ca.com/#t
-> > > >
-> > > > Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
-> > > > Fixes: 625236ba3832 ("security: Fix the default value of secid_to_secctx hook"
-> > > > Reported-by: Alexei Starovoitov <ast@kernel.org>
-> > > > Signed-off-by: KP Singh <kpsingh@google.com>
-> > >
-> > > This looks fine.
-> >
-> > Tested. audit works now.
-> > I fixed missing ')' in the commit log
-> > and applied to bpf tree.
-> > It will be on the way to Linus tree soon.
->
-> Please add:
->
->
-> Acked-by: James Morris <jamorris@linux.microsoft.com>
 
-Thank you. Done.
+
+On 05/20/2020 05:50 PM, Will Deacon wrote:
+> Hi Anshuman,
+> 
+> On Wed, May 20, 2020 at 06:52:54AM +0530, Anshuman Khandual wrote:
+>> There is no way to proceed when requested register could not be searched in
+>> arm64_ftr_reg[]. Requesting for a non present register would be an error as
+>> well. Hence lets just BUG_ON() when the search fails in get_arm64_ftr_reg()
+>> rather than checking for return value and doing the same in some individual
+>> callers.
+>>
+>> But there are some callers that dont BUG_ON() upon search failure. It adds
+>> an argument 'failsafe' that provides required switch between callers based
+>> on whether they could proceed or not.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> Cc: Mark Brown <broonie@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> Applies on next-20200518 that has recent cpufeature changes from Will.
+>>
+>>  arch/arm64/kernel/cpufeature.c | 26 +++++++++++++-------------
+>>  1 file changed, 13 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index bc5048f152c1..62767cc540c3 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -557,7 +557,7 @@ static int search_cmp_ftr_reg(const void *id, const void *regp)
+>>   *         - NULL on failure. It is upto the caller to decide
+>>   *	     the impact of a failure.
+>>   */
+>> -static struct arm64_ftr_reg *get_arm64_ftr_reg(u32 sys_id)
+>> +static struct arm64_ftr_reg *get_arm64_ftr_reg(u32 sys_id, bool failsafe)
+> 
+> Generally, I'm not a big fan of boolean arguments because they are really
+> opaque at the callsite. It also seems bogus to me that we don't trust the
+
+If preferred, we could replace with an enum variable here with some
+more context e.g
+
+enum ftr_reg_search {
+	FTR_REG_SEARCH_SAFE,
+	FTR_REG_SEARCH_UNSAFE,
+};
+
+> caller to pass a valid sys_id, but we trust it to get "failsafe" right,
+
+If we really trust the callers, then why BUG_ON() checks are present in
+the first place. Because it is always prudent to protect against the
+unexpected.
+
+> which seems to mean "I promise to check the result isn't NULL before
+> dereferencing it."
+
+Not sure I got this. Do you mean all the present BUG_ON() are trying to
+check that returned arm64_ftr_reg is valid before dereferencing it ? If
+there is real trust on the callers that a non present sys_id will never
+get requested, then all present BUG_ON() instances should never be there.
+
+Either we trust the callers - drop all BUG_ON() and WARN_ON() instances
+or we dont - consolidate BUG_ON() and WARN_ON() instances appropriately.
+
+> 
+> So I don't see how this patch improves anything. I'd actually be more
+
+It consolidates multiple BUG_ON() in various callers which are not really
+required. Code consolidation and reduction especially BUG_ON() instances,
+is invariably a good thing.
+
+> inclined to stick a WARN() in get_arm64_ftr_reg() when it returns NULL and
+
+AFAICS in emulate_sys_reg() where the user can send non-present sys_id
+registers that eventually gets emulated, should not expect an WARN_ON()
+as it did not do anything wrong.
+
+> have the callers handle NULL by returning early, getting rid of all the
+> BUG_ONs in here. Sure, the system might end up in a funny state, but we
+> WARN()d about it and tried to keep going (and Linus has some strong opinions
+> on this too).
+
+Sure, we could go with an WARN_ON() instead, if acceptable and preferred.
