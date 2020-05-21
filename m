@@ -2,97 +2,137 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03962C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA62CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA0242072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E442083E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nVtO74pa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N53ce3W4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgEUOVU (ORCPT
+        id S1729145AbgEUOWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:21:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53510 "EHLO
+        Thu, 21 May 2020 10:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgEUOVT (ORCPT
+        with ESMTP id S1726965AbgEUOWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:21:19 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6CBC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:21:19 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v4so5597368qte.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:21:19 -0700 (PDT)
+        Thu, 21 May 2020 10:22:22 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A323C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:21 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id s8so5409529ybj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pcs70r+jLgxPgoJvLwzbsID0j/rkvxXG6DlxyjvqoHw=;
-        b=nVtO74pap1x8NIfAz5i0d2jKSmGXkeOJVwRYOKDarinCRDgjGGUkxE/J1TzUNJygsB
-         O0ZN796Z0V2+Aa818R8buT8JqL2CU6R27ko02QCE3xn2FnMUlLaIGEbuvrrYh+6029bv
-         Bk40Rvo/C5vIvkdkbSXp1Xi06BFwFlDOeVBpLQRCbJ5NqywhmTDL7yTSz8jhJFCVqoRq
-         895JFanRAKlfeBE0G0OciV7jFbKC0KFOgNCLs4sipHE0m5TW8vhoXDLf1Ln90s1K75Pl
-         dZ3gY9Imvc0UZWiZ2ETTlJz9pw1zPPnBlNcwcTbmamAUtuSvb+9t66vXLhKcdRF3zxtV
-         vnIw==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=oGh0kqYNNAZM+Pjnllixvw53KGUxiJ/hODIqL9XqSI8=;
+        b=N53ce3W4F1IpXl4ChkhdD3LWxnFiRQVJTDL/wOUQii97P48NWSVAOdhXhgVaK48dk2
+         Nt+pmmEb6P2ovsbhfKsEFFJSCEh04b4IQXvk5tWHWPZB0OwsKf9HGGkpT9xSP+2cE+Jw
+         feBQA60lAHIvLnpOGDdkBImyHOP2cSc8S44i3uHeB7sydq7ipF07dXaD07zKMLwfaHB0
+         7UuBbFsW5XcbfHbbdvwMg36zr8EGAu1uAJCzt4XR1ghuFjJ1MU9KRNUzD0y2mPkd12zn
+         6LSIa0TMbDakv/vL8ba+Kzlfali/1fW2BgEIqAUE59I9Fk9i+6XG8BPCy0dWyRthf+rR
+         B46g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pcs70r+jLgxPgoJvLwzbsID0j/rkvxXG6DlxyjvqoHw=;
-        b=ora7NYmiTYF2JOCyva2NyrNJLGiSQHkO5/DWwzC3rypo/zxWECZy6vPUjuWnxcyoh9
-         5JdUCAVluXUAz6ZjtAiywj5XsSKLQeF/fooSfzwTe8//rjzV71MovRKA5dgKsW5GdaaC
-         NMf4UxTkbvPWTwQmUK+zEgXcBdJhA5f9wNdGZl/IWpeqdGfXg6gekA1YWv2RI3he01aV
-         rSRYTArusinIjtesP9g5uKEERS1gEFFp4HuD4F67DTr+rCzRKvK70Go7u5cnjc1U7rPH
-         6g8X0EooWlQD0f+fm8V9i+xHr5hLuBP2SaLjwIDShKQiWb+25OENOcHaM4A84IlelOca
-         +rRg==
-X-Gm-Message-State: AOAM533iP16KvCpgXzx9jqw4T4TOKOdeq1PYXiPa0Rzvb6OHOUQJTL5M
-        +UmDKINN0gNTIOa93m55TWt5AL4OnvfMFqumUUj4IA==
-X-Google-Smtp-Source: ABdhPJy8cCZ9oT9uBMA6ACH2vLLvE83My3rHUrXgHIL8dqU1ksdB3gDA/0LyZ6iOZrlRI5zm7Dk9jTVm3ZdPjeFJGsA=
-X-Received: by 2002:aed:37e7:: with SMTP id j94mr10693345qtb.57.1590070878207;
- Thu, 21 May 2020 07:21:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000c866c705a61a95d4@google.com> <9a337dfa-175f-e13b-1977-0f63d589f37c@I-love.SAKURA.ne.jp>
-In-Reply-To: <9a337dfa-175f-e13b-1977-0f63d589f37c@I-love.SAKURA.ne.jp>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 21 May 2020 16:21:06 +0200
-Message-ID: <CACT4Y+bAg0jJSVSu-AwP2k5QMk3kgnwRn4xXb3C5Mx-CyMRwdA@mail.gmail.com>
-Subject: Re: INFO: task hung in locks_remove_posix
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzbot <syzbot+f5bc30abd8916982419c@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=oGh0kqYNNAZM+Pjnllixvw53KGUxiJ/hODIqL9XqSI8=;
+        b=bcYVt2gAOOcPRLd35ZpuBqWRStySLG8oDOvpvwoyVRxoV55a4tnDduDxW2Sk6WQtC8
+         qTRkX1DhWodJ6dhoH0H+bC8RUgamY7ZlZTWcima7ZEUiGDdwksNWjz/gTXnr9xXpFi+d
+         Fd6+1Pf51yh5faKZdamVwTPl/4sTSWeL0bQCCdalY2p0OsmwiHlgl3B0+GsONJ1Yh2dI
+         NnS3w9lvMufW2WGGUq1GVbgivP0Z1SrO2t1hn8/7u8mQREzJlAvtuPOgLWDe9xZ5/qH1
+         vLI4U5/Je62yu0bq84JrSjgg1sGNvixk2mhVMDpiGIRKFRqC6DDzy6DPUqnFIZfwCZup
+         5QaQ==
+X-Gm-Message-State: AOAM531fWbGALVNsOaf2vwN4pw8UHRmdVr+keHbu4hcZCUycvkYkude/
+        nYfIwBLTaebpDuEEPWS9gH8DOWATJw==
+X-Google-Smtp-Source: ABdhPJwmv+6MclTJ+EllMyykRGDynVdX1CSwgVjgvmo8lvm1yGwryMBM851g6lmcfGhz8fsMcz0wMyHVXQ==
+X-Received: by 2002:a25:e86:: with SMTP id 128mr16977291ybo.344.1590070940186;
+ Thu, 21 May 2020 07:22:20 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:20:36 +0200
+Message-Id: <20200521142047.169334-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
+Subject: [PATCH -tip v3 00/11] Fix KCSAN for new ONCE (require Clang 11)
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        peterz@infradead.org, will@kernel.org,
+        clang-built-linux@googlegroups.com, bp@alien8.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 4:09 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> On 2020/05/21 5:53, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    806d8acc USB: dummy-hcd: use configurable endpoint naming ..
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16c9ece2100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d800e9bad158025f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f5bc30abd8916982419c
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
->
-> This seems to be a mislabeling due to '?' in all lines in a trace.
->
-> #syz dup: INFO: task hung in wdm_flush
+This patch series is the conclusion to [1], where we determined that due
+to various interactions with no_sanitize attributes and the new
+{READ,WRITE}_ONCE(), KCSAN will require Clang 11 or later. Other
+sanitizers are largely untouched, and only KCSAN now has a hard
+dependency on Clang 11. To test, a recent Clang development version will
+suffice [2]. While a little inconvenient for now, it is hoped that in
+future we may be able to fix GCC and re-enable GCC support.
 
-It seems that unwind from __schedule is broken. Fixing the unwinder
-may be the action item here, otherwise we will get an infinite number
-of such reports.
+The patch "kcsan: Restrict supported compilers" contains a detailed list
+of requirements that led to this decision.
+
+Most of the patches are related to KCSAN, however, the first patch also
+includes an UBSAN related fix and is a dependency for the remaining
+ones. The last 2 patches clean up the attributes by moving them to the
+right place, and fix KASAN's way of defining __no_kasan_or_inline,
+making it consistent with KCSAN.
+
+The series has been tested by running kcsan-test several times and
+completed successfully.
+
+[1] https://lkml.kernel.org/r/CANpmjNOGFqhtDa9wWpXs2kztQsSozbwsuMO5BqqW0c0g0zGfSA@mail.gmail.com
+[2] https://github.com/llvm/llvm-project
+
+v3:
+* data_race() fix for 'const' non-scalar expressions.
+* Add a missing commit message.
+* Add Will's Acked-by.
+
+v2: https://lkml.kernel.org/r/20200521110854.114437-1-elver@google.com
+* Remove unnecessary kcsan_check_atomic in ONCE.
+* Simplify __READ_ONCE_SCALAR and remove __WRITE_ONCE_SCALAR. This
+  effectively restores Will Deacon's pre-KCSAN version:
+  https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/tree/include/linux/compiler.h?h=rwonce/cleanup#n202
+* Introduce patch making data_race() a single statement expression in
+  response to apparent issues that compilers are having with nested
+  statement expressions.
+
+Arnd Bergmann (1):
+  ubsan, kcsan: don't combine sanitizer with kcov on clang
+
+Marco Elver (10):
+  kcsan: Avoid inserting __tsan_func_entry/exit if possible
+  kcsan: Support distinguishing volatile accesses
+  kcsan: Pass option tsan-instrument-read-before-write to Clang
+  kcsan: Remove 'noinline' from __no_kcsan_or_inline
+  kcsan: Restrict supported compilers
+  kcsan: Update Documentation to change supported compilers
+  READ_ONCE, WRITE_ONCE: Remove data_race() and unnecessary checks
+  data_race: Avoid nested statement expression
+  compiler.h: Move function attributes to compiler_types.h
+  compiler_types.h, kasan: Use __SANITIZE_ADDRESS__ instead of
+    CONFIG_KASAN to decide inlining
+
+ Documentation/dev-tools/kcsan.rst |  9 +-----
+ include/linux/compiler.h          | 54 ++++---------------------------
+ include/linux/compiler_types.h    | 32 ++++++++++++++++++
+ kernel/kcsan/core.c               | 43 ++++++++++++++++++++++++
+ lib/Kconfig.kcsan                 | 20 +++++++++++-
+ lib/Kconfig.ubsan                 | 11 +++++++
+ scripts/Makefile.kcsan            | 15 ++++++++-
+ 7 files changed, 127 insertions(+), 57 deletions(-)
+
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
