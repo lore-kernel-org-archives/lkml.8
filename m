@@ -2,171 +2,92 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C73C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1032BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA612070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Few7Cvga"
+	by mail.kernel.org (Postfix) with ESMTP id E9FAB2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgEUMeW (ORCPT
+        id S1729310AbgEUMes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:34:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41014 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728037AbgEUMeV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:34:21 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LCYGSU068676;
-        Thu, 21 May 2020 07:34:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590064456;
-        bh=3HwKNsiZR64FJ05ODAi+SwPDScENaEua2gPzI8Vn1lA=;
-        h=Subject:From:To:References:Date:In-Reply-To;
-        b=Few7CvgaQn9OkBxG71L+bKWQV/fGM9nriam3FyyQsq62cF8C/ws0PlYIitUdqWpMy
-         fcenJCJ3WJcYEQZQR0P2LqqGRHmoGzMO+AaiYKjY8hv0wuSvwqtoYEEjL2rzllZzh8
-         I+uO90CUMTEb6NkWv7gbJFKzzZPkVAdW89rsnx/U=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LCYG6L061400
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 07:34:16 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 07:34:16 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 07:34:16 -0500
-Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LCYFEI012561;
-        Thu, 21 May 2020 07:34:15 -0500
-Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <grygorii.strashko@ti.com>
-References: <20200506163033.3843-1-m-karicheri2@ti.com>
- <a947b604-4016-ff02-380f-f3788eea4ed9@ti.com>
-Message-ID: <2e96bf73-9ef3-4949-967f-4b9d65816c09@ti.com>
-Date:   Thu, 21 May 2020 08:34:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 08:34:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:53299 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728186AbgEUMes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:34:48 -0400
+IronPort-SDR: +ybOD1RMM+pnamZpMlQhx5pyKpDsVA4bUjNqGl93EZ25QOh6KO8kEz6RGw3bpz1ozPFcPFTAMe
+ W0yI9yRukN1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 05:34:47 -0700
+IronPort-SDR: Lctipwjy10ADkgk+KPH2ghdvELhfA1XPXfoH87Hxjm7JiX00WoBPlneW7usHOfpG0ZhBXRw/iV
+ xdbRbECBOLwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
+   d="scan'208";a="268618473"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 21 May 2020 05:34:47 -0700
+Received: from [10.215.164.158] (vramuthx-mobl1.gar.corp.intel.com [10.215.164.158])
+        by linux.intel.com (Postfix) with ESMTP id AA28A580101;
+        Thu, 21 May 2020 05:34:44 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, vigneshr@ti.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200520124329.GF4823@sirena.org.uk>
+ <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
+ <20200521105646.GA4770@sirena.org.uk>
+ <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
+ <20200521122035.GB4770@sirena.org.uk>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <463b24a4-0a6a-9fcf-7eb9-8fde602c0c13@linux.intel.com>
+Date:   Thu, 21 May 2020 20:34:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <a947b604-4016-ff02-380f-f3788eea4ed9@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200521122035.GB4770@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David, et all,
+Hi Mark,
 
-On 5/13/20 8:27 AM, Murali Karicheri wrote:
-> Hello netdev experts,
+On 21/5/2020 8:20 pm, Mark Brown wrote:
+> On Thu, May 21, 2020 at 08:14:04PM +0800, Ramuthevar, Vadivel MuruganX wrote:
+>> On 21/5/2020 6:56 pm, Mark Brown wrote:
 > 
-> On 5/6/20 12:30 PM, Murali Karicheri wrote:
->> This RFC series add support for Parallel Redundancy Protocol (PRP)
->> as defined in IEC-62439-3 in the kernel networking subsystem. PRP
->> Uses a Redundancy Control Trailer (RCT) the format of which is
->> similar to HSR Tag. This is used for implementing redundancy.
->> RCT consists of 6 bytes similar to HSR tag and contain following
->> fields:-
->>
->> - 16-bit sequence number (SeqNr);
->> - 4-bit LAN identifier (LanId);
->> - 12 bit frame size (LSDUsize);
->> - 16-bit suffix (PRPsuffix).
->>
->> The PRPsuffix identifies PRP frames and distinguishes PRP frames
->> from other protocols that also append a trailer to their useful
->> data. The LSDUsize field allows the receiver to distinguish PRP
->> frames from random, nonredundant frames as an additional check.
->> LSDUsize is the size of the Ethernet payload inclusive of the
->> RCT. Sequence number along with LanId is used for duplicate
->> detection and discard.
->>
->> PRP node is also known as Dual Attached Node (DAN-P) since it
->> is typically attached to two different LAN for redundancy.
->> DAN-P duplicates each of L2 frames and send it over the two
->> Ethernet links. Each outgoing frame is appended with RCT.
->> Unlike HSR, these are added to the end of L2 frame and may be
->> treated as padding by bridges and therefore would be work with
->> traditional bridges or switches, where as HSR wouldn't as Tag
->> is prefixed to the Ethenet frame. At the remote end, these are
->> received and the duplicate frame is discarded before the stripped
->> frame is send up the networking stack. Like HSR, PRP also sends
->> periodic Supervision frames to the network. These frames are
->> received and MAC address from the SV frames are populated in a
->> database called Node Table. The above functions are grouped into
->> a block called Link Redundancy Entity (LRE) in the IEC spec.
->>
->> As there are many similarities between HSR and PRP protocols,
->> this patch re-use the code from HSR driver to implement PRP
->> driver. As many part of the code can be re-used, this patch
->> introduces a new common API definitions for both protocols and
->> propose to obsolete the existing HSR defines in
->> include/uapi/linux/if_link.h. New definitions are prefixed
->> with a HSR_PRP prefix. Similarly include/uapi/linux/hsr_netlink.h
->> is proposed to be replaced with include/uapi/linux/hsr_prp_netlink.h
->> which also uses the HSR_PRP prefix. The netlink socket interface
->> code is migrated (as well as the iproute2 being sent as a follow up
->> patch) to use the new API definitions. To re-use the code,
->> following are done as a preparatory patch before adding the PRP
->> functionality:-
->>
->>    - prefix all common code with hsr_prp
->>    - net/hsr -> renamed to net/hsr-prp
->>    - All common struct types, constants, functions renamed with
->>      hsr{HSR}_prp{PRP} prefix.
->>
->> Please review this and provide me feedback so that I can work to
->> incorporate them and send a formal patch series for this. As this
->> series impacts user space, I am not sure if this is the right
->> approach to introduce a new definitions and obsolete the old
->> API definitions for HSR. The current approach is choosen
->> to avoid redundant code in iproute2 and in the netlink driver
->> code (hsr_netlink.c). Other approach we discussed internally was
->> to Keep the HSR prefix in the user space and kernel code, but
->> live with the redundant code in the iproute2 and hsr netlink
->> code. Would like to hear from you what is the best way to add
->> this feature to networking core. If there is any other
->> alternative approach possible, I would like to hear about the
->> same.
->>
->> The patch was tested using two TI AM57x IDK boards which are
->> connected back to back over two CPSW ports.
->>
->> Script used for creating the hsr/prp interface is given below
->> and uses the ip link command. Also provided logs from the tests
->> I have executed for your reference.
->>
->> iproute2 related patches will follow soon....
-> Could someone please review this and provide some feedback to take
-> this forward?
+>>> That doesn't address either of the issues.  The removal of the old
+>>> bindings and addition of the YAML ones needs to be in a single patch
+>>> doing that conversion.  What I'm suggesting should be done separately is
+>>> whatever changes to the semantics of the bindings you are (according to
+>>> your changelog) doing.
 > 
-> Thanks and regards,
->>
->> Murali Karicheri
->> Texas Instruments
+>> You mean semantics of the binding as a single patch you are suggesting me,
+>> right? , Thanks!
 > 
-> 
-> -Cut-------------------------
+> I mean that any changes to the bindings ought to be split out into
+> separate patches, if there's multiple changes it may make sense for
+> there to be multiple patches.
+Got it, we do not have multiple changes since it is new YAML file.
+in case if we feel anything to be added , we add as separate patches.
+Thanks!
 
-I plan to send a formal patch early next week as we would like to move
-forward with this series. So please take some high level look at this
-and guide me if I am on the right track or this requires rework for
-a formal patch.
--- 
-Murali Karicheri
-Texas Instruments
+Regards
+Vadivel
+
+> 
