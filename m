@@ -2,219 +2,180 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2257CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A612072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F30206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IngPvfQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgEUOc5 (ORCPT
+        id S1729727AbgEUOfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:32:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726973AbgEUOc4 (ORCPT
+        Thu, 21 May 2020 10:35:13 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33032 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728243AbgEUOfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:32:56 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04LEVufn147495;
-        Thu, 21 May 2020 10:32:10 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 315pfwseqt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 May 2020 10:31:57 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04LEVQ0o011028;
-        Thu, 21 May 2020 14:31:26 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 313wne2dwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 May 2020 14:31:25 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04LEVNbt64749568
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 14:31:23 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4A764C04A;
-        Thu, 21 May 2020 14:31:23 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 129BC4C046;
-        Thu, 21 May 2020 14:31:23 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 21 May 2020 14:31:23 +0000 (GMT)
-Received: from localhost (unknown [9.102.46.56])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2C0B1A01EB;
-        Fri, 22 May 2020 00:31:17 +1000 (AEST)
-From:   Michael Ellerman <michaele@au1.ibm.com>
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RESEND PATCH v7 3/5] powerpc/papr_scm: Fetch nvdimm health information from PHYP
-In-Reply-To: <87tv0awmr5.fsf@linux.ibm.com>
-References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-4-vaibhav@linux.ibm.com> <20200520145430.GB3660833@iweiny-DESK2.sc.intel.com> <87tv0awmr5.fsf@linux.ibm.com>
-Date:   Fri, 22 May 2020 00:31:41 +1000
-Message-ID: <87k115gy0i.fsf@mpe.ellerman.id.au>
+        Thu, 21 May 2020 10:35:10 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LEZ3vo125705;
+        Thu, 21 May 2020 09:35:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590071703;
+        bh=cNjaQ9fXx/uUqYhSW8L/0cq+/RkAn17do/znBW1C7Bc=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=IngPvfQqk55+7bJe9Zom5oXOLr8G3ITt9bH8rZTsJ4dsDcSzZNP2MZxB9GISdoBHd
+         23UrC1LdaW/KYmch2e55aCp7fFW5rwj5HzeCj57jfc99EtNJIPKld28MitR+h8rJsD
+         1uR6K53NuPksB8BhzimqCK/SMa7x0luH0b//yhOU=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LEZ3rO109304
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 09:35:03 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 09:35:02 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 09:35:02 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LEYx2o082791;
+        Thu, 21 May 2020 09:35:00 -0500
+Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
+To:     Drew Fustini <drew@beagleboard.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+References: <20200520214757.GA362547@x1>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
+Date:   Thu, 21 May 2020 17:34:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-21_08:2020-05-21,2020-05-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- suspectscore=0 mlxscore=0 impostorscore=0 cotscore=-2147483648
- priorityscore=1501 adultscore=0 clxscore=1011 bulkscore=0
- lowpriorityscore=0 mlxlogscore=985 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210106
+In-Reply-To: <20200520214757.GA362547@x1>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vaibhav Jain <vaibhav@linux.ibm.com> writes:
-> Thanks for reviewing this this patch Ira. My responses below:
-> Ira Weiny <ira.weiny@intel.com> writes:
->> On Wed, May 20, 2020 at 12:30:56AM +0530, Vaibhav Jain wrote:
->>> Implement support for fetching nvdimm health information via
->>> H_SCM_HEALTH hcall as documented in Ref[1]. The hcall returns a pair
->>> of 64-bit big-endian integers, bitwise-and of which is then stored in
->>> 'struct papr_scm_priv' and subsequently partially exposed to
->>> user-space via newly introduced dimm specific attribute
->>> 'papr/flags'. Since the hcall is costly, the health information is
->>> cached and only re-queried, 60s after the previous successful hcall.
-...
->>> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
->>> index f35592423380..142636e1a59f 100644
->>> --- a/arch/powerpc/platforms/pseries/papr_scm.c
->>> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
->>> @@ -39,6 +78,15 @@ struct papr_scm_priv {
->>>  	struct resource res;
->>>  	struct nd_region *region;
->>>  	struct nd_interleave_set nd_set;
->>> +
->>> +	/* Protect dimm health data from concurrent read/writes */
->>> +	struct mutex health_mutex;
->>> +
->>> +	/* Last time the health information of the dimm was updated */
->>> +	unsigned long lasthealth_jiffies;
->>> +
->>> +	/* Health information for the dimm */
->>> +	u64 health_bitmap;
->>
->> I wonder if this should be typed big endian as you mention that it is in the
->> commit message?
-> This was discussed in an earlier review of the patch series at
-> https://lore.kernel.org/linux-nvdimm/878sjetcis.fsf@mpe.ellerman.id.au
->
-> Even though health bitmap is returned in big endian format (For ex
-> value 0xC00000000000000 indicates bits 0,1 set), its value is never
-> used. Instead only test for specific bits being set in the register is
-> done.
-
-This has already caused a lot of confusion, so let me try and clear it
-up. I will probably fail :)
-
-The value is not big endian.
-
-It's returned in a GPR (a register), from the hypervisor. The ordering
-of bytes in a register is not dependent on what endian we're executing
-in.
-
-It's true that the hypervisor will have been running big endian, and
-when it returns to us we will now be running little endian. But the
-value is unchanged, it was 0xC00000000000000 in the GPR while the HV was
-running and it's still 0xC00000000000000 when we return to Linux. You
-can see this in mambo, see below for an example.
 
 
-_However_, the specification of the bits in the bitmap value uses MSB 0
-ordering, as is traditional for IBM documentation. That means the most
-significant bit, aka. the left most bit, is called "bit 0".
+On 21/05/2020 00:47, Drew Fustini wrote:
+> Add gpio-line-names properties to the GPIO controller nodes.
+> 
+> BeagleBone boards have P8 and P9 headers [0] which expose many of the
+> AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
+> other external connections like jumper wires connected to a breadboard.
+> BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
+> diagram [1] as it is in the "Bone101" getting started tutorial. [2]
+> 
+> Most of the P8 and P9 header pins can muxed to a GPIO line.  The
+> gpio-line-names describe which P8 or P9 pin that line goes to and the
+> default mux for that P8 or P9 pin if it is not GPIO.
+> 
+> For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
+> however the default device tree has the corresponding BGA ball (ZCZ U7)
+> muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
+> GPIO line to be used, one would need to modify the device tree to
+> disable the eMMC and change the pin mux for that ball to GPIO mode.
+> 
+> Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
+> to a P8 or P9 header, but are instead wired to some peripheral device
+> like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
+> brackets to denote those GPIO lines can not be used.
+> 
+> Some GPIO lines are named "[NC]" as the corresponding balls are not
+> routed to anything on the PCB.
+> 
+> The goal for these names is to make it easier for a user viewing the
+> output of gpioinfo to determine which P8 or P9 pin is connected to a
+> GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
+> 
+> debian@beaglebone:~$ gpioinfo
+> gpiochip0 - 32 lines:
+> 	line   0: "[ethernet]"       unused   input  active-high
+> 	line   1: "[ethernet]"       unused   input  active-high
+> 	line   2: "P9_22 [spi0_sclk]" unused input active-high
+> 	line   3: "P9_21 [spi0_d0]" unused input active-high
+> 	line   4: "P9_18 [spi0_d1]" unused input active-high
+> 	line   5: "P9_17 [spi0_cs0]" unused input active-high
+> 	line   6:  "[sd card]"         "cd"   input   active-low [used]
+> 	line   7: "P9_42A [ecappwm0]" unused input active-high
+> 	line   8: "P8_35 [hdmi]" unused input active-high
+> 	line   9: "P8_33 [hdmi]" unused input active-high
+> 	line  10: "P8_31 [hdmi]" unused input active-high
+> 	line  11: "P8_32 [hdmi]" unused input active-high
 
-See: https://en.wikipedia.org/wiki/Bit_numbering#MSB_0_bit_numbering
+[...]
 
-That is the opposite numbering from what most people use, and in
-particular what most code in Linux uses, which is that bit 0 is the
-least significant bit.
+> 
+> [0] https://git.io/JfgOd
+> [1] https://beagleboard.org/capes
+> [1] https://beagleboard.org/Support/bone101
+> [2] https://beagleboard.org/static/images/cape-headers.png
+> 
+> Reviewed-by: Jason Kridner <jason@beagleboard.org>
+> Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>   arch/arm/boot/dts/am335x-bone-common.dtsi | 144 ++++++++++++++++++++++
 
-Which is where the confusion comes in. It's not that the bytes are
-returned in a different order, it's that the bits are numbered
-differently in the IBM documentation.
+Not sure if it should be in am335x-bone-common.dtsi.
 
-The way to fix this kind of thing is to read the docs, and convert all
-the bits into correct numbering (LSB=0), and then throw away the docs ;)
+For example:
+am335x-boneblack.dts
+  #include "am335x-bone-common.dtsi"
+  #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
 
-cheers
+am335x-bonegreen.dts
+  #include "am335x-bone-common.dtsi"
+  #include "am335x-bonegreen-common.dtsi"
 
+>   1 file changed, 144 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> index 6c9187bc0f17..d86e67b0e852 100644
+> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> @@ -397,3 +397,147 @@ &rtc {
+>   	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+>   	clock-names = "ext-clk", "int-clk";
+>   };
+> +
+> +&gpio0 {
+> +	gpio-line-names =
+> +		"[ethernet]",
+> +		"[ethernet]",
+> +		"P9_22 [spi0_sclk]",
+> +		"P9_21 [spi0_d0]",
+> +		"P9_18 [spi0_d1]",
+> +		"P9_17 [spi0_cs0]",
+> +		"[sd card]",
+> +		"P9_42A [ecappwm0]",
+> +		"P8_35 [hdmi]",
+> +		"P8_33 [hdmi]",
+> +		"P8_31 [hdmi]",
+> +		"P8_32 [hdmi]",
 
+[...]
 
-In mambo we can set a breakpoint just before the kernel enters skiboot,
-towards the end of __opal_call. The kernel is running LE and skiboot
-runs BE.
-
-  systemsim-p9 [~/skiboot/skiboot/external/mambo] b 0xc0000000000c1744
-  breakpoint set at [0:0:0]: 0xc0000000000c1744 (0x00000000000C1744) Enc:0x2402004C : hrfid
-
-Then run:
-
-  systemsim-p9 [~/skiboot/skiboot/external/mambo] c
-  [0:0:0]: 0xC0000000000C1744 (0x00000000000C1744) Enc:0x2402004C : hrfid
-  INFO: 121671618: (121671618): ** Execution stopped: user (tcl),  **
-  121671618: ** finished running 121671618 instructions **
-
-And we stop there, on an hrfid that we haven't executed yet.
-We can print r0, to see the OPAL token:
-
-  systemsim-p9 [~/skiboot/skiboot/external/mambo] p r0
-  0x0000000000000019
-
-ie. we're calling OPAL_CONSOLE_WRITE_BUFFER_SPACE (25).
-
-And we can print the MSR:
-
-  systemsim-p9 [~/skiboot/skiboot/external/mambo] p msr
-  0x9000000002001033
-  
-                     64-bit mode (SF): 0x1 [64-bit mode]
-                Hypervisor State (HV): 0x1
-               Vector Available (VEC): 0x1
-  Machine Check Interrupt Enable (ME): 0x1
-            Instruction Relocate (IR): 0x1
-                   Data Relocate (DR): 0x1
-           Recoverable Interrupt (RI): 0x1
-              Little-Endian Mode (LE): 0x1 [little-endian]
-
-ie. we're little endian.
-
-We then step one instruction:
-
-  systemsim-p9 [~/skiboot/skiboot/external/mambo] s
-  [0:0:0]: 0x0000000030002BF0 (0x0000000030002BF0) Enc:0x7D9FFAA6 : mfspr   r12,PIR
-
-Now we're in skiboot. Print the MSR again:
-
-  systemsim-p9 [~/skiboot/skiboot/external/mambo] p msr
-  0x9000000002001002
-  
-                     64-bit mode (SF): 0x1 [64-bit mode]
-                Hypervisor State (HV): 0x1
-               Vector Available (VEC): 0x1
-  Machine Check Interrupt Enable (ME): 0x1
-           Recoverable Interrupt (RI): 0x1
-
-We're big endian.
-Print r0:
-
-  systemsim-p9 [~/skiboot/skiboot/external/mambo] p r0
-  0x0000000000000019
-
-r0 is unchanged!
+-- 
+Best regards,
+grygorii
