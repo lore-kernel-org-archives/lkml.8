@@ -7,133 +7,176 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80241C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53703207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0652207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rUdy0Gqz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="g26+CJ6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbgEUPYY (ORCPT
+        id S1730359AbgEUPY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730311AbgEUPYM (ORCPT
+        Thu, 21 May 2020 11:24:29 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:63067 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730345AbgEUPYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:24:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17D0C061A0E;
-        Thu, 21 May 2020 08:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=kv7va3JnJ1SeELpjhZcyLBCa20krrM3Xn4ju295jtGk=; b=rUdy0Gqzh3C4nJ6TIdAzKeaoif
-        wcO+pkmQg4oh+RaTJSGjuKJXdWDDJUYMIicegaPFbD3QMndGAgCdBjZh1eLyE/wqaocovxx+mGLyi
-        RlEMRo4KWxKjsECuFNapixznaS98/x20tWLfwVzyQQGMpVDlktZOHWqxxteKQyx3Eant2Ou6sVWT1
-        FDeAz0UFxKBHg0u2Qw9BwNLcec2AzoQa4PjCr/deKqjkOm7+ph3GVN0NQ+PU7PAKvqInr5q8DWlrn
-        L5OJO06mNjWLrStuLSvcAmQJVAu1CwXpApFO5RGzG1T1lSsG6M6h2aBM2rEhOzv3ekUiixNL/AXHa
-        326OosUA==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn3K-0004wA-Sz; Thu, 21 May 2020 15:24:11 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 23/23] maccess: return -ERANGE when copy_from_kernel_nofault_allowed fails
-Date:   Thu, 21 May 2020 17:23:01 +0200
-Message-Id: <20200521152301.2587579-24-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 21 May 2020 11:24:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590074663; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=JzqbmnEE661B7Lr5dD4p9+wQF60SRux+eXF7ny38bSs=; b=g26+CJ6D1ObbScfiEA5v1itKHhDHvmpJzwg8nLkvZVbQaqm7GKhqiKYI6kVNRlMq6UkVIXAs
+ hhtF5fE0As28t4zMW/ncpRDGU5REwidtkNFP2UhyeXFFK3jKp9zNJiUrS9o+zQtmLWulS//F
+ v4GepBJO3ZKIaNUupMWGSWK3NiY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ec69d268075f6e58c8e33f3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 15:24:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C3046C433AF; Thu, 21 May 2020 15:24:21 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51234C433CA;
+        Thu, 21 May 2020 15:24:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51234C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V2 3/3] mmc: sdhci: Allow platform controlled voltage switching
+Date:   Thu, 21 May 2020 20:53:35 +0530
+Message-Id: <1590074615-10787-4-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the callers to distinguish a real unmapped address vs a range
-that can't be probed.
+From: Vijay Viswanath <vviswana@codeaurora.org>
 
-Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+If vendor platform drivers are controlling whole logic of voltage
+switching, then sdhci driver no need control vqmmc regulator.
+So skip enabling/disable vqmmc from SDHC driver.
+
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 ---
- mm/maccess.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/mmc/host/sdhci.c | 32 +++++++++++++++++++-------------
+ drivers/mmc/host/sdhci.h |  1 +
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 349b6cb14426c..d317f8b8095ca 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -25,7 +25,7 @@ bool __weak copy_from_kernel_nofault_allowed(const void *unsafe_src,
- long copy_from_kernel_nofault(void *dst, const void *src, size_t size)
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 1bb6b67..88e5312 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -4098,6 +4098,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	unsigned int override_timeout_clk;
+ 	u32 max_clk;
+ 	int ret;
++	bool enable_vqmmc = false;
+ 
+ 	WARN_ON(host == NULL);
+ 	if (host == NULL)
+@@ -4111,9 +4112,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	 * the host can take the appropriate action if regulators are not
+ 	 * available.
+ 	 */
+-	ret = mmc_regulator_get_supply(mmc);
+-	if (ret)
+-		return ret;
++	if (!mmc->supply.vqmmc) {
++		ret = mmc_regulator_get_supply(mmc);
++		if (ret)
++			return ret;
++		enable_vqmmc  = true;
++	}
+ 
+ 	DBG("Version:   0x%08x | Present:  0x%08x\n",
+ 	    sdhci_readw(host, SDHCI_HOST_VERSION),
+@@ -4373,7 +4377,15 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		mmc->caps |= MMC_CAP_NEEDS_POLL;
+ 
+ 	if (!IS_ERR(mmc->supply.vqmmc)) {
+-		ret = regulator_enable(mmc->supply.vqmmc);
++		if (enable_vqmmc) {
++			ret = regulator_enable(mmc->supply.vqmmc);
++			if (ret) {
++				pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
++					mmc_hostname(mmc), ret);
++				mmc->supply.vqmmc = ERR_PTR(-EINVAL);
++			}
++			host->sdhci_core_to_disable_vqmmc = !ret;
++		}
+ 
+ 		/* If vqmmc provides no 1.8V signalling, then there's no UHS */
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+@@ -4386,12 +4398,6 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 2700000,
+ 						    3600000))
+ 			host->flags &= ~SDHCI_SIGNALING_330;
+-
+-		if (ret) {
+-			pr_warn("%s: Failed to enable vqmmc regulator: %d\n",
+-				mmc_hostname(mmc), ret);
+-			mmc->supply.vqmmc = ERR_PTR(-EINVAL);
+-		}
+ 	}
+ 
+ 	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V) {
+@@ -4625,7 +4631,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+ 	return 0;
+ 
+ unreg:
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
+ undma:
+ 	if (host->align_buffer)
+@@ -4643,7 +4649,7 @@ void sdhci_cleanup_host(struct sdhci_host *host)
  {
- 	if (!copy_from_kernel_nofault_allowed(src, size))
--		return -EFAULT;
-+		return -ERANGE;
+ 	struct mmc_host *mmc = host->mmc;
  
- 	pagefault_disable();
- 	copy_from_kernel_nofault_loop(dst, src, size, u64, Efault);
-@@ -69,7 +69,7 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
- 	if (unlikely(count <= 0))
- 		return 0;
- 	if (!copy_from_kernel_nofault_allowed(unsafe_addr, count))
--		return -EFAULT;
-+		return -ERANGE;
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
  
- 	pagefault_disable();
- 	do {
-@@ -94,7 +94,8 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
-  * @size: size of the data chunk
-  *
-  * Safely read from kernel address @src to the buffer at @dst.  If a kernel
-- * fault happens, handle that and return -EFAULT.
-+ * fault happens, handle that and return -EFAULT.  If @src is not a valid kernel
-+ * address, return -ERANGE.
-  *
-  * We ensure that the copy_from_user is executed in atomic context so that
-  * do_page_fault() doesn't attempt to take mmap_sem.  This makes
-@@ -107,7 +108,7 @@ long copy_from_kernel_nofault(void *dst, const void *src, size_t size)
- 	mm_segment_t old_fs = get_fs();
+ 	if (host->align_buffer)
+@@ -4780,7 +4786,7 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
  
- 	if (!copy_from_kernel_nofault_allowed(src, size))
--		return -EFAULT;
-+		return -ERANGE;
+ 	destroy_workqueue(host->complete_wq);
  
- 	set_fs(KERNEL_DS);
- 	pagefault_disable();
-@@ -159,8 +160,9 @@ long copy_to_kernel_nofault(void *dst, const void *src, size_t size)
-  *
-  * On success, returns the length of the string INCLUDING the trailing NUL.
-  *
-- * If access fails, returns -EFAULT (some data may have been copied
-- * and the trailing NUL added).
-+ * If access fails, returns -EFAULT (some data may have been copied and the
-+ * trailing NUL added).  If @unsafe_addr is not a valid kernel address, return
-+ * -ERANGE.
-  *
-  * If @count is smaller than the length of the string, copies @count-1 bytes,
-  * sets the last byte of @dst buffer to NUL and returns @count.
-@@ -174,7 +176,7 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
- 	if (unlikely(count <= 0))
- 		return 0;
- 	if (!copy_from_kernel_nofault_allowed(unsafe_addr, count))
--		return -EFAULT;
-+		return -ERANGE;
+-	if (!IS_ERR(mmc->supply.vqmmc))
++	if (host->sdhci_core_to_disable_vqmmc)
+ 		regulator_disable(mmc->supply.vqmmc);
  
- 	set_fs(KERNEL_DS);
- 	pagefault_disable();
+ 	if (host->align_buffer)
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 8d2a096..c7dbc68 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -570,6 +570,7 @@ struct sdhci_host {
+ 	u32 caps1;		/* CAPABILITY_1 */
+ 	bool read_caps;		/* Capability flags have been read */
+ 
++	bool sdhci_core_to_disable_vqmmc;  /* sdhci core can disable vqmmc */
+ 	unsigned int            ocr_avail_sdio;	/* OCR bit masks */
+ 	unsigned int            ocr_avail_sd;
+ 	unsigned int            ocr_avail_mmc;
 -- 
-2.26.2
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
