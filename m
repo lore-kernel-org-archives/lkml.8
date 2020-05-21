@@ -4,24 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2445AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 073302070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6F82070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgEUJOi (ORCPT
+        id S1728979AbgEUJOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:14:38 -0400
-Received: from v6.sk ([167.172.42.174]:34946 "EHLO v6.sk"
+        Thu, 21 May 2020 05:14:42 -0400
+Received: from v6.sk ([167.172.42.174]:34954 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbgEUJOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:14:38 -0400
+        id S1728748AbgEUJOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:14:41 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id DEC5261301;
-        Thu, 21 May 2020 09:14:05 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 394F661303;
+        Thu, 21 May 2020 09:14:09 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Alessandro Zummo <a.zummo@towertech.it>,
@@ -35,9 +36,9 @@ Cc:     Alessandro Zummo <a.zummo@towertech.it>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 3/9] dt-bindings: i2c: Convert i2c-pxa to json-schema
-Date:   Thu, 21 May 2020 11:13:50 +0200
-Message-Id: <20200521091356.2211020-4-lkundrak@v3.sk>
+Subject: [PATCH v2 5/9] dt-bindings: media: Convert marvell,mmp2-ccic to json-schema
+Date:   Thu, 21 May 2020 11:13:52 +0200
+Message-Id: <20200521091356.2211020-6-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200521091356.2211020-1-lkundrak@v3.sk>
 References: <20200521091356.2211020-1-lkundrak@v3.sk>
@@ -48,98 +49,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A conversion of the i2c-pxa binding to DT schema format using json-schema.
+Convert the marvell,mmp2-ccic binding to DT schema format using
+json-schema. While at that this drops the "func" and "phy" clocks.
 
-This also cleans ups some errors in the binding: The compatible string
-description suggested that "mmp" in "mrvl,mmp-twsi" is to be substituted
-with a processor model, which wouldn't be a right thing to do and indeed
-nobody seems to have been doing that. There also was "Recommended
-properties" section that included optional as well as mandatory
-properties. Missing mandatory properties were added to the example.
+The driver consumes clocks with those names, but it's not clear
+what are they for and they are not used in DT systems. "phy" is
+probably a clock for the sensor and it would belong in the sensor
+node.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
 ---
 Changes since v1:
-- Add default GPL-2.0-only license tag
-- Fill in maintainers from MAINTAINERS file
+- Fix indentation
+- Drop clocks other than "axi"
+- s/GPL-2.0-or-later/GPL-2.0-only/
 
- .../devicetree/bindings/i2c/i2c-pxa.txt       | 31 --------
- .../devicetree/bindings/i2c/i2c-pxa.yaml      | 72 +++++++++++++++++++
- 2 files changed, 72 insertions(+), 31 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-pxa.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+ .../bindings/media/marvell,mmp2-ccic.txt      | 50 ----------
+ .../bindings/media/marvell,mmp2-ccic.yaml     | 97 +++++++++++++++++++
+ 2 files changed, 97 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
+ create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
 deleted file mode 100644
-index c30783c0eca0..000000000000
---- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+index 7ec2c8c8a3b9..000000000000
+--- a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
 +++ /dev/null
-@@ -1,31 +0,0 @@
--* Marvell MMP I2C controller
+@@ -1,50 +0,0 @@
+-Marvell MMP2 camera host interface
 -
--Required properties :
+-Required properties:
+- - compatible: Should be "marvell,mmp2-ccic".
+- - reg: Register base and size.
+- - interrupts: The interrupt number.
+- - #clock-cells: Must be 0.
 -
-- - reg : Offset and length of the register set for the device
-- - compatible : should be "mrvl,mmp-twsi" where mmp is the name of a
--   compatible processor, e.g. pxa168, pxa910, mmp2, mmp3.
--   For the pxa2xx/pxa3xx, an additional node "mrvl,pxa-i2c" is required
--   as shown in the example below.
--   For the Armada 3700, the compatible should be "marvell,armada-3700-i2c".
+-Optional properties:
+- - clocks: Reference to the input clock as specified by
+-           Documentation/devicetree/bindings/clock/clock-bindings.txt.
+- - clock-names: Names of the clocks used; "axi" for the AXI bus interface,
+-                "func" for the peripheral clock and "phy" for the parallel
+-                video bus interface.
+- - clock-output-names: Optional clock source for sensors. Shall be "mclk".
 -
--Recommended properties :
+-Required subnodes:
+- - port: The parallel bus interface port with a single endpoint linked to
+-         the sensor's endpoint as described in
+-         Documentation/devicetree/bindings/media/video-interfaces.txt.
 -
-- - interrupts : the interrupt number
-- - mrvl,i2c-polling : Disable interrupt of i2c controller. Polling
--   status register of i2c controller instead.
-- - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
+-Required endpoint properties:
+- - bus-type: data bus type, <5> or <6> for Parallel or Bt.656 respectively
+- - pclk-sample: pixel clock polarity
+- - hsync-active: horizontal synchronization polarity (only required for
+-   parallel bus)
+- - vsync-active: vertical synchronization polarity (only required for
+-   parallel bus)
 -
--Examples:
--	twsi1: i2c@d4011000 {
--		compatible = "mrvl,mmp-twsi";
--		reg = <0xd4011000 0x1000>;
--		interrupts = <7>;
--		mrvl,i2c-fast-mode;
+-Example:
+-
+-	camera0: camera@d420a000 {
+-		compatible = "marvell,mmp2-ccic";
+-		reg = <0xd420a000 0x800>;
+-		interrupts = <42>;
+-		clocks = <&soc_clocks MMP2_CLK_CCIC0>;
+-		clock-names = "axi";
+-		#clock-cells = <0>;
+-		clock-output-names = "mclk";
+-
+-		port {
+-			camera0_0: endpoint {
+-				remote-endpoint = <&ov7670_0>;
+-                                bus-type = <5>;      /* Parallel */
+-                                hsync-active = <1>;  /* Active high */
+-                                vsync-active = <1>;  /* Active high */
+-                                pclk-sample = <0>;   /* Falling */
+-			};
+-		};
 -	};
--	
--	twsi2: i2c@d4025000 {
--		compatible = "mrvl,mmp-twsi";
--		reg = <0xd4025000 0x1000>;
--		interrupts = <58>;
--	};
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
 new file mode 100644
-index 000000000000..19c81972243d
+index 000000000000..fb399de668bb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/i2c/i2c-pxa.yaml#
++$id: http://devicetree.org/schemas/media/marvell,mmp2-ccic.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell MMP I2C controller bindings
++title: Marvell MMP2 camera host interface bindings
 +
 +maintainers:
-+  - Rob Herring <robh+dt@kernel.org>
-+
-+allOf:
-+  - $ref: /schemas/i2c/i2c-controller.yaml#
-+  - if:
-+      not:
-+        required:
-+          - mrvl,i2c-polling
-+    then:
-+        required:
-+          - interrupts
++  - Lubomir Rintel <lkundrak@v3.sk>
 +
 +properties:
++  $nodename:
++    pattern: '^camera@[a-f0-9]+$'
++
 +  compatible:
-+    enum:
-+      - mrvl,mmp-twsi
-+      - mrvl,pxa-i2c
-+      - marvell,armada-3700-i2c
++    const: marvell,mmp2-ccic
 +
 +  reg:
 +    maxItems: 1
@@ -147,41 +158,75 @@ index 000000000000..19c81972243d
 +  interrupts:
 +    maxItems: 1
 +
++  port:
++    type: object
++    additionalProperties: false
++
++    properties:
++      endpoint:
++        type: object
++        additionalProperties: false
++
++        # Properties described in
++        # Documentation/devicetree/bindings/media/video-interfaces.txt
++        properties:
++          remote-endpoint: true
++          hsync-active: true
++          vsync-active: true
++          pclk-sample: true
++          bus-type: true
++
++        required:
++          - remote-endpoint
++
++    required:
++      - endpoint
++
 +  clocks:
 +    minItems: 1
++    maxItems: 3
++    items:
++      - description: AXI bus interface clock
++      - description: Peripheral clock
++      - description: Parallel video bus interface clock
 +
-+  resets:
-+    minItems: 1
++  clock-names:
++    const: axi
 +
-+  mrvl,i2c-polling:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      Disable interrupt of i2c controller. Polling status register of i2c
-+      controller instead.
++  '#clock-cells':
++    const: 0
 +
-+  mrvl,i2c-fast-mode:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: Enable fast mode of i2c controller.
++  clock-output-names:
++    const: mclk
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+  - clocks
-+  - '#address-cells'
-+  - '#size-cells'
++  - port
 +
 +examples:
 +  - |
 +    #include <dt-bindings/clock/marvell,mmp2.h>
-+    i2c@d4011000 {
-+        compatible = "mrvl,mmp-twsi";
-+        reg = <0xd4011000 0x1000>;
-+        interrupts = <7>;
-+        clocks = <&soc_clocks MMP2_CLK_TWSI1>;
-+        mrvl,i2c-fast-mode;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++
++    camera@d420a000 {
++      compatible = "marvell,mmp2-ccic";
++      reg = <0xd420a000 0x800>;
++      interrupts = <42>;
++      clocks = <&soc_clocks MMP2_CLK_CCIC0>;
++      clock-names = "axi";
++      #clock-cells = <0>;
++      clock-output-names = "mclk";
++
++      port {
++        camera0_0: endpoint {
++          remote-endpoint = <&ov7670_0>;
++          bus-type = <5>;      /* Parallel */
++          hsync-active = <1>;  /* Active high */
++          vsync-active = <1>;  /* Active high */
++          pclk-sample = <0>;   /* Falling */
++        };
++      };
 +    };
 +
 +...
