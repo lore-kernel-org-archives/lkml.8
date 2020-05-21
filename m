@@ -2,66 +2,68 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FA7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7036FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D0E2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE2D2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AousQc5p"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZKStJW0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgEUOXL (ORCPT
+        id S1729771AbgEUOXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
+        Thu, 21 May 2020 10:23:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729617AbgEUOWh (ORCPT
+        with ESMTP id S1729572AbgEUOWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:22:37 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A206C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:37 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id o7so7364000qvm.15
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:37 -0700 (PDT)
+        Thu, 21 May 2020 10:22:31 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38090C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:30 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id y189so5500929ybc.14
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=PgDY4jBoWDmqeTjpUELiZyK5eYsaiohYt+3kMWavVjU=;
-        b=AousQc5p2kmc89WnzfvCyrVuxCJRXA1GX9peMVpbs3CCEiJXLW9LhAc/41YjKvLOX0
-         jp6CsLS0CiFep/5Lqi2moJ5QnqRUckBNecZohu/LX89mphkE7GcFwhV7zS4HyyHKO/KX
-         qDZZ4Kz/m+j87DQvf5myihJr/hOS49JlE4goViipXZchtzSBdLu6823bzHsdwCxXdwl8
-         swZLF0C40fQhb8VYYj/qhoyGoV/PdtF02Dz3OX42dO9eIpFRUVHHXhHUaVkth2hVlL9C
-         r1E+V7A7REeI5Nk+dMG/KQ78h4AiX6itTn0uV98hJjWrXskYNp50f2aMAhk1miUSwS9U
-         r6fw==
+        bh=Brlwg7pmXrMxrU6QOfUVrfzRnJMhki/06xHbbYhdDQQ=;
+        b=ZKStJW0oYpwxuBFtjn9/g4UjdwFx/2iHufjgLbOHsxJxbJyr2TjhwZtzb0Afdz6WrN
+         0vw8L2kGgfPZhJRhl9LDdTPw8LbYFNmm1FP7J50zUxoKk3Rtr5LEz3PMOZ+ocmSAa7E6
+         KEtQ56F4ZHI8D0pMjlZVocIjBpRRQFoXCfaPA9BAsv6mhMeUitonAGUzlv7tWz1d8r90
+         vQUxc+7GF+Ylq21bnYvlJxZCLiwM9n5WwcM91ePHuRgCabBnm0RuU8ag1pVZpgGybZ+d
+         9aWC1fus8SEts5QyAjsOcaeMwcvTWK3WMbprnugw+jUwpb6/KWQFYP1Sm1Irg4g2RP/q
+         Yb9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=PgDY4jBoWDmqeTjpUELiZyK5eYsaiohYt+3kMWavVjU=;
-        b=mtwMBje/300VNWQmzhrZoLPriAkgiG1lpKeJQOu3InOsYV+CNnwsd94SnF2WDdyHkh
-         j05TAxcLY8w4bTwkK6/7w9Nm5PR1fmURgdPA+6dOQHxLmSKMcRhg+1ZmGXwX2Ks76Nlo
-         WSJ5nBHS/JqabVedbP+9oMY6OzA+sjEpTjvnjV9ZuEQ/KqCtwHjFCf5w2/Wtcv9Q2jtS
-         b0lAmwX6q1JB1iCWiBfNvRaR/Q4548R8WyEeKvY5EIwoEKYhQLpZPdgwY4/tCL624378
-         moCrKMYBH44rPUe65XAgzMNhAu3MzzTZmL+15VXLdyQT8OhMg4NEh9tbWFhQqKIbj8LN
-         eOXQ==
-X-Gm-Message-State: AOAM5330TZL0bZBjYOj/szkdW8y1e4gjvtGWSm9+SU3rXVXHcMkCBCOV
-        Mt6ucsPKaP/Yo+K58EwPiN5oHamE/A==
-X-Google-Smtp-Source: ABdhPJwO7p4/RATu11945AzACzORSJUB2UbkD94tfByRbG2zgWyVR2y2XdGSRefi7hErmbeHCnNh2+7E+A==
-X-Received: by 2002:ad4:4690:: with SMTP id bq16mr9884082qvb.20.1590070956501;
- Thu, 21 May 2020 07:22:36 -0700 (PDT)
-Date:   Thu, 21 May 2020 16:20:43 +0200
+        bh=Brlwg7pmXrMxrU6QOfUVrfzRnJMhki/06xHbbYhdDQQ=;
+        b=HyagyWfVxOkjrl8e/GPMSUJX7jbQVXmw/kGEuw7zHvqSczi3ZipQgdbv5ZJcABQyp8
+         FplD+lc5+/KqIJS8oydnqVWkHFQcXzd2LoPpdOBtCKoczFyE3k0iSm8czJqS+LsUFSiS
+         QUTJMeP6xNzqb8ZKIo8l7Z1tKUv+Jh1mVFPxbAEp3Id4Ar6Fv2yfUaSUHK3tvO5Ixo9h
+         k98V1fqnu6r3FbHKAM8jxhQThLP0bjfkDNU9KfwwfPLDEdbitA35DYX41WF6biWE2iXF
+         gRZCti/1gE2Lt4m7Pmm1EnqvIlxd5pBn6RiwtmDRPOqd2gRePZqriSwRqboe2KHvcbmI
+         sFqg==
+X-Gm-Message-State: AOAM531CzVU5+sLKbyTnP4xQLOf3Jg79K6ZXGKhsRe+oXB8hqmHz0u6T
+        JNBgVOZ3BjEwMXQOx5miux6NSl3l5g==
+X-Google-Smtp-Source: ABdhPJyyhH3M4bnzK4CiqrTGzPDYD/I+5WGFOnenD+idnQQYn5gpVQY6sG8w/KDS3IwQAprBeWpoxc2Hxg==
+X-Received: by 2002:a25:3214:: with SMTP id y20mr5166798yby.362.1590070949416;
+ Thu, 21 May 2020 07:22:29 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:20:40 +0200
 In-Reply-To: <20200521142047.169334-1-elver@google.com>
-Message-Id: <20200521142047.169334-8-elver@google.com>
+Message-Id: <20200521142047.169334-5-elver@google.com>
 Mime-Version: 1.0
 References: <20200521142047.169334-1-elver@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH -tip v3 07/11] kcsan: Update Documentation to change supported compilers
+Subject: [PATCH -tip v3 04/11] kcsan: Pass option tsan-instrument-read-before-write
+ to Clang
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
@@ -75,46 +77,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document change in required compiler version for KCSAN, and remove the
-now redundant note about __no_kcsan and inlining problems with older
-compilers.
+Clang (unlike GCC) removes reads before writes with matching addresses
+in the same basic block. This is an optimization for TSAN, since writes
+will always cause conflict if the preceding read would have.
+
+However, for KCSAN we cannot rely on this option, because we apply
+several special rules to writes, in particular when the
+KCSAN_ASSUME_PLAIN_WRITES_ATOMIC option is selected. To avoid missing
+potential data races, pass the -tsan-instrument-read-before-write option
+to Clang if it is available [1].
+
+[1] https://github.com/llvm/llvm-project/commit/151ed6aa38a3ec6c01973b35f684586b6e1c0f7e
 
 Acked-by: Will Deacon <will@kernel.org>
 Signed-off-by: Marco Elver <elver@google.com>
 ---
-v3:
-* Add missing commit message.
----
- Documentation/dev-tools/kcsan.rst | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ scripts/Makefile.kcsan | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
-index f4b5766f12cc..ce4bbd918648 100644
---- a/Documentation/dev-tools/kcsan.rst
-+++ b/Documentation/dev-tools/kcsan.rst
-@@ -8,8 +8,7 @@ approach to detect races. KCSAN's primary purpose is to detect `data races`_.
- Usage
- -----
+diff --git a/scripts/Makefile.kcsan b/scripts/Makefile.kcsan
+index 75d2942b9437..bd4da1af5953 100644
+--- a/scripts/Makefile.kcsan
++++ b/scripts/Makefile.kcsan
+@@ -13,6 +13,7 @@ endif
+ # of some options does not break KCSAN nor causes false positive reports.
+ CFLAGS_KCSAN := -fsanitize=thread \
+ 	$(call cc-option,$(call cc-param,tsan-instrument-func-entry-exit=0) -fno-optimize-sibling-calls) \
++	$(call cc-option,$(call cc-param,tsan-instrument-read-before-write=1)) \
+ 	$(call cc-param,tsan-distinguish-volatile=1)
  
--KCSAN is supported in both GCC and Clang. With GCC it requires version 7.3.0 or
--later. With Clang it requires version 7.0.0 or later.
-+KCSAN requires Clang version 11 or later.
- 
- To enable KCSAN configure the kernel with::
- 
-@@ -121,12 +120,6 @@ the below options are available:
-     static __no_kcsan_or_inline void foo(void) {
-         ...
- 
--  Note: Older compiler versions (GCC < 9) also do not always honor the
--  ``__no_kcsan`` attribute on regular ``inline`` functions. If false positives
--  with these compilers cannot be tolerated, for small functions where
--  ``__always_inline`` would be appropriate, ``__no_kcsan_or_inline`` should be
--  preferred instead.
--
- * To disable data race detection for a particular compilation unit, add to the
-   ``Makefile``::
- 
+ endif # CONFIG_KCSAN
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
