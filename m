@@ -2,205 +2,113 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1584EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2EB12072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590065517;
-	bh=3whdey929ITHDSOj48APaWaZPIf8nFrimW/z3E2++ws=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=q6fSXC47b05MCkcOIklhibeRQRAyGNltqxsOXMWi2CiLLz8l52YSN5Q4ApY+jAWTf
-	 pJnavYqUGz+hsrH6MDlSjYshmFID8x233E1pf6tV5vF7RGcKtO4ypjHmctoFAzyeQR
-	 CJkwAoamTkeHcTljYXNEGYWf7AX/Zhe6SNe12kJU=
+	by mail.kernel.org (Postfix) with ESMTP id D7D262072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:52:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B6AX0Bme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgEUMv5 (ORCPT
+        id S1729404AbgEUMwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728133AbgEUMv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:51:56 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86CF72072C;
-        Thu, 21 May 2020 12:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590065515;
-        bh=3whdey929ITHDSOj48APaWaZPIf8nFrimW/z3E2++ws=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=T7tPWzxqLArS/d4/qNaDt8moCOiO7ihqXCe4ewcePF0yrfRnGCLCv7EudexAkBDDJ
-         POgYFHzRrm5Ig3Cf3s2BfkKi87Zq/6bhsv4wIsdKmsIred/hXo/2nRLb0lu4/4oIEs
-         uxG5lFbl0tJRmfjuWi3EEYCCdCdv9j5+OQ3rTR80=
-Message-ID: <d1e221be16e220009f1ca55d4b1eb6728462a279.camel@kernel.org>
-Subject: Re: [PATCH] ceph: show max caps in debugfs caps file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 21 May 2020 08:51:54 -0400
-In-Reply-To: <CAB9OAC0ry=tuYa-uWjGbnPGEpDCaQYhmN7bJFYvkZ1Uszo=Xpw@mail.gmail.com>
-References: <20200521093845.15101-1-gmayyyha@gmail.com>
-         <cad949df361b68a1c929f9053bce34d1892c8291.camel@kernel.org>
-         <CAB9OAC0ry=tuYa-uWjGbnPGEpDCaQYhmN7bJFYvkZ1Uszo=Xpw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Thu, 21 May 2020 08:52:53 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:43508 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729296AbgEUMww (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:52:52 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LCqQBM073519;
+        Thu, 21 May 2020 07:52:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590065547;
+        bh=HhdS0k1uvFyYcnFyKdAE7u2FGKBzACV32jA6ddp5U90=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=B6AX0BmewPmUOKJI5DJ3cIZn+mQtSxDXO9Avzp912H0DIeRRFYLdBCq5F1P0K/PX7
+         ZBFr4KNidcljuogeJKGXNVIzLhPqoT8rUaNRB9jQktX4F+5LUYW8hpz+7HKo+ea875
+         9xBCwVXNAZY05h0iL5muyCMfD/8jR9tAittuvtXQ=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LCqQkD089935
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 07:52:26 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 07:52:26 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 07:52:26 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LCqPlK071033;
+        Thu, 21 May 2020 07:52:26 -0500
+Date:   Thu, 21 May 2020 18:22:25 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     <masonccyang@mxic.com.tw>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v5 05/19] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200521125225.odxcdjkoy5lckrbx@ti.com>
+References: <20200519142642.24131-1-p.yadav@ti.com>
+ <20200519142642.24131-6-p.yadav@ti.com>
+ <OF6C754784.29BF11CD-ON4825856F.0032D83F-4825856F.0033A4F1@mxic.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <OF6C754784.29BF11CD-ON4825856F.0032D83F-4825856F.0033A4F1@mxic.com.tw>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-21 at 20:19 +0800, Yanhu Cao wrote:
-> On Thu, May 21, 2020 at 7:09 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > On Thu, 2020-05-21 at 17:38 +0800, Yanhu Cao wrote:
-> > >         before
-> > >         ------
-> > >         total           1026
-> > >         avail           1024
-> > >         used            2
-> > >         reserved        0
-> > >         min             1024
-> > > 
-> > >         after
-> > >         ------
-> > >         total           1026
-> > >         avail           1024
-> > >         used            2
-> > >         max             2048
-> > >         reserved        0
-> > >         min             1024
-> > > 
-> > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > ---
-> > >  fs/ceph/caps.c    | 6 ++++--
-> > >  fs/ceph/debugfs.c | 7 ++++---
-> > >  fs/ceph/super.h   | 2 +-
-> > >  3 files changed, 9 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> > > index 5f3aa4d607de..e2c759a2ef35 100644
-> > > --- a/fs/ceph/caps.c
-> > > +++ b/fs/ceph/caps.c
-> > > @@ -404,8 +404,8 @@ void ceph_put_cap(struct ceph_mds_client *mdsc, struct ceph_cap *cap)
-> > >  }
-> > > 
-> > >  void ceph_reservation_status(struct ceph_fs_client *fsc,
-> > > -                          int *total, int *avail, int *used, int *reserved,
-> > > -                          int *min)
-> > > +                          int *total, int *avail, int *used, int *max,
-> > > +                          int *reserved, int *min)
-> > >  {
-> > >       struct ceph_mds_client *mdsc = fsc->mdsc;
-> > > 
-> > > @@ -417,6 +417,8 @@ void ceph_reservation_status(struct ceph_fs_client *fsc,
-> > >               *avail = mdsc->caps_avail_count;
-> > >       if (used)
-> > >               *used = mdsc->caps_use_count;
-> > > +     if (max)
-> > > +             *max = mdsc->caps_use_max;
-> > 
-> > Can you lay out what value this will provide? I'm not convinced that
-> > this information is really that helpful:
-> > 
-> > mdsc->caps_use_max is just set to the value of the "caps_max" mount
-> > option, and that information is displayed in /proc/mounts if it's not
-> > set to the default.
-> > 
-> > What might be more interesting is to track the most recent "max_caps"
-> > value sent by the MDS (see the CEPH_SESSION_RECALL_STATE message
-> > handling). Tracking that would give us a more dynamic view of the
-> > current maximum requested by the MDS, which is often going to be less
-> > than what "caps_max" was set to at mount time.
+Hi,
+
+On 21/05/20 05:24PM, masonccyang@mxic.com.tw wrote:
 > 
-> Do you mean the 'mds_recall_max_caps'? which can be set by the MDS.
-> Clients use this value every time to trim caps.
-> 
-> There is an option mds_max_caps_per_client which is a soft limit,
-> which is determined by the behavior of the client.
-> and we recently encounter a warning '1 MDSs report oversized
-> cache'(ceph-v12.2.12: mds_cache_memory_limit=64G, used=100G),
-> Therefore, the effect is not good.
-> 
-> So we want to know whether the caps held by the client exceed caps_max
-> through the debugfs caps file (default or mount option).
+> Hi Pratyush,
 > 
 > 
+> > @@ -311,6 +313,7 @@ struct flash_info {
+> >                  * BP3 is bit 6 of status register.
+> >                  * Must be used with SPI_NOR_4BIT_BP.
+> >                  */
+> > +#define SPI_NOR_OCTAL_DTR_READ   BIT(19) /* Flash supports octal DTR 
+> Read. */
+> 
+> #define SPI_NOR_OCTAL_DTR_RDWR  BIT(19) /* Support Octal DTR Read & Write 
+> */
 
-Ok, I doubt this patch is going to tell you what you want to know then. 
-There are two limits involved here:
-
-1/ the limit set by the caps_max mount option for the client
-2/ a dynamic limit that is managed by the MDS issuing
-   CEPH_SESSION_RECALL_STATE messages to the clients (max_caps).
-
-This patch is only going to tell you about the first one, but the second
-one is more interesting to monitor on a long-term basis.
-
-When the mds exceeds its memory limits, it can issue
-CEPH_SESSION_RECALL_STATE messages to the clients, to tell them to
-reduce their own caches to a particular size. Currently we just take
-that value and feed it into ceph_trim_caps and forget about it.
-
-It would probably be useful though to keep track of the most recent
-value issued by the MDS, and print this value as min(mount_option_max,
-max_caps_from_mds). Bonus points if you can help untangle the confusing
-naming of all these values in the process.
-
-> > >       if (reserved)
-> > >               *reserved = mdsc->caps_reserve_count;
-> > >       if (min)
-> > > diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
-> > > index 481ac97b4d25..942004376588 100644
-> > > --- a/fs/ceph/debugfs.c
-> > > +++ b/fs/ceph/debugfs.c
-> > > @@ -138,16 +138,17 @@ static int caps_show(struct seq_file *s, void *p)
-> > >  {
-> > >       struct ceph_fs_client *fsc = s->private;
-> > >       struct ceph_mds_client *mdsc = fsc->mdsc;
-> > > -     int total, avail, used, reserved, min, i;
-> > > +     int total, avail, used, max, reserved, min, i;
-> > >       struct cap_wait *cw;
-> > > 
-> > > -     ceph_reservation_status(fsc, &total, &avail, &used, &reserved, &min);
-> > > +     ceph_reservation_status(fsc, &total, &avail, &used, &max,
-> > > +                             &reserved, &min);
-> > >       seq_printf(s, "total\t\t%d\n"
-> > >                  "avail\t\t%d\n"
-> > >                  "used\t\t%d\n"
-> > >                  "reserved\t%d\n"
-> > >                  "min\t\t%d\n\n",
-> > > -                total, avail, used, reserved, min);
-> > > +                total, avail, used, max, reserved, min);
-> > >       seq_printf(s, "ino                issued           implemented\n");
-> > >       seq_printf(s, "-----------------------------------------------\n");
-> > > 
-> > > diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-> > > index 60aac3aee055..79aa42d9336c 100644
-> > > --- a/fs/ceph/super.h
-> > > +++ b/fs/ceph/super.h
-> > > @@ -700,7 +700,7 @@ extern void ceph_unreserve_caps(struct ceph_mds_client *mdsc,
-> > >                              struct ceph_cap_reservation *ctx);
-> > >  extern void ceph_reservation_status(struct ceph_fs_client *client,
-> > >                                   int *total, int *avail, int *used,
-> > > -                                 int *reserved, int *min);
-> > > +                                 int *max, int *reserved, int *min);
-> > > 
-> > > 
-> > > 
-> > 
-> > --
-> > Jeff Layton <jlayton@kernel.org>
-> > 
+This flag only enables SNOR_HWCAPS_READ_8_8_8_DTR. It does not affect 
+SNOR_HWCAPS_PP_8_8_8_DTR. So it shouldn't be called RDWR.
+ 
+> more precisely and clearly ?
+> 
+> thanks,
+> Mason
+> 
 
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Regards,
+Pratyush Yadav
+Texas Instruments India
