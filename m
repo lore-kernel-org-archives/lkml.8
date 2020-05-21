@@ -2,129 +2,85 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5189720756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EYBHVED3"
+	by mail.kernel.org (Postfix) with ESMTP id 8C8E020756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgEUVVp (ORCPT
+        id S1730708AbgEUVVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:21:45 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:23104 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgEUVVn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:21:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590096102; x=1621632102;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=47pxhHidMagDsJh1CuDJK9uMkQt6nuknQvYrfb2Oqjw=;
-  b=EYBHVED3+TR7fMwzkl3pcfhrLTOGgAf5DGzOsAyVGTb/K31R4UUFgQEr
-   dqh4ot3vH4WeXAKpgXmnNRwDkgpdTCGlEgAK8xC8+vPSwjrSZV2grIZG0
-   R9m7hMytvUh4Ant+P1CeFL65AwFGFDH6Rz8arObaUCegWaWFpJEkJsNK8
-   UvtyUp0nSbcvaGh+2asVB8/t2mZu03IfS/2aM4Ckx1wA0BnEvc9NBtATG
-   +uLhQuqHvsgxoohv74qHy2MuTnLSasRKqMFZPRAK8AXfCnx+eCmpbJ5ZZ
-   /7pJLaZKm+JpZ5Z6AvU7e0fDJaB2oRoAYJNvo0OScp7BXFZWZWbinAR7T
-   w==;
-IronPort-SDR: iCMQPDyRebV5U/K3oKjjLG89gIKihHN5BWkP86pjR+C6a2KYK395LyIjP1NeKX2YoUoCI8XGcN
- IJmPMCE7C9vEU+5/DUh/3bWdQOCXCjC/iTg8sdob69YGJ87ZgcnPVRaULalsoEDWpFosUl5SNU
- /YnqmK02ZEVSz5oU+qJlo+d4Tf4B0txehGAuMH5mLuQ1XMHDOFUFPuANlhbJbxgKAb9z2XsBJJ
- CpGyCRWzWg++7iYOu+Be1dW77qEMUnJve5HHxPeWiI54fDb1srbDeKsy9tA6nZ7BAO64P+G7x9
- P4E=
-X-IronPort-AV: E=Sophos;i="5.73,419,1583218800"; 
-   d="scan'208";a="80597512"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 May 2020 14:21:38 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 21 May 2020 14:21:38 -0700
-Received: from soft-dev3.localdomain (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 21 May 2020 14:21:36 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <jiri@resnulli.us>, <ivecera@redhat.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
-        <nikolay@cumulusnetworks.com>, <andrew@lunn.ch>,
-        <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bridge@lists.linux-foundation.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH v2 3/3] bridge: mrp: Restore port state when deleting MRP instance
-Date:   Thu, 21 May 2020 23:19:07 +0000
-Message-ID: <20200521231907.3564679-4-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521231907.3564679-1-horatiu.vultur@microchip.com>
-References: <20200521231907.3564679-1-horatiu.vultur@microchip.com>
+        Thu, 21 May 2020 17:21:53 -0400
+Received: from sauhun.de ([88.99.104.3]:54094 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726814AbgEUVVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 17:21:51 -0400
+Received: from localhost (p5486ce13.dip0.t-ipconnect.de [84.134.206.19])
+        by pokefinder.org (Postfix) with ESMTPSA id DF02A2C1FCF;
+        Thu, 21 May 2020 23:21:49 +0200 (CEST)
+Date:   Thu, 21 May 2020 23:21:49 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Tali Perry <tali.perry1@gmail.com>, ofery@google.com,
+        brendanhiggins@google.com, avifishman70@gmail.com,
+        tmaimon77@gmail.com, kfting@nuvoton.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
+ driver
+Message-ID: <20200521212149.GB20150@ninjato>
+References: <20200521110910.45518-1-tali.perry1@gmail.com>
+ <20200521110910.45518-3-tali.perry1@gmail.com>
+ <20200521142340.GM1634618@smile.fi.intel.com>
+ <20200521143100.GA16812@ninjato>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
+Content-Disposition: inline
+In-Reply-To: <20200521143100.GA16812@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a MRP instance is deleted, then restore the port according to the
-bridge state. If the bridge is up then the ports will be in forwarding
-state otherwise will be in disabled state.
 
-Fixes: 9a9f26e8f7ea ("bridge: mrp: Connect MRP API with the switchdev API")
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- net/bridge/br_mrp.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+--7ZAtKRhVyVSsbBD2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
-index 854e31bf0151e..528d767eb026f 100644
---- a/net/bridge/br_mrp.c
-+++ b/net/bridge/br_mrp.c
-@@ -223,6 +223,7 @@ static void br_mrp_test_work_expired(struct work_struct *work)
- static void br_mrp_del_impl(struct net_bridge *br, struct br_mrp *mrp)
- {
- 	struct net_bridge_port *p;
-+	u8 state;
- 
- 	/* Stop sending MRP_Test frames */
- 	cancel_delayed_work_sync(&mrp->test_work);
-@@ -234,20 +235,24 @@ static void br_mrp_del_impl(struct net_bridge *br, struct br_mrp *mrp)
- 	p = rtnl_dereference(mrp->p_port);
- 	if (p) {
- 		spin_lock_bh(&br->lock);
--		p->state = BR_STATE_FORWARDING;
-+		state = netif_running(br->dev) ?
-+				BR_STATE_FORWARDING : BR_STATE_DISABLED;
-+		p->state = state;
- 		p->flags &= ~BR_MRP_AWARE;
- 		spin_unlock_bh(&br->lock);
--		br_mrp_port_switchdev_set_state(p, BR_STATE_FORWARDING);
-+		br_mrp_port_switchdev_set_state(p, state);
- 		rcu_assign_pointer(mrp->p_port, NULL);
- 	}
- 
- 	p = rtnl_dereference(mrp->s_port);
- 	if (p) {
- 		spin_lock_bh(&br->lock);
--		p->state = BR_STATE_FORWARDING;
-+		state = netif_running(br->dev) ?
-+				BR_STATE_FORWARDING : BR_STATE_DISABLED;
-+		p->state = state;
- 		p->flags &= ~BR_MRP_AWARE;
- 		spin_unlock_bh(&br->lock);
--		br_mrp_port_switchdev_set_state(p, BR_STATE_FORWARDING);
-+		br_mrp_port_switchdev_set_state(p, state);
- 		rcu_assign_pointer(mrp->s_port, NULL);
- 	}
- 
--- 
-2.26.2
 
+> From a glimpse, this looks good to go. I will have a close look later
+> today.
+
+Phew, this driver is huge. I won't finish my review today, but I am
+working on it and am maybe 2/3 through.
+
+
+--7ZAtKRhVyVSsbBD2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7G8OkACgkQFA3kzBSg
+KbYcCw/9H7oWUrWBWy5C49NVa1N+n9JHdtx5KFE40DwXAwm2mRCSuoMr1JP9Rq5M
+IFVgQp7Kk1mZ0jDR178dMQSYKuwDuFkOMDrewvQyOGPbGtn38FyInpJ6Te+uVyBS
+HNJMGTluuvvM6840KdZSkRYZ9ynptA/JwSfvKoBk9/UAL6W/4C1LR97a4AEb/JFT
+1To5HWdtArLvqSdfwvAaZyRghNLM2bjrp46NUFsfcXvxbZoiRZJBlmqBPJqkO4sw
+wyVdSW16rdxMrAa6sFlcCjnCCZWusEgf5hdUtm3dRqnELLYH87iLqZpdfpMyOA8E
+YJSLRpRBj2GUlmvG2S2Kd2H03UUyfspn9Qxe5T7MOpYDuoQQoOXrjH88kqTyEVty
+3pkQ0z/oo62JsfgfjJQW5cBxbRhIiwP/rvMai1eXo303chCA2ieP9cT1bPbw8BXY
+uJ3Xl2Botr7hgj7VywLHN6cp4S5m4iWJVbjUZfM2vAmSKTSKvBcIR1mVVzfZgWJD
+vE9PsxfHtt0EOAU8WE9iseFJPOvzK7tuuaibHaD6gVAaNLr0Nv4adcM1MwSCicum
+PqkDvXWuP+n6HdQ9+L/FA63xAtbT5SRQIFYhMBxots9hOYAUxK5gOnoHJYbAqB5R
+TY2mr5I/NekkgzmBbh0ZRWTRdCmgfQCXmzMku6xaM4D57Weuauk=
+=vjY8
+-----END PGP SIGNATURE-----
+
+--7ZAtKRhVyVSsbBD2--
