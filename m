@@ -2,85 +2,255 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E10DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE61C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F0820756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D492072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:13:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RHQYNUl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgEUMGl (ORCPT
+        id S1729166AbgEUMNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:06:41 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:12008 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727905AbgEUMGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:06:41 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app2 (Coremail) with SMTP id by_KCgCXlTC9bsZeH1KdAQ--.33787S4;
-        Thu, 21 May 2020 20:06:25 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Todor Tomov <todor.too@gmail.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: camss: ispif: Fix runtime PM imbalance on error
-Date:   Thu, 21 May 2020 20:06:21 +0800
-Message-Id: <20200521120621.2658-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgCXlTC9bsZeH1KdAQ--.33787S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWftFb_ur
-        s5XrWfXF4Ygr1vvr4Utw43urWIqaykZw18u3WftFWay3yjyFykGrykZr98ZrnxZw1jyF17
-        GFZ8ZFyfCr97ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6ryUMxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
-        uYvjfUeWlkDUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0HBlZdtOPdcwAEs4
+        Thu, 21 May 2020 08:13:19 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43770 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728043AbgEUMNT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:13:19 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LCD6EZ056524;
+        Thu, 21 May 2020 07:13:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590063186;
+        bh=3HENkJ17qOrSqmQfjcb0TayRhr8NN9GDpkzIoZgJ91U=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=RHQYNUl+9sRg1ln9eIDNEsqD5d2EnxEZKOrz5qLQrqGor3xQ8O4i0q/D/mTAaKfH+
+         Lkr4hNPkima7UCeUZIHmaTsr/cVVcAtao3CEyVbliseZePOwaluGyfbBNtbf2np0vC
+         3pJyZTZCACXc+Dmez6Ms2MzchJdzCf99v+ccBTwA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LCD6l7017067
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 07:13:06 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 07:13:06 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 07:13:06 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LCD3S4074070;
+        Thu, 21 May 2020 07:13:03 -0500
+Subject: Re: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200508130646.23939-1-kishon@ti.com>
+ <20200508130646.23939-5-kishon@ti.com>
+ <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
+ <162447e2-ac3b-9523-d404-130b93e0860e@ti.com>
+Message-ID: <73274652-4a18-e20b-36d1-73529241b9d7@ti.com>
+Date:   Thu, 21 May 2020 17:43:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <162447e2-ac3b-9523-d404-130b93e0860e@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Rob,
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/media/platform/qcom/camss/camss-ispif.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 5/21/2020 9:00 AM, Kishon Vijay Abraham I wrote:
+> Hi Rob,
+> 
+> On 5/19/2020 10:41 PM, Rob Herring wrote:
+>> On Fri, May 8, 2020 at 7:07 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>
+>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>>> property to configure the number of bits passed through from PCIe
+>>> address to internal address in Inbound Address Translation register.
+>>> This only used the NO MATCH BAR.
+>>>
+>>> However standard PCI dt-binding already defines "dma-ranges" to
+>>> describe the address ranges accessible by PCIe controller. Add support
+>>> in Cadence PCIe host driver to parse dma-ranges and configure the
+>>> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
+>>> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
+>>> the dma-ranges specifies a size larger than the maximum allowed, the
+>>> driver will split and configure the BARs.
+>>
+>> Would be useful to know what your dma-ranges contains now.
+>>
+>>
+>>> Legacy device tree binding compatibility is maintained by retaining
+>>> support for "cdns,no-bar-match-nbits".
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>  .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
+>>>  drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
+>>>  2 files changed, 141 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> index 6ecebb79057a..2485ecd8434d 100644
+>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> @@ -11,6 +11,12 @@
+>>>
+>>>  #include "pcie-cadence.h"
+>>>
+>>> +static u64 cdns_rp_bar_max_size[] = {
+>>> +       [RP_BAR0] = _ULL(128 * SZ_2G),
+>>> +       [RP_BAR1] = SZ_2G,
+>>> +       [RP_NO_BAR] = SZ_64T,
+>>> +};
+>>> +
+>>>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>>>                                int where)
+>>>  {
+>>> @@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>>         return 0;
+>>>  }
+>>>
+>>> +static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
+>>> +                                        enum cdns_pcie_rp_bar bar,
+>>> +                                        u64 cpu_addr, u32 aperture)
+>>> +{
+>>> +       struct cdns_pcie *pcie = &rc->pcie;
+>>> +       u32 addr0, addr1;
+>>> +
+>>> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
+>>> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+>>> +       addr1 = upper_32_bits(cpu_addr);
+>>> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
+>>> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
+>>> +}
+>>> +
+>>> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+>>> +                                    struct resource_entry *entry,
+>>> +                                    enum cdns_pcie_rp_bar *index)
+>>> +{
+>>> +       u64 cpu_addr, pci_addr, size, winsize;
+>>> +       struct cdns_pcie *pcie = &rc->pcie;
+>>> +       struct device *dev = pcie->dev;
+>>> +       enum cdns_pcie_rp_bar bar;
+>>> +       unsigned long flags;
+>>> +       u32 aperture;
+>>> +       u32 value;
+>>> +
+>>> +       cpu_addr = entry->res->start;
+>>> +       flags = entry->res->flags;
+>>> +       pci_addr = entry->res->start - entry->offset;
+>>> +       size = resource_size(entry->res);
+>>> +       bar = *index;
+>>> +
+>>> +       if (entry->offset) {
+>>> +               dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
+>>> +                       pci_addr, cpu_addr);
+>>
+>> Would be a bit more clear to say PCI addr must equal CPU addr.
+>>
+>>> +               return -EINVAL;
+>>> +       }
+>>> +
+>>> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
+>>> +       while (size > 0) {
+>>> +               if (bar > RP_NO_BAR) {
+>>> +                       dev_err(dev, "Failed to map inbound regions!\n");
+>>> +                       return -EINVAL;
+>>> +               }
+>>> +
+>>> +               winsize = size;
+>>> +               if (size > cdns_rp_bar_max_size[bar])
+>>> +                       winsize = cdns_rp_bar_max_size[bar];
+>>> +
+>>> +               aperture = ilog2(winsize);
+>>> +
+>>> +               cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
+>>> +
+>>> +               if (bar == RP_NO_BAR)
+>>> +                       break;
+>>> +
+>>> +               if (winsize + cpu_addr >= SZ_4G) {
+>>> +                       if (!(flags & IORESOURCE_PREFETCH))
+>>> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
+>>> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
+>>> +               } else {
+>>> +                       if (!(flags & IORESOURCE_PREFETCH))
+>>> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
+>>> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
+>>> +               }
+>>> +
+>>> +               value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
+>>> +
+>>> +               size -= winsize;
+>>> +               cpu_addr += winsize;
+>>> +               bar++;
+>>> +       }
+>>> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>>> +       *index = bar;
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+>>> +{
+>>> +       enum cdns_pcie_rp_bar bar = RP_BAR0;
+>>> +       struct cdns_pcie *pcie = &rc->pcie;
+>>> +       struct device *dev = pcie->dev;
+>>> +       struct device_node *np = dev->of_node;
+>>> +       struct pci_host_bridge *bridge;
+>>> +       struct resource_entry *entry;
+>>> +       u32 no_bar_nbits = 32;
+>>> +       int err;
+>>> +
+>>> +       bridge = pci_host_bridge_from_priv(rc);
+>>> +       if (!bridge)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       if (list_empty(&bridge->dma_ranges)) {
+>>> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
+>>> +                                    &no_bar_nbits);
+>>> +               cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
+>>> +               return 0;
+>>> +       }
+>>> +
+>>> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+>>> +               err = cdns_pcie_host_bar_config(rc, entry, &bar);
+>>
+>> Seems like this should have some better logic to pick which BAR to
+>> use. Something like find the biggest region and then find the smallest
+>> BAR that it fits in. Then get the next biggest...
+> 
+> Okay, I'll change this something like for each region, find the smallest BAR
+> that it fits in and if there is no BAR big enough to hold the region, split the
+> region to see if can be fitted using multiple BARs. I don't see the purpose of
+> finding the biggest region first since at all times we'll only use the smallest
+> BAR to fit.
 
-diff --git a/drivers/media/platform/qcom/camss/camss-ispif.c b/drivers/media/platform/qcom/camss/camss-ispif.c
-index 1f33b4eb198c..5722e971b184 100644
---- a/drivers/media/platform/qcom/camss/camss-ispif.c
-+++ b/drivers/media/platform/qcom/camss/camss-ispif.c
-@@ -344,8 +344,10 @@ static int ispif_set_power(struct v4l2_subdev *sd, int on)
- 		}
- 
- 		ret = pm_runtime_get_sync(dev);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_sync(dev);
- 			goto exit;
-+		}
- 
- 		ret = camss_enable_clocks(ispif->nclocks, ispif->clock, dev);
- 		if (ret < 0) {
--- 
-2.17.1
+Nevermind, I realized finding the biggest region is useful. I have sent a patch
+adding support for that.
 
+Thanks
+Kishon
