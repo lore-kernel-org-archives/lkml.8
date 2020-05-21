@@ -2,152 +2,109 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8F620826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590084426;
-	bh=teZtbZmdrWDP3PS3nLN++qQGlFNe0buLFWAQeiWZm6s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SlQ0Bqh1pmhNeLgaq7ZocIACINN6CxW6nXgMt6sqNyDconnwgxHzmApu+HdaeyXGa
-	 Y6UFGLSk76UM0lbMoIy3jJRFYMwmmZtvSMwGY3t8ul4oL+vubwe/0nt/FIFA2XD0A4
-	 J8+ojMwRnm8CNcAMQDOlkMkPgRouCGYK6qV1Pfx4=
+	by mail.kernel.org (Postfix) with ESMTP id 6E9D320823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYgLu8a3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgEUSHF (ORCPT
+        id S1729360AbgEUSIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgEUSHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:07:04 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1272207D3;
-        Thu, 21 May 2020 18:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590084424;
-        bh=teZtbZmdrWDP3PS3nLN++qQGlFNe0buLFWAQeiWZm6s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vFKWZSYhZBzvtcMgUQDcrinU/O7eVvrF6tkaeDLRNU9/5RRwYrADVdnn9e/ihCEFk
-         99U/P1D3ZoZShISVY4nCkuvqO/4Xk7PBT+oeAGvhw8u6C2ByFHeH4xe8c2bWbX8bB7
-         hC+4TudRnpptnrw5C3BI6AXjKbadNrOT2VDCFYO4=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Klaus Doth <kdlnx@doth.eu>, Rui Feng <rui_feng@realsil.com.cn>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 6/6] misc: rtsx: Remove unnecessary rts5249_set_aspm(), rts5260_set_aspm()
-Date:   Thu, 21 May 2020 13:05:45 -0500
-Message-Id: <20200521180545.1159896-7-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200521180545.1159896-1-helgaas@kernel.org>
-References: <20200521180545.1159896-1-helgaas@kernel.org>
+        Thu, 21 May 2020 14:08:43 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35911 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728455AbgEUSIn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:08:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590084521;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=CSwVUGMdm1SF/JKvVgrgcJwpikT7dcnsVODRPnenSIQ=;
+        b=AYgLu8a3LIGrhE/UKpmW9DRbHM8IIjjQq9JymmflmyJiz8ddiqBlkoLskv6Sb5AhrCiNaM
+        O0I5EQh8TL3cQ+y/bmWAdBD1Ev7gWcgBhn5uPabPEtoOHy/9vz5n+AiKWKQqGYvylvXfsJ
+        Mggcs+Br+9tvVq3uo2swVhoSNIdyQlA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-6iqFeG4lPaaJXGPxh9D-9g-1; Thu, 21 May 2020 14:08:39 -0400
+X-MC-Unique: 6iqFeG4lPaaJXGPxh9D-9g-1
+Received: by mail-wr1-f71.google.com with SMTP id i9so3264333wrx.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 11:08:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=CSwVUGMdm1SF/JKvVgrgcJwpikT7dcnsVODRPnenSIQ=;
+        b=RErvBDwwzJociRnaD684UI85Cn9ol0ciAIFIapa4xW/SVON+y3gRLZ8p7Y16w9Ek76
+         o4JGTJZ+mrRyN64pn3vLojQpTphL94GdAlG3hitfBEzRi+W6SOJF1LbX7Y0rUzYsnxIv
+         uu4afzCG2LydBAfzpYqOrSmWm4ex5vcJhGP3RekGFi3FASpe+BMbXvgWXASuChrZsm6M
+         QtbpHVx5gGb2MCJtPAvh2GSx6EwjOzkR6KfP3nabWnbz+FjPe47AhF8uQ6HtV1JjPuky
+         /+qX5AhBMZqrcBE9VOLKA33N4LsE6JGM1pqtWurVKJ2cHupQU5HBA94Phjx1YYwLHbed
+         RdFQ==
+X-Gm-Message-State: AOAM531127TbL+oSgUQu/v5GOJ68pf1O4Xy6l/3tt+V0nK7i/EVmdV2g
+        C4veIoxpDwDG/AG3rN41pGdym8vB9wjOw4Lx90RKd4tKgHc6SksaC5F9grnTrOAyiEV0E9DgVBY
+        oa0HI6sZZ/rkdakyZnlwl9Pcm
+X-Received: by 2002:a5d:6087:: with SMTP id w7mr10437013wrt.158.1590084518725;
+        Thu, 21 May 2020 11:08:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxZ9o08gBH7tx0yYBsN8onaJW/OLPfFqqFDCwm2ORoSsfevxSpfrqifuC4Sj9PcOKKkhR/Jqg==
+X-Received: by 2002:a5d:6087:: with SMTP id w7mr10436991wrt.158.1590084518323;
+        Thu, 21 May 2020 11:08:38 -0700 (PDT)
+Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
+        by smtp.gmail.com with ESMTPSA id j1sm7269700wrm.40.2020.05.21.11.08.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 11:08:37 -0700 (PDT)
+Date:   Thu, 21 May 2020 14:08:35 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jasowang@redhat.com, lkp@intel.com, mst@redhat.com,
+        yuehaibing@huawei.com
+Subject: [GIT PULL] vhost/vdpa: minor fixes
+Message-ID: <20200521140835-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+The following changes since commit 0b841030625cde5f784dd62aec72d6a766faae70:
 
-rts5249_set_aspm() and rts5260_set_aspm() do nothing more than the default
-rtsx_comm_set_aspm() does, so remove them and use the default.  No
-functional change intended.
+  vhost: vsock: kick send_pkt worker once device is started (2020-05-02 10:28:21 -0400)
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/misc/cardreader/rts5249.c | 15 ---------------
- drivers/misc/cardreader/rts5260.c | 13 -------------
- 2 files changed, 28 deletions(-)
+are available in the Git repository at:
 
-diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
-index d122608e9f79..6c6c9e95a29f 100644
---- a/drivers/misc/cardreader/rts5249.c
-+++ b/drivers/misc/cardreader/rts5249.c
-@@ -347,18 +347,6 @@ static int rtsx_base_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
- 	return rtsx_pci_send_cmd(pcr, 100);
- }
- 
--static void rts5249_set_aspm(struct rtsx_pcr *pcr, bool enable)
--{
--	if (pcr->aspm_enabled == enable)
--		return;
--
--	pcie_capability_clear_and_set_word(pcr->pci, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPMC,
--					   enable ? pcr->aspm_en : 0);
--
--	pcr->aspm_enabled = enable;
--}
--
- static const struct pcr_ops rts5249_pcr_ops = {
- 	.fetch_vendor_settings = rtsx_base_fetch_vendor_settings,
- 	.extra_init_hw = rts5249_extra_init_hw,
-@@ -371,7 +359,6 @@ static const struct pcr_ops rts5249_pcr_ops = {
- 	.card_power_off = rtsx_base_card_power_off,
- 	.switch_output_voltage = rtsx_base_switch_output_voltage,
- 	.force_power_down = rtsx_base_force_power_down,
--	.set_aspm = rts5249_set_aspm,
- };
- 
- /* SD Pull Control Enable:
-@@ -598,7 +585,6 @@ static const struct pcr_ops rts524a_pcr_ops = {
- 	.switch_output_voltage = rtsx_base_switch_output_voltage,
- 	.force_power_down = rtsx_base_force_power_down,
- 	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
--	.set_aspm = rts5249_set_aspm,
- };
- 
- void rts524a_init_params(struct rtsx_pcr *pcr)
-@@ -714,7 +700,6 @@ static const struct pcr_ops rts525a_pcr_ops = {
- 	.switch_output_voltage = rts525a_switch_output_voltage,
- 	.force_power_down = rtsx_base_force_power_down,
- 	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
--	.set_aspm = rts5249_set_aspm,
- };
- 
- void rts525a_init_params(struct rtsx_pcr *pcr)
-diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
-index 75fc67d78d7f..7a9dbb778e84 100644
---- a/drivers/misc/cardreader/rts5260.c
-+++ b/drivers/misc/cardreader/rts5260.c
-@@ -570,18 +570,6 @@ static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
- 	return 0;
- }
- 
--static void rts5260_set_aspm(struct rtsx_pcr *pcr, bool enable)
--{
--	if (pcr->aspm_enabled == enable)
--		return;
--
--	pcie_capability_clear_and_set_word(pcr->pci, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPMC,
--					   enable ?  pcr->aspm : 0);
--
--	pcr->aspm_enabled = enable;
--}
--
- static void rts5260_set_l1off_cfg_sub_d0(struct rtsx_pcr *pcr, int active)
- {
- 	struct rtsx_cr_option *option = &pcr->option;
-@@ -627,7 +615,6 @@ static const struct pcr_ops rts5260_pcr_ops = {
- 	.switch_output_voltage = rts5260_switch_output_voltage,
- 	.force_power_down = rtsx_base_force_power_down,
- 	.stop_cmd = rts5260_stop_cmd,
--	.set_aspm = rts5260_set_aspm,
- 	.set_l1off_cfg_sub_d0 = rts5260_set_l1off_cfg_sub_d0,
- 	.enable_ocp = rts5260_enable_ocp,
- 	.disable_ocp = rts5260_disable_ocp,
--- 
-2.25.1
+  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+
+for you to fetch changes up to 1b0be99f1a426d9f17ced95c4118c6641a2ff13d:
+
+  vhost: missing __user tags (2020-05-15 11:36:31 -0400)
+
+----------------------------------------------------------------
+virtio: build warning fixes
+
+Fix a couple of build warnings.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+----------------------------------------------------------------
+Michael S. Tsirkin (1):
+      vhost: missing __user tags
+
+YueHaibing (1):
+      vdpasim: remove unused variable 'ret'
+
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 15 +++++++--------
+ drivers/vhost/vhost.c            |  4 ++--
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
