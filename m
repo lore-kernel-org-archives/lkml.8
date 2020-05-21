@@ -2,143 +2,109 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE18C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A982070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA536207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:49:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZzVXBxj9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="r3GMoD4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbgEULtK (ORCPT
+        id S1729185AbgEULtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:49:10 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42853 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729002AbgEULtJ (ORCPT
+        Thu, 21 May 2020 07:49:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729002AbgEULtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:49:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590061747;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rD9nUKjKetPNgFJJMbeB1cCRB1Q4uLpwzABIKxJBRI4=;
-        b=ZzVXBxj95GDlsNsKaCoFaUGjoi4brsXfFHsZ/DiqcQ1wppNKlIAZn4fqCY7bM2NwH3D0NG
-        VsYVh+YWKenzjb29U75oWCoDKbNvYih9he0tBVaGmpIAGiGk2KfB797FWzX7d+qwT/38cV
-        k0ZG/q8BuZpG6bv/j6C33NqdB3lHo2c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-32XGUhsBM8yfJVKvXScDxA-1; Thu, 21 May 2020 07:49:03 -0400
-X-MC-Unique: 32XGUhsBM8yfJVKvXScDxA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8669C80183C;
-        Thu, 21 May 2020 11:49:02 +0000 (UTC)
-Received: from krava (unknown [10.40.195.217])
-        by smtp.corp.redhat.com (Postfix) with SMTP id BCCE75C1B0;
-        Thu, 21 May 2020 11:49:00 +0000 (UTC)
-Date:   Thu, 21 May 2020 13:48:59 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/9] perf stat: factor out event handling loop into a
- function
-Message-ID: <20200521114859.GU157452@krava>
-References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
- <dcb0b0f5-4c92-3027-a508-c3946c51f3d1@linux.intel.com>
- <20200520123850.GI157452@krava>
- <a03c1c18-6e87-692f-87a5-bd4124d56bc9@linux.intel.com>
+        Thu, 21 May 2020 07:49:39 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7350DC061A0E;
+        Thu, 21 May 2020 04:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=pZRZ5ai+2OEtzq7iw7AMDtLjRGWBjulfH6RpHnKhK00=; b=r3GMoD4mo5KpZ3a33cPalZhIJ6
+        NqskAuHX1uJmSveg1HMePMVCrybMUeAV+DoH/9HWxOhqbAOBilM3CUIAnePVHdyqaBJ1O9aJGs/Va
+        I+5dUzHGR0BzAu4AKhkQa5780w/72ufkhS9MjcioIj1oijRp8GRO2GZKxk4erk8uNzZJkHyQa3qTA
+        m6e7pG9hQ8gS6L8bl1qz3slRcRdLJDZbjIgpNcOCRYI/rWrs1016CCORlIcHnvvQGIsQTVZPZ0R2z
+        tuNRZxYTWiaL5964qrZNzbCfTCWWN6aoP2X09/GBo6fQcQG6lP6WXhvwSHUNKuNgKKDQ9iDc/FPKY
+        HOW6GVSA==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jbjhe-0007rJ-UX; Thu, 21 May 2020 12:49:34 +0100
+Date:   Thu, 21 May 2020 12:49:34 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Sergey Sergeev <adron@yapic.net>,
+        Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH] net: ethernet: stmmac: Enable interface clocks on probe for
+ IPQ806x
+Message-ID: <20200521114934.GY311@earth.li>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a03c1c18-6e87-692f-87a5-bd4124d56bc9@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:17:40PM +0300, Alexey Budankov wrote:
+The ipq806x_gmac_probe() function enables the PTP clock but not the
+appropriate interface clocks. This means that if the bootloader hasn't
+done so attempting to bring up the interface will fail with an error
+like:
 
-SNIP
+[   59.028131] ipq806x-gmac-dwmac 37600000.ethernet: Failed to reset the dma
+[   59.028196] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_hw_setup: DMA engine initialization failed
+[   59.034056] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_open: Hw setup failed
 
-> >> @@ -675,16 +708,9 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> >>  		perf_evlist__start_workload(evsel_list);
-> >>  		enable_counters();
-> >>  
-> >> -		if (interval || timeout) {
-> >> -			while (!waitpid(child_pid, &status, WNOHANG)) {
-> >> -				nanosleep(&ts, NULL);
-> >> -				if (timeout)
-> >> -					break;
-> >> -				process_interval();
-> >> -				if (interval_count && !(--times))
-> >> -					break;
-> >> -			}
-> >> -		}
-> >> +		if (interval || timeout)
-> >> +			handle_events(child_pid, &stat_config);
-> >> +
-> >>  		if (child_pid != -1) {
-> >>  			if (timeout)
-> >>  				kill(child_pid, SIGTERM);
-> >> @@ -701,18 +727,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-> >>  			psignal(WTERMSIG(status), argv[0]);
-> >>  	} else {
-> >>  		enable_counters();
-> >> -		while (!done) {
-> >> -			nanosleep(&ts, NULL);
-> >> -			if (!is_target_alive(&target, evsel_list->core.threads))
-> >> -				break;
-> >> -			if (timeout)
-> >> -				break;
-> >> -			if (interval) {
-> >> -				process_interval();
-> >> -				if (interval_count && !(--times))
-> >> -					break;
-> >> -			}
-> >> -		}
-> >> +		handle_events(-1, &stat_config);
-> > 
-> > this makes me worried.. I'm not sure if it's good idea
-> > to squash these 2 looops into one, because they are already
-> > complex as they are.. and one of you following patches is
-> > making it even more complex
-> 
-> Loops bodies are mostly identical. The only difference is in events
-> they wait for and API used for that. Adding of more events will
-> complicate further. The code is duplicated, thus needs refactoring.
-> If the following patch complicates lets organize the patch it into
-> several smaller functions.
+This patch, a slightly cleaned up version of one posted by Sergey
+Sergeev in:
 
-yea, that might help
+https://forum.openwrt.org/t/support-for-mikrotik-rb3011uias-rm/4064/257
 
-jirka
+correctly enables the clock; we have already configured the source just
+before this.
 
-> 
-> > 
-> > wouldn't it be better if you just add single call into
-> > each of them.. that would poll on your fd and process the
-> > commands if needed?
-> 
-> That's of course possible, but doesn't manage existing complexity
-> at the first place - __run_perf_stat().
-> 
-> Let's still have handle_events() as a general dispatcher and implement
-> handlers for different events as separate functions?
-> 
-> ~Alexey
-> 
+Tested on a MikroTik RB3011.
 
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+
+---
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 6ae13dc19510..02102c781a8c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -319,6 +319,19 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
+ 	/* Enable PTP clock */
+ 	regmap_read(gmac->nss_common, NSS_COMMON_CLK_GATE, &val);
+ 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
++	switch (gmac->phy_mode) {
++	case PHY_INTERFACE_MODE_RGMII:
++		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
++			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
++		break;
++	case PHY_INTERFACE_MODE_SGMII:
++		val |= NSS_COMMON_CLK_GATE_GMII_RX_EN(gmac->id) |
++				NSS_COMMON_CLK_GATE_GMII_TX_EN(gmac->id);
++		break;
++	default:
++		/* We don't get here; the switch above will have errored out */
++		unreachable();
++	}
+ 	regmap_write(gmac->nss_common, NSS_COMMON_CLK_GATE, val);
+ 
+ 	if (gmac->phy_mode == PHY_INTERFACE_MODE_SGMII) {
