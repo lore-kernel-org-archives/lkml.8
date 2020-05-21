@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EAEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B19207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B46720829
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:22:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ry3yF5S5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b48sod3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbgEUOWt (ORCPT
+        id S1729703AbgEUOWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53758 "EHLO
+        Thu, 21 May 2020 10:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729675AbgEUOWp (ORCPT
+        with ESMTP id S1729642AbgEUOWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:22:45 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C541CC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:43 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k15so5501096ybt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:43 -0700 (PDT)
+        Thu, 21 May 2020 10:22:46 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD5CC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:45 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id p31so7890322qte.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 07:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Lmm+/+h5qLO6fUy4Is9S48RQHv+8MyPjNoPxJUCaU88=;
-        b=Ry3yF5S5/LqKUOIQpGNAL925QQehVK9jMWjX8PjHCVoA0XPJgDubp7oFbY/CDc5ThC
-         WT+0+uecdaVL9mF34dHUHm62BJaTSsum+nyk/7BRGtaSIo0CfuUst2nRWxDLmPQI89QI
-         +EfLiybS+tHYvCsDoFRrWrqcBiBaOxZY8EJgGeUvWdYTvlvj3g2KPPhIeGWj4lC4HOj4
-         lS1EU36gsfoCEpfUFIUQa1ABmK44OnOuPq7qricwYQzsXdq73eqRwAVoEg4qfKY1Wszz
-         qJvzYI+sBeM+aHoOD9Zfk+rBSEa3mXkekb06m6J8UASfj8D12i0ddnbMSjnmjhXb7rT3
-         4iOA==
+        bh=LdWtxw6Vf28rU4H8/TQCyMB4NDqGcmdRqUmsRUyh1H4=;
+        b=b48sod3HbCojcAZmoxv0Z0aZMP9yUixrODaXzldAdz8FeUPtp47mQ7BCJ1KpfW0wAy
+         o8/CA7975VSpFt7cTFSzEvIneQ2GNaWzEG8WdSe9Mkq8bEG5WTc+tWWkmOYVN3a3z5Mm
+         oeGV84IjafE6HwfqdxVc9WmQSWP1Xehk8+vVnGO7cQwZmCp3ttd90Ex82sJ4t9AaLGK6
+         4VLzlR0QFv1lUEKx1YO3Ths1H9lVeUBfEMJvvtZtd+gKlBaMp+dPXIjYwzwzLR9FSdIq
+         ac84Wt6ORNKj0wKASSXbc5KDHIG7mRR5a6n3A4BhTDTRZoq8q4sRPEQEztp0wQn1W6q5
+         QxiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Lmm+/+h5qLO6fUy4Is9S48RQHv+8MyPjNoPxJUCaU88=;
-        b=T7X56ecJmf/62ukYyNN+V6jvZ6Ea6LDI3oE98A13lnqfRQu6iJK741dn2deOfa7cZ9
-         3jiD+7Zef3UZ3kNos+7DoYeGL+aqw37iypgOb+9X5djZLEmrPARm6a95miF4rbPfROnl
-         dZtRQhNnp/1wVvvT16q94/2zx91WMxEOoQexdvlZrcPbKWv8bY1yi7WuhqPBCpFQhX1w
-         ipIilopCOYZK1FdENFr6VHyV3cHrC/U/yZQ0g/48xMXQ1+7AXL4+U3y5p8yc0VTbq54Z
-         NWyx3hECzZWzgZpXgU5OTQJI1wajTGuvk+Y+1nO5SAfTrDYjquiBslIAXjyaokhUtgsZ
-         +t8A==
-X-Gm-Message-State: AOAM531GNBr9ASqxBPzKRXHaVEpANO10HD2i4tNLJ5tpHeg24+CtrTwP
-        0/6limN0BvqNbARTlL/2xLsfhq6bnw==
-X-Google-Smtp-Source: ABdhPJxCbmIqG74ZKiFWtHzlEGlfTFXRBt+iLEI339Mbm7r+Lf9EBVzuxRUJ8/F5xLLcF6uwV4CNs3EzoQ==
-X-Received: by 2002:a25:77d0:: with SMTP id s199mr14286095ybc.333.1590070963005;
- Thu, 21 May 2020 07:22:43 -0700 (PDT)
-Date:   Thu, 21 May 2020 16:20:46 +0200
+        bh=LdWtxw6Vf28rU4H8/TQCyMB4NDqGcmdRqUmsRUyh1H4=;
+        b=qzokkDybnoknNZP7LysaevtSJE812741xiWQ1X3aVgJr7cqwFSgCq7Qmf27CDoXg9X
+         XYWzLGPbrAMW4Ns/0bGj+nQ5z5/1q3YB6N7jV185NUgFJMjizphenAzhBS+OupHhwC+V
+         rGG7AgUysElAwOL8NCU60yRA5WvWcfgzQzTiXnbNm2xUr7WEHXnuoHf6xo4KsB++qsoK
+         3CX7WCC/dC5KdjoebDtf2O3KoiMnxREvgVWESpjiMHDaF6g/E1/l5lpKePoPAMMRuGQZ
+         pxGQPiYAsLZPB4YKKTAUO/l6EkerjLXky1V58XHcvHeQWJZi8MA/ADS1OhMNCbbfYXOw
+         1EEw==
+X-Gm-Message-State: AOAM533jhcfoODFz7VBgSaTBfmRfmE1RGxuf2LXtMaSzlnDnQdhLKzO7
+        Y5CFulebRuqOqHJw2pxsZJCqzpRXzw==
+X-Google-Smtp-Source: ABdhPJwZY+2KaSe7kVdMR9PNmwD17DVTAGherx2ae88TcoWo+ThCKZKIU3ko9V2RIzXipP7D74o0EPb8cg==
+X-Received: by 2002:ad4:4a8b:: with SMTP id h11mr10542388qvx.232.1590070965164;
+ Thu, 21 May 2020 07:22:45 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:20:47 +0200
 In-Reply-To: <20200521142047.169334-1-elver@google.com>
-Message-Id: <20200521142047.169334-11-elver@google.com>
+Message-Id: <20200521142047.169334-12-elver@google.com>
 Mime-Version: 1.0
 References: <20200521142047.169334-1-elver@google.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH -tip v3 10/11] compiler.h: Move function attributes to compiler_types.h
+Subject: [PATCH -tip v3 11/11] compiler_types.h, kasan: Use
+ __SANITIZE_ADDRESS__ instead of CONFIG_KASAN to decide inlining
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com
 Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
@@ -76,98 +76,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup and move the KASAN and KCSAN related function attributes to
-compiler_types.h, where the rest of the same kind live.
-
-No functional change intended.
+Like is done for KCSAN, for KASAN we should also use __always_inline in
+compilation units that have instrumentation disabled
+(KASAN_SANITIZE_foo.o := n). Adds common documentation for KASAN and
+KCSAN explaining the attribute.
 
 Acked-by: Will Deacon <will@kernel.org>
 Signed-off-by: Marco Elver <elver@google.com>
 ---
- include/linux/compiler.h       | 29 -----------------------------
- include/linux/compiler_types.h | 29 +++++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 29 deletions(-)
+ include/linux/compiler_types.h | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 379a5077e9c6..652aee025c89 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -250,35 +250,6 @@ do {									\
- 	__WRITE_ONCE(x, val);						\
- } while (0)
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index b190a12e7089..5faf68eae204 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -167,7 +167,14 @@ struct ftrace_likely_data {
+  */
+ #define noinline_for_stack noinline
  
 -#ifdef CONFIG_KASAN
--/*
-- * We can't declare function 'inline' because __no_sanitize_address conflicts
-- * with inlining. Attempt to inline it may cause a build failure.
-- *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
-- * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
-- */
--# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
--# define __no_sanitize_or_inline __no_kasan_or_inline
--#else
--# define __no_kasan_or_inline __always_inline
--#endif
--
--#define __no_kcsan __no_sanitize_thread
--#ifdef __SANITIZE_THREAD__
++/*
++ * Sanitizer helper attributes: Because using __always_inline and
++ * __no_sanitize_* conflict, provide helper attributes that will either expand
++ * to __no_sanitize_* in compilation units where instrumentation is enabled
++ * (__SANITIZE_*__), or __always_inline in compilation units without
++ * instrumentation (__SANITIZE_*__ undefined).
++ */
++#ifdef __SANITIZE_ADDRESS__
+ /*
+  * We can't declare function 'inline' because __no_sanitize_address conflicts
+  * with inlining. Attempt to inline it may cause a build failure.
+@@ -182,10 +189,6 @@ struct ftrace_likely_data {
+ 
+ #define __no_kcsan __no_sanitize_thread
+ #ifdef __SANITIZE_THREAD__
 -/*
 - * Rely on __SANITIZE_THREAD__ instead of CONFIG_KCSAN, to avoid not inlining in
 - * compilation units where instrumentation is disabled.
 - */
--# define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
--# define __no_sanitize_or_inline __no_kcsan_or_inline
--#else
--# define __no_kcsan_or_inline __always_inline
--#endif
--
--#ifndef __no_sanitize_or_inline
--#define __no_sanitize_or_inline __always_inline
--#endif
--
- static __no_sanitize_or_inline
- unsigned long __read_once_word_nocheck(const void *addr)
- {
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 6ed0612bc143..b190a12e7089 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -167,6 +167,35 @@ struct ftrace_likely_data {
-  */
- #define noinline_for_stack noinline
- 
-+#ifdef CONFIG_KASAN
-+/*
-+ * We can't declare function 'inline' because __no_sanitize_address conflicts
-+ * with inlining. Attempt to inline it may cause a build failure.
-+ *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
-+ * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
-+ */
-+# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
-+# define __no_sanitize_or_inline __no_kasan_or_inline
-+#else
-+# define __no_kasan_or_inline __always_inline
-+#endif
-+
-+#define __no_kcsan __no_sanitize_thread
-+#ifdef __SANITIZE_THREAD__
-+/*
-+ * Rely on __SANITIZE_THREAD__ instead of CONFIG_KCSAN, to avoid not inlining in
-+ * compilation units where instrumentation is disabled.
-+ */
-+# define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
-+# define __no_sanitize_or_inline __no_kcsan_or_inline
-+#else
-+# define __no_kcsan_or_inline __always_inline
-+#endif
-+
-+#ifndef __no_sanitize_or_inline
-+#define __no_sanitize_or_inline __always_inline
-+#endif
-+
- #endif /* __KERNEL__ */
- 
- #endif /* __ASSEMBLY__ */
+ # define __no_kcsan_or_inline __no_kcsan notrace __maybe_unused
+ # define __no_sanitize_or_inline __no_kcsan_or_inline
+ #else
 -- 
 2.26.2.761.g0e0b3e54be-goog
 
