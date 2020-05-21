@@ -2,95 +2,146 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4744CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07582C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1015F20721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c17tgnes"
+	by mail.kernel.org (Postfix) with ESMTP id CC99020721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590067091;
+	bh=ZJljZ6uIPIG3RU+2rBIuSdZVriwJ3EuVoA0eA8WQd10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HlsRUBWruG73r3O8e04NUkxlrMHpBPIad82mUIsTmUifhABAHtjvtAZILIH01s4W3
+	 ctd/Pxs0De6JnDdQjUKYd710rcQkw7Vgw/fHkPUpKlV9rCfX+H9KwVCKRu+hp+RvY6
+	 Ss6IdNopuR6RkiKGgpkd3le8vezL/rmeyE7tBHeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgEUNJ4 (ORCPT
+        id S1729352AbgEUNSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:09:56 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37599 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728208AbgEUNJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:09:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590066594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=0tHBgCvyZltVrN0JriCw+VgbLMlwZL8WCxbksXie0bo=;
-        b=c17tgnesnqVBVo50K7DBxwy6wsjHJhVR71tC44KcRGr3RCDp24EKS9D5LcO+DcodEixby4
-        Mn1giVkPiGhJ9eb4IbpgS8hcssoUGehMqjSF8PK9pjTR7Lk6G2aj47imFmjgklizXTCU9H
-        K2Lir1TVLHSR8VMEZ9n/pCLzBqe4wz8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-cH8H9hgPP622hPLjK9Dncg-1; Thu, 21 May 2020 09:09:52 -0400
-X-MC-Unique: cH8H9hgPP622hPLjK9Dncg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 21 May 2020 09:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727846AbgEUNSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 09:18:10 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5A078014D4;
-        Thu, 21 May 2020 13:09:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CA365106222B;
-        Thu, 21 May 2020 13:09:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] Adjust comments in linux/fs_parser.h
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 21 May 2020 14:09:49 +0100
-Message-ID: <159006658996.105720.14023071485286413229.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
+        by mail.kernel.org (Postfix) with ESMTPSA id B8A6B206B6;
+        Thu, 21 May 2020 13:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590067089;
+        bh=ZJljZ6uIPIG3RU+2rBIuSdZVriwJ3EuVoA0eA8WQd10=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MM5SHFs056yrBmf0QOycZMj8E/xE+B4HWHcEsMq10W3tp4EBHP8mQPZ+qgRSmg8xa
+         l+W2c5utrU+hhQAspz1oBoWsKHc3ZPN9Ns+pRn6Nz+ig4QNZSkoHBTYrr2ZIKRpX82
+         zERKldt5Wuj4aOzId/i3A0kTvsLu28NuEq8c9a0I=
+Date:   Thu, 21 May 2020 14:18:04 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        peterz@infradead.org, clang-built-linux@googlegroups.com,
+        bp@alien8.de
+Subject: Re: [PATCH -tip v2 03/11] kcsan: Support distinguishing volatile
+ accesses
+Message-ID: <20200521131803.GA6608@willie-the-truck>
+References: <20200521110854.114437-1-elver@google.com>
+ <20200521110854.114437-4-elver@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521110854.114437-4-elver@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix some comments in linux/fs_parser.h that have not kept up with the
-changes.
+On Thu, May 21, 2020 at 01:08:46PM +0200, Marco Elver wrote:
+> In the kernel, volatile is used in various concurrent context, whether
+> in low-level synchronization primitives or for legacy reasons. If
+> supported by the compiler, we will assume that aligned volatile accesses
+> up to sizeof(long long) (matching compiletime_assert_rwonce_type()) are
+> atomic.
+> 
+> Recent versions Clang [1] (GCC tentative [2]) can instrument volatile
+> accesses differently. Add the option (required) to enable the
+> instrumentation, and provide the necessary runtime functions. None of
+> the updated compilers are widely available yet (Clang 11 will be the
+> first release to support the feature).
+> 
+> [1] https://github.com/llvm/llvm-project/commit/5a2c31116f412c3b6888be361137efd705e05814
+> [2] https://gcc.gnu.org/pipermail/gcc-patches/2020-April/544452.html
+> 
+> This patch allows removing any explicit checks in primitives such as
+> READ_ONCE() and WRITE_ONCE().
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> v2:
+> * Reword Makefile comment.
+> ---
+>  kernel/kcsan/core.c    | 43 ++++++++++++++++++++++++++++++++++++++++++
+>  scripts/Makefile.kcsan |  5 ++++-
+>  2 files changed, 47 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+> index a73a66cf79df..15f67949d11e 100644
+> --- a/kernel/kcsan/core.c
+> +++ b/kernel/kcsan/core.c
+> @@ -789,6 +789,49 @@ void __tsan_write_range(void *ptr, size_t size)
+>  }
+>  EXPORT_SYMBOL(__tsan_write_range);
+>  
+> +/*
+> + * Use of explicit volatile is generally disallowed [1], however, volatile is
+> + * still used in various concurrent context, whether in low-level
+> + * synchronization primitives or for legacy reasons.
+> + * [1] https://lwn.net/Articles/233479/
+> + *
+> + * We only consider volatile accesses atomic if they are aligned and would pass
+> + * the size-check of compiletime_assert_rwonce_type().
+> + */
+> +#define DEFINE_TSAN_VOLATILE_READ_WRITE(size)                                  \
+> +	void __tsan_volatile_read##size(void *ptr)                             \
+> +	{                                                                      \
+> +		const bool is_atomic = size <= sizeof(long long) &&            \
+> +				       IS_ALIGNED((unsigned long)ptr, size);   \
+> +		if (IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS) && is_atomic)      \
+> +			return;                                                \
+> +		check_access(ptr, size, is_atomic ? KCSAN_ACCESS_ATOMIC : 0);  \
+> +	}                                                                      \
+> +	EXPORT_SYMBOL(__tsan_volatile_read##size);                             \
+> +	void __tsan_unaligned_volatile_read##size(void *ptr)                   \
+> +		__alias(__tsan_volatile_read##size);                           \
+> +	EXPORT_SYMBOL(__tsan_unaligned_volatile_read##size);                   \
+> +	void __tsan_volatile_write##size(void *ptr)                            \
+> +	{                                                                      \
+> +		const bool is_atomic = size <= sizeof(long long) &&            \
+> +				       IS_ALIGNED((unsigned long)ptr, size);   \
+> +		if (IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS) && is_atomic)      \
+> +			return;                                                \
+> +		check_access(ptr, size,                                        \
+> +			     KCSAN_ACCESS_WRITE |                              \
+> +				     (is_atomic ? KCSAN_ACCESS_ATOMIC : 0));   \
+> +	}                                                                      \
+> +	EXPORT_SYMBOL(__tsan_volatile_write##size);                            \
+> +	void __tsan_unaligned_volatile_write##size(void *ptr)                  \
+> +		__alias(__tsan_volatile_write##size);                          \
+> +	EXPORT_SYMBOL(__tsan_unaligned_volatile_write##size)
+> +
+> +DEFINE_TSAN_VOLATILE_READ_WRITE(1);
+> +DEFINE_TSAN_VOLATILE_READ_WRITE(2);
+> +DEFINE_TSAN_VOLATILE_READ_WRITE(4);
+> +DEFINE_TSAN_VOLATILE_READ_WRITE(8);
+> +DEFINE_TSAN_VOLATILE_READ_WRITE(16);
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Having a 16-byte case seems a bit weird to me, but I guess clang needs this
+for some reason?
 
- include/linux/fs_parser.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/fs_parser.h b/include/linux/fs_parser.h
-index 2eab6d5f6736..784f4bfa2aa2 100644
---- a/include/linux/fs_parser.h
-+++ b/include/linux/fs_parser.h
-@@ -53,10 +53,10 @@ struct fs_parameter_spec {
- struct fs_parse_result {
- 	bool			negated;	/* T if param was "noxxx" */
- 	union {
--		bool		boolean;	/* For spec_bool */
--		int		int_32;		/* For spec_s32/spec_enum */
--		unsigned int	uint_32;	/* For spec_u32{,_octal,_hex}/spec_enum */
--		u64		uint_64;	/* For spec_u64 */
-+		bool		boolean;	/* For fs_param_is_bool */
-+		int		int_32;		/* For fs_param_is_{s32,enum} */
-+		unsigned int	uint_32;	/* For fs_param_is_{u32*,enum,fd) */
-+		u64		uint_64;	/* For fs_param_is_u64 */
- 	};
- };
- 
-
-
+Will
