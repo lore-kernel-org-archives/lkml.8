@@ -2,138 +2,92 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF48C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20BE206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CE22206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgEUCPX (ORCPT
+        id S1727914AbgEUCSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:15:23 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:46672 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726833AbgEUCPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:15:22 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP94s5MVeMjc3AA--.590S2;
-        Thu, 21 May 2020 10:15:08 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH] MIPS: DTS: Only build subdir of current platform
-Date:   Thu, 21 May 2020 10:15:06 +0800
-Message-Id: <1590027306-2137-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxP94s5MVeMjc3AA--.590S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF45ZryUuw48KF18GF1UAwb_yoW5ZF1Dp3
-        y3Aa1DWFWxWF1Syr1fAryDWr93Aw45CFZ7uFs8Gr1UAFZ29a4jyr1ftrsayr1UZr9Yya1S
-        grWfWrW7AF1vyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-        Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUseOJUUU
-        UU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 20 May 2020 22:18:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25849 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726833AbgEUCSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 22:18:32 -0400
+IronPort-SDR: Gxpwy1yShcWG3uUExjEyq0yJFR1jNXJjHChXem5wDy91sFBB1tfTH4AnjobmrFWqOZIfC1gkUE
+ Sig3448RAUqg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 19:18:31 -0700
+IronPort-SDR: ej73RVr5VXW1YFsQO2RnXxS2Gz6PpL1WryA3R0i9OZOzz47haLbA6uGuM5NSc3gblLeTdBhlYP
+ ofEnlu51jN9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
+   d="scan'208";a="300642970"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 20 May 2020 19:18:31 -0700
+Received: from [10.214.148.54] (vramuthx-MOBL1.gar.corp.intel.com [10.214.148.54])
+        by linux.intel.com (Postfix) with ESMTP id 99B9E580613;
+        Wed, 20 May 2020 19:18:28 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, vigneshr@ti.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200520124329.GF4823@sirena.org.uk>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
+Date:   Thu, 21 May 2020 10:18:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200520124329.GF4823@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add config check in Makefile to only build the subdir of current platform.
+Hi Mark,
 
-E.g. without this patch:
+  Thank you for the review comments...
 
-  AR      arch/mips/built-in.a
-  AR      arch/mips/boot/dts/brcm/built-in.a
-  AR      arch/mips/boot/dts/cavium-octeon/built-in.a
-  AR      arch/mips/boot/dts/img/built-in.a
-  AR      arch/mips/boot/dts/ingenic/built-in.a
-  AR      arch/mips/boot/dts/lantiq/built-in.a
-  DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
-  DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
-  AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
-  DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
-  DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
-  AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
-  AR      arch/mips/boot/dts/loongson/built-in.a
-  AR      arch/mips/boot/dts/mscc/built-in.a
-  AR      arch/mips/boot/dts/mti/built-in.a
-  AR      arch/mips/boot/dts/netlogic/built-in.a
-  AR      arch/mips/boot/dts/ni/built-in.a
-  AR      arch/mips/boot/dts/pic32/built-in.a
-  AR      arch/mips/boot/dts/qca/built-in.a
-  AR      arch/mips/boot/dts/ralink/built-in.a
-  AR      arch/mips/boot/dts/xilfpga/built-in.a
-  AR      arch/mips/boot/dts/built-in.a
+On 20/5/2020 8:43 pm, Mark Brown wrote:
+> On Wed, May 20, 2020 at 08:36:12PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add dt-bindings documentation for Cadence-QSPI controller to support
+>> spi based flash memories.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+>>   .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 133 +++++++++++++++++++++
+> 
+> The changelog says this is adding a new binding but the actual change is
+> mostly a conversion to YAML.  Please split the additions out into a
+> separate change, ideally doing that before the conversion since there is
+> a backlog on review of YAML conversions.
 
-With this patch:
+Initially was sending the only YAML file alone, then reviewers suggest 
+to me do this way so I did, next by split the patches like below...
 
-  AR      arch/mips/built-in.a
-  DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
-  DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
-  AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
-  DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
-  DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
-  AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
-  AR      arch/mips/boot/dts/loongson/built-in.a
-  AR      arch/mips/boot/dts/built-in.a
+1. remove the cadence-quadspi.txt (patch1)
+2. convert txt to YAML (patch2)
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/mips/boot/dts/Makefile | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index d429a69..dce32d1 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -1,17 +1,17 @@
- # SPDX-License-Identifier: GPL-2.0
--subdir-y	+= brcm
--subdir-y	+= cavium-octeon
--subdir-y	+= img
--subdir-y	+= ingenic
--subdir-y	+= lantiq
--subdir-y	+= loongson
--subdir-y	+= mscc
--subdir-y	+= mti
--subdir-y	+= netlogic
--subdir-y	+= ni
--subdir-y	+= pic32
--subdir-y	+= qca
--subdir-y	+= ralink
--subdir-y	+= xilfpga
-+subdir-$(CONFIG_BMIPS_GENERIC)		+= brcm
-+subdir-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon
-+subdir-$(CONFIG_MACH_PISTACHIO)		+= img
-+subdir-$(CONFIG_MACH_INGENIC)		+= ingenic
-+subdir-$(CONFIG_LANTIQ)			+= lantiq
-+subdir-$(CONFIG_MACH_LOONGSON64)	+= loongson
-+subdir-$(CONFIG_MSCC_OCELOT)		+= mscc
-+subdir-$(CONFIG_MIPS_MALTA)		+= mti
-+subdir-$(CONFIG_NLM_XLP_BOARD)		+= netlogic
-+subdir-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= ni
-+subdir-$(CONFIG_MACH_PIC32)		+= pic32
-+subdir-$(CONFIG_ATH79)			+= qca
-+subdir-$(CONFIG_RALINK)			+= ralink
-+subdir-$(CONFIG_FIT_IMAGE_FDT_XILFPGA)	+= xilfpga
- 
- obj-$(CONFIG_BUILTIN_DTB)	:= $(addsuffix /, $(subdir-y))
--- 
-2.1.0
-
+Regards
+Vadivel
+> 
