@@ -2,209 +2,113 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F6BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C82C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E60AA2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:39:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="nS1wPFI9"
+	by mail.kernel.org (Postfix) with ESMTP id C539B20826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590079148;
+	bh=d1LNfflc2xncKAMYKDK3/akbZicrB/VqCYFFRCJWhn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qbsse4eMbZE6VU3ugCdLldVizfCGcGi52LFMCulWBbg07PuhNdLClIGxPU2Lu/ZIK
+	 GGM4Y4z9eMS5IiJ3qi4ga/MMMkkSllQexkCKAU54fI/QXSn5h22Tu4HpAppnMKYE9G
+	 CHuUn2BB2L4MfRNSK2ol4g+eHyAzz94MiN3ulcYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgEUQjA (ORCPT
+        id S1729819AbgEUQjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 12:39:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgEUQi7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 12:38:59 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73709C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 09:38:58 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id i5so7770397qkl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 09:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=o36CaISTnvijJ/qQX5jxoX3WQi5azGFV4Q25YhraOzw=;
-        b=nS1wPFI9dyRqaRovfmrrquMIh4Z2CSdLmfaWzOWxKk91CazeUR302QfgGYYGXZMwb/
-         EgEwdvrWxnrjJM8YvZlDPzx+jiDY+07Td9ZjHSL0y8tZsSENL+FS3n3p6T1nW1dh6Yij
-         fPQ3I88P3C7fCbp2CsEyy0jEzgeZ68+A2nQEO+qDmVSz4FV5ZOnipJeATfD2tXDsYwRL
-         bJ4hwDpODF5FaPbGzVE7Nh0fsqdOxuurNVONAu99Zyy/gHNqnwYH4S/eKXJLFHwfUVlZ
-         2kHp5+EZ3xOnx04v/HtKKMP7CkzWzrW3Qn8i4KufQpqK6FXeoMr0iBxiQx+XuH+g4sU4
-         D3kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=o36CaISTnvijJ/qQX5jxoX3WQi5azGFV4Q25YhraOzw=;
-        b=LmMEgEojJxCWw1Z7s2fPcf5sS86d9T5e1PmmPAtcy9k2Bv7vYFxx11q6yHMvjym2KE
-         SCMxKSW5sE/4y9B6HYbNRpNK39QrOXY0LBHpbhXF4IXFDMLbWJyOXxiprf25osTA6HsV
-         65mIdGKCJG2jOGhq6ZhQ1yxWKVEKQDB+X4iXs71AuYNRoLmV8pjFIYYOkMqFTk26Ch+e
-         IXeTBVkiDHIBtRL6Ol1r6ve/rGgfOuLE4tlec4Lb863PK1z3DcA4U6NV37wAYKk+xxN5
-         m9pdjsIOIxU6YUni/KArFyzg7585V+Cy0MXUqMdDdf7ZFcDidi7MU/QxcCjAhFoaswfg
-         4GHQ==
-X-Gm-Message-State: AOAM532FrLOIbZBhSStcJALjtzaPJG4GynbJLMbfln4pKjS27WFOXQsM
-        TEevDN0kU5VgMi4TFqVjvvNcMA==
-X-Google-Smtp-Source: ABdhPJwspUoxlK0fPewnjAFSjyPyUwRJwYMFPkQ+44BvvYhaT7jNq92QbXbTWrUK5dVlg7t/WlDjQQ==
-X-Received: by 2002:a05:620a:56f:: with SMTP id p15mr9939989qkp.366.1590079137491;
-        Thu, 21 May 2020 09:38:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:4708])
-        by smtp.gmail.com with ESMTPSA id o3sm5412925qtt.56.2020.05.21.09.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 09:38:56 -0700 (PDT)
-Date:   Thu, 21 May 2020 12:38:33 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200521163833.GA813446@cmpxchg.org>
-References: <20200520143712.GA749486@chrisdown.name>
- <20200520160756.GE6462@dhcp22.suse.cz>
- <20200520165131.GB630613@cmpxchg.org>
- <20200520170430.GG6462@dhcp22.suse.cz>
- <20200520175135.GA793901@cmpxchg.org>
- <20200521073245.GI6462@dhcp22.suse.cz>
- <20200521135152.GA810429@cmpxchg.org>
- <20200521143515.GU6462@dhcp22.suse.cz>
+        Thu, 21 May 2020 12:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726938AbgEUQjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 12:39:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA3982072C;
+        Thu, 21 May 2020 16:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590079147;
+        bh=d1LNfflc2xncKAMYKDK3/akbZicrB/VqCYFFRCJWhn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TE5HNonA6//A6to+71Mf+4I7jptBHdR05iodEwYKCIWVdc0qq3g/x+EOxeXQ8DrEP
+         /mGpITDcHqQPLlUl9rf1vWjb33vXv6GutJWPi92KiOqkbRqT0b67zmpYwWMB9LxTvL
+         /MidcaVFaealb/QkwqNgBOl0W3PpLK1WswNHr/dU=
+Date:   Thu, 21 May 2020 17:39:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
+Message-ID: <20200521163904.GF4770@sirena.org.uk>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
+ <20200521121228.aqplh6eftylnys3p@mobilestation>
+ <20200521155143.GE4770@sirena.org.uk>
+ <20200521155804.qgaaqc23h2nll7r3@mobilestation>
+ <CAHp75VcY9HG3=wft9VFWKJD9PG6TiSbmOyjgYZyue+z3PW_eCQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TU+u6i6jrDPzmlWF"
 Content-Disposition: inline
-In-Reply-To: <20200521143515.GU6462@dhcp22.suse.cz>
+In-Reply-To: <CAHp75VcY9HG3=wft9VFWKJD9PG6TiSbmOyjgYZyue+z3PW_eCQ@mail.gmail.com>
+X-Cookie: Keep your laws off my body!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 04:35:15PM +0200, Michal Hocko wrote:
-> On Thu 21-05-20 09:51:52, Johannes Weiner wrote:
-> > On Thu, May 21, 2020 at 09:32:45AM +0200, Michal Hocko wrote:
-> [...]
-> > > I am not saying the looping over try_to_free_pages is wrong. I do care
-> > > about the final reclaim target. That shouldn't be arbitrary. We have
-> > > established a target which is proportional to the requested amount of
-> > > memory. And there is a good reason for that. If any task tries to
-> > > reclaim down to the high limit then this might lead to a large
-> > > unfairness when heavy producers piggy back on the active reclaimer(s).
-> > 
-> > Why is that different than any other form of reclaim?
-> 
-> Because the high limit reclaim is a best effort rather than must to
-> either get over reclaim watermarks and continue allocation or meet the
-> hard limit requirement to continue.
 
-It's not best effort. It's a must-meet or get put to sleep. You are
-mistaken about what memory.high is.
+--TU+u6i6jrDPzmlWF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> In an ideal world even the global resp. hard limit reclaim should
-> consider fairness. They don't because that is easier but that sucks. I
-> have been involved in debugging countless of issues where direct reclaim
-> was taking too long because of the unfairness. Users simply see that as
-> bug and I am not surprised.
+On Thu, May 21, 2020 at 07:02:32PM +0300, Andy Shevchenko wrote:
+> On Thu, May 21, 2020 at 6:58 PM Serge Semin
 
-Then there should be a generic fix to this problem (like the page
-capturing during reclaim).
+> > Let's leave the patch as is.
 
-You're bringing anecdotal evidence that reclaim has a generic problem,
-which nobody has seriously tried to fix in recent times, and then ask
-people to hack around it in a patch that only brings the behavior for
-this specific instance in line with everybody else.
+> Mark, should I send a partial revert afterwards in this case?
+> I'm not fully satisfied with it.
 
-I'm sorry, but this IS a black and white issue, and I think you're out
-of line here. If you think reclaim fairness is a problem, it should be
-on you to provide concrete data for that and propose changes on how we
-do reclaim, instead of asking to hack around it in one callsite -
-thereby introducing inconsistencies to userspace between different
-limits, as well as inconsistencies and complications for the kernel
-developers that actually work on this code (take a look at git blame).
+That might be a suitable way to keep the peace here.  You are clearly
+both much more passionate about this choice than I am.
 
-> > > I wouldn't mind to loop over try_to_free_pages to meet the requested
-> > > memcg_nr_pages_over_high target.
-> > 
-> > Should we do the same for global reclaim? Move reclaim to userspace
-> > resume where there are no GFP_FS, GFP_NOWAIT etc. restrictions and
-> > then have everybody just reclaim exactly what they asked for, and punt
-> > interrupts / kthread allocations to a worker/kswapd?
-> 
-> This would be quite challenging considering the page allocator wouldn't
-> be able to make a forward progress without doing any reclaim. But maybe
-> you can be creative with watermarks.
+--TU+u6i6jrDPzmlWF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I clarified in the follow-up email that I meant limit reclaim.
+-----BEGIN PGP SIGNATURE-----
 
-> > > > > > > Also if the current high reclaim scaling is insufficient then we should
-> > > > > > > be handling that via memcg_nr_pages_over_high rather than effectivelly
-> > > > > > > unbound number of reclaim retries.
-> > > > > > 
-> > > > > > ???
-> > > > > 
-> > > > > I am not sure what you are asking here.
-> > > > 
-> > > > You expressed that some alternate solution B would be preferable,
-> > > > without any detail on why you think that is the case.
-> > > > 
-> > > > And it's certainly not obvious or self-explanatory - in particular
-> > > > because Chris's proposal *is* obvious and self-explanatory, given how
-> > > > everybody else is already doing loops around page reclaim.
-> > > 
-> > > Sorry, I could have been less cryptic. I hope the above and my response
-> > > to Chris goes into more details why I do not like this proposal and what
-> > > is the alternative. But let me summarize. I propose to use memcg_nr_pages_over_high
-> > > target. If the current calculation of the target is unsufficient - e.g.
-> > > in situations where the high limit excess is very large then this should
-> > > be reflected in memcg_nr_pages_over_high.
-> > > 
-> > > Is it more clear?
-> > 
-> > Well you haven't made a good argument why memory.high is actually
-> > different than any other form of reclaim, and why it should be the
-> > only implementation of page reclaim that has special-cased handling
-> > for the inherent "unfairness" or rather raciness of that operation.
-> > 
-> > You cut these lines from the quote:
-> > 
-> >   Under pressure, page reclaim can struggle to satisfy the reclaim
-> >   goal and may return with less pages reclaimed than asked to.
-> > 
-> >   Under concurrency, a parallel allocation can invalidate the reclaim
-> >   progress made by a thread.
-> > 
-> > Even if we *could* invest more into trying to avoid any unfairness,
-> > you haven't made a point why we actually should do that here
-> > specifically, yet not everywhere else.
-> 
-> I have tried to explain my thinking elsewhere in the thread. The bottom
-> line is that high limit is a way of throttling rather than meeting a
-> specific target.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7GrqcACgkQJNaLcl1U
+h9D6rwf/fACnRPPiV00dxVVND5ILBPJ1KzpV9NsThKr1PvqPTsJn7f0pKyas63Sf
+eoygJfneMKi3kZlj2wQJMKD8bCs4hXF4NeKPlUAMgN+rTHrC++vj509B7sNSLgDR
+r4Knt6+ur9iFTXvYggP7mbmAqFfbsVDTlCHViHgjXmRMoqT4lrPVhC6EcvwlUoaI
+ykrGzD+C6olEFbneErNLY2mIJhTcs8s90YT5VpccRx0oWLkVL0eQo8gBrSrQc+10
+nwQpIJVsIf/XFhvz/SPEank//XrgjOY6E2w+yN5d9AzpywJuqRQ8tILg5Y5KRqOL
+dQU19zRqFgoB6lKbX1KTFzX2GFNoXg==
+=jRLZ
+-----END PGP SIGNATURE-----
 
-That's an incorrect assumption. Of course it should meet the specific
-target that the user specified.
-
-> > (And people have tried to do it for global reclaim[1], but clearly
-> > this isn't a meaningful problem in practice.)
-> > 
-> > I have a good reason why we shouldn't: because it's special casing
-> > memory.high from other forms of reclaim, and that is a maintainability
-> > problem. We've recently been discussing ways to make the memory.high
-> > implementation stand out less, not make it stand out even more. There
-> > is no solid reason it should be different from memory.max reclaim,
-> > except that it should sleep instead of invoke OOM at the end. It's
-> > already a mess we're trying to get on top of and straighten out, and
-> > you're proposing to add more kinks that will make this work harder.
-> 
-> I do see your point of course. But I do not give the code consistency
-> a higher priority than the potential unfairness aspect of the user
-> visible behavior for something that can do better.
-
-Michal, you have almost no authorship stake in this code base. Would
-it be possible to defer judgement on maintainability to people who do?
+--TU+u6i6jrDPzmlWF--
