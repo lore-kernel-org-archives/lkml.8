@@ -2,180 +2,196 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F48C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F30206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:35:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IngPvfQq"
+	by mail.kernel.org (Postfix) with ESMTP id 592F520671
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:35:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590071722;
+	bh=b9uBilpeYJ7e3o41gk9NNky16bwnVuXuSQTTpO5YDTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HAyF5lFO5AKXBZcf3QostbEkYOCq57jbWaRAutZQfyznHjLEzQ/IUsnmXBuc3pJB9
+	 zW283Sg59Ggp5yVt+3D6wfdemWMiyMPHJCxwf+aVnENn/PY+MYLOO/tS8oH678eG31
+	 B6G4YROj/Kl/mfuzJpYY4TKGNUgvaYlnJjzXkzMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgEUOfN (ORCPT
+        id S1729742AbgEUOfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:35:13 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33032 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbgEUOfK (ORCPT
+        Thu, 21 May 2020 10:35:21 -0400
+Received: from mail-ej1-f43.google.com ([209.85.218.43]:42780 "EHLO
+        mail-ej1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbgEUOfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:35:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LEZ3vo125705;
-        Thu, 21 May 2020 09:35:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590071703;
-        bh=cNjaQ9fXx/uUqYhSW8L/0cq+/RkAn17do/znBW1C7Bc=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=IngPvfQqk55+7bJe9Zom5oXOLr8G3ITt9bH8rZTsJ4dsDcSzZNP2MZxB9GISdoBHd
-         23UrC1LdaW/KYmch2e55aCp7fFW5rwj5HzeCj57jfc99EtNJIPKld28MitR+h8rJsD
-         1uR6K53NuPksB8BhzimqCK/SMa7x0luH0b//yhOU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LEZ3rO109304
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 09:35:03 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 09:35:02 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 09:35:02 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LEYx2o082791;
-        Thu, 21 May 2020 09:35:00 -0500
-Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
-To:     Drew Fustini <drew@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-References: <20200520214757.GA362547@x1>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
-Date:   Thu, 21 May 2020 17:34:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 10:35:20 -0400
+Received: by mail-ej1-f43.google.com with SMTP id se13so9054359ejb.9;
+        Thu, 21 May 2020 07:35:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CU+URAOiaTBHZIYOLMUlPNn3m2wcv+iphqIOyVuOtwk=;
+        b=P+XlbChfsbGe4Si5ItiY2sfAFacau+gGajGbeZcUkZjUj5mFhi7xekm0PYqvpJaWKr
+         oqW9uECQ4m+oe7YL8hhVmQa2m7zi2Sj7oAw/ieuBILCWWvzluY40U19oszWgjoBzOwUg
+         6mEwnE+SWhTSKIh6rcwSYDJDc4EaFWrKUVyUhE0FW3ELlNHjw6QPHDpyhF+IA1NoRyfH
+         XqeMKPHA7uphtyFkjPZIN7utYzmjZo2gZA9+wQw9EkphrcxfPOl0K9m3yqiYwyARH9WZ
+         Og+ZNMx8Xwc37roed5dFiJdkShzz9nqlOp8GsJ2q3/FjlZ7HznpsYWwQ0sJIlqm6HQAp
+         ZGZA==
+X-Gm-Message-State: AOAM530F+hmY+Vr+OaWwX79XaC62/EDt5y5uRqtsSm58U28k4iym8xSP
+        HH3AhOsLkjw0mF88nee9SSA=
+X-Google-Smtp-Source: ABdhPJwy5UVqhy2hd2MPmbnGZiwjLo8zlJjUJXRkIS9VzgWClA9n0F1GJHDd5SiZziEhBHQFyjuJZA==
+X-Received: by 2002:a17:906:4a8b:: with SMTP id x11mr3702141eju.107.1590071717110;
+        Thu, 21 May 2020 07:35:17 -0700 (PDT)
+Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
+        by smtp.gmail.com with ESMTPSA id x23sm1891978edr.14.2020.05.21.07.35.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 07:35:16 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:35:15 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521143515.GU6462@dhcp22.suse.cz>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520165131.GB630613@cmpxchg.org>
+ <20200520170430.GG6462@dhcp22.suse.cz>
+ <20200520175135.GA793901@cmpxchg.org>
+ <20200521073245.GI6462@dhcp22.suse.cz>
+ <20200521135152.GA810429@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20200520214757.GA362547@x1>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521135152.GA810429@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 21/05/2020 00:47, Drew Fustini wrote:
-> Add gpio-line-names properties to the GPIO controller nodes.
-> 
-> BeagleBone boards have P8 and P9 headers [0] which expose many of the
-> AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
-> other external connections like jumper wires connected to a breadboard.
-> BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
-> diagram [1] as it is in the "Bone101" getting started tutorial. [2]
-> 
-> Most of the P8 and P9 header pins can muxed to a GPIO line.  The
-> gpio-line-names describe which P8 or P9 pin that line goes to and the
-> default mux for that P8 or P9 pin if it is not GPIO.
-> 
-> For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
-> however the default device tree has the corresponding BGA ball (ZCZ U7)
-> muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
-> GPIO line to be used, one would need to modify the device tree to
-> disable the eMMC and change the pin mux for that ball to GPIO mode.
-> 
-> Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
-> to a P8 or P9 header, but are instead wired to some peripheral device
-> like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
-> brackets to denote those GPIO lines can not be used.
-> 
-> Some GPIO lines are named "[NC]" as the corresponding balls are not
-> routed to anything on the PCB.
-> 
-> The goal for these names is to make it easier for a user viewing the
-> output of gpioinfo to determine which P8 or P9 pin is connected to a
-> GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
-> 
-> debian@beaglebone:~$ gpioinfo
-> gpiochip0 - 32 lines:
-> 	line   0: "[ethernet]"       unused   input  active-high
-> 	line   1: "[ethernet]"       unused   input  active-high
-> 	line   2: "P9_22 [spi0_sclk]" unused input active-high
-> 	line   3: "P9_21 [spi0_d0]" unused input active-high
-> 	line   4: "P9_18 [spi0_d1]" unused input active-high
-> 	line   5: "P9_17 [spi0_cs0]" unused input active-high
-> 	line   6:  "[sd card]"         "cd"   input   active-low [used]
-> 	line   7: "P9_42A [ecappwm0]" unused input active-high
-> 	line   8: "P8_35 [hdmi]" unused input active-high
-> 	line   9: "P8_33 [hdmi]" unused input active-high
-> 	line  10: "P8_31 [hdmi]" unused input active-high
-> 	line  11: "P8_32 [hdmi]" unused input active-high
-
+On Thu 21-05-20 09:51:52, Johannes Weiner wrote:
+> On Thu, May 21, 2020 at 09:32:45AM +0200, Michal Hocko wrote:
 [...]
-
+> > I am not saying the looping over try_to_free_pages is wrong. I do care
+> > about the final reclaim target. That shouldn't be arbitrary. We have
+> > established a target which is proportional to the requested amount of
+> > memory. And there is a good reason for that. If any task tries to
+> > reclaim down to the high limit then this might lead to a large
+> > unfairness when heavy producers piggy back on the active reclaimer(s).
 > 
-> [0] https://git.io/JfgOd
-> [1] https://beagleboard.org/capes
-> [1] https://beagleboard.org/Support/bone101
-> [2] https://beagleboard.org/static/images/cape-headers.png
+> Why is that different than any other form of reclaim?
+
+Because the high limit reclaim is a best effort rather than must to
+either get over reclaim watermarks and continue allocation or meet the
+hard limit requirement to continue.
+
+In an ideal world even the global resp. hard limit reclaim should
+consider fairness. They don't because that is easier but that sucks. I
+have been involved in debugging countless of issues where direct reclaim
+was taking too long because of the unfairness. Users simply see that as
+bug and I am not surprised.
+
+> > I wouldn't mind to loop over try_to_free_pages to meet the requested
+> > memcg_nr_pages_over_high target.
 > 
-> Reviewed-by: Jason Kridner <jason@beagleboard.org>
-> Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->   arch/arm/boot/dts/am335x-bone-common.dtsi | 144 ++++++++++++++++++++++
+> Should we do the same for global reclaim? Move reclaim to userspace
+> resume where there are no GFP_FS, GFP_NOWAIT etc. restrictions and
+> then have everybody just reclaim exactly what they asked for, and punt
+> interrupts / kthread allocations to a worker/kswapd?
 
-Not sure if it should be in am335x-bone-common.dtsi.
+This would be quite challenging considering the page allocator wouldn't
+be able to make a forward progress without doing any reclaim. But maybe
+you can be creative with watermarks.
 
-For example:
-am335x-boneblack.dts
-  #include "am335x-bone-common.dtsi"
-  #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
-
-am335x-bonegreen.dts
-  #include "am335x-bone-common.dtsi"
-  #include "am335x-bonegreen-common.dtsi"
-
->   1 file changed, 144 insertions(+)
+> > > > > > Also if the current high reclaim scaling is insufficient then we should
+> > > > > > be handling that via memcg_nr_pages_over_high rather than effectivelly
+> > > > > > unbound number of reclaim retries.
+> > > > > 
+> > > > > ???
+> > > > 
+> > > > I am not sure what you are asking here.
+> > > 
+> > > You expressed that some alternate solution B would be preferable,
+> > > without any detail on why you think that is the case.
+> > > 
+> > > And it's certainly not obvious or self-explanatory - in particular
+> > > because Chris's proposal *is* obvious and self-explanatory, given how
+> > > everybody else is already doing loops around page reclaim.
+> > 
+> > Sorry, I could have been less cryptic. I hope the above and my response
+> > to Chris goes into more details why I do not like this proposal and what
+> > is the alternative. But let me summarize. I propose to use memcg_nr_pages_over_high
+> > target. If the current calculation of the target is unsufficient - e.g.
+> > in situations where the high limit excess is very large then this should
+> > be reflected in memcg_nr_pages_over_high.
+> > 
+> > Is it more clear?
 > 
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 6c9187bc0f17..d86e67b0e852 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -397,3 +397,147 @@ &rtc {
->   	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
->   	clock-names = "ext-clk", "int-clk";
->   };
-> +
-> +&gpio0 {
-> +	gpio-line-names =
-> +		"[ethernet]",
-> +		"[ethernet]",
-> +		"P9_22 [spi0_sclk]",
-> +		"P9_21 [spi0_d0]",
-> +		"P9_18 [spi0_d1]",
-> +		"P9_17 [spi0_cs0]",
-> +		"[sd card]",
-> +		"P9_42A [ecappwm0]",
-> +		"P8_35 [hdmi]",
-> +		"P8_33 [hdmi]",
-> +		"P8_31 [hdmi]",
-> +		"P8_32 [hdmi]",
+> Well you haven't made a good argument why memory.high is actually
+> different than any other form of reclaim, and why it should be the
+> only implementation of page reclaim that has special-cased handling
+> for the inherent "unfairness" or rather raciness of that operation.
+> 
+> You cut these lines from the quote:
+> 
+>   Under pressure, page reclaim can struggle to satisfy the reclaim
+>   goal and may return with less pages reclaimed than asked to.
+> 
+>   Under concurrency, a parallel allocation can invalidate the reclaim
+>   progress made by a thread.
+> 
+> Even if we *could* invest more into trying to avoid any unfairness,
+> you haven't made a point why we actually should do that here
+> specifically, yet not everywhere else.
 
-[...]
+I have tried to explain my thinking elsewhere in the thread. The bottom
+line is that high limit is a way of throttling rather than meeting a
+specific target. With the current implementation we scale the reclaim
+activity by the consumer's demand which is something that is not
+terribly complex to wrap your head around and reason about. Because the
+objective is to not increase the excess much. It offers some sort of
+fairness as well. I fully recognize that a full fairness is not
+something we can target but working reasonably well most of the time
+sounds good enough for me.
+
+> (And people have tried to do it for global reclaim[1], but clearly
+> this isn't a meaningful problem in practice.)
+> 
+> I have a good reason why we shouldn't: because it's special casing
+> memory.high from other forms of reclaim, and that is a maintainability
+> problem. We've recently been discussing ways to make the memory.high
+> implementation stand out less, not make it stand out even more. There
+> is no solid reason it should be different from memory.max reclaim,
+> except that it should sleep instead of invoke OOM at the end. It's
+> already a mess we're trying to get on top of and straighten out, and
+> you're proposing to add more kinks that will make this work harder.
+
+I do see your point of course. But I do not give the code consistency
+a higher priority than the potential unfairness aspect of the user
+visible behavior for something that can do better. Really the direct
+reclaim unfairness is really painfull and hard to explain to users. You
+can essentially only hand wave that system is struggling so fairness is
+not really a priority anymore.
+
+> I have to admit, I'm baffled by this conversation. I consider this a
+> fairly obvious, idiomatic change, and I cannot relate to the
+> objections or counter-proposals in the slightest.
+
+I have to admit that I would prefer a much less aggressive tone. We are
+discussing a topic which is obviously not black and white and there are
+different aspects of it.
+
+Thanks!
+
+> [1] http://lkml.iu.edu/hypermail//linux/kernel/0810.0/0169.html
 
 -- 
-Best regards,
-grygorii
+Michal Hocko
+SUSE Labs
