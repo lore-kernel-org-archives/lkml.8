@@ -2,129 +2,99 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC79C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 172B92075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A57620748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ifaeD5kr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgEUC0O (ORCPT
+        id S1727983AbgEUC0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:26:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4876 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726833AbgEUC0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:26:13 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 13751DBF44B0FC6D655D;
-        Thu, 21 May 2020 10:26:11 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 21 May 2020
- 10:26:03 +0800
-Subject: Re: [PATCH net-next 1/2] net: hns3: adds support for dynamic VLAN
- mode
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
-        GuoJia Liao <liaoguojia@huawei.com>
-References: <1589937613-40545-1-git-send-email-tanhuazhong@huawei.com>
- <1589937613-40545-2-git-send-email-tanhuazhong@huawei.com>
- <20200520140617.6d8338bf@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <91bd81dc-5513-f717-559f-b225ab380fbc@huawei.com>
- <20200520183639.5e82bc09@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <4875e2a7-b216-3e13-1d80-f32e0e849502@huawei.com>
-Date:   Thu, 21 May 2020 10:26:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Wed, 20 May 2020 22:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgEUC0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 22:26:40 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD19AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 19:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AQAUQIhz6SqBbHGlDEdDO7YRyc583EZtNH+fi0JhOnE=; b=ifaeD5kroRd/pg4bLz7jN/XLLB
+        24s4q/bsYF++8aYyezv8cokcKu+WD/hZrpLUbHTlKnTjD6hW74FM8TrnKUbeFGn4eFyM45w4IKXyx
+        ezbJjWLew8N86eaP2nowALIAff5ceiTIWylAWtiW763IPK0l+62dxzIfbpgofkuiGe/xZ7BzR+ch2
+        MA8+mG00jCMq8151XmnIzj+YKevgflB27ZShQL0Fw2HIU0kgJWg492JPECQmnRYdhFeA0JGNLzS8Y
+        AM5hzNtriG8TRn1NwAxUdL2Ak7EI2CeDCA0mOGlRyBiKgRGjaZzuXmOWN4eIleMLAPAebHkmiiNrG
+        xYzANe4A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbaui-0003R9-PO; Thu, 21 May 2020 02:26:28 +0000
+Date:   Wed, 20 May 2020 19:26:28 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     gregkh@linuxfoundation.org, Arnd Bergmann <arnd@arndb.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3] /dev/mem: Revoke mappings when a driver claims the
+ region
+Message-ID: <20200521022628.GE16070@bombadil.infradead.org>
+References: <159002475918.686697.11844615159862491335.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200520183639.5e82bc09@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159002475918.686697.11844615159862491335.stgit@dwillia2-desk3.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 20, 2020 at 06:35:25PM -0700, Dan Williams wrote:
+> +static struct inode *devmem_inode;
+> +
+> +#ifdef CONFIG_IO_STRICT_DEVMEM
+> +void revoke_devmem(struct resource *res)
+> +{
+> +	struct inode *inode = READ_ONCE(devmem_inode);
+> +
+> +	/*
+> +	 * Check that the initialization has completed. Losing the race
+> +	 * is ok because it means drivers are claiming resources before
+> +	 * the fs_initcall level of init and prevent /dev/mem from
+> +	 * establishing mappings.
+> +	 */
+> +	smp_rmb();
+> +	if (!inode)
+> +		return;
 
+But we don't need the smp_rmb() here, right?  READ_ONCE and WRITE_ONCE
+are a DATA DEPENDENCY barrier (in Documentation/memory-barriers.txt parlance)
+so the smp_rmb() is superfluous ...
 
-On 2020/5/21 9:36, Jakub Kicinski wrote:
-> On Thu, 21 May 2020 09:33:14 +0800 tanhuazhong wrote:
->> On 2020/5/21 5:06, Jakub Kicinski wrote:
->>> On Wed, 20 May 2020 09:20:12 +0800 Huazhong Tan wrote:
->>>> From: GuoJia Liao <liaoguojia@huawei.com>
->>>>
->>>> There is a scenario which needs vNICs enable the VLAN filter
->>>> in access port, while disable the VLAN filter in trunk port.
->>>> Access port and trunk port can switch according to the user's
->>>> configuration.
->>>>
->>>> This patch adds support for the dynamic VLAN mode. then the
->>>> HNS3 driver can support two VLAN modes: default VLAN mode and
->>>> dynamic VLAN mode. User can switch the mode through the
->>>> configuration file.
->>>
->>> What configuration file? Sounds like you're reimplementing trusted
->>> VFs (ndo_set_vf_trust).
->>>    
->>
->> Hi, Jakub.
->>
->> Maybe this configuration file here is a little misleading,
->> this VLAN mode is decided by the firmware, the driver will
->> query the VLAN mode from firmware during  intializing.
-> 
-> And the FW got that configuration from?
-> 
+> +	/*
+> +	 * Use a unified address space to have a single point to manage
+> +	 * revocations when drivers want to take over a /dev/mem mapped
+> +	 * range.
+> +	 */
+> +	inode->i_mapping = devmem_inode->i_mapping;
+> +	inode->i_mapping->host = devmem_inode;
 
-It depends on the user's demand, the user can choose the firmware
-which supports the default VLAN mode or the dynamic VLAN mode.
+umm ... devmem_inode->i_mapping->host doesn't already point to devmem_inode?
 
->> I will modified this description in V2. BTW, is there any
->> other suggestion about this patch?
-> 
-> The other suggestion was to trusted vf. What's the difference between
-> trusted VF and "dynamic VLAN mode"?
-> 
+> +
+> +	/* publish /dev/mem initialized */
+> +	smp_wmb();
+> +	WRITE_ONCE(devmem_inode, inode);
 
-Trust VF is not related to dynamic VLAN mode. So far it's only
-be used for privilege checking for the VF promisc. And dynamic
-VLAN mode is designed to adapt specified scenario which want
-enable/disable VLAN filter base on VLAN used.
-
-Thanks.
-
->>>> In default VLAN mode, port based VLAN filter and VF VLAN
->>>> filter should always be enabled.
->>>>
->>>> In dynamic VLAN mode, port based VLAN filter is disabled, and
->>>> VF VLAN filter is disabled defaultly, and should be enabled
->>>> when there is a non-zero VLAN ID. In addition, VF VLAN filter
->>>> is enabled if PVID is enabled for vNIC.
->>>>
->>>> When enable promisc, VLAN filter should be disabled. When disable
->>>> promisc, VLAN filter's status depends on the value of
->>>> 'vport->vf_vlan_en', which is used to record the VF VLAN filter
->>>> status.
->>>>
->>>> In default VLAN mode, 'vport->vf_vlan_en' always be 'true', so
->>>> VF VLAN filter will set to be enabled after disabling promisc.
->>>>
->>>> In dynamic VLAN mode, 'vport->vf_vlan_en' lies on whether there
->>>> is a non-zero VLAN ID.
->>>>
->>>> Signed-off-by: GuoJia Liao <liaoguojia@huawei.com>
->>>> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-> 
-> 
-> .
-> 
+As above, unnecessary barrier, I think.
 
