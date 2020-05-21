@@ -2,113 +2,138 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81558C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C55DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54D7720721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E01620721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:07:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590070079;
+	bh=oodOFHxHqkfsWv0Xyp8W0ZMy0H+lEXTILnMXNepIF+Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MlPmf055XU8Ufqx8GCVtIB0DQPoB8KEPt+dK4BoaCg3JeLNXXUq7y/hupMmRqrSZ2
+	 QWmyNoz9BDyzOgffztFbsie6DBNzOHC8yIZG49mcp2JFmJP3cZ0iD5AaogxSbDvnMT
+	 oDsxTnNj1XcVLjE5T/LQHT4UNdcduOj8dWZhaQ04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbgEUOHr (ORCPT
+        id S1729797AbgEUOH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:07:47 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38312 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729696AbgEUOHq (ORCPT
+        Thu, 21 May 2020 10:07:58 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44588 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729784AbgEUOH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:07:46 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id AA1838029EB7;
-        Thu, 21 May 2020 14:07:43 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6jyOtfsIeDyO; Thu, 21 May 2020 17:07:42 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 02/13] dt-bindings: bus: Add MIPS CDMM controller
-Date:   Thu, 21 May 2020 17:07:13 +0300
-Message-ID: <20200521140725.29571-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Thu, 21 May 2020 10:07:58 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w19so2856607ply.11;
+        Thu, 21 May 2020 07:07:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JoNp2Y7zz0yJJeDFRUhzITUSQI74mvmrMIPrAd1z6ao=;
+        b=iXRMyycckLPFlAxzxaQ0vY442HBL7Y+U/PZd3hnAnFGWM6DXyawdSqL5rITEv9KlTv
+         naThp8QPSHtKKrR7L8oWdYdhiumrt4pfLpbbIAI2nItUY6tFQmAxxUmYIxfXdHM+Ky9U
+         brsJTlQITGNPpc0gKvhY1h5zJx9qF97L0DYshJ6VtYibAHo+3vGTtd+sjSeizKY80erE
+         uL1ythqRrlJRvsSxYVakSvmTUc9R4PO+wv9BarjqpmqA88axBnB31Yo/+FkGXkg0bK/i
+         WtJUb78E1NawfCaTy0NQG/USoD4J9tsZdAVI0iSx3HnuYr41jWaMFZMUGEjBhyhFeB8B
+         UQFQ==
+X-Gm-Message-State: AOAM531SRgW7+Bdmln86ESFhhM7hdfpkGd8g3VMH6ANs3FXwdwvaZBGS
+        BmBQ0vadMHxFti5H2kOWQ6NT5jWg
+X-Google-Smtp-Source: ABdhPJzDGF9DJTORsBVEnMP8Hw6YVRUo6pmf6G69G8j1zrKhS8KG1Y3mnbVONHFbMgBusKU35FP/sQ==
+X-Received: by 2002:a17:902:c403:: with SMTP id k3mr9919096plk.12.1590070077224;
+        Thu, 21 May 2020 07:07:57 -0700 (PDT)
+Received: from localhost.localdomain ([221.146.116.86])
+        by smtp.gmail.com with ESMTPSA id w14sm4287763pgi.12.2020.05.21.07.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 07:07:56 -0700 (PDT)
+From:   Namjae Jeon <linkinjeon@kernel.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        Namjae Jeon <linkinjeon@kernel.org>
+Subject: [PATCH v2] exfat: add the dummy mount options to be backward compatible with staging/exfat
+Date:   Thu, 21 May 2020 23:05:02 +0900
+Message-Id: <20200521140502.2409-1-linkinjeon@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a Common Device Memory Map controller embedded into the MIPS IP
-cores, which dts node is supposed to have compatible and reg properties.
+As Ubuntu and Fedora release new version used kernel version equal to or
+higher than v5.4, They started to support kernel exfat filesystem.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-mips@vger.kernel.org
+Linus Torvalds reported mount error with new version of exfat on Fedora.
+
+	exfat: Unknown parameter 'namecase'
+
+This is because there is a difference in mount option between old
+staging/exfat and new exfat.
+And utf8, debug, and codepage options as well as namecase have been
+removed from new exfat.
+
+This patch add the dummy mount options as deprecated option to be backward
+compatible with old one.
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Namjae Jeon <linkinjeon@kernel.org>
 ---
- .../bindings/bus/mti,mips-cdmm.yaml           | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
+v2:
+ - fix checkpatch.pl warning(Missing Signed-off-by).
 
-diff --git a/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml b/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
-new file mode 100644
-index 000000000000..d28d65ae57b2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/mti,mips-cdmm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ fs/exfat/super.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/fs/exfat/super.c b/fs/exfat/super.c
+index 0565d5539d57..26b0db5b20de 100644
+--- a/fs/exfat/super.c
++++ b/fs/exfat/super.c
+@@ -203,6 +203,12 @@ enum {
+ 	Opt_errors,
+ 	Opt_discard,
+ 	Opt_time_offset,
 +
-+title: MIPS Common Device Memory Map
-+
-+description: |
-+  Defines a location of the MIPS Common Device Memory Map registers.
-+
-+maintainers:
-+  - James Hogan <jhogan@kernel.org>
-+
-+properties:
-+  compatible:
-+    const: mti,mips-cdmm
-+
-+  reg:
-+    description: |
-+      Base address and size of an unoccupied memory region, which will be
-+      used to map the MIPS CDMM registers block.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cdmm@1bde8000 {
-+      compatible = "mti,mips-cdmm";
-+      reg = <0 0x1bde8000 0 0x8000>;
-+    };
-+...
++	/* Deprecated options */
++	Opt_utf8,
++	Opt_debug,
++	Opt_namecase,
++	Opt_codepage,
+ };
+ 
+ static const struct constant_table exfat_param_enums[] = {
+@@ -223,6 +229,10 @@ static const struct fs_parameter_spec exfat_parameters[] = {
+ 	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
+ 	fsparam_flag("discard",			Opt_discard),
+ 	fsparam_s32("time_offset",		Opt_time_offset),
++	fsparam_flag("utf8",			Opt_utf8),
++	fsparam_flag("debug",			Opt_debug),
++	fsparam_u32("namecase",			Opt_namecase),
++	fsparam_u32("codepage",			Opt_codepage),
+ 	{}
+ };
+ 
+@@ -278,6 +288,18 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 			return -EINVAL;
+ 		opts->time_offset = result.int_32;
+ 		break;
++	case Opt_utf8:
++		pr_warn("exFAT-fs: 'utf8' mount option is deprecated and has no effect\n");
++		break;
++	case Opt_debug:
++		pr_warn("exFAT-fs: 'debug' mount option is deprecated and has no effect\n");
++		break;
++	case Opt_namecase:
++		pr_warn("exFAT-fs: 'namecase' mount option is deprecated and has no effect\n");
++		break;
++	case Opt_codepage:
++		pr_warn("exFAT-fs: 'codepage' mount option is deprecated and has no effect\n");
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
 2.25.1
 
