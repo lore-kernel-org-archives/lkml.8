@@ -2,187 +2,121 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A16C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8037CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFDA6207F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4615B20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g8Kzqe/n"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Fdu19Bux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbgEUXPK (ORCPT
+        id S1730789AbgEUXQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 19:15:10 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:39462 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730734AbgEUXPJ (ORCPT
+        Thu, 21 May 2020 19:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730716AbgEUXQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 19:15:09 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200521231506epoutp018330a28f5898eddc787344f3e0fb7a02~RLitCCJO_2395523955epoutp01h
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 23:15:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200521231506epoutp018330a28f5898eddc787344f3e0fb7a02~RLitCCJO_2395523955epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590102906;
-        bh=rJZqCQOnSFMJc+1/SWJ3uMKcjR5d2Ru5UKpf6u7uQGs=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=g8Kzqe/nfK8IK8YSAGUuXo37RNc9edPuUI+oh+2ntexjiHK/OJbwmIMkAjkogKobR
-         94R1PrFviuaZ+s93kLMojB1ZGS1aO0tMpHdBCmRPY5Hx1jID0JGAMYrxAbf6Wzdv07
-         HSWh7qNhOvTeb6HHX+TGhhb2fOHyVXAifIG502MQ=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200521231506epcas1p16b7b6728aa98d1bd42ceb0d611f43ee5~RLisnxGrw1786117861epcas1p1U;
-        Thu, 21 May 2020 23:15:06 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 49Slp12cr3zMqYkV; Thu, 21 May
-        2020 23:15:05 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0C.6A.04744.97B07CE5; Fri, 22 May 2020 08:15:05 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200521231505epcas1p28521830bf5732f71adc0510502930d41~RLirelFTG1191311913epcas1p2V;
-        Thu, 21 May 2020 23:15:05 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200521231505epsmtrp14049c6fd943227b0a6bed37ff102d90c~RLirdwkyd1048410484epsmtrp1B;
-        Thu, 21 May 2020 23:15:05 +0000 (GMT)
-X-AuditID: b6c32a38-253ff70000001288-fa-5ec70b79039a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        69.17.18461.87B07CE5; Fri, 22 May 2020 08:15:04 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.103.87]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200521231504epsmtip2b1e0acd1b2274109409e94e0baddfe50~RLirQvtiq0371603716epsmtip2M;
-        Thu, 21 May 2020 23:15:04 +0000 (GMT)
-From:   Namjae Jeon <namjae.jeon@samsung.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        sandeen@sandeen.net, viro@zeniv.linux.org.uk, willy@infradead.org,
-        Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v3] exfat: add the dummy mount options to be backward
- compatible with staging/exfat
-Date:   Fri, 22 May 2020 08:10:10 +0900
-Message-Id: <20200521231010.4181-1-namjae.jeon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHKsWRmVeSWpSXmKPExsWy7bCmgW4l9/E4g2PzRC327D3JYnF51xw2
-        ix/T6y1ar2hZPOp7y25x/u9xVovfP+awObB7bF6h5XFixm8Wj74tqxg9tix+yOTxeZOcx6Yn
-        b5kC2KJybDJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA
-        DlFSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFBgaFOgVJ+YWl+al6yXn51oZGhgY
-        mQJVJuRkHN45lbHgnGDFmVPrWRoYN/F1MXJySAiYSBw81MraxcjFISSwg1Hi3v/pzBDOJ0aJ
-        TVOWs0A43xgl5vfMYoRpWbF8L1RiL6NE09FDLHAtN28cBari4GAT0Jb4s0UUxBQRUJS4/N4J
-        pIRZYC2jxMHrr1hABgkLpEqs2z2HHcRmEVCV2He8lQ3E5hWwlph28hgTxDJ5idUbDoCdJCGw
-        jV3i7sFFUAkXiddH7kBdJCzx6vgWdghbSuJlfxs7yGIJgWqJj/uZIcIdjBIvvttC2MYSN9dv
-        YAUpYRbQlFi/Sx8irCix8/dcsInMAnwS7772sEJM4ZXoaBOCKFGV6Lt0GOoAaYmu9g9QSz0k
-        Vqx/CXa9kECsxIaHN5kmMMrOQliwgJFxFaNYakFxbnpqsWGBCXIcbWIEpy0tix2Me875HGIU
-        4GBU4uG1SDsWJ8SaWFZcmXuIUYKDWUmEdyH/0Tgh3pTEyqrUovz4otKc1OJDjKbAsJvILCWa
-        nA9MqXkl8YamRsbGxhYmZuZmpsZK4rxTr+fECQmkJ5akZqemFqQWwfQxcXBKNTDuXP4opHPJ
-        /fpfrZxvf3FNcLHbZfMz7srJ1I6NvLt+asu9NK9Y9rH6yir/BxN4VV3kzwmvqP79TfOt7I7q
-        u/sUS2Kf7A7vqdrqFiCjrPvmZEqbMkecptVj17rwTJGm29uOxW4KY7bwnT7HV+kz2+Qf07Vv
-        6K26LfzbZobk792Bm38W8LZWJBYrsRRnJBpqMRcVJwIAD5ZOIXEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPJMWRmVeSWpSXmKPExsWy7bCSvG4F9/E4g2PfrCz27D3JYnF51xw2
-        ix/T6y1ar2hZPOp7y25x/u9xVovfP+awObB7bF6h5XFixm8Wj74tqxg9tix+yOTxeZOcx6Yn
-        b5kC2KK4bFJSczLLUov07RK4Mg7vnMpYcE6w4syp9SwNjJv4uhg5OSQETCRWLN/L0sXIxSEk
-        sJtRom/XNjaIhLTEsRNnmLsYOYBsYYnDh4shaj4wSjQvecgGEmcT0Jb4s0UUxBQRUJS4/N4J
-        pIRZYDOjxLKjU8HGCAskS7w+vokRxGYRUJXYd7wVLM4rYC0x7eQxJohV8hKrNxxgnsDIs4CR
-        YRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4mRnAYaWnuYNy+6oPeIUYmDsZDjBIczEoi
-        vAv5j8YJ8aYkVlalFuXHF5XmpBYfYpTmYFES571RuDBOSCA9sSQ1OzW1ILUIJsvEwSnVwLRY
-        9OvH93sMZ35qkuhWzpJ4uvIA07yz5kmpn+qmf9ulJr7t+1SW08vTvpo8Con5YeeQ+8Ev6mdn
-        q+D7WXXLOI2s1yslbc43uexctEdVmO+dwUaH64r3ZfmY2De8ZRFn3n8wbtvPt9WzL5vLBt6U
-        CLhx3uLjTaVbWRPjtf/HZb0ItchrVTEy8MkOXLnvWodxwtuVYaVHAjvDv0+T+nnuiq3kvsnT
-        37tfbNq5z3xFXPoR+9iiTWFW6Td+nnghzVt+TPWuRNr+zsvxlvuCf57nvn2ely20WutJklJY
-        +uxl27qdbRtd96etXrtOeOemTVYfvxZdlWuKffg09ZBZ03Td1vAzejOU9Hd78ghcfXXkr68S
-        S3FGoqEWc1FxIgDUCSiTkgIAAA==
-X-CMS-MailID: 20200521231505epcas1p28521830bf5732f71adc0510502930d41
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200521231505epcas1p28521830bf5732f71adc0510502930d41
-References: <CGME20200521231505epcas1p28521830bf5732f71adc0510502930d41@epcas1p2.samsung.com>
+        Thu, 21 May 2020 19:16:33 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED78DC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 16:16:32 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id x12so6925692qts.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 16:16:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hUoZcotUHvHkDynbBdg2kum8KhHAvdqpz3vVIU74srU=;
+        b=Fdu19Bux/T9zm5qDECsrqrKsavHJgzr0BrjJeEkoqgM9U/vqgFdBSQXH4noPwGen8f
+         Q+Gw98IBbkNh619BiVZpXHsN0/WHEPtpiRUPYGdWCFrYWRYz1HHOQwFaztsVqsb5rnaJ
+         wj227OUGoChm2DCYa8nBV+whh4EJaMHlCZ7VE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hUoZcotUHvHkDynbBdg2kum8KhHAvdqpz3vVIU74srU=;
+        b=XHytW3kCs4aCknjCF1R0zGJUTPIlLJ4Ceh6VPfBTaUbshAfGdaLba3JPYtS6VgUicg
+         eD1DSWen/Pq4yc+eFd6dRp7MGChML/1voaXoCfojYDKKuTtQlar2Ei1xr6XJRxRKiUoi
+         8YYBF7FR2fcCEtmxS9JqXQELF9LSqFvx7JpbnBV18lAld/1KxttBay1GR3lOzIzACkeF
+         KNHTRm2SfQ78r2KacJocAidYph09hNvc2ES/Bw2SeRbTU78nlcKh3qYucEGXjNc3KJYJ
+         y8Hugy9P+DBsSSf7y8/rldyrLtDbahtkdTF6ARjmEt5PL6+GCleDFso1ab2ZOzbiyQXU
+         3CgA==
+X-Gm-Message-State: AOAM531+GrJ+MYbJY3t2ge5/DjWDV6r+SpRRQ1gWpaUxLucXUbrksBo6
+        SE/xL22PXt9Yq1f95EQo8kB5nA==
+X-Google-Smtp-Source: ABdhPJzUSnir1qv6SQFJsgNt1l7Z5aj4xbIs+83yHT7ZC+9w1PCdkvgd/8GD23L46b9y4ABJK2rEWg==
+X-Received: by 2002:ac8:3032:: with SMTP id f47mr13381740qte.386.1590102992154;
+        Thu, 21 May 2020 16:16:32 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 88sm6436462qth.9.2020.05.21.16.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 16:16:31 -0700 (PDT)
+Date:   Thu, 21 May 2020 19:16:31 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     vpillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>
+Subject: Re: [RFC PATCH 07/13] sched: Add core wide task selection and
+ scheduling.
+Message-ID: <20200521231631.GB246288@google.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com>
+ <20200521231426.GA246288@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521231426.GA246288@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Ubuntu and Fedora release new version used kernel version equal to or
-higher than v5.4, They started to support kernel exfat filesystem.
+On Thu, May 21, 2020 at 07:14:26PM -0400, Joel Fernandes wrote:
+> On Wed, Mar 04, 2020 at 04:59:57PM +0000, vpillai wrote:
+[snip]
+> > +	/*
+> > +	 * If class_pick is idle or matches cookie, return early.
+> > +	 */
+> > +	if (cookie_equals(class_pick, cookie))
+> > +		return class_pick;
+> > +
+> > +	cookie_pick = sched_core_find(rq, cookie);
+> > +
+> > +	/*
+> > +	 * If class > max && class > cookie, it is the highest priority task on
+> > +	 * the core (so far) and it must be selected, otherwise we must go with
+> > +	 * the cookie pick in order to satisfy the constraint.
+> > +	 */
+> > +	if (prio_less(cookie_pick, class_pick) &&
+> > +	    (!max || prio_less(max, class_pick)))
+> > +		return class_pick;
+> > +
+> > +	return cookie_pick;
+> > +}
+> 
+> I've been hating on this pick_task() routine for a while now :-). If we add
+> the task to the tag tree as Peter suggested at OSPM for that other issue
+> Vineeth found, it seems it could be simpler.
 
-Linus Torvalds reported mount error with new version of exfat on Fedora.
+Sorry, I meant adding of a 0-tagged (no cookie) task to the tag tree.
 
-        exfat: Unknown parameter 'namecase'
+thanks,
 
-This is because there is a difference in mount option between old
-staging/exfat and new exfat.
-And utf8, debug, and codepage options as well as namecase have been
-removed from new exfat.
-
-This patch add the dummy mount options as deprecated option to be backward
-compatible with old one.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
----
- v2:
-  - fix checkpatch.pl warning(Missing Signed-off-by).
- v3:
-  - use fs_param_deprecated instead of printing deprecated warning(Matthew Wilcox).
-
- fs/exfat/super.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index 0565d5539d57..a846ff555656 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -203,6 +203,12 @@ enum {
- 	Opt_errors,
- 	Opt_discard,
- 	Opt_time_offset,
-+
-+	/* Deprecated options */
-+	Opt_utf8,
-+	Opt_debug,
-+	Opt_namecase,
-+	Opt_codepage,
- };
- 
- static const struct constant_table exfat_param_enums[] = {
-@@ -223,6 +229,14 @@ static const struct fs_parameter_spec exfat_parameters[] = {
- 	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
- 	fsparam_flag("discard",			Opt_discard),
- 	fsparam_s32("time_offset",		Opt_time_offset),
-+	__fsparam(NULL, "utf8",			Opt_utf8, fs_param_deprecated,
-+		  NULL),
-+	__fsparam(NULL, "debug",		Opt_debug, fs_param_deprecated,
-+		  NULL),
-+	__fsparam(fs_param_is_u32, "namecase",	Opt_namecase,
-+		  fs_param_deprecated, NULL),
-+	__fsparam(fs_param_is_u32, "codepage",	Opt_codepage,
-+		  fs_param_deprecated, NULL),
- 	{}
- };
- 
-@@ -278,6 +292,11 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 			return -EINVAL;
- 		opts->time_offset = result.int_32;
- 		break;
-+	case Opt_utf8:
-+	case Opt_debug:
-+	case Opt_namecase:
-+	case Opt_codepage:
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
--- 
-2.17.1
+ - Joel
 
