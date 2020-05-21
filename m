@@ -2,162 +2,101 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A587BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB87620721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B8A2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="P+T2oevs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jyfLBevZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgEUNrL (ORCPT
+        id S1729639AbgEUNrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48156 "EHLO
+        Thu, 21 May 2020 09:47:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729431AbgEUNrI (ORCPT
+        with ESMTP id S1729354AbgEUNrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:47:08 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F87FC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:47:08 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id z18so5503819qto.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:47:08 -0700 (PDT)
+        Thu, 21 May 2020 09:47:35 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB1ADC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:47:34 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u1so5630611wmn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=44FYlkUrt8i90UVdJutZuc7RtdPIilkJHRfkNsLzvz8=;
-        b=P+T2oevsrMwt9Bij/ihxWdOK8KwWgzy8u/kkA0uyB1t4fxz8j7sEd+WZmQ3/qGW3vN
-         4ijlnbA8I678sfzZbNUQsycLFzDdAmEkXA1kpZdK1DWvladeb6rGOd31JzlAPiEcwlL7
-         IpdP4mo0Lsoyu3jqWkn6qhcQKg6ltm6tTjIb8=
+        bh=WigAm6R3JnrkS0bWmUO3ZB1tWo9KDMYSlwhtkqHAIps=;
+        b=jyfLBevZAiI3qkkBfstEElorOWNvUcbZe8+NYJX9vsFk4WpXks+gPfEuN04Ws3MixW
+         1mt8vxFWFKxT/FwXh70xQ7l9mzqNXQq5l4CvApuE0h0xAxvzt9GxF+lHFlAYvUYwaNDC
+         XcFDRdRO+IS0Xt+i8dnhvNyGG05gut8vNkPUk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=44FYlkUrt8i90UVdJutZuc7RtdPIilkJHRfkNsLzvz8=;
-        b=lfxhUAxLeem6+qEay8Qc+StFmh3HIkQDo1BMZ7UONSixLPgaJcvUdNUETGaZOBd5C4
-         Yqy+cm70RKc8pC9GYHdRggCGXWtb9GBa9+GLMlzvHANJwUbfLSFYA+ucQI3YKSpucx5A
-         S/LS63ywMrssdJzqZ6dHE7HW8FWNSBjz6Q7lPj3mDvVlij+TVEpE+XRJBHcUbaIj7VJd
-         TbEg7v7h7QJwlFnPKMwlsjfwQZPeynOpFaqhiqdNl/nwagh0JabnqGu9lXtH25IvK9U6
-         WV5xJXvt9HfXta707Tg7OO9+bm5qSZooo2DwpmkMttnGPh4hjfg3DCuKCUOxcmOQclxZ
-         YQQw==
-X-Gm-Message-State: AOAM531hpJdxaU9CqmSOwpnSLpYGo8g6pG+y9mFprET0ugwUifoz8Wdy
-        zFt/GU5kWPp9NZP9x7f7zUwCWg==
-X-Google-Smtp-Source: ABdhPJw9Tvzcr/XATyOG/O6EqPKbtZISWNLdDVGk6HNso6/Rw7ShAMsvHaPcUCOEz3TK6HJj8vfwfQ==
-X-Received: by 2002:ac8:6b84:: with SMTP id z4mr10903446qts.227.1590068826804;
-        Thu, 21 May 2020 06:47:06 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id m6sm4794876qkc.4.2020.05.21.06.47.06
+        bh=WigAm6R3JnrkS0bWmUO3ZB1tWo9KDMYSlwhtkqHAIps=;
+        b=oiwyhAf1GNDu78HAzE52BI+YGaGyyNHqJVVTBgB5x4bGbSW95bgHYmlnZA8fTBoi06
+         x8TcSIYW6ZQkeujfqmCFb6pL9DxT/rlrs1szqXVmKPhYnsuZdROAZdTsBX8FEYdrLGix
+         zai981FCQs8ACr/D1c74CoJ9gCnGPldnzyr650af91C9oCuFRNw00XshZYqYLSzZLs9Q
+         XogArE1KSxmuTm3LcyR5PmxdSNbJQiRRVWokVD8YMA6Vn8Ih4pnLDuahnYdSuggQi6NV
+         zsaB0ggOuBeLv/6+j/EVu23qScx/RYa6ZO5yI480mwq2zL9b9kUbWSuiVIYoQG+tCJ5m
+         sS+A==
+X-Gm-Message-State: AOAM533+/K0zB8iRTrcXVBUMANfq/82NYP+gl/LAzgYyA7EBQXAWgCJU
+        urCmeIJP/8nsT1aBV967+n96tlsmlRPuEw==
+X-Google-Smtp-Source: ABdhPJycudi/4ZFEocfK7FGUn/bFSMM2TZDaR2Ql4yDG5QBmvorZtq7f/VZXArUqQ7+SPm0CNXRP+w==
+X-Received: by 2002:a1c:2e46:: with SMTP id u67mr8770259wmu.156.1590068853633;
+        Thu, 21 May 2020 06:47:33 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id q4sm6733605wma.9.2020.05.21.06.47.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 06:47:06 -0700 (PDT)
-Date:   Thu, 21 May 2020 09:47:05 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
-Message-ID: <20200521134705.GA140701@google.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <20200520222642.70679-1-joel@joelfernandes.org>
- <20200521085122.GF325280@hirez.programming.kicks-ass.net>
+        Thu, 21 May 2020 06:47:32 -0700 (PDT)
+Date:   Thu, 21 May 2020 13:47:31 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH v8 03/14] media: platform: Improve getting and requesting
+ irq flow for bug fixing
+Message-ID: <20200521134731.GC209565@chromium.org>
+References: <20200403094033.8288-1-xia.jiang@mediatek.com>
+ <20200403094033.8288-4-xia.jiang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521085122.GF325280@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200403094033.8288-4-xia.jiang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-Thanks for the comments.
-
-On Thu, May 21, 2020 at 10:51:22AM +0200, Peter Zijlstra wrote:
-> On Wed, May 20, 2020 at 06:26:42PM -0400, Joel Fernandes (Google) wrote:
-> > Add a per-thread core scheduling interface which allows a thread to tag
-> > itself and enable core scheduling. Based on discussion at OSPM with
-> > maintainers, we propose a prctl(2) interface accepting values of 0 or 1.
-> >  1 - enable core scheduling for the task.
-> >  0 - disable core scheduling for the task.
+On Fri, Apr 03, 2020 at 05:40:22PM +0800, Xia Jiang wrote:
+> Delete platform_get_resource operation for irq.
+> Return actual value rather than EINVAL when fail to get and request
+> irq.
 > 
-> Yeah, so this is a terrible interface :-)
-
-I tried to keep it simple. You are right, lets make it better.
-
-> It doens't allow tasks for form their own groups (by for example setting
-> the key to that of another task).
-
-So for this, I was thinking of making the prctl pass in an integer. And 0
-would mean untagged. Does that sound good to you?
-
-> It is also horribly ill defined what it means to 'enable', with whoem
-> is it allows to share a core.
-
-I couldn't parse this. Do you mean "enabling coresched does not make sense if
-we don't specify whom to share the core with?"
-
-> > Special cases:
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> > (1)
-> > The core-scheduling patchset contains a CGroup interface as well. In
-> > order for us to respect users of that interface, we avoid overriding the
-> > tag if a task was CGroup-tagged because the task becomes inconsistent
-> > with the CGroup tag. Instead return -EBUSY.
-> > 
-> > (2)
-> > If a task is prctl-tagged, allow the CGroup interface to override
-> > the task's tag.
-> 
-> OK, so cgroup always wins; is why is that a good thing?
 
-I was just trying to respect the functionality of the CGroup patch in the
-coresched series, after all a gentleman named Peter Zijlstra wrote that
-patch ;-) ;-).
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
-More seriously, the reason I did it this way is the prctl-tagging is a bit
-incompatible with CGroup tagging:
-
-1. What happens if 2 tasks are in a tagged CGroup and one of them changes
-their cookie through prctl? Do they still remain in the tagged CGroup but are
-now going to not trust each other? Do they get removed from the CGroup? This
-is why I made the prctl fail with -EBUSY in such cases.
-
-2. What happens if 2 tagged tasks with different cookies are added to a
-tagged CGroup? Do we fail the addition of the tasks to the group, or do we
-override their cookie (like I'm doing)?
-
-> > ChromeOS will use core-scheduling to securely enable hyperthreading.
-> > This cuts down the keypress latency in Google docs from 150ms to 50ms
-> > while improving the camera streaming frame rate by ~3%.
-> 
-> It doesn't consider permissions.
-> 
-> Basically, with the way you guys use it, it should be a CAP_SYS_ADMIN
-> only to enable core-sched.
-
-True, we were relying on the seccomp sandboxing in ChromeOS to protect the
-prctl but you're right and I fixed it for next revision.
-
-> That also means we should very much default to disable.
-
-This is how it is already.
-
-thanks,
-
- - Joel
-
+Best regards,
+Tomasz
