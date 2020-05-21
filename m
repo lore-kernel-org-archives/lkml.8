@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1105C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C31C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7F2020849
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4390120759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgEUJOF (ORCPT
+        id S1728859AbgEUJOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:14:05 -0400
-Received: from v6.sk ([167.172.42.174]:34782 "EHLO v6.sk"
+        Thu, 21 May 2020 05:14:08 -0400
+Received: from v6.sk ([167.172.42.174]:34802 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728671AbgEUJOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:14:04 -0400
+        id S1728833AbgEUJOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:14:06 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 684AE612FF;
-        Thu, 21 May 2020 09:14:02 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 4947A61300;
+        Thu, 21 May 2020 09:14:04 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Alessandro Zummo <a.zummo@towertech.it>,
@@ -35,9 +35,9 @@ Cc:     Alessandro Zummo <a.zummo@towertech.it>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 1/9] dt-bindings: mmc: Convert sdhci-pxa to json-schema
-Date:   Thu, 21 May 2020 11:13:48 +0200
-Message-Id: <20200521091356.2211020-2-lkundrak@v3.sk>
+Subject: [PATCH v2 2/9] dt-bindings: gpio: Convert mrvl-gpio to json-schema
+Date:   Thu, 21 May 2020 11:13:49 +0200
+Message-Id: <20200521091356.2211020-3-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200521091356.2211020-1-lkundrak@v3.sk>
 References: <20200521091356.2211020-1-lkundrak@v3.sk>
@@ -48,191 +48,269 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the sdhci-pxa binding to DT schema format using json-schema.
+This converts the mrvl-gpio binding to DT schema format using json-schema.
 
-At the same time, fix a couple of issues with the examples discovered by
-the validation tool -- a semicolon instead of a comma and wrong node names.
+Various fixes were done during the conversion, such as adding more
+properties that are in fact mandatory or extending the examples to
+include child nodes with extra GPIO blocks.
+
+The compatible strings are a mess. It is not clear why so many of them
+are needed; the driver doesn't really seem to differentiate between the
+models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
+are not used at all, so it's not known how many interrupts they utilize.
+On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
+doesn't end up in any actual DTB file.
+
+In any case -- the schema merely copies whatever was in the original
+binding document, so it's hopefully no more wrong that the original.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
 ---
 Changes since v1:
-- move reg-names items: from the conditional to main properties:, only
-  specify maxItems and minItems in conditional branches
-- Specify minItems and maxItems in properties/reg instad of on
-  conditional branchs
+- Drop marvell,pxa1928-gpio
+- Drop ranges from example with no gcb child nodes
 - Add default GPL-2.0-only license tag
 - Fill in maintainers from MAINTAINERS file
 
- .../devicetree/bindings/mmc/sdhci-pxa.txt     |  50 ---------
- .../devicetree/bindings/mmc/sdhci-pxa.yaml    | 103 ++++++++++++++++++
- 2 files changed, 103 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+ .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
+ .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 174 ++++++++++++++++++
+ 2 files changed, 174 insertions(+), 48 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
 deleted file mode 100644
-index 3d1b449d6097..000000000000
---- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+index 30fd2201b3d4..000000000000
+--- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
 +++ /dev/null
-@@ -1,50 +0,0 @@
--* Marvell sdhci-pxa v2/v3 controller
--
--This file documents differences between the core properties in mmc.txt
--and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
+@@ -1,48 +0,0 @@
+-* Marvell PXA GPIO controller
 -
 -Required properties:
--- compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
--  "marvell,armada-380-sdhci".
--- reg:
--  * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
--    the SDHCI registers.
+-- compatible : Should be "intel,pxa25x-gpio", "intel,pxa26x-gpio",
+-		"intel,pxa27x-gpio", "intel,pxa3xx-gpio",
+-		"marvell,pxa93x-gpio", "marvell,mmp-gpio",
+-		"marvell,mmp2-gpio" or marvell,pxa1928-gpio.
+-- reg : Address and length of the register set for the device
+-- interrupts : Should be the port interrupt shared by all gpio pins.
+-  There're three gpio interrupts in arch-pxa, and they're gpio0,
+-  gpio1 and gpio_mux. There're only one gpio interrupt in arch-mmp,
+-  gpio_mux.
+-- interrupt-names : Should be the names of irq resources. Each interrupt
+-  uses its own interrupt name, so there should be as many interrupt names
+-  as referenced interrupts.
+-- interrupt-controller : Identifies the node as an interrupt controller.
+-- #interrupt-cells: Specifies the number of cells needed to encode an
+-  interrupt source.
+-- gpio-controller : Marks the device node as a gpio controller.
+-- #gpio-cells : Should be two.  The first cell is the pin number and
+-  the second cell is used to specify flags. See gpio.txt for possible
+-  values.
 -
--  * for "marvell,armada-380-sdhci", three register areas. The first
--    one for the SDHCI registers themselves, the second one for the
--    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
--    SDIO3 Configuration register
--- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
--  for "marvell,armada-380-sdhci"
--- clocks: Array of clocks required for SDHCI; requires at least one for
--    I/O clock.
--- clock-names: Array of names corresponding to clocks property; shall be
--    "io" for I/O clock and "core" for optional core clock.
+-Example for a MMP platform:
 -
--Optional properties:
--- mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
+-	gpio: gpio@d4019000 {
+-		compatible = "marvell,mmp-gpio";
+-		reg = <0xd4019000 0x1000>;
+-		interrupts = <49>;
+-		interrupt-names = "gpio_mux";
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-      };
 -
--Example:
+-Example for a PXA3xx platform:
 -
--sdhci@d4280800 {
--	compatible = "mrvl,pxav3-mmc";
--	reg = <0xd4280800 0x800>;
--	bus-width = <8>;
--	interrupts = <27>;
--	clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
--	clock-names = "io", "core";
--	non-removable;
--	mrvl,clk-delay-cycles = <31>;
--};
--
--sdhci@d8000 {
--	compatible = "marvell,armada-380-sdhci";
--	reg-names = "sdhci", "mbus", "conf-sdio3";
--	reg = <0xd8000 0x1000>,
--		<0xdc000 0x100>;
--		<0x18454 0x4>;
--	interrupts = <0 25 0x4>;
--	clocks = <&gateclk 17>;
--	clock-names = "io";
--	mrvl,clk-delay-cycles = <0x1F>;
--};
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+-	gpio: gpio@40e00000 {
+-		compatible = "intel,pxa3xx-gpio";
+-		reg = <0x40e00000 0x10000>;
+-		interrupt-names = "gpio0", "gpio1", "gpio_mux";
+-		interrupts = <8 9 10>;
+-		gpio-controller;
+-		#gpio-cells = <0x2>;
+-		interrupt-controller;
+-		#interrupt-cells = <0x2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
 new file mode 100644
-index 000000000000..27ea069aa5fc
+index 000000000000..575ccc75ae30
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
-@@ -0,0 +1,103 @@
++++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+@@ -0,0 +1,174 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
++$id: http://devicetree.org/schemas/gpio/mrvl-gpio.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell PXA SDHCI v2/v3 bindings
++title: Marvell PXA GPIO controller
 +
 +maintainers:
-+  - Ulf Hansson <ulf.hansson@linaro.org>
++  - Linus Walleij <linus.walleij@linaro.org>
++  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
 +  - Rob Herring <robh+dt@kernel.org>
 +
 +allOf:
-+  - $ref: mmc-controller.yaml#
 +  - if:
 +      properties:
 +        compatible:
 +          contains:
-+            const: marvell,armada-380-sdhci
++            enum:
++              - intel,pxa25x-gpio
++              - intel,pxa26x-gpio
++              - intel,pxa27x-gpio
++              - intel,pxa3xx-gpio
 +    then:
 +      properties:
-+        regs:
++        interrupts:
 +          minItems: 3
-+        reg-names:
-+          minItems: 3
-+      required:
-+        - reg-names
-+    else:
++          maxItems: 3
++        interrupt-names:
++          items:
++            - const: gpio0
++            - const: gpio1
++            - const: gpio_mux
++  - if:
 +      properties:
-+        regs:
++        compatible:
++          contains:
++            enum:
++              - marvell,mmp-gpio
++              - marvell,mmp2-gpio
++    then:
++      properties:
++        interrupts:
 +          maxItems: 1
-+        reg-names:
-+          maxItems: 1
++        interrupt-names:
++          items:
++            - const: gpio_mux
 +
 +properties:
++  $nodename:
++    pattern: '^gpio@[0-9a-f]+$'
++
 +  compatible:
 +    enum:
-+      - mrvl,pxav2-mmc
-+      - mrvl,pxav3-mmc
-+      - marvell,armada-380-sdhci
++      - intel,pxa25x-gpio
++      - intel,pxa26x-gpio
++      - intel,pxa27x-gpio
++      - intel,pxa3xx-gpio
++      - marvell,mmp-gpio
++      - marvell,mmp2-gpio
++      - marvell,pxa93x-gpio
 +
 +  reg:
-+    minItems: 1
-+    maxItems: 3
-+
-+  reg-names:
-+    items:
-+      - const: sdhci
-+      - const: mbus
-+      - const: conf-sdio3
-+
-+  interrupts:
 +    maxItems: 1
 +
 +  clocks:
-+    minItems: 1
-+    maxItems: 2
++    maxItems: 1
 +
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: io
-+      - const: core
++  resets:
++    maxItems: 1
 +
-+  mrvl,clk-delay-cycles:
-+    description: Specify a number of cycles to delay for tuning.
-+    $ref: /schemas/types.yaml#/definitions/uint32
++  ranges: true
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++  gpio-ranges:
++    maxItems: 1
++
++  interrupts: true
++
++  interrupt-names: true
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 2
++
++patternProperties:
++  '^gpio@[0-9a-f]*$':
++    type: object
++    properties:
++      reg:
++        maxItems: 1
++
++    required:
++      - reg
++
++    additionalProperties: false
 +
 +required:
 +  - compatible
++  - '#address-cells'
++  - '#size-cells'
 +  - reg
++  - gpio-controller
++  - '#gpio-cells'
 +  - interrupts
-+  - clocks
-+  - clock-names
++  - interrupt-names
++  - interrupt-controller
++  - '#interrupt-cells'
++  - ranges
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/berlin2.h>
-+    mmc@d4280800 {
-+        compatible = "mrvl,pxav3-mmc";
-+        reg = <0xd4280800 0x800>;
-+        bus-width = <8>;
-+        interrupts = <27>;
-+        clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
-+        clock-names = "io", "core";
-+        non-removable;
-+        mrvl,clk-delay-cycles = <31>;
++    #include <dt-bindings/clock/pxa-clock.h>
++    gpio@40e00000 {
++        compatible = "intel,pxa3xx-gpio";
++        #address-cells = <1>;
++        #size-cells = <1>;
++        reg = <0x40e00000 0x10000>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupts = <8>, <9>, <10>;
++        interrupt-names = "gpio0", "gpio1", "gpio_mux";
++        clocks = <&clks CLK_GPIO>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
 +    };
 +  - |
-+    mmc@d8000 {
-+        compatible = "marvell,armada-380-sdhci";
-+        reg-names = "sdhci", "mbus", "conf-sdio3";
-+        reg = <0xd8000 0x1000>,
-+              <0xdc000 0x100>,
-+              <0x18454 0x4>;
-+        interrupts = <0 25 0x4>;
-+        clocks = <&gateclk 17>;
-+        clock-names = "io";
-+        mrvl,clk-delay-cycles = <0x1F>;
-+    };
++    #include <dt-bindings/clock/marvell,pxa910.h>
++    gpio@d4019000 {
++        compatible = "marvell,mmp-gpio";
++        #address-cells = <1>;
++        #size-cells = <1>;
++        reg = <0xd4019000 0x1000>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupts = <49>;
++        interrupt-names = "gpio_mux";
++        clocks = <&soc_clocks PXA910_CLK_GPIO>;
++        resets = <&soc_clocks PXA910_CLK_GPIO>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        ranges;
++
++        gpio@d4019000 {
++            reg = <0xd4019000 0x4>;
++        };
++
++        gpio@d4019004 {
++            reg = <0xd4019004 0x4>;
++        };
++
++        gpio@d4019008 {
++            reg = <0xd4019008 0x4>;
++        };
++
++        gpio@d4019100 {
++            reg = <0xd4019100 0x4>;
++        };
++     };
 +
 +...
 -- 
