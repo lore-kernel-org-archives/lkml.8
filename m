@@ -2,90 +2,81 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C89C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A19EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF562065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A6D12065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgEUHmB (ORCPT
+        id S1728512AbgEUHmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:42:01 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48498 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbgEUHmB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:42:01 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0D3031C0290; Thu, 21 May 2020 09:42:00 +0200 (CEST)
-Date:   Thu, 21 May 2020 09:41:59 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
-Message-ID: <20200521074110.GA3895@amd.ucw.cz>
-References: <20200520110900.GA8203@amd>
+        Thu, 21 May 2020 03:42:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35472 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728245AbgEUHmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 03:42:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DF51FAD78;
+        Thu, 21 May 2020 07:42:06 +0000 (UTC)
+Subject: Re: [PATCH v6 12/12] mmap locking API: convert mmap_sem comments
+To:     Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        John Hubbard <jhubbard@nvidia.com>
+References: <20200520052908.204642-1-walken@google.com>
+ <20200520052908.204642-13-walken@google.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <e01060e9-6f00-7fa8-5da0-c9250c951d10@suse.cz>
+Date:   Thu, 21 May 2020 09:41:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Content-Disposition: inline
-In-Reply-To: <20200520110900.GA8203@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520052908.204642-13-walken@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/20/20 7:29 AM, Michel Lespinasse wrote:
+> Convert comments that reference mmap_sem to reference mmap_lock instead.
+> 
+> Signed-off-by: Michel Lespinasse <walken@google.com>
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Hi!
+But:
 
-> My window manager stopped responding. I was able to recover machine
-> using sysrq-k.
->=20
-> I started writing nice report, when session failed second time. And
-> then third time on next attempt.
->=20
-> Any ideas?
->=20
-> I'll send this out before this locks up...
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index a1247d3553da..1bf46e2e0cec 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -224,7 +224,7 @@ static int mpol_new_bind(struct mempolicy *pol, const nodemask_t *nodes)
+>   * handle an empty nodemask with MPOL_PREFERRED here.
+>   *
+>   * Must be called holding task's alloc_lock to protect task's mems_allowed
+> - * and mempolicy.  May also be called holding the mmap_semaphore for write.
+> + * and mempolicy.  May also be called holding the mmap_lockaphore for write.
+>   */
+>  static int mpol_set_nodemask(struct mempolicy *pol,
+>  		     const nodemask_t *nodes, struct nodemask_scratch *nsc)
 
-Today it crashed again, with similar oops in the log.
-
-My records say:
-
-fb57b1fabcb2 (HEAD, tag: next-20200519, origin/master, origin/HEAD) HEAD@{0=
-}: checkout: moving from bdecf38f228bcca73b31ada98b5b7ba1215eb9c9 to next-2=
-0200519
-bdecf38f228b (tag: next-20200515) HEAD@{1}: checkout: moving from 30e2206e1=
-1ce27ae910cc0dab21472429e400a87 to next-20200515
-
-So it is well possible that 0515 worked okay for few
-days. Hmm. Perhaps I'll try going to 0516 and see if it is stable?
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXsYwxwAKCRAw5/Bqldv6
-8ieiAJwJvEvk5R3Jui7qPD9WEIupPnK0OwCgoS/H6iYLcrZPla88CVwjjPemzEY=
-=9Wtu
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
+:)
