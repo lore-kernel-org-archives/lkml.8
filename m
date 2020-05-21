@@ -2,148 +2,223 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24257C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D78C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 038872072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ADhQPTFd"
+	by mail.kernel.org (Postfix) with ESMTP id 4CCFA20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgEUPKw (ORCPT
+        id S1729870AbgEUPMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728136AbgEUPKv (ORCPT
+        Thu, 21 May 2020 11:12:07 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39078 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728136AbgEUPMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:10:51 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B736BC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:10:51 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id g34so1877068uah.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:10:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ffe0xz9XMcB5mRpVbSZxAWF/UEfoDxZNXD2x44f+aIg=;
-        b=ADhQPTFdZEYLsxid6o5adOvSYnvHO06MEAcMIK9vt6NakkFzT7SJoRfUfS/VVY2uBN
-         sBf7Rg3UZ+KjLHtkaHd4bEORQOOVJ/qIZSn7J0HVFPd812RpgZPZxFrPxAe55+M2gl9T
-         R70cOP577H7YotMi3d7OptNRcJWyVeW+oc7lM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ffe0xz9XMcB5mRpVbSZxAWF/UEfoDxZNXD2x44f+aIg=;
-        b=VlIdPVryliykI9XwhVpW78pLqJxkPrHqVM5JEDqKpNJ29c0QGDU6ZmUfy+vP0w0rOs
-         hGiIZvhql92Ng7WHw3a4gabTE6uMZ4edAfQGZ6wHoVPZkfomFvO3ibWfdvaUnEZwPIDX
-         HDrD10QUkNTn6ZbrKWxVc6YnJH5Yndj2can6zQPRfwBty7TxqtVejY7Mjv47EWrd8jXq
-         mC/iVRVwJ/7qqZpbrBEEPQmMb19KMiSnioNfdXpJZV+5nHPI57CK9CNhHwhMmv+piFht
-         Y0p3xmT8WywRCx6bkdBb3pKoL6s11v2wtZ5GAtd+x2lrHwDpJ+yVdv07RU2RIVzrd9BX
-         6MXw==
-X-Gm-Message-State: AOAM532PbYExyykmDvHRbWUnfkZ2DL0C1yDY/KSCrpsjUMVpZjvbgD4a
-        cNJDdM+r42K3BuvoAHQPj37pvH1OEak=
-X-Google-Smtp-Source: ABdhPJyIG6BKMswwi7dOnabT9qLnKXXBJL/N19SrC4yie/bm6OKneRjRIzbjuqVTs3QMQbuq8yBFog==
-X-Received: by 2002:ab0:48ea:: with SMTP id y39mr7293333uac.21.1590073849501;
-        Thu, 21 May 2020 08:10:49 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 2sm103950vsj.3.2020.05.21.08.10.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 08:10:48 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id 1so4183694vsl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:10:47 -0700 (PDT)
-X-Received: by 2002:a67:e884:: with SMTP id x4mr7424096vsn.106.1590073847105;
- Thu, 21 May 2020 08:10:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
- <1589307480-27508-3-git-send-email-rbokka@codeaurora.org> <ffaccce7-95c0-2f95-ad3b-55f1da42eaee@linaro.org>
- <14e1fa51-066c-6e1b-01a4-2103612de9e9@codeaurora.org> <d5902226-21b3-7941-6405-688d7a115142@linaro.org>
- <b80aaca0-0594-e04b-5320-b5b3c4478161@codeaurora.org> <d76e4eb2-fa6a-0b76-3912-83bce678bc96@linaro.org>
- <CAD=FV=XW7GymV_pr_0SvUPWwL6WnPhqMq-crq-RbR_us3-ShNA@mail.gmail.com>
- <9864496c-b066-3fe8-5608-bd9af69663f4@linaro.org> <CAD=FV=UbZPQ74COXJbOikq9Wcx1UvtuMuMA+nqkx44uySoqggg@mail.gmail.com>
- <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org>
-In-Reply-To: <99f07eaa-d072-f391-098e-e6f7a50a1960@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 21 May 2020 08:10:35 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
-Message-ID: <CAD=FV=W+UES1f3reMhvPPUho5FbaZXdU-2jkRaPcbBEzDWT+WQ@mail.gmail.com>
-Subject: Re: [RFC v1 2/3] drivers: nvmem: Add driver for QTI qfprom-efuse support
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        Thu, 21 May 2020 11:12:07 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 604D98030790;
+        Thu, 21 May 2020 15:12:02 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NIsANa6IA8-3; Thu, 21 May 2020 18:11:59 +0300 (MSK)
+Date:   Thu, 21 May 2020 18:11:58 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        John Garry <john.garry@huawei.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Baikal-T1 System Boot SPI
+ Controller binding
+Message-ID: <20200521151158.f3izg2svbn5dh6hy@mobilestation>
+References: <20200508093621.31619-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508093621.31619-2-Sergey.Semin@baikalelectronics.ru>
+ <20200518152659.GA2525@bogus>
+ <20200518212703.vju456kd3telctux@mobilestation>
+ <CAL_JsqLLMh1LAvVXccyjLc4SqTAaPQ5LC7Nb6Q5ib8_3a0q6Ow@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLLMh1LAvVXccyjLc4SqTAaPQ5LC7Nb6Q5ib8_3a0q6Ow@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, May 21, 2020 at 8:01 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
-> On 20/05/2020 23:48, Doug Anderson wrote:
-> >> Is this only applicable for corrected address space?
-> > I guess I was proposing a two dts-node / two drive approach here.
+On Thu, May 21, 2020 at 08:57:10AM -0600, Rob Herring wrote:
+> On Mon, May 18, 2020 at 3:27 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
 > >
-> > dts node #1:just covers the memory range for accessing the FEC-corrected data
-> > driver #1: read-only and reads the FEC-corrected data
+> > On Mon, May 18, 2020 at 09:26:59AM -0600, Rob Herring wrote:
+> > > On Fri, May 08, 2020 at 12:36:20PM +0300, Serge Semin wrote:
+> > > > Baikal-T1 Boot SPI is a part of the SoC System Controller and is
+> > > > responsible for the system bootup from an external SPI flash. It's a DW
+> > > > APB SSI-based SPI-controller with no interrupts, no DMA, with just one
+> > > > native chip-select available and a single reference clock. Since Baikal-T1
+> > > > SoC is normally booted up from an external SPI flash this SPI controller
+> > > > in most of the cases is supposed to be connected to a single SPI-nor
+> > > > flash. Additionally in order to provide a transparent from CPU point of
+> > > > view initial code execution procedure the system designers created an IP
+> > > > block which physically maps the SPI flash found at CS0 to a memory region.
+> > > >
+> > > > Co-developed-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> > > > Signed-off-by: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > > Cc: Paul Burton <paulburton@kernel.org>
+> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > > > Cc: John Garry <john.garry@huawei.com>
+> > > > Cc: Chuanhong Guo <gch981213@gmail.com>
+> > > > Cc: Tomer Maimon <tmaimon77@gmail.com>
+> > > > Cc: Lee Jones <lee.jones@linaro.org>
+> > > > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > Cc: linux-mips@vger.kernel.org
+> > > > Cc: linux-spi@vger.kernel.org
+> > > > ---
+> > > >  .../bindings/spi/baikal,bt1-sys-ssi.yaml      | 100 ++++++++++++++++++
+> > > >  1 file changed, 100 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml b/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..d9d3257d78f4
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/spi/baikal,bt1-sys-ssi.yaml
+> > > > @@ -0,0 +1,100 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/spi/baikal,bt1-sys-ssi.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Baikal-T1 System Boot SSI Controller
+> > > > +
+> > > > +description: |
+> > > > +  Baikal-T1 System Controller includes a Boot SPI Controller, which is
+> > > > +  responsible for loading chip bootup code from an external SPI flash. In order
+> > > > +  to do this transparently from CPU point of view there is a dedicated IP block
+> > > > +  mapping the 16MB flash to a dedicated MMIO range. The controller is based on
+> > > > +  the DW APB SSI IP-core but equipped with very limited resources: no IRQ,
+> > > > +  no DMA, a single native CS being necessarily connected to a 16MB SPI flash
+> > > > +  (otherwise the system won't bootup from the flash), internal Tx/Rx FIFO of
+> > > > +  just 8 bytes depth. Access to DW APB SSI controller registers is mutually
+> > > > +  exclusive from normal MMIO interface and from physically mapped SPI Flash
+> > > > +  memory. So either one or another way of using the controller functionality
+> > > > +  can be enabled at a time.
+> > > > +
+> > > > +maintainers:
+> > > > +  - Serge Semin <fancer.lancer@gmail.com>
+> > > > +
+> > > > +allOf:
+> > > > +  - $ref: spi-controller.yaml#
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: baikal,bt1-sys-ssi
+> > > > +
+> > > > +  reg:
+> > > > +    items:
+> > > > +      - description: Baikal-T1 Boot Controller configuration registers
+> > > > +      - description: Physically mapped SPI flash ROM found at CS0
+> > > > +
+> > > > +  reg-names:
+> > > > +    items:
+> > > > +      - const: config
+> > > > +      - const: map
+> > > > +
+> > > > +  clocks:
+> > > > +    description: SPI Controller reference clock source
+> > >
+> > > Can drop this.
 > >
-> > dts node #2: covers the memory range that's_not_  the FEC-corrected
-> > memory range.
-> > driver #2: read-write.  reading reads uncorrected data
+> > Ok.
 > >
-> > Does that seem sane?
->
-> I see your point but it does not make sense to have two node for same thing.
+> > >
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  clock-names:
+> > > > +    items:
+> > > > +      - const: ssi_clk
+> > > > +
+> > > > +  num-cs:
+> > > > +    const: 1
+> > > > +
+> > > > +patternProperties:
+> > > > +  "^.*@[0-9a-f]+":
+> > > > +    type: object
+> > > > +    properties:
+> > > > +      reg:
+> > > > +        minimum: 0
+> > > > +        maximum: 0
+> > > > +
+> > > > +      spi-rx-bus-width:
+> > > > +        const: 1
+> > > > +
+> > > > +      spi-tx-bus-width:
+> > > > +        const: 1
+> > >
+> > > What's the point of these 2 properties if they aren't required?
+> >
+> > Yes, they are optional, but this is a constraint on the bus-width parameters.
+> > DW APB SSI provides a single laned Tx and Rx.
+> 
+> Are you just trying to keep someone from saying 'spi-tx-bus-width: 2'
+> for example?
 
-OK, so that sounds as if we want to go with the proposal where we
-"deprecate the old driver and/or bindings and say that there really
-should just be one node and one driver".
+Right.
 
-Would this be acceptable to you?
+> 
+> You could also say 'spi-tx-bus-width: false' here to disallow the
+> property. I guess the above is fine.
 
-1. Officially mark the old bindings as deprecated.
+Ok. If it's fine I'll leave them as is then. Right?
 
-2. Leave the old driver there to support the old deprecated bindings,
-at least until everyone can be transferred over.  There seem to be
-quite a few existing users of "qcom,qfprom" and we're supposed to make
-an attempt at keeping the old device trees working, at least for a
-little while.  Once everyone is transferred over we could decide to
-delete the old driver.
+What about the next question you've asked:
 
-3. We will have a totally new driver here.
+> >
+> > > +
+> > > +unevaluatedProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - reg-names
+> >
+> > > +  - "#address-cells"
+> > > +  - "#size-cells"
+> >
+> > These 2 are required by spi-controller.yaml, so you can drop here.
+> 
+> Yes, "#address-cells" is required, but "#size-cells" isn't. Is this supposed to
+> be like that?
 
-4. A given device tree will _not_ be allowed to have both
-"qcom,qfprom" specified and "qcom,SOC-qfprom" specified.  ...and by
-"qcom,SOC-qfprom" I mean that SOC should be replaced by the SoC name,
-so "qcom,sc7180-qfprom" or "qcom,sdm845-qfprom".  So once you switch
-to the new node it replaces the old node.
+As far as I can see in spi-controller.yaml, "#address-cells" is required, but
+"#size-cells" isn't. Is this intentional?
 
+-Sergey
 
-> Isn't the raw address space reads used to for blowing and checking the
-> fuses if they are blown correctly or not and software usage of these
-> fuses should only be done from correct address space?
->
-> the read interface to user should be always from corrected address space
-> and write interface should be to raw address space.
-
-Great.  That sounds right to me.  Presumably the driver could add some
-sort of "debugfs" access to read the raw address space if needed.
-
--Doug
+> 
+> Rob
