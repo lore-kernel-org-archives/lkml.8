@@ -2,221 +2,117 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7590AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F10D2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590031401;
-	bh=l4LFB2adLL8Fwr8y3Ullwx1wKTu/CijGRZHMau1S3BM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WwNX0C9ULPL2KQXRs1BY4yAfVi5PYRSBmCTOOvftqZn7ENo1KiT7DgAjZ7yslNPkV
-	 8Juc7AYgl1c2GknL7znmqeZYU8gbQQnZuL5irkZtWJIRv+bOJoRStNBPCbp4v/OCFG
-	 WGhSbTpcfdACw3MjQweeoxRKkyryQqUGtlbXLv6M=
+	by mail.kernel.org (Postfix) with ESMTP id CE03F20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:24:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dQODjFoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgEUDXU (ORCPT
+        id S1728154AbgEUDYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:23:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbgEUDXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:23:20 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B190F20709;
-        Thu, 21 May 2020 03:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590031398;
-        bh=l4LFB2adLL8Fwr8y3Ullwx1wKTu/CijGRZHMau1S3BM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hgkSAmpn3UjiPftlBcqCwQBjtVbcwDRD2pY3YAH3r13ALnBRXu3HEk6GjuSP/tYi6
-         ZQZ60+cglfgcbXqW+f2pWTBF3CaBRHhpvfWD4x1ujadaabEo9PkpVHO9MHBaaTGJEC
-         8c2hMJQX+tCfvZeY8qmfzO5ZmiKc11u2K1AoPtNY=
-Date:   Wed, 20 May 2020 20:23:17 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v6 05/12] mmap locking API: convert mmap_sem call sites
- missed by coccinelle
-Message-Id: <20200520202317.1f7515649dd711b388e40d3f@linux-foundation.org>
-In-Reply-To: <20200520052908.204642-6-walken@google.com>
-References: <20200520052908.204642-1-walken@google.com>
-        <20200520052908.204642-6-walken@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 20 May 2020 23:24:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbgEUDYT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:24:19 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D980C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:24:19 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d10so2458613pgn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mWnBjl1zYC8g8arTkDhsLL1NSSPTMEKdZHG0NVZD9M8=;
+        b=dQODjFoCNsXPgZtIsjjHamdC4Pu+mSJd0GckTyPx551zr98aODM5dJFMdkhXgPjklf
+         VYPAt85gs5oCBBSY8ECg8cFn31wUYDRLAAh9PNMfsCMF8a+/KTkDsHPt9m0Jc9PtxSpU
+         8wZgJVSDe5kxAm3oAtQuqWMfKgxPEZGlO2rzc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mWnBjl1zYC8g8arTkDhsLL1NSSPTMEKdZHG0NVZD9M8=;
+        b=mKu8fCIBXxiUDKVyHq6fCfvy4cyeWcH5164/ixOnWFwAYmfBJPaHGaUxL2TS89euiI
+         ybSpODVqwy2QKi1QTgmdAbGy5B2gd47TqorT8nDVV7BG5nfvkN00XZAktZQRwQsqC2EI
+         WvX3fa371XfrrhRQh9+tTr+RLq+BE4Ydp1NAOFuNTI0sAzxJeFNZwhPv+gxkh0NeRydv
+         NuhjSdd4cwlYSbNFjZiNKpZYfGFvqkajBoLfjNRIZTV6ChbN1O+UMCrPIpzypBMQm3OW
+         SDAUw/iWsgvDejWXFqbhD0e1BgeHGGmf2Tx3p+ycUd++j1yC/yuqNwcID80fU9qRKY98
+         qTsw==
+X-Gm-Message-State: AOAM5320dDEtA9h1KGJ1kJ6w1b+H74eJtO+j2UKpvg2pGcPApIN7cAVp
+        ogwFjHke/vXR1mQZoAkS77x36ssqZS9WDA==
+X-Google-Smtp-Source: ABdhPJwEXKl6A+KQbb5Fp68HNAuocmXXpqB85QaVdfl5nI9EFTDUjgRqSfp1CPCQYOESq1iPuYQ3Xw==
+X-Received: by 2002:a63:f242:: with SMTP id d2mr7158481pgk.212.1590031458617;
+        Wed, 20 May 2020 20:24:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s206sm3325954pfc.31.2020.05.20.20.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 20:24:16 -0700 (PDT)
+Date:   Wed, 20 May 2020 20:24:15 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] soc: fsl: qe: Replace one-element array and use
+ struct_size() helper
+Message-ID: <202005202022.588918E61@keescook>
+References: <20200518221904.GA22274@embeddedor>
+ <202005181529.C0CB448FBB@keescook>
+ <CADRPPNR-Croux9FgnrQJJmdF2jNnuAmC+2xMJSgSbkbRv9u8Mw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADRPPNR-Croux9FgnrQJJmdF2jNnuAmC+2xMJSgSbkbRv9u8Mw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 22:29:01 -0700 Michel Lespinasse <walken@google.com> wrote:
+On Wed, May 20, 2020 at 06:52:21PM -0500, Li Yang wrote:
+> On Mon, May 18, 2020 at 5:57 PM Kees Cook <keescook@chromium.org> wrote:
+> > Hm, looking at this code, I see a few other things that need to be
+> > fixed:
+> >
+> > 1) drivers/tty/serial/ucc_uart.c does not do a be32_to_cpu() conversion
+> >    on the length test (understandably, a little-endian system has never run
+> >    this code since it's ppc specific), but it's still wrong:
+> >
+> >         if (firmware->header.length != fw->size) {
+> >
+> >    compare to the firmware loader:
+> >
+> >         length = be32_to_cpu(hdr->length);
+> >
+> > 2) drivers/soc/fsl/qe/qe.c does not perform bounds checking on the
+> >    per-microcode offsets, so the uploader might send data outside the
+> >    firmware buffer. Perhaps:
+> 
+> We do validate the CRC for each microcode, it is unlikely the CRC
+> check can pass if the offset or length is not correct.  But you are
+> probably right that it will be safer to check the boundary and fail
 
-> Convert the last few remaining mmap_sem rwsem calls to use the new
-> mmap locking API. These were missed by coccinelle for some reason
-> (I think coccinelle does not support some of the preprocessor
-> constructs in these files ?)
+Right, but a malicious firmware file could still match CRC but trick the
+kernel code.
 
+> quicker before we actually start the CRC check.  Will you come up with
+> a formal patch or you want us to deal with it?
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: mmap-locking-api-convert-mmap_sem-call-sites-missed-by-coccinelle-fix
+It sounds like Gustavo will be sending one, though I don't think either
+of us have the hardware to test it with, so if you could do that part,
+that would be great! :)
 
-convert linux-next leftovers
-
-Cc: Michel Lespinasse <walken@google.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Davidlohr Bueso <dbueso@suse.de>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Liam Howlett <Liam.Howlett@oracle.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ying Han <yinghan@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- arch/arm64/kvm/mmu.c |   14 +++++++-------
- lib/test_hmm.c       |   14 +++++++-------
- 2 files changed, 14 insertions(+), 14 deletions(-)
-
---- a/lib/test_hmm.c~mmap-locking-api-convert-mmap_sem-call-sites-missed-by-coccinelle-fix
-+++ a/lib/test_hmm.c
-@@ -243,9 +243,9 @@ static int dmirror_range_fault(struct dm
- 		}
- 
- 		range->notifier_seq = mmu_interval_read_begin(range->notifier);
--		down_read(&mm->mmap_sem);
-+		mmap_read_lock(mm);
- 		ret = hmm_range_fault(range);
--		up_read(&mm->mmap_sem);
-+		mmap_read_unlock(mm);
- 		if (ret) {
- 			if (ret == -EBUSY)
- 				continue;
-@@ -684,7 +684,7 @@ static int dmirror_migrate(struct dmirro
- 	if (!mmget_not_zero(mm))
- 		return -EINVAL;
- 
--	down_read(&mm->mmap_sem);
-+	mmap_read_lock(mm);
- 	for (addr = start; addr < end; addr = next) {
- 		vma = find_vma(mm, addr);
- 		if (!vma || addr < vma->vm_start ||
-@@ -711,7 +711,7 @@ static int dmirror_migrate(struct dmirro
- 		dmirror_migrate_finalize_and_map(&args, dmirror);
- 		migrate_vma_finalize(&args);
- 	}
--	up_read(&mm->mmap_sem);
-+	mmap_read_unlock(mm);
- 	mmput(mm);
- 
- 	/* Return the migrated data for verification. */
-@@ -731,7 +731,7 @@ static int dmirror_migrate(struct dmirro
- 	return ret;
- 
- out:
--	up_read(&mm->mmap_sem);
-+	mmap_read_unlock(mm);
- 	mmput(mm);
- 	return ret;
- }
-@@ -823,9 +823,9 @@ static int dmirror_range_snapshot(struct
- 
- 		range->notifier_seq = mmu_interval_read_begin(range->notifier);
- 
--		down_read(&mm->mmap_sem);
-+		mmap_read_lock(mm);
- 		ret = hmm_range_fault(range);
--		up_read(&mm->mmap_sem);
-+		mmap_read_unlock(mm);
- 		if (ret) {
- 			if (ret == -EBUSY)
- 				continue;
---- a/arch/arm64/kvm/mmu.c~mmap-locking-api-convert-mmap_sem-call-sites-missed-by-coccinelle-fix
-+++ a/arch/arm64/kvm/mmu.c
-@@ -1084,7 +1084,7 @@ void stage2_unmap_vm(struct kvm *kvm)
- 	int idx;
- 
- 	idx = srcu_read_lock(&kvm->srcu);
--	down_read(&current->mm->mmap_sem);
-+	mmap_read_lock(current->mm);
- 	spin_lock(&kvm->mmu_lock);
- 
- 	slots = kvm_memslots(kvm);
-@@ -1092,7 +1092,7 @@ void stage2_unmap_vm(struct kvm *kvm)
- 		stage2_unmap_memslot(kvm, memslot);
- 
- 	spin_unlock(&kvm->mmu_lock);
--	up_read(&current->mm->mmap_sem);
-+	mmap_read_unlock(current->mm);
- 	srcu_read_unlock(&kvm->srcu, idx);
- }
- 
-@@ -1848,11 +1848,11 @@ static int user_mem_abort(struct kvm_vcp
- 	}
- 
- 	/* Let's check if we will get back a huge page backed by hugetlbfs */
--	down_read(&current->mm->mmap_sem);
-+	mmap_read_lock(current->mm);
- 	vma = find_vma_intersection(current->mm, hva, hva + 1);
- 	if (unlikely(!vma)) {
- 		kvm_err("Failed to find VMA for hva 0x%lx\n", hva);
--		up_read(&current->mm->mmap_sem);
-+		mmap_read_unlock(current->mm);
- 		return -EFAULT;
- 	}
- 
-@@ -1879,7 +1879,7 @@ static int user_mem_abort(struct kvm_vcp
- 	if (vma_pagesize == PMD_SIZE ||
- 	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
- 		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
--	up_read(&current->mm->mmap_sem);
-+	mmap_read_unlock(current->mm);
- 
- 	/* We need minimum second+third level pages */
- 	ret = mmu_topup_memory_cache(memcache, kvm_mmu_cache_min_pages(kvm),
-@@ -2456,7 +2456,7 @@ int kvm_arch_prepare_memory_region(struc
- 	    (kvm_phys_size(kvm) >> PAGE_SHIFT))
- 		return -EFAULT;
- 
--	down_read(&current->mm->mmap_sem);
-+	mmap_read_lock(current->mm);
- 	/*
- 	 * A memory region could potentially cover multiple VMAs, and any holes
- 	 * between them, so iterate over all of them to find out if we can map
-@@ -2515,7 +2515,7 @@ int kvm_arch_prepare_memory_region(struc
- 		stage2_flush_memslot(kvm, memslot);
- 	spin_unlock(&kvm->mmu_lock);
- out:
--	up_read(&current->mm->mmap_sem);
-+	mmap_read_unlock(current->mm);
- 	return ret;
- }
- 
-_
-
+-- 
+Kees Cook
