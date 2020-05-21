@@ -2,180 +2,117 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C39C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E57C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8192065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="R+XUpn9q"
+	by mail.kernel.org (Postfix) with ESMTP id 5194C2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590047883;
+	bh=4lM/8ShYtWTr1Pw2EKWG6DtgkHZzD7Wz1k87Xzi6HFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=04bPffj1qLvqizFl8WPy25wC09j+4DBKkrciXoIXd+Vjt/RB3HXVAkg9HarIszKtC
+	 2OgsIBy1iuYEcPUgVAB5HfTGndRnEJ8rQDyoftedyXcHsWeO5y8yG33oSc/dyYzjg2
+	 E1Sg3n0p/VzHEk49mwmKk8JeLVlVxV/zu3MUC0qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgEUH4T (ORCPT
+        id S1728488AbgEUH6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:56:19 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51722 "EHLO mga18.intel.com"
+        Thu, 21 May 2020 03:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbgEUH4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:56:18 -0400
-IronPort-SDR: 7EIqXKvs99vNQHGP5/ZsO5MMS9xbFPjf9TnHYslla6/JccOC3OTUsgUyIjPaggg+0EsllJN56Q
- PgwoiJtoSxmQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 00:56:17 -0700
-IronPort-SDR: Ifqt7oWD28CU73Jplv1Hghgc8Gm+dCNQR8HOy0So5tRO7Ep/EUlkghn5pUieCRH+VqxwEXXz0N
- IkWda0b1W/wA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
-   d="scan'208";a="253907294"
-Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by fmsmga007.fm.intel.com with ESMTP; 21 May 2020 00:56:16 -0700
-Received: from orsmsx113.amr.corp.intel.com (10.22.240.9) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 21 May 2020 00:56:14 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX113.amr.corp.intel.com (10.22.240.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 21 May 2020 00:56:14 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 21 May 2020 00:56:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gcysVZa7j0ZFnhXIybgdZ7ipZNsUvCQ0/6tIedIeWFbps6xLDbVriJTeT+9yfSgayaaPDttIt0LIA0DsSa1ECIU4FQxwQUlxDfXbFmBeRAp5UXECTDkpLYdG7nFjOwpaKNYqfa1WEeKQEbX+I6MbhsJFRblUR1nqK7ogW80mDSzYP0O4h3iAZ5FEz/jZHzO8xsRPM8x5gYTDSqq4wYKq9B3nBCQO69oZxdS/N/HJEMLdpVAOE1z80iCVcdP+TsxDYnS/btbV/Jf9b0qEHfOKd6MMHAq04VqhV84HGuH7qPJo34KDSMyNsvZUAU1qTvglPX7XOJMhDz47vOG2603ttw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lgEHjhjzCoHl98WlaRY6AZYUuzEoQgZjbG1WqEFACc4=;
- b=GRi60DZSakUcZ6lmplbrTrSIxsjAF350qTCyqdKKFORBKiJh9Sf+eQ/O9UBn8y8VVc2oAvEoFXmrxxKf+k0EaZbUm8NWPcG5mkjB0uiLynd5QtAF31oxjR0h47pPTF2G9/B4v18uhVpQotRTihJ6GXDwdsiVJIy3lfWPAVumZqWWJTbleOCPvTxNloQPaErj3Fmh9uzgU5g7nQETxF/yhoSjtVTwNuoGBBmx434LI7clTx+tGjEsjHb7Heex6QqCt/apd5ux1x+6mAlzZb9VfR6p3NadyoTcZTvt5nHot5pYXAYjIcp4QVLW5UfipFzb9ttmk9pXKd1+CjVsdHdMxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lgEHjhjzCoHl98WlaRY6AZYUuzEoQgZjbG1WqEFACc4=;
- b=R+XUpn9qrtfBYngywTB44TiMtvrNCjWf/ydCSjZCJ7ilTuQRDQaZqHMTzcvy9rB81Rb5wUcDHZl6h4mqzh9pQ1b5VGZR5SM5IrAe6wpWbDjWCSaelJYDOQsAoUAg6ahpiMI3IDqLVmrVs7dt8HT9vABT+qTOukPJ19awzwSaOTE=
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com (2603:10b6:5:63::20) by
- DM6PR11MB3545.namprd11.prod.outlook.com (2603:10b6:5:141::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.26; Thu, 21 May 2020 07:56:12 +0000
-Received: from DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::40b:5b49:b17d:d875]) by DM6PR11MB2890.namprd11.prod.outlook.com
- ([fe80::40b:5b49:b17d:d875%7]) with mapi id 15.20.3000.022; Thu, 21 May 2020
- 07:56:12 +0000
-From:   "Brown, Aaron F" <aaron.f.brown@intel.com>
-To:     Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
-CC:     "daniel.sangorrin@toshiba.co.jp" <daniel.sangorrin@toshiba.co.jp>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        id S1728399AbgEUH6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 03:58:02 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB332065F;
+        Thu, 21 May 2020 07:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590047881;
+        bh=4lM/8ShYtWTr1Pw2EKWG6DtgkHZzD7Wz1k87Xzi6HFA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HY+eX+3wW8axbeDNmoF0xI9NLvnL9Gmq4GjQ8bgzy/k8kxiCQPsggsu9KVYa3Nvr2
+         fy+LEkd1RklhMh/qZbSdi/UVuBG1Mec6Fvwb3lFNtOzQAldPGf0dwr0Mmd13yLLQ2Z
+         MxO3HXq1CgEVUpIjZXlKLJ8YZSMvdMobRHiUkdgo=
+Date:   Thu, 21 May 2020 08:57:56 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] e1000e: Relax condition to trigger reset for ME
- workaround
-Thread-Topic: [PATCH] e1000e: Relax condition to trigger reset for ME
- workaround
-Thread-Index: AQHWKnHhYXgap9bbtEq5AHkc4XiRdaiyNRoQ
-Date:   Thu, 21 May 2020 07:56:12 +0000
-Message-ID: <DM6PR11MB2890F48ACD9A4ECF9181A819BCB70@DM6PR11MB2890.namprd11.prod.outlook.com>
-References: <20200515043127.3882162-1-punit1.agrawal@toshiba.co.jp>
-In-Reply-To: <20200515043127.3882162-1-punit1.agrawal@toshiba.co.jp>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: toshiba.co.jp; dkim=none (message not signed)
- header.d=none;toshiba.co.jp; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [134.134.136.209]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 636f7f95-98e2-4c3c-cd4d-08d7fd5c6e68
-x-ms-traffictypediagnostic: DM6PR11MB3545:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB354542AED4A693CBDF1519BBBCB70@DM6PR11MB3545.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 041032FF37
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MULiVrybOMiOQlbSvwYYsd0aCpuYZ3oJbBR4G9u7sht0aJIaM2ssNPtgfwok1f18L6a6MR9FP4Tz0fTNJhgMPHVQKsdTgwWgv+oM+Kv9PVycrCzY7Nu69brmZSMmEwMilRW4TXlkun8LaGodFr8eRtUL3K1p6Q0gQNT0NCPErB6K9ZKgOb+hWAA2NnNMBiL7INC/DRK/dQA5ZBFAfaboOfZoOuT11bYzzM6vSMtgYd10kdAyCcOkWVdoxDFKCYlShjS4bHTIm0CcONe6kYhANQNPJZwmyg55qzN/tBl+CAafdMNdDAIeRsHH79FZ/W72MMTk7GwRhIIeYIIx+TIfjfZBb5+b0d5Bo/jdGMbRxFE/LibfzIeLhfqc78UazsnxFY7gFbyT9btcFgDxtZxAAw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2890.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(39860400002)(376002)(346002)(136003)(66476007)(6506007)(53546011)(66556008)(52536014)(66946007)(2906002)(7696005)(66446008)(64756008)(6636002)(8676002)(9686003)(55016002)(26005)(76116006)(186003)(966005)(33656002)(86362001)(71200400001)(4326008)(316002)(54906003)(5660300002)(110136005)(8936002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: EJldffoT+Z+ETWFkKglWlOhy4LtWzOHt1d3jSzJySXtVq1OZGDzWPJDbKd+fUsFUoCwWdqlnKwIs5hPkg1smR+VncMQ08zbo7kZMxj5llAl1fQsW+ytteam9UAnMWp/NHWzFscxth0gQi1VDYjA8UbnB4ctLK95LX8VPhtL5TXQVJdlFu+PFHPaz3W8TDkNYm1iK39VQjykronVDUgJpSrCaj3utlHvVaUd91yropUY7+e6hnP9AM7Xui0cWwKPofOB+wKoJPGrN1cF15U7BJf0MXG4leRZ1RNku2pZLQFKzv5z/vbVukNrhqHm76K5QLozklH91EX3RuE5voKhn0vFbEZU25wyxm3368Lm+xaWYZAVEBYKBkdb+3M8wuEyLbWPB93dwu1tyhWa/IDcEaQ3c3XKiYEATJ52R2gUbZJrReUHFG9/LO9tGCBEnKsthU4UPKwhcEaB2qmMg6cOKVfRA9wptFUKv3XdSUcnQsIVgkZUxjkzTkTAJkp00NLCf
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+Message-ID: <20200521075755.GA4668@willie-the-truck>
+References: <20200518091222.27467-1-sudeep.holla@arm.com>
+ <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus>
+ <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 636f7f95-98e2-4c3c-cd4d-08d7fd5c6e68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 07:56:12.6495
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Pqst+UwYZgfP+xkpCk6eTL4/kWBjMAoNvBsNeqLM9yeYYv04VKMY7fF8wf7nZ0mJ1/Kmwh0b8KGsNhAdfpytXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3545
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
-> Behalf Of Punit Agrawal
-> Sent: Thursday, May 14, 2020 9:31 PM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>
-> Cc: daniel.sangorrin@toshiba.co.jp; Punit Agrawal
-> <punit1.agrawal@toshiba.co.jp>; Alexander Duyck
-> <alexander.h.duyck@linux.intel.com>; David S. Miller <davem@davemloft.net=
->;
-> intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH] e1000e: Relax condition to trigger reset for ME workarou=
-nd
->=20
-> It's an error if the value of the RX/TX tail descriptor does not match
-> what was written. The error condition is true regardless the duration
-> of the interference from ME. But the driver only performs the reset if
-> E1000_ICH_FWSM_PCIM2PCI_COUNT (2000) iterations of 50us delay have
-> transpired. The extra condition can lead to inconsistency between the
-> state of hardware as expected by the driver.
->=20
-> Fix this by dropping the check for number of delay iterations.
->=20
-> While at it, also make __ew32_prepare() static as it's not used
-> anywhere else.
->=20
-> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: intel-wired-lan@lists.osuosl.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> Hi Jeff,
->=20
-> If there are no further comments please consider merging the patch.
->=20
-> Also, should it be marked for backport to stable?
->=20
-> Thanks,
-> Punit
->=20
-> RFC[0] -> v1:
-> * Dropped return value for __ew32_prepare() as it's not used
-> * Made __ew32_prepare() static
-> * Added tags
->=20
-> [0] https://lkml.org/lkml/2020/5/12/20
->=20
->  drivers/net/ethernet/intel/e1000e/e1000.h  |  1 -
->  drivers/net/ethernet/intel/e1000e/netdev.c | 12 +++++-------
->  2 files changed, 5 insertions(+), 8 deletions(-)
->=20
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+On Thu, May 21, 2020 at 09:34:10AM +0200, Arnd Bergmann wrote:
+> On Thu, May 21, 2020 at 9:07 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > On Wed, May 20, 2020 at 11:54:16PM +0200, Arnd Bergmann wrote:
+> > > On Wed, May 20, 2020 at 11:29 PM Will Deacon <will@kernel.org> wrote:
+> > > > Applied to arm64 (for-next/smccc), thanks!
+> > > >
+> > > > Arnd -- Sudeep's reply to you about the sysfs groups seemed reasonable to me,
+> > > > but please shout if you'd rather I dropped this in order to pursue an
+> > > > alternative approach.
+> > >
+> > > I missed the reply earlier, thanks for pointing me to it again.
 
+D'oh, I took your silence as "no objections". Oh well!
+
+> > > I'm not entirely convinced, but don't revert it for now because of that,
+> > > I assume we can find a solution.
+
+Ok, cheers. It's on a separate branch so it's easy enough to drop if
+necessary (i.e. no reverts needed). Sudeep -- please send any extra patches
+on top of the branch.
+
+> > I liked your idea of making this generic and hardcode values if required
+> > for other drivers. I will take a look at that/
+> >
+> > > However, please have a look at the build failure report for patch 5
+> > > and fix it if you can see what went wrong.
+> > >
+> >
+> > Any pointers for that failure ? I seem to have missed them. I pushed
+> > branch couple of times to my tree but got build success both times.
+> > Any specific config or compilers ?
+> 
+> See below for the reply from the 0day build bot to your email. It seems it
+> was not sent to the mailing list, but you were on Cc. Looking at it now,
+> the fix should be trivial.
+
+[...]
+
+> >> drivers/firmware/smccc/smccc.c:14:13: warning: no previous prototype for function 'arm_smccc_version_init' [-Wmissing-prototypes]
+> void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
+> ^
+> drivers/firmware/smccc/smccc.c:14:1: note: declare 'static' if the
+> function is not intended to be used outside of this translation unit
+> void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
+
+I saw that when I applied the patches, but since the function is called from
+another compilation unit (psci/psci.o), I just ignored it as we have loads
+of these already and it only screams if you build with W=1.
+
+Will
