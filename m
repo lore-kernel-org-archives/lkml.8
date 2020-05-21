@@ -2,61 +2,63 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3034DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA70C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0523D2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A11120829
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:47:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sL3s4iKI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TGVpFD9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgEURrt (ORCPT
+        id S1730022AbgEURrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:47:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38320 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728961AbgEURrr (ORCPT
+        Thu, 21 May 2020 13:47:53 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57650 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgEURrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:47:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LHleWn018533;
-        Thu, 21 May 2020 12:47:40 -0500
+        Thu, 21 May 2020 13:47:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LHlk5U052208;
+        Thu, 21 May 2020 12:47:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590083260;
-        bh=W7VdXvJ1bJSYxANNMUlbEw5VMMcgdV+4t6nd72fBXgc=;
-        h=From:To:CC:Subject:Date;
-        b=sL3s4iKI+4MzZ864t4gNSLn3uXLHvifMch1HP1XeYj7iOWeODZdYt0G4jjkYnSbWb
-         VsKqn8n67hjv8tTQGxShkBPwWgad0SDCMNH7jEw8KcpGDsiVaTbllJVPvUqDuDAown
-         Adb6RgquUJQULqLUQ9VyXRe1QzDLeIRpIp2Jngso=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LHldYc115837
+        s=ti-com-17Q1; t=1590083266;
+        bh=PZ4r5XGl2mSqS4YYQmPElJ3WJ0EBOzNWqHYk+VWDcQA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TGVpFD9kttTMixvuPA012ci3rfW1R6NKI7ZeeiOIrL/98GGW30DY+vApYEk1YFJBo
+         e0qbaiqMrd5Cro7YCBKsZSFfapZLTc/7RaHeDYRB5jb40opVMoOqOMYvV4I/lmNjrP
+         Uz2KAwJvdmtRkHJbnrasg8HNmPmQfVyqjRSb90JY=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LHljne128037
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 12:47:39 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 21 May 2020 12:47:45 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 12:47:39 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 12:47:45 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 12:47:39 -0500
+ Frontend Transport; Thu, 21 May 2020 12:47:45 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LHldOu081106;
-        Thu, 21 May 2020 12:47:39 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LHljFv081147;
+        Thu, 21 May 2020 12:47:45 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v3 0/2] DP83869 Enhancements
-Date:   Thu, 21 May 2020 12:47:36 -0500
-Message-ID: <20200521174738.3151-1-dmurphy@ti.com>
+Subject: [PATCH net-next v3 2/2] net: phy: dp83869: Set opmode from straps
+Date:   Thu, 21 May 2020 12:47:38 -0500
+Message-ID: <20200521174738.3151-3-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200521174738.3151-1-dmurphy@ti.com>
+References: <20200521174738.3151-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,21 +68,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+If the op-mode for the device is not set in the device tree then set
+the strapped op-mode and store it for later configuration.
 
-These are improvements to the DP83869 Ethernet PHY driver.  OP-mode and port
-mirroring may be strapped on the device but the software only retrives these
-settings from the device tree.  Reading the straps and initializing the
-associated stored variables so when setting the PHY up and down the PHY's
-configuration values will be retained.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83869.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-Dan Murphy (2):
-  net: phy: dp83869: Update port-mirroring to read straps
-  net: phy: dp83869: Set opmode from straps
-
- drivers/net/phy/dp83869.c | 36 ++++++++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+index 073a0f7754a5..cfb22a21a2e6 100644
+--- a/drivers/net/phy/dp83869.c
++++ b/drivers/net/phy/dp83869.c
+@@ -65,6 +65,7 @@
+ #define DP83869_RGMII_RX_CLK_DELAY_EN		BIT(0)
+ 
+ /* STRAP_STS1 bits */
++#define DP83869_STRAP_OP_MODE_MASK		GENMASK(2, 0)
+ #define DP83869_STRAP_STS1_RESERVED		BIT(11)
+ #define DP83869_STRAP_MIRROR_ENABLED           BIT(12)
+ 
+@@ -161,6 +162,20 @@ static int dp83869_config_port_mirroring(struct phy_device *phydev)
+ 					  DP83869_CFG3_PORT_MIRROR_EN);
+ }
+ 
++static int dp83869_set_strapped_mode(struct phy_device *phydev)
++{
++	struct dp83869_private *dp83869 = phydev->priv;
++	int val;
++
++	val = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
++	if (val < 0)
++		return val;
++
++	dp83869->mode = val & DP83869_STRAP_OP_MODE_MASK;
++
++	return 0;
++}
++
+ #ifdef CONFIG_OF_MDIO
+ static int dp83869_of_init(struct phy_device *phydev)
+ {
+@@ -185,6 +200,10 @@ static int dp83869_of_init(struct phy_device *phydev)
+ 		if (dp83869->mode < DP83869_RGMII_COPPER_ETHERNET ||
+ 		    dp83869->mode > DP83869_SGMII_COPPER_ETHERNET)
+ 			return -EINVAL;
++	} else {
++		ret = dp83869_set_strapped_mode(phydev);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	if (of_property_read_bool(of_node, "ti,max-output-impedance"))
+@@ -218,7 +237,7 @@ static int dp83869_of_init(struct phy_device *phydev)
+ #else
+ static int dp83869_of_init(struct phy_device *phydev)
+ {
+-	return 0;
++	return dp83869_set_strapped_mode(phydev);
+ }
+ #endif /* CONFIG_OF_MDIO */
+ 
 -- 
 2.26.2
 
