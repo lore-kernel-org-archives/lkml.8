@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A43C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5560DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03296204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E36207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590074785;
-	bh=AJmYW9HuU9yryKkC/CR9tmkLTg2Hr/aoAaHtA7zSaaU=;
+	s=default; t=1590074790;
+	bh=L6ZqonRzSEXb8hKcfMyie44fNPXrf3YYfGTd/z8s76c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZJYla4AylfklUd/0ehx2EEb5oVF1gEpiopWqPVLzGnjhfJ1EQOY/P9Qii+rGS0q5V
-	 vpKdlvA7rsw6LH9z842deK8G8TELbBsaXmvPTXZJdtFDWKPm3YSQIIf+DvHKhUTcHd
-	 U2FA39yMrSD37tqzhB0BbQQvJEG2ZAUuz2mIYAy4=
+	b=PiE/Fm5jV18rSwwsH32A8WHNfg0JTDN0Q4EbZVDbckstv91kMr63uG0661D8yrQ8d
+	 EUhWprAGCyL1IAy4gvfCiv3n57nFT44uGOFHOIfNna+BfvbO6zHFvNGsYAhlSb5u/E
+	 5LU/EtSf179tTRo7IG6NDhl9Q9nINgDXxWnui7XA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbgEUP0X (ORCPT
+        id S1730496AbgEUP02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34374 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 11:26:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730456AbgEUP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:26:20 -0400
+        id S1730489AbgEUP0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:26:24 -0400
 Received: from localhost.localdomain (unknown [157.51.235.56])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76AC4207D8;
-        Thu, 21 May 2020 15:26:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3124D204EA;
+        Thu, 21 May 2020 15:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590074779;
-        bh=AJmYW9HuU9yryKkC/CR9tmkLTg2Hr/aoAaHtA7zSaaU=;
+        s=default; t=1590074783;
+        bh=L6ZqonRzSEXb8hKcfMyie44fNPXrf3YYfGTd/z8s76c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yDO93MN2kaSoVyK8ITtY2+hh4jBgyCAcJaFngTQje9A3eWr/WOu6P3dKjVBCouCIN
-         VJPDQKIW7d9B02kwVoXK6jjaRuTnb5GXYlYRmjneBVbj2PZvxm7+bZQpA9izwQPIQd
-         Bksb6FtB1hxL7vC0Y1nEH2eh/QX9D1W3vFxuyqHk=
+        b=a3NfqAWR2So1aLfECVlthuwsONVqfYav4YsqJ+IfUymZ1dLMYsfL4vtusAHUk1YyA
+         KkKRHnPxVhlYTDJJCLcVU2pjp2t0sPjEc5GecJhnGowV1+4WXLLFv6xn5FFIQKuDQS
+         lvUP/E6PW9ldVcvCKvaerETKRIm+drBZCHjV3/j4=
 From:   mani@kernel.org
 To:     gregkh@linuxfoundation.org
 Cc:     hemantk@codeaurora.org, jhugo@codeaurora.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 06/14] bus: mhi: core: Return appropriate error codes for AMSS load failure
-Date:   Thu, 21 May 2020 20:55:32 +0530
-Message-Id: <20200521152540.17335-7-mani@kernel.org>
+Subject: [PATCH 07/14] bus: mhi: core: Improve debug logs for loading firmware
+Date:   Thu, 21 May 2020 20:55:33 +0530
+Message-Id: <20200521152540.17335-8-mani@kernel.org>
 X-Mailer: git-send-email 2.26.GIT
 In-Reply-To: <20200521152540.17335-1-mani@kernel.org>
 References: <20200521152540.17335-1-mani@kernel.org>
@@ -60,61 +60,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bhaumik Bhatt <bbhatt@codeaurora.org>
 
-When loading AMSS firmware using BHIe protocol, return -ETIMEDOUT if no
-response is received within the timeout or return -EIO in case of a
-protocol returned failure or an MHI error state.
+Add log messages to track boot flow errors and timeouts in SBL or AMSS
+firmware loading to aid in debug.
 
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/bus/mhi/core/boot.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/bus/mhi/core/boot.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index 17c636b4bc6e..cf6dc5a2361c 100644
+index cf6dc5a2361c..80e4d7609aaa 100644
 --- a/drivers/bus/mhi/core/boot.c
 +++ b/drivers/bus/mhi/core/boot.c
-@@ -176,6 +176,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+@@ -121,7 +121,8 @@ static int __mhi_download_rddm_in_panic(struct mhi_controller *mhi_cntrl)
+ 		ee = mhi_get_exec_env(mhi_cntrl);
+ 	}
+ 
+-	dev_dbg(dev, "Waiting for image download completion, current EE: %s\n",
++	dev_dbg(dev,
++		"Waiting for RDDM image download via BHIe, current EE:%s\n",
+ 		TO_MHI_EXEC_STR(ee));
+ 
+ 	while (retry--) {
+@@ -152,11 +153,14 @@ static int __mhi_download_rddm_in_panic(struct mhi_controller *mhi_cntrl)
+ int mhi_download_rddm_img(struct mhi_controller *mhi_cntrl, bool in_panic)
+ {
  	void __iomem *base = mhi_cntrl->bhie;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+ 	u32 rx_status;
+ 
+ 	if (in_panic)
+ 		return __mhi_download_rddm_in_panic(mhi_cntrl);
+ 
++	dev_dbg(dev, "Waiting for RDDM image download via BHIe\n");
++
+ 	/* Wait for the image download to complete */
+ 	wait_event_timeout(mhi_cntrl->state_event,
+ 			   mhi_read_reg_field(mhi_cntrl, base,
+@@ -174,6 +178,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+ 			    const struct mhi_buf *mhi_buf)
+ {
+ 	void __iomem *base = mhi_cntrl->bhie;
++	struct device *dev = &mhi_cntrl->mhi_dev->dev;
  	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
  	u32 tx_status, sequence_id;
-+	int ret;
- 
- 	read_lock_bh(pm_lock);
- 	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
-@@ -198,19 +199,19 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 	read_unlock_bh(pm_lock);
- 
- 	/* Wait for the image download to complete */
--	wait_event_timeout(mhi_cntrl->state_event,
--			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
--			   mhi_read_reg_field(mhi_cntrl, base,
--					      BHIE_TXVECSTATUS_OFFS,
--					      BHIE_TXVECSTATUS_STATUS_BMSK,
--					      BHIE_TXVECSTATUS_STATUS_SHFT,
--					      &tx_status) || tx_status,
--			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
--
--	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
-+	ret = wait_event_timeout(mhi_cntrl->state_event,
-+				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-+				 mhi_read_reg_field(mhi_cntrl, base,
-+						   BHIE_TXVECSTATUS_OFFS,
-+						   BHIE_TXVECSTATUS_STATUS_BMSK,
-+						   BHIE_TXVECSTATUS_STATUS_SHFT,
-+						   &tx_status) || tx_status,
-+				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
-+	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-+	    tx_status != BHIE_TXVECSTATUS_STATUS_XFER_COMPL)
+ 	int ret;
+@@ -184,6 +189,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
  		return -EIO;
+ 	}
  
--	return (tx_status == BHIE_TXVECSTATUS_STATUS_XFER_COMPL) ? 0 : -EIO;
-+	return (!ret) ? -ETIMEDOUT : 0;
- }
++	dev_dbg(dev, "Starting AMSS download via BHIe\n");
+ 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECADDR_HIGH_OFFS,
+ 		      upper_32_bits(mhi_buf->dma_addr));
  
- static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
+@@ -435,7 +441,12 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 		release_firmware(firmware);
+ 
+ 	/* Error or in EDL mode, we're done */
+-	if (ret || mhi_cntrl->ee == MHI_EE_EDL)
++	if (ret) {
++		dev_err(dev, "MHI did not load SBL, ret:%d\n", ret);
++		return;
++	}
++
++	if (mhi_cntrl->ee == MHI_EE_EDL)
+ 		return;
+ 
+ 	write_lock_irq(&mhi_cntrl->pm_lock);
+@@ -463,8 +474,10 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 	if (!mhi_cntrl->fbc_download)
+ 		return;
+ 
+-	if (ret)
++	if (ret) {
++		dev_err(dev, "MHI did not enter READY state\n");
+ 		goto error_read;
++	}
+ 
+ 	/* Wait for the SBL event */
+ 	ret = wait_event_timeout(mhi_cntrl->state_event,
+@@ -482,6 +495,8 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 	ret = mhi_fw_load_amss(mhi_cntrl,
+ 			       /* Vector table is the last entry */
+ 			       &image_info->mhi_buf[image_info->entries - 1]);
++	if (ret)
++		dev_err(dev, "MHI did not load AMSS, ret:%d\n", ret);
+ 
+ 	release_firmware(firmware);
+ 
 -- 
 2.26.GIT
 
