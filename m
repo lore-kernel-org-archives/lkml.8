@@ -2,231 +2,127 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC93C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5459C20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uIDE4B/j"
+	by mail.kernel.org (Postfix) with ESMTP id 6789A20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590051601;
+	bh=OF167bw6TAO1xV/ri9mfdhSX8/TqgsxqTsszhaeYVdU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ylRP926R5buFTQHpe+MWUYb6ghvxrf+2/hudCnqhbSAOcB5xiAu7vVXZdHbKuIWeu
+	 0zY9vuhHHd7J7M6bCA8jz1aREICGT22LteoxHjuXLBldJu7UyswBDKnFTonSIDV+JF
+	 43FST9rV9VaB77urClkthw6MqATZiXZVwCUj3R8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgEUI7P (ORCPT
+        id S1728731AbgEUJAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbgEUI7O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:59:14 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D800C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 01:59:13 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id x22so4038138lfd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 01:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ebjb/EkTXvuLGqJe8ycqzM228+EB5pV3TJ94q2+hFBE=;
-        b=uIDE4B/jSErBGZ7dOnzEgDAhyBWnmBaQsrZKtTpAwa6Z91lQRziNBWcH3VmFbPbprV
-         N6eQawm+AiXWqGuqukU2cinrgbpkwYYYszcRIIAVxAh3+Ke9laz31qkoKL3DVZtzrxhb
-         UKGZb4UBaKcYmskNL/BVgb1R547rsgu6RJV3DBNyPIA/WMXkG73zz5UtqtOsotMRzOcX
-         PlsvuWvdZmqjEKtVG5XKpkLUFz65+Vhy8omCaVd6UPjKm7tSWi16AGZSh2Jbp3aFNCtw
-         B3g6TdZWAJlzVPG/6thsom+ogYAp2Rz3RKbAETWxeZGZtjyErE7tlk5T3Me08V54J3GS
-         e/og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ebjb/EkTXvuLGqJe8ycqzM228+EB5pV3TJ94q2+hFBE=;
-        b=Se7ZP5BuHmuqSF5CtUqLsQxPCvQ69Xn1nbSoMJ1AUMPxWtBcLZP6RN8NnlRLDxH1ZJ
-         5oqtaVkuT+ULfjeF5J5Uwh04w7P927LwbA1R3gAOVOoy8sTQVPbwPp2wTwltMAZgzZDP
-         uIDfXXgSi2zPmrkviYybS+bY8Z7f3A+nGj7zM9M6eCNeAmOXjJubSsFEmCoWLRGfeCwx
-         GZiMYbgAo54Doc53s/pUM3EW3SLuBhWw7xSPZ8U0SxoBiKeZqeMAZGm6xDUAhFn/zmc+
-         AUzBK/s/o5HN8JMx6SZlioSpi8ywVByVvZzaLiXRYtozGs5Zl+3BbL+0r+t+c40Xfo5Q
-         AJLg==
-X-Gm-Message-State: AOAM533TLUo8N/tKoKyO0I38VzCf8302H4yKmyx0dNX8cL6tYSLkV8pR
-        vmqrRl6Ga1+ekZ4QNJxd3rS3y3B2wtH4uGb49n/kqw==
-X-Google-Smtp-Source: ABdhPJxDvtYrdgUKcpg1JdYdNpiDjJpM5V4Ly/IUHcYljcMDsZbQaVXuEqvryChtft1CSL9MYVF8w+pIeakbceUncq8=
-X-Received: by 2002:a19:8453:: with SMTP id g80mr4635448lfd.167.1590051551242;
- Thu, 21 May 2020 01:59:11 -0700 (PDT)
+        Thu, 21 May 2020 05:00:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728560AbgEUJAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:00:00 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F88220738;
+        Thu, 21 May 2020 08:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590051599;
+        bh=OF167bw6TAO1xV/ri9mfdhSX8/TqgsxqTsszhaeYVdU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KeCVzphIBaDgUS+6LJznJ8wiNmY8Akr6xMkMYcd1JAOfb2/Oi/J2nZAc8vhZTzNwg
+         DEFCndWqrLgyluhcEJFf6/4ffV3dLi9Xl2aLNPQrJvdAK6Wz9F0r/D/fhwjFk2ExF5
+         7Ah8nsBe6BQRRv41EihksT9U8HLjs8ei3N8oqDxM=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jbh3V-00EBYj-Pi; Thu, 21 May 2020 09:59:57 +0100
 MIME-Version: 1.0
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
- <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
- <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
- <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com> <CALOAHbDMrHkNHTxeBWP22iTjJd+HfqfFhAfmC_m0jsVkhu5vEA@mail.gmail.com>
-In-Reply-To: <CALOAHbDMrHkNHTxeBWP22iTjJd+HfqfFhAfmC_m0jsVkhu5vEA@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 21 May 2020 14:28:59 +0530
-Message-ID: <CA+G9fYsCaxJ5WyN8y=gCMvrZHCCYYkbzyCpHKspkqrEVwpgNoQ@mail.gmail.com>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Michal Hocko <mhocko@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 21 May 2020 09:59:57 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] irqdomain: Allow software node to be correct one
+ for IRQ domain
+In-Reply-To: <20200520164927.39090-3-andriy.shevchenko@linux.intel.com>
+References: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
+ <20200520164927.39090-3-andriy.shevchenko@linux.intel.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <c7432ac8e2564c1c2177ef6e71f252ac@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: andriy.shevchenko@linux.intel.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, rjw@rjwysocki.net, linux-acpi@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 at 08:10, Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> On Thu, May 21, 2020 at 2:00 AM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Wed, 20 May 2020 at 17:26, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> > >
-> > > This issue is specific on 32-bit architectures i386 and arm on linux-next tree.
-> > > As per the test results history this problem started happening from
-> > > mkfs -t ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190804A00BE5
-> > >
-> > >
-> > > Problem:
-> > > [   38.802375] dd invoked oom-killer: gfp_mask=0x100cc0(GFP_USER),
-> > > order=0, oom_score_adj=0
-> >
-> My guess is that we made the same mistake in commit "mm, memcg:
-> decouple e{low,min} state mutations from protection
-> checks" that it read a stale memcg protection in
-> mem_cgroup_below_low() and mem_cgroup_below_min().
->
-> Bellow is a possble fix,
+Hi Andy,
 
-Sorry. The proposed fix did not work.
-I have took your patch and applied on top of linux-next master branch and
-tested and mkfs -t ext4 invoked oom-killer.
+On 2020-05-20 17:49, Andy Shevchenko wrote:
+> In some cases we might need to have an IRQ domain created out of 
+> software node.
+> One of such cases is DesignWare GPIO driver when it's instantiated from
+> half-baked ACPI table (alas, we can't fix it for devices which are few 
+> years
+> on market) and thus using software nodes to quirk this up. But the 
+> driver
+> is using IRQ domains based on per GPIO port firmware nodes, which are 
+> in
+> the above case software ones. This brings a warning message to be 
+> printed
+> 
+>   [   73.957183] irq: Invalid fwnode type for irqdomain
+> 
+> and creates an unknown IRQ domain.
+> 
+> When we allow software node to be correct one for IRQ domain we will
+> get rid of the warning message and nice domain name at the same time:
+> 
+>   % ls -1 /sys/kernel/debug/irq/domains/
+>   ...
+>   intel-quark-dw-apb-gpio:portA
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  kernel/irq/irqdomain.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index c6204bc606a2..e4ebc5398ef5 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -161,7 +161,8 @@ struct irq_domain *__irq_domain_add(struct
+> fwnode_handle *fwnode, int size,
+>  			domain->name = fwid->name;
+>  			break;
+>  		}
+> -	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode)) {
+> +	} else if (is_of_node(fwnode) || is_acpi_device_node(fwnode) ||
+> +		   is_software_node(fwnode)) {
+>  		char *name;
+> 
+>  		/*
 
-After patch applied test log link,
-https://lkft.validation.linaro.org/scheduler/job/1443936#L1168
+Thanks for this. I've applied it to irqchip-next. In the future,
+please consider adding a cover letter describing the overall
+goal of the series.
 
+Cheers,
 
-test  log,
-+ mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8NRK0BPF6XF
-mke2fs 1.43.8 (1-Jan-2018)
-Creating filesystem with 244190646 4k blocks and 61054976 inodes
-Filesystem UUID: ab107250-bf18-4357-a06a-67f2bfcc1048
-Superblock backups stored on blocks:
-32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
-4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
-102400000, 214990848
-Allocating group tables:    0/7453                           done
-Writing inode tables:    0/7453                           done
-Creating journal (262144 blocks): [   34.423940] mkfs.ext4 invoked
-oom-killer: gfp_mask=0x101cc0(GFP_USER|__GFP_WRITE), order=0,
-oom_score_adj=0
-[   34.433694] CPU: 0 PID: 402 Comm: mkfs.ext4 Not tainted
-5.7.0-rc6-next-20200519+ #1
-[   34.441342] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[   34.448734] Call Trace:
-[   34.451196]  dump_stack+0x54/0x76
-[   34.454517]  dump_header+0x40/0x1f0
-[   34.458008]  ? oom_badness+0x1f/0x120
-[   34.461673]  ? ___ratelimit+0x6c/0xe0
-[   34.465332]  oom_kill_process+0xc9/0x110
-[   34.469255]  out_of_memory+0xd7/0x2f0
-[   34.472916]  __alloc_pages_nodemask+0xdd1/0xe90
-[   34.477446]  ? set_bh_page+0x33/0x50
-[   34.481016]  ? __xa_set_mark+0x4d/0x70
-[   34.484762]  pagecache_get_page+0xbe/0x250
-[   34.488859]  grab_cache_page_write_begin+0x1a/0x30
-[   34.493645]  block_write_begin+0x25/0x90
-[   34.497569]  blkdev_write_begin+0x1e/0x20
-[   34.501574]  ? bdev_evict_inode+0xc0/0xc0
-[   34.505578]  generic_perform_write+0x95/0x190
-[   34.509927]  __generic_file_write_iter+0xe0/0x1a0
-[   34.514626]  blkdev_write_iter+0xbf/0x1c0
-[   34.518630]  __vfs_write+0x122/0x1e0
-[   34.522200]  vfs_write+0x8f/0x1b0
-[   34.525510]  ksys_pwrite64+0x60/0x80
-[   34.529081]  __ia32_sys_ia32_pwrite64+0x16/0x20
-[   34.533604]  do_fast_syscall_32+0x66/0x240
-[   34.537697]  entry_SYSENTER_32+0xa5/0xf8
-[   34.541613] EIP: 0xb7f3c549
-[   34.544403] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01
-10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[   34.563140] EAX: ffffffda EBX: 00000003 ECX: b7830010 EDX: 00400000
-[   34.569397] ESI: 38400000 EDI: 00000074 EBP: 07438400 ESP: bff1e650
-[   34.575654] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-[   34.582453] Mem-Info:
-[   34.584732] active_anon:5713 inactive_anon:2169 isolated_anon:0
-[   34.584732]  active_file:4040 inactive_file:211204 isolated_file:0
-[   34.584732]  unevictable:0 dirty:17270 writeback:6240 unstable:0
-[   34.584732]  slab_reclaimable:5856 slab_unreclaimable:3439
-[   34.584732]  mapped:6192 shmem:2258 pagetables:178 bounce:0
-[   34.584732]  free:265105 free_pcp:1330 free_cma:0
-[   34.618483] Node 0 active_anon:22852kB inactive_anon:8676kB
-active_file:16160kB inactive_file:844816kB unevictable:0kB
-isolated(anon):0kB isolated(file):0kB mapped:24768kB dirty:69080kB
-writeback:19628kB shmem:9032kB writeback_tmp:0kB unstable:0kB
-all_unreclaimable? yes
-[   34.642354] DMA free:3588kB min:68kB low:84kB high:100kB
-reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-active_file:0kB inactive_file:11848kB unevictable:0kB
-writepending:11856kB present:15964kB managed:15876kB mlocked:0kB
-kernel_stack:0kB pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0kB
-free_cma:0kB
-[   34.670194] lowmem_reserve[]: 0 824 1947 824
-[   34.674483] Normal free:4228kB min:3636kB low:4544kB high:5452kB
-reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
-active_file:1136kB inactive_file:786456kB unevictable:0kB
-writepending:68084kB present:884728kB managed:845324kB mlocked:0kB
-kernel_stack:1104kB pagetables:0kB bounce:0kB free_pcp:3056kB
-local_pcp:388kB free_cma:0kB
-[   34.704243] lowmem_reserve[]: 0 0 8980 0
-[   34.708189] HighMem free:1053028kB min:512kB low:1748kB high:2984kB
-reserved_highatomic:0KB active_anon:22852kB inactive_anon:8676kB
-active_file:15024kB inactive_file:46596kB unevictable:0kB
-writepending:0kB present:1149544kB managed:1149544kB mlocked:0kB
-kernel_stack:0kB pagetables:712kB bounce:0kB free_pcp:2160kB
-local_pcp:736kB free_cma:0kB
-[   34.738563] lowmem_reserve[]: 0 0 0 0
-[   34.742245] DMA: 23*4kB (U) 2*8kB (U) 3*16kB (U) 2*32kB (UE) 2*64kB
-(U) 1*128kB (U) 1*256kB (E) 0*512kB 1*1024kB (E) 1*2048kB (E) 0*4096kB
-= 3804kB
-[   34.755479] Normal: 25*4kB (UM) 27*8kB (UME) 16*16kB (UME) 14*32kB
-(UME) 7*64kB (UME) 2*128kB (UM) 1*256kB (E) 1*512kB (E) 0*1024kB
-1*2048kB (M) 0*4096kB = 4540kB
-[   34.770004] HighMem: 1*4kB (U) 0*8kB 0*16kB 1*32kB (U) 1*64kB (M)
-2*128kB (UM) 2*256kB (UM) 1*512kB (U) 1*1024kB (U) 1*2048kB (U)
-256*4096kB (M) = 1053028kB
-[   34.784010] Node 0 hugepages_total=0 hugepages_free=0
-hugepages_surp=0 hugepages_size=4096kB
-[   34.792466] 217507 total pagecache pages
-[   34.796387] 0 pages in swap cache
-[   34.799704] Swap cache stats: add 0, delete 0, find 0/0
-[   34.804923] Free swap  = 0kB
-[   34.807834] Total swap = 0kB
-[   34.810738] 512559 pages RAM
-[   34.813640] 287386 pages HighMem/MovableOnly
-[   34.817931] 9873 pages reserved
-
-
-- Naresh
+         M.
+-- 
+Jazz is not dead. It just smells funny...
