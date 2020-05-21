@@ -2,137 +2,107 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD13C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D468DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C5420748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590074184;
-	bh=j+ATZyTEUqzaa7C9cjX2VyqS6H/0GtWSC8aQQUq6YYE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=N1VUOwVeOS1isykBs0BOuW+zJYO5xfEmVvMRsJ2SO1Rt3X55alfHtRHW3stqRD3jD
-	 TZ020crO+qBSU1ReTxJ83c6RKY5rn+s5F3mJPQmsRJItqtxDLSCjXKhOZFo115xHeF
-	 p8rjaqkT6cKmFe3MVwdbKEU6/WcVV8Yrn7eS55hE=
+	by mail.kernel.org (Postfix) with ESMTP id AFCCA20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:16:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Stn4UqJd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgEUPQX (ORCPT
+        id S1729923AbgEUPQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:16:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgEUPQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:16:23 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 21 May 2020 11:16:30 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27015 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729896AbgEUPQ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:16:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590074187;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1jYcpHnQL3yWssjgDciSJYss0+WKenYias59GqFdGbA=;
+        b=Stn4UqJdHl/kI/Wr6YPLmZ6LPRB6CEft2U7vd56KAhKrl7LlHXiIy9/ycLOEj9YpZK83TI
+        7O4YQbwIsfnTBT7X2PmLTPctewzFJr1rDkS8nbBMwPNXMZKN2RnPQ6VQVHCWTrmbLiTHhl
+        z+y/MqATCn7XWptLIvnMyI8YuC3f+fI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-QcU_r6aePH625lEdCeW_7g-1; Thu, 21 May 2020 11:16:21 -0400
+X-MC-Unique: QcU_r6aePH625lEdCeW_7g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F64E204EA;
-        Thu, 21 May 2020 15:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590074182;
-        bh=j+ATZyTEUqzaa7C9cjX2VyqS6H/0GtWSC8aQQUq6YYE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gNLoP7M3nC2UP2goc/ysaJwkL6GkbN6DWGIMDkWgKdq3+uYPqvVHNKIGKRyDGlFvv
-         4oh6IciHAv02TqYvn1C3gTXnsQWpnu9y1djjHjVlbmORSpY0f9RZc9g0OX7qw6dKUK
-         LqaWB6Sk/KL5NQSodyrBk8oXXOcrnd8AQTePYrrU=
-Date:   Thu, 21 May 2020 10:16:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH] [v2] PCI: tegra194: Fix runtime PM imbalance on error
-Message-ID: <20200521151620.GA1135365@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2AB3100D0DB;
+        Thu, 21 May 2020 15:16:17 +0000 (UTC)
+Received: from treble (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F010106A7B7;
+        Thu, 21 May 2020 15:15:58 +0000 (UTC)
+Date:   Thu, 21 May 2020 10:15:56 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v10 00/26] Control-flow Enforcement: Shadow Stack
+Message-ID: <20200521151556.pojijpmuc2rdd7ko@treble>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200521031355.7022-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael, linux-pm]
-
-On Thu, May 21, 2020 at 11:13:49AM +0800, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
-
-I didn't realize there were so many drivers with the exact same issue.
-Can we just squash these all into a single patch so we can see them
-all together?
-
-Hmm.  There are over 1300 callers of pm_runtime_get_sync(), and it
-looks like many of them have similar issues, i.e., they have a pattern
-like this
-
-  ret = pm_runtime_get_sync(dev);
-  if (ret < 0)
-    return;
-
-  pm_runtime_put(dev);
-
-where there is not a pm_runtime_put() to match every
-pm_runtime_get_sync().  Random sample:
-
-  nds32_pmu_reserve_hardware
-  sata_rcar_probe
-  exynos_trng_probe
-  ks_sa_rng_probe
-  omap_aes_probe
-  sun8i_ss_probe
-  omap_aes_probe
-  zynq_gpio_probe
-  amdgpu_hwmon_show_power_avg
-  mtk_crtc_ddp_hw_init
-  ...
-
-Surely I'm missing something and these aren't all broken, right?
-
-Maybe we could put together a coccinelle script to scan the tree for
-this issue?
-
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+On Wed, Apr 29, 2020 at 03:07:06PM -0700, Yu-cheng Yu wrote:
+> Control-flow Enforcement (CET) is a new Intel processor feature that blocks
+> return/jump-oriented programming attacks.  Details can be found in "Intel
+> 64 and IA-32 Architectures Software Developer's Manual" [1].
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index ae30a2fd3716..2c0d2ce16b47 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1623,7 +1623,7 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->  	ret = pinctrl_pm_select_default_state(dev);
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
-> -		goto fail_pinctrl;
-> +		goto fail_pm_get_sync;
->  	}
->  
->  	tegra_pcie_init_controller(pcie);
-> @@ -1650,9 +1650,8 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->  
->  fail_host_init:
->  	tegra_pcie_deinit_controller(pcie);
-> -fail_pinctrl:
-> -	pm_runtime_put_sync(dev);
->  fail_pm_get_sync:
-> +	pm_runtime_put_sync(dev);
->  	pm_runtime_disable(dev);
->  	return ret;
->  }
-> -- 
-> 2.17.1
+> This series depends on the XSAVES supervisor state series that was split
+> out and submitted earlier [2].
 > 
+> I have gone through previous comments, and hope all concerns have been
+> resolved now.  Please inform me if anything is overlooked.
+> 
+> Changes in v10:
+
+Hi Yu-cheng,
+
+Do you have a git branch with the latest Shadow Stack and IBT branches
+applied?  I tried to apply IBT v9 on top of this, but I guess the SS
+code has changed since then and it didn't apply cleanly.
+
+-- 
+Josh
+
