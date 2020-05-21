@@ -2,70 +2,90 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C89C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8552065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:41:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b4JqpIwu"
+	by mail.kernel.org (Postfix) with ESMTP id 7EF562065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgEUHls (ORCPT
+        id S1728502AbgEUHmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:41:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25646 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbgEUHls (ORCPT
+        Thu, 21 May 2020 03:42:01 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48498 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgEUHmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:41:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590046907;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oHQ+imPSFVixB/pE0KSN2Fs8U6r2Mmjiu0+HMJzZ/Tw=;
-        b=b4JqpIwuO42nYOoiyIe2fP6uQTHrg9hwBpBJMXwnfUc3n7wRPX1qZq7FHnAuYFM6t5ia85
-        4GWLnUCO00XUqO0A1XdUe0wDhWm7gda21rF54FjtC+3JD4GOwhD0TKFnUEMXTj6MXH3WUa
-        jDluxP1IXfGMxgXaynZVqVWEVejcFhU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-iHSdMCy9N26WBxgfRQv9uw-1; Thu, 21 May 2020 03:41:45 -0400
-X-MC-Unique: iHSdMCy9N26WBxgfRQv9uw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 855D7835B41;
-        Thu, 21 May 2020 07:41:44 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 84E0379584;
-        Thu, 21 May 2020 07:41:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <159001690181.18663.663730118645460940.stgit@warthog.procyon.org.uk>
-References: <159001690181.18663.663730118645460940.stgit@warthog.procyon.org.uk>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH net 0/3] rxrpc: Fix retransmission timeout and ACK discard
+        Thu, 21 May 2020 03:42:01 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0D3031C0290; Thu, 21 May 2020 09:42:00 +0200 (CEST)
+Date:   Thu, 21 May 2020 09:41:59 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: next-0519 on thinkpad x60: sound related? window manager crash
+Message-ID: <20200521074110.GA3895@amd.ucw.cz>
+References: <20200520110900.GA8203@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <70946.1590046902.1@warthog.procyon.org.uk>
-Date:   Thu, 21 May 2020 08:41:42 +0100
-Message-ID: <70947.1590046902@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Disposition: inline
+In-Reply-To: <20200520110900.GA8203@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've posted a new version of this with a fixed description for patch 1.
 
-David
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
+
+> My window manager stopped responding. I was able to recover machine
+> using sysrq-k.
+>=20
+> I started writing nice report, when session failed second time. And
+> then third time on next attempt.
+>=20
+> Any ideas?
+>=20
+> I'll send this out before this locks up...
+
+Today it crashed again, with similar oops in the log.
+
+My records say:
+
+fb57b1fabcb2 (HEAD, tag: next-20200519, origin/master, origin/HEAD) HEAD@{0=
+}: checkout: moving from bdecf38f228bcca73b31ada98b5b7ba1215eb9c9 to next-2=
+0200519
+bdecf38f228b (tag: next-20200515) HEAD@{1}: checkout: moving from 30e2206e1=
+1ce27ae910cc0dab21472429e400a87 to next-20200515
+
+So it is well possible that 0515 worked okay for few
+days. Hmm. Perhaps I'll try going to 0516 and see if it is stable?
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXsYwxwAKCRAw5/Bqldv6
+8ieiAJwJvEvk5R3Jui7qPD9WEIupPnK0OwCgoS/H6iYLcrZPla88CVwjjPemzEY=
+=9Wtu
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
