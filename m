@@ -2,123 +2,283 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEEAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E84C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE559207F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254ED20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:14:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EJO8Lmra"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wSg8zAEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730761AbgEUXOD (ORCPT
+        id S1730769AbgEUXO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 19:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52628 "EHLO
+        Thu, 21 May 2020 19:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730748AbgEUXOC (ORCPT
+        with ESMTP id S1730658AbgEUXO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 19:14:02 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B089C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 16:14:01 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id l67so44005ybl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 16:14:01 -0700 (PDT)
+        Thu, 21 May 2020 19:14:28 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F2DC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 16:14:28 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id l1so6941900qtp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 16:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=prum5QcrbZCO0F65OHvFGChvc11UJdGytJaiM86CTfc=;
-        b=EJO8LmragjkCPmJ41c+po3zpR8kk9FxzpYkfolWjsWm/p7Z1mDP1PIVanxntgtIjlu
-         IIEJgNn+vOewvEKC794pIXsbPqh8K8K8K/z05EU22q84qbvWwXurP8L8pN2CTB1Lxn07
-         wllQh86f2e/faYICaeOC4O1GSbyjHy6ie2HEZ5z7EIzd2FayPfgAoow1OdWChmponEJE
-         qvX2TW9MTEBvPOGdbNguA6cGVH2G2Atn7Kta5orCn1jcJQ4/e2CD17+qZZDgy5e7Zgt7
-         TvRbB7OI5BqzzfXt6+2b29plh5CGUZ4d80DMgmw4moH55QZMIUJEtiP0CnYYwk4t5Sck
-         CiRw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=p3Hdvcd+xHhyt3NoKuQ6ayw1V2hWUZczEPhgChE6r2I=;
+        b=wSg8zAEchboHGRWoQA3FX2iSGBAIm5t/5PTrQb+91NK0EumvVgmfXPYgbbwXFkbms/
+         5ZAsqxfVF5QXxsvyEJr37KsuHJed4LPiCe8TgfggMT8IZ+b+EJbG0UD2ZgXD9G5LZ16B
+         EA5WK3B4nmESt6f911z3u6/JGYsUUg+JWSQHo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=prum5QcrbZCO0F65OHvFGChvc11UJdGytJaiM86CTfc=;
-        b=EMnqCX6Ieyc1D3Y6zxILs1WPxx857Q/0tsU7KxNYq9I4JdDTkxk1WhaXY5IMBX67Ey
-         Im3kLWeQTkU2krKOuCM7PeP9ZlG4p3mjtVrE09y88oIZPxJQolMKE+iUE9/ADkmlmIuJ
-         ev2Fv2j/bZq5Ki2AWT15q2GuFVGiqeVHKUFS7arh7M1fAzb6Hv8k+r/AZ/4rJDcW7dvp
-         0HHuXXOadOG7FTU7FlMJKgHKbC42XI2lsFU/dGe0620pWBWxI7qX4N+TSpHAsYoTATp0
-         s/TjFsdy9NCA4kEXEhIWu+R5E2N2JO7w3lTG9C8SJFGF2dHQiqbN98yLxPO4VIPza4Jk
-         fgrA==
-X-Gm-Message-State: AOAM532Qa23/FZWfPmFvKT8I1Sn5LzsZzT/vz6pY8y480n+ZEOcwpHUE
-        XsFtlwagtmdB0/TXEWKUDENuArKFu5pnLppmkVyopg==
-X-Google-Smtp-Source: ABdhPJwyeBZVNqGDDn7EXqfUoPtnSiRN0M0U3xT9gYtJelmdRXVjJEVDRKm0e+Um+Naji4fd1bnb3ChFlyDdmcHH2Ts=
-X-Received: by 2002:a25:bb42:: with SMTP id b2mr18715117ybk.383.1590102840392;
- Thu, 21 May 2020 16:14:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p3Hdvcd+xHhyt3NoKuQ6ayw1V2hWUZczEPhgChE6r2I=;
+        b=c4xJfWBD/czP84ALDkeD1r8p2kAwszQjEZPAm3qAhxTFXYNN5LDXDgXgwVXvyXA/pu
+         tE9V5ZVtfRZslngD8CKEZNVJXmDQUPNDHEM3/G1uIQCqBwaCydbqFN1JMLOYLAc0Pipl
+         DEig6NMcCpuZnLBlWYYUDL6V/Pbx7yCiSudLr9sUGOat/Blpwwz3kTdIQjCQxP8tz9vS
+         ExnXJY3fIc1u85/OEHYQni2tKvK6aPMp0fg3OVmU0qfjpDcYd9Em76DZCB7s+7hPKrcV
+         JxTANX1/pIGhGiIZ1+Nzv7ZMF21DzY10fxzGP18Vy96Y7ovbQ2mWVyPxgT1mLdFpWE29
+         kbFw==
+X-Gm-Message-State: AOAM531yiug8U9TkoTCOoNCQCG6zlpYlqSDLTxWItkDW+jVhlGkOxE6W
+        43Puc+gqQR7YEPOIbW2D49xWGg==
+X-Google-Smtp-Source: ABdhPJxJff2pAhRPlAtAedctQOlW84ZeULOKdkxEH0+PB6+f/MD33UJ/AdplDsupnvfRp+KDgnCGaA==
+X-Received: by 2002:ac8:2492:: with SMTP id s18mr5923786qts.81.1590102867666;
+        Thu, 21 May 2020 16:14:27 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id u39sm6793217qtc.8.2020.05.21.16.14.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 16:14:27 -0700 (PDT)
+Date:   Thu, 21 May 2020 19:14:26 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     vpillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>
+Subject: Re: [RFC PATCH 07/13] sched: Add core wide task selection and
+ scheduling.
+Message-ID: <20200521231426.GA246288@google.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com>
 MIME-Version: 1.0
-References: <20200521222551.259804-1-irogers@google.com>
-In-Reply-To: <20200521222551.259804-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 21 May 2020 16:13:48 -0700
-Message-ID: <CAP-5=fXjXgWEgp9gqReByrDBTvjDbPEsubeAFxrpxj_+FsFn6w@mail.gmail.com>
-Subject: Re: [PATCH] proc.5: add "wf" to VmFlags in /proc/[pid]/smaps
-To:     Rik van Riel <riel@redhat.com>, mtk.manpages@gmail.com
-Cc:     linux-man@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-api@vger.kernel.org, nilal@redhat.com,
-        Florian Weimer <fweimer@redhat.com>,
-        =?UTF-8?Q?Colm_MacC=C3=A1rtaigh?= <colm@allcosts.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 3:25 PM Ian Rogers <irogers@google.com> wrote:
->
-> This patch documents a flag added in the following kernel commit:
->
-> commit d2cd9ede6e193dd7d88b6d27399e96229a551b19
-> Author: Rik van Riel <riel@redhat.com>
-> Date:   Wed Sep 6 16:25:15 2017 -0700
->
->     mm,fork: introduce MADV_WIPEONFORK
->
-> This was already documented in man2/madvise.2 in the commit:
->
-> commit c0c4f6c29c494c466f3a2a6273c5b55b76a72927
-> Author: Rik van Riel <riel@redhat.com>
-> Date:   Tue Sep 19 20:32:00 2017 +0200
->
->     madvise.2: Document MADV_WIPEONFORK and MADV_KEEPONFORK
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Doing a quick audit of fs/proc/task_mmu.c having noticed this flag was
-missing I note:
- - "mp" isn't documented, only possible with INTEL_MPX
- - "nl" is documented but not present in show_smap_vma_flags
- - "um" and "uw" aren't documented
-
-Thanks,
-Ian
-
+On Wed, Mar 04, 2020 at 04:59:57PM +0000, vpillai wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> Instead of only selecting a local task, select a task for all SMT
+> siblings for every reschedule on the core (irrespective which logical
+> CPU does the reschedule).
+> 
+> There could be races in core scheduler where a CPU is trying to pick
+> a task for its sibling in core scheduler, when that CPU has just been
+> offlined.  We should not schedule any tasks on the CPU in this case.
+> Return an idle task in pick_next_task for this situation.
+> 
+> NOTE: there is still potential for siblings rivalry.
+> NOTE: this is far too complicated; but thus far I've failed to
+>       simplify it further.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
+> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
+> Signed-off-by: Aaron Lu <aaron.lu@linux.alibaba.com>
+> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 > ---
->  man5/proc.5 | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/man5/proc.5 b/man5/proc.5
-> index 46d603f28..3e5b91af0 100644
-> --- a/man5/proc.5
-> +++ b/man5/proc.5
-> @@ -2020,6 +2020,7 @@ encoded using the following two-letter codes:
->      ht  - area uses huge tlb pages
->      nl  - non-linear mapping
->      ar  - architecture specific flag
-> +    wf  - wipe on fork
->      dd  - do not include area into core dump
->      sd  - soft-dirty flag
->      mm  - mixed map area
-> --
-> 2.27.0.rc0.183.gde8f92d652-goog
->
+>  kernel/sched/core.c  | 274 ++++++++++++++++++++++++++++++++++++++++++-
+>  kernel/sched/fair.c  |  40 +++++++
+>  kernel/sched/sched.h |   6 +-
+>  3 files changed, 318 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 445f0d519336..9a1bd236044e 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4253,7 +4253,7 @@ static inline void schedule_debug(struct task_struct *prev, bool preempt)
+>   * Pick up the highest-prio task:
+>   */
+>  static inline struct task_struct *
+> -pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+> +__pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  {
+>  	const struct sched_class *class;
+>  	struct task_struct *p;
+> @@ -4309,6 +4309,273 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  	BUG();
+>  }
+>  
+> +#ifdef CONFIG_SCHED_CORE
+> +
+> +static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
+> +{
+> +	return is_idle_task(a) || (a->core_cookie == cookie);
+> +}
+> +
+> +static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
+> +{
+> +	if (is_idle_task(a) || is_idle_task(b))
+> +		return true;
+> +
+> +	return a->core_cookie == b->core_cookie;
+> +}
+> +
+> +// XXX fairness/fwd progress conditions
+> +/*
+> + * Returns
+> + * - NULL if there is no runnable task for this class.
+> + * - the highest priority task for this runqueue if it matches
+> + *   rq->core->core_cookie or its priority is greater than max.
+> + * - Else returns idle_task.
+> + */
+> +static struct task_struct *
+> +pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
+> +{
+> +	struct task_struct *class_pick, *cookie_pick;
+> +	unsigned long cookie = rq->core->core_cookie;
+> +
+> +	class_pick = class->pick_task(rq);
+> +	if (!class_pick)
+> +		return NULL;
+> +
+> +	if (!cookie) {
+> +		/*
+> +		 * If class_pick is tagged, return it only if it has
+> +		 * higher priority than max.
+> +		 */
+> +		if (max && class_pick->core_cookie &&
+> +		    prio_less(class_pick, max))
+> +			return idle_sched_class.pick_task(rq);
+> +
+> +		return class_pick;
+> +	}
+> +
+> +	/*
+> +	 * If class_pick is idle or matches cookie, return early.
+> +	 */
+> +	if (cookie_equals(class_pick, cookie))
+> +		return class_pick;
+> +
+> +	cookie_pick = sched_core_find(rq, cookie);
+> +
+> +	/*
+> +	 * If class > max && class > cookie, it is the highest priority task on
+> +	 * the core (so far) and it must be selected, otherwise we must go with
+> +	 * the cookie pick in order to satisfy the constraint.
+> +	 */
+> +	if (prio_less(cookie_pick, class_pick) &&
+> +	    (!max || prio_less(max, class_pick)))
+> +		return class_pick;
+> +
+> +	return cookie_pick;
+> +}
+
+I've been hating on this pick_task() routine for a while now :-). If we add
+the task to the tag tree as Peter suggested at OSPM for that other issue
+Vineeth found, it seems it could be simpler.
+
+This has just been near a compiler so far but how about:
+
+---8<-----------------------
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 005d7f7323e2d..81e23252b6c99 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -182,9 +182,6 @@ static void sched_core_enqueue(struct rq *rq, struct task_struct *p)
+ 
+ 	rq->core->core_task_seq++;
+ 
+-	if (!p->core_cookie)
+-		return;
+-
+ 	node = &rq->core_tree.rb_node;
+ 	parent = *node;
+ 
+@@ -215,7 +212,7 @@ static void sched_core_dequeue(struct rq *rq, struct task_struct *p)
+ 
+ void sched_core_add(struct rq *rq, struct task_struct *p)
+ {
+-	if (p->core_cookie && task_on_rq_queued(p))
++	if (task_on_rq_queued(p))
+ 		sched_core_enqueue(rq, p);
+ }
+ 
+@@ -4563,36 +4560,32 @@ pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *ma
+ 	if (!class_pick)
+ 		return NULL;
+ 
+-	if (!cookie) {
+-		/*
+-		 * If class_pick is tagged, return it only if it has
+-		 * higher priority than max.
+-		 */
+-		if (max && class_pick->core_cookie &&
+-		    prio_less(class_pick, max))
+-			return idle_sched_class.pick_task(rq);
+-
++	if (!max)
+ 		return class_pick;
+-	}
+ 
+-	/*
+-	 * If class_pick is idle or matches cookie, return early.
+-	 */
++	/* Make sure the current max's cookie is core->core_cookie */
++	WARN_ON_ONCE(max->core_cookie != cookie);
++
++	/* If class_pick is idle or matches cookie, play nice. */
+ 	if (cookie_equals(class_pick, cookie))
+ 		return class_pick;
+ 
+-	cookie_pick = sched_core_find(rq, cookie);
++	/* If class_pick is highest prio, trump max. */
++	if (prio_less(max, class_pick)) {
++
++		/* .. but not before checking if cookie trumps class. */
++		cookie_pick = sched_core_find(rq, cookie);
++		if (prio_less(class_pick, cookie_pick))
++			return cookie_pick;
+ 
+-	/*
+-	 * If class > max && class > cookie, it is the highest priority task on
+-	 * the core (so far) and it must be selected, otherwise we must go with
+-	 * the cookie pick in order to satisfy the constraint.
+-	 */
+-	if (prio_less(cookie_pick, class_pick) &&
+-	    (!max || prio_less(max, class_pick)))
+ 		return class_pick;
++	}
+ 
+-	return cookie_pick;
++	/*
++	 * We get here if class_pick was incompatible with max
++	 * and lower prio than max. So we have nothing.
++	 */
++	return idle_sched_class.pick_task(rq);
+ }
+ 
+ static struct task_struct *
