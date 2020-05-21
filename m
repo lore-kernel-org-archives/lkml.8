@@ -2,128 +2,79 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A095C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEACCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C136A20826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:07:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590080829;
-	bh=OtwlfFmNQgc80UjNIdcExbJwJxfb18Gjc2AQYQZ4KCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kqbp+inORcEkAUBpFOtUN2r+YKZKGvS1m0roxrDNgaABOYGFM1cOpfXynxSLOAPA8
-	 SBrruG415B0p4h3ZB45ZX91DMtmdI5EDQcDXkuL97zSx+BagVlaRRI39e3ZEQvyhR5
-	 K/J5r3Cb0tfi3R4AXJpOksi0xgoOnBjm+rVAyzV0=
+	by mail.kernel.org (Postfix) with ESMTP id B426520759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:08:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgEURHJ (ORCPT
+        id S1730016AbgEURIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:07:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728565AbgEURHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:07:07 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8D9820759;
-        Thu, 21 May 2020 17:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590080827;
-        bh=OtwlfFmNQgc80UjNIdcExbJwJxfb18Gjc2AQYQZ4KCA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jX0v0UwvZ+soIo2gh1lmoddPZuETI8kS51MBmggNIbQ9bOOYSEpLfGRMWUN8bwbeX
-         MjIzR+Dhfv4VmR1xNymBIMekvXeOOoPzHgjCkp5s0Qv/BOCOf+BPxKLF3ai+Cfq/tn
-         Peze1O6CrD7GOjqV+bpFAKppYK+iHzATNC65OtsY=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DB22F40AFD; Thu, 21 May 2020 14:07:04 -0300 (-03)
-Date:   Thu, 21 May 2020 14:07:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [RFC PATCH v3 09/14] perf metricgroup: free metric_events on
- error
-Message-ID: <20200521170704.GC14034@kernel.org>
-References: <20200508053629.210324-1-irogers@google.com>
- <20200508053629.210324-10-irogers@google.com>
+        Thu, 21 May 2020 13:08:13 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48578 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728565AbgEURIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:08:12 -0400
+Received: from 89-64-86-91.dynamic.chello.pl (89.64.86.91) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id bed6dafa262e0ef4; Thu, 21 May 2020 19:08:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Subject: [PATCH] PM: runtime: clk: Fix clk_pm_runtime_get() error path
+Date:   Thu, 21 May 2020 19:08:09 +0200
+Message-ID: <5127441.yGvM1JjtLk@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508053629.210324-10-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, May 07, 2020 at 10:36:24PM -0700, Ian Rogers escreveu:
-> Avoid a simple memory leak.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Thanks, applied.
+clk_pm_runtime_get() assumes that the PM-runtime usage counter will
+be dropped by pm_runtime_get_sync() on errors, which is not the case,
+so PM-runtime references to devices acquired by the former are leaked
+on errors returned by the latter.
 
-- Arnaldo
+Fix this by modifying clk_pm_runtime_get() to drop the reference if
+pm_runtime_get_sync() returns an error.
+
+Fixes: 9a34b45397e5 clk: Add support for runtime PM
+Cc: 4.15+ <stable@vger.kernel.org> # 4.15+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/clk/clk.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+Index: linux-pm/drivers/clk/clk.c
+===================================================================
+--- linux-pm.orig/drivers/clk/clk.c
++++ linux-pm/drivers/clk/clk.c
+@@ -114,7 +114,11 @@ static int clk_pm_runtime_get(struct clk
+ 		return 0;
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/metricgroup.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 4f7e36bc49d9..7e1725d61c39 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -186,6 +186,7 @@ static int metricgroup__setup_events(struct list_head *groups,
->  		if (!evsel) {
->  			pr_debug("Cannot resolve %s: %s\n",
->  					eg->metric_name, eg->metric_expr);
-> +			free(metric_events);
->  			continue;
->  		}
->  		for (i = 0; metric_events[i]; i++)
-> @@ -193,11 +194,13 @@ static int metricgroup__setup_events(struct list_head *groups,
->  		me = metricgroup__lookup(metric_events_list, evsel, true);
->  		if (!me) {
->  			ret = -ENOMEM;
-> +			free(metric_events);
->  			break;
->  		}
->  		expr = malloc(sizeof(struct metric_expr));
->  		if (!expr) {
->  			ret = -ENOMEM;
-> +			free(metric_events);
->  			break;
->  		}
->  		expr->metric_expr = eg->metric_expr;
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
-> 
+ 	ret = pm_runtime_get_sync(core->dev);
+-	return ret < 0 ? ret : 0;
++	if (ret < 0) {
++		pm_runtime_put_noidle(core->dev);
++		return ret;
++	}
++	return 0;
+ }
+ 
+ static void clk_pm_runtime_put(struct clk_core *core)
 
--- 
 
-- Arnaldo
+
