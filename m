@@ -2,113 +2,324 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D262072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B6AX0Bme"
+	by mail.kernel.org (Postfix) with ESMTP id 50DA52072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbgEUMwx (ORCPT
+        id S1729413AbgEUMxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:52:53 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43508 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbgEUMww (ORCPT
+        Thu, 21 May 2020 08:53:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48742 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729296AbgEUMxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:52:52 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LCqQBM073519;
-        Thu, 21 May 2020 07:52:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590065547;
-        bh=HhdS0k1uvFyYcnFyKdAE7u2FGKBzACV32jA6ddp5U90=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=B6AX0BmewPmUOKJI5DJ3cIZn+mQtSxDXO9Avzp912H0DIeRRFYLdBCq5F1P0K/PX7
-         ZBFr4KNidcljuogeJKGXNVIzLhPqoT8rUaNRB9jQktX4F+5LUYW8hpz+7HKo+ea875
-         9xBCwVXNAZY05h0iL5muyCMfD/8jR9tAittuvtXQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LCqQkD089935
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 07:52:26 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 07:52:26 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 07:52:26 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LCqPlK071033;
-        Thu, 21 May 2020 07:52:26 -0500
-Date:   Thu, 21 May 2020 18:22:25 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     <masonccyang@mxic.com.tw>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Mark Brown <broonie@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v5 05/19] mtd: spi-nor: add support for DTR protocol
-Message-ID: <20200521125225.odxcdjkoy5lckrbx@ti.com>
-References: <20200519142642.24131-1-p.yadav@ti.com>
- <20200519142642.24131-6-p.yadav@ti.com>
- <OF6C754784.29BF11CD-ON4825856F.0032D83F-4825856F.0033A4F1@mxic.com.tw>
+        Thu, 21 May 2020 08:53:13 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 9F43B2A0807
+Subject: Re: [PATCH v3 2/4] media: v4l2-common: add helper functions to call
+ s_stream() callbacks
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
+        skhan@linuxfoundation.org, niklas.soderlund@ragnatech.se,
+        mchehab@kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+References: <20200415013044.1778572-1-helen.koike@collabora.com>
+ <20200415013044.1778572-3-helen.koike@collabora.com>
+ <31557623-2b8c-6cfe-19f7-7854ed51bc86@collabora.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <8223dc91-6299-8835-c397-74246bd8c54a@collabora.com>
+Date:   Thu, 21 May 2020 09:53:02 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <OF6C754784.29BF11CD-ON4825856F.0032D83F-4825856F.0033A4F1@mxic.com.tw>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <31557623-2b8c-6cfe-19f7-7854ed51bc86@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Dafna,
 
-On 21/05/20 05:24PM, masonccyang@mxic.com.tw wrote:
+On 5/21/20 9:03 AM, Dafna Hirschfeld wrote:
+> Hi
 > 
-> Hi Pratyush,
-> 
-> 
-> > @@ -311,6 +313,7 @@ struct flash_info {
-> >                  * BP3 is bit 6 of status register.
-> >                  * Must be used with SPI_NOR_4BIT_BP.
-> >                  */
-> > +#define SPI_NOR_OCTAL_DTR_READ   BIT(19) /* Flash supports octal DTR 
-> Read. */
-> 
-> #define SPI_NOR_OCTAL_DTR_RDWR  BIT(19) /* Support Octal DTR Read & Write 
-> */
+> On 15.04.20 03:30, Helen Koike wrote:
+>> Add v4l2_pipeline_stream_{enable,disable} helper functions to iterate
+>> through the subdevices in a given stream (i.e following links from sink
+>> to source) and call .s_stream() callback.
+>>
+>> Add stream_count on the subdevice object for simultaneous streaming from
+>> different video devices which shares subdevices.
+>>
+>> Prevent calling .s_stream(true) if it was already called previously by
+>> another stream.
+>>
+>> Prevent calling .s_stream(false) from one stream when there are still
+>> others active.
+>>
+>> If .s_stream(true) fails, call .s_stream(false) in the reverse order.
+>>
+>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+>> ---
+>>
+>> Changes in v3:
+>> - re-write helpers to use media walkers as in v1, but with
+>> v4l2_pipeline_subdevs_get() to reverse the order we call s_stream(true)
+>> in subdevices.
+>> - rename size to max_size (and update docs) in v4l2_pipeline_subdevs_get() to
+>> reflect the meaning of the argument.
+>> - add if defined(CONFIG_MEDIA_CONTROLLER) around helpers
+>>
+>> Changes in v2:
+>> - re-write helpers to not use media walkers
+>>
+>>   drivers/media/v4l2-core/v4l2-common.c | 125 ++++++++++++++++++++++++++
+>>   include/media/v4l2-common.h           |  43 +++++++++
+>>   include/media/v4l2-subdev.h           |   2 +
+>>   3 files changed, 170 insertions(+)
+>>
+>> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+>> index 9e8eb45a5b03c..2f991a1a57d7c 100644
+>> --- a/drivers/media/v4l2-core/v4l2-common.c
+>> +++ b/drivers/media/v4l2-core/v4l2-common.c
+>> @@ -442,3 +442,128 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+>>       return 0;
+>>   }
+>>   EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
+>> +
+>> +#if defined(CONFIG_MEDIA_CONTROLLER)
+>> +
+>> +/*
+>> + * v4l2_pipeline_subdevs_get - Assemble a list of subdevices in a pipeline
+>> + * @subdevs: the array to be filled.
+>> + * @max_size: max number of elements that can fit in subdevs array.
+>> + *
+>> + * Walk from a video node, following links from sink to source and fill the
+>> + * array with subdevices in the path.
+>> + * The walker performs a depth-first traversal, which means that, in a topology
+>> + * sd1->sd2->sd3->vdev, sd1 will be the first element placed in the array.
+>> + *
+>> + * Return the number of subdevices filled in the array.
+>> + */
+>> +static int v4l2_pipeline_subdevs_get(struct video_device *vdev,
+>> +                     struct media_pipeline *pipe,
+>> +                     struct v4l2_subdev **subdevs,
+>> +                     unsigned int max_size)
+>> +{
+>> +    struct media_entity *entity = &vdev->entity;
+>> +    struct media_device *mdev = entity->graph_obj.mdev;
+>> +    int idx = 0;
+>> +    int ret;
+>> +
+>> +    mutex_lock(&mdev->graph_mutex);
+>> +
+>> +    if (!pipe->streaming_count) {
+>> +        ret = media_graph_walk_init(&pipe->graph, mdev);
+>> +        if (ret) {
+>> +            mutex_unlock(&mdev->graph_mutex);
+>> +            return ret;
+>> +        }
+>> +    }
+>> +
+>> +    media_graph_walk_start(&pipe->graph, entity);
+>> +
+>> +    while ((entity = media_graph_walk_next_stream(&pipe->graph))) {
+>> +        if (!is_media_entity_v4l2_subdev(entity))
+>> +            continue;
+>> +        if (WARN_ON(idx >= max_size)) {
+>> +            mutex_unlock(&mdev->graph_mutex);
+>> +            return -EINVAL;
+>> +        }
+>> +        subdevs[idx++] = media_entity_to_v4l2_subdev(entity);
+>> +    }
+>> +
+>> +    if (!pipe->streaming_count)
+>> +        media_graph_walk_cleanup(&pipe->graph);
+>> +
+>> +    mutex_unlock(&mdev->graph_mutex);
+>> +
+>> +    return idx;
+>> +}
+>> +
+>> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
+>> +                         struct media_pipeline *pipe)
+>> +{
+>> +    struct media_device *mdev = vdev->entity.graph_obj.mdev;
+>> +    struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
+>> +    struct v4l2_subdev *sd;
+>> +    int i, size, ret;
+>> +
+>> +    size = v4l2_pipeline_subdevs_get(vdev, pipe,
+>> +                     subdevs, ARRAY_SIZE(subdevs));
+>> +    if (size <= 0)
+>> +        return size;
+>> +
+>> +    /* Call s_stream() in reverse order to enable sensors last */
+>> +    for (i = size - 1; i >= 0; i--) {
+>> +        sd = subdevs[i];
+>> +        if (sd->stream_count++)
+>> +            continue;
+>> +        dev_dbg(mdev->dev,
+>> +            "enabling stream for '%s'\n", sd->entity.name);
+>> +        ret = v4l2_subdev_call(sd, video, s_stream, true);
+>> +        if (ret && ret != -ENOIOCTLCMD) {
+>> +            sd->stream_count = 0;
+>> +            goto err_stream_disable;
+>> +        }
+>> +    }
+>> +
+>> +    return 0;
+>> +
+>> +err_stream_disable:
+>> +    for (i++; i < size; i++) {
+>> +        sd = subdevs[i];
+>> +        if (--sd->stream_count)
+>> +            continue;
+>> +        dev_dbg(mdev->dev,
+>> +            "disabling stream for '%s'\n", sd->entity.name);
+>> +        v4l2_subdev_call(sd, video, s_stream, false);
+>> +    };
+>> +
+>> +    return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_enable);
+>> +
+>> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
+>> +                  struct media_pipeline *pipe)
+>> +{
+>> +    struct media_device *mdev = vdev->entity.graph_obj.mdev;
+>> +    struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
+>> +    unsigned int i;
+>> +    int size;
+>> +
+>> +    size = v4l2_pipeline_subdevs_get(vdev, pipe,
+>> +                     subdevs, ARRAY_SIZE(subdevs));
+>> +    if (WARN_ON(size < 0))
+>> +        return;
+>> +
+>> +    /* Call s_stream() in order to disable sensors first */
+>> +    for (i = 0; i < size; i++) {
+>> +        struct v4l2_subdev *sd = subdevs[i];
+>> +
+>> +        if (--sd->stream_count)
+>> +            continue;
+>> +        dev_dbg(mdev->dev,
+>> +            "disabling stream for '%s'\n", sd->entity.name);
+>> +        v4l2_subdev_call(sd, video, s_stream, false);
+>> +    }
+>> +}
+>> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_disable);
+>> +
+>> +#endif /* CONFIG_MEDIA_CONTROLLER */
+>> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+>> index 150ee16ebd811..dc46812120cdc 100644
+>> --- a/include/media/v4l2-common.h
+>> +++ b/include/media/v4l2-common.h
+>> @@ -539,4 +539,47 @@ static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
+>>       buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
+>>   }
+>>   +#if defined(CONFIG_MEDIA_CONTROLLER)
+>> +
+>> +/**
+>> + * v4l2_pipeline_stream_enable - Call .s_stream(true) callbacks in the stream
+>> + * @vdev: Starting video device.
+>> + * @pipe: Pipeline this entity belongs to.
+>> + *
+>> + * Call .s_stream(true) callback in all the subdevices participating in the
+>> + * stream, i.e. following links from sink to source.
+>> + *
+>> + * .s_stream(true) is also called from sink to source, i.e. in a topology
+>> + * sd1->sd2->sd3->vdev, .s_stream(true) of sd3 is called first.
+>> + *
+>> + * Calls to this function can be nested, in which case the same number of
+>> + * v4l2_pipeline_stream_disable() calls will be required to disable streaming
+>> + * through subdevices in the pipeline.
+>> + * The  pipeline pointer must be identical for all nested calls to
+>> + * v4l2_pipeline_stream_enable().
+>> + */
+>> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
+>> +                         struct media_pipeline *pipe);
+>> +
+>> +/**
+>> + * v4l2_pipeline_stream_disable - Call .s_stream(false) callbacks in the stream
+>> + * @vdev: Starting video device.
+>> + * @pipe: Pipeline this entity belongs to.
+>> + *
+>> + * Call .s_stream(false) callback in all the subdevices participating in the
+>> + * stream, i.e. following links from sink to source.
+>> + *
+>> + * s_stream(false) is called in a reverse order from
+>> + * v4l2_pipeline_stream_enable(), i.e. in a topology sd1->sd2->sd3->vdev,
+>> + * .s_stream(false) of sd1 is called first.
+>> + *
+>> + * If multiple calls to v4l2_pipeline_stream_enable() have been made, the same
+>> + * number of calls to this function are required to disable streaming through
+>> + * subdevices in the pipeline.
+>> + */
+>> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
+>> +                  struct media_pipeline *pipe);
+>> +
+>> +#endif /* CONFIG_MEDIA_CONTROLLER */
+>> +
+>>   #endif /* V4L2_COMMON_H_ */
+>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+>> index a4848de598521..20f913a9f70c5 100644
+>> --- a/include/media/v4l2-subdev.h
+>> +++ b/include/media/v4l2-subdev.h
+>> @@ -838,6 +838,7 @@ struct v4l2_subdev_platform_data {
+>>    * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
+>>    *             device using v4l2_device_register_sensor_subdev().
+>>    * @pdata: common part of subdevice platform data
+>> + * @stream_count: Stream count for the subdevice.
+>>    *
+>>    * Each instance of a subdev driver should create this struct, either
+>>    * stand-alone or embedded in a larger struct.
+>> @@ -869,6 +870,7 @@ struct v4l2_subdev {
+>>       struct v4l2_async_notifier *notifier;
+>>       struct v4l2_async_notifier *subdev_notifier;
+>>       struct v4l2_subdev_platform_data *pdata;
+>> +    unsigned int stream_count;
+> I wonder if it is worth it to add a new field to v4l2_subdev that is used only
+> for the specific case, it seems that except of rkisp1 and vimc, the other drivers you pointed to that
+> could use the helpers don't need this counter and they call s_stream without checking if it was already called.
+> This counter is updated only by the new introduced functions and not when s_stream is called from other places.
 
-This flag only enables SNOR_HWCAPS_READ_8_8_8_DTR. It does not affect 
-SNOR_HWCAPS_PP_8_8_8_DTR. So it shouldn't be called RDWR.
- 
-> more precisely and clearly ?
-> 
-> thanks,
-> Mason
-> 
+Other drivers implement their own loop that navigates through the pipeline calling .s_stream().
+They are very similar. The only difference from rkisp1/vimc is that they don't support simultaneous streaming from different
+capture nodes.
 
--- 
+Also, drivers usually don't handle errors very well, in cases of failures where .s_stream() should be called in reversed order.
+
+Adding this counter + helpers allows a common generic implementation that can be used for both cases.
+So we re-use a code that should be well tested in the core and avoid re-implementing it.
+
+> Maybe we can add a helper that just return the next subdevice connected to the current entity as a source, and drivers can
+> iterate it and can decide themselves if s_stream should be called or not
+
+Patch 1/4 in the series provides this iterator :)
+Unless if you think we could add helpers to make things easier.
+
 Regards,
-Pratyush Yadav
-Texas Instruments India
+Helen
+
+> 
+> Thanks,
+> Dafna
+> 
+>>   };
+>>    
