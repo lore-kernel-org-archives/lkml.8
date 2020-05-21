@@ -2,216 +2,141 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208B4C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFABC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A13206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6459220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="bftlGrpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgEUEiN (ORCPT
+        id S1727875AbgEUEkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 00:38:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:15625 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726394AbgEUEiM (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 00:38:12 -0400
-IronPort-SDR: 33plZz4AEPVRtPgYDZgdZeWJhFzy+5ca1oZremrF+FOxUc2+DbWvGJ7JnEuGkGW0cQNkzYEXdD
- sATbX+t+/4PQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 21:38:11 -0700
-IronPort-SDR: 5LdwVbLtwg1PZMsTXRNHRfjAt8JK4ziS4qH2szjXi4opCJL6aeS6QCrDBckiM0qGvyUjtZMogg
- jvQNAri8k5Cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
-   d="scan'208";a="300172439"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga002.fm.intel.com with ESMTP; 20 May 2020 21:38:09 -0700
-Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200430013451.17196-1-yao.jin@linux.intel.com>
- <20200501102337.GA1761222@krava>
- <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
- <20200505000352.GH1916255@krava>
- <3e813227-4954-0d4b-bc7a-ca272b18454a@linux.intel.com>
- <68e53765-6f45-9483-7543-0a2f961cdc62@linux.intel.com>
- <20200515083312.GB3511648@krava>
- <5fe2efe4-f8a3-04ef-f5e8-7b9c433d4142@linux.intel.com>
- <82da23c8-94dd-4096-a987-a17087e2642f@linux.intel.com>
- <20200520075018.GE110644@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <0dc72312-5464-3f71-2fa2-ea604d33a1c4@linux.intel.com>
-Date:   Thu, 21 May 2020 12:38:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 00:40:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgEUEkC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 00:40:02 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED286C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:40:01 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id n24so7285006ejd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:40:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eBtX1BhIv6H5u1g/wTf+6clz1KbfAgNzGVcttWA373A=;
+        b=bftlGrpvKHRdXHGqy/T11STSBYEvsL9Nzi8XjA2bsjOrn3/TudxMpKocwcZsOsuTUi
+         CqLLTV5gtv+CG+2rVQpfvK/GOBJ0pj8PnU/iNahj1zIvd3pSAi+qkJOFuQfftdHPV0BB
+         e9YJ8OrV9UTP0L2AqSnqgx2Af1Vut9xzhhruuEslYbJTI+89Upy5QVT6H6rlETW/ORE5
+         g6m4gFKWEvz52Nwqb5EA+PAd7SYmxqPcCn2BkpM1J6ze76jLyQKSpIhQ+/P7evvsqz9J
+         nAj6CNysgHeWsOWSJf+XenI0GIGdfoaF4CwfC6WJFhOZBVgzkL08wPcGtH9/1vA2ls8f
+         VqBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eBtX1BhIv6H5u1g/wTf+6clz1KbfAgNzGVcttWA373A=;
+        b=bLRX8DErXRhK4wldxYkVaAXRWUgjK02zBFxkep5yiAjbPjE+5NHEsfHnXw+bLiozLN
+         0l6lChsHzDLhNHL1/5NXVKtpq17EZNlNBO11yd31hIIaZ/9MbLmc808QEqpfdk/Vwq/e
+         WU8EZC/kFwVpMbcZf3Zw1fT6iR9L4D7C7OPXfKQsWb2oEl8IzFldNq04OtYQ7+/QBghV
+         LyTkZsZBZeQ//ysiEFyl/Q6C7mZ5REhoVf9VAPCS2RhFgYD7mLxtzjdE3I4C2x464wha
+         vKD+UwO66h/1hFRBR4Ogp5U7CmaC1Q35T4RGYCvBL7nfhMKK+4zjwLfyUA/jeF4VFB22
+         JqyQ==
+X-Gm-Message-State: AOAM5334x23eSlWZ8/MT2Eh8uUOgG2y7ylI7+yQfRwTRILKw6F2D9atq
+        WhP5fftpd5GpPNbFfQ7QIhFjOTKl6wh8qvt83L7KPA==
+X-Google-Smtp-Source: ABdhPJy2NESD9tmrr3HTnOZP8LoZsyEivlyXTVc6ZGaMysFZHe9qj/CNd6KGxvOcX+mFudxqATX0a57vQI5RWYSzg58=
+X-Received: by 2002:a17:906:379b:: with SMTP id n27mr1890840ejc.432.1590036000594;
+ Wed, 20 May 2020 21:40:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200520075018.GE110644@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <159002475918.686697.11844615159862491335.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20200521022628.GE16070@bombadil.infradead.org> <CAPcyv4jpKo7s-bqM2TN2BS73ssOVfhdNaooziZMs2zULH6xs-g@mail.gmail.com>
+In-Reply-To: <CAPcyv4jpKo7s-bqM2TN2BS73ssOVfhdNaooziZMs2zULH6xs-g@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 20 May 2020 21:39:49 -0700
+Message-ID: <CAPcyv4hvCYF7wCtYwAXi-Okpxm-W+W=nRRJkmSHFg0p+Z2p17A@mail.gmail.com>
+Subject: Re: [PATCH v3] /dev/mem: Revoke mappings when a driver claims the region
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+On Wed, May 20, 2020 at 9:37 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Wed, May 20, 2020 at 7:26 PM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Wed, May 20, 2020 at 06:35:25PM -0700, Dan Williams wrote:
+> > > +static struct inode *devmem_inode;
+> > > +
+> > > +#ifdef CONFIG_IO_STRICT_DEVMEM
+> > > +void revoke_devmem(struct resource *res)
+> > > +{
+> > > +     struct inode *inode = READ_ONCE(devmem_inode);
+> > > +
+> > > +     /*
+> > > +      * Check that the initialization has completed. Losing the race
+> > > +      * is ok because it means drivers are claiming resources before
+> > > +      * the fs_initcall level of init and prevent /dev/mem from
+> > > +      * establishing mappings.
+> > > +      */
+> > > +     smp_rmb();
+> > > +     if (!inode)
+> > > +             return;
+> >
+> > But we don't need the smp_rmb() here, right?  READ_ONCE and WRITE_ONCE
+> > are a DATA DEPENDENCY barrier (in Documentation/memory-barriers.txt parlance)
+> > so the smp_rmb() is superfluous ...
+>
+> Is it? I did not grok that from Documentation/memory-barriers.txt.
+> READ_ONCE and WRITE_ONCE are certainly ordered with respect to each
+> other in the same function, but I thought they still depend on
+> barriers for smp ordering?
+>
+> >
+> > > +     /*
+> > > +      * Use a unified address space to have a single point to manage
+> > > +      * revocations when drivers want to take over a /dev/mem mapped
+> > > +      * range.
+> > > +      */
+> > > +     inode->i_mapping = devmem_inode->i_mapping;
+> > > +     inode->i_mapping->host = devmem_inode;
+> >
+> > umm ... devmem_inode->i_mapping->host doesn't already point to devmem_inode?
+>
+> Not if inode is coming from:
+>
+>      mknod ./newmem c 1 1
+>
+> ...that's the problem that a unified inode solves. You can mknod all
+> you want, but mapping and mapping->host will point to a common
+> instance.
+>
+> >
+> > > +
+> > > +     /* publish /dev/mem initialized */
+> > > +     smp_wmb();
+> > > +     WRITE_ONCE(devmem_inode, inode);
+> >
+> > As above, unnecessary barrier, I think.
+>
+> Well, if you're not sure, how sure should I be?
 
-On 5/20/2020 3:50 PM, Jiri Olsa wrote:
-> On Wed, May 20, 2020 at 01:36:40PM +0800, Jin, Yao wrote:
->> Hi Jiri,
->>
->> On 5/18/2020 11:28 AM, Jin, Yao wrote:
->>> Hi Jiri,
->>>
->>> On 5/15/2020 4:33 PM, Jiri Olsa wrote:
->>>> On Fri, May 15, 2020 at 02:04:57PM +0800, Jin, Yao wrote:
->>>>
->>>> SNIP
->>>>
->>>>> I think I get the root cause. That should be a serious bug in get_group_fd, access violation!
->>>>>
->>>>> For a group mixed with system-wide event and per-core event and the group
->>>>> leader is system-wide event, access violation will happen.
->>>>>
->>>>> perf_evsel__alloc_fd allocates one FD member for system-wide event (only FD(evsel, 0, 0) is valid).
->>>>>
->>>>> But for per core event, perf_evsel__alloc_fd allocates N FD members (N =
->>>>> ncpus). For example, for ncpus is 8, FD(evsel, 0, 0) to FD(evsel, 7, 0) are
->>>>> valid.
->>>>>
->>>>> get_group_fd(struct evsel *evsel, int cpu, int thread)
->>>>> {
->>>>>       struct evsel *leader = evsel->leader;
->>>>>
->>>>>       fd = FD(leader, cpu, thread);    /* access violation may happen here */
->>>>> }
->>>>>
->>>>> If leader is system-wide event, only the FD(leader, 0, 0) is valid.
->>>>>
->>>>> When get_group_fd accesses FD(leader, 1, 0), access violation happens.
->>>>>
->>>>> My fix is:
->>>>>
->>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>>>> index 28683b0eb738..db05b8a1e1a8 100644
->>>>> --- a/tools/perf/util/evsel.c
->>>>> +++ b/tools/perf/util/evsel.c
->>>>> @@ -1440,6 +1440,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
->>>>>           if (evsel__is_group_leader(evsel))
->>>>>                   return -1;
->>>>>
->>>>> +       if (leader->core.system_wide && !evsel->core.system_wide)
->>>>> +               return -2;
->>>>
->>>> so this effectively stops grouping system_wide events with others,
->>>> and I think it's correct, how about events that differ in cpumask?
->>>>
->>>
->>> My understanding for the events that differ in cpumaks is, if the
->>> leader's cpumask is not fully matched with the evsel's cpumask then we
->>> stop the grouping. Is this understanding correct?
->>>
->>> I have done some tests and get some conclusions:
->>>
->>> 1. If the group is mixed with core and uncore events, the system_wide checking can distinguish them.
->>>
->>> 2. If the group is mixed with core and uncore events and "-a" is
->>> specified, the system_wide for core event is also false. So system_wide
->>> checking can distinguish them too
->>>
->>> 3. In my test, the issue only occurs when we collect the metric which is
->>> mixed with uncore event and core event, so maybe checking the
->>> system_wide is OK.
->>>
->>>> should we perhaps ensure this before we call open? go throught all
->>>> groups and check they are on the same cpus?
->>>>
->>>
->>> The issue doesn't happen at most of the time (only for the metric
->>> consisting of uncore event and core event), so fallback to stop grouping
->>> if call open is failed looks reasonable.
->>>
->>> Thanks
->>> Jin Yao
->>>
->>>> thanks,
->>>> jirka
->>>>
->>>>
->>>>> +
->>>>>           /*
->>>>>            * Leader must be already processed/open,
->>>>>            * if not it's a bug.
->>>>> @@ -1665,6 +1668,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->>>>>                                   pid = perf_thread_map__pid(threads, thread);
->>>>>
->>>>>                           group_fd = get_group_fd(evsel, cpu, thread);
->>>>> +                       if (group_fd == -2) {
->>>>> +                               errno = EINVAL;
->>>>> +                               err = -EINVAL;
->>>>> +                               goto out_close;
->>>>> +                       }
->>>>>    retry_open:
->>>>>                           test_attr__ready();
->>>>>
->>>>> It enables the perf_evlist__reset_weak_group. And in the second_pass (in
->>>>> __run_perf_stat), the events will be opened successfully.
->>>>>
->>>>> I have tested OK for this fix on cascadelakex.
->>>>>
->>>>> Thanks
->>>>> Jin Yao
->>>>>
->>>>
->>
->> Is this fix OK?
->>
->> Another thing is, do you think if we need to rename
->> "evsel->core.system_wide" to "evsel->core.has_cpumask".
->>
->> The "system_wide" may misleading.
->>
->> evsel->core.system_wide = pmu ? pmu->is_uncore : false;
->>
->> "pmu->is_uncore" is true if PMU has a "cpumask". But it's not just uncore
->> PMU which has cpumask. Some other PMUs, e.g. cstate_pkg, also have cpumask.
->> So for this case, "has_cpumask" should be better.
-> 
-> so those flags are checked in many places in the code so I don't
-> think it's wise to mess with them
-> 
-> what I meant before was that the cpumask could be different for
-> different events so even when both events are 'system_wide' the
-> leader 'fd' might not exist for the groupped events and vice versa
-> 
-> so maybe we should ensure that we are groupping events with same
-> cpu maps before we go for open, so the get_group_fd stays simple
-> 
-
-Thanks for the comments. I'm preparing the patch according to this idea.
-
->>
->> But I'm not sure if the change is OK for other case, e.g. PT, which also
->> uses "evsel->core.system_wide".
-> 
-> plz CC Adrian Hunter <adrian.hunter@intel.com> on next patches
-> if you are touching this
-> 
-
-I will not touch "evsel->core.system_wide" in the new patch.
-
-Thanks
-Jin Yao
-
-> thanks,
-> jirka
-> 
+I'm pretty sure they are needed, because I need the prior writes to
+initialize the inode to be fenced before the final write to publish
+the inode. I don't think WRITE_ONCE() enforces that prior writes have
+completed.
