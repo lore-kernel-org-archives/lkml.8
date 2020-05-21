@@ -2,168 +2,194 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9045DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624C020748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7633A20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgEUGYr (ORCPT
+        id S1728224AbgEUGZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 02:24:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:5775 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgEUGYr (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 02:24:47 -0400
-IronPort-SDR: TXPPf7V+NRSF6G1qSGL9X3hvPTdTfSKTxUHXC2Q7SSHQPqaOcbLu8+dRV0xlqcDFm+3wmG3Gyi
- 4Q+SZyKcqxNA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 23:24:46 -0700
-IronPort-SDR: KvlqI8GHyYwQ1/7xiGOuhZBmfygZBkrj6hSEIeJpzic2RwyiMdGZ4CjO/cTYhy5MA2oRizn7ja
- HGLZe/82OQ2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
-   d="scan'208";a="374316881"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga001.fm.intel.com with ESMTP; 20 May 2020 23:24:44 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf evlist: Ensure grouped events with same cpu map
-Date:   Thu, 21 May 2020 14:22:40 +0800
-Message-Id: <20200521062240.18865-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 21 May 2020 02:25:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4831 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbgEUGZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 02:25:38 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1BDDE98CBFABEE69D726;
+        Thu, 21 May 2020 14:25:35 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.101) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 21 May 2020
+ 14:25:26 +0800
+Subject: Re: [RFC PATCH v3 2/2] CPPC: add support for SW BOOST
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <Souvik.Chakravarty@arm.com>,
+        <Thanu.Rangarajan@arm.com>, <Sudeep.Holla@arm.com>,
+        <guohanjun@huawei.com>, <john.garry@huawei.com>,
+        <jonathan.cameron@huawei.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1589888489-13828-1-git-send-email-wangxiongfeng2@huawei.com>
+ <1589888489-13828-3-git-send-email-wangxiongfeng2@huawei.com>
+ <20200520050014.qpnnmyas2z7mvcss@vireshk-i7>
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Message-ID: <161082be-0df8-0128-bc77-58aee8d43bf6@huawei.com>
+Date:   Thu, 21 May 2020 14:25:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200520050014.qpnnmyas2z7mvcss@vireshk-i7>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.101]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A metric may consist of core event and uncore event (or other
-per-socket event)
+Hi Viresh,
 
-For example, the metric "C2_Pkg_Residency" consists of
-"cstate_pkg/c2-residency" and "msr/tsc". The former is per-socket
-event and the latter is per-cpu event.
+On 2020/5/20 13:00, Viresh Kumar wrote:
+> On 19-05-20, 19:41, Xiongfeng Wang wrote:
+>> To add SW BOOST support for CPPC, we need to get the max frequency of
+>> boost mode and non-boost mode. ACPI spec 6.2 section 8.4.7.1 describe
+>> the following two CPC registers.
+>>
+>> "Highest performance is the absolute maximum performance an individual
+>> processor may reach, assuming ideal conditions. This performance level
+>> may not be sustainable for long durations, and may only be achievable if
+>> other platform components are in a specific state; for example, it may
+>> require other processors be in an idle state.
+>>
+>> Nominal Performance is the maximum sustained performance level of the
+>> processor, assuming ideal operating conditions. In absence of an
+>> external constraint (power, thermal, etc.) this is the performance level
+>> the platform is expected to be able to maintain continuously. All
+>> processors are expected to be able to sustain their nominal performance
+>> state simultaneously."
+>>
+>> To add SW BOOST support for CPPC, we can use Highest Performance as the
+>> max performance in boost mode and Nominal Performance as the max
+>> performance in non-boost mode. If the Highest Performance is greater
+>> than the Nominal Performance, we assume SW BOOST is supported.
+>>
+>> The current CPPC driver does not support SW BOOST and use 'Highest
+>> Performance' as the max performance the CPU can achieve. 'Nominal
+>> Performance' is used to convert 'performance' to 'frequency'. That
+>> means, if firmware enable boost and provide a value for Highest
+>> Performance which is greater than Nominal Performance, boost feature is
+>> enabled by default.
+>>
+>> Because SW BOOST is disabled by default, so, after this patch, boost
+>> feature is disabled by default even if boost is enabled by firmware.
+>>
+>> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+>> ---
+>>  drivers/cpufreq/cppc_cpufreq.c | 39 +++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 37 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+>> index bda0b24..792ed9e 100644
+>> --- a/drivers/cpufreq/cppc_cpufreq.c
+>> +++ b/drivers/cpufreq/cppc_cpufreq.c
+>> @@ -37,6 +37,7 @@
+>>   * requested etc.
+>>   */
+>>  static struct cppc_cpudata **all_cpu_data;
+>> +static bool boost_supported;
+>>  
+>>  struct cppc_workaround_oem_info {
+>>  	char oem_id[ACPI_OEM_ID_SIZE + 1];
+>> @@ -310,7 +311,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>>  	 * Section 8.4.7.1.1.5 of ACPI 6.1 spec)
+>>  	 */
+>>  	policy->min = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_nonlinear_perf);
+>> -	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
+>> +	policy->max = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
+>>  
+>>  	/*
+>>  	 * Set cpuinfo.min_freq to Lowest to make the full range of performance
+>> @@ -318,7 +319,7 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>>  	 * nonlinear perf
+>>  	 */
+>>  	policy->cpuinfo.min_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.lowest_perf);
+>> -	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.highest_perf);
+>> +	policy->cpuinfo.max_freq = cppc_cpufreq_perf_to_khz(cpu, cpu->perf_caps.nominal_perf);
+>>  
+>>  	policy->transition_delay_us = cppc_cpufreq_get_transition_delay_us(cpu_num);
+>>  	policy->shared_type = cpu->shared_type;
+>> @@ -343,6 +344,13 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>>  
+>>  	cpu->cur_policy = policy;
+>>  
+>> +	/*
+>> +	 * If 'highest_perf' is greater than 'nominal_perf', we assume CPU Boost
+>> +	 * is supported.
+>> +	 */
+>> +	if (cpu->perf_caps.highest_perf > cpu->perf_caps.nominal_perf)
+>> +		boost_supported = true;
+>> +
+>>  	/* Set policy->cur to max now. The governors will adjust later. */
+>>  	policy->cur = cppc_cpufreq_perf_to_khz(cpu,
+>>  					cpu->perf_caps.highest_perf);
+>> @@ -410,6 +418,32 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>>  	return cppc_get_rate_from_fbctrs(cpu, fb_ctrs_t0, fb_ctrs_t1);
+>>  }
+>>  
+>> +static int cppc_cpufreq_set_boost(struct cpufreq_policy *policy, int state)
+>> +{
+>> +	struct cppc_cpudata *cpudata;
+>> +	int ret = 0;
+> 
+> No need to initialize this.
 
-"C2_Pkg_Residency" hits assertion failure on cascadelakex.
+I will change it in the next version.
 
- # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
- perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
- Aborted
+Thanks for your advice. I will add your 'Suggested-by' for these two patches.
 
-The root cause is one issue in get_group_fd(), access violation!
 
-For a group mixed with per-socket event and per-cpu event and the
-group leader is per-socket event, access violation will happen.
+Thanks,
+Xiongfeng
 
-perf_evsel__alloc_fd allocates one FD member for per-socket event.
-Only FD(evsel, 0, 0) is valid (suppose one-socket system).
-
-But for per-cpu event, perf_evsel__alloc_fd allocates N FD members
-(N = ncpus). For example, if ncpus is 8, FD(evsel, 0, 0) to
-FD(evsel, 7, 0) are valid.
-
-get_group_fd(struct evsel *evsel, int cpu, int thread)
-{
-       struct evsel *leader = evsel->leader;
-
-       fd = FD(leader, cpu, thread);    /* access violation */
-}
-
-If leader is per-socket event, only FD(leader, 0, 0) is valid.
-So when get_group_fd tries to access FD(leader, 1, 0), access
-violation will happen.
-
-This patch ensures that the grouped events with same cpu maps
-before we go to get_group_fd.
-
-If the cpu maps are not matched, we force to disable the group.
-
-Fixes: 6a4bb04caacc8 ("perf tools: Enable grouping logic for parsed events")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-stat.c |  3 +++
- tools/perf/util/evlist.c  | 32 ++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h  |  5 +++++
- 3 files changed, 40 insertions(+)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 377e575f9645..0e4fc6b3323c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -584,6 +584,9 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	if (affinity__setup(&affinity) < 0)
- 		return -1;
- 
-+	if (!evlist__cpus_matched(evsel_list))
-+		evlist__force_disable_group(evsel_list);
-+
- 	evlist__for_each_cpu (evsel_list, i, cpu) {
- 		affinity__set(&affinity, cpu);
- 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 2a9de6491700..fc6e410ca63b 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1704,3 +1704,35 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
- 	}
- 	return leader;
- }
-+
-+bool evlist__cpus_matched(struct evlist *evlist)
-+{
-+	struct evsel *prev = evlist__first(evlist), *evsel = prev;
-+
-+	if (prev->core.nr_members <= 1)
-+		return true;
-+
-+	evlist__for_each_entry_continue(evlist, evsel) {
-+		if (evsel->core.cpus->nr != prev->core.cpus->nr)
-+			return false;
-+
-+		for (int i = 0; i < evsel->core.cpus->nr; i++) {
-+			if (evsel->core.cpus->map[i] != prev->core.cpus->map[i])
-+				return false;
-+		}
-+
-+		prev = evsel;
-+	}
-+
-+	return true;
-+}
-+
-+void evlist__force_disable_group(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		evsel->leader = evsel;
-+		evsel->core.nr_members = 0;
-+	}
-+}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index b6f325dfb4d2..ea7a53166cbd 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -355,4 +355,9 @@ void perf_evlist__force_leader(struct evlist *evlist);
- struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
- 						 struct evsel *evsel,
- 						bool close);
-+
-+bool evlist__cpus_matched(struct evlist *evlist);
-+
-+void evlist__force_disable_group(struct evlist *evlist);
-+
- #endif /* __PERF_EVLIST_H */
--- 
-2.17.1
+> 
+>> +
+>> +	if (!boost_supported) {
+>> +		pr_err("BOOST not supported by CPU or firmware\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	cpudata = all_cpu_data[policy->cpu];
+>> +	if (state)
+>> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
+>> +					cpudata->perf_caps.highest_perf);
+>> +	else
+>> +		policy->max = cppc_cpufreq_perf_to_khz(cpudata,
+>> +					cpudata->perf_caps.nominal_perf);
+>> +	policy->cpuinfo.max_freq = policy->max;
+>> +
+>> +	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct cpufreq_driver cppc_cpufreq_driver = {
+>>  	.flags = CPUFREQ_CONST_LOOPS,
+>>  	.verify = cppc_verify_policy,
+>> @@ -417,6 +451,7 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
+>>  	.get = cppc_cpufreq_get_rate,
+>>  	.init = cppc_cpufreq_cpu_init,
+>>  	.stop_cpu = cppc_cpufreq_stop_cpu,
+>> +	.set_boost = cppc_cpufreq_set_boost,
+>>  	.name = "cppc_cpufreq",
+>>  };
+>>  
+>> -- 
+>> 1.7.12.4
+> 
 
