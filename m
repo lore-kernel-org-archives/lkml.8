@@ -2,117 +2,292 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87638C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F357820756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590025005;
-	bh=50+omnV6kU5L+9tOyK1dQNBOsCEluF+W9UEGXGi8iyY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZiianaJtpVvW6e+RZRpEgj5CgCppOdV796Kqt/IiFMbm8v7yYr+e5wkAkRlV/UfYS
-	 gSgeWbSzPV2wQF4pFfJAEcr90QnGy0tukt3xAt2Et+2PxSksnvHq77m41I81FnEf6N
-	 yS0cv+iTEBKKRDvFoJVSJ5REvRd/bOde7h3H6f7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 5B232206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:37:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qUG0/EH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgEUBgn (ORCPT
+        id S1728021AbgEUBg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 21:36:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727917AbgEUBgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 21:36:42 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80BCD206BE;
-        Thu, 21 May 2020 01:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590025001;
-        bh=50+omnV6kU5L+9tOyK1dQNBOsCEluF+W9UEGXGi8iyY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SH5gNQhIlyeWDxygzf1TVBesxJsBvm7GHIkakTRGm/gx5A/HYozLkGnZSpnd0SCMZ
-         nr6XRAI0Bp+97pN+FgTJwoZstljU2lwalLM4/D34ETnNDGYIu0u9drIZOm79XwzZgL
-         WnLjqea5gCACicXdzUVfWvcDmxi/C65wCLMp5eo0=
-Date:   Wed, 20 May 2020 18:36:39 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     tanhuazhong <tanhuazhong@huawei.com>
-Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
-        GuoJia Liao <liaoguojia@huawei.com>
-Subject: Re: [PATCH net-next 1/2] net: hns3: adds support for dynamic VLAN
- mode
-Message-ID: <20200520183639.5e82bc09@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <91bd81dc-5513-f717-559f-b225ab380fbc@huawei.com>
-References: <1589937613-40545-1-git-send-email-tanhuazhong@huawei.com>
-        <1589937613-40545-2-git-send-email-tanhuazhong@huawei.com>
-        <20200520140617.6d8338bf@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <91bd81dc-5513-f717-559f-b225ab380fbc@huawei.com>
+        Wed, 20 May 2020 21:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727974AbgEUBg5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 21:36:57 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77265C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 18:36:56 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id dh1so2348850qvb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 18:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oUriGfgjkQX3LYY7wtj+RwTpaaRdDlt+3hTHB1vDTro=;
+        b=qUG0/EH6XgLuxNXbQdJGezJbSQnq0Y0S/9ctlrDqDZzBmDJvsxq7FBzhGpk11Ot+cT
+         UsLryIJ+nLWIYzsIV6Gu/Gb2PxgGUbjh0zqQVnPG4bzFl45QemjVJQaDawNLUKoLvCC9
+         QJ8VqGPOjpv3ayUyQtnOU0LD/9bRdnFGsbRl64BkFPt8mD+QhsPumB/jzYiHyLkVE4B0
+         902XwQS+EUOGGd8kT064L7blhtHZHmZ24U4MraCQJQSV6gr+SfKf9DRh/zaCfYbaRUPl
+         uuGzpzGRkVx78pLUo5Smp49BsBnHwC+RAjbVqMp24UtmQT38yD4UGvKQGeuitvt76b7K
+         MitQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oUriGfgjkQX3LYY7wtj+RwTpaaRdDlt+3hTHB1vDTro=;
+        b=g+6aJ9M4LbCWTAfTl034J9PD1q/jElj29/FV0TFlvWIRM59ctJDem0HNry1mSc0ftM
+         AVl0iY6nrAD8i/D8VSw5f3o9IqsptduYjPnIzlYWl1/EkeVftM5SzkWHl82AWbay+p6M
+         yO5P/xnu+hSo8l4OFqW7NePbbrDXa40EEdmXYi+Fo5AS4qVybQTU9sBU0esTUfwR+Fgy
+         OqMI10OGP89Gm2Z0dMB7j0pbwrdwLhm7uPF7NfkUAOMTmG2RIKMltTpeGF4DViR2FXhU
+         XTaXdVZqj2RndNzVF2iLugbD6z3diJS0Wt30QZiQflFfDJ1QVfvvoNCpQ4oojLYea0Cx
+         1B4g==
+X-Gm-Message-State: AOAM532rxQT2MlNNfdcEV9GzCeHYEpjz1K5hIF8qwBc9gSowZ0MpTzqI
+        zM/kQJ/PkpthzYsvWuRpxhb/wJygXDOoSZvNj1PflA==
+X-Google-Smtp-Source: ABdhPJy4C/+klK8xF4IEwT19w/09g+zR+6lWSkQvG6oshEgv9u7seIlkLrXJWcxPACRQ5P+F/R97+CzyHpQhoOhPB0E=
+X-Received: by 2002:a0c:ed21:: with SMTP id u1mr7831281qvq.206.1590025015219;
+ Wed, 20 May 2020 18:36:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200506084039.249977-1-eizan@chromium.org> <20200506184018.v2.2.I87cf35a058328c780bd3b8b2191209a5011b7016@changeid>
+ <CAFqH_50_Py7Diu5bwmjLBPGiy3F5J5qNGmtrbH7i7aTUaHif9A@mail.gmail.com>
+In-Reply-To: <CAFqH_50_Py7Diu5bwmjLBPGiy3F5J5qNGmtrbH7i7aTUaHif9A@mail.gmail.com>
+From:   Eizan Miyamoto <eizan@google.com>
+Date:   Thu, 21 May 2020 11:36:43 +1000
+Message-ID: <CAOak1e-U8kxocZWUV=e9zWHzdfLg0=cnvjtX-Wq0G9Cw=Bcq0g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] [media] mtk-mdp: use pm_runtime in MDP component driver
+To:     Enric Balletbo Serra <eballetbo@gmail.com>
+Cc:     Eizan Miyamoto <eizan@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 09:33:14 +0800 tanhuazhong wrote:
-> On 2020/5/21 5:06, Jakub Kicinski wrote:
-> > On Wed, 20 May 2020 09:20:12 +0800 Huazhong Tan wrote:  
-> >> From: GuoJia Liao <liaoguojia@huawei.com>
-> >>
-> >> There is a scenario which needs vNICs enable the VLAN filter
-> >> in access port, while disable the VLAN filter in trunk port.
-> >> Access port and trunk port can switch according to the user's
-> >> configuration.
-> >>
-> >> This patch adds support for the dynamic VLAN mode. then the
-> >> HNS3 driver can support two VLAN modes: default VLAN mode and
-> >> dynamic VLAN mode. User can switch the mode through the
-> >> configuration file.  
-> > 
-> > What configuration file? Sounds like you're reimplementing trusted
-> > VFs (ndo_set_vf_trust).
-> >   
-> 
-> Hi, Jakub.
-> 
-> Maybe this configuration file here is a little misleading,
-> this VLAN mode is decided by the firmware, the driver will
-> query the VLAN mode from firmware during  intializing.
+On Thu, May 7, 2020 at 3:07 AM Enric Balletbo Serra <eballetbo@gmail.com> wrote:
+>
+> Hi Eizan,
+>
+> Thank you for the patch.
+>
+> Missatge de Eizan Miyamoto <eizan@chromium.org> del dia dc., 6 de maig
+> 2020 a les 10:42:
+> >
+> > Without this change, the MDP components are not fully integrated into
+> > the runtime power management subsystem, and the MDP driver does not
+> > work.
+> >
+> > For each of the component device drivers to be able to call
+> > pm_runtime_get/put_sync() a pointer to the component's device struct
+> > had to be added to struct mtk_mdp_comp, set by mtk_mdp_comp_init().
+> >
+> > Note that the dev argument to mtk_mdp_comp_clock_on/off() has been
+> > removed. Those functions used to be called from the "master" mdp driver
+> > in mtk_mdp_core.c, but the component's device pointer no longer
+> > corresponds to the mdp master device pointer, which is not the right
+> > device to pass to pm_runtime_put/get_sync() which we had to add to get
+> > the driver to work properly.
+> >
+> > Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
+> > ---
+> >
+> > Changes in v2:
+>
+> Ah, I guess this change log corresponds to the first patch.
+>
+> > - remove empty mtk_mdp_comp_init
+> > - update documentation for enum mtk_mdp_comp_type
+> > - remove comma after last element of mtk_mdp_comp_driver_dt_match
+> >
+> >  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 22 ++++++++++++++-----
+> >  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |  6 +++--
+> >  drivers/media/platform/mtk-mdp/mtk_mdp_core.c |  6 ++---
+> >  3 files changed, 23 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> > index 5b4d482df778..228c58f92c8c 100644
+> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/of_platform.h>
+> >  #include <soc/mediatek/smi.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/pm_runtime.h>
+> >
+> >  #include "mtk_mdp_comp.h"
+> >  #include "mtk_mdp_core.h"
+> > @@ -53,7 +54,7 @@ static const struct of_device_id mtk_mdp_comp_driver_dt_match[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(of, mtk_mdp_comp_driver_dt_match);
+> >
+> > -void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+> > +void mtk_mdp_comp_clock_on(struct mtk_mdp_comp *comp)
+> >  {
+> >         int i, err;
+> >
+> > @@ -62,25 +63,31 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
+> >                 if (err) {
+> >                         enum mtk_mdp_comp_type comp_type =
+> >                                 (enum mtk_mdp_comp_type)
+> > -                               of_device_get_match_data(dev);
+> > -                       dev_err(dev,
+> > +                               of_device_get_match_data(comp->dev);
+> > +                       dev_err(comp->dev,
+> >                                 "failed to get larb, err %d. type:%d\n",
+> >                                 err, comp_type);
+> >                 }
+> >         }
+> >
+> > +       err = pm_runtime_get_sync(comp->dev);
+> > +       if (err < 0)
+> > +               dev_err(comp->dev,
+> > +                       "failed to runtime get, err %d.\n",
+> > +                       err);
+>
+> Should you really ignore this error? If that's the case I'd just call
+> pm_runtime_get_sync() without adding the logic to just print an error
+> message.
 
-And the FW got that configuration from?
+This is mostly consistent with style elsewhere, e.g., in mtk_mdp_m2m.c
+mtk_mdp_m2m_start_streaming and mtk_mdp_m2m_stop_streaming.
 
-> I will modified this description in V2. BTW, is there any
-> other suggestion about this patch?
+>
+> > +
+> >         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
+> >                 if (IS_ERR(comp->clk[i]))
+> >                         continue;
+> >                 err = clk_prepare_enable(comp->clk[i]);
+> >                 if (err)
+> > -                       dev_err(dev,
+> > +                       dev_err(comp->dev,
+> >                                 "failed to enable clock, err %d. i:%d\n",
+> >                                 err, i);
+>
+> Although ignoring errors seems to be a common pattern in this file and
+> I know you did not introduce this.
 
-The other suggestion was to trusted vf. What's the difference between
-trusted VF and "dynamic VLAN mode"?
+Maybe the issue is that since no action is taken, logging at the 'error' log
+level is not the right thing? IOW, should it be changed to an informational
+message instead? Nevertheless, I think we should defer these changes to a
+follow-up patch instead.
 
-> >> In default VLAN mode, port based VLAN filter and VF VLAN
-> >> filter should always be enabled.
-> >>
-> >> In dynamic VLAN mode, port based VLAN filter is disabled, and
-> >> VF VLAN filter is disabled defaultly, and should be enabled
-> >> when there is a non-zero VLAN ID. In addition, VF VLAN filter
-> >> is enabled if PVID is enabled for vNIC.
-> >>
-> >> When enable promisc, VLAN filter should be disabled. When disable
-> >> promisc, VLAN filter's status depends on the value of
-> >> 'vport->vf_vlan_en', which is used to record the VF VLAN filter
-> >> status.
-> >>
-> >> In default VLAN mode, 'vport->vf_vlan_en' always be 'true', so
-> >> VF VLAN filter will set to be enabled after disabling promisc.
-> >>
-> >> In dynamic VLAN mode, 'vport->vf_vlan_en' lies on whether there
-> >> is a non-zero VLAN ID.
-> >>
-> >> Signed-off-by: GuoJia Liao <liaoguojia@huawei.com>
-> >> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>  
-
+>
+> >         }
+> >  }
+> >
+> > -void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
+> > +void mtk_mdp_comp_clock_off(struct mtk_mdp_comp *comp)
+> >  {
+> >         int i;
+> >
+> > @@ -92,6 +99,8 @@ void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
+> >
+> >         if (comp->larb_dev)
+> >                 mtk_smi_larb_put(comp->larb_dev);
+> > +
+> > +       pm_runtime_put_sync(comp->dev);
+> >  }
+> >
+> >  static int mtk_mdp_comp_bind(struct device *dev, struct device *master,
+> > @@ -101,6 +110,7 @@ static int mtk_mdp_comp_bind(struct device *dev, struct device *master,
+> >         struct mtk_mdp_dev *mdp = data;
+> >
+> >         mtk_mdp_register_component(mdp, comp);
+> > +       pm_runtime_enable(dev);
+> >
+> >         return 0;
+> >  }
+> > @@ -111,6 +121,7 @@ static void mtk_mdp_comp_unbind(struct device *dev, struct device *master,
+> >         struct mtk_mdp_dev *mdp = data;
+> >         struct mtk_mdp_comp *comp = dev_get_drvdata(dev);
+> >
+> > +       pm_runtime_disable(dev);
+> >         mtk_mdp_unregister_component(mdp, comp);
+> >  }
+> >
+> > @@ -129,6 +140,7 @@ int mtk_mdp_comp_init(struct mtk_mdp_comp *comp, struct device *dev)
+> >                  (enum mtk_mdp_comp_type)of_device_get_match_data(dev);
+> >
+> >         INIT_LIST_HEAD(&comp->node);
+> > +       comp->dev = dev;
+> >
+> >         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
+> >                 comp->clk[i] = of_clk_get(node, i);
+> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> > index b5a18fe567aa..de158d3712f6 100644
+> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+> > @@ -12,17 +12,19 @@
+> >   * @node:      list node to track sibing MDP components
+> >   * @clk:       clocks required for component
+> >   * @larb_dev:  SMI device required for component
+> > + * @dev:       component's device
+> >   */
+> >  struct mtk_mdp_comp {
+> >         struct list_head        node;
+> >         struct clk              *clk[2];
+> >         struct device           *larb_dev;
+> > +       struct device           *dev;
+> >  };
+> >
+> >  int mtk_mdp_comp_init(struct mtk_mdp_comp *comp, struct device *dev);
+> >
+> > -void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp);
+> > -void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp);
+> > +void mtk_mdp_comp_clock_on(struct mtk_mdp_comp *comp);
+> > +void mtk_mdp_comp_clock_off(struct mtk_mdp_comp *comp);
+> >
+> >  extern struct platform_driver mtk_mdp_component_driver;
+> >
+> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> > index 539a7942e3cb..133d107aa4e6 100644
+> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> > @@ -52,20 +52,18 @@ MODULE_DEVICE_TABLE(of, mtk_mdp_of_ids);
+> >
+> >  static void mtk_mdp_clock_on(struct mtk_mdp_dev *mdp)
+> >  {
+> > -       struct device *dev = &mdp->pdev->dev;
+> >         struct mtk_mdp_comp *comp_node;
+> >
+> >         list_for_each_entry(comp_node, &mdp->comp_list, node)
+> > -               mtk_mdp_comp_clock_on(dev, comp_node);
+> > +               mtk_mdp_comp_clock_on(comp_node);
+> >  }
+> >
+> >  static void mtk_mdp_clock_off(struct mtk_mdp_dev *mdp)
+> >  {
+> > -       struct device *dev = &mdp->pdev->dev;
+> >         struct mtk_mdp_comp *comp_node;
+> >
+> >         list_for_each_entry(comp_node, &mdp->comp_list, node)
+> > -               mtk_mdp_comp_clock_off(dev, comp_node);
+> > +               mtk_mdp_comp_clock_off(comp_node);
+> >  }
+> >
+> >  static void mtk_mdp_wdt_worker(struct work_struct *work)
+> > --
+> > 2.26.2.526.g744177e7f7-goog
+> >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
