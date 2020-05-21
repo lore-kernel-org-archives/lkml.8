@@ -2,110 +2,102 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6190EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B49C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33CC120721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F19120814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SToWnglh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c8xNMDVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgEULME (ORCPT
+        id S1729038AbgEULV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728442AbgEULMD (ORCPT
+        Thu, 21 May 2020 07:21:58 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53948 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728887AbgEULV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:12:03 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD1AC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 04:12:03 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id g25so5149558otp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 04:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/oL7dAuaA62cBm7hAceUJOjBRK5rQp19BMPlUMceggo=;
-        b=SToWnglhZFHvnkT5/QNB9fD0tbAajvPdZlwXz6KPsdo/KGF1m3FaV81CqJ7COejDH5
-         SgQz+SsmWca/W8+dH6L4/gJ4Nn7g3CwY4ryAG34oCjXK6LyQ+e0lQCguuqlEXqgZ5TCg
-         5uGe5G/TO0/HcaHwthRzAs/fGY4s0fGofRlnp/LsPk4m4E7XPe/Ui+zzzsl2Lecr4s7+
-         iTASy+6lSY3Fe2pCtEzVkFWVeJKdhMf6syN776cTBZs6fVTnJBvXbMYd9mzNSJFLkCpO
-         VNq0LY+Vl8P/Yl73hrtKEckDQLqSJO7bqMhXj+KFMeFIh1wzrY9Yc+qmYJ1VzyXdclFS
-         c1xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/oL7dAuaA62cBm7hAceUJOjBRK5rQp19BMPlUMceggo=;
-        b=tOv0gFZuLMte/XxBz92hSlnV1UaAMjdwHAyb7+2MrmaMSbrmmaURzY6TiPCISfH7Km
-         Bv1537qTgNrKWq9MT9ucgoAkkMdby1KLpxyjT1Bup0Wn1+QX6rKV7t5l3YO95r9XgDhO
-         72VDxlw/BJ0nWz4+ZBJfnUUoSMFTY9ri+dk1y9acAUC1QyXYHyNt3hV9ITnOgi5P6TVd
-         WZL6BpfDnFCvvinHU8VoGglX7OBGdZpw1YtnQa5uVjgwzdZFL2pLwCPsKuJOBKlEUMSc
-         K8ooDEJw65LX3ebPnFJ/RFjp6u7Nr38MaS1GsW7R7CwG73pJvfOwckKRppxPDt89aer4
-         t7lA==
-X-Gm-Message-State: AOAM53003Gs106Ttq0Gp3q0L+3HKA90xoSJrxchmZQdanbz60J1qmeJP
-        e5Yhx43Utlmxz5eDpqEqHYwvk7VTPSMNklK1v+mIhw==
-X-Google-Smtp-Source: ABdhPJw17uyBMC0m3w1yjaRSVBfBWWlyDtoOJjc5+l8DV6nFfRiiRN1W5A8VLsLHUTfZAiwI9X8jJpRHAyXlXGyaTA4=
-X-Received: by 2002:a9d:27a3:: with SMTP id c32mr7112271otb.233.1590059522704;
- Thu, 21 May 2020 04:12:02 -0700 (PDT)
+        Thu, 21 May 2020 07:21:58 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LBLoa1142341;
+        Thu, 21 May 2020 11:21:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=zDxy18VJXMKyiEMNyaTfSbB5Ym8PfYq9SfswI99nuIA=;
+ b=c8xNMDVGL5RMNeM39+tJAoMXk61kOfDm6zMxA/j0tZsCRqNUtiMH6D2UTI9ClNeGryYv
+ k9YoOQB7CerLJnfoiPsdAn0gfS5pG8zYqIr5EUlbi5ueeL/dHlp/GBwETFklSIfV9pJ+
+ dbu+meo1r0gD7QeJ5pA+ASByn/dZnCJRWBpnSPhrLsA0/Gf/4AHwlJVzJZIpEYyeUXY1
+ 4lFat/mZ6aE9ZhVmXAjJRU+qLrhKcnBw7lrDLYtwIQ8xE/jRI8vY6ldQVO8pZYRaipKY
+ HHlIb94xydQH35jtGhh84yHPN1QgaYEamAg/3Na9Wkt1POoN2dOeBmSNIw7o+pxHcB0I iQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31284m7y7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 11:21:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LBDFVv176434;
+        Thu, 21 May 2020 11:21:46 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 3150226mmf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 11:21:46 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04LBLdYS005721;
+        Thu, 21 May 2020 11:21:39 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 May 2020 04:21:39 -0700
+Date:   Thu, 21 May 2020 14:21:31 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] [v2] media: staging: tegra-vde: fix runtime pm imbalance
+ on error
+Message-ID: <20200521112131.GG30374@kadam>
+References: <20200521062746.6656-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-References: <20200515150338.190344-1-elver@google.com>
-In-Reply-To: <20200515150338.190344-1-elver@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 21 May 2020 13:11:50 +0200
-Message-ID: <CANpmjNP2GsUuHAfvBa6qhnAe1W=1Zo=0i2eB09V7GAdtRSjVfg@mail.gmail.com>
-Subject: Re: [PATCH -tip 00/10] Fix KCSAN for new ONCE (require Clang 11)
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521062746.6656-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 suspectscore=18 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005210085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 at 17:03, Marco Elver <elver@google.com> wrote:
->
-> This patch series is the conclusion to [1], where we determined that due
-> to various interactions with no_sanitize attributes and the new
-> {READ,WRITE}_ONCE(), KCSAN will require Clang 11 or later. Other
-> sanitizers are largely untouched, and only KCSAN now has a hard
-> dependency on Clang 11. To test, a recent Clang development version will
-> suffice [2]. While a little inconvenient for now, it is hoped that in
-> future we may be able to fix GCC and re-enable GCC support.
->
-> The patch "kcsan: Restrict supported compilers" contains a detailed list
-> of requirements that led to this decision.
->
-> Most of the patches are related to KCSAN, however, the first patch also
-> includes an UBSAN related fix and is a dependency for the remaining
-> ones. The last 2 patches clean up the attributes by moving them to the
-> right place, and fix KASAN's way of defining __no_kasan_or_inline,
-> making it consistent with KCSAN.
->
-> The series has been tested by running kcsan-test several times and
-> completed successfully.
->
-> [1] https://lkml.kernel.org/r/CANpmjNOGFqhtDa9wWpXs2kztQsSozbwsuMO5BqqW0c0g0zGfSA@mail.gmail.com
-> [2] https://github.com/llvm/llvm-project
->
+On Thu, May 21, 2020 at 02:27:45PM +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> the call returns an error code. Thus a pairing decrement is needed
+> on the error handling path to keep the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
+Let's stop working around the bug in pm_runtime_get_sync() and write
+a replacement for it instead.
 
-Superseded by v2:
-https://lkml.kernel.org/r/20200521110854.114437-1-elver@google.com
+regards,
+dan carpenter
+
