@@ -2,210 +2,94 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE34C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 938BA206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FC720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgEUSkk (ORCPT
+        id S1729679AbgEUSlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:40:40 -0400
-Received: from smtprelay0218.hostedemail.com ([216.40.44.218]:37268 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728240AbgEUSkk (ORCPT
+        Thu, 21 May 2020 14:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728240AbgEUSlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:40:40 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 5D245182CED2A;
-        Thu, 21 May 2020 18:40:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: class39_3a05a3526d20
-X-Filterd-Recvd-Size: 5863
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 21 May 2020 18:40:38 +0000 (UTC)
-Message-ID: <a21d75fce03991d3c8eb1f4d130572d8a04f8686.camel@perches.com>
-Subject: [PATCH] printk: Move and rename maximum printk output line length
- defines
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Chenggang Wang <wangchenggang@vivo.com>,
+        Thu, 21 May 2020 14:41:49 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3E9C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 11:41:49 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbq81-0006rj-7U; Thu, 21 May 2020 20:41:13 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 97BAC100C2D; Thu, 21 May 2020 20:41:11 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     paulmck@kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org
-Date:   Thu, 21 May 2020 11:40:35 -0700
-In-Reply-To: <cover.1589916689.git.joe@perches.com>
-References: <cover.1589916689.git.joe@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
+Subject: Re: [patch V6 12/37] x86/entry: Provide idtentry_entry/exit_cond_rcu()
+In-Reply-To: <20200521133920.GY2869@paulmck-ThinkPad-P72>
+References: <874ksb7hbg.fsf@nanos.tec.linutronix.de> <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com> <20200520022353.GN2869@paulmck-ThinkPad-P72> <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com> <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com> <20200520180546.GQ2869@paulmck-ThinkPad-P72> <87o8qiv135.fsf@nanos.tec.linutronix.de> <20200520221531.GW2869@paulmck-ThinkPad-P72> <20200520232550.GA20812@paulmck-ThinkPad-P72> <87zha1u1tc.fsf@nanos.tec.linutronix.de> <20200521133920.GY2869@paulmck-ThinkPad-P72>
+Date:   Thu, 21 May 2020 20:41:11 +0200
+Message-ID: <87mu61t9ko.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the printk output maximum line length globally available.
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+> On Thu, May 21, 2020 at 10:31:11AM +0200, Thomas Gleixner wrote:
+>> And I made this a NOP for for !NOHZ_FULL systems and avoided the call if
+>> context tracking is not enabled at boot.
+>> 
+>> void __rcu_irq_enter_check_tick(void);
+>> 
+>> static inline void rcu_irq_enter_check_tick(void)
+>> {
+>> 	if (context_tracking_enabled())
+>>         	__rcu_irq_enter_check_tick();
+>> }
+>
+> That certainly is a better approach!
+>
+> So let's go with your version.  But could you please post it, just in
+> case reviewing an alternative version causes me to spot something?
 
-This can be used to emit logging messages lines that exceed
-the single printk maximum length line.
+I'm just testing the complete rework of this series and will post it if
+it survives smoke testing.
 
-e.g.: the kernel boot command on ARM can be up to 2048 chars
+Thanks,
 
-Miscellanea:
-
-o Prefix the defines with PRINTK_
-
-Signed-off-by: Joe Perches <joe@perches.com>
-Acked-by: Petr Mladek <pmladek@suse.com>
----
- include/linux/printk.h | 18 ++++++++++++++++++
- kernel/printk/printk.c | 28 ++++++++++------------------
- 2 files changed, 28 insertions(+), 18 deletions(-)
-
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 38beb97e7018..850dc4d4356f 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -43,6 +43,24 @@ static inline const char *printk_skip_headers(const char *buffer)
- 
- #define CONSOLE_EXT_LOG_MAX	8192
- 
-+/* Maximum length of a single printk */
-+
-+#ifdef CONFIG_PRINTK
-+
-+#ifdef CONFIG_PRINTK_CALLER
-+#define PRINTK_PREFIX_MAX	48
-+#else
-+#define PRINTK_PREFIX_MAX	32
-+#endif
-+#define PRINTK_LOG_LINE_MAX	(1024 - PRINTK_PREFIX_MAX)
-+
-+#else
-+
-+#define PRINTK_PREFIX_MAX	0
-+#define PRINTK_LOG_LINE_MAX	0
-+
-+#endif
-+
- /* printk's without a loglevel use this.. */
- #define MESSAGE_LOGLEVEL_DEFAULT CONFIG_MESSAGE_LOGLEVEL_DEFAULT
- 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 4f1cc4acef41..fc22a494ef0c 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -443,13 +443,6 @@ static u64 exclusive_console_stop_seq;
- static u64 clear_seq;
- static u32 clear_idx;
- 
--#ifdef CONFIG_PRINTK_CALLER
--#define PREFIX_MAX		48
--#else
--#define PREFIX_MAX		32
--#endif
--#define LOG_LINE_MAX		(1024 - PREFIX_MAX)
--
- #define LOG_LEVEL(v)		((v) & 0x07)
- #define LOG_FACILITY(v)		((v) >> 3 & 0xff)
- 
-@@ -825,7 +818,7 @@ static ssize_t devkmsg_write(struct kiocb *iocb, struct iov_iter *from)
- 	size_t len = iov_iter_count(from);
- 	ssize_t ret = len;
- 
--	if (!user || len > LOG_LINE_MAX)
-+	if (!user || len > PRINTK_LOG_LINE_MAX)
- 		return -EINVAL;
- 
- 	/* Ignore when user logging is disabled. */
-@@ -1341,7 +1334,7 @@ static size_t msg_print_text(const struct printk_log *msg, bool syslog,
- 	const char *text = log_text(msg);
- 	size_t text_size = msg->text_len;
- 	size_t len = 0;
--	char prefix[PREFIX_MAX];
-+	char prefix[PRINTK_PREFIX_MAX];
- 	const size_t prefix_len = print_prefix(msg, syslog, time, prefix);
- 
- 	do {
-@@ -1382,7 +1375,7 @@ static int syslog_print(char __user *buf, int size)
- 	struct printk_log *msg;
- 	int len = 0;
- 
--	text = kmalloc(LOG_LINE_MAX + PREFIX_MAX, GFP_KERNEL);
-+	text = kmalloc(PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX, GFP_KERNEL);
- 	if (!text)
- 		return -ENOMEM;
- 
-@@ -1412,7 +1405,7 @@ static int syslog_print(char __user *buf, int size)
- 		skip = syslog_partial;
- 		msg = log_from_idx(syslog_idx);
- 		n = msg_print_text(msg, true, syslog_time, text,
--				   LOG_LINE_MAX + PREFIX_MAX);
-+				   PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX);
- 		if (n - syslog_partial <= size) {
- 			/* message fits into buffer, move forward */
- 			syslog_idx = log_next(syslog_idx);
-@@ -1454,7 +1447,7 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
- 	u32 idx;
- 	bool time;
- 
--	text = kmalloc(LOG_LINE_MAX + PREFIX_MAX, GFP_KERNEL);
-+	text = kmalloc(PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX, GFP_KERNEL);
- 	if (!text)
- 		return -ENOMEM;
- 
-@@ -1492,7 +1485,8 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
- 	while (len >= 0 && seq < next_seq) {
- 		struct printk_log *msg = log_from_idx(idx);
- 		int textlen = msg_print_text(msg, true, time, text,
--					     LOG_LINE_MAX + PREFIX_MAX);
-+					     PRINTK_LOG_LINE_MAX +
-+					     PRINTK_PREFIX_MAX);
- 
- 		idx = log_next(idx);
- 		seq++;
-@@ -1845,7 +1839,7 @@ static inline u32 printk_caller_id(void)
-  * reached the console in case of a kernel crash.
-  */
- static struct cont {
--	char buf[LOG_LINE_MAX];
-+	char buf[PRINTK_LOG_LINE_MAX];
- 	size_t len;			/* length == 0 means unused buffer */
- 	u32 caller_id;			/* printk_caller_id() of first print */
- 	u64 ts_nsec;			/* time of first print */
-@@ -1931,7 +1925,7 @@ int vprintk_store(int facility, int level,
- 		  const char *dict, size_t dictlen,
- 		  const char *fmt, va_list args)
- {
--	static char textbuf[LOG_LINE_MAX];
-+	static char textbuf[PRINTK_LOG_LINE_MAX];
- 	char *text = textbuf;
- 	size_t text_len;
- 	enum log_flags lflags = 0;
-@@ -2088,8 +2082,6 @@ EXPORT_SYMBOL(printk);
- 
- #else /* CONFIG_PRINTK */
- 
--#define LOG_LINE_MAX		0
--#define PREFIX_MAX		0
- #define printk_time		false
- 
- static u64 syslog_seq;
-@@ -2396,7 +2388,7 @@ static inline int can_use_console(void)
- void console_unlock(void)
- {
- 	static char ext_text[CONSOLE_EXT_LOG_MAX];
--	static char text[LOG_LINE_MAX + PREFIX_MAX];
-+	static char text[PRINTK_LOG_LINE_MAX + PRINTK_PREFIX_MAX];
- 	unsigned long flags;
- 	bool do_cond_resched, retry;
- 
-
+        tglx
