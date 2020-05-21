@@ -2,101 +2,110 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C68E92072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:35:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lbnlAAnr"
+	by mail.kernel.org (Postfix) with ESMTP id D41212072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590068144;
+	bh=vPCtfItAKZs5tbKxa7/e57pZbNrUtY2q3ZoV6TDHbK4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=r4aAihWV6BeGDvMfunO6hqIkajzTnXLU/2EX4+Yy7zR0V9HcBD7IRiO2v5fPi4ycz
+	 q9kCPRkrOWbue4JY48VdfTv+Ail/WC/AXngkky1ujw0Xn9IB0svZKMBcjKuA/nZKfe
+	 qKZTugu0O2NJDaDOFlNcZxdDFoplyndVSF5fbdho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbgEUNfN (ORCPT
+        id S1729451AbgEUNfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729333AbgEUNfM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:35:12 -0400
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83514C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:35:12 -0700 (PDT)
-Received: by mail-oi1-x22b.google.com with SMTP id z9so1359179oid.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:35:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zx1Zxii7kuqEBAAZh/SfralQu7+w6Yj6Omise5zlDew=;
-        b=lbnlAAnrNskZGuMGkYZHY1vCSCCxjBA8d4U/fxCr2/qMDE7ZCGaZBoEiO7auDLiiX0
-         2LAsqH5gfhniNU8lz509hK48CxoFbEyJ6eNIOzCR/QiMBXpRcIK3n0BZrxlYh+P26Uh9
-         sbMJCqF4FyIPwwF7KtlBv7pmdrcjLlwTNEoX7AsfIsXhoG1bKDz9rsYs14vDmHweS2yI
-         0xaICp3BR1Mu1WBso8nR7PREmtBpiAtl1Nd19szCTX1bgzpfvIPV1FFYReT1GpaIdN8D
-         6HjuGSj6pyy3Z6/eyGfxkuIJ7hsbfFSTSrT/UqcOQE0a9G9lBUitLQ/aZ5wFQ5fQchpz
-         TRDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zx1Zxii7kuqEBAAZh/SfralQu7+w6Yj6Omise5zlDew=;
-        b=oMFRVKU2GbY4nEGOajwQRMmbNrLHnxy8MfyCX0FsEmjwRuhaMdsegYNTDqpGkA7fNc
-         bsIkn7PDpnlVwv/YgboSdCfc3+9k2oVS5cFOdjX7ms6SRZzRZOvIpuw0os+eHLXFYGxU
-         YT/6w8AQekP1q9baLVsoqgk5DELrMaP7hXL1P5AnU37GrHe2V6mqqtOnuDHb8jLVwGRU
-         8XjKaNl38jk9hBiN3cQa5SgYcJgvFzKVOOtojdqrkXMWih+uKSQ/INopG0zgO7CWxz45
-         V4I6Vj4eTdrBXiydvbm3Z+S0zSicSkGK84IacommjSkiOtI27LygcxJqKGuLgR5ja2Ew
-         lIhA==
-X-Gm-Message-State: AOAM533YTPu5RSuhc0GaDZINE7dNqBuSsJbb1Ix3bIvCR13IQ1PxUTAm
-        vPSNx1bYpLTfRgfKPGZ4w59yTwlHD9w2s1hPUuWLUA==
-X-Google-Smtp-Source: ABdhPJyV+H2XuIpwPdXawrK7zAk9LhoUEYkcBzQ259T+WBC+TDCcYdf3viJw1KjepVRQtrjw2s7Kab7xpIPrx1WW3EM=
-X-Received: by 2002:aca:ebc5:: with SMTP id j188mr6839565oih.70.1590068111768;
- Thu, 21 May 2020 06:35:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521110854.114437-1-elver@google.com> <20200521110854.114437-8-elver@google.com>
- <20200521133322.GC6608@willie-the-truck>
-In-Reply-To: <20200521133322.GC6608@willie-the-truck>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 21 May 2020 15:35:00 +0200
-Message-ID: <CANpmjNNgQkw77uATD0jWezXheX0ZtKK9GcgWd_EQu1_u-m3PoA@mail.gmail.com>
-Subject: Re: [PATCH -tip v2 07/11] kcsan: Update Documentation to change
- supported compilers
-To:     Will Deacon <will@kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
+        Thu, 21 May 2020 09:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729197AbgEUNfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 09:35:43 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 230D620721;
+        Thu, 21 May 2020 13:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590068143;
+        bh=vPCtfItAKZs5tbKxa7/e57pZbNrUtY2q3ZoV6TDHbK4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=n7QdvfyZVoAbp1uztI0xitoVDwlqGOazkK7OJk+40jrBX9SB9CD31Tc/1GkzIrtF1
+         KI8wPzAPNWnZsweUtt9wMuMKkcWvtaszTt3Z4HucljfFJc3LC9kr3G1VVNe9YR7zX8
+         GdcRMWdEPN9qjvOGqlBog6znVuHi4TFNd7obmaHI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 087C03520CB7; Thu, 21 May 2020 06:35:43 -0700 (PDT)
+Date:   Thu, 21 May 2020 06:35:43 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: linux-next: manual merge of the rcu tree with the powerpc tree
+Message-ID: <20200521133543.GX2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200519172316.3b37cbae@canb.auug.org.au>
+ <20200521145124.48ae408b@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521145124.48ae408b@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 at 15:33, Will Deacon <will@kernel.org> wrote:
->
-> On Thu, May 21, 2020 at 01:08:50PM +0200, Marco Elver wrote:
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  Documentation/dev-tools/kcsan.rst | 9 +--------
-> >  1 file changed, 1 insertion(+), 8 deletions(-)
->
-> -ENOCOMMITMSG
+On Thu, May 21, 2020 at 02:51:24PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Tue, 19 May 2020 17:23:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Today's linux-next merge of the rcu tree got a conflict in:
+> > 
+> >   arch/powerpc/kernel/traps.c
+> > 
+> > between commit:
+> > 
+> >   116ac378bb3f ("powerpc/64s: machine check interrupt update NMI accounting")
+> > 
+> > from the powerpc tree and commit:
+> > 
+> >   187416eeb388 ("hardirq/nmi: Allow nested nmi_enter()")
+> > 
+> > from the rcu tree.
+> > 
+> > I fixed it up (I used the powerpc tree version for now) and can carry the
+> > fix as necessary. This is now fixed as far as linux-next is concerned,
+> > but any non trivial conflicts should be mentioned to your upstream
+> > maintainer when your tree is submitted for merging.  You may also want
+> > to consider cooperating with the maintainer of the conflicting tree to
+> > minimise any particularly complex conflicts.
+> 
+> This is now a conflict between the powerpc commit and commit
+> 
+>   69ea03b56ed2 ("hardirq/nmi: Allow nested nmi_enter()")
+> 
+> from the tip tree.  I assume that the rcu and tip trees are sharing
+> some patches (but not commits) :-(
 
-Oops. Ok, then there will be a v3.
+We are sharing commits, and in fact 187416eeb388 in the rcu tree came
+from the tip tree.  My guess is version skew, and that I probably have
+another rebase coming up.
 
-> Will
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200521133322.GC6608%40willie-the-truck.
+Why is this happening?  There are sets of conflicting commits in different
+efforts, and we are trying to resolve them.  But we are getting feedback
+on some of those commits, which is probably what is causing the skew.
+
+							Thanx, Paul
