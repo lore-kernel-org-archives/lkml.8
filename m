@@ -2,119 +2,124 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C8320849
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1B3207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgEUOxu (ORCPT
+        id S1729841AbgEUOz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:53:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:6288 "EHLO mga06.intel.com"
+        Thu, 21 May 2020 10:55:27 -0400
+Received: from mga02.intel.com ([134.134.136.20]:36814 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728136AbgEUOxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:53:49 -0400
-IronPort-SDR: SmVjdwwJAL52hpRORRqxzEXlB0eTuY0yjNGDuqriLI+OD0SwcRZOCyaxY28+ElweCHL5Htuu5R
- SCv7bMKugGzg==
+        id S1728136AbgEUOz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 10:55:27 -0400
+IronPort-SDR: KeQBo5ddq7tmHR+Bu0sF68gs3R0Qz7BpnNtTXMyyAJoYuRrA4DzO82kRS+oAFgfiezgqFSb2QN
+ GMavpcNbqGTQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 07:53:48 -0700
-IronPort-SDR: CB261a1GJ8FH2/VHlwwKegEMCLgFPSudpuK9cAivmEf2gXDxZY8ZSeaP1UTGCBvzUk02CvmFs8
- cpKaQJw4V22A==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 07:55:26 -0700
+IronPort-SDR: 0N8BDIYEnX5ZztnT6R70YHVdLDe21Txo+hJEhXPPOnQ2+q7jm0oFvzcmzpB1z+oZUds0ho+fJr
+ j8sCh6ohBjGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
-   d="scan'208";a="412417898"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 21 May 2020 07:53:44 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jbmZv-0083Dh-LU; Thu, 21 May 2020 17:53:47 +0300
-Date:   Thu, 21 May 2020 17:53:47 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, Ofer Yehielli <ofery@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
-        kfting@nuvoton.com, Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
- driver
-Message-ID: <20200521145347.GO1634618@smile.fi.intel.com>
-References: <20200521110910.45518-1-tali.perry1@gmail.com>
- <20200521110910.45518-3-tali.perry1@gmail.com>
- <20200521142340.GM1634618@smile.fi.intel.com>
- <20200521143100.GA16812@ninjato>
- <CAHb3i=vcVLWHjdiJoNZQrwJCqzszpOL7e9SAjqObsZCRH4ifwg@mail.gmail.com>
+   d="scan'208";a="440474678"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by orsmga005.jf.intel.com with ESMTP; 21 May 2020 07:55:21 -0700
+Date:   Thu, 21 May 2020 22:55:20 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200521145520.GB12568@shbuild999.sh.intel.com>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+ <20200521030924.GA12568@shbuild999.sh.intel.com>
+ <20200521114736.b2azyfvym372vkdl@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHb3i=vcVLWHjdiJoNZQrwJCqzszpOL7e9SAjqObsZCRH4ifwg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200521114736.b2azyfvym372vkdl@mobilestation>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 05:45:03PM +0300, Tali Perry wrote:
-> On Thu, May 21, 2020 at 5:31 PM Wolfram Sang <wsa@the-dreams.de> wrote:
-> > On Thu, May 21, 2020 at 05:23:40PM +0300, Andy Shevchenko wrote:
-> > > On Thu, May 21, 2020 at 02:09:09PM +0300, Tali Perry wrote:
-> > > > Add Nuvoton NPCM BMC I2C controller driver.
-> > >
-> > > Thanks. My comments below.
-> > > After addressing them, FWIW,
-> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > Thanks, Andy, for all the review!
-> >
-> 
-> Highly appreciate your time and patience for a newbie :)
-> 
-> > From a glimpse, this looks good to go. I will have a close look later
-> > today.
-> >
-> > > > +#ifdef CONFIG_DEBUG_FS
-> > >
-> > > Again, why is this here?
-> > >
-> > > Have you checked debugfs.h for !CONFIG_DEBUG_FS case?
-> 
-> I compiled both options. I removed the ifdef in most places, except in the
-> struct itself. Users that don't use the debugfs don't need this in the struct.
-> 
-> >
-> > I wondered also about DEBUG_FS entries. I can see their value when
-> > developing the driver. But since this is done now, do they really help a
-> > user to debug a difficult case? I am not sure, and then I wonder if we
-> > should have that code in upstream. I am open for discussion, though.
-> 
-> The user wanted to have health monitor implemented on top of the driver.
-> The user has 16 channels connected the multiple devices. All are operated
-> using various daemons in the system. Sometimes the slave devices are power down.
-> Therefor the user wanted to track the health status of the devices.
+Hi Serge,
 
-Ah, then there are these options I have in mind (Wolfram, FYI as well!):
-1) push with debugfs as a temporary solution and convert to devlink health protocol [1];
-2) drop it and develop devlink_health solution;
-3) push debugfs and wait if I²C will gain devlink health support
+On Thu, May 21, 2020 at 02:47:36PM +0300, Serge Semin wrote:
+> Hello Feng,
+> 
+> On Thu, May 21, 2020 at 11:09:24AM +0800, Feng Tang wrote:
+> > Hi Serge,
+> > 
+> > On Thu, May 21, 2020 at 04:21:51AM +0300, Serge Semin wrote:
+> 
+> [nip]
+> 
+> > >  /*
+> > >   * dws->dma_chan_busy is set before the dma transfer starts, callback for rx
+> > >   * channel will clear a corresponding bit.
+> > > @@ -200,6 +267,8 @@ static void dw_spi_dma_rx_done(void *arg)
+> > >  {
+> > >  	struct dw_spi *dws = arg;
+> > >  
+> > > +	dw_spi_dma_wait_rx_done(dws);
+> > 
+> > I can understand the problem about TX, but I don't see how RX
+> > will get hurt, can you elaborate more? thanks
+> > 
+> > - Feng
+> 
+> Your question is correct. You are right with your hypothesis. Ideally upon the
+> dw_spi_dma_rx_done() execution Rx FIFO must be already empty. That's why the
+> commit log signifies the error being mostly related with Tx FIFO. But
+> practically there are many reasons why Rx FIFO might be left with data:
+> DMA engine failures, incorrect DMA configuration (if DW SPI or DW DMA driver
+> messed something up), controller hanging up, and so on. It's better to catch
+> an error at this stage while propagating it up to the SPI device drivers.
+> Especially seeing the wait-check implementation doesn't gives us much of the
+> execution overhead in normal conditions. So by calling dw_spi_dma_wait_rx_done()
+> we make sure that all the data has been fetched and we may freely get the
+> buffers back to the client driver.
 
-[1]: https://www.kernel.org/doc/html/latest/networking/devlink/devlink-health.html
+I see your point about checking RX. But I still don't think checking
+RX FIFO level is the right way to detect error. Some data left in
+RX FIFO doesn't always mean a error, say for some case if there is
+20 words in RX FIFO, and the driver starts a DMA request for 16
+words, then after a sucessful DMA transaction, there are 4 words
+left without any error.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Feng
 
-
+> 
+> -Sergey
