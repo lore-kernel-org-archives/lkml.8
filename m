@@ -2,87 +2,89 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5288FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BEEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB1620825
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6405A20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgEUWwf (ORCPT
+        id S1730711AbgEUW6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:52:35 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:51388 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730041AbgEUWwf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:52:35 -0400
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1E5E5820761;
-        Fri, 22 May 2020 08:52:30 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jbu32-0000i0-RJ; Fri, 22 May 2020 08:52:20 +1000
-Date:   Fri, 22 May 2020 08:52:20 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Cc:     akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org, willy@infradead.org
-Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
- code
-Message-ID: <20200521225220.GV2005@dread.disaster.area>
-References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
- <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
+        Thu, 21 May 2020 18:58:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41812 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730041AbgEUW6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 18:58:08 -0400
+IronPort-SDR: m/+JG8SNOxRB8o0q7/vu90Fi3Q8SIYcsTs2xydLaOyDZrqGPDRV0aXmWxvJdeDnZsry5z0S4EM
+ +q6eVYZdHqRw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 15:58:07 -0700
+IronPort-SDR: Pg/DQq+A1fZna0tY6aIC7YuoCureh5EJFUU5QUpeIJhVVZ7IF9jqkj24ksePGgTdF8N6hvK+yH
+ Tc8EMpeTdWTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
+   d="scan'208";a="300481142"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga002.fm.intel.com with ESMTP; 21 May 2020 15:58:07 -0700
+Message-ID: <b97aeac13967cfad5d6a962d29a87215c77996e8.camel@intel.com>
+Subject: Re: [RFC PATCH 2/5] selftest/x86: Enable CET for selftests/x86
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Date:   Thu, 21 May 2020 15:58:11 -0700
+In-Reply-To: <202005211544.26CD475832@keescook>
+References: <20200521211720.20236-1-yu-cheng.yu@intel.com>
+         <20200521211720.20236-3-yu-cheng.yu@intel.com>
+         <202005211544.26CD475832@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=UgJECxHJAAAA:8 a=7-415B0cAAAA:8
-        a=AK4pDz-JxGAavDNz_KEA:9 a=CjuIK1q_8ugA:10 a=-El7cUbtino8hM1DCn8D:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 11:47:18PM +0200, Guoqing Jiang wrote:
-> We can cleanup code a little by call detach_page_private here.
+On Thu, 2020-05-21 at 15:44 -0700, Kees Cook wrote:
+> On Thu, May 21, 2020 at 02:17:17PM -0700, Yu-cheng Yu wrote:
+> > To build CET-enabled applications, GCC needs to support '-fcf-protection'.
+> > Update x86 selftest makefile to detect and enable CET for x86 selftest
+> > applications.
+> > 
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 > 
-> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-> ---
-> No change since RFC V3.
-> 
->  mm/migrate.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 5fed0305d2ec..f99502bc113c 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -804,10 +804,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
->  	if (rc != MIGRATEPAGE_SUCCESS)
->  		goto unlock_buffers;
->  
-> -	ClearPagePrivate(page);
-> -	set_page_private(newpage, page_private(page));
-> -	set_page_private(page, 0);
-> -	put_page(page);
-> +	set_page_private(newpage, detach_page_private(page));
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-attach_page_private(newpage, detach_page_private(page));
+Thanks!  I will fix issues you pointed out in the series.
 
-Cheers,
+Yu-cheng
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
