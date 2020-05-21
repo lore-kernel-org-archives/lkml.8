@@ -2,218 +2,118 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C67F206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83B7207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbgEUOJW (ORCPT
+        id S1729971AbgEUOJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:09:22 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38398 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729680AbgEUOIc (ORCPT
+        Thu, 21 May 2020 10:09:44 -0400
+Received: from smtp12.smtpout.orange.fr ([80.12.242.134]:26017 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729961AbgEUOJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:08:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 866D2803087B;
-        Thu, 21 May 2020 14:08:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SsCoGxC0q1F3; Thu, 21 May 2020 17:08:26 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Fangrui Song <maskray@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 04/13] mips: Add MIPS Warrior P5600 support
-Date:   Thu, 21 May 2020 17:07:15 +0300
-Message-ID: <20200521140725.29571-5-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 21 May 2020 10:09:43 -0400
+Received: from [192.168.42.210] ([93.22.132.254])
+        by mwinf5d47 with ME
+        id hS9Z220065VUqNM03S9ax5; Thu, 21 May 2020 16:09:40 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 21 May 2020 16:09:40 +0200
+X-ME-IP: 93.22.132.254
+Subject: Re: [PATCH 3.16 35/99] pxa168fb: Fix the function used to release
+ some memory in an error handling path
+To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lubomir Rintel <lkundrak@v3.sk>
+References: <lsq.1589984008.562400019@decadent.org.uk>
+From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <95e4cf2d-5f50-e7bd-6e1e-a1d172eb24b6@wanadoo.fr>
+Date:   Thu, 21 May 2020 16:09:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <lsq.1589984008.562400019@decadent.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a MIPS32 Release 5 based IP core with XPA, EVA, dual/quad issue
-exec pipes, MMU with two-levels TLB, UCA, MSA, MDU core level features
-and system level features like up to six P5600 calculation cores, CM2
-with L2 cache, IOCU/IOMMU (though might be unused depending on the
-system-specific IP core configuration), GIC, CPC, virtualisation module,
-eJTAG and PDtrace.
+Hi,
 
-As being MIPS32 Release 5 based core it provides all the features
-available by the CPU_MIPS32_R5 config, while adding a few more like
-UCA attribute support, availability of CPU-freq (by means of L2/CM
-clock ratio setting), EI/VI GIC modes detection at runtime.
+I don't think that this one is applicable to 3.16.x
 
-In addition to this if P5600 architecture is enabled modern GNU GCC
-provides a specific tuning for P5600 processors with respect to the
-classic MIPS32 Release 5. First of all branch-likely avoidance is
-activated only when the code is compiled with the speed optimization
-(avoidance is always enabled for the pure MIPS32 Release 5
-architecture). Secondly the madd/msub avoidance is enabled since
-madd/msub utilization isn't profitable due to overhead of getting the
-result out of the HI/LO registers. Multiply-accumulate instructions are
-activated and utilized together with the necessary code reorder when
-multiply-add/multiply-subtract statements are met. Finally load/store
-bonding is activated by default. All of these optimizations may make
-the code relatively faster than if just MIP32 release 5 architecture
-was requested.
+The remove function and the error handling path of the probe function 
+both use 'dma_free_wc'.
+I've not look in details, but it looks consistent and the patch would 
+not apply as-is anyway.
 
-Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- arch/mips/Kconfig              | 37 +++++++++++++++++++++++++++++-----
- arch/mips/Makefile             |  1 +
- arch/mips/include/asm/module.h |  2 ++
- 3 files changed, 35 insertions(+), 5 deletions(-)
+just my 2c.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 9dc173ff7293..2747b1b2d435 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1618,6 +1618,28 @@ config CPU_MIPS64_R6
- 	  family, are based on a MIPS64r6 processor. If you own an older
- 	  processor, you probably need to select MIPS64r1 or MIPS64r2 instead.
- 
-+config CPU_P5600
-+	bool "MIPS Warrior P5600"
-+	depends on SYS_HAS_CPU_P5600
-+	select CPU_HAS_PREFETCH
-+	select CPU_SUPPORTS_32BIT_KERNEL
-+	select CPU_SUPPORTS_HIGHMEM
-+	select CPU_SUPPORTS_MSA
-+	select CPU_SUPPORTS_UNCACHED_ACCELERATED
-+	select CPU_SUPPORTS_CPUFREQ
-+	select CPU_MIPSR2_IRQ_VI
-+	select CPU_MIPSR2_IRQ_EI
-+	select HAVE_KVM
-+	select MIPS_O32_FP64_SUPPORT
-+	help
-+	  Choose this option to build a kernel for MIPS Warrior P5600 CPU.
-+	  It's based on MIPS32r5 ISA with XPA, EVA, dual/quad issue exec pipes,
-+	  MMU with two-levels TLB, UCA, MSA, MDU core level features and system
-+	  level features like up to six P5600 calculation cores, CM2 with L2
-+	  cache, IOCU/IOMMU (though might be unused depending on the system-
-+	  specific IP core configuration), GIC, CPC, virtualisation module,
-+	  eJTAG and PDtrace.
-+
- config CPU_R3000
- 	bool "R3000"
- 	depends on SYS_HAS_CPU_R3000
-@@ -1794,7 +1816,8 @@ endchoice
- config CPU_MIPS32_3_5_FEATURES
- 	bool "MIPS32 Release 3.5 Features"
- 	depends on SYS_HAS_CPU_MIPS32_R3_5
--	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6
-+	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_MIPS32_R6 || \
-+		   CPU_P5600
- 	help
- 	  Choose this option to build a kernel for release 2 or later of the
- 	  MIPS32 architecture including features from the 3.5 release such as
-@@ -1814,7 +1837,7 @@ config CPU_MIPS32_3_5_EVA
- config CPU_MIPS32_R5_FEATURES
- 	bool "MIPS32 Release 5 Features"
- 	depends on SYS_HAS_CPU_MIPS32_R5
--	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5
-+	depends on CPU_MIPS32_R2 || CPU_MIPS32_R5 || CPU_P5600
- 	help
- 	  Choose this option to build a kernel for release 2 or later of the
- 	  MIPS32 architecture including features from release 5 such as
-@@ -1969,6 +1992,10 @@ config SYS_HAS_CPU_MIPS64_R6
- 	bool
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
- 
-+config SYS_HAS_CPU_P5600
-+	bool
-+	select ARCH_HAS_SYNC_DMA_FOR_CPU if DMA_NONCOHERENT
-+
- config SYS_HAS_CPU_R3000
- 	bool
- 
-@@ -2053,7 +2080,7 @@ endmenu
- config CPU_MIPS32
- 	bool
- 	default y if CPU_MIPS32_R1 || CPU_MIPS32_R2 || CPU_MIPS32_R5 || \
--		     CPU_MIPS32_R6
-+		     CPU_MIPS32_R6 || CPU_P5600
- 
- config CPU_MIPS64
- 	bool
-@@ -2076,7 +2103,7 @@ config CPU_MIPSR2
- 
- config CPU_MIPSR5
- 	bool
--	default y if CPU_MIPS32_R5 || CPU_MIPS64_R5
-+	default y if CPU_MIPS32_R5 || CPU_MIPS64_R5 || CPU_P5600
- 	select CPU_HAS_RIXI
- 	select CPU_HAS_DIEI if !CPU_DIEI_BROKEN
- 	select MIPS_SPRAM
-@@ -2689,7 +2716,7 @@ config RELOCATABLE
- 	depends on CPU_MIPS32_R2 || CPU_MIPS64_R2 || \
- 		   CPU_MIPS32_R5 || CPU_MIPS64_R5 || \
- 		   CPU_MIPS32_R6 || CPU_MIPS64_R6 || \
--		   CAVIUM_OCTEON_SOC
-+		   CPU_P5600 || CAVIUM_OCTEON_SOC
- 	help
- 	  This builds a kernel image that retains relocation information
- 	  so it can be loaded someplace besides the default 1MB.
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 5d7a33ae86a4..0d0f29d662c9 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -152,6 +152,7 @@ cflags-$(CONFIG_CPU_MIPS64_R1)	+= -march=mips64 -Wa,--trap
- cflags-$(CONFIG_CPU_MIPS64_R2)	+= -march=mips64r2 -Wa,--trap
- cflags-$(CONFIG_CPU_MIPS64_R5)	+= -march=mips64r5 -Wa,--trap
- cflags-$(CONFIG_CPU_MIPS64_R6)	+= -march=mips64r6 -Wa,--trap
-+cflags-$(CONFIG_CPU_P5600)	+= -march=p5600 -Wa,--trap -modd-spreg
- cflags-$(CONFIG_CPU_R5000)	+= -march=r5000 -Wa,--trap
- cflags-$(CONFIG_CPU_R5500)	+= $(call cc-option,-march=r5500,-march=r5000) \
- 			-Wa,--trap
-diff --git a/arch/mips/include/asm/module.h b/arch/mips/include/asm/module.h
-index 84776e1ec8e5..7be4c68081a8 100644
---- a/arch/mips/include/asm/module.h
-+++ b/arch/mips/include/asm/module.h
-@@ -131,6 +131,8 @@ search_module_dbetables(unsigned long addr)
- #define MODULE_PROC_FAMILY "LOONGSON64 "
- #elif defined CONFIG_CPU_CAVIUM_OCTEON
- #define MODULE_PROC_FAMILY "OCTEON "
-+#elif defined CONFIG_CPU_P5600
-+#define MODULE_PROC_FAMILY "P5600 "
- #elif defined CONFIG_CPU_XLR
- #define MODULE_PROC_FAMILY "XLR "
- #elif defined CONFIG_CPU_XLP
--- 
-2.25.1
+CJ
 
+Le 20/05/2020 à 16:14, Ben Hutchings a écrit :
+> 3.16.84-rc1 review patch.  If anyone has any objections, please let me know.
+>
+> ------------------
+>
+> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>
+> commit 3c911fe799d1c338d94b78e7182ad452c37af897 upstream.
+>
+> In the probe function, some resources are allocated using 'dma_alloc_wc()',
+> they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
+>
+> We already use 'dma_free_wc()' in the remove function, but not in the
+> error handling path of the probe function.
+>
+> Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
+> PAGE_ALIGNed.
+>
+> Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+> CC: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Link: https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-christophe.jaillet@wanadoo.fr
+> [bwh: Backported to 3.16: Use dma_free_writecombine().]
+> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+> ---
+>   drivers/video/fbdev/pxa168fb.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> --- a/drivers/video/fbdev/pxa168fb.c
+> +++ b/drivers/video/fbdev/pxa168fb.c
+> @@ -772,8 +772,8 @@ failed_free_cmap:
+>   failed_free_clk:
+>   	clk_disable(fbi->clk);
+>   failed_free_fbmem:
+> -	dma_free_coherent(fbi->dev, info->fix.smem_len,
+> -			info->screen_base, fbi->fb_start_dma);
+> +	dma_free_writecombine(fbi->dev, info->fix.smem_len,
+> +			      info->screen_base, fbi->fb_start_dma);
+>   failed_free_info:
+>   	kfree(info);
+>   failed_put_clk:
+> @@ -809,7 +809,7 @@ static int pxa168fb_remove(struct platfo
+>   
+>   	irq = platform_get_irq(pdev, 0);
+>   
+> -	dma_free_writecombine(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
+> +	dma_free_writecombine(fbi->dev, info->fix.smem_len,
+>   				info->screen_base, info->fix.smem_start);
+>   
+>   	clk_disable(fbi->clk);
+>
