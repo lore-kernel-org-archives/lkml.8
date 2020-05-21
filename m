@@ -2,271 +2,175 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8D2207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590095021;
-	bh=4LNfQkxWy5yVPPyMWOZ3E8Oy+UhotFZEryHO0JMs03s=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=NFnScHYKz4Ama475UCaEosGOCjpKatGb/VoXru7H7NyBiV7G/VNLl1bLA9kVJpgdW
-	 O0rHFX7Iyua8W+5y6sxpmpfaG4e8+6JOAYoX+Z3YO42eBL2UTGV7Et+FflxSaUmdlK
-	 9tBgVUsjpZT+nsb45Ee3KC1enzjSQ18bi0UWM11g=
+	by mail.kernel.org (Postfix) with ESMTP id 74F77207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYJcYHl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbgEUVDk (ORCPT
+        id S1730472AbgEUVER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgEUVDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:03:40 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1B412078B;
-        Thu, 21 May 2020 21:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590095019;
-        bh=4LNfQkxWy5yVPPyMWOZ3E8Oy+UhotFZEryHO0JMs03s=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=fhUqlb0E190OI4j8xFV+ZjXyoRyc8FXFlMumjEU73DJNVhcQlbdHhlAySh9wgEE8+
-         NFUlMYdylSOd8sn09MX9sHUskfq6Wx9OKp4W0BX/gN0uYaNPjvvlWPNRZQQNGqDhzM
-         kNHU1zsVTTHlnR8In99ARAoFXoh/SK/T1JDx+1w4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 677183522FEB; Thu, 21 May 2020 14:03:39 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:03:39 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Thu, 21 May 2020 17:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgEUVEP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 17:04:15 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BB8C061A0E;
+        Thu, 21 May 2020 14:04:14 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f134so6786062wmf.1;
+        Thu, 21 May 2020 14:04:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:references:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QZeCeK8p2wSrt+bTxeHQ3mMh/QGdI4wG1j05OuSlGgk=;
+        b=KYJcYHl84sDa95PB04uFCMRdQKl4v34HIURpNkaVLAb6sErv5f5Ec+xYAApNBpC4jg
+         5WV1Y/y+4MXXp8uHTeDyyIwgqJ0bPZnoya5g8DeGpUtO4vjfAUlqzGnmxUKieG7/Hf9z
+         8Imoj8Qkgo35lwCoztWJXdEp/5pMnYAvYyn3jVft+AwxO9jiase0HFT+8qcMX2vYPhx0
+         WbJJ5X8sjv1g0i4m9rUQ945YlN6OcZokbGW9vcFGH6p7jHzvtu8tMRHBXVqjHcjl/oYG
+         LvHCVEyGO57owTWljirz+fx3u+1GLfL69dk+L8RaFlYUDTdtEYw/Et8LFG7gfmd1ayHk
+         +qXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QZeCeK8p2wSrt+bTxeHQ3mMh/QGdI4wG1j05OuSlGgk=;
+        b=H2HXBFvgtqTGC3yuY1B5Uw0LMpWW2pJyQjJVVCJM/oaf3c+pcW0LK1fz0gEt225On7
+         WgxagD/sL3PJ1JNYOUU1kCoaSo4IYl4b0v+823lCFhTH9lKvgUIILFXi7GgPDITrX+/x
+         o8zyuw1LYJIfXNDq1Hn4aPeBDsek3PaA6sOap33K+/hzRk+03fPafK5biBsd09ZdIWpA
+         XGZRhiFj7OuZjXI0fJf/C7xLm+e5JQq5LppNbrd1Ha+9/b9ewKpdO5yBWZE5EgVo1xW7
+         0CI9G2TLBEKZb2dMMCtphCONlWdk7U/XAxn6TPWyY0SV3BEVoY7pWUhCss2LaLuM8eTa
+         UaLg==
+X-Gm-Message-State: AOAM532pjMAmePdWp2eaXu2Yg9keTgiR7d5c0VJNhQAYhi3LIIV6GMKg
+        Pzhl3EzoTqixLIxOxhUaCmmfzjZm
+X-Google-Smtp-Source: ABdhPJxpTtdlO07F422Z9vG5KPD6eIgSMGVrcQIlZjhwwVaWpw/QF+N24tIYFjtqcRPFcMpTU450Fg==
+X-Received: by 2002:a1c:b60b:: with SMTP id g11mr10470942wmf.49.1590095052723;
+        Thu, 21 May 2020 14:04:12 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1c48:1dd8:fe63:e3da? ([2001:b07:6468:f312:1c48:1dd8:fe63:e3da])
+        by smtp.googlemail.com with ESMTPSA id u10sm7573129wmc.31.2020.05.21.14.04.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 14:04:11 -0700 (PDT)
+Subject: Re: [PATCH v2 03/22] KVM: SVM: immediately inject INTR vmexit
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     wei.huang2@amd.com, cavery@redhat.com,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V9 02/39] rcu: Abstract out rcu_irq_enter_check_tick()
- from rcu_nmi_enter()
-Message-ID: <20200521210339.GC2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200521200513.656533920@linutronix.de>
- <20200521202116.996113173@linutronix.de>
+        Oliver Upton <oupton@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20200424172416.243870-1-pbonzini@redhat.com>
+ <20200424172416.243870-4-pbonzini@redhat.com>
+ <87blmhsb7y.fsf@vitty.brq.redhat.com>
+ <8bc4c38a-1717-1e4f-b322-fdd51f614717@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <73e55aba-dc71-ae36-d491-a6afed844c9a@redhat.com>
+Date:   Thu, 21 May 2020 23:04:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521202116.996113173@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8bc4c38a-1717-1e4f-b322-fdd51f614717@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 10:05:15PM +0200, Thomas Gleixner wrote:
-> From: Paul E. McKenney <paulmck@kernel.org>
+On 21/05/20 16:08, Paolo Bonzini wrote:
+> On 21/05/20 14:50, Vitaly Kuznetsov wrote:
+>> Sorry for reporting this late but I just found out that this commit
+>> breaks Hyper-V 2016 on KVM on SVM completely (always hangs on boot). I
+>> haven't investigated it yet (well, this is Windows, you know...) but
+>> what's usually different about Hyper-V is that unlike KVM/Linux it has
+>> handlers for some hardware interrupts in the guest and not in the
+>> hypervisor.
 > 
-> There will likely be exception handlers that can sleep, which rules
-> out the usual approach of invoking rcu_nmi_enter() on entry and also
-> rcu_nmi_exit() on all exit paths.  However, the alternative approach of
-> just not calling anything can prevent RCU from coaxing quiescent states
-> from nohz_full CPUs that are looping in the kernel:  RCU must instead
-> IPI them explicitly.  It would be better to enable the scheduler tick
-> on such CPUs to interact with RCU in a lighter-weight manner, and this
-> enabling is one of the things that rcu_nmi_enter() currently does.
-> 
-> What is needed is something that helps RCU coax quiescent states while
-> not preventing subsequent sleeps.  This commit therefore splits out the
-> nohz_full scheduler-tick enabling from the rest of the rcu_nmi_enter()
-> logic into a new function named rcu_irq_enter_check_tick().
-> 
-> [ tglx: Renamed the function and made it a nop when context tracking is off ]
+> "Always hangs on boot" is easy. :)  At this point I think it's easiest
+> to debug it on top of the whole pending SVM patches that remove
+> exit_required completely (and exit_required is not coming back anyway).
 
-The new name works for me!  A couple of nits called out below.
+Ok so there could be two bugs, as the hang seems to happens much earlier
+later in the series (try "grep int_ctl:.0x.....1.." on the trace).
 
-							Thanx, Paul
+As one could guess from the grep, one thing that is certainly different
+between KVM and Hyper-V is that Hyper-V injects interrupts using
+int_ctl; sometimes it also uses eventinj but presumably it's just
+copying it from exitintinfo).
 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V9: New patch
-> ---
->  include/linux/hardirq.h |    9 +++++
->  kernel/rcu/tree.c       |   82 ++++++++++++++++++++++++++++++++++++------------
->  2 files changed, 71 insertions(+), 20 deletions(-)
-> 
-> --- a/include/linux/hardirq.h
-> +++ b/include/linux/hardirq.h
-> @@ -2,6 +2,7 @@
->  #ifndef LINUX_HARDIRQ_H
->  #define LINUX_HARDIRQ_H
->  
-> +#include <linux/context_tracking_state.h>
->  #include <linux/preempt.h>
->  #include <linux/lockdep.h>
->  #include <linux/ftrace_irq.h>
-> @@ -27,6 +28,14 @@ extern void rcu_nmi_enter(void);
->  extern void rcu_nmi_exit(void);
->  #endif
->  
-> +void __rcu_irq_enter_check_tick(void);
-> +
-> +static __always_inline void rcu_irq_enter_check_tick(void)
-> +{
-> +	if (context_tracking_enabled())
-> +		__rcu_irq_enter_check_tick();
+This could cause problems: for example, when L1 wants to inject a
+virtual interrupt into L2 that has interrupts disabled or V_TPR >=
+V_INTR_PRIO, and KVM also wants to inject an interrupt to L1, then KVM
+might end up stomping on Hyper-V's int_ctl.  However I cannot think
+off-hand of a scenario where this could happen in this case, because
+Hyper-V does set EXIT_INTR and therefore we should never get into
+enable_irq_window while L2 is running.  Still, that's one place where
+I'd start adding some trace_printk's.
 
-I suggest moving the WARN_ON_ONCE(in_nmi()) check here to avoid calling
-in_nmi() twice.  Because of the READ_ONCE(), the compiler cannot (had
-better not!) eliminate the double call.
+Also, if a uniprocessor guest also fails, it might be easier to debug.
 
-> +}
-> +
->  /*
->   * It is safe to do non-atomic ops on ->hardirq_context,
->   * because NMI handlers may not preempt and the ops are
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -848,6 +848,67 @@ void noinstr rcu_user_exit(void)
->  {
->  	rcu_eqs_exit(1);
->  }
-> +
-> +/**
-> + * __rcu_irq_enter_check_tick - Enable scheduler tick on CPU if RCU needs it.
-> + *
-> + * The scheduler tick is not normally enabled when CPUs enter the kernel
-> + * from nohz_full userspace execution.  After all, nohz_full userspace
-> + * execution is an RCU quiescent state and the time executing in the kernel
-> + * is quite short.  Except of course when it isn't.  And it is not hard to
-> + * cause a large system to spend tens of seconds or even minutes looping
-> + * in the kernel, which can cause a number of problems, include RCU CPU
-> + * stall warnings.
-> + *
-> + * Therefore, if a nohz_full CPU fails to report a quiescent state
-> + * in a timely manner, the RCU grace-period kthread sets that CPU's
-> + * ->rcu_urgent_qs flag with the expectation that the next interrupt or
-> + * exception will invoke this function, which will turn on the scheduler
-> + * tick, which will enable RCU to detect that CPU's quiescent states,
-> + * for example, due to cond_resched() calls in CONFIG_PREEMPT=n kernels.
-> + * The tick will be disabled once a quiescent state is reported for
-> + * this CPU.
-> + *
-> + * Of course, in carefully tuned systems, there might never be an
-> + * interrupt or exception.  In that case, the RCU grace-period kthread
-> + * will eventually cause one to happen.  However, in less carefully
-> + * controlled environments, this function allows RCU to get what it
-> + * needs without creating otherwise useless interruptions.
-> + */
-> +void __rcu_irq_enter_check_tick(void)
-> +{
-> +	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-> +
-> +	 // Enabling the tick is unsafe in NMI handlers.
-
-There is an extra space before the "//", probably the one that used to
-be after the ";" below.  ;-)
-
-> +	if (WARN_ON_ONCE(in_nmi()))
-> +		return;
-> +
-> +	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
-> +			 "Illegal rcu_irq_enter_check_tick() from extended quiescent state");
-
-The instrumentation_begin() has disappeared, presumably because
-instrumentation is already enabled in the non-RCU code that directly calls
-rcu_irq_enter_check_tick().  (I do see the calls in rcu_nmi_enter() below.)
-
-> +
-> +	if (!tick_nohz_full_cpu(rdp->cpu) ||
-> +	    !READ_ONCE(rdp->rcu_urgent_qs) ||
-> +	    READ_ONCE(rdp->rcu_forced_tick)) {
-> +		// RCU doesn't need nohz_full help from this CPU, or it is
-> +		// already getting that help.
-> +		return;
-> +	}
-> +
-> +	// We get here only when not in an extended quiescent state and
-> +	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
-> +	// already watching and (2) The fact that we are in an interrupt
-> +	// handler and that the rcu_node lock is an irq-disabled lock
-> +	// prevents self-deadlock.  So we can safely recheck under the lock.
-> +	// Note that the nohz_full state currently cannot change.
-> +	raw_spin_lock_rcu_node(rdp->mynode);
-> +	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> +		// A nohz_full CPU is in the kernel and RCU needs a
-> +		// quiescent state.  Turn on the tick!
-> +		WRITE_ONCE(rdp->rcu_forced_tick, true);
-> +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-> +	}
-> +	raw_spin_unlock_rcu_node(rdp->mynode);
-> +}
->  #endif /* CONFIG_NO_HZ_FULL */
->  
->  /**
-> @@ -894,26 +955,7 @@ noinstr void rcu_nmi_enter(void)
->  		incby = 1;
->  	} else if (!in_nmi()) {
-
-This can just be "else" given the in_nmi() check in
-__rcu_irq_enter_check_tick(), right?  Ah, that check got a
-WARN_ON_ONCE(), so never mind!
-
-I guess that will discourage NMI-handler calls to
-rcu_irq_enter_check_tick().  ;-)
-
-It does mean a double call to in_nmi(), though, so should that
-WARN_ON_ONCE(in_nmi()) check go into the rcu_irq_enter_check_tick()
-wrapper?  Or do modern compilers figure this one out?  Given the
-READ_ONCE() in preempt_count(), I have to say that I hope not.
-So see my comment above on rcu_irq_enter_check_tick().
-
->  		instrumentation_begin();
-> -		if (tick_nohz_full_cpu(rdp->cpu) &&
-> -		    rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
-> -		    READ_ONCE(rdp->rcu_urgent_qs) &&
-> -		    !READ_ONCE(rdp->rcu_forced_tick)) {
-> -			// We get here only if we had already exited the
-> -			// extended quiescent state and this was an
-> -			// interrupt (not an NMI).  Therefore, (1) RCU is
-> -			// already watching and (2) The fact that we are in
-> -			// an interrupt handler and that the rcu_node lock
-> -			// is an irq-disabled lock prevents self-deadlock.
-> -			// So we can safely recheck under the lock.
-> -			raw_spin_lock_rcu_node(rdp->mynode);
-> -			if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> -				// A nohz_full CPU is in the kernel and RCU
-> -				// needs a quiescent state.  Turn on the tick!
-> -				WRITE_ONCE(rdp->rcu_forced_tick, true);
-> -				tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-> -			}
-> -			raw_spin_unlock_rcu_node(rdp->mynode);
-> -		}
-> +		rcu_irq_enter_check_tick();
->  		instrumentation_end();
->  	}
->  	instrumentation_begin();
-> 
+Paolo
