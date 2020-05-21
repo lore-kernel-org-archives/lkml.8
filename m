@@ -2,193 +2,106 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F18C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6729920671
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hqv9O0Zq"
+	by mail.kernel.org (Postfix) with ESMTP id 778D220671
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590067286;
+	bh=gCx2TyRG3MoyOZDUUObtvWVU7RKq5qWaEkY4GUhjN78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O6D080dij7tDxjbZavDSGddfRFCc4vrcfhv1W4OQX3Ovi6BfAKr9Ov41yRd68qDRD
+	 CIhuRyO7B6ieLOmG5fVE7AyPPIVOha6HM2kjavVTq6ImvvwMb/ICXS88tV9aA6e4jS
+	 jtPlj0pYwbQyP4c5U3GjcbSqK/0mDUigQG60vVL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729379AbgEUNUX (ORCPT
+        id S1729392AbgEUNVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:20:23 -0400
-Received: from mail-eopbgr680043.outbound.protection.outlook.com ([40.107.68.43]:60486
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728159AbgEUNUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:20:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J4Ioe24dA0JcMz/Hc3EOIXJs9njE2chvQFKUVgMQnXsn4hjkcmKWrvf8tcMqjfZot7sDP9N2loQ5wFf+G2IhlAJpzgukVdli9oQKBPvfDLbYDJ+ho5EAcOedzkoiLk8sWfcKYaScNAs7mohfs4n+MB72QqlMDHz9GPxkJF/o95xHG32n3t22CTNLXGk2BKbs9Qjm02hwUY3JBjGIzLcI40y4W1V3nTGymAJMvpYBAbD/tbfVpvUALz4Y6ObnO/yi55mbcawGSeOFElh5YgFMf3vE0CBGin841tnWrKQA5jfQ9QtRx4S6FG2WI/VTbmHB2ErVAHR0zXP3EbUYW1pI4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3r4c/u0nJGhzzb0cOlJh0h+Tb3+zMkcxNcqhrS8GFRw=;
- b=OV2TsWt/dR6syYxuCoWBQg1xF94fnfn4rnfGkJj19Mo5gNL10ltwDQ4WRc+jyKY1BhCE+xUaP9YbJ650zaw8n0bL6+FVhGXENvL/kzFVmBeGE3rCgbw2SgQZBBaObkZeuJPIqJqLCbm4W3fhh+LidUuSJ9KjA+TMDkMC7104jT9VDi7/cGaTOIDRx9PG1EIK9DY22VaA/auGk8S+Qfdom4p3FFBtY7uuRhB9ubYj0d+ev9fuoTUXViEjmZkQIfIDxLUBtt7IK6YkB7K4ZKESt0ycafzosc3PkQG38ycf7R44FPFbhLzQDJY3TY5dvfhjZwou099HnAmtghFtAjAW6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3r4c/u0nJGhzzb0cOlJh0h+Tb3+zMkcxNcqhrS8GFRw=;
- b=hqv9O0ZqSZyvSc8lZwHb+8eSN8uJr+Hvlngvv1R8SmmVTaIC5qUwnTs3+xLR7ufo9mb4EF3Tv33nu6/4i4S6d+dwarkUy/6SIA/+tFwGeNEMs9tl2s4RgH5gOurTecD4Mw4dD4bb8oYyYOkyrTVUtTN/uTH1TKI/HOv+vMOvGbk=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com (2603:10b6:5:2a9::15)
- by DM6PR12MB4139.namprd12.prod.outlook.com (2603:10b6:5:214::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
- 2020 13:20:19 +0000
-Received: from DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766]) by DM6PR12MB4401.namprd12.prod.outlook.com
- ([fe80::7949:b580:a2d5:f766%3]) with mapi id 15.20.3021.020; Thu, 21 May 2020
- 13:20:19 +0000
-Subject: Re: [PATCH v1 13/25] dma-buf: Use sequence counter with associated
- wound/wait mutex
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-14-a.darwish@linutronix.de>
- <e28c251e-5771-598c-37dd-c6be2de4b9e1@gmail.com>
- <20200521000930.GA359643@debian-buster-darwi.lab.linutronix.de>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <cfde5db9-2b05-52df-4f88-1928779db669@amd.com>
-Date:   Thu, 21 May 2020 15:20:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <20200521000930.GA359643@debian-buster-darwi.lab.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: FR2P281CA0026.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::13) To DM6PR12MB4401.namprd12.prod.outlook.com
- (2603:10b6:5:2a9::15)
+        Thu, 21 May 2020 09:21:25 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:43450 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728159AbgEUNVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 09:21:25 -0400
+Received: by mail-ej1-f65.google.com with SMTP id a2so8744214ejb.10;
+        Thu, 21 May 2020 06:21:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t4ZgBaxu8psJTH+wQpzS+5wxRN/OxLHl3Tsx7xVOSrI=;
+        b=JSKS0ikHNPRj8HCxcfMI9mbARZWEEgM0IoG8KLupWs/CoTTn6TRpzJVPK7spKk1DUZ
+         OQxXSv0solrkDGgNjJUBUmtTOLAr+UE86ewPg3bUoBKcP1TH+Hr3nw5Ry7p3tKHyOK+/
+         EqiCXN1MY7tapHdid0qhza2U6qkLn6yY/sQabRJ6lBbhG9/mX2y9dKtSCmo/XyTv5Qmq
+         iNOBhwC27PmoGFDmXW2Kx57FiB+HkeYJt31z23apeSyAJKHUGyf4ZlShAonJcgJYf9+g
+         8cPH3SsdEbtZbY9cU4TrKUHLa/lin6oiFQtE/Y7Vp+AxUw4CFL3uKoNSMGNcBNz70iUt
+         PsOA==
+X-Gm-Message-State: AOAM532lo9gfD/z+j6F9q8l4hUVVjw7mEXK+ys+9lcQPDyqlGooily8Y
+        BdpWGeFxHpv+mr0aN96OiyQ=
+X-Google-Smtp-Source: ABdhPJwA8k8xRmngoLH2EqAfwEHSAw4oSpuO2/gtbxK0HSC8+a+PLfIENR1tqH/RUQlfft+fASIXZA==
+X-Received: by 2002:a17:906:63c9:: with SMTP id u9mr3606605ejk.439.1590067283528;
+        Thu, 21 May 2020 06:21:23 -0700 (PDT)
+Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
+        by smtp.gmail.com with ESMTPSA id k9sm5065750edl.83.2020.05.21.06.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 06:21:22 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:21:20 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521132120.GR6462@dhcp22.suse.cz>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520202650.GB558281@chrisdown.name>
+ <20200521071929.GH6462@dhcp22.suse.cz>
+ <20200521112711.GA990580@chrisdown.name>
+ <20200521120455.GM6462@dhcp22.suse.cz>
+ <20200521122327.GB990580@chrisdown.name>
+ <20200521123742.GO6462@dhcp22.suse.cz>
+ <20200521125759.GD990580@chrisdown.name>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FR2P281CA0026.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:14::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Thu, 21 May 2020 13:20:11 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ed5e00d8-ae0e-4154-8b1b-08d7fd89b505
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4139:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB41398F7161EA0E006681D40A83B70@DM6PR12MB4139.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 041032FF37
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gEL0NUeUWJfNg9FPTJuUTJY5TP9DmXyc65UYhlyTVon6IJYUzMeHJWU/6av3Xj4DARwotBufJtpb/BM1DZN7Ky9eFEdBdxRXlr4DM8franPl0Do+ye5ieCH3ixtbD6BmCSjIS3KnxJX+7SAnatZRl/9AlWTmJLGS8kYZ281iLKnTl9YAj+7UnILX/5V749OomYnsuQUvsauVDHeFDymIGDrO5aiAamN9W6nRP/jQI1xK6KJ33ZrUTAnTLlGM6zmVkpqvMaY9YDJxzV8GKQJniCYAqEOX5BXN01SUWmlsxkmJy5d2VAdJl/AeL8IJ0j9+mdONl/aVdtPtQ0FbexkjHY+wWyu+/ce9ca+bqh6ctlCFvp0LHmN0TYk/OUulVAjl
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4401.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(7416002)(2616005)(186003)(6666004)(5660300002)(31686004)(66556008)(66946007)(66574014)(66476007)(36756003)(478600001)(8936002)(2906002)(16526019)(6486002)(8676002)(316002)(110136005)(4326008)(86362001)(31696002)(54906003)(52116002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: B46FXa2FCEaz+dG67toXIgVNuSsaLcpscjHId66nMMlW47umexbk1+N8e/SI7IGgOzntViF6BSRiSOR/4cFF+eypQ60qbVRrkeIJXS+vmTcP5hSFV72mvI1EPPlqK77kU2B0B83yoHrXASNLh8wPX7g1Q8zAXVFqlb7Nx9U29zVDoCkQdPVie7D859C0POY6Nttd8SMy8dOSCCqmUic/aPu0shJP5JdgUMx0n0M1yWg15OTxBJZY7FsVL/NY8HqCAdT3QLuq464PvzJs92JcQ9eTnj9XUv7CALLNPvKy5cAqhbB8plMZmQNBR25R9VV6TZUH+ytFeKyYvTLZ6wScQLqfG9eXmKZMZt+9/wNpZh76Al6pJ7MyWjYxID5zhAwYiKNypF/cG+Ktks1fWjgG6xbq//+3UetwWrChZJe+7FKlF+Cl0fgNszLCK5FhIziSl8Z93Noj2reGfZri6XC79CbpkdaV12Kj0JvK+6E07Yr2EQurMbdMJUNrGPKmWXi8+akteByoGMcAWvYaFk9ssnPrzoRM/+3R4Ka6k8tbSFsywZMkL2Lcwjt29EuRcfCc
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed5e00d8-ae0e-4154-8b1b-08d7fd89b505
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 13:20:18.8667
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /Ob6VJAffOdCyKSe3wkyrTxBr7MfV0pbv/MwlM6ukBm4ugF0xih2Wn/LaFNVRMQW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4139
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521125759.GD990580@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 21.05.20 um 02:09 schrieb Ahmed S. Darwish:
-> On Wed, May 20, 2020, Christian König wrote:
->> Am 19.05.20 um 23:45 schrieb Ahmed S. Darwish:
->>> A sequence counter write side critical section must be protected by some
->>> form of locking to serialize writers. If the serialization primitive is
->>> not disabling preemption implicitly, preemption has to be explicitly
->>> disabled before entering the sequence counter write side critical
->>> section.
->>>
->>> The dma-buf reservation subsystem uses plain sequence counters to manage
->>> updates to reservations. Writer serialization is accomplished through a
->>> wound/wait mutex.
->>>
->>> Acquiring a wound/wait mutex does not disable preemption, so this needs
->>> to be done manually before and after the write side critical section.
->>>
->>> Use the newly-added seqcount_ww_mutex_t instead:
->>>
->>>     - It associates the ww_mutex with the sequence count, which enables
->>>       lockdep to validate that the write side critical section is properly
->>>       serialized.
->>>
->>>     - It removes the need to explicitly add preempt_disable/enable()
->>>       around the write side critical section because the write_begin/end()
->>>       functions for this new data type automatically do this.
->>>
->>> If lockdep is disabled this ww_mutex lock association is compiled out
->>> and has neither storage size nor runtime overhead.
->> Mhm, is the dma_resv object the only user of this new seqcount_ww_mutex
->> variant ?
->>
->> If yes we are trying to get rid of this sequence counter for quite some
->> time, so I would rather invest the additional time to finish this.
->>
-> In this patch series, each extra "seqcount with associated lock" data
-> type costs us, exactly:
->
->    - 1 typedef definition, seqcount_ww_mutex_t
->    - 1 static initializer, SEQCNT_WW_MUTEX_ZERO()
->    - 1 runtime initializer, seqcount_ww_mutex_init()
->
-> Definitions for the typedef and the 2 initializers above are
-> template-code one liners.
+On Thu 21-05-20 13:57:59, Chris Down wrote:
+> Michal Hocko writes:
+> > > A cgroup is a unit and breaking it down into "reclaim fairness" for
+> > > individual tasks like this seems suspect to me. For example, if one task in
+> > > a cgroup is leaking unreclaimable memory like crazy, everyone in that cgroup
+> > > is going to be penalised by allocator throttling as a result, even if they
+> > > aren't "responsible" for that reclaim.
+> > 
+> > You are right, but that doesn't mean that it is desirable that some
+> > tasks would be throttled unexpectedly too long because of the other's activity.
+> 
+> Are you really talking about throttling, or reclaim? If throttling, tasks
+> are already throttled proportionally to how much this allocation is
+> contributing to the overage in calculate_high_delay.
 
-In this case I'm perfectly fine with this.
+Reclaim is a part of the throttling mechanism. It is a productive side
+of it actually.
+ 
+> If you're talking about reclaim, trying to reason about whether the overage
+> is the result of some other task in this cgroup or the task that's
+> allocating right now is something that we already know doesn't work well
+> (eg. global OOM).
 
->
-> The logic which automatically disables preemption upon entering a
-> seqcount_ww_mutex_t write side critical section is also already shared
-> with seqcount_mutex_t and any future, preemptible, associated lock.
->
-> So, yes, dma-resv is the only user of seqcount_ww_mutex.
->
-> But even in that case, given the one liner template code nature of
-> seqcount_ww_mutex_t logic, it does not make sense to block the dma_resv
-> and amdgpu change until at some point in the future the sequence counter
-> is completely removed.
->
-> **If and when** the sequence counter gets removed, please just remove
-> the seqcount_ww_mutex_t data type with it. It will be extremely simple.
-
-Completely agree, just wanted to prevent that we now add a lot of code 
-which gets removed again ~3 month from now.
-
-Regards,
-Christian.
-
->
->> Regards,
->> Christian.
->>
-> Thanks,
->
-> --
-> Ahmed S. Darwish
-> Linutronix GmbH
-
+I am not sure I follow you here.
+-- 
+Michal Hocko
+SUSE Labs
