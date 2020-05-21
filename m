@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF139C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3847E206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40E22072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgEUNdG (ORCPT
+        id S1729492AbgEUNdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:33:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4879 "EHLO huawei.com"
+        Thu, 21 May 2020 09:33:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4880 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729197AbgEUNdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:33:06 -0400
+        id S1729362AbgEUNdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 09:33:10 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CB3DC2FD30B7B2052576;
-        Thu, 21 May 2020 21:33:03 +0800 (CST)
+        by Forcepoint Email with ESMTP id 009C0D8D6EC6CD8FA4B6;
+        Thu, 21 May 2020 21:33:09 +0800 (CST)
 Received: from euler.huawei.com (10.175.124.27) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
  14.3.487.0; Thu, 21 May 2020 21:32:57 +0800
@@ -34,9 +34,9 @@ To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 CC:     <linux-kernel@vger.kernel.org>, Li Bin <huawei.libin@huawei.com>,
         "Xie XiuQi" <xiexiuqi@huawei.com>,
         Hongbo Yao <yaohongbo@huawei.com>
-Subject: [PATCH 2/4] perf svghelper: Fix memory leak in svg_build_topology_map
-Date:   Thu, 21 May 2020 21:32:16 +0800
-Message-ID: <20200521133218.30150-3-liwei391@huawei.com>
+Subject: [PATCH 3/4] perf util: Fix memory leak of prefix_if_not_in
+Date:   Thu, 21 May 2020 21:32:17 +0800
+Message-ID: <20200521133218.30150-4-liwei391@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200521133218.30150-1-liwei391@huawei.com>
 References: <20200521133218.30150-1-liwei391@huawei.com>
@@ -49,74 +49,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Bin <huawei.libin@huawei.com>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-Fix leak of memory pointed to by t.sib_thr and t.sib_core in
-svg_build_topology_map.
+Need to free "str" before return when asprintf() failed
+to avoid memory leak.
 
-Signed-off-by: Li Bin <huawei.libin@huawei.com>
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
 ---
- tools/perf/util/svghelper.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/util/sort.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index 96f941e01681..e2b3b0e2fafe 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -754,6 +754,7 @@ int svg_build_topology_map(struct perf_env *env)
- 	int i, nr_cpus;
- 	struct topology t;
- 	char *sib_core, *sib_thr;
-+	int ret;
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index f14cc728c358..8ed777565c82 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -2811,7 +2811,7 @@ static char *prefix_if_not_in(const char *pre, char *str)
+ 		return str;
  
- 	nr_cpus = min(env->nr_cpus_online, MAX_NR_CPUS);
+ 	if (asprintf(&n, "%s,%s", pre, str) < 0)
+-		return NULL;
++		n = NULL;
  
-@@ -767,12 +768,14 @@ int svg_build_topology_map(struct perf_env *env)
- 
- 	if (!t.sib_core || !t.sib_thr) {
- 		fprintf(stderr, "topology: no memory\n");
-+		ret = -1;
- 		goto exit;
- 	}
- 
- 	for (i = 0; i < env->nr_sibling_cores; i++) {
- 		if (str_to_bitmap(sib_core, &t.sib_core[i], nr_cpus)) {
- 			fprintf(stderr, "topology: can't parse siblings map\n");
-+			ret = -1;
- 			goto exit;
- 		}
- 
-@@ -782,6 +785,7 @@ int svg_build_topology_map(struct perf_env *env)
- 	for (i = 0; i < env->nr_sibling_threads; i++) {
- 		if (str_to_bitmap(sib_thr, &t.sib_thr[i], nr_cpus)) {
- 			fprintf(stderr, "topology: can't parse siblings map\n");
-+			ret = -1;
- 			goto exit;
- 		}
- 
-@@ -791,6 +795,7 @@ int svg_build_topology_map(struct perf_env *env)
- 	topology_map = malloc(sizeof(int) * nr_cpus);
- 	if (!topology_map) {
- 		fprintf(stderr, "topology: no memory\n");
-+		ret = -1;
- 		goto exit;
- 	}
- 
-@@ -798,12 +803,11 @@ int svg_build_topology_map(struct perf_env *env)
- 		topology_map[i] = -1;
- 
- 	scan_core_topology(topology_map, &t, nr_cpus);
--
--	return 0;
-+	ret = 0;
- 
- exit:
- 	zfree(&t.sib_core);
- 	zfree(&t.sib_thr);
- 
--	return -1;
-+	return ret;
- }
+ 	free(str);
+ 	return n;
 -- 
 2.17.1
 
