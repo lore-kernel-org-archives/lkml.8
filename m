@@ -2,97 +2,142 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3746C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7C520738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBB520738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:16:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fGuo2D4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgEUIOV (ORCPT
+        id S1728550AbgEUIQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52970 "EHLO
+        Thu, 21 May 2020 04:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbgEUIOV (ORCPT
+        with ESMTP id S1727122AbgEUIQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:14:21 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65600C061A0E;
-        Thu, 21 May 2020 01:14:21 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbgL2-0004jF-Gl; Thu, 21 May 2020 10:14:00 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B6DB5100C2D; Thu, 21 May 2020 10:13:59 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
-In-Reply-To: <20200521022746.GA730422@T590>
-References: <20200519015420.GA70957@T590> <20200519153000.GB22286@lst.de> <20200520011823.GA415158@T590> <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de> <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk> <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk> <87tv0av1gu.fsf@nanos.tec.linutronix.de> <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk> <87eereuudh.fsf@nanos.tec.linutronix.de> <20200521022746.GA730422@T590>
-Date:   Thu, 21 May 2020 10:13:59 +0200
-Message-ID: <87367tvh6g.fsf@nanos.tec.linutronix.de>
+        Thu, 21 May 2020 04:16:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558C5C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 01:16:17 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s8so5740481wrt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 01:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=KPDqb+DCYxxpSLeq6U5D/jKybkhAzjGZ8QLA5YedgMg=;
+        b=fGuo2D4qqxs0LddmHxyYtVQK3DJjuNDPbTrhoeOfUGD4FH/OI2BX/z8FrTVVetWfeL
+         yxSdMCpaMuE0CT59NPSdKGWvlF/wEwwbQIo/ENQXqs6MPPqzlC/hfUJ3ybypKqgN2S5M
+         o/mvlR8mPiBPU+NJuQj2pwYDEzhalaTyOIGNdYlQJhhErXNjxuG9Jr41mL5qO2wLTlAk
+         8jKD8MUO2AnEnULwDQ+r5sELmzj3LIdAlcvGtV/Ye4p5M8rstCcL499Gc/SDCczcfnCn
+         U27GrGfii48SZIS+mbiHKcAl19InSZu9c9q8PSO1K6Rmk6MnZfOSiC2DrSOTeJm/M082
+         QFKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KPDqb+DCYxxpSLeq6U5D/jKybkhAzjGZ8QLA5YedgMg=;
+        b=e7kQxsX7lQpyYfjBQtYQ/MLoyuK/7QJEjBzdMkxyEV28c8+glf6m0+2/0oMzwf2RZO
+         wgCseyaiAC3DMN6W+6+G+jzPKT7vgUfgyXCLnCfccorM0VezwDxOaEySiKcuzpGr8e/t
+         05g0Uso5Bwb6lAPXo1+WRDem6/gU5O9JZwimCXUesfZuFaXULXe7rWucUVfbkJ41PaQ3
+         jaHJrhcBPMar7WeB2grT3hwp3i4InLw+vNQCANZ731LQkUvtJIiKKFP6FF32oPhynOzA
+         sxvwZRAXwZ0Fu5jCntSkq2j5A0g9KuKPQUp/mUDsiOnmO7PLKhksdfNaKnE+69+ETnky
+         XrUg==
+X-Gm-Message-State: AOAM531fndUmk45nRCuCQN/tnK9VLg1BLlALjVgvt6fK9h/VyX9HaNEf
+        zoGDOgKULO3xcnMYzDz/os5Ohg==
+X-Google-Smtp-Source: ABdhPJxUykPWBMpDxCLK97UyXMlHnRBvfRJh1k/pbvLfDpfppBXa1QMSqiirA7kcWucM6FnWvj4LJA==
+X-Received: by 2002:adf:dcc8:: with SMTP id x8mr7439168wrm.404.1590048975850;
+        Thu, 21 May 2020 01:16:15 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id j190sm5848242wmb.33.2020.05.21.01.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 01:16:15 -0700 (PDT)
+Date:   Thu, 21 May 2020 09:16:12 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        drinkcat@chromium.org, Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: [GIT PULL] Immutable branch between MFD, Power and RTC due for the
+ v5.8 merge window
+Message-ID: <20200521081612.GO271301@dell>
+References: <1587438012-24832-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587438012-24832-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming Lei <ming.lei@redhat.com> writes:
-> On Thu, May 21, 2020 at 12:14:18AM +0200, Thomas Gleixner wrote:
->> When the CPU is finally offlined, i.e. the CPU cleared the online bit in
->> the online mask is definitely too late simply because it still runs on
->> that outgoing CPU _after_ the hardware queue is shut down and drained.
->
-> IMO, the patch in Christoph's blk-mq-hotplug.2 still works for percpu
-> kthread.
->
-> It is just not optimal in the retrying, but it should be fine. When the
-> percpu kthread is scheduled on the CPU to be offlined:
->
-> - if the kthread doesn't observe the INACTIVE flag, the allocated request
-> will be drained.
->
-> - otherwise, the kthread just retries and retries to allocate & release,
-> and sooner or later, its time slice is consumed, and migrated out, and the
-> cpu hotplug handler will get chance to run and move on, then the cpu is
-> shutdown.
+Enjoy!
 
-1) This is based on the assumption that the kthread is in the SCHED_OTHER
-   scheduling class. Is that really a valid assumption?
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-2) What happens in the following scenario:
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
-   unplug
+are available in the Git repository at:
 
-     mq_offline
-       set_ctx_inactive()
-       drain_io()
-       
-   io_kthread()
-       try_queue()
-       wait_on_ctx()
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-power-rtc-v5.8
 
-   Can this happen and if so what will wake up that thread?
+for you to fetch changes up to 29ee40091e27615530c0ba7773a2879d8266381e:
 
-I'm not familiar enough with that code to answer #2, but this really
-wants to be properly described and documented.
+  rtc: mt6397: Add support for the MediaTek MT6358 RTC (2020-05-21 08:55:48 +0100)
 
-Thanks,
+----------------------------------------------------------------
+Immutable branch between MFD, Power and RTC due for the v5.8 merge window
 
-        tglx
+----------------------------------------------------------------
+Hsin-Hsiung Wang (4):
+      mfd: mt6397: Modify suspend/resume behavior
+      mfd: mt6397: Trim probe function to support different chips more cleanly
+      dt-bindings: mfd: Add compatible for the MediaTek MT6358 PMIC
+      mfd: Add support for the MediaTek MT6358 PMIC
+
+Ran Bi (1):
+      rtc: mt6397: Add support for the MediaTek MT6358 RTC
+
+ Documentation/devicetree/bindings/mfd/mt6397.txt |  14 +-
+ drivers/mfd/Makefile                             |   2 +-
+ drivers/mfd/mt6358-irq.c                         | 235 +++++++++++++++++++
+ drivers/mfd/mt6397-core.c                        | 101 ++++----
+ drivers/mfd/mt6397-irq.c                         |  35 ++-
+ drivers/power/reset/mt6323-poweroff.c            |   2 +-
+ drivers/rtc/rtc-mt6397.c                         |  18 +-
+ include/linux/mfd/mt6358/core.h                  | 158 +++++++++++++
+ include/linux/mfd/mt6358/registers.h             | 282 +++++++++++++++++++++++
+ include/linux/mfd/mt6397/core.h                  |   5 +
+ include/linux/mfd/mt6397/rtc.h                   |   9 +-
+ 11 files changed, 799 insertions(+), 62 deletions(-)
+ create mode 100644 drivers/mfd/mt6358-irq.c
+ create mode 100644 include/linux/mfd/mt6358/core.h
+ create mode 100644 include/linux/mfd/mt6358/registers.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
