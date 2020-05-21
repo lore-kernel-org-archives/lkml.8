@@ -2,108 +2,149 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A01C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03342C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEEB2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JRCcNUj8"
+	by mail.kernel.org (Postfix) with ESMTP id C86E320738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590045709;
+	bh=kCJFiC2qcVkXJicasXnpPmEKnb+0hgvDkk2zq6VzoXg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C8sqlk8qSmtphVnZFYBi3kBT6T4GKI6VdyzQup/Pnh9aIYTEPafI2ND0S9l2e/kBt
+	 svb5SkqoEEpjP1NOHTsJhxOx86f/AU0LbZ2I8mwV/3FI1FTLz4xnZyaNBgoo4EM1LH
+	 y5tK/FuFug3flV2MBstJ294L9x3LR5fEXJKzQ+Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgEUHVf (ORCPT
+        id S1728331AbgEUHVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgEUHVf (ORCPT
+        Thu, 21 May 2020 03:21:49 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:32783 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgEUHVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:21:35 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0348C061A0E;
-        Thu, 21 May 2020 00:21:34 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SLdm1F00z9sTK;
-        Thu, 21 May 2020 17:21:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590045693;
-        bh=q1vx8A9kbDCtXgqiGX1gPAlTnB8R5RmVzfh8wbU2lZA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JRCcNUj8EUVtqXKEQWALdDBQmELP1qMzGTU0dY4bQpg+hBbuXiah+1F/LOI60BzLw
-         2bJIQ5YkxRHz5Xb6zib26TQqpUho+IKN/f/05ZucajHCosAO0U0J5b4m8ocT39M8EW
-         toVO6YsgNYuDSxeCtmK4NpUnu5dYZs/buJG6ZQKMbXSB9Q+mepwPGR7+YLkJuyRMYN
-         L+dK+sI2LG+GBWTzN9YEEIZnMK4Fl7DCzKqww1cZPMED8N2NUqvWcaKcfm5wUuj1/b
-         rgjTRSRefL5iKQjuBbd2e1EhQNs9BdVAawcGbW5bFn2WB1oW75PPMS+jZHN/qquA12
-         qudfijkJBvWWg==
-Date:   Thu, 21 May 2020 17:21:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Felipe Balbi <balbi@kernel.org>, Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Yan <yanaijie@huawei.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: linux-next: manual merge of the usb-gadget tree with the usb tree
-Message-ID: <20200521172130.52aaa1d6@canb.auug.org.au>
+        Thu, 21 May 2020 03:21:48 -0400
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 04L7LX95019601;
+        Thu, 21 May 2020 16:21:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 04L7LX95019601
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590045694;
+        bh=g3f+D9tafdmbvpg7O9G/hP2TxGYOgCzFzWkyMyDjYrA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I+1vGg9ZzZFhHI5QbI63huhQpyX9MeFb/M4zeXVjfPjwQQZCfA+y/YsUv496JqjmT
+         yMbNHCWL1W8zqKknaomuOtWJRcgdJyWnFPtwsJP+UC96+FwEalHYRdHQ1e9vSHQPZ8
+         tno7saK/CmyL0DIX3fH/s7kFx3BjFLeVTHJuTxe7Ske2jarpi8fPO8ukh69Ve39zE1
+         K+YEGGOZ8PfQTivenitJ4RYyMkMxf8lN7rtSMB1YBA78g2u6G+yUb6Xnu6htRMh4IQ
+         DynyryqANNwuxBKF19gH9bgoMrs2SNkam3EtrJurEmlrL4L27RFr/YQpxB4tg/Gc22
+         ater2z4rygorA==
+X-Nifty-SrcIP: [209.85.221.182]
+Received: by mail-vk1-f182.google.com with SMTP id j28so1466843vkn.8;
+        Thu, 21 May 2020 00:21:33 -0700 (PDT)
+X-Gm-Message-State: AOAM532Fe+S9HVzoPCFCMAUD0IIQdgULKUmRSMOlxYieqk+IenPg3AsG
+        wHpAyLwj8NK01OshjjybKe4qquiH6lq2tUM8apw=
+X-Google-Smtp-Source: ABdhPJyjSMndqk4OZKdfbRuMSh6rkcEKgLQZKuyQ4RzRUFtqbg+PLCAzB7yLurCO6p/T3vahAlwvUc0+rSJDTOHMnzY=
+X-Received: by 2002:a1f:2e16:: with SMTP id u22mr6558972vku.12.1590045692980;
+ Thu, 21 May 2020 00:21:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/APdJPlwHsfhfWz=HCHfmtMc";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200514131234.380097-1-efremov@linux.com> <CAK7LNASRv9E-pfYCRmD-RstKhW+WgfHKrn+7bP_dAAkyKaoPGg@mail.gmail.com>
+ <e26a1565-e770-0e5e-c730-60cc6fa16a4f@linux.com>
+In-Reply-To: <e26a1565-e770-0e5e-c730-60cc6fa16a4f@linux.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 21 May 2020 16:20:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASqja+eKcTeBA29LoWcMXucWv-L7Jntvzx9a5cam=UcWQ@mail.gmail.com>
+Message-ID: <CAK7LNASqja+eKcTeBA29LoWcMXucWv-L7Jntvzx9a5cam=UcWQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] kbuild: add variables for compression tools
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/APdJPlwHsfhfWz=HCHfmtMc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 15, 2020 at 6:40 PM Denis Efremov <efremov@linux.com> wrote:
+>
+> It seems that I missed a couple of tar commands in the patch:
+> scripts/Makefile.package
+> scripts/package/buildtar
+>
+> On 5/15/20 5:20 AM, Masahiro Yamada wrote:
+> > On Thu, May 14, 2020 at 10:14 PM Denis Efremov <efremov@linux.com> wrote:
+> >>
+> >
+> > commit 5054e88a7934d5ff5ec14231c8b8676161bb45fa
+> > Author: Paul Eggert <eggert@cs.ucla.edu>
+> > Date:   Mon Mar 16 14:25:17 2015 -0700
+> >
+> >     gzip: make the GZIP env var obsolescent
+>
+> Other implementations can depend on this.
+> pigz still parses GZIP env var:
+> https://github.com/madler/pigz/blob/master/pigz.c#L4346
+>
+> >
+> > Some possible options I came up with:
+> >
+> >
+> > [1] Use KGZIP for now, but BZIP2, XZ, etc. for the others.
+> >
+> >     (Then, rename KGZIP to GZIP when the time comes)
+> >
+> >
+> > [2] Do not take this patch
+> >
+> >     The whole build process is parallelized
+> >     by 'make -j $(nproc)'.
+> >
+> >     If you are still eager to use pigz instead gzip,
+> >     use a symbolic link or a wrapper shell script.
+> >
+> >     $ ln -s /usr/bin/pigz  /$HOME/bin/gzip
+> >     $ PATH="$HOME/bin:$PATH"
+> >
+>
+> [3] GZIP at frontend, KGZIP or _GZIP internally? Something like:
+>
+> $ cat Makefile
+> GZIP=gzip
+> override KGZIP=$(GZIP) # optional overrdide. Used to force GZIP value
+>                        # in case: make KGZIP=test
+>
+> unexport GZIP
 
-Hi all,
 
-Today's linux-next merge of the usb-gadget tree got a conflict in:
+The command line option is really strong,
+so you cannot negate it by 'unexport GZIP'.
 
-  drivers/usb/cdns3/gadget.c
+override GZIP :=
 
-between commit:
+does not work either in sub-make.
 
-  e9010320f2d9 ("usb: cdns3: gadget: make a bunch of functions static")
 
-from the usb tree and commit:
 
-  e2e77a94078b ("usb: cdns3: mark local functions static")
 
-from the usb-gadget tree.
 
-I fixed it up (the difference was the indentation of contiuation lines -
-I juts used the latter) and can carry the fix as necessary. This is now
-fixed as far as linux-next is concerned, but any non trivial conflicts
-should be mentioned to your upstream maintainer when your tree is
-submitted for merging.  You may also want to consider cooperating with
-the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+> export KGZIP
+>
+> default:
+>         @env | grep GZIP
+>
+> $ make GZIP=test
+> KGZIP=test
+>
+> Thanks,
+> Denis
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/APdJPlwHsfhfWz=HCHfmtMc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7GK/oACgkQAVBC80lX
-0GzGOgf9Fmbg59Ul1SWI1nAfe2gnjjOPB9NuPrI4Ra82K+75hnEVyZaD8T/x/UZh
-MSo/BMciiXpybshpJCX9ASP7a7FfJniAGh/9GH68gNHrxkXRVMmH3m89eVZ3Q6dW
-+XNkU/PeF/XC+nndsF3rwt0vgYSN77XvGQoKxvccfip7XvOrjCAKfQ2evVBCCLqS
-0Dq0toe8h9NdlaiCH8pP0eMzBsmpi5WHLV9QOnjrNh9xPMV7Pp0bYW2Jl3UzG8q1
-CdQ/hq9bCVuDLkjGzDEbTtA92FPnoxw9Bc+8TaJNhcYg9M/FEKjWZbFMEkVUm72Y
-2y0L0SV2Y/A/tDIYSctgnlkDY8wXEA==
-=roe2
------END PGP SIGNATURE-----
-
---Sig_/APdJPlwHsfhfWz=HCHfmtMc--
+-- 
+Best Regards
+Masahiro Yamada
