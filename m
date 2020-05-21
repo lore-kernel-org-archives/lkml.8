@@ -2,112 +2,132 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CE5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61A520758
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:54:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590022489;
-	bh=nUC6IS5B+HO4x1xRb90GxHXMHv01xodZ56chdUvxpR4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KUd9A5pMuZKPyp2rUhF8FTH/tkF8yn27nGxRYp/V3BeyrP2Y2jjJfdcj0VORx+D01
-	 0iLseuF4Zr4mT1g2UFYZDs/1xSD/iLyG23polFn+S2sV5fXWFJnL+tHvnbK+uEWYUa
-	 aTIs4yVajQK3yRO0xoUn5ywZ8OKWC//6Gg+Tpq9E=
+	by mail.kernel.org (Postfix) with ESMTP id 218AB20756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgEUAyt (ORCPT
+        id S1728037AbgEUAzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40210 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 20:55:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10627 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbgEUAys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:54:48 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56C0E20756;
-        Thu, 21 May 2020 00:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590022488;
-        bh=nUC6IS5B+HO4x1xRb90GxHXMHv01xodZ56chdUvxpR4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dpHKgFJ9WM3DHwB8NU0iO7BVqjA8bVDD3gzbTkCQSA7m1X3gZUioDgTvR4I2hAVCw
-         qVNIo3rEDD9eMNWYQrhXT60ZDlDUUJVidIvr8MDzhgcuss+dmx1b1dCC29i+xBAAhM
-         BaEuTTJYbLoLx6aYIYOwGE3VJz6Wm2BQHABSju10=
-Date:   Wed, 20 May 2020 17:54:46 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     maobibo <maobibo@loongson.cn>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v4 2/4] mm/memory.c: Update local TLB if PTE entry
- exists
-Message-Id: <20200520175446.11068e9e81da493a8e120601@linux-foundation.org>
-In-Reply-To: <e9cd1d61-c475-9b13-fd48-3ff886c74797@loongson.cn>
-References: <1589882610-7291-1-git-send-email-maobibo@loongson.cn>
-        <1589882610-7291-2-git-send-email-maobibo@loongson.cn>
-        <20200519182619.2c5e76d3f6b25d71702abbe0@linux-foundation.org>
-        <e9cd1d61-c475-9b13-fd48-3ff886c74797@loongson.cn>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726870AbgEUAzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 20:55:48 -0400
+IronPort-SDR: 8duFuZPEofp/DftbcS+JS7mWFuMCyFKUzT+exsqs5owTlKw8M5F/x7a/Zg33N+KbeX6EM1iTIv
+ QMXsXzPN9A+Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 17:55:48 -0700
+IronPort-SDR: 2H7CgkH+KoPTW4LUsgiGxEVueOh0IlvIteLGhf1tdBUrkQ1JEAx/go+VdIZAH9K5F/AmHzWA3G
+ jj4jQer82PyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
+   d="scan'208";a="255163730"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga008.fm.intel.com with ESMTP; 20 May 2020 17:55:47 -0700
+Date:   Wed, 20 May 2020 17:56:05 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Brendan Shanks <bshanks@codeweavers.com>,
+        Andreas Rammhold <andi@notmuch.email>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Babu Moger <Babu.Moger@amd.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: umip: AMD Ryzen 3900X, pagefault after emulate SLDT/SIDT
+ instruction
+Message-ID: <20200521005605.GA11955@ranerica-svr.sc.intel.com>
+References: <20200519143815.cpsd2xfx2kl3khsq@wrt>
+ <2330FAB4-A6CE-49E7-921C-B7D55763BDED@codeweavers.com>
+ <20200519194320.GA25138@ranerica-svr.sc.intel.com>
+ <CALCETrXxYjrMoenqyxEoBmcitHY22tfpJQAzvS=iF_5+SEZa4w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrXxYjrMoenqyxEoBmcitHY22tfpJQAzvS=iF_5+SEZa4w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 14:39:13 +0800 maobibo <maobibo@loongson.cn> wrote:
-
-> > I'm still worried about the impact on other architectures.  The
-> > additional update_mmu_cache() calls won't occur only when multiple
-> > threads are racing against the same page, I think?  For example,
-> > insert_pfn() will do this when making a read-only page a writable one.
-> How about defining ptep_set_access_flags function like this on mips system?
-> which is the same on riscv platform.
+On Tue, May 19, 2020 at 05:54:53PM -0700, Andy Lutomirski wrote:
+> On Tue, May 19, 2020 at 12:43 PM Ricardo Neri
+> <ricardo.neri-calderon@linux.intel.com> wrote:
+> >
+> > On Tue, May 19, 2020 at 11:56:40AM -0700, Brendan Shanks wrote:
+> > >
+> > > > On May 19, 2020, at 7:38 AM, Andreas Rammhold <andi@notmuch.email> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > I've been running into a weird problem with UMIP on a current Ryzen
+> > > > 3900x with kernel 5.6.11 where a process receives a page fault after the
+> > > > kernel handled the SLDT (or SIDT) instruction (emulation).
+> > > >
+> > > > The program I am running is run through WINE in 32bit mode and tries to
+> > > > figure out if it is running in a VMWare machine by comparing the results
+> > > > of SLDT against well known constants (basically as shown in the
+> > > > [example] linked below).
+> > > >
+> > > > In dmesg I see the following log lines:
+> > > >> [99970.004756] umip: Program.exe[3080] ip:4373fb sp:32f3e0: SIDT instruction cannot be used by applications.
+> > > >> [99970.004757] umip: Program.exe[3080] ip:4373fb sp:32f3e0: For now, expensive software emulation returns the result.
+> > > >> [99970.004758] umip: Program.exe[3080] ip:437415 sp:32f3e0: SLDT instruction cannot be used by applications.
+> > > >
+> > > > Following that the process terminates with a page fault:
+> > > >> Unhandled exception: page fault on read access to 0xffffffff in 32-bit code (0x0000000000437415).
+> > > >
+> > > > Assembly at that address:
+> > > >> 0x0000000000437415: sldt    0xffffffe8(%ebp)
+> > > >
+> > > > Running the same executable on the exact same kernel (and userland) but
+> > > > on a Intel i7-8565U doesn't crash at this point. I am guessing the
+> > > > emulation is supposed to do something different on AMD CPUs?
+> >
+> > I am surprised you don't see it on the Intel processor. Maybe it does
+> > not have UMIP. Do you see umip when you do
+> >
+> > $ grep umip /proc/cpuinfo
+> >
+> > ?
+> > > >
+> > > > On the Ryzen the code executes successfully after setting CONFIG_X86_UMIP=n.
+> > >
+> > > Hi Andreas,
+> > >
+> > > The problem is that the kernel does not emulate/spoof the SLDT instruction, only SGDT, SIDT, and SMSW.
+> > > SLDT and STR weren't thought to be commonly used, so emulation/spoofing wasn’t added.
+> > > In the last few months I have seen reports of one or two (32-bit) Windows games that use SLDT though.
+> > > Can you share more information about the application you’re running?
+> > >
+> > > Maybe the best path is to add kernel emulation/spoofing for SLDT and STR on 32 and 64-bit, just to cover all the cases. It should be a pretty simple patch, I’ll start working on it.
+> >
+> > I have a patch for this already that I wrote for testing purposes:
+> >
+> > https://github.com/ricardon/tip/commit/1692889cb3f8accb523d44b682458e234b93be50
+> >
+> > Perhaps it can be used as a starting point? Not sure what the spoofing
+> > value should be, though. Perhaps 0?
 > 
-> static inline int ptep_set_access_flags(struct vm_area_struct *vma,
-> 					unsigned long address, pte_t *ptep,
-> 					pte_t entry, int dirty)
-> {
-> 	if (!pte_same(*ptep, entry))
-> 		set_pte_at(vma->vm_mm, address, ptep, entry);
-> 	/*
-> 	 * update_mmu_cache will unconditionally execute, handling both
-> 	 * the case that the PTE changed and the spurious fault case.
-> 	 */
-> 	return true;
-> }
-> 
+> Possibly SLDT should return nonzero if there's an LDT.
 
-hm, it seems a bit abusive - ptep_set_access_flags() is supposed to
-return true if the pte changed, and that isn't the case here.
+I guess the value should be in the same hole of the x86_64 memory map,
+right? Currently sgdt and sidt return 0xfffffffffffe0000 and
+0xffffffffffff0000, respectively.
 
-I suppose we could run update_mmu_cache() directly from
-ptep_set_access_flags() if we're about to return false, but that
-doesn't seem a lot nicer?
-
-> > Would you have time to add some instrumentation into update_mmu_cache()
-> > (maybe a tracepoint) and see what effect this change has upon the
-> > frequency at which update_mmu_cache() is called for a selection of
-> > workloads?  And add this info to the changelog to set minds at ease?
->
-> OK, I will add some instrumentation data in the changelog.
-
-Well, if this testing shows no effect as you expect, perhaps we can
-leave the code as-is.
+Thanks and BR,
+Ricardo
