@@ -2,133 +2,131 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F438C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BADFC20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CBF1207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="SsroLET2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Le6cJcuo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgEUPpI (ORCPT
+        id S1728098AbgEUPrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38542 "EHLO
+        Thu, 21 May 2020 11:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728326AbgEUPpD (ORCPT
+        with ESMTP id S1726814AbgEUPrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:45:03 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACAC1C08C5C2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:45:02 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id m12so6441955ljc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:45:02 -0700 (PDT)
+        Thu, 21 May 2020 11:47:45 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822D2C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:47:43 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id n5so6858207wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cmJz+Gx7YLDmT8/F9qf3OOQUtF5Sv5dZUkEevMwOpmM=;
-        b=SsroLET2JSHiD8ayuKdihmujwAC67+dgA8oluNDMYpfdBxnArd+BSWFOgdJBz3AUXn
-         Jgr19lkTNEI0fzxu/MAgt0HPLhYToFhkeRxwTirCPS+rmBpUdPWsJQZkQzgnOak6GP/P
-         jQRpA8hNcjjAOc4MpUXyIEyb0/xvM3uM0Ik9MTwOAptQVKMsGOqSvmSGl3OZmLzF6PlT
-         QLQOGo56Agti779dHCpPRDkXKQsEeYXLPM1D62ZYdpTojiTeogdATC6rR22aD/k/GyU5
-         NpjJSJf2PL2iDSYkSQERySBp+NKc6wYBCtxCx+QzjOsfbCz+eewsOJx+Ql5o9V0j7MjE
-         kmCQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ygXdshwZ6sqhNV/RMFYuAUef1d1MehMWLgDXSG2EHPs=;
+        b=Le6cJcuobanbwKgpp8zSivcyXze9t07R/UHYuERqTibtsy7X/7SAiRx3kKbE9q+2t7
+         a8LBUq/lE7CMVR3EFaUHcSr6o0pkzVkQudm8mbe8Brwi3sfop8yoJ0l/GyFhcrZqAQ89
+         OOtxQ24xQK1ODH4tvY+VAqxgZEWS0RFpiQGMo1SvpLsrxxJNEyA/2/ly+qvNOrvJDcnb
+         DJeOIaYP2xcpraV7aoTkNImBo83FCkvNbnqOlSTZk5cESrtBKP1XP9WZ/MsN9k+v2K4a
+         Uyhm1gX5Cn6BH6d+FSF9oaRhFniCeNWam4cS6kt+Om7gD86vLeCEhg32UKpaUKqtbDPb
+         zKEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cmJz+Gx7YLDmT8/F9qf3OOQUtF5Sv5dZUkEevMwOpmM=;
-        b=NHkm0BPDoLZozXyXNiqVuMUoLNE2oaCWgOG1vWt6WIGp1dWy9mS2bYnioA7V7KwMT6
-         ZqwosusR1IE4jbalpROwVIOXKDxSN2M3a6Ye+NK673LBH7Hf4pf23JV93tlsbfME9/M1
-         wDjWQmoMGzpvdbAh5fz3QRln+YzpcEOyo8Fx7XqoNy066UqqLQpKkT1u/Kvzf8qZqk6b
-         KjpnbcvRnChV7RBW0TuPszi7T5qCJkSTu5mUphZMS5wpfZvW3hLvj9OfrH3J/cNS3QOd
-         p0uY06Dgg44FqL/T7EkMm49vW/PnRzdp7QkeiT5r/lb3uJOK5eTK0re49xwwQZQ7wSAn
-         BURA==
-X-Gm-Message-State: AOAM533sYgF6iVcixazX5whiINwaij6fSBOzK4L9GOr97q+GR//Zu4gI
-        GqGsob+fBMINHslU2tsAz1xrSXXy5L/wZg==
-X-Google-Smtp-Source: ABdhPJzF7ksN+o14aJ+SGpc5Githg07FbeQQKCCVP/Xx20hNFOuoDeHcLFuTKLz6iHWPLC6E/tV3rw==
-X-Received: by 2002:a05:651c:1104:: with SMTP id d4mr5227117ljo.193.1590075900931;
-        Thu, 21 May 2020 08:45:00 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:447:6c16:7801:dcb9:693e:53c? ([2a00:1fa0:447:6c16:7801:dcb9:693e:53c])
-        by smtp.gmail.com with ESMTPSA id i8sm2098945lfl.72.2020.05.21.08.44.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 08:45:00 -0700 (PDT)
-Subject: Re: [PATCH v3 11/14] bus: cdmm: Add MIPS R5 arch support
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        David Lechner <david@lechnology.com>,
-        John Garry <john.garry@huawei.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        Sameer Pujar <spujar@nvidia.com>, linux-kernel@vger.kernel.org
-References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
- <20200521003443.11385-12-Sergey.Semin@baikalelectronics.ru>
- <9ad8383b-8199-1006-cf91-d760bace705e@cogentembedded.com>
- <20200521125851.5upamjd7ldirj57a@mobilestation>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <73d43b13-c153-cfa0-dbfa-bd0a560a3754@cogentembedded.com>
-Date:   Thu, 21 May 2020 18:44:47 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ygXdshwZ6sqhNV/RMFYuAUef1d1MehMWLgDXSG2EHPs=;
+        b=e4gjaAQOenkJ75/4/r+medt7tew2IE9OErYMtOAVcH7QA6nhtf+qobYruUkwKDndfZ
+         UaOvO/mkpFg9+GNCVhnBHKQ3PY8tj7dNNrxwR6XA4FgjOysSLhgbhi54D4mvNr5La11v
+         oLjJoI9QnLflei+2spcQ2cMKVJjEh3WOBkoy8IBhQuA8tiZCf80vw3IjmFrPTlWUNhwX
+         UN7ah3xsfZ5ew6mq8p41dCSqtsGV0rYQvnk6dZElR+RTKki/q2zwfdKSbExiYCvn7efb
+         6H/4u02bJN2BXZ8aZ5Qq3twujlrg0j/GNyEGbYcHeszbY3XBna+8OvZMzmcH1zlyxNIW
+         oq2w==
+X-Gm-Message-State: AOAM531orW1JghCjJRBIKlNbyKnisc/gDCCHa5Qrmx3YKGxmTfN7+70N
+        ZrNJ96l4f65zxwm+hmLMWFDn4L244qA=
+X-Google-Smtp-Source: ABdhPJw5aqhrGaCS0GkssHgUIq4kYKj48KGgn6bMqFfY0W6t9kiBEGtCB7dkNiSteJamudE6T3LTbA==
+X-Received: by 2002:a7b:c205:: with SMTP id x5mr9933734wmi.135.1590076062001;
+        Thu, 21 May 2020 08:47:42 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id a10sm7076374wmf.46.2020.05.21.08.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 08:47:40 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:47:39 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [Kgdb-bugreport] [PATCH v3] kdb: Remove the misfeature 'KDBFLAGS'
+Message-ID: <20200521154739.ukfro4uuxpmnrpsx@holly.lan>
+References: <20200521072125.21103-1-liwei391@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521125851.5upamjd7ldirj57a@mobilestation>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521072125.21103-1-liwei391@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.05.2020 15:58, Serge Semin wrote:
+On Thu, May 21, 2020 at 03:21:25PM +0800, Wei Li wrote:
+> Currently, 'KDBFLAGS' is an internal variable of kdb, it is combined
+> by 'KDBDEBUG' and state flags. It will be shown only when 'KDBDEBUG'
+> is set, and the user can define an environment variable named 'KDBFLAGS'
+> too. These are puzzling indeed.
+> 
+> After communication with Daniel, it seems that 'KDBFLAGS' is a misfeature.
+> So let's replace 'KDBFLAGS' with 'KDBDEBUG' to just show the value we
+> wrote into. After this modification, we can use `md4c1 kdb_flags` instead,
+> to observe the state flags.
+> 
+> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
+> v2 -> v3:
+>  - Change to replace the internal env 'KDBFLAGS' with 'KDBDEBUG'.
+> v1 -> v2:
+>  - Fix lack of braces.
+> 
+>  kernel/debug/kdb/kdb_main.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> index 4fc43fb17127..392029287083 100644
+> --- a/kernel/debug/kdb/kdb_main.c
+> +++ b/kernel/debug/kdb/kdb_main.c
+> @@ -418,8 +418,7 @@ int kdb_set(int argc, const char **argv)
+>  				    argv[2]);
+>  			return 0;
+>  		}
+> -		kdb_flags = (kdb_flags &
+> -			     ~(KDB_DEBUG_FLAG_MASK << KDB_DEBUG_FLAG_SHIFT))
+> +		kdb_flags = (kdb_flags & ~KDB_DEBUG(MASK))
+>  			| (debugflags << KDB_DEBUG_FLAG_SHIFT);
+>  
+>  		return 0;
+> @@ -2081,7 +2080,8 @@ static int kdb_env(int argc, const char **argv)
+>  	}
+>  
+>  	if (KDB_DEBUG(MASK))
+> -		kdb_printf("KDBFLAGS=0x%x\n", kdb_flags);
+> +		kdb_printf("KDBDEBUG=0x%x\n",
+> +			(kdb_flags & KDB_DEBUG(MASK)) >> KDB_DEBUG_FLAG_SHIFT);
 
->>> CDMM may be available not only MIPS R2 architectures, but also in
->>                                  ^ on              -re, it's singular
-> 
-> Thanks, Sergey. Got it. I'll fix it in the next revision.
-> 
->>> newer MIPS R5 chips. For instance our P5600 chip has one. Lets mark
-> Probably also:                                                ^ Let's
-> Right?
+For this expression to work correctly, kdb_flags, need to be unsigned
+(otherwise we get an arithmetic right shift and mis-report when
+KDBDEBUG == 0xfff).
 
-    Yes.
-    Thanks for replying. :-)
+This is just FYI, I think I can fix this up when applying...
 
-> 
-> -Sergey
-> 
->>> the CDMM bus being supported for that MIPS arch too.
-> 
->>>
->>> Co-developed-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
->>> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
->>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->>> Reviewed-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->>> Cc: Paul Burton <paulburton@kernel.org>
->>> Cc: Ralf Baechle <ralf@linux-mips.org>
->>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Cc: Olof Johansson <olof@lixom.net>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: linux-mips@vger.kernel.org
->>> Cc: devicetree@vger.kernel.org
->> [...]
 
-MBR, Sergei
+Daniel.
