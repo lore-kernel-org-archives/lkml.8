@@ -2,104 +2,162 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36560C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17327C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BB320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:18:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OCitxUN/"
+	by mail.kernel.org (Postfix) with ESMTP id ED07A20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590085168;
+	bh=N5CsmBgzgRJ1qoSjQJyCqgE9IOj3hAVxpxWnjwMHcOw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=k7o6bGfg+d7Hr+sguq+S0p5QZYRWD9CoBjzHqSBwkssxzfQILicTF3fvQrlqfL8CW
+	 PnAgS0OI5DbaN74A6eZl0IFbkIohE6pv/wrTb6wsUOScK8G+wIhzc1BRApun5iMVqG
+	 bKVXNV6JbuHLvSxWsnp0ZtARtqlKNbNT/5l9a8GM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgEUSST (ORCPT
+        id S1729321AbgEUST1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:18:19 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53136 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgEUSST (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:18:19 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LIBpFt052290;
-        Thu, 21 May 2020 18:17:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ATl3KJlFPSEGzOoiVH1UAkA3XUXaPQB38iW36ETQLFw=;
- b=OCitxUN/+6tIyV/61zw/WvAVnGjgF/tQggnY2fVjydp1ujriRiEank8oMmvhN7e38OEg
- LctaH1RH1soJvCvnieDJkmduM5JYditSEjzE0/ckAt8CgY+I/Pq40vraL8rG2/aKeWVr
- SlweWJj9SUONt7gwNS3RnV/dC9cavU0ZZNUqutopsO5yQXrJVgXlaQRjK/ylSmUmG9DN
- ghaiyVdbS1HO1puWmPqsTNMV8/sRRMt+r5Na9cehPNTl+/31HP9/+3EBbP2oGwPAreDn
- Z9HFMbCu38PyYUaHWSPISumYMBwAWt1iQTFwkOx1/sf3+PMDloNNSNkMvqJlgLif8nRb 3w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31284ma140-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 18:17:27 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LI9F3F109956;
-        Thu, 21 May 2020 18:17:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 312t3by6uk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 18:17:27 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04LIHOv7010091;
-        Thu, 21 May 2020 18:17:25 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 11:17:24 -0700
-Subject: Re: [PATCH 02/11] mm/migrate: move migration helper from .h to .c
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1589764857-6800-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1589764857-6800-3-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <c2a278cd-27b6-baa8-914b-1d528b7d0c10@oracle.com>
-Date:   Thu, 21 May 2020 11:17:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 14:19:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728670AbgEUST1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:19:27 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A4E20738;
+        Thu, 21 May 2020 18:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590085166;
+        bh=N5CsmBgzgRJ1qoSjQJyCqgE9IOj3hAVxpxWnjwMHcOw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Sid+RAofpJhvVSePV8bzGp+OZMlEJfxE7e+9xOWfDmVLegyKQnOgPc3nSTCPsC5hP
+         cA1F18rZmRreoph12CkIhK+B3aUHnjMRyG2RXLt2QMgmjtjzVIok24QNlTbalhEa/0
+         Yn+IsceiGCdvPfkRTpU8D7Sf3FEzdiKaCkv9zVdc=
+Date:   Thu, 21 May 2020 19:19:21 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "ak@it-klinger.de" <ak@it-klinger.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2 3/8] iio: at91_adc: pass ref to IIO device via param
+ for int function
+Message-ID: <20200521191921.11473cba@archlinux>
+In-Reply-To: <99993df0dce7f7561e9659985265d6c1f5839208.camel@analog.com>
+References: <20200514131710.84201-1-alexandru.ardelean@analog.com>
+        <20200514131710.84201-4-alexandru.ardelean@analog.com>
+        <20200516181749.243c9515@archlinux>
+        <99993df0dce7f7561e9659985265d6c1f5839208.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1589764857-6800-3-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
- cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005210132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/17/20 6:20 PM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On Mon, 18 May 2020 08:32:11 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+
+> On Sat, 2020-05-16 at 18:17 +0100, Jonathan Cameron wrote:
+> > [External]
+> > 
+> > On Thu, 14 May 2020 16:17:05 +0300
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> >   
+> > > Since there will be some changes to how iio_priv_to_dev() is implemented,
+> > > it could be that the helper becomes a bit slower, as it will be hidden away
+> > > in the IIO core.
+> > > 
+> > > For this driver, the IIO device can be passed directly as a parameter to
+> > > the at91_ts_sample() function, thus making it immune to the change of
+> > > iio_priv_to_dev().
+> > > The function gets called in an interrupt context.
+> > > 
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> > I wonder. Should we just pass the struct device?  It's only used for
+> > error printing I think, so we could make that explicit.  
 > 
-> It's not performance sensitive function. Move it to .c.
-> This is a preparation step for future change.
+> I was also thinking that for this series, [for some drivers] it would make sense
+> to put a reference to indio_dev on the state-struct; and just return it.
+> I'll see about it.
+> I am feeling that sometimes these IIO core cleanups end up being more than I
+> want to do. But I'll try to see about it. Maybe I can make time or delegate some
+> of this.
+
+Absolutely understood.  No problem if you don't have time / energy to
+do this stuff.  I very much appreciate it when you do, but I know how
+unrewarding it can be!
+
 > 
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> My personal interest with them, is to reduce my complaints during reviews.
+> People starting to write IIO drivers: well, I can see their frustration [on
+> their faces] when I complain that they shouldn't use something, and they copied
+> it from somewhere.
+> 
 
-Agreed, this is not performance sensitive and can be moved.
+That's more or less the only reason I write IIO patches currently!
+Though I get to mostly avoid seeing the faces of those who fall
+into the traps of old code we should have tidied up years ago :(
+Not gotten near any of new hardware pile of IIO hardware in a long time.
+Plenty of other new hardware, but not IIO stuff!
 
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+Jonathan
 
--- 
-Mike Kravetz
+> 
+> > 
+> > I'm not that bothered either way though.
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > >  drivers/iio/adc/at91_adc.c | 5 ++---
+> > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+> > > index 0368b6dc6d60..5999defe47cd 100644
+> > > --- a/drivers/iio/adc/at91_adc.c
+> > > +++ b/drivers/iio/adc/at91_adc.c
+> > > @@ -287,13 +287,12 @@ static void handle_adc_eoc_trigger(int irq, struct
+> > > iio_dev *idev)
+> > >  	}
+> > >  }
+> > >  
+> > > -static int at91_ts_sample(struct at91_adc_state *st)
+> > > +static int at91_ts_sample(struct iio_dev *idev, struct at91_adc_state *st)
+> > >  {
+> > >  	unsigned int xscale, yscale, reg, z1, z2;
+> > >  	unsigned int x, y, pres, xpos, ypos;
+> > >  	unsigned int rxp = 1;
+> > >  	unsigned int factor = 1000;
+> > > -	struct iio_dev *idev = iio_priv_to_dev(st);
+> > >  
+> > >  	unsigned int xyz_mask_bits = st->res;
+> > >  	unsigned int xyz_mask = (1 << xyz_mask_bits) - 1;
+> > > @@ -449,7 +448,7 @@ static irqreturn_t at91_adc_9x5_interrupt(int irq, void
+> > > *private)
+> > >  
+> > >  		if (status & AT91_ADC_ISR_PENS) {
+> > >  			/* validate data by pen contact */
+> > > -			at91_ts_sample(st);
+> > > +			at91_ts_sample(idev, st);
+> > >  		} else {
+> > >  			/* triggered by event that is no pen contact, just read
+> > >  			 * them to clean the interrupt and discard all.  
+
