@@ -2,181 +2,206 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FA8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31970C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08FEA20826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13CF206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ID1dvrYm"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="H8im6dcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgEUPuE (ORCPT
+        id S1728339AbgEUPuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgEUPuD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:50:03 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E07CC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:50:02 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x14so1746210wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:50:01 -0700 (PDT)
+        Thu, 21 May 2020 11:50:37 -0400
+Received: from mail-eopbgr750139.outbound.protection.outlook.com ([40.107.75.139]:52645
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727911AbgEUPug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:50:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YOMFCvgHyFu5SnLg3Wbsh7JIYJUUBzVA24vRRB4G6WvC5i+nmkCVxrqq/iNMbQq3LQhA1BUrWdusu5O7qWtr3V9wc+lP0G3PmPGaP+lE3O29IPGF8SZfQQ8fuiE76GhezTdrXaLQXenq2r+iaeFrYamAs7GLGtgRYn1zJrq5WwL4sMEnGthZ/1BsWu41UygP/uglOyqq5X/gS2lqw2vmnJs1JMr49d5mrusYf+qGBIqQKdcCgdB2x+fmzlii0xRhZKOTZptWr5Df84SxZS9l9q4dz7kxSVnjz/rTQGEDa3bo7C94mWRob2Xf//U0vYs7g3Ukyy3hLcUiOdLT3KmPig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3/D6mldSTSQU1bsxZ0a+/zu/56vtZ00PLTqInvP2S4E=;
+ b=nzn+fG8mqv9IHMtF/uRDulspIUxscjf3sFa3lXwuOAiqPKhsQ9BBlOi2pSGUGy7a7i5pjQJApes6EBtXVj91CVlrCz2T4EbZmkL+Y1KPR+txV/hPUu11o9kk3bhM8Ow+Bh1166zsWh8JrVepeIgUtZeFZUcmoeNn6s0TdeGZ+Dct60a/n8M+XJqw5ldrTW1qdHfbTfLBWfrlELk+PEUwc93FjO0uvc9zUuwc5SrFxnpvp1/SdCArOKR+CguDIulGtfx1HuBm1Gn3T6KsOQHLDe20IKPZvw4IOQXlL2A64Ji5+4sVYFrcS29AcSoTdNAGw16otezAAkLPh74ucf30nQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=amperemail.onmicrosoft.com; dkim=pass
+ header.d=amperemail.onmicrosoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=I5QXaX52IPaG+95gPfmlZ0rD63JTAUJslTJmrnwNjQc=;
-        b=ID1dvrYmYK5R1R7a0Cw6H9ckAbwIgzD1jEh8cLijWGS6z4cOVQD8npfgacuW3YzbTR
-         6p53ASb2F8xqyBMI8KhptHeaQt1pyG6j16NzI19RwIF22j7IKpB1vdhv2vKICxvPmIGS
-         L9IwRDjpD8PgKAcggZu7EgMhLsHQK5hYnPirU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I5QXaX52IPaG+95gPfmlZ0rD63JTAUJslTJmrnwNjQc=;
-        b=Xe/hf71Ky/xHkSg7dVUqas/OUis3C/k5EJJQ2JLy80G6/Y91Sm/Dtng9ugbw9lAVlj
-         gnQGrYXrUQ8W++ULDGLcCTuwY1cMoARYXQAPDsOo0IWyvt2/szZkPIDbZWtekZ31uVlJ
-         n8yWUmsaluThhuGa3DkpvWl4J5OgR+e+Afbq5NAl5XeVrSjuA7hN85vsl2KRgxyhFLrz
-         RscjghJa1cXJtFiP+eP8gIlIaD6QJ7F8r23UVza2OHToxm7DIquqh0NLMwvDack02BBK
-         N3po1V2ZOs64QrMKRrAu17r2F3Xhu7i2GzOH0Rce4Yvm2RjGpU6H5vOmfNpvG+9H0wj7
-         9CmQ==
-X-Gm-Message-State: AOAM5316tU5Gpne1i7N95V3tEC++c4Yu9Hqi7jlF9F5gP53NK9xOuu+B
-        2iZZ+187tTAbgj+IitC7y5fHqg==
-X-Google-Smtp-Source: ABdhPJw5KfY6ZCQuAckjsE5E7cfiDb7ScpWMpUV7bgUyKbpKFR20CCu1lyQfVtv8YMw85K8xToqg9w==
-X-Received: by 2002:adf:ec87:: with SMTP id z7mr9942589wrn.149.1590076200716;
-        Thu, 21 May 2020 08:50:00 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id r3sm6663037wmh.48.2020.05.21.08.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 08:50:00 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:49:58 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH v8 10/14] media: platform: Delete redundant code for
- improving code quality
-Message-ID: <20200521154958.GI209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
- <20200403094033.8288-11-xia.jiang@mediatek.com>
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3/D6mldSTSQU1bsxZ0a+/zu/56vtZ00PLTqInvP2S4E=;
+ b=H8im6dczdIr2I3VW+yuW2+0sZ73SLfREkHoANSQ0Rv+06CP27MMVu39WYq+wlpAG75KqST4N7lICPlB2Te9WM1HxdYNR8+4zf+/3kxrpcWzdDkHJgKfF1CGmQRAP6bXOSZqzZyz7tr4KkvEnv3BG3dc5r65MU4YcFwJSNXxeok4=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none
+ header.from=amperemail.onmicrosoft.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB4680.prod.exchangelabs.com (2603:10b6:a03:84::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3000.20; Thu, 21 May 2020 15:50:31 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.3021.020; Thu, 21 May 2020
+ 15:50:31 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Subject: Re: [PATCH v2] perf: arm_dsu: Support DSU ACPI devices.
+From:   Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+In-Reply-To: <20200521135557.GB12282@bogus>
+Date:   Thu, 21 May 2020 08:50:28 -0700
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        patches@amperecomputing.com, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2684F75B-98BC-4C24-BF29-C5214F9CD3BB@amperemail.onmicrosoft.com>
+References: <1589229160-18558-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <20200521135557.GB12282@bogus>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-ClientProxiedBy: CY4PR01CA0019.prod.exchangelabs.com (2603:10b6:903:1f::29)
+ To BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403094033.8288-11-xia.jiang@mediatek.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.173] (73.151.56.145) by CY4PR01CA0019.prod.exchangelabs.com (2603:10b6:903:1f::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Thu, 21 May 2020 15:50:30 +0000
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Originating-IP: [73.151.56.145]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 17767772-c034-423d-0bd0-08d7fd9eb0fa
+X-MS-TrafficTypeDiagnostic: BYAPR01MB4680:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB4680F45AA3A07E21594893C6E0B70@BYAPR01MB4680.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GKKrP5crpGSRTJ5kfkmJhxh7yy1WVgk6f0fZnrcbdTwrumtmgfjXrqhWat6IYnClkzN+EqalaDMW2kqZsMiPu7fEreOZF2lEv8WiEi3thrzH8t476H948NXuc6fzJ7MBdlklSJntXqzV9K7dUnjEebJYUSaeZG2K7x/j8Z6KuXLwonuC6sdUeMz+R++UofxQK3JRaVfWnVrE0PeGk2LpOt4Oelp2Z4zRgerTbhBMiBEwicBIRxelEc/mYEvdgWs1/VWKOQrVsoQNrGi8jVUtjM7YdExzcSmzycXvcmxtW47wxJKGxTYhmFD3wx+KGa58uMAgzNc+jR+3hRWtLiLq7FBkZqEdRCFRp7LFlmSU5Cfqi+C0/5+HxNi/rLz2qWLKhqkF/kpAl0OQKlL5D912xbEQ8EjYoaZH0KqbcdDNqvU0CcMaUoZELmmDr7NTE770cxow+kT3fPJUiddY1JdDCjuXXh/akUATwUuQV66Sm8/pweQc0XrXn7L3a+CwRMSB8FGKlbnpfRxfeDsZcMdNQw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(39840400004)(136003)(366004)(478600001)(54906003)(16526019)(966005)(8936002)(5660300002)(4326008)(8676002)(6916009)(33656002)(2906002)(6486002)(52116002)(83170400001)(956004)(2616005)(16576012)(53546011)(42882007)(186003)(316002)(66556008)(66476007)(26005)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: CstIhkSVTVCRMTZ/cukH1Uob2N7fjTHgv0zfwjO4KlCC7FvY/YSQY6RFNwDWJ+MPUJ5D7OGCJc30VsIpjXFeNRxg2bL1vJ8Psa302Qqk2/KmPGTrTs5SZQEWw1te+SXDOazh/QphsQ2gduxpC9NvTKAKpkQIBJLK4kaB4ai61QcHsL9+TLZlqCzHZQ53//0L0KgvKS9hSgGG5lECyXESDN7bP4iOtCDUA4J/IhKM1qf1jEigzD6q0v9lNUFA8CvBDJ8akqMxurtMMdCk53/UwwPhsSm/bSdBzLJlnoqrb1FmkQHaa/gE3kMzc/HMg5uXYUH0GZ8LqIlnlzJJEwtgVoOFMosk8bZ9KRVJTATsEzW3pa9+xuZRcyAttTjqi9hPikR4wnefrZN6vHsL1s3woX6cuRVDUf/gecAl+7wo395+7/B1HYpQmKDGp0UqhlDAMIA2AIMmvR9uMHEcKZ+qrWKkmiBEb3t3zCLbwlPOE64=
+X-OriginatorOrg: amperemail.onmicrosoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17767772-c034-423d-0bd0-08d7fd9eb0fa
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 15:50:31.4390
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wl0UIWOL/EkVDPDfwe2QB4rR6C1CGLfLfnXn9vb0xsVbNhYmO7AC68RdMAjvsCNpxo5U2faBDPmtWvHJsjgc/uPx0UjoIbAPfR3kMdEXdYzUzes/Yv7hObI+q2d3bV7L
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4680
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
 
-On Fri, Apr 03, 2020 at 05:40:29PM +0800, Xia Jiang wrote:
-> Delete unused member variables annotation.
-> Delete unused variable definition.
-> Delete redundant log print, because V4L2 debug logs already print it.
-> 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
-> v8: no changes
-> ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 16 ++--------------
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  5 +++--
->  2 files changed, 5 insertions(+), 16 deletions(-)
-> 
 
-Thank you for the patch. Please see my comments inline.
+> On May 21, 2020, at 6:55 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>=20
+> On Mon, May 11, 2020 at 01:32:40PM -0700, Tuan Phan wrote:
+>> Add ACPI node probing device support. Each DSU ACPI node
+>> defines a "cpus" package with a per cpu MPIDR element.
+>>=20
+>> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+>> ---
+>> Changes in v2:
+>> - Removed IRQF_SHARED.
+>> - Fixed ACPI runtime detection.
+>>=20
+>> The ACPI binding spec for DSU ACPI node is under beta and located
+>> in ARM server group under project "ACPI on ARM".
+>>=20
+>> drivers/perf/arm_dsu_pmu.c | 71 ++++++++++++++++++++++++++++++++++++++++=
+------
+>> 1 file changed, 63 insertions(+), 8 deletions(-)
+>>=20
+>> diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
+>> index 70968c8..784d177 100644
+>> --- a/drivers/perf/arm_dsu_pmu.c
+>> +++ b/drivers/perf/arm_dsu_pmu.c
+>> @@ -11,6 +11,7 @@
+>> #define DRVNAME		PMUNAME "_pmu"
+>> #define pr_fmt(fmt)	DRVNAME ": " fmt
+>>=20
+>> +#include <linux/acpi.h>
+>> #include <linux/bitmap.h>
+>> #include <linux/bitops.h>
+>> #include <linux/bug.h>
+>> @@ -603,18 +604,21 @@ static struct dsu_pmu *dsu_pmu_alloc(struct platfo=
+rm_device *pdev)
+>> }
+>>=20
+>> /**
+>> - * dsu_pmu_dt_get_cpus: Get the list of CPUs in the cluster.
+>> + * dsu_pmu_dt_get_cpus: Get the list of CPUs in the cluster
+>> + * from device tree.
+>>  */
+>> -static int dsu_pmu_dt_get_cpus(struct device_node *dev, cpumask_t *mask=
+)
+>> +static int dsu_pmu_dt_get_cpus(struct platform_device *pdev)
+>> {
+>> 	int i =3D 0, n, cpu;
+>> 	struct device_node *cpu_node;
+>> +	struct dsu_pmu *dsu_pmu =3D
+>> +		(struct dsu_pmu *) platform_get_drvdata(pdev);
+>>=20
+>> -	n =3D of_count_phandle_with_args(dev, "cpus", NULL);
+>> +	n =3D of_count_phandle_with_args(pdev->dev.of_node, "cpus", NULL);
+>> 	if (n <=3D 0)
+>> 		return -ENODEV;
+>> 	for (; i < n; i++) {
+>> -		cpu_node =3D of_parse_phandle(dev, "cpus", i);
+>> +		cpu_node =3D of_parse_phandle(pdev->dev.of_node, "cpus", i);
+>> 		if (!cpu_node)
+>> 			break;
+>> 		cpu =3D of_cpu_node_to_id(cpu_node);
+>> @@ -626,11 +630,54 @@ static int dsu_pmu_dt_get_cpus(struct device_node =
+*dev, cpumask_t *mask)
+>> 		 */
+>> 		if (cpu < 0)
+>> 			continue;
+>> -		cpumask_set_cpu(cpu, mask);
+>> +		cpumask_set_cpu(cpu, &dsu_pmu->associated_cpus);
+>> 	}
+>> 	return 0;
+>> }
+>>=20
+>> +/**
+>> + * dsu_pmu_acpi_get_cpus: Get the list of CPUs in the cluster
+>> + * from ACPI.
+>> + */
+>> +static int dsu_pmu_acpi_get_cpus(struct platform_device *pdev)
+>> +{
+>> +	int i, cpu, ret;
+>> +	const union acpi_object *obj;
+>> +	struct acpi_device *adev =3D ACPI_COMPANION(&pdev->dev);
+>> +	struct dsu_pmu *dsu_pmu =3D
+>> +		(struct dsu_pmu *) platform_get_drvdata(pdev);
+>> +
+>> +	ret =3D acpi_dev_get_property(adev, "cpus", ACPI_TYPE_PACKAGE, &obj);
+>=20
+> I don't see any property "cpus" in the document:
+> DEN 0093 A (Generic ACPI for Arm Components 1.0) [1]
+>=20
+> Is there any newer updates that I need to look at ?
+>=20
+There is a newer DEN 0093 A version but it has not been public yet. Let aba=
+ndon this
+patch and I will post new one when the document has been finalized and avai=
+lable to public.
 
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index 4e64046a6854..9e59b9a51ef0 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -182,7 +182,6 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
->  				   struct mtk_jpeg_ctx *ctx, int q_type)
->  {
->  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-> -	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
->  	int i;
->  
->  	memset(pix_mp->reserved, 0, sizeof(pix_mp->reserved));
-> @@ -190,7 +189,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
->  
->  	if (ctx->state != MTK_JPEG_INIT) {
->  		mtk_jpeg_adjust_fmt_mplane(ctx, f);
-> -		goto end;
-> +		return 0;
->  	}
->  
->  	pix_mp->num_planes = fmt->colplanes;
-> @@ -210,7 +209,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
->  		pfmt->sizeimage = round_up(pfmt->sizeimage, 128);
->  		if (pfmt->sizeimage == 0)
->  			pfmt->sizeimage = MTK_JPEG_DEFAULT_SIZEIMAGE;
-> -		goto end;
-> +		return 0;
->  	}
->  
->  	/* type is MTK_JPEG_FMT_TYPE_CAPTURE */
-> @@ -224,20 +223,9 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_format *f,
->  		u32 stride = pix_mp->width * fmt->h_sample[i] / 4;
->  		u32 h = pix_mp->height * fmt->v_sample[i] / 4;
->  
-> -		memset(pfmt->reserved, 0, sizeof(pfmt->reserved));
+Thanks,
+=20
+> --=20
+> Regards,
+> Sudeep
+>=20
+> [1] https://static.docs.arm.com/den0093/a/DEN0093_ACPI_Arm_Components_1.0=
+.pdf
 
-This change is not mentioned in the description. I'd suggest moving it
-to a separate patch, because it's a functional change.
-
->  		pfmt->bytesperline = stride;
->  		pfmt->sizeimage = stride * h;
->  	}
-> -end:
-> -	v4l2_dbg(2, debug, &jpeg->v4l2_dev, "wxh:%ux%u\n",
-> -		 pix_mp->width, pix_mp->height);
-> -	for (i = 0; i < pix_mp->num_planes; i++) {
-> -		v4l2_dbg(2, debug, &jpeg->v4l2_dev,
-> -			 "plane[%d] bpl=%u, size=%u\n",
-> -			 i,
-> -			 pix_mp->plane_fmt[i].bytesperline,
-> -			 pix_mp->plane_fmt[i].sizeimage);
-> -	}
->  	return 0;
->  }
->  
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> index 64a731261214..9bbd615b1067 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
-> @@ -30,6 +30,9 @@
->  
->  #define MTK_JPEG_DEFAULT_SIZEIMAGE	(1 * 1024 * 1024)
->  
-> +/**
-> + * enum mtk_jpeg_ctx_state - contex state of jpeg
-
-typo: s/contex/context/
-
-But I'd rephrase it to "states of the context state machine".
-
-> + */
-
-Not mentioned in the description. Also, the documentation of an enum
-should have descriptions for the values.
-
-Best regards,
-Tomasz
