@@ -2,129 +2,123 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC005C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3DF207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="RPZS8L9I"
+	by mail.kernel.org (Postfix) with ESMTP id D815B207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgEUTXo (ORCPT
+        id S1730356AbgEUTXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:23:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729475AbgEUTXo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:23:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10C18C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:23:44 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w7so7737090wre.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Fo34Jyqqt3gxat3KrPs3T1U40ZqnzdXLMCRUHY0WScw=;
-        b=RPZS8L9I1L4Hr5Yf3I0WZyvWE9tXEyfLro5fAWIp/dmJsPqh+Ut24o0bId4XRFvqDF
-         CWNOVdYaeq+l9hSylp41TgmLZtINHkAcksO5wj5BcVbkedhQ49MX9tGUQ/3N+7eUgDkh
-         QogS3XHbJg8Eig36uZmDP1zvm10EDs10g1lvXCbmiQ9nQHhVWBDbGS97ToTp8ubt08Ii
-         2Xu4qeSds80NBbb1GviJwPnsTO6UbTvu7rXUIIbboDX7pCpmiEmYRoMAGp7jHrS7PIqo
-         2hdkDWPEb62boxYvmm6V03Ouq21CCCrrDKietbbJl0gTjuFgBxqPRwLzp8a9BlKUFOeG
-         8Rag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fo34Jyqqt3gxat3KrPs3T1U40ZqnzdXLMCRUHY0WScw=;
-        b=tv0ZowH0mBAqliibuFZdB9UIOMptTSYbUpaWj1Kusu8ae4rPFmYkaEv491gVatkKZV
-         U3Bg2rMNnTdV4UMOyI8Ozcc8Dc2HPmEBh4e6JbhO0KL42kcUTNipP+udYQ5OngYAl/1X
-         0g9WKaXqZwA5eWr2+gLuM0FGKI+O8k0C/X/9cBJlEgCcDPVeR63OXXpFNmCFhIE8FX5o
-         zAQDtNSbOnokMa8TJomNhjdS6I/a+JqzyOuMHkTqLgWi4QcSS8sCqqZbAXQUNmfEYyHJ
-         v7HiqnE1WzIRR0DeASS1wxtlkUqhtkEkAIp0by0ugd+Ub1SkWvnbi78Rj3ai0UYUu/kr
-         h4FQ==
-X-Gm-Message-State: AOAM532JP705DDKxQUjKargth9dH6Sp9qI02KKDsKEf4fFh7Hox/G1DS
-        3CTJA6jWOgXpnzFsQR4M4k79tg==
-X-Google-Smtp-Source: ABdhPJy1sEiv5+j8jAF8WOiuIvxBcnPKzxFmdT9P/BihuQi5Njdrqu02Skt8Kb4CXk8rodOlNmPM3w==
-X-Received: by 2002:a05:6000:85:: with SMTP id m5mr91049wrx.281.1590089022686;
-        Thu, 21 May 2020 12:23:42 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id l18sm7208878wmj.22.2020.05.21.12.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 12:23:41 -0700 (PDT)
-Date:   Thu, 21 May 2020 21:23:39 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Robert Nelson <robertcnelson@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux kernel <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>
-Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
-Message-ID: <20200521192339.GA429020@x1>
-References: <20200520214757.GA362547@x1>
- <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
- <CAOCHtYiw2jJuzbnW02FUmPy-xmmtErMmow46QQJUMs0VtX=cKg@mail.gmail.com>
- <cdf82f9c-48fb-49a0-99e4-926dc292c109@ti.com>
+        Thu, 21 May 2020 15:23:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33746 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729475AbgEUTXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 15:23:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 964D9B21E;
+        Thu, 21 May 2020 19:23:50 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id C4B67604F6; Thu, 21 May 2020 21:23:42 +0200 (CEST)
+Date:   Thu, 21 May 2020 21:23:42 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Chen Yu <yu.c.chen@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Auke Kok <auke-jan.h.kok@intel.com>,
+        Jeff Garzik <jeff@garzik.org>,
+        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
+        Len Brown <len.brown@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Neftin, Sasha" <sasha.neftin@intel.com>,
+        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+        Stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] e1000e: Make WOL info in ethtool consistent with
+ device wake up ability
+Message-ID: <20200521192342.GE8771@lion.mk-sys.cz>
+References: <cover.1590081982.git.yu.c.chen@intel.com>
+ <725bad2f3ce7f7b7f1667d53b6527dc059f9e419.1590081982.git.yu.c.chen@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cdf82f9c-48fb-49a0-99e4-926dc292c109@ti.com>
+In-Reply-To: <725bad2f3ce7f7b7f1667d53b6527dc059f9e419.1590081982.git.yu.c.chen@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 08:26:42PM +0300, Grygorii Strashko wrote:
+On Fri, May 22, 2020 at 01:59:13AM +0800, Chen Yu wrote:
+> Currently the ethtool shows that WOL(Wake On Lan) is enabled
+> even if the device wakeup ability has been disabled via sysfs:
+>   cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
+>    disabled
 > 
+>   ethtool eno1
+>   ...
+>   Wake-on: g
 > 
-> On 21/05/2020 17:41, Robert Nelson wrote:
-> > > Not sure if it should be in am335x-bone-common.dtsi.
-> > > 
-> > > For example:
-> > > am335x-boneblack.dts
-> > >    #include "am335x-bone-common.dtsi"
-> > >    #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
-> > 
-> > Ah crap, yeah that's a good point.. So if we stick it in...
-> > am335x-boneblack-common.dtsi
-> > 
-> > Then the Black-Wireless now has Ethernet...
-> > 
-> > am335x-boneblack-wireless.dts
-> > #include "am335x-bone-common.dtsi"
-> > #include "am335x-boneblack-common.dtsi"
-> > 
-> > It's going to be ugly, copy and paste mess, but i guess we might as
-> > well stick it in the device " am335x-boneblack.dts"?
+> Fix this in ethtool to check if the user has explicitly disabled the
+> wake up ability for this device.
+
+Wouldn't this lead to rather unexpected and inconsistent behaviour when
+the wakeup is disabled? As you don't touch the set_wol handler, I assume
+it will still allow setting enabled modes as usual so that you get e.g.
+
+  ethtool -s eth0 wol g   # no error or warning, returns 0
+  ethtool eth0            # reports no modes enabled
+
+The first command would set the enabled wol modes but that would be
+hidden from user and even the netlink notification would claim something
+different. Another exampe (with kernel and ethtool >= 5.6):
+
+  ethtool -s eth0 wol g
+  ethtool -s eth0 wol +m
+
+resulting in "mg" if device wakeup is enabled but "m" when it's disabled
+(but the latter would be hidden from user and only revealed when you
+enable the device wakeup).
+
+This is a general problem discussed recently for EEE and pause
+autonegotiation: if setting A can be effectively used only when B is
+enabled, should we hide actual setting of A from userspace when B is
+disabled or even reset the value of A whenever B gets toggled or rather
+allow setting A and B independently? AFAICS the consensus seemed to be
+that A should be allowed to be set and queried independently of the
+value of B.
+
+Michal
+
+> Fixes: 6ff68026f475 ("e1000e: Use device_set_wakeup_enable")
+> Reported-by: Len Brown <len.brown@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: <Stable@vger.kernel.org>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+>  drivers/net/ethernet/intel/e1000e/ethtool.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Seems like.
-> 
-> Unfortunately, there is no way to partially overwrite "gpio-line-names"
-> property.
-> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> index 1d47e2503072..0cccd823ff24 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ethtool.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+> @@ -1891,7 +1891,7 @@ static void e1000_get_wol(struct net_device *netdev,
+>  	wol->wolopts = 0;
+>  
+>  	if (!(adapter->flags & FLAG_HAS_WOL) ||
+> -	    !device_can_wakeup(&adapter->pdev->dev))
+> +	    !device_may_wakeup(&adapter->pdev->dev))
+>  		return;
+>  
+>  	wol->supported = WAKE_UCAST | WAKE_MCAST |
 > -- 
-> Best regards,
-> grygorii
-
-Thank you for pointing out that those gpio-line-names are really
-specific to the BeagleBone Black and not applicable for other boards
-like the BeagleBone Green which lack eMMC.
-
-I will post a new patch for am335x-boneblack.dts.
-
-After that is reviewed and applied, I will then create patches for the
-the other BeagleBone models.
-
-thanks,
-drew
+> 2.17.1
+> 
