@@ -2,86 +2,182 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE45C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3742072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590081919;
-	bh=vAo4QzwpoFgYhFQKi8shN2DAw/GCIUkoAg0u7koid4w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HIEAowAcymGhToh8pORDZFlG3eX9JTZSCp9m90JNbTyH2WshvfQBuafdUfyQ0dked
-	 HFvNhj7SjQEuawBmUQttcDsBS1n6EpJNR3BbVpvR+hcSmnUPlFpIcHIsSZOO95grt0
-	 gKx5Aww1x9klQ5Yq+fBpSdTEiAtOJWA8oOGjCfgY=
+	by mail.kernel.org (Postfix) with ESMTP id 60A502072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jMYRNs3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgEURZS (ORCPT
+        id S1728975AbgEUR0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:25:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728553AbgEURZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:25:18 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7CB2067B;
-        Thu, 21 May 2020 17:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590081918;
-        bh=vAo4QzwpoFgYhFQKi8shN2DAw/GCIUkoAg0u7koid4w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Mma1o5WsQIScc1MuikrJ4qDvMkMce5c94pM4GHrfjLEFjwHZiw8Az6j6QUZVGH59i
-         4q6XkBQfVqhPj8dJl7DwHwbbj8poVnhg5KeZ7Bof8mUSpfWEt8GUMDUeboX3glfqsR
-         ChAPSWW2rvzhmYqzPZHoTmLe5d+TdEVzhFZO/sOE=
-Date:   Thu, 21 May 2020 10:25:16 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm <linux-mm@kvack.org>,
+        Thu, 21 May 2020 13:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728867AbgEUR0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:26:14 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5EAC061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 10:26:14 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id r128so3206802ybc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 10:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RR9haEy3oD7+qrZeQ4YaXrnNf25B1l42i4uERnUL4Ng=;
+        b=jMYRNs3LETif9kx5lz6ZAwErHdUoxgNvUzatgY5CTVI+2qpFNoF0jsdlLTT7BtaK9e
+         6i/zlBga96SljJSmQpVD3KTnBot9yqGdXl+rsNH29wtmfpAoMU6frHcOfbreOttpP+O6
+         gi7FdTi+La381CLUcNheHlgZn3liaJg4J6N1q0fiKXRsH5A/nqqcJH0XTJ8/ofrE8/s8
+         82Tv8w9Gt+XXnNdhgafntMNF+6FxdXCoOEPQm5PnsuYKiuDGWqW9W9xmph4h/tccDag1
+         vc5XaaJwA+hNdNi7yBsBi+YEK1MtSjIBZdLzRFXJ7uYbMgtEiJbJbpr7JCp1yaNC/xFH
+         GOVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RR9haEy3oD7+qrZeQ4YaXrnNf25B1l42i4uERnUL4Ng=;
+        b=ke7+ztZKEuLFs7DTkz0FITcbO4bXqmxp3anVjZjkZelG9XARRWSravtRZDOop6DUbc
+         qMk+DtjWemta5MPcjpZivoOnXVVN/h9as3WPFzvalqE/I3YdMJJRDYEPMvKP6LuVaOk3
+         dA1qlTl6zamki9WOB0JS+jMkw1W3conpSxcf5YrMPANEnCRDoRLH2WG/6ietvAJwgd/P
+         wdBNlDY1tNmIVN2hFveZyzC/iw/PPwrJXDzN5j3YihAre5yie5S5kEWUJcmtC0ndQ+6E
+         68NVpeH91OK6kqmmv8eA+UA/0wX4qzOnwc49sGTKDSJgJFKHVaarrDV69nf3hPD/WGVV
+         Plkw==
+X-Gm-Message-State: AOAM533PISDyA6TySu3WdNdGhyAbK3hmjzMWO19rtxRHeCcNS3F19w0S
+        vhTUUkvWYJ0lLfBz4oGSdhSLnwoG4obkQqI6GS3YBQ==
+X-Google-Smtp-Source: ABdhPJzpX45EVuQ2vGLsTMipO1SgdOv5ksUZ0EuPZQY7BsULRRHlyhO8sdpwgpDrzA9rndtePhE7F+OD2XNY6NJzjuY=
+X-Received: by 2002:a25:c08b:: with SMTP id c133mr16746739ybf.286.1590081973287;
+ Thu, 21 May 2020 10:26:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200520072814.128267-1-irogers@google.com> <20200520072814.128267-6-irogers@google.com>
+ <20200520134847.GM157452@krava> <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
+ <20200520220912.GP157452@krava> <CAP-5=fU12vP45Sg3uRSuz-xoceTPTKw9-XZieKv1PaTnREMdrw@mail.gmail.com>
+ <20200521105412.GS157452@krava>
+In-Reply-To: <20200521105412.GS157452@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 21 May 2020 10:26:02 -0700
+Message-ID: <CAP-5=fWfV=+TY80kvTz9ZmzzzR5inYbZXRuQfsLfe9tPG7eJrQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v6 12/12] mmap locking API: convert mmap_sem comments
-Message-Id: <20200521102516.01dbc9fcc539baba96224c3f@linux-foundation.org>
-In-Reply-To: <CANN689GXWS9yHTw0aN-tAkd9tyA-vRn0GbJgC+Td=1r13KBZzA@mail.gmail.com>
-References: <20200520052908.204642-1-walken@google.com>
-        <20200520052908.204642-13-walken@google.com>
-        <e01060e9-6f00-7fa8-5da0-c9250c951d10@suse.cz>
-        <CANN689GXWS9yHTw0aN-tAkd9tyA-vRn0GbJgC+Td=1r13KBZzA@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 00:50:56 -0700 Michel Lespinasse <walken@google.com> wrote:
-
-> > >   * Must be called holding task's alloc_lock to protect task's mems_allowed
-> > > - * and mempolicy.  May also be called holding the mmap_semaphore for write.
-> > > + * and mempolicy.  May also be called holding the mmap_lockaphore for write.
-> > >   */
-> > >  static int mpol_set_nodemask(struct mempolicy *pol,
-> > >                    const nodemask_t *nodes, struct nodemask_scratch *nsc)
+On Thu, May 21, 2020 at 3:54 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, May 20, 2020 at 03:42:02PM -0700, Ian Rogers wrote:
+>
+> SNIP
+>
+> > >
+> > > hum, I think that's also concern if you are multiplexing 2 groups and one
+> > > metric getting events from both groups that were not meassured together
+> > >
+> > > it makes sense to me put all the merged events into single weak group
+> > > anything else will have the issue you described above, no?
+> > >
+> > > and perhaps add command line option for merging that to make sure it's
+> > > what user actuly wants
 > >
-> > :)
-> 
-> Haha, good catch !
+> > I'm not sure I'm following. With the patch set if we have 3 metrics
+> > with the event groups shown:
+> > M1: {A,B,C}:W
+> > M2: {A,B}:W
+> > M3: {A,B,D}:W
+> >
+> > then what happens is we sort the metrics in to M1, M3, M2 then when we
+> > come to match the events:
+> >
+> >  - by default: match events allowing sharing if all events come from
+> > the same group. So in the example M1 will first match with {A,B,C}
+> > then M3 will fail to match the group {A,B,C} but match {A,B,D}; M2
+> > will succeed with matching {A,B} from M1. The events/group for M2 can
+> > be removed as they are no longer used. This kind of sharing is
+> > opportunistic and respects existing groupings. While it may mean a
+> > metric is computed from a group that now multiplexes, that group will
+> > run for more of the time as there are fewer groups to multiplex with.
+> > In this example we've gone from 3 groups down to 2, 8 events down to
+> > 6. An improvement would be to realize that A,B is in both M1 and M3,
+> > so when we print the stat we could combine these values.
+>
+> ok, I misunderstood and thought you would colaps also M3 to
+> have A,B computed via M1 group and with separate D ...
+>
+> thanks a lot for the explanation, it might be great to have it
+> in the comments/changelog or even man page
 
-aww, you're all so cruel.  The world would be a better place if Linux
-had lockaphores!
+Thanks Jiri! Arnaldo do you want me to copy the description above into
+the commit message of this change and resend?
+This patch adds some description to find_evsel_group, this is expanded
+by the next patch that adds the two command line flags:
+https://lore.kernel.org/lkml/20200520072814.128267-7-irogers@google.com/
+When writing the patches it wasn't clear to me how much detail to
+include in say the man pages.
+
+Thanks,
+Ian
+
+> >
+> >  - with --metric-no-merge: no events are shared by metrics M1, M2 and
+> > M3 have their events and computation as things currently are. There
+> > are 3 groups and 8 events.
+> >
+> >  - with --metric-no-group: all groups are removed and so the evlist
+> > has A,B,C,A,B,A,B,D in it. The matching will now match M1 to A,B,C at
+> > the beginning of the list, M2 to the first A,B and M3 to the same A,B
+> > and D at the end of the list. We've got no groups and the events have
+> > gone from 8 down to 4.
+> >
+> > It is difficult to reason about which grouping is most accurate. If we
+> > have 4 counters (no NMI watchdog) then this example will fit with no
+> > multiplexing. The default above should achieve less multiplexing, in
+> > the same way merging PMU events currently does - this patch is trying
+> > to mirror the --no-merge functionality to a degree. Considering
+> > TopDownL1 then we go from metrics that never sum to 100%, to metrics
+> > that do in either the default or --metric-no-group cases.
+> >
+> > I'm not sure what user option is missing with these combinations? The
+> > default is trying to strike a compromise and I think user interaction
+> > is unnecessary, just as --no-merge doesn't cause interaction. If the
+> > existing behavior is wanted using --metric-no-merge will give that.
+> > The new default and --metric-no-group are hopefully going to reduce
+> > the number of groups and events. I'm somewhat agnostic as to what the
+> > flag functionality should be as what I'm working with needs either the
+> > default or --metric-no-group, I can use whatever flag is agreed upon.
+>
+> no other option is needed then
+>
+> thanks,
+> jirka
+>
