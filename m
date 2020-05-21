@@ -2,93 +2,182 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94BEE204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A91207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:29:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RelSvCH1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u8Ez7YlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgEUPXO (ORCPT
+        id S1729827AbgEUP3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
+        Thu, 21 May 2020 11:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgEUPXN (ORCPT
+        with ESMTP id S1728266AbgEUP3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:23:13 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0102FC061A0E;
-        Thu, 21 May 2020 08:23:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=81hDLaNsDP1XezBBCmTYO/9RleZtnLgOrYL3Jzc5rEw=; b=RelSvCH17DkzALKE5okRB+Y0wg
-        KoFoeYNS38bl7gxLrLZ+lN3ApsSbTXeo1Mfx2PvWHH7REwAnx2ksix/dbD2jN3AIzpkm1Q+KYLrjb
-        VCOu49KNHxA/far0fLLFGhtG6hKhnd5pRh00XeEBXomnMrq/JCfwWdde3cmQoAJ8EmS7QWQU6wfI3
-        K6s2sps5HEy6NC9ldAe8gdJe6PHsU//hvdwAWSNJEjDzDouYLde2uR06cU4hUD29c941CcBwxKIKf
-        QAWCwq2uFV/cwPzJVDOcsOF6JEtASh79XLNDBFIdet6IcrqMA5F0kvpD8cqNyImcP1pNuG7VhnHzd
-        a7FX8gdA==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn2H-000403-Jc; Thu, 21 May 2020 15:23:06 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/23] maccess: unexport probe_kernel_write and probe_user_write
-Date:   Thu, 21 May 2020 17:22:39 +0200
-Message-Id: <20200521152301.2587579-2-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
+        Thu, 21 May 2020 11:29:38 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23997C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:29:38 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k7so3248656pjs.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dzTSkoUSf6ji3NTN+1eYpRWJNdw3yxOKZnV7YqVUwaw=;
+        b=u8Ez7YlVrl4SrqtiHTcp0HdaD7SBjyNaGbUW0ZxGIYH8C9cRKIeQItl34KvkZaxOvM
+         j/GynPp+bUv1b0gvkN3fbRROKwV+c9TAogwmSJjb1N2jRdhDz2UFowH5GeqO5YG354Ng
+         McsmL8Y35p6qnS4Akf5zBOat0x94yASD/ZZsJ1q5VFR0TgyWwczi0kgf5K/FjriD/8aN
+         KNmP5hWxQZnPHAUADA8yGD/Ld8yKVqAx6e9eXw0UaZHa2Gu2du4z39br58K+NflmtSMB
+         qr6hkV36mKnpH5l0cPx71qu7CMgbfNNrOOF11gnT2C5cSeofI3ihnHZDai+FFxlMkZEV
+         AWHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dzTSkoUSf6ji3NTN+1eYpRWJNdw3yxOKZnV7YqVUwaw=;
+        b=Z7Rjok3ZqFZcHSYjEGQF1Y8JAoO7iaJK8ZlZRJz6M0HWmG91nBwo1OOLqGGNYJhrwN
+         doEg/efZe6lHMvPoeIqI574I/rke1iDCkhpM1TqB35Xb+vHGq49iTLDfVvrCMkXWr0XN
+         eDBBfmeMk2gMOEtqzlFp1PURoBTQwZRA9dbH3g/XzOZ8Tc4Idqd9M3DdyvQpW/xfwRqp
+         VrKECXSu10Gl8o+OMtq16TZf45SSsOqgDCzA9WXjFvxDgwq0p/SieDMgmKtZ3tYlCXjo
+         eCTx/YP/CAcyDia/TpXzuF4ku9Erwf5bYE0ujKOUImwvS0oIxWYopQW70fbMKutHruhs
+         fdJA==
+X-Gm-Message-State: AOAM5308XATRYzr+fr9aZi9PivaABPPw513B5YCfyiSaswrGFRZRifBw
+        WA+p/ba6WIVlUo2JoNukyg8b
+X-Google-Smtp-Source: ABdhPJwYtjxuead8StBG7/eIdFNkN27jA3CXxe192i8JIyP1rKaRh7+cC5imuRmmgO5E06T0Mj8BWw==
+X-Received: by 2002:a17:90a:ea84:: with SMTP id h4mr12024975pjz.8.1590074977412;
+        Thu, 21 May 2020 08:29:37 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:69f:45f2:3d8d:3719:f568:7ee9])
+        by smtp.gmail.com with ESMTPSA id z6sm4524343pgu.85.2020.05.21.08.29.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 May 2020 08:29:36 -0700 (PDT)
+Date:   Thu, 21 May 2020 20:59:30 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     hemantk@codeaurora.org, jhugo@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] MHI patches for v5.8
+Message-ID: <20200521152930.GA16101@Mani-XPS-13-9360>
+References: <20200521152540.17335-1-mani@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521152540.17335-1-mani@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two functions are not used by any modular code.
+On Thu, May 21, 2020 at 08:55:26PM +0530, mani@kernel.org wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Hi Greg,
+> 
+> Here is the set of MHI patches for v5.8. Most of the patches are cleanup and
+> refactoring ones. All of them are reviewed by myself and Jeff and also
+> verified on x86 and ARM64 architectures for functionality.
+> 
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- mm/maccess.c | 2 --
- 1 file changed, 2 deletions(-)
+Greg,
 
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 3ca8d97e50106..cf21e604f78cb 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -121,7 +121,6 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(probe_kernel_write);
- 
- /**
-  * probe_user_write(): safely attempt to write to a user-space location
-@@ -148,7 +147,6 @@ long __probe_user_write(void __user *dst, const void *src, size_t size)
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(probe_user_write);
- 
- /**
-  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
--- 
-2.26.2
+Sorry, something wrong happened with my git config and these patches were sent
+from my korg ID. Please let me know if I have to resend from my linaro ID to
+match the signed-off-by tag.
 
+Sorry for the confusion!
+
+Thanks,
+Mani
+
+> Here is the short summary:
+> -------------------------------------------------------------
+> 
+> - The firmware download was handled by a worker thread which gets scheduled
+> when the device powers up. But this thread waits until the device gets into
+> PBL state (notified using PM state worker). Sometimes, there might be delay for
+> the device to enter PBL state and due to that the firmware worker thread will
+> timeout. So in order to handle this situation effectively, the firmware load
+> is now directly called by PM state worker instead of scheduling the thread.
+> 
+> - Return proper error codes incase of error while loading the AMSS firmware
+> through BHIE protocol
+> 
+> - The MHI register space of the device accepts only non-zero values for the
+> sequence identifier. But there is a possibility that the host might write zero
+> (due to the use of prandom_u32() API). Hence, a macro is introduced which
+> provides non-zero sequence identifiers and used them in all places.
+> 
+> - Moved all common TRE generation code to mhi_gen_tre() function
+> 
+> - The MHI host reads channel ID from the event ring element of the client
+> device. This ID can be of any value between 0 to 255 but the host may not
+> support all those IDs. So reject the event ring elements whose channel IDs
+> are not within the limits of the controller.
+> 
+> - Limit the transfer length read from the client device. This value should
+> be within the size of the MHI host buffer but there are chances this can
+> be larger.
+> 
+> - Remove the system worker thread for processing the SYS_ERR condition and
+> instead call the function directly from EE worker. This is done to avoid
+> any possible race while MHI shutting down.
+> 
+> - Handle MHI power off in the state worker thread as like MISSION_MODE. This
+> helps in preventing a possible race condition where a power off is issued by
+> the controller while processing mission mode.
+> 
+> - Skip the handling of BHI interrupt when the register access is not allowed
+> due to the device in wrong PM state.
+> 
+> - The write_lock of 'mhi_chan->lock' should only protect 'db_mode'. Hence, use
+> it properly in places where it is protecting other unwanted regions.
+> 
+> - Reset the client device if it is in SYS_ERR state during power up.
+> 
+> -------------------------------------------------------------
+> 
+> Please consider merging!
+> 
+> Thanks,
+> Mani
+> 
+> Bhaumik Bhatt (4):
+>   bus: mhi: core: Handle firmware load using state worker
+>   bus: mhi: core: Return appropriate error codes for AMSS load failure
+>   bus: mhi: core: Improve debug logs for loading firmware
+>   bus: mhi: core: Ensure non-zero session or sequence ID values are used
+> 
+> Hemant Kumar (9):
+>   bus: mhi: core: Refactor mhi queue APIs
+>   bus: mhi: core: Cache intmod from mhi event to mhi channel
+>   bus: mhi: core: Add range check for channel id received in event ring
+>   bus: mhi: core: Read transfer length from an event properly
+>   bus: mhi: core: Remove the system error worker thread
+>   bus: mhi: core: Handle disable transitions in state worker
+>   bus: mhi: core: Skip handling BHI irq if MHI reg access is not allowed
+>   bus: mhi: core: Do not process SYS_ERROR if RDDM is supported
+>   bus: mhi: core: Handle write lock properly in mhi_pm_m0_transition
+> 
+> Jeffrey Hugo (1):
+>   bus: mhi: core: Handle syserr during power_up
+> 
+>  drivers/bus/mhi/core/boot.c     |  75 ++++++------
+>  drivers/bus/mhi/core/init.c     |   8 +-
+>  drivers/bus/mhi/core/internal.h |   9 +-
+>  drivers/bus/mhi/core/main.c     | 194 ++++++++++++++++++--------------
+>  drivers/bus/mhi/core/pm.c       |  86 +++++++++-----
+>  include/linux/mhi.h             |   4 -
+>  6 files changed, 217 insertions(+), 159 deletions(-)
+> 
+> -- 
+> 2.26.GIT
+> 
