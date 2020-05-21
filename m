@@ -2,108 +2,82 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1385C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1D62070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73297207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgEUIbo (ORCPT
+        id S1728702AbgEUIes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:31:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728538AbgEUIbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:31:44 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5AEC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 01:31:44 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jbgbf-0004xZ-OY; Thu, 21 May 2020 10:31:11 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 204E0100C2D; Thu, 21 May 2020 10:31:11 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     paulmck@kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V6 12/37] x86/entry: Provide idtentry_entry/exit_cond_rcu()
-In-Reply-To: <20200520232550.GA20812@paulmck-ThinkPad-P72>
-References: <87a7237k3x.fsf@nanos.tec.linutronix.de> <CALCETrXbQkE1zTW5Ly+ZQgDFLQQa3crPxzK6to0YR+BP5B9q+g@mail.gmail.com> <874ksb7hbg.fsf@nanos.tec.linutronix.de> <CALCETrWw7Vz39ROdBV1QxOQS3gMbPgNu5RRSuhBaXG+UVcFAzw@mail.gmail.com> <20200520022353.GN2869@paulmck-ThinkPad-P72> <CALCETrWAVTjsKwih06GeK237w7RLSE2D2+naiunA=VFEJY1meQ@mail.gmail.com> <CALCETrVPM1x5v8Gq7xyF+QqxSWSWTShhc7K02nGJZuB-oVDxNw@mail.gmail.com> <20200520180546.GQ2869@paulmck-ThinkPad-P72> <87o8qiv135.fsf@nanos.tec.linutronix.de> <20200520221531.GW2869@paulmck-ThinkPad-P72> <20200520232550.GA20812@paulmck-ThinkPad-P72>
-Date:   Thu, 21 May 2020 10:31:11 +0200
-Message-ID: <87zha1u1tc.fsf@nanos.tec.linutronix.de>
+        Thu, 21 May 2020 04:34:48 -0400
+Received: from verein.lst.de ([213.95.11.211]:53663 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728571AbgEUIer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 04:34:47 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2946668BEB; Thu, 21 May 2020 10:34:43 +0200 (CEST)
+Date:   Thu, 21 May 2020 10:34:42 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, hch@lst.de, kuba@kernel.org,
+        edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        vyasevich@gmail.com, nhorman@tuxdriver.com, jmaloy@redhat.com,
+        ying.xue@windriver.com, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
+        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 31/33] sctp: add sctp_sock_set_nodelay
+Message-ID: <20200521083442.GA7771@lst.de>
+References: <20200520195509.2215098-1-hch@lst.de> <20200520195509.2215098-32-hch@lst.de> <20200520231001.GU2491@localhost.localdomain> <20200520.162355.2212209708127373208.davem@davemloft.net> <20200520233913.GV2491@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520233913.GV2491@localhost.localdomain>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
-> On Wed, May 20, 2020 at 03:15:31PM -0700, Paul E. McKenney wrote:
-> Same patch, but with updated commit log based on IRC discussion
-> with Andy.
+On Wed, May 20, 2020 at 08:39:13PM -0300, Marcelo Ricardo Leitner wrote:
+> On Wed, May 20, 2020 at 04:23:55PM -0700, David Miller wrote:
+> > From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> > Date: Wed, 20 May 2020 20:10:01 -0300
+> > 
+> > > The duplication with sctp_setsockopt_nodelay() is quite silly/bad.
+> > > Also, why have the 'true' hardcoded? It's what dlm uses, yes, but the
+> > > API could be a bit more complete than that.
+> > 
+> > The APIs are being designed based upon what in-tree users actually
+> > make use of.  We can expand things later if necessary.
+> 
+> Sometimes expanding things later can be though, thus why the worry.
+> But ok, I get it. Thanks.
+> 
+> The comment still applies, though. (re the duplication)
 
-Fun. I came up with the same thing before going to bed. Just that I
-named the function differently: rcu_irq_enter_check_tick()
+Where do you see duplication?
 
->  #if defined(CONFIG_TINY_RCU)
->  
-> +static inline void tickle_nohz_for_rcu(void)
-> +{
-> +}
-> +
->  static inline void rcu_nmi_enter(void)
->  {
->  }
-> @@ -23,6 +27,7 @@ static inline void rcu_nmi_exit(void)
->  }
->  
->  #else
-> +extern void tickle_nohz_for_rcu(void);
+sctp_setsockopt_nodelay does the following things:
 
-And I made this a NOP for for !NOHZ_FULL systems and avoided the call if
-context tracking is not enabled at boot.
+ - verifies optlen, returns -EINVAL if it doesn't match
+ - calls get_user, returns -EFAULT on error
+ - converts the value from get_user to a boolean and assigns it
+   to sctp_sk(sk)->nodelay
+ - returns 0.
 
-void __rcu_irq_enter_check_tick(void);
+sctp_sock_set_nodelay does:
 
-static inline void rcu_irq_enter_check_tick(void)
-{
-	if (context_tracking_enabled())
-        	__rcu_irq_enter_check_tick();
-}
-
-Thanks,
-
-        tglx
-
+ - call lock_sock
+ - assign true to sctp_sk(sk)->nodelay
+ - call release_sock
+ - does not return an error code
