@@ -4,108 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5742C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D41212072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBA62072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590068144;
-	bh=vPCtfItAKZs5tbKxa7/e57pZbNrUtY2q3ZoV6TDHbK4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=r4aAihWV6BeGDvMfunO6hqIkajzTnXLU/2EX4+Yy7zR0V9HcBD7IRiO2v5fPi4ycz
-	 q9kCPRkrOWbue4JY48VdfTv+Ail/WC/AXngkky1ujw0Xn9IB0svZKMBcjKuA/nZKfe
-	 qKZTugu0O2NJDaDOFlNcZxdDFoplyndVSF5fbdho=
+	s=default; t=1590068193;
+	bh=k1U9skoq/IsxYcIdWWwltNtKISxIBRqA2/fMuQ1l6/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pjDkFwZTwW9+lyEup8lsKpLnHEhWw9JaSke4K29ca75tHzGG7ezdAfIhhzv9jopW3
+	 QadTGEQCkr0sBhION4tPnqdRgj4fllX4l6PFn3BdgPIw37I2PQJjHLtwd5zI2GkFuj
+	 Ig+geNv3kR6nJsZYcxHTPjdBAfxzd/j/kgXDoqAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgEUNfo (ORCPT
+        id S1728110AbgEUNgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 09:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgEUNfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:35:43 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726856AbgEUNgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 09:36:32 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 230D620721;
-        Thu, 21 May 2020 13:35:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02B1720721;
+        Thu, 21 May 2020 13:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590068143;
-        bh=vPCtfItAKZs5tbKxa7/e57pZbNrUtY2q3ZoV6TDHbK4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=n7QdvfyZVoAbp1uztI0xitoVDwlqGOazkK7OJk+40jrBX9SB9CD31Tc/1GkzIrtF1
-         KI8wPzAPNWnZsweUtt9wMuMKkcWvtaszTt3Z4HucljfFJc3LC9kr3G1VVNe9YR7zX8
-         GdcRMWdEPN9qjvOGqlBog6znVuHi4TFNd7obmaHI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 087C03520CB7; Thu, 21 May 2020 06:35:43 -0700 (PDT)
-Date:   Thu, 21 May 2020 06:35:43 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: linux-next: manual merge of the rcu tree with the powerpc tree
-Message-ID: <20200521133543.GX2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200519172316.3b37cbae@canb.auug.org.au>
- <20200521145124.48ae408b@canb.auug.org.au>
+        s=default; t=1590068192;
+        bh=k1U9skoq/IsxYcIdWWwltNtKISxIBRqA2/fMuQ1l6/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fiiMcKpG6X/JtSWMRjsdR4p6LuRA638LAeg+KATziaRhN/rYR30X+H1cRyg2j6sNR
+         7Un+7kyMPRvtO7ty1OSPtx03+GEGN+hUfOWrR7Xt8mWojHmBThZGBavKtafysKxzk4
+         xlvFQK7Fl0BjhVJGb4cXmwQ0GdzDlyuU512y8Dvk=
+Date:   Thu, 21 May 2020 14:36:27 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        peterz@infradead.org, clang-built-linux@googlegroups.com,
+        bp@alien8.de
+Subject: Re: [PATCH -tip v2 00/11] Fix KCSAN for new ONCE (require Clang 11)
+Message-ID: <20200521133626.GD6608@willie-the-truck>
+References: <20200521110854.114437-1-elver@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521145124.48ae408b@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200521110854.114437-1-elver@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:51:24PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Thu, May 21, 2020 at 01:08:43PM +0200, Marco Elver wrote:
+> This patch series is the conclusion to [1], where we determined that due
+> to various interactions with no_sanitize attributes and the new
+> {READ,WRITE}_ONCE(), KCSAN will require Clang 11 or later. Other
+> sanitizers are largely untouched, and only KCSAN now has a hard
+> dependency on Clang 11. To test, a recent Clang development version will
+> suffice [2]. While a little inconvenient for now, it is hoped that in
+> future we may be able to fix GCC and re-enable GCC support.
 > 
-> On Tue, 19 May 2020 17:23:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Today's linux-next merge of the rcu tree got a conflict in:
-> > 
-> >   arch/powerpc/kernel/traps.c
-> > 
-> > between commit:
-> > 
-> >   116ac378bb3f ("powerpc/64s: machine check interrupt update NMI accounting")
-> > 
-> > from the powerpc tree and commit:
-> > 
-> >   187416eeb388 ("hardirq/nmi: Allow nested nmi_enter()")
-> > 
-> > from the rcu tree.
-> > 
-> > I fixed it up (I used the powerpc tree version for now) and can carry the
-> > fix as necessary. This is now fixed as far as linux-next is concerned,
-> > but any non trivial conflicts should be mentioned to your upstream
-> > maintainer when your tree is submitted for merging.  You may also want
-> > to consider cooperating with the maintainer of the conflicting tree to
-> > minimise any particularly complex conflicts.
+> The patch "kcsan: Restrict supported compilers" contains a detailed list
+> of requirements that led to this decision.
 > 
-> This is now a conflict between the powerpc commit and commit
+> Most of the patches are related to KCSAN, however, the first patch also
+> includes an UBSAN related fix and is a dependency for the remaining
+> ones. The last 2 patches clean up the attributes by moving them to the
+> right place, and fix KASAN's way of defining __no_kasan_or_inline,
+> making it consistent with KCSAN.
 > 
->   69ea03b56ed2 ("hardirq/nmi: Allow nested nmi_enter()")
-> 
-> from the tip tree.  I assume that the rcu and tip trees are sharing
-> some patches (but not commits) :-(
+> The series has been tested by running kcsan-test several times and
+> completed successfully.
 
-We are sharing commits, and in fact 187416eeb388 in the rcu tree came
-from the tip tree.  My guess is version skew, and that I probably have
-another rebase coming up.
+I've left a few minor comments, but the only one that probably needs a bit
+of thought is using data_race() with const non-scalar expressions, since I
+think that's now prohibited by these changes. We don't have too many
+data_race() users yet, so probably not a big deal, but worth bearing in
+mind.
 
-Why is this happening?  There are sets of conflicting commits in different
-efforts, and we are trying to resolve them.  But we are getting feedback
-on some of those commits, which is probably what is causing the skew.
+Other than that,
 
-							Thanx, Paul
+Acked-by: Will Deacon <will@kernel.org>
+
+Thanks!
+
+Will
