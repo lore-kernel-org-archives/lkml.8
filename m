@@ -7,437 +7,387 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C30C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 483F820826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605EC207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X1i+7nvA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="p5dPINLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgEUPYP (ORCPT
+        id S1730339AbgEUPYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:24:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730296AbgEUPYK (ORCPT
+        Thu, 21 May 2020 11:24:21 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:31952 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730320AbgEUPYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:24:10 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CA8C061A0E;
-        Thu, 21 May 2020 08:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=tSrHIVxcGZ6TXuoxcJfHEv/vX7FDpsLNAMqgHy9mRL0=; b=X1i+7nvAgpyU1sqjjnZsprmu2h
-        s93WvDflUWaC8mIa62wUcqB76CTkJhM8lLoDFUdH2+sJBRwpgCEfcxA/RN6fPFqJciMBAHNa8McBi
-        Muw9Gvq3ogIy1kGLgZ8OLEoaJPWTO+SUEXLMg5Q/wa6z1R83LOKx9uyJadAGBpovP1ch5WtRVPY+w
-        P7ytwwoFAl94VpKh9dFbyRmpEe5jkYJLOLCo2vEGw9Ke+0uM60ke9EEoOWz7NHJbyB0mF+8JtypCv
-        HRAQxge6MiYMb9EgLFpjMoha8rgm35sfsmfLok6uBl//N9LR8UcFpqxOoZl27zNvqxkU3DatT/NYk
-        cf57N7Hw==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn3I-0004um-4D; Thu, 21 May 2020 15:24:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 22/23] maccess: rename probe_kernel_address to get_kernel_nofault
-Date:   Thu, 21 May 2020 17:23:00 +0200
-Message-Id: <20200521152301.2587579-23-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 21 May 2020 11:24:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590074654; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=abilVHcRe96eelslWKX/XNXJJR6Sa0xIlDety9B+swk=; b=p5dPINLiQYRm4ZlphCKCJoR8sIw1zMBVZcGqo+Xl/vx7kt4Ki088/XRyx2aMi2dHn81ASl+C
+ ebMbSXEgSzXDHKkC3D69FRBfqF6+UpU/VOARIGrehbqyXJckDxhzwdl/N3ofaIU94t/Fge5k
+ mIXoFuJe0idwqFULxjj7teOziCE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ec69d1d4c3faf51e27bacb5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 15:24:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 30E05C433AF; Thu, 21 May 2020 15:24:11 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C4180C433C9;
+        Thu, 21 May 2020 15:24:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C4180C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Vijay Viswanath <vviswana@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+Subject: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
+Date:   Thu, 21 May 2020 20:53:34 +0530
+Message-Id: <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+ <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Better describe what this helper does, and match the naming of
-copy_from_kernel_nofault.
+On qcom SD host controllers voltage switching be done after the HW
+is ready for it. The HW informs its readiness through power irq.
+The voltage switching should happen only then.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Use the internal voltage switching and then control the voltage
+switching using power irq.
+
+Set the regulator load as well so that regulator can be configured
+in LPM mode when in is not being used.
+
+Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 ---
- arch/arm/kernel/traps.c             |  2 +-
- arch/arm/mm/alignment.c             |  4 ++--
- arch/arm64/kernel/traps.c           |  2 +-
- arch/ia64/include/asm/sections.h    |  2 +-
- arch/parisc/kernel/process.c        |  2 +-
- arch/powerpc/include/asm/sections.h |  2 +-
- arch/powerpc/kernel/kgdb.c          |  2 +-
- arch/powerpc/kernel/process.c       |  2 +-
- arch/powerpc/sysdev/fsl_pci.c       |  2 +-
- arch/riscv/kernel/traps.c           |  4 ++--
- arch/s390/mm/fault.c                |  2 +-
- arch/sh/kernel/traps.c              |  2 +-
- arch/x86/kernel/probe_roms.c        | 20 ++++++++++----------
- arch/x86/kernel/traps.c             |  2 +-
- arch/x86/mm/fault.c                 |  6 +++---
- arch/x86/pci/pcbios.c               |  2 +-
- include/linux/uaccess.h             |  4 ++--
- lib/test_lockup.c                   |  6 +++---
- 18 files changed, 34 insertions(+), 34 deletions(-)
+ drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 198 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index 1e70e7227f0ff..61b91872b3e74 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -391,7 +391,7 @@ int is_valid_bugaddr(unsigned long pc)
- 	u32 insn = __opcode_to_mem_arm(BUG_INSTR_VALUE);
- #endif
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 97758fa..6211ab4 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -36,7 +36,9 @@
+ #define CORE_PWRCTL_IO_LOW	BIT(2)
+ #define CORE_PWRCTL_IO_HIGH	BIT(3)
+ #define CORE_PWRCTL_BUS_SUCCESS BIT(0)
++#define CORE_PWRCTL_BUS_FAIL    BIT(1)
+ #define CORE_PWRCTL_IO_SUCCESS	BIT(2)
++#define CORE_PWRCTL_IO_FAIL     BIT(3)
+ #define REQ_BUS_OFF		BIT(0)
+ #define REQ_BUS_ON		BIT(1)
+ #define REQ_IO_LOW		BIT(2)
+@@ -263,6 +265,8 @@ struct sdhci_msm_host {
+ 	bool use_cdr;
+ 	u32 transfer_mode;
+ 	bool updated_ddr_cfg;
++	u32 vqmmc_load;
++	bool vqmmc_enabled;
+ };
  
--	if (probe_kernel_address((unsigned *)pc, bkpt))
-+	if (get_kernel_nofault((unsigned *)pc, bkpt))
- 		return 0;
- 
- 	return bkpt == insn;
-diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-index 84718eddae603..236016f13bcd3 100644
---- a/arch/arm/mm/alignment.c
-+++ b/arch/arm/mm/alignment.c
-@@ -774,7 +774,7 @@ static int alignment_get_arm(struct pt_regs *regs, u32 *ip, u32 *inst)
- 	if (user_mode(regs))
- 		fault = get_user(instr, ip);
- 	else
--		fault = probe_kernel_address(ip, instr);
-+		fault = get_kernel_nofault(ip, instr);
- 
- 	*inst = __mem_to_opcode_arm(instr);
- 
-@@ -789,7 +789,7 @@ static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
- 	if (user_mode(regs))
- 		fault = get_user(instr, ip);
- 	else
--		fault = probe_kernel_address(ip, instr);
-+		fault = get_kernel_nofault(ip, instr);
- 
- 	*inst = __mem_to_opcode_thumb16(instr);
- 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index cf402be5c573f..2245af23973a2 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -315,7 +315,7 @@ static int call_undef_hook(struct pt_regs *regs)
- 
- 	if (!user_mode(regs)) {
- 		__le32 instr_le;
--		if (probe_kernel_address((__force __le32 *)pc, instr_le))
-+		if (get_kernel_nofault((__force __le32 *)pc, instr_le))
- 			goto exit;
- 		instr = le32_to_cpu(instr_le);
- 	} else if (compat_thumb_mode(regs)) {
-diff --git a/arch/ia64/include/asm/sections.h b/arch/ia64/include/asm/sections.h
-index cea15f2dd38df..ef03eec8666f8 100644
---- a/arch/ia64/include/asm/sections.h
-+++ b/arch/ia64/include/asm/sections.h
-@@ -35,7 +35,7 @@ static inline void *dereference_function_descriptor(void *ptr)
- 	struct fdesc *desc = ptr;
- 	void *p;
- 
--	if (!probe_kernel_address(&desc->ip, p))
-+	if (!get_kernel_nofault(&desc->ip, p))
- 		ptr = p;
- 	return ptr;
+ static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+@@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
+ 		sdhci_msm_hs400(host, &mmc->ios);
  }
-diff --git a/arch/parisc/kernel/process.c b/arch/parisc/kernel/process.c
-index 230a6422b99f3..c3b0f03bd0bf1 100644
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -293,7 +293,7 @@ void *dereference_function_descriptor(void *ptr)
- 	Elf64_Fdesc *desc = ptr;
- 	void *p;
  
--	if (!probe_kernel_address(&desc->addr, p))
-+	if (!get_kernel_nofault(&desc->addr, p))
- 		ptr = p;
- 	return ptr;
- }
-diff --git a/arch/powerpc/include/asm/sections.h b/arch/powerpc/include/asm/sections.h
-index d19871763ed4a..636bb1633de18 100644
---- a/arch/powerpc/include/asm/sections.h
-+++ b/arch/powerpc/include/asm/sections.h
-@@ -85,7 +85,7 @@ static inline void *dereference_function_descriptor(void *ptr)
- 	struct ppc64_opd_entry *desc = ptr;
- 	void *p;
- 
--	if (!probe_kernel_address(&desc->funcaddr, p))
-+	if (!get_kernel_nofault(&desc->funcaddr, p))
- 		ptr = p;
- 	return ptr;
- }
-diff --git a/arch/powerpc/kernel/kgdb.c b/arch/powerpc/kernel/kgdb.c
-index 7dd55eb1259dc..f0045a74e7cea 100644
---- a/arch/powerpc/kernel/kgdb.c
-+++ b/arch/powerpc/kernel/kgdb.c
-@@ -420,7 +420,7 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
- 	unsigned int instr;
- 	unsigned int *addr = (unsigned int *)bpt->bpt_addr;
- 
--	err = probe_kernel_address(addr, instr);
-+	err = get_kernel_nofault(addr, instr);
- 	if (err)
- 		return err;
- 
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index d5d6136b13480..b77f97073200c 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1260,7 +1260,7 @@ static void show_instructions(struct pt_regs *regs)
- #endif
- 
- 		if (!__kernel_text_address(pc) ||
--		    probe_kernel_address((const void *)pc, instr)) {
-+		    get_kernel_nofault((const void *)pc, instr)) {
- 			pr_cont("XXXXXXXX ");
- 		} else {
- 			if (regs->nip == pc)
-diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
-index 73fa37ca40ef9..483412d5a1973 100644
---- a/arch/powerpc/sysdev/fsl_pci.c
-+++ b/arch/powerpc/sysdev/fsl_pci.c
-@@ -1069,7 +1069,7 @@ int fsl_pci_mcheck_exception(struct pt_regs *regs)
- 			ret = copy_from_user_nofault(&inst,
- 					(void __user *)regs->nip, sizeof(inst));
- 		else
--			ret = probe_kernel_address((void *)regs->nip, inst);
-+			ret = get_kernel_nofault((void *)regs->nip, inst);
- 
- 		if (!ret && mcheck_handle_load(regs, inst)) {
- 			regs->nip += 4;
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 7f58fa53033f6..d807d507bd95a 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -137,7 +137,7 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
++static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
++{
++	int ret;
++
++	if (IS_ERR(mmc->supply.vmmc))
++		return 0;
++
++	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
++	if (ret)
++		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
++			mmc_hostname(mmc), mmc->ios.vdd, ret);
++
++	return ret;
++}
++
++static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
++			      struct mmc_host *mmc, bool level)
++{
++	int load, ret;
++	struct mmc_ios ios;
++
++	if (IS_ERR(mmc->supply.vqmmc)			 ||
++	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
++	    (msm_host->vqmmc_enabled == level))
++		return 0;
++
++	if (msm_host->vqmmc_load) {
++		load = level ? msm_host->vqmmc_load : 0;
++		ret = regulator_set_load(mmc->supply.vqmmc, load);
++		if (ret) {
++			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
++				mmc_hostname(mmc), ret);
++			goto out;
++		}
++	}
++
++	if (level) {
++		/* Set the IO voltage regulator to default voltage level */
++		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
++			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
++		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
++			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
++
++		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
++			ret = mmc_regulator_set_vqmmc(mmc, &ios);
++			if (ret < 0) {
++				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
++					mmc_hostname(mmc), ret);
++				goto out;
++			}
++		}
++		ret = regulator_enable(mmc->supply.vqmmc);
++	} else {
++		ret = regulator_disable(mmc->supply.vqmmc);
++	}
++
++	if (ret)
++		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
++			mmc_hostname(mmc), level ? "en":"dis", ret);
++	else
++		msm_host->vqmmc_enabled = level;
++out:
++	return ret;
++}
++
+ static inline void sdhci_msm_init_pwr_irq_wait(struct sdhci_msm_host *msm_host)
  {
- 	bug_insn_t insn;
- 
--	if (probe_kernel_address((bug_insn_t *)pc, insn))
-+	if (get_kernel_nofault((bug_insn_t *)pc, insn))
- 		return 0;
- 
- 	return GET_INSN_LENGTH(insn);
-@@ -160,7 +160,7 @@ int is_valid_bugaddr(unsigned long pc)
- 
- 	if (pc < VMALLOC_START)
- 		return 0;
--	if (probe_kernel_address((bug_insn_t *)pc, insn))
-+	if (get_kernel_nofault((bug_insn_t *)pc, insn))
- 		return 0;
- 	if ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32)
- 		return (insn == __BUG_INSN_32);
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index dedc28be27ab4..ab68eca6b2480 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -106,7 +106,7 @@ static int bad_address(void *p)
+ 	init_waitqueue_head(&msm_host->pwr_irq_wait);
+@@ -1401,8 +1470,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
  {
- 	unsigned long dummy;
- 
--	return probe_kernel_address((unsigned long *)p, dummy);
-+	return get_kernel_nofault((unsigned long *)p, dummy);
- }
- 
- static void dump_pagetable(unsigned long asce, unsigned long address)
-diff --git a/arch/sh/kernel/traps.c b/arch/sh/kernel/traps.c
-index 63cf17bc760da..27c53c5b84e6b 100644
---- a/arch/sh/kernel/traps.c
-+++ b/arch/sh/kernel/traps.c
-@@ -118,7 +118,7 @@ int is_valid_bugaddr(unsigned long addr)
- 
- 	if (addr < PAGE_OFFSET)
- 		return 0;
--	if (probe_kernel_address((insn_size_t *)addr, opcode))
-+	if (get_kernel_nofault((insn_size_t *)addr, opcode))
- 		return 0;
- 	if (opcode == TRAPA_BUG_OPCODE)
- 		return 1;
-diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
-index ee0286390a4c1..77f3341570e84 100644
---- a/arch/x86/kernel/probe_roms.c
-+++ b/arch/x86/kernel/probe_roms.c
-@@ -99,7 +99,7 @@ static bool probe_list(struct pci_dev *pdev, unsigned short vendor,
- 	unsigned short device;
- 
- 	do {
--		if (probe_kernel_address(rom_list, device) != 0)
-+		if (get_kernel_nofault(rom_list, device) != 0)
- 			device = 0;
- 
- 		if (device && match_id(pdev, vendor, device))
-@@ -125,13 +125,13 @@ static struct resource *find_oprom(struct pci_dev *pdev)
- 			break;
- 
- 		rom = isa_bus_to_virt(res->start);
--		if (probe_kernel_address(rom + 0x18, offset) != 0)
-+		if (get_kernel_nofault(rom + 0x18, offset) != 0)
- 			continue;
- 
--		if (probe_kernel_address(rom + offset + 0x4, vendor) != 0)
-+		if (get_kernel_nofault(rom + offset + 0x4, vendor) != 0)
- 			continue;
- 
--		if (probe_kernel_address(rom + offset + 0x6, device) != 0)
-+		if (get_kernel_nofault(rom + offset + 0x6, device) != 0)
- 			continue;
- 
- 		if (match_id(pdev, vendor, device)) {
-@@ -139,8 +139,8 @@ static struct resource *find_oprom(struct pci_dev *pdev)
- 			break;
- 		}
- 
--		if (probe_kernel_address(rom + offset + 0x8, list) == 0 &&
--		    probe_kernel_address(rom + offset + 0xc, rev) == 0 &&
-+		if (get_kernel_nofault(rom + offset + 0x8, list) == 0 &&
-+		    get_kernel_nofault(rom + offset + 0xc, rev) == 0 &&
- 		    rev >= 3 && list &&
- 		    probe_list(pdev, vendor, rom + offset + list)) {
- 			oprom = res;
-@@ -183,14 +183,14 @@ static int __init romsignature(const unsigned char *rom)
- 	const unsigned short * const ptr = (const unsigned short *)rom;
- 	unsigned short sig;
- 
--	return probe_kernel_address(ptr, sig) == 0 && sig == ROMSIGNATURE;
-+	return get_kernel_nofault(ptr, sig) == 0 && sig == ROMSIGNATURE;
- }
- 
- static int __init romchecksum(const unsigned char *rom, unsigned long length)
- {
- 	unsigned char sum, c;
- 
--	for (sum = 0; length && probe_kernel_address(rom++, c) == 0; length--)
-+	for (sum = 0; length && get_kernel_nofault(rom++, c) == 0; length--)
- 		sum += c;
- 	return !length && !sum;
- }
-@@ -211,7 +211,7 @@ void __init probe_roms(void)
- 
- 		video_rom_resource.start = start;
- 
--		if (probe_kernel_address(rom + 2, c) != 0)
-+		if (get_kernel_nofault(rom + 2, c) != 0)
- 			continue;
- 
- 		/* 0 < length <= 0x7f * 512, historically */
-@@ -249,7 +249,7 @@ void __init probe_roms(void)
- 		if (!romsignature(rom))
- 			continue;
- 
--		if (probe_kernel_address(rom + 2, c) != 0)
-+		if (get_kernel_nofault(rom + 2, c) != 0)
- 			continue;
- 
- 		/* 0 < length <= 0x7f * 512, historically */
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 96809f6aad67d..07739b67da335 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -161,7 +161,7 @@ int is_valid_bugaddr(unsigned long addr)
- 	if (addr < TASK_SIZE_MAX)
- 		return 0;
- 
--	if (probe_kernel_address((unsigned short *)addr, ud))
-+	if (get_kernel_nofault((unsigned short *)addr, ud))
- 		return 0;
- 
- 	return ud == INSN_UD0 || ud == INSN_UD2;
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 994e207abdf64..7c5e23e7407d8 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -98,7 +98,7 @@ check_prefetch_opcode(struct pt_regs *regs, unsigned char *instr,
- 		return !instr_lo || (instr_lo>>1) == 1;
- 	case 0x00:
- 		/* Prefetch instruction is 0x0F0D or 0x0F18 */
--		if (probe_kernel_address(instr, opcode))
-+		if (get_kernel_nofault(instr, opcode))
- 			return 0;
- 
- 		*prefetch = (instr_lo == 0xF) &&
-@@ -132,7 +132,7 @@ is_prefetch(struct pt_regs *regs, unsigned long error_code, unsigned long addr)
- 	while (instr < max_instr) {
- 		unsigned char opcode;
- 
--		if (probe_kernel_address(instr, opcode))
-+		if (get_kernel_nofault(instr, opcode))
- 			break;
- 
- 		instr++;
-@@ -441,7 +441,7 @@ static int bad_address(void *p)
- {
- 	unsigned long dummy;
- 
--	return probe_kernel_address((unsigned long *)p, dummy);
-+	return get_kernel_nofault((unsigned long *)p, dummy);
- }
- 
- static void dump_pagetable(unsigned long address)
-diff --git a/arch/x86/pci/pcbios.c b/arch/x86/pci/pcbios.c
-index 9c97d814125eb..b7f8699b18c1f 100644
---- a/arch/x86/pci/pcbios.c
-+++ b/arch/x86/pci/pcbios.c
-@@ -302,7 +302,7 @@ static const struct pci_raw_ops *__init pci_find_bios(void)
- 	     check <= (union bios32 *) __va(0xffff0);
- 	     ++check) {
- 		long sig;
--		if (probe_kernel_address(&check->fields.signature, sig))
-+		if (get_kernel_nofault(&check->fields.signature, sig))
- 			continue;
- 
- 		if (check->fields.signature != BIOS32_SIGNATURE)
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 5214d2f1f2cef..73b79f06cad8b 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -318,13 +318,13 @@ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
- long strnlen_user_nofault(const void __user *unsafe_addr, long count);
- 
- /**
-- * probe_kernel_address(): safely attempt to read from a location
-+ * get_kernel_nofault(): safely attempt to read from a location
-  * @addr: address to read from
-  * @retval: read into this variable
-  *
-  * Returns 0 on success, or -EFAULT.
-  */
--#define probe_kernel_address(addr, retval)		\
-+#define get_kernel_nofault(addr, retval)		\
- 	copy_from_kernel_nofault(&retval, addr, sizeof(retval))
- 
- #ifndef user_access_begin
-diff --git a/lib/test_lockup.c b/lib/test_lockup.c
-index ea09ca335b214..71f7a4c89ed4f 100644
---- a/lib/test_lockup.c
-+++ b/lib/test_lockup.c
-@@ -419,8 +419,8 @@ static bool test_kernel_ptr(unsigned long addr, int size)
- 	/* should be at least readable kernel address */
- 	if (access_ok(ptr, 1) ||
- 	    access_ok(ptr + size - 1, 1) ||
--	    probe_kernel_address(ptr, buf) ||
--	    probe_kernel_address(ptr + size - 1, buf)) {
-+	    get_kernel_nofault(ptr, buf) ||
-+	    get_kernel_nofault(ptr + size - 1, buf)) {
- 		pr_err("invalid kernel ptr: %#lx\n", addr);
- 		return true;
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
++	struct mmc_host *mmc = host->mmc;
+ 	u32 irq_status, irq_ack = 0;
+-	int retry = 10;
++	int retry = 10, ret;
+ 	u32 pwr_state = 0, io_level = 0;
+ 	u32 config;
+ 	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
+@@ -1440,21 +1510,42 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+ 	if (irq_status & CORE_PWRCTL_BUS_ON) {
+ 		pwr_state = REQ_BUS_ON;
+ 		io_level = REQ_IO_HIGH;
+-		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
  	}
-@@ -437,7 +437,7 @@ static bool __maybe_unused test_magic(unsigned long addr, int offset,
- 	if (!addr)
- 		return false;
+ 	if (irq_status & CORE_PWRCTL_BUS_OFF) {
+ 		pwr_state = REQ_BUS_OFF;
+ 		io_level = REQ_IO_LOW;
+-		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+ 	}
++
++	if (pwr_state) {
++		ret = sdhci_msm_set_vmmc(mmc);
++		if (!ret)
++			ret = sdhci_msm_set_vqmmc(msm_host, mmc,
++					pwr_state & REQ_BUS_ON);
++		if (!ret)
++			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
++		else
++			irq_ack |= CORE_PWRCTL_BUS_FAIL;
++	}
++
+ 	/* Handle IO LOW/HIGH */
+-	if (irq_status & CORE_PWRCTL_IO_LOW) {
++	if (irq_status & CORE_PWRCTL_IO_LOW)
+ 		io_level = REQ_IO_LOW;
+-		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
+-	}
+-	if (irq_status & CORE_PWRCTL_IO_HIGH) {
++
++	if (irq_status & CORE_PWRCTL_IO_HIGH)
+ 		io_level = REQ_IO_HIGH;
++
++	if (io_level)
+ 		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
++
++	if (io_level && !IS_ERR(mmc->supply.vqmmc) && !pwr_state) {
++		ret = mmc_regulator_set_vqmmc(mmc, &mmc->ios);
++		if (ret < 0) {
++			dev_err(mmc_dev(mmc), "%s: IO_level setting failed(%d). signal_voltage: %d, vdd: %d irq_status: 0x%08x\n",
++					mmc_hostname(mmc), ret,
++					mmc->ios.signal_voltage, mmc->ios.vdd,
++					irq_status);
++			irq_ack |= CORE_PWRCTL_IO_FAIL;
++		}
+ 	}
  
--	if (probe_kernel_address(ptr, magic) || magic != expected) {
-+	if (get_kernel_nofault(ptr, magic) || magic != expected) {
- 		pr_err("invalid magic at %#lx + %#x = %#x, expected %#x\n",
- 		       addr, offset, magic, expected);
- 		return true;
+ 	/*
+@@ -1503,7 +1594,7 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+ 	if (io_level)
+ 		msm_host->curr_io_level = io_level;
+ 
+-	pr_debug("%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
++	dev_dbg(mmc_dev(mmc), "%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
+ 		mmc_hostname(msm_host->mmc), __func__, irq, irq_status,
+ 		irq_ack);
+ }
+@@ -1833,6 +1924,98 @@ static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+ 	sdhci_reset(host, mask);
+ }
+ 
++static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
++{
++	int ret;
++	u32 vmmc_load;
++	struct mmc_host *mmc = msm_host->mmc;
++
++	ret = mmc_regulator_get_supply(msm_host->mmc);
++	if (ret)
++		return ret;
++	device_property_read_u32(&msm_host->pdev->dev,
++			"vmmc-max-load-microamp",
++			&vmmc_load);
++	device_property_read_u32(&msm_host->pdev->dev,
++			"vqmmc-max-load-microamp",
++			&msm_host->vqmmc_load);
++
++	/* Vmmc regulator can be turned off. So just set active load once */
++	if (!IS_ERR(mmc->supply.vmmc) && vmmc_load) {
++		ret = regulator_set_load(mmc->supply.vmmc, vmmc_load);
++		if (ret) {
++			dev_err(mmc_dev(mmc), "%s: vmmc set active load failed: %d\n",
++				mmc_hostname(mmc), ret);
++			return ret;
++		}
++	}
++
++	sdhci_msm_set_regulator_caps(msm_host);
++	mmc->ios.power_mode = MMC_POWER_UNDEFINED;
++
++	return 0;
++
++}
++
++static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
++				      struct mmc_ios *ios)
++{
++	struct sdhci_host *host = mmc_priv(mmc);
++	u16 ctrl, status;
++
++	/*
++	 * Signal Voltage Switching is only applicable for Host Controllers
++	 * v3.00 and above.
++	 */
++	if (host->version < SDHCI_SPEC_300)
++		return 0;
++
++	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
++
++	switch (ios->signal_voltage) {
++	case MMC_SIGNAL_VOLTAGE_330:
++		if (!(host->flags & SDHCI_SIGNALING_330))
++			return -EINVAL;
++
++		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
++		ctrl &= ~SDHCI_CTRL_VDD_180;
++		break;
++	case MMC_SIGNAL_VOLTAGE_180:
++		if (!(host->flags & SDHCI_SIGNALING_180))
++			return -EINVAL;
++
++		/*
++		 * Enable 1.8V Signal Enable in the Host Control2
++		 * register
++		 */
++		ctrl |= SDHCI_CTRL_VDD_180;
++		break;
++	case MMC_SIGNAL_VOLTAGE_120:
++		if (!(host->flags & SDHCI_SIGNALING_120))
++			return -EINVAL;
++		return 0;
++	default:
++		/* No signal voltage switch required */
++		return 0;
++	}
++
++	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
++
++	/* Wait for 5ms */
++	usleep_range(5000, 5500);
++
++	/* regulator output should be stable within 5 ms */
++	status = !!(ctrl & SDHCI_CTRL_VDD_180);
++	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
++	if (!!(ctrl &  SDHCI_CTRL_VDD_180) == status)
++		return 0;
++
++	dev_warn(mmc_dev(mmc), "%s: Regulator output did not became stable\n",
++		mmc_hostname(mmc));
++
++	return -EAGAIN;
++}
++
+ static const struct sdhci_msm_variant_ops mci_var_ops = {
+ 	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+ 	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+@@ -1880,6 +2063,7 @@ static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+ 	.write_w = sdhci_msm_writew,
+ 	.write_b = sdhci_msm_writeb,
+ 	.irq	= sdhci_msm_cqe_irq,
++	.set_power = sdhci_set_power_noreg,
+ };
+ 
+ static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+@@ -2072,6 +2256,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 	if (core_major == 1 && core_minor >= 0x49)
+ 		msm_host->updated_ddr_cfg = true;
+ 
++	ret = sdhci_msm_register_vreg(msm_host);
++	if (ret)
++		goto clk_disable;
++
+ 	/*
+ 	 * Power on reset state may trigger power irq if previous status of
+ 	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
+@@ -2116,6 +2304,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 					 MSM_MMC_AUTOSUSPEND_DELAY_MS);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 
++	host->mmc_host_ops.start_signal_voltage_switch =
++		sdhci_msm_start_signal_voltage_switch;
+ 	host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
+ 	if (of_property_read_bool(node, "supports-cqe"))
+ 		ret = sdhci_msm_cqe_add_host(host, pdev);
+@@ -2123,7 +2313,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 		ret = sdhci_add_host(host);
+ 	if (ret)
+ 		goto pm_runtime_disable;
+-	sdhci_msm_set_regulator_caps(msm_host);
+ 
+ 	pm_runtime_mark_last_busy(&pdev->dev);
+ 	pm_runtime_put_autosuspend(&pdev->dev);
 -- 
-2.26.2
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
