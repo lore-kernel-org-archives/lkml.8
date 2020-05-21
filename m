@@ -2,104 +2,117 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E643C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79594204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9C620721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:07:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QJKj5hLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgEUDGq (ORCPT
+        id S1728008AbgEUDHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:06:46 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:8798 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726861AbgEUDGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:06:46 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 11:06:26
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Thu, 21 May 2020 11:06:26 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Thierry Reding" <thierry.reding@gmail.com>
-Cc:     kjlu@umn.edu, "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        "Rob Herring" <robh@kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Jonathan Hunter" <jonathanh@nvidia.com>,
-        "Vidya Sagar" <vidyas@nvidia.com>,
-        "Andrew Murray" <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200520095908.GD2136208@ulmo>
-References: <20200520085231.32552-1-dinghao.liu@zju.edu.cn>
- <20200520095908.GD2136208@ulmo>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Wed, 20 May 2020 23:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbgEUDHj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:07:39 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F1BC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:07:39 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id a13so2216101pls.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:07:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ccibA7LDXIbckabc89mZhjSjYh9Yh1XsB9j1urjankk=;
+        b=QJKj5hLEAVaHWmPMeYCFgAtB2gTVZ7CmhjXdaGUbfgs7I6L0MCJI2kUWQLLaQDSNmw
+         RAH2Y5zLLVU+R6V0wpcbS26hiO8TnDZ5lfONDKSZvJHL1jX4mFXHKbokR+vLmelNPUSq
+         6kgyvz796KDhYSGs9GSTVyxgbJ2IntR+Jr6lgx7YeBQ+eoRLsAuZsuNcOs6nBVy4HV6Y
+         avN9skUdNqsAa/h+ruWdM0XXmo5wA8MGqcTLS6dbDG33Ibka4LHqby7hnoKZQu2f1ezH
+         tCIvBh8Gjtr6APay2OrzsOVTLX2arxVjsYHKtniFOj8z6JOX70xe5EJQ8i5OaAXGHrgn
+         UenA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ccibA7LDXIbckabc89mZhjSjYh9Yh1XsB9j1urjankk=;
+        b=p1BpBBLiXiGBYlhJkq7f6logHRyTb5NTuQTnXt481bf2SHo2l0LYtldw6nICCcDJIw
+         mJ0GVsimgWK3r/4oCQvGPF9lbgGVd71NlJCyNP8CylsM3pdWvV2Q2LJGwhv43gT/y8fh
+         7NgHapUr5PfCwzirMZJzsR1+qAj1tXpfDMV1XA/XnTa2r3MgxfgzS8bZgPlj2iAdmIG5
+         HwconO8x0zFPXJZc6sgJ4NxfOvh3/AEaQk4gZtkgMQKlYf2mv9ZhIvRnAWAueNXDd4oL
+         gA00mokiOP1OEBw5LfDLO1HgipOtDcUwdzVcnvAONgfUWNtDuBBOyI+84Hlu+/MYbTg9
+         7cWg==
+X-Gm-Message-State: AOAM531ZFTu/GeCcbcwnKHw07mZx1MDcgMFE4tTEF4MuMBD8gRggCH6R
+        riJZXp9jyaEgwIs0RkYvHfewog==
+X-Google-Smtp-Source: ABdhPJyQiQ3aNvL+wpFR3LQOzxPoIr/jqJaJJQPX1TlU7vAAbOPwC86YzPcUurVOWQ6QT0EHm7spYQ==
+X-Received: by 2002:a17:90a:bf08:: with SMTP id c8mr8846242pjs.13.1590030458274;
+        Wed, 20 May 2020 20:07:38 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id go1sm2967314pjb.26.2020.05.20.20.07.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 20:07:37 -0700 (PDT)
+Date:   Wed, 20 May 2020 20:07:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 0/3] Even moar rpmh cleanups
+Message-ID: <20200521030734.GD11847@yoga>
+References: <20200521012119.238270-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Message-ID: <54ce423c.b9436.172353245da.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCXPxwy8MVexFjlAQ--.29859W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwAEsm
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtvS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUGVWUXwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY64IIrI8v6xkF7I0E8cxan2IY04v7MIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwV
-        W8GwCS07vEc2IjII80xcxEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l
-        V2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67
-        AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_
-        Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x
-        0267AKxVW8JVWxJwCS07vEIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY
-        6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-        C2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521012119.238270-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmsgeW91IGZvciB5b3VyIGFkdmljZS4gSSB3aWxsIGZpeCB0aGVzZSBwcm9ibGVtcyBpbiB0
-aGUgbmV4dCBlZGl0aW9uIG9mIHBhdGNoLgoKJnF1b3Q7VGhpZXJyeSBSZWRpbmcmcXVvdDsgJmx0
-O3RoaWVycnkucmVkaW5nQGdtYWlsLmNvbSZndDvlhpnpgZPvvJoKPiBPbiBXZWQsIE1heSAyMCwg
-MjAyMCBhdCAwNDo1MjoyM1BNICswODAwLCBEaW5naGFvIExpdSB3cm90ZToNCj4gPiBwbV9ydW50
-aW1lX2dldF9zeW5jKCkgaW5jcmVtZW50cyB0aGUgcnVudGltZSBQTSB1c2FnZSBjb3VudGVyIGV2
-ZW4NCj4gPiBpdCByZXR1cm5zIGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVu
-dCBpcyBuZWVkZWQgb24NCj4gDQo+IHMvZXZlbiBpdC9ldmVuIHdoZW4gaXQvDQo+IA0KPiBNaWdo
-dCBhbHNvIGJlIGEgZ29vZCBpZGVhIHRvIHVzZSBhIGRpZmZlcmVudCBzdWJqZWN0IHByZWZpeCBi
-ZWNhdXNlIEkNCj4gd2FzIGFsbW9zdCBub3QgZ29pbmcgdG8gbG9vayBhdCB0aGUgb3RoZXIgcGF0
-Y2gsIHRha2luZyB0aGlzIHRvIGJlIGENCj4gcmVwbGFjZW1lbnQgZm9yIGl0Lg0KPiANCj4gQWx0
-aG91Z2gsIGxvb2tpbmcgYXQgdGhlIGxvZyB3ZSBoYXZlIHVzZWQgdGhpcyBzYW1lIHByZWZpeCBm
-b3IgYm90aA0KPiBkcml2ZXJzIGluIHRoZSBwYXN0Li4uDQo+IA0KPiA+IHRoZSBlcnJvciBoYW5k
-bGluZyBwYXRoIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+DQo+ID4gLS0tDQo+
-ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtdGVncmExOTQuYyB8IDIgKy0NCj4g
-PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtdGVncmExOTQu
-YyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtdGVncmExOTQuYw0KPiA+IGluZGV4
-IGFlMzBhMmZkMzcxNi4uYTY5ZjllNDlkY2I1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvZHdjL3BjaWUtdGVncmExOTQuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvZHdjL3BjaWUtdGVncmExOTQuYw0KPiA+IEBAIC0xNjUxLDggKzE2NTEsOCBAQCBz
-dGF0aWMgaW50IHRlZ3JhX3BjaWVfY29uZmlnX3JwKHN0cnVjdCB0ZWdyYV9wY2llX2R3ICpwY2ll
-KQ0KPiA+ICBmYWlsX2hvc3RfaW5pdDoNCj4gPiAgCXRlZ3JhX3BjaWVfZGVpbml0X2NvbnRyb2xs
-ZXIocGNpZSk7DQo+ID4gIGZhaWxfcGluY3RybDoNCj4gPiAtCXBtX3J1bnRpbWVfcHV0X3N5bmMo
-ZGV2KTsNCj4gPiAgZmFpbF9wbV9nZXRfc3luYzoNCj4gDQo+IEVpdGhlciBvZiB0aG9zZSB0d28g
-bGFiZWxzIGlzIG5vdyBubyBsb25nZXIgbmVlZGVkLiBPZiBjb3Vyc2UgaXQnbGwgbm93DQo+IGJl
-IG9kZCB0byBqdW1wIHRvIGZhaWxfcG1fZ2V0X3N5bmMgb24gcGluY3RybF9wbV9zZWxlY3RfZGVm
-YXVsdF9zdGF0ZSgpDQo+IGZhaWx1cmUsIGJ1dCB0aGF0J3Mgb25lIG9mIHRoZSByZWFzb25zIHdo
-eSBsYWJlbCBzaG91bGQgaGF2ZSBuYW1lcw0KPiBkZXNjcmliaW5nIHdoYXQgdGhleSBkbyByYXRo
-ZXIgdGhhbiBkZXNjcmliZSB0aGUgZmFpbHVyZSBsb2NhdGlvbi4gSQ0KPiBndWVzcyB3ZSBjYW4g
-bGl2ZSB3aXRoIHRoYXQgZm9yIG5vdy4gSSdsbCBtYWtlIGEgbm90ZSB0byBzZW5kIGEgY2xlYW51
-cA0KPiBwYXRjaCBmb3IgdGhhdCBsYXRlciBvbi4NCj4gDQo+IFdpdGggdGhlIGZpeHVwIGluIHRo
-ZSBjb21taXQgbWVzc2FnZSBhbmQgZWl0aGVyIG9mIHRoZSBsYWJlbHMgcmVtb3ZlZDoNCj4gDQo+
-IEFja2VkLWJ5OiBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPg0K
+On Wed 20 May 18:21 PDT 2020, Stephen Boyd wrote:
+
+> We remove the tcs_is_free() API and then do super micro optimizations on
+> the irq handler. I haven't tested anything here so most likely there's a
+> bug (again again)!
+> 
+> Changes from v2:
+>  * Went back in time and used the v1 patch for the first patch with
+>    the fixes to make it not so complicated
+> 
+> Changes from v1:
+>  * First patch became even moar complicated because it combines
+>    find_free_tcs() with the check for a request in flight
+>  * Fixed subject in patch 2
+>  * Put back unsigned long for bitmap operation to silence compiler
+>    warning
+>  * Picked up review tags
+> 
+
+Can you please resend this series with both linux-arm-msm and myself on
+Cc for all three patches?
+
+Thanks,
+Bjorn
+
+> Stephen Boyd (3):
+>   soc: qcom: rpmh-rsc: Remove tcs_is_free() API
+>   soc: qcom: rpmh-rsc: Loop over fewer bits in irq handler
+>   soc: qcom: rpmh-rsc: Fold WARN_ON() into if condition
+> 
+>  drivers/soc/qcom/rpmh-rsc.c | 65 +++++++++++++------------------------
+>  1 file changed, 22 insertions(+), 43 deletions(-)
+> 
+> Cc: Maulik Shah <mkshah@codeaurora.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> 
+> base-commit: 1f7a3eb785e4a4e196729cd3d5ec97bd5f9f2940
+> -- 
+> Sent by a computer, using git, on the internet
+> 
