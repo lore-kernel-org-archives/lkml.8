@@ -2,191 +2,283 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D177C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFB720814
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35911206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:50:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NObNT5xw"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="pdzOstKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgEUTtS (ORCPT
+        id S1729998AbgEUTue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48658 "EHLO
+        Thu, 21 May 2020 15:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbgEUTtS (ORCPT
+        with ESMTP id S1728273AbgEUTue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:49:18 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DE4DC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:49:18 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id f18so6451198otq.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:49:17 -0700 (PDT)
+        Thu, 21 May 2020 15:50:34 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6ADFC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r3so5953120wrn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=OzuhmvdoIxBKTVFXltvkyaowfdMK/Lfhv/xnsclt3Rc=;
-        b=NObNT5xwSeyx5e1VPrIDD+ZRYKW07354XH9bCIyqu+FydtwFjKzNSzoRn3HvPqYtWo
-         V27pcSOFHpM2Q0Vtlnap6dL05rDdRy+8fZBrGH+oe/vH3obTzfNDbfqhRNgOAAmBBAm3
-         B4L1WCwfj9iYFHC+LXeLop7MQIWUM3PWd4RSeWAeD1A+K7oX3YIYoiQMMa2lKmv9na+J
-         eq3ePN7+l4HsVD2KxIrXISzAt5mouL4hS24weTfLzbGq1b+/n1RGFjthM71DGqV8vbnz
-         pReU8EoW3+pVLl0kDjZO5fhCj7H0xVqUclSuqhR/bAfVbEiLdB1Fi3HJhtSVy59GVjrV
-         nKwQ==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
+        b=pdzOstKGZ1qMN+Pt/TsxJHH8iZB55xatp5okzckH9uMnliXxBzJ9d0Dl9uBJ2qEw9R
+         7PTdcGlnFcOu+873UWzw/00aGEtsuyvlAJ7ZFQpy5TP4vD2NyfcKQKtrD9Ck7iQd2NkI
+         6Ng7TcezZa+S8AV4dIUNdC13V8LwS/Vfi4jGHA+K14GOcFaDrGoZDhHZYKyW2U5fLupK
+         ObdGJ7gdJpQwB7rewEDpX+h3vVGjeepFL58TpAGyAJOf5F8CjhUnRqtwFmi3aEy4lD/M
+         LoC1VKlwtJvVcmWpthwx0VwlfA/PwebI1aTE6ljjX7R7Mk+e6inPHbpSTFiu8/My8QCT
+         voxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=OzuhmvdoIxBKTVFXltvkyaowfdMK/Lfhv/xnsclt3Rc=;
-        b=UiYVZOk8LrE9Hbk90X3V5qaLlC5goX9IXveQaElygPVA/TokDPETzAUjBNzvnpvsV8
-         FOUFpdKQumZWTzfiaER43+XZcZeICqMvtjuL7RHRqpWkbfUK9S1iQztpXh+DvRmQJFZj
-         /1x4rKI8uN5XXueIyXbVe1ULDFjFzOFp6M7ie8igz7Mwyy4bxfkSPdgzj/v2uH9XH1Ji
-         wu0Xev909jiudqppcSm7ICNkVhPVu0eZxBtFrEU3cmMm/N5ECTkv5ipq1B+b4IcBnI0M
-         P57gIoB6MGxhhM5aki34U2MBLDh3OXjBNkCy6xeYXttoXCcNnOT5hM/CyirjlJgVTXTk
-         MXLw==
-X-Gm-Message-State: AOAM5313fWnVEUut7bXlsEQmg6NQPsnujaHnhb/yp5jbIVjfGvRPhExK
-        WSh99JnzG0glc5gQsxm8VeDCkQ==
-X-Google-Smtp-Source: ABdhPJyWBjLXlpb1Z1AY3HGX+wt1Og/K0/8/Xfqmi2jb8a7hYStcnldOvilM9Gf4kvEWIF+IOpdCcw==
-X-Received: by 2002:a9d:2da8:: with SMTP id g37mr8443930otb.293.1590090556781;
-        Thu, 21 May 2020 12:49:16 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id j6sm301172ots.61.2020.05.21.12.49.13
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Thu, 21 May 2020 12:49:15 -0700 (PDT)
-Date:   Thu, 21 May 2020 12:48:58 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Qian Cai <cai@lca.pw>
-cc:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH mmotm] mm/vmstat: Add events for PMD based THP migration
- without split fix
-In-Reply-To: <20200521185419.GB6367@ovpn-112-192.phx2.redhat.com>
-Message-ID: <alpine.LSU.2.11.2005211232170.1158@eggly.anvils>
-References: <alpine.LSU.2.11.2005210643340.482@eggly.anvils> <20200521185419.GB6367@ovpn-112-192.phx2.redhat.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
+        b=DA0BFfdMWcOOxQ2eyBTOR1LuGFWYfMc1VsMOQb7IhRGhDqO77W81oGpqPFHysyh89W
+         dM8M2hdMhGTPqkVJI3BsndzAhIO3lz8mDNvfY2LM8ixrFNQDURXsdWSzMOVjFCgJZsuI
+         2XqtAVrnPJA9Unyxf9lsJcxASp48XyM9rCMC9eton8RKkH/hdCXkG70Vz8vKSP1RBR3Y
+         7aTkgCXhCSUB4TLGQAsFo1dTRahuS1Yvwt9XCeJ+dLpljSjwrFl4uy/rmpOp9VR3bDta
+         4KaOnG24mvhtoklepoiUEk+sfO0V6kePjF+vatuXcTmKdEj10MyIMHqvn9kMKes1Wwhl
+         ZTKQ==
+X-Gm-Message-State: AOAM530+kYK16WT5PnvjjiPkyBBjffLZvTBjJleBZR/wTeWahZO40u1r
+        uwZdhLsKsGkQF0PtFfA9illYzg==
+X-Google-Smtp-Source: ABdhPJxI5+4zP6A4maoDpeagfmZeWogan+Aicw3eNBXaIjNm2V8HkzqxiSDUki2DMSG365TA15J5jQ==
+X-Received: by 2002:a5d:6806:: with SMTP id w6mr207199wru.324.1590090631449;
+        Thu, 21 May 2020 12:50:31 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id 18sm7329042wmj.19.2020.05.21.12.50.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 12:50:30 -0700 (PDT)
+Date:   Thu, 21 May 2020 21:50:28 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: [PATCH] arm: dts: am335x-boneblack: add gpio-line-names
+Message-ID: <20200521195028.GB429020@x1>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020, Qian Cai wrote:
-> On Thu, May 21, 2020 at 06:49:51AM -0700, Hugh Dickins wrote:
-> > Fix 5.7-rc6-mm1 page migration crash in unmap_and_move(): when the
-> > page to be migrated has been freed from under us, that is considered 
-> > a MIGRATEPAGE_SUCCESS, but no newpage has been allocated (and I don't
-> > think it would ever need to be counted as a successful THP migration).
-> > 
-> > Signed-off-by: Hugh Dickins <hughd@google.com>
-> > ---
-> > Fix to mm-vmstat-add-events-for-pmd-based-thp-migration-without-split.patch
-> > 
-> >  mm/migrate.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > --- 5.7-rc6-mm1/mm/migrate.c	2020-05-20 12:21:56.117693827 -0700
-> > +++ linux/mm/migrate.c	2020-05-20 15:08:12.319476978 -0700
-> > @@ -1248,7 +1248,7 @@ out:
-> >  	 * we want to retry.
-> >  	 */
-> >  	if (rc == MIGRATEPAGE_SUCCESS) {
-> > -		if (PageTransHuge(newpage))
-> > +		if (newpage && PageTransHuge(newpage))
-> 
-> Should this be
-> 
-> if (!IS_ERR_OR_NULL(newpage) && PageTransHuge(newpage)) ?
+Add gpio-line-names properties to the GPIO controller nodes.
 
-No: newpage is set higher up by:
+The BeagleBone Black has P8 and P9 headers [0] which expose many of the
+AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
+other external connections like jumper wires connected to a breadboard.
+BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
+diagram [1] as it is in the "Bone101" getting started tutorial. [2]
 
-	newpage = get_new_page(page, private);
-	if (!newpage)
-		return -ENOMEM;
+Most of the P8 and P9 header pins can muxed to a GPIO line.  The
+gpio-line-names describe which P8 or P9 pin that line goes to and the
+default mux for that P8 or P9 pin if it is not GPIO.
 
-and there's enough other places after that which would crash on an
-erroneous newpage.  (Of course, the get_new_page() convention might
-be changed in future to return an error code, but no need to make
-such a change here and now.)
+For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
+however the default device tree has the corresponding BGA ball (ZCZ U7)
+muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
+GPIO line to be used, one would need to modify the device tree to
+disable the eMMC and change the pin mux for that ball to GPIO mode.
 
-> 
-> I have also crashed here due to the buggy commit,
-> 
-> unmap_and_move() -> PageTransHuge(page) -> page->compound_head
-> 
-> but it said 0x00000008 instead of NULL which is aweful a lot like,
+Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
+to a P8 or P9 header, but are instead wired to some peripheral device
+like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
+brackets to denote those GPIO lines can not be used.
 
-0x00000008 is where it's trying to dereference NULL->compound_head,
-no mystery there.
+Some GPIO lines are named "[NC]" as the corresponding balls are not
+routed to anything on the PCB.
 
-> 
-> https://lore.kernel.org/linux-mm/20200512215813.GA487759@cmpxchg.org/
-> 
-> Interesting thing is I applied this patch and the problem went away, but not
-> sure if it could still be ERR_PTR sometimes just not always?
-> 
-> [  210.929981][ T4159] BUG: Kernel NULL pointer dereference on read at 0x00000008
-> [  210.930009][ T4159] Faulting instruction address: 0xc0000000005196c8
-> [  210.930027][   C61] irq event stamp: 270727
-> [  210.930028][ T4159] Oops: Kernel access of bad area, sig: 11 [#1]
-> [  210.930033][ T4159] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256 DEBUG_PAGEALLOC NUMA PowerNV
-> [  210.930058][   C61] hardirqs last  enabled at (270726): [<c000000000adcc44>] _raw_spin_unlock_irqrestore+0x94/0xd0
-> [  210.930064][ T4159] Modules linked in: kvm_hv kvm ip_tables x_tables xfs sd_mod tg3 bnx2x libphy mdio firmware_class ahci libahci libata dm_mirror dm_region_hash dm_log dm_mod
-> [  210.930083][   C61] hardirqs last disabled at (270727): [<c000000000adc8dc>] _raw_spin_lock_irqsave+0x3c/0xa0
-> [  210.930086][   C61] softirqs last  enabled at (270556): [<c000000000addbdc>] __do_softirq+0x6dc/0xaa8
-> [  210.930125][ T4159] CPU: 109 PID: 4159 Comm: test.sh Not tainted 5.7.0-rc6-next-20200521+ #112
-> [  210.930163][   C61] softirqs last disabled at (270559): [<c000000000129544>] run_ksoftirqd+0x74/0xc0
-> [  210.930260][ T4159] NIP:  c0000000005196c8 LR: c000000000519568 CTR: 0000000000000000
-> [  210.930307][ T4159] REGS: c0002005b10af570 TRAP: 0300   Not tainted  (5.7.0-rc6-next-20200521+)
-> [  210.930342][ T4159] MSR:  900000000280b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24248242  XER: 00000000
-> [  210.930403][ T4159] CFAR: c000000000519570 DAR: 0000000000000008 DSISR: 40000000 IRQMASK: 0 
-> [  210.930403][ T4159] GPR00: c000000000519568 c0002005b10af800 c000000001765500 0000000000000000 
-> [  210.930403][ T4159] GPR04: c000000001c18d28 0000000000000006 0000000035279396 fffffffef69809d2 
-> [  210.930403][ T4159] GPR08: 0000201cc6240000 0000000000000000 0000000000000000 0000000000000008 
-> [  210.930403][ T4159] GPR12: 0000000000008000 c000201fff670600 0000000000000000 c00c000805312a00 
-> [  210.930403][ T4159] GPR16: c00000000050b090 c000000000c857d0 c00c000805312a80 0000000000000000 
-> [  210.930403][ T4159] GPR20: 0000000000000001 0000000000000000 c0002005b10af978 c000201ffc7c8780 
-> [  210.930403][ T4159] GPR24: fffffffffffffff5 0000000000000002 0000000020000000 0000000000000000 
-> [  210.930403][ T4159] GPR28: 0000000000000007 0000000000000001 0000000000000000 c00c000805312a08 
-> [  210.930740][ T4159] NIP [c0000000005196c8] migrate_pages+0xc18/0x1ad0
-> [  210.930775][ T4159] LR [c000000000519568] migrate_pages+0xab8/0x1ad0
-> [  210.930824][ T4159] Call Trace:
-> [  210.930843][ T4159] [c0002005b10af800] [c000000000519568] migrate_pages+0xab8/0x1ad0 (unreliable)
-> [  210.930882][ T4159] [c0002005b10af910] [c00000000050b6fc] do_migrate_range+0x25c/0x8f0
-> [  210.930940][ T4159] [c0002005b10afa10] [c00000000050e974] __offline_pages+0x6e4/0x8b0
-> [  210.930988][ T4159] [c0002005b10afb40] [c000000000887f6c] memory_block_action+0xac/0xc0
-> [  210.931016][ T4159] [c0002005b10afba0] [c000000000888618] memory_subsys_offline+0x58/0xa0
-> [  210.931030][ T4159] [c0002005b10afbd0] [c0000000008621a0] device_offline+0x100/0x140
-> [  210.931080][ T4159] [c0002005b10afc10] [c000000000888938] state_store+0x108/0x190
-> [  210.931128][ T4159] [c0002005b10afc50] [c00000000085b628] dev_attr_store+0x38/0x60
-> [  210.931176][ T4159] [c0002005b10afc70] [c0000000006b9790] sysfs_kf_write+0x70/0xb0
-> [  210.931211][ T4159] [c0002005b10afcb0] [c0000000006b895c] kernfs_fop_write+0x11c/0x270
-> [  210.931249][ T4159] [c0002005b10afd00] [c00000000057bcac] __vfs_write+0x3c/0x70
-> [  210.931273][ T4159] [c0002005b10afd20] [c00000000057f0ac] vfs_write+0xcc/0x200
-> [  210.931319][ T4159] [c0002005b10afd70] [c00000000057f44c] ksys_write+0x7c/0x140
-> [  210.931345][ T4159] [c0002005b10afdc0] [c000000000039e78] system_call_exception+0x108/0x1d0
-> [  210.931395][ T4159] [c0002005b10afe20] [c00000000000c9f0] system_call_common+0xf0/0x278
-> [  210.931445][ T4159] Instruction dump:
-> [  210.931476][ T4159] 9bad0988 e90d0028 3d22ff9f 3929c670 7d49402a 394a0001 7d49412a 4bafdec5 
-> [  210.931492][ T4159] 60000000 4bfff544 2fbe0000 409e04c4 <e93b0008> 71290001 40820928 e93b0000 
-> [  210.931521][ T4159] ---[ end trace 03092b3800dbb5cb ]---
-> [  211.416724][ T4159] 
-> [  212.416810][ T4159] Kernel panic - not syncing: Fatal exception
-> [  213.829268][ T4159] ---[ end Kernel panic - not syncing: Fatal exception ]---
-> 
-> >  			thp_migration_success(true);
-> >  		put_page(page);
-> >  		if (reason == MR_MEMORY_FAILURE) {
-> > 
+The goal for these names is to make it easier for a user viewing the
+output of gpioinfo to determine which P8 or P9 pin is connected to a
+GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
+
+[0] https://git.io/JfgOd
+[1] https://beagleboard.org/capes
+[1] https://beagleboard.org/Support/bone101
+[2] https://beagleboard.org/static/images/cape-headers.png
+
+Reviewed-by: Jason Kridner <jason@beagleboard.org>
+Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+V1 note:
+I had posted a patch with these line names for am335x-bone-common.dtsi
+but Grygorii Strashko pointed out that the names are not applicable to
+all BeagleBone models.  Thus is have created this patch to add these
+names just for the BeagleBone Black.
+
+ arch/arm/boot/dts/am335x-boneblack.dts | 144 +++++++++++++++++++++++++
+ 1 file changed, 144 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+index d3928662aed4..5f31e832eb82 100644
+--- a/arch/arm/boot/dts/am335x-boneblack.dts
++++ b/arch/arm/boot/dts/am335x-boneblack.dts
+@@ -23,3 +23,147 @@ oppnitro-1000000000 {
+ 		opp-supported-hw = <0x06 0x0100>;
+ 	};
+ };
++
++&gpio0 {
++	gpio-line-names =
++		"[ethernet]",
++		"[ethernet]",
++		"P9_22 [spi0_sclk]",
++		"P9_21 [spi0_d0]",
++		"P9_18 [spi0_d1]",
++		"P9_17 [spi0_cs0]",
++		"[sd card]",
++		"P9_42A [ecappwm0]",
++		"P8_35 [hdmi]",
++		"P8_33 [hdmi]",
++		"P8_31 [hdmi]",
++		"P8_32 [hdmi]",
++		"P9_20 [i2c2_sda]",
++		"P9_19 [i2c2_scl]",
++		"P9_26 [uart1_rxd]",
++		"P9_24 [uart1_txd]",
++		"[ethernet]",
++		"[ethernet]",
++		"[usb]",
++		"[hdmi]",
++		"P9_41B",
++		"[ethernet]",
++		"P8_19 [ehrpwm2a]",
++		"P8_13 [ehrpwm2b]",
++		"[NC]",
++		"[NC]",
++		"P8_14",
++		"P8_17",
++		"[ethernet]",
++		"[ethernet]",
++		"P9_11 [uart4_rxd]",
++		"P9_13 [uart4_txd]";
++};
++
++&gpio1 {
++	gpio-line-names =
++		"P8_25 [emmc]",
++		"[emmc]",
++		"P8_5 [emmc]",
++		"P8_6 [emmc]",
++		"P8_23 [emmc]",
++		"P8_22 [emmc]",
++		"P8_3 [emmc]",
++		"P8_4 [emmc]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"P8_12",
++		"P8_11",
++		"P8_16",
++		"P8_15",
++		"P9_15A",
++		"P9_23",
++		"P9_14 [ehrpwm1a]",
++		"P9_16 [ehrpwm1b]",
++		"[emmc]",
++		"[usr0 led]",
++		"[usr1 led]",
++		"[usr2 led]",
++		"[usr3 led]",
++		"[hdmi]",
++		"[usb]",
++		"[hdmi audio]",
++		"P9_12",
++		"P8_26",
++		"P8_21 [emmc]",
++		"P8_20 [emmc]";
++};
++
++&gpio2 {
++	gpio-line-names =
++		"P9_15B",
++		"P8_18",
++		"P8_7",
++		"P8_8",
++		"P8_10",
++		"P8_9",
++		"P8_45 [hdmi]",
++		"P8_46 [hdmi]",
++		"P8_43 [hdmi]",
++		"P8_44 [hdmi]",
++		"P8_41 [hdmi]",
++		"P8_42 [hdmi]",
++		"P8_39 [hdmi]",
++		"P8_40 [hdmi]",
++		"P8_37 [hdmi]",
++		"P8_38 [hdmi]",
++		"P8_36 [hdmi]",
++		"P8_34 [hdmi]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"P8_27 [hdmi]",
++		"P8_29 [hdmi]",
++		"P8_28 [hdmi]",
++		"P8_30 [hdmi]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]",
++		"[emmc]";
++};
++
++&gpio3 {
++	gpio-line-names =
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[ethernet]",
++		"[i2c0]",
++		"[i2c0]",
++		"[emu]",
++		"[emu]",
++		"[ethernet]",
++		"[ethernet]",
++		"[NC]",
++		"[NC]",
++		"[usb]",
++		"P9_31 [spi1_sclk]",
++		"P9_29 [spi1_d0]",
++		"P9_30 [spi1_d1]",
++		"P9_28 [spi1_cs0]",
++		"P9_42B [ecappwm0]",
++		"P9_27",
++		"P9_41A",
++		"P9_25",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]",
++		"[NC]";
++};
+-- 
+2.25.1
+
