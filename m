@@ -2,143 +2,142 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DFCC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 064842070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:06:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JanaI9bL"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA0D2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbgEUJGq (ORCPT
+        id S1728828AbgEUJGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:06:46 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:11823 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728769AbgEUJGi (ORCPT
+        Thu, 21 May 2020 05:06:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:36857 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728800AbgEUJGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:06:38 -0400
-X-UUID: 1ffef90f52b4403eafbe27e1ae4d8041-20200521
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=0rM0q4hkZ0DNqIzZUdev1uMbsurkkv21fpGoS3vOqow=;
-        b=JanaI9bL1l2RzrYJ3umvkHGHDgZ9KONu+XkmU95qnotc5sorVjlCnK2Vw8TjiRgxL6gDn/UB7RJJC9DrtTh0hkzED9/PlHH3YLdRQk3wHrsTmQCLYjHPYXZxID7C55w5x3Cn6B2HOPRbSLyA/KWyEG7MKn8xXgUiQTw8Nzd5QpU=;
-X-UUID: 1ffef90f52b4403eafbe27e1ae4d8041-20200521
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1656432827; Thu, 21 May 2020 17:06:32 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 21 May 2020 17:06:29 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 21 May 2020 17:06:29 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-CC:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v15 06/11] soc: mediatek: Add subsys clock control for bus protection
-Date:   Thu, 21 May 2020 17:06:19 +0800
-Message-ID: <1590051985-29149-7-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1590051985-29149-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1590051985-29149-1-git-send-email-weiyi.lu@mediatek.com>
+        Thu, 21 May 2020 05:06:44 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MmyzH-1jA5ln49dn-00k66s for <linux-kernel@vger.kernel.org>; Thu, 21 May
+ 2020 11:06:41 +0200
+Received: by mail-qk1-f179.google.com with SMTP id i5so6449398qkl.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 02:06:40 -0700 (PDT)
+X-Gm-Message-State: AOAM531cBW7Lzb0s/pSomG/+0ovL4HrobnfzG1WCMIP3TO3e0dVyNkYB
+        kLehjkPZgpXO6+7uJRrTV2FtbLvX2pGz7kYqCiI=
+X-Google-Smtp-Source: ABdhPJzY8tA9XFsf4PrVPQEo6j/Vx7xBZ9oGKpIW2en2BlP6PygE3gCqxjy8F3kyxcIPHi56fHEG7aFtx3du0f0szRs=
+X-Received: by 2002:a37:434b:: with SMTP id q72mr9383265qka.352.1590051999841;
+ Thu, 21 May 2020 02:06:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200518091222.27467-1-sudeep.holla@arm.com> <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus> <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+ <20200521075755.GA4668@willie-the-truck> <20200521081055.GD1131@bogus>
+In-Reply-To: <20200521081055.GD1131@bogus>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 May 2020 11:06:23 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
+Message-ID: <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:yIM2W/q0Bw8x7qkenLwwDmcIfv3YcVEQq9kTP1xSPqV3x9HuMV0
+ Qbxbu4YeGKHlk+P8Vpz303ZoqODG629dCXk6Z5jgWzIAynLQKGdDEmixaa+1/BKhbFgCkI7
+ b4jEJtrbKHe82/mKS8nmICjBNgLdAgRZwqGZ3V6sKox7vhZic6WUlm4DTP+GyNTJBEvK40E
+ bLfllV6y2cFF3X8wcogsA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o8NpqzRGB30=:cQlkXGNG64e24D95ul95RL
+ qBkf8cgWRi5rgMtKnMfvmj1mJ9fcPqRpvX2ZFMsDGEdfTXdyEWgjYXz7MW/uvTndUQMVhVbzr
+ vq6fa/Hx9TCXWg7ljL+xmaGbGpxd1hLjbaPW+mOWjdi1NbQ7VSge4MzBHi4P4PfCvj7aWAN/t
+ ghbndPqWRujV2MKXiw3n/Jmd1UHG89HYDF20Ov0oc1cy6hXpuRwIITOb28akdMXTMQkmi/YTd
+ hm6ihlzFE0Z5cr6ln7PlpcI3p7lg3P2lxVPocHcevFO/yBj4mNzGnSrBtbe9WWOlEDEP2CUk0
+ MZZTxL/kVSodSWcwOYuES56Vzjw7YOnShS+UBV8gvYVXSrO6bH5rKIR+7XaMlSnGCnTKQ0iAJ
+ DWNhpswmE8+yFiXLv3MMTvcGnfKk9A//9sQ/z7SBDrn9Yk4zDPc3sLF7z7rEH6NhNjRFvQ0Lx
+ QO5Sj0Kgwn0Hn5zAr5GU3AuGCZ7c849ugsPd8LN1eIB5uWxhVRIB8zSGcB03LbsMUbdxJpNs3
+ N7gvJa2mCWb/s9eHGFEpV/ijDYdiYVwSmIsrjC1TDeGwlQHmOam90QvmgddecPehY3AHUYQJs
+ rZ4TDxw9vmQjEy6liYiVW0xMOnrOHJXZOgl2hnJ5ja75OpXI/cIYEZoluAF3FyQ97tDTGa41+
+ hfrPEuiOJFRvO3l2SN4wG8ybwG9f/k6bYMeZCoIxs8IN5FxIxI8DdPrQxvvJ3rXMzrF9K6OC6
+ L0wP+opQUQvPBactkoR2ARJonXaOpFVeXXITbqUHDRAVzI9oTzP6UashTfpQ4oTiwr49P2CIJ
+ EpqRUssSIRtliAg33uVXzeV7YY6foRDdOs6Kd/Lx5sIqU84CdQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rm9yIHRoZSBidXMgcHJvdGVjdGlvbiBvcGVyYXRpb25zLCBzb21lIHN1YnN5cyBjbG9ja3MgbmVl
-ZCB0byBiZSBlbmFibGVkDQpiZWZvcmUgcmVsZWFzaW5nIHRoZSBwcm90ZWN0aW9uLCBhbmQgdmlj
-ZSB2ZXJzYS4NCkJ1dCB0aG9zZSBzdWJzeXMgY2xvY2tzIGNvdWxkIG9ubHkgYmUgY29udHJvbGxl
-ZCBvbmNlIGl0cyBjb3JyZXNwb25kaW5nDQpwb3dlciBkb21haW4gaXMgdHVybmVkIG9uIGZpcnN0
-Lg0KSW4gdGhpcyBwYXRjaCwgd2UgYWRkIHRoZSBzdWJzeXMgY2xvY2sgY29udHJvbCBpbnRvIGl0
-cyByZWxldmFudCBzdGVwcy4NCg0KU2lnbmVkLW9mZi1ieTogV2VpeWkgTHUgPHdlaXlpLmx1QG1l
-ZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1zY3BzeXMuYyB8IDYy
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQ0KIDEgZmlsZSBjaGFuZ2Vk
-LCA2MCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9zb2MvbWVkaWF0ZWsvbXRrLXNjcHN5cy5jIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLXNj
-cHN5cy5jDQppbmRleCA1OWE1MjVhLi5lZjJjNjY4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2Mv
-bWVkaWF0ZWsvbXRrLXNjcHN5cy5jDQorKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstc2Nw
-c3lzLmMNCkBAIC05Nyw2ICs5Nyw3IEBADQogI2RlZmluZSBNVDgxNzNfVE9QX0FYSV9QUk9UX0VO
-X01GR19TTk9PUF9PVVQJQklUKDIzKQ0KIA0KICNkZWZpbmUgTUFYX0NMS1MJMw0KKyNkZWZpbmUg
-TUFYX1NVQlNZU19DTEtTIDEwDQogDQogI2RlZmluZSBNQVhfU1RFUFMJNA0KIA0KQEAgLTE0NSw2
-ICsxNDYsOCBAQCBzdHJ1Y3QgYnVzX3Byb3Qgew0KICAqIEBzcmFtX3Bkbl9iaXRzOiBUaGUgbWFz
-ayBmb3Igc3JhbSBwb3dlciBjb250cm9sIGJpdHMuDQogICogQHNyYW1fcGRuX2Fja19iaXRzOiBU
-aGUgbWFzayBmb3Igc3JhbSBwb3dlciBjb250cm9sIGFja2VkIGJpdHMuDQogICogQGJhc2ljX2Ns
-a19uYW1lOiBUaGUgYmFzaWMgY2xvY2tzIHJlcXVpcmVkIGJ5IHRoaXMgcG93ZXIgZG9tYWluLg0K
-KyAqIEBzdWJzeXNfY2xrX3ByZWZpeDogVGhlIHByZWZpeCBuYW1lIG9mIHRoZSBjbG9ja3MgbmVl
-ZCB0byBiZSBlbmFibGVkDQorICogICAgICAgICAgICAgICAgICAgICBiZWZvcmUgcmVsZWFzaW5n
-IGJ1cyBwcm90ZWN0aW9uLg0KICAqIEBjYXBzOiBUaGUgZmxhZyBmb3IgYWN0aXZlIHdha2UtdXAg
-YWN0aW9uLg0KICAqIEBicF90YWJsZTogVGhlIG1hc2sgdGFibGUgZm9yIG11bHRpcGxlIHN0ZXAg
-YnVzIHByb3RlY3Rpb24uDQogICovDQpAQCAtMTU1LDYgKzE1OCw3IEBAIHN0cnVjdCBzY3BfZG9t
-YWluX2RhdGEgew0KIAl1MzIgc3JhbV9wZG5fYml0czsNCiAJdTMyIHNyYW1fcGRuX2Fja19iaXRz
-Ow0KIAljb25zdCBjaGFyICpiYXNpY19jbGtfbmFtZVtNQVhfQ0xLU107DQorCWNvbnN0IGNoYXIg
-KnN1YnN5c19jbGtfcHJlZml4Ow0KIAl1OCBjYXBzOw0KIAlzdHJ1Y3QgYnVzX3Byb3QgYnBfdGFi
-bGVbTUFYX1NURVBTXTsNCiB9Ow0KQEAgLTE2NSw2ICsxNjksNyBAQCBzdHJ1Y3Qgc2NwX2RvbWFp
-biB7DQogCXN0cnVjdCBnZW5lcmljX3BtX2RvbWFpbiBnZW5wZDsNCiAJc3RydWN0IHNjcCAqc2Nw
-Ow0KIAlzdHJ1Y3QgY2xrICpjbGtbTUFYX0NMS1NdOw0KKwlzdHJ1Y3QgY2xrICpzdWJzeXNfY2xr
-W01BWF9TVUJTWVNfQ0xLU107DQogCWNvbnN0IHN0cnVjdCBzY3BfZG9tYWluX2RhdGEgKmRhdGE7
-DQogCXN0cnVjdCByZWd1bGF0b3IgKnN1cHBseTsNCiB9Ow0KQEAgLTQyNSwxNiArNDMwLDIyIEBA
-IHN0YXRpYyBpbnQgc2Nwc3lzX3Bvd2VyX29uKHN0cnVjdCBnZW5lcmljX3BtX2RvbWFpbiAqZ2Vu
-cGQpDQogCXZhbCB8PSBQV1JfUlNUX0JfQklUOw0KIAl3cml0ZWwodmFsLCBjdGxfYWRkcik7DQog
-DQotCXJldCA9IHNjcHN5c19zcmFtX2VuYWJsZShzY3BkLCBjdGxfYWRkcik7DQorCXJldCA9IHNj
-cHN5c19jbGtfZW5hYmxlKHNjcGQtPnN1YnN5c19jbGssIE1BWF9TVUJTWVNfQ0xLUyk7DQogCWlm
-IChyZXQgPCAwKQ0KIAkJZ290byBlcnJfcHdyX2FjazsNCiANCisJcmV0ID0gc2Nwc3lzX3NyYW1f
-ZW5hYmxlKHNjcGQsIGN0bF9hZGRyKTsNCisJaWYgKHJldCA8IDApDQorCQlnb3RvIGVycl9zcmFt
-Ow0KKw0KIAlyZXQgPSBzY3BzeXNfYnVzX3Byb3RlY3RfZGlzYWJsZShzY3BkKTsNCiAJaWYgKHJl
-dCA8IDApDQotCQlnb3RvIGVycl9wd3JfYWNrOw0KKwkJZ290byBlcnJfc3JhbTsNCiANCiAJcmV0
-dXJuIDA7DQogDQorZXJyX3NyYW06DQorCXNjcHN5c19jbGtfZGlzYWJsZShzY3BkLT5zdWJzeXNf
-Y2xrLCBNQVhfU1VCU1lTX0NMS1MpOw0KIGVycl9wd3JfYWNrOg0KIAlzY3BzeXNfY2xrX2Rpc2Fi
-bGUoc2NwZC0+Y2xrLCBNQVhfQ0xLUyk7DQogZXJyX2NsazoNCkBAIC00NjEsNiArNDcyLDggQEAg
-c3RhdGljIGludCBzY3BzeXNfcG93ZXJfb2ZmKHN0cnVjdCBnZW5lcmljX3BtX2RvbWFpbiAqZ2Vu
-cGQpDQogCWlmIChyZXQgPCAwKQ0KIAkJZ290byBvdXQ7DQogDQorCXNjcHN5c19jbGtfZGlzYWJs
-ZShzY3BkLT5zdWJzeXNfY2xrLCBNQVhfU1VCU1lTX0NMS1MpOw0KKw0KIAkvKiBzdWJzeXMgcG93
-ZXIgb2ZmICovDQogCXZhbCA9IHJlYWRsKGN0bF9hZGRyKTsNCiAJdmFsIHw9IFBXUl9JU09fQklU
-Ow0KQEAgLTQ5OCw2ICs1MTEsMzkgQEAgc3RhdGljIGludCBzY3BzeXNfcG93ZXJfb2ZmKHN0cnVj
-dCBnZW5lcmljX3BtX2RvbWFpbiAqZ2VucGQpDQogCXJldHVybiByZXQ7DQogfQ0KIA0KK3N0YXRp
-YyBpbnQgaW5pdF9zdWJzeXNfY2xrcyhzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KKwkJ
-Y29uc3QgY2hhciAqcHJlZml4LCBzdHJ1Y3QgY2xrICoqY2xrKQ0KK3sNCisJc3RydWN0IGRldmlj
-ZV9ub2RlICpub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7DQorCXUzMiBwcmVmaXhfbGVuLCBzdWJf
-Y2xrX2NudCA9IDA7DQorCXN0cnVjdCBwcm9wZXJ0eSAqcHJvcDsNCisJY29uc3QgY2hhciAqY2xr
-X25hbWU7DQorDQorCXByZWZpeF9sZW4gPSBzdHJsZW4ocHJlZml4KTsNCisNCisJb2ZfcHJvcGVy
-dHlfZm9yX2VhY2hfc3RyaW5nKG5vZGUsICJjbG9jay1uYW1lcyIsIHByb3AsIGNsa19uYW1lKSB7
-DQorCQlpZiAoIXN0cm5jbXAoY2xrX25hbWUsIHByZWZpeCwgcHJlZml4X2xlbikgJiYNCisJCQkJ
-KGNsa19uYW1lW3ByZWZpeF9sZW5dID09ICctJykpIHsNCisJCQlpZiAoc3ViX2Nsa19jbnQgPj0g
-TUFYX1NVQlNZU19DTEtTKSB7DQorCQkJCWRldl9lcnIoJnBkZXYtPmRldiwNCisJCQkJCSJzdWJz
-eXMgY2xrIG91dCBvZiByYW5nZSAlZFxuIiwNCisJCQkJCXN1Yl9jbGtfY250KTsNCisJCQkJcmV0
-dXJuIC1FSU5WQUw7DQorCQkJfQ0KKw0KKwkJCWNsa1tzdWJfY2xrX2NudF0gPSBkZXZtX2Nsa19n
-ZXQoJnBkZXYtPmRldiwNCisJCQkJCQljbGtfbmFtZSk7DQorDQorCQkJaWYgKElTX0VSUihjbGtb
-c3ViX2Nsa19jbnRdKSkNCisJCQkJcmV0dXJuIFBUUl9FUlIoY2xrW3N1Yl9jbGtfY250XSk7DQor
-DQorCQkJc3ViX2Nsa19jbnQrKzsNCisJCX0NCisJfQ0KKw0KKwlyZXR1cm4gc3ViX2Nsa19jbnQ7
-DQorfQ0KKw0KIHN0YXRpYyBpbnQgaW5pdF9iYXNpY19jbGtzKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYsIHN0cnVjdCBjbGsgKipjbGssDQogCQkJY29uc3QgY2hhciAqIGNvbnN0ICpuYW1l
-KQ0KIHsNCkBAIC01OTYsNiArNjQyLDE4IEBAIHN0YXRpYyBzdHJ1Y3Qgc2NwICppbml0X3NjcChz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KIAkJaWYgKHJldCkNCiAJCQlyZXR1cm4gRVJS
-X1BUUihyZXQpOw0KIA0KKwkJaWYgKGRhdGEtPnN1YnN5c19jbGtfcHJlZml4KSB7DQorCQkJcmV0
-ID0gaW5pdF9zdWJzeXNfY2xrcyhwZGV2LA0KKwkJCQkJZGF0YS0+c3Vic3lzX2Nsa19wcmVmaXgs
-DQorCQkJCQlzY3BkLT5zdWJzeXNfY2xrKTsNCisJCQlpZiAocmV0IDwgMCkgew0KKwkJCQlkZXZf
-ZXJyKCZwZGV2LT5kZXYsDQorCQkJCQkiJXM6IHN1YnN5cyBjbGsgdW5hdmFpbGFibGVcbiIsDQor
-CQkJCQlkYXRhLT5uYW1lKTsNCisJCQkJcmV0dXJuIEVSUl9QVFIocmV0KTsNCisJCQl9DQorCQl9
-DQorDQogCQlnZW5wZC0+bmFtZSA9IGRhdGEtPm5hbWU7DQogCQlnZW5wZC0+cG93ZXJfb2ZmID0g
-c2Nwc3lzX3Bvd2VyX29mZjsNCiAJCWdlbnBkLT5wb3dlcl9vbiA9IHNjcHN5c19wb3dlcl9vbjsN
-Ci0tIA0KMS44LjEuMS5kaXJ0eQ0K
+On Thu, May 21, 2020 at 10:11 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> On Thu, May 21, 2020 at 08:57:56AM +0100, Will Deacon wrote:
+> > On Thu, May 21, 2020 at 09:34:10AM +0200, Arnd Bergmann wrote:
+> > > On Thu, May 21, 2020 at 9:07 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > On Wed, May 20, 2020 at 11:54:16PM +0200, Arnd Bergmann wrote:
+> > > > > On Wed, May 20, 2020 at 11:29 PM Will Deacon <will@kernel.org> wrote:
+> > > > > > Applied to arm64 (for-next/smccc), thanks!
+> > > > > >
+> > > > > > Arnd -- Sudeep's reply to you about the sysfs groups seemed reasonable to me,
+> > > > > > but please shout if you'd rather I dropped this in order to pursue an
+> > > > > > alternative approach.
+> > > > >
+> > > > > I missed the reply earlier, thanks for pointing me to it again.
+> >
+> > D'oh, I took your silence as "no objections". Oh well!
+> >
+> > > > > I'm not entirely convinced, but don't revert it for now because of that,
+> > > > > I assume we can find a solution.
+> >
+> > Ok, cheers. It's on a separate branch so it's easy enough to drop if
+> > necessary (i.e. no reverts needed). Sudeep -- please send any extra patches
+> > on top of the branch.
+> >
+>
+> Indeed, it is also last patch in the series. However if Arnd is happy
+> with the sysfs names, we can move to generic code later without breaking
+> anything.
+>
+> We need not revert or drop it now. I will leave that to you or Arnd to
+> decide. Just that it may be too late to get acks for all the soc sysfs
+> drivers in time for v5.8
+>
+> I am fine if you want to drop the last patch.
 
+Ok, let's drop that patch then and make sure we do something that
+everyone is happy with later on. I'm already in favor of adding
+a more reliable soc_device instance based on this, but we need to
+be sure we don't screw up the contents of the attributes when we
+can't change them later.
+
+> > > >> drivers/firmware/smccc/smccc.c:14:13: warning: no previous prototype for function 'arm_smccc_version_init' [-Wmissing-prototypes]
+> > > void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
+> > > ^
+> > > drivers/firmware/smccc/smccc.c:14:1: note: declare 'static' if the
+> > > function is not intended to be used outside of this translation unit
+> > > void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
+> >
+> > I saw that when I applied the patches, but since the function is called from
+> > another compilation unit (psci/psci.o), I just ignored it as we have loads
+> > of these already and it only screams if you build with W=1.
+> >
+>
+> /me confused. Do you need the fix for this warning or you are happy to ignore?
+
+I want a fix for that, as I hope we can eventually turn this warning on by
+default and stop playing whack-a-mole when they come up. Most of these
+warnings are harmless, but occasionally the prototypes don't match exactly
+and cause real bugs depending on the configuration, and ensuring both
+sides include a common header file is an easy way to make it work
+more reliably.
+
+Note that the warning should come up for either W=1 or C=1, and I also
+think that
+new code should generally be written sparse-clean and have no warnings with
+'make C=1' as a rule.
+
+      Arnd
