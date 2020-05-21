@@ -2,105 +2,100 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF55C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9A52070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4CD2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:24:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f5PxzU/m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KiS63N3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgEUIXH (ORCPT
+        id S1728590AbgEUIY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbgEUIXG (ORCPT
+        Thu, 21 May 2020 04:24:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29559 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728374AbgEUIY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:23:06 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D7BAC061A0E;
-        Thu, 21 May 2020 01:23:06 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SN0m0s98z9sPF;
-        Thu, 21 May 2020 18:23:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590049384;
-        bh=V1tslC8q4Izh34WWpiLdTGo+nLJxNNMp4RgxkaT2r/Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=f5PxzU/mebvmxlwtjAvA82va18JReEb3ur1is7WCEGwCaBnr5U3evV2qiHr6pYt+h
-         2n5HUHWUqj8UDUL8g/9mvVwuqoTqibpTQNIbuPNGxnT2RBUOo9VDRIGnWq8NV7sPD+
-         rgBWXqHr+QoIDqiYZCWQI4RcDExv2S1A95uceyvvC3t9ICrxDC/EaLBPpi1ZacuTvi
-         80qX9FiS+IgMstJ3IVb3VVm2Dxi/13UXtoAzNOzOmji44VuVOGszG30Pb9swkKSv72
-         79SGX5XTl7bBhUx0FzVabVK7PgJTT1PTnRzxwF85rSbCRKxL8sCQuMtoZdzxbSyHrK
-         L3zGaFqfCbBHA==
-Date:   Thu, 21 May 2020 18:22:58 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: linux-next: build failure after merge of the userns tree
-Message-ID: <20200521182258.23cc75fc@canb.auug.org.au>
+        Thu, 21 May 2020 04:24:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590049467;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UgPlPKwQ78SmEvwlM+tSnD4eOCAOdkr7Ntl2fCb3Qdo=;
+        b=KiS63N3Cn7Czi5DVNZGyjNaxec7dLbyPv4piB4gVvc776I0UdY/hFDUKDkwLBrApkfuT/U
+        3FB8opFdS3gpc9WHzuLuJqx+ltoawgPsWDMFqvEQc0uWHdRK70kjlzGu8njB9Rfu59nSYt
+        ggQAeYpz9afFTmSC+O3b2rdqJjCxkzo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-HFw0fZHhMRSxz11tr1JoSA-1; Thu, 21 May 2020 04:24:25 -0400
+X-MC-Unique: HFw0fZHhMRSxz11tr1JoSA-1
+Received: by mail-ed1-f70.google.com with SMTP id a18so2509819eds.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 01:24:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UgPlPKwQ78SmEvwlM+tSnD4eOCAOdkr7Ntl2fCb3Qdo=;
+        b=rBAvkKt+RFxH8/MxsuJUZf8Rm4mO5XkzTOOVfeCng32vC5SxKI+LUw7DK/Yw6VJBMc
+         SmyxjLFmgwoAFTD7ztBRcQaBgtKRc5S3Vkwce2B/6Tx1D3+xhbqYqRCwPKZjHqmqoU9q
+         vSV1eJRzKy7+fOPHvVfWpty0DyTEXcx5DHRgyfAiPHcRxfJrah1Ssg/bAi5RElRE2CID
+         O+doqONUFYuv+aZ3qGI0zs8owX1jou65ahbs9TqwgkCrCT6P1s9vySHF1IwWVSB+yCzY
+         Kt8qRvbWuKrRE8/Fc5ybKz5vjAkQJjd1O7WfA1b3Fl3uzx8w5au+su82MXKYJYj8QnC9
+         TtQQ==
+X-Gm-Message-State: AOAM530FeFDuTQwmRQNQ2reC8OxcdkJ5jhehsNXxYVTEHRlGmXcgnS03
+        bYaXgHLE+QVixBnyVOQQiFaeifyoVaF5o358eGRfRVn5jVAbqpOU5TjOdyAEhBkCyigzjGZXvWh
+        9JG1JY0H9GGlzIjqXXbNL3OQw
+X-Received: by 2002:a17:907:9d5:: with SMTP id bx21mr2366556ejc.510.1590049464362;
+        Thu, 21 May 2020 01:24:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyoFKBT/y+lQ+LBEKa1W8bfwlzO4IvlNszMAjhIGGbGZEJr2l2PRpnaSFM+8x03wohqDEKpng==
+X-Received: by 2002:a17:907:9d5:: with SMTP id bx21mr2366545ejc.510.1590049464136;
+        Thu, 21 May 2020 01:24:24 -0700 (PDT)
+Received: from [192.168.178.58] ([151.30.94.134])
+        by smtp.gmail.com with ESMTPSA id s20sm4204784eju.96.2020.05.21.01.24.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 01:24:23 -0700 (PDT)
+Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL
+ unconditionally
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
+        Tao Xu <tao3.xu@intel.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200520160740.6144-1-mlevitsk@redhat.com>
+ <20200520160740.6144-3-mlevitsk@redhat.com>
+ <b8ca9ea1-2958-3ab4-2e86-2edbee1ca9d9@redhat.com>
+ <81228a0e-7797-4f34-3d6d-5b0550c10a8f@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <13f16f34-ce01-4207-1d1d-775b15a1e0f7@redhat.com>
+Date:   Thu, 21 May 2020 10:24:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/YY_ZyP1cVj=bDZA1v/u9q3I";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <81228a0e-7797-4f34-3d6d-5b0550c10a8f@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YY_ZyP1cVj=bDZA1v/u9q3I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 21/05/20 06:33, Xiaoyao Li wrote:
+> I remember there is certainly some reason why we don't expose WAITPKG to
+> guest by default.
 
-Hi all,
+That's a userspace policy decision.  KVM_GET_SUPPORTED_CPUID should
+still tell userspace that it's supported.
 
-After merging the userns tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Paolo
 
-In file included from init/do_mounts.c:9:
-include/linux/security.h: In function 'security_bprm_repopulate_creds':
-include/linux/security.h:580:9: error: implicit declaration of function 'ca=
-p_bprm_repopluate_creds'; did you mean 'cap_bprm_repopulate_creds'? [-Werro=
-r=3Dimplicit-function-declaration]
-  580 |  return cap_bprm_repopluate_creds(bprm);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-      |         cap_bprm_repopulate_creds
+> Tao, please help clarify it.
 
-Caused by commit
-
-  d9d67b76eed6 ("exec: Convert security_bprm_set_creds into security_bprm_r=
-epopulate_creds")
-
-I have used the userns tree from next-20200519 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/YY_ZyP1cVj=bDZA1v/u9q3I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7GOmIACgkQAVBC80lX
-0GxUnwf/dNf8RvIq2xAOZfHf1fpvGVrYRti0bz0ctW5zMXm9sHVMuuzLbH3nfOjL
-pRWtTYxMskxC5c5KTa8skgH1c95DESkOErRYl+XNNd9CL3Z+J9eSCUdAKSBBhFfF
-SkOyBtWZQJP0xoyMdoYLhr1iCbHIprLb9fSQwyOQ7R3AF3hWFyWgGRrBtkCXDz5S
-SYh9IPjnP4O6/u8e+4yYsBlhzpKgFzNOcXi9ien1CrdXAH4s3X9CoQBRPnopS/v5
-BHqMfT6VqYF5sqDKKyBXNp2Mnc9CLOuTF9m2hm2mu9nyAuVaMmq39A5SmfPWDb88
-et24XgU+wBFg9xiDa9iJO4LXJRDfxQ==
-=o8tM
------END PGP SIGNATURE-----
-
---Sig_/YY_ZyP1cVj=bDZA1v/u9q3I--
