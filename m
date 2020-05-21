@@ -2,92 +2,112 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 684342072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2284207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="spJG7P5U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WABF7N4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgEUKMK (ORCPT
+        id S1728218AbgEUKOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 06:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43022 "EHLO
+        Thu, 21 May 2020 06:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgEUKMK (ORCPT
+        with ESMTP id S1726871AbgEUKOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 06:12:10 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1607AC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 03:12:09 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id q16so2661190plr.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 03:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DIe2nQ5wLexPjaO9CVf6Qf80rzmPfsKb7xa72lbN0jw=;
-        b=spJG7P5Uk2wIUTi2cXpdWZ0yBk0k6QZhpJo42zcsD8b/c4mDh5jEI9GHguHYqYr/9L
-         +W1JlDvQuItS52ToK9jfewx9OZA+aMXHYDXNCM8yY+fjd0ksOLEWeffekXy6yg58BkFH
-         Riij7sBoq4s6AdS6YGCS80JVzK0QQDmfQe3jcIHLituTinwLhDp0qXkFtzPmNZD5Mwz0
-         6xyILmq5xJZ3ghzOFWKMnEXph6NOsT5YAKuWgZzKEQddns3MGlmBMovXFba7TcGZjoq/
-         sJLnEn1WV/MPvL5zP/c0rFb/g7ENupKvAxBew79pdkijYRjPXA3eCJVaUW/bVTmnQnpL
-         Tdjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DIe2nQ5wLexPjaO9CVf6Qf80rzmPfsKb7xa72lbN0jw=;
-        b=dBATC152SdyR8NjeyAIOlUDFnLjTrlcPZqD+xq6NA54PLGKWY40sp9DRhCtfJWN5o5
-         YKapJ2SKrri5AHlpgnswQZG5lcKqs5kgz5Tb0EBZOxIYMPWZ1Q5hgLTp3I3oE6uf7K/v
-         EXT60haaR5uqCByWgfVHC1tOz+YNUd+mFaTlJUiLej87NuXef5v0z5+H/gu+UoLs4hxk
-         b0opk+fjmeDsKfkynBXUpoepWSAYHPzliZTPGh34DulzHBXBlEoPCAzBvZqls3L0e+nW
-         F71LuwHtFPdf3TL7c3/wB/o3aNm2+qJXcdk5WJLkzoLACADB5+ScKyZyuPN9jHPlzOW+
-         2m8g==
-X-Gm-Message-State: AOAM532HnrtWn8HsrhEE/2kHduB645PrFgOPlOXNyX4hM1iaRPc5cgZR
-        lxQiwAVtRe2R9EvvK3ir9Cr2RWn3GPXFIyNsxh+D9f5Gw3oZcA==
-X-Google-Smtp-Source: ABdhPJxqZdqnBwhwj5DNI8aPwJc0K4LVMLiS2Bw1ZGIchZoDAMOFJf7/VsNoOqD/kXFnEvqRAJ1sL3dxL0k0gFiqTYQ=
-X-Received: by 2002:a17:902:d68e:: with SMTP id v14mr8730715ply.262.1590055928387;
- Thu, 21 May 2020 03:12:08 -0700 (PDT)
+        Thu, 21 May 2020 06:14:36 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8695C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 03:14:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nVvJE8f1XxadM3r7X+mk11otqfh8Bv87wWgbGlu9ktw=; b=WABF7N4aMaOXWI7ApaPItftPt
+        wpbZ/eOeCoz0ddFnEoR8gUtBRadfwNGTWP6j8+iMnJvBTs2il5Z6/BiWHF9vjV9IIMyK+yWcC9VpU
+        skNyREoyOT1/by11c05/1EDbfF3foZ8CwpEPS+jbtBlpiI1WWjObUuJGYz9BASIvlZwgXXF3b9AmM
+        gmwojpyL0OMblzBr6UqsgA43PvtfHB0LBqHYTBI2JKVOeQxDuOKHYMfJdn2o4avhfj9kng0fwM4Aa
+        35sIUimvJyGxeXSfVpNnEEoTqVINeCyAmMhnfTEQzzM8AJ8qHDtKEKjf52UasiS+tGEvxxXvm+EvT
+        p/y9/FZ1w==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:60806)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jbiDZ-0002A2-L8; Thu, 21 May 2020 11:14:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jbiDW-00006u-Vn; Thu, 21 May 2020 11:14:23 +0100
+Date:   Thu, 21 May 2020 11:14:22 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+Message-ID: <20200521101422.GO1551@shell.armlinux.org.uk>
+References: <20200518091222.27467-1-sudeep.holla@arm.com>
+ <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus>
+ <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+ <20200521075755.GA4668@willie-the-truck>
+ <20200521081055.GD1131@bogus>
+ <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1589497311.git.syednwaris@gmail.com> <f4d924971feb15b0044eeefdd969b36747d2322b.1589497312.git.syednwaris@gmail.com>
- <20200515113202.GO185537@smile.fi.intel.com> <CACG_h5o5=DXFtNzHn+NzY0rRjbZXhjrs58ka042hoOsVFFHnkA@mail.gmail.com>
-In-Reply-To: <CACG_h5o5=DXFtNzHn+NzY0rRjbZXhjrs58ka042hoOsVFFHnkA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 21 May 2020 13:11:51 +0300
-Message-ID: <CAHp75VcL9cSMaHqn0bn-GRGX92pbGY_vOqLOU14BTzT93Mu=Mw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] lib/test_bitmap.c: Add for_each_set_clump test cases
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 12:42 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-> On Fri, May 15, 2020 at 5:02 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, May 15, 2020 at 04:48:46AM +0530, Syed Nayyar Waris wrote:
+On Thu, May 21, 2020 at 11:06:23AM +0200, Arnd Bergmann wrote:
+> Note that the warning should come up for either W=1 or C=1, and I also
+> think that
+> new code should generally be written sparse-clean and have no warnings with
+> 'make C=1' as a rule.
 
-> I have incorporated your above 2 review comments.
->
-> I will be sharing the new (v7) patchset in some time with your
-> 'Reviewed-by' tag included in this patch. I believe I have understood
-> correctly.
+No, absolutely not, that's a stupid idea, there are corner cases
+where hiding a sparse warning is the wrong thing to do.  Look at
+many of the cases in fs/ for example.
 
-I think so, thanks!
+See https://lkml.org/lkml/2004/9/12/249 which should make anyone
+who sees a use of __force in some random code stop and question
+why it is there, and whether it is actually correct, or just there
+to hide a sparse warning.
+
+Remember, sparse is there to warn that something isn't quite right,
+and the view taken is, if it isn't right, then we don't "cast the
+warning away" with __force, even if we intend not to fix the code
+immediately.
+
+So, going for "sparse-clean" is actually not correct. Going for
+"no unnecessary warnings" is.
+
+And don't think what I've said above doesn't happen; I've rejected
+patches from people who've gone around trying to fix every sparse
+warning that they see by throwing __force incorrectly at it.
+
+The thing is, if you hide all the warnings, even for incorrect code,
+then sparse becomes completely useless to identify where things in
+the code are not quite correct.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
