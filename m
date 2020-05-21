@@ -2,163 +2,104 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3469C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B310EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A15E420756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590093445;
-	bh=Stxmy5bjtizNU8Nx6Mslgp2T+FmzRshtXGRDcZodBIc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTCSuykp27X3hbjDbzjWVpPEeGKQhwcTDzxMy1NthVY4o9UIVMW6KdyGQpO/7VaEy
-	 avc1oKRGpkKTNhGdVE8onR41mwp4BwY4GDig4qwbdnL+MPxCiEF7ws6sTTauDTWlGr
-	 u9QRUgms0tcm+OJwHiF1O+K9Ma3sBOVHjUmJjBeY=
+	by mail.kernel.org (Postfix) with ESMTP id 7AAD920756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:37:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b/hWi2PD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgEUUhY (ORCPT
+        id S1730009AbgEUUhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgEUUhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:37:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E322078B;
-        Thu, 21 May 2020 20:37:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590093441;
-        bh=Stxmy5bjtizNU8Nx6Mslgp2T+FmzRshtXGRDcZodBIc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k6F1xnAWhUWj4knb/UDVKBoGrscUwCrF+HWYp/4VW5SdFh3l7XZScf0uqnHHiBwcx
-         NUdLgXRsw9w/SPhdAbHsh0lBqqr9SQ7hWc1ZHvnsw+z+s30AKqNRjuQkSz75zzInSw
-         ikdQEHZbt2qVSWoiC0vpzqcFA6k8+/5xf3ASkKKc=
-From:   Mark Brown <broonie@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH v2 3/3] selftests: vdso: Add a selftest for vDSO getcpu()
-Date:   Thu, 21 May 2020 21:37:07 +0100
-Message-Id: <20200521203707.37304-4-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200521203707.37304-1-broonie@kernel.org>
-References: <20200521203707.37304-1-broonie@kernel.org>
+        Thu, 21 May 2020 16:37:32 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48008 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgEUUhb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 16:37:31 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LKbSm1048692;
+        Thu, 21 May 2020 15:37:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590093448;
+        bh=9xP5vfoBO+4BJ4jvW3objaO6eouH59qs+QM52qR8o3M=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=b/hWi2PDFf0VSW2yJawZ9W2H2iAfh74UixmbprqMb+4CTu8dY2EItfrV99ePrzmQ0
+         jjNwTxIHNdFt4t/UElwxtNZUE29emuVrZoyBtbhEG38MoxAvRHKeq+9o5AikPB+I/b
+         W7BtoKvEPU6yNq2Ly0UldLf0/P1lnMT0t4p7f410=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LKbSLW089527
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 15:37:28 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 15:37:28 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 15:37:28 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LKbSOO098116;
+        Thu, 21 May 2020 15:37:28 -0500
+Date:   Thu, 21 May 2020 15:37:28 -0500
+From:   Bin Liu <b-liu@ti.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+CC:     <kjlu@umn.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: musb: Fix runtime PM imbalance on error
+Message-ID: <20200521203728.GB25575@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200521073547.18828-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200521073547.18828-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a very basic selftest for getcpu() which similarly to our existing
-test for gettimeofday() looks up the function in the vDSO and prints the
-results it gets if the function exists and succeeds.
+Hi,
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/vDSO/.gitignore       |  1 +
- tools/testing/selftests/vDSO/Makefile         |  3 +-
- .../testing/selftests/vDSO/vdso_test_getcpu.c | 54 +++++++++++++++++++
- 3 files changed, 57 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
+On Thu, May 21, 2020 at 03:35:47PM +0800, Dinghao Liu wrote:
+> When copy_from_user() returns an error code, a pairing
+> runtime PM usage counter decrement is needed to keep
+> the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/usb/musb/musb_debugfs.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/musb/musb_debugfs.c b/drivers/usb/musb/musb_debugfs.c
+> index 7b6281ab62ed..837c38a5e4ef 100644
+> --- a/drivers/usb/musb/musb_debugfs.c
+> +++ b/drivers/usb/musb/musb_debugfs.c
+> @@ -178,8 +178,11 @@ static ssize_t musb_test_mode_write(struct file *file,
+>  
+>  	memset(buf, 0x00, sizeof(buf));
+>  
+> -	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+> +	if (copy_from_user(buf, ubuf, min_t(size_t, sizeof(buf) - 1, count))) {
+> +		pm_runtime_mark_last_busy(musb->controller);
+> +		pm_runtime_put_autosuspend(musb->controller);
+>  		return -EFAULT;
+> +	}
 
-diff --git a/tools/testing/selftests/vDSO/.gitignore b/tools/testing/selftests/vDSO/.gitignore
-index 74f49bd5f6dd..5eb64d41e541 100644
---- a/tools/testing/selftests/vDSO/.gitignore
-+++ b/tools/testing/selftests/vDSO/.gitignore
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- vdso_test
- vdso_test_gettimeofday
-+vdso_test_getcpu
- vdso_standalone_test_x86
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index ae15d700b62e..0069f2f83f86 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -4,7 +4,7 @@ include ../lib.mk
- uname_M := $(shell uname -m 2>/dev/null || echo not)
- ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
- 
--TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday
-+TEST_GEN_PROGS := $(OUTPUT)/vdso_test_gettimeofday $(OUTPUT)/vdso_test_getcpu
- ifeq ($(ARCH),x86)
- TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
- endif
-@@ -18,6 +18,7 @@ endif
- 
- all: $(TEST_GEN_PROGS)
- $(OUTPUT)/vdso_test_gettimeofday: parse_vdso.c vdso_test_gettimeofday.c
-+$(OUTPUT)/vdso_test_getcpu: parse_vdso.c vdso_test_getcpu.c
- $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
- 	$(CC) $(CFLAGS) $(CFLAGS_vdso_standalone_test_x86) \
- 		vdso_standalone_test_x86.c parse_vdso.c \
-diff --git a/tools/testing/selftests/vDSO/vdso_test_getcpu.c b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
-new file mode 100644
-index 000000000000..fc25ede131b8
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_test_getcpu.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * vdso_test_getcpu.c: Sample code to test parse_vdso.c and vDSO getcpu()
-+ *
-+ * Copyright (c) 2020 Arm Ltd
-+ */
-+
-+#include <stdint.h>
-+#include <elf.h>
-+#include <stdio.h>
-+#include <sys/auxv.h>
-+#include <sys/time.h>
-+
-+#include "../kselftest.h"
-+#include "parse_vdso.h"
-+
-+const char *version = "LINUX_2.6";
-+const char *name = "__vdso_getcpu";
-+
-+struct getcpu_cache;
-+typedef long (*getcpu_t)(unsigned int *, unsigned int *,
-+			 struct getcpu_cache *);
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned long sysinfo_ehdr;
-+	unsigned int cpu, node;
-+	getcpu_t get_cpu;
-+	long ret;
-+
-+	sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
-+	if (!sysinfo_ehdr) {
-+		printf("AT_SYSINFO_EHDR is not present!\n");
-+		return KSFT_SKIP;
-+	}
-+
-+	vdso_init_from_sysinfo_ehdr(getauxval(AT_SYSINFO_EHDR));
-+
-+	get_cpu = (getcpu_t)vdso_sym(version, name);
-+	if (!get_cpu) {
-+		printf("Could not find %s\n", name);
-+		return KSFT_SKIP;
-+	}
-+
-+	ret = get_cpu(&cpu, &node, 0);
-+	if (ret == 0) {
-+		printf("Running on CPU %u node %u\n", cpu, node);
-+	} else {
-+		printf("%s failed\n", name);
-+		return KSFT_FAIL;
-+	}
-+
-+	return 0;
-+}
--- 
-2.20.1
+Thanks for catching the bug. Can you please instead move these lines to
+the beginning of this function so that pm_runtime_get_sync() is not
+called if copy_from_user() failed?
 
+-Bin.
