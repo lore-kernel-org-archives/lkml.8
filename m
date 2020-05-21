@@ -2,143 +2,120 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ECBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B173C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186792078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dgq2ENGi"
+	by mail.kernel.org (Postfix) with ESMTP id 527362070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgEUM3G (ORCPT
+        id S1729378AbgEUMaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgEUM3D (ORCPT
+        Thu, 21 May 2020 08:30:08 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.67]:48050 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728348AbgEUMaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:29:03 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FCA1C061A0E;
-        Thu, 21 May 2020 05:29:03 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a2so8543369ejb.10;
-        Thu, 21 May 2020 05:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6GWXUPDNtcqPMbMf+st3rlAt+MWIjWvFAG+evIajo2Q=;
-        b=Dgq2ENGih+H9YOhCve0hYfcTj4H0NHnoqFUNURea3Nkq//rRp/Y7OwrKGo+V56lh7g
-         unHKMmsPtCGSyKki7bPw90RLPuG3B9MQMZEU3Bh41SPPYHZyGhq3tyFAfEcpvjXZcam3
-         rjLqQJw4w1VaH1NQzO8vKnX+RAPU2vO2j4ZZaqF+9dTSJUFjGpEL2Tjt4XMPJu6xSqJd
-         SknvoknV8qSmYree9EawNrQVfTmyG9RrjSbcL4kG787IpHfKpdooYHXGdSBpLXvkvRrp
-         C2Qj6FEFT83LXlKAyrx8SU/cSRmt1JlIFOSixmgW2oCKJUV2U3kEH+tdIc8YLaLjhvfz
-         +4lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6GWXUPDNtcqPMbMf+st3rlAt+MWIjWvFAG+evIajo2Q=;
-        b=NrJInznbND84SiSBUmxOsy8ttJV8ZNKl0/5RqPwAMaZ1z6rkeTC/Xpw41Rf2HGJ/HI
-         YLf/yEmZPdZ/43+/axBhl07L8m5j8TP1GNK8E7Hgz/4rBPlQOlwfWMiGAN5KKpdYISf9
-         3gK29ktL8Yi8FpxQRkrsBReNwJFOuu+heddrJHSUWenNsDlUNeXBB3+W2phqEDNuIZeL
-         gwJSuZRcoVger6Y093kGFynXuhs3sbFA64YBpodKkTnu3v0bUTsgch+d18pfNQKOILfC
-         8NLlwraqv+E63Ltt3KhPp24Zb8kLrObtywU9lXw/JTlHGtbhX4Vca7dvw16YWiU8F7b/
-         SLtQ==
-X-Gm-Message-State: AOAM533n0Rwgk0uzzqSNgpAX7j333PDA6sk89HdYEoKnNdEu+FTd//f7
-        K5fyqQ9POEV1IU0JEVz7a+0=
-X-Google-Smtp-Source: ABdhPJyIuKGqOWjquNroUoWJ3cJmIA0tMeGKZOElZzWNqX8OV/c6qN8Y0YF0wDLkl/gS4HLH53vhxQ==
-X-Received: by 2002:a17:907:9484:: with SMTP id dm4mr3521767ejc.56.1590064142189;
-        Thu, 21 May 2020 05:29:02 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id nj6sm4692805ejb.99.2020.05.21.05.29.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 05:29:01 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64: dts: rockchip: fix dmas dma-names for rk3308
- i2s node
-To:     Robin Murphy <robin.murphy@arm.com>, heiko@sntech.de
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, kever.yang@rock-chips.com,
-        wxt@rock-chips.com
-References: <20200520064816.3954-1-jbx6244@gmail.com>
- <543270ad-dd11-2bd4-8959-e898834c19e5@arm.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <094fa89d-61f7-1eb4-be78-b430502c5d3e@gmail.com>
-Date:   Thu, 21 May 2020 14:28:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 08:30:04 -0400
+Received: from [100.112.196.46] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-west-1.aws.symcld.net id E6/6B-40520-84476CE5; Thu, 21 May 2020 12:30:00 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRWlGSWpSXmKPExsVy8MN7XV2PkmN
+  xBr8vM1vMOd/CYtG8eD2bxaqF19gsLu+aw2bx/lMnk8X/PTvYHdg8tqy8yeTRcuQtq8emVZ1s
+  HvvnrmH3+LxJLoA1ijUzLym/IoE14+G63UwFvVwVX1tfszcw/uLoYuTiEBJYyygxsfEZaxcjJ
+  5BTKdF4+gJzFyMHB69AhET/IX6QMKeAmcScmRfYIUpMJT4e7GABsdkEdCQezVzPBGKzCKhK7N
+  q8GKxGWCBVYn5rDzvIfBGBi4wSTx7/YQNJMAvEScxqWA62i1dAUOLkzCcsEHEJiYMvXjBDLNC
+  SOLdmFeMERt5ZSMpmISlbwMi0itEiqSgzPaMkNzEzR9fQwEDX0NBI19DSUtfIyFgvsUo3SS+1
+  VLc8tbhE11AvsbxYr7gyNzknRS8vtWQTIzBsUwqO39/BeHzte71DjJIcTEqivAf8j8UJ8SXlp
+  1RmJBZnxBeV5qQWH2KU4eBQkuDNLwbKCRalpqdWpGXmAGMIJi3BwaMkwrupCCjNW1yQmFucmQ
+  6ROsWoy7Hz6LxFzEIsefl5qVLivJIgMwRAijJK8+BGwOL5EqOslDAvIwMDgxBPQWpRbmYJqvw
+  rRnEORiVh3gyQKTyZeSVwm14BHcEEdIT0sUMgR5QkIqSkGpiEppf0pLQ9murVGTt/cbTz3J+P
+  VaQdPs+7rNfdEP7c4djd2ya3eWte8V703nN4aYZZx1FdC+0Uo/y7Z1hvSqxfkqrvpC77oIiB3
+  UZvjcuZdfO4glQYzrKyKFr3Mkn+Y190XOlvlo5YwBW+z2xbFq2vypj3sGdaz8WVDz3Sc/9bvj
+  X4yxeyuPcka85prkiWO73xEmw9LIpnE+69u9p89n3SN5GVK688U5ac9yg+f13MjXtzI8UzuOL
+  2dqn2bRTQeOo38dQ6Dd60hQoiCgsrTiWvaOn26P135PECrq3/1h689tn6zf1ZxblVLubavGqf
+  1gcvElZu5J15+dWltwFZP2JjlK7dmMIz8897ltDbQTlKLMUZiYZazEXFiQCuE9YLYgMAAA==
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-21.tower-282.messagelabs.com!1590064199!5520835!3
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 26082 invoked from network); 21 May 2020 12:30:00 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-21.tower-282.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 21 May 2020 12:30:00 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Thu, 21 May 2020 14:29:57 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 8441E13F670; Thu, 21 May 2020 21:29:55 +0900 (KST)
+Message-ID: <34108f195fa50261e32fccf7ab08ba0ff78facce.1590053093.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1590053093.git.Roy.Im@diasemi.com>
+References: <cover.1590053093.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Thu, 21 May 2020 18:24:52 +0900
+Subject: [RESEND PATCH V13 1/3] MAINTAINERS: da7280 updates to the Dialog
+ Semiconductor search terms
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
-In-Reply-To: <543270ad-dd11-2bd4-8959-e898834c19e5@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin, Kever, Caesar,
+This patch adds the da7280 bindings doc and driver to the Dialog
+Semiconductor support list.
 
-On 5/21/20 1:48 PM, Robin Murphy wrote:
-> On 2020-05-20 07:48, Johan Jonker wrote:
->> One of the current rk3308 'i2s' nodes has a different dma layout
->> with only 1 item. Table 9-2 DMAC1 Request Mapping Table shows that
->> there 2 dma sources available, so fix the dmas and dma-names
->> for the rk3308 'i2s' node.
->>
->> 10 I2S/PCM_2CH_1 tx High level
->> 11 I2S/PCM_2CH_1 rx High level
-> 
-> ...however table 1-5 in the same manual (at least that I could find)
-> says request 10 is reserved. Does that mean it was intended to be wired
-> up for this, but ended up broken for some reason?
-> 
-> Do you have hardware to confirm whether this works reliably or not?
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
-No, I don't.
-A description for 3308 was added to rockchip-i2s.yaml with only rx by
-myself.
-It would be nice if someone could test, confirm or give a hint.
+---
+v13: No changes.
+v12: Corrected file list order.
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: No changes.
+v7: No changes.
+v6: No changes.
+v5: No changes.
+v4: No changes.
+v3: No changes.
+v2: No changes.
 
-Could someone from Rockchip(Kever, Caesar) explain the 'Reserved' in
-Table 1-5 ?
 
-Table 1-5 RK3308 DMAC1 hardware request connection list
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-10 Reserved     High level
-11 I2S_2CH_1 rx High level
-
-> 
-> Robin.
-> 
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3308.dtsi | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> index ac7f69407..79c1dd1fe 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
->> @@ -564,8 +564,8 @@
->>           interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
->>           clocks = <&cru SCLK_I2S1_2CH>, <&cru HCLK_I2S1_2CH>;
->>           clock-names = "i2s_clk", "i2s_hclk";
->> -        dmas = <&dmac1 11>;
->> -        dma-names = "rx";
->> +        dmas = <&dmac1 10>, <&dmac1 11>;
->> +        dma-names = "tx", "rx";
->>           resets = <&cru SRST_I2S1_2CH_M>, <&cru SRST_I2S1_2CH_H>;
->>           reset-names = "reset-m", "reset-h";
->>           status = "disabled";
->>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327..56e83e9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4942,6 +4942,7 @@ M:	Support Opensource <support.opensource@diasemi.com>
+ S:	Supported
+ W:	http://www.dialog-semiconductor.com/products
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
+ F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -4952,6 +4953,7 @@ F:	Documentation/hwmon/da90??.rst
+ F:	drivers/gpio/gpio-da90??.c
+ F:	drivers/hwmon/da90??-hwmon.c
+ F:	drivers/iio/adc/da91??-*.c
++F:	drivers/input/misc/da72??.[ch]
+ F:	drivers/input/misc/da90??_onkey.c
+ F:	drivers/input/touchscreen/da9052_tsi.c
+ F:	drivers/leds/leds-da90??.c
+-- 
+end-of-patch for RESEND PATCH V13
 
