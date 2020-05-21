@@ -2,86 +2,75 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D069C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E392FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B7C2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590054171;
-	bh=HLNBPlMIwcyPLxoXQ3ROr7zGCgI47fgKzS7fsLAAHnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oEagyGx14aDBZULiCLAYAPF6K6XuQT2X47+8H+N6xiz+FXmnPYwD2r/2yuJ7e5ctU
-	 LAjO+DMzPh0nyblx9MzKTLseZFr5oKL8SjcPbXeOD3Ciu1IlKyiYK5ZuFPSUFXm6jY
-	 RMzMJRD7YPWihiyuoTJ2grSc5CfK9BIaGVBdftrg=
+	by mail.kernel.org (Postfix) with ESMTP id C8A3220721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgEUJmu (ORCPT
+        id S1728917AbgEUJnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:42:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39602 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 05:43:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:43923 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbgEUJmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:42:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E0820721;
-        Thu, 21 May 2020 09:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590054169;
-        bh=HLNBPlMIwcyPLxoXQ3ROr7zGCgI47fgKzS7fsLAAHnc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JAO8ol+vUu00FCzxprbBF8gkgEhqxuQb/PPWFKSvajF9lFxezKDlFTvKujh3Sq06J
-         tltLMIywU2yZlJLJqAu5nz1nJR5GDyQt5j6gPilCVbsA7iRCJ6oErk9ZKJqJ/E+7+7
-         DEHf5hm7RHianqFiuncmVk8tLeBE33e+nBV6EW0U=
-Date:   Thu, 21 May 2020 11:42:47 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH v2 0/4] driver core: Add device link related sysfs files
-Message-ID: <20200521094247.GA2861894@kroah.com>
-References: <20200520034824.79049-1-saravanak@google.com>
+        id S1728804AbgEUJn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:43:29 -0400
+IronPort-SDR: nRiMJxSnwDZqOXdBpHaOYiaprGxXGvRv9p41uIl6pgxrAMLhC+soIpJ7r/dYYYmUTvTWqt+HWi
+ KecdfNO+8AZg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 02:43:29 -0700
+IronPort-SDR: 7KHtRKni+re75Ld6GQPilabEWKTjtgIzS0uDO7trer9Khd0nFbOosDCXT77jMzeWICzMlbWJ1+
+ QsjSM4veqFgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
+   d="scan'208";a="300735970"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 21 May 2020 02:43:27 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jbhje-0080d2-P0; Thu, 21 May 2020 12:43:30 +0300
+Date:   Thu, 21 May 2020 12:43:30 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] irqdomain: Allow software node to be correct one
+ for IRQ domain
+Message-ID: <20200521094330.GH1634618@smile.fi.intel.com>
+References: <20200520164927.39090-1-andriy.shevchenko@linux.intel.com>
+ <20200520164927.39090-3-andriy.shevchenko@linux.intel.com>
+ <c7432ac8e2564c1c2177ef6e71f252ac@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520034824.79049-1-saravanak@google.com>
+In-Reply-To: <c7432ac8e2564c1c2177ef6e71f252ac@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:48:20PM -0700, Saravana Kannan wrote:
-> With fw_devlink and with sync_state() callback features, there's a lot
-> of device/device link related information that's not available in sysfs.
-> 
-> Exposing these details to user space can be very useful in understanding
-> suspend/resume issues, runtime pm issues, probing issues, figuring out
-> the modules that'd be needed for first stage init, etc. In fact, an
-> earlier verion of this series was very helpful in debugging and
-> validating the recent memory leak fix[1].
-> 
-> This series combines combines a bunch of patches I've sent before.
-> 
-> I'm aware that I haven't added documentation for patch 1/2. I'm waiting
-> on review to make sure the file location, name and values don't change
-> before I add the documentation.
+On Thu, May 21, 2020 at 09:59:57AM +0100, Marc Zyngier wrote:
+> On 2020-05-20 17:49, Andy Shevchenko wrote:
 
-You mean patch 2/4, right?
+> Thanks for this. I've applied it to irqchip-next.
 
-> This series is based on driver-core-next and [1] cherry-picked on top of
-> it.
+Thank you, Marc!
 
-I've taken patch 1 now, as it was easy to review :)
+> In the future,
+> please consider adding a cover letter describing the overall
+> goal of the series.
 
-I'll wait for the next series with the documentation update before going
-further.
+I will keep in mind and follow.
 
-thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-greg k-h
+
