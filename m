@@ -2,102 +2,135 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D913C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3072DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E06206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:30:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="S4+U4oIh"
+	by mail.kernel.org (Postfix) with ESMTP id 16EB020748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgEUAaj (ORCPT
+        id S1726914AbgEUAew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:30:39 -0400
-Received: from ozlabs.org ([203.11.71.1]:53791 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726844AbgEUAaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:30:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49S9Wd14jvz9sTC;
-        Thu, 21 May 2020 10:30:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590021037;
-        bh=8K5SrG46YjcWNv5Y0lpux2/tuO5AiOFETUC/sMBDS40=;
-        h=Date:From:To:Cc:Subject:From;
-        b=S4+U4oIh+kdYV3+IdhacHQM/u3uYvZV824+GLG9PGouo7es5hiIpjcVpPY/yiRHUE
-         B+9hYWm15Ea7X/cSblD2ul/Hc6XNdQvwSo/aYrtVooSFCrYgpjgzDMBjSTN4sLv80d
-         wAB+YzaLLkOwwnVk/GZxxeLoTDV2OHOyBl4FKS11QA/2YoM6GUQlfRwhhpJFotNYW9
-         m80NauCgnMwMDftqr/o0AzGc1AGn8LUnyXXDFKUOUSqrwTsUF20uKqwV1UVMEKt48J
-         TUqnkftmN87nCH8R2XFRsBerKr60Sce0KDSig4Xka5JaTckpjwAKW901ovQjyvDbhM
-         nCzawYnMVa01Q==
-Date:   Thu, 21 May 2020 10:30:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the f2fs tree with the fscrypt tree
-Message-ID: <20200521103034.49bba1e1@canb.auug.org.au>
+        Wed, 20 May 2020 20:34:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:32890 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgEUAev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 20:34:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0E1B580307CB;
+        Thu, 21 May 2020 00:34:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZW7iqmW8Mb-Y; Thu, 21 May 2020 03:34:49 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 01/14] dt-bindings: power: Convert mti,mips-cpc to DT schema
+Date:   Thu, 21 May 2020 03:34:30 +0300
+Message-ID: <20200521003443.11385-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/g1KhqsO=+YVQMiPorwpCtFV";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/g1KhqsO=+YVQMiPorwpCtFV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+It's a Cluster Power Controller embedded into the MIPS IP cores.
+Currently the corresponding dts node is supposed to have compatible
+and reg properties.
 
-Hi all,
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
 
-Today's linux-next merge of the f2fs tree got a conflict in:
+---
 
-  fs/f2fs/f2fs.h
+Changelog v2:
+- Reword the changelog summary - use shorter version.
+- Lowercase the example hex'es.
+---
+ .../bindings/power/mti,mips-cpc.txt           |  8 -----
+ .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
+ 2 files changed, 35 insertions(+), 8 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+ create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
 
-between commit:
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt b/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
+deleted file mode 100644
+index c6b82511ae8a..000000000000
+--- a/Documentation/devicetree/bindings/power/mti,mips-cpc.txt
++++ /dev/null
+@@ -1,8 +0,0 @@
+-Binding for MIPS Cluster Power Controller (CPC).
+-
+-This binding allows a system to specify where the CPC registers are
+-located.
+-
+-Required properties:
+-compatible : Should be "mti,mips-cpc".
+-regs: Should describe the address & size of the CPC register region.
+diff --git a/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+new file mode 100644
+index 000000000000..9cd92a57130c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/mti,mips-cpc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MIPS Cluster Power Controller
++
++description: |
++  Defines a location of the MIPS Cluster Power Controller registers.
++
++maintainers:
++  - Paul Burton <paulburton@kernel.org>
++
++properties:
++  compatible:
++    const: mti,mips-cpc
++
++  reg:
++    description: |
++      Base address and size of an unoccupied memory region, which will be
++      used to map the MIPS CPC registers block.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    cpc@1bde0000 {
++      compatible = "mti,mips-cpc";
++      reg = <0 0x1bde0000 0 0x8000>;
++    };
++...
+-- 
+2.25.1
 
-  ed318a6cc0b6 ("fscrypt: support test_dummy_encryption=3Dv2")
-
-from the fscrypt tree and commit:
-
-  1ae18f71cb52 ("f2fs: fix checkpoint=3Ddisable:%u%%")
-
-from the f2fs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/g1KhqsO=+YVQMiPorwpCtFV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7Fy6oACgkQAVBC80lX
-0GwJVQgAmIr5kgyC9EAr45ew/B7nvpugX4TNSzU7J2f9WPZe6bFLUEwsDFv9Jucl
-8kalDDk4GXYhaWOmN7MkBG/3zTE3U+3c9iz+NBuMKM97KkBPD5xMgOB+3PdGQWg6
-PborI0YU4WgBeMMZaQ58LsHXi8lWoa1ZN7k0Iuabek6K6oOhJH7w58ItNWomOcip
-hiNwed1giTG094dP8xRtoSPpC24fs5LpNy5BJMxaGZMhjd1eFgO13V5MQwM2B3Sm
-CHzEP4MOIsdtLyN2SfXsOd1RlG0/CfWtjwvOYp8o6YJaK9DoGMuMfGfTtRXqac8R
-GSlscwYyX2GeMf/bT158/YvQPyBcrg==
-=p1eK
------END PGP SIGNATURE-----
-
---Sig_/g1KhqsO=+YVQMiPorwpCtFV--
