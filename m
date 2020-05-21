@@ -2,157 +2,134 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A88C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B842C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13498204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4414D204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pqGd6S81"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSYO1VsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgEUPZQ (ORCPT
+        id S1730428AbgEUPZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35208 "EHLO
+        Thu, 21 May 2020 11:25:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbgEUPXu (ORCPT
+        with ESMTP id S1730190AbgEUPZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:23:50 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D23C061A0E;
-        Thu, 21 May 2020 08:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=1npcDTOJ/7f3HiPL67/bMBXtdt053nBQX247zae/UWo=; b=pqGd6S81tSKZa336lIookYkwk8
-        Iy7VC6laC7HEryoG9Y4rYXwbstInrQedaaFzCUC8OrHO/f8k7/NMQ1/Y2vZQ8MPkVh2IlZ6oLjN1x
-        68bFPrnotirGbFoTEDL0BnY9UKdYACt45BXZHJIRgTBJJF0mho2HZVIr6oVxAn1hUTwzXCpz/ud81
-        EeEwgbWaYHVFglAhosG/cx46HMBf1S/GMBUqlHsKHWAFFzQ77uoy3KwfUKdvOZxgJC87GqlLIOdIY
-        atTBlvcODkkFq0v2WbjNtrOOLU8Q5cgMczOu+eopuxHLz+ub8YX5N4EXnmJizcSoizXjBOtM5tsmf
-        7D78Z82Q==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn2y-0004YO-Qn; Thu, 21 May 2020 15:23:49 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 15/23] maccess: remove strncpy_from_unsafe
-Date:   Thu, 21 May 2020 17:22:53 +0200
-Message-Id: <20200521152301.2587579-16-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
+        Thu, 21 May 2020 11:25:17 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4777AC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:25:17 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c3so2804034wru.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:25:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2MXyaLaRSsQuWfENm44vgzHPCRJEfAycGFg99F3pJNE=;
+        b=NSYO1VsH0H9XChSAQaVX3buJRwQSaTVgYvkXKquy5bb58jeMhiDO8o9Vb1hNjuMReQ
+         34pq6vsyfjJ7q06KKD9NXVyzSTQyylndX2Bxz7X588Ts5kDVhqvnkpmxfMFbXiGFs+f1
+         Jvomx8250fZzdQUWEVUIneimMB6Q10PP7at+8z4C4gl8nMckYYWQvDX6EL7ZA3Ae84RH
+         2xsPioCypRu6NiB/8sxmNv4alwgRZTi3ErxW9TGcouSP6AqWT/FUvkMqhvtSS2eKNAad
+         K1lYYjYpAHR8sZowk/cgfbRvmu3hgE0TH2QuWMwNsV3OoBc4UKSFN/jE0LafaWiPUOdt
+         XFDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=2MXyaLaRSsQuWfENm44vgzHPCRJEfAycGFg99F3pJNE=;
+        b=Z03i39+a8Pr8jco8d0/Du5XeOSmRJby2GnMYYtbky2CW154a2rM817crwyMiQBy1xs
+         tltJV5NmCqedSqQgNWUEs/X2f7iPG97bfGb1Eg90j+Te7+e2B0R92u2IoUm3dwec74ds
+         Ea/Rt+E/f/qpQUyPCXrvLudP1Or4o8NAWIkV2OVZ/a2DBRZ1zLP5KNo2i6mo8klMh4EM
+         nO6CoWcYwAny6w3PVeW/KtQV0Ec6LPgFJWgWGqkaAbDSARwf1+8/q2dHeO/stTDTCyvB
+         S2TmVWTFPCHxfJ99qLtant3poVquOKv+nHDU2l+W3MQN06jt7r6lg8v7tjQZCXtoapNi
+         eJPw==
+X-Gm-Message-State: AOAM5300dW5b7DHmx0jmKuhAKyZLT37WBwWwQJjQZXYvwZ+kOOYipoEk
+        g0ZabJN1/dxOWDP++p82fgU=
+X-Google-Smtp-Source: ABdhPJxe9BzZH/D/cLQ09xDSH5xKJ+llBaRqNMkRN6aTJKiFQ94C3mMj6q6CsEJV6czohYKvf4PqtQ==
+X-Received: by 2002:adf:82b6:: with SMTP id 51mr8946931wrc.102.1590074716021;
+        Thu, 21 May 2020 08:25:16 -0700 (PDT)
+Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
+        by smtp.gmail.com with ESMTPSA id q9sm6637831wmb.34.2020.05.21.08.25.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 08:25:14 -0700 (PDT)
+Date:   Thu, 21 May 2020 17:25:14 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, ajd@linux.ibm.com, mpe@ellerman.id.au,
+        syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com,
+        syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com,
+        syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com,
+        syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2] relay: handle alloc_percpu returning NULL in
+ relay_open
+Message-ID: <20200521152514.GA2868125@eldamar.local>
+References: <20191219121256.26480-1-dja@axtens.net>
+ <alpine.DEB.2.21.1912201100400.68407@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1912201100400.68407@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All users are gone now.
+Hi,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/uaccess.h |  1 -
- mm/maccess.c            | 39 +--------------------------------------
- 2 files changed, 1 insertion(+), 39 deletions(-)
+On Fri, Dec 20, 2019 at 11:00:56AM -0800, David Rientjes wrote:
+> On Thu, 19 Dec 2019, Daniel Axtens wrote:
+> 
+> > alloc_percpu() may return NULL, which means chan->buf may be set to
+> > NULL. In that case, when we do *per_cpu_ptr(chan->buf, ...), we
+> > dereference an invalid pointer:
+> > 
+> > BUG: Unable to handle kernel data access at 0x7dae0000
+> > Faulting instruction address: 0xc0000000003f3fec
+> > ...
+> > NIP [c0000000003f3fec] relay_open+0x29c/0x600
+> > LR [c0000000003f3fc0] relay_open+0x270/0x600
+> > Call Trace:
+> > [c000000054353a70] [c0000000003f3fb4] relay_open+0x264/0x600 (unreliable)
+> > [c000000054353b00] [c000000000451764] __blk_trace_setup+0x254/0x600
+> > [c000000054353bb0] [c000000000451b78] blk_trace_setup+0x68/0xa0
+> > [c000000054353c10] [c0000000010da77c] sg_ioctl+0x7bc/0x2e80
+> > [c000000054353cd0] [c000000000758cbc] do_vfs_ioctl+0x13c/0x1300
+> > [c000000054353d90] [c000000000759f14] ksys_ioctl+0x94/0x130
+> > [c000000054353de0] [c000000000759ff8] sys_ioctl+0x48/0xb0
+> > [c000000054353e20] [c00000000000bcd0] system_call+0x5c/0x68
+> > 
+> > Check if alloc_percpu returns NULL.
+> > 
+> > This was found by syzkaller both on x86 and powerpc, and the reproducer
+> > it found on powerpc is capable of hitting the issue as an unprivileged
+> > user.
+> > 
+> > Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+> > Reported-by: syzbot+1e925b4b836afe85a1c6@syzkaller-ppc64.appspotmail.com
+> > Reported-by: syzbot+587b2421926808309d21@syzkaller-ppc64.appspotmail.com
+> > Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+> > Reported-by: syzbot+d6074fb08bdb2e010520@syzkaller.appspotmail.com
+> > Cc: Akash Goel <akash.goel@intel.com>
+> > Cc: Andrew Donnellan <ajd@linux.ibm.com> # syzkaller-ppc64
+> > Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
+> > Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+> > Cc: stable@vger.kernel.org # v4.10+
+> > Signed-off-by: Daniel Axtens <dja@axtens.net>
+> 
+> Acked-by: David Rientjes <rientjes@google.com>
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 65a37ae3b8871..d7d98ff345b3d 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -311,7 +311,6 @@ extern long probe_user_read(void *dst, const void __user *src, size_t size);
- extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
- extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
- 
--extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
- long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr,
- 		long count);
- 
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 6116742608217..df82fde34307f 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -8,8 +8,6 @@
- 
- static long __probe_kernel_read(void *dst, const void *src, size_t size,
- 		bool strict);
--static long __strncpy_from_unsafe(char *dst, const void *unsafe_addr,
--		long count, bool strict);
- 
- bool __weak probe_kernel_read_allowed(const void *unsafe_src, size_t size,
- 		bool strict)
-@@ -156,35 +154,6 @@ long probe_user_write(void __user *dst, const void *src, size_t size)
- 	return 0;
- }
- 
--/**
-- * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
-- * @dst:   Destination address, in kernel space.  This buffer must be at
-- *         least @count bytes long.
-- * @unsafe_addr: Unsafe address.
-- * @count: Maximum number of bytes to copy, including the trailing NUL.
-- *
-- * Copies a NUL-terminated string from unsafe address to kernel buffer.
-- *
-- * On success, returns the length of the string INCLUDING the trailing NUL.
-- *
-- * If access fails, returns -EFAULT (some data may have been copied
-- * and the trailing NUL added).
-- *
-- * If @count is smaller than the length of the string, copies @count-1 bytes,
-- * sets the last byte of @dst buffer to NUL and returns @count.
-- *
-- * Same as strncpy_from_kernel_nofault() except that for architectures with
-- * not fully separated user and kernel address spaces this function also works
-- * for user address tanges.
-- *
-- * DO NOT USE THIS FUNCTION - it is broken on architectures with entirely
-- * separate kernel and user address spaces, and also a bad idea otherwise.
-- */
--long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
--{
--	return __strncpy_from_unsafe(dst, unsafe_addr, count, false);
--}
--
- /**
-  * strncpy_from_kernel_nofault: - Copy a NUL terminated string from unsafe
-  *				 address.
-@@ -204,12 +173,6 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
-  * sets the last byte of @dst buffer to NUL and returns @count.
-  */
- long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
--{
--	return __strncpy_from_unsafe(dst, unsafe_addr, count, true);
--}
--
--static long __strncpy_from_unsafe(char *dst, const void *unsafe_addr,
--		long count, bool strict)
- {
- 	mm_segment_t old_fs = get_fs();
- 	const void *src = unsafe_addr;
-@@ -217,7 +180,7 @@ static long __strncpy_from_unsafe(char *dst, const void *unsafe_addr,
- 
- 	if (unlikely(count <= 0))
- 		return 0;
--	if (!probe_kernel_read_allowed(unsafe_addr, count, strict))
-+	if (!probe_kernel_read_allowed(unsafe_addr, count, true))
- 		return -EFAULT;
- 
- 	set_fs(KERNEL_DS);
--- 
-2.26.2
+It looks this one was never applied (which relates to CVE-2019-19462,
+as pointed by Guenter in 20191223163610.GA32267@roeck-us.net).
 
+Whas this lost or are there any issues pending?
+
+Regards,
+Salvatore
