@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B937C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C36C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 102D6206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC0220748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgEUOIx (ORCPT
+        id S1729786AbgEUOI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:08:53 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38488 "EHLO
+        Thu, 21 May 2020 10:08:57 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38534 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729868AbgEUOIr (ORCPT
+        with ESMTP id S1729632AbgEUOIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:08:47 -0400
+        Thu, 21 May 2020 10:08:52 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0B2058029EB7;
-        Thu, 21 May 2020 14:08:43 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C58C88000610;
+        Thu, 21 May 2020 14:08:49 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id UGg6BcNG4PG6; Thu, 21 May 2020 17:08:42 +0300 (MSK)
+        with ESMTP id ZK5nNqYeEPAL; Thu, 21 May 2020 17:08:49 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -34,18 +34,13 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        WANG Xuerui <git@xen0n.name>,
-        Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 07/13] mips: Add CONFIG/CONFIG6/Cause reg fields macro
-Date:   Thu, 21 May 2020 17:07:18 +0300
-Message-ID: <20200521140725.29571-8-Sergey.Semin@baikalelectronics.ru>
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 09/13] mips: cdmm: Add mti,mips-cdmm dtb node support
+Date:   Thu, 21 May 2020 17:07:20 +0300
+Message-ID: <20200521140725.29571-10-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -57,102 +52,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are bit fields which persist in the MIPS CONFIG and CONFIG6
-registers, but haven't been described in the generic mipsregs.h
-header so far. In particular, the generic CONFIG bitfields are
-BE - endian mode, BM - burst mode, SB - SimpleBE, OCP interface mode
-indicator, UDI - user-defined "CorExtend" instructions, DSP - data
-scratch pad RAM present, ISP - instruction scratch pad RAM present,
-etc. The core-specific CONFIG6 bitfields are JRCD - jump register
-cache prediction disable, R6 - MIPSr6 extensions enable, IFUPerfCtl -
-IFU performance control, SPCD - sleep state performance counter, DLSB -
-disable load/store bonding. A new exception code reported in the
-ExcCode field of the Cause register: 30 - Parity/ECC error exception
-happened on either fetch, load or cache refill. Lets add them to the
-mipsregs.h header to be used in future platform code, which have them
-utilized.
+Since having and mapping the CDMM block is platform specific, then
+instead of just returning a zero-address, lets make the default CDMM
+base address search method (mips_cdmm_phys_base()) to do something
+useful. For instance to find the address in a dedicated dtb-node in
+order to support of-based platforms by default.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
 Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- arch/mips/include/asm/mipsregs.h | 19 +++++++++++++++++++
- arch/mips/kernel/spram.c         |  4 ++--
- 2 files changed, 21 insertions(+), 2 deletions(-)
+ drivers/bus/mips_cdmm.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index a284da54efd5..fe6293f5b939 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -468,6 +468,7 @@
- #define EXCCODE_THREAD		25	/* Thread exceptions (MT) */
- #define EXCCODE_DSPDIS		26	/* DSP disabled exception */
- #define EXCCODE_GE		27	/* Virtualized guest exception (VZ) */
-+#define EXCCODE_CACHEERR	30	/* Parity/ECC occured on a core */
+diff --git a/drivers/bus/mips_cdmm.c b/drivers/bus/mips_cdmm.c
+index 1b14256376d2..7faa8c049f07 100644
+--- a/drivers/bus/mips_cdmm.c
++++ b/drivers/bus/mips_cdmm.c
+@@ -16,6 +16,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/smp.h>
++#include <linux/of_address.h>
++#include <linux/of.h>
+ #include <asm/cdmm.h>
+ #include <asm/hazards.h>
+ #include <asm/mipsregs.h>
+@@ -337,9 +339,22 @@ static phys_addr_t mips_cdmm_cur_base(void)
+  * Picking a suitable physical address at which to map the CDMM region is
+  * platform specific, so this weak function can be overridden by platform
+  * code to pick a suitable value if none is configured by the bootloader.
++ * By default this method tries to find a CDMM-specific node in the system
++ * dtb. Note that this won't work for early serial console.
+  */
+ phys_addr_t __weak mips_cdmm_phys_base(void)
+ {
++	struct device_node *np;
++	struct resource res;
++	int err;
++
++	np = of_find_compatible_node(NULL, NULL, "mti,mips-cdmm");
++	if (np) {
++		err = of_address_to_resource(np, 0, &res);
++		if (!err)
++			return res.start;
++	}
++
+ 	return 0;
+ }
  
- /* Implementation specific trap codes used by MIPS cores */
- #define MIPS_EXCCODE_TLBPAR	16	/* TLB parity error exception */
-@@ -563,9 +564,17 @@
- #define MIPS_CONF_MT_FTLB	(_ULCAST_(4) <<  7)
- #define MIPS_CONF_AR		(_ULCAST_(7) << 10)
- #define MIPS_CONF_AT		(_ULCAST_(3) << 13)
-+#define MIPS_CONF_BE		(_ULCAST_(1) << 15)
-+#define MIPS_CONF_BM		(_ULCAST_(1) << 16)
- #define MIPS_CONF_MM		(_ULCAST_(3) << 17)
- #define MIPS_CONF_MM_SYSAD	(_ULCAST_(1) << 17)
- #define MIPS_CONF_MM_FULL	(_ULCAST_(2) << 17)
-+#define MIPS_CONF_SB		(_ULCAST_(1) << 21)
-+#define MIPS_CONF_UDI		(_ULCAST_(1) << 22)
-+#define MIPS_CONF_DSP		(_ULCAST_(1) << 23)
-+#define MIPS_CONF_ISP		(_ULCAST_(1) << 24)
-+#define MIPS_CONF_KU		(_ULCAST_(3) << 25)
-+#define MIPS_CONF_K23		(_ULCAST_(3) << 28)
- #define MIPS_CONF_M		(_ULCAST_(1) << 31)
- 
- /*
-@@ -677,9 +686,19 @@
- #define MIPS_CONF5_CV		(_ULCAST_(1) << 29)
- #define MIPS_CONF5_K		(_ULCAST_(1) << 30)
- 
-+/* Jump register cache prediction disable */
-+#define MIPS_CONF6_JRCD		(_ULCAST_(1) << 0)
-+/* MIPSr6 extensions enable */
-+#define MIPS_CONF6_R6		(_ULCAST_(1) << 2)
-+/* IFU Performance Control */
-+#define MIPS_CONF6_IFUPERFCTL	(_ULCAST_(3) << 10)
- #define MIPS_CONF6_SYND		(_ULCAST_(1) << 13)
-+/* Sleep state performance counter disable */
-+#define MIPS_CONF6_SPCD		(_ULCAST_(1) << 14)
- /* proAptiv FTLB on/off bit */
- #define MIPS_CONF6_FTLBEN	(_ULCAST_(1) << 15)
-+/* Disable load/store bonding */
-+#define MIPS_CONF6_DLSB		(_ULCAST_(1) << 21)
- /* Loongson-3 FTLB on/off bit */
- #define MIPS_CONF6_FTLBDIS	(_ULCAST_(1) << 22)
- /* FTLB probability bits */
-diff --git a/arch/mips/kernel/spram.c b/arch/mips/kernel/spram.c
-index 26d355462ace..d5d96214cce5 100644
---- a/arch/mips/kernel/spram.c
-+++ b/arch/mips/kernel/spram.c
-@@ -209,11 +209,11 @@ void spram_config(void)
- 	case CPU_P6600:
- 		config0 = read_c0_config();
- 		/* FIXME: addresses are Malta specific */
--		if (config0 & (1<<24)) {
-+		if (config0 & MIPS_CONF_ISP) {
- 			probe_spram("ISPRAM", 0x1c000000,
- 				    &ispram_load_tag, &ispram_store_tag);
- 		}
--		if (config0 & (1<<23))
-+		if (config0 & MIPS_CONF_DSP)
- 			probe_spram("DSPRAM", 0x1c100000,
- 				    &dspram_load_tag, &dspram_store_tag);
- 	}
 -- 
 2.25.1
 
