@@ -2,1431 +2,219 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C76C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1FAC2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D6E2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tZKSSkDu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgEURUc (ORCPT
+        id S1728903AbgEURWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:20:32 -0400
-Received: from mga04.intel.com ([192.55.52.120]:28567 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgEURUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:20:32 -0400
-IronPort-SDR: 7rBZ/8dZw7kd1WbXV/+md/yGRvQv7HY0dJO6y8phTRT6IKCW+Qr4g8JVtbdx19QmgidkaaQZLd
- a0Q+gt7iO6gg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 09:57:29 -0700
-IronPort-SDR: oIIsplNzl/tmzT9GO7STmR/YnAM0/4go22Zm8D/7z7bt3L+IuJX0B47DPGf7M7/I2j82kG8GAO
- lyL8Tuef+SYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
-   d="scan'208";a="309094772"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.147.236])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 May 2020 09:57:27 -0700
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org
-Subject: [PATCH v2 7/9] x86: Add support for function granular KASLR
-Date:   Thu, 21 May 2020 09:56:38 -0700
-Message-Id: <20200521165641.15940-8-kristen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200521165641.15940-1-kristen@linux.intel.com>
-References: <20200521165641.15940-1-kristen@linux.intel.com>
+        Thu, 21 May 2020 13:22:16 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40080 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728806AbgEURWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:22:16 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHLv7O166772;
+        Thu, 21 May 2020 17:22:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=hpmMnei2rM/L7Pi5nGnRDXvCuZpucliPxYWYs7TRDM8=;
+ b=tZKSSkDuYeu27zDjK1lcJ6IfjCMQ8V1HkApiYMG296CARX++Sl+qibbMpSUIF4hXyH2v
+ nkgUwhxPEykrb0QUzGtuNBxuAyJpZdM2Y4gxUgPklDOwMgxVcO/EMECmPJVI0AplgSs/
+ CC3X6HcHtohvzo3gSm43fKbipOquGqfVYIVjn4kMBIkPX5SQMXGkRq7qWOLE1PuKuC8H
+ 3kmyYemwoQpPmnouUrrZOXDOFvL8dD66i3eWlHn1CRhnOHdyEFS5D53zAOZj7QIkOd0k
+ Hh3mmeDMJEndG3IOq6/q4MIEC4i3i6fJisYyJiEEVQPLXXwGumQVv0M6TedzSrXsF/RL lA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 31284m9rtm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 17:22:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHJD2D116734;
+        Thu, 21 May 2020 17:22:07 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 312t3bthpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 17:22:07 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04LHM5nV003894;
+        Thu, 21 May 2020 17:22:06 GMT
+Received: from [10.39.200.114] (/10.39.200.114)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 May 2020 10:22:05 -0700
+Subject: Re: [PATCH] xen/events: avoid NULL pointer dereference in
+ evtchn_from_irq()
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?= 
+        <marmarek@invisiblethingslab.com>, stable@vger.kernel.org
+References: <20200319071428.12115-1-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Autocrypt: addr=boris.ostrovsky@oracle.com; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <30719c35-6de7-d400-7bb8-cff4570f8971@oracle.com>
+Date:   Thu, 21 May 2020 13:22:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200319071428.12115-1-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 malwarescore=0 suspectscore=2 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005210125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At boot time, find all the function sections that have separate .text
-sections, shuffle them, and then copy them to new locations. Adjust
-any relocations accordingly.
+On 3/19/20 3:14 AM, Juergen Gross wrote:
+> There have been reports of races in evtchn_from_irq() where the info
+> pointer has been NULL.
+>
+> Avoid that case by testing info before dereferencing it.
+>
+> In order to avoid accessing a just freed info structure do the kfree()
+> via kfree_rcu().
 
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
----
- Documentation/security/fgkaslr.rst       | 155 +++++
- Documentation/security/index.rst         |   1 +
- arch/x86/boot/compressed/Makefile        |   3 +
- arch/x86/boot/compressed/fgkaslr.c       | 823 +++++++++++++++++++++++
- arch/x86/boot/compressed/kaslr.c         |   4 -
- arch/x86/boot/compressed/misc.c          | 109 ++-
- arch/x86/boot/compressed/misc.h          |  34 +
- arch/x86/boot/compressed/utils.c         |  12 +
- arch/x86/boot/compressed/vmlinux.symbols |  17 +
- arch/x86/include/asm/boot.h              |  15 +-
- include/uapi/linux/elf.h                 |   1 +
- 11 files changed, 1159 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/security/fgkaslr.rst
- create mode 100644 arch/x86/boot/compressed/fgkaslr.c
- create mode 100644 arch/x86/boot/compressed/utils.c
- create mode 100644 arch/x86/boot/compressed/vmlinux.symbols
 
-diff --git a/Documentation/security/fgkaslr.rst b/Documentation/security/fgkaslr.rst
-new file mode 100644
-index 000000000000..94939c62c50d
---- /dev/null
-+++ b/Documentation/security/fgkaslr.rst
-@@ -0,0 +1,155 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================================================================
-+Function Granular Kernel Address Space Layout Randomization (fgkaslr)
-+=====================================================================
-+
-+:Date: 6 April 2020
-+:Author: Kristen Accardi
-+
-+Kernel Address Space Layout Randomization (KASLR) was merged into the kernel
-+with the objective of increasing the difficulty of code reuse attacks. Code
-+reuse attacks reused existing code snippets to get around existing memory
-+protections. They exploit software bugs which expose addresses of useful code
-+snippets to control the flow of execution for their own nefarious purposes.
-+KASLR as it was originally implemented moves the entire kernel code text as a
-+unit at boot time in order to make addresses less predictable. The order of the
-+code within the segment is unchanged - only the base address is shifted. There
-+are a few shortcomings to this algorithm.
-+
-+1. Low Entropy - there are only so many locations the kernel can fit in. This
-+   means an attacker could guess without too much trouble.
-+2. Knowledge of a single address can reveal the offset of the base address,
-+   exposing all other locations for a published/known kernel image.
-+3. Info leaks abound.
-+
-+Finer grained ASLR has been proposed as a way to make ASLR more resistant
-+to info leaks. It is not a new concept at all, and there are many variations
-+possible. Function reordering is an implementation of finer grained ASLR
-+which randomizes the layout of an address space on a function level
-+granularity. The term "fgkaslr" is used in this document to refer to the
-+technique of function reordering when used with KASLR, as well as finer grained
-+KASLR in general.
-+
-+The objective of this patch set is to improve a technology that is already
-+merged into the kernel (KASLR). This code will not prevent all code reuse
-+attacks, and should be considered as one of several tools that can be used.
-+
-+Implementation Details
-+======================
-+
-+The over-arching objective of the fgkaslr implementation is incremental
-+improvement over the existing KASLR algorithm. It is designed to work with
-+the existing solution, and there are two main area where code changes occur:
-+Build time, and Load time.
-+
-+Build time
-+----------
-+
-+GCC has had an option to place functions into individual .text sections
-+for many years now (-ffunction-sections). This option is used to implement
-+function reordering at load time. The final compiled vmlinux retains all the
-+section headers, which can be used to help find the address ranges of each
-+function. Using this information and an expanded table of relocation addresses,
-+individual text sections can be shuffled immediately after decompression.
-+Some data tables inside the kernel that have assumptions about order
-+require sorting after the update. In order to modify these tables,
-+a few key symbols from the objcopy symbol stripping process are preserved
-+for use after shuffling the text segments.
-+
-+Load time
-+---------
-+
-+The boot kernel was modified to parse the vmlinux elf file after
-+decompression to check for symbols for modifying data tables, and to
-+look for any .text.* sections to randomize. The sections are then shuffled,
-+and tables are updated or resorted. The existing code which updated relocation
-+addresses was modified to account for not just a fixed delta from the load
-+address, but the offset that the function section was moved to. This requires
-+inspection of each address to see if it was impacted by a randomization.
-+
-+In order to hide the new layout, symbols reported through /proc/kallsyms will
-+be sorted by name alphabetically rather than by address.
-+
-+Performance Impact
-+==================
-+
-+There are two areas where function reordering can impact performance: boot
-+time latency, and run time performance.
-+
-+Boot time latency
-+-----------------
-+
-+This implementation of finer grained KASLR impacts the boot time of the kernel
-+in several places. It requires additional parsing of the kernel ELF file to
-+obtain the section headers of the sections to be randomized. It calls the
-+random number generator for each section to be randomized to determine that
-+section's new memory location. It copies the decompressed kernel into a new
-+area of memory to avoid corruption when laying out the newly randomized
-+sections. It increases the number of relocations the kernel has to perform at
-+boot time vs. standard KASLR, and it also requires a lookup on each address
-+that needs to be relocated to see if it was in a randomized section and needs
-+to be adjusted by a new offset. Finally, it re-sorts a few data tables that
-+are required to be sorted by address.
-+
-+Booting a test VM on a modern, well appointed system showed an increase in
-+latency of approximately 1 second.
-+
-+Run time
-+--------
-+
-+The performance impact at run-time of function reordering varies by workload.
-+Randomly reordering the functions will cause an increase in cache misses
-+for some workloads. Some workloads perform significantly worse under FGKASLR,
-+while others stay the same or even improve. In general, it will depend on the
-+code flow whether or not finer grained KASLR will impact a workload, and how
-+the underlying code was designed. Because the layout changes per boot, each
-+time a system is rebooted the performance of a workload may change.
-+
-+Image Size
-+==========
-+
-+fgkaslr increases the size of the kernel binary due to the extra section
-+headers that are included, as well as the extra relocations that need to
-+be added. You can expect fgkaslr to increase the size of the resulting
-+vmlinux by about 3%, and the compressed image (bzImage) by 15%.
-+
-+Memory Usage
-+============
-+
-+fgkaslr increases the amount of heap that is required at boot time,
-+although this extra memory is released when the kernel has finished
-+decompression. As a result, it may not be appropriate to use this feature
-+on systems without much memory.
-+
-+Building
-+========
-+
-+To enable fine grained KASLR, you need to have the following config options
-+set (including all the ones you would use to build normal KASLR)
-+
-+``CONFIG_FG_KASLR=y``
-+
-+fgkaslr for the kernel is only supported for the X86_64 architecture.
-+
-+Modules
-+=======
-+
-+Modules are randomized similarly to the rest of the kernel by shuffling
-+the sections at load time prior to moving them into memory. The module must
-+also have been build with the -ffunction-sections compiler option.
-+
-+Although fgkaslr for the kernel is only supported for the X86_64 architecture,
-+it is possible to use fgkaslr with modules on other architectures. To enable
-+this feature, select the following config option:
-+
-+``CONFIG_MODULE_FG_KASLR``
-+
-+This option is selected automatically for X86_64 when CONFIG_FG_KASLR is set.
-+
-+Disabling
-+=========
-+
-+Disabling normal kaslr using the nokaslr command line option also disables
-+fgkaslr. In addtion, it is possible to disable fgkaslr separately by booting
-+with fgkaslr=off on the commandline.
-diff --git a/Documentation/security/index.rst b/Documentation/security/index.rst
-index fc503dd689a7..5e370c409ad2 100644
---- a/Documentation/security/index.rst
-+++ b/Documentation/security/index.rst
-@@ -7,6 +7,7 @@ Security Documentation
- 
-    credentials
-    IMA-templates
-+   fgkaslr
-    keys/index
-    lsm
-    lsm-development
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 3a5a004498de..0ad5a31f1f0a 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -80,10 +80,12 @@ vmlinux-objs-y := $(obj)/vmlinux.lds $(obj)/kernel_info.o $(obj)/head_$(BITS).o
- 
- vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
- vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
-+vmlinux-objs-$(CONFIG_FG_KASLR) += $(obj)/utils.o
- ifdef CONFIG_X86_64
- 	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
-+	vmlinux-objs-$(CONFIG_FG_KASLR) += $(obj)/fgkaslr.o
- endif
- 
- vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
-@@ -120,6 +122,7 @@ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
- 
- ifdef CONFIG_FG_KASLR
- 	RELOCS_ARGS += --fg-kaslr
-+	OBJCOPYFLAGS += --keep-symbols=$(srctree)/$(src)/vmlinux.symbols
- endif
- 
- $(obj)/vmlinux.bin: vmlinux FORCE
-diff --git a/arch/x86/boot/compressed/fgkaslr.c b/arch/x86/boot/compressed/fgkaslr.c
-new file mode 100644
-index 000000000000..451e807de276
---- /dev/null
-+++ b/arch/x86/boot/compressed/fgkaslr.c
-@@ -0,0 +1,823 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * fgkaslr.c
-+ *
-+ * This contains the routines needed to reorder the kernel text section
-+ * at boot time.
-+ */
-+#include "misc.h"
-+#include "error.h"
-+#include "pgtable.h"
-+#include "../string.h"
-+#include "../voffset.h"
-+#include <linux/sort.h>
-+#include <linux/bsearch.h>
-+#include "../../include/asm/extable.h"
-+#include "../../include/asm/orc_types.h"
-+
-+/*
-+ * Longest parameter of 'fgkaslr=' is 'off' right now, plus an extra '\0'
-+ * for termination.
-+ */
-+#define MAX_FGKASLR_ARG_LENGTH 4
-+int nofgkaslr;
-+
-+/*
-+ * Use normal definitions of mem*() from string.c. There are already
-+ * included header files which expect a definition of memset() and by
-+ * the time we define memset macro, it is too late.
-+ */
-+#undef memcpy
-+#undef memset
-+#define memzero(s, n)	memset((s), 0, (n))
-+#define memmove		memmove
-+
-+void *memmove(void *dest, const void *src, size_t n);
-+
-+static unsigned long percpu_start;
-+static unsigned long percpu_end;
-+
-+static long kallsyms_names;
-+static long kallsyms_offsets;
-+static long kallsyms_num_syms;
-+static long kallsyms_relative_base;
-+static long kallsyms_markers;
-+static long __start___ex_table_addr;
-+static long __stop___ex_table_addr;
-+static long _stext;
-+static long _etext;
-+static long _sinittext;
-+static long _einittext;
-+static long __start_orc_unwind_ip;
-+static long __stop_orc_unwind_ip;
-+static long __start_orc_unwind;
-+
-+/* addresses in mapped address space */
-+static int *base;
-+static u8 *names;
-+static unsigned long relative_base;
-+static unsigned int *markers_addr;
-+
-+struct kallsyms_name {
-+	u8 len;
-+	u8 indecis[256];
-+};
-+
-+struct kallsyms_name *names_table;
-+
-+struct orc_entry *cur_orc_table;
-+int *cur_orc_ip_table;
-+
-+/*
-+ * This is an array of pointers to sections headers for randomized sections
-+ */
-+Elf64_Shdr **sections;
-+
-+/*
-+ * This is an array of all section headers, randomized or otherwise.
-+ */
-+Elf64_Shdr *sechdrs;
-+
-+/*
-+ * The number of elements in the randomized section header array (sections)
-+ */
-+int sections_size;
-+
-+static bool is_text(long addr)
-+{
-+	if ((addr >= _stext && addr < _etext) ||
-+	    (addr >= _sinittext && addr < _einittext))
-+		return true;
-+	return false;
-+}
-+
-+bool is_percpu_addr(long pc, long offset)
-+{
-+	unsigned long ptr;
-+	long address;
-+
-+	address = pc + offset + 4;
-+
-+	ptr = (unsigned long)address;
-+
-+	if (ptr >= percpu_start && ptr < percpu_end)
-+		return true;
-+
-+	return false;
-+}
-+
-+static int cmp_section_addr(const void *a, const void *b)
-+{
-+	unsigned long ptr = (unsigned long)a;
-+	Elf64_Shdr *s = *(Elf64_Shdr **)b;
-+	unsigned long end = s->sh_addr + s->sh_size;
-+
-+	if (ptr >= s->sh_addr && ptr < end)
-+		return 0;
-+
-+	if (ptr < s->sh_addr)
-+		return -1;
-+
-+	return 1;
-+}
-+
-+/*
-+ * Discover if the address is in a randomized section and if so, adjust
-+ * by the saved offset.
-+ */
-+Elf64_Shdr *adjust_address(long *address)
-+{
-+	Elf64_Shdr **s;
-+	Elf64_Shdr *shdr;
-+
-+	if (nofgkaslr)
-+		return NULL;
-+
-+	s = bsearch((const void *)*address, sections, sections_size, sizeof(*s),
-+		    cmp_section_addr);
-+	if (s) {
-+		shdr = *s;
-+		*address += shdr->sh_offset;
-+		return shdr;
-+	}
-+
-+	return NULL;
-+}
-+
-+void adjust_relative_offset(long pc, long *value, Elf64_Shdr *section)
-+{
-+	Elf64_Shdr *s;
-+	long address;
-+
-+	if (nofgkaslr)
-+		return;
-+
-+	/*
-+	 * sometimes we are updating a relative offset that would
-+	 * normally be relative to the next instruction (such as a call).
-+	 * In this case to calculate the target, you need to add 32bits to
-+	 * the pc to get the next instruction value. However, sometimes
-+	 * targets are just data that was stored in a table such as ksymtab
-+	 * or cpu alternatives. In this case our target is not relative to
-+	 * the next instruction.
-+	 */
-+
-+	/*
-+	 * Calculate the address that this offset would call.
-+	 */
-+	if (!is_text(pc))
-+		address = pc + *value;
-+	else
-+		address = pc + *value + 4;
-+
-+	/*
-+	 * if the address is in section that was randomized,
-+	 * we need to adjust the offset.
-+	 */
-+	s = adjust_address(&address);
-+	if (s)
-+		*value += s->sh_offset;
-+
-+	/*
-+	 * If the PC that this offset was calculated for was in a section
-+	 * that has been randomized, the value needs to be adjusted by the
-+	 * same amount as the randomized section was adjusted from it's original
-+	 * location.
-+	 */
-+	if (section)
-+		*value -= section->sh_offset;
-+}
-+
-+static void kallsyms_swp(void *a, void *b, int size)
-+{
-+	int idx1, idx2;
-+	int temp;
-+	struct kallsyms_name name_a;
-+
-+	/* determine our index into the array */
-+	idx1 = (int *)a - base;
-+	idx2 = (int *)b - base;
-+	temp = base[idx1];
-+	base[idx1] = base[idx2];
-+	base[idx2] = temp;
-+
-+	/* also swap the names table */
-+	memcpy(&name_a, &names_table[idx1], sizeof(name_a));
-+	memcpy(&names_table[idx1], &names_table[idx2],
-+	       sizeof(struct kallsyms_name));
-+	memcpy(&names_table[idx2], &name_a, sizeof(struct kallsyms_name));
-+}
-+
-+static int kallsyms_cmp(const void *a, const void *b)
-+{
-+	int addr_a, addr_b;
-+	unsigned long uaddr_a, uaddr_b;
-+
-+	addr_a = *(int *)a;
-+	addr_b = *(int *)b;
-+
-+	if (addr_a >= 0)
-+		uaddr_a = addr_a;
-+	if (addr_b >= 0)
-+		uaddr_b = addr_b;
-+
-+	if (addr_a < 0)
-+		uaddr_a = relative_base - 1 - addr_a;
-+	if (addr_b < 0)
-+		uaddr_b = relative_base - 1 - addr_b;
-+
-+	if (uaddr_b > uaddr_a)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+static void deal_with_names(int num_syms)
-+{
-+	int num_bytes;
-+	int i, j;
-+	int offset;
-+
-+	/* we should have num_syms kallsyms_name entries */
-+	num_bytes = num_syms * sizeof(*names_table);
-+	names_table = malloc(num_syms * sizeof(*names_table));
-+	if (!names_table) {
-+		debug_putstr("\nbytes requested: ");
-+		debug_puthex(num_bytes);
-+		error("\nunable to allocate space for names table\n");
-+	}
-+
-+	/* read all the names entries */
-+	offset = 0;
-+	for (i = 0; i < num_syms; i++) {
-+		names_table[i].len = names[offset];
-+		offset++;
-+		for (j = 0; j < names_table[i].len; j++) {
-+			names_table[i].indecis[j] = names[offset];
-+			offset++;
-+		}
-+	}
-+}
-+
-+static void write_sorted_names(int num_syms)
-+{
-+	int i, j;
-+	int offset = 0;
-+	unsigned int *markers;
-+
-+	/*
-+	 * we are going to need to regenerate the markers table, which is a
-+	 * table of offsets into the compressed stream every 256 symbols.
-+	 * this code copied almost directly from scripts/kallsyms.c
-+	 */
-+	markers = malloc(sizeof(unsigned int) * ((num_syms + 255) / 256));
-+	if (!markers) {
-+		debug_putstr("\nfailed to allocate heap space of ");
-+		debug_puthex(((num_syms + 255) / 256));
-+		debug_putstr(" bytes\n");
-+		error("Unable to allocate space for markers table");
-+	}
-+
-+	for (i = 0; i < num_syms; i++) {
-+		if ((i & 0xFF) == 0)
-+			markers[i >> 8] = offset;
-+
-+		names[offset] = (u8)names_table[i].len;
-+		offset++;
-+		for (j = 0; j < names_table[i].len; j++) {
-+			names[offset] = (u8)names_table[i].indecis[j];
-+			offset++;
-+		}
-+	}
-+
-+	/* write new markers table over old one */
-+	for (i = 0; i < ((num_syms + 255) >> 8); i++)
-+		markers_addr[i] = markers[i];
-+
-+	free(markers);
-+	free(names_table);
-+}
-+
-+static void sort_kallsyms(unsigned long map)
-+{
-+	int num_syms;
-+	int i;
-+
-+	debug_putstr("\nRe-sorting kallsyms...\n");
-+
-+	num_syms = *(int *)(kallsyms_num_syms + map);
-+	base = (int *)(kallsyms_offsets + map);
-+	relative_base = *(unsigned long *)(kallsyms_relative_base + map);
-+	markers_addr = (unsigned int *)(kallsyms_markers + map);
-+	names = (u8 *)(kallsyms_names + map);
-+
-+	/*
-+	 * the kallsyms table was generated prior to any randomization.
-+	 * it is a bunch of offsets from "relative base". In order for
-+	 * us to check if a symbol has an address that was in a randomized
-+	 * section, we need to reconstruct the address to it's original
-+	 * value prior to handle_relocations.
-+	 */
-+	for (i = 0; i < num_syms; i++) {
-+		unsigned long addr;
-+		int new_base;
-+
-+		/*
-+		 * according to kernel/kallsyms.c, positive offsets are absolute
-+		 * values and negative offsets are relative to the base.
-+		 */
-+		if (base[i] >= 0)
-+			addr = base[i];
-+		else
-+			addr = relative_base - 1 - base[i];
-+
-+		if (adjust_address(&addr)) {
-+			/* here we need to recalcuate the offset */
-+			new_base = relative_base - 1 - addr;
-+			base[i] = new_base;
-+		}
-+	}
-+
-+	/*
-+	 * here we need to read in all the kallsyms_names info
-+	 * so that we can regenerate it.
-+	 */
-+	deal_with_names(num_syms);
-+
-+	sort(base, num_syms, sizeof(int), kallsyms_cmp, kallsyms_swp);
-+
-+	/* write the newly sorted names table over the old one */
-+	write_sorted_names(num_syms);
-+}
-+
-+#include "../../../../lib/extable.c"
-+
-+static inline unsigned long
-+ex_fixup_handler(const struct exception_table_entry *x)
-+{
-+	return ((unsigned long)&x->handler + x->handler);
-+}
-+
-+static inline unsigned long
-+ex_fixup_addr(const struct exception_table_entry *x)
-+{
-+	return ((unsigned long)&x->fixup + x->fixup);
-+}
-+
-+static void update_ex_table(unsigned long map)
-+{
-+	struct exception_table_entry *start_ex_table =
-+		(struct exception_table_entry *)(__start___ex_table_addr + map);
-+	struct exception_table_entry *stop_ex_table =
-+		(struct exception_table_entry *)(__stop___ex_table_addr + map);
-+	int num_entries =
-+		(__stop___ex_table_addr - __start___ex_table_addr) /
-+		sizeof(struct exception_table_entry);
-+	int i;
-+
-+	debug_putstr("\nUpdating exception table...");
-+	for (i = 0; i < num_entries; i++) {
-+		unsigned long insn = ex_to_insn(&start_ex_table[i]);
-+		unsigned long fixup = ex_fixup_addr(&start_ex_table[i]);
-+		unsigned long handler = ex_fixup_handler(&start_ex_table[i]);
-+		unsigned long addr;
-+		Elf64_Shdr *s;
-+
-+		/* check each address to see if it needs adjusting */
-+		addr = insn - map;
-+		s = adjust_address(&addr);
-+		if (s)
-+			start_ex_table[i].insn += s->sh_offset;
-+
-+		addr = fixup - map;
-+		s = adjust_address(&addr);
-+		if (s)
-+			start_ex_table[i].fixup += s->sh_offset;
-+
-+		addr = handler - map;
-+		s = adjust_address(&addr);
-+		if (s)
-+			start_ex_table[i].handler += s->sh_offset;
-+	}
-+}
-+
-+static void sort_ex_table(unsigned long map)
-+{
-+	struct exception_table_entry *start_ex_table =
-+		(struct exception_table_entry *)(__start___ex_table_addr + map);
-+	struct exception_table_entry *stop_ex_table =
-+		(struct exception_table_entry *)(__stop___ex_table_addr + map);
-+
-+	debug_putstr("\nRe-sorting exception table...");
-+
-+	sort_extable(start_ex_table, stop_ex_table);
-+}
-+
-+static inline unsigned long orc_ip(const int *ip)
-+{
-+	return (unsigned long)ip + *ip;
-+}
-+
-+static void orc_sort_swap(void *_a, void *_b, int size)
-+{
-+	struct orc_entry *orc_a, *orc_b;
-+	struct orc_entry orc_tmp;
-+	int *a = _a, *b = _b, tmp;
-+	int delta = _b - _a;
-+
-+	/* Swap the .orc_unwind_ip entries: */
-+	tmp = *a;
-+	*a = *b + delta;
-+	*b = tmp - delta;
-+
-+	/* Swap the corresponding .orc_unwind entries: */
-+	orc_a = cur_orc_table + (a - cur_orc_ip_table);
-+	orc_b = cur_orc_table + (b - cur_orc_ip_table);
-+	orc_tmp = *orc_a;
-+	*orc_a = *orc_b;
-+	*orc_b = orc_tmp;
-+}
-+
-+static int orc_sort_cmp(const void *_a, const void *_b)
-+{
-+	struct orc_entry *orc_a;
-+	const int *a = _a, *b = _b;
-+	unsigned long a_val = orc_ip(a);
-+	unsigned long b_val = orc_ip(b);
-+
-+	if (a_val > b_val)
-+		return 1;
-+	if (a_val < b_val)
-+		return -1;
-+
-+	/*
-+	 * The "weak" section terminator entries need to always be on the left
-+	 * to ensure the lookup code skips them in favor of real entries.
-+	 * These terminator entries exist to handle any gaps created by
-+	 * whitelisted .o files which didn't get objtool generation.
-+	 */
-+	orc_a = cur_orc_table + (a - cur_orc_ip_table);
-+	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
-+}
-+
-+static void sort_orc_table(unsigned long map)
-+{
-+	int num_entries =
-+		(__stop_orc_unwind_ip - __start_orc_unwind_ip) / sizeof(int);
-+
-+	cur_orc_ip_table = (int *)(__start_orc_unwind_ip + map);
-+	cur_orc_table = (struct orc_entry *)(__start_orc_unwind + map);
-+
-+	debug_putstr("\nRe-sorting orc tables...\n");
-+	sort(cur_orc_ip_table, num_entries, sizeof(int), orc_sort_cmp,
-+	     orc_sort_swap);
-+}
-+
-+void post_relocations_cleanup(unsigned long map)
-+{
-+	if (!nofgkaslr) {
-+		update_ex_table(map);
-+		sort_ex_table(map);
-+		sort_orc_table(map);
-+	}
-+
-+	/*
-+	 * maybe one day free will do something. So, we "free" this memory
-+	 * in either case
-+	 */
-+	free(sections);
-+	free(sechdrs);
-+}
-+
-+void pre_relocations_cleanup(unsigned long map)
-+{
-+	if (nofgkaslr)
-+		return;
-+
-+	sort_kallsyms(map);
-+}
-+
-+static void shuffle_sections(int *list, int size)
-+{
-+	int i;
-+	unsigned long j;
-+	int temp;
-+
-+	for (i = size - 1; i > 0; i--) {
-+		j = kaslr_get_random_long(NULL) % (i + 1);
-+
-+		temp = list[i];
-+		list[i] = list[j];
-+		list[j] = temp;
-+	}
-+}
-+
-+static void move_text(int num_sections, char *secstrings, Elf64_Shdr *text,
-+		      void *source, void *dest, Elf64_Phdr *phdr)
-+{
-+	unsigned long adjusted_addr;
-+	int copy_bytes;
-+	void *stash;
-+	Elf64_Shdr **sorted_sections;
-+	int *index_list;
-+	int i, j;
-+
-+	memmove(dest, source + text->sh_offset, text->sh_size);
-+	copy_bytes = text->sh_size;
-+	dest += text->sh_size;
-+	adjusted_addr = text->sh_addr + text->sh_size;
-+
-+	/*
-+	 * we leave the sections sorted in their original order
-+	 * by s->sh_addr, but shuffle the indexes in a random
-+	 * order for copying.
-+	 */
-+	index_list = malloc(sizeof(int) * num_sections);
-+	if (!index_list)
-+		error("Failed to allocate space for index list");
-+
-+	for (i = 0; i < num_sections; i++)
-+		index_list[i] = i;
-+
-+	shuffle_sections(index_list, num_sections);
-+
-+	/*
-+	 * to avoid overwriting earlier sections before they can get
-+	 * copied to dest, stash everything into a buffer first.
-+	 * this will cause our source address to be off by
-+	 * phdr->p_offset though, so we'll adjust s->sh_offset below.
-+	 *
-+	 * TBD: ideally we'd simply decompress higher up so that our
-+	 * copy wasn't in danger of overwriting anything important.
-+	 */
-+	stash = malloc(phdr->p_filesz);
-+	if (!stash)
-+		error("Failed to allocate space for text stash");
-+
-+	memcpy(stash, source + phdr->p_offset, phdr->p_filesz);
-+
-+	/* now we'd walk through the sections. */
-+	for (j = 0; j < num_sections; j++) {
-+		unsigned long aligned_addr;
-+		Elf64_Shdr *s;
-+		const char *sname;
-+		void *src;
-+		int pad_bytes;
-+
-+		s = sections[index_list[j]];
-+
-+		sname = secstrings + s->sh_name;
-+
-+		/* align addr for this section */
-+		aligned_addr = ALIGN(adjusted_addr, s->sh_addralign);
-+
-+		/*
-+		 * copy out of stash, so adjust offset
-+		 */
-+		src = stash + s->sh_offset - phdr->p_offset;
-+
-+		/*
-+		 * Fill any space between sections with int3
-+		 */
-+		pad_bytes = aligned_addr - adjusted_addr;
-+		memset(dest, 0xcc, pad_bytes);
-+
-+		dest = (void *)ALIGN((unsigned long)dest, s->sh_addralign);
-+
-+		memmove(dest, src, s->sh_size);
-+
-+		dest += s->sh_size;
-+		copy_bytes += s->sh_size + pad_bytes;
-+		adjusted_addr = aligned_addr + s->sh_size;
-+
-+		/* we can blow away sh_offset for our own uses */
-+		s->sh_offset = aligned_addr - s->sh_addr;
-+	}
-+
-+	free(index_list);
-+
-+	/*
-+	 * move remainder of text segment. Ok to just use original source
-+	 * here since this area is untouched.
-+	 */
-+	memmove(dest, source + text->sh_offset + copy_bytes,
-+		phdr->p_filesz - copy_bytes);
-+	free(stash);
-+}
-+
-+#define GET_SYM(name)							\
-+	do {								\
-+		if (!name) {						\
-+			if (strcmp(#name, strtab + sym->st_name) == 0) {\
-+				name = sym->st_value;			\
-+				continue;				\
-+			}						\
-+		}							\
-+	} while (0)
-+
-+static void parse_symtab(Elf64_Sym *symtab, char *strtab, long num_syms)
-+{
-+	Elf64_Sym *sym;
-+
-+	if (!symtab || !strtab)
-+		return;
-+
-+	debug_putstr("\nLooking for symbols... ");
-+
-+	/*
-+	 * walk through the symbol table looking for the symbols
-+	 * that we care about.
-+	 */
-+	for (sym = symtab; --num_syms >= 0; sym++) {
-+		if (!sym->st_name)
-+			continue;
-+
-+		GET_SYM(kallsyms_num_syms);
-+		GET_SYM(kallsyms_offsets);
-+		GET_SYM(kallsyms_relative_base);
-+		GET_SYM(kallsyms_names);
-+		GET_SYM(kallsyms_markers);
-+		GET_SYM(_stext);
-+		GET_SYM(_etext);
-+		GET_SYM(_sinittext);
-+		GET_SYM(_einittext);
-+		GET_SYM(__start_orc_unwind_ip);
-+		GET_SYM(__stop_orc_unwind_ip);
-+		GET_SYM(__start_orc_unwind);
-+
-+		/*
-+		 * the GET_SYM macro can't be used here because these have
-+		 * to be renamed due to the inclusion of lib/extable.c
-+		 */
-+		if (!__start___ex_table_addr) {
-+			if (strcmp("__start___ex_table",
-+				   strtab + sym->st_name) == 0) {
-+				__start___ex_table_addr = sym->st_value;
-+				continue;
-+			}
-+		}
-+
-+		if (!__stop___ex_table_addr) {
-+			if (strcmp("__stop___ex_table",
-+				   strtab + sym->st_name) == 0) {
-+				__stop___ex_table_addr = sym->st_value;
-+				continue;
-+			}
-+		}
-+	}
-+}
-+
-+void parse_sections_headers(void *output, Elf64_Ehdr *ehdr, Elf64_Phdr *phdrs)
-+{
-+	Elf64_Phdr *phdr;
-+	Elf64_Shdr *s;
-+	Elf64_Shdr *text = NULL;
-+	Elf64_Shdr *percpu = NULL;
-+	char *secstrings;
-+	const char *sname;
-+	int num_sections = 0;
-+	Elf64_Sym *symtab = NULL;
-+	char *strtab = NULL;
-+	long num_syms = 0;
-+	void *dest;
-+	int i;
-+	char arg[MAX_FGKASLR_ARG_LENGTH];
-+	Elf64_Shdr shdr;
-+	unsigned long shnum;
-+	unsigned int shstrndx;
-+
-+	debug_putstr("\nParsing ELF section headers... ");
-+
-+	/*
-+	 * Even though fgkaslr may have been disabled, we still
-+	 * need to parse through the section headers to get the
-+	 * start and end of the percpu section. This is because
-+	 * if we were built with CONFIG_FG_KASLR, there are more
-+	 * relative relocations present in vmlinux.relocs than
-+	 * just the percpu, and only the percpu relocs need to be
-+	 * adjusted when using just normal base address kaslr.
-+	 */
-+	if (cmdline_find_option("fgkaslr", arg, sizeof(arg)) == 3 &&
-+	    !strncmp(arg, "off", 3)) {
-+		warn("FG_KASLR disabled on cmdline.");
-+		nofgkaslr = 1;
-+	}
-+
-+	/* read the first section header */
-+	shnum = ehdr->e_shnum;
-+	shstrndx = ehdr->e_shstrndx;
-+	if (shnum == SHN_UNDEF || shstrndx == SHN_XINDEX) {
-+		memcpy(&shdr, output + ehdr->e_shoff, sizeof(shdr));
-+		if (shnum == SHN_UNDEF)
-+			shnum = shdr.sh_size;
-+		if (shstrndx == SHN_XINDEX)
-+			shstrndx = shdr.sh_link;
-+	}
-+
-+	/* we are going to need to allocate space for the section headers */
-+	sechdrs = malloc(sizeof(*sechdrs) * shnum);
-+	if (!sechdrs)
-+		error("Failed to allocate space for shdrs");
-+
-+	sections = malloc(sizeof(*sections) * shnum);
-+	if (!sections)
-+		error("Failed to allocate space for section pointers");
-+
-+	memcpy(sechdrs, output + ehdr->e_shoff,
-+	       sizeof(*sechdrs) * shnum);
-+
-+	/* we need to allocate space for the section string table */
-+	s = &sechdrs[shstrndx];
-+
-+	secstrings = malloc(s->sh_size);
-+	if (!secstrings)
-+		error("Failed to allocate space for shstr");
-+
-+	memcpy(secstrings, output + s->sh_offset, s->sh_size);
-+
-+	/*
-+	 * now we need to walk through the section headers and collect the
-+	 * sizes of the .text sections to be randomized.
-+	 */
-+	for (i = 0; i < shnum; i++) {
-+		s = &sechdrs[i];
-+		sname = secstrings + s->sh_name;
-+
-+		if (s->sh_type == SHT_SYMTAB) {
-+			/* only one symtab per image */
-+			symtab = malloc(s->sh_size);
-+			if (!symtab)
-+				error("Failed to allocate space for symtab");
-+
-+			memcpy(symtab, output + s->sh_offset, s->sh_size);
-+			num_syms = s->sh_size / sizeof(*symtab);
-+			continue;
-+		}
-+
-+		if (s->sh_type == SHT_STRTAB && i != ehdr->e_shstrndx) {
-+			strtab = malloc(s->sh_size);
-+			if (!strtab)
-+				error("Failed to allocate space for strtab");
-+
-+			memcpy(strtab, output + s->sh_offset, s->sh_size);
-+		}
-+
-+		if (!strcmp(sname, ".text")) {
-+			text = s;
-+			continue;
-+		}
-+
-+		if (!strcmp(sname, ".data..percpu")) {
-+			/* get start addr for later */
-+			percpu = s;
-+		}
-+
-+		if (!(s->sh_flags & SHF_ALLOC) ||
-+		    !(s->sh_flags & SHF_EXECINSTR) ||
-+		    !(strstarts(sname, ".text")))
-+			continue;
-+
-+		sections[num_sections] = s;
-+
-+		num_sections++;
-+	}
-+	sections[num_sections] = NULL;
-+	sections_size = num_sections;
-+
-+	parse_symtab(symtab, strtab, num_syms);
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &phdrs[i];
-+
-+		switch (phdr->p_type) {
-+		case PT_LOAD:
-+			if ((phdr->p_align % 0x200000) != 0)
-+				error("Alignment of LOAD segment isn't multiple of 2MB");
-+			dest = output;
-+			dest += (phdr->p_paddr - LOAD_PHYSICAL_ADDR);
-+			if (!nofgkaslr &&
-+			    (text && phdr->p_offset == text->sh_offset)) {
-+				move_text(num_sections, secstrings, text,
-+					  output, dest, phdr);
-+			} else {
-+				if (percpu &&
-+				    phdr->p_offset == percpu->sh_offset) {
-+					percpu_start = percpu->sh_addr;
-+					percpu_end = percpu_start +
-+							phdr->p_filesz;
-+				}
-+				memmove(dest, output + phdr->p_offset,
-+					phdr->p_filesz);
-+			}
-+			break;
-+		default: /* Ignore other PT_* */
-+			break;
-+		}
-+	}
-+
-+	/* we need to keep the section info to redo relocs */
-+	free(secstrings);
-+
-+	free(phdrs);
-+}
-+
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index d7408af55738..6f596bd5b6e5 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -39,10 +39,6 @@
- #include <generated/utsrelease.h>
- #include <asm/efi.h>
- 
--/* Macros used by the included decompressor code below. */
--#define STATIC
--#include <linux/decompress/mm.h>
--
- #ifdef CONFIG_X86_5LEVEL
- unsigned int __pgtable_l5_enabled;
- unsigned int pgdir_shift __ro_after_init = 39;
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 9652d5c2afda..5f08922fd12a 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -26,9 +26,6 @@
-  * it is not safe to place pointers in static structures.
-  */
- 
--/* Macros used by the included decompressor code below. */
--#define STATIC		static
--
- /*
-  * Use normal definitions of mem*() from string.c. There are already
-  * included header files which expect a definition of memset() and by
-@@ -49,6 +46,10 @@ struct boot_params *boot_params;
- 
- memptr free_mem_ptr;
- memptr free_mem_end_ptr;
-+#ifdef CONFIG_FG_KASLR
-+unsigned long malloc_ptr;
-+int malloc_count;
-+#endif
- 
- static char *vidmem;
- static int vidport;
-@@ -203,10 +204,21 @@ static void handle_relocations(void *output, unsigned long output_len,
- 	if (IS_ENABLED(CONFIG_X86_64))
- 		delta = virt_addr - LOAD_PHYSICAL_ADDR;
- 
--	if (!delta) {
--		debug_putstr("No relocation needed... ");
--		return;
-+	/*
-+	 * it is possible to have delta be zero and
-+	 * still have enabled fg kaslr. We need to perform relocations
-+	 * for fgkaslr regardless of whether the base address has moved.
-+	 */
-+	if (!IS_ENABLED(CONFIG_FG_KASLR) ||
-+	    cmdline_find_option_bool("nokaslr")) {
-+		if (!delta) {
-+			debug_putstr("No relocation needed... ");
-+			return;
-+		}
- 	}
-+
-+	pre_relocations_cleanup(map);
-+
- 	debug_putstr("Performing relocations... ");
- 
- 	/*
-@@ -230,35 +242,106 @@ static void handle_relocations(void *output, unsigned long output_len,
- 	 */
- 	for (reloc = output + output_len - sizeof(*reloc); *reloc; reloc--) {
- 		long extended = *reloc;
-+		long value;
-+
-+		/*
-+		 * if using fgkaslr, we might have moved the address
-+		 * of the relocation. Check it to see if it needs adjusting
-+		 * from the original address.
-+		 */
-+		(void)adjust_address(&extended);
-+
- 		extended += map;
- 
- 		ptr = (unsigned long)extended;
- 		if (ptr < min_addr || ptr > max_addr)
- 			error("32-bit relocation outside of kernel!\n");
- 
--		*(uint32_t *)ptr += delta;
-+		value = *(int32_t *)ptr;
-+
-+		/*
-+		 * If using fgkaslr, the value of the relocation
-+		 * might need to be changed because it referred
-+		 * to an address that has moved.
-+		 */
-+		adjust_address(&value);
-+
-+		value += delta;
-+
-+		*(uint32_t *)ptr = value;
- 	}
- #ifdef CONFIG_X86_64
- 	while (*--reloc) {
- 		long extended = *reloc;
-+		long value;
-+		long oldvalue;
-+		Elf64_Shdr *s;
-+
-+		/*
-+		 * if using fgkaslr, we might have moved the address
-+		 * of the relocation. Check it to see if it needs adjusting
-+		 * from the original address.
-+		 */
-+		s = adjust_address(&extended);
-+
- 		extended += map;
- 
- 		ptr = (unsigned long)extended;
- 		if (ptr < min_addr || ptr > max_addr)
- 			error("inverse 32-bit relocation outside of kernel!\n");
- 
--		*(int32_t *)ptr -= delta;
-+		value = *(int32_t *)ptr;
-+		oldvalue = value;
-+
-+		/*
-+		 * If using fgkaslr, these relocs will contain
-+		 * relative offsets which might need to be
-+		 * changed because it referred
-+		 * to an address that has moved.
-+		 */
-+		adjust_relative_offset(*reloc, &value, s);
-+
-+		/*
-+		 * only percpu symbols need to have their values adjusted for
-+		 * base address kaslr since relative offsets within the .text
-+		 * and .text.* sections are ok wrt each other.
-+		 */
-+		if (is_percpu_addr(*reloc, oldvalue))
-+			value -= delta;
-+
-+		*(int32_t *)ptr = value;
- 	}
- 	for (reloc--; *reloc; reloc--) {
- 		long extended = *reloc;
-+		long value;
-+
-+		/*
-+		 * if using fgkaslr, we might have moved the address
-+		 * of the relocation. Check it to see if it needs adjusting
-+		 * from the original address.
-+		 */
-+		(void)adjust_address(&extended);
-+
- 		extended += map;
- 
- 		ptr = (unsigned long)extended;
- 		if (ptr < min_addr || ptr > max_addr)
- 			error("64-bit relocation outside of kernel!\n");
- 
--		*(uint64_t *)ptr += delta;
-+		value = *(int64_t *)ptr;
-+
-+		/*
-+		 * If using fgkaslr, the value of the relocation
-+		 * might need to be changed because it referred
-+		 * to an address that has moved.
-+		 */
-+		(void)adjust_address(&value);
-+
-+		value += delta;
-+
-+		*(uint64_t *)ptr = value;
- 	}
-+	post_relocations_cleanup(map);
- #endif
- }
- #else
-@@ -296,6 +379,14 @@ static void parse_elf(void *output)
- 
- 	memcpy(phdrs, output + ehdr.e_phoff, sizeof(*phdrs) * ehdr.e_phnum);
- 
-+	if (IS_ENABLED(CONFIG_FG_KASLR)) {
-+		if (!cmdline_find_option_bool("nokaslr")) {
-+			parse_sections_headers(output, &ehdr, phdrs);
-+			return;
-+		}
-+		warn("FG_KASLR disabled: 'nokaslr' on cmdline.");
-+	}
-+
- 	for (i = 0; i < ehdr.e_phnum; i++) {
- 		phdr = &phdrs[i];
- 
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 726e264410ff..e8e45f263eaf 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -39,6 +39,12 @@
- /* misc.c */
- extern memptr free_mem_ptr;
- extern memptr free_mem_end_ptr;
-+#define STATIC
-+#ifdef CONFIG_FG_KASLR
-+#define STATIC_RW_DATA extern
-+#endif
-+#include <linux/decompress/mm.h>
-+
- extern struct boot_params *boot_params;
- void __putstr(const char *s);
- void __puthex(unsigned long value);
-@@ -74,6 +80,34 @@ struct mem_vector {
- 	unsigned long long size;
- };
- 
-+#ifdef CONFIG_X86_64
-+#define Elf_Ehdr Elf64_Ehdr
-+#define Elf_Phdr Elf64_Phdr
-+#define Elf_Shdr Elf64_Shdr
-+#else
-+#define Elf_Ehdr Elf32_Ehdr
-+#define Elf_Phdr Elf32_Phdr
-+#define Elf_Shdr Elf32_Shdr
-+#endif
-+
-+#if CONFIG_FG_KASLR
-+void parse_sections_headers(void *output, Elf_Ehdr *ehdr, Elf_Phdr *phdrs);
-+void pre_relocations_cleanup(unsigned long map);
-+void post_relocations_cleanup(unsigned long map);
-+Elf_Shdr *adjust_address(long *address);
-+void adjust_relative_offset(long pc, long *value, Elf_Shdr *section);
-+bool is_percpu_addr(long pc, long offset);
-+#else
-+static inline void parse_sections_headers(void *output, Elf_Ehdr *ehdr,
-+					  Elf_Phdr *phdrs) { }
-+static inline void pre_relocations_cleanup(unsigned long map) { }
-+static inline void post_relocations_cleanup(unsigned long map) { }
-+static inline Elf_Shdr *adjust_address(long *address) { return NULL; }
-+static inline void adjust_relative_offset(long pc, long *value,
-+					  Elf_Shdr *section) { }
-+static inline bool is_percpu_addr(long pc, long offset) { return true; }
-+#endif /* CONFIG_FG_KASLR */
-+
- #if CONFIG_RANDOMIZE_BASE
- /* kaslr.c */
- void choose_random_location(unsigned long input,
-diff --git a/arch/x86/boot/compressed/utils.c b/arch/x86/boot/compressed/utils.c
-new file mode 100644
-index 000000000000..ceefc58d7c71
---- /dev/null
-+++ b/arch/x86/boot/compressed/utils.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * utils.c
-+ *
-+ * This contains various libraries that are needed for fgkaslr
-+ */
-+#define __DISABLE_EXPORTS
-+#define _LINUX_KPROBES_H
-+#define NOKPROBE_SYMBOL(fname)
-+#include "../../../../lib/sort.c"
-+#include "../../../../lib/bsearch.c"
-+
-diff --git a/arch/x86/boot/compressed/vmlinux.symbols b/arch/x86/boot/compressed/vmlinux.symbols
-new file mode 100644
-index 000000000000..cc86e79a2a3d
---- /dev/null
-+++ b/arch/x86/boot/compressed/vmlinux.symbols
-@@ -0,0 +1,17 @@
-+kallsyms_offsets
-+kallsyms_addresses
-+kallsyms_num_syms
-+kallsyms_relative_base
-+kallsyms_names
-+kallsyms_token_table
-+kallsyms_token_index
-+kallsyms_markers
-+__start___ex_table
-+__stop___ex_table
-+_sinittext
-+_einittext
-+_stext
-+_etext
-+__start_orc_unwind_ip
-+__stop_orc_unwind_ip
-+__start_orc_unwind
-diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
-index 680c320363db..6918d33eb5ef 100644
---- a/arch/x86/include/asm/boot.h
-+++ b/arch/x86/include/asm/boot.h
-@@ -26,8 +26,19 @@
- 
- #ifdef CONFIG_KERNEL_BZIP2
- # define BOOT_HEAP_SIZE		0x400000
--#else /* !CONFIG_KERNEL_BZIP2 */
--# define BOOT_HEAP_SIZE		 0x10000
-+#elif CONFIG_FG_KASLR
-+/*
-+ * We need extra boot heap when using fgkaslr because we make a copy
-+ * of the original decompressed kernel to avoid issues with writing
-+ * over ourselves when shuffling the sections. We also need extra
-+ * space for resorting kallsyms after shuffling. This value could
-+ * be decreased if free() would release memory properly, or if we
-+ * could avoid the kernel copy. It would need to be increased if we
-+ * find additional tables that need to be resorted.
-+ */
-+# define BOOT_HEAP_SIZE		0x4000000
-+#else /* !CONFIG_KERNEL_BZIP2 && !CONFIG_FG_KASLR */
-+# define BOOT_HEAP_SIZE		0x10000
- #endif
- 
- #ifdef CONFIG_X86_64
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 34c02e4290fe..a85d1792d5a8 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -298,6 +298,7 @@ typedef struct elf64_phdr {
- #define SHN_LIVEPATCH	0xff20
- #define SHN_ABS		0xfff1
- #define SHN_COMMON	0xfff2
-+#define SHN_XINDEX	0xffff
- #define SHN_HIRESERVE	0xffff
-  
- typedef struct elf32_shdr {
--- 
-2.20.1
+Looks like noone ever responded to this.
+
+
+This change looks fine but is there a background on the problem? I
+looked in the archives and didn't find the relevant discussion.
+
+
+-boris
+
+
+>
+> Cc: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
+> Cc: stable@vger.kernel.org
+> Reported-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingsl=
+ab.com>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+>  drivers/xen/events/events_base.c     | 10 ++++++++--
+>  drivers/xen/events/events_internal.h |  3 +++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/even=
+ts_base.c
+> index 499eff7d3f65..838762fe3d6e 100644
+> --- a/drivers/xen/events/events_base.c
+> +++ b/drivers/xen/events/events_base.c
+> @@ -247,10 +247,16 @@ static void xen_irq_info_cleanup(struct irq_info =
+*info)
+>   */
+>  unsigned int evtchn_from_irq(unsigned irq)
+>  {
+> +	struct irq_info *info;
+> +
+>  	if (WARN(irq >=3D nr_irqs, "Invalid irq %d!\n", irq))
+>  		return 0;
+> =20
+> -	return info_for_irq(irq)->evtchn;
+> +	info =3D info_for_irq(irq);
+> +	if (info =3D=3D NULL)
+> +		return 0;
+> +
+> +	return info->evtchn;
+>  }
+> =20
+>  unsigned irq_from_evtchn(unsigned int evtchn)
+> @@ -436,7 +442,7 @@ static void xen_free_irq(unsigned irq)
+> =20
+>  	WARN_ON(info->refcnt > 0);
+> =20
+> -	kfree(info);
+> +	kfree_rcu(info, rcu);
+> =20
+>  	/* Legacy IRQ descriptors are managed by the arch. */
+>  	if (irq < nr_legacy_irqs())
+> diff --git a/drivers/xen/events/events_internal.h b/drivers/xen/events/=
+events_internal.h
+> index 82938cff6c7a..c421055843c8 100644
+> --- a/drivers/xen/events/events_internal.h
+> +++ b/drivers/xen/events/events_internal.h
+> @@ -7,6 +7,8 @@
+>  #ifndef __EVENTS_INTERNAL_H__
+>  #define __EVENTS_INTERNAL_H__
+> =20
+> +#include <linux/rcupdate.h>
+> +
+>  /* Interrupt types. */
+>  enum xen_irq_type {
+>  	IRQT_UNBOUND =3D 0,
+> @@ -30,6 +32,7 @@ enum xen_irq_type {
+>   */
+>  struct irq_info {
+>  	struct list_head list;
+> +	struct rcu_head rcu;
+>  	int refcnt;
+>  	enum xen_irq_type type;	/* type */
+>  	unsigned irq;
+
+
 
