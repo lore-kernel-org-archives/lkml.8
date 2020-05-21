@@ -2,122 +2,74 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5998DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB41C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3D320759
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PIIXS+eC"
+	by mail.kernel.org (Postfix) with ESMTP id 137E520759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbgEUR5a (ORCPT
+        id S1729213AbgEUR6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgEUR5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:57:30 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C6F5C061A0E;
-        Thu, 21 May 2020 10:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YEGiyJ5J60rxwdmY4lT+xudS1/jh1/7YclIMmGnHZGE=; b=PIIXS+eC5DD7LBhbkxVl4hQbPo
-        KRjVT1wOlcv35cRLz4KSRkcdxAS5QFauxquIwnF77pgAYeQAwr5G9x6ZulTl59oV242VgnCJgAdx0
-        xP5uwShg7+UQFjaIY+1sW9kSBTIpUTBnHhghxcoW5tcRBKXOEMoBLTUnI6J8ulVjj/rEF6dKQgtsX
-        pqplH781Rty/n4VXCJkoDhKtk6pFoaPtcrJv4oA8F4YRc3+SWs9fA6LkFWCbYZsUBKrtvBvpveVUo
-        Dp9gte6FOWoXvyl1Sb4UDL7f48KfROIVbL5dx3qO8a7O0usw/DHcgSm21k+CZEem4Oic2oayY4cu6
-        8YEwcOfg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbpRh-0000m4-8s; Thu, 21 May 2020 17:57:29 +0000
-Date:   Thu, 21 May 2020 10:57:29 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Namjae Jeon <linkinjeon@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
-Subject: Re: [PATCH v2] exfat: add the dummy mount options to be backward
- compatible with staging/exfat
-Message-ID: <20200521175729.GE28818@bombadil.infradead.org>
-References: <20200521140502.2409-1-linkinjeon@kernel.org>
- <eb8858fb-c3bc-3f8d-96c1-3b4082c14373@sandeen.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb8858fb-c3bc-3f8d-96c1-3b4082c14373@sandeen.net>
+        Thu, 21 May 2020 13:58:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:63550 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbgEUR6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:58:15 -0400
+IronPort-SDR: gwicssT2ogRWISmDQEqF27Bq37+dNKBNRvn17BPFIrv2x81JSSpaQz/DJui/Ixp1F9xQfBdPkD
+ JveBl22+ZIBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 10:58:14 -0700
+IronPort-SDR: TcfMhpGw3LfGf0eahhdlMV9ev/8N/Xltjf0NJSvAFjXaminb+VNw5h8b/ssbIBAipk9ek+wVFH
+ lAWktAqTPb0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
+   d="scan'208";a="254058362"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga007.jf.intel.com with ESMTP; 21 May 2020 10:58:11 -0700
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Auke Kok <auke-jan.h.kok@intel.com>,
+        Jeff Garzik <jeff@garzik.org>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Neftin, Sasha" <sasha.neftin@intel.com>,
+        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+        Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH 0/2] Make WOL of e1000e consistent with sysfs device wakeup
+Date:   Fri, 22 May 2020 01:58:02 +0800
+Message-Id: <cover.1590081982.git.yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 10:44:28AM -0500, Eric Sandeen wrote:
-> On 5/21/20 9:05 AM, Namjae Jeon wrote:
-> > As Ubuntu and Fedora release new version used kernel version equal to or
-> > higher than v5.4, They started to support kernel exfat filesystem.
-> > 
-> > Linus Torvalds reported mount error with new version of exfat on Fedora.
-> > 
-> > 	exfat: Unknown parameter 'namecase'
-> > 
-> > This is because there is a difference in mount option between old
-> > staging/exfat and new exfat.
-> > And utf8, debug, and codepage options as well as namecase have been
-> > removed from new exfat.
-> > 
-> > This patch add the dummy mount options as deprecated option to be backward
-> > compatible with old one.
-> 
-> Wow, it seems wild that we'd need to maintain compatibility with options
-> which only ever existed in a different codebase in a staging driver
-> (what's the point of staging if every interface that makes it that far has
-> to be maintained in perpetuity?)
-> 
-> Often, when things are deprecated, they are eventually removed.  Perhaps a
-> future removal date stated in this commit, or in Documentation/..../exfat.txt
-> would be good as a reminder to eventually remove this?
+Currently the WOL(Wake On Lan) bahavior of e1000e is not consistent with its corresponding
+device wake up ability.
+Fix this by:
+1. Do not wake up the system via WOL if device wakeup is disabled
+2. Make WOL display info from ethtool consistent with device wake up
+   settings in sysfs
 
-For NFS, 'intr' has been deprecated since December 2007 and has been
-printing a warning since June 2008.  How long until we delete it?
+Chen Yu (2):
+  e1000e: Do not wake up the system via WOL if device wakeup is disabled
+  e1000e: Make WOL info in ethtool consistent with device wake up
+    ability
 
-> >  static const struct constant_table exfat_param_enums[] = {
-> > @@ -223,6 +229,10 @@ static const struct fs_parameter_spec exfat_parameters[] = {
-> >  	fsparam_enum("errors",			Opt_errors, exfat_param_enums),
-> >  	fsparam_flag("discard",			Opt_discard),
-> >  	fsparam_s32("time_offset",		Opt_time_offset),
-> > +	fsparam_flag("utf8",			Opt_utf8),
-> > +	fsparam_flag("debug",			Opt_debug),
-> > +	fsparam_u32("namecase",			Opt_namecase),
-> > +	fsparam_u32("codepage",			Opt_codepage),
+ drivers/net/ethernet/intel/e1000e/ethtool.c |  2 +-
+ drivers/net/ethernet/intel/e1000e/netdev.c  | 14 ++++++++++----
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-	__fsparam(NULL, "utf8",		Opt_utf8, fs_param_deprecated, NULL),
-	__fsparam(NULL, "debug",	Opt_debug, fs_param_deprecated, NULL),
-	__fsparam(fs_param_is_u32, "namecase", Opt_namecase,
-						fs_param_deprecated, NULL),
-	__fsparam(fs_param_is_u32, "codepage", Opt_codepage,
-						fs_param_deprecated, NULL),
+-- 
+2.17.1
 
-> > @@ -278,6 +288,18 @@ static int exfat_parse_param(struct fs_context *fc, struct fs_parameter *param)
-> >  			return -EINVAL;
-> >  		opts->time_offset = result.int_32;
-> >  		break;
-> > +	case Opt_utf8:
-> > +		pr_warn("exFAT-fs: 'utf8' mount option is deprecated and has no effect\n");
-> > +		break;
-> > +	case Opt_debug:
-> > +		pr_warn("exFAT-fs: 'debug' mount option is deprecated and has no effect\n");
-> > +		break;
-> > +	case Opt_namecase:
-> > +		pr_warn("exFAT-fs: 'namecase' mount option is deprecated and has no effect\n");
-> > +		break;
-> > +	case Opt_codepage:
-> > +		pr_warn("exFAT-fs: 'codepage' mount option is deprecated and has no effect\n");
-> > +		break;
-
-and then you don't need this hunk because the fs parser will print the
-deprecated message for you.
