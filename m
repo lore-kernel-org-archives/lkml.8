@@ -2,64 +2,57 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF60FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2856AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F5E207C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B8F2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgEUAPR (ORCPT
+        id S1726852AbgEUARd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:15:17 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42330 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgEUAPR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:15:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id A4FDB2A2AFE
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Xose Vazquez Perez <xose.vazquez@gmail.com>
-Cc:     agk@redhat.com, snitzer@redhat.com, breeves@redhat.com,
-        linux-kernel@vger.kernel.org, khazhy@google.com, song@kernel.org,
-        dm-devel@redhat.com, mpatocka@redhat.com, kernel@collabora.com
-Subject: Re: [dm-devel] [PATCH v4 0/2] Historical Service Time Path Selector
-Organization: Collabora
-References: <20200511163910.3778467-1-krisman@collabora.com>
-        <ee987451-6d17-b978-809e-e0fe56dc13ce@gmail.com>
-Date:   Wed, 20 May 2020 20:15:09 -0400
-In-Reply-To: <ee987451-6d17-b978-809e-e0fe56dc13ce@gmail.com> (Xose Vazquez
-        Perez's message of "Thu, 21 May 2020 01:26:27 +0200")
-Message-ID: <85tv0am9de.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Wed, 20 May 2020 20:17:33 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:45466 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgEUARd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 20:17:33 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=phil.lan)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jbYtq-0005Re-SD; Thu, 21 May 2020 02:17:26 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: fix pinctrl-names for gpio-leds node on rk3326-odroid-go2
+Date:   Thu, 21 May 2020 02:17:25 +0200
+Message-Id: <159002021954.2754417.8270198597807714801.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200519111444.2208-1-jbx6244@gmail.com>
+References: <20200519111444.2208-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xose Vazquez Perez <xose.vazquez@gmail.com> writes:
+On Tue, 19 May 2020 13:14:44 +0200, Johan Jonker wrote:
+> The 'pinctrl-names' property should contain a list of names
+> to the assigned states. The value 'led_pins' in the gpio-leds
+> node on rk3326-odroid-go2 is not a state that is normally used,
+> so change it the common name 'default'.
 
-> On 5/11/20 6:39 PM, Gabriel Krisman Bertazi wrote:
->
->> This fourth version of HST applies the suggestion from Mikulas Patocka
->> to do the ktime_get_ns inside the mpath map_bio instead of generic
->> device-mapper code. This means that struct dm_mpath_io gained another
->> 64bit field.  For the request-based case, we continue to use the block
->> layer start time information.
->
-> You should add some info to the multipath.conf.5 man page (
-> https://git.opensvc.com/gitweb.cgi?p=multipath-tools/.git;a=blob;f=multipath/multipath.conf.5;h=05a5e8ffeb110d969f3b2381eb3b88d7f28380f6;hb=HEAD#l189
-> ),
-> or none one is going to use it.
+Applied, thanks!
 
-Sure, will do.
+[1/1] arm64: dts: rockchip: fix pinctrl-names for gpio-leds node on rk3326-odroid-go2
+      commit: b2cb68e864222eb3cc1d7c3c06edc40469699983
 
+Best regards,
 -- 
-Gabriel Krisman Bertazi
+Heiko Stuebner <heiko@sntech.de>
