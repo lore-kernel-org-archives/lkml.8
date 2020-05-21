@@ -6,207 +6,142 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC67C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEC820748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47ADC20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="FOQ4kxLw"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="UvUOZ2wn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgEUFJu (ORCPT
+        id S1726978AbgEUFLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 01:09:50 -0400
-Received: from mga11.intel.com ([192.55.52.93]:26043 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbgEUFJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 01:09:49 -0400
-IronPort-SDR: hMyGyMKJY9a69UqwcoELoz10bqQrnBTSsfG3FnwzWM13g2XBZQCX3m/dfJH9ISRb85iBbsW7W6
- EwFJvLb8L+Mw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 22:09:48 -0700
-IronPort-SDR: Fy1pLO/87D1P0ovNMbJEYsN7d/Lt4ODvyz6tklh+KE3T2AjTJmejsYzPiGVKfkJu6sFCYWct6g
- vD2AmBQqYhwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
-   d="scan'208";a="282928831"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga002.jf.intel.com with ESMTP; 20 May 2020 22:09:47 -0700
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 20 May 2020 22:09:47 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 20 May 2020 22:09:47 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.57) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 20 May 2020 22:09:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AxPTklkLk1byHfip+rj2a4ZraKRjxWxsMpQ8UmCaohUARvRONCF6U4XeNzQzJWmf+5yXgSP8UvRyd83dszAG9EFaYDgGOJWHNLfC+Z0T6oBrwdlDmswmn9bLbllsFFVOa6BxJuwiC04WG+z6LdVeyslDxzZfmXnE0122/A5Qsqhg9q9JTK6Uc0FXTc0hjbzuf/p34m1Re30W2YWOuN2jlVVjgxywEjCIDM3Cqwr0y13v5Pcqxe9/VagUGP7uclx/pbNOqFLyzUQ2DpNJ1yWQs9gkzJKpbWfp+ft9emXmHG37iZINqirFqVSLdJOT7zbJTe/hI1z+Aq4wBS/NOoySWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tx6kd6QW9R6VUpMe/yeToId/WpUtEaihTFi5LT+yG7E=;
- b=mBoAZ5qBFZF0PgKqKw9sGTcSLHYqB/H2qm5TcfuPKIQl6waLYDA4A13TVQKXyDPs+3VjzaJCOOJD1UnhHxrciydwbXy9X+6YWuAJ5ggU3l99lTOjW/xXm2aUFwicI+RZg1bU1cv0FT1EW7dgGhS8hVOPPApZujYCMa4rwkrTNMRXNWUKfnF1sck3Sm81MvrQzYxtQWC3adxk1WTR5CuxD+cSqJCXVsyovr6CtNMncgKm4W00SKa6+ov2Tk0FkN8/ZXmiM9y+j9QSzA3UOKHEbo8fsSYvwqp+/IteN6P1aPRZSR+DIp87yPct8SKbIFCpq6JywQTRW3p5VCvat7LiLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tx6kd6QW9R6VUpMe/yeToId/WpUtEaihTFi5LT+yG7E=;
- b=FOQ4kxLw3MIKpa/JNYgxxkU9c7bKzF/nwnlXF2oyGoCVPWExzlFCpn+T2Dl73HYJo/TDfuggKJXEMfPzutoEmmiP1eaIqLhzLYHFRuIhVWKIWd3KOC6lRLp3Mwrk88pIqzn1Q34akSw1r4LurlG8O4AWN4kmiEY+aCiksi0DEeE=
-Received: from DM6PR11MB4074.namprd11.prod.outlook.com (2603:10b6:5:5::11) by
- DM6PR11MB3514.namprd11.prod.outlook.com (2603:10b6:5:61::26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3000.26; Thu, 21 May 2020 05:09:45 +0000
-Received: from DM6PR11MB4074.namprd11.prod.outlook.com
- ([fe80::6921:e03e:b890:fd53]) by DM6PR11MB4074.namprd11.prod.outlook.com
- ([fe80::6921:e03e:b890:fd53%7]) with mapi id 15.20.3021.024; Thu, 21 May 2020
- 05:09:45 +0000
-From:   "Liao, Bard" <bard.liao@intel.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jank@cadence.com" <jank@cadence.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
-        "ranjani.sridharan@linux.intel.com" 
-        <ranjani.sridharan@linux.intel.com>,
-        "hui.wang@canonical.com" <hui.wang@canonical.com>,
-        "pierre-louis.bossart@linux.intel.com" 
-        <pierre-louis.bossart@linux.intel.com>,
-        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
-        "Blauciak, Slawomir" <slawomir.blauciak@intel.com>,
-        "Lin, Mengdong" <mengdong.lin@intel.com>
-Subject: RE: [PATCH 2/2] soundwire: intel: transition to 3 steps
- initialization
-Thread-Topic: [PATCH 2/2] soundwire: intel: transition to 3 steps
- initialization
-Thread-Index: AQHWLnZHNMkaCkFFVUyGMtyK/ck+QKiw/2uAgADQzaCAACXEgIAACFgA
-Date:   Thu, 21 May 2020 05:09:45 +0000
-Message-ID: <DM6PR11MB407456180646DCCD9A962FC3FFB70@DM6PR11MB4074.namprd11.prod.outlook.com>
-References: <20200519191903.6557-1-yung-chuan.liao@linux.intel.com>
- <20200519191903.6557-2-yung-chuan.liao@linux.intel.com>
- <20200520135425.GX374218@vkoul-mobl.Dlink>
- <DM6PR11MB4074165599273350FF7CA83EFFB70@DM6PR11MB4074.namprd11.prod.outlook.com>
- <20200521043655.GA374218@vkoul-mobl.Dlink>
-In-Reply-To: <20200521043655.GA374218@vkoul-mobl.Dlink>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [220.133.4.96]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5203bd3b-8f63-4379-fc23-08d7fd452d8a
-x-ms-traffictypediagnostic: DM6PR11MB3514:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3514CED644AD391739172583FFB70@DM6PR11MB3514.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 041032FF37
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KLq3kyw8JDx9rP/+Del1VSj7A5yhrWQfLnFxhnmuMJVbey3hOM4wg22egP/OHQrkJG1ZCvvNODYLtViWzN8RJ+u+K7yvNjuR25AAaabuvDnGJuuZ73rss2iuGqF6bvEdzUakqsj9TMtfNgjCO8al5j6+glYJ3n7XMNvMMy7DUFQrBRTePI7CY/dyAmc0RbMfY1aWL9vwipbWTSB0wbMRCe4F0iRWx8o+qTmsOEsXLf7QoGugDotbwCgiR6UO5gdvEua69Z/IBrLKcwTNJxOF6WqBlIYHPyvu4XyCt8XayYY2Ws8/l4c7DnSoicoEQK/eBfJN+fZfvIHZxFwMk0oRKgc+9iyRLL1PIhMinJxfJW4Xl38Jjv/dG5FPFBNGkzqqAafYvirBUjZTgiIZxFUiY7MFJnLd050U8yRPD4lGsmCkyOB9K0b+pLid78fOKw1L
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4074.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(366004)(136003)(39860400002)(26005)(5660300002)(71200400001)(52536014)(54906003)(66946007)(64756008)(316002)(66476007)(478600001)(76116006)(86362001)(8936002)(186003)(66446008)(66556008)(4326008)(53546011)(6506007)(55016002)(8676002)(7696005)(7416002)(6916009)(33656002)(9686003)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: e6eWLdwdBqYWDpknBeYtmlg4ErZIsoY9Xvv8M1lXuhwILxT3qKnpCCjOYG12u0PwO1EhlRZiKem75S9X/LoAoVJ/3yRp2ruYRBwuC4Njca7VeoFGZ2/0GUTxKoDrbgHUqSBU072eOeluEcGD/Q7XnWTSkNMTpRkBeypmRSIqkCAa7HzP2PA1Bpgd2SXKVTintDWqMuJH85FlU6RsqFjS6tj6BTAuFZgCBaurHAu5bHfEFGYlREZfFmu2xduYaTiyvjLRZv8BC18nvpqHCVvvWHFS9MkDHqBKyDQjeORKNbC/i47WJLf5egQChv4QNl41SMphKYv1R5mJLpXmAYbA/r1yRRJQVfhoPtC3YYLyuGnMDYYmS9TSe9iyejkjvyyoR62JNF1spO+iKd0i/7hJse2QHMeu+syYDwRqOxciorNjdA5QxWPNO4NihcbA0tcO/c3HYWi90fy7SWE1PtF9VzUJWWEl+kqRLsUCRJm96CE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 May 2020 01:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbgEUFLv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 01:11:51 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5524DC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 22:11:51 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id b28so1287405vsa.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 22:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AD8unmgm6oauUOHFj/P0iocD1WUvsir6u2NUntElyR0=;
+        b=UvUOZ2wnJ60BygQT1sHXXCrN2Tzvau1CgvUsJ7S7Zr6X7l7wgj+zG5uvyALUYk7B1w
+         HQfIDrgd+fRc779lt2xg0fEuyit4c/VliPIE0tqVrmAStjcAHlYwUhfnVSw71bXKFFTg
+         jkVOIgJG4BxuuOzdOJWjxoav6F3ddgx9Q50aog3PRXTt7dLq5VWDL50Ko4KS1o2G3VNq
+         hjFjUIwBP/JiO/+CN0eiAPETP6MkWHYkue378fKFkcKGq/RRG57ajLA8OWKMOID+VzAh
+         653VA97SNo5MISFjtUdnQsi5tFf2FHisn1O0A2sPHvVD3oJSyOOcB/YLNcQQIxxBILHE
+         iGyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AD8unmgm6oauUOHFj/P0iocD1WUvsir6u2NUntElyR0=;
+        b=pKWbJBTUQJVFvXw1JLKb2KUfns9YU3Ps3Ql6cCkCrn4wtnv/z8km3RP4okmHAc7ItM
+         optR2EFR8W3ea9/MzRbx0cAQ9cVea6ooX5XWwRXmyFcGkDLvq+IRkTJmHTLyHaePDnbV
+         tAA/xcK+cuj23vGzXFj85BpEbihS/KcX4pGNXzMJQRGc7PIr+hMsa/N85xip7gixgh8Q
+         VzrEFUUhGbN54Z+3/1TcDKeRmLTMUz1lkIvFRuv9P0qrZEJPkMr5fCoR321pDggGrT1Y
+         OFohZjnfBxEpmMERg9sGb7Ah7QCMOyeKlbSN0AxNOJXcus4TCjLIMg/2lvetk3WhhO8i
+         9bwA==
+X-Gm-Message-State: AOAM533yPNlP4KutdMPZ34acU9Z4RsZOShUyYVuEiccZM7VEADShjjvb
+        2KDXxPZ9CqJdJPH9DsIz5ay4IVkWriuZi6lma6QdekM4
+X-Google-Smtp-Source: ABdhPJwEolPuzTzn2SxjV+akxq1Zpi4fVI2XbgJG+xqPfsBq7KtXfbSJyzUcQrtxJCxj7c+hIGaAMMYcrGq1QNVIXgw=
+X-Received: by 2002:a67:407:: with SMTP id 7mr5683332vse.95.1590037909533;
+ Wed, 20 May 2020 22:11:49 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5203bd3b-8f63-4379-fc23-08d7fd452d8a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 05:09:45.4029
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nhyGUDFzhXPasQ8ovGYyr26RQcLx5iKu6IJ4+Mpa+e/cqtUkrzuKxVk3nycNmDMkKmmC4JM1vMp5QRC29Wr9ww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3514
-X-OriginatorOrg: intel.com
+References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
+ <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
+ <a9af415d-9fd0-dcea-79ee-0fb90f45045e@linaro.org> <2cd6c73b890b3eab12420adf4ae29101672e6a0b.camel@linux.intel.com>
+ <CAHLCerMfnHPuJnj6G4EvRPvODf1_Se4xM-OobA1o7eao5eetzg@mail.gmail.com> <703fcf3b2b6769f5e469f0b035846ee95193ef7d.camel@linux.intel.com>
+In-Reply-To: <703fcf3b2b6769f5e469f0b035846ee95193ef7d.camel@linux.intel.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 21 May 2020 10:41:04 +0530
+Message-ID: <CAHLCerOsZrrZYcRLH+iZFT9FPL8zfmy2Y-Py6f61YXUrMrkcbg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 3/5] thermal: Add support for setting notification thresholds
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Thursday, May 21, 2020 12:37 PM
-> To: Liao, Bard <bard.liao@intel.com>
-> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>; alsa-devel@alsa-project.=
-org;
-> linux-kernel@vger.kernel.org; tiwai@suse.de; broonie@kernel.org;
-> gregkh@linuxfoundation.org; jank@cadence.com;
-> srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
-> ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
-> louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>;
-> Blauciak, Slawomir <slawomir.blauciak@intel.com>; Lin, Mengdong
-> <mengdong.lin@intel.com>
-> Subject: Re: [PATCH 2/2] soundwire: intel: transition to 3 steps initiali=
-zation
->=20
-> On 21-05-20, 02:23, Liao, Bard wrote:
-> > > -----Original Message-----
-> > > From: Vinod Koul <vkoul@kernel.org>
-> > > Sent: Wednesday, May 20, 2020 9:54 PM
-> > > To: Bard Liao <yung-chuan.liao@linux.intel.com>
-> > > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
-> > > tiwai@suse.de; broonie@kernel.org; gregkh@linuxfoundation.org;
-> > > jank@cadence.com; srinivas.kandagatla@linaro.org;
-> > > rander.wang@linux.intel.com; ranjani.sridharan@linux.intel.com;
-> > > hui.wang@canonical.com; pierre- louis.bossart@linux.intel.com; Kale,
-> > > Sanyog R <sanyog.r.kale@intel.com>; Blauciak, Slawomir
-> > > <slawomir.blauciak@intel.com>; Lin, Mengdong
-> > > <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
-> > > Subject: Re: [PATCH 2/2] soundwire: intel: transition to 3 steps
-> > > initialization
-> > >
-> > > On 20-05-20, 03:19, Bard Liao wrote:
-> > > > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> > > >
-> > > > Rather than a plain-vanilla init/exit, this patch provides 3 steps
-> > > > in the initialization (ACPI scan, probe, startup) which makes it
-> > > > easier to detect platform support for SoundWire, allocate required
-> > > > resources as early as possible, and conversely help make the
-> > > > startup() callback lighter-weight with only hardware register setup=
-.
-> > >
-> > > Okay but can you add details in changelog on what each step would do?
-> >
-> > Sure. Will do.
-> >
-> > >
-> > > > @@ -1134,25 +1142,15 @@ static int intel_probe(struct
-> > > > platform_device
-> > > *pdev)
-> > > >
-> > > >  	intel_pdi_ch_update(sdw);
-> > > >
-> > > > -	/* Acquire IRQ */
-> > > > -	ret =3D request_threaded_irq(sdw->link_res->irq,
-> > > > -				   sdw_cdns_irq, sdw_cdns_thread,
-> > > > -				   IRQF_SHARED, KBUILD_MODNAME, &sdw-
-> > > >cdns);
-> > >
-> > > This is removed here but not added anywhere else, do we have no irq
-> > > after this patch?
-> >
-> > We use a single irq for all Intel Audio DSP events and it will be
-> > requested in the SOF driver.
->=20
-> And how will the irq be propagated to sdw/cdns drivers here?
+Hi Srinivas,
 
-We export the handler and call it on SOF driver.
+On Wed, May 20, 2020 at 11:46 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Wed, 2020-05-20 at 09:58 +0530, Amit Kucheria wrote:
+> > On Tue, May 19, 2020 at 5:10 AM Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com> wrote:
+> > > On Mon, 2020-05-18 at 18:37 +0200, Daniel Lezcano wrote:
+> > > > On 04/05/2020 20:16, Srinivas Pandruvada wrote:
+> > > > > Add new attributes in thermal syfs when a thermal drivers
+> > > > > provides
+> > > > > callbacks for them and CONFIG_THERMAL_USER_EVENT_INTERFACE is
+> > > > > defined.
+> > > > >
+> > > > > These attribute allow user space to stop polling for
+> > > > > temperature.
+> > > > >
+> > > > > These attributes are:
+> > > > > - temp_thres_low: Specify a notification temperature for a low
+> > > > > temperature threshold event.
+> > > > > temp_thres_high: Specify a notification temperature for a high
+> > > > > temperature threshold event.
+> > > > > temp_thres_hyst: Specify a change in temperature to send
+> > > > > notification
+> > > > > again.
+> > > > >
+> > > > > This is implemented by adding additional sysfs attribute group.
+> > > > > The
+> > > > > changes in this patch are trivial to add new attributes in
+> > > > > thermal
+> > > > > sysfs as done for other attributes.
+> > > >
+> > > > Isn't it duplicate with the trip point?
+> > > A trip point is where an in-kernel governor takes some action. This
+> > > is
+> > > not same as a notification temperature. For example at trip point
+> > > configured by ACPI at 85C, the thermal governor may start
+> > > aggressive
+> > > throttling.
+> > > But a user space can set a notification threshold at 80C and start
+> > > some
+> > > active controls like activate some fan to reduce the impact of
+> > > passive
+> > > control on performance.
+> >
+> > Then what is the use of thermal trip type "ACTIVE" ?
+> This is an example.
+> The defaults are set by the OEMs via ACPI. User can't modify that if
+> they want to optimize for their usage on Linux. There are fan control
+> daemon's which user use on top.
 
->=20
-> --
-> ~Vinod
+-ENOPARSE. Are you saying users "can" modify these?
+
+In any case, how is what you described earlier not possible with an
+ACTIVE trip point directly wired to the fan as a cooling device or
+with a HOT trip point that causes the platform driver to send
+notification to userspace where a fan control daemon can do what it
+needs to?
+
+Basically, I think the issue of polling is orthogonal to the
+introduction of the new attributes introduced in this patch and I
+don't understand the reason for these attributes from your commit
+description.
+
+> > > We need a way to distinguish between temperature notification
+> > > threshold
+> > > and actual trip point. Changing a trip point means that user wants
+> > > kernel to throttle at temperature.
+>
