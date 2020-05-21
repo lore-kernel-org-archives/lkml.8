@@ -2,238 +2,81 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78B2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4FD204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Urnx6PIU"
+	by mail.kernel.org (Postfix) with ESMTP id ACCDE20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbgEUTf0 (ORCPT
+        id S1729845AbgEUTiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgEUTfZ (ORCPT
+        Thu, 21 May 2020 15:38:05 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:54079 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728955AbgEUTiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:35:25 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C76FC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:35:25 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z72so7607485wmc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fXTE3yjnFJVJ4RMTP+hFtfV69y3g7idePydsdqEDOvU=;
-        b=Urnx6PIU4w0LHEM/0sVFU0WRGpU3pWxVPEGtXRmDC+zUmRU1/zi1kj16aFQ2P/UaY5
-         75vqXaVwj4O7sN47cqKRUcikoqiL6Rr84nUGLHkMXgk2PH3S0YM30hi1MPtzdQfWK9tT
-         JrBIweGMSKAztPbjtJX/78GjS0zmN6gLpPDq0=
+        Thu, 21 May 2020 15:38:04 -0400
+Received: by mail-il1-f197.google.com with SMTP id m17so6536386ilq.20
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:38:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fXTE3yjnFJVJ4RMTP+hFtfV69y3g7idePydsdqEDOvU=;
-        b=bKKEd0+UuQRxM735D0DjPHjQt9Myc6VP5ik80DoZ3ZLi3/rGlGaecqSAArNV7fwC2T
-         y/8Cr+pzO6Jv5eiJRarMxIGHUTS0rLEQ8jJh0D/Pg+XxaxI3SZXVv4pc8F0jynNPSHb+
-         Q3ssBTvncg4pLEz7MJH4WM0d77MyM5u3NKnKKmq1ZOjLF/lWO86y9dL9jm6NALgcyxT8
-         UMrvyoOEvO4gkoI7xSFhV3cCLcyENfUsPPJQ3DKxnhk2Eu287K8GAiz0YLZ5/vfsxY9O
-         BRMB3T3h9c4pSKEt6Phk15pNksMTcvwEzzUwtcYpijgyWGOVSmrnzAhoBLF7rzW713mH
-         sW+Q==
-X-Gm-Message-State: AOAM530VYV6zKaY3mh9oJ2PTRF9m2s3DN8pagz9E1bt8oYUOv92joHLH
-        QCIO5etwb0CIYJK9XPA35RC/LQWso3hLEAKm0/Yj1Q==
-X-Google-Smtp-Source: ABdhPJys3lSyamABhSpV9p1+ZRLgdctlDO3boTGydZwLnsXpdO06hyQIO/CDFT1eH5E1CtdgMMR4vEirWBhO7YFGEFU=
-X-Received: by 2002:a1c:7d02:: with SMTP id y2mr9060596wmc.92.1590089724177;
- Thu, 21 May 2020 12:35:24 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=NkM41cRyykyrTcXhuRq+Uqt1euBLz5q82M1iSb3aSkc=;
+        b=Vyq4FjcfL0G4ry/noXxTse6IGLn7PbvdlsKNgB76LjmqsY+8C33TaCHl+euugT/B7L
+         tb7mvd+7GgSuKw6ZyPIL/f9SvWX36GNRKbrVn/gL9ssod/Mu6OomNm1GfCc0A/s4ZUTG
+         t7eIlP96rbPpN5qTL8rA1/UdjBc3pt6JyR2LeS0IZaZt7y9Rc8ZnrxJ9V76CLqVp8x8B
+         9CLMphxAA/c0QzJoQrv4bfjUWhm7UVT1Ob+7CwAs6Zz6ViaaHQvs5uTr1racdWymcwar
+         eEqJTjN3mbvH31/D1f9cUKJWIzq+Ukk8EQpErmyMCRte+xEKjnVokQ4Sz9DaN4fkA2vu
+         tOQA==
+X-Gm-Message-State: AOAM532pveHq35ZUXs2qoE9TycTy4O/2/mhjhQbrOpBzPT/NITTNEypn
+        uOyEJBh12rfOFc10GE/i+5yHTMOz2wQGktmJqUIv6x3TRO0Z
+X-Google-Smtp-Source: ABdhPJz1FMid2HBzS6OeC8X8s51lXhWDo/4NiVC0UQXz/KcfgeapJlPG+XCp1SR4JS6Dx+SAezbEtWn4NTX3HiGc7Kjpjzv7X1zA
 MIME-Version: 1.0
-References: <20200519203419.12369-1-james.quinlan@broadcom.com>
- <20200519203419.12369-5-james.quinlan@broadcom.com> <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
-In-Reply-To: <5a52e39ce99214877e83104b8ea9f95c0d5b4e90.camel@suse.de>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 21 May 2020 15:35:11 -0400
-Message-ID: <CA+-6iNyqtFguHJ=sB=nKoghX6PR9ve5OuyafPw88mfSmhe+c8Q@mail.gmail.com>
-Subject: Re: [PATCH 04/15] PCI: brcmstb: Add compatibily of other chips
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a92:40ca:: with SMTP id d71mr10291945ill.200.1590089883386;
+ Thu, 21 May 2020 12:38:03 -0700 (PDT)
+Date:   Thu, 21 May 2020 12:38:03 -0700
+In-Reply-To: <0000000000004a72f505a5a16525@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a9080105a62da6e4@google.com>
+Subject: Re: WARNING in media_create_pad_link
+From:   syzbot <syzbot+dd320d114deb3f5bb79b@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, balbi@kernel.org,
+        gregkh@linuxfoundation.org, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 7:51 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Hi Jim,
->
-> On Tue, 2020-05-19 at 16:34 -0400, Jim Quinlan wrote:
-> > From: Jim Quinlan <jquinlan@broadcom.com>
-> >
-> > Add in compatibility strings and code for three Broadcom STB chips.
-> > Some of the register locations, shifts, and masks are different
-> > for certain chips, requiring the use of different constants based
-> > on of_id.
-> >
-> > We would like to add the following at this time to the match list
-> > but we need to wait until the end of this patchset so that
-> > everything works.
-> >
-> >     { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
-> >     { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-> >     { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-> >     { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
-> >
-> > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 103 +++++++++++++++++++++++---
-> >  1 file changed, 91 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c
-> > b/drivers/pci/controller/pcie-brcmstb.c
-> > index 73020b4ff090..c1cf4ea7d3d9 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -120,9 +120,8 @@
-> >  #define  PCIE_EXT_SLOT_SHIFT                         15
-> >  #define  PCIE_EXT_FUNC_SHIFT                         12
-> >
-> > -#define PCIE_RGR1_SW_INIT_1                          0x9210
-> >  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK                      0x1
-> > -#define  PCIE_RGR1_SW_INIT_1_INIT_MASK                       0x2
-> > +#define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT             0x0
-> >
-> >  /* PCIe parameters */
-> >  #define BRCM_NUM_PCIE_OUT_WINS               0x4
-> > @@ -152,6 +151,69 @@
-> >  #define SSC_STATUS_SSC_MASK          0x400
-> >  #define SSC_STATUS_PLL_LOCK_MASK     0x800
-> >
-> > +#define IDX_ADDR(pcie)       \
-> > +     (pcie->reg_offsets[EXT_CFG_INDEX])
-> > +#define DATA_ADDR(pcie)      \
-> > +     (pcie->reg_offsets[EXT_CFG_DATA])
-> > +#define PCIE_RGR1_SW_INIT_1(pcie) \
-> > +     (pcie->reg_offsets[RGR1_SW_INIT_1])
-> > +
-> > +enum {
-> > +     RGR1_SW_INIT_1,
-> > +     EXT_CFG_INDEX,
-> > +     EXT_CFG_DATA,
-> > +};
-> > +
-> > +enum {
-> > +     RGR1_SW_INIT_1_INIT_MASK,
-> > +     RGR1_SW_INIT_1_INIT_SHIFT,
-> > +};
-> > +
-> > +enum pcie_type {
-> > +     GENERIC,
-> > +     BCM7278,
-> > +};
-> > +
-> > +struct pcie_cfg_data {
-> > +     const int *reg_field_info;
-> > +     const int *offsets;
-> > +     const enum pcie_type type;
-> > +};
-> > +
-> > +static const int pcie_reg_field_info[] = {
-> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x2,
-> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
-> > +};
-> > +
-> > +static const int pcie_reg_field_info_bcm7278[] = {
-> > +     [RGR1_SW_INIT_1_INIT_MASK] = 0x1,
-> > +     [RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
-> > +};
-> > +
-> > +static const int pcie_offsets[] = {
-> > +     [RGR1_SW_INIT_1] = 0x9210,
-> > +     [EXT_CFG_INDEX]  = 0x9000,
-> > +     [EXT_CFG_DATA]   = 0x9004,
-> > +};
-> > +
-> > +static const struct pcie_cfg_data generic_cfg = {
-> > +     .reg_field_info = pcie_reg_field_info,
-> > +     .offsets        = pcie_offsets,
-> > +     .type           = GENERIC,
-> > +};
-> > +
-> > +static const int pcie_offset_bcm7278[] = {
-> > +     [RGR1_SW_INIT_1] = 0xc010,
-> > +     [EXT_CFG_INDEX] = 0x9000,
-> > +     [EXT_CFG_DATA] = 0x9004,
-> > +};
-> > +
-> > +static const struct pcie_cfg_data bcm7278_cfg = {
-> > +     .reg_field_info = pcie_reg_field_info_bcm7278,
-> > +     .offsets        = pcie_offset_bcm7278,
-> > +     .type           = BCM7278,
-> > +};
->
-> It's not essential, but if v2 is due I'd suggest factoring out the bcm2728
-> specific structures above, and moving them to patch #15. This will keep a
-> clearer division between the patch introducing the infrastructure and the one
-> adding the support for a new device.
->
-> > +
-> >  struct brcm_msi {
-> >       struct device           *dev;
-> >       void __iomem            *base;
-> > @@ -176,6 +238,9 @@ struct brcm_pcie {
-> >       int                     gen;
-> >       u64                     msi_target_addr;
-> >       struct brcm_msi         *msi;
-> > +     const int               *reg_offsets;
-> > +     const int               *reg_field_info;
-> > +     enum pcie_type          type;
-> >  };
-> >
-> >  /*
-> > @@ -602,20 +667,21 @@ static struct pci_ops brcm_pcie_ops = {
-> >
-> >  static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie, u32
-> > val)
-> >  {
-> > -     u32 tmp;
-> > +     u32 tmp, mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
-> > +     u32 shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
->
-> I don't think you need shift here, IIUC u32p_replace_bits() will take care of
-> all the masking and shifting internally, moreover, you'd be able to drop the
-> shift entry from reg_field_info.
-I believe that u32p_replace_bits requires at least one of the value or
-mask to be compile time constants to work and we don't have that here.
-Regards,
-Jim
->
-> > -     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1);
-> > -     u32p_replace_bits(&tmp, val, PCIE_RGR1_SW_INIT_1_INIT_MASK);
-> > -     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1);
-> > +     tmp = readl(pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> > +     tmp = (tmp & ~mask) | ((val << shift) & mask);
-> > +     writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
-> >  }
->
-> Regards,
-> Nicolas
->
+syzbot has bisected this bug to:
+
+commit f2c2e717642c66f7fe7e5dd69b2e8ff5849f4d10
+Author: Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon Feb 24 16:13:03 2020 +0000
+
+    usb: gadget: add raw-gadget interface
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=126d2b81100000
+start commit:   b85051e7 Merge tag 'fixes-for-5.7-rc6' of git://git.kernel..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=116d2b81100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=166d2b81100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c33c7f7c5471fd39
+dashboard link: https://syzkaller.appspot.com/bug?extid=dd320d114deb3f5bb79b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16accd06100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1680ce5e100000
+
+Reported-by: syzbot+dd320d114deb3f5bb79b@syzkaller.appspotmail.com
+Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
