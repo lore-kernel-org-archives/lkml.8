@@ -2,107 +2,167 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 315C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012E620756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:47:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a6ieZxkD"
+	by mail.kernel.org (Postfix) with ESMTP id BD10920756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgEUUrG (ORCPT
+        id S1729827AbgEUUsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:47:06 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52517 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726858AbgEUUrF (ORCPT
+        Thu, 21 May 2020 16:48:51 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40366 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbgEUUsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:47:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590094024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZCbHVU++ADvqtlwI3liORSZGCKRYFsaHclPVH+arJhU=;
-        b=a6ieZxkDXHsjGi0QQxdCHtjtestv2d/lYYQvqDwTPiZQxEgaG6rd6LB6+neVAczHZ4DCc+
-        3c03EWPgNanoOHgFEkFSNAkc4rfMrNSK9rHDv03fjvgElLFeFVo3h/cNzXgHvza5fq3r8q
-        OzDSvr1KF64IVYbMWvY+A4KwP/DfI8Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-gzgkwDQFMVKsC_RoQwr3Ew-1; Thu, 21 May 2020 16:47:00 -0400
-X-MC-Unique: gzgkwDQFMVKsC_RoQwr3Ew-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7559918FE860;
-        Thu, 21 May 2020 20:46:58 +0000 (UTC)
-Received: from Whitewolf.redhat.com (ovpn-116-188.rdu2.redhat.com [10.10.116.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C97B56ED80;
-        Thu, 21 May 2020 20:46:56 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Dave Airlie <airlied@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vblank: Fix -Wformat compile warnings on some arches
-Date:   Thu, 21 May 2020 16:46:47 -0400
-Message-Id: <20200521204647.2578479-1-lyude@redhat.com>
+        Thu, 21 May 2020 16:48:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D9C188030776;
+        Thu, 21 May 2020 20:48:46 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id DGrwowxHrJn9; Thu, 21 May 2020 23:48:44 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 0/8] clocksource: Fix MIPS GIC and DW APB Timer for Baikal-T1 SoC support
+Date:   Thu, 21 May 2020 23:48:09 +0300
+Message-ID: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some architectures like ppc64le and aarch64, compiling with
--Wformat=1 will throw the following warnings:
+As for all Baikal-T1 SoC related patchsets, which need this, we replaced
+the DW APB Timer legacy plain text-based dt-binding file with DT schema.
+Similarly the MIPS GIC bindings file is also converted to DT schema seeing
+it also defines the MIPS GIC Timer binding.
 
-  In file included from drivers/gpu/drm/drm_vblank.c:33:
-  drivers/gpu/drm/drm_vblank.c: In function 'drm_update_vblank_count':
-  drivers/gpu/drm/drm_vblank.c:273:16: warning: format '%llu' expects
-  argument of type 'long long unsigned int', but argument 4 has type
-  'long int' [-Wformat=]
-    DRM_DEBUG_VBL("updating vblank count on crtc %u:"
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ./include/drm/drm_print.h:407:22: note: in definition of macro
-  'DRM_DEBUG_VBL'
-    drm_dbg(DRM_UT_VBL, fmt, ##__VA_ARGS__)
-                        ^~~
-  drivers/gpu/drm/drm_vblank.c:274:22: note: format string is defined here
-           " current=%llu, diff=%u, hw=%u hw_last=%u\n",
-                     ~~~^
-                     %lu
+Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
+functionality of two another timers: embedded into the MIPS GIC timer and
+three external DW timers available over APB bus. But we can't use them
+before the corresponding drivers are properly fixed. First of all DW APB
+Timer shouldn't be bound to a single CPU, since as being accessible over
+APB they are external with respect to all possible CPUs. Secondly there
+might be more than just two DW APB Timers in the system (Baikal-T1 has
+three of them), so permit the driver to use one of them as a clocksource
+and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
+timer as a clocksource so register it in the corresponding subsystem
+(the patch has been found in the Paul Burton MIPS repo so I left the
+original Signed-off-by attribute). Finally in the same way as r4k timer
+the MIPS GIC timer should be used with care when CPUFREQ config is enabled
+since in case of CM2 the timer counting depends on the CPU reference clock
+frequency while the clocksource subsystem currently doesn't support the
+timers with non-stable clock.
 
-So, fix that with a typecast.
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Co-developed-by: Dave Airlie <airlied@redhat.com>
----
- drivers/gpu/drm/drm_vblank.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changelog v2:
+- Fix the SoB tags.
+- Our corporate email server doesn't change Message-Id anymore, so the
+  patchset is resubmitted being in the cover-letter-threaded format.
+- Convert the "snps,dw-apb-timer" binding to DT schema in a dedicated
+  patch.
+- Convert the "mti,gic" binding to DT schema in a dedicated patch.
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index acb3c3f65b579..1a96db2dd16fa 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -342,7 +342,7 @@ static void drm_update_vblank_count(struct drm_device *dev, unsigned int pipe,
- 
- 	DRM_DEBUG_VBL("updating vblank count on crtc %u:"
- 		      " current=%llu, diff=%u, hw=%u hw_last=%u\n",
--		      pipe, atomic64_read(&vblank->count), diff,
-+		      pipe, (unsigned long long)atomic64_read(&vblank->count), diff,
- 		      cur_vblank, vblank->last);
- 
- 	if (diff == 0) {
+Link: https://lore.kernel.org/linux-rtc/20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru
+Changelog v3:
+- Make the MIPS GIC timer sub-node name not having a unit-address number.
+- Discard allOf: [ $ref: /schemas/interrupt-controller.yaml# ] from MIPS
+  GIC bindings.
+- Add patch moving the "snps,dw-apb-timer" binding file to the directory
+  with timers binding files.
+
+Link: https://lore.kernel.org/linux-rtc/20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru
+Changelog v4:
+- Mark clocksource as unstable instead of lowering its rating.
+- Move conditional sched clocks registration to the Paul' patch.
+- Add Thomas Gleixner to the patchset To-list to draw his attention to the
+  patch "dt-bindings: interrupt-controller: Convert mti,gic to DT schema".
+
+Link: https://lore.kernel.org/linux-rtc/20200521005321.12129-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v5:
+- Fix mistakenly added "git_" prefix. Obviously it was supposed to be gic_.
+- Add new patch "clocksource: dw_apb_timer: Affiliate of-based timer with
+  any CPU"
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-rtc@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Paul Burton (1):
+  clocksource: mips-gic-timer: Register as sched_clock
+
+Serge Semin (7):
+  dt-bindings: rtc: Convert snps,dw-apb-timer to DT schema
+  dt-bindings: timer: Move snps,dw-apb-timer DT schema from rtc
+  dt-bindings: interrupt-controller: Convert mti,gic to DT schema
+  clocksource: dw_apb_timer: Make CPU-affiliation being optional
+  clocksource: dw_apb_timer: Affiliate of-based timer with any CPU
+  clocksource: dw_apb_timer_of: Fix missing clockevent timers
+  clocksource: mips-gic-timer: Mark GIC timer as unstable if ref clock
+    changes
+
+ .../interrupt-controller/mips-gic.txt         |  67 --------
+ .../interrupt-controller/mti,gic.yaml         | 148 ++++++++++++++++++
+ .../devicetree/bindings/rtc/dw-apb.txt        |  32 ----
+ .../bindings/timer/snps,dw-apb-timer.yaml     |  88 +++++++++++
+ drivers/clocksource/Kconfig                   |   1 +
+ drivers/clocksource/dw_apb_timer.c            |   5 +-
+ drivers/clocksource/dw_apb_timer_of.c         |   8 +-
+ drivers/clocksource/mips-gic-timer.c          |  50 +++++-
+ 8 files changed, 288 insertions(+), 111 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rtc/dw-apb.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
+
 -- 
-2.26.2
+2.25.1
 
