@@ -2,213 +2,148 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39028C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F990C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209B4207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41092072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:50:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p73WvaiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbgEUKtH (ORCPT
+        id S1728902AbgEUKuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 06:49:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48336 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgEUKtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 06:49:06 -0400
-IronPort-SDR: ubYYU07HwqI7YVj7lwR9jUnoduzOyvfO4T0rhvQVngXRkCu1WnIyTWs0+RyDq78JCdeRu5ZO6s
- 4QASHYGjI/ow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 03:49:06 -0700
-IronPort-SDR: j54tVNWAMKZQp/4fVJ75sZHIhe48xnM00KcoMaDyIP50TxlVD/PYD+y0lwjG06H3ynBd1zGGQv
- u2uXTKzu5nvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
-   d="scan'208";a="268592021"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 21 May 2020 03:49:01 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jbil6-00819S-9w; Thu, 21 May 2020 13:49:04 +0300
-Date:   Thu, 21 May 2020 13:49:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Thu, 21 May 2020 06:50:12 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38268 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbgEUKuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 06:50:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UWvnfa19r1FQDwx/9W5RgRGXvBWnFUWUYn6L5ClPmLM=; b=p73WvaiBjYOVphK2nrGUC/aXVZ
+        Q85YumDlcbbViLt6y3IZwuXRg4//ElM6aRGlb+WK2Q0yK8+3WafTz8mN2H4eUS5Nqnm/wLUTp+42f
+        zInP0dgKxLmHIBrL+jlJrNAlOIYv35lDJ4kfKYayjpwep9MzwWVos5dnubWQdnIlbpUlNSV0V6wtU
+        Tb1APna4unoZtH0Ac1e1Mn5VE6pA74HMmhUkmcRaK82mq10YtOvUfHIkb+7mAuvg4LIrcKNZQWthT
+        L1mySfRV/O9AJ1T7/Z5kczHIlI88UQq65qNPwXONwDzdhgQZCQ7IMnC48GeXSFD3dOsPH951VUgsw
+        X1cDOCZw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jbill-0002XT-MC; Thu, 21 May 2020 10:49:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 317103011E8;
+        Thu, 21 May 2020 12:49:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DF997286B5F33; Thu, 21 May 2020 12:49:37 +0200 (CEST)
+Date:   Thu, 21 May 2020 12:49:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/16] spi: dw: Use DMA max burst to set the request
- thresholds
-Message-ID: <20200521104904.GK1634618@smile.fi.intel.com>
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
- <20200521012206.14472-8-Sergey.Semin@baikalelectronics.ru>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: Endless soft-lockups for compiling workload since next-20200519
+Message-ID: <20200521104937.GB325303@hirez.programming.kicks-ass.net>
+References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
+ <20200520125056.GC325280@hirez.programming.kicks-ass.net>
+ <20200521004035.GA15455@lenoir>
+ <20200521093938.GG325280@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521012206.14472-8-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200521093938.GG325280@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 04:21:57AM +0300, Serge Semin wrote:
-> Each channel of DMA controller may have a limited length of burst
-> transaction (number of IO operations performed at ones in a single
-> DMA client request). This parameter can be used to setup the most
-> optimal DMA Tx/Rx data level values. In order to avoid the Tx buffer
-> overrun we can set the DMA Tx level to be of FIFO depth minus the
-> maximum burst transactions length. To prevent the Rx buffer underflow
-> the DMA Rx level should be set to the maximum burst transactions length.
-> This commit setups the DMA channels and the DW SPI DMA Tx/Rx levels
-> in accordance with these rules.
+On Thu, May 21, 2020 at 11:39:39AM +0200, Peter Zijlstra wrote:
+> On Thu, May 21, 2020 at 02:40:36AM +0200, Frederic Weisbecker wrote:
 
-Besides one bikeshedding point, looks good to me.
-Feel free to add
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+> This:
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+> >         smp_call_function_single_async() {             smp_call_function_single_async() {
+> >             // verified csd->flags != CSD_LOCK             // verified csd->flags != CSD_LOCK
+> >             csd->flags = CSD_LOCK                          csd->flags = CSD_LOCK
 > 
-> ---
-> 
-> Changelog v3:
-> - Use min() method to calculate the optimal burst values.
-> ---
->  drivers/spi/spi-dw-mid.c | 37 +++++++++++++++++++++++++++++++++----
->  drivers/spi/spi-dw.h     |  2 ++
->  2 files changed, 35 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
-> index be02fedd87cb..0e95d8bc85c5 100644
-> --- a/drivers/spi/spi-dw-mid.c
-> +++ b/drivers/spi/spi-dw-mid.c
-> @@ -34,6 +34,31 @@ static bool mid_spi_dma_chan_filter(struct dma_chan *chan, void *param)
->  	return true;
->  }
->  
-> +static void mid_spi_maxburst_init(struct dw_spi *dws)
-> +{
-> +	struct dma_slave_caps caps;
-> +	u32 max_burst, def_burst;
-> +	int ret;
-> +
-> +	def_burst = dws->fifo_len / 2;
-> +
-> +	ret = dma_get_slave_caps(dws->rxchan, &caps);
-> +	if (!ret && caps.max_burst)
-> +		max_burst = caps.max_burst;
-> +	else
-> +		max_burst = RX_BURST_LEVEL;
-> +
-> +	dws->rxburst = min(max_burst, def_burst);
-> +
-> +	ret = dma_get_slave_caps(dws->txchan, &caps);
-> +	if (!ret && caps.max_burst)
-> +		max_burst = caps.max_burst;
-> +	else
-> +		max_burst = TX_BURST_LEVEL;
-> +
-> +	dws->txburst = min(max_burst, def_burst);
-> +}
-> +
->  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  {
->  	struct dw_dma_slave slave = {
-> @@ -69,6 +94,8 @@ static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  	dws->master->dma_rx = dws->rxchan;
->  	dws->master->dma_tx = dws->txchan;
->  
-> +	mid_spi_maxburst_init(dws);
-> +
->  	return 0;
->  
->  free_rxchan:
-> @@ -94,6 +121,8 @@ static int mid_spi_dma_init_generic(struct device *dev, struct dw_spi *dws)
->  	dws->master->dma_rx = dws->rxchan;
->  	dws->master->dma_tx = dws->txchan;
->  
-> +	mid_spi_maxburst_init(dws);
-> +
->  	return 0;
->  }
->  
-> @@ -216,7 +245,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
->  	memset(&txconf, 0, sizeof(txconf));
->  	txconf.direction = DMA_MEM_TO_DEV;
->  	txconf.dst_addr = dws->dma_addr;
-> -	txconf.dst_maxburst = TX_BURST_LEVEL;
-> +	txconf.dst_maxburst = dws->txburst;
->  	txconf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	txconf.dst_addr_width = convert_dma_width(dws->n_bytes);
->  	txconf.device_fc = false;
-> @@ -290,7 +319,7 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_rx(struct dw_spi *dws,
->  	memset(&rxconf, 0, sizeof(rxconf));
->  	rxconf.direction = DMA_DEV_TO_MEM;
->  	rxconf.src_addr = dws->dma_addr;
-> -	rxconf.src_maxburst = RX_BURST_LEVEL;
-> +	rxconf.src_maxburst = dws->rxburst;
->  	rxconf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->  	rxconf.src_addr_width = convert_dma_width(dws->n_bytes);
->  	rxconf.device_fc = false;
-> @@ -315,8 +344,8 @@ static int mid_spi_dma_setup(struct dw_spi *dws, struct spi_transfer *xfer)
->  {
->  	u16 imr = 0, dma_ctrl = 0;
->  
-> -	dw_writel(dws, DW_SPI_DMARDLR, RX_BURST_LEVEL - 1);
-> -	dw_writel(dws, DW_SPI_DMATDLR, TX_BURST_LEVEL);
-> +	dw_writel(dws, DW_SPI_DMARDLR, dws->rxburst - 1);
-> +	dw_writel(dws, DW_SPI_DMATDLR, dws->fifo_len - dws->txburst);
->  
->  	if (xfer->tx_buf) {
->  		dma_ctrl |= SPI_DMA_TDMAE;
-> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-> index 4902f937c3d7..d0c8b7d3a5d2 100644
-> --- a/drivers/spi/spi-dw.h
-> +++ b/drivers/spi/spi-dw.h
-> @@ -141,7 +141,9 @@ struct dw_spi {
->  
->  	/* DMA info */
->  	struct dma_chan		*txchan;
-> +	u32			txburst;
->  	struct dma_chan		*rxchan;
-> +	u32			rxburst;
->  	unsigned long		dma_chan_busy;
->  	dma_addr_t		dma_addr; /* phy address of the Data register */
->  	const struct dw_spi_dma_ops *dma_ops;
-> -- 
-> 2.25.1
-> 
+> concurrent smp_call_function_single_async() using the same csd is what
+> I'm looking at as well.
 
--- 
-With Best Regards,
-Andy Shevchenko
+So something like this ought to cure the fundamental problem and make
+smp_call_function_single_async() more user friendly, but also more
+expensive.
 
+The problem is that while the ILB case is easy to fix, I can't seem to
+find an equally nice solution for the ttwu_remote_queue() case; that
+would basically require sticking the wake_csd in task_struct, I'll also
+post that.
 
+So it's either this:
+
+---
+ kernel/smp.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 84303197caf9..d1ca2a2d1cc7 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -109,6 +109,12 @@ static __always_inline void csd_lock_wait(call_single_data_t *csd)
+ 	smp_cond_load_acquire(&csd->flags, !(VAL & CSD_FLAG_LOCK));
+ }
+ 
++/*
++ * csd_lock() can use non-atomic operations to set CSD_FLAG_LOCK because it's
++ * users are careful to only use CPU-local data. IOW, there is no cross-cpu
++ * lock usage. Also, you're not allowed to use smp_call_function*() from IRQs,
++ * and must be extra careful from SoftIRQ.
++ */
+ static __always_inline void csd_lock(call_single_data_t *csd)
+ {
+ 	csd_lock_wait(csd);
+@@ -318,7 +324,7 @@ EXPORT_SYMBOL(smp_call_function_single);
+ 
+ /**
+  * smp_call_function_single_async(): Run an asynchronous function on a
+- * 			         specific CPU.
++ *				     specific CPU.
+  * @cpu: The CPU to run on.
+  * @csd: Pre-allocated and setup data structure
+  *
+@@ -339,18 +345,23 @@ EXPORT_SYMBOL(smp_call_function_single);
+  */
+ int smp_call_function_single_async(int cpu, call_single_data_t *csd)
+ {
++	unsigned int csd_flags;
+ 	int err = 0;
+ 
+ 	preempt_disable();
+ 
+-	if (csd->flags & CSD_FLAG_LOCK) {
++	/*
++	 * Unlike the regular smp_call_function*() APIs, this one is actually
++	 * usable from IRQ context, also the -EBUSY return value suggests
++	 * it is safe to share csd's.
++	 */
++	csd_flags = READ_ONCE(csd->flags);
++	if (csd_flags & CSD_FLAG_LOCK ||
++	    cmpxchg(&csd->flags, csd_flags, csd_flags | CSD_FLAG_LOCK) != csd_flags) {
+ 		err = -EBUSY;
+ 		goto out;
+ 	}
+ 
+-	csd->flags = CSD_FLAG_LOCK;
+-	smp_wmb();
+-
+ 	err = generic_exec_single(cpu, csd, csd->func, csd->info);
+ 
+ out:
