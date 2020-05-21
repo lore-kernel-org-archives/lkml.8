@@ -2,202 +2,219 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A321FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC73C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB06206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F2C206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e4sfz7hF"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="B89GD5Th"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgEUBoS (ORCPT
+        id S1727040AbgEUBp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 21:44:18 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45677 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726840AbgEUBoS (ORCPT
+        Wed, 20 May 2020 21:45:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58321 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726925AbgEUBp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 21:44:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590025455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=CCEasa2J5evFTeUb/BLxZS5fCWTF6bLrwK37bZkjLbI=;
-        b=e4sfz7hFvszewDYZAtBBPdSlyz2Sxo46mvZR7yrMw3S7yD576RKODWzPQ6E0oXhSpileTT
-        vSsHQv51waw8VgwLXr27yhjDP1tlQwCe+UzUuHHVAdZlP6/VnHuSSSFnJ/hh++geSfrnKQ
-        pWpSmhWLHMIQoJsQZFhWR/WOLrr9A+0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-202-EPUs-rCnNV-k72o9zYjVGg-1; Wed, 20 May 2020 21:44:13 -0400
-X-MC-Unique: EPUs-rCnNV-k72o9zYjVGg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5904C1005510;
-        Thu, 21 May 2020 01:44:12 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-86.pek2.redhat.com [10.72.12.86])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B7535C1D0;
-        Thu, 21 May 2020 01:44:08 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, cai@lca.pw,
-        mgorman@suse.de, mhocko@kernel.org, rppt@linux.ibm.com,
-        bhe@redhat.com
-Subject: [PATCH] mm/compaction: Fix the incorrect hole in fast_isolate_freepages()
-Date:   Thu, 21 May 2020 09:44:07 +0800
-Message-Id: <20200521014407.29690-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Wed, 20 May 2020 21:45:29 -0400
+X-UUID: 13721171ddde4ba199924115eacc2e6c-20200521
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=WeCuWHduXwpieDXBHOivIUfYTm2ChJceDlZ+3qOBl/s=;
+        b=B89GD5Th29HTO/uODVStHjeVXQOi3smb1Nb4562oC/XgS7mQdaSC0Z5BCBy/nQ50xBdMPA1/DAgHJPEUTgP1ahBwIgGZs/fwONwzDCT/uifHJZC7JCf3mp18DpWq8MI5rem56Qoa4YoCHl9Hh71fLfHGGDUSTS5PjrV+k1yXKAA=;
+X-UUID: 13721171ddde4ba199924115eacc2e6c-20200521
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1255944629; Thu, 21 May 2020 09:45:23 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 21 May 2020 09:45:21 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 21 May 2020 09:45:21 +0800
+Message-ID: <1590025521.18444.1.camel@mtksdccf07>
+Subject: Re: [PATCH v5 1/4] rcu/kasan: record and print call_rcu() call stack
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        "Josh Triplett" <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "Linux Memory Management List" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 21 May 2020 09:45:21 +0800
+In-Reply-To: <CAAeHK+wyg90Tw_Fp+A1vkW3rK+WKwPi_oS4T4SVL-fEYYaU0Lw@mail.gmail.com>
+References: <20200520123434.3888-1-walter-zh.wu@mediatek.com>
+         <CAAeHK+wyg90Tw_Fp+A1vkW3rK+WKwPi_oS4T4SVL-fEYYaU0Lw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 698E2BDDDB02B1C3C7B9511F993D7B398AE80C4A04F86E0740C01786F5C2C95E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian reported that a crash happened in compaction.
-http://lkml.kernel.org/r/8C537EB7-85EE-4DCF-943E-3CC0ED0DF56D@lca.pw
-
-LTP: starting swapping01 (swapping01 -i 5)
-page:ffffea0000aa0000 refcount:1 mapcount:0 mapping:000000002243743b index:0x0
-flags: 0x1fffe000001000(reserved)
-raw: 001fffe000001000 ffffea0000aa0008 ffffea0000aa0008 0000000000000000
-raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn))
-page_owner info is not present (never set?)
-------------[ cut here ]------------
-kernel BUG at mm/page_alloc.c:533!
-...
-CPU: 17 PID: 218 Comm: kcompactd0 Not tainted 5.7.0-rc2-next-20200423+ #7
-...
-RIP: 0010:set_pfnblock_flags_mask+0x150/0x210
-...
-RSP: 0018:ffffc900042ff858 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffffff9a002382
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff8884535b8e6c
-RBP: ffffc900042ff8b8 R08: ffffed108a6b8459 R09: ffffed108a6b8459
-R10: ffff8884535c22c7 R11: ffffed108a6b8458 R12: 000000000002a800
-R13: ffffea0000aa0000 R14: ffff88847fff3000 R15: ffff88847fff3040
-FS:  0000000000000000(0000) GS:ffff888453580000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd1eb4a1000 CR3: 000000083154c000 CR4: 00000000003406e0
-Call Trace:
- isolate_freepages+0xb20/0x1140
- ? isolate_freepages_block+0x730/0x730
- ? mark_held_locks+0x34/0xb0
- ? free_unref_page+0x7d/0x90
- ? free_unref_page+0x7d/0x90
- ? check_flags.part.28+0x86/0x220
- compaction_alloc+0xdd/0x100
- migrate_pages+0x304/0x17e0
- ? __ClearPageMovable+0x100/0x100
- ? isolate_freepages+0x1140/0x1140
- compact_zone+0x1249/0x1e90
- ? compaction_suitable+0x260/0x260
- kcompactd_do_work+0x231/0x650
- ? sysfs_compact_node+0x80/0x80
- ? finish_wait+0xe6/0x110
- kcompactd+0x162/0x490
- ? kcompactd_do_work+0x650/0x650
- ? finish_wait+0x110/0x110
- ? __kasan_check_read+0x11/0x20
- ? __kthread_parkme+0xd4/0xf0
- ? kcompactd_do_work+0x650/0x650
- kthread+0x1f7/0x220
- ? kthread_create_worker_on_cpu+0xc0/0xc0
- ret_from_fork+0x27/0x50
-
-After investigation, it turns out that this is introduced by commit of
-linux-next: commit f6edbdb71877 ("mm: memmap_init: iterate over memblock
-regions rather that check each PFN").
-
-After investigation, it turns out that this is introduced by commit of
-linux-next, the patch subject is:
-  "mm: memmap_init: iterate over memblock regions rather that check each PFN".
-
-Qian added debugging code. The debugging log shows that the fault page is
-0x2a800000. From the system e820 map which is pasted at bottom, the page
-is in e820 reserved range:
-	BIOS-e820: [mem 0x0000000029ffe000-0x000000002a80afff] reserved
-And it's in section [0x28000000, 0x2fffffff]. In that secion, there are
-several usable ranges and some e820 reserved ranges.
-
-For this kind of e820 reserved range, it won't be added to memblock allocator.
-However, init_unavailable_mem() will initialize to add them into node 0,
-zone 0. Before that commit, later, memmap_init() will add e820 reserved
-ranges into the zone where they are contained, because it can pass
-the checking of early_pfn_valid() and early_pfn_in_nid(). In this case,
-the e820 reserved range where fault page 0x2a800000 is located is added
-into DMA32 zone. After that commit, the e820 reserved rgions are kept
-in node 0, zone 0, since we iterate over memblock regions to iniatialize
-in memmap_init() instead, their node and zone won't be changed.
-
-Now, fast_isolate_freepages() will use min mark directly as the migration
-target if no page is found from buddy. However, the min mark is not checked
-carefully, it could be in e820 reserved range, and trigger the
-VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn)) when try to mark it
-as skip.
-
-Here, let's call pageblock_pfn_to_page() to get page of min_pfn, since it
-will do careful checks and return NULL if the pfn is not qualified.
-
-[    0.000000] BIOS-provided physical RAM map:
-[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000008bfff] usable
-[    0.000000] BIOS-e820: [mem 0x000000000008c000-0x000000000009ffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000028328fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000028329000-0x0000000028568fff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000028569000-0x0000000028d85fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000028d86000-0x0000000028ee5fff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000028ee6000-0x0000000029a04fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000029a05000-0x0000000029a08fff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000029a09000-0x0000000029ee4fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000029ee5000-0x0000000029ef2fff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x0000000029ef3000-0x0000000029f22fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000029f23000-0x0000000029f23fff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x0000000029f24000-0x0000000029f24fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000029f25000-0x0000000029f28fff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x0000000029f29000-0x0000000029f29fff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x0000000029f2a000-0x0000000029f2bfff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x0000000029f2c000-0x0000000029f2cfff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000029f2d000-0x0000000029f2ffff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x0000000029f30000-0x0000000029ffdfff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000029ffe000-0x000000002a80afff] reserved
-[    0.000000] BIOS-e820: [mem 0x000000002a80b000-0x000000002a80efff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x000000002a80f000-0x000000002a81ffff] reserved
-[    0.000000] BIOS-e820: [mem 0x000000002a820000-0x000000002a822fff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x000000002a823000-0x0000000033a22fff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000033a23000-0x0000000033a32fff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000033a33000-0x0000000033a42fff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x0000000033a43000-0x0000000033a52fff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x0000000033a53000-0x0000000077ffffff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000078000000-0x000000008fffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fed80000-0x00000000fed80fff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000087effffff] usable
-[    0.000000] BIOS-e820: [mem 0x000000087f000000-0x000000087fffffff] reserved
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- mm/compaction.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 67fd317f78db..9ce4cff4d407 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -1418,7 +1418,9 @@ fast_isolate_freepages(struct compact_control *cc)
- 				cc->free_pfn = highest;
- 			} else {
- 				if (cc->direct_compaction && pfn_valid(min_pfn)) {
--					page = pfn_to_page(min_pfn);
-+					page = pageblock_pfn_to_page(min_pfn,
-+						pageblock_end_pfn(min_pfn),
-+						cc->zone);
- 					cc->free_pfn = min_pfn;
- 				}
- 			}
--- 
-2.17.2
+PiBPbiBXZWQsIE1heSAyMCwgMjAyMCBhdCAyOjM0IFBNIFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1
+QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIGZlYXR1cmUgd2lsbCByZWNvcmQg
+dGhlIGxhc3QgdHdvIGNhbGxfcmN1KCkgY2FsbCBzdGFja3MgYW5kDQo+ID4gcHJpbnRzIHVwIHRv
+IDIgY2FsbF9yY3UoKSBjYWxsIHN0YWNrcyBpbiBLQVNBTiByZXBvcnQuDQo+ID4NCj4gPiBXaGVu
+IGNhbGxfcmN1KCkgaXMgY2FsbGVkLCB3ZSBzdG9yZSB0aGUgY2FsbF9yY3UoKSBjYWxsIHN0YWNr
+IGludG8NCj4gPiBzbHViIGFsbG9jIG1ldGEtZGF0YSwgc28gdGhhdCB0aGUgS0FTQU4gcmVwb3J0
+IGNhbiBwcmludCByY3Ugc3RhY2suDQo+ID4NCj4gPiBbMV1odHRwczovL2J1Z3ppbGxhLmtlcm5l
+bC5vcmcvc2hvd19idWcuY2dpP2lkPTE5ODQzNw0KPiA+IFsyXWh0dHBzOi8vZ3JvdXBzLmdvb2ds
+ZS5jb20vZm9ydW0vIyFzZWFyY2hpbi9rYXNhbi1kZXYvYmV0dGVyJDIwc3RhY2skMjB0cmFjZXMk
+MjBmb3IkMjByY3UlN0Nzb3J0OmRhdGUva2FzYW4tZGV2L0tRc2pUXzg4aERFLzdyTlVacHJSQmdB
+Sg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1IDx3YWx0ZXItemgud3VAbWVkaWF0
+ZWsuY29tPg0KPiA+IFN1Z2dlc3RlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUu
+Y29tPg0KPiA+IEFja2VkLWJ5OiBQYXVsIEUuIE1jS2VubmV5IDxwYXVsbWNrQGtlcm5lbC5vcmc+
+DQo+ID4gQ2M6IEFuZHJleSBSeWFiaW5pbiA8YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQo+ID4g
+Q2M6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCj4gPiBDYzogQWxleGFuZGVy
+IFBvdGFwZW5rbyA8Z2xpZGVyQGdvb2dsZS5jb20+DQo+ID4gQ2M6IEFuZHJldyBNb3J0b24gPGFr
+cG1AbGludXgtZm91bmRhdGlvbi5vcmc+DQo+ID4gQ2M6IEpvc2ggVHJpcGxldHQgPGpvc2hAam9z
+aHRyaXBsZXR0Lm9yZz4NCj4gPiBDYzogTWF0aGlldSBEZXNub3llcnMgPG1hdGhpZXUuZGVzbm95
+ZXJzQGVmZmljaW9zLmNvbT4NCj4gPiBDYzogTGFpIEppYW5nc2hhbiA8amlhbmdzaGFubGFpQGdt
+YWlsLmNvbT4NCj4gPiBDYzogSm9lbCBGZXJuYW5kZXMgPGpvZWxAam9lbGZlcm5hbmRlcy5vcmc+
+DQo+ID4gQ2M6IEFuZHJleSBLb25vdmFsb3YgPGFuZHJleWtudmxAZ29vZ2xlLmNvbT4NCj4gPiAt
+LS0NCj4gPiAgaW5jbHVkZS9saW51eC9rYXNhbi5oIHwgIDIgKysNCj4gPiAga2VybmVsL3JjdS90
+cmVlLmMgICAgIHwgIDIgKysNCj4gPiAgbW0va2FzYW4vY29tbW9uLmMgICAgIHwgIDQgKystLQ0K
+PiA+ICBtbS9rYXNhbi9nZW5lcmljLmMgICAgfCAyMSArKysrKysrKysrKysrKysrKysrKysNCj4g
+PiAgbW0va2FzYW4va2FzYW4uaCAgICAgIHwgMTAgKysrKysrKysrKw0KPiA+ICBtbS9rYXNhbi9y
+ZXBvcnQuYyAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgNiBmaWxlcyBj
+aGFuZ2VkLCA2MSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL2luY2x1ZGUvbGludXgva2FzYW4uaCBiL2luY2x1ZGUvbGludXgva2FzYW4uaA0KPiA+
+IGluZGV4IDMxMzE0Y2E3YzYzNS4uMjNiN2VlMDA1NzJkIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1
+ZGUvbGludXgva2FzYW4uaA0KPiA+ICsrKyBiL2luY2x1ZGUvbGludXgva2FzYW4uaA0KPiA+IEBA
+IC0xNzQsMTEgKzE3NCwxMyBAQCBzdGF0aWMgaW5saW5lIHNpemVfdCBrYXNhbl9tZXRhZGF0YV9z
+aXplKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkgeyByZXR1cm4gMDsgfQ0KPiA+DQo+ID4gIHZv
+aWQga2FzYW5fY2FjaGVfc2hyaW5rKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSk7DQo+ID4gIHZv
+aWQga2FzYW5fY2FjaGVfc2h1dGRvd24oc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCj4gPiAr
+dm9pZCBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKHZvaWQgKnB0cik7DQo+ID4NCj4gPiAgI2Vsc2Ug
+LyogQ09ORklHX0tBU0FOX0dFTkVSSUMgKi8NCj4gPg0KPiA+ICBzdGF0aWMgaW5saW5lIHZvaWQg
+a2FzYW5fY2FjaGVfc2hyaW5rKHN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZSkge30NCj4gPiAgc3Rh
+dGljIGlubGluZSB2b2lkIGthc2FuX2NhY2hlX3NodXRkb3duKHN0cnVjdCBrbWVtX2NhY2hlICpj
+YWNoZSkge30NCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGthc2FuX3JlY29yZF9hdXhfc3RhY2so
+dm9pZCAqcHRyKSB7fQ0KPiA+DQo+ID4gICNlbmRpZiAvKiBDT05GSUdfS0FTQU5fR0VORVJJQyAq
+Lw0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2tlcm5lbC9yY3UvdHJlZS5jIGIva2VybmVsL3JjdS90
+cmVlLmMNCj4gPiBpbmRleCAwNjU0OGUyZWJiNzIuLjM2YTRmZjdmMzIwYiAxMDA2NDQNCj4gPiAt
+LS0gYS9rZXJuZWwvcmN1L3RyZWUuYw0KPiA+ICsrKyBiL2tlcm5lbC9yY3UvdHJlZS5jDQo+ID4g
+QEAgLTU3LDYgKzU3LDcgQEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPiAgI2lu
+Y2x1ZGUgPGxpbnV4L3NjaGVkL2lzb2xhdGlvbi5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc2No
+ZWQvY2xvY2suaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2thc2FuLmg+DQo+ID4gICNpbmNsdWRl
+ICIuLi90aW1lL3RpY2staW50ZXJuYWwuaCINCj4gPg0KPiA+ICAjaW5jbHVkZSAidHJlZS5oIg0K
+PiA+IEBAIC0yNjY4LDYgKzI2NjksNyBAQCBfX2NhbGxfcmN1KHN0cnVjdCByY3VfaGVhZCAqaGVh
+ZCwgcmN1X2NhbGxiYWNrX3QgZnVuYykNCj4gPiAgICAgICAgIGhlYWQtPmZ1bmMgPSBmdW5jOw0K
+PiA+ICAgICAgICAgaGVhZC0+bmV4dCA9IE5VTEw7DQo+ID4gICAgICAgICBsb2NhbF9pcnFfc2F2
+ZShmbGFncyk7DQo+ID4gKyAgICAgICBrYXNhbl9yZWNvcmRfYXV4X3N0YWNrKGhlYWQpOw0KPiA+
+ICAgICAgICAgcmRwID0gdGhpc19jcHVfcHRyKCZyY3VfZGF0YSk7DQo+ID4NCj4gPiAgICAgICAg
+IC8qIEFkZCB0aGUgY2FsbGJhY2sgdG8gb3VyIGxpc3QuICovDQo+ID4gZGlmZiAtLWdpdCBhL21t
+L2thc2FuL2NvbW1vbi5jIGIvbW0va2FzYW4vY29tbW9uLmMNCj4gPiBpbmRleCAyOTA2MzU4ZTQy
+ZjAuLjhiYzYxODI4OWJiMSAxMDA2NDQNCj4gPiAtLS0gYS9tbS9rYXNhbi9jb21tb24uYw0KPiA+
+ICsrKyBiL21tL2thc2FuL2NvbW1vbi5jDQo+ID4gQEAgLTQxLDcgKzQxLDcgQEANCj4gPiAgI2lu
+Y2x1ZGUgImthc2FuLmgiDQo+ID4gICNpbmNsdWRlICIuLi9zbGFiLmgiDQo+ID4NCj4gPiAtc3Rh
+dGljIGlubGluZSBkZXBvdF9zdGFja19oYW5kbGVfdCBzYXZlX3N0YWNrKGdmcF90IGZsYWdzKQ0K
+PiA+ICtkZXBvdF9zdGFja19oYW5kbGVfdCBrYXNhbl9zYXZlX3N0YWNrKGdmcF90IGZsYWdzKQ0K
+PiA+ICB7DQo+ID4gICAgICAgICB1bnNpZ25lZCBsb25nIGVudHJpZXNbS0FTQU5fU1RBQ0tfREVQ
+VEhdOw0KPiA+ICAgICAgICAgdW5zaWduZWQgaW50IG5yX2VudHJpZXM7DQo+ID4gQEAgLTU0LDcg
+KzU0LDcgQEAgc3RhdGljIGlubGluZSBkZXBvdF9zdGFja19oYW5kbGVfdCBzYXZlX3N0YWNrKGdm
+cF90IGZsYWdzKQ0KPiA+ICBzdGF0aWMgaW5saW5lIHZvaWQgc2V0X3RyYWNrKHN0cnVjdCBrYXNh
+bl90cmFjayAqdHJhY2ssIGdmcF90IGZsYWdzKQ0KPiA+ICB7DQo+ID4gICAgICAgICB0cmFjay0+
+cGlkID0gY3VycmVudC0+cGlkOw0KPiA+IC0gICAgICAgdHJhY2stPnN0YWNrID0gc2F2ZV9zdGFj
+ayhmbGFncyk7DQo+ID4gKyAgICAgICB0cmFjay0+c3RhY2sgPSBrYXNhbl9zYXZlX3N0YWNrKGZs
+YWdzKTsNCj4gPiAgfQ0KPiA+DQo+ID4gIHZvaWQga2FzYW5fZW5hYmxlX2N1cnJlbnQodm9pZCkN
+Cj4gPiBkaWZmIC0tZ2l0IGEvbW0va2FzYW4vZ2VuZXJpYy5jIGIvbW0va2FzYW4vZ2VuZXJpYy5j
+DQo+ID4gaW5kZXggNTZmZjg4ODVmZTJlLi44YWNmNDg4ODJiYTIgMTAwNjQ0DQo+ID4gLS0tIGEv
+bW0va2FzYW4vZ2VuZXJpYy5jDQo+ID4gKysrIGIvbW0va2FzYW4vZ2VuZXJpYy5jDQo+ID4gQEAg
+LTMyNSwzICszMjUsMjQgQEAgREVGSU5FX0FTQU5fU0VUX1NIQURPVyhmMik7DQo+ID4gIERFRklO
+RV9BU0FOX1NFVF9TSEFET1coZjMpOw0KPiA+ICBERUZJTkVfQVNBTl9TRVRfU0hBRE9XKGY1KTsN
+Cj4gPiAgREVGSU5FX0FTQU5fU0VUX1NIQURPVyhmOCk7DQo+ID4gKw0KPiA+ICt2b2lkIGthc2Fu
+X3JlY29yZF9hdXhfc3RhY2sodm9pZCAqYWRkcikNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0
+IHBhZ2UgKnBhZ2UgPSBrYXNhbl9hZGRyX3RvX3BhZ2UoYWRkcik7DQo+ID4gKyAgICAgICBzdHJ1
+Y3Qga21lbV9jYWNoZSAqY2FjaGU7DQo+ID4gKyAgICAgICBzdHJ1Y3Qga2FzYW5fYWxsb2NfbWV0
+YSAqYWxsb2NfaW5mbzsNCj4gPiArICAgICAgIHZvaWQgKm9iamVjdDsNCj4gPiArDQo+ID4gKyAg
+ICAgICBpZiAoIShwYWdlICYmIFBhZ2VTbGFiKHBhZ2UpKSkNCj4gPiArICAgICAgICAgICAgICAg
+cmV0dXJuOw0KPiA+ICsNCj4gPiArICAgICAgIGNhY2hlID0gcGFnZS0+c2xhYl9jYWNoZTsNCj4g
+PiArICAgICAgIG9iamVjdCA9IG5lYXJlc3Rfb2JqKGNhY2hlLCBwYWdlLCBhZGRyKTsNCj4gPiAr
+ICAgICAgIGFsbG9jX2luZm8gPSBnZXRfYWxsb2NfaW5mbyhjYWNoZSwgb2JqZWN0KTsNCj4gPiAr
+DQo+ID4gKyAgICAgICAvKg0KPiA+ICsgICAgICAgICogcmVjb3JkIHRoZSBsYXN0IHR3byBjYWxs
+X3JjdSgpIGNhbGwgc3RhY2tzLg0KPiA+ICsgICAgICAgICovDQo+ID4gKyAgICAgICBhbGxvY19p
+bmZvLT5hdXhfc3RhY2tbMV0gPSBhbGxvY19pbmZvLT5hdXhfc3RhY2tbMF07DQo+ID4gKyAgICAg
+ICBhbGxvY19pbmZvLT5hdXhfc3RhY2tbMF0gPSBrYXNhbl9zYXZlX3N0YWNrKEdGUF9OT1dBSVQp
+Ow0KPiA+ICt9DQo+ID4gZGlmZiAtLWdpdCBhL21tL2thc2FuL2thc2FuLmggYi9tbS9rYXNhbi9r
+YXNhbi5oDQo+ID4gaW5kZXggZThmMzcxOTlkODg1Li5hNzM5MWJjODMwNzAgMTAwNjQ0DQo+ID4g
+LS0tIGEvbW0va2FzYW4va2FzYW4uaA0KPiA+ICsrKyBiL21tL2thc2FuL2thc2FuLmgNCj4gPiBA
+QCAtMTA0LDcgKzEwNCwxNSBAQCBzdHJ1Y3Qga2FzYW5fdHJhY2sgew0KPiA+DQo+ID4gIHN0cnVj
+dCBrYXNhbl9hbGxvY19tZXRhIHsNCj4gPiAgICAgICAgIHN0cnVjdCBrYXNhbl90cmFjayBhbGxv
+Y190cmFjazsNCj4gPiArI2lmZGVmIENPTkZJR19LQVNBTl9HRU5FUklDDQo+ID4gKyAgICAgICAv
+Kg0KPiA+ICsgICAgICAgICogY2FsbF9yY3UoKSBjYWxsIHN0YWNrIGlzIHN0b3JlZCBpbnRvIHN0
+cnVjdCBrYXNhbl9hbGxvY19tZXRhLg0KPiA+ICsgICAgICAgICogVGhlIGZyZWUgc3RhY2sgaXMg
+c3RvcmVkIGludG8gc3RydWN0IGthc2FuX2ZyZWVfbWV0YS4NCj4gPiArICAgICAgICAqLw0KPiA+
+ICsgICAgICAgZGVwb3Rfc3RhY2tfaGFuZGxlX3QgYXV4X3N0YWNrWzJdOw0KPiA+ICsjZWxzZQ0K
+PiA+ICAgICAgICAgc3RydWN0IGthc2FuX3RyYWNrIGZyZWVfdHJhY2tbS0FTQU5fTlJfRlJFRV9T
+VEFDS1NdOw0KPiA+ICsjZW5kaWYNCj4gPiAgI2lmZGVmIENPTkZJR19LQVNBTl9TV19UQUdTX0lE
+RU5USUZZDQo+ID4gICAgICAgICB1OCBmcmVlX3BvaW50ZXJfdGFnW0tBU0FOX05SX0ZSRUVfU1RB
+Q0tTXTsNCj4gPiAgICAgICAgIHU4IGZyZWVfdHJhY2tfaWR4Ow0KPiA+IEBAIC0xNTksNiArMTY3
+LDggQEAgdm9pZCBrYXNhbl9yZXBvcnRfaW52YWxpZF9mcmVlKHZvaWQgKm9iamVjdCwgdW5zaWdu
+ZWQgbG9uZyBpcCk7DQo+ID4NCj4gPiAgc3RydWN0IHBhZ2UgKmthc2FuX2FkZHJfdG9fcGFnZShj
+b25zdCB2b2lkICphZGRyKTsNCj4gPg0KPiA+ICtkZXBvdF9zdGFja19oYW5kbGVfdCBrYXNhbl9z
+YXZlX3N0YWNrKGdmcF90IGZsYWdzKTsNCj4gPiArDQo+ID4gICNpZiBkZWZpbmVkKENPTkZJR19L
+QVNBTl9HRU5FUklDKSAmJiBcDQo+ID4gICAgICAgICAoZGVmaW5lZChDT05GSUdfU0xBQikgfHwg
+ZGVmaW5lZChDT05GSUdfU0xVQikpDQo+ID4gIHZvaWQgcXVhcmFudGluZV9wdXQoc3RydWN0IGth
+c2FuX2ZyZWVfbWV0YSAqaW5mbywgc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlKTsNCj4gPiBkaWZm
+IC0tZ2l0IGEvbW0va2FzYW4vcmVwb3J0LmMgYi9tbS9rYXNhbi9yZXBvcnQuYw0KPiA+IGluZGV4
+IDgwZjIzYzlkYTZiMC4uMjlhODAxZDVjZDc0IDEwMDY0NA0KPiA+IC0tLSBhL21tL2thc2FuL3Jl
+cG9ydC5jDQo+ID4gKysrIGIvbW0va2FzYW4vcmVwb3J0LmMNCj4gPiBAQCAtMTA1LDYgKzEwNSwx
+NyBAQCBzdGF0aWMgdm9pZCBlbmRfcmVwb3J0KHVuc2lnbmVkIGxvbmcgKmZsYWdzKQ0KPiA+ICAg
+ICAgICAga2FzYW5fZW5hYmxlX2N1cnJlbnQoKTsNCj4gPiAgfQ0KPiA+DQo+ID4gKyNpZmRlZiBD
+T05GSUdfS0FTQU5fR0VORVJJQw0KPiA+ICtzdGF0aWMgdm9pZCBwcmludF9zdGFjayhkZXBvdF9z
+dGFja19oYW5kbGVfdCBzdGFjaykNCj4gPiArew0KPiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyAq
+ZW50cmllczsNCj4gPiArICAgICAgIHVuc2lnbmVkIGludCBucl9lbnRyaWVzOw0KPiA+ICsNCj4g
+PiArICAgICAgIG5yX2VudHJpZXMgPSBzdGFja19kZXBvdF9mZXRjaChzdGFjaywgJmVudHJpZXMp
+Ow0KPiA+ICsgICAgICAgc3RhY2tfdHJhY2VfcHJpbnQoZW50cmllcywgbnJfZW50cmllcywgMCk7
+DQo+ID4gK30NCj4gPiArI2VuZGlmDQo+IA0KPiBUaGUgaWRlYSBvZiBtb3ZpbmcgaXQgaGVyZSB3
+YXMgdG8gcmV1c2UgcHJpbnRfc3RhY2soKSBpbiBwcmludF90cmFjaygpIDopDQo+IA0KDQpPay4g
+SSBzZWUuIE5leHQgcGF0Y2ggd2lsbCBmaXggaXQuDQoNCj4gPiArDQo+ID4gIHN0YXRpYyB2b2lk
+IHByaW50X3RyYWNrKHN0cnVjdCBrYXNhbl90cmFjayAqdHJhY2ssIGNvbnN0IGNoYXIgKnByZWZp
+eCkNCj4gPiAgew0KPiA+ICAgICAgICAgcHJfZXJyKCIlcyBieSB0YXNrICV1OlxuIiwgcHJlZml4
+LCB0cmFjay0+cGlkKTsNCj4gPiBAQCAtMTkyLDYgKzIwMywxOSBAQCBzdGF0aWMgdm9pZCBkZXNj
+cmliZV9vYmplY3Qoc3RydWN0IGttZW1fY2FjaGUgKmNhY2hlLCB2b2lkICpvYmplY3QsDQo+ID4g
+ICAgICAgICAgICAgICAgIGZyZWVfdHJhY2sgPSBrYXNhbl9nZXRfZnJlZV90cmFjayhjYWNoZSwg
+b2JqZWN0LCB0YWcpOw0KPiA+ICAgICAgICAgICAgICAgICBwcmludF90cmFjayhmcmVlX3RyYWNr
+LCAiRnJlZWQiKTsNCj4gPiAgICAgICAgICAgICAgICAgcHJfZXJyKCJcbiIpOw0KPiA+ICsNCj4g
+PiArI2lmZGVmIENPTkZJR19LQVNBTl9HRU5FUklDDQo+ID4gKyAgICAgICAgICAgICAgIGlmIChh
+bGxvY19pbmZvLT5hdXhfc3RhY2tbMF0pIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBw
+cl9lcnIoIkxhc3QgY2FsbF9yY3UoKTpcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+IHByaW50X3N0YWNrKGFsbG9jX2luZm8tPmF1eF9zdGFja1swXSk7DQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgcHJfZXJyKCJcbiIpOw0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gKyAg
+ICAgICAgICAgICAgIGlmIChhbGxvY19pbmZvLT5hdXhfc3RhY2tbMV0pIHsNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICBwcl9lcnIoIlNlY29uZCB0byBsYXN0IGNhbGxfcmN1KCk6XG4iKTsN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBwcmludF9zdGFjayhhbGxvY19pbmZvLT5hdXhf
+c3RhY2tbMV0pOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHByX2VycigiXG4iKTsNCj4g
+PiArICAgICAgICAgICAgICAgfQ0KPiA+ICsjZW5kaWYNCj4gPiAgICAgICAgIH0NCj4gPg0KPiA+
+ICAgICAgICAgZGVzY3JpYmVfb2JqZWN0X2FkZHIoY2FjaGUsIG9iamVjdCwgYWRkcik7DQo+ID4g
+LS0NCj4gPiAyLjE4LjANCj4gPg0KPiA+IC0tDQo+ID4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2Fn
+ZSBiZWNhdXNlIHlvdSBhcmUgc3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAia2FzYW4t
+ZGV2IiBncm91cC4NCj4gPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3Ag
+cmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGthc2FuLWRldit1bnN1
+YnNjcmliZUBnb29nbGVncm91cHMuY29tLg0KPiA+IFRvIHZpZXcgdGhpcyBkaXNjdXNzaW9uIG9u
+IHRoZSB3ZWIgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29vZ2xlLmNvbS9kL21zZ2lkL2thc2FuLWRl
+di8yMDIwMDUyMDEyMzQzNC4zODg4LTEtd2FsdGVyLXpoLnd1JTQwbWVkaWF0ZWsuY29tLg0KDQo=
 
