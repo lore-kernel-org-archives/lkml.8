@@ -2,144 +2,113 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA62C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F85C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 772712072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590062701;
-	bh=eQzbtADRfUnTfJw6YIVj/6IhR+PQooz3O5b8M+2XfuU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ka9RB7bF63fUUb2I/568JnfUR161e+sGDCN2u8Sco3qhYPPhwzN5QsRgae6TQK4Gy
-	 4FUMYiHBmC0CMiZDE2hdkCixGVSEDh9/263UxuQNt1SuqB4fc83SwPaJ9nhn1o5aAo
-	 Su72y+2V8NgJLcrXgupocNkLOfE5Nrk5ws5Wswz0=
+	by mail.kernel.org (Postfix) with ESMTP id 002DC2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:06:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="e4L267jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgEUMFB (ORCPT
+        id S1729185AbgEUMGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:05:01 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41730 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgEUMFA (ORCPT
+        Thu, 21 May 2020 08:06:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48352 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727905AbgEUMGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:05:00 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g9so6481243edr.8;
-        Thu, 21 May 2020 05:04:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SwZpALLAQeyKdCeabWUvdFsJgTC5XhIBMoJbc1saxP8=;
-        b=gPInm6fHMz9LqHYXBXkaBSM3grWGP2GnpJHlVBK3CnXkn00vELC9wWvY6XavdRcmC4
-         gwRIYSEbb+jH81Yb8MNUQDEienLBEnRmfqXQH3K4xuj2vznEcr8fMQSqPvzpWR9h+3dw
-         FX29hcjGNRlNbzQT8LY5mpAowXjwkyKKxq5YTzwaOj47RiGS8KVpSYNwLWB9HR3hWQsj
-         26hV7gQAFlArdZOE1nzladOI/1LGgdlR124N3ORPwTgyXig5Q0mcOQMtP2UpUgo07SFw
-         7XtcBMLwHeEuKzmWUJqS7VsTKhVBXObD1IWn4pLM7UKhOqVSmNskLNFI8IM/YgIMywix
-         6eag==
-X-Gm-Message-State: AOAM531TX0SMZQ1Y9FBxTpTLvAMH6yGAfIdttGq12/bzU6MYRzwZZBxL
-        fu2ksIvnsOsXhmKZLlVhcq4=
-X-Google-Smtp-Source: ABdhPJxcJU3YYlU6FupEZNcOtfXj4LB04jwem+8NjPjBlLO3RJdPWnW3l+WShSuHCKKHdCiixcsfrg==
-X-Received: by 2002:a50:f40d:: with SMTP id r13mr7180291edm.93.1590062697963;
-        Thu, 21 May 2020 05:04:57 -0700 (PDT)
-Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
-        by smtp.gmail.com with ESMTPSA id o21sm4645166ejb.31.2020.05.21.05.04.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 05:04:56 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:04:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200521120455.GM6462@dhcp22.suse.cz>
-References: <20200520143712.GA749486@chrisdown.name>
- <20200520160756.GE6462@dhcp22.suse.cz>
- <20200520202650.GB558281@chrisdown.name>
- <20200521071929.GH6462@dhcp22.suse.cz>
- <20200521112711.GA990580@chrisdown.name>
+        Thu, 21 May 2020 08:06:11 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LC3kQ4031241;
+        Thu, 21 May 2020 12:06:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=/dSwQBMQ9edVQjkiT3Bt0WIXXVOZp3v9OdMj2sZjdRM=;
+ b=e4L267jwZlTFvTG9JpcIULqEeEQocx0mw6IjjEz8r1uelXohYCcNYQWm63MmNdFiJFMC
+ YifX1o3XyvBF6x/rZGDZ1mNd9Y1laKRbFpuSPYp1EzuE/I9zJY1WGqS9TXAK4MfHwu+Y
+ 0gwJ13GqRKQEYr5LTnoW4lijkInJxlkDlN/zCILV0qkW95J8mSbAFLWIIohhAEiib35A
+ Y/bMYNVm4Xa9beWQRWNjcqLR8ClhlV50qsVlmYjOXJePHIFHQEXRT5LiKmECMpc0vjBp
+ 5li9q5LQEEvdqCcWoouQxJbifnkjTbx7ZT7gt9sO7vG9RX0dbxqdA90NKV04CK6UYKiV FA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31501ren20-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 12:06:00 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LC3D2E106767;
+        Thu, 21 May 2020 12:03:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 312t3ay20b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 12:03:59 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04LC3rgH020890;
+        Thu, 21 May 2020 12:03:53 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 May 2020 05:03:53 -0700
+Date:   Thu, 21 May 2020 15:03:45 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     dinghao.liu@zju.edu.cn
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kjlu@umn.edu,
+        linux-kernel@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: Re: [PATCH] [v2] media: staging: tegra-vde: fix runtime pm
+ imbalance on error
+Message-ID: <20200521120344.GH30374@kadam>
+References: <20200521062746.6656-1-dinghao.liu@zju.edu.cn>
+ <20200521112131.GG30374@kadam>
+ <4b400526.bbc83.172370b23a0.Coremail.dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521112711.GA990580@chrisdown.name>
+In-Reply-To: <4b400526.bbc83.172370b23a0.Coremail.dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 malwarescore=0 suspectscore=2 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210091
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005210091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 21-05-20 12:27:11, Chris Down wrote:
-> Michal Hocko writes:
-> > On Wed 20-05-20 21:26:50, Chris Down wrote:
-> > > Michal Hocko writes:
-> > > > Let me try to understand the actual problem. The high memory reclaim has
-> > > > a target which is proportional to the amount of charged memory. For most
-> > > > requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
-> > > > N is the number of memcgs in excess up the hierarchy). I can see to be
-> > > > insufficient if the memcg is already in a large excess but if the
-> > > > reclaim can make a forward progress this should just work fine because
-> > > > each charging context should reclaim at least the contributed amount.
-> > > >
-> > > > Do you have any insight on why this doesn't work in your situation?
-> > > > Especially with such a large inactive file list I would be really
-> > > > surprised if the reclaim was not able to make a forward progress.
-> > > 
-> > > Reclaim can fail for any number of reasons, which is why we have retries
-> > > sprinkled all over for it already. It doesn't seem hard to believe that it
-> > > might just fail for transient reasons and drive us deeper into the hole as a
-> > > result.
-> > 
-> > Reclaim can certainly fail. It is however surprising to see it fail with
-> > such a large inactive lru list and reasonably small reclaim target.
+On Thu, May 21, 2020 at 07:42:56PM +0800, dinghao.liu@zju.edu.cn wrote:
+> We need to make sure if pm_runtime_get_sync() is designed with
+> such behavior before modifying it.  
 > 
-> Why do you think the reclaim target is small? In the case of generating tons
-> of dirty pages, current->memcg_nr_pages_over_high can grow to be huge (on
-> the order of several tens of megabytes or more).
+> I received a response from Rafael when I commited a similar patch:
+> https://lkml.org/lkml/2020/5/20/1100
+> It seems that this behavior is intentional and needs to be kept.
 
-Because from my experience there are not tons of charges inside one
-syscall usually. Yeah, some syscalls can generate a lot of them but that
-shouldn't be a majority.
+Yes.  This is why I have said twice or three times to not change
+pm_runtime_get_sync() but instead to write a replacement.
 
-> > Having the full LRU of dirty pages sounds a bit unusual, IO throttling
-> > for v2 and explicit throttling during the reclaim for v1 should prevent
-> > from that. If the reclaim gives up too easily then this should be
-> > addressed at the reclaim level.
-> 
-> I'm not sure I agree. Reclaim knows what you asked it to do: reclaim N
-> pages, but what to do about the situation when it fails to satisfy that is a
-> job for the caller. In this case, we are willing to even tolerate a little
-> bit of overage up to the 10ms throttle threshold. In other cases, we want to
-> do other checks first before retrying, because the tradeoffs are different.
-> Putting all of this inside the reclaim logic seems unwieldy.
+A large percent of the callers are buggy.  The pm_runtime_get_sync() is
+a -4 on Rusty's API scale.
+http://sweng.the-davies.net/Home/rustys-api-design-manifesto
+One could argue that anything above a -4 is really a 2 if you read
+the implementation thouroughly enough...
 
-That is not what I meant. We do have some throttling inside the reclaim
-because failing reclaim too quickly can easily lead to pre mature OOMs.
-If that doesn't work then we should have a look why. E.g. it is quite
-unexpected to have large LRU full of dirty pages because this suggests
-that dirty throttling doesn't work properly.
+regards,
+dan carpenter
 
-> > The main problem I see with that approach is that the loop could easily
-> > lead to reclaim unfairness when a heavy producer which doesn't leave the
-> > kernel (e.g. a large read/write call) can keep a different task doing
-> > all the reclaim work. The loop is effectivelly unbound when there is a
-> > reclaim progress and so the return to the userspace is by no means
-> > proportional to the requested memory/charge.
-> 
-> It's not unbound when there is reclaim progress, it stops when we are within
-> the memory.high throttling grace period. Right after reclaim, we check if
-> penalty_jiffies is less than 10ms, and abort and further reclaim or
-> allocator throttling:
 
-Just imagine that you have parallel producers increasing the high limit
-excess while somebody reclaims those. Sure in practice the loop will be
-bounded but the reclaimer might perform much more work on behalf of
-other tasks.
--- 
-Michal Hocko
-SUSE Labs
