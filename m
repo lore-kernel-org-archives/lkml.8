@@ -2,155 +2,133 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93DDA2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:54:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSbC0EFu"
+	by mail.kernel.org (Postfix) with ESMTP id 6CF3320825
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590040603;
+	bh=dHzsAWGKpeSFLlFK2Hm9joNV5l95MR4v9De3FclSRqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dSDGCY5+/BwYg131IHXLpxnoZAl2damTLk1jxbUxSOenkUj0AmlvyXWuYRF5SDu66
+	 ntqk7rGZ7SHpWy7XUW2sZBPX0p4DhLd8W3em9Y7BiU8xaTd2bA8qLifMADBGH0JUUp
+	 YQbQ+iLdQCb7RyBn3WCAJwzeLcoiUKVSSUJKjAhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgEUFyG (ORCPT
+        id S1728002AbgEUF4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 01:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbgEUFyG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 01:54:06 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA32C061A0E;
-        Wed, 20 May 2020 22:54:04 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k22so2404450pls.10;
-        Wed, 20 May 2020 22:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6Oeo04aTJBdyCnGTe09rB/DvCqMAciCkvUQT6JZbeb4=;
-        b=DSbC0EFu1huz4rcDvKDOM7Lpzeqhbo3a2IBCi1LTvErsuA3dYcYFK+mJYCBL7Rdhob
-         90yR/UxHH8GiMSbM8R2NjIqyapcB7kiBwGY9Mw4IDBCjygPml2jJJjk3z/gHzB8Ut7un
-         atVKHUYDdTplSSEuDGNIa74hBXf3py5yurS97vNNkNsXQ3e9kmojs8PBGnG0MtDSxoUn
-         FhKmBBLBT/KMHIqR0IoVZwQ6JeCsV0wggt8vhkHmdHN8Dn595M9ednWE8AQkiyCGefK7
-         JSBR7xSRdEuamWZ6MOxSEkPJ9jQU2fDFABHzapph/2jFY94FHR7RXI6dLLaYLsjlzRTn
-         W1Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6Oeo04aTJBdyCnGTe09rB/DvCqMAciCkvUQT6JZbeb4=;
-        b=o3PvaOO94sMJq+Kzk6zwhdX8UT/AQg2PyqKCK7WrlF/zRMyY2O/iaEBWyXkIA5SmYm
-         0a9t7W09M5+KFo+16o/ZlvW8a6nDZF96Y6YOz913qTFX977qz/O8x3Jc4AYJ/4o4cT1t
-         aPV5LwddV8rc2Hzg9mcYL4r9VeAJilRRln/FzeX+Exvm/ioYRpWUJLjYdVwUaxJxU1Ah
-         7KkXJHfV38RYzFfX0FH7EaHss8oDJrbvJn6XPsB1KFQEz9JUN58dq05hi8nVAiG5N5YT
-         M3QE1HLJuq8Fc5Yda7TtpDtcnTn8UTwyiUgHIxI7x6N/lPSbDE1QB6jXPKlUZBUVfhyc
-         VIxQ==
-X-Gm-Message-State: AOAM532juGeZ+8y/pljTmlUUaL1qUEL1LDTNbukjt9q+r0oFnwETOZCr
-        xd8gjTbtsZkRnOCNK2dL6+Q=
-X-Google-Smtp-Source: ABdhPJyMY+B3CPz5d5jIg9bcJobY7IzTiEHxVGOfM+ZOrkaaRqelFFFz0a6NTZAXYAiV7vc4z40/Mg==
-X-Received: by 2002:a17:90a:6283:: with SMTP id d3mr9827318pjj.18.1590040443477;
-        Wed, 20 May 2020 22:54:03 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id 14sm3524776pjm.49.2020.05.20.22.54.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 22:54:02 -0700 (PDT)
-Date:   Wed, 20 May 2020 22:54:00 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Ahmet Inan <inan@distec.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv3 4/5] Input: EXC3000: Add support to query model and
- fw_version
-Message-ID: <20200521055400.GX89269@dtor-ws>
-References: <20200520153936.46869-1-sebastian.reichel@collabora.com>
- <20200520153936.46869-5-sebastian.reichel@collabora.com>
- <20200520174952.GW89269@dtor-ws>
- <20200520212540.t73my7ireicuwbrs@earth.universe>
+        Thu, 21 May 2020 01:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726869AbgEUF4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 01:56:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 075912070A;
+        Thu, 21 May 2020 05:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590040601;
+        bh=dHzsAWGKpeSFLlFK2Hm9joNV5l95MR4v9De3FclSRqw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fBGmHKrxU4k4q7b7Zo0KSHkmspdADbOXPY5PRmNREWBCwrAW8ubi4nDhPofW6S6WW
+         MlwxwblV6g1NlHECX7SJBIgzeNLWC2jGw7hN6uBMtIffRKJqsLq+be18tgzOsa+fue
+         wlrZ7oyd3ClDkYMp6K0nme9jfLdICUsfCVG0AwOM=
+Date:   Thu, 21 May 2020 07:56:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Vinayak Menon <vinmenon@codeaurora.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Liang Chen <cl@rock-chips.com>
+Subject: Re: [PATCH] kthread: Use TASK_IDLE state for newly created kernel
+ threads
+Message-ID: <20200521055639.GA2337399@kroah.com>
+References: <1589975710-9283-1-git-send-email-pkondeti@codeaurora.org>
+ <20200520181858.GA343493@kroah.com>
+ <20200521013544.GC31725@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520212540.t73my7ireicuwbrs@earth.universe>
+In-Reply-To: <20200521013544.GC31725@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:25:40PM +0200, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Wed, May 20, 2020 at 10:49:52AM -0700, Dmitry Torokhov wrote:
-> > Hi Sebastian,
-> > 
-> > On Wed, May 20, 2020 at 05:39:35PM +0200, Sebastian Reichel wrote:
-> > > Expose model and fw_version via sysfs. Also query the model
-> > > in probe to make sure, that the I2C communication with the
-> > > device works before successfully probing the driver.
+On Thu, May 21, 2020 at 07:05:44AM +0530, Pavan Kondeti wrote:
+> On Wed, May 20, 2020 at 08:18:58PM +0200, Greg Kroah-Hartman wrote:
+> > On Wed, May 20, 2020 at 05:25:09PM +0530, Pavankumar Kondeti wrote:
+> > > When kernel threads are created for later use, they will be in
+> > > TASK_UNINTERRUPTIBLE state until they are woken up. This results
+> > > in increased loadavg and false hung task reports. To fix this,
+> > > use TASK_IDLE state instead of TASK_UNINTERRUPTIBLE when
+> > > a kernel thread schedules out for the first time.
 > > > 
-> > > This is a bit complicated, since EETI devices do not have
-> > > a sync interface. Sending the commands and directly reading
-> > > does not work. Sending the command and waiting for some time
-> > > is also not an option, since there might be touch events in
-> > > the mean time.
-> > > 
-> > > Last but not least we do not cache the results, since this
-> > > interface can be used to check the I2C communication is still
-> > > working as expected.
-> > > 
-> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > > Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
 > > > ---
-> > >  .../ABI/testing/sysfs-driver-input-exc3000    |  15 ++
-> > >  drivers/input/touchscreen/exc3000.c           | 145 +++++++++++++++++-
-> > >  2 files changed, 159 insertions(+), 1 deletion(-)
-> > >  create mode 100644 Documentation/ABI/testing/sysfs-driver-input-exc3000
+> > >  kernel/kthread.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
 > > > 
-> > > diff --git a/Documentation/ABI/testing/sysfs-driver-input-exc3000 b/Documentation/ABI/testing/sysfs-driver-input-exc3000
-> > > new file mode 100644
-> > > index 000000000000..d79da4f869af
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/testing/sysfs-driver-input-exc3000
-> > > @@ -0,0 +1,15 @@
-> > > +What:		/sys/class/input/inputX/fw_version
-> > > +Date:		May 2020
-> > > +Contact:	linux-input@vger.kernel.org
-> > > +Description:	Reports the firmware version provided by the touchscreen, for example "00_T6" on a EXC80H60
-> > > +
-> > > +		Access: Read
-> > > +		Valid values: Represented as string
-> > > +
-> > > +What:		/sys/class/input/inputX/model
-> > > +Date:		May 2020
-> > > +Contact:	linux-input@vger.kernel.org
-> > > +Description:	Reports the model identification provided by the touchscreen, for example "Orion_1320" on a EXC80H60
-> > > +
-> > > +		Access: Read
-> > > +		Valid values: Represented as string
+> > > diff --git a/kernel/kthread.c b/kernel/kthread.c
+> > > index bfbfa48..b74ed8e 100644
+> > > --- a/kernel/kthread.c
+> > > +++ b/kernel/kthread.c
+> > > @@ -250,7 +250,7 @@ static int kthread(void *_create)
+> > >  	current->vfork_done = &self->exited;
+> > >  
+> > >  	/* OK, tell user we're spawned, wait for stop or wakeup */
+> > > -	__set_current_state(TASK_UNINTERRUPTIBLE);
+> > > +	__set_current_state(TASK_IDLE);
+> > >  	create->result = current;
+> > >  	/*
+> > >  	 * Thread is going to call schedule(), do not preempt it,
+> > > @@ -428,7 +428,7 @@ static void __kthread_bind(struct task_struct *p, unsigned int cpu, long state)
+> > >  
+> > >  void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
+> > >  {
+> > > -	__kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
+> > > +	__kthread_bind_mask(p, mask, TASK_IDLE);
+> > >  }
+> > >  
+> > >  /**
+> > > @@ -442,7 +442,7 @@ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
+> > >   */
+> > >  void kthread_bind(struct task_struct *p, unsigned int cpu)
+> > >  {
+> > > -	__kthread_bind(p, cpu, TASK_UNINTERRUPTIBLE);
+> > > +	__kthread_bind(p, cpu, TASK_IDLE);
+> > >  }
+> > >  EXPORT_SYMBOL(kthread_bind);
 > > 
-> > These are properties of the controller (i2c device), not input
-> > abstraction class on top of it, so the attributes should be attached to
-> > i2c_client instance.
+> > It's as if people never read mailing lists:
+> > 	https://lore.kernel.org/r/DM6PR11MB3531D3B164357B2DC476102DDFC90@DM6PR11MB3531.namprd11.prod.outlook.com
 > > 
-> > Please use devm_device_add_group() in probe to instantiate them at the
-> > proper level.
+> > Given that this is an identical resend of the previous patch, why are
+> > you doing so, and what has changed since that original rejection?
+> > 
+> I did not know that it is attempted before. Thanks for pointing to the
+> previous discussion. 
 > 
-> As written in the cover letter using devm_device_add_group() in
-> probe routine results in a udev race condition:
-> 
-> http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
+> We have seen hung task reports from customers and it is due to a downstream
+> change which create bunch of kernel threads for later use.
 
-This race has been solved with the addition of KOBJ_BIND/KOBJ_UNBIND
-uevents that signal when driver is bound or unbound from the device.
-Granted, current systemd/udev drops them as it does not know how to
-"add" to the device state, but this is on systemd to solve.
+Do you have a pointer to that specific change?
 
-Thanks.
+> From Peter's reply, I understood that one must wake up the kthread
+> after creation and put it in INTERRUPTIBLE sleep. I will pass on the
+> message.
 
--- 
-Dmitry
+Just go fix that code, it sounds like it's in your tree already :)
+
+thanks,
+
+greg k-h
