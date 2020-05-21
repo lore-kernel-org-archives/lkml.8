@@ -2,126 +2,88 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD93C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF1D206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590029466;
-	bh=pgJQa1w4GgFyUgPZ73SymaRcnYjxRBW/AIT2HJe0HLc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vz6XIXp8SjPt1GjOzQ8dRezCsXhgdlbkDKKqdPQU7+2yzmNU1Wb3kN0M0zZl6WRaY
-	 qCOxMW0/5cKRvWbwmRJmds9albu5DrdXnkteAwWNBNDxrzWz5TpHG36EOL9JjAEoZn
-	 RBnyIufGo6jjIifZHw8eLH9XuMB+8cQr5QgSig/4=
+	by mail.kernel.org (Postfix) with ESMTP id 61513206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgEUCvG (ORCPT
+        id S1727938AbgEUDAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726979AbgEUCvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:51:04 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FD6420756;
-        Thu, 21 May 2020 02:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590029463;
-        bh=pgJQa1w4GgFyUgPZ73SymaRcnYjxRBW/AIT2HJe0HLc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Zek0SPJjepnZk3PsEnSKqdkox4ZCbwicJqdnqrTtKclqcasDKhsovb68KfaFRaBRI
-         02Svn1GgX1piNuLo5ArMVEPB+A+GMPkyUJDrdGlGDpi5gxTHghZ15jleLPB+J+WJX3
-         zwCkeYtP8fyNgWa20Yxz4A1G8niA6f1MSFD1m3QI=
-Date:   Wed, 20 May 2020 19:51:02 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Huang Ying <ying.huang@intel.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V2] swap: Reduce lock contention on swap cache from
- swap slots allocation
-Message-Id: <20200520195102.2343f746e88a2bec5c29ef5b@linux-foundation.org>
-In-Reply-To: <20200520031502.175659-1-ying.huang@intel.com>
-References: <20200520031502.175659-1-ying.huang@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 20 May 2020 23:00:39 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:8092 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726861AbgEUDAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:00:39 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 11:00:15
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Thu, 21 May 2020 11:00:15 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     "Thierry Reding" <thierry.reding@gmail.com>, kjlu@umn.edu,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Vidya Sagar" <vidyas@nvidia.com>,
+        "Andrew Murray" <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] PCI: tegra: fix runtime pm imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200520163739.GA1100601@bjorn-Precision-5520>
+References: <20200520163739.GA1100601@bjorn-Precision-5520>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Message-ID: <a78d156.b93a0.172352c9b6e.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgCXPxy_7sVerkDlAQ--.29844W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwADsh
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtIS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
+        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
+        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
+        v26r106r15MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
+        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r
+        48MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS
+        07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14
+        v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWU
+        tVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r4j6F4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvE
+        x4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 11:15:02 +0800 Huang Ying <ying.huang@intel.com> wrote:
-
-> In some swap scalability test, it is found that there are heavy lock
-> contention on swap cache even if we have split one swap cache radix
-> tree per swap device to one swap cache radix tree every 64 MB trunk in
-> commit 4b3ef9daa4fc ("mm/swap: split swap cache into 64MB trunks").
-> 
-> The reason is as follow.  After the swap device becomes fragmented so
-> that there's no free swap cluster, the swap device will be scanned
-> linearly to find the free swap slots.  swap_info_struct->cluster_next
-> is the next scanning base that is shared by all CPUs.  So nearby free
-> swap slots will be allocated for different CPUs.  The probability for
-> multiple CPUs to operate on the same 64 MB trunk is high.  This causes
-> the lock contention on the swap cache.
-> 
-> To solve the issue, in this patch, for SSD swap device, a percpu
-> version next scanning base (cluster_next_cpu) is added.  Every CPU
-> will use its own per-cpu next scanning base.  And after finishing
-> scanning a 64MB trunk, the per-cpu scanning base will be changed to
-> the beginning of another randomly selected 64MB trunk.  In this way,
-> the probability for multiple CPUs to operate on the same 64 MB trunk
-> is reduced greatly.  Thus the lock contention is reduced too.  For
-> HDD, because sequential access is more important for IO performance,
-> the original shared next scanning base is used.
-> 
-> To test the patch, we have run 16-process pmbench memory benchmark on
-> a 2-socket server machine with 48 cores.  One ram disk is configured
-
-What does "ram disk" mean here?  Which drivers(s) are in use and backed
-by what sort of memory?
-
-> as the swap device per socket.  The pmbench working-set size is much
-> larger than the available memory so that swapping is triggered.  The
-> memory read/write ratio is 80/20 and the accessing pattern is random.
-> In the original implementation, the lock contention on the swap cache
-> is heavy.  The perf profiling data of the lock contention code path is
-> as following,
-> 
-> _raw_spin_lock_irq.add_to_swap_cache.add_to_swap.shrink_page_list:      7.91
-> _raw_spin_lock_irqsave.__remove_mapping.shrink_page_list:               7.11
-> _raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 2.51
-> _raw_spin_lock_irqsave.swap_cgroup_record.mem_cgroup_uncharge_swap:     1.66
-> _raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:      1.29
-> _raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:         1.03
-> _raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:        0.93
-> 
-> After applying this patch, it becomes,
-> 
-> _raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 3.58
-> _raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:      2.3
-> _raw_spin_lock_irqsave.swap_cgroup_record.mem_cgroup_uncharge_swap:     2.26
-> _raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node:        1.8
-> _raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages:         1.19
-> 
-> The lock contention on the swap cache is almost eliminated.
-> 
-> And the pmbench score increases 18.5%.  The swapin throughput
-> increases 18.7% from 2.96 GB/s to 3.51 GB/s.  While the swapout
-> throughput increases 18.5% from 2.99 GB/s to 3.54 GB/s.
-
-If this was backed by plain old RAM, can we assume that the performance
-improvement on SSD swap is still good?
-
-Does the ram disk actually set SWP_SOLIDSTATE?
+VGhhbmsgeW91IGZvciB5b3VyIGFkdmljZS4gSSB0aGluayB0ZWdyYTE5NCBpcyBhIGdvb2QgY2hv
+aWNlIGFuZCAKSSB3aWxsIHVzZSBpdCBpbiB0aGUgbmV4dCBlZGl0aW9uIG9mIHBhdGNoLgoKJnF1
+b3Q7Qmpvcm4gSGVsZ2FhcyZxdW90OyAmbHQ7aGVsZ2Fhc0BrZXJuZWwub3JnJmd0O+WGmemBk++8
+mgo+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDExOjU5OjA4QU0gKzAyMDAsIFRoaWVycnkgUmVk
+aW5nIHdyb3RlOg0KPiA+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDA0OjUyOjIzUE0gKzA4MDAs
+IERpbmdoYW8gTGl1IHdyb3RlOg0KPiA+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVu
+dHMgdGhlIHJ1bnRpbWUgUE0gdXNhZ2UgY291bnRlciBldmVuDQo+ID4gPiBpdCByZXR1cm5zIGFu
+IGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBuZWVkZWQgb24NCj4gPiAN
+Cj4gPiBzL2V2ZW4gaXQvZXZlbiB3aGVuIGl0Lw0KPiA+IA0KPiA+IE1pZ2h0IGFsc28gYmUgYSBn
+b29kIGlkZWEgdG8gdXNlIGEgZGlmZmVyZW50IHN1YmplY3QgcHJlZml4IGJlY2F1c2UgSQ0KPiA+
+IHdhcyBhbG1vc3Qgbm90IGdvaW5nIHRvIGxvb2sgYXQgdGhlIG90aGVyIHBhdGNoLCB0YWtpbmcg
+dGhpcyB0byBiZSBhDQo+ID4gcmVwbGFjZW1lbnQgZm9yIGl0Lg0KPiANCj4gQW1lbi4gIFRoaXMg
+d291bGQgYmUgYSBnb29kIGNoYW5nZSB0byBzdGFydCB1c2luZyAiUENJOiB0ZWdyYTE5NCIgb3IN
+Cj4gc29tZXRoaW5nIGZvciBwY2llLXRlZ3JhMTk0LmMuICBPciB3aWxsIHRoZXJlIGJlIHRlZ3Jh
+MTk1LCB0ZWdyYSAxOTYsDQo+IGV0YyBhZGRlZCB0byB0aGlzIGRyaXZlcj8NCj4gDQo+IEFsc28s
+IHBsZWFzZSBjYXBpdGFsaXplIHRoZSBmaXJzdCB3b3JkIGFuZCAiUE0iIGluIHRoZSBzdWJqZWN0
+czoNCj4gDQo+ICAgUENJOiB0ZWdyYTE5NDogRml4IHJ1bnRpbWUgUE0gaW1iYWxhbmNlIG9uIGVy
+cm9yDQo+IA0KPiBCam9ybg0K
