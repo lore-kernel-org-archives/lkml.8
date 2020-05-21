@@ -2,95 +2,74 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647B7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7A4206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 265D8206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgEUNuN (ORCPT
+        id S1729648AbgEUNul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:50:13 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38142 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728630AbgEUNuM (ORCPT
+        Thu, 21 May 2020 09:50:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50074 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgEUNul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:50:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id CD10D803078F;
-        Thu, 21 May 2020 13:50:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id J0Q4oEWdxXVs; Thu, 21 May 2020 16:50:09 +0300 (MSK)
-Date:   Thu, 21 May 2020 16:50:08 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/14] mips: Prepare MIPS-arch code for Baikal-T1 SoC
- support
-Message-ID: <20200521135008.cl7slwn5hujvbbie@mobilestation>
-References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
- <20200521004217.6gdcpboxaqizreky@mobilestation>
- <20200521071457.GC7309@alpha.franken.de>
+        Thu, 21 May 2020 09:50:41 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jblao-0006b4-Gr; Thu, 21 May 2020 13:50:38 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: fbtft: fb_st7789v: make HSD20_IPS numeric and not a string
+Date:   Thu, 21 May 2020 14:50:38 +0100
+Message-Id: <20200521135038.345878-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200521071457.GC7309@alpha.franken.de>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 09:14:57AM +0200, Thomas Bogendoerfer wrote:
-> On Thu, May 21, 2020 at 03:42:17AM +0300, Serge Semin wrote:
-> > On Thu, May 21, 2020 at 03:34:29AM +0300, Serge Semin wrote:
-> > >
-> > > This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> > > base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-> > > tag: v5.7-rc4
-> > 
-> > Thomas,
-> > Please note that this patchset is based on the Linux 5.7-rc4 tree (it most likely
-> > will get cleanly applied on rc6 as well), while mips-next is still at rc1. Due
-> > to that the patchset fails to be applied on mips-next. I think it would be
-> > better first to merge the last Linux tree into the mips-next, then try to merge
-> > this patchset in. Should you have any problem after that, please let me know.
-> > I'll resend the patchset being rebased on top of the new mips-next tree.
-> 
-> no, that's not how it works. Please rebase your patches on top of
-> mips-next. Thank you.
+From: Colin Ian King <colin.king@canonical.com>
 
-Ok. I'll do it shortly and discard the commit 37353ec964e8 ("mips: MAAR: Use more
-precise address mask") since you have already applied it on to the mips-next
-branch.
+Currently HSD20_IPS is defined as "true" and will always result in a
+non-zero result even if it is defined as "false" because it is an array
+and that will never be zero. Fix this by defining it as an integer 1
+rather than a literal string.
 
--Sergey
+Addessses-Coverity: ("Array compared against 0")
+Fixes: f03c9b788472 ("staging: fbtft: fb_st7789v: Initialize the Display")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/staging/fbtft/fb_st7789v.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Thomas.
-> 
-> -- 
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
+diff --git a/drivers/staging/fbtft/fb_st7789v.c b/drivers/staging/fbtft/fb_st7789v.c
+index ebc17e05ecd0..3a280cc1892c 100644
+--- a/drivers/staging/fbtft/fb_st7789v.c
++++ b/drivers/staging/fbtft/fb_st7789v.c
+@@ -24,7 +24,7 @@
+ 	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
+ 	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
+ 
+-#define HSD20_IPS "true"
++#define HSD20_IPS 1
+ 
+ /**
+  * enum st7789v_command - ST7789V display controller commands
+-- 
+2.25.1
+
