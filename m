@@ -2,121 +2,176 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB56EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 685E820721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:38:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mELKqfIb"
+	by mail.kernel.org (Postfix) with ESMTP id E20EC20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgEUNif (ORCPT
+        id S1729499AbgEUNil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:38:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55012 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbgEUNif (ORCPT
+        Thu, 21 May 2020 09:38:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4770 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728060AbgEUNik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:38:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LDRXYL158375;
-        Thu, 21 May 2020 13:37:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=1H9r5JbwrbyVDc6gEnRR1i+kqMeSEbJU8Fh66Zw0Ono=;
- b=mELKqfIb/VLF3nLhd60AqlujPMbFxbC3kUlOfRV/D7eKxsNAFSSAoVneSVb3ryyxoTx+
- LJqqlKXFxyqgplXsMeiRKdU8UynF5UbShCLb/dkYTe1IPpUPo210UzKdPqA5gnLHPA3v
- n3IddseeQeByBqPTp0dIeCB4tBms07f0adn0ugf3XMmYtBewkGtqIGHKxE5NxCHJSB8x
- ilHgqKskhSw6v/+IXOooWx4Ou7xAY3jK7ePcK/u8Cl7Wdf8pNz56YudAbQFK+OvAxt3W
- rj+giVZfBog++TMnfF3FutpsHfuyVC3deNuLiUf5c5C9Vh+/0U+wixIh60eTTmfM2MpV 3Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 31501rf221-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 13:37:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LDXFgJ026782;
-        Thu, 21 May 2020 13:35:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 312t3b5xpa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 13:35:14 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04LDZCMw016629;
-        Thu, 21 May 2020 13:35:12 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 06:35:12 -0700
-Date:   Thu, 21 May 2020 09:35:32 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Huang Ying <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH -V2] swap: Reduce lock contention on swap cache from swap
- slots allocation
-Message-ID: <20200521133532.psckytr456eevs5j@ca-dmjordan1.us.oracle.com>
-References: <20200520031502.175659-1-ying.huang@intel.com>
+        Thu, 21 May 2020 09:38:40 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04LDWlmR099950;
+        Thu, 21 May 2020 09:38:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312wsm59j3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 May 2020 09:38:30 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04LDX603100838;
+        Thu, 21 May 2020 09:38:28 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312wsm59h4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 May 2020 09:38:28 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04LDZN60003308;
+        Thu, 21 May 2020 13:38:27 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 313xcd2bt0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 May 2020 13:38:26 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04LDcOjm62062690
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 13:38:24 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5A8452050;
+        Thu, 21 May 2020 13:38:24 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.204.51])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id E1E525204F;
+        Thu, 21 May 2020 13:38:23 +0000 (GMT)
+Date:   Thu, 21 May 2020 16:38:21 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, cai@lca.pw,
+        mhocko@kernel.org
+Subject: Re: [PATCH] mm/compaction: Fix the incorrect hole in
+ fast_isolate_freepages()
+Message-ID: <20200521133821.GR1059226@linux.ibm.com>
+References: <20200521014407.29690-1-bhe@redhat.com>
+ <20200521093606.GA7110@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520031502.175659-1-ying.huang@intel.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=2 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005210100
+In-Reply-To: <20200521093606.GA7110@suse.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-21_07:2020-05-21,2020-05-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 cotscore=-2147483648 suspectscore=84 clxscore=1015
+ priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005210101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 11:15:02AM +0800, Huang Ying wrote:
-> @@ -2827,6 +2865,11 @@ static struct swap_info_struct *alloc_swap_info(void)
->  	p = kvzalloc(struct_size(p, avail_lists, nr_node_ids), GFP_KERNEL);
->  	if (!p)
->  		return ERR_PTR(-ENOMEM);
-> +	p->cluster_next_cpu = alloc_percpu(unsigned int);
-> +	if (!p->cluster_next_cpu) {
-> +		kvfree(p);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
+On Thu, May 21, 2020 at 10:36:06AM +0100, Mel Gorman wrote:
+> On Thu, May 21, 2020 at 09:44:07AM +0800, Baoquan He wrote:
+> > After investigation, it turns out that this is introduced by commit of
+> > linux-next: commit f6edbdb71877 ("mm: memmap_init: iterate over memblock
+> > regions rather that check each PFN").
+> > 
+> > After investigation, it turns out that this is introduced by commit of
+> > linux-next, the patch subject is:
+> >   "mm: memmap_init: iterate over memblock regions rather that check each PFN".
+> > 
+> 
+> Some repetition here. I assume it's because the commit ID is not stable
+> because it's in linux-next.
+> 
+> > Qian added debugging code. The debugging log shows that the fault page is
+> > 0x2a800000. From the system e820 map which is pasted at bottom, the page
+> > is in e820 reserved range:
+> > 	BIOS-e820: [mem 0x0000000029ffe000-0x000000002a80afff] reserved
+> > And it's in section [0x28000000, 0x2fffffff]. In that secion, there are
+> > several usable ranges and some e820 reserved ranges.
+> > 
+> > For this kind of e820 reserved range, it won't be added to memblock allocator.
+> > However, init_unavailable_mem() will initialize to add them into node 0,
+> > zone 0.
+> 
+> Why is it appropriate for init_unavailable_mem to add a e820 reserved
+> range to the zone at all? The bug being triggered indicates there is a
+> mismatch between the zone of a struct page and the PFN passed in.
+> 
+> > Before that commit, later, memmap_init() will add e820 reserved
+> > ranges into the zone where they are contained, because it can pass
+> > the checking of early_pfn_valid() and early_pfn_in_nid(). In this case,
+> > the e820 reserved range where fault page 0x2a800000 is located is added
+> > into DMA32 zone. After that commit, the e820 reserved rgions are kept
+> > in node 0, zone 0, since we iterate over memblock regions to iniatialize
+> > in memmap_init() instead, their node and zone won't be changed.
+> > 
+> 
+> This implies that we have struct pages that should never be used (e820
+> reserved) but exist somehow in a zone range but with broken linkages to
+> their node and zone.
 
-There should be free_percpu()s at two places after this, but I think the
-allocation really belongs right...
+Unless I misread Baoquan's explanation we do have struct pages for e820
+resrved memory, but they are properly linked to their node and zone and
+marked as reserved.
 
-> @@ -3202,7 +3245,10 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
->  		 * select a random position to start with to help wear leveling
->  		 * SSD
->  		 */
-> -		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
+Before the commit memmap_init_zone() looped over all pfns in node in
+zone and the reserved pages were passed to __init_single_page with node
+and zone where their pfn belongs.
 
-...here because then it's only allocated when it's actually used.
+Afterwards, free_low_memory_core_early() reserved them because they were
+present in memblock.reserved and form here on nothing would touch them.
 
-> +		for_each_possible_cpu(cpu) {
-> +			per_cpu(*p->cluster_next_cpu, cpu) =
-> +				1 + prandom_u32_max(p->highest_bit);
-> +		}
->  		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
->  
->  		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
+After the commit, we skip over the holes in memblock.memory during
+memmap_init_zone() which leaves the zone and node link zeroed for e820
+reserved pages and that evetually triggers
+VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn)).
+
+> > Reported-by: Qian Cai <cai@lca.pw>
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/compaction.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/compaction.c b/mm/compaction.c
+> > index 67fd317f78db..9ce4cff4d407 100644
+> > --- a/mm/compaction.c
+> > +++ b/mm/compaction.c
+> > @@ -1418,7 +1418,9 @@ fast_isolate_freepages(struct compact_control *cc)
+> >  				cc->free_pfn = highest;
+> >  			} else {
+> >  				if (cc->direct_compaction && pfn_valid(min_pfn)) {
+> > -					page = pfn_to_page(min_pfn);
+> > +					page = pageblock_pfn_to_page(min_pfn,
+> > +						pageblock_end_pfn(min_pfn),
+> > +						cc->zone);
+> >  					cc->free_pfn = min_pfn;
+> >  				}
+> >  			}
+> 
+> Why is the correct fix not to avoid creating struct pages for e820
+> ranges and make sure that struct pages that are reachable have proper
+> node and zone linkages?
+
+I think that simpler fix would be to have e820 reserved ranges
+reigstered as memory in memblock and not only as reserved. If we will
+have these regions in both memblock.memory and memblock.reserved the
+struct pages for them will be properly initialized as reserved. 
+
 > -- 
-> 2.26.2
-> 
-> 
+> Mel Gorman
+> SUSE Labs
+
+-- 
+Sincerely yours,
+Mike.
