@@ -2,169 +2,104 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B77020721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0BF2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590064584;
-	bh=kvXZ5Ar3iD8sz53DrMiw67s4i3oP26P5U8RIKu85m7w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=sLdLMRzawPh6LLTFzZkKZzU/Cl4gbvBjI9w7ri9XlY4zH2TMcAAkQVNs3OtRn6ukF
-	 oPcbwzhV5AXcWo6j4xUUa96ZXUfgUve/nnBzAxpX21Hz/PiI2tXA2Pm9gInsI21N25
-	 tA0ayZDaGnupu6wCwyan5qGZySH/FyRKlW0ndM94=
+	s=default; t=1590064659;
+	bh=XzY9Vu3vZDIMRqhC2Uec8ljVnAJkU8kHTGL8ax+6XUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=StbfN5IdIwiYgFdK5ZquuwG+XBlTQJ2Hn+IPp6fQpI7lFOemkVcerYh0Qy5BXK6bt
+	 Qq911iDa1wonUjzzVPjlJH6hdh8qwYVxNRa5wp2w4GoYqc6/7mITDk6thEgcGgnuHh
+	 x9nBn5LvBOI4xkAQx+bC4siTCYqRjgQTXqQA1F9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgEUMgX (ORCPT
+        id S1729303AbgEUMhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:36:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39496 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 08:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728133AbgEUMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:36:22 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1728186AbgEUMhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:37:38 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DD3E2070A;
-        Thu, 21 May 2020 12:36:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 547DD2070A;
+        Thu, 21 May 2020 12:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590064581;
-        bh=kvXZ5Ar3iD8sz53DrMiw67s4i3oP26P5U8RIKu85m7w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rWCdezUNKHzqfIMCzRYS+XVS5/oyB7Bb1P0TzT1i+QsqYY41xOuR0eRhrY0IrUWEK
-         CyWN/a2Ra2tYZUMoYN8HOWW0jHEAKnZwUpircKK1XnSq+kEE2Uu1Od28c3lt+yWjK2
-         wICBqFuF61FHmyefppz+GySgXfPqCr4oiEL0MNpU=
-Received: by pali.im (Postfix)
-        id 98A6734B; Thu, 21 May 2020 14:36:19 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mwifiex: Add support for NL80211_ATTR_MAX_AP_ASSOC_STA
-Date:   Thu, 21 May 2020 14:35:59 +0200
-Message-Id: <20200521123559.29028-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        s=default; t=1590064657;
+        bh=XzY9Vu3vZDIMRqhC2Uec8ljVnAJkU8kHTGL8ax+6XUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1Hh7R91MXepY8cJaTBq4r9BBHcCknRHA4kdtVwWZGAoahyEhDYtZUpVhR2+huC2ip
+         hR/cvCRBcGfdmuFUvqWfmOB6yYDafJQcIKkuSdnmwxQEdI7Lc6ZJ8WOZVPHkTiFu+6
+         zXB74atNrHZCB3MQ5YyiYn7J01c7AwODVBRHTw8M=
+Date:   Thu, 21 May 2020 13:37:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, vigneshr@ti.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+Message-ID: <20200521123735.GC4770@sirena.org.uk>
+References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200520124329.GF4823@sirena.org.uk>
+ <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
+ <20200521105646.GA4770@sirena.org.uk>
+ <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
+ <20200521122035.GB4770@sirena.org.uk>
+ <463b24a4-0a6a-9fcf-7eb9-8fde602c0c13@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Bu8it7iiRSEf40bY"
+Content-Disposition: inline
+In-Reply-To: <463b24a4-0a6a-9fcf-7eb9-8fde602c0c13@linux.intel.com>
+X-Cookie: Keep your laws off my body!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD8997 firmware sends TLV_TYPE_MAX_CONN with struct hw_spec_max_conn to
-inform kernel about maximum number of p2p connections and stations in AP
-mode.
 
-During initialization of SD8997 wifi chip kernel prints warning:
+--Bu8it7iiRSEf40bY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  mwifiex_sdio mmc0:0001:1: Unknown GET_HW_SPEC TLV type: 0x217
+On Thu, May 21, 2020 at 08:34:43PM +0800, Ramuthevar, Vadivel MuruganX wrote:
+> On 21/5/2020 8:20 pm, Mark Brown wrote:
 
-This patch adds support for parsing TLV_TYPE_MAX_CONN (0x217) and sets
-appropriate cfg80211 member 'max_ap_assoc_sta' from retrieved structure.
+> > I mean that any changes to the bindings ought to be split out into
+> > separate patches, if there's multiple changes it may make sense for
+> > there to be multiple patches.
 
-It allows userspace to retrieve NL80211_ATTR_MAX_AP_ASSOC_STA attribute.
+> Got it, we do not have multiple changes since it is new YAML file.
+> in case if we feel anything to be added , we add as separate patches.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/net/wireless/marvell/mwifiex/cfg80211.c |  5 +++++
- drivers/net/wireless/marvell/mwifiex/cmdevt.c   | 12 ++++++++++++
- drivers/net/wireless/marvell/mwifiex/fw.h       |  8 ++++++++
- drivers/net/wireless/marvell/mwifiex/main.h     |  1 +
- 4 files changed, 26 insertions(+)
+If this is just a conversion to YAML then your changelog is wildly
+inaccurate and needs to be improved, your changelog says you are adding
+new things.
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 12bfd653a..7998e91c9 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -4339,6 +4339,11 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
- 		wiphy->iface_combinations = &mwifiex_iface_comb_ap_sta;
- 	wiphy->n_iface_combinations = 1;
- 
-+	if (adapter->max_sta_conn > adapter->max_p2p_conn)
-+		wiphy->max_ap_assoc_sta = adapter->max_sta_conn;
-+	else
-+		wiphy->max_ap_assoc_sta = adapter->max_p2p_conn;
-+
- 	/* Initialize cipher suits */
- 	wiphy->cipher_suites = mwifiex_cipher_suites;
- 	wiphy->n_cipher_suites = ARRAY_SIZE(mwifiex_cipher_suites);
-diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-index 589cc5eb1..d068b9075 100644
---- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-@@ -1495,6 +1495,7 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
- 	struct mwifiex_adapter *adapter = priv->adapter;
- 	struct mwifiex_ie_types_header *tlv;
- 	struct hw_spec_api_rev *api_rev;
-+	struct hw_spec_max_conn *max_conn;
- 	u16 resp_size, api_id;
- 	int i, left_len, parsed_len = 0;
- 
-@@ -1604,6 +1605,17 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
- 					break;
- 				}
- 				break;
-+			case TLV_TYPE_MAX_CONN:
-+				max_conn = (struct hw_spec_max_conn *)tlv;
-+				adapter->max_p2p_conn = max_conn->max_p2p_conn;
-+				adapter->max_sta_conn = max_conn->max_sta_conn;
-+				mwifiex_dbg(adapter, INFO,
-+					    "max p2p connections: %u\n",
-+					    adapter->max_p2p_conn);
-+				mwifiex_dbg(adapter, INFO,
-+					    "max sta connections: %u\n",
-+					    adapter->max_sta_conn);
-+				break;
- 			default:
- 				mwifiex_dbg(adapter, FATAL,
- 					    "Unknown GET_HW_SPEC TLV type: %#x\n",
-diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-index 6f86f5b96..8047e3078 100644
---- a/drivers/net/wireless/marvell/mwifiex/fw.h
-+++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-@@ -220,6 +220,7 @@ enum MWIFIEX_802_11_PRIVACY_FILTER {
- #define TLV_TYPE_BSS_MODE           (PROPRIETARY_TLV_BASE_ID + 206)
- #define TLV_TYPE_RANDOM_MAC         (PROPRIETARY_TLV_BASE_ID + 236)
- #define TLV_TYPE_CHAN_ATTR_CFG      (PROPRIETARY_TLV_BASE_ID + 237)
-+#define TLV_TYPE_MAX_CONN           (PROPRIETARY_TLV_BASE_ID + 279)
- 
- #define MWIFIEX_TX_DATA_BUF_SIZE_2K        2048
- 
-@@ -2388,4 +2389,11 @@ struct mwifiex_opt_sleep_confirm {
- 	__le16 action;
- 	__le16 resp_ctrl;
- } __packed;
-+
-+struct hw_spec_max_conn {
-+	struct mwifiex_ie_types_header header;
-+	u8 max_p2p_conn;
-+	u8 max_sta_conn;
-+} __packed;
-+
- #endif /* !_MWIFIEX_FW_H_ */
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
-index afaffc325..5923c5c14 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -1022,6 +1022,7 @@ struct mwifiex_adapter {
- 	bool ext_scan;
- 	u8 fw_api_ver;
- 	u8 key_api_major_ver, key_api_minor_ver;
-+	u8 max_p2p_conn, max_sta_conn;
- 	struct memory_type_mapping *mem_type_mapping_tbl;
- 	u8 num_mem_types;
- 	bool scan_chan_gap_enabled;
--- 
-2.20.1
+--Bu8it7iiRSEf40bY
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Gdg4ACgkQJNaLcl1U
+h9CEowf/QMYDfB1WRpIHtE540R46+Mt+m6ieiujeMi72a0tdEVaExwPeBNHvHAfr
+JeVWeL+H6//8H2NcR5NwR6kVDFYNlx7h1JSNKhOpMedxsT72sJxj62hadMgF18Nm
+laUg+q/bz+kPN6qOpAb6iY9ocf6vo9qWcYcKK00DDrrEfkLVF2KbLdft9dGzs75O
+VApz+3bfiMY4ROV3Kc08V7xEGyJbXRWnAtiA21+9XrWjiuqYtfuLue+2qeFiE9Hu
+3eacgVdd0pGiBjrEi/WbwRUoAnbQBFpRisqkNz/OGtt3d/8mvjF2prNW9QwsPH+g
+zugQEeTYSCDR4Nm36ZHyuqzau9hAvA==
+=zxZ7
+-----END PGP SIGNATURE-----
+
+--Bu8it7iiRSEf40bY--
