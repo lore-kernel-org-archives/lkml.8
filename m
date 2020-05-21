@@ -2,145 +2,248 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60E2520678
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72CF207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyO6SeGG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JO3hOK9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbgEUDaf (ORCPT
+        id S1728165AbgEUDau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgEUDaf (ORCPT
+        Wed, 20 May 2020 23:30:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44024 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgEUDat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:30:35 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1216BC061A0E;
-        Wed, 20 May 2020 20:30:35 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id cx22so2296078pjb.1;
-        Wed, 20 May 2020 20:30:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uDIiEcjy80gA4ps38HoROvYan2sQOUFT82jQPB/2UNw=;
-        b=AyO6SeGGAm0QIBIThN81SGP22D8KEcinoULbuJpMuGLPj+TBB6w56rPuJ9bZMI6GrB
-         hVb1JWW98n8iq9Sqt2fp50aL/UE0K1AOInfCQixIRLFkRuApEB38udFtXFHd1Xhg7/yu
-         l/jjyWMByv7QV5YKUQuKuZQRdMAh55VjbXu0SLBUUpaXGb6niSP4D7Np6gWczQKTHsZZ
-         EPdpvwyjYf89fiVm+Wj+KR7VLdi1ltKrNHrWCKXy7rjC3n9hFL8G4T7fSOKXswi2fNe5
-         omGddWl1GckaZextAfUHv8dw0In36MAiMUO066IOHAbov9lR2L+pzStSVIdQFeMFmrSE
-         PDLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uDIiEcjy80gA4ps38HoROvYan2sQOUFT82jQPB/2UNw=;
-        b=GaVHztKhiHHwLFsiVtr9P8BF2AuEkJwZzDg9ukhmJKjBS4ZYZ6TWOeqie6CGzQpjFn
-         9zVvfrdRdvhQDOEXlmWldaOKEzEd5TNIXuv7dvl6N0mjcSq+Acea+vFu+LEjpqoqPJHT
-         ZWf8y6toJuvTIJJSKQSBoDj8mwfmCFKAJfInEcqewHSoT2PeNpliQp2CY2lhn2HQMh4k
-         GV2aZaJDoHFa3yPbyUlErhUTTdqpbqF791yF+xlfj1cDVrlF2a9mD0ZR2KQxrGiSlsRL
-         UXtn1IokbHr7MwVg/URtLdiS5x0/P9x0kx7zSumTEVyuItXzFlZTKXODKEm91weFp/ok
-         VpPA==
-X-Gm-Message-State: AOAM531uQJXN0AuOCmKacFqe7Lf95Ry/JxsvX6FoPrtTZmzem6lgjyku
-        tOCeHJSWYPmNcmMkgtsAiQ3NlwQe
-X-Google-Smtp-Source: ABdhPJxt68R1ahsIg4uKpfQccsG8TdtMaNTHJ8jB2pvqkrfcdE9mBwAkuBCixiCN0HO4yEW90bMc3Q==
-X-Received: by 2002:a17:90b:8d1:: with SMTP id ds17mr8432440pjb.76.1590031834534;
-        Wed, 20 May 2020 20:30:34 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id w21sm3479771pfu.47.2020.05.20.20.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 20:30:33 -0700 (PDT)
-Date:   Wed, 20 May 2020 20:30:31 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marco Elver <elver@google.com>, x86 <x86@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [tip: locking/kcsan] READ_ONCE: Use data_race() to avoid KCSAN
- instrumentation
-Message-ID: <20200521033031.GA3590594@ubuntu-s3-xlarge-x86>
-References: <20200511204150.27858-18-will@kernel.org>
- <158929421358.390.2138794300247844367.tip-bot2@tip-bot2>
- <20200520221712.GA21166@zn.tnic>
+        Wed, 20 May 2020 23:30:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L3UaIk091192;
+        Wed, 20 May 2020 22:30:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590031836;
+        bh=b6oEC2PB2pjw4Mn+qzNvfqJC+/OpQLwrj1RTuLQtQwQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JO3hOK9dmY6s1gbbvAjsW2uFby9AjDV1qyuNfY03uf01UhQ3Yz7ifb9zZorzxAOt4
+         BTYt45eqipApPucs7R1iMcN9WHmjRunRmlrgWtN3kkg2/bJI7GfuLe/VTRI293EhVy
+         +ZjsRrFUJzEtObV7XGG6KLJ0+2xvELfo3wTdlJQA=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04L3UaTi053753
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 20 May 2020 22:30:36 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
+ May 2020 22:30:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 20 May 2020 22:30:36 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L3UXwZ121668;
+        Wed, 20 May 2020 22:30:33 -0500
+Subject: Re: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200508130646.23939-1-kishon@ti.com>
+ <20200508130646.23939-5-kishon@ti.com>
+ <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <162447e2-ac3b-9523-d404-130b93e0860e@ti.com>
+Date:   Thu, 21 May 2020 09:00:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520221712.GA21166@zn.tnic>
+In-Reply-To: <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 12:17:12AM +0200, Borislav Petkov wrote:
-> Hi,
-> 
-> On Tue, May 12, 2020 at 02:36:53PM -0000, tip-bot2 for Will Deacon wrote:
-> > The following commit has been merged into the locking/kcsan branch of tip:
-> > 
-> > Commit-ID:     cdd28ad2d8110099e43527e96d059c5639809680
-> > Gitweb:        https://git.kernel.org/tip/cdd28ad2d8110099e43527e96d059c5639809680
-> > Author:        Will Deacon <will@kernel.org>
-> > AuthorDate:    Mon, 11 May 2020 21:41:49 +01:00
-> > Committer:     Thomas Gleixner <tglx@linutronix.de>
-> > CommitterDate: Tue, 12 May 2020 11:04:17 +02:00
-> > 
-> > READ_ONCE: Use data_race() to avoid KCSAN instrumentation
-> > 
-> > Rather then open-code the disabling/enabling of KCSAN across the guts of
-> > {READ,WRITE}_ONCE(), defer to the data_race() macro instead.
-> > 
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Cc: Marco Elver <elver@google.com>
-> > Link: https://lkml.kernel.org/r/20200511204150.27858-18-will@kernel.org
-> 
-> so this commit causes a kernel build slowdown depending on the .config
-> of between 50% and over 100%. I just bisected locking/kcsan and got
-> 
-> NOT_OK:	cdd28ad2d811 READ_ONCE: Use data_race() to avoid KCSAN instrumentation
-> OK:	88f1be32068d kcsan: Rework data_race() so that it can be used by READ_ONCE()
-> 
-> with a simple:
-> 
-> $ git clean -dqfx && mk defconfig
-> $ time make -j<NUM_CORES+1>
-> 
-> I'm not even booting the kernels - simply checking out the above commits
-> and building the target kernels. I.e., something in that commit is
-> making gcc go nuts in the compilation phases.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+Hi Rob,
 
-For what it's worth, I also noticed the same thing with clang. I only
-verified the issue in one of my first build targets, an arm defconfig
-build, which regressed from 2.5 minutes to 10+ minutes.
+On 5/19/2020 10:41 PM, Rob Herring wrote:
+> On Fri, May 8, 2020 at 7:07 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>> property to configure the number of bits passed through from PCIe
+>> address to internal address in Inbound Address Translation register.
+>> This only used the NO MATCH BAR.
+>>
+>> However standard PCI dt-binding already defines "dma-ranges" to
+>> describe the address ranges accessible by PCIe controller. Add support
+>> in Cadence PCIe host driver to parse dma-ranges and configure the
+>> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
+>> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
+>> the dma-ranges specifies a size larger than the maximum allowed, the
+>> driver will split and configure the BARs.
+> 
+> Would be useful to know what your dma-ranges contains now.
+> 
+> 
+>> Legacy device tree binding compatibility is maintained by retaining
+>> support for "cdns,no-bar-match-nbits".
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
+>>  drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
+>>  2 files changed, 141 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 6ecebb79057a..2485ecd8434d 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -11,6 +11,12 @@
+>>
+>>  #include "pcie-cadence.h"
+>>
+>> +static u64 cdns_rp_bar_max_size[] = {
+>> +       [RP_BAR0] = _ULL(128 * SZ_2G),
+>> +       [RP_BAR1] = SZ_2G,
+>> +       [RP_NO_BAR] = SZ_64T,
+>> +};
+>> +
+>>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>>                                int where)
+>>  {
+>> @@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>         return 0;
+>>  }
+>>
+>> +static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
+>> +                                        enum cdns_pcie_rp_bar bar,
+>> +                                        u64 cpu_addr, u32 aperture)
+>> +{
+>> +       struct cdns_pcie *pcie = &rc->pcie;
+>> +       u32 addr0, addr1;
+>> +
+>> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
+>> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
+>> +       addr1 = upper_32_bits(cpu_addr);
+>> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
+>> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
+>> +}
+>> +
+>> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
+>> +                                    struct resource_entry *entry,
+>> +                                    enum cdns_pcie_rp_bar *index)
+>> +{
+>> +       u64 cpu_addr, pci_addr, size, winsize;
+>> +       struct cdns_pcie *pcie = &rc->pcie;
+>> +       struct device *dev = pcie->dev;
+>> +       enum cdns_pcie_rp_bar bar;
+>> +       unsigned long flags;
+>> +       u32 aperture;
+>> +       u32 value;
+>> +
+>> +       cpu_addr = entry->res->start;
+>> +       flags = entry->res->flags;
+>> +       pci_addr = entry->res->start - entry->offset;
+>> +       size = resource_size(entry->res);
+>> +       bar = *index;
+>> +
+>> +       if (entry->offset) {
+>> +               dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
+>> +                       pci_addr, cpu_addr);
+> 
+> Would be a bit more clear to say PCI addr must equal CPU addr.
+> 
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
+>> +       while (size > 0) {
+>> +               if (bar > RP_NO_BAR) {
+>> +                       dev_err(dev, "Failed to map inbound regions!\n");
+>> +                       return -EINVAL;
+>> +               }
+>> +
+>> +               winsize = size;
+>> +               if (size > cdns_rp_bar_max_size[bar])
+>> +                       winsize = cdns_rp_bar_max_size[bar];
+>> +
+>> +               aperture = ilog2(winsize);
+>> +
+>> +               cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
+>> +
+>> +               if (bar == RP_NO_BAR)
+>> +                       break;
+>> +
+>> +               if (winsize + cpu_addr >= SZ_4G) {
+>> +                       if (!(flags & IORESOURCE_PREFETCH))
+>> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
+>> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
+>> +               } else {
+>> +                       if (!(flags & IORESOURCE_PREFETCH))
+>> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
+>> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
+>> +               }
+>> +
+>> +               value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
+>> +
+>> +               size -= winsize;
+>> +               cpu_addr += winsize;
+>> +               bar++;
+>> +       }
+>> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>> +       *index = bar;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+>> +{
+>> +       enum cdns_pcie_rp_bar bar = RP_BAR0;
+>> +       struct cdns_pcie *pcie = &rc->pcie;
+>> +       struct device *dev = pcie->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +       struct pci_host_bridge *bridge;
+>> +       struct resource_entry *entry;
+>> +       u32 no_bar_nbits = 32;
+>> +       int err;
+>> +
+>> +       bridge = pci_host_bridge_from_priv(rc);
+>> +       if (!bridge)
+>> +               return -ENOMEM;
+>> +
+>> +       if (list_empty(&bridge->dma_ranges)) {
+>> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
+>> +                                    &no_bar_nbits);
+>> +               cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
+>> +               return 0;
+>> +       }
+>> +
+>> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+>> +               err = cdns_pcie_host_bar_config(rc, entry, &bar);
+> 
+> Seems like this should have some better logic to pick which BAR to
+> use. Something like find the biggest region and then find the smallest
+> BAR that it fits in. Then get the next biggest...
 
-More details available on our issue tracker (Nick did some more
-profiling on other configs with both clang and gcc):
+Okay, I'll change this something like for each region, find the smallest BAR
+that it fits in and if there is no BAR big enough to hold the region, split the
+region to see if can be fitted using multiple BARs. I don't see the purpose of
+finding the biggest region first since at all times we'll only use the smallest
+BAR to fit.
 
-https://github.com/ClangBuiltLinux/linux/issues/1032
-
-More than happy to do further triage as time permits. I do note Marco's
-message about the upcoming series to eliminate this but it would be nice
-if this did not regress in the meantime.
-
-Cheers,
-Nathan
+Thanks
+Kishon
