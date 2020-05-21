@@ -2,114 +2,123 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AAFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0DD2206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:15:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a0EChYEY"
+	by mail.kernel.org (Postfix) with ESMTP id D1E1920759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590052665;
+	bh=lrCsi5PPelpIf3uelRQPGB1wFFjJDgGZhs/G1Te3fZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mDZwtuvxqO1Lw/4pYeZsrvEkd734TLLybgNx78KPxw+FnYqQV26cC4H0SBsvL5EpK
+	 PAEL+Kq8UvFg0Nmhlyz09RAXi/f4mFs0x8Z4me6ytAOq2c6Bqt/3p85rjm73DXgGu2
+	 A8MaCB3Dlimc89sH8X0rG5zotsol5kxqycA18Niw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgEUJPh (ORCPT
+        id S1728792AbgEUJRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:15:37 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58116 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728746AbgEUJPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:15:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04L9BnJU127976;
-        Thu, 21 May 2020 09:15:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=bh+xl74w9Pkh3905HBogf0NGla+VU7nalNxpQKJpDgo=;
- b=a0EChYEYNnlwmOCKS9rkx0gOHg77FbolOr/EsqMpLpNqzEj6dp9cUgIAvocRavU8hKtM
- HE4kYMhm3vNYS98f217SdV1SDOoxIJVYpdszoh/yr6jJmwEvw9no7Zwy/TLjw9q58nea
- l3Ofrm3CeWWoHG8oKFLSyCF9rdfifmuKTAMoY3Izj6BCKs+c9DIBgmB4uZSz0jMAXbhs
- Vdj3K3b1SRl1FGwi1BJeN5iuMokY5B+MytX6jgG9AsF3bjOIyKm2x/yN7st9DhmT18Ez
- myajXBxweymmQP8+yoRVWWluBETYiA7zkLv30XZ/lL6T17Dhw4qq6fWUM/grRwFdUe5F Dg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31284m7gfe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 09:15:23 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04L9DERq169437;
-        Thu, 21 May 2020 09:15:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 312t3aj105-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 09:15:22 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04L9FE7h011073;
-        Thu, 21 May 2020 09:15:15 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 02:15:14 -0700
-Date:   Thu, 21 May 2020 12:15:05 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     dinghao.liu@zju.edu.cn
-Cc:     devel@driverdev.osuosl.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, linux-tegra@vger.kernel.org,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
- on error
-Message-ID: <20200521091505.GF30374@kadam>
-References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
- <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
- <20200520150230.GC30374@kadam>
- <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
+        Thu, 21 May 2020 05:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728686AbgEUJRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:17:44 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A19206BE;
+        Thu, 21 May 2020 09:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590052664;
+        bh=lrCsi5PPelpIf3uelRQPGB1wFFjJDgGZhs/G1Te3fZM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DIlBfpyARv0vGa3tJkUPcxfnPdKc50TPwojk12d275MhOI1sRQ9w98/1yEf93mcvb
+         fGzQMuJ4Yp96h/zonve+e907nxQne9iJCritIncVwG1NiNbA1b2Esh/dQWRpsOXRVg
+         jffBqfWUGRvQ/Fh2FpTfyCE3CYN/FfRqGeJ2pHgM=
+Date:   Thu, 21 May 2020 10:17:39 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+Message-ID: <20200521091736.GA5091@willie-the-truck>
+References: <20200518091222.27467-1-sudeep.holla@arm.com>
+ <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus>
+ <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+ <20200521075755.GA4668@willie-the-truck>
+ <20200521081055.GD1131@bogus>
+ <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=29 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210067
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=29 mlxscore=0
- cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005210067
+In-Reply-To: <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
-> Hi, Dan,
+On Thu, May 21, 2020 at 11:06:23AM +0200, Arnd Bergmann wrote:
+> On Thu, May 21, 2020 at 10:11 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > Indeed, it is also last patch in the series. However if Arnd is happy
+> > with the sysfs names, we can move to generic code later without breaking
+> > anything.
+> >
+> > We need not revert or drop it now. I will leave that to you or Arnd to
+> > decide. Just that it may be too late to get acks for all the soc sysfs
+> > drivers in time for v5.8
+> >
+> > I am fine if you want to drop the last patch.
 > 
-> I agree the best solution is to fix __pm_runtime_resume(). But there are also 
-> many cases that assume pm_runtime_get_sync() will change PM usage 
-> counter on error. According to my static analysis results, the number of these 
-> "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce 
-> more new bugs. Therefore I think we should resolve the "bug" cases individually.
+> Ok, let's drop that patch then and make sure we do something that
+> everyone is happy with later on. I'm already in favor of adding
+> a more reliable soc_device instance based on this, but we need to
+> be sure we don't screw up the contents of the attributes when we
+> can't change them later.
 > 
+> > > > >> drivers/firmware/smccc/smccc.c:14:13: warning: no previous prototype for function 'arm_smccc_version_init' [-Wmissing-prototypes]
+> > > > void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
+> > > > ^
+> > > > drivers/firmware/smccc/smccc.c:14:1: note: declare 'static' if the
+> > > > function is not intended to be used outside of this translation unit
+> > > > void __init arm_smccc_version_init(u32 version, enum arm_smccc_conduit conduit)
+> > >
+> > > I saw that when I applied the patches, but since the function is called from
+> > > another compilation unit (psci/psci.o), I just ignored it as we have loads
+> > > of these already and it only screams if you build with W=1.
+> > >
+> >
+> > /me confused. Do you need the fix for this warning or you are happy to ignore?
+> 
+> I want a fix for that, as I hope we can eventually turn this warning on by
+> default and stop playing whack-a-mole when they come up. Most of these
+> warnings are harmless, but occasionally the prototypes don't match exactly
+> and cause real bugs depending on the configuration, and ensuring both
+> sides include a common header file is an easy way to make it work
+> more reliably.
+> 
+> Note that the warning should come up for either W=1 or C=1, and I also
+> think that
+> new code should generally be written sparse-clean and have no warnings with
+> 'make C=1' as a rule.
 
-That's why I was saying that we may need to introduce a new replacement
-function for pm_runtime_get_sync() that works as expected.
+Fair enough. Is anybody working on a tree-wide sweep for this, like we've
+done for other things such as zero-length arrays? If so, I can start
+enforcing this in the arch code as well (I haven't been so far, even though
+I do run sparse on every commit).
 
-There is no reason why we have to live with the old behavior.
+Anyway, I've dropped the last patch from the branch, and we can put a fix
+for the missing prototype on top.
 
-regards,
-dan carpenter
-
+Will
