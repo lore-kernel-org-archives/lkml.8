@@ -2,139 +2,132 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C52DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B5CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B5320823
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F52C20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgEUToi (ORCPT
+        id S1729845AbgEUTrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:44:38 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33794 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728635AbgEUToi (ORCPT
+        Thu, 21 May 2020 15:47:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42801 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728635AbgEUTrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:44:38 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jbr7I-00085v-KW; Thu, 21 May 2020 19:44:32 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] media: atomisp: fix a handful of spelling mistakes
-Date:   Thu, 21 May 2020 20:44:32 +0100
-Message-Id: <20200521194432.357572-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 21 May 2020 15:47:13 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n11so3709099pgl.9;
+        Thu, 21 May 2020 12:47:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=foeJlyVbhHBxd2p0ZoCNpnTcxIWCYuViSyIENFIMaWU=;
+        b=H4AMG/sSIZs2IO9bcj3oTb2+Rho16xRGbewPjJ7FYq5i4ZH/uK7JUSi1jH2fJbMR/K
+         8MU8EVXXjA2o/df9FVjyUK9FlWmplPp1i6EDKx8Z/C1JvjuxZYMcTytYoNbzUFdME+i5
+         hJOeJ4TA95pQGYEyQYdcfFx5kyuNrphWwJDEFRlnapwdQ97EB4u+tN1ZxObdEnI39E/U
+         t9vqKoHcbTUAF+pNrekUT8bYPQZNGUdEcoKypRWLooTiO8eQa7YQyNEdbpwALN8ckCLd
+         Ncy6p6PD+xLifrtv9NxFow4Y7/QyXxBNx7Iu1o29/h4aVUxD7ZqqwlJML7Qn2mv6oNSL
+         2Ntw==
+X-Gm-Message-State: AOAM533dGrD8OXJguH7t44vI9pNGUqzNGmJvNPedxWVjciv4H8mdtxhl
+        HQHhi2QsWanuHbydNSPAsyxefRVW
+X-Google-Smtp-Source: ABdhPJwjECtHL7tWmApimiikgR+JFhMdB5qg8I2RYTH+ATsJUPRcMqzu2Gmcwg0BVWU5oA0jnyF4eQ==
+X-Received: by 2002:a63:e804:: with SMTP id s4mr10597494pgh.260.1590090431859;
+        Thu, 21 May 2020 12:47:11 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:50cc:4329:ba49:7ab1? ([2601:647:4000:d7:50cc:4329:ba49:7ab1])
+        by smtp.gmail.com with ESMTPSA id x10sm4344548pgr.65.2020.05.21.12.47.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 12:47:10 -0700 (PDT)
+Subject: Re: [PATCH] scsi: st: convert convert get_user_pages() -->
+ pin_user_pages()
+To:     John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+References: <20200519045525.2446851-1-jhubbard@nvidia.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <494478b6-9a8c-5271-fc9f-fd758af850c0@acm.org>
+Date:   Thu, 21 May 2020 12:47:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519045525.2446851-1-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 2020-05-18 21:55, John Hubbard wrote:
+> This code was using get_user_pages*(), in a "Case 2" scenario
+> (DMA/RDMA), using the categorization from [1]. That means that it's
+> time to convert the get_user_pages*() + put_page() calls to
+> pin_user_pages*() + unpin_user_pages() calls.
+> 
+> There is some helpful background in [2]: basically, this is a small
+> part of fixing a long-standing disconnect between pinning pages, and
+> file systems' use of those pages.
+> 
+> Note that this effectively changes the code's behavior as well: it now
+> ultimately calls set_page_dirty_lock(), instead of SetPageDirty().This
+> is probably more accurate.
+> 
+> As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
+> dealing with a file backed page where we have reference on the inode it
+> hangs off." [3]
+> 
+> Also, this deletes one of the two FIXME comments (about refcounting),
+> because there is nothing wrong with the refcounting at this point.
+> 
+> [1] Documentation/core-api/pin_user_pages.rst
+> 
+> [2] "Explicit pinning of user-space pages":
+>     https://lwn.net/Articles/807108/
+> 
+> [3] https://lore.kernel.org/r/20190723153640.GB720@lst.de
 
-There are several spelling mistakes in various messages and literal
-strings. Fix these.
+Kai, why is the st driver calling get_user_pages_fast() directly instead
+of calling blk_rq_map_user()? blk_rq_map_user() is already used in
+st_scsi_execute(). I think that the blk_rq_map_user() implementation is
+also based on get_user_pages_fast(). See also iov_iter_get_pages_alloc()
+in lib/iov_iter.c.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- .../staging/media/atomisp/pci/base/refcount/src/refcount.c  | 2 +-
- .../media/atomisp/pci/css_2401_system/host/csi_rx_private.h | 4 ++--
- .../atomisp/pci/css_2401_system/host/pixelgen_private.h     | 4 ++--
- drivers/staging/media/atomisp/pci/sh_css.c                  | 6 +++---
- 4 files changed, 8 insertions(+), 8 deletions(-)
+John, why are the get_user_pages_fast() calls in the st driver modified
+but not the blk_rq_map_user() call? Are you sure that the modified code
+is a "case 2" scenario and not a "case 1" scenario?
 
-diff --git a/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c b/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c
-index e39cc2132953..8f0c94449ec9 100644
---- a/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c
-+++ b/drivers/staging/media/atomisp/pci/base/refcount/src/refcount.c
-@@ -46,7 +46,7 @@ static struct ia_css_refcount_entry *refcount_find_entry(hrt_vaddress ptr,
- 		return NULL;
- 	if (!myrefcount.items) {
- 		ia_css_debug_dtrace(IA_CSS_DEBUG_ERROR,
--				    "refcount_find_entry(): Ref count not initiliazed!\n");
-+				    "refcount_find_entry(): Ref count not initialized!\n");
- 		return NULL;
- 	}
- 
-diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx_private.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx_private.h
-index 3fa3c3a487ab..97ad67e438f0 100644
---- a/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx_private.h
-+++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/csi_rx_private.h
-@@ -289,12 +289,12 @@ static inline void csi_rx_be_ctrl_dump_state(
- 	 * lut.
- 	 */
- 	for (i = 0; i < N_SHORT_PACKET_LUT_ENTRIES[ID]; i++) {
--		ia_css_print("CSI RX BE STATE Controller ID %d Short packat entry %d shart packet lut id 0x%x\n",
-+		ia_css_print("CSI RX BE STATE Controller ID %d Short packet entry %d short packet lut id 0x%x\n",
- 			     ID, i,
- 			     state->short_packet_lut_entry[i]);
- 	}
- 	for (i = 0; i < N_LONG_PACKET_LUT_ENTRIES[ID]; i++) {
--		ia_css_print("CSI RX BE STATE Controller ID %d Long packat entry %d Long packet lut id 0x%x\n",
-+		ia_css_print("CSI RX BE STATE Controller ID %d Long packet entry %d long packet lut id 0x%x\n",
- 			     ID, i,
- 			     state->long_packet_lut_entry[i]);
- 	}
-diff --git a/drivers/staging/media/atomisp/pci/css_2401_system/host/pixelgen_private.h b/drivers/staging/media/atomisp/pci/css_2401_system/host/pixelgen_private.h
-index 65ea23604479..5d4ffe03d13b 100644
---- a/drivers/staging/media/atomisp/pci/css_2401_system/host/pixelgen_private.h
-+++ b/drivers/staging/media/atomisp/pci/css_2401_system/host/pixelgen_private.h
-@@ -97,9 +97,9 @@ STORAGE_CLASS_PIXELGEN_C void pixelgen_ctrl_dump_state(
-     pixelgen_ctrl_state_t *state)
- {
- 	ia_css_print("Pixel Generator ID %d Enable  0x%x\n", ID, state->com_enable);
--	ia_css_print("Pixel Generator ID %d PRBS reset vlue 0 0x%x\n", ID,
-+	ia_css_print("Pixel Generator ID %d PRBS reset value 0 0x%x\n", ID,
- 		     state->prbs_rstval0);
--	ia_css_print("Pixel Generator ID %d PRBS reset vlue 1 0x%x\n", ID,
-+	ia_css_print("Pixel Generator ID %d PRBS reset value 1 0x%x\n", ID,
- 		     state->prbs_rstval1);
- 	ia_css_print("Pixel Generator ID %d SYNC SID 0x%x\n", ID, state->syng_sid);
- 	ia_css_print("Pixel Generator ID %d syng free run 0x%x\n", ID,
-diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
-index d77432254a2c..fee91b542c65 100644
---- a/drivers/staging/media/atomisp/pci/sh_css.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css.c
-@@ -1324,7 +1324,7 @@ static void print_pc_histogram(void)
- 		sh_css_print(" pc_histogram for binary %d\n", metrics->id);
- 		print_pc_histo("  ISP", &metrics->isp_histogram);
- 		print_pc_histo("  SP",   &metrics->sp_histogram);
--		sh_css_print("print_pc_histogram() done for binay->id = %d, done.\n",
-+		sh_css_print("print_pc_histogram() done for binary->id = %d, done.\n",
- 			     metrics->id);
- 	}
- 
-@@ -5335,7 +5335,7 @@ static enum ia_css_err sh_css_pipe_configure_output(
- {
- 	enum ia_css_err err = IA_CSS_SUCCESS;
- 
--	IA_CSS_ENTER_PRIVATE("pipe = %p, width = %d, height = %d, paddaed width = %d, format = %d, idx = %d",
-+	IA_CSS_ENTER_PRIVATE("pipe = %p, width = %d, height = %d, padded width = %d, format = %d, idx = %d",
- 			     pipe, width, height, padded_width, format, idx);
- 	if (!pipe) {
- 		IA_CSS_LEAVE_ERR_PRIVATE(IA_CSS_ERR_INVALID_ARGUMENTS);
-@@ -10705,7 +10705,7 @@ ia_css_unlock_raw_frame(struct ia_css_stream *stream, uint32_t exp_id) {
- 	if (exp_id > IA_CSS_ISYS_MAX_EXPOSURE_ID ||
- 	    exp_id < IA_CSS_ISYS_MIN_EXPOSURE_ID)
- 	{
--		IA_CSS_ERROR("invalid expsure ID: %d\n", exp_id);
-+		IA_CSS_ERROR("invalid exposure ID: %d\n", exp_id);
- 		return IA_CSS_ERR_INVALID_ARGUMENTS;
- 	}
- 
--- 
-2.25.1
+Thanks,
 
+Bart.
