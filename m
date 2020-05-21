@@ -2,109 +2,112 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7886C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9D320823
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:08:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYgLu8a3"
+	by mail.kernel.org (Postfix) with ESMTP id 7534020823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgEUSIn (ORCPT
+        id S1729325AbgEUSK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:08:43 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35911 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728455AbgEUSIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:08:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590084521;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=CSwVUGMdm1SF/JKvVgrgcJwpikT7dcnsVODRPnenSIQ=;
-        b=AYgLu8a3LIGrhE/UKpmW9DRbHM8IIjjQq9JymmflmyJiz8ddiqBlkoLskv6Sb5AhrCiNaM
-        O0I5EQh8TL3cQ+y/bmWAdBD1Ev7gWcgBhn5uPabPEtoOHy/9vz5n+AiKWKQqGYvylvXfsJ
-        Mggcs+Br+9tvVq3uo2swVhoSNIdyQlA=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-6iqFeG4lPaaJXGPxh9D-9g-1; Thu, 21 May 2020 14:08:39 -0400
-X-MC-Unique: 6iqFeG4lPaaJXGPxh9D-9g-1
-Received: by mail-wr1-f71.google.com with SMTP id i9so3264333wrx.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 11:08:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=CSwVUGMdm1SF/JKvVgrgcJwpikT7dcnsVODRPnenSIQ=;
-        b=RErvBDwwzJociRnaD684UI85Cn9ol0ciAIFIapa4xW/SVON+y3gRLZ8p7Y16w9Ek76
-         o4JGTJZ+mrRyN64pn3vLojQpTphL94GdAlG3hitfBEzRi+W6SOJF1LbX7Y0rUzYsnxIv
-         uu4afzCG2LydBAfzpYqOrSmWm4ex5vcJhGP3RekGFi3FASpe+BMbXvgWXASuChrZsm6M
-         QtbpHVx5gGb2MCJtPAvh2GSx6EwjOzkR6KfP3nabWnbz+FjPe47AhF8uQ6HtV1JjPuky
-         /+qX5AhBMZqrcBE9VOLKA33N4LsE6JGM1pqtWurVKJ2cHupQU5HBA94Phjx1YYwLHbed
-         RdFQ==
-X-Gm-Message-State: AOAM531127TbL+oSgUQu/v5GOJ68pf1O4Xy6l/3tt+V0nK7i/EVmdV2g
-        C4veIoxpDwDG/AG3rN41pGdym8vB9wjOw4Lx90RKd4tKgHc6SksaC5F9grnTrOAyiEV0E9DgVBY
-        oa0HI6sZZ/rkdakyZnlwl9Pcm
-X-Received: by 2002:a5d:6087:: with SMTP id w7mr10437013wrt.158.1590084518725;
-        Thu, 21 May 2020 11:08:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxZ9o08gBH7tx0yYBsN8onaJW/OLPfFqqFDCwm2ORoSsfevxSpfrqifuC4Sj9PcOKKkhR/Jqg==
-X-Received: by 2002:a5d:6087:: with SMTP id w7mr10436991wrt.158.1590084518323;
-        Thu, 21 May 2020 11:08:38 -0700 (PDT)
-Received: from redhat.com (bzq-109-64-41-91.red.bezeqint.net. [109.64.41.91])
-        by smtp.gmail.com with ESMTPSA id j1sm7269700wrm.40.2020.05.21.11.08.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 11:08:37 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:08:35 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jasowang@redhat.com, lkp@intel.com, mst@redhat.com,
-        yuehaibing@huawei.com
-Subject: [GIT PULL] vhost/vdpa: minor fixes
-Message-ID: <20200521140835-mutt-send-email-mst@kernel.org>
+        Thu, 21 May 2020 14:10:56 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21653 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728455AbgEUSK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:10:56 -0400
+IronPort-SDR: 3zziwMNeLeZykRN5RmtUL7C+ztk1ZPBnV/xR+8QlotFFZ2Nhrt+9z6OtxJ/hB8DDn6+mYbtbo6
+ K0UiSVun8SEA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 11:10:55 -0700
+IronPort-SDR: JCuh9H/hp4YFzm3n4ukF0/9cPkRoVB2FWwSZl79U6XjFPyn3ZlfO784xWpxfyjmANOsbTNVHqS
+ zGY1qBPYO/7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
+   d="scan'208";a="254062243"
+Received: from dsrao-mobl.amr.corp.intel.com (HELO [10.255.229.80]) ([10.255.229.80])
+  by orsmga007.jf.intel.com with ESMTP; 21 May 2020 11:10:54 -0700
+Subject: Re: [PATCH v3] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
+ be_hw_params_fixup function
+To:     =?UTF-8?Q?=c5=81ukasz_Majczak?= <lma@semihalf.com>
+Cc:     alsa-devel@alsa-project.org, Jie Yang <yang.jie@linux.intel.com>,
+        Radoslaw Biernacki <rad@semihalf.com>,
+        Ross Zwisler <zwisler@google.com>,
+        linux-kernel@vger.kernel.org,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Bob Brandt <brndt@google.com>, Marcin Wojtas <mw@semihalf.com>,
+        Alex Levin <levinale@chromium.org>,
+        Harsha Priya <harshapriya.n@intel.com>
+References: <20200521162518.1809995-1-lma@semihalf.com>
+ <3c89e614-81f5-ba87-19a9-fbe9f5c73925@linux.intel.com>
+ <CAFJ_xbr8TN3ynfELJ3NQnkuRg0VRbkjB7=Cyb8yu2L==JGXJiw@mail.gmail.com>
+ <475fb5c0-9b26-a8f6-c102-25c7775bc2ca@linux.intel.com>
+ <CAFJ_xbq-QotvPG=AxSp7=Etc5P5f4ePRWLCvSNnTkzUO9o_qjQ@mail.gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <268b11b6-9f4c-d769-a7f9-536d77198705@linux.intel.com>
+Date:   Thu, 21 May 2020 13:10:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mutt-Fcc: =sent
+In-Reply-To: <CAFJ_xbq-QotvPG=AxSp7=Etc5P5f4ePRWLCvSNnTkzUO9o_qjQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 0b841030625cde5f784dd62aec72d6a766faae70:
 
-  vhost: vsock: kick send_pkt worker once device is started (2020-05-02 10:28:21 -0400)
 
-are available in the Git repository at:
+On 5/21/20 12:30 PM, Łukasz Majczak wrote:
+> Hi Pierre
+> 
+> If you will take a look at the original kabylake_ssp_fixup() you will
+> see that it is checking whether the related FE is "Kbl Audio Port",
+> "Kbl Audio Headset Playback", "Kbl Audio Capture Port" or "Kbl Audio
+> DMIC cap" - then for the first 3 cases it sets min/max channels to 2
+> while for the "Kbl DMIC cap" it can be 2 or 4, that's is why I'm
+> trying to split this, but maybe I'm missing here something.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+I don't understand this code either.
 
-for you to fetch changes up to 1b0be99f1a426d9f17ced95c4118c6641a2ff13d:
+I believe the intent is that for all SSP1-RT5663 usages, we should use
 
-  vhost: missing __user tags (2020-05-15 11:36:31 -0400)
+  		rate->min = rate->max = 48000;
+		chan->min = chan->max = 2;
+		snd_mask_none(fmt);
+		snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S24_LE);
 
-----------------------------------------------------------------
-virtio: build warning fixes
+That is pretty easy to move to a dedicated ssp1 fixup.
 
-Fix a couple of build warnings.
+for SSP0, we have RT5514 for capture and max98927 for playback, but the 
+existing code does not explicitly deal with rate/channels/format for all 
+cases, so it's not clear what should happen.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Harsha, can you help here?
 
-----------------------------------------------------------------
-Michael S. Tsirkin (1):
-      vhost: missing __user tags
-
-YueHaibing (1):
-      vdpasim: remove unused variable 'ret'
-
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 15 +++++++--------
- drivers/vhost/vhost.c            |  4 ++--
- 2 files changed, 9 insertions(+), 10 deletions(-)
-
+> 
+> Best regards,
+> Lukasz
+> 
+> czw., 21 maj 2020 o 19:17 Pierre-Louis Bossart
+> <pierre-louis.bossart@linux.intel.com> napisał(a):
+>>
+>>
+>>
+>> On 5/21/20 12:08 PM, Łukasz Majczak wrote:
+>>>>
+>>>> don't add a new dailink, this is not right.
+>>>>
+>>> Can you advise a better solution how to assign different fixup
+>>> functions to mic and to speakers? I was looking at "dmic01" dailink in
+>>> skl_nau88l25_max98357a.c as an example.
+>>
+>> I am not sure I follow. the DMICs are handled on a shared SSP, so how
+>> would one set a different fixup? The word length have to be the same.
