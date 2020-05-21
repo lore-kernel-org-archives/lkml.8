@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B647C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E59C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D56E20849
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F1720759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbgEUJOL (ORCPT
+        id S1728922AbgEUJOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:14:11 -0400
+        Thu, 21 May 2020 05:14:15 -0400
 Received: from v6.sk ([167.172.42.174]:34802 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbgEUJOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:14:09 -0400
+        id S1728870AbgEUJOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:14:14 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 7CC9961302;
-        Thu, 21 May 2020 09:14:07 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 61ED461305;
+        Thu, 21 May 2020 09:14:12 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Alessandro Zummo <a.zummo@towertech.it>,
@@ -35,9 +35,9 @@ Cc:     Alessandro Zummo <a.zummo@towertech.it>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 4/9] dt-bindings: interrupt-controller: Convert mrvl,intc to json-schema
-Date:   Thu, 21 May 2020 11:13:51 +0200
-Message-Id: <20200521091356.2211020-5-lkundrak@v3.sk>
+Subject: [PATCH v2 7/9] dt-bindings: spi: Convert spi-pxa2xx to json-schema
+Date:   Thu, 21 May 2020 11:13:54 +0200
+Message-Id: <20200521091356.2211020-8-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200521091356.2211020-1-lkundrak@v3.sk>
 References: <20200521091356.2211020-1-lkundrak@v3.sk>
@@ -48,234 +48,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the mrvl,intc binding to DT schema format using json-schema.
+A straightforward conversion of the the spi-pxa2xx binding to DT schema
+format using json-schema.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
 ---
 Changes since v1:
-- Move minItems/maxItems to main reg property definition from the
-  conditional one
-- Drop the condition for marvell,orion-intc
-- Add default GPL-2.0-only license tag
-- Fill in maintainers from MAINTAINERS file
+- Drop #address-cells and #size-cells
+- s/GPL-2.0-or-later/GPL-2.0-only/
 
- .../interrupt-controller/mrvl,intc.txt        |  64 ---------
- .../interrupt-controller/mrvl,intc.yaml       | 134 ++++++++++++++++++
- 2 files changed, 134 insertions(+), 64 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+ .../bindings/spi/marvell,mmp2-ssp.yaml        | 56 +++++++++++++++++++
+ .../devicetree/bindings/spi/spi-pxa2xx.txt    | 27 ---------
+ 2 files changed, 56 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-deleted file mode 100644
-index a0ed02725a9d..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-+++ /dev/null
-@@ -1,64 +0,0 @@
--* Marvell MMP Interrupt controller
--
--Required properties:
--- compatible : Should be
--               "mrvl,mmp-intc" on Marvel MMP,
--               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 or
--               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
--- reg : Address and length of the register set of the interrupt controller.
--  If the interrupt controller is intc, address and length means the range
--  of the whole interrupt controller. The "marvell,mmp3-intc" controller
--  also has a secondary range for the second CPU core.  If the interrupt
--  controller is mux-intc, address and length means one register. Since
--  address of mux-intc is in the range of intc. mux-intc is secondary
--  interrupt controller.
--- reg-names : Name of the register set of the interrupt controller. It's
--  only required in mux-intc interrupt controller.
--- interrupts : Should be the port interrupt shared by mux interrupts. It's
--  only required in mux-intc interrupt controller.
--- interrupt-controller : Identifies the node as an interrupt controller.
--- #interrupt-cells : Specifies the number of cells needed to encode an
--  interrupt source.
--- mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
--  controller.
--- mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
--  detection first.
--
--Example:
--	intc: interrupt-controller@d4282000 {
--		compatible = "mrvl,mmp2-intc";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0xd4282000 0x1000>;
--		mrvl,intc-nr-irqs = <64>;
--	};
--
--	intcmux4@d4282150 {
--		compatible = "mrvl,mmp2-mux-intc";
--		interrupts = <4>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0x150 0x4>, <0x168 0x4>;
--		reg-names = "mux status", "mux mask";
--		mrvl,intc-nr-irqs = <2>;
--	};
--
--* Marvell Orion Interrupt controller
--
--Required properties
--- compatible :  Should be "marvell,orion-intc".
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. Supported value is <1>.
--- interrupt-controller : Declare this node to be an interrupt controller.
--- reg : Interrupt mask address. A list of 4 byte ranges, one per controller.
--        One entry in the list represents 32 interrupts.
--
--Example:
--
--	intc: interrupt-controller {
--        	compatible = "marvell,orion-intc", "marvell,intc";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--                reg = <0xfed20204 0x04>,
--		      <0xfed20214 0x04>;
--        };
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+diff --git a/Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml b/Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml
 new file mode 100644
-index 000000000000..372ccbfae771
+index 000000000000..09bd831250a2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-@@ -0,0 +1,134 @@
-+# SPDX-License-Identifier: GPL-2.0-only
++++ b/Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/interrupt-controller/mrvl,intc.yaml#
++$id: http://devicetree.org/schemas/spi/marvell,mmp2-ssp.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell MMP/Orion Interrupt controller bindings
++title: PXA2xx SSP SPI Controller bindings
 +
 +maintainers:
-+  - Thomas Gleixner <tglx@linutronix.de>
-+  - Jason Cooper <jason@lakedaemon.net>
-+  - Marc Zyngier <maz@kernel.org>
-+  - Rob Herring <robh+dt@kernel.org>
++  - Lubomir Rintel <lkundrak@v3.sk>
 +
 +allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              const: marvell,orion-intc
-+    then:
-+      required:
-+        - mrvl,intc-nr-irqs
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mrvl,mmp-intc
-+              - mrvl,mmp2-intc
-+    then:
-+      properties:
-+        reg:
-+          maxItems: 1
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - marvell,mmp3-intc
-+              - mrvl,mmp2-mux-intc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: mrvl,mmp2-mux-intc
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        reg-names:
-+          items:
-+            - const: 'mux status'
-+            - const: 'mux mask'
-+      required:
-+        - interrupts
-+    else:
-+      properties:
-+        interrupts: false
++  - $ref: spi-controller.yaml#
 +
 +properties:
-+  '#interrupt-cells':
-+    const: 1
-+
 +  compatible:
-+    enum:
-+      - mrvl,mmp-intc
-+      - mrvl,mmp2-intc
-+      - marvell,mmp3-intc
-+      - marvell,orion-intc
-+      - mrvl,mmp2-mux-intc
++    const: marvell,mmp2-ssp
++
++  interrupts:
++    maxItems: 1
 +
 +  reg:
-+    minItems: 1
-+    maxItems: 2
++    maxItems: 1
 +
-+  reg-names: true
++  clocks:
++    maxItems: 1
 +
-+  interrupts: true
-+
-+  interrupt-controller: true
-+
-+  mrvl,intc-nr-irqs:
++  ready-gpios:
 +    description: |
-+      Specifies the number of interrupts in the interrupt controller.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  mrvl,clr-mfp-irq:
-+    description: |
-+      Specifies the interrupt that needs to clear MFP edge detection first.
-+    $ref: /schemas/types.yaml#/definitions/uint32
++      GPIO used to signal a SPI master that the FIFO is filled and we're
++      ready to service a transfer. Only useful in slave mode.
++    maxItems: 1
 +
 +required:
-+  - '#interrupt-cells'
 +  - compatible
 +  - reg
-+  - interrupt-controller
++  - interrupts
++  - clocks
 +
-+additionalProperties: false
++dependencies:
++  ready-gpios: [ spi-slave ]
 +
 +examples:
 +  - |
-+    interrupt-controller@d4282000 {
-+        compatible = "mrvl,mmp2-intc";
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0xd4282000 0x1000>;
-+        mrvl,intc-nr-irqs = <64>;
-+    };
-+
-+    interrupt-controller@d4282150 {
-+        compatible = "mrvl,mmp2-mux-intc";
-+        interrupts = <4>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0x150 0x4>, <0x168 0x4>;
-+        reg-names = "mux status", "mux mask";
-+        mrvl,intc-nr-irqs = <2>;
-+    };
-+  - |
-+    interrupt-controller@fed20204 {
-+        compatible = "marvell,orion-intc";
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0xfed20204 0x04>,
-+              <0xfed20214 0x04>;
++    #include <dt-bindings/clock/marvell,mmp2.h>
++    spi@d4035000 {
++        compatible = "marvell,mmp2-ssp";
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <0xd4035000 0x1000>;
++        clocks = <&soc_clocks MMP2_CLK_SSP0>;
++        interrupts = <0>;
 +    };
 +
 +...
+diff --git a/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt b/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
+deleted file mode 100644
+index e30e0c2a4bce..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-PXA2xx SSP SPI Controller
+-
+-Required properties:
+-- compatible: Must be "marvell,mmp2-ssp".
+-- reg: Offset and length of the device's register set.
+-- interrupts: Should be the interrupt number.
+-- clocks: Should contain a single entry describing the clock input.
+-- #address-cells:  Number of cells required to define a chip select address.
+-- #size-cells: Should be zero.
+-
+-Optional properties:
+-- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
+-  Documentation/devicetree/bindings/spi/spi-bus.txt
+-- spi-slave: Empty property indicating the SPI controller is used in slave mode.
+-- ready-gpios: GPIO used to signal a SPI master that the FIFO is filled
+-  and we're ready to service a transfer. Only useful in slave mode.
+-
+-Child nodes represent devices on the SPI bus
+-  See ../spi/spi-bus.txt
+-
+-Example:
+-	ssp1: spi@d4035000 {
+-		compatible = "marvell,mmp2-ssp";
+-		reg = <0xd4035000 0x1000>;
+-		clocks = <&soc_clocks MMP2_CLK_SSP0>;
+-		interrupts = <0>;
+-	};
 -- 
 2.26.2
 
