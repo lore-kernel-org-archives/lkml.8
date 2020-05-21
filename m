@@ -2,120 +2,119 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20D6520748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590072495;
-	bh=I2YFyPcPI3f0/PWUh0s9kge175isnr5X0AFtDxs5Ijs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=bn0wmW8D5xn6cESAo8I19iXXWIS6M4cPgNCwmP41jOdee7NoYt56G+QVYp7Hs9I8o
-	 q9n4y/WTPZFkXCb0C+zp/236o0N4RZHoHvoIQdG+5KLuNjF3C8LEvCfHBdop2T9wO+
-	 1Wt4KzAJN3LGzgF1Mn2kNkiQH/w+4rCDsGk7z3pQ=
+	by mail.kernel.org (Postfix) with ESMTP id 99C8320849
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgEUOsO (ORCPT
+        id S1729784AbgEUOxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47998 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 10:53:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:6288 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbgEUOsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:48:14 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1DD320748;
-        Thu, 21 May 2020 14:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590072493;
-        bh=I2YFyPcPI3f0/PWUh0s9kge175isnr5X0AFtDxs5Ijs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SxvUetC5XaFSj8lCbYHNK1Dvz3JgKT+AT7dUml8T4fv2BO16vDcic+97YOVEn7Rux
-         CSfToyq/gG7NCgaWaB/SfKjBlh5xnTWLRdMPvLscjG8HWmfZRouKhl55oLKTizm/M7
-         ZKAVzthlyzlzfx/2Tqhdl3XlFjjsN5yYrXabkwE4=
-Message-ID: <0bc8334572c0716e8dcad2ec3b623f20cefdfde3.camel@kernel.org>
-Subject: Re: INFO: task hung in locks_remove_posix
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+f5bc30abd8916982419c@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-Cc:     linux-kernel@vger.kernel.org
-Date:   Thu, 21 May 2020 10:48:11 -0400
-In-Reply-To: <9a337dfa-175f-e13b-1977-0f63d589f37c@I-love.SAKURA.ne.jp>
-References: <000000000000c866c705a61a95d4@google.com>
-         <9a337dfa-175f-e13b-1977-0f63d589f37c@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        id S1728136AbgEUOxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 10:53:49 -0400
+IronPort-SDR: SmVjdwwJAL52hpRORRqxzEXlB0eTuY0yjNGDuqriLI+OD0SwcRZOCyaxY28+ElweCHL5Htuu5R
+ SCv7bMKugGzg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 07:53:48 -0700
+IronPort-SDR: CB261a1GJ8FH2/VHlwwKegEMCLgFPSudpuK9cAivmEf2gXDxZY8ZSeaP1UTGCBvzUk02CvmFs8
+ cpKaQJw4V22A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
+   d="scan'208";a="412417898"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 21 May 2020 07:53:44 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jbmZv-0083Dh-LU; Thu, 21 May 2020 17:53:47 +0300
+Date:   Thu, 21 May 2020 17:53:47 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, Ofer Yehielli <ofery@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
+        kfting@nuvoton.com, Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
+ driver
+Message-ID: <20200521145347.GO1634618@smile.fi.intel.com>
+References: <20200521110910.45518-1-tali.perry1@gmail.com>
+ <20200521110910.45518-3-tali.perry1@gmail.com>
+ <20200521142340.GM1634618@smile.fi.intel.com>
+ <20200521143100.GA16812@ninjato>
+ <CAHb3i=vcVLWHjdiJoNZQrwJCqzszpOL7e9SAjqObsZCRH4ifwg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHb3i=vcVLWHjdiJoNZQrwJCqzszpOL7e9SAjqObsZCRH4ifwg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-21 at 23:09 +0900, Tetsuo Handa wrote:
-> On 2020/05/21 5:53, syzbot wrote:
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    806d8acc USB: dummy-hcd: use configurable endpoint naming ..
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16c9ece2100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d800e9bad158025f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f5bc30abd8916982419c
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > 
-> > Unfortunately, I don't have any reproducer for this crash yet.
+On Thu, May 21, 2020 at 05:45:03PM +0300, Tali Perry wrote:
+> On Thu, May 21, 2020 at 5:31 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+> > On Thu, May 21, 2020 at 05:23:40PM +0300, Andy Shevchenko wrote:
+> > > On Thu, May 21, 2020 at 02:09:09PM +0300, Tali Perry wrote:
+> > > > Add Nuvoton NPCM BMC I2C controller driver.
+> > >
+> > > Thanks. My comments below.
+> > > After addressing them, FWIW,
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > Thanks, Andy, for all the review!
+> >
 > 
-> This seems to be a mislabeling due to '?' in all lines in a trace.
+> Highly appreciate your time and patience for a newbie :)
 > 
-> #syz dup: INFO: task hung in wdm_flush
+> > From a glimpse, this looks good to go. I will have a close look later
+> > today.
+> >
+> > > > +#ifdef CONFIG_DEBUG_FS
+> > >
+> > > Again, why is this here?
+> > >
+> > > Have you checked debugfs.h for !CONFIG_DEBUG_FS case?
+> 
+> I compiled both options. I removed the ifdef in most places, except in the
+> struct itself. Users that don't use the debugfs don't need this in the struct.
+> 
+> >
+> > I wondered also about DEBUG_FS entries. I can see their value when
+> > developing the driver. But since this is done now, do they really help a
+> > user to debug a difficult case? I am not sure, and then I wonder if we
+> > should have that code in upstream. I am open for discussion, though.
+> 
+> The user wanted to have health monitor implemented on top of the driver.
+> The user has 16 channels connected the multiple devices. All are operated
+> using various daemons in the system. Sometimes the slave devices are power down.
+> Therefor the user wanted to track the health status of the devices.
 
+Ah, then there are these options I have in mind (Wolfram, FYI as well!):
+1) push with debugfs as a temporary solution and convert to devlink health protocol [1];
+2) drop it and develop devlink_health solution;
+3) push debugfs and wait if I²C will gain devlink health support
 
-I'm not sure I trust those stack traces. The console output shows '?'
-characters in front of every frame. Doesn't that mean that that address
-it found on the stack is unreliable?
-
-In principle, unless you're overriding the filp->lock operation (and the
-wdm fs doesn't do that, afaict), locks_remove_posix should not block.
-I'll also note that there is some of this in the logs before the hung
-task warnings:
-
-[  182.020388][   T12] usb 5-1: too many endpoints for config 0 interface 107 altsetting 116: 116, using maximum allowed: 30
-[  182.031661][   T12] usb 5-1: config 0 interface 107 altsetting 116 has 0 endpoint descriptors, different from the interface descriptor's value: 116
-[  182.045145][   T12] usb 5-1: config 0 interface 107 has no altsetting 0
-[  182.052028][   T12] usb 5-1: New USB device found, idVendor=0926, idProduct=3333, bcdDevice= 0.40
-[  182.060120][ T3525] usb 6-1: USB disconnect, device number 20
-[  182.061148][    C0] xpad 6-1:0.65: xpad_irq_out - usb_submit_urb failed with result -19
-[  182.075465][ T3525] xpad 6-1:0.65: xpad_try_sending_next_out_packet - usb_submit_urb failed with result -19
-[  182.075565][   T12] usb 5-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-[  182.109020][   T12] usb 5-1: config 0 descriptor??
-[  182.136857][  T163] usb usb2-port1: attempt power cycle
-[  182.410396][ T4447] udc-core: couldn't find an available UDC or it's busy
-[  182.417562][ T4447] misc raw-gadget: fail, usb_gadget_probe_driver returned -16
-[  182.856513][  T163] usb 2-1: new high-speed USB device number 18 using dummy_hcd
-[  183.026601][  T163] usb 2-1: device descriptor read/8, error -61
-[  183.236577][  T163] usb 2-1: device descriptor read/8, error -71
-[  184.068991][ T3525] usb 5-1: USB disconnect, device number 21
-[  206.185571][   T23] INFO: task syz-executor.2:3145 blocked for more than 143 seconds.
-[  206.193630][   T23]       Not tainted 5.7.0-rc5-syzkaller #0
-[  206.199512][   T23] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  206.208242][   T23] syz-executor.2  D28552  3145    370 0x80004006
-
-...which leads me to believe that this might have more to do with the
-USB subsystem than anything in the posix locking code.
-
-In any case, I doubt there's much we can do here without a more reliable
-stack trace to work from. That call stack doesn't seem to make much
-sense.
+[1]: https://www.kernel.org/doc/html/latest/networking/devlink/devlink-health.html
 
 -- 
-Jeff Layton <jlayton@kernel.org>
+With Best Regards,
+Andy Shevchenko
+
 
