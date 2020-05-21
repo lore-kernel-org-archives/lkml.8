@@ -2,218 +2,132 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C382FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18152C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF3B206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA229207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="e2ooHXQz";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="oIs73KfW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1yY0pcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgEUNdt (ORCPT
+        id S1729586AbgEUNdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:33:49 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:61769 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729536AbgEUNdq (ORCPT
+        Thu, 21 May 2020 09:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729536AbgEUNdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:33:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590068025; x=1621604025;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=S1b36p02cSwnUtlEy0TuBRB1sDC6K5s4EWPDv4UR5KQ=;
-  b=e2ooHXQzB6DT3MNYt1JlF/yWyBTZEky1Cr2+GlE6RvU1nIXtLyAIa3yU
-   7K0OPFwkOHzI4UgyCyMGDnEU6zhMpSDrAhZVL1LI66oK5ku8Y17sHAzIs
-   sPNerQuawjDC6mjn5WSNbpEryH4G+VjBp0skV+LOGwDRYX1NZeXgp2jAi
-   6Up55753QQesWmiipce4gtMjQ6DFJSauYfHXXE/G1eHgzlsEKDKcXBev/
-   UBkIRtUVhhdTt/1tXdjl/bwQgymrU4NkJTLDJqncutD3q5LYNtwC36ZCm
-   adqF3DidzaFPtT7GCBSt8VbldLRNoiMAsIWkgQa24SQenT/vjLorP+RJj
-   w==;
-IronPort-SDR: M86uoskcf8vKZwSN0GxsuXwKn5Xr1THXq+RmWDkLgv66oxg8sd5ExXjepaPYYks5HAtbSGHrRU
- Q1IwU7IZLx+nA6CCcivS2/TyBBXfQ1tKdHFZKt/wv0FkYPv+6a6COgi5RMh594SwcB6k/yVSmY
- 4AvNxnavFeAjcjyH/CkTprmttVBNM8mZ2b5eRafuQeES2Extg3P2lyCZnzZgsX9DJZqJ/yk5Tg
- 2+NJMI3uAo3K5UluVb+eWjABMwejAFbZwHNxY/XQ0xIYHmPMOd19H44n40HfH/NMUGal7Uv8PG
- H4s=
-X-IronPort-AV: E=Sophos;i="5.73,417,1583164800"; 
-   d="scan'208";a="247222585"
-Received: from mail-dm6nam11lp2170.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.170])
-  by ob1.hgst.iphmx.com with ESMTP; 21 May 2020 21:33:45 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OPajDwVhyp6odVtDHbSxQYk5vW+3xxTikRFcaM0iXEZ3+iV7l2M+a01mHPmhsVbRW8uU2XHPNOTn2t5hQPcJEJRDnUFiDpS0df5jSdMU0VngT2++GwicFmuws/EmyvwLk9d123chogP5zxQRkWBBNfjKHlkk1MAkq62H8xJ5aa1ygotdfb3sNQp20PKpoqllT56OcypxilGhRUYuz6xhnLSnp9gYhzXkAYHfO3YiAp183WA2RmnXV5PwoOQBLDASSX28CE2ETgxsILq/ZS53kwOXrwq50x+qEW6Jl0dEfrm7vmjZCA5yt5/08OHTF2qXBLxwDe5oiOKovKyY65LiYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uE2W9DLlKdGilXoKWil4+pDPIMKsBgbm4cT6I6B7Gbk=;
- b=g+AWvkYEDy77bMztKfc2cdUKkzSmSgia3omF1hBQ+fYYj6Gg8iGrnx/BDR2niXW6smvzEkocEQ1GYT8JUEhHHJKaDqE2JsjSNaQb1JNKTxwnx3ag7njGlFwfAsC4YRjZhdI519eN8b2NWWwcJpaOql/qbXYq7y25620OWRfJV03EU8wzOX2NgPpMp6nH2l9OE0n4tBqbcJVE65LflmmAo33ZZoxmN1m0B7DzMB855gpVZGWqRxKVwfh2749IYYo+wnu7etF7AS10e/pxaShOXrSO7mrIY9GvzppLesncfqZh9Lty8ttk8tq6NG0u61sGEbab6QAfcX8HBgd2Qawgkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 21 May 2020 09:33:52 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C825C061A0E;
+        Thu, 21 May 2020 06:33:52 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id z18so5466338qto.2;
+        Thu, 21 May 2020 06:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uE2W9DLlKdGilXoKWil4+pDPIMKsBgbm4cT6I6B7Gbk=;
- b=oIs73KfWFA8rLRTWHGjXgi33Zaw3I5yaE9wPV7DNjf/OG51XSaxz6Yc3qmX0nzjdGsc6QEliiS9HPAgRbrUgwPFmj6W7272LN5vCjgiu3nGomYrUyjqJP+Un0nWsfC1kpEI+PqnJf1xm/1sqmcWbFDDZEAZ3NyLhBbaaPwX+UPk=
-Authentication-Results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
- by DM6PR04MB5292.namprd04.prod.outlook.com (2603:10b6:5:107::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
- 2020 13:33:44 +0000
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::f8b3:c124:482b:52e0]) by DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::f8b3:c124:482b:52e0%5]) with mapi id 15.20.3000.034; Thu, 21 May 2020
- 13:33:44 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v5 2/6] RISC-V: Rename and move plic_find_hart_id() to arch directory
-Date:   Thu, 21 May 2020 19:02:57 +0530
-Message-Id: <20200521133301.816665-3-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200521133301.816665-1-anup.patel@wdc.com>
-References: <20200521133301.816665-1-anup.patel@wdc.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0033.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::19) To DM6PR04MB6201.namprd04.prod.outlook.com
- (2603:10b6:5:127::32)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EQm3KwRvgaHxQ5d1Q4EsqwYQDDPz8ESa9iFyt4vvvfU=;
+        b=A1yY0pcUPS8ck0PV+oiK0L7Xz4/CMf99HFvZLNGUwtkmJl1HZgyPoRsWMMpkPViZh0
+         g5zjGf3xBdccjZCBDrDAtY8wQjaBZ20OxMUJOX2ygsAZmQ7FAOTD578Pi8cO/AGsz/0k
+         +6GEYqQqrDeTvrPiNG4dFgi17HrIhPWpILlQe2Haz/tBvylaHUHhtLMH1x1JgMBfFxbG
+         dVhzC9D5lQnZ9bUPGy2DvBKfUkckuBYamDN1KFet5x5I1KxpS/Xd/0nP+OBlUFjYmTJ3
+         d3tseyuZBcS/wV3owA0JIbRvtw028OV+O6ZJMOkqyJt0SMGeOHIN4l7beBYArRlnUqQR
+         Cj1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EQm3KwRvgaHxQ5d1Q4EsqwYQDDPz8ESa9iFyt4vvvfU=;
+        b=dsv0KKILWi1qP2fyzqRMUc2fyifuGsvTA5in5LUhKPDhnz6ko3ILxneAtEXyfQgm8j
+         3//eoOl7Ut974Wig/Iyotsop7GBmCGnK+L68wj2C9qFebfUkQVwLkyCjDHaqd727Vf0t
+         OZCRHW1IH+uSl3x/77aaX2AOf2KcZAhdxT9OLU827GEd41m4dTVEPra/MYrfYm0R1bEm
+         WWkDkGiLGuLpQQQJTXWD/XPPLd7OMgaW97NDyPhz95RJyGCvllaEMWV27YijHwlXXuWK
+         8F9z0gOjusZ0ymiSksdhgPQiaf5JvycnAdqxikGdqvyEQRxa9WTOROFRcDz7lgRltW/T
+         Q5+g==
+X-Gm-Message-State: AOAM531z8CQX+KVgcu2DS1axo/V1ovH/zd/mJyElUyi+srRstGc5h46g
+        cWIDJ+sMm4hO3/wPyTDCTFBm8GkCEDjsdA==
+X-Google-Smtp-Source: ABdhPJzWBT98PJLkbYawA91UQ6OHszxicgo3NkwFTGAv08qIHw76JSy/EnOeEfPbcxMUsuNECRy/Lw==
+X-Received: by 2002:aed:2bc4:: with SMTP id e62mr11045622qtd.263.1590068031488;
+        Thu, 21 May 2020 06:33:51 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.48.225])
+        by smtp.gmail.com with ESMTPSA id l184sm4861282qke.115.2020.05.21.06.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 06:33:50 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 3AF26C0BEB; Thu, 21 May 2020 10:33:48 -0300 (-03)
+Date:   Thu, 21 May 2020 10:33:48 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     David Miller <davem@davemloft.net>, kuba@kernel.org,
+        edumazet@google.com, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        vyasevich@gmail.com, nhorman@tuxdriver.com, jmaloy@redhat.com,
+        ying.xue@windriver.com, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
+        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 31/33] sctp: add sctp_sock_set_nodelay
+Message-ID: <20200521133348.GX2491@localhost.localdomain>
+References: <20200520195509.2215098-1-hch@lst.de>
+ <20200520195509.2215098-32-hch@lst.de>
+ <20200520231001.GU2491@localhost.localdomain>
+ <20200520.162355.2212209708127373208.davem@davemloft.net>
+ <20200520233913.GV2491@localhost.localdomain>
+ <20200521083442.GA7771@lst.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from wdc.com (106.51.30.72) by MA1PR0101CA0033.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Thu, 21 May 2020 13:33:38 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [106.51.30.72]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c7d0748a-7ad9-4701-ee17-08d7fd8b9527
-X-MS-TrafficTypeDiagnostic: DM6PR04MB5292:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB5292BAA61D8F206D813366938DB70@DM6PR04MB5292.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 041032FF37
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: p938/xmYXCk2FBuOkjT6oezuthJBHhk8EsAFYoEsKzDsfNU6dSiZG0I4sHQMruPFMXXoNyMtKcRQTdVp7HCYCRKijBDCB7EEm9hsRFqo7VHnW6VzMM5HxT11qmMg2EsRjpZFQY1s0Goj4XwSCCDmfj1GiOM5xBfrXRU/cS7nNfU+Fa1a/6zDRZmaqVC2wu548IK14tBzybPi3gpe4zQXb2YjjwGs7dxZFCtyl3YRfu5kU3UzPAfa5lazsByRqn1y6wxMu5kSvpDZRt8N51r7WQyLHIFzV1WbTsu9h9MHG2+ZQQjUBKWz+qfViVX2gT3M
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(136003)(39860400002)(376002)(478600001)(7416002)(5660300002)(8936002)(86362001)(8676002)(4326008)(8886007)(55016002)(26005)(7696005)(186003)(1006002)(1076003)(6666004)(66946007)(2616005)(2906002)(66556008)(956004)(54906003)(66476007)(52116002)(36756003)(44832011)(16526019)(55236004)(316002)(110136005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: zOFjmYBqTs5lqOa01XZrBBLeNcnF2br4qofskPkuTBEmTK5NbVySfEhydJOwMDZ4E7FVnN2j71qqLWruk2rJ4GQrrdNUnWKpMij6ADAPbzZamcQqJePhCsDkLqq8KdKwi3EkoIjEW8CUiW8akwVLlJScGGd5bOCvYnhTIT3T79xlKOaiJ6R4n3umgabCxnhLugXE/T/kcUzxM3SFRWQp7NOr/iK+E5iAV86RBd8gHgT9PvVCqDieICNJgQFhb5l8hUVNkJf5owmoGKNLVqGwl6Kr3Vv6kexXttXwc5xn6MQcil/esmKd6ZCwT8EHl6dzsIruE4zB/mDO1w2B94P3lmppxn3cWWgVFX/VoNlOxqKAWOWsSDKPEh3J1B+LAxRkZNnrWJn/E4bmpXCWDjoNjxxNCtb0yv4Fa7pLthsxbbehbbUYNERsNaVDEilu9Pu9jcUCx8gjdF8pmSX2I1umHyRdoMUNIZ6w2MzOPt/sFpA=
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7d0748a-7ad9-4701-ee17-08d7fd8b9527
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 13:33:44.5435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: D0lSxjUINoMsepxIQCI6kG/m75xm6DiAChJog4iS/agv5MmunDwWYV7H4AKr2H/VwtDn8CQxUlr8iF8jZC8lRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB5292
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521083442.GA7771@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The plic_find_hart_id() can be useful to other interrupt controller
-drivers (such as RISC-V local interrupt driver) so we rename this
-function to riscv_of_parent_hartid() and place it in arch directory
-along with riscv_of_processor_hartid().
+On Thu, May 21, 2020 at 10:34:42AM +0200, Christoph Hellwig wrote:
+> On Wed, May 20, 2020 at 08:39:13PM -0300, Marcelo Ricardo Leitner wrote:
+> > On Wed, May 20, 2020 at 04:23:55PM -0700, David Miller wrote:
+> > > From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> > > Date: Wed, 20 May 2020 20:10:01 -0300
+> > > 
+> > > > The duplication with sctp_setsockopt_nodelay() is quite silly/bad.
+> > > > Also, why have the 'true' hardcoded? It's what dlm uses, yes, but the
+> > > > API could be a bit more complete than that.
+> > > 
+> > > The APIs are being designed based upon what in-tree users actually
+> > > make use of.  We can expand things later if necessary.
+> > 
+> > Sometimes expanding things later can be though, thus why the worry.
+> > But ok, I get it. Thanks.
+> > 
+> > The comment still applies, though. (re the duplication)
+> 
+> Where do you see duplication?
+> 
+> sctp_setsockopt_nodelay does the following things:
+> 
+>  - verifies optlen, returns -EINVAL if it doesn't match
+>  - calls get_user, returns -EFAULT on error
+>  - converts the value from get_user to a boolean and assigns it
+>    to sctp_sk(sk)->nodelay
+>  - returns 0.
+> 
+> sctp_sock_set_nodelay does:
+> 
+>  - call lock_sock
+>  - assign true to sctp_sk(sk)->nodelay
+>  - call release_sock
+>  - does not return an error code
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
----
- arch/riscv/include/asm/processor.h |  1 +
- arch/riscv/kernel/cpu.c            | 16 ++++++++++++++++
- drivers/irqchip/irq-sifive-plic.c  | 16 +---------------
- 3 files changed, 18 insertions(+), 15 deletions(-)
-
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index 3ddb798264f1..b1efd840003c 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -75,6 +75,7 @@ static inline void wait_for_interrupt(void)
- 
- struct device_node;
- int riscv_of_processor_hartid(struct device_node *node);
-+int riscv_of_parent_hartid(struct device_node *node);
- 
- extern void riscv_fill_hwcap(void);
- 
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 40a3c442ac5f..6d59e6906fdd 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -44,6 +44,22 @@ int riscv_of_processor_hartid(struct device_node *node)
- 	return hart;
- }
- 
-+/*
-+ * Find hart ID of the CPU DT node under which given DT node falls.
-+ *
-+ * To achieve this, we walk up the DT tree until we find an active
-+ * RISC-V core (HART) node and extract the cpuid from it.
-+ */
-+int riscv_of_parent_hartid(struct device_node *node)
-+{
-+	for (; node; node = node->parent) {
-+		if (of_device_is_compatible(node, "riscv"))
-+			return riscv_of_processor_hartid(node);
-+	}
-+
-+	return -1;
-+}
-+
- #ifdef CONFIG_PROC_FS
- 
- static void print_isa(struct seq_file *f, const char *isa)
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index d9c53f85a68e..16d31d114c30 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -240,20 +240,6 @@ static void plic_handle_irq(struct pt_regs *regs)
- 	csr_set(CSR_IE, IE_EIE);
- }
- 
--/*
-- * Walk up the DT tree until we find an active RISC-V core (HART) node and
-- * extract the cpuid from it.
-- */
--static int plic_find_hart_id(struct device_node *node)
--{
--	for (; node; node = node->parent) {
--		if (of_device_is_compatible(node, "riscv"))
--			return riscv_of_processor_hartid(node);
--	}
--
--	return -1;
--}
--
- static void plic_set_threshold(struct plic_handler *handler, u32 threshold)
- {
- 	/* priority must be > threshold to trigger an interrupt */
-@@ -330,7 +316,7 @@ static int __init plic_init(struct device_node *node,
- 		if (parent.args[0] != RV_IRQ_EXT)
- 			continue;
- 
--		hartid = plic_find_hart_id(parent.np);
-+		hartid = riscv_of_parent_hartid(parent.np);
- 		if (hartid < 0) {
- 			pr_warn("failed to parse hart ID for context %d.\n", i);
- 			continue;
--- 
-2.25.1
-
+With the patch there are now two ways of enabling nodelay. It may be
+just a boolean set today, but if one wants to probe on it or if we
+want to extend it with anything, say a debug msg, we have to do it in
+two (very different) places.
