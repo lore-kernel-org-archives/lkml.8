@@ -2,175 +2,186 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88387C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62509206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965B7206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:22:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LoGrEjHY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nvsQpDAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbgEUWUv (ORCPT
+        id S1730674AbgEUWWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:20:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44312 "EHLO
+        Thu, 21 May 2020 18:22:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbgEUWUu (ORCPT
+        with ESMTP id S1728701AbgEUWWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:20:50 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E8A5C061A0E;
-        Thu, 21 May 2020 15:20:50 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d10so3986587pgn.4;
-        Thu, 21 May 2020 15:20:50 -0700 (PDT)
+        Thu, 21 May 2020 18:22:03 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3043AC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:22:03 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id be9so7859012edb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o7s0xnYhCkFQyhSka6PkHzLmWdZ5DE6Fr3QJ+0v/GmQ=;
-        b=LoGrEjHYmEADeaInMc7AthBcky+H1BDIGPpZDct9+ACmj1uPRDgVtvqdrPo4n785VL
-         KrvycmzuRF8mogDrjwfeZgeW3xzhHahMnBup92w40z/bi2ivhGE0y1xt63Q+h+MtsJ0d
-         ADtEnwx4CIniaBjPDcpkCCXn5FOKY3gl9uQN8DtzPWpXwmOzAD66XbH6Qv3QpBmBiTGC
-         qhzGUMFT0GbkaIRaOp8Nq7g4F34ECIrUh/o1xUwtCpYvmrcLwOP6xREfZz/927KX0yL3
-         JtgNLrN1y5Ifkihi4K60TwsQivtzZoQg9t/knvtK7lZqLQtyiaYxKVTQ/e6Ndga8EGRj
-         7ZcA==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=FDUtER/lAZTg+MBn1fXfZZ4rMzE6FaJzE4Mw9aw7xqU=;
+        b=nvsQpDAbB8hFGoNpmqufscrM9qdy/idWMwmQEYeBub/HFAD2bCCRvV4Z59Q2CO2odG
+         gTvK1kLgpB68csGb02tvwsLGi+J5WuYtjO+19EkYHow0ePIS20cKeQB1MLvR4PTV8QjA
+         9WimumV5M1Q5ASpTQwpOFiDFnzC4Cv6WG3EsklEqO7YfPY+u2DJyrx78ZV6+uiC6PTBW
+         pCU7rThIQLwN16Q0BQ2bCR26qs5SLNwiYnFwvynDkCdiEMIDwG7SeKtJTr2U2u4hZGVU
+         WctENE90zE2cKJr90RUSfiuLG+ato4+IuHCel+8T4Nr1c+Fmz5SUDtSWlKA05xYV21oE
+         necg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=o7s0xnYhCkFQyhSka6PkHzLmWdZ5DE6Fr3QJ+0v/GmQ=;
-        b=WaODFVmdrp8TzfALExfDNY2X/PWPS5J89o3vOJeMMC+HXwFwkp0pnduJINA2IZz2RU
-         YlqxekSMtw3+iAossQbCjxoT/1cYLrO8JCdSUi9AfkNHW9hva1Z8nqmPFfsfdfN1fLjZ
-         wb0we99AqczaKXYgrQ0BM29T6HrpOO49IziwiLO92hDrWDv2T9kGcj3WEtTq8b5+VsO+
-         boFMQATu29JovmMcJUDLlthb82/sBmbNavHt4gL2ahKox7aL3Pao0KrMw4KHFxPIBNeQ
-         SmRXHAxnWgJ7VDGljGB63kpz4mXsbg3Odhh4BmkuIHXte7YkZhSgYT+cGS69KX5uggi2
-         TyOQ==
-X-Gm-Message-State: AOAM5317snp7pGlTt/zZfKFjrmrFqfccQpx0/lBJy9gdw8sOzO5gh4HA
-        cVq9YZVAVczHwii5LYqnSwk=
-X-Google-Smtp-Source: ABdhPJyJtYw+hhTaMwcf2I/G2CqfR+XSye2CNZXg9yH3CXb/PdM18i1UfYTSd0zXHEP4mkaV3GQOWw==
-X-Received: by 2002:a63:5d19:: with SMTP id r25mr7883042pgb.360.1590099649941;
-        Thu, 21 May 2020 15:20:49 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 192sm5064919pfu.182.2020.05.21.15.20.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 15:20:49 -0700 (PDT)
-Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200507150004.1423069-8-ira.weiny@intel.com>
- <20200518184843.3029640-1-ira.weiny@intel.com>
- <20200519165422.GA5838@roeck-us.net>
- <20200521172704.GF23230@ZenIV.linux.org.uk>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <bdc8dc64-622c-3b0d-1ae1-48222cf34358@roeck-us.net>
-Date:   Thu, 21 May 2020 15:20:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=FDUtER/lAZTg+MBn1fXfZZ4rMzE6FaJzE4Mw9aw7xqU=;
+        b=B0AXKIIoOYFQdJ8h1mSRhFhp4frMJyIaH/uNZ0Vcro6IeTWeiRDPY7lpSb4/CctEuR
+         83Kvqzqzmt3IRbCobGflTxmu/Hb8rbF0whbNk7tGhNyKISKhZVaRgFiaVKLJuZjSpEjP
+         qLqM8hZ7DggtWxGsL4t1bXeae9S93DWRaRIHbCUEfwZynpRlTErklHWFUYxyJePm0EOJ
+         /uqerdl1SRGkyo/O4Z1uBSVfceLPKZCQ7hViJY5Q15L0Jc79Z8FeF6/YoEvggGULbskp
+         2ix9eGCbnd4KONFYQWPiDGrws4uPh4cNDY4PhV3Z0oKI0Arai5RYX3DwLoNrt/+dMLMQ
+         yz5g==
+X-Gm-Message-State: AOAM533F8zkMN2Ik3gkKQsM/BE0N2obC1VraZrcmkoUJjGaf5jajh78a
+        Xoq1TX33lYW4mChCYlC0zGm/WgANHaFbxVUUTho8zQ==
+X-Google-Smtp-Source: ABdhPJyphfV1QCeLNVMCTEmFft48dEsTlZ547P6YHvbzY1SGdFXhX03ZpCGDVgKpTe9u65dJiS7yR5o3twJCUAGIjVo=
+X-Received: by 2002:a50:a365:: with SMTP id 92mr799750edn.220.1590099721483;
+ Thu, 21 May 2020 15:22:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200521172704.GF23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 22 May 2020 08:21:50 +1000
+Message-ID: <CAPM=9tyy5vubggbcj32bGpA_h6yDaBNM3QeJPySTzci-etfBZw@mail.gmail.com>
+Subject: lockdep trace with xfs + mm in it from 5.7.0-rc5
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        darrick.wong@oracle.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/21/20 10:27 AM, Al Viro wrote:
-> On Tue, May 19, 2020 at 09:54:22AM -0700, Guenter Roeck wrote:
->> On Mon, May 18, 2020 at 11:48:43AM -0700, ira.weiny@intel.com wrote:
->>> From: Ira Weiny <ira.weiny@intel.com>
->>>
->>> The kunmap_atomic clean up failed to remove one set of pagefault/preempt
->>> enables when vaddr is not in the fixmap.
->>>
->>> Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
->>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->>
->> microblazeel works with this patch, as do the nosmp sparc32 boot tests,
->> but sparc32 boot tests with SMP enabled still fail with lots of messages
->> such as:
-> 
-> BTW, what's your setup for sparc32 boot tests?  IOW, how do you manage to
-> shrink the damn thing enough to have the loader cope with it?  I hadn't
-> been able to do that for the current mainline ;-/
-> 
+Hi,
 
-defconfig seems to work just fine, even after enabling various debug
-and file system options.
+Just updated a rawhide VM to the Fedora 5.7.0-rc5 kernel, did some
+package building,
 
-Guenter
+got the below trace, not sure if it's known and fixed or unknown.
+
+Dave.
+
+  725.862536] ======================================================
+[  725.862564] WARNING: possible circular locking dependency detected
+[  725.862591] 5.7.0-0.rc5.20200515git1ae7efb38854.1.fc33.x86_64 #1 Not tainted
+[  725.862612] ------------------------------------------------------
+[  725.862630] kswapd0/159 is trying to acquire lock:
+[  725.862645] ffff9b38d01a4470 (&xfs_nondir_ilock_class){++++}-{3:3},
+at: xfs_ilock+0xde/0x2c0 [xfs]
+[  725.862718]
+               but task is already holding lock:
+[  725.862735] ffffffffbbb8bd00 (fs_reclaim){+.+.}-{0:0}, at:
+__fs_reclaim_acquire+0x5/0x30
+[  725.862762]
+               which lock already depends on the new lock.
+
+[  725.862785]
+               the existing dependency chain (in reverse order) is:
+[  725.862806]
+               -> #1 (fs_reclaim){+.+.}-{0:0}:
+[  725.862824]        fs_reclaim_acquire+0x34/0x40
+[  725.862839]        __kmalloc+0x4f/0x270
+[  725.862878]        kmem_alloc+0x93/0x1d0 [xfs]
+[  725.862914]        kmem_alloc_large+0x4c/0x130 [xfs]
+[  725.862945]        xfs_attr_copy_value+0x74/0xa0 [xfs]
+[  725.862984]        xfs_attr_get+0x9d/0xc0 [xfs]
+[  725.863021]        xfs_get_acl+0xb6/0x200 [xfs]
+[  725.863036]        get_acl+0x81/0x160
+[  725.863052]        posix_acl_xattr_get+0x3f/0xd0
+[  725.863067]        vfs_getxattr+0x148/0x170
+[  725.863081]        getxattr+0xa7/0x240
+[  725.863093]        path_getxattr+0x52/0x80
+[  725.863111]        do_syscall_64+0x5c/0xa0
+[  725.863133]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
+[  725.863149]
+               -> #0 (&xfs_nondir_ilock_class){++++}-{3:3}:
+[  725.863177]        __lock_acquire+0x1257/0x20d0
+[  725.863193]        lock_acquire+0xb0/0x310
+[  725.863207]        down_write_nested+0x49/0x120
+[  725.863242]        xfs_ilock+0xde/0x2c0 [xfs]
+[  725.863277]        xfs_reclaim_inode+0x3f/0x400 [xfs]
+[  725.863312]        xfs_reclaim_inodes_ag+0x20b/0x410 [xfs]
+[  725.863351]        xfs_reclaim_inodes_nr+0x31/0x40 [xfs]
+[  725.863368]        super_cache_scan+0x190/0x1e0
+[  725.863383]        do_shrink_slab+0x184/0x420
+[  725.863397]        shrink_slab+0x182/0x290
+[  725.863409]        shrink_node+0x174/0x680
+[  725.863927]        balance_pgdat+0x2d0/0x5f0
+[  725.864389]        kswapd+0x21f/0x510
+[  725.864836]        kthread+0x131/0x150
+[  725.865277]        ret_from_fork+0x3a/0x50
+[  725.865707]
+               other info that might help us debug this:
+
+[  725.866953]  Possible unsafe locking scenario:
+
+[  725.867764]        CPU0                    CPU1
+[  725.868161]        ----                    ----
+[  725.868531]   lock(fs_reclaim);
+[  725.868896]                                lock(&xfs_nondir_ilock_class);
+[  725.869276]                                lock(fs_reclaim);
+[  725.869633]   lock(&xfs_nondir_ilock_class);
+[  725.869996]
+                *** DEADLOCK ***
+
+[  725.871061] 4 locks held by kswapd0/159:
+[  725.871406]  #0: ffffffffbbb8bd00 (fs_reclaim){+.+.}-{0:0}, at:
+__fs_reclaim_acquire+0x5/0x30
+[  725.871779]  #1: ffffffffbbb7cef8 (shrinker_rwsem){++++}-{3:3}, at:
+shrink_slab+0x115/0x290
+[  725.872167]  #2: ffff9b39f07a50e8
+(&type->s_umount_key#56){++++}-{3:3}, at: super_cache_scan+0x38/0x1e0
+[  725.872560]  #3: ffff9b39f077f258
+(&pag->pag_ici_reclaim_lock){+.+.}-{3:3}, at:
+xfs_reclaim_inodes_ag+0x82/0x410 [xfs]
+[  725.873013]
+               stack backtrace:
+[  725.873811] CPU: 3 PID: 159 Comm: kswapd0 Not tainted
+5.7.0-0.rc5.20200515git1ae7efb38854.1.fc33.x86_64 #1
+[  725.874249] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29
+04/01/2014
+[  725.875158] Call Trace:
+[  725.875625]  dump_stack+0x8b/0xc8
+[  725.876090]  check_noncircular+0x134/0x150
+[  725.876547]  __lock_acquire+0x1257/0x20d0
+[  725.877019]  lock_acquire+0xb0/0x310
+[  725.877517]  ? xfs_ilock+0xde/0x2c0 [xfs]
+[  725.877988]  down_write_nested+0x49/0x120
+[  725.878473]  ? xfs_ilock+0xde/0x2c0 [xfs]
+[  725.878955]  ? xfs_reclaim_inode+0x3f/0x400 [xfs]
+[  725.879448]  xfs_ilock+0xde/0x2c0 [xfs]
+[  725.879925]  xfs_reclaim_inode+0x3f/0x400 [xfs]
+[  725.880414]  xfs_reclaim_inodes_ag+0x20b/0x410 [xfs]
+[  725.880876]  ? sched_clock_cpu+0xc/0xb0
+[  725.881343]  ? mark_held_locks+0x2d/0x80
+[  725.881798]  ? _raw_spin_unlock_irqrestore+0x46/0x60
+[  725.882268]  ? lockdep_hardirqs_on+0x11e/0x1b0
+[  725.882734]  ? try_to_wake_up+0x249/0x820
+[  725.883234]  xfs_reclaim_inodes_nr+0x31/0x40 [xfs]
+[  725.883700]  super_cache_scan+0x190/0x1e0
+[  725.884180]  do_shrink_slab+0x184/0x420
+[  725.884653]  shrink_slab+0x182/0x290
+[  725.885129]  shrink_node+0x174/0x680
+[  725.885596]  balance_pgdat+0x2d0/0x5f0
+[  725.886074]  kswapd+0x21f/0x510
+[  725.886540]  ? finish_wait+0x90/0x90
+[  725.887013]  ? balance_pgdat+0x5f0/0x5f0
+[  725.887477]  kthread+0x131/0x150
+[  725.887937]  ? __kthread_bind_mask+0x60/0x60
+[  725.888410]  ret_from_fork+0x3a/0x50
