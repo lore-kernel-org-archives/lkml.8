@@ -2,150 +2,132 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1373C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E396E2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFE62078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E+o09LWI"
+	dkim=pass (1024-bit key) header.d=ikelte.onmicrosoft.com header.i=@ikelte.onmicrosoft.com header.b="fwSfCPzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgEUVyn (ORCPT
+        id S1730239AbgEUVz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:54:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728701AbgEUVym (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:54:42 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB50C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:54:42 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n11so3929327pgl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:54:42 -0700 (PDT)
+        Thu, 21 May 2020 17:55:29 -0400
+Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:2214
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728701AbgEUVz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 17:55:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KOEyFIRgwRP3fQpwjjs2D8H7f8dHDu12/POUwkDc3tZcm6Ft91mCl39NYqcLvs8u+90EHPBsT9tCZwdmYKMPXHVMnixKVRbIKmfxin7/DHrRNxyvi13YICEPvJt6Ga98+GzXXPKuGkfuGIqcG39woM6G/P5NMLgIIBYJ1y/qube/PLUxlEPdgFYS3Y8Mum9q36EY82sz/6V0oLbH/wsFxf/ViX9JSAL14IsfXwn4Q3OiIxzc+fnwQkbf8LIrO4fQAQRXxVNHE/aACnm4gBq9ysjN2YzdfGz2uNyuru6xwKrfVruiQka1BlRTfOKtAf6xwbaF9Riq4YlsXBrDmSHEAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wTG4x7N7jsCtbqGuiY3xqbSZQFLZEgtb0Yys/Pkx6J0=;
+ b=LsfAlQXWtO6CR4RvrvNNYDN0/dmBQaRlA1n/Sc9QaCxBZxDIOMu/QF1QnWS8BPxNOySEQQgbyH20VQaatWTBSfPnvKra761SElz1eajHS+vRlPxFbRd4Ud4dbmQN28/cJolQ7h3QlpOaNlGxVKCpt1rnWblu68XxcuVuapubaFS2gc74m3EMcLwzCSyXfsJRbc6SxfF007T1BWTCLxaMfX7BfWzsn0ZlKNMf5L8TKdFp9wP81fkPgChlJShRNHZyWzoWKPA3JkB9cuy2e+49KOUCd7R1R/iz5gGTpQchTQ3qJVVMIxy5r3aauqPH7zfvwmWpgYSutPJY9yrXQn/7rg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=inf.elte.hu; dmarc=pass action=none header.from=inf.elte.hu;
+ dkim=pass header.d=inf.elte.hu; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qpd+pHTtktr0kpNjUZDK7A291Uhdx4ouls0jQBZgJbI=;
-        b=E+o09LWIlQ+NniVPXQSRZoxiyn86jw4XjK0Z7PZG4bkhcZiTxrdDvF4boiizLY5u6L
-         ntwxyw/tq0o0Zoh0/+0d7ZjBQvK+zHI4qAGvAdCyZtUg/EpAUbOosDa7aZ9GVWlUkmE7
-         c+BK+YFIIKtUIcFV52JsokzIyymKsaknEfAMY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qpd+pHTtktr0kpNjUZDK7A291Uhdx4ouls0jQBZgJbI=;
-        b=OACUQCHmJvpvyY5uu29u1UXntXO8h+WZf7B6AZCnWbj1XCRX3FuP8A3/jySEGAyKD4
-         nBT1HAavDWM2unuHrGR7IZfREtiDhPM2vyU807NsRGEWf+AGU4b2WwdbTmTSBx7Hagj/
-         uGvRb61EAWVriTY8wbvzYmPVtriQN88bVso/Sw/SuZgoVYmd6mwqjKkL/x0ZGu6EasFk
-         M/svfPl4x0wSWxWI9SNIQRT9LfNHVQ1yKz/spMxYVgLqOxG0oanCG1RrXOuiMQTqcnQN
-         t5/gzlW7fz4YShqBDXd0KCAXfq3reBWBHkCw0adY/qSpDBsCLHGybxpHnHARJWXLgbnj
-         DifA==
-X-Gm-Message-State: AOAM531A4qZHur5ZXgxnpg2GTkcBDN8wvWzp0pdf1h55ZEtNQfFyAf7Z
-        8HaeZCHXtXTGcOFKmJ2Ipat+qA==
-X-Google-Smtp-Source: ABdhPJx6VolkvDgFR7ZSKtSVZiKV1tltjRSlw+AFOnkwTJE7en/CRGuk4F0KulIthu2T1RO6O0lxDQ==
-X-Received: by 2002:a63:4911:: with SMTP id w17mr10574165pga.13.1590098081815;
-        Thu, 21 May 2020 14:54:41 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bu7sm4028351pjb.41.2020.05.21.14.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 14:54:40 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:54:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        arjan@linux.intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        rick.p.edgecombe@intel.com
-Subject: Re: [PATCH v2 0/9] Function Granular KASLR
-Message-ID: <202005211441.F63205B7@keescook>
-References: <20200521165641.15940-1-kristen@linux.intel.com>
+ d=ikelte.onmicrosoft.com; s=selector2-ikelte-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wTG4x7N7jsCtbqGuiY3xqbSZQFLZEgtb0Yys/Pkx6J0=;
+ b=fwSfCPzmXEBbEsBKbe+5WaVN+QM6gwRZ7Woj8MdTU9prJhO0Vt4b1q3zAihK+0hTdsmNgvW5NexmQQeot/u6lVk+1IRHEDiIszrQQFpvpANZzjh9qiYyUgMCLG3NOVzwthDZjMf4nCDo3pqzDuUIXQFmcTMu82gYJkESqqCt2Lc=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=inf.elte.hu;
+Received: from DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:ab::20)
+ by DB8PR10MB3783.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:16e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
+ 2020 21:55:24 +0000
+Received: from DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::285b:6f31:7d11:5c53]) by DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::285b:6f31:7d11:5c53%5]) with mapi id 15.20.3021.024; Thu, 21 May 2020
+ 21:55:24 +0000
+X-Gm-Message-State: AOAM533/W7Vze2u/ehUuCqYg0OF305EvhA6POHdC3b2wgbpH6c/JJqOJ
+        1ysb+lvaebjlYxRpWjShiMWgRLRLIp7LyTscy0s=
+X-Google-Smtp-Source: ABdhPJyfUmVQMxdwuJ7saGQCZuTsn6EmXBeUyrX26YbH3QQldJBT2bivMuxlLIBZKUYMSgQyTvn7EEpFG9R/o/XiWTg=
+X-Received: by 2002:adf:fdc5:: with SMTP id i5mr522600wrs.176.1590098123059;
+ Thu, 21 May 2020 14:55:23 -0700 (PDT)
+References: <20200521125247.30178-1-fejes@inf.elte.hu> <20200521211432.GC49942@google.com>
+In-Reply-To: <20200521211432.GC49942@google.com>
+From:   Ferenc Fejes <fejes@inf.elte.hu>
+Date:   Thu, 21 May 2020 23:55:12 +0200
+X-Gmail-Original-Message-ID: <CAAej5NZMBTsoSMh2RJF19WwZNDxq5cLE2dy3TC0Od+yh05VP=A@mail.gmail.com>
+Message-ID: <CAAej5NZMBTsoSMh2RJF19WwZNDxq5cLE2dy3TC0Od+yh05VP=A@mail.gmail.com>
+Subject: Re: [PATCH net-next] Extending bpf_setsockopt with SO_BINDTODEVICE sockopt
+To:     sdf@google.com
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+X-ClientProxiedBy: AM3PR05CA0156.eurprd05.prod.outlook.com
+ (2603:10a6:207:3::34) To DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:ab::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521165641.15940-1-kristen@linux.intel.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mail-wr1-f47.google.com (209.85.221.47) by AM3PR05CA0156.eurprd05.prod.outlook.com (2603:10a6:207:3::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Thu, 21 May 2020 21:55:24 +0000
+Received: by mail-wr1-f47.google.com with SMTP id l11so8209804wru.0;        Thu, 21 May 2020 14:55:24 -0700 (PDT)
+X-Gm-Message-State: AOAM533/W7Vze2u/ehUuCqYg0OF305EvhA6POHdC3b2wgbpH6c/JJqOJ
+        1ysb+lvaebjlYxRpWjShiMWgRLRLIp7LyTscy0s=
+X-Google-Smtp-Source: ABdhPJyfUmVQMxdwuJ7saGQCZuTsn6EmXBeUyrX26YbH3QQldJBT2bivMuxlLIBZKUYMSgQyTvn7EEpFG9R/o/XiWTg=
+X-Received: by 2002:adf:fdc5:: with SMTP id i5mr522600wrs.176.1590098123059;
+ Thu, 21 May 2020 14:55:23 -0700 (PDT)
+X-Gmail-Original-Message-ID: <CAAej5NZMBTsoSMh2RJF19WwZNDxq5cLE2dy3TC0Od+yh05VP=A@mail.gmail.com>
+X-Originating-IP: [209.85.221.47]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2ddf14e9-ed19-4bb8-0ebe-08d7fdd1aa30
+X-MS-TrafficTypeDiagnostic: DB8PR10MB3783:
+X-Microsoft-Antispam-PRVS: <DB8PR10MB3783BE6707E2281E983DF9C1E1B70@DB8PR10MB3783.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QUdXZmXr+ui6Kss6LA6auU3PNuWSms2tNVbdTrJEkHXyslcWYqUxvb5phJnRLBzvY+ib8X3M4nUpZciNoaTc7DsIHcolVgr1Pg2Z5cxFFUFofTnAdho9Gc/XzZcSnWvs9GlTsuOYzc8kkquXNvIBQXq4DQhwXQN5BmeIIhT3B1R+cl3Fy6FZLV4zHM9HbfcQhEnuqIQUWv+ijuZw9LhgAoFsul9bPiz5t3PsZ/C/l/sIiaU1i7VCelgxCMdO+B+7BzNGQGAhw8Ck8E6R9BXNFKwzKKKF7lQmV+KrZTwSmqur3KQhakosTm93fz4jc8GOYwVozf1gCHI4dpEShA8ZSf9npJqjuAzQsrNoM5umzkBZjs1nXy5kmhZejR9JVXcfeWNqZmfKt8AQGarQmN/BvQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(366004)(136003)(396003)(39850400004)(107886003)(34206002)(450100002)(52116002)(4326008)(66946007)(186003)(5660300002)(478600001)(966005)(9686003)(26005)(55446002)(6666004)(316002)(8936002)(786003)(42186006)(54906003)(8676002)(66476007)(2906002)(86362001)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: hK4Lm+9NEB4dJ3klpJrMg4FU0UygRCTPw7i/cukEw+5lYs07tDLoH/pOMwYr94WNHU8i2IURoygXdAzftVn7b+VOchXDvBHQtU+gPGzK9NXv5zAgAxgjV9DKyPvQ9e1Cr9NGH8m9r3xlAfQoVWnI9zeT3WavW9evbMUOyKdeSosbWBUE7PapfIja2J5SfIRdTLKqOsWG4QN96+Y1Ja2PKiiC567V+ePXUCg/9bmwiuxyM8MNQ7OFqyfD47bLpad7hsmzHT8ThRFg/X3fcpbCBs7gdY66AKYz673Z5RvqFI3sToW9UZrAsMthYd4GAxq5zGJ183HgMCfZ/rkpTftcY0IzsbnvfkYOQ3d4RWTjiXj2ZzfrFDfjZdwOEGnoe9zED3SmRoh2KJiJV9vSSrlRFhfnRL2jiwKrOOKn44I0eI78uAOizDlU6Em85CDE/X0eQ6ewHSbiqKO0+WeeycVU/XEFBbQSKz7fhsmFIfS1uVA=
+X-OriginatorOrg: inf.elte.hu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ddf14e9-ed19-4bb8-0ebe-08d7fdd1aa30
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 21:55:24.2902
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0133bb48-f790-4560-a64d-ac46a472fbbc
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SG0gkX0QoA5+cZn2s+cuHRjBn3rFqmU0EDX3M8m3/md+XcobCtptqw1zLSSYOGaBwh92iCsDQcjzI9ds+GxDcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3783
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 09:56:31AM -0700, Kristen Carlson Accardi wrote:
-> Changes in v2:
-> --------------
-> * Fix to address i386 build failure
-> * Allow module reordering patch to be configured separately so that
->   arm (or other non-x86_64 arches) can take advantage of module function
->   reordering. This support has not be tested by me, but smoke tested by
->   Ard Biesheuvel <ardb@kernel.org> on arm.
-> * Fix build issue when building on arm as reported by
->   Ard Biesheuvel <ardb@kernel.org> 
-> * minor chages for certain checkpatch warnings and review feedback.
+> Any specific reason you're not reusing sock_setbindtodevice or at least
+> sock_setbindtodevice_locked here? I think, historically, we've
+> reimplemented some of the sockopts because they were 'easy' (i.e.
+> were just setting a flag in the socket), this one looks more involved.
 
-I successfully built and booted this on top of linux-next. For my builds
-I include:
+Yes, there is a copy_from_user in the sock_setbindtodevice for copying
+the ioctl netdev name from the user which (I think) not necessary
+here. However sock_setbindtodevice_locked is the way to go but I was
+afraid to forward declare it in sock.h, change the linkage and export
+it in sock.c (I find that a little bit too intrusive).
 
-CONFIG_LOCK_DEBUGGING_SUPPORT=y
-CONFIG_PROVE_LOCKING=y
-CONFIG_DEBUG_RT_MUTEXES=y
-CONFIG_DEBUG_SPINLOCK=y
-CONFIG_DEBUG_MUTEXES=y
-CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
-CONFIG_DEBUG_RWSEMS=y
-CONFIG_DEBUG_LOCK_ALLOC=y
-CONFIG_LOCKDEP=y
-CONFIG_DEBUG_ATOMIC_SLEEP=y
+> I'd suggest, add an optional 'lock_sk' argument to sock_setbindtodevice,
+> call it with 'true' from real setsockopt, and call it with 'false'
+> here.
 
-which catches various things. One of those (I assume either CONFIG_LOCKDEP
-or CONFIG_DEBUG_MUTEXES) has found an issue with kallsyms:
+Thanks for the advice. However I think I'll wait what happens with
+this patch: https://lore.kernel.org/netdev/20200520195509.2215098-8-hch@lst.de/T/#u
+Very strange coincidence that patch was submitted a few hours before
+mine (but I noticed just now) and refactor the sock_setbindtodevice in
+a way that will useful in my case (also define it in sock.h).
 
-[   34.112989] ------------[ cut here ]------------
-[   34.113560] WARNING: CPU: 1 PID: 1997 at kernel/module.c:260 module_assert_mutex+0x29/0x30
-[   34.114479] Modules linked in:
-[   34.114831] CPU: 1 PID: 1997 Comm: grep Tainted: G        W 5.7.0-rc6-next-20200519+ #497
-...
-[   34.128556] Call Trace:
-[   34.128867]  module_kallsyms_on_each_symbol+0x1d/0xa0
-[   34.130238]  kallsyms_on_each_symbol+0xbd/0xd0
-[   34.131642]  kallsyms_sorted_open+0x3f/0x70
-[   34.132160]  proc_reg_open+0x99/0x180
-[   34.133222]  do_dentry_open+0x176/0x400
-[   34.134182]  vfs_open+0x2d/0x30
-[   34.134579]  do_open.isra.0+0x2a0/0x410
-[   34.135058]  path_openat+0x175/0x620
-[   34.135506]  do_filp_open+0x91/0x100
-[   34.136912]  do_sys_openat2+0x210/0x2d0
-[   34.137388]  do_sys_open+0x46/0x80
-[   34.137818]  __x64_sys_openat+0x20/0x30
-[   34.138288]  do_syscall_64+0x55/0x1d0
-[   34.138720]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> And, as Andrii pointed out, it would be nice to have a selftest
+> that exercises this new option.
 
-Triggering it is easy, just "cat /proc/kallsyms" (and I'd note that I
-don't even have any modules loaded). Tracking this down, it just looks
-like kallsyms needs to hold a lock while sorting:
-
-
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 558963b275ec..182b16a6079b 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -772,7 +772,9 @@ static int kallsyms_sorted_open(struct inode *inode, struct file *file)
- 
- 	INIT_LIST_HEAD(list);
- 
-+	mutex_lock(&module_mutex);
- 	ret = kallsyms_on_each_symbol(get_all_symbol_name, list);
-+	mutex_unlock(&module_mutex);
- 	if (ret != 0)
- 		return ret;
- 
-
-This fixes it for me. Everything else seems to be lovely. :) Nice work!
-
--- 
-Kees Cook
+Thanks, I will implement them in the next iteration.
