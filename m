@@ -2,130 +2,83 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6988C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C28C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8BA208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IkOL/0Q5"
+	by mail.kernel.org (Postfix) with ESMTP id 12E5120890
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgEUPXT (ORCPT
+        id S1730053AbgEUPXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730008AbgEUPXS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:23:18 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01FEC061A0E;
-        Thu, 21 May 2020 08:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=LNedO/lL6g8P+QsVFWLVScVEptUSGiGTZWf8H0Q1tZA=; b=IkOL/0Q5VFLdvcH4E2f1lWsujc
-        ZpGa6pBSTA/irSQfHNd3fMJ6M+PJUZ/RtayvjfqlfJMzMSbJlYlD16DbM64jpqaZKliOvVuIRemuB
-        HreLTNUfvD6xrF38OqsnvHUyJfe4k5mVpAbXt3OkxXRfOUAOBakbMYnaRZ6/1J691uiXaYDYR821c
-        XmRwRCHvyuQlPlCXq6vdfd5bHCnIeT5jABBcaRjkv4ujyJmpmHDZ5HNN3/MsXC+2N8byomzKJA1uI
-        BodYd0Acx2A7AXjcsEraLZYwwe8QkDqNP3Y+rmMZkGoha1LjpXvDCSO8d4RW9BGcUuDRf9y+tiz+s
-        TM0CRuSQ==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn2N-00045c-Hu; Thu, 21 May 2020 15:23:12 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/23] maccess: remove duplicate kerneldoc comments
-Date:   Thu, 21 May 2020 17:22:41 +0200
-Message-Id: <20200521152301.2587579-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
+        Thu, 21 May 2020 11:23:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:48900 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730018AbgEUPXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:23:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0546BD6E;
+        Thu, 21 May 2020 08:23:16 -0700 (PDT)
+Received: from e112269-lin.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64EE13F305;
+        Thu, 21 May 2020 08:23:14 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Jan Beulich <jbeulich@suse.com>
+Cc:     Steven Price <steven.price@arm.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [PATCH 0/2] Fix W+X debug feature on x86
+Date:   Thu, 21 May 2020 16:23:06 +0100
+Message-Id: <20200521152308.33096-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many of the maccess routines have a copy of the kerneldoc comment
-in the header.  Remove it as it is not useful and will get out of
-sync sooner or later.
+Jan alert me[1] that the W+X detection debug feature was broken in x86
+by my change[2] to switch x86 to use the generic ptdump infrastructure.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/uaccess.h | 38 --------------------------------------
- 1 file changed, 38 deletions(-)
+Fundamentally the approach of trying to move the calculation of
+effective permissions into note_page() was broken because note_page() is
+only called for 'leaf' entries and the effective permissions are passed
+down via the internal nodes of the page tree. The solution I've taken
+here is to create a new (optional) callback which is called for all
+nodes of the page tree and therefore can calculate the effective
+permissions.
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index a2c606a403745..5a36a298a85f8 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -301,50 +301,12 @@ copy_struct_from_user(void *dst, size_t ksize, const void __user *src,
- 	return 0;
- }
- 
--/*
-- * probe_kernel_read(): safely attempt to read from a location
-- * @dst: pointer to the buffer that shall take the data
-- * @src: address to read from
-- * @size: size of the data chunk
-- *
-- * Safely read from address @src to the buffer at @dst.  If a kernel fault
-- * happens, handle that and return -EFAULT.
-- */
- extern long probe_kernel_read(void *dst, const void *src, size_t size);
- extern long probe_kernel_read_strict(void *dst, const void *src, size_t size);
- extern long __probe_kernel_read(void *dst, const void *src, size_t size);
--
--/*
-- * probe_user_read(): safely attempt to read from a location in user space
-- * @dst: pointer to the buffer that shall take the data
-- * @src: address to read from
-- * @size: size of the data chunk
-- *
-- * Safely read from address @src to the buffer at @dst.  If a kernel fault
-- * happens, handle that and return -EFAULT.
-- */
- extern long probe_user_read(void *dst, const void __user *src, size_t size);
- 
--/*
-- * probe_kernel_write(): safely attempt to write to a location
-- * @dst: address to write to
-- * @src: pointer to the data that shall be written
-- * @size: size of the data chunk
-- *
-- * Safely write to address @dst from the buffer at @src.  If a kernel fault
-- * happens, handle that and return -EFAULT.
-- */
- extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
--
--/*
-- * probe_user_write(): safely attempt to write to a location in user space
-- * @dst: address to write to
-- * @src: pointer to the data that shall be written
-- * @size: size of the data chunk
-- *
-- * Safely write to address @dst from the buffer at @src.  If a kernel fault
-- * happens, handle that and return -EFAULT.
-- */
- extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
- 
- extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+Secondly on some configurations (32 bit with PAE) "unsigned long" is not
+large enough to store the table entries. The fix here is simple - let's
+just use a u64.
+
+I'd welcome testing (and other comments), especially if you have a
+configuration which previously triggered W+X warnings as I don't have
+such a setup.
+
+[1] https://lore.kernel.org/lkml/d573dc7e-e742-84de-473d-f971142fa319@suse.com/
+[2] 2ae27137b2db ("x86: mm: convert dump_pagetables to use walk_page_range")
+
+Steven Price (2):
+  x86: mm: ptdump: Calculate effective permissions correctly
+  mm: ptdump: Expand type of 'val' in note_page()
+
+ arch/arm64/mm/dump.c          |  2 +-
+ arch/x86/mm/dump_pagetables.c | 33 ++++++++++++++++++++-------------
+ include/linux/ptdump.h        |  3 ++-
+ mm/ptdump.c                   | 17 ++++++++++++++++-
+ 4 files changed, 39 insertions(+), 16 deletions(-)
+
 -- 
-2.26.2
+2.20.1
 
