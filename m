@@ -2,175 +2,136 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA9E207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:47:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Nl+kGqhG"
+	by mail.kernel.org (Postfix) with ESMTP id 6CE5320814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgEUKrX (ORCPT
+        id S1729023AbgEUKrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 06:47:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37115 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727034AbgEUKrW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 06:47:22 -0400
-X-UUID: 0442f1a9833a4fc48a2a7f9fca92908c-20200521
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vwJUCYOgb3bqVmIWxvK+TT8AtKtO3x/nNC/FL8RCFqU=;
-        b=Nl+kGqhGbrIvD93P5HGlyKFgjOI/QgG+6fvZkXUt/4hMYWEKw43HvEA9nP+EyWoDCkXm/TcDwwfn1+I36grZHX+6tP4aYIjFz+U93fO0+lTZqGXiBW65wroqXvNR/LoiapE9SKADN+IMj7XK46Of4iROySPyi5glGnnS4e+I7aI=;
-X-UUID: 0442f1a9833a4fc48a2a7f9fca92908c-20200521
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1384281164; Thu, 21 May 2020 18:47:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 21 May 2020 18:47:12 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 21 May 2020 18:47:11 +0800
-Message-ID: <1590058033.29894.2.camel@mtksdaap41>
-Subject: Re: [PATCH 1/3] arm64: dts: mt8183: Add gce setting in display node
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        YT Shen <yt.shen@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>, <tfiga@chromium.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>
-Date:   Thu, 21 May 2020 18:47:13 +0800
-In-Reply-To: <77a11bb2-83a1-07b8-e949-eb9e5b37549d@gmail.com>
-References: <20200214044954.16923-1-bibby.hsieh@mediatek.com>
-         <2369225e-2a92-c493-d089-e03f792df8cf@gmail.com>
-         <77a11bb2-83a1-07b8-e949-eb9e5b37549d@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 21 May 2020 06:47:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47357 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728720AbgEUKrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 06:47:48 -0400
+IronPort-SDR: RN5qEcrqeY5dNqTkv3GtxXBQ/PlouTn1FSrSuTkGFJyRsguG1tJiZdy1l8+Rfbj63Vb4YwLCK7
+ 2dcvna7d+2Hg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 03:47:47 -0700
+IronPort-SDR: EbbdmfNXgB5HerMGnt9TrnxUjACn3DwlvQylqK2/2C+wBpBrF77UdyXTgra7sYLt4CgW7O2PoH
+ i0PVcBBiO4wA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
+   d="scan'208";a="283008388"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 21 May 2020 03:47:41 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jbijn-00818f-QE; Thu, 21 May 2020 13:47:43 +0300
+Date:   Thu, 21 May 2020 13:47:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>,
+        John Garry <john.garry@huawei.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Clement Leger <cleger@kalray.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 09/16] spi: dw: Add core suffix to the DW APB SSI core
+ source file
+Message-ID: <20200521104743.GJ1634618@smile.fi.intel.com>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-10-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C6A05536FA69D4ABBA47AC2218374DEC3C688214C640B5B6C4D594B6D953DC982000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521012206.14472-10-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTIxIGF0IDEyOjEwICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiBPbiAxNC8wMi8yMDIwIDExOjA2LCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOg0KPiA+IA0K
-PiA+IA0KPiA+IE9uIDE0LzAyLzIwMjAgMDU6NDksIEJpYmJ5IEhzaWVoIHdyb3RlOg0KPiA+PiBJ
-biBvcmRlciB0byB1c2UgR0NFIGZ1bmN0aW9uLCB3ZSBuZWVkIGFkZCBzb21lIGluZm9ybWF0aW9u
-DQo+ID4+IGludG8gZGlzcGxheSBub2RlIChtYm94ZXMsIG1lZGlhdGVrLGdjZS1jbGllbnQtcmVn
-LCBtZWRpYXRlayxnY2UtZXZlbnRzKS4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogQmliYnkg
-SHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPj4gU2lnbmVkLW9mZi1ieTogWW9u
-Z3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQo+ID4+IC0tLQ0KPiA+IA0K
-PiA+IEZvciB0aGUgbmV4dCB0aW1lIHBsZWFzZSBwcm92aWRlIHNvbWUgY29udGV4dCBvbiB3aGlj
-aCBwYXRjaGVzIHRoaXMgYXJlIGJhc2VkDQo+ID4gb24uIEJldCBiZWxvdyB0aGUgJy0tLScgd2l0
-aCBhIGxpbmsuDQo+ID4gDQo+ID4gRm9yIHRoaXMgdGltZSwgb24gd2hpY2ggcGF0Y2gvc2VyaWVz
-IGlzIHRoaXMgYmFzZWQ/IDopDQo+IA0KPiBCaWJieSBjYW4geW91IHBsZWFzZSBoZWxwIGFuZCBy
-ZWJhc2UgdGhlIHBhdGNoIGFnYWluc3QgbXkgZm9yLW5leHQgYnJhbmNoIFsxXS4NCj4gSSdtIHRo
-ZW4gaGFwcHkgdG8gcXVldWUgaXQuIE5vdCBzdXJlIGlmIHdlIGNhbiBtYWtlIGl0IGZvciB2NS44
-IGFzIHdlIGFyZSByZWFsbHkNCj4gbGF0ZSwgYnV0IHdlIGNvdWxkIHRyeSA6KQ0KDQpIaSwgTWF0
-dGhpYXMsDQoNCk5QLCBidXQgdGhpcyBwYXRjaFsxXSBpcyBkZXBlbmRzIG9uIGFub3RoZXIgcGF0
-Y2ggWzJdLg0KU2hvdWxkIEkgcmViYXNlIHRoZW0gdG9nZXRoZXIgaW50byB5b3VyIGZvci1uZXh0
-IGJyYW5jaD8NCg0KWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEzODU4
-NjMvDQpbMl0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTMxNjI3Ny8NCg0K
-QmliYnkNCg0KPiANCj4gVGhhbmtzIQ0KPiBNYXR0aGlhcw0KPiANCj4gWzFdDQo+IGh0dHBzOi8v
-Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L21hdHRoaWFzLmJnZy9saW51
-eC5naXQvbG9nLz9oPWZvci1uZXh0DQo+IA0KPiA+IA0KPiA+IFRoYW5rcywNCj4gPiBNYXR0aGlh
-cw0KPiA+IA0KPiA+PiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSB8
-IDE2ICsrKysrKysrKysrKysrKysNCj4gPj4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBpbnNlcnRpb25z
-KCspDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
-L210ODE4My5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0K
-PiA+PiBpbmRleCBiZTQ0MjhjOTJmMzUuLjhiNTIyYjAzOWEzNyAxMDA2NDQNCj4gPj4gLS0tIGEv
-YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0KPiA+PiArKysgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpDQo+ID4+IEBAIC05LDYgKzksNyBA
-QA0KPiA+PiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FybS1n
-aWMuaD4NCj4gPj4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9p
-cnEuaD4NCj4gPj4gICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9wb3dlci9tdDgxODMtcG93ZXIuaD4N
-Cj4gPj4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9nY2UvbXQ4MTgzLWdjZS5oPg0KPiA+PiAgI2lu
-Y2x1ZGUgIm10ODE4My1waW5mdW5jLmgiDQo+ID4+ICANCj4gPj4gIC8gew0KPiA+PiBAQCAtNjY0
-LDYgKzY2NSw5IEBADQo+ID4+ICAJCQlyZWcgPSA8MCAweDE0MDAwMDAwIDAgMHgxMDAwPjsNCj4g
-Pj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+
-Ow0KPiA+PiAgCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPiA+PiArCQkJbWJveGVzID0gPCZnY2Ug
-MCBDTURRX1RIUl9QUklPX0hJR0hFU1Q+LA0KPiA+PiArCQkJCSA8JmdjZSAxIENNRFFfVEhSX1BS
-SU9fSElHSEVTVD47DQo+ID4+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNV
-QlNZU18xNDAwWFhYWCAwIDB4MTAwMD47DQo+ID4+ICAJCX07DQo+ID4+ICANCj4gPj4gIAkJb3Zs
-MDogb3ZsQDE0MDA4MDAwIHsNCj4gPj4gQEAgLTY3Miw2ICs2NzYsNyBAQA0KPiA+PiAgCQkJaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDIyNSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+PiAgCQkJcG93
-ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+ID4+ICAJ
-CQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX09WTDA+Ow0KPiA+PiArCQkJbWVkaWF0ZWss
-Z2NlLWNsaWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHg4MDAwIDB4MTAwMD47DQo+
-ID4+ICAJCX07DQo+ID4+ICANCj4gPj4gIAkJb3ZsXzJsMDogb3ZsQDE0MDA5MDAwIHsNCj4gPj4g
-QEAgLTY4MCw2ICs2ODUsNyBAQA0KPiA+PiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyNiBJ
-UlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+PiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1U
-ODE4M19QT1dFUl9ET01BSU5fRElTUD47DQo+ID4+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19N
-TV9ESVNQX09WTDBfMkw+Ow0KPiA+PiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8Jmdj
-ZSBTVUJTWVNfMTQwMFhYWFggMHg5MDAwIDB4MTAwMD47DQo+ID4+ICAJCX07DQo+ID4+ICANCj4g
-Pj4gIAkJb3ZsXzJsMTogb3ZsQDE0MDBhMDAwIHsNCj4gPj4gQEAgLTY4OCw2ICs2OTQsNyBAQA0K
-PiA+PiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyNyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0K
-PiA+PiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5fRElT
-UD47DQo+ID4+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX09WTDFfMkw+Ow0KPiA+
-PiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMFhYWFggMHhh
-MDAwIDB4MTAwMD47DQo+ID4+ICAJCX07DQo+ID4+ICANCj4gPj4gIAkJcmRtYTA6IHJkbWFAMTQw
-MGIwMDAgew0KPiA+PiBAQCAtNjk3LDYgKzcwNCw3IEBADQo+ID4+ICAJCQlwb3dlci1kb21haW5z
-ID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCj4gPj4gIAkJCWNsb2NrcyA9
-IDwmbW1zeXMgQ0xLX01NX0RJU1BfUkRNQTA+Ow0KPiA+PiAgCQkJbWVkaWF0ZWsscmRtYV9maWZv
-X3NpemUgPSA8NTEyMD47DQo+ID4+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2Nl
-IFNVQlNZU18xNDAwWFhYWCAweGIwMDAgMHgxMDAwPjsNCj4gPj4gIAkJfTsNCj4gPj4gIA0KPiA+
-PiAgCQlyZG1hMTogcmRtYUAxNDAwYzAwMCB7DQo+ID4+IEBAIC03MDYsNiArNzE0LDcgQEANCj4g
-Pj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+
-Ow0KPiA+PiAgCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9SRE1BMT47DQo+ID4+ICAJ
-CQltZWRpYXRlayxyZG1hX2ZpZm9fc2l6ZSA9IDwyMDQ4PjsNCj4gPj4gKwkJCW1lZGlhdGVrLGdj
-ZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhYIDB4YzAwMCAweDEwMDA+Ow0KPiA+
-PiAgCQl9Ow0KPiA+PiAgDQo+ID4+ICAJCWNvbG9yMDogY29sb3JAMTQwMGUwMDAgew0KPiA+PiBA
-QCAtNzE1LDYgKzcyNCw3IEBADQo+ID4+ICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjMxIElS
-UV9UWVBFX0xFVkVMX0xPVz47DQo+ID4+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4
-MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCj4gPj4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01N
-X0RJU1BfQ09MT1IwPjsNCj4gPj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2Ug
-U1VCU1lTXzE0MDBYWFhYIDB4ZTAwMCAweDEwMDA+Ow0KPiA+PiAgCQl9Ow0KPiA+PiAgDQo+ID4+
-ICAJCWNjb3JyMDogY2NvcnJAMTQwMGYwMDAgew0KPiA+PiBAQCAtNzIzLDYgKzczMyw3IEBADQo+
-ID4+ICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjMyIElSUV9UWVBFX0xFVkVMX0xPVz47DQo+
-ID4+ICAJCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQ
-PjsNCj4gPj4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfQ0NPUlIwPjsNCj4gPj4g
-KwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhYIDB4ZjAw
-MCAweDEwMDA+Ow0KPiA+PiAgCQl9Ow0KPiA+PiAgDQo+ID4+ICAJCWFhbDA6IGFhbEAxNDAxMDAw
-MCB7DQo+ID4+IEBAIC03MzIsNiArNzQzLDcgQEANCj4gPj4gIAkJCWludGVycnVwdHMgPSA8R0lD
-X1NQSSAyMzMgSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8
-JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KPiA+PiAgCQkJY2xvY2tzID0gPCZt
-bXN5cyBDTEtfTU1fRElTUF9BQUwwPjsNCj4gPj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVn
-ID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhYIDAgMHgxMDAwPjsNCj4gPj4gIAkJfTsNCj4gPj4gIA0K
-PiA+PiAgCQlnYW1tYTA6IGdhbW1hQDE0MDExMDAwIHsNCj4gPj4gQEAgLTc0MSw2ICs3NTMsNyBA
-QA0KPiA+PiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIzNCBJUlFfVFlQRV9MRVZFTF9MT1c+
-Ow0KPiA+PiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE4M19QT1dFUl9ET01BSU5f
-RElTUD47DQo+ID4+ICAJCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX0dBTU1BMD47DQo+
-ID4+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAxWFhYWCAw
-eDEwMDAgMHgxMDAwPjsNCj4gPj4gIAkJfTsNCj4gPj4gIA0KPiA+PiAgCQlkaXRoZXIwOiBkaXRo
-ZXJAMTQwMTIwMDAgew0KPiA+PiBAQCAtNzQ5LDYgKzc2Miw3IEBADQo+ID4+ICAJCQlpbnRlcnJ1
-cHRzID0gPEdJQ19TUEkgMjM1IElSUV9UWVBFX0xFVkVMX0xPVz47DQo+ID4+ICAJCQlwb3dlci1k
-b21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsNCj4gPj4gIAkJCWNs
-b2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfRElUSEVSMD47DQo+ID4+ICsJCQltZWRpYXRlayxn
-Y2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAxWFhYWCAweDIwMDAgMHgxMDAwPjsNCj4g
-Pj4gIAkJfTsNCj4gPj4gIA0KPiA+PiAgCQltdXRleDogbXV0ZXhAMTQwMTYwMDAgew0KPiA+PiBA
-QCAtNzU2LDYgKzc3MCw4IEBADQo+ID4+ICAJCQlyZWcgPSA8MCAweDE0MDE2MDAwIDAgMHgxMDAw
-PjsNCj4gPj4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMTcgSVJRX1RZUEVfTEVWRUxfTE9X
-PjsNCj4gPj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5cyBNVDgxODNfUE9XRVJfRE9NQUlO
-X0RJU1A+Ow0KPiA+PiArCQkJbWVkaWF0ZWssZ2NlLWV2ZW50cyA9IDxDTURRX0VWRU5UX01VVEVY
-X1NUUkVBTV9ET05FMD4sDQo+ID4+ICsJCQkJCSAgICAgIDxDTURRX0VWRU5UX01VVEVYX1NUUkVB
-TV9ET05FMT47DQo+ID4+ICAJCX07DQo+ID4+ICANCj4gPj4gIAkJc21pX2NvbW1vbjogc21pQDE0
-MDE5MDAwIHsNCj4gPj4NCj4gDQoNCg==
+On Thu, May 21, 2020 at 04:21:59AM +0300, Serge Semin wrote:
+> Generic DMA support is going to be part of the DW APB SSI core object.
+> In order to preserve the kernel loadable module name as spi-dw.ko, let's
+> add the "-core" suffix to the object with generic DW APB SSI code and
+> build it into the target spi-dw.ko driver.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v3:
+> - This is a new patch added as a result of the discussion with Andy
+>   Shevchenko.
+> ---
+>  drivers/spi/Makefile                    | 1 +
+>  drivers/spi/{spi-dw.c => spi-dw-core.c} | 0
+>  2 files changed, 1 insertion(+)
+>  rename drivers/spi/{spi-dw.c => spi-dw-core.c} (100%)
+> 
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+> index 28f601327f8c..70ebc2a62e5f 100644
+> --- a/drivers/spi/Makefile
+> +++ b/drivers/spi/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_SPI_COLDFIRE_QSPI)		+= spi-coldfire-qspi.o
+>  obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
+>  obj-$(CONFIG_SPI_DLN2)			+= spi-dln2.o
+>  obj-$(CONFIG_SPI_DESIGNWARE)		+= spi-dw.o
+> +spi-dw-y				:= spi-dw-core.o
+>  obj-$(CONFIG_SPI_DW_MMIO)		+= spi-dw-mmio.o
+>  obj-$(CONFIG_SPI_DW_PCI)		+= spi-dw-midpci.o
+>  spi-dw-midpci-objs			:= spi-dw-pci.o spi-dw-mid.o
+> diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw-core.c
+> similarity index 100%
+> rename from drivers/spi/spi-dw.c
+> rename to drivers/spi/spi-dw-core.c
+> -- 
+> 2.25.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
