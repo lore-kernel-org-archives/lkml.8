@@ -2,98 +2,135 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5D520748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D7920748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:28:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YQmRuFQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgEUG2J (ORCPT
+        id S1728256AbgEUG27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 02:28:09 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:33482 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbgEUG2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 02:28:09 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgCnr0NjH8Ze2nbmAA--.28907S4;
-        Thu, 21 May 2020 14:27:51 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] media: staging: tegra-vde: fix runtime pm imbalance on error
-Date:   Thu, 21 May 2020 14:27:45 +0800
-Message-Id: <20200521062746.6656-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgCnr0NjH8Ze2nbmAA--.28907S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWkAwc_Cr
-        s0gwnru34Yyw4xtw17K3W5ZrySvFWDWF40qa1FyF43Gw4jvFy3GrykZr1DCa1Duay29342
-        vrZ3uF1avrn3CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbaAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
-        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
-        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-        McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-        1lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAF
-        wVW8AwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4I
-        kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-        WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-        0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVW8
-        JVW3JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJr
-        UvcSsGvfC2KfnxnUUI43ZEXa7VUjY0PDUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgsHBlZdtOPFuAACsr
+        Thu, 21 May 2020 02:28:59 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:51501 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726938AbgEUG26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 02:28:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SKT31jHSz9sT8;
+        Thu, 21 May 2020 16:28:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590042536;
+        bh=4aGvZd/60yfG45VzmIh3YI/neYvcqholgfnSpAb2LPc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YQmRuFQ23F6R6pGXi6pJElvnF4hMRgCR9CD0IPF2A4giCXnuAN0gmNAtXQi5QeLaU
+         JdHA0NnBj5x3Q7KadBmGZkjN60ldZHkx/1hYhvPBeQgp9Z0VjhGxB+uOt34c4ozA1A
+         XYsa/8WyjSn42P9GFOncUOz+/NHk1EDQix8A1NL9MwfzSp5rdRvXLC8XwMdybqj9ez
+         0f/hEWif2nXvv/tidiY4FhnJedkTar6A1MOsomLbjS6HuVf6VizMox83ohlJ9sL8cx
+         tZoIOjjwoOZyQ5TDKDK4xcO895s+u7EWJxZicPqs7zEwtJQGlCmOtSBdVGuBXJ/iA+
+         mTMPGSLctdJ+Q==
+Date:   Thu, 21 May 2020 16:28:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Uros Bizjak <ubizjak@gmail.com>
+Subject: linux-next: build failure after merge of the kvm tree
+Message-ID: <20200521162854.70995699@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/kRUYmA7Ax=s.v5n_hXDTMi5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a pairing decrement is needed
-on the error handling path to keep the counter balanced.
+--Sig_/kRUYmA7Ax=s.v5n_hXDTMi5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Hi all,
+
+After merging the kvm tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
+
+arch/x86/kvm/svm/svm.c: In function 'kvm_machine_check':
+arch/x86/kvm/svm/svm.c:1834:2: error: too many arguments to function 'do_ma=
+chine_check'
+ 1834 |  do_machine_check(&regs, 0);
+      |  ^~~~~~~~~~~~~~~~
+In file included from arch/x86/kvm/svm/svm.c:36:
+arch/x86/include/asm/mce.h:254:6: note: declared here
+  254 | void do_machine_check(struct pt_regs *pt_regs);
+      |      ^~~~~~~~~~~~~~~~
+
+Caused by commit
+
+  1c164cb3ffd0 ("KVM: SVM: Use do_machine_check to pass MCE to the host")
+
+interacting with commit
+
+  aaa4947defff ("x86/entry: Convert Machine Check to IDTENTRY_IST")
+
+from the tip tree.
+
+I added the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 21 May 2020 16:24:59 +1000
+Subject: [PATCH] KVM: SVM: fix up for do_machine_check() API change
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
+ arch/x86/kvm/svm/svm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changelog:
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index ae287980c027..7488c8abe825 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1831,7 +1831,7 @@ static void kvm_machine_check(void)
+ 		.flags =3D X86_EFLAGS_IF,
+ 	};
+=20
+-	do_machine_check(&regs, 0);
++	do_machine_check(&regs);
+ #endif
+ }
+=20
+--=20
+2.26.2
 
-v2: - Remove unused label 'unlock'
----
- drivers/staging/media/tegra-vde/vde.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--=20
+Cheers,
+Stephen Rothwell
 
-diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-index d3e63512a765..3fdf2cd0b99e 100644
---- a/drivers/staging/media/tegra-vde/vde.c
-+++ b/drivers/staging/media/tegra-vde/vde.c
-@@ -777,7 +777,7 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
- 
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0)
--		goto unlock;
-+		goto put_runtime_pm;
- 
- 	/*
- 	 * We rely on the VDE registers reset value, otherwise VDE
-@@ -843,8 +843,6 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
- put_runtime_pm:
- 	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
--
--unlock:
- 	mutex_unlock(&vde->lock);
- 
- release_dpb_frames:
--- 
-2.17.1
+--Sig_/kRUYmA7Ax=s.v5n_hXDTMi5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7GH6YACgkQAVBC80lX
+0GyKEwf/QaFM0a89iomF2hN2IEy0NIKFRVhaO2uhFSmTsgbtQOH8ViuzREPlWjUI
+8BTtFJ28yru5hTLNb7nqVprEZCY7t6iOqVRWd5MTNqVqLffn7nCmcsBhKBaEyCWS
+Q4dzRJ3UMe0Ll8zA9qikZMevuDLXDEad8asXUIP5ofo5u9ouQOcU0XGC/eNY8WxK
+rGne3B3mSUNCCSZv9oMgVfi12/xLLujtEVeVj42i814KAtMYDM20uTmDQTPjGyLQ
+KcRFHBim1QX0WiA6QN+HhoutvJpRMwrZhSm7W5RCNTI1tWK1cdir6FtRKmucjP+r
+9v/xiu8T9afsY0n0g18SFMRdGjj/cA==
+=0/Xc
+-----END PGP SIGNATURE-----
+
+--Sig_/kRUYmA7Ax=s.v5n_hXDTMi5--
