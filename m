@@ -2,236 +2,96 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3036C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F47C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9045D207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JIZNHQnm"
+	by mail.kernel.org (Postfix) with ESMTP id CAFB020709
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgEUCkF (ORCPT
+        id S1727911AbgEUCrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:40:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgEUCkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:40:03 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27CCBC061A0E;
-        Wed, 20 May 2020 19:40:02 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id y17so3336509ilg.0;
-        Wed, 20 May 2020 19:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/RCzazjPJQ1zcfvr5ivU8gZ2oW1vvouNHyaX2fPjs5o=;
-        b=JIZNHQnmERaJeRhfnEjjac0W+vknvOwLXY/d6ercTVMilrrz524WChiYGwFGcaHgFJ
-         K8JZk1i5INW6EyIXuYOyX2v32bfw6qRfgzQTQHHULRWMhQsYMBm89glhPbVBx2I6bwxs
-         j20/Yum6NRQKLWYNIxFRjPx0QViHZTbPlmI1fZzO6exUlTKfLwEVLiDwpVb7Qfp6TgJ/
-         snhs+KlBeHyRitCTHyRBIFjZ454fFCb9qrYuro47/SQk4QgBQgus3sRPgPYvG8W/Vui1
-         AknW2UXV00QW+opr5rDKKkCPY+BNrd0MlLO7V3cFfkCwusagGNkXGNtRMJgA5pK9QeWA
-         IAFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/RCzazjPJQ1zcfvr5ivU8gZ2oW1vvouNHyaX2fPjs5o=;
-        b=TWTHK1Mul5Ro/PhNgWzqWNYPt0nJuLsbNFOVNMtrDHKeUNy5e3Wh4KgXabrwfejQa4
-         feGQUIrWta/+x1iWMMKkF95BTmX22rdt+eaMHB2HnUkoBYGSK/Hu9KHbjv+BmPIoH6+n
-         MxAmTa8gLVNgzNGUEm32kaHaJYGHO8DYUO4jiB7cEoJwQyVAuC8rLYdbpC6arSWPo3K6
-         Bgqcm/kcW5i+XRLJd6gjF3FiPga6q49LJs2Mgj6IFDBPg7QaPPNEhs8PSWHouj3hSFKC
-         IVcPeYPuZJwkrw4dqoILxGW0DGCfBC0jvyl98CnOG3p+/AhoxnPTh8l9IaZhrNuYJihJ
-         r98g==
-X-Gm-Message-State: AOAM53084UvGaeHRrgPwSB/V1GuYkpGv69xr+89HIfFpfscv5Ue+oW+Z
-        KgqQtQd3+FqBTBWZX8nQAlxvdPiSsKFL7f9z2FM=
-X-Google-Smtp-Source: ABdhPJyv/UYZjPy/DPwJRsYbSaKbImcwHJUxF5BT675dGaD56oiGCZioxLSjEnZKhN7916a+tUgfDxQbE7d+nnFanoQ=
-X-Received: by 2002:a92:9e11:: with SMTP id q17mr6952459ili.137.1590028801270;
- Wed, 20 May 2020 19:40:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
- <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
- <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
- <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 21 May 2020 10:39:25 +0800
-Message-ID: <CALOAHbDMrHkNHTxeBWP22iTjJd+HfqfFhAfmC_m0jsVkhu5vEA@mail.gmail.com>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Michal Hocko <mhocko@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 May 2020 22:47:37 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:5686 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726979AbgEUCrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 22:47:36 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgC3zz6u68VepRblAQ--.49692S4;
+        Thu, 21 May 2020 10:47:15 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] PCI: tegra: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 10:47:09 +0800
+Message-Id: <20200521024709.2368-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgC3zz6u68VepRblAQ--.49692S4
+X-Coremail-Antispam: 1UD129KBjvJXoWrKrW7ZFW3Gr18JF1xZFy5urg_yoW8JrW5pF
+        WDXa4xCF48X3yYkFnIy3WDZFyY9r9Iv34UK3yq9wnrZ3ZxJa4UXr45JFySqF1YqrWvvF1U
+        t3Wj93W7CF45XFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9q1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
+        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
+        W8JbIYCTnIWIevJa73UjIFyTuYvjfUO_MaUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwABsj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 2:00 AM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> On Wed, 20 May 2020 at 17:26, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> >
-> > This issue is specific on 32-bit architectures i386 and arm on linux-next tree.
-> > As per the test results history this problem started happening from
-> > Bad : next-20200430
-> > Good : next-20200429
-> >
-> > steps to reproduce:
-> > dd if=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190504A00573
-> > of=/dev/null bs=1M count=2048
-> > or
-> > mkfs -t ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190804A00BE5
-> >
-> >
-> > Problem:
-> > [   38.802375] dd invoked oom-killer: gfp_mask=0x100cc0(GFP_USER),
-> > order=0, oom_score_adj=0
->
-> As a part of investigation on this issue LKFT teammate Anders Roxell
-> git bisected the problem and found bad commit(s) which caused this problem.
->
-> The following two patches have been reverted on next-20200519 and retested the
-> reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
-> ( invoked oom-killer is gone now)
->
-> Revert "mm, memcg: avoid stale protection values when cgroup is above
-> protection"
->     This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
->
-> Revert "mm, memcg: decouple e{low,min} state mutations from protection
-> checks"
->     This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
->
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-My guess is that we made the same mistake in commit "mm, memcg:
-decouple e{low,min} state mutations from protection
-checks" that it read a stale memcg protection in
-mem_cgroup_below_low() and mem_cgroup_below_min().
+Also, call pm_runtime_disable() when pm_runtime_get_sync() returns
+an error code.
 
-Bellow is a possble fix,
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/pci/controller/pci-tegra.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 7a2c56fc..6591b71 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -391,20 +391,28 @@ static inline unsigned long
-mem_cgroup_protection(struct mem_cgroup *root,
- void mem_cgroup_calculate_protection(struct mem_cgroup *root,
-                                     struct mem_cgroup *memcg);
+diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+index 3e64ba6a36a8..00236dd65b5b 100644
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2712,7 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err < 0) {
+ 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+-		goto teardown_msi;
++		goto pm_runtime_put;
+ 	}
+ 
+ 	host->busnr = bus->start;
+@@ -2746,7 +2746,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+ pm_runtime_put:
+ 	pm_runtime_put_sync(pcie->dev);
+ 	pm_runtime_disable(pcie->dev);
+-teardown_msi:
+ 	tegra_pcie_msi_teardown(pcie);
+ put_resources:
+ 	tegra_pcie_put_resources(pcie);
+-- 
+2.17.1
 
--static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
-+static inline bool mem_cgroup_below_low(struct mem_cgroup *root,
-+                                       struct mem_cgroup *memcg)
- {
-        if (mem_cgroup_disabled())
-                return false;
-
-+       if (root == memcg)
-+               return false;
-+
-        return READ_ONCE(memcg->memory.elow) >=
-                page_counter_read(&memcg->memory);
- }
-
--static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
-+static inline bool mem_cgroup_below_min(struct mem_cgroup *root,
-+                                       struct mem_cgroup *memcg)
- {
-        if (mem_cgroup_disabled())
-                return false;
-
-+       if (root == memcg)
-+               return false;
-+
-        return READ_ONCE(memcg->memory.emin) >=
-                page_counter_read(&memcg->memory);
- }
-@@ -896,12 +904,14 @@ static inline void
-mem_cgroup_calculate_protection(struct mem_cgroup *root,
- {
- }
-
--static inline bool mem_cgroup_below_low(struct mem_cgroup *memcg)
-+static inline bool mem_cgroup_below_low(struct mem_cgroup *root,
-+                                       struct mem_cgroup *memcg)
- {
-        return false;
- }
-
--static inline bool mem_cgroup_below_min(struct mem_cgroup *memcg)
-+static inline bool mem_cgroup_below_min(struct mem_cgroup *root,
-+                                       struct mem_cgroup *memcg)
- {
-        return false;
- }
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index c71660e..fdcdd88 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2637,13 +2637,13 @@ static void shrink_node_memcgs(pg_data_t
-*pgdat, struct scan_control *sc)
-
-                mem_cgroup_calculate_protection(target_memcg, memcg);
-
--               if (mem_cgroup_below_min(memcg)) {
-+               if (mem_cgroup_below_min(target_memcg, memcg)) {
-                        /*
-                         * Hard protection.
-                         * If there is no reclaimable memory, OOM.
-                         */
-                        continue;
--               } else if (mem_cgroup_below_low(memcg)) {
-+               } else if (mem_cgroup_below_low(target_memcg, memcg)) {
-                        /*
-                         * Soft protection.
-                         * Respect the protection only as long as
-
-
-
-
-
-> i386 test log shows mkfs -t ext4 pass
-> https://lkft.validation.linaro.org/scheduler/job/1443405#L1200
->
-> ref:
-> https://lore.kernel.org/linux-mm/cover.1588092152.git.chris@chrisdown.name/
-> https://lore.kernel.org/linux-mm/CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com/T/#t
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
-
-
-
---
-Thanks
-Yafang
