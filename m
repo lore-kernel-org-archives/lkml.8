@@ -2,155 +2,383 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D249C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D6420748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44C0207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEpj6/DK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n8XMg3aD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730700AbgEUWkB (ORCPT
+        id S1730690AbgEUWmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47322 "EHLO
+        Thu, 21 May 2020 18:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730620AbgEUWkA (ORCPT
+        with ESMTP id S1730525AbgEUWmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:40:00 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E56C08C5C0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:40:00 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id x1so10768871ejd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:40:00 -0700 (PDT)
+        Thu, 21 May 2020 18:42:10 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC6DC08C5C0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:42:10 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p30so3997047pgl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:42:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DUPhOAIuTJ5xRLAJLrPs5R/yX2Kz3PPtLVmeKSOmg64=;
-        b=dEpj6/DK0orAiDd62wDopz6yDw82sY7oW+LmYMcGo7qmJSQdB7DJBVhDzpRMLZwHXb
-         1Ack+ZtR+ymImD4q3b7A1H3CdA1GuzqBuPMuw8k//lZbveH6Vb9SF3g13xSxfkQAxqaX
-         OD5/62fPQe98pieHNxrY8EhjgKRNh3pmBX7+2lTWHELUcmYoaf8u3WIOfJWbsQ3trKD7
-         kQMcsBOsq89wX/2/RiymxaI15nawYm1g8LgI44nw+aKY0vOsja6Cp0ctK96y2LqTYw4N
-         DEE1wShdy0AIErZz+Cw6OXnFwau/3FC0bKbhZ3RY+7apTaK06vCvhiMBNcIlyFlOmCc1
-         2zIg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jw/xqa3g89q51hDnYa5jOhsO4JnUA2E12TXYJqQM6yo=;
+        b=n8XMg3aD467ovZaJ8YnSYN6LVan287tt4sBIOgRs82WugtI/HdxyJhYnlWCKPHqCgO
+         ill8z/e4VVxGXzzKkIW5NVLJ/1f4x5cJ61kn/qqwkHTnEqz/Vz/IZRFU0R8q/IEQ2Qf7
+         lId3+6YrFd3uIlEkXBncI8CDs9k/oH/CLKIsc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DUPhOAIuTJ5xRLAJLrPs5R/yX2Kz3PPtLVmeKSOmg64=;
-        b=p8pcSdc0bwZyEYXw4kOYPvCzwmlcYEE7yUZE52MZlmTIVRxK03Dyssim0KmzMHinGx
-         AKEIayXSLbXScixUzwHjegpH9HQ+Bj0ZepW5Yt/6LMe/NAaNAmBGrPZn/HsCzxBZnZ9E
-         JWGm9ZG5AmceknqhqVE0VqeRF5fx9WTkxr75nL89R2z8N4ef4ou/vi3frlfyQlX2/MYd
-         m5nTjGP35pFagAV/61yUYLDfoNWyRR1AVaplgDGx8QatK3HbTyuoV3cri2OwRLEFTzeb
-         iFnRMwkA1I2/puZ1ih+GVS/Ys+45m5Wznjzcx8utEnGnoRC+ZQaHytlAQfAnX3Mny60F
-         80Mg==
-X-Gm-Message-State: AOAM530ZyNZ7R1tl/5bJ9taemFm2KQGrvSLpVlGmFsIl64EKkN4T9rWy
-        j5KwuYNJ4vtvZFQqkz8zbjo37b1AoEiOMQ==
-X-Google-Smtp-Source: ABdhPJznjwofg+qdPN7YqjP44PDn2xnukhn8p1qlycSbyTdo6B54Aa68m4LoeJ987kxtuKx71OshfQ==
-X-Received: by 2002:a17:906:2e4a:: with SMTP id r10mr6068225eji.116.1590100798553;
-        Thu, 21 May 2020 15:39:58 -0700 (PDT)
-Received: from [192.168.1.4] (212-5-158-12.ip.btc-net.bg. [212.5.158.12])
-        by smtp.googlemail.com with ESMTPSA id q3sm5831341edn.91.2020.05.21.15.39.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 15:39:57 -0700 (PDT)
-Subject: Re: [RFC] Make dynamic debug infrastructure more flexible
-To:     Joe Perches <joe@perches.com>, Jason Baron <jbaron@akamai.com>
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200521132816.31111-1-stanimir.varbanov@linaro.org>
- <20200521132816.31111-3-stanimir.varbanov@linaro.org>
- <c4cad4f243988d214208a4903aa311a64f9b4531.camel@perches.com>
- <5bb4b918aec3c77038122588ee642ae4aa2a09b0.camel@perches.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <bb5ff55f-dd97-5367-8f64-673e420103d7@linaro.org>
-Date:   Fri, 22 May 2020 01:39:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jw/xqa3g89q51hDnYa5jOhsO4JnUA2E12TXYJqQM6yo=;
+        b=aLe7QLCQLePjIWdX4F11exnDtghjs16suryL5p+DCC9Fxt2zRYGOIl7h1ALuQnTeMF
+         1MjyEhMjvW41PwR2DtLF9ucjR6Y+9P5imRVsdtYm1b6cwtsE8jBjlRFYEeIBDKc1W+2o
+         PJDErAiajLDCg655HTgVXHQiqbMys/7PH6Y/QvVkcRGYnVQHNlscIicnj6R/68Mgi3Mq
+         WEbrJK64araAYiPosHj4bgjqCuLb1ld9bqM2wW62yy4BMleEQxsS+VW8Na7+4EvXQPgx
+         QlAMWSmJrdeHdBNhwj4r2rzQbIn9Wn3wW6lMRp2m1H35ZZBst+ZeAqwQmghWUBrt2p4t
+         1RPw==
+X-Gm-Message-State: AOAM533VDdF6NAVg9Fuq4kE+oWHWLDbYoqOyObTJNNjjohYR7ICWqMbo
+        Ta+LAw5Gi/+9T1rgtnDA3aZtuw==
+X-Google-Smtp-Source: ABdhPJwXOoPao/Ck/VlSSNAkUg8UNcEFO1e6LSxmA5hGfbn/TjlhNOkzmuwUAXLHuks+nAYhj1nmlg==
+X-Received: by 2002:a65:4908:: with SMTP id p8mr10684191pgs.214.1590100929772;
+        Thu, 21 May 2020 15:42:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n10sm5395236pfd.192.2020.05.21.15.42.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 15:42:08 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:42:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v10 26/26] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+Message-ID: <202005211528.A12B4AD@keescook>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+ <20200429220732.31602-27-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <5bb4b918aec3c77038122588ee642ae4aa2a09b0.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429220732.31602-27-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe, Jason,
+On Wed, Apr 29, 2020 at 03:07:32PM -0700, Yu-cheng Yu wrote:
+> arch_prctl(ARCH_X86_CET_STATUS, u64 *args)
+>     Get CET feature status.
+> 
+>     The parameter 'args' is a pointer to a user buffer.  The kernel returns
+>     the following information:
+> 
+>     *args = shadow stack/IBT status
+>     *(args + 1) = shadow stack base address
+>     *(args + 2) = shadow stack size
+> 
+> arch_prctl(ARCH_X86_CET_DISABLE, u64 features)
+>     Disable CET features specified in 'features'.  Return -EPERM if CET is
+>     locked.
+> 
+> arch_prctl(ARCH_X86_CET_LOCK)
+>     Lock in CET features.
+> 
+> arch_prctl(ARCH_X86_CET_ALLOC_SHSTK, u64 *args)
+>     Allocate a new shadow stack.
+> 
+>     The parameter 'args' is a pointer to a user buffer containing the
+>     desired size to allocate.  The kernel returns the allocated shadow
+>     stack address in *args.
 
-On 5/21/20 11:06 PM, Joe Perches wrote:
-> On Thu, 2020-05-21 at 09:08 -0700, Joe Perches wrote:
->> On Thu, 2020-05-21 at 16:28 +0300, Stanimir Varbanov wrote:
->>> Here we introduce few debug macros with levels (low, medium and
->>> high) and debug macro for firmware. Enabling the particular level
->>> will be done by dynamic debug.
->>
->> I'd rather make the logging level facility generic in
->> dynamic debug than prefix all formats with what could
->> be non-specific content.
-
-I like the idea. To be honest I researched the dynamic debug for such
-level debugging facility but found it will be too complex to implement.
-I guess now when you catch me it will be better to add it in dyndbg ;) .
-
->>
->> From a long time ago:
->>
->> https://groups.google.com/forum/#!msg/linux.kernel/VlWbno-ZAFw/k_fFadhNHXcJ
-> 
-> Hey Jason.
-> 
-> I believe there are 6 bits left in the unsigned int
-> use for the line number and flags in struct _ddebug
-> 
-> Assuming the use of a mechanism like
-> 
-> 	pr_debug_level(level, fmt, ...)
-> 
-> would you be OK with something like this to enable a
-> level or bitmask test of dynamic debug logging output?
-> 
-> where the output is controlled by something like
-> 
-> echo 'file <filename> level <n> +p' > <debugfs>/dynamic_debug/control
-
-I guess for bitmask it should be?
-
-echo 'file <> bitmask <0xn> +p' >  $CONTROL
+Hi! Just a quick note about getting these designs right -- prctl() (and
+similar APIs) needs to make sure they're examining all "unknown" flags
+as zero, or we run the risk of breaking sloppy userspace callers who
+accidentally set flags and then later the kernel gives meaning to those
+flags. Notes below...
 
 > 
-> to enable dynamic debug output only at level <n> or higher
-> or maybe match a bitmap of <n>
-> 
-> (modulo all the rest of the code necessary to use it?)
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 > ---
->  include/linux/dynamic_debug.h | 2 ++
->  1 file changed, 2 insertions(+)
+> v10:
+> - Verify CET is enabled before handling arch_prctl.
+> - Change input parameters from unsigned long to u64, to make it clear they
+>   are 64-bit.
 > 
-> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-> index abcd5fde30eb..616dbb2b5921 100644
-> --- a/include/linux/dynamic_debug.h
-> +++ b/include/linux/dynamic_debug.h
-> @@ -38,6 +38,8 @@ struct _ddebug {
->  #define _DPRINTK_FLAGS_DEFAULT 0
->  #endif
->  	unsigned int flags:8;
-> +	unsigned int level:5;
-> +	unsigned int level_is_bitmask:1;
->  #ifdef CONFIG_JUMP_LABEL
->  	union {
->  		struct static_key_true dd_key_true;
+>  arch/x86/include/asm/cet.h        |  4 ++
+>  arch/x86/include/uapi/asm/prctl.h |  5 ++
+>  arch/x86/kernel/Makefile          |  2 +-
+>  arch/x86/kernel/cet.c             | 29 +++++++++++
+>  arch/x86/kernel/cet_prctl.c       | 87 +++++++++++++++++++++++++++++++
+>  arch/x86/kernel/process.c         |  4 +-
+>  6 files changed, 128 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/x86/kernel/cet_prctl.c
 > 
-> 
+> diff --git a/arch/x86/include/asm/cet.h b/arch/x86/include/asm/cet.h
+> index 71dc92acd2f2..99e6e741d28c 100644
+> --- a/arch/x86/include/asm/cet.h
+> +++ b/arch/x86/include/asm/cet.h
+> @@ -14,16 +14,20 @@ struct sc_ext;
+>  struct cet_status {
+>  	unsigned long	shstk_base;
+>  	unsigned long	shstk_size;
+> +	unsigned int	locked:1;
+>  };
+>  
+>  #ifdef CONFIG_X86_INTEL_CET
+> +int prctl_cet(int option, u64 arg2);
+>  int cet_setup_shstk(void);
+>  int cet_setup_thread_shstk(struct task_struct *p);
+> +int cet_alloc_shstk(unsigned long *arg);
+>  void cet_disable_free_shstk(struct task_struct *p);
+>  int cet_verify_rstor_token(bool ia32, unsigned long ssp, unsigned long *new_ssp);
+>  void cet_restore_signal(struct sc_ext *sc);
+>  int cet_setup_signal(bool ia32, unsigned long rstor, struct sc_ext *sc);
+>  #else
+> +static inline int prctl_cet(int option, u64 arg2) { return -EINVAL; }
+>  static inline int cet_setup_thread_shstk(struct task_struct *p) { return 0; }
+>  static inline void cet_disable_free_shstk(struct task_struct *p) {}
+>  static inline void cet_restore_signal(struct sc_ext *sc) { return; }
+> diff --git a/arch/x86/include/uapi/asm/prctl.h b/arch/x86/include/uapi/asm/prctl.h
+> index 5a6aac9fa41f..d962f0ec9ccf 100644
+> --- a/arch/x86/include/uapi/asm/prctl.h
+> +++ b/arch/x86/include/uapi/asm/prctl.h
+> @@ -14,4 +14,9 @@
+>  #define ARCH_MAP_VDSO_32	0x2002
+>  #define ARCH_MAP_VDSO_64	0x2003
+>  
+> +#define ARCH_X86_CET_STATUS		0x3001
+> +#define ARCH_X86_CET_DISABLE		0x3002
+> +#define ARCH_X86_CET_LOCK		0x3003
+> +#define ARCH_X86_CET_ALLOC_SHSTK	0x3004
+> +
+>  #endif /* _ASM_X86_PRCTL_H */
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index e9cc2551573b..0b621e2afbdc 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -144,7 +144,7 @@ obj-$(CONFIG_UNWINDER_ORC)		+= unwind_orc.o
+>  obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
+>  obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
+>  
+> -obj-$(CONFIG_X86_INTEL_CET)		+= cet.o
+> +obj-$(CONFIG_X86_INTEL_CET)		+= cet.o cet_prctl.o
+>  
+>  ###
+>  # 64 bit specific files
+> diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
+> index 121552047b86..c1b9b540c03e 100644
+> --- a/arch/x86/kernel/cet.c
+> +++ b/arch/x86/kernel/cet.c
+> @@ -145,6 +145,35 @@ static int create_rstor_token(bool ia32, unsigned long ssp,
+>  	return 0;
+>  }
+>  
+> +int cet_alloc_shstk(unsigned long *arg)
+> +{
+> +	unsigned long len = *arg;
+> +	unsigned long addr;
+> +	unsigned long token;
+> +	unsigned long ssp;
+> +
+> +	addr = alloc_shstk(round_up(len, PAGE_SIZE));
+> +
+> +	if (IS_ERR((void *)addr))
+> +		return PTR_ERR((void *)addr);
+> +
+> +	/* Restore token is 8 bytes and aligned to 8 bytes */
+> +	ssp = addr + len;
+> +	token = ssp;
+> +
+> +	if (!in_ia32_syscall())
+> +		token |= TOKEN_MODE_64;
+> +	ssp -= 8;
+> +
+> +	if (write_user_shstk_64(ssp, token)) {
+> +		vm_munmap(addr, len);
+> +		return -EINVAL;
+> +	}
+> +
+> +	*arg = addr;
+> +	return 0;
+> +}
+> +
+>  int cet_setup_shstk(void)
+>  {
+>  	unsigned long addr, size;
+> diff --git a/arch/x86/kernel/cet_prctl.c b/arch/x86/kernel/cet_prctl.c
+> new file mode 100644
+> index 000000000000..0139c48f2215
+> --- /dev/null
+> +++ b/arch/x86/kernel/cet_prctl.c
+> @@ -0,0 +1,87 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/prctl.h>
+> +#include <linux/compat.h>
+> +#include <linux/mman.h>
+> +#include <linux/elfcore.h>
+> +#include <asm/processor.h>
+> +#include <asm/prctl.h>
+> +#include <asm/cet.h>
+> +
+> +/* See Documentation/x86/intel_cet.rst. */
+> +
+> +static int handle_get_status(u64 arg2)
+> +{
+> +	struct cet_status *cet = &current->thread.cet;
+> +	u64 buf[3] = {0, 0, 0};
+> +
+> +	if (cet->shstk_size) {
+> +		buf[0] |= GNU_PROPERTY_X86_FEATURE_1_SHSTK;
+> +		buf[1] = (u64)cet->shstk_base;
+> +		buf[2] = (u64)cet->shstk_size;
+> +	}
+> +
+> +	return copy_to_user((u64 __user *)arg2, buf, sizeof(buf));
+> +}
+> +
+> +static int handle_alloc_shstk(u64 arg2)
+> +{
+> +	int err = 0;
+> +	unsigned long arg;
+> +	unsigned long addr = 0;
+> +	unsigned long size = 0;
+> +
+> +	if (get_user(arg, (unsigned long __user *)arg2))
+> +		return -EFAULT;
+> +
+> +	size = arg;
+> +	err = cet_alloc_shstk(&arg);
+> +	if (err)
+> +		return err;
+> +
+> +	addr = arg;
+> +	if (put_user((u64)addr, (u64 __user *)arg2)) {
+> +		vm_munmap(addr, size);
+> +		return -EFAULT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int prctl_cet(int option, u64 arg2)
+> +{
+> +	struct cet_status *cet;
+> +
+> +	if (!IS_ENABLED(CONFIG_X86_INTEL_CET))
+> +		return -EINVAL;
+
+Using -EINVAL here means userspace can't tell the difference between an
+old kernel and a kernel not built with CONFIG_X86_INTEL_CET. Perhaps
+-ENOTSUPP?
+
+> +
+> +	if (option == ARCH_X86_CET_STATUS)
+> +		return handle_get_status(arg2);
+> +
+> +	if (!static_cpu_has(X86_FEATURE_SHSTK))
+> +		return -EINVAL;
+
+Similar case: though this is now a kernel that knows how, but a CPU that
+doesn't.
+
+> +
+> +	cet = &current->thread.cet;
+
+You get this both here and in handle_get_status(). Why not just get it
+once and pass it into handle_get_status()? (And perhaps rename it to
+"copy_status_to_user" or so?
+
+> +
+> +	switch (option) {
+> +	case ARCH_X86_CET_DISABLE:
+
+This must check for unknown flags before doing anything else:
+
+		if (arg & ~(GNU_PROPERTY_X86_FEATURE_1_SHSTK))
+			return -EINVAL;
+
+> +		if (cet->locked)
+> +			return -EPERM;
+> +		if (arg2 & GNU_PROPERTY_X86_FEATURE_1_SHSTK)
+> +			cet_disable_free_shstk(current);
+> +
+> +		return 0;
+> +
+> +	case ARCH_X86_CET_LOCK:
+
+Same here.
+
+> +		cet->locked = 1;
+> +		return 0;
+> +
+> +	case ARCH_X86_CET_ALLOC_SHSTK:
+> +		return handle_alloc_shstk(arg2);
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+> index ef1c2b8086a2..de6773dd6a16 100644
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -996,7 +996,7 @@ long do_arch_prctl_common(struct task_struct *task, int option,
+>  		return get_cpuid_mode();
+>  	case ARCH_SET_CPUID:
+>  		return set_cpuid_mode(task, cpuid_enabled);
+> +	default:
+> +		return prctl_cet(option, cpuid_enabled);
+>  	}
+
+This is weird, but yeah, there's only the cpuid and cet handlers... I
+think do_arch_prctrl_common() should call the second arg "arg2" and
+there should be a series of calls:
+
+	ret = prctl_cpuid(task, option, args);
+	if (ret != -EINVAL)
+		return ret;
+	return prctl_cet(option, args);
+
+But that's just a style nit, I guess.
+
+And really, why is x86's arch prtcl return EINVAL for unknown options?
+It should use -ENOSYS for unknown options and -EINVAL for bad arguments,
+but I guess it's too late for that. :)
 
 -- 
-regards,
-Stan
+Kees Cook
