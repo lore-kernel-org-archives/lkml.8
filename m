@@ -2,173 +2,276 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4361C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86BF820826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9339D20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590089570;
+	bh=wVdNaS0ZwKTecNDaqDlBLOhKCIthZf+jeeG5uNktzc8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JsN/d35VRpoXqvKUhBa2qG64nk0/FZSY+OLPKLASai0c2/Wxf8Wt2siH5VpZL9NBJ
+	 iP+5AcA0+aVYhwMh1ol+rZCuQ0vZNxYTCSo9SnR2kOBnkg1ydlWcen46mTR6VGmhLb
+	 yV4gcAtB+RpGZsjhA7psY4VIMi4FmJF7mMnDw6tQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgEUTbf (ORCPT
+        id S1730061AbgEUTct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:31:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26767 "EHLO mga06.intel.com"
+        Thu, 21 May 2020 15:32:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbgEUTbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:31:35 -0400
-IronPort-SDR: RJSZqMaUjxNUuwwJeod1JB0dqTiyLKbP8H2jcKJJYa2VUrAC0jqIZJ80wfzFTUWkvTQSCq4tu0
- tCB8ohaRavbg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 12:31:34 -0700
-IronPort-SDR: Am4Zex30NwTh6gYz5Q9dfPyPuEXJ1wTvaCHUvLj9S+IcOZk3Ownb03X039JFbvq5nA9c7vi+2m
- p/eeM6CqR48w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
-   d="scan'208";a="289859921"
-Received: from irishmed-mobl2.amr.corp.intel.com (HELO [10.254.66.124]) ([10.254.66.124])
-  by fmsmga004.fm.intel.com with ESMTP; 21 May 2020 12:31:33 -0700
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     Yicong Yang <yangyicong@hisilicon.com>, bhelgaas@google.com
-Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
- <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
- <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
-Date:   Thu, 21 May 2020 12:31:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728635AbgEUTct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 15:32:49 -0400
+Received: from sstabellini-ThinkPad-T480s.hsd1.ca.comcast.net (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB978207D3;
+        Thu, 21 May 2020 19:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590089568;
+        bh=wVdNaS0ZwKTecNDaqDlBLOhKCIthZf+jeeG5uNktzc8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NBLDLTkRTKeIfjBmoz7sgk+dNW0U0DUEyoIHVSfRSPNr/V73wzHCQ6PLDfpIjPC00
+         NWqxvApQHe0eDRSi55HDN7vJ/etlgvlt2G6xFFl4T/TT9lduHQUV9q+Y2q47g6B44w
+         DbbdfkFw0COPKQyEsJhdKUOm6DYqiU6XGxLzsfLs=
+From:   Stefano Stabellini <sstabellini@kernel.org>
+To:     jgross@suse.com
+Cc:     boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, ericvh@gmail.com,
+        lucho@ionkov.net, asmadeus@codewreck.org,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Subject: [PATCH v2] 9p/xen: increase XEN_9PFS_RING_ORDER
+Date:   Thu, 21 May 2020 12:32:42 -0700
+Message-Id: <20200521193242.15953-1-sstabellini@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stefano Stabellini <stefano.stabellini@xilinx.com>
 
+Increase XEN_9PFS_RING_ORDER to 9 for performance reason. Order 9 is the
+max allowed by the protocol.
 
-On 5/21/20 3:58 AM, Yicong Yang wrote:
-> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
->>
->>
->> On 5/20/20 1:28 AM, Yicong Yang wrote:
->>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>
->>>> If there are non-hotplug capable devices connected to a given
->>>> port, then during the fatal error recovery(triggered by DPC or
->>>> AER), after calling reset_link() function, we cannot rely on
->>>> hotplug handler to detach and re-enumerate the device drivers
->>>> in the affected bus. Instead, we will have to let the error
->>>> recovery handler call report_slot_reset() for all devices in
->>>> the bus to notify about the reset operation. Although this is
->>>> only required for non hot-plug capable devices, doing it for
->>>> hotplug capable devices should not affect the functionality.
->>>>
->>>> Along with above issue, this fix also applicable to following
->>>> issue.
->>>>
->>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->>>> reset_link()") added support to store status of reset_link()
->>>> call. Although this fixed the error recovery issue observed if
->>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->>>> result from report_frozen_detected. This can cause a failure to
->>>> recover if _NEED_RESET is returned by report_frozen_detected and
->>>> report_slot_reset is not invoked.
->>>>
->>>> Such an event can be induced for testing purposes by reducing the
->>>> Max_Payload_Size of a PCIe bridge to less than that of a device
->>>> downstream from the bridge, and then initiating I/O through the
->>>> device, resulting in oversize transactions.  In the presence of DPC,
->>>> this results in a containment event and attempted reset and recovery
->>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->>>> invoked, and the device does not recover.
->>>>
->>>> [original patch is from jay.vosburgh@canonical.com]
->>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>> ---
->>>>    drivers/pci/pcie/err.c | 19 +++++++++++++++----
->>>>    1 file changed, 15 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>> index 14bb8f54723e..db80e1ecb2dc 100644
->>>> --- a/drivers/pci/pcie/err.c
->>>> +++ b/drivers/pci/pcie/err.c
->>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>>>        pci_dbg(dev, "broadcast error_detected message\n");
->>>>        if (state == pci_channel_io_frozen) {
->>>>            pci_walk_bus(bus, report_frozen_detected, &status);
->>>> -        status = reset_link(dev);
->>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
->>>> +        status = PCI_ERS_RESULT_NEED_RESET;
->>>> +    } else {
->>>> +        pci_walk_bus(bus, report_normal_detected, &status);
->>>> +    }
->>>> +
->>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>> +        if (reset_link) {
->>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->>>
->>> we'll call reset_link() only if link is frozen. so it may have problem here.
->> you mean before this change right?
->> After this change, reset_link() will be called as long as status is
->> PCI_ERS_RESULT_NEED_RESET.
-> 
-> Yes. I think we should reset the link only if the io is blocked as before. There's
-> no reason to reset a normal link.
-Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
-possible reset_link options are dpc_reset_link() and aer_root_reset().
+We can't assume that all backends will support order 9. The xenstore
+property max-ring-page-order specifies the max order supported by the
+backend. We'll use max-ring-page-order for the size of the ring.
 
-In dpc_reset_link() case, the link is already disabled and hence we
-don't need to do another reset. In case of aer_root_reset() it
-uses pci_bus_error_reset() to reset the slot.
-> 
-> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
-> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
-> We decide whether to do a link reset only by the io state.
-> 
-> Thanks,
-> Yicong
-> 
-> 
->>>
->>> Thanks,
->>> Yicong
->>>
->>>
->>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>> +        } else {
->>>> +            if (pci_bus_error_reset(dev))
->>>> +                status = PCI_ERS_RESULT_DISCONNECT;
->>>> +        }
->>>> +
->>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
->>>>                pci_warn(dev, "link reset failed\n");
->>>>                goto failed;
->>>>            }
->>>> -    } else {
->>>> -        pci_walk_bus(bus, report_normal_detected, &status);
->>>>        }
->>>>          if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>
->> .
->>
-> 
+This means that the size of the ring is not static
+(XEN_FLEX_RING_SIZE(9)) anymore. Change XEN_9PFS_RING_SIZE to take an
+argument and base the calculation on the order chosen at setup time.
+
+Finally, modify p9_xen_trans.maxsize to be divided by 4 compared to the
+original value. We need to divide it by 2 because we have two rings
+coming off the same order allocation: the in and out rings. This was a
+mistake in the original code. Also divide it further by 2 because we
+don't want a single request/reply to fill up the entire ring. There can
+be multiple requests/replies outstanding at any given time and if we use
+the full ring with one, we risk forcing the backend to wait for the
+client to read back more replies before continuing, which is not
+performant.
+
+Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+---
+Changes in v2:
+- Fix setting of p9_xen_trans.maxsize in xen_9pfs_front_probe to match
+  the initial setting for the reasons explained in the commit message
+
+---
+ net/9p/trans_xen.c | 61 ++++++++++++++++++++++++++--------------------
+ 1 file changed, 34 insertions(+), 27 deletions(-)
+
+diff --git a/net/9p/trans_xen.c b/net/9p/trans_xen.c
+index 3963eb11c3fb..3debad93be1a 100644
+--- a/net/9p/trans_xen.c
++++ b/net/9p/trans_xen.c
+@@ -43,8 +43,8 @@
+ #include <net/9p/transport.h>
+ 
+ #define XEN_9PFS_NUM_RINGS 2
+-#define XEN_9PFS_RING_ORDER 6
+-#define XEN_9PFS_RING_SIZE  XEN_FLEX_RING_SIZE(XEN_9PFS_RING_ORDER)
++#define XEN_9PFS_RING_ORDER 9
++#define XEN_9PFS_RING_SIZE(ring)  XEN_FLEX_RING_SIZE(ring->intf->ring_order)
+ 
+ struct xen_9pfs_header {
+ 	uint32_t size;
+@@ -132,8 +132,8 @@ static bool p9_xen_write_todo(struct xen_9pfs_dataring *ring, RING_IDX size)
+ 	prod = ring->intf->out_prod;
+ 	virt_mb();
+ 
+-	return XEN_9PFS_RING_SIZE -
+-		xen_9pfs_queued(prod, cons, XEN_9PFS_RING_SIZE) >= size;
++	return XEN_9PFS_RING_SIZE(ring) -
++		xen_9pfs_queued(prod, cons, XEN_9PFS_RING_SIZE(ring)) >= size;
+ }
+ 
+ static int p9_xen_request(struct p9_client *client, struct p9_req_t *p9_req)
+@@ -167,17 +167,18 @@ static int p9_xen_request(struct p9_client *client, struct p9_req_t *p9_req)
+ 	prod = ring->intf->out_prod;
+ 	virt_mb();
+ 
+-	if (XEN_9PFS_RING_SIZE - xen_9pfs_queued(prod, cons,
+-						 XEN_9PFS_RING_SIZE) < size) {
++	if (XEN_9PFS_RING_SIZE(ring) -
++	    xen_9pfs_queued(prod, cons, XEN_9PFS_RING_SIZE(ring)) < size) {
+ 		spin_unlock_irqrestore(&ring->lock, flags);
+ 		goto again;
+ 	}
+ 
+-	masked_prod = xen_9pfs_mask(prod, XEN_9PFS_RING_SIZE);
+-	masked_cons = xen_9pfs_mask(cons, XEN_9PFS_RING_SIZE);
++	masked_prod = xen_9pfs_mask(prod, XEN_9PFS_RING_SIZE(ring));
++	masked_cons = xen_9pfs_mask(cons, XEN_9PFS_RING_SIZE(ring));
+ 
+ 	xen_9pfs_write_packet(ring->data.out, p9_req->tc.sdata, size,
+-			      &masked_prod, masked_cons, XEN_9PFS_RING_SIZE);
++			      &masked_prod, masked_cons,
++			      XEN_9PFS_RING_SIZE(ring));
+ 
+ 	p9_req->status = REQ_STATUS_SENT;
+ 	virt_wmb();			/* write ring before updating pointer */
+@@ -207,19 +208,19 @@ static void p9_xen_response(struct work_struct *work)
+ 		prod = ring->intf->in_prod;
+ 		virt_rmb();
+ 
+-		if (xen_9pfs_queued(prod, cons, XEN_9PFS_RING_SIZE) <
++		if (xen_9pfs_queued(prod, cons, XEN_9PFS_RING_SIZE(ring)) <
+ 		    sizeof(h)) {
+ 			notify_remote_via_irq(ring->irq);
+ 			return;
+ 		}
+ 
+-		masked_prod = xen_9pfs_mask(prod, XEN_9PFS_RING_SIZE);
+-		masked_cons = xen_9pfs_mask(cons, XEN_9PFS_RING_SIZE);
++		masked_prod = xen_9pfs_mask(prod, XEN_9PFS_RING_SIZE(ring));
++		masked_cons = xen_9pfs_mask(cons, XEN_9PFS_RING_SIZE(ring));
+ 
+ 		/* First, read just the header */
+ 		xen_9pfs_read_packet(&h, ring->data.in, sizeof(h),
+ 				     masked_prod, &masked_cons,
+-				     XEN_9PFS_RING_SIZE);
++				     XEN_9PFS_RING_SIZE(ring));
+ 
+ 		req = p9_tag_lookup(priv->client, h.tag);
+ 		if (!req || req->status != REQ_STATUS_SENT) {
+@@ -233,11 +234,11 @@ static void p9_xen_response(struct work_struct *work)
+ 		memcpy(&req->rc, &h, sizeof(h));
+ 		req->rc.offset = 0;
+ 
+-		masked_cons = xen_9pfs_mask(cons, XEN_9PFS_RING_SIZE);
++		masked_cons = xen_9pfs_mask(cons, XEN_9PFS_RING_SIZE(ring));
+ 		/* Then, read the whole packet (including the header) */
+ 		xen_9pfs_read_packet(req->rc.sdata, ring->data.in, h.size,
+ 				     masked_prod, &masked_cons,
+-				     XEN_9PFS_RING_SIZE);
++				     XEN_9PFS_RING_SIZE(ring));
+ 
+ 		virt_mb();
+ 		cons += h.size;
+@@ -267,7 +268,7 @@ static irqreturn_t xen_9pfs_front_event_handler(int irq, void *r)
+ 
+ static struct p9_trans_module p9_xen_trans = {
+ 	.name = "xen",
+-	.maxsize = 1 << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT),
++	.maxsize = 1 << (XEN_9PFS_RING_ORDER + XEN_PAGE_SHIFT - 2),
+ 	.def = 1,
+ 	.create = p9_xen_create,
+ 	.close = p9_xen_close,
+@@ -295,14 +296,16 @@ static void xen_9pfs_front_free(struct xen_9pfs_front_priv *priv)
+ 		if (priv->rings[i].irq > 0)
+ 			unbind_from_irqhandler(priv->rings[i].irq, priv->dev);
+ 		if (priv->rings[i].data.in) {
+-			for (j = 0; j < (1 << XEN_9PFS_RING_ORDER); j++) {
++			for (j = 0;
++			     j < (1 << priv->rings[i].intf->ring_order);
++			     j++) {
+ 				grant_ref_t ref;
+ 
+ 				ref = priv->rings[i].intf->ref[j];
+ 				gnttab_end_foreign_access(ref, 0, 0);
+ 			}
+ 			free_pages((unsigned long)priv->rings[i].data.in,
+-				   XEN_9PFS_RING_ORDER -
++				   priv->rings[i].intf->ring_order -
+ 				   (PAGE_SHIFT - XEN_PAGE_SHIFT));
+ 		}
+ 		gnttab_end_foreign_access(priv->rings[i].ref, 0, 0);
+@@ -323,7 +326,8 @@ static int xen_9pfs_front_remove(struct xenbus_device *dev)
+ }
+ 
+ static int xen_9pfs_front_alloc_dataring(struct xenbus_device *dev,
+-					 struct xen_9pfs_dataring *ring)
++					 struct xen_9pfs_dataring *ring,
++					 unsigned int order)
+ {
+ 	int i = 0;
+ 	int ret = -ENOMEM;
+@@ -342,21 +346,21 @@ static int xen_9pfs_front_alloc_dataring(struct xenbus_device *dev,
+ 		goto out;
+ 	ring->ref = ret;
+ 	bytes = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
+-			XEN_9PFS_RING_ORDER - (PAGE_SHIFT - XEN_PAGE_SHIFT));
++			order - (PAGE_SHIFT - XEN_PAGE_SHIFT));
+ 	if (!bytes) {
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+-	for (; i < (1 << XEN_9PFS_RING_ORDER); i++) {
++	for (; i < (1 << order); i++) {
+ 		ret = gnttab_grant_foreign_access(
+ 				dev->otherend_id, virt_to_gfn(bytes) + i, 0);
+ 		if (ret < 0)
+ 			goto out;
+ 		ring->intf->ref[i] = ret;
+ 	}
+-	ring->intf->ring_order = XEN_9PFS_RING_ORDER;
++	ring->intf->ring_order = order;
+ 	ring->data.in = bytes;
+-	ring->data.out = bytes + XEN_9PFS_RING_SIZE;
++	ring->data.out = bytes + XEN_FLEX_RING_SIZE(order);
+ 
+ 	ret = xenbus_alloc_evtchn(dev, &ring->evtchn);
+ 	if (ret)
+@@ -374,7 +378,7 @@ static int xen_9pfs_front_alloc_dataring(struct xenbus_device *dev,
+ 		for (i--; i >= 0; i--)
+ 			gnttab_end_foreign_access(ring->intf->ref[i], 0, 0);
+ 		free_pages((unsigned long)bytes,
+-			   XEN_9PFS_RING_ORDER -
++			   ring->intf->ring_order -
+ 			   (PAGE_SHIFT - XEN_PAGE_SHIFT));
+ 	}
+ 	gnttab_end_foreign_access(ring->ref, 0, 0);
+@@ -404,8 +408,10 @@ static int xen_9pfs_front_probe(struct xenbus_device *dev,
+ 		return -EINVAL;
+ 	max_ring_order = xenbus_read_unsigned(dev->otherend,
+ 					      "max-ring-page-order", 0);
+-	if (max_ring_order < XEN_9PFS_RING_ORDER)
+-		return -EINVAL;
++	if (max_ring_order > XEN_9PFS_RING_ORDER)
++		max_ring_order = XEN_9PFS_RING_ORDER;
++	if (p9_xen_trans.maxsize > XEN_FLEX_RING_SIZE(max_ring_order))
++		p9_xen_trans.maxsize = XEN_FLEX_RING_SIZE(max_ring_order) / 2;
+ 
+ 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+@@ -422,7 +428,8 @@ static int xen_9pfs_front_probe(struct xenbus_device *dev,
+ 
+ 	for (i = 0; i < priv->num_rings; i++) {
+ 		priv->rings[i].priv = priv;
+-		ret = xen_9pfs_front_alloc_dataring(dev, &priv->rings[i]);
++		ret = xen_9pfs_front_alloc_dataring(dev, &priv->rings[i],
++						    max_ring_order);
+ 		if (ret < 0)
+ 			goto error;
+ 	}
+-- 
+2.17.1
+
