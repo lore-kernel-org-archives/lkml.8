@@ -2,142 +2,98 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97728C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD70C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6A220756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwpQzUaz"
+	by mail.kernel.org (Postfix) with ESMTP id 4A5A2207D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgEUC2G (ORCPT
+        id S1727930AbgEUChk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:28:06 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44542 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726871AbgEUC2G (ORCPT
+        Wed, 20 May 2020 22:37:40 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34470 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgEUChk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:28:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590028084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HiJAaDRSg5DnM9NEbapqZa54OkdMt62Nfi59/wxsSTk=;
-        b=hwpQzUazhe24rfDk9LqbVJ1q5DQqcyKOgp080qZhlLv4wNSagQG7go5xh8ipDiqqhoUSqy
-        4tf7LiuaRcCJ+qLuQQtyECtQ4CM6hZd6UGu6JwSSm7EqFeaAXVWT0nN4nrfgy//y50YV5c
-        fvTtwg+bSyx4nmiwMipmjpi/uZRxj+o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-FDsArPCQMPSgD6E4nTNMkg-1; Wed, 20 May 2020 22:28:00 -0400
-X-MC-Unique: FDsArPCQMPSgD6E4nTNMkg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D12F800688;
-        Thu, 21 May 2020 02:27:59 +0000 (UTC)
-Received: from T590 (ovpn-13-123.pek2.redhat.com [10.72.13.123])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5350382A24;
-        Thu, 21 May 2020 02:27:50 +0000 (UTC)
-Date:   Thu, 21 May 2020 10:27:46 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
- data->ctx and data->hctx in blk_mq_alloc_request_hctx
-Message-ID: <20200521022746.GA730422@T590>
-References: <20200519015420.GA70957@T590>
- <20200519153000.GB22286@lst.de>
- <20200520011823.GA415158@T590>
- <20200520030424.GI416136@T590>
- <20200520080357.GA4197@lst.de>
- <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
- <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
- <87tv0av1gu.fsf@nanos.tec.linutronix.de>
- <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
- <87eereuudh.fsf@nanos.tec.linutronix.de>
+        Wed, 20 May 2020 22:37:40 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5C29180307CB;
+        Thu, 21 May 2020 02:37:37 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iiCsY7-X5QfY; Thu, 21 May 2020 05:37:36 +0300 (MSK)
+Date:   Thu, 21 May 2020 05:37:35 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH v2 08/12] i2c: designware: Introduce platform drivers
+ glue layer interface
+Message-ID: <20200521023735.mja62ujmxebgwyef@mobilestation>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
+ <20200510095019.20981-9-Sergey.Semin@baikalelectronics.ru>
+ <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <87eereuudh.fsf@nanos.tec.linutronix.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <4950bb1e-302f-947e-1924-452a8169b504@linux.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 12:14:18AM +0200, Thomas Gleixner wrote:
-> Jens Axboe <axboe@kernel.dk> writes:
+On Wed, May 20, 2020 at 03:46:11PM +0300, Jarkko Nikula wrote:
+> Hi
 > 
-> > On 5/20/20 1:41 PM, Thomas Gleixner wrote:
-> >> Jens Axboe <axboe@kernel.dk> writes:
-> >>> On 5/20/20 8:45 AM, Jens Axboe wrote:
-> >>>> It just uses kthread_create_on_cpu(), nothing home grown. Pretty sure
-> >>>> they just break affinity if that CPU goes offline.
-> >>>
-> >>> Just checked, and it works fine for me. If I create an SQPOLL ring with
-> >>> SQ_AFF set and bound to CPU 3, if CPU 3 goes offline, then the kthread
-> >>> just appears unbound but runs just fine. When CPU 3 comes online again,
-> >>> the mask appears correct.
-> >> 
-> >> When exactly during the unplug operation is it unbound?
-> >
-> > When the CPU has been fully offlined. I check the affinity mask, it
-> > reports 0. But it's still being scheduled, and it's processing work.
-> > Here's an example, PID 420 is the thread in question:
-> >
-> > [root@archlinux cpu3]# taskset -p 420
-> > pid 420's current affinity mask: 8
-> > [root@archlinux cpu3]# echo 0 > online 
-> > [root@archlinux cpu3]# taskset -p 420
-> > pid 420's current affinity mask: 0
-> > [root@archlinux cpu3]# echo 1 > online 
-> > [root@archlinux cpu3]# taskset -p 420
-> > pid 420's current affinity mask: 8
-> >
-> > So as far as I can tell, it's working fine for me with the goals
-> > I have for that kthread.
+> On 5/10/20 12:50 PM, Serge Semin wrote:
+> > Seeing the DW I2C platform driver is getting overcomplicated with a lot of
+> > vendor-specific configs let's introduce a glue-layer interface so new
+> > platforms which equipped with Synopsys Designware APB I2C IP-core would
+> > be able to handle their peculiarities in the dedicated objects.
+> > 
+> Comment to this patch and patches 9/12 and 12/12:
 > 
-> Works for me is not really useful information and does not answer my
-> question:
+> Currently i2c-designware-platdrv.c is about 500 lines of code so I don't
+> think it's too overcomplicated. But I feel we have already too many Kconfig
+> options and source modules for i2c-designware and obviously would like to
+> push back a little from adding more.
 > 
-> >> When exactly during the unplug operation is it unbound?
+> I don't think i2c-designware-platdrv.c becomes yet too complicated if Baikal
+> related code is added there, perhaps under #ifdef CONFIG_OF like MSCC Ocelot
+> code is currently.
+
+Well, it's up to you to decide, what solution is more suitable for you to
+maintain. My idea of detaching the MSCC and Baikal-T1 code to the dedicated
+source files was to eventually move the whole i2c-designware-* set of files
+into a dedicated directory drivers/i2c/buses/dw as it's done for some others
+Synopsys DesignWare controllers: drivers/pci/controller/dwc/, drivers/usb/dwc2,
+drivers/usb/dwc3, drivers/net/ethernet/synopsys/ . If you think, that it's too
+early for Dw I2C code to live in a dedicated directory, fine with me. I can
+merge the MSCC and Baikal-T1 code back into the i2c-designware-platdrv.c .
+So what's your final word in this matter?
+
+-Sergey
+
 > 
-> The problem Ming and Christoph are trying to solve requires that the
-> thread is migrated _before_ the hardware queue is shut down and
-> drained. That's why I asked for the exact point where this happens.
-> 
-> When the CPU is finally offlined, i.e. the CPU cleared the online bit in
-> the online mask is definitely too late simply because it still runs on
-> that outgoing CPU _after_ the hardware queue is shut down and drained.
-
-IMO, the patch in Christoph's blk-mq-hotplug.2 still works for percpu
-kthread.
-
-It is just not optimal in the retrying, but it should be fine. When the
-percpu kthread is scheduled on the CPU to be offlined:
-
-- if the kthread doesn't observe the INACTIVE flag, the allocated request
-will be drained.
-
-- otherwise, the kthread just retries and retries to allocate & release,
-and sooner or later, its time slice is consumed, and migrated out, and the
-cpu hotplug handler will get chance to run and move on, then the cpu is
-shutdown.
-
-- After the cpu is shutdown, the percpu kthread becomes unbound, and
-the allocation from new online cpu will succeed.
-
-Thanks,
-Ming
-
+> -- 
+> Jarkko
