@@ -2,236 +2,165 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E287C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD79C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0352207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE386207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="CQ7SXN1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbgEUQ5i (ORCPT
+        id S1729899AbgEUQ6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 12:57:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:28574 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730200AbgEUQ5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 12:57:36 -0400
-IronPort-SDR: +0H7XkbcLp2BpjAtSllhGNpGfv2xCpb2VXGYvqwAgtip8DXHY8cvkLuyd/i6/r/JyyHmtBExk+
- epLTjYp/iIyg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 09:57:36 -0700
-IronPort-SDR: P6wEIu2SJuHDHQwXasz9m0NGvmkDLrrsa3c9q3cdsZubQS+kjPmQIawnk21iMKnMaiJT4kinct
- gDO85ZACgdEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
-   d="scan'208";a="309094841"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.147.236])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 May 2020 09:57:34 -0700
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v2 9/9] module: Reorder functions
-Date:   Thu, 21 May 2020 09:56:40 -0700
-Message-Id: <20200521165641.15940-10-kristen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200521165641.15940-1-kristen@linux.intel.com>
-References: <20200521165641.15940-1-kristen@linux.intel.com>
+        Thu, 21 May 2020 12:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728565AbgEUQ6K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 12:58:10 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3262CC061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 09:58:09 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s8so7335404wrt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 09:58:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5Y9QXn5/MtNpd1gpuH+YQVxBDqCPuf0vIRP+fPeT388=;
+        b=CQ7SXN1PdVyxzxTn48IBDk1HDqJrKf6aZ67r0kdzGCIMp82jRV5cP4cXU2qsgf8AMR
+         f0AYNpGAUQai+4PcqZ5mqW77BBJDzPWRJnwb8ORAmgyJ5eeg8et4blG30bbGrcpoxGMM
+         rYvRWqpfyEztOdLirxGPacBA6cO421LA1RVow=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5Y9QXn5/MtNpd1gpuH+YQVxBDqCPuf0vIRP+fPeT388=;
+        b=kc1rPBSsElb3dY0NDDS1LQ3I0umuARRjorKywF4Chf69YCTGk4TNCtwksYXkXiQrAn
+         IsC6hg15CJMJY4KFPxbTUFov2JXjHR6sf0MGejfg7ZMbA9d/g76VE6miYO2G56uuAQK8
+         ijqysb4Gkd1PTUsGfir4qyE4HfbRhd5kUnSOH7UQQ2xx3f5omxvvzh17envFgfckGRWB
+         o3/Va48VS7yZJeUU/ja44Rrdvo9RXGwtUeoxHONjpyuiai+/1q9zXO/FP1BNAVBkeT5b
+         RGHqPj3y8AgrLO/64FzyvN6RTlvAl+Gq525a/x5d9N8ILs25wnLzPXH/MEqwi7XWSWB6
+         +RvA==
+X-Gm-Message-State: AOAM533tPP/EpbQPZj8UTvjmYu4GlCYOQve3PbtmWo7JLtrMFbRCLRgt
+        jXfsNwoj+pjVEIZxpjQ9pZX5NQ==
+X-Google-Smtp-Source: ABdhPJwtTFeFA0RzSf70parteHd+eKsBzJ7WMtkTQlSR9kL4jx9EHI7evkipwvopFBuSAuWcIlqymA==
+X-Received: by 2002:a5d:5389:: with SMTP id d9mr6717311wrv.77.1590080287860;
+        Thu, 21 May 2020 09:58:07 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id q15sm6224927wrf.87.2020.05.21.09.58.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 09:58:07 -0700 (PDT)
+Subject: Re: [PATCH 1/3] bridge: mrp: Add br_mrp_unique_ifindex function
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     jiri@resnulli.us, ivecera@redhat.com, davem@davemloft.net,
+        kuba@kernel.org, roopa@cumulusnetworks.com, andrew@lunn.ch,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
+References: <20200520130923.3196432-1-horatiu.vultur@microchip.com>
+ <20200520130923.3196432-2-horatiu.vultur@microchip.com>
+ <cecbdbf0-bb49-1e3c-c163-8e7412c6fcec@cumulusnetworks.com>
+ <20200521181337.ory6lxyswatqhoej@soft-dev3.localdomain>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <39ba5110-2c2a-6fd9-a3e3-000b52a366dc@cumulusnetworks.com>
+Date:   Thu, 21 May 2020 19:58:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200521181337.ory6lxyswatqhoej@soft-dev3.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new config option to allow modules to be re-ordered
-by function. This option can be enabled independently of the
-kernel text KASLR or FG_KASLR settings so that it can be used
-by architectures that do not support either of these features.
-This option will be selected by default if CONFIG_FG_KASLR is
-selected.
+On 21/05/2020 21:49, Horatiu Vultur wrote:
+> The 05/21/2020 11:16, Nikolay Aleksandrov wrote:
+>> On 20/05/2020 16:09, Horatiu Vultur wrote:
+>>> It is not allow to have the same net bridge port part of multiple MRP
+>>> rings. Therefore add a check if the port is used already in a different
+>>> MRP. In that case return failure.
+>>>
+>>> Fixes: 9a9f26e8f7ea ("bridge: mrp: Connect MRP API with the switchdev API")
+>>> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+>>> ---
+>>>  net/bridge/br_mrp.c | 31 +++++++++++++++++++++++++++++++
+>>>  1 file changed, 31 insertions(+)
+>>>
+>>> diff --git a/net/bridge/br_mrp.c b/net/bridge/br_mrp.c
+>>> index d7bc09de4c139..a5a3fa59c078a 100644
+>>> --- a/net/bridge/br_mrp.c
+>>> +++ b/net/bridge/br_mrp.c
+>>> @@ -37,6 +37,32 @@ static struct br_mrp *br_mrp_find_id(struct net_bridge *br, u32 ring_id)
+>>>       return res;
+>>>  }
+>>>
+>>> +static bool br_mrp_unique_ifindex(struct net_bridge *br, u32 ifindex)
+>>> +{
+>>> +     struct br_mrp *mrp;
+>>> +     bool res = true;
+>>> +
+>>> +     rcu_read_lock();
+>>
+>> Why do you need the rcu_read_lock() here when lockdep_rtnl_is_held() is used?
+>> You should be able to just do rtnl_dereference() below as this is used only
+>> under rtnl.
+> 
+> Hi Nik,
+> 
+> Also initially I thought that is not needed, but when I enabled all the
+> RCU debug configs to see if I use correctly the RCU, I got a warning
+> regarding suspicious RCU usage.
+> And that is the reason why I have put it.
+> 
 
-If a module has functions split out into separate text sections
-(i.e. compiled with the -ffunction-sections flag), reorder the
-functions to provide some code diversification to modules.
+Did you try using rtnl_dereference() instead of rcu_dereference() ?
 
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/Kconfig  |  1 +
- arch/x86/Makefile |  3 ++
- init/Kconfig      | 11 +++++++
- kernel/module.c   | 81 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 96 insertions(+)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 50e83ea57d70..d0bdd5c8c432 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2187,6 +2187,7 @@ config FG_KASLR
- 	bool "Function Granular Kernel Address Space Layout Randomization"
- 	depends on $(cc-option, -ffunction-sections)
- 	depends on RANDOMIZE_BASE && X86_64
-+	select MODULE_FG_KASLR
- 	help
- 	  This option improves the randomness of the kernel text
- 	  over basic Kernel Address Space Layout Randomization (KASLR)
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index b65ec63c7db7..8c830c37c74c 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -51,6 +51,9 @@ ifdef CONFIG_X86_NEED_RELOCS
-         LDFLAGS_vmlinux := --emit-relocs --discard-none
- endif
- 
-+ifdef CONFIG_MODULE_FG_KASLR
-+	KBUILD_CFLAGS_MODULE += -ffunction-sections
-+endif
- #
- # Prevent GCC from generating any FP code by mistake.
- #
-diff --git a/init/Kconfig b/init/Kconfig
-index 74a5ac65644f..b19920413bcc 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2227,6 +2227,17 @@ config UNUSED_KSYMS_WHITELIST
- 	  one per line. The path can be absolute, or relative to the kernel
- 	  source tree.
- 
-+config MODULE_FG_KASLR
-+	depends on $(cc-option, -ffunction-sections)
-+	bool "Module Function Granular Layout Randomization"
-+	help
-+	  This option randomizes the module text section by reordering the text
-+	  section by function at module load time. In order to use this
-+	  feature, the module must have been compiled with the
-+	  -ffunction-sections compiler flag.
-+
-+	  If unsure, say N.
-+
- endif # MODULES
- 
- config MODULES_TREE_LOOKUP
-diff --git a/kernel/module.c b/kernel/module.c
-index 646f1e2330d2..e3cd619c60c2 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -53,6 +53,7 @@
- #include <linux/bsearch.h>
- #include <linux/dynamic_debug.h>
- #include <linux/audit.h>
-+#include <linux/random.h>
- #include <uapi/linux/module.h>
- #include "module-internal.h"
- 
-@@ -2370,6 +2371,83 @@ static long get_offset(struct module *mod, unsigned int *size,
- 	return ret;
- }
- 
-+/*
-+ * shuffle_text_list()
-+ * Use a Fisher Yates algorithm to shuffle a list of text sections.
-+ */
-+static void shuffle_text_list(Elf_Shdr **list, int size)
-+{
-+	int i;
-+	unsigned int j;
-+	Elf_Shdr *temp;
-+
-+	for (i = size - 1; i > 0; i--) {
-+		/*
-+		 * pick a random index from 0 to i
-+		 */
-+		get_random_bytes(&j, sizeof(j));
-+		j = j % (i + 1);
-+
-+		temp = list[i];
-+		list[i] = list[j];
-+		list[j] = temp;
-+	}
-+}
-+
-+/*
-+ * randomize_text()
-+ * Look through the core section looking for executable code sections.
-+ * Store sections in an array and then shuffle the sections
-+ * to reorder the functions.
-+ */
-+static void randomize_text(struct module *mod, struct load_info *info)
-+{
-+	int i;
-+	int num_text_sections = 0;
-+	Elf_Shdr **text_list;
-+	int size = 0;
-+	int max_sections = info->hdr->e_shnum;
-+	unsigned int sec = find_sec(info, ".text");
-+
-+	if (sec == 0)
-+		return;
-+
-+	text_list = kmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
-+	if (!text_list)
-+		return;
-+
-+	for (i = 0; i < max_sections; i++) {
-+		Elf_Shdr *shdr = &info->sechdrs[i];
-+		const char *sname = info->secstrings + shdr->sh_name;
-+
-+		if (!(shdr->sh_flags & SHF_ALLOC) ||
-+		    !(shdr->sh_flags & SHF_EXECINSTR) ||
-+		    strstarts(sname, ".init"))
-+			continue;
-+
-+		text_list[num_text_sections] = shdr;
-+		num_text_sections++;
-+	}
-+
-+	shuffle_text_list(text_list, num_text_sections);
-+
-+	for (i = 0; i < num_text_sections; i++) {
-+		Elf_Shdr *shdr = text_list[i];
-+
-+		/*
-+		 * get_offset has a section index for it's last
-+		 * argument, that is only used by arch_mod_section_prepend(),
-+		 * which is only defined by parisc. Since this this type
-+		 * of randomization isn't supported on parisc, we can
-+		 * safely pass in zero as the last argument, as it is
-+		 * ignored.
-+		 */
-+		shdr->sh_entsize = get_offset(mod, &size, shdr, 0);
-+	}
-+
-+	kfree(text_list);
-+}
-+
- /* Lay out the SHF_ALLOC sections in a way not dissimilar to how ld
-    might -- code, read-only data, read-write data, small data.  Tally
-    sizes, and place the offsets into sh_entsize fields: high bit means it
-@@ -2460,6 +2538,9 @@ static void layout_sections(struct module *mod, struct load_info *info)
- 			break;
- 		}
- 	}
-+
-+	if (IS_ENABLED(CONFIG_MODULE_FG_KASLR))
-+		randomize_text(mod, info);
- }
- 
- static void set_license(struct module *mod, const char *license)
--- 
-2.20.1
+>>
+>>> +     list_for_each_entry_rcu(mrp, &br->mrp_list, list,
+>>> +                             lockdep_rtnl_is_held()) {
+>>> +             struct net_bridge_port *p;
+>>> +
+>>> +             p = rcu_dereference(mrp->p_port);
+>>> +             if (p && p->dev->ifindex == ifindex) {
+>>> +                     res = false;
+>>> +                     break;
+>>> +             }
+>>> +
+>>> +             p = rcu_dereference(mrp->s_port);
+>>> +             if (p && p->dev->ifindex == ifindex) {
+>>> +                     res = false;
+>>> +                     break;
+>>> +             }
+>>> +     }
+>>> +     rcu_read_unlock();
+>>> +     return res;
+>>> +}
+>>> +
+>>>  static struct br_mrp *br_mrp_find_port(struct net_bridge *br,
+>>>                                      struct net_bridge_port *p)
+>>>  {
+>>> @@ -255,6 +281,11 @@ int br_mrp_add(struct net_bridge *br, struct br_mrp_instance *instance)
+>>>           !br_mrp_get_port(br, instance->s_ifindex))
+>>>               return -EINVAL;
+>>>
+>>> +     /* It is not possible to have the same port part of multiple rings */
+>>> +     if (!br_mrp_unique_ifindex(br, instance->p_ifindex) ||
+>>> +         !br_mrp_unique_ifindex(br, instance->s_ifindex))
+>>> +             return -EINVAL;
+>>> +
+>>>       mrp = kzalloc(sizeof(*mrp), GFP_KERNEL);
+>>>       if (!mrp)
+>>>               return -ENOMEM;
+>>>
+>>
+> 
 
