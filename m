@@ -2,92 +2,135 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FCFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87126207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590084388;
-	bh=UgTXW2cgj45DGwBaa7hLXyLjKuKJP5ELoSk0BJviyXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cLL/DOG0TcdUiCBayD0m5/+CD5CrY37IC/F3yJPeLPLg28VoezieIhEIMxQq0a0D3
-	 8UXsacsgnx182CohOJQHa3+i01eN7+JphanXNNcU3il8adfRMvDk+oB+8AYFnjJaF2
-	 ZcGI+IHzpAkEsIG4mbK189hlwrjPxvMEhaQr+a+8=
+	by mail.kernel.org (Postfix) with ESMTP id 6124320823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:06:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eW6v38ZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbgEUSG1 (ORCPT
+        id S1729569AbgEUSGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:06:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgEUSG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbgEUSG0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 May 2020 14:06:26 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E308720738;
-        Thu, 21 May 2020 18:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590084386;
-        bh=UgTXW2cgj45DGwBaa7hLXyLjKuKJP5ELoSk0BJviyXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I14syJWz/xcE92gFzNEH/nL+YAwZaCvpw+z87oWDyCvWamhgcdPhu0bpe+nnrJNdP
-         /V/XC9NpyRiQxMj7skPlCMNg70pRdTC+sCADsMA0p6GxJP7NNEWrKeo1Uc2t7Fjp4R
-         8E0CLrwWsHDNiMcHlsyU7P2sdZKg2j8W2HMBVgI4=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Klaus Doth <kdlnx@doth.eu>, Rui Feng <rui_feng@realsil.com.cn>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 3/6] misc: rtsx: Use ASPM_MASK_NEG instead of hard-coded value
-Date:   Thu, 21 May 2020 13:05:42 -0500
-Message-Id: <20200521180545.1159896-4-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200521180545.1159896-1-helgaas@kernel.org>
-References: <20200521180545.1159896-1-helgaas@kernel.org>
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B26C061A0E;
+        Thu, 21 May 2020 11:06:26 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j21so3534280pgb.7;
+        Thu, 21 May 2020 11:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YcuxEZQUpOQDQ5Lr0xl9z9r81E55lsgED1E3qnSscDk=;
+        b=eW6v38ZRp+Glo1cdTZumTfkrEClDxGIGVQPUmVnS3h2bbdkhB2hZydHePX9NH5h1WJ
+         57JjQzpjr7Rvf30dSJISe8wjDElqD8mdf5NF/ma+HS8eVRio7mqNIoty+w+x26mZ2wgW
+         plEeZSv+UOcBad23gyytHzH5bYQLYi3uTMdSPubu6JyoxOXWfmNQQ+HtaXJxDuai6ObI
+         7zS0UO/REoAWWzt5XuERqrg0uPzqtUPLi4w4HvBkWzpe4/i39HYb15wITV+hCH7XFXab
+         HDWQ92eOQIkbgvNn345fJ8VetC1Mxabbt/pp4Ib6lQLqbtR3hJ32fVdh/ED7udF8mma6
+         yYMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YcuxEZQUpOQDQ5Lr0xl9z9r81E55lsgED1E3qnSscDk=;
+        b=Z6acBqBJaje/4lu0rl2r0Ewas6v7on76ABMOpagdWCj5xOMYmvjkS4ATW/QDpHzPee
+         ragObhdrj1qrpiWLaZuBdo3IGd9sBu/Rdwg2pvcugdJPeKpkJvVEOm8I7RBqZZxbLfr3
+         J0lmUtLrO4WVhk5kBQPts0SGxfzrGv/lPFiD6URlw8r5gKysbdQHEVuP3YunhVaF+fMZ
+         6iiMLZZWIEvuFEsnuvXNKioPOFfbqq/Rxa1+Iz+6KyigVfwFwXBYFFjsvK8o91bzHiDJ
+         MAvOanXnThOF13FVgjo1UL96jf8DFK2ZVs0eMmyEFWg58kR/eryRQb+amyQZYXtoM9/P
+         qBew==
+X-Gm-Message-State: AOAM533eWfxwDzz4HWyx9u5gpsen5W8cyMHa27Pu+4tzjIss7gLL25sC
+        6h3UhszKsuIzDQ9HgVyMGfao65Qo
+X-Google-Smtp-Source: ABdhPJznGe2UNZ5jAmqKiPtGqZfklEpUjBlndvAcPOFCKX2xEIJyAGsymq18z1F10/gOSMmTbJvXjQ==
+X-Received: by 2002:a63:d918:: with SMTP id r24mr10175031pgg.119.1590084385623;
+        Thu, 21 May 2020 11:06:25 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x13sm4910062pjr.20.2020.05.21.11.06.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 11:06:24 -0700 (PDT)
+Subject: Re: [RFC PATCH net-next 1/4] dt-bindings: net: Add tx and rx internal
+ delays
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, hkallweit1@gmail.com,
+        davem@davemloft.net, robh@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200521174834.3234-1-dmurphy@ti.com>
+ <20200521174834.3234-2-dmurphy@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a293624e-bbab-4f9e-3e59-470bff5a90f9@gmail.com>
+Date:   Thu, 21 May 2020 11:06:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200521174834.3234-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
 
-Use ASPM_MASK_NEG instead of hard-coded value, as other callers of
-rtsx_pci_update_cfg_byte() do.  No functional change intended.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/misc/cardreader/rtsx_pcr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 5/21/2020 10:48 AM, Dan Murphy wrote:
+> tx-internal-delays and rx-internal-delays are a common setting for RGMII
+> capable devices.
+> 
+> These properties are used when the phy-mode or phy-controller is set to
+> rgmii-id, rgmii-rxid or rgmii-txid.  These modes indicate to the
+> controller that the PHY will add the internal delay for the connection.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../bindings/net/ethernet-controller.yaml          | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index ac471b60ed6a..3f25066c339c 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -143,6 +143,20 @@ properties:
+>        Specifies the PHY management type. If auto is set and fixed-link
+>        is not specified, it uses MDIO for management.
+>  
+> +  rx-internal-delay:
 
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index ce3919e59719..afde5499bfb6 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -58,13 +58,13 @@ MODULE_DEVICE_TABLE(pci, rtsx_pci_ids);
- static inline void rtsx_pci_enable_aspm(struct rtsx_pcr *pcr)
- {
- 	rtsx_pci_update_cfg_byte(pcr, pcr->pcie_cap + PCI_EXP_LNKCTL,
--		0xFC, pcr->aspm_en);
-+		ASPM_MASK_NEG, pcr->aspm_en);
- }
- 
- static inline void rtsx_pci_disable_aspm(struct rtsx_pcr *pcr)
- {
- 	rtsx_pci_update_cfg_byte(pcr, pcr->pcie_cap + PCI_EXP_LNKCTL,
--		0xFC, 0);
-+		ASPM_MASK_NEG, 0);
- }
- 
- static int rtsx_comm_set_ltr_latency(struct rtsx_pcr *pcr, u32 latency)
+Please name this 'rx-internal-delay-ps'
+
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description: |
+> +      RGMII Receive PHY Clock Delay defined in pico seconds.  This is used for
+> +      PHY's that have configurable RX internal delays.  This property is only
+> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-rxid.
+> +
+> +  tx-internal-delay:
+
+Likewise
+
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description: |
+> +      RGMII Transmit PHY Clock Delay defined in pico seconds.  This is used for
+> +      PHY's that have configurable TX internal delays.  This property is only
+> +      used when the phy-mode or phy-connection-type is rgmii-id or rgmii-txid.
+> +
+>    fixed-link:
+>      allOf:
+>        - if:
+> 
+
 -- 
-2.25.1
-
+Florian
