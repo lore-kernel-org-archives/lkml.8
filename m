@@ -2,302 +2,123 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E5AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302DDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 808CA2089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F6C20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgEUXcx (ORCPT
+        id S1729445AbgEUXdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 19:32:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:55752 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728290AbgEUXcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 19:32:53 -0400
-IronPort-SDR: qJj2ox36qWs2tOm5b0EwZj9WtHoS6BfWyrNSy80Dzssr4XD8oOGwSSSV7D5AxT6CEsBwxxzNSW
- JJhscvB/k2qw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 16:32:51 -0700
-IronPort-SDR: iXDJu0gHCZ++z4lJs2CJwAwxWiqu1G57gotmEGMU7x42fkmIXHH5MA5pmiaIC0yU53MHWv3T5+
- 0u4bppZYbnvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
-   d="scan'208";a="467106648"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga006.fm.intel.com with ESMTP; 21 May 2020 16:32:51 -0700
-Date:   Thu, 21 May 2020 16:32:51 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Vaibhav Jain <vaibhav@linux.ibm.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [RESEND PATCH v7 3/5] powerpc/papr_scm: Fetch nvdimm health
- information from PHYP
-Message-ID: <20200521233250.GA310685@iweiny-DESK2.sc.intel.com>
-References: <20200519190058.257981-1-vaibhav@linux.ibm.com>
- <20200519190058.257981-4-vaibhav@linux.ibm.com>
- <20200520145430.GB3660833@iweiny-DESK2.sc.intel.com>
- <87tv0awmr5.fsf@linux.ibm.com>
+        Thu, 21 May 2020 19:33:33 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41044 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728554AbgEUXdd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 19:33:33 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C74088030809;
+        Thu, 21 May 2020 23:33:29 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mzndbVe0uaYh; Fri, 22 May 2020 02:33:29 +0300 (MSK)
+Date:   Fri, 22 May 2020 02:33:27 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200521233327.o5siot6dyftgz7gu@mobilestation>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <87tv0awmr5.fsf@linux.ibm.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:45:58PM +0530, Vaibhav Jain wrote:
-...
+Mark, Andy,
 
-> > On Wed, May 20, 2020 at 12:30:56AM +0530, Vaibhav Jain wrote:
+On Thu, May 21, 2020 at 04:21:51AM +0300, Serge Semin wrote:
+>  
 
-...
+[nip]
 
-> >> @@ -39,6 +78,15 @@ struct papr_scm_priv {
-> >>  	struct resource res;
-> >>  	struct nd_region *region;
-> >>  	struct nd_interleave_set nd_set;
-> >> +
-> >> +	/* Protect dimm health data from concurrent read/writes */
-> >> +	struct mutex health_mutex;
-> >> +
-> >> +	/* Last time the health information of the dimm was updated */
-> >> +	unsigned long lasthealth_jiffies;
-> >> +
-> >> +	/* Health information for the dimm */
-> >> +	u64 health_bitmap;
-> >
-> > I wonder if this should be typed big endian as you mention that it is in the
-> > commit message?
-> This was discussed in an earlier review of the patch series at
-> https://lore.kernel.org/linux-nvdimm/878sjetcis.fsf@mpe.ellerman.id.au
-> 
-> Even though health bitmap is returned in big endian format (For ex
-> value 0xC00000000000000 indicates bits 0,1 set), its value is never
-> used. Instead only test for specific bits being set in the register is
-> done.
-> 
-> Hence using native cpu type instead of __be64 to store this value.
+> +static void dw_spi_dma_calc_delay(struct dw_spi *dws, u32 nents,
+> +				  struct spi_delay *delay)
+> +{
+> +	unsigned long ns, us;
+> +
+> +	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
+> +	     BITS_PER_BYTE;
+> +
+> +	if (ns <= NSEC_PER_USEC) {
+> +		delay->unit = SPI_DELAY_UNIT_NSECS;
+> +		delay->value = ns;
+> +	} else {
+> +		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
+> +		delay->unit = SPI_DELAY_UNIT_USECS;
+> +		delay->value = clamp_val(us, 0, USHRT_MAX);
+> +	}
+> +}
+> +
+> +static inline bool dw_spi_dma_tx_busy(struct dw_spi *dws)
+> +{
+> +	return !(dw_readl(dws, DW_SPI_SR) & SR_TF_EMPT);
+> +}
+> +
+> +static void dw_spi_dma_wait_tx_done(struct dw_spi *dws)
+> +{
+> +	int retry = WAIT_RETRIES;
+> +	struct spi_delay delay;
+> +	u32 nents;
+> +
+> +	nents = dw_readl(dws, DW_SPI_TXFLR);
+> +	dw_spi_dma_calc_delay(dws, nents, &delay);
+> +
+> +	while (dw_spi_dma_tx_busy(dws) && retry--)
 
-ok.
+> +		spi_delay_exec(&delay, NULL);
 
-> 
-> >
-> >>  };
-> >>  
-> >>  static int drc_pmem_bind(struct papr_scm_priv *p)
-> >> @@ -144,6 +192,62 @@ static int drc_pmem_query_n_bind(struct papr_scm_priv *p)
-> >>  	return drc_pmem_bind(p);
-> >>  }
-> >>  
-> >> +/*
-> >> + * Issue hcall to retrieve dimm health info and populate papr_scm_priv with the
-> >> + * health information.
-> >> + */
-> >> +static int __drc_pmem_query_health(struct papr_scm_priv *p)
-> >> +{
-> >> +	unsigned long ret[PLPAR_HCALL_BUFSIZE];
-> >
-> > Is this exclusive to 64bit?  Why not u64?
-> Yes this is specific to 64 bit as the array holds 64 bit register values
-> returned from PHYP. Can u64 but here that will be a departure from existing
-> practice within arch/powerpc code to use an unsigned long array to fetch
-> returned values for PHYP.
-> 
-> >
-> >> +	s64 rc;
-> >
-> > plpar_hcall() returns long and this function returns int and rc is declared
-> > s64?
-> >
-> > Why not have them all be long to follow plpar_hcall?
-> Yes 'long' type is better suited for variable 'rc' and I will get it fixed.
-> 
-> But the value of variable 'rc' is never directly returned from this
-> function, we always return kernel error codes instead. Hence the
-> return type of this function is consistent.
+I've just discovered using spi_delay_exec() wasn't a good idea here. Look at the
+call stack:
+dw_dma_tasklet() -> dwc_scan_descriptors() -> dwc_descriptor_complete() ->
+dw_spi_dma_tx_done() -> spi_delay_exec() -> usleep_range() -> ...
 
-Honestly masking the error return of plpar_hcall() seems a problem as well...
-but ok.
+So tasklet is calling a sleeping function.((( I've absolutely forgotten to check
+the context the DMA completion function is called with. We'll have to manually
+select either ndelay or udelay here and nothing else. Since basically both
+functions represent an atomic context and most of the platforms ndelay fallsback to
+udelay, I'll get the ndelay back to the wait functions. I'll resend a patchset
+shortly.
 
-Ira
-
-> 
-> >
-> >> +
-> >> +	/* issue the hcall */
-> >> +	rc = plpar_hcall(H_SCM_HEALTH, ret, p->drc_index);
-> >> +	if (rc != H_SUCCESS) {
-> >> +		dev_err(&p->pdev->dev,
-> >> +			 "Failed to query health information, Err:%lld\n", rc);
-> >> +		rc = -ENXIO;
-> >> +		goto out;
-> >> +	}
-> >> +
-> >> +	p->lasthealth_jiffies = jiffies;
-> >> +	p->health_bitmap = ret[0] & ret[1];
-> >> +
-> >> +	dev_dbg(&p->pdev->dev,
-> >> +		"Queried dimm health info. Bitmap:0x%016lx Mask:0x%016lx\n",
-> >> +		ret[0], ret[1]);
-> >> +out:
-> >> +	return rc;
-> >> +}
-> >> +
-> >> +/* Min interval in seconds for assuming stable dimm health */
-> >> +#define MIN_HEALTH_QUERY_INTERVAL 60
-> >> +
-> >> +/* Query cached health info and if needed call drc_pmem_query_health */
-> >> +static int drc_pmem_query_health(struct papr_scm_priv *p)
-> >> +{
-> >> +	unsigned long cache_timeout;
-> >> +	s64 rc;
-> >> +
-> >> +	/* Protect concurrent modifications to papr_scm_priv */
-> >> +	rc = mutex_lock_interruptible(&p->health_mutex);
-> >> +	if (rc)
-> >> +		return rc;
-> >> +
-> >> +	/* Jiffies offset for which the health data is assumed to be same */
-> >> +	cache_timeout = p->lasthealth_jiffies +
-> >> +		msecs_to_jiffies(MIN_HEALTH_QUERY_INTERVAL * 1000);
-> >> +
-> >> +	/* Fetch new health info is its older than MIN_HEALTH_QUERY_INTERVAL */
-> >> +	if (time_after(jiffies, cache_timeout))
-> >> +		rc = __drc_pmem_query_health(p);
-> >
-> > And back to s64 after returning int?
-> Agree, will change 's64 rc' to 'int rc'.
-> 
-> >
-> >> +	else
-> >> +		/* Assume cached health data is valid */
-> >> +		rc = 0;
-> >> +
-> >> +	mutex_unlock(&p->health_mutex);
-> >> +	return rc;
-> >> +}
-> >>  
-> >>  static int papr_scm_meta_get(struct papr_scm_priv *p,
-> >>  			     struct nd_cmd_get_config_data_hdr *hdr)
-> >> @@ -286,6 +390,64 @@ static int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc,
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +static ssize_t flags_show(struct device *dev,
-> >> +				struct device_attribute *attr, char *buf)
-> >> +{
-> >> +	struct nvdimm *dimm = to_nvdimm(dev);
-> >> +	struct papr_scm_priv *p = nvdimm_provider_data(dimm);
-> >> +	struct seq_buf s;
-> >> +	u64 health;
-> >> +	int rc;
-> >> +
-> >> +	rc = drc_pmem_query_health(p);
-> >
-> > and back to int...
-> >
-> drc_pmem_query_health() returns an 'int' so the type of variable 'rc'
-> looks correct to me.
-> 
-> > Just make them long all through...
-> I think the return type for above all functions is 'int' with
-> an issue in drc_pmem_query_health() that you pointed out.
-> 
-> With that fixed the usage of 'int' return type for functions will become
-> consistent.
-> 
-> >
-> > Ira
-> >
-> >> +	if (rc)
-> >> +		return rc;
-> >> +
-> >> +	/* Copy health_bitmap locally, check masks & update out buffer */
-> >> +	health = READ_ONCE(p->health_bitmap);
-> >> +
-> >> +	seq_buf_init(&s, buf, PAGE_SIZE);
-> >> +	if (health & PAPR_SCM_DIMM_UNARMED_MASK)
-> >> +		seq_buf_printf(&s, "not_armed ");
-> >> +
-> >> +	if (health & PAPR_SCM_DIMM_BAD_SHUTDOWN_MASK)
-> >> +		seq_buf_printf(&s, "flush_fail ");
-> >> +
-> >> +	if (health & PAPR_SCM_DIMM_BAD_RESTORE_MASK)
-> >> +		seq_buf_printf(&s, "restore_fail ");
-> >> +
-> >> +	if (health & PAPR_SCM_DIMM_ENCRYPTED)
-> >> +		seq_buf_printf(&s, "encrypted ");
-> >> +
-> >> +	if (health & PAPR_SCM_DIMM_SMART_EVENT_MASK)
-> >> +		seq_buf_printf(&s, "smart_notify ");
-> >> +
-> >> +	if (health & PAPR_SCM_DIMM_SCRUBBED_AND_LOCKED)
-> >> +		seq_buf_printf(&s, "scrubbed locked ");
-> >> +
-> >> +	if (seq_buf_used(&s))
-> >> +		seq_buf_printf(&s, "\n");
-> >> +
-> >> +	return seq_buf_used(&s);
-> >> +}
-> >> +DEVICE_ATTR_RO(flags);
-> >> +
-> >> +/* papr_scm specific dimm attributes */
-> >> +static struct attribute *papr_scm_nd_attributes[] = {
-> >> +	&dev_attr_flags.attr,
-> >> +	NULL,
-> >> +};
-> >> +
-> >> +static struct attribute_group papr_scm_nd_attribute_group = {
-> >> +	.name = "papr",
-> >> +	.attrs = papr_scm_nd_attributes,
-> >> +};
-> >> +
-> >> +static const struct attribute_group *papr_scm_dimm_attr_groups[] = {
-> >> +	&papr_scm_nd_attribute_group,
-> >> +	NULL,
-> >> +};
-> >> +
-> >>  static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
-> >>  {
-> >>  	struct device *dev = &p->pdev->dev;
-> >> @@ -312,8 +474,8 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
-> >>  	dimm_flags = 0;
-> >>  	set_bit(NDD_LABELING, &dimm_flags);
-> >>  
-> >> -	p->nvdimm = nvdimm_create(p->bus, p, NULL, dimm_flags,
-> >> -				  PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
-> >> +	p->nvdimm = nvdimm_create(p->bus, p, papr_scm_dimm_attr_groups,
-> >> +				  dimm_flags, PAPR_SCM_DIMM_CMD_MASK, 0, NULL);
-> >>  	if (!p->nvdimm) {
-> >>  		dev_err(dev, "Error creating DIMM object for %pOF\n", p->dn);
-> >>  		goto err;
-> >> @@ -399,6 +561,9 @@ static int papr_scm_probe(struct platform_device *pdev)
-> >>  	if (!p)
-> >>  		return -ENOMEM;
-> >>  
-> >> +	/* Initialize the dimm mutex */
-> >> +	mutex_init(&p->health_mutex);
-> >> +
-> >>  	/* optional DT properties */
-> >>  	of_property_read_u32(dn, "ibm,metadata-size", &metadata_size);
-> >>  
-> >> -- 
-> >> 2.26.2
-> >> _______________________________________________
-> >> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
-> >> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
-> 
-> -- 
-> Cheers
-> ~ Vaibhav
+-Sergey
