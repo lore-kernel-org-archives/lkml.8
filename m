@@ -2,109 +2,135 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 266E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3142C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D95B320829
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590082100;
-	bh=pRt37ocE9vbggyrqslixMeQ2DbUZaL7la/D9a2Hyc0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TS/5Pdcam4c8nfsStr471bn3sdj2rpG3WkDhOc/+XMgLoDEzHyYzjqHoQ9TUilwrz
-	 eRijVTHseZce6VlbWHQz9nvB+zESR1bWI88/emiOmV5ZmJcElL8uSwHhKOVaJ/Vvg+
-	 FOK11oq42BmgLem1GNn8+MeoCBGBFYBuqPLoNuPs=
+	by mail.kernel.org (Postfix) with ESMTP id BA62E2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgEUR2U (ORCPT
+        id S1730022AbgEUR2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:28:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgEUR2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:28:19 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F742072C;
-        Thu, 21 May 2020 17:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590082099;
-        bh=pRt37ocE9vbggyrqslixMeQ2DbUZaL7la/D9a2Hyc0Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ckSLP4YKyS88FddhbJdgMzUz8vGOQPYYrpD0JarsGmKMcHdz/RvArC57UE0IcAS8K
-         j8sNGhCwSlhy/FJEUDjB/PMevl5125W9NQB2Ff9idCtW8N1xT8wxFW4FYm/z/ueLFL
-         gfjwiD3laRWqiM6D+HT/FaKaf/zqbHKnwPG1Q6DQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EB8D840AFD; Thu, 21 May 2020 14:28:16 -0300 (-03)
-Date:   Thu, 21 May 2020 14:28:16 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 5/7] perf metricgroup: Remove duped metric group events
-Message-ID: <20200521172816.GE14034@kernel.org>
-References: <20200520072814.128267-1-irogers@google.com>
- <20200520072814.128267-6-irogers@google.com>
- <20200520134847.GM157452@krava>
- <CAP-5=fVGf9i7hvQcht_8mnMMjzhQYdFqPzZFraE-iMR7Vcr1tw@mail.gmail.com>
- <20200520220912.GP157452@krava>
- <CAP-5=fU12vP45Sg3uRSuz-xoceTPTKw9-XZieKv1PaTnREMdrw@mail.gmail.com>
- <20200521105412.GS157452@krava>
- <CAP-5=fWfV=+TY80kvTz9ZmzzzR5inYbZXRuQfsLfe9tPG7eJrQ@mail.gmail.com>
+        Thu, 21 May 2020 13:28:40 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39784 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgEUR2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:28:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BD6ED803087B;
+        Thu, 21 May 2020 17:28:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eHxoNLgoGl2o; Thu, 21 May 2020 20:28:36 +0300 (MSK)
+Date:   Thu, 21 May 2020 20:28:35 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <linux-spi@vger.kernel.org>,
+        Liang Jin J <liang.j.jin@ericsson.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
+Subject: Re: [PATCH 1/2] spi: dw: add reset control
+Message-ID: <20200521172835.pf37pyd7whg76d3a@mobilestation>
+References: <20200521170359.20430-1-dinguyen@kernel.org>
+ <20200521171203.GH4770@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWfV=+TY80kvTz9ZmzzzR5inYbZXRuQfsLfe9tPG7eJrQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200521171203.GH4770@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, May 21, 2020 at 10:26:02AM -0700, Ian Rogers escreveu:
-> On Thu, May 21, 2020 at 3:54 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > ok, I misunderstood and thought you would colaps also M3 to
-> > have A,B computed via M1 group and with separate D ...
-> >
-> > thanks a lot for the explanation, it might be great to have it
-> > in the comments/changelog or even man page
+On Thu, May 21, 2020 at 06:12:03PM +0100, Mark Brown wrote:
+> On Thu, May 21, 2020 at 12:03:58PM -0500, Dinh Nguyen wrote:
+> > Add mechanism to get the reset control and deassert it in order to bring
+> > the IP out of reset.
+> > 
+> > Signed-off-by: Liang Jin J <liang.j.jin@ericsson.com>
+> > Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 > 
-> Thanks Jiri! Arnaldo do you want me to copy the description above into
-> the commit message of this change and resend?
-
-Send as a follow on patch, please.
-
-- Arnaldo
-
-> This patch adds some description to find_evsel_group, this is expanded
-> by the next patch that adds the two command line flags:
-> https://lore.kernel.org/lkml/20200520072814.128267-7-irogers@google.com/
-> When writing the patches it wasn't clear to me how much detail to
-> include in say the man pages.
+> Is the From: correct here?
 > 
-> Thanks,
-> Ian
+> Also adding everyone else who's got patches in flight for this driver
+> right now.
+> 
+> > ---
+> >  drivers/spi/spi-dw-mmio.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+> > index 384a3ab6dc2d..5c813e15ed89 100644
+> > --- a/drivers/spi/spi-dw-mmio.c
+> > +++ b/drivers/spi/spi-dw-mmio.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/acpi.h>
+> >  #include <linux/property.h>
+> >  #include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> >  
+> >  #include "spi-dw.h"
+> >  
+> > @@ -30,6 +31,7 @@ struct dw_spi_mmio {
+> >  	struct clk     *clk;
+> >  	struct clk     *pclk;
+> >  	void           *priv;
+> > +	struct reset_control	*rstc;
+> >  };
+> >  
+> >  #define MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x24
+> > @@ -145,6 +147,10 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+> >  	if (!dwsmmio)
+> >  		return -ENOMEM;
+> >  
+
+> > +	dwsmmio->rstc = devm_reset_control_get_exclusive(&pdev->dev, "spi");
+
+It would be better to use the optional-version of the reset getter:
+devm_reset_control_get_optional_exclusive(), since for instance our DW APB SSI
+doesn't have a dedicated reset line.
+
+Note also that you don't need to check the rstc for being NULL. It's null if the
+reset line is optional and isn't provided.
+
+If we get to have this patch applied, then DT binding shall be also updated...
+Though we haven't got it reviewed yet.(
+
+-Sergey
+
+
+
+> > +	if (!IS_ERR(dwsmmio->rstc))
+> > +		reset_control_deassert(dwsmmio->rstc);
+> > +
+> >  	dws = &dwsmmio->dws;
+> >  
+> >  	/* Get basic io resource and map it */
+> 
+> Should we also undo the reset in error paths from probe()?  It's not the
+> end of the world if we don't but...
+> 
+> > @@ -220,6 +226,9 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
+> >  	clk_disable_unprepare(dwsmmio->pclk);
+> >  	clk_disable_unprepare(dwsmmio->clk);
+> >  
+> > +	if (dwsmmio->rstc)
+> > +		reset_control_assert(dwsmmio->rstc);
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > -- 
+> > 2.17.1
+> > 
+
+
