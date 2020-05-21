@@ -2,306 +2,144 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC03C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA62C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C6520721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772712072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:05:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590062701;
+	bh=eQzbtADRfUnTfJw6YIVj/6IhR+PQooz3O5b8M+2XfuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ka9RB7bF63fUUb2I/568JnfUR161e+sGDCN2u8Sco3qhYPPhwzN5QsRgae6TQK4Gy
+	 4FUMYiHBmC0CMiZDE2hdkCixGVSEDh9/263UxuQNt1SuqB4fc83SwPaJ9nhn1o5aAo
+	 Su72y+2V8NgJLcrXgupocNkLOfE5Nrk5ws5Wswz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgEUMDg (ORCPT
+        id S1728041AbgEUMFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:03:36 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48312 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbgEUMDf (ORCPT
+        Thu, 21 May 2020 08:05:01 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41730 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727905AbgEUMFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:03:35 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 2E32D2A333F
-Subject: Re: [PATCH v3 2/4] media: v4l2-common: add helper functions to call
- s_stream() callbacks
-To:     Helen Koike <helen.koike@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
-        skhan@linuxfoundation.org, niklas.soderlund@ragnatech.se,
-        mchehab@kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-References: <20200415013044.1778572-1-helen.koike@collabora.com>
- <20200415013044.1778572-3-helen.koike@collabora.com>
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Message-ID: <31557623-2b8c-6cfe-19f7-7854ed51bc86@collabora.com>
-Date:   Thu, 21 May 2020 14:03:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 08:05:00 -0400
+Received: by mail-ed1-f68.google.com with SMTP id g9so6481243edr.8;
+        Thu, 21 May 2020 05:04:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SwZpALLAQeyKdCeabWUvdFsJgTC5XhIBMoJbc1saxP8=;
+        b=gPInm6fHMz9LqHYXBXkaBSM3grWGP2GnpJHlVBK3CnXkn00vELC9wWvY6XavdRcmC4
+         gwRIYSEbb+jH81Yb8MNUQDEienLBEnRmfqXQH3K4xuj2vznEcr8fMQSqPvzpWR9h+3dw
+         FX29hcjGNRlNbzQT8LY5mpAowXjwkyKKxq5YTzwaOj47RiGS8KVpSYNwLWB9HR3hWQsj
+         26hV7gQAFlArdZOE1nzladOI/1LGgdlR124N3ORPwTgyXig5Q0mcOQMtP2UpUgo07SFw
+         7XtcBMLwHeEuKzmWUJqS7VsTKhVBXObD1IWn4pLM7UKhOqVSmNskLNFI8IM/YgIMywix
+         6eag==
+X-Gm-Message-State: AOAM531TX0SMZQ1Y9FBxTpTLvAMH6yGAfIdttGq12/bzU6MYRzwZZBxL
+        fu2ksIvnsOsXhmKZLlVhcq4=
+X-Google-Smtp-Source: ABdhPJxcJU3YYlU6FupEZNcOtfXj4LB04jwem+8NjPjBlLO3RJdPWnW3l+WShSuHCKKHdCiixcsfrg==
+X-Received: by 2002:a50:f40d:: with SMTP id r13mr7180291edm.93.1590062697963;
+        Thu, 21 May 2020 05:04:57 -0700 (PDT)
+Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
+        by smtp.gmail.com with ESMTPSA id o21sm4645166ejb.31.2020.05.21.05.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 05:04:56 -0700 (PDT)
+Date:   Thu, 21 May 2020 14:04:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521120455.GM6462@dhcp22.suse.cz>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520202650.GB558281@chrisdown.name>
+ <20200521071929.GH6462@dhcp22.suse.cz>
+ <20200521112711.GA990580@chrisdown.name>
 MIME-Version: 1.0
-In-Reply-To: <20200415013044.1778572-3-helen.koike@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521112711.GA990580@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Thu 21-05-20 12:27:11, Chris Down wrote:
+> Michal Hocko writes:
+> > On Wed 20-05-20 21:26:50, Chris Down wrote:
+> > > Michal Hocko writes:
+> > > > Let me try to understand the actual problem. The high memory reclaim has
+> > > > a target which is proportional to the amount of charged memory. For most
+> > > > requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
+> > > > N is the number of memcgs in excess up the hierarchy). I can see to be
+> > > > insufficient if the memcg is already in a large excess but if the
+> > > > reclaim can make a forward progress this should just work fine because
+> > > > each charging context should reclaim at least the contributed amount.
+> > > >
+> > > > Do you have any insight on why this doesn't work in your situation?
+> > > > Especially with such a large inactive file list I would be really
+> > > > surprised if the reclaim was not able to make a forward progress.
+> > > 
+> > > Reclaim can fail for any number of reasons, which is why we have retries
+> > > sprinkled all over for it already. It doesn't seem hard to believe that it
+> > > might just fail for transient reasons and drive us deeper into the hole as a
+> > > result.
+> > 
+> > Reclaim can certainly fail. It is however surprising to see it fail with
+> > such a large inactive lru list and reasonably small reclaim target.
+> 
+> Why do you think the reclaim target is small? In the case of generating tons
+> of dirty pages, current->memcg_nr_pages_over_high can grow to be huge (on
+> the order of several tens of megabytes or more).
 
-On 15.04.20 03:30, Helen Koike wrote:
-> Add v4l2_pipeline_stream_{enable,disable} helper functions to iterate
-> through the subdevices in a given stream (i.e following links from sink
-> to source) and call .s_stream() callback.
-> 
-> Add stream_count on the subdevice object for simultaneous streaming from
-> different video devices which shares subdevices.
-> 
-> Prevent calling .s_stream(true) if it was already called previously by
-> another stream.
-> 
-> Prevent calling .s_stream(false) from one stream when there are still
-> others active.
-> 
-> If .s_stream(true) fails, call .s_stream(false) in the reverse order.
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
-> 
-> Changes in v3:
-> - re-write helpers to use media walkers as in v1, but with
-> v4l2_pipeline_subdevs_get() to reverse the order we call s_stream(true)
-> in subdevices.
-> - rename size to max_size (and update docs) in v4l2_pipeline_subdevs_get() to
-> reflect the meaning of the argument.
-> - add if defined(CONFIG_MEDIA_CONTROLLER) around helpers
-> 
-> Changes in v2:
-> - re-write helpers to not use media walkers
-> 
->   drivers/media/v4l2-core/v4l2-common.c | 125 ++++++++++++++++++++++++++
->   include/media/v4l2-common.h           |  43 +++++++++
->   include/media/v4l2-subdev.h           |   2 +
->   3 files changed, 170 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-> index 9e8eb45a5b03c..2f991a1a57d7c 100644
-> --- a/drivers/media/v4l2-core/v4l2-common.c
-> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> @@ -442,3 +442,128 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
-> +
-> +#if defined(CONFIG_MEDIA_CONTROLLER)
-> +
-> +/*
-> + * v4l2_pipeline_subdevs_get - Assemble a list of subdevices in a pipeline
-> + * @subdevs: the array to be filled.
-> + * @max_size: max number of elements that can fit in subdevs array.
-> + *
-> + * Walk from a video node, following links from sink to source and fill the
-> + * array with subdevices in the path.
-> + * The walker performs a depth-first traversal, which means that, in a topology
-> + * sd1->sd2->sd3->vdev, sd1 will be the first element placed in the array.
-> + *
-> + * Return the number of subdevices filled in the array.
-> + */
-> +static int v4l2_pipeline_subdevs_get(struct video_device *vdev,
-> +				     struct media_pipeline *pipe,
-> +				     struct v4l2_subdev **subdevs,
-> +				     unsigned int max_size)
-> +{
-> +	struct media_entity *entity = &vdev->entity;
-> +	struct media_device *mdev = entity->graph_obj.mdev;
-> +	int idx = 0;
-> +	int ret;
-> +
-> +	mutex_lock(&mdev->graph_mutex);
-> +
-> +	if (!pipe->streaming_count) {
-> +		ret = media_graph_walk_init(&pipe->graph, mdev);
-> +		if (ret) {
-> +			mutex_unlock(&mdev->graph_mutex);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	media_graph_walk_start(&pipe->graph, entity);
-> +
-> +	while ((entity = media_graph_walk_next_stream(&pipe->graph))) {
-> +		if (!is_media_entity_v4l2_subdev(entity))
-> +			continue;
-> +		if (WARN_ON(idx >= max_size)) {
-> +			mutex_unlock(&mdev->graph_mutex);
-> +			return -EINVAL;
-> +		}
-> +		subdevs[idx++] = media_entity_to_v4l2_subdev(entity);
-> +	}
-> +
-> +	if (!pipe->streaming_count)
-> +		media_graph_walk_cleanup(&pipe->graph);
-> +
-> +	mutex_unlock(&mdev->graph_mutex);
-> +
-> +	return idx;
-> +}
-> +
-> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
-> +					     struct media_pipeline *pipe)
-> +{
-> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
-> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
-> +	struct v4l2_subdev *sd;
-> +	int i, size, ret;
-> +
-> +	size = v4l2_pipeline_subdevs_get(vdev, pipe,
-> +					 subdevs, ARRAY_SIZE(subdevs));
-> +	if (size <= 0)
-> +		return size;
-> +
-> +	/* Call s_stream() in reverse order to enable sensors last */
-> +	for (i = size - 1; i >= 0; i--) {
-> +		sd = subdevs[i];
-> +		if (sd->stream_count++)
-> +			continue;
-> +		dev_dbg(mdev->dev,
-> +			"enabling stream for '%s'\n", sd->entity.name);
-> +		ret = v4l2_subdev_call(sd, video, s_stream, true);
-> +		if (ret && ret != -ENOIOCTLCMD) {
-> +			sd->stream_count = 0;
-> +			goto err_stream_disable;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err_stream_disable:
-> +	for (i++; i < size; i++) {
-> +		sd = subdevs[i];
-> +		if (--sd->stream_count)
-> +			continue;
-> +		dev_dbg(mdev->dev,
-> +			"disabling stream for '%s'\n", sd->entity.name);
-> +		v4l2_subdev_call(sd, video, s_stream, false);
-> +	};
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_enable);
-> +
-> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
-> +				  struct media_pipeline *pipe)
-> +{
-> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
-> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
-> +	unsigned int i;
-> +	int size;
-> +
-> +	size = v4l2_pipeline_subdevs_get(vdev, pipe,
-> +					 subdevs, ARRAY_SIZE(subdevs));
-> +	if (WARN_ON(size < 0))
-> +		return;
-> +
-> +	/* Call s_stream() in order to disable sensors first */
-> +	for (i = 0; i < size; i++) {
-> +		struct v4l2_subdev *sd = subdevs[i];
-> +
-> +		if (--sd->stream_count)
-> +			continue;
-> +		dev_dbg(mdev->dev,
-> +			"disabling stream for '%s'\n", sd->entity.name);
-> +		v4l2_subdev_call(sd, video, s_stream, false);
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_disable);
-> +
-> +#endif /* CONFIG_MEDIA_CONTROLLER */
-> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
-> index 150ee16ebd811..dc46812120cdc 100644
-> --- a/include/media/v4l2-common.h
-> +++ b/include/media/v4l2-common.h
-> @@ -539,4 +539,47 @@ static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
->   	buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
->   }
->   
-> +#if defined(CONFIG_MEDIA_CONTROLLER)
-> +
-> +/**
-> + * v4l2_pipeline_stream_enable - Call .s_stream(true) callbacks in the stream
-> + * @vdev: Starting video device.
-> + * @pipe: Pipeline this entity belongs to.
-> + *
-> + * Call .s_stream(true) callback in all the subdevices participating in the
-> + * stream, i.e. following links from sink to source.
-> + *
-> + * .s_stream(true) is also called from sink to source, i.e. in a topology
-> + * sd1->sd2->sd3->vdev, .s_stream(true) of sd3 is called first.
-> + *
-> + * Calls to this function can be nested, in which case the same number of
-> + * v4l2_pipeline_stream_disable() calls will be required to disable streaming
-> + * through subdevices in the pipeline.
-> + * The  pipeline pointer must be identical for all nested calls to
-> + * v4l2_pipeline_stream_enable().
-> + */
-> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
-> +					     struct media_pipeline *pipe);
-> +
-> +/**
-> + * v4l2_pipeline_stream_disable - Call .s_stream(false) callbacks in the stream
-> + * @vdev: Starting video device.
-> + * @pipe: Pipeline this entity belongs to.
-> + *
-> + * Call .s_stream(false) callback in all the subdevices participating in the
-> + * stream, i.e. following links from sink to source.
-> + *
-> + * s_stream(false) is called in a reverse order from
-> + * v4l2_pipeline_stream_enable(), i.e. in a topology sd1->sd2->sd3->vdev,
-> + * .s_stream(false) of sd1 is called first.
-> + *
-> + * If multiple calls to v4l2_pipeline_stream_enable() have been made, the same
-> + * number of calls to this function are required to disable streaming through
-> + * subdevices in the pipeline.
-> + */
-> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
-> +				  struct media_pipeline *pipe);
-> +
-> +#endif /* CONFIG_MEDIA_CONTROLLER */
-> +
->   #endif /* V4L2_COMMON_H_ */
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index a4848de598521..20f913a9f70c5 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -838,6 +838,7 @@ struct v4l2_subdev_platform_data {
->    * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
->    *		     device using v4l2_device_register_sensor_subdev().
->    * @pdata: common part of subdevice platform data
-> + * @stream_count: Stream count for the subdevice.
->    *
->    * Each instance of a subdev driver should create this struct, either
->    * stand-alone or embedded in a larger struct.
-> @@ -869,6 +870,7 @@ struct v4l2_subdev {
->   	struct v4l2_async_notifier *notifier;
->   	struct v4l2_async_notifier *subdev_notifier;
->   	struct v4l2_subdev_platform_data *pdata;
-> +	unsigned int stream_count;
-I wonder if it is worth it to add a new field to v4l2_subdev that is used only
-for the specific case, it seems that except of rkisp1 and vimc, the other drivers you pointed to that
-could use the helpers don't need this counter and they call s_stream without checking if it was already called.
-This counter is updated only by the new introduced functions and not when s_stream is called from other places.
-Maybe we can add a helper that just return the next subdevice connected to the current entity as a source, and drivers can
-iterate it and can decide themselves if s_stream should be called or not
+Because from my experience there are not tons of charges inside one
+syscall usually. Yeah, some syscalls can generate a lot of them but that
+shouldn't be a majority.
 
-Thanks,
-Dafna
-
->   };
->   
->   
+> > Having the full LRU of dirty pages sounds a bit unusual, IO throttling
+> > for v2 and explicit throttling during the reclaim for v1 should prevent
+> > from that. If the reclaim gives up too easily then this should be
+> > addressed at the reclaim level.
 > 
+> I'm not sure I agree. Reclaim knows what you asked it to do: reclaim N
+> pages, but what to do about the situation when it fails to satisfy that is a
+> job for the caller. In this case, we are willing to even tolerate a little
+> bit of overage up to the 10ms throttle threshold. In other cases, we want to
+> do other checks first before retrying, because the tradeoffs are different.
+> Putting all of this inside the reclaim logic seems unwieldy.
+
+That is not what I meant. We do have some throttling inside the reclaim
+because failing reclaim too quickly can easily lead to pre mature OOMs.
+If that doesn't work then we should have a look why. E.g. it is quite
+unexpected to have large LRU full of dirty pages because this suggests
+that dirty throttling doesn't work properly.
+
+> > The main problem I see with that approach is that the loop could easily
+> > lead to reclaim unfairness when a heavy producer which doesn't leave the
+> > kernel (e.g. a large read/write call) can keep a different task doing
+> > all the reclaim work. The loop is effectivelly unbound when there is a
+> > reclaim progress and so the return to the userspace is by no means
+> > proportional to the requested memory/charge.
+> 
+> It's not unbound when there is reclaim progress, it stops when we are within
+> the memory.high throttling grace period. Right after reclaim, we check if
+> penalty_jiffies is less than 10ms, and abort and further reclaim or
+> allocator throttling:
+
+Just imagine that you have parallel producers increasing the high limit
+excess while somebody reclaims those. Sure in practice the loop will be
+bounded but the reclaimer might perform much more work on behalf of
+other tasks.
+-- 
+Michal Hocko
+SUSE Labs
