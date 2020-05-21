@@ -2,132 +2,116 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1BE42072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BB92072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgEUObF (ORCPT
+        id S1729616AbgEUObI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:31:05 -0400
-Received: from smtp12.smtpout.orange.fr ([80.12.242.134]:53558 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbgEUObE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:31:04 -0400
-Received: from [192.168.42.210] ([93.22.132.254])
-        by mwinf5d47 with ME
-        id hSX12200Q5VUqNM03SX1Ps; Thu, 21 May 2020 16:31:02 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 21 May 2020 16:31:02 +0200
-X-ME-IP: 93.22.132.254
-Subject: Re: [PATCH 3.16 35/99] pxa168fb: Fix the function used to release
- some memory in an error handling path
-From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lubomir Rintel <lkundrak@v3.sk>
-References: <lsq.1589984008.562400019@decadent.org.uk>
- <95e4cf2d-5f50-e7bd-6e1e-a1d172eb24b6@wanadoo.fr>
-Message-ID: <104d4c9f-48d8-19b1-d529-a34fcc1e5606@wanadoo.fr>
-Date:   Thu, 21 May 2020 16:31:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 10:31:08 -0400
+Received: from sauhun.de ([88.99.104.3]:50418 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727840AbgEUObG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 10:31:06 -0400
+Received: from localhost (p5486ce13.dip0.t-ipconnect.de [84.134.206.19])
+        by pokefinder.org (Postfix) with ESMTPSA id F01102C1FCF;
+        Thu, 21 May 2020 16:31:03 +0200 (CEST)
+Date:   Thu, 21 May 2020 16:31:00 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Tali Perry <tali.perry1@gmail.com>, ofery@google.com,
+        brendanhiggins@google.com, avifishman70@gmail.com,
+        tmaimon77@gmail.com, kfting@nuvoton.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
+ driver
+Message-ID: <20200521143100.GA16812@ninjato>
+References: <20200521110910.45518-1-tali.perry1@gmail.com>
+ <20200521110910.45518-3-tali.perry1@gmail.com>
+ <20200521142340.GM1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <95e4cf2d-5f50-e7bd-6e1e-a1d172eb24b6@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <20200521142340.GM1634618@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-sorry for the noise, I have messed up my 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/ usage.
-I thought I was looking at the 3.16.83 branch, but I was not.
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The patch looks good to me.
+Hi Tali, Andy!
 
-CJ
+On Thu, May 21, 2020 at 05:23:40PM +0300, Andy Shevchenko wrote:
+> On Thu, May 21, 2020 at 02:09:09PM +0300, Tali Perry wrote:
+> > Add Nuvoton NPCM BMC I2C controller driver.
+>=20
+> Thanks. My comments below.
+> After addressing them, FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Le 21/05/2020 à 16:09, Marion & Christophe JAILLET a écrit :
-> Hi,
->
-> I don't think that this one is applicable to 3.16.x
->
-> The remove function and the error handling path of the probe function 
-> both use 'dma_free_wc'.
-> I've not look in details, but it looks consistent and the patch would 
-> not apply as-is anyway.
->
-> just my 2c.
->
-> CJ
->
-> Le 20/05/2020 à 16:14, Ben Hutchings a écrit :
->> 3.16.84-rc1 review patch.  If anyone has any objections, please let 
->> me know.
->>
->> ------------------
->>
->> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>
->> commit 3c911fe799d1c338d94b78e7182ad452c37af897 upstream.
->>
->> In the probe function, some resources are allocated using 
->> 'dma_alloc_wc()',
->> they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
->>
->> We already use 'dma_free_wc()' in the remove function, but not in the
->> error handling path of the probe function.
->>
->> Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
->> PAGE_ALIGNed.
->>
->> Fixes: 638772c7553f ("fb: add support of LCD display controller on 
->> pxa168/910 (base layer)")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
->> CC: YueHaibing <yuehaibing@huawei.com>
->> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->> Link: 
->> https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-christophe.jaillet@wanadoo.fr
->> [bwh: Backported to 3.16: Use dma_free_writecombine().]
->> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
->> ---
->>   drivers/video/fbdev/pxa168fb.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> --- a/drivers/video/fbdev/pxa168fb.c
->> +++ b/drivers/video/fbdev/pxa168fb.c
->> @@ -772,8 +772,8 @@ failed_free_cmap:
->>   failed_free_clk:
->>       clk_disable(fbi->clk);
->>   failed_free_fbmem:
->> -    dma_free_coherent(fbi->dev, info->fix.smem_len,
->> -            info->screen_base, fbi->fb_start_dma);
->> +    dma_free_writecombine(fbi->dev, info->fix.smem_len,
->> +                  info->screen_base, fbi->fb_start_dma);
->>   failed_free_info:
->>       kfree(info);
->>   failed_put_clk:
->> @@ -809,7 +809,7 @@ static int pxa168fb_remove(struct platfo
->>         irq = platform_get_irq(pdev, 0);
->>   -    dma_free_writecombine(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
->> +    dma_free_writecombine(fbi->dev, info->fix.smem_len,
->>                   info->screen_base, info->fix.smem_start);
->>         clk_disable(fbi->clk);
->>
+Thanks, Andy, for all the review!
+
+=46rom a glimpse, this looks good to go. I will have a close look later
+today.
+
+> > +#ifdef CONFIG_DEBUG_FS
+>=20
+> Again, why is this here?
+>=20
+> Have you checked debugfs.h for !CONFIG_DEBUG_FS case?
+
+I wondered also about DEBUG_FS entries. I can see their value when
+developing the driver. But since this is done now, do they really help a
+user to debug a difficult case? I am not sure, and then I wonder if we
+should have that code in upstream. I am open for discussion, though.
+
+> > +MODULE_VERSION("0.1.3");
+>=20
+> Module version is defined by kernel commit hash. But it's up to you and
+> subsystem maintainer to decide.
+
+Please drop it. I also think commit id's (or even kernel versions) are a
+more precise description.
+
+Regards,
+
+   Wolfram
+
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7GkKAACgkQFA3kzBSg
+KbZ4kA/+J19dZhaJMmLz3WgryibpVzJTnhheDeduLgYVUvQcBoHj7dvuMF9+RYNM
+R+ClE6BTGWDYBGglNFSSFq/M8TUro7GzIPJw1wzSjLLtxYh13FeFx9FFYX+XS1zO
+oKff+p2gC1XM6RjEsIyTz7+/e0AsUKgCM6ENX4re+BbU/6IHvv2zOOaaVn2oEsoO
+3jQ/V2yV9U1QsFLd/Ev2SnYT4owBZY/CVz93njaUc9/Hfvz5FawH0SD3/GnWh8+K
+3gm7Ry1VoW8oopkXEcquXTBjaLKQPE3/w0cuJHFh4f9PAi1aEYHCfFa6MgC/Z8xg
+Fkhwkxj5m226WUa41Lswib5sdQ/ITRLetMkoM3VTLFKj5x2HmluwSV2Jt6tGFReZ
+K5fP8h8b4/TjEqVILEctTAfW0pEVT+BF0/cg9MiPPlKjNKXdOollLpu6hnaUdUxb
+QYz3ehhDfsD9lKpKFfCTyx1seQ54DwBM/C/w+RAg8ThTWjMHuj2rz872SVC1i+hY
+OCqRzUicn60p0SzZW5rL+kAVEKQkWjuosQ9XyoBMASXZnfWjzhLIFde6Yas6SXHV
+rTKLx5840wEuTVnNKsQ5XoMN0eadd9H0eu4I/XBXoc5ywX5EISq6df4xKfGC0kx6
+VB9hc42qrJ5lmQVOMVQ1bAdFba+mwzLKdCNcC+qHISoNJOctprY=
+=dVRn
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
