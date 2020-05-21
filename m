@@ -2,158 +2,110 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C56DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34BC7207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47577207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:17:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljg05M5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgEUURE (ORCPT
+        id S1728845AbgEUURv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
+        Thu, 21 May 2020 16:17:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgEUURD (ORCPT
+        with ESMTP id S1726814AbgEUURv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:17:03 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96BCBC061A0E;
-        Thu, 21 May 2020 13:17:03 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id D0AD82A0667;
-        Thu, 21 May 2020 21:17:01 +0100 (BST)
-Date:   Thu, 21 May 2020 22:16:58 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: Re: [PATCH v6 04/19] spi: spi-mem: allow specifying a command's
- extension
-Message-ID: <20200521221658.037b802b@collabora.com>
-In-Reply-To: <20200521200313.bnil6a4u3dhiizr4@ti.com>
-References: <20200520163053.24357-1-p.yadav@ti.com>
-        <20200520163053.24357-5-p.yadav@ti.com>
-        <20200521202256.5816eb32@collabora.com>
-        <20200521194129.3lqdormmcs4zadh2@ti.com>
-        <20200521200313.bnil6a4u3dhiizr4@ti.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 21 May 2020 16:17:51 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E76C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:17:50 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id u1so6659634wmn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=huWgXpbDzdljKw3GvlKFMkS9v32YlszvZUodY9Vu2AM=;
+        b=ljg05M5aahcskGiy83jjBBWZfs2xI5NxpP4k2fna2chn8rGXb6cpKB3Ef+xrCKF9yn
+         fQC/P/qaZ+2l4SQYIMEb6qRa2UXz12dYEOnRQiH85v1UTuSC4oBFApfWrfv4jSTQp6P2
+         yoDl/ib6de/OZOfk7HfYqAUJjl1/u8UWS/W/QSGfCiDmKzeNUB/Z8Ib6P50jRUSQVjDM
+         YPfTI5HF8oUlAEgikI2fUumFbbtOfwWNlHE++B0GUji8XWMBv5r+YmHiQ+N90tOpsCSv
+         TYp8Gv596H0ws+AtWZyXGaNYXCgld6k3Tm8qzgYs52/rlQa/zjGouo+MPG/6WsSbm+SO
+         rogg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=huWgXpbDzdljKw3GvlKFMkS9v32YlszvZUodY9Vu2AM=;
+        b=PfbUoNZa8xOjrKy4+cAvnZsAGUCpPc002jKe9rsrWU7fs2knxGEHVEDPe/ZEfWYf7C
+         YJkDpIhJNuMbE2GC62psHL+X9cjZhT8OjkufjpdWrhEjq+kKyDzNwPYEQYfvuQixSS3D
+         zXjevnZQRVQhakD6HheTIYDwMhhsqUDBGpCT7QGpP11SKEMC+hnmk1tLsLbJ1rjKZ/vR
+         m6kTFENUHyQduRhadDrdOXSMLNYgNMfZiJ8kpdM9Gss+/GrQUXJo0bx5Ej2KxqFs09/a
+         fKLwTiFW4m5AYuNbu9BaYWKoFF7pkFV0agTiDP4VpKHgmpkgxsZHeiMeqyA4tp5zhMod
+         0ezg==
+X-Gm-Message-State: AOAM531hXlWWVBX6mjkfGcY0IQ2tBKjJfN5oFF0VY7Ze+LRTjXrgtTmX
+        UYKfIHU28UuFMdYG4DtpNk5gJzOuTyDeVXNecNo=
+X-Google-Smtp-Source: ABdhPJwFCX6ZTfZC+CYhpgpI3DM3w4YWTm9Ir6r9l2PdlZuiYiDYb0T2GXm6T8zhCVnCb/vwD8/q+rFFDW8SaepTFM4=
+X-Received: by 2002:a7b:cf05:: with SMTP id l5mr10778996wmg.100.1590092269456;
+ Thu, 21 May 2020 13:17:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
+ <20200520234520.22563-9-sstabellini@kernel.org> <83c1120f-fe63-dc54-7b82-15a91c748de8@xen.org>
+ <alpine.DEB.2.21.2005211247461.27502@sstabellini-ThinkPad-T480s>
+In-Reply-To: <alpine.DEB.2.21.2005211247461.27502@sstabellini-ThinkPad-T480s>
+From:   Julien Grall <julien.grall.oss@gmail.com>
+Date:   Thu, 21 May 2020 21:17:38 +0100
+Message-ID: <CAJ=z9a24gHgS1yrpzLmW35zPSR6F6NUvYJUyJ9p1+oLp7THD8w@mail.gmail.com>
+Subject: Re: [PATCH 09/10] xen/arm: introduce phys/dma translations in xen_dma_sync_for_*
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        linux-kernel@vger.kernel.org,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 01:33:15 +0530
-Pratyush Yadav <p.yadav@ti.com> wrote:
+On Thu, 21 May 2020 at 21:08, Stefano Stabellini <sstabellini@kernel.org> wrote:
+>
+> On Thu, 21 May 2020, Julien Grall wrote:
+> > > @@ -97,8 +98,7 @@ bool xen_arch_need_swiotlb(struct device *dev,
+> > >                        phys_addr_t phys,
+> > >                        dma_addr_t dev_addr)
+> > >   {
+> > > -   unsigned int xen_pfn = XEN_PFN_DOWN(phys);
+> > > -   unsigned int bfn = XEN_PFN_DOWN(dev_addr);
+> > > +   unsigned int bfn = XEN_PFN_DOWN(dma_to_phys(dev, dev_addr));
+> > >             /*
+> > >      * The swiotlb buffer should be used if
+> > > @@ -115,7 +115,7 @@ bool xen_arch_need_swiotlb(struct device *dev,
+> > >      * require a bounce buffer because the device doesn't support coherent
+> > >      * memory and we are not able to flush the cache.
+> > >      */
+> > > -   return (!hypercall_cflush && (xen_pfn != bfn) &&
+> > > +   return (!hypercall_cflush && !pfn_valid(bfn) &&
+> >
+> > I believe this change is incorrect. The bfn is a frame based on Xen page
+> > granularity (always 4K) while pfn_valid() is expecting a frame based on the
+> > Kernel page granularity.
+>
+> Given that kernel granularity >= xen granularity it looks like it would
+> be safe to use PFN_DOWN instead of XEN_PFN_DOWN:
+>
+>   unsigned int bfn = PFN_DOWN(dma_to_phys(dev, dev_addr));
 
-> On 22/05/20 01:11AM, Pratyush Yadav wrote:
-> > On 21/05/20 08:22PM, Boris Brezillon wrote:  
-> > > On Wed, 20 May 2020 22:00:38 +0530
-> > > Pratyush Yadav <p.yadav@ti.com> wrote:
-> > >   
-> > > > In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
-> > > > the "command extension". There can be 3 types of extensions in xSPI:
-> > > > repeat, invert, and hex. When the extension type is "repeat", the same
-> > > > opcode is sent twice. When it is "invert", the second byte is the
-> > > > inverse of the opcode. When it is "hex" an additional opcode byte based
-> > > > is sent with the command whose value can be anything.
-> > > > 
-> > > > So, make opcode a 16-bit value and add a 'nbytes', similar to how
-> > > > multiple address widths are handled.
-> > > > 
-> > > > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > > > ---
-> > > >  include/linux/spi/spi-mem.h | 5 ++++-
-> > > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-> > > > index e3dcb956bf61..731bb64c6ba6 100644
-> > > > --- a/include/linux/spi/spi-mem.h
-> > > > +++ b/include/linux/spi/spi-mem.h
-> > > > @@ -69,6 +69,8 @@ enum spi_mem_data_dir {
-> > > >  
-> > > >  /**
-> > > >   * struct spi_mem_op - describes a SPI memory operation
-> > > > + * @cmd.nbytes: number of opcode bytes (only 1 or 2 are valid). The opcode is
-> > > > + *		sent MSB-first.
-> > > >   * @cmd.buswidth: number of IO lines used to transmit the command
-> > > >   * @cmd.opcode: operation opcode
-> > > >   * @cmd.dtr: whether the command opcode should be sent in DTR mode or not
-> > > > @@ -94,9 +96,10 @@ enum spi_mem_data_dir {
-> > > >   */
-> > > >  struct spi_mem_op {
-> > > >  	struct {
-> > > > +		u8 nbytes;
-> > > >  		u8 buswidth;
-> > > >  		u8 dtr : 1;
-> > > > -		u8 opcode;
-> > > > +		u16 opcode;
-> > > >  	} cmd;
-> > > >  
-> > > >  	struct {  
-> > > 
-> > > As mentioned in one of my previous review, you should patch the mxic
-> > > driver before extending the opcode field:  
-> > 
-> > IIUC, this patchset doesn't break original functionality of the driver. 
-> > It will work like before with 1-byte opcodes. So I don't think it is the 
-> > responsibility of this patchset to enhance the driver. It didn't work 
-> > before with 2-byte opcodes, it won't work now. IMO this should be a 
-> > separate, independent change.  
-> 
-> Scratch that. Big/little endian issue. If you'd drop your Signed-off-by, 
-> I'll write the commit message and patch it in.
+Yes. But is the change worth it though? pfn_valid() is definitely
+going to be more expensive than the current check.
 
-Just add a Suggested-by, that should be fine.
-
->   
-> > > --->8---  
-> > > diff --git a/drivers/spi/spi-mxic.c b/drivers/spi/spi-mxic.c
-> > > index 69491f3a515d..c3f4136a7c1d 100644
-> > > --- a/drivers/spi/spi-mxic.c
-> > > +++ b/drivers/spi/spi-mxic.c
-> > > @@ -356,6 +356,7 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
-> > >         int nio = 1, i, ret;
-> > >         u32 ss_ctrl;
-> > >         u8 addr[8];
-> > > +       u8 cmd[2];
-> > >  
-> > >         ret = mxic_spi_set_freq(mxic, mem->spi->max_speed_hz);
-> > >         if (ret)
-> > > @@ -393,7 +394,10 @@ static int mxic_spi_mem_exec_op(struct spi_mem *mem,
-> > >         writel(readl(mxic->regs + HC_CFG) | HC_CFG_MAN_CS_ASSERT,
-> > >                mxic->regs + HC_CFG);
-> > >  
-> > > -       ret = mxic_spi_data_xfer(mxic, &op->cmd.opcode, NULL, 1);
-> > > +       for (i = 0; i < op->cmd.nbytes; i++)
-> > > +               cmd[i] = op->cmd.opcode >> (8 * (op->cmd.nbytes - i - 1));
-> > > +
-> > > +       ret = mxic_spi_data_xfer(mxic, cmd, NULL, op->cmd.nbytes);
-> > >         if (ret)
-> > >                 goto out;
-> > >    
-> 
-
+Cheers,
