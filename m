@@ -2,112 +2,155 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC27C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BB8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF8F20814
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590095337;
-	bh=bq3nfY2FHxD6+erwGvYnFzlknI2N+zMNIxoeBzsuMVg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oKQLrmaoNfwiQ1KwhiJUVO0ZXy3dVNKRrn5Z4bzko1IydIZJ+hl9xx9tGM4QnMHl6
-	 JfrRvqc2rcDvqCdAm91I3w2axIo17NVFbLfPIJUaihJE3MPJkerg5qOkQbEsWXwqg/
-	 3DK01B2ytBtkbUVmuG9KJ7zY68eHHCXL0xSy6ccI=
+	by mail.kernel.org (Postfix) with ESMTP id AB4D620823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbgEUVI5 (ORCPT
+        id S1730573AbgEUVI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 21 May 2020 17:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729803AbgEUVI5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 May 2020 17:08:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729803AbgEUVI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:08:57 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4916207F9;
-        Thu, 21 May 2020 21:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590095336;
-        bh=bq3nfY2FHxD6+erwGvYnFzlknI2N+zMNIxoeBzsuMVg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zY2En2y5UEXbWZpyjwa/I5GUbCpu4P22OtT46zIHNHDX/CBgwccWGg4nD1jP2mxof
-         /Cojfv4QevmZ4xUrz8YrbkbJX/6UP3hWbpaPNI51JR/a78J2Ja1jo6RR6lkL87PdMQ
-         aU3wTCXPYltvhNTZXHGPTaCXFoZPxDYPCpZHUwMg=
-Date:   Thu, 21 May 2020 22:08:53 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>,
-        Timo =?iso-8859-1?B?U2NobPzfbGVy?= <schluessler@krause.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-spi@vger.kernel.org, Jan Glauber <jglauber@marvell.com>,
-        Robert Richter <rrichter@marvell.com>
-Subject: Re: [PATCH] can: mcp251x: convert to half-duplex SPI
-Message-ID: <20200521210853.GK4770@sirena.org.uk>
-References: <1582655734-20890-1-git-send-email-tharvey@gateworks.com>
- <0ac77abd-0df5-e437-ea46-f6c77f59b81c@pengutronix.de>
- <CAJ+vNU3vk92_1UnrYH72QgD3-q9Oy9As=jCiup42jzx_2LG9FA@mail.gmail.com>
- <0b351fe3-8fe9-572f-fd85-e2aed22873e3@pengutronix.de>
- <7b85e098-b9a9-dd14-203f-100cdf2e703e@pengutronix.de>
- <CAJ+vNU06DHVS25OQR1Kqyzy2ZxLVq-HdwenGv-jN5Rb3r8F86Q@mail.gmail.com>
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65728C061A0E;
+        Thu, 21 May 2020 14:08:57 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jbsQv-0001kN-O1; Thu, 21 May 2020 23:08:53 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2ECFA1C010B;
+        Thu, 21 May 2020 23:08:53 +0200 (CEST)
+Date:   Thu, 21 May 2020 21:08:53 -0000
+From:   "tip-bot2 for Krzysztof Piecuch" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/timers] x86/tsc: Add tsc_early_khz command line parameter
+Cc:     Krzysztof Piecuch <piecuch@protonmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: =?utf-8?q?=3CO2CpIOrqLZHgNRkfjRpz=5FLGqnc1ix=5FseNIiOCvHY4RHoul?=
+ =?utf-8?q?OVRo6kMXKuLOfBVTi0SMMevg6Go1uZ=5FcL9fLYtYdTRNH78ChaFaZyG3VAyY?=
+ =?utf-8?q?z8=3D=40protonmail=2Ecom=3E?=
+References: =?utf-8?q?=3CO2CpIOrqLZHgNRkfjRpz=5FLGqnc1ix=5FseNIiOCvHY4RHoulO?=
+ =?utf-8?q?VRo6kMXKuLOfBVTi0SMMevg6Go1uZ=5FcL9fLYtYdTRNH78ChaFaZyG3VAyYz?=
+ =?utf-8?q?8=3D=40protonmail=2Ecom=3E?=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="apbmkPN6Hu/1dI3g"
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU06DHVS25OQR1Kqyzy2ZxLVq-HdwenGv-jN5Rb3r8F86Q@mail.gmail.com>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <159009533302.17951.12414541965465458126.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/timers branch of tip:
 
---apbmkPN6Hu/1dI3g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Commit-ID:     bd35c77e32e4359580207891c0f7a438ad4b42df
+Gitweb:        https://git.kernel.org/tip/bd35c77e32e4359580207891c0f7a438ad4b42df
+Author:        Krzysztof Piecuch <piecuch@protonmail.com>
+AuthorDate:    Thu, 23 Jan 2020 16:09:26 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 21 May 2020 23:07:00 +02:00
 
-On Thu, May 21, 2020 at 01:19:16PM -0700, Tim Harvey wrote:
+x86/tsc: Add tsc_early_khz command line parameter
 
-> Should I be submitting this patch with logic that only does
-> half-duplex if the spi controller doesn't support it (if
-> (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX)) or is it
-> acceptable to simply make the driver half-duplex like this for all
-> cases?
+Changing base clock frequency directly impacts TSC Hz but not CPUID.16h
+value. An overclocked CPU supporting CPUID.16h and with partial CPUID.15h
+support will set TSC KHZ according to "best guess" given by CPUID.16h
+relying on tsc_refine_calibration_work to give better numbers later.
+tsc_refine_calibration_work will refuse to do its work when the outcome is
+off the early TSC KHZ value by more than 1% which is certain to happen on
+an overclocked system.
 
-It seems likely that making the transfers explicitly half duplex will
-perform better, especially for PIO controllers since there's less FIFO
-stuffing to do but also just generally on longer messages.  You will
-get some overhead setting up two transfers on write then read messages
-which might offset that but my best guess would be that it'll be
-negligable on most controllers.  It's also just a more accurate
-representation of what the transfers are actually doing which seems
-nicer.
+Fix this by adding a tsc_early_khz command line parameter that makes the
+kernel skip early TSC calibration and use the given value instead.
 
-If there *is* a performance win for doing full duplex messages on some
-controllers we should probably look at optimizing this in the SPI core
-since it'll affect a wide range of hardware and we already have some
-code for forcing full duplex anyway.
+This allows the user to provide the expected TSC frequency that is closer
+to reality than the one reported by the hardware, enabling
+tsc_refine_calibration_work to do meaningful error checking.
 
---apbmkPN6Hu/1dI3g
-Content-Type: application/pgp-signature; name="signature.asc"
+[ tglx: Made the variable __initdata as it's only used on init and
+        removed the error checking in the argument parser because
+	kstrto*() only stores to the variable if the string is valid ]
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Krzysztof Piecuch <piecuch@protonmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/O2CpIOrqLZHgNRkfjRpz_LGqnc1ix_seNIiOCvHY4RHoulOVRo6kMXKuLOfBVTi0SMMevg6Go1uZ_cL9fLYtYdTRNH78ChaFaZyG3VAyYz8=@protonmail.com
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7G7eUACgkQJNaLcl1U
-h9AOJQf+MicpOYZXR/CuHGZ9nB2XYZVgilr2bOVHAgmW9Ptv934QL7ohdwoxOi6/
-envwoCqrTmi8Ii1y2aVCj4/fnoFzYhYOEIAifJyecrnU8HJVouLN55z7OtMcd1W2
-hT/hVhXtPkT16rWo2/hMxJvljs7xRG3ezBy7kfsOgrvkN8T7P7pGo9IZrStLWM22
-FLUt6FH54mF1A8eqCHevlaIIzP6deQ4WaWyi+tpwc8zoJXSDWAVlYqOugiVSYRvC
-5UFPKCQXLVaymi0BcHpXkZv9ctDmpQHH3ZKsi/uuePlqMmyHxe+IAv3kZBJY6R1F
-xLQSJezpEy6QAujKHOtwiM9zTPEsCw==
-=Mz9E
------END PGP SIGNATURE-----
+---
+ Documentation/admin-guide/kernel-parameters.txt |  6 ++++++
+ arch/x86/kernel/tsc.c                           | 12 +++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
---apbmkPN6Hu/1dI3g--
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7bc83f3..409ee4a 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5067,6 +5067,12 @@
+ 			interruptions from clocksource watchdog are not
+ 			acceptable).
+ 
++	tsc_early_khz=  [X86] Skip early TSC calibration and use the given
++			value instead. Useful when the early TSC frequency discovery
++			procedure is not reliable, such as on overclocked systems
++			with CPUID.16h support and partial CPUID.15h support.
++			Format: <unsigned int>
++
+ 	tsx=		[X86] Control Transactional Synchronization
+ 			Extensions (TSX) feature in Intel processors that
+ 			support TSX control.
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index fdd4c10..49d9250 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -41,6 +41,7 @@ EXPORT_SYMBOL(tsc_khz);
+  * TSC can be unstable due to cpufreq or due to unsynced TSCs
+  */
+ static int __read_mostly tsc_unstable;
++static unsigned int __initdata tsc_early_khz;
+ 
+ static DEFINE_STATIC_KEY_FALSE(__use_tsc);
+ 
+@@ -59,6 +60,12 @@ struct cyc2ns {
+ 
+ static DEFINE_PER_CPU_ALIGNED(struct cyc2ns, cyc2ns);
+ 
++static int __init tsc_early_khz_setup(char *buf)
++{
++	return kstrtouint(buf, 0, &tsc_early_khz);
++}
++early_param("tsc_early_khz", tsc_early_khz_setup);
++
+ __always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
+ {
+ 	int seq, idx;
+@@ -1412,7 +1419,10 @@ static bool __init determine_cpu_tsc_frequencies(bool early)
+ 
+ 	if (early) {
+ 		cpu_khz = x86_platform.calibrate_cpu();
+-		tsc_khz = x86_platform.calibrate_tsc();
++		if (tsc_early_khz)
++			tsc_khz = tsc_early_khz;
++		else
++			tsc_khz = x86_platform.calibrate_tsc();
+ 	} else {
+ 		/* We should not be here with non-native cpu calibration */
+ 		WARN_ON(x86_platform.calibrate_cpu != native_calibrate_cpu);
