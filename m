@@ -2,231 +2,99 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA212072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dpbcq2d1"
+	by mail.kernel.org (Postfix) with ESMTP id BC9102072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgEUJ1s (ORCPT
+        id S1728774AbgEUJbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:27:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32375 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728754AbgEUJ1r (ORCPT
+        Thu, 21 May 2020 05:31:11 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:55829 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728704AbgEUJbK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:27:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590053266;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=quQuJBMGTdzqpuGt7zo1zAzJESra8VWBn2to1tNTbPo=;
-        b=dpbcq2d1ASBwyu9G4HX5j+c1R/mUjGulvkw98Yw5G55+gmv1PPRslWTIFaQYPEZ//NZeFi
-        UPAe+KUtuwExLhQie2PMjjSK87E9J3px5tdNxigA9cBEdLqOuOS7tKA8SGNUEuKUR06aRn
-        nwMPs5VtnZo+g/i1XsDdsWHMoZ4kfao=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-445-TeGjl3qSMhahcFOYG87f0g-1; Thu, 21 May 2020 05:27:43 -0400
-X-MC-Unique: TeGjl3qSMhahcFOYG87f0g-1
-Received: by mail-ej1-f69.google.com with SMTP id gl5so2561344ejb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 02:27:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=quQuJBMGTdzqpuGt7zo1zAzJESra8VWBn2to1tNTbPo=;
-        b=ZQSHf3u2kSZuiZ31yEYgQbqnW5rxLN1WJLbVdjzyuiAXFxt92KUt/fs/Fr2o/o4Kib
-         gh+JQKI8jkkmJ+LGQXCiDdPr1zFiLV9JkfnFm2F9pJ6h3VTjjQC/Iq2nMF5z+qB+Guwy
-         Gm+xg0DjDfk8URTBaQYQrNwcPANVyY0LaseS5hJKCN9EAllKVefeR/JP92vSrmsXI0JB
-         PK55JvpBbo47Z9P5oJ6A1A/G1hJyXlIc/qLHDvA/Vzh5Uiw64PFHd5PdglkYkHsDIVjc
-         qNYm7vE8C2ZKJ0omWXkAxG6fpqPEEsSCR8uXD19k5dmBusxjTagIzQoT2/b0JJ1x6Twf
-         wLZQ==
-X-Gm-Message-State: AOAM531qhHcm8uLg5iPQQzwfx0Q4i3ZXOKMndtBGR59rxyFZg90z5lZQ
-        A0fSlcBzH6cG1cpffgzDEhbkY/UxJN9JcoPjlNlnoKnM67kmKr06YAYHTyDNPWtukjPcwogNxs7
-        l5LW/xdqWAf3dIZwzWOrcIzFg
-X-Received: by 2002:a17:907:1199:: with SMTP id uz25mr2867008ejb.24.1590053262460;
-        Thu, 21 May 2020 02:27:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxu3tvSOXBKIaoKCExELL7QWl8a/0QYfX9s5r0nE2gAfdwL6HfdVLGHlArhNH733Qdd+RR40w==
-X-Received: by 2002:a17:907:1199:: with SMTP id uz25mr2866989ejb.24.1590053262172;
-        Thu, 21 May 2020 02:27:42 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id k9sm4639051edf.26.2020.05.21.02.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 02:27:41 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     =?utf-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3] kvm/x86 : Remove redundant function implement
-In-Reply-To: <HKAPR02MB4291D5926EA10B8BFE9EA0D3E0B70@HKAPR02MB4291.apcprd02.prod.outlook.com>
-References: <HKAPR02MB4291D5926EA10B8BFE9EA0D3E0B70@HKAPR02MB4291.apcprd02.prod.outlook.com>
-Date:   Thu, 21 May 2020 11:27:40 +0200
-Message-ID: <87h7w9skmr.fsf@vitty.brq.redhat.com>
+        Thu, 21 May 2020 05:31:10 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N9cDF-1ixPAH2wTN-015dNM for <linux-kernel@vger.kernel.org>; Thu, 21 May
+ 2020 11:31:08 +0200
+Received: by mail-qk1-f171.google.com with SMTP id y22so6583673qki.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 02:31:08 -0700 (PDT)
+X-Gm-Message-State: AOAM532y3FNcqsntLRaUqXSoNiqDwPKPwbOQju4Osxi9q1xx0BXOx6fb
+        kO+6HkQGwy7bCcCCigxInMZh3BaPpP3Uv/z/JbU=
+X-Google-Smtp-Source: ABdhPJzbgF8kpiHY8jbqJbvHdKF89SdmVVSXNL4nMi/iekVliG7vUiFck8VHCIJH+/J+6YUDtXi2c8Eovdt4IzQ+dlw=
+X-Received: by 2002:a37:434b:: with SMTP id q72mr9455175qka.352.1590053467616;
+ Thu, 21 May 2020 02:31:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200518091222.27467-1-sudeep.holla@arm.com> <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus> <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+ <20200521075755.GA4668@willie-the-truck> <20200521081055.GD1131@bogus>
+ <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com> <20200521091736.GA5091@willie-the-truck>
+In-Reply-To: <20200521091736.GA5091@willie-the-truck>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 May 2020 11:30:51 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3+AjykQpVFcyM9ht9T7FwHGcwSOH3GGo2ziaQ1mpesoA@mail.gmail.com>
+Message-ID: <CAK8P3a3+AjykQpVFcyM9ht9T7FwHGcwSOH3GGo2ziaQ1mpesoA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+To:     Will Deacon <will@kernel.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:j5rGUQ73rrDexC1lnHcB1RpiEDo35jQL/y8gAGtBCC9Lbxmxv23
+ r5eGf2EsLg5w4cXiQDdz7gHVibZJxtz7uKgmUnA8d+GD7/i+piciZGUfbmuaFHuVZ54h8rv
+ pAFqkePGbuVSit3Abkaqps8xtVDUiDLUUzI6avSOA6NP8cWLB13XOZXpOwPIm+so6qkM4pT
+ 4vFV2COVGAhiz72Bt0zxg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bRGBE2Z6qFc=:5Rm06osgW0jNoU/v6k9BWf
+ s6SUAtcgWJK/Oxn6+jL/lJo3vO7CcyFZTRrfQhNX1be24+tYp6wwIqGC/Ny5AIzBSSKvo29mz
+ rUoAFskyYt+hvQR63CjkfyrwkGBQyiGkljRnyRFJAPHfdlvzyboCk8wFpd6tnJf5u7nsaq8jI
+ GuHrbwgXPjEItnWXXAYhGjt6mCRowkfykKNpUX8Ha5mHvCYHQrL2FDygjUshqrW33ps1E3VgP
+ nDsT3fEn6ggCwCtY2xIRCupA8JgVYOgsS3foJq3QBWmqzhY4TnitjUAF0nICtN05n3SHGXCr/
+ +eMY4JDD5fGeNZxPo9eOm21fXh523FlzQ7oPGmjwG/4pTzZ19oaSSy0knN/4wxoesnYxYio8c
+ zqOIfzB7QM47aob1/3QWgcoG2TzLQAloAZdkbMZAxC2ITmiKlZkPmT4z1zb0r6m1kes3nZs2B
+ 48gN6z6B/VQzxEeTaJtwOo6pPMWqQn05s/yL/OYwhrirKycDUzcccDKbM0SOH9MCo1DJsKNYe
+ 6qobyObkVM2YPbdCJrNIOi2NlwnNB8yhRyTjuCMWWFhse9b4X2IjcMVj+GRT4fnW2UDPMqIjo
+ 5IP/RdMe5vxrnmr8EkSkLwk7RpHMb/W7zdhlcp8Ah3zTYq798Gaf4fXtjJI7VpZO12G5swmcE
+ 3McF+KMh9DKhpEeoZ9qynFPiKHdv4YU+Ub0D8aY7Uz97ip6U2WYrbj2USew2BvwxQbNZsaQTK
+ XNcqq7mzkbEA8reGTyRC2RLnhs9LtPx7ZEssNxgVmGaL2EFJDOl40NZGEcunW6KkSwFHHwSQZ
+ 0T/GSHNPB/wnHE4vGhKjX76D154VtpQNo9rttdc2PnkZhPTN0o=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E5=BD=AD=E6=B5=A9(Richard) <richard.peng@oppo.com> writes:
+On Thu, May 21, 2020 at 11:17 AM Will Deacon <will@kernel.org> wrote:
+> On Thu, May 21, 2020 at 11:06:23AM +0200, Arnd Bergmann wrote:
+> > On Thu, May 21, 2020 at 10:11 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > Note that the warning should come up for either W=1 or C=1, and I also
+> > think that
+> > new code should generally be written sparse-clean and have no warnings with
+> > 'make C=1' as a rule.
+>
+> Fair enough. Is anybody working on a tree-wide sweep for this, like we've
+> done for other things such as zero-length arrays? If so, I can start
+> enforcing this in the arch code as well (I haven't been so far, even though
+> I do run sparse on every commit).
 
-> pic_in_kernel(),ioapic_in_kernel() and irqchip_kernel() have the
-> same implementation.
+I've done some work on that a few years ago, and there are always
+some cleanup patches for C=1 and W=1 warnings, most recently
+with an increase from Huawei's automated build testing + manual
+patching.
 
-'pic_in_kernel()' name is misleading, one may think this is about lapic
-and it's not. Also, ioapic_in_kernel() doesn't have that many users, can
-we maybe converge on using irqchip_*() functions everywhere?
+I have not looked in a while, but it always seemed to be somewhere
+between "too much to do by myself" and "small enough that it should
+really be done" as build warnings go.
 
->
-> Signed-off-by: Peng Hao <richard.peng@oppo.com>
-> ---
->  arch/x86/kvm/ioapic.h  |  8 ++------
->  arch/x86/kvm/irq.h     | 14 ++++----------
->  arch/x86/kvm/lapic.c   |  1 +
->  arch/x86/kvm/mmu/mmu.c |  1 +
->  arch/x86/kvm/x86.c     |  1 +
->  5 files changed, 9 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
-> index 2fb2e3c..7a3c53b 100644
-> --- a/arch/x86/kvm/ioapic.h
-> +++ b/arch/x86/kvm/ioapic.h
-> @@ -5,7 +5,7 @@
->  #include <linux/kvm_host.h>
->
->  #include <kvm/iodev.h>
-> -
-> +#include "irq.h"
->  struct kvm;
->  struct kvm_vcpu;
->
-> @@ -108,11 +108,7 @@ do {\
->
->  static inline int ioapic_in_kernel(struct kvm *kvm)
->  {
-> -int mode =3D kvm->arch.irqchip_mode;
-> -
-> -/* Matches smp_wmb() when setting irqchip_mode */
-> -smp_rmb();
-> -return mode =3D=3D KVM_IRQCHIP_KERNEL;
-> +return irqchip_kernel(kvm);
->  }
->
->  void kvm_rtc_eoi_tracking_restore_one(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-> index f173ab6..e133c1a 100644
-> --- a/arch/x86/kvm/irq.h
-> +++ b/arch/x86/kvm/irq.h
-> @@ -16,7 +16,6 @@
->  #include <linux/spinlock.h>
->
->  #include <kvm/iodev.h>
-> -#include "ioapic.h"
->  #include "lapic.h"
->
->  #define PIC_NUM_PINS 16
-> @@ -66,15 +65,6 @@ void kvm_pic_destroy(struct kvm *kvm);
->  int kvm_pic_read_irq(struct kvm *kvm);
->  void kvm_pic_update_irq(struct kvm_pic *s);
->
-> -static inline int pic_in_kernel(struct kvm *kvm)
-> -{
-> -int mode =3D kvm->arch.irqchip_mode;
-> -
-> -/* Matches smp_wmb() when setting irqchip_mode */
-> -smp_rmb();
-> -return mode =3D=3D KVM_IRQCHIP_KERNEL;
-> -}
-> -
->  static inline int irqchip_split(struct kvm *kvm)
->  {
->  int mode =3D kvm->arch.irqchip_mode;
-> @@ -93,6 +83,10 @@ static inline int irqchip_kernel(struct kvm *kvm)
->  return mode =3D=3D KVM_IRQCHIP_KERNEL;
->  }
->
-> +static inline int pic_in_kernel(struct kvm *kvm)
-> +{
-> +return irqchip_kernel(kvm);
-> +}
->  static inline int irqchip_in_kernel(struct kvm *kvm)
->  {
->  int mode =3D kvm->arch.irqchip_mode;
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 9af25c9..de4d046 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -36,6 +36,7 @@
->  #include <linux/jump_label.h>
->  #include "kvm_cache_regs.h"
->  #include "irq.h"
-> +#include "ioapic.h"
->  #include "trace.h"
->  #include "x86.h"
->  #include "cpuid.h"
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 8071952..6133f69 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -16,6 +16,7 @@
->   */
->
->  #include "irq.h"
-> +#include "ioapic.h"
->  #include "mmu.h"
->  #include "x86.h"
->  #include "kvm_cache_regs.h"
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index d786c7d..c8b62ac 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -18,6 +18,7 @@
->
->  #include <linux/kvm_host.h>
->  #include "irq.h"
-> +#include "ioapic.h"
->  #include "mmu.h"
->  #include "i8254.h"
->  #include "tss.h"
-> --
-> 2.7.4
->
-> ________________________________
-> OPPO
->
-> =E6=9C=AC=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=
-=E4=BB=B6=E5=90=AB=E6=9C=89OPPO=E5=85=AC=E5=8F=B8=E7=9A=84=E4=BF=9D=E5=AF=
-=86=E4=BF=A1=E6=81=AF=EF=BC=8C=E4=BB=85=E9=99=90=E4=BA=8E=E9=82=AE=E4=BB=B6=
-=E6=8C=87=E6=98=8E=E7=9A=84=E6=94=B6=E4=BB=B6=E4=BA=BA=E4=BD=BF=E7=94=A8=EF=
-=BC=88=E5=8C=85=E5=90=AB=E4=B8=AA=E4=BA=BA=E5=8F=8A=E7=BE=A4=E7=BB=84=EF=BC=
-=89=E3=80=82=E7=A6=81=E6=AD=A2=E4=BB=BB=E4=BD=95=E4=BA=BA=E5=9C=A8=E6=9C=AA=
-=E7=BB=8F=E6=8E=88=E6=9D=83=E7=9A=84=E6=83=85=E5=86=B5=E4=B8=8B=E4=BB=A5=E4=
-=BB=BB=E4=BD=95=E5=BD=A2=E5=BC=8F=E4=BD=BF=E7=94=A8=E3=80=82=E5=A6=82=E6=9E=
-=9C=E6=82=A8=E9=94=99=E6=94=B6=E4=BA=86=E6=9C=AC=E9=82=AE=E4=BB=B6=EF=BC=8C=
-=E8=AF=B7=E7=AB=8B=E5=8D=B3=E4=BB=A5=E7=94=B5=E5=AD=90=E9=82=AE=E4=BB=B6=E9=
-=80=9A=E7=9F=A5=E5=8F=91=E4=BB=B6=E4=BA=BA=E5=B9=B6=E5=88=A0=E9=99=A4=E6=9C=
-=AC=E9=82=AE=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=E4=BB=B6=E3=80=82
->
-> This e-mail and its attachments contain confidential information from OPP=
-O, which is intended only for the person or entity whose address is listed =
-above. Any use of the information contained herein in any way (including, b=
-ut not limited to, total or partial disclosure, reproduction, or disseminat=
-ion) by persons other than the intended recipient(s) is prohibited. If you =
-receive this e-mail in error, please notify the sender by phone or email im=
-mediately and delete it!
-
---=20
-Vitaly
-
+       Arnd
