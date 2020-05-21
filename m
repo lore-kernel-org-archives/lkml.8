@@ -2,143 +2,120 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B15C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AAAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6AFF207F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853D920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DfOg8Qx/"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="XPG2fmle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgEUMXM (ORCPT
+        id S1729314AbgEUMXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35130 "EHLO
+        Thu, 21 May 2020 08:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbgEUMXM (ORCPT
+        with ESMTP id S1729304AbgEUMX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:23:12 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39CA3C061A0E;
-        Thu, 21 May 2020 05:23:12 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id c16so7205254iol.3;
-        Thu, 21 May 2020 05:23:12 -0700 (PDT)
+        Thu, 21 May 2020 08:23:29 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57770C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:23:29 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l25so6527837edj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dLRlXkQKfLYkmmwJc2IRcOiGHBn9i2amIFILrmeGCPA=;
-        b=DfOg8Qx/GufnehWDt+lldTEiy0PT1YFGmMI0o0T6PYZezyt5e8QPWegcsRaT1sBEQz
-         Z+8nlQHyvtRQKn4elyeRBmfdUxZfkCapBnyKlCCZzz5DIUgnPm4kebeJbsWBCBpY7hYB
-         WpMMlmKcX/K6IMjT4u6pdGOc/ewXtu4OZxLiUwNmZA1xc/SNzTDljD6+E7SWwM5NgHAV
-         TZFGdZrdWaI9S6s+qmRlMGQbLqpJqEqcBaFh/Fp3dztYb4+OfoiiKSPPSIBQX/BKlPak
-         f42zgIaY6uWY9xWffR4WGtv2dXC3K/Xhab2VcgWIT4j+rZrtD09pwwXfV+DAf7Hvvv9n
-         oUTA==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uwOifwCrhhMbK5Uq7O2JD6i7Fke3H2izTnc0aJuCXEg=;
+        b=XPG2fmle0UHD0TI3rprNxDcmfUfFqTRmNpREToIIZtED2Tw1ccSUVY3s4nRvf2eeHI
+         6fyQbuYFMmtWFb/NIweeYDAxLIZQggq40/t2t6OcwndTJ9KfQbOi2cjxxCdmgouj8g5f
+         PWs23lR8s68dqTVlmt13rZ3Mv+n9u0mXUNON0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dLRlXkQKfLYkmmwJc2IRcOiGHBn9i2amIFILrmeGCPA=;
-        b=oOZxhu9CC9m4mCqLjQZDYLBa4UeFb16KOMfmvY6kir/63zjEZBPBzAzdsJ/+RtUTb7
-         arJfK18m8KjFdxK1znu9L/Xi+pCl67ft9tqtn/PfUT+8UWiAIBGSG/hQaEBjO+syMCgY
-         K/IhJxA0QDCMw1z7fM+U0UfMYdbmwCrXeBV4ZZ6gmMt32DDWKPneqKoDbqw4OE93PTEG
-         qEwhuAJsqMCiTkFVJEi1QktM3hthmcIZtOaKCwji59/KEyGPZQ89GK4skA9ces2vfhIG
-         j21N++CDSZnBfiQ/MXsN4aUulHIzOZy/NK0WVASNOHGevtDryL7U53gFu+pj2/2bwJeE
-         4asQ==
-X-Gm-Message-State: AOAM530XWcZXgv9LdwTxfnIcu1NVzT+6CDC8jGA1w30iEcDZRyfKnxLA
-        VO9ITZ2n57FJBzk35mLpI6lB8ciEVS6z8Wl5OtUGFpW/QsI=
-X-Google-Smtp-Source: ABdhPJxywRNWuEXqqJHmt35W0FgGHaOdScBGeQjIVzBw0Z3F5o/E5GG+U12fvQC0HIN/IrZPLnupCYcFH2Y5OJ9GrQI=
-X-Received: by 2002:a02:ccd6:: with SMTP id k22mr3488037jaq.18.1590063791246;
- Thu, 21 May 2020 05:23:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uwOifwCrhhMbK5Uq7O2JD6i7Fke3H2izTnc0aJuCXEg=;
+        b=Yf8VL8JIoUyGDgAkZb0V8eGaovj5zzHBmD4Gai1ulNAw+tMPPgyKhnvTcrUh9Kd3uk
+         vUVPbZKdkggArRce/ll4PJpLnTymWCCG63rIkxugkXZyRCgRRbN5RDBj4lczA6rBTfN3
+         zaH95XPuQOQpZkYmuJfFKbI+zki42jV43uBKyCO3AvaucG6H2JAc4jJhXFpDT6QZGAt4
+         VcBa3vb5j5Q0hrA/H7CTxIIk66eZXBlJ4LL/fZGHoGUarTUUYXh0TG9QvEWr8hAi/Qkk
+         NaBrFtWVR6RdEbM33M6wTBWswLPoozmAbUmb3UAhzLgtM7z3gfC8xZuzc1S6JSCyl758
+         w12A==
+X-Gm-Message-State: AOAM533KSn9U29LSLsfcSMX22wJBybJaollsuX2upEnwHeuevO8Za+Ht
+        lswWy22QsIt3GJj+7orx/RnuUI9PxFG7VIoE
+X-Google-Smtp-Source: ABdhPJwIyMIKWxVlICS84mttq3Nqy68ltl2ewLaM0bfQqS1tl6vJX6JfY8W4NWhUa5vl9fh86hqbhQ==
+X-Received: by 2002:a50:bf04:: with SMTP id f4mr7265805edk.91.1590063807770;
+        Thu, 21 May 2020 05:23:27 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:4262])
+        by smtp.gmail.com with ESMTPSA id h16sm4695618ejy.47.2020.05.21.05.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 05:23:27 -0700 (PDT)
+Date:   Thu, 21 May 2020 13:23:27 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521122327.GB990580@chrisdown.name>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520202650.GB558281@chrisdown.name>
+ <20200521071929.GH6462@dhcp22.suse.cz>
+ <20200521112711.GA990580@chrisdown.name>
+ <20200521120455.GM6462@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <cover.1589528491.git.viresh.kumar@linaro.org> <CAJiuCceftArjKPyiEW8AnT5TtuCJFsRGGA-_8y2zG5GDTxHO4Q@mail.gmail.com>
-In-Reply-To: <CAJiuCceftArjKPyiEW8AnT5TtuCJFsRGGA-_8y2zG5GDTxHO4Q@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 21 May 2020 14:23:00 +0200
-Message-ID: <CAJiuCcejjaM=+XWsmOe93idbC8TyyxLj30+Lf+5C=yv=hxT80g@mail.gmail.com>
-Subject: Re: [PATCH 0/2] opp: core: add regulators enable and disable
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     k.konieczny@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        "open list:ALLWINNER CPUFREQ DRIVER" <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200521120455.GM6462@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+(I'll leave the dirty throttling discussion to Johannes, because I'm not so 
+familiar with that code or its history.)
 
-On Fri, 15 May 2020 at 14:00, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com=
-> wrote:
+Michal Hocko writes:
+>> > The main problem I see with that approach is that the loop could easily
+>> > lead to reclaim unfairness when a heavy producer which doesn't leave the
+>> > kernel (e.g. a large read/write call) can keep a different task doing
+>> > all the reclaim work. The loop is effectivelly unbound when there is a
+>> > reclaim progress and so the return to the userspace is by no means
+>> > proportional to the requested memory/charge.
+>>
+>> It's not unbound when there is reclaim progress, it stops when we are within
+>> the memory.high throttling grace period. Right after reclaim, we check if
+>> penalty_jiffies is less than 10ms, and abort and further reclaim or
+>> allocator throttling:
 >
-> Hi Viresh,
->
-> On Fri, 15 May 2020 at 09:57, Viresh Kumar <viresh.kumar@linaro.org> wrot=
-e:
-> >
-> > Hi,
-> >
-> > This series reintroduces the usage of regulator_enable/disable() to the
-> > OPP core after the previous attempt was reverted [1] shortly after gett=
-ing
-> > applied. This time the regulator is enabled only after it is configured
-> > by the OPP core.
-> >
-> > Marek, Kamil and Cl=C3=A9ment: Can you guys please test this out and re=
-port
-> > if this doesn't work as expected ?
->
-> I have reviewed the patch and it seems fine for my use case.
-> Unfortunately I can't test it until next week.
+>Just imagine that you have parallel producers increasing the high limit
+>excess while somebody reclaims those. Sure in practice the loop will be
+>bounded but the reclaimer might perform much more work on behalf of
+>other tasks.
 
-Ok, before the patch the regulator was released by regulator_late_cleanup()=
- :
-[   33.756849] vdd-gpu: disabling
+A cgroup is a unit and breaking it down into "reclaim fairness" for individual 
+tasks like this seems suspect to me. For example, if one task in a cgroup is 
+leaking unreclaimable memory like crazy, everyone in that cgroup is going to be 
+penalised by allocator throttling as a result, even if they aren't 
+"responsible" for that reclaim.
 
-Now it works fine and the vdd-gpu is no more disabled.
+So the options here are as follows when a cgroup is over memory.high and a 
+single reclaim isn't enough:
 
-Tested-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+1. Decline further reclaim. Instead, throttle for up to 2 seconds.
+2. Keep on reclaiming. Only throttle if we can't get back under memory.high.
 
-Regards,
-Clement
-
->
-> Acked-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
->
-> Regards,
-> Clement
->
->
-> >
-> > --
-> > viresh
-> >
-> > [1] https://lore.kernel.org/lkml/20191017102758.8104-1-m.szyprowski@sam=
-sung.com/
-> >
-> > Kamil Konieczny (1):
-> >   opp: core: add regulators enable and disable
-> >
-> > Viresh Kumar (1):
-> >   opp: Reorder the code for !target_freq case
-> >
-> >  drivers/opp/core.c | 39 ++++++++++++++++++++++++++++++++++-----
-> >  drivers/opp/opp.h  |  2 ++
-> >  2 files changed, 36 insertions(+), 5 deletions(-)
-> >
-> > --
-> > 2.25.0.rc1.19.g042ed3e048af
-> >
+The outcome of your suggestion to decline further reclaim is case #1, which is 
+significantly more practically "unfair" to that task. Throttling is extremely 
+disruptive to tasks and should be a last resort when we've exhausted all other 
+practical options. It shouldn't be something you get just because you didn't 
+try to reclaim hard enough.
