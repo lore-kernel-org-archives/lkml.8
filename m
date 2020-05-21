@@ -2,95 +2,109 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B56C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BED20756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:56:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fSz2gq4z"
+	by mail.kernel.org (Postfix) with ESMTP id AB43120721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgEUL4V (ORCPT
+        id S1729214AbgEUL43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:56:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51101 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729002AbgEUL4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:56:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SSkn5rrqz9sSJ;
-        Thu, 21 May 2020 21:56:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590062179;
-        bh=kwF6cPnS97gtdHYMgI/TZKraaabw4ylDI13DsO3XuGU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fSz2gq4z4lamWPoXUPF+xkHl2NIJZl6zoKzFseNG1yCNUqzSJDRRo6CBn4Y5f/pMA
-         fR9SmXtDyqE7SPsYb/4FqurcXckTe9cpI1ymkbHvcjCXXcYZjathb2t4TxlmrPzNSe
-         p8tJ/iuGc6FhuQUZoFeqNWTYXOpFhJ9OLvlm5vbUQzEC7TK4JRwPvXb7WQAPFAwmrB
-         05cZ+oLXA9bmMpvlhSx4jEmJLg6Wj4JiSHniQO3E8Bx8los0nNXw4RHvNSlzCzKF8B
-         IJW0GIHKFqmuCAeOe7VDHjJg+EVtSuQrZBq//RPEQnIQUUONzByTVZ96rt2YJKlBdE
-         3MUdvt1TUJdQQ==
-Date:   Thu, 21 May 2020 21:56:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the tip tree
-Message-ID: <20200521215614.63e4473a@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sWOO1vVeJ0E+_2_iXTGlbic";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Thu, 21 May 2020 07:56:29 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:11258 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729002AbgEUL42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 07:56:28 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgA3jwlYbMZeX4LtAQ--.44757S4;
+        Thu, 21 May 2020 19:56:13 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Todor Tomov <todor.too@gmail.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: camss: vfe: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 19:56:07 +0800
+Message-Id: <20200521115607.32733-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgA3jwlYbMZeX4LtAQ--.44757S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1fury5tFWrJFWUJwb_yoW8Xw4rpr
+        40q3s3Cr1xXrWjqw1Utr1Duas5G393tasrKrWYk3WfAws5CF97GF48KFyFqFWjkrWIy3W7
+        Ja17Xa43ZF1Y9FJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvS1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+        6r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8KwCF04k20xvY0x0EwIxG
+        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43
+        ZEXa7VUbjYLPUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0HBlZdtOPdcwACs+
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/sWOO1vVeJ0E+_2_iXTGlbic
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Hi all,
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/media/platform/qcom/camss/camss-vfe.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-After merging the tip tree, today's linux-next build (x86_64 allnoconfig)
-produced this warning:
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
+index a8c542fa647d..fc31c2c169cd 100644
+--- a/drivers/media/platform/qcom/camss/camss-vfe.c
++++ b/drivers/media/platform/qcom/camss/camss-vfe.c
+@@ -1265,12 +1265,12 @@ static int vfe_get(struct vfe_device *vfe)
+ 
+ 		ret = vfe_set_clock_rates(vfe);
+ 		if (ret < 0)
+-			goto error_clocks;
++			goto error_pm_runtime_get;
+ 
+ 		ret = camss_enable_clocks(vfe->nclocks, vfe->clock,
+ 					  vfe->camss->dev);
+ 		if (ret < 0)
+-			goto error_clocks;
++			goto error_pm_runtime_get;
+ 
+ 		ret = vfe_reset(vfe);
+ 		if (ret < 0)
+@@ -1282,7 +1282,7 @@ static int vfe_get(struct vfe_device *vfe)
+ 	} else {
+ 		ret = vfe_check_clock_rates(vfe);
+ 		if (ret < 0)
+-			goto error_clocks;
++			goto error_pm_runtime_get;
+ 	}
+ 	vfe->power_count++;
+ 
+@@ -1293,10 +1293,8 @@ static int vfe_get(struct vfe_device *vfe)
+ error_reset:
+ 	camss_disable_clocks(vfe->nclocks, vfe->clock);
+ 
+-error_clocks:
+-	pm_runtime_put_sync(vfe->camss->dev);
+-
+ error_pm_runtime_get:
++	pm_runtime_put_sync(vfe->camss->dev);
+ 	camss_pm_domain_off(vfe->camss, vfe->id);
+ 
+ error_pm_domain:
+-- 
+2.17.1
 
-arch/x86/kernel/traps.c: In function 'exc_double_fault':
-arch/x86/kernel/traps.c:332:16: warning: unused variable 'address' [-Wunuse=
-d-variable]
-  332 |  unsigned long address =3D read_cr2();
-      |                ^~~~~~~
-
-Introduced by commit
-
-  095b7a3e7745 ("x86/entry: Convert double fault exception to IDTENTRY_DF")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/sWOO1vVeJ0E+_2_iXTGlbic
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7GbF4ACgkQAVBC80lX
-0GwNrggAoUAxs2WMhydYKdkTiKnIdbEmBrLYPoHFKUeeKRhNs2WtmlTiHWlqjnZH
-TWdFwzItQny2tCOXF2SahYOwDzjKtRkwSEsgLXRrH9/tdGYECRbkjQmz9mDMMFXv
-ewN2P5HbIGOQnPJfOilgXoQ1eMGXen0XMDqHQNPml25UXqLAe0vxpz9vx0V5g/2T
-CIh/QRoTOQFIK0mQM6BPldXIES4uRNZNjbo+j0tF7ots5LXutOtYPNne7/stNY5d
-OMHiux+dYigBPPxg2Vx/e+Ur84JIZi/tuvbjhEyCOSVLWJENldB4F+zM+CjFlnap
-NxLPw5kF3B6ghkbE2JkRAm7GNA2o5Q==
-=BMkc
------END PGP SIGNATURE-----
-
---Sig_/sWOO1vVeJ0E+_2_iXTGlbic--
