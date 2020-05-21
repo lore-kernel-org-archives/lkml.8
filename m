@@ -2,118 +2,72 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A83B7207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2B0206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgEUOJo (ORCPT
+        id S1729984AbgEUOJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:09:44 -0400
-Received: from smtp12.smtpout.orange.fr ([80.12.242.134]:26017 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729961AbgEUOJn (ORCPT
+        Thu, 21 May 2020 10:09:54 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:54504 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729710AbgEUOJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:09:43 -0400
-Received: from [192.168.42.210] ([93.22.132.254])
-        by mwinf5d47 with ME
-        id hS9Z220065VUqNM03S9ax5; Thu, 21 May 2020 16:09:40 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 21 May 2020 16:09:40 +0200
-X-ME-IP: 93.22.132.254
-Subject: Re: [PATCH 3.16 35/99] pxa168fb: Fix the function used to release
- some memory in an error handling path
-To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lubomir Rintel <lkundrak@v3.sk>
-References: <lsq.1589984008.562400019@decadent.org.uk>
-From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <95e4cf2d-5f50-e7bd-6e1e-a1d172eb24b6@wanadoo.fr>
-Date:   Thu, 21 May 2020 16:09:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thu, 21 May 2020 10:09:52 -0400
+Received: from fsav304.sakura.ne.jp (fsav304.sakura.ne.jp [153.120.85.135])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04LE9Ikk073192;
+        Thu, 21 May 2020 23:09:19 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav304.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav304.sakura.ne.jp);
+ Thu, 21 May 2020 23:09:18 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav304.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04LE9ImK073188
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 21 May 2020 23:09:18 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: INFO: task hung in locks_remove_posix
+To:     syzbot <syzbot+f5bc30abd8916982419c@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+References: <000000000000c866c705a61a95d4@google.com>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     linux-kernel@vger.kernel.org
+Message-ID: <9a337dfa-175f-e13b-1977-0f63d589f37c@I-love.SAKURA.ne.jp>
+Date:   Thu, 21 May 2020 23:09:13 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <lsq.1589984008.562400019@decadent.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <000000000000c866c705a61a95d4@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020/05/21 5:53, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    806d8acc USB: dummy-hcd: use configurable endpoint naming ..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16c9ece2100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d800e9bad158025f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f5bc30abd8916982419c
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
 
-I don't think that this one is applicable to 3.16.x
+This seems to be a mislabeling due to '?' in all lines in a trace.
 
-The remove function and the error handling path of the probe function 
-both use 'dma_free_wc'.
-I've not look in details, but it looks consistent and the patch would 
-not apply as-is anyway.
-
-just my 2c.
-
-CJ
-
-Le 20/05/2020 à 16:14, Ben Hutchings a écrit :
-> 3.16.84-rc1 review patch.  If anyone has any objections, please let me know.
->
-> ------------------
->
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->
-> commit 3c911fe799d1c338d94b78e7182ad452c37af897 upstream.
->
-> In the probe function, some resources are allocated using 'dma_alloc_wc()',
-> they should be released with 'dma_free_wc()', not 'dma_free_coherent()'.
->
-> We already use 'dma_free_wc()' in the remove function, but not in the
-> error handling path of the probe function.
->
-> Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is already
-> PAGE_ALIGNed.
->
-> Fixes: 638772c7553f ("fb: add support of LCD display controller on pxa168/910 (base layer)")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
-> CC: YueHaibing <yuehaibing@huawei.com>
-> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Link: https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-christophe.jaillet@wanadoo.fr
-> [bwh: Backported to 3.16: Use dma_free_writecombine().]
-> Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> ---
->   drivers/video/fbdev/pxa168fb.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> --- a/drivers/video/fbdev/pxa168fb.c
-> +++ b/drivers/video/fbdev/pxa168fb.c
-> @@ -772,8 +772,8 @@ failed_free_cmap:
->   failed_free_clk:
->   	clk_disable(fbi->clk);
->   failed_free_fbmem:
-> -	dma_free_coherent(fbi->dev, info->fix.smem_len,
-> -			info->screen_base, fbi->fb_start_dma);
-> +	dma_free_writecombine(fbi->dev, info->fix.smem_len,
-> +			      info->screen_base, fbi->fb_start_dma);
->   failed_free_info:
->   	kfree(info);
->   failed_put_clk:
-> @@ -809,7 +809,7 @@ static int pxa168fb_remove(struct platfo
->   
->   	irq = platform_get_irq(pdev, 0);
->   
-> -	dma_free_writecombine(fbi->dev, PAGE_ALIGN(info->fix.smem_len),
-> +	dma_free_writecombine(fbi->dev, info->fix.smem_len,
->   				info->screen_base, info->fix.smem_start);
->   
->   	clk_disable(fbi->clk);
->
+#syz dup: INFO: task hung in wdm_flush
