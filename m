@@ -2,114 +2,91 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1606C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7645320721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45FF20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:52:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JIZhKVw8"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="U+FaTvlt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgEUIvm (ORCPT
+        id S1728654AbgEUIwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728389AbgEUIvm (ORCPT
+        Thu, 21 May 2020 04:52:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:33210 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728389AbgEUIwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:51:42 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467EDC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 01:51:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2wizm4Rngjr7Gy1sl663+W2PlI9xBLkts/AnIHHMOCs=; b=JIZhKVw80kcxxEDG3gSuOqCdwV
-        vszpf9ep3YcI+viVbXEQRQZw6xR9YjWfCxXF/htnV1n8GN8blhxRt5H/rV2mX34OYPShNwXogxQsI
-        xCXIzDAUGMK8RoG0zS8gAY4m6b2Ctf3NCXx0b/lzpQdcvWrZxStENbVG+ncRXmFkuX1y73T2w9Xu5
-        rw3ttzhHzzBebYBLw8WT1XYpGrIFyQkrEOrNFZCGhjpw0OH22k1JyxSZ5p4fAn2dvtHMAw44Ri2Vh
-        ISDK3VHx3G/rccMIfE4+zjtKKBdoE8TNt/IyqbyxyS0oPd3OwXF8nfpca42oFodlF8EeytXo+cIL+
-        J/XzyFFw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbgvF-0000Ng-K2; Thu, 21 May 2020 08:51:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9D0853011C6;
-        Thu, 21 May 2020 10:51:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 891FE212820FE; Thu, 21 May 2020 10:51:22 +0200 (CEST)
-Date:   Thu, 21 May 2020 10:51:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>
-Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
-Message-ID: <20200521085122.GF325280@hirez.programming.kicks-ass.net>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <20200520222642.70679-1-joel@joelfernandes.org>
+        Thu, 21 May 2020 04:52:39 -0400
+X-UUID: eea90d1380b540bfb2d3f2d6437f50f9-20200521
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:From:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:Message-ID:Subject; bh=Ntq+xnZqQIn/7PE5MMeGwbIxDp+MLU6cQe0dH7iWCZU=;
+        b=U+FaTvltahZ7khZZtzciTGjMw2cZP8cOg2BL98HP1W7g5hyOid75Bmg0LrszMbJtAAxkfHtinTC2SXMb5srzC76X1Z7gdg9IzMdrRlqsl9tS5oBEWIwCw4A6ypqd2JE4FA2ICmwR3itSyFk8/m9lRlcMk+gnZ8c9+Y+p97FVTFs=;
+X-UUID: eea90d1380b540bfb2d3f2d6437f50f9-20200521
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <andrew-sh.cheng@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1294609958; Thu, 21 May 2020 16:52:36 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 21 May 2020 16:52:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 21 May 2020 16:52:34 +0800
+Subject: Re: [PATCH 09/12] devfreq: add mediatek cci devfreq
+Message-ID: <1590051155.14062.3.camel@mtksdaap41>
+SubjeTo: Mark Brown <broonie@kernel.org>
+CC:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, "Stephen Boyd" <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Date:   Thu, 21 May 2020 16:52:35 +0800
+In-Reply-To: <20200520123135.GD4823@sirena.org.uk>
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+         <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
+         <20200520123135.GD4823@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520222642.70679-1-joel@joelfernandes.org>
+From:   <andrew-sh.cheng@mediatek.com>
+X-MTK:  N
+Content-Transfer-Encoding: base64
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 06:26:42PM -0400, Joel Fernandes (Google) wrote:
-> Add a per-thread core scheduling interface which allows a thread to tag
-> itself and enable core scheduling. Based on discussion at OSPM with
-> maintainers, we propose a prctl(2) interface accepting values of 0 or 1.
->  1 - enable core scheduling for the task.
->  0 - disable core scheduling for the task.
+DQpPbiBXZWQsIDIwMjAtMDUtMjAgYXQgMTM6MzEgKzAxMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+IE9uIFdlZCwgTWF5IDIwLCAyMDIwIGF0IDExOjQzOjA0QU0gKzA4MDAsIEFuZHJldy1zaC5DaGVu
+ZyB3cm90ZToNCj4gDQo+ID4gKwljY2lfZGYtPnByb2NfcmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0
+X29wdGlvbmFsKGNjaV9kZXYsICJwcm9jIik7DQo+ID4gKwlyZXQgPSBQVFJfRVJSX09SX1pFUk8o
+Y2NpX2RmLT5wcm9jX3JlZyk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJaWYgKHJldCAhPSAt
+RVBST0JFX0RFRkVSKQ0KPiA+ICsJCQlkZXZfZXJyKGNjaV9kZXYsICJmYWlsZWQgdG8gZ2V0IHJl
+Z3VsYXRvciBmb3IgQ0NJOiAlZFxuIiwNCj4gPiArCQkJCXJldCk7DQo+ID4gKwkJcmV0dXJuIHJl
+dDsNCj4gPiArCX0NCj4gPiArCXJldCA9IHJlZ3VsYXRvcl9lbmFibGUoY2NpX2RmLT5wcm9jX3Jl
+Zyk7DQo+IA0KPiBUaGUgY29kZSBhcHBlYXJzIHRvIHJlcXVpcmUgYSByZWd1bGF0b3IgKGFuZCBJ
+J20gZ3Vlc3NpbmcgdGhlIGRldmljZQ0KPiBuZWVkcyBwb3dlcikgc28gd2h5IGlzIHRoaXMgdXNp
+bmcgcmVndWxhdG9yX2dldF9vcHRpb25hbCgpPw0KDQpIaSBNYXJrLA0KDQpEbyB5b3UgbWVhbiwg
+d2h5IG5vdCB1c2UgcmVndWxhdG9yX2dldF9leGNsdXNpdmUoKSBvciByZWd1bGF0b3JfZ2V0KCk/
+DQpCZWNhdXNlIGNjaSBhbmQgY3B1IGxpdHRlciBjb3JlIHNoYXJlZCBidWNrLCBpdCBjYW5ub3Qg
+dXNlDQpyZWd1bGF0b3JfZ2V0X2V4Y2x1c2l2ZSgpLg0KQmVjYXVzZSBib3RoIGNjaSBhbmQgY3B1
+IHdhbnQgdG8gdHVuZSB2b2x0YWdlLCBpdCBjYW5ub3QgdXNlDQpyZWd1bGF0b3JfZ2V0KCksIG90
+aGVyd2lzZSBpdCB3aWxsIGdldCBkdW1teSByZWd1bGF0b3IgZXZlbiB0aGlzIGJ1Y2sNCmRvZXNu
+J3QgcmVnaXN0ZXIuYXMgcmVndWxhdG9yLg0KDQpCUiwNCkFuZHJldy1zaC5DaGVuZw0K
 
-Yeah, so this is a terrible interface :-)
-
-It doens't allow tasks for form their own groups (by for example setting
-the key to that of another task).
-
-It is also horribly ill defined what it means to 'enable', with whoem
-is it allows to share a core.
-
-> Special cases:
-
-> (1)
-> The core-scheduling patchset contains a CGroup interface as well. In
-> order for us to respect users of that interface, we avoid overriding the
-> tag if a task was CGroup-tagged because the task becomes inconsistent
-> with the CGroup tag. Instead return -EBUSY.
-> 
-> (2)
-> If a task is prctl-tagged, allow the CGroup interface to override
-> the task's tag.
-
-OK, so cgroup always wins; is why is that a good thing?
-
-> ChromeOS will use core-scheduling to securely enable hyperthreading.
-> This cuts down the keypress latency in Google docs from 150ms to 50ms
-> while improving the camera streaming frame rate by ~3%.
-
-It doesn't consider permissions.
-
-Basically, with the way you guys use it, it should be a CAP_SYS_ADMIN
-only to enable core-sched.
-
-That also means we should very much default to disable.
