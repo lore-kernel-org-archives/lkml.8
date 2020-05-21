@@ -2,180 +2,140 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C0720671
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCCB206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:36:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y0EGKAAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgEUOgi (ORCPT
+        id S1729520AbgEUOgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:36:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63186 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729844AbgEUOgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:36:37 -0400
-IronPort-SDR: ae5p9ncrVuiXxW5wezmyun+odlx5FOb3wtTOjd9rhwM+LRRF2Cm3OrWj0XBMmnuFwu3uTM+IPY
- ROiaoZN4x5CQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 07:36:36 -0700
-IronPort-SDR: 7b8ROu2A3A9XEgh3Fs2Y+Q285e1ifd91EOCucSW4KwbQ1BCx/+VNxN++j7SoDTWYquT7uYB9YF
- J8sQKRBNJxAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
-   d="scan'208";a="343862381"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 21 May 2020 07:36:32 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jbmJH-0082yZ-GB; Thu, 21 May 2020 17:36:35 +0300
-Date:   Thu, 21 May 2020 17:36:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     ofery@google.com, brendanhiggins@google.com,
-        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        robh+dt@kernel.org, wsa@the-dreams.de,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 3/3] i2c: npcm7xx: Add support for slave mode for
- Nuvoton
-Message-ID: <20200521143635.GN1634618@smile.fi.intel.com>
-References: <20200521110910.45518-1-tali.perry1@gmail.com>
- <20200521110910.45518-4-tali.perry1@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521110910.45518-4-tali.perry1@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Thu, 21 May 2020 10:36:51 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:13740 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729480AbgEUOgu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 10:36:50 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200521143648epoutp0174e78ce45d56e986e076094aa63b8841~REeKXPKjZ1710917109epoutp01X
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:36:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200521143648epoutp0174e78ce45d56e986e076094aa63b8841~REeKXPKjZ1710917109epoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590071808;
+        bh=xF+b0Q9OMHJN8J5YqAXOUh1uQxPqhs+cqtAaCEwzaRA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Y0EGKAAhXBwae7akngNyzrfTzQagRkDSKO5g2tDgUEBK6F6tQtpX1iu12SSIfJOTN
+         Qm1uEV/uf20fOUijIzoYbeOlvIVpfT/SWTWhfpAPoCPuQDzxXsqxZQm7pDj/lygw/F
+         YGtpZ/C4o0g2CDOWKrfT2s+iIVFMBucIlOsM9xEc=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200521143647epcas5p1905faffe86d0d97be6a2bb7aa64dd02f~REeJ1dgdP3248732487epcas5p1X;
+        Thu, 21 May 2020 14:36:47 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BB.F1.23389.FF196CE5; Thu, 21 May 2020 23:36:47 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200521143647epcas5p279d486b29125419c67ff96e0b5b1454e~REeJYPdfH1493014930epcas5p2V;
+        Thu, 21 May 2020 14:36:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200521143647epsmtrp27af6207874b567e48745a5dacd522cda~REeJXYG5E1594915949epsmtrp2h;
+        Thu, 21 May 2020 14:36:47 +0000 (GMT)
+X-AuditID: b6c32a4b-797ff70000005b5d-ce-5ec691ffd8d4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        37.1C.18461.FF196CE5; Thu, 21 May 2020 23:36:47 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200521143645epsmtip2f028ad4f8c727d782dd748ff901b59c6~REeHZmDZa1174611746epsmtip2M;
+        Thu, 21 May 2020 14:36:45 +0000 (GMT)
+From:   Tamseel Shams <m.shams@samsung.com>
+To:     inki.dae@samsung.com, jy0922.shim@samsung.com,
+        sw0312.kim@samsung.com, kyungmin.park@samsung.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shaik.ameer@samsung.com, krzk@kernel.org, alim.akhtar@samsung.com,
+        Tamseel Shams <m.shams@samsung.com>
+Subject: [PATCH v3] drm/exynos: Remove dev_err() on platform_get_irq()
+ failure
+Date:   Thu, 21 May 2020 19:52:10 +0530
+Message-Id: <20200521142210.17400-1-m.shams@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGIsWRmVeSWpSXmKPExsWy7bCmlu7/icfiDC43a1n0njvJZPFg3jY2
+        i//bJjJbXPn6ns1i0v0JLBYv7l1ksTh/fgO7xdmmN+wWmx5fY7W4vGsOm8WM8/uYLO62Lma3
+        OPJwN7vFjMkv2Rz4PPZ+W8DisWlVJ5vH9m8PWD3udx9n8ti8pN6jb8sqRo/Pm+QC2KO4bFJS
+        czLLUov07RK4Mra94ipYz1Yx6fZU1gbGJaxdjJwcEgImEjsmHgKyuTiEBHYzSvyfs4MJwvnE
+        KHHy0H8o5xujxMXHH1hgWiY8WMMOkdjLKHG0fRUbSEJIoIVJYsUWoAQHB5uApsTx89wgNSIC
+        nYwSPbd/g+1gFvjBKPFm5TpmkAZhgQCJ922vwGwWAVWJk/uus4PYvAIWElf3wxwoL7F6wwFm
+        kGYJgY/sEkvvT4Y6w0XiwaVDUEXCEq+Ob2GHsKUkPr/bywZh50vMn7eKGcKukFh54Q2UbS9x
+        4MocFpBLmYEuXb9LHyTMLMAn0fv7CRNIWEKAV6KjTQiiWlHi/+5+qOniEu9WTIHa6iHx68NG
+        RpByIYFYiQlTUicwysxCmLmAkXEVo2RqQXFuemqxaYFxXmq5XnFibnFpXrpecn7uJkZw0tDy
+        3sH46MEHvUOMTByMhxglOJiVRHgX8h+NE+JNSaysSi3Kjy8qzUktPsQozcGiJM77uHFLnJBA
+        emJJanZqakFqEUyWiYNTqoGpl7V56aQp/3yn6Gjf9Nn+2UI5NV3keVnfO31TK9m6Yyxhd75P
+        dMt42HZrTUbXMr9yrst93wIc/D7vlLPvF4sXzBL7wcfw8PQH+8/5daYGr67qntmXkh5zQd3L
+        vP9e3Y+5q5pbNtUmHWBdZDXTNdJH/raUjGjwCrbP5UlJB1ds2v94nbC66d3CC7lJp97bM+nn
+        zYtxu7It/8bNaqPDRx9qWRgdebZA9qMU175/wVO/Rvi+N7vkIVikfGqnw+L/1+5bPHvaEmT0
+        9lSlhnfPZNvN3CrbrG5PXCKoN+vajkzZGWur2JgrnRndv+8Sbed6sqnqxymJH70TFtot9nS9
+        x+TMuvzkW69J25V3GrZv+PNViaU4I9FQi7moOBEAgwbALYkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFLMWRmVeSWpSXmKPExsWy7bCSvO7/icfiDC7e5bLoPXeSyeLBvG1s
+        Fv+3TWS2uPL1PZvFpPsTWCxe3LvIYnH+/AZ2i7NNb9gtNj2+xmpxedccNosZ5/cxWdxtXcxu
+        ceThbnaLGZNfsjnweez9toDFY9OqTjaP7d8esHrc7z7O5LF5Sb1H35ZVjB6fN8kFsEdx2aSk
+        5mSWpRbp2yVwZWx7xVWwnq1i0u2prA2MS1i7GDk5JARMJCY8WMPexcjFISSwm1GieUYHE0RC
+        XGLar/2MELawxMp/z6GKmpgk2vvPs3UxcnCwCWhKHD/PDRIXEZjIKDGnfRULiMMs0MAksWLl
+        b0aQImEBP4mWJXUgg1gEVCVO7rvODmLzClhIXN0Pc4W8xOoNB5gnMPIsYGRYxSiZWlCcm55b
+        bFhgmJdarlecmFtcmpeul5yfu4kRHJxamjsYt6/6oHeIkYmD8RCjBAezkgjvQv6jcUK8KYmV
+        ValF+fFFpTmpxYcYpTlYlMR5bxQujBMSSE8sSc1OTS1ILYLJMnFwSgGdWnaWk/mLvbRoAUe4
+        ruK5sNanB8JP/jN5vUDg1FQd5/WfHx6+vH+Wn6si9+u9Fs/77rttVDjSefuqdFPDrsycja/F
+        9hbLn05hdf8dECL/00W+j9vNakHHwkmaSyVKlSLKb3bLuJie90h+8GHBz59rX/6Q61uW9a94
+        VcnUy92NGV2Mz0u2nms7P0tfbpZUZPjLdfyr9njw3r3/ab1vwZRv1n+2HFA5eL7oQU7fdPVS
+        juPr6w7lMXTNWJhZ8iMsgndt7q8frr8f3uN8+7/q6eO5fXvsgsNvaoTef2Ocplf2LOqc8VxB
+        jXOb3r6e53Zsw9WCplAzJ7NVy7QjP1ddymvJsrwc/3R1sMpW3jWe9xVYlFiKMxINtZiLihMB
+        HT7Y570CAAA=
+X-CMS-MailID: 20200521143647epcas5p279d486b29125419c67ff96e0b5b1454e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200521143647epcas5p279d486b29125419c67ff96e0b5b1454e
+References: <CGME20200521143647epcas5p279d486b29125419c67ff96e0b5b1454e@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:09:10PM +0300, Tali Perry wrote:
-> Add support for slave mode for Nuvoton
-> NPCM BMC I2C controller driver.
+platform_get_irq() will call dev_err() itself on failure,
+so there is no need for the driver to also do this.
+This is detected by coccinelle.
 
-...
+Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+---
+- Changes since v2:
+* Addressed Inki Dae comments
 
-> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
-> +/*
-> + * npcm_i2caddr array:
-> + * The module supports having multiple own slave addresses.
-> + * Since the addr regs are sprinkled all over the address space,
-> + * use this array to get the address or each register.
-> + */
-> +#define I2C_NUM_OWN_ADDR 10
-> +const int  npcm_i2caddr[I2C_NUM_OWN_ADDR] = {NPCM_I2CADDR1, NPCM_I2CADDR2,
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Extra spaces.
-On top. please start assignment from the new line.
-
-> +					     NPCM_I2CADDR3, NPCM_I2CADDR4,
-> +					     NPCM_I2CADDR5, NPCM_I2CADDR6,
-> +					     NPCM_I2CADDR7, NPCM_I2CADDR8,
-
-> +					     NPCM_I2CADDR9, NPCM_I2CADDR10};
-
-Split }; to new line and leave comma with the last member.
-
-> +#endif
-
-...
-
-> +static int  npcm_i2c_slave_enable(struct npcm_i2c *bus, enum i2c_addr addr_type,
-> +				  u8 addr, bool enable)
-
-Extra spaces. Check entire patch for that and fix accordingly.
-
-> +#if IS_ENABLED(CONFIG_I2C_SLAVE)
-> +	if (bus->slave)
-
-> +		npcm_i2c_slave_enable(bus, I2C_SLAVE_ADDR1, bus->slave->addr,
-> +				      true);
-
-I would leave this on one line.
-
-> +#endif
-
-...
-
-> +static void npcm_i2c_write_fifo_slave(struct npcm_i2c *bus, u16 max_bytes)
-> +{
-> +	u8 size_free_fifo;
-
-+ blank line.
-
-> +	/*
-> +	 * Fill the FIFO, while the FIFO is not full and there are more bytes
-> +	 * to write
-> +	 */
-> +	npcm_i2c_clear_fifo_int(bus);
-> +	npcm_i2c_clear_tx_fifo(bus);
-> +	iowrite8(0, bus->reg + NPCM_I2CTXF_CTL);
-
-> +	size_free_fifo = I2C_HW_FIFO_SIZE - npcm_i2c_fifo_usage(bus);
-
-Dup, move into loop.
-
-> +	while (max_bytes-- && size_free_fifo) {
-> +		if (bus->slv_wr_size > 0) {
-> +			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
-> +			npcm_i2c_wr_byte(bus, bus->slv_wr_buf[bus->slv_wr_ind]);
-> +			bus->slv_wr_ind++;
-> +			bus->slv_wr_ind = bus->slv_wr_ind % I2C_HW_FIFO_SIZE;
-> +			bus->slv_wr_size--;
-> +			size_free_fifo = I2C_HW_FIFO_SIZE -
-> +					 npcm_i2c_fifo_usage(bus);
-> +		} else {
-> +			break;
-> +		}
-> +	}
-
-	while (...) {
-		if (...)
-			break;
-		...
-	}
-
-> +}
-
-...
-
-> +static int npcm_i2c_slave_get_wr_buf(struct npcm_i2c *bus)
-> +{
-> +	int i;
-
-> +	u8 value = 0;
-
-Redundant assignment.
-
-> +	int ind;
-> +	int ret = bus->slv_wr_ind;
-> +
-> +	/* fill a cyclic buffer */
-> +	for (i = 0; i < I2C_HW_FIFO_SIZE; i++) {
-> +		if (bus->slv_wr_size >= I2C_HW_FIFO_SIZE)
-> +			break;
-> +		i2c_slave_event(bus->slave, I2C_SLAVE_READ_REQUESTED, &value);
-> +		ind = (bus->slv_wr_ind + bus->slv_wr_size) % I2C_HW_FIFO_SIZE;
-> +		bus->slv_wr_buf[ind] = value;
-> +		bus->slv_wr_size++;
-> +		i2c_slave_event(bus->slave, I2C_SLAVE_READ_PROCESSED, &value);
-> +	}
-> +	return I2C_HW_FIFO_SIZE - ret;
-> +}
-
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_g2d.c b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+index fcee33a43aca..03be31427181 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_g2d.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+@@ -1498,7 +1498,6 @@ static int g2d_probe(struct platform_device *pdev)
+ 
+ 	g2d->irq = platform_get_irq(pdev, 0);
+ 	if (g2d->irq < 0) {
+-		dev_err(dev, "failed to get irq\n");
+ 		ret = g2d->irq;
+ 		goto err_put_clk;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
