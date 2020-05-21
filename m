@@ -2,153 +2,98 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5448E207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590070549;
-	bh=I+ppeGpRJmwBqRsyqpZd6h5unEhCpnis2mJI09ZkU7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mCjsx30dvSAhI1MY6k0wuy++gnlNXiJOiicqt3FVRwgAKYs144uNfEYmlwJdw8qS5
-	 Ub3qCNd+MfmpyR30jIw5XJ8S1nwdKfCUkCkyPdXrXV+hL/M6ZZhR29ms0xPuriaH92
-	 luirf3ngPqPkFedvF8ZEQO6ixDz33Btja4L0C5jQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6EFBF20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgEUOPs (ORCPT
+        id S1729658AbgEUORc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:15:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbgEUOPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:15:48 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DBE220721;
-        Thu, 21 May 2020 14:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590070547;
-        bh=I+ppeGpRJmwBqRsyqpZd6h5unEhCpnis2mJI09ZkU7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aSM1tGENz5jfJftUm03PtVI9V3CCBxNJlwh+F8YeZYHb0WHhLJXzkezQF0EXWKQ4v
-         NpX68Xtbp0lnsIX0CgsCHnVqU217Wz9zyiZ8BFInusHs5ih5pUHIE1HByV3gAxPFFz
-         0V7A2QR8VbdFtY/JivIrvJlgdqcPe6hnhb9u+JZo=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 738EE40AFD; Thu, 21 May 2020 11:15:45 -0300 (-03)
-Date:   Thu, 21 May 2020 11:15:45 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Wei Li <liwei391@huawei.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Li Bin <huawei.libin@huawei.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>,
-        Hongbo Yao <yaohongbo@huawei.com>
-Subject: Re: [PATCH 2/4] perf svghelper: Fix memory leak in
- svg_build_topology_map
-Message-ID: <20200521141545.GC3898@kernel.org>
-References: <20200521133218.30150-1-liwei391@huawei.com>
- <20200521133218.30150-3-liwei391@huawei.com>
+        Thu, 21 May 2020 10:17:32 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2239 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727909AbgEUORb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 10:17:31 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id B7AC5851A8F64C7CAB12;
+        Thu, 21 May 2020 15:17:29 +0100 (IST)
+Received: from [127.0.0.1] (10.47.6.132) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 21 May
+ 2020 15:17:28 +0100
+Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for
+ userspace
+To:     Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>
+CC:     Rob Herring <robh@kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>, <shawnguo@kernel.org>,
+        <linux-imx@nxp.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
+ <20200512073115.14177-2-qiangqing.zhang@nxp.com>
+ <20200519185125.GB453195@bogus> <20200520073304.GA23534@willie-the-truck>
+ <20200521132641.GB47848@C02TD0UTHF1T.local>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <04e6ed82-d33e-9153-eeab-29986ccf8e1e@huawei.com>
+Date:   Thu, 21 May 2020 15:16:29 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521133218.30150-3-liwei391@huawei.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200521132641.GB47848@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.6.132]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, May 21, 2020 at 09:32:16PM +0800, Wei Li escreveu:
-> From: Li Bin <huawei.libin@huawei.com>
+On 21/05/2020 14:26, Mark Rutland wrote:
+> On Wed, May 20, 2020 at 08:33:04AM +0100, Will Deacon wrote:
+>> On Tue, May 19, 2020 at 12:51:25PM -0600, Rob Herring wrote:
+>>> On Tue, May 12, 2020 at 03:31:13PM +0800, Joakim Zhang wrote:
+>>>> +static ssize_t ddr_perf_identifier_show(struct device *dev,
+>>>> +					struct device_attribute *attr,
+>>>> +					char *page)
+>>>> +{
+>>>> +	struct ddr_pmu *pmu = dev_get_drvdata(dev);
+>>>> +
+>>>> +	return sprintf(page, "%s\n", pmu->devtype_data->identifier);
+>>>
+>>> Why do we need yet another way to identify the SoC from userspace?
+>>
+>> I also really dislike this. What's the preferred way to identify the SoC
+>> from userspace? It's needed so that the perf userspace tool can describe
+>> perf events that are supported for the PMU, as this isn't probe-able
+>> directly from the hardware. We have the same issue with the SMMUv3 PMCG [1],
+>> and so we need to solve the problem for both DT and ACPI.
 > 
-> Fix leak of memory pointed to by t.sib_thr and t.sib_core in
-> svg_build_topology_map.
-> 
-> Signed-off-by: Li Bin <huawei.libin@huawei.com>
-> ---
->  tools/perf/util/svghelper.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-> index 96f941e01681..e2b3b0e2fafe 100644
-> --- a/tools/perf/util/svghelper.c
-> +++ b/tools/perf/util/svghelper.c
-> @@ -754,6 +754,7 @@ int svg_build_topology_map(struct perf_env *env)
->  	int i, nr_cpus;
->  	struct topology t;
->  	char *sib_core, *sib_thr;
-> +	int ret;
-
-Please set ret to -1 here
-
-	int ret = -1;
-	
-So that you don't have to add all those lines below...
-
->  
->  	nr_cpus = min(env->nr_cpus_online, MAX_NR_CPUS);
->  
-> @@ -767,12 +768,14 @@ int svg_build_topology_map(struct perf_env *env)
->  
->  	if (!t.sib_core || !t.sib_thr) {
->  		fprintf(stderr, "topology: no memory\n");
-> +		ret = -1;
->  		goto exit;
->  	}
->  
->  	for (i = 0; i < env->nr_sibling_cores; i++) {
->  		if (str_to_bitmap(sib_core, &t.sib_core[i], nr_cpus)) {
->  			fprintf(stderr, "topology: can't parse siblings map\n");
-> +			ret = -1;
->  			goto exit;
->  		}
->  
-> @@ -782,6 +785,7 @@ int svg_build_topology_map(struct perf_env *env)
->  	for (i = 0; i < env->nr_sibling_threads; i++) {
->  		if (str_to_bitmap(sib_thr, &t.sib_thr[i], nr_cpus)) {
->  			fprintf(stderr, "topology: can't parse siblings map\n");
-> +			ret = -1;
->  			goto exit;
->  		}
->  
-> @@ -791,6 +795,7 @@ int svg_build_topology_map(struct perf_env *env)
->  	topology_map = malloc(sizeof(int) * nr_cpus);
->  	if (!topology_map) {
->  		fprintf(stderr, "topology: no memory\n");
-> +		ret = -1;
->  		goto exit;
->  	}
->  
-> @@ -798,12 +803,11 @@ int svg_build_topology_map(struct perf_env *env)
->  		topology_map[i] = -1;
->  
->  	scan_core_topology(topology_map, &t, nr_cpus);
-> -
-> -	return 0;
-
-... as you'll set it to zero here :-)
-
-> +	ret = 0;
->  
->  exit:
->  	zfree(&t.sib_core);
->  	zfree(&t.sib_thr);
->  
-> -	return -1;
-> +	return ret;
->  }
-> -- 
-> 2.17.1
+> Worth noting that while in this case it happens to identify the SoC,
+> in general you can have distinct instances of system IP in a single
+> system, so I do think that we need *something* instance-specific, even
+> if that's combined with SoC info.
 > 
 
--- 
+Hi Mark,
 
-- Arnaldo
+> Where IP gets reused across SoCs, it makes sense for that to not depend
+> on top-level SoC info.
+
+This would be quite an uncommon case. Generally most instances of a 
+given PMU in a SoC would be identical implementations.
+
+And anyway, we should be able to solve that problem in perf tool, as 
+long as the PMU device name is fixed. Like what we have for the SMMUv3 
+PMU, where the device name contains the device bus address, i.e don't 
+use idr for perf drivers device naming....
+
+Thanks,
+John
