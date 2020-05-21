@@ -2,165 +2,184 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68210C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34360C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46F122070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8EE2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:25:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LX8b5/50"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GAwoCLbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgEUMYw (ORCPT
+        id S1729342AbgEUMZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35398 "EHLO
+        Thu, 21 May 2020 08:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729304AbgEUMYw (ORCPT
+        with ESMTP id S1729304AbgEUMZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:24:52 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40FFC061A0E;
-        Thu, 21 May 2020 05:24:51 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id e125so4356971lfd.1;
-        Thu, 21 May 2020 05:24:51 -0700 (PDT)
+        Thu, 21 May 2020 08:25:12 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20284C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:25:12 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id o13so5340358otl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mDAJOLWg9mKjJNeVSHT8m8/Fhzt9bDgS8eqSCs7Dujc=;
-        b=LX8b5/50+9+WTk2veYSl1B0zyuk4I/Z1GdM/3rM5S25W0ryPYoGWL4n2K3MUYaVBNj
-         R1NmCkHJjJoWcICePlNevkQvtK/y3MNjvJvNFuW6i6Nrdrrqeo5bMUhT7+ltKY3UdaoM
-         uq33UGp0tPTONkG6LTUkpXOeU+ESLmdH8XViwmeucGNNiDpRG1rpdQtQBq4TEPkA7DuW
-         TLM4P1Tvi1wHeaugmMWtRxBQs/snHhp3P+sL18IYA6qH2GM15fky7jofEvv6F8XpBpiU
-         3sSn6wKmoU7Pl5OojnURTejuqqgcojGeGd7CjKhwzq08+tBwSqOGn+l/J24UlF0rNRBd
-         kB5A==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=PhDrJCxRBSBAodlC1XBnNa5He6+juNPIjvBJ9yPZkZU=;
+        b=GAwoCLbWD9HuyBSQd0wB8YF9zAyMXx8NbeSM7sRIrSyCwgXCk1LyqZeRL1KKYDxGpO
+         SfcyL7WWrKzTySa7jQ2M5Ts1LnWUm3g/Qx1L8g5kC2IoeCBruc4gzU1F4CJxlTlthFwn
+         8cQLzuQJ8GunRzg6SAVUB5eWIOoS/I4/3TvmOl6Os6sL6dq8+TYnF4G2BikWZZdixt6Z
+         8YGeoGhg3eET12atEyxNGeStgzAZYgEGop4eXnXIT8ch1u4jTGjXtDWtipmKoMC+brMH
+         7uiUWwSCg6szqJOXce1pc6s7/tvySaQmynhC56Uz1zN68+slGilfarrZouXqBlszBgta
+         PC+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mDAJOLWg9mKjJNeVSHT8m8/Fhzt9bDgS8eqSCs7Dujc=;
-        b=TvlNrBQ2gTrPHEYoX8fJG2l5TjOuGRILJo+ctGSAE0jLwnC7hxfTvKyClqisEd03sl
-         YusWFfY0qxVpJBMM1zpHLOXazoPwMz2zPA9PM5ixmhJa8i7/v4jH/yFnKqeFbWP/Gquf
-         SJ2/wzJ+EVahRPa9+Pt80jpb7yuFJzeFwkKZ+XVKcYgp7VzLW5QDNIb0whWN6jvSk1mS
-         10JIc+DGx3L+PzAaSqfzYPRiChd8SOJwAOdDG3o7rCFIZ6uiuxMGVULMTVOEflxHBh1/
-         nv2hWkXKwo0bzWMImAs+f/GJXHbzK/hj8NUCbI0lASUP1u67cOxc5zYvSCQwMOBaMBxn
-         4q0g==
-X-Gm-Message-State: AOAM532LNAw+BNuoaCjTEyS3mB+ZSRThbrIGspIEVFqEkG6xYU70EAtn
-        bUnHvBoqZP7cU7+7smAFRM55q57u5N2jLXB1IzM=
-X-Google-Smtp-Source: ABdhPJwp/R8hnjRcGcej59N3MIfttVemdGNUrGc4anV8BfnRi1gqt5Fn4WKCNYgDEEeAvX3m9xFMKTuz/JumydwFjjQ=
-X-Received: by 2002:ac2:51a7:: with SMTP id f7mr4816668lfk.13.1590063890126;
- Thu, 21 May 2020 05:24:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=PhDrJCxRBSBAodlC1XBnNa5He6+juNPIjvBJ9yPZkZU=;
+        b=EaZpKf0e8mOEjWWI6oEz/dv3xLi7rrhTzTPNTMWM2BkDjxAquKo1x+40iKINp7ZEw6
+         NA1s14ihQXL/I+Ks2e897SBBRFpoYJYMOPtU79MQ5J8rhAyVTLCHGe14YU9J2AZRZR6E
+         kldSZqENHDLLzH0zSO7vZBmDVGKM9kVs7tvLWZPycV0hrfA5XCeHNY5kKCQ7BQSP983t
+         LhAylUnxBaEpVDAvvsyWZWoK8iKDkWh9GW1JX3wgJTqelDKGahJAoQgWyn48oBhS5aiN
+         MGEA2vNMuibbjB0TAF13g3+5/Mr0t1z3/MM92UGmNhSBzP/YlqOd8fYoKR+JpVvfTKNX
+         u8iA==
+X-Gm-Message-State: AOAM532xRm+YIiFHSrwS6defwbUrDf8Hk07U0sTCYhnsP7fsJ20O5uFu
+        S+NhZZEZfu5nrrKgRDV3x8xEDQ==
+X-Google-Smtp-Source: ABdhPJz8i6R3+Gpl88cFFCjChR4peNI0ajEE177NOVIpwi4jQ1mVyOkilLJaymEulOMfcKdQ7NDNgg==
+X-Received: by 2002:a05:6830:1de3:: with SMTP id b3mr6316659otj.71.1590063911088;
+        Thu, 21 May 2020 05:25:11 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id t2sm1553308otq.54.2020.05.21.05.25.07
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 21 May 2020 05:25:09 -0700 (PDT)
+Date:   Thu, 21 May 2020 05:24:27 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+In-Reply-To: <20200521105801.GL6462@dhcp22.suse.cz>
+Message-ID: <alpine.LSU.2.11.2005210504110.1185@eggly.anvils>
+References: <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org> <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com> <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com> <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com> <20200520190906.GA558281@chrisdown.name> <20200521095515.GK6462@dhcp22.suse.cz>
+ <CA+G9fYvAB9F+Xo0vUsSveKnExkv3cV9-oOG9gBqGEcXsO95m0w@mail.gmail.com> <20200521105801.GL6462@dhcp22.suse.cz>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
- <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
- <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
- <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
- <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
- <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com> <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com>
-In-Reply-To: <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Thu, 21 May 2020 20:24:36 +0800
-Message-ID: <CADBw62rZuhaeSEppy+AhSkv1uNgaj9qrHFf7pz9nwKm8q3OrTA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jassi,
-
-On Wed, May 13, 2020 at 2:32 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> On Wed, May 13, 2020 at 2:05 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> >
-> > On Tue, May 12, 2020 at 11:14 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+On Thu, 21 May 2020, Michal Hocko wrote:
+> On Thu 21-05-20 16:11:11, Naresh Kamboju wrote:
+> > On Thu, 21 May 2020 at 15:25, Michal Hocko <mhocko@kernel.org> wrote:
 > > >
-> > > Hi Jassi,
-> > >
-> > > On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > On Wed 20-05-20 20:09:06, Chris Down wrote:
+> > > > Hi Naresh,
 > > > >
-> > > > Hi Jassi,
-> > > >
-> > > > On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> > > > Naresh Kamboju writes:
+> > > > > As a part of investigation on this issue LKFT teammate Anders Roxell
+> > > > > git bisected the problem and found bad commit(s) which caused this problem.
 > > > > >
-> > > > > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > >
-> > > > > > Hi Jassi,
-> > > > > >
-> > > > > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > > >
-> > > > > > > From: Baolin Wang <baolin.wang@unisoc.com>
-> > > > > > >
-> > > > > > > The Spreadtrum mailbox controller supports 8 channels to communicate
-> > > > > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
-> > > > > > > are used to send and receive messages by IRQ mode.
-> > > > > > >
-> > > > > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> > > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > > > > > > ---
-> > > > > > > Changes from v3:
-> > > > > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
-> > > > > > >
-> > > > > > > Changes from v2:
-> > > > > > >  - None.
-> > > > > > >
-> > > > > > > Changes from v1:
-> > > > > > >  - None
-> > > > > >
-> > > > > > Gentle ping, do you have any other comments? Thanks.
-> > > > > >
-> > > > > Yea, I am still not sure about the error returned in send_data().  It
-> > > > > will either never hit or there will be no easy recovery from it. The
-> > > > > api expects the driver to tell it the last-tx was done only when it
-> > > > > can send the next message. (There may be case like sending depend on
-> > > > > remote, which can't be ensured before hand).
+> > > > > The following two patches have been reverted on next-20200519 and retested the
+> > > > > reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
+> > > > > ( invoked oom-killer is gone now)
+> > > > >
+> > > > > Revert "mm, memcg: avoid stale protection values when cgroup is above
+> > > > > protection"
+> > > > >    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
+> > > > >
+> > > > > Revert "mm, memcg: decouple e{low,min} state mutations from protection
+> > > > > checks"
+> > > > >    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
 > > > >
-> > > > Actually this is an unusual case, suppose the remote target did not
-> > > > fetch the message as soon as possile, which will cause the FIFO
-> > > > overflow, so in this case we  can not send messages to the remote
-> > > > target any more, otherwise messages will be lost. Thus we can return
-> > > > errors to users to indicate that something wrong with the remote
-> > > > target need to be checked.
+> > > > Thanks Anders and Naresh for tracking this down and reverting.
 > > > >
-> > > > So this validation in send_data() is mostly for debugging for this
-> > > > abnormal case and we will not trigger this issue if the remote target
-> > > > works well. So I think it is useful to keep this validation in
-> > > > send_data(). Thanks.
+> > > > I'll take a look tomorrow. I don't see anything immediately obviously wrong
+> > > > in either of those commits from a (very) cursory glance, but they should
+> > > > only be taking effect if protections are set.
 > > >
-> > > Any comments? Thanks.
-> > >
-> > Same as my last post.
->
-> I think I've explained the reason why we need add this validation in
-> my previous email, I am not sure how do you think? You still want to
-> remove this validation?
+> > > Agreed. If memory.{low,min} is not used then the patch should be
+> > > effectively a nop. Btw. do you see the problem when booting with
+> > > cgroup_disable=memory kernel command line parameter?
+> > 
+> > With extra kernel command line parameters, cgroup_disable=memory
+> > I have noticed a differ problem now.
+> > 
+> > + mkfs -t ext4 /dev/disk/by-id/ata-TOSHIBA_MG04ACA100N_Y8NRK0BPF6XF
+> > mke2fs 1.43.8 (1-Jan-2018)
+> > Creating filesystem with 244190646 4k blocks and 61054976 inodes
+> > Filesystem UUID: 3bb1a285-2cb4-44b4-b6e8-62548f3ac620
+> > Superblock backups stored on blocks:
+> > 32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+> > 4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+> > 102400000, 214990848
+> > Allocating group tables:    0/7453                           done
+> > Writing inode tables:    0/7453                           done
+> > Creating journal (262144 blocks): [   35.502102] BUG: kernel NULL
+> > pointer dereference, address: 000000c8
+> > [   35.508372] #PF: supervisor read access in kernel mode
+> > [   35.513506] #PF: error_code(0x0000) - not-present page
+> > [   35.518638] *pde = 00000000
+> > [   35.521514] Oops: 0000 [#1] SMP
+> > [   35.524652] CPU: 0 PID: 145 Comm: kswapd0 Not tainted
+> > 5.7.0-rc6-next-20200519+ #1
+> > [   35.532121] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > 2.2 05/23/2018
+> > [   35.539507] EIP: mem_cgroup_get_nr_swap_pages+0x28/0x60
+> 
+> Could you get faddr2line for this offset?
 
-Gentle ping.
+No need for that, I can help with the "cgroup_disabled=memory" crash:
+I've been happily running with the fixup below, but haven't got to
+send it in yet (and wouldn't normally be reading mail at this time!)
+because of busy chasing a couple of other bugs (not necessarily mm);
+and maybe the fix would be better with explicit mem_cgroup_disabled()
+test, or maybe that should be where cgroup_memory_noswap is decided -
+up to Johannes.
 
-As I explained in previous email, this validation is for an unusual
-case, suppose the remote target did not fetch the message as soon as
-possile, which will cause the FIFO overflow, so in this case we  can
-not send messages to the remote
-target any more, otherwise messages will be lost. Thus we can return
-errors to users to indicate that something wrong with the remote
-target need to be checked.
+---
 
-So this validation in send_data() is mostly for debugging for this
-abnormal case and we will not trigger this issue if the remote target
-works well. So I think it is useful to keep this validation in
-send_data(). What do you think? Thanks.
+ mm/memcontrol.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--- 
-Baolin Wang
+--- 5.7-rc6-mm1/mm/memcontrol.c	2020-05-20 12:21:56.109693740 -0700
++++ linux/mm/memcontrol.c	2020-05-20 12:26:15.500478753 -0700
+@@ -6954,7 +6954,8 @@ long mem_cgroup_get_nr_swap_pages(struct
+ {
+ 	long nr_swap_pages = get_nr_swap_pages();
+ 
+-	if (cgroup_memory_noswap || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
++	if (!memcg || cgroup_memory_noswap ||
++            !cgroup_subsys_on_dfl(memory_cgrp_subsys))
+ 		return nr_swap_pages;
+ 	for (; memcg != root_mem_cgroup; memcg = parent_mem_cgroup(memcg))
+ 		nr_swap_pages = min_t(long, nr_swap_pages,
