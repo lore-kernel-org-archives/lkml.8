@@ -2,213 +2,121 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16913C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB56EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E952120721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685E820721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:38:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AXRwkhmq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mELKqfIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgEUNhF (ORCPT
+        id S1729465AbgEUNif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:37:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33708 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729465AbgEUNhE (ORCPT
+        Thu, 21 May 2020 09:38:35 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55012 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgEUNif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:37:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590068222;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k9apolne3MOvgFYAOik7xpjgAh+OTAjNzLgbnviUZnk=;
-        b=AXRwkhmqPkT64SYv0SbnJGSyYtwBJXtewTxpidcxm7k0j0DpL3fJqibsvALgwJ6YNw+ed7
-        74ByJAX5PrdnM41W9hEK+PuXZXQb2cecVexhpFcjWTVMW27weP/VHUwMSSZYLE0MmdA365
-        fpBfl7X3WaclJHav2Uf/yk6ptbxMjAA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-340-FJjzo88eN2W6x-WCltxcdw-1; Thu, 21 May 2020 09:36:58 -0400
-X-MC-Unique: FJjzo88eN2W6x-WCltxcdw-1
-Received: by mail-wm1-f69.google.com with SMTP id o8so1009402wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:36:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k9apolne3MOvgFYAOik7xpjgAh+OTAjNzLgbnviUZnk=;
-        b=Gd1TigpIQ4Jtozcrl23WlwRhwQXupEKFSzBQSnZQLZR/5hLZnXtUgFmXW0lzaAeo+t
-         xWeeG/AAQnBYDt9vQvDf1GCHkr3nGUAo4XnFDNsZtooNxOcD2S4fJPJ+dpNqeXwwmjmB
-         g6b8DqcCPYKHxwjAJEaSpntiYM5LozYkF2YfKmrBqzds/TpIHcrL7MTMpHoo5xqAJQRB
-         sg9T3+J9HU1/1Vgg0mmRHNjy93x+WGV6wO8g0zh1EEOHRdFXbOhF3fk1/K/chq8AhOxP
-         xPIU0of4xfFkPRthMusv3LBz42w2MJY0AL4oC55lMkG4PLVwL9s+tlMkKaY9BqKIkvFQ
-         9S7Q==
-X-Gm-Message-State: AOAM533qhQGsgP+lLzHglheA8uwsXXaUMSfS6yjGFna8lak7s7QcDtQq
-        qrVM+rysO9xzAcX1QTM616w4bVQc6bQpP4JZDk84yoxzL8Az0aGF8wfw81CVS5Rr0iLWGDr/nnm
-        pBB+03Uyg/fcpEsBzwZ7MbWV0
-X-Received: by 2002:a1c:3bc5:: with SMTP id i188mr8856755wma.90.1590068217485;
-        Thu, 21 May 2020 06:36:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz0Qvv+LB4xFaLKN/vr1LCs4+uEau6Ef45+r3Usb72/IQMTIglg+pNLXlzEd0xvftHufcmXZQ==
-X-Received: by 2002:a1c:3bc5:: with SMTP id i188mr8856739wma.90.1590068217245;
-        Thu, 21 May 2020 06:36:57 -0700 (PDT)
-Received: from [192.168.178.58] ([151.30.94.134])
-        by smtp.gmail.com with ESMTPSA id r9sm7484013wra.52.2020.05.21.06.36.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 06:36:56 -0700 (PDT)
-Subject: Re: [PATCH v3] kvm/x86 : Remove redundant function implement
-To:     =?UTF-8?B?5b2t5rWpKFJpY2hhcmQp?= <richard.peng@oppo.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <HKAPR02MB4291D5926EA10B8BFE9EA0D3E0B70@HKAPR02MB4291.apcprd02.prod.outlook.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5f2a3d25-adbf-26c2-4c2e-43d1a7abab97@redhat.com>
-Date:   Thu, 21 May 2020 15:36:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 21 May 2020 09:38:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LDRXYL158375;
+        Thu, 21 May 2020 13:37:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=1H9r5JbwrbyVDc6gEnRR1i+kqMeSEbJU8Fh66Zw0Ono=;
+ b=mELKqfIb/VLF3nLhd60AqlujPMbFxbC3kUlOfRV/D7eKxsNAFSSAoVneSVb3ryyxoTx+
+ LJqqlKXFxyqgplXsMeiRKdU8UynF5UbShCLb/dkYTe1IPpUPo210UzKdPqA5gnLHPA3v
+ n3IddseeQeByBqPTp0dIeCB4tBms07f0adn0ugf3XMmYtBewkGtqIGHKxE5NxCHJSB8x
+ ilHgqKskhSw6v/+IXOooWx4Ou7xAY3jK7ePcK/u8Cl7Wdf8pNz56YudAbQFK+OvAxt3W
+ rj+giVZfBog++TMnfF3FutpsHfuyVC3deNuLiUf5c5C9Vh+/0U+wixIh60eTTmfM2MpV 3Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 31501rf221-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 13:37:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LDXFgJ026782;
+        Thu, 21 May 2020 13:35:14 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 312t3b5xpa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 13:35:14 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04LDZCMw016629;
+        Thu, 21 May 2020 13:35:12 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 May 2020 06:35:12 -0700
+Date:   Thu, 21 May 2020 09:35:32 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Huang Ying <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH -V2] swap: Reduce lock contention on swap cache from swap
+ slots allocation
+Message-ID: <20200521133532.psckytr456eevs5j@ca-dmjordan1.us.oracle.com>
+References: <20200520031502.175659-1-ying.huang@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <HKAPR02MB4291D5926EA10B8BFE9EA0D3E0B70@HKAPR02MB4291.apcprd02.prod.outlook.com>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520031502.175659-1-ying.huang@intel.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 malwarescore=0 suspectscore=2 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210101
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005210100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/20 07:57, 彭浩(Richard) wrote:
-> pic_in_kernel(),ioapic_in_kernel() and irqchip_kernel() have the
-> same implementation.
-> 
-> Signed-off-by: Peng Hao <richard.peng@oppo.com>
-> ---
->  arch/x86/kvm/ioapic.h  |  8 ++------
->  arch/x86/kvm/irq.h     | 14 ++++----------
->  arch/x86/kvm/lapic.c   |  1 +
->  arch/x86/kvm/mmu/mmu.c |  1 +
->  arch/x86/kvm/x86.c     |  1 +
->  5 files changed, 9 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
-> index 2fb2e3c..7a3c53b 100644
-> --- a/arch/x86/kvm/ioapic.h
-> +++ b/arch/x86/kvm/ioapic.h
-> @@ -5,7 +5,7 @@
->  #include <linux/kvm_host.h>
-> 
->  #include <kvm/iodev.h>
-> -
-> +#include "irq.h"
->  struct kvm;
->  struct kvm_vcpu;
-> 
-> @@ -108,11 +108,7 @@ do {\
-> 
->  static inline int ioapic_in_kernel(struct kvm *kvm)
->  {
-> -int mode = kvm->arch.irqchip_mode;
-> -
-> -/* Matches smp_wmb() when setting irqchip_mode */
-> -smp_rmb();
-> -return mode == KVM_IRQCHIP_KERNEL;
-> +return irqchip_kernel(kvm);
->  }
-> 
->  void kvm_rtc_eoi_tracking_restore_one(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-> index f173ab6..e133c1a 100644
-> --- a/arch/x86/kvm/irq.h
-> +++ b/arch/x86/kvm/irq.h
-> @@ -16,7 +16,6 @@
->  #include <linux/spinlock.h>
-> 
->  #include <kvm/iodev.h>
-> -#include "ioapic.h"
->  #include "lapic.h"
-> 
->  #define PIC_NUM_PINS 16
-> @@ -66,15 +65,6 @@ void kvm_pic_destroy(struct kvm *kvm);
->  int kvm_pic_read_irq(struct kvm *kvm);
->  void kvm_pic_update_irq(struct kvm_pic *s);
-> 
-> -static inline int pic_in_kernel(struct kvm *kvm)
-> -{
-> -int mode = kvm->arch.irqchip_mode;
-> -
-> -/* Matches smp_wmb() when setting irqchip_mode */
-> -smp_rmb();
-> -return mode == KVM_IRQCHIP_KERNEL;
-> -}
-> -
->  static inline int irqchip_split(struct kvm *kvm)
->  {
->  int mode = kvm->arch.irqchip_mode;
-> @@ -93,6 +83,10 @@ static inline int irqchip_kernel(struct kvm *kvm)
->  return mode == KVM_IRQCHIP_KERNEL;
->  }
-> 
-> +static inline int pic_in_kernel(struct kvm *kvm)
-> +{
-> +return irqchip_kernel(kvm);
-> +}
->  static inline int irqchip_in_kernel(struct kvm *kvm)
->  {
->  int mode = kvm->arch.irqchip_mode;
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 9af25c9..de4d046 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -36,6 +36,7 @@
->  #include <linux/jump_label.h>
->  #include "kvm_cache_regs.h"
->  #include "irq.h"
-> +#include "ioapic.h"
->  #include "trace.h"
->  #include "x86.h"
->  #include "cpuid.h"
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 8071952..6133f69 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -16,6 +16,7 @@
->   */
-> 
->  #include "irq.h"
-> +#include "ioapic.h"
->  #include "mmu.h"
->  #include "x86.h"
->  #include "kvm_cache_regs.h"
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index d786c7d..c8b62ac 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -18,6 +18,7 @@
-> 
->  #include <linux/kvm_host.h>
->  #include "irq.h"
-> +#include "ioapic.h"
->  #include "mmu.h"
->  #include "i8254.h"
->  #include "tss.h"
-> --
-> 2.7.4
-> 
-> ________________________________
-> OPPO
-> 
-> 本电子邮件及其附件含有OPPO公司的保密信息，仅限于邮件指明的收件人使用（包含个人及群组）。禁止任何人在未经授权的情况下以任何形式使用。如果您错收了本邮件，请立即以电子邮件通知发件人并删除本邮件及其附件。
-> 
-> This e-mail and its attachments contain confidential information from OPPO, which is intended only for the person or entity whose address is listed above. Any use of the information contained herein in any way (including, but not limited to, total or partial disclosure, reproduction, or dissemination) by persons other than the intended recipient(s) is prohibited. If you receive this e-mail in error, please notify the sender by phone or email immediately and delete it!
-> 
+On Wed, May 20, 2020 at 11:15:02AM +0800, Huang Ying wrote:
+> @@ -2827,6 +2865,11 @@ static struct swap_info_struct *alloc_swap_info(void)
+>  	p = kvzalloc(struct_size(p, avail_lists, nr_node_ids), GFP_KERNEL);
+>  	if (!p)
+>  		return ERR_PTR(-ENOMEM);
+> +	p->cluster_next_cpu = alloc_percpu(unsigned int);
+> +	if (!p->cluster_next_cpu) {
+> +		kvfree(p);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
 
-Queued, thanks.
+There should be free_percpu()s at two places after this, but I think the
+allocation really belongs right...
 
-Paolo
+> @@ -3202,7 +3245,10 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+>  		 * select a random position to start with to help wear leveling
+>  		 * SSD
+>  		 */
+> -		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
 
+...here because then it's only allocated when it's actually used.
+
+> +		for_each_possible_cpu(cpu) {
+> +			per_cpu(*p->cluster_next_cpu, cpu) =
+> +				1 + prandom_u32_max(p->highest_bit);
+> +		}
+>  		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
+>  
+>  		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
+> -- 
+> 2.26.2
+> 
+> 
