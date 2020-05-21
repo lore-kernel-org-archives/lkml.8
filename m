@@ -2,101 +2,100 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E940C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7551FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0288220849
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5594C20849
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ibuk6wti"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eaMvhhWu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbgEUPYH (ORCPT
+        id S1730297AbgEUPYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730252AbgEUPYC (ORCPT
+        Thu, 21 May 2020 11:24:10 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11603 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730249AbgEUPYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:24:02 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E325CC061A0E;
-        Thu, 21 May 2020 08:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=z84HF8MbiF+uWN8N63G2E43OTwbdeCsOdqVBGb9xrkM=; b=ibuk6wti7NITiJ/gTx9Z7H73dN
-        IbKZ5YEJu3Sj9xfwWnX8Tf7CB7gU4qD69l8Kh8KoIBwpT+D9satafsUfZjRQ+A7S0l0aZ/Fbm2bUu
-        oEyQ+m+8UNZ3Ljai+efPSL5/W3EbngROUFTf6xnk7lKHl81AiQ1VQ1a8ZLUNBfhGCgb0/6TStOedk
-        wCu4DP9YGWQdbL4A01Uchj+J/VjQgDqkKUPl0PEG54wcUecIxanMA0BtxZHBoa5tBtaujgRrH0JCM
-        Ik08u0XexCxOdvnuIGCHmpYEGxcjsGym6p1S3j5UQWQJj1fo8U8cuvxsxvj6GAwLt8rNel7x2Pccj
-        mOtgjebA==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn39-0004fj-OL; Thu, 21 May 2020 15:24:00 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 19/23] x86: use non-set_fs based maccess routines
-Date:   Thu, 21 May 2020 17:22:57 +0200
-Message-Id: <20200521152301.2587579-20-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Thu, 21 May 2020 11:24:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590074647; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=naABoZqtWXQ2lg37iYvV0+bqGuL4VsftQdvTElt++Oc=; b=eaMvhhWuJ5hW8+Q4ax/ngUxIs9wvmOweiJW0+FW8bB1ScJdLux5gerfuC7Hto5Um99Dbz1z0
+ MawdXyfd71rqbDVrujLTigzpvTVo/lcopS/gfSequEHBzA71zcGBR7tyyZD9hq8eLL4WKHZH
+ 4+X6oRYRxdTJ2sUA1LVwhi0LrfU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ec69d088cd231c4035c06ac (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 15:23:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EB65EC433AD; Thu, 21 May 2020 15:23:50 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4863AC433CA;
+        Thu, 21 May 2020 15:23:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4863AC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V2 0/3] Internal voltage control for qcom SDHC 
+Date:   Thu, 21 May 2020 20:53:32 +0530
+Message-Id: <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
+References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide arch_kernel_read and arch_kernel_write routines to implement the
-maccess routines without messing with set_fs and without stac/clac that
-opens up access to user space.
+On qcom SD host controllers voltage switching be done after the HW
+is ready for it. The HW informs its readiness through power irq.
+The voltage switching should happen only then.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/include/asm/uaccess.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+So added support to register voltage regulators from the msm driver
+and use them.
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index d8f283b9a569c..b3e0a56ae961a 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -523,5 +523,21 @@ do {									\
- 	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
- } while (0)
- 
-+#define HAVE_GET_KERNEL_NOFAULT
-+
-+#define __get_kernel_nofault(dst, src, type, err_label)			\
-+do {									\
-+        int __kr_err;							\
-+									\
-+	__get_user_size(*((type *)dst), (__force type __user *)src,	\
-+			sizeof(type), __kr_err);			\
-+        if (unlikely(__kr_err))						\
-+		goto err_label;						\
-+} while (0)
-+
-+#define __put_kernel_nofault(dst, src, type, err_label)			\
-+	__put_user_size(*((type *)(src)), (__force type __user *)(dst),	\
-+			sizeof(type), err_label)
-+
- #endif /* _ASM_X86_UACCESS_H */
- 
+This patchset was posted long back but not actively pursued
+https://lore.kernel.org/linux-arm-msm/1539004739-32060-1-git-send-email-vbadigan@codeaurora.org/
+So posting it as fresh patchset.  
+
+Changes since V1:
+	- Removed setting load for Vmmc regulator while turning it on/off.
+	  Instead setting the active load once during probe.
+	- Simplified handlng of supplies for BUS_ON/OFF cases in shci_msm_handle_pwr_irq().
+	- Moved common code out of switch case in sdhci_msm_start_signal_voltage_switch().
+	- Updated variable name to sdhci_core_to_disable_vqmmc.
+	- Updated pr_err logs to dev_err logs.
+
+Veerabhadrarao Badiganti (1):
+  dt-bindings: mmc: Supply max load for mmc supplies
+  mmc: sdhci-msm: Use internal voltage control
+
+Vijay Viswanath (1):
+  mmc: sdhci: Allow platform controlled voltage switching
+
+ .../devicetree/bindings/mmc/mmc-controller.yaml    |  16 ++
+ drivers/mmc/host/sdhci-msm.c                       | 207 ++++++++++++++++++++-
+ drivers/mmc/host/sdhci.c                           |  32 ++--
+ drivers/mmc/host/sdhci.h                           |   1 +
+ 4 files changed, 234 insertions(+), 22 deletions(-)
+
 -- 
-2.26.2
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
 
