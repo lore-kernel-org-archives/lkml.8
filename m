@@ -2,145 +2,95 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E54C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727FD20826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:41:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KXrFiR/R"
+	by mail.kernel.org (Postfix) with ESMTP id 73914207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgEURlf (ORCPT
+        id S1728764AbgEURmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:41:35 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42724 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgEURle (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:41:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHbUjp196368;
-        Thu, 21 May 2020 17:41:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=gA43wCjQqcJxoz3k/kU6IZwsYpzQYq2m+PwRQ/B3VuI=;
- b=KXrFiR/REHrzSvFv/SIXpsQFfN3guFg4aqUUlyaEwJhRMZIaeY41DOT6xi2xWZn1VgLH
- DOUvuKNnw+mcyEfDfOLg8Bf+knoOCwah2Mh47Q/mAmskorEFJ6kS+2vysisdbD5TNWUW
- MA0+YBpTVhUSTet98TijOcTX9S7qH7oj5XKjgFl3KDmcZIowc+7RNabKIIzXbDZR3H6T
- JpVH3whqOTuGKzGCFLlrzwMfjuUq/q6oYMtVVPN9R1Iy8lEDIQ1K+iuBacIXG799P1ic
- gKds2Z/KQwLMd4ajPFxq1AvbrJ0WExNDzVKZ6DR6MxrqVsPUi3MvXt7b8+SrCGrxcain WA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 31501rgby4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 17:41:19 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHdFtJ105995;
-        Thu, 21 May 2020 17:39:18 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 315022uevc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 17:39:18 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04LHdBli014341;
-        Thu, 21 May 2020 17:39:11 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 10:39:10 -0700
-Date:   Thu, 21 May 2020 20:39:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     dinghao.liu@zju.edu.cn, devel@driverdev.osuosl.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>, Kangjie Lu <kjlu@umn.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
- on error
-Message-ID: <20200521173901.GA22310@kadam>
-References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
- <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
- <20200520150230.GC30374@kadam>
- <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
- <20200521091505.GF30374@kadam>
- <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
+        Thu, 21 May 2020 13:42:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:50902 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727966AbgEURmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:42:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F0CE30E;
+        Thu, 21 May 2020 10:42:14 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE2803F68F;
+        Thu, 21 May 2020 10:42:12 -0700 (PDT)
+Date:   Thu, 21 May 2020 18:42:10 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH v3 0/2] Fix PCI HyperV device error handling
+Message-ID: <20200521174210.GB29590@e121166-lin.cambridge.arm.com>
+References: <20200507050126.10871-1-weh@microsoft.com>
+ <20200511112147.GD24954@e121166-lin.cambridge.arm.com>
+ <MW2PR2101MB1052A57E7BE9634821E29E4FD7B70@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
+In-Reply-To: <MW2PR2101MB1052A57E7BE9634821E29E4FD7B70@MW2PR2101MB1052.namprd21.prod.outlook.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 suspectscore=18 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 clxscore=1011 priorityscore=1501 cotscore=-2147483648
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
- mlxscore=0 suspectscore=18 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005210127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 05:22:05PM +0200, Rafael J. Wysocki wrote:
-> On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> >
-> > On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
-> > > Hi, Dan,
+On Thu, May 21, 2020 at 02:39:58AM +0000, Michael Kelley wrote:
+> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> Sent: Monday, May 11, 2020 4:22 AM
+> > 
+> > On Thu, May 07, 2020 at 01:01:26PM +0800, Wei Hu wrote:
+> > > This series better handles some PCI HyperV error cases in general
+> > > and for kdump case. Some of review comments from previous individual
+> > > patch reviews, including splitting into separate patches, have already
+> > > been incorporated. Thanks Lorenzo Pieralisi for the review and
+> > > suggestions, as well as Michael Kelley's contribution to the commit
+> > > log.
 > > >
-> > > I agree the best solution is to fix __pm_runtime_resume(). But there are also
-> > > many cases that assume pm_runtime_get_sync() will change PM usage
-> > > counter on error. According to my static analysis results, the number of these
-> > > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
-> > > more new bugs. Therefore I think we should resolve the "bug" cases individually.
+> > > Thanks,
+> > > Wei
 > > >
-> >
-> > That's why I was saying that we may need to introduce a new replacement
-> > function for pm_runtime_get_sync() that works as expected.
-> >
-> > There is no reason why we have to live with the old behavior.
+> > >
+> > > Wei Hu (2):
+> > >   PCI: hv: Fix the PCI HyperV probe failure path to release resource
+> > >     properly
+> > >   PCI: hv: Retry PCI bus D0 entry when the first attempt failed with
+> > >     invalid device state
+> > >
+> > >  drivers/pci/controller/pci-hyperv.c | 60 ++++++++++++++++++++++++++---
+> > >  1 file changed, 54 insertions(+), 6 deletions(-)
+> > 
+> > Applied to pci/hv, thanks.
+> > 
 > 
-> What exactly do you mean by "the old behavior"?
+> Lorenzo -- 
+> 
+> Will you be bringing these fixes into 5.7?  The main fix is the 2nd patch, but
+> there wasn't a clear "Fixes:" tag to add because the problem is due more to
+> how Hyper-V operates than a bug in a previous Linux commit.  We have a
+> customer experiencing the problem, so getting the fix into the main tree
+> sooner rather than later is helpful.
 
-I'm suggesting we leave pm_runtime_get_sync() alone but we add a new
-function which called pm_runtime_get_sync_resume() which does something
-like this:
+We usually send fixes at -rc* if the bug was introduced in the previous
+release, at the moment this is v5.8 material not planned for such a late
+-rc* (ie -rc7). We can send patches to stable and/or apply a Fixes: tag
+if that can help when the commits hit mainline.
 
-static inline int pm_runtime_get_sync_resume(struct device *dev)
-{
-	int ret;
-
-	ret = __pm_runtime_resume(dev, RPM_GET_PUT);
-	if (ret < 0) {
-		pm_runtime_put(dev);
-		return ret;
-	}
-	return 0;
-}
-
-I'm not sure if pm_runtime_put() is the correct thing to do?  The other
-thing is that this always returns zero on success.  I don't know that
-drivers ever care to differentiate between one and zero returns.
-
-Then if any of the caller expect that behavior we update them to use the
-new function.
-
-regards,
-dan carpenter
-
+Lorenzo
