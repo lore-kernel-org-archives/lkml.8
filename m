@@ -2,117 +2,254 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E643C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9C620721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QJKj5hLE"
+	by mail.kernel.org (Postfix) with ESMTP id AD46320756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgEUDHj (ORCPT
+        id S1728061AbgEUDJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgEUDHj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:07:39 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F1BC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:07:39 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id a13so2216101pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 20:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ccibA7LDXIbckabc89mZhjSjYh9Yh1XsB9j1urjankk=;
-        b=QJKj5hLEAVaHWmPMeYCFgAtB2gTVZ7CmhjXdaGUbfgs7I6L0MCJI2kUWQLLaQDSNmw
-         RAH2Y5zLLVU+R6V0wpcbS26hiO8TnDZ5lfONDKSZvJHL1jX4mFXHKbokR+vLmelNPUSq
-         6kgyvz796KDhYSGs9GSTVyxgbJ2IntR+Jr6lgx7YeBQ+eoRLsAuZsuNcOs6nBVy4HV6Y
-         avN9skUdNqsAa/h+ruWdM0XXmo5wA8MGqcTLS6dbDG33Ibka4LHqby7hnoKZQu2f1ezH
-         tCIvBh8Gjtr6APay2OrzsOVTLX2arxVjsYHKtniFOj8z6JOX70xe5EJQ8i5OaAXGHrgn
-         UenA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ccibA7LDXIbckabc89mZhjSjYh9Yh1XsB9j1urjankk=;
-        b=p1BpBBLiXiGBYlhJkq7f6logHRyTb5NTuQTnXt481bf2SHo2l0LYtldw6nICCcDJIw
-         mJ0GVsimgWK3r/4oCQvGPF9lbgGVd71NlJCyNP8CylsM3pdWvV2Q2LJGwhv43gT/y8fh
-         7NgHapUr5PfCwzirMZJzsR1+qAj1tXpfDMV1XA/XnTa2r3MgxfgzS8bZgPlj2iAdmIG5
-         HwconO8x0zFPXJZc6sgJ4NxfOvh3/AEaQk4gZtkgMQKlYf2mv9ZhIvRnAWAueNXDd4oL
-         gA00mokiOP1OEBw5LfDLO1HgipOtDcUwdzVcnvAONgfUWNtDuBBOyI+84Hlu+/MYbTg9
-         7cWg==
-X-Gm-Message-State: AOAM531ZFTu/GeCcbcwnKHw07mZx1MDcgMFE4tTEF4MuMBD8gRggCH6R
-        riJZXp9jyaEgwIs0RkYvHfewog==
-X-Google-Smtp-Source: ABdhPJyQiQ3aNvL+wpFR3LQOzxPoIr/jqJaJJQPX1TlU7vAAbOPwC86YzPcUurVOWQ6QT0EHm7spYQ==
-X-Received: by 2002:a17:90a:bf08:: with SMTP id c8mr8846242pjs.13.1590030458274;
-        Wed, 20 May 2020 20:07:38 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id go1sm2967314pjb.26.2020.05.20.20.07.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 20:07:37 -0700 (PDT)
-Date:   Wed, 20 May 2020 20:07:34 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 0/3] Even moar rpmh cleanups
-Message-ID: <20200521030734.GD11847@yoga>
-References: <20200521012119.238270-1-swboyd@chromium.org>
+        Wed, 20 May 2020 23:09:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:19984 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727869AbgEUDJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:09:41 -0400
+IronPort-SDR: D5uqVYZUNFiC5uW9oluo39higlsvO3TcY9M3915neLIO5/vYIDYi9W0mLPsxAjz8wLTYBWQE9W
+ 297miXW/DeCg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 20:09:39 -0700
+IronPort-SDR: /FY+8d5ByoyOaHpIPTb39UfH0C/6qZ0RMzVOy5zDuuQdY3sa65MBvMIfZBnMybIdHFoZPrmakL
+ kQ35fmbnIWYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
+   d="scan'208";a="255188307"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by fmsmga008.fm.intel.com with ESMTP; 20 May 2020 20:09:24 -0700
+Date:   Thu, 21 May 2020 11:09:24 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200521030924.GA12568@shbuild999.sh.intel.com>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521012119.238270-1-swboyd@chromium.org>
+In-Reply-To: <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 20 May 18:21 PDT 2020, Stephen Boyd wrote:
+Hi Serge,
 
-> We remove the tcs_is_free() API and then do super micro optimizations on
-> the irq handler. I haven't tested anything here so most likely there's a
-> bug (again again)!
+On Thu, May 21, 2020 at 04:21:51AM +0300, Serge Semin wrote:
+> Since DMA transfers are performed asynchronously with actual SPI
+> transaction, then even if DMA transfers are finished it doesn't mean
+> all data is actually pushed to the SPI bus. Some data might still be
+> in the controller FIFO. This is specifically true for Tx-only
+> transfers. In this case if the next SPI transfer is recharged while
+> a tail of the previous one is still in FIFO, we'll loose that tail
+> data. In order to fix this lets add the wait procedure of the Tx/Rx
+> SPI transfers completion after the corresponding DMA transactions
+> are finished.
 > 
-> Changes from v2:
->  * Went back in time and used the v1 patch for the first patch with
->    the fixes to make it not so complicated
+> Co-developed-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Signed-off-by: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Fixes: 7063c0d942a1 ("spi/dw_spi: add DMA support")
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > 
-> Changes from v1:
->  * First patch became even moar complicated because it combines
->    find_free_tcs() with the check for a request in flight
->  * Fixed subject in patch 2
->  * Put back unsigned long for bitmap operation to silence compiler
->    warning
->  * Picked up review tags
+> ---
 > 
+> Changelog v2:
+> - Use conditional statement instead of the ternary operator in the ref
+>   clock getter.
+> - Move the patch to the head of the series so one could be picked up to
+>   the stable kernels as a fix.
+> 
+> Changelog v3:
+> - Use spi_delay_exec() method to wait for the current operation completion.
+> ---
+>  drivers/spi/spi-dw-mid.c | 69 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/spi/spi-dw.h     | 10 ++++++
+>  2 files changed, 79 insertions(+)
+> 
+> diff --git a/drivers/spi/spi-dw-mid.c b/drivers/spi/spi-dw-mid.c
+> index f9757a370699..3526b196a7fc 100644
+> --- a/drivers/spi/spi-dw-mid.c
+> +++ b/drivers/spi/spi-dw-mid.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/platform_data/dma-dw.h>
+>  
+> +#define WAIT_RETRIES	5
+>  #define RX_BUSY		0
+>  #define TX_BUSY		1
+>  
+> @@ -143,6 +144,47 @@ static enum dma_slave_buswidth convert_dma_width(u32 dma_width) {
+>  	return DMA_SLAVE_BUSWIDTH_UNDEFINED;
+>  }
+>  
+> +static void dw_spi_dma_calc_delay(struct dw_spi *dws, u32 nents,
+> +				  struct spi_delay *delay)
+> +{
+> +	unsigned long ns, us;
+> +
+> +	ns = (NSEC_PER_SEC / spi_get_clk(dws)) * nents * dws->n_bytes *
+> +	     BITS_PER_BYTE;
+> +
+> +	if (ns <= NSEC_PER_USEC) {
+> +		delay->unit = SPI_DELAY_UNIT_NSECS;
+> +		delay->value = ns;
+> +	} else {
+> +		us = DIV_ROUND_UP(ns, NSEC_PER_USEC);
+> +		delay->unit = SPI_DELAY_UNIT_USECS;
+> +		delay->value = clamp_val(us, 0, USHRT_MAX);
+> +	}
+> +}
+> +
+> +static inline bool dw_spi_dma_tx_busy(struct dw_spi *dws)
+> +{
+> +	return !(dw_readl(dws, DW_SPI_SR) & SR_TF_EMPT);
+> +}
+> +
+> +static void dw_spi_dma_wait_tx_done(struct dw_spi *dws)
+> +{
+> +	int retry = WAIT_RETRIES;
+> +	struct spi_delay delay;
+> +	u32 nents;
+> +
+> +	nents = dw_readl(dws, DW_SPI_TXFLR);
+> +	dw_spi_dma_calc_delay(dws, nents, &delay);
+> +
+> +	while (dw_spi_dma_tx_busy(dws) && retry--)
+> +		spi_delay_exec(&delay, NULL);
+> +
+> +	if (retry < 0) {
+> +		dev_err(&dws->master->dev, "Tx hanged up\n");
+> +		dws->master->cur_msg->status = -EIO;
+> +	}
+> +}
+> +
+>  /*
+>   * dws->dma_chan_busy is set before the dma transfer starts, callback for tx
+>   * channel will clear a corresponding bit.
+> @@ -151,6 +193,8 @@ static void dw_spi_dma_tx_done(void *arg)
+>  {
+>  	struct dw_spi *dws = arg;
+>  
+> +	dw_spi_dma_wait_tx_done(dws);
+> +
+>  	clear_bit(TX_BUSY, &dws->dma_chan_busy);
+>  	if (test_bit(RX_BUSY, &dws->dma_chan_busy))
+>  		return;
+> @@ -192,6 +236,29 @@ static struct dma_async_tx_descriptor *dw_spi_dma_prepare_tx(struct dw_spi *dws,
+>  	return txdesc;
+>  }
+>  
+> +static inline bool dw_spi_dma_rx_busy(struct dw_spi *dws)
+> +{
+> +	return !!(dw_readl(dws, DW_SPI_SR) & SR_RF_NOT_EMPT);
+> +}
+> +
+> +static void dw_spi_dma_wait_rx_done(struct dw_spi *dws)
+> +{
+> +	int retry = WAIT_RETRIES;
+> +	struct spi_delay delay;
+> +	u32 nents;
+> +
+> +	nents = dw_readl(dws, DW_SPI_RXFLR);
+> +	dw_spi_dma_calc_delay(dws, nents, &delay);
+> +
+> +	while (dw_spi_dma_rx_busy(dws) && retry--)
+> +		spi_delay_exec(&delay, NULL);
+> +
+> +	if (retry < 0) {
+> +		dev_err(&dws->master->dev, "Rx hanged up\n");
+> +		dws->master->cur_msg->status = -EIO;
+> +	}
+> +}
+> +
+>  /*
+>   * dws->dma_chan_busy is set before the dma transfer starts, callback for rx
+>   * channel will clear a corresponding bit.
+> @@ -200,6 +267,8 @@ static void dw_spi_dma_rx_done(void *arg)
+>  {
+>  	struct dw_spi *dws = arg;
+>  
+> +	dw_spi_dma_wait_rx_done(dws);
 
-Can you please resend this series with both linux-arm-msm and myself on
-Cc for all three patches?
+I can understand the problem about TX, but I don't see how RX
+will get hurt, can you elaborate more? thanks
 
-Thanks,
-Bjorn
+- Feng
 
-> Stephen Boyd (3):
->   soc: qcom: rpmh-rsc: Remove tcs_is_free() API
->   soc: qcom: rpmh-rsc: Loop over fewer bits in irq handler
->   soc: qcom: rpmh-rsc: Fold WARN_ON() into if condition
-> 
->  drivers/soc/qcom/rpmh-rsc.c | 65 +++++++++++++------------------------
->  1 file changed, 22 insertions(+), 43 deletions(-)
-> 
-> Cc: Maulik Shah <mkshah@codeaurora.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> 
-> base-commit: 1f7a3eb785e4a4e196729cd3d5ec97bd5f9f2940
+
+> +
+>  	clear_bit(RX_BUSY, &dws->dma_chan_busy);
+>  	if (test_bit(TX_BUSY, &dws->dma_chan_busy))
+>  		return;
+> diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
+> index e92d43b9a9e6..81364f501b7e 100644
+> --- a/drivers/spi/spi-dw.h
+> +++ b/drivers/spi/spi-dw.h
+> @@ -210,6 +210,16 @@ static inline void spi_set_clk(struct dw_spi *dws, u16 div)
+>  	dw_writel(dws, DW_SPI_BAUDR, div);
+>  }
+>  
+> +static inline u32 spi_get_clk(struct dw_spi *dws)
+> +{
+> +	u32 div = dw_readl(dws, DW_SPI_BAUDR);
+> +
+> +	if (!div)
+> +		return 0;
+> +
+> +	return dws->max_freq / div;
+> +}
+> +
+>  /* Disable IRQ bits */
+>  static inline void spi_mask_intr(struct dw_spi *dws, u32 mask)
+>  {
 > -- 
-> Sent by a computer, using git, on the internet
-> 
+> 2.25.1
