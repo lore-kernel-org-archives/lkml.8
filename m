@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC65C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA10720884
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB5720884
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgEUUcC (ORCPT
+        id S1729149AbgEUUcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55442 "EHLO
+        Thu, 21 May 2020 16:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729837AbgEUUb6 (ORCPT
+        with ESMTP id S1729899AbgEUUcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:31:58 -0400
+        Thu, 21 May 2020 16:32:03 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBF2C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:31:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A9DC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:32:03 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jbrqo-0000W0-0B; Thu, 21 May 2020 22:31:34 +0200
+        id 1jbrqp-0000X4-2o; Thu, 21 May 2020 22:31:35 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4A76A100606;
-        Thu, 21 May 2020 22:31:33 +0200 (CEST)
-Message-Id: <20200521202118.331115895@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 85844100606;
+        Thu, 21 May 2020 22:31:34 +0200 (CEST)
+Message-Id: <20200521202118.423224507@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 21 May 2020 22:05:29 +0200
+Date:   Thu, 21 May 2020 22:05:30 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Andy Lutomirski <luto@kernel.org>,
@@ -60,7 +60,7 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V9 16/39] x86/entry: Remove the transition leftovers
+Subject: [patch V9 17/39] x86/entry: Change exit path of xen_failsafe_callback
 References: <20200521200513.656533920@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,128 +75,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Now that all exceptions are converted over the sane flag is not longer
-needed. Also the vector argument of idtentry_body on 64 bit is pointless
-now.
+xen_failsafe_callback is invoked from XEN for two cases:
+
+  1. Fault while reloading DS, ES, FS or GS
+  2. Fault while executing IRET
+
+#1 retries the IRET after XEN has fixed up the segments.
+#2 injects a #GP which kills the task
+
+For #1 there is no reason to go through the full exception return path
+because the tasks TIF state is still the same. So just going straight to
+the IRET path is good enough.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/entry/entry_32.S       |    3 +--
- arch/x86/entry/entry_64.S       |   26 ++++----------------------
- arch/x86/include/asm/idtentry.h |    6 +++---
- 3 files changed, 8 insertions(+), 27 deletions(-)
+ arch/x86/entry/entry_32.S |    2 +-
+ arch/x86/entry/entry_64.S |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -734,9 +734,8 @@
-  * @asmsym:		ASM symbol for the entry point
-  * @cfunc:		C function to be called
-  * @has_error_code:	Hardware pushed error code on stack
-- * @sane:		Compatibility flag with 64bit
-  */
--.macro idtentry vector asmsym cfunc has_error_code:req sane=0
-+.macro idtentry vector asmsym cfunc has_error_code:req
- SYM_CODE_START(\asmsym)
- 	ASM_CLAC
- 	cld
+@@ -1352,7 +1352,7 @@ SYM_FUNC_START(xen_failsafe_callback)
+ 5:	pushl	$-1				/* orig_ax = -1 => not a system call */
+ 	SAVE_ALL
+ 	ENCODE_FRAME_POINTER
+-	jmp	ret_from_exception
++	jmp	handle_exception_return
+ 
+ .section .fixup, "ax"
+ 6:	xorl	%eax, %eax
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -496,27 +496,14 @@ SYM_CODE_END(spurious_entries_start)
- 
- /**
-  * idtentry_body - Macro to emit code calling the C function
-- * @vector:		Vector number
-  * @cfunc:		C function to be called
-  * @has_error_code:	Hardware pushed error code on stack
-- * @sane:		Sane variant which handles irq tracing, context tracking in C
-  */
--.macro idtentry_body vector cfunc has_error_code:req sane=0
-+.macro idtentry_body cfunc has_error_code:req
- 
- 	call	error_entry
- 	UNWIND_HINT_REGS
- 
--	.if \sane == 0
--	TRACE_IRQS_OFF
--
--#ifdef CONFIG_CONTEXT_TRACKING
--	testb	$3, CS(%rsp)
--	jz	.Lfrom_kernel_no_ctxt_tracking_\@
--	CALL_enter_from_user_mode
--.Lfrom_kernel_no_ctxt_tracking_\@:
--#endif
--	.endif
--
- 	movq	%rsp, %rdi			/* pt_regs pointer into 1st argument*/
- 
- 	.if \has_error_code == 1
-@@ -526,11 +513,7 @@ SYM_CODE_END(spurious_entries_start)
- 
- 	call	\cfunc
- 
--	.if \sane == 0
+@@ -1175,7 +1175,7 @@ SYM_CODE_START(xen_failsafe_callback)
+ 	pushq	$-1 /* orig_ax = -1 => not a system call */
+ 	PUSH_AND_CLEAR_REGS
+ 	ENCODE_FRAME_POINTER
 -	jmp	error_exit
--	.else
- 	jmp	error_return
--	.endif
- .endm
- 
- /**
-@@ -539,12 +522,11 @@ SYM_CODE_END(spurious_entries_start)
-  * @asmsym:		ASM symbol for the entry point
-  * @cfunc:		C function to be called
-  * @has_error_code:	Hardware pushed error code on stack
-- * @sane:		Sane variant which handles irq tracing, context tracking in C
-  *
-  * The macro emits code to set up the kernel context for straight forward
-  * and simple IDT entries. No IST stack, no paranoid entry checks.
-  */
--.macro idtentry vector asmsym cfunc has_error_code:req sane=0
-+.macro idtentry vector asmsym cfunc has_error_code:req
- SYM_CODE_START(\asmsym)
- 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
- 	ASM_CLAC
-@@ -567,7 +549,7 @@ SYM_CODE_START(\asmsym)
- .Lfrom_usermode_no_gap_\@:
- 	.endif
- 
--	idtentry_body \vector \cfunc \has_error_code \sane
-+	idtentry_body \cfunc \has_error_code
- 
- _ASM_NOKPROBE(\asmsym)
- SYM_CODE_END(\asmsym)
-@@ -642,7 +624,7 @@ SYM_CODE_START(\asmsym)
- 
- 	/* Switch to the regular task stack and use the noist entry point */
- .Lfrom_usermode_switch_stack_\@:
--	idtentry_body vector noist_\cfunc, has_error_code=0 sane=1
-+	idtentry_body noist_\cfunc, has_error_code=0
- 
- _ASM_NOKPROBE(\asmsym)
- SYM_CODE_END(\asmsym)
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -283,10 +283,10 @@ static __always_inline void __##func(str
-  * The ASM variants for DECLARE_IDTENTRY*() which emit the ASM entry stubs.
-  */
- #define DECLARE_IDTENTRY(vector, func)					\
--	idtentry vector asm_##func func has_error_code=0 sane=1
-+	idtentry vector asm_##func func has_error_code=0
- 
- #define DECLARE_IDTENTRY_ERRORCODE(vector, func)			\
--	idtentry vector asm_##func func has_error_code=1 sane=1
-+	idtentry vector asm_##func func has_error_code=1
- 
- /* Special case for 32bit IRET 'trap'. Do not emit ASM code */
- #define DECLARE_IDTENTRY_SW(vector, func)
-@@ -324,7 +324,7 @@ static __always_inline void __##func(str
- 
- /* XEN NMI and DB wrapper */
- #define DECLARE_IDTENTRY_XEN(vector, func)				\
--	idtentry vector asm_exc_xen##func exc_##func has_error_code=0 sane=1
-+	idtentry vector asm_exc_xen##func exc_##func has_error_code=0
- 
- #endif /* __ASSEMBLY__ */
++	jmp	error_return
+ SYM_CODE_END(xen_failsafe_callback)
+ #endif /* CONFIG_XEN_PV */
  
 
