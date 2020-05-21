@@ -2,86 +2,124 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC387C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A7920759
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC742084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:59:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gEzEaxet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgEUS5v convert rfc822-to-8bit (ORCPT
+        id S1729959AbgEUS7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:57:51 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:49462 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729092AbgEUS5v (ORCPT
+        Thu, 21 May 2020 14:59:52 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46702 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729555AbgEUS7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:57:51 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21252267-1500050 
-        for multiple; Thu, 21 May 2020 19:57:36 +0100
-Content-Type: text/plain; charset="utf-8"
+        Thu, 21 May 2020 14:59:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LIxkUn037038;
+        Thu, 21 May 2020 13:59:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590087586;
+        bh=qHgIZ1jeMMAGpyygK6081zktw2WUM4w1JQMRrYptymU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=gEzEaxetknGbpkdpFF815hUys3+9q7H1azD62EpI9qENEpnRLoqRtK2zWzyFbhCKJ
+         vg+Lr0PuyWwOIBa1T1675VNVARmOSbmUdHwNKw1pj4OnMawWZmEZh7YtgCa+60aARM
+         +etEaADW7eeGo0aApndqgZfXMERzng4XGCBD5ylQ=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LIxkYH082066;
+        Thu, 21 May 2020 13:59:46 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 13:59:45 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 13:59:46 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LIxjLX055152;
+        Thu, 21 May 2020 13:59:45 -0500
+Subject: Re: [PATCH v2 0/4] TI K3 DSP remoteproc driver for C66x DSPs
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200521001006.2725-1-s-anna@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <5f84465e-8f63-51b4-4758-59c85d3ad597@ti.com>
+Date:   Thu, 21 May 2020 13:59:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200519002124.2025955-1-jhubbard@nvidia.com>
-References: <20200519002124.2025955-1-jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        John Hubbard <jhubbard@nvidia.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-Subject: Re: [PATCH 0/4] mm/gup, drm/i915: refactor gup_fast, convert to pin_user_pages()
-Message-ID: <159008745422.32320.5724805750977048669@build.alporthouse.com>
-User-Agent: alot/0.8.1
-Date:   Thu, 21 May 2020 19:57:34 +0100
+In-Reply-To: <20200521001006.2725-1-s-anna@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting John Hubbard (2020-05-19 01:21:20)
-> This needs to go through Andrew's -mm tree, due to adding a new gup.c
-> routine. However, I would really love to have some testing from the
-> drm/i915 folks, because I haven't been able to run-time test that part
-> of it.
+Hi Bjorn,
 
-CI hit
+On 5/20/20 7:10 PM, Suman Anna wrote:
+> Hi All,
+> 
+> The following is v2 of the K3 DSP remoteproc driver supporting the C66x DSPs
+> on the TI K3 J721E SoCs. The patches are based on the latest commit on the
+> rproc-next branch, 7dcef3988eed ("remoteproc: Fix an error code in
+> devm_rproc_alloc()").
 
-<4> [185.667750] WARNING: CPU: 0 PID: 1387 at mm/gup.c:2699 internal_get_user_pages_fast+0x63a/0xac0
-<4> [185.667752] Modules linked in: vgem snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic i915 mei_hdcp x86_pkg_temp_thermal coretemp snd_hda_intel snd_intel_dspcfg crct10dif_pclmul snd_hda_codec crc32_pclmul snd_hwdep snd_hda_core ghash_clmulni_intel cdc_ether usbnet mii snd_pcm e1000e mei_me ptp pps_core mei intel_lpss_pci prime_numbers
-<4> [185.667774] CPU: 0 PID: 1387 Comm: gem_userptr_bli Tainted: G     U            5.7.0-rc5-CI-Patchwork_17704+ #1
-<4> [185.667777] Hardware name: Intel Corporation Ice Lake Client Platform/IceLake U DDR4 SODIMM PD RVP, BIOS ICLSFWR1.R00.3234.A01.1906141750 06/14/2019
-<4> [185.667782] RIP: 0010:internal_get_user_pages_fast+0x63a/0xac0
-<4> [185.667785] Code: 24 40 08 48 39 5c 24 38 49 89 df 0f 85 74 fc ff ff 48 83 44 24 50 08 48 39 5c 24 58 49 89 dc 0f 85 e0 fb ff ff e9 14 fe ff ff <0f> 0b b8 ea ff ff ff e9 36 fb ff ff 4c 89 e8 48 21 e8 48 39 e8 0f
-<4> [185.667789] RSP: 0018:ffffc90001133c38 EFLAGS: 00010206
-<4> [185.667792] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff8884999ee800
-<4> [185.667795] RDX: 00000000000c0001 RSI: 0000000000000100 RDI: 00007f419e774000
-<4> [185.667798] RBP: ffff888453dbf040 R08: 0000000000000000 R09: 0000000000000001
-<4> [185.667800] R10: 0000000000000000 R11: 0000000000000000 R12: ffff888453dbf380
-<4> [185.667803] R13: ffff8884999ee800 R14: ffff888453dbf3e8 R15: 0000000000000040
-<4> [185.667806] FS:  00007f419e875e40(0000) GS:ffff88849fe00000(0000) knlGS:0000000000000000
-<4> [185.667808] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4> [185.667811] CR2: 00007f419e873000 CR3: 0000000458bd2004 CR4: 0000000000760ef0
-<4> [185.667814] PKRU: 55555554
-<4> [185.667816] Call Trace:
-<4> [185.667912]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
-<4> [185.667918]  ? mark_held_locks+0x49/0x70
-<4> [185.667998]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
-<4> [185.668073]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
+I realized I also had the R5F patches on my branch, so the third patch 
+won't apply cleanly (conflict on Makefile). Let me know if you want a 
+new revision posted for you to pick up the series.
 
-and then panicked, across a range of systems.
--Chris
+regards
+Suman
+
+> 
+> v2 includes a new remoteproc core patch (patch 1) that adds an OF helper
+> for parsing the firmware-name property. This is refactored out to avoid
+> replicating the code in various remoteproc drivers. Please see the
+> individual patches for detailed changes.
+> 
+> The main dependent patches from the previous series are now staged in
+> rproc-next branch. The only dependency for this series is the common
+> ti-sci-proc helper between R5 and DSP drivers [1]. Please see the initial
+> cover-letter [2] for v1 details.
+> 
+> regards
+> Suman
+> 
+> [1] https://patchwork.kernel.org/patch/11456379/
+> [2] https://patchwork.kernel.org/cover/11458573/
+> 
+> Suman Anna (4):
+>    remoteproc: Introduce rproc_of_parse_firmware() helper
+>    dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
+>    remoteproc/k3-dsp: Add a remoteproc driver of K3 C66x DSPs
+>    remoteproc/k3-dsp: Add support for L2RAM loading on C66x DSPs
+> 
+>   .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 190 +++++
+>   drivers/remoteproc/Kconfig                    |  13 +
+>   drivers/remoteproc/Makefile                   |   1 +
+>   drivers/remoteproc/remoteproc_core.c          |  23 +
+>   drivers/remoteproc/remoteproc_internal.h      |   2 +
+>   drivers/remoteproc/ti_k3_dsp_remoteproc.c     | 773 ++++++++++++++++++
+>   6 files changed, 1002 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+>   create mode 100644 drivers/remoteproc/ti_k3_dsp_remoteproc.c
+> 
+
