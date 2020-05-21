@@ -2,132 +2,221 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CE5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2196AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218AB20756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED1620756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:57:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="EnQnho+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgEUAzt (ORCPT
+        id S1727796AbgEUA54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:55:49 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10627 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726870AbgEUAzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:55:48 -0400
-IronPort-SDR: 8duFuZPEofp/DftbcS+JS7mWFuMCyFKUzT+exsqs5owTlKw8M5F/x7a/Zg33N+KbeX6EM1iTIv
- QMXsXzPN9A+Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 17:55:48 -0700
-IronPort-SDR: 2H7CgkH+KoPTW4LUsgiGxEVueOh0IlvIteLGhf1tdBUrkQ1JEAx/go+VdIZAH9K5F/AmHzWA3G
- jj4jQer82PyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,416,1583222400"; 
-   d="scan'208";a="255163730"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmsmga008.fm.intel.com with ESMTP; 20 May 2020 17:55:47 -0700
-Date:   Wed, 20 May 2020 17:56:05 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Brendan Shanks <bshanks@codeweavers.com>,
-        Andreas Rammhold <andi@notmuch.email>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: umip: AMD Ryzen 3900X, pagefault after emulate SLDT/SIDT
- instruction
-Message-ID: <20200521005605.GA11955@ranerica-svr.sc.intel.com>
-References: <20200519143815.cpsd2xfx2kl3khsq@wrt>
- <2330FAB4-A6CE-49E7-921C-B7D55763BDED@codeweavers.com>
- <20200519194320.GA25138@ranerica-svr.sc.intel.com>
- <CALCETrXxYjrMoenqyxEoBmcitHY22tfpJQAzvS=iF_5+SEZa4w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALCETrXxYjrMoenqyxEoBmcitHY22tfpJQAzvS=iF_5+SEZa4w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 20 May 2020 20:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgEUA5z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 20:57:55 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87CE0C05BD43
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:57:54 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q16so2107595plr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=KGVkUClSLYZCYqVJ3Vb5pZma0B0CMSc9xCimjRrMQV4=;
+        b=EnQnho+durolBvxcF0rxSWNlK3Jrfd93rhtSLlUIhi9jN+cueOLJafrsVZwBtv+S4T
+         u55ccsGngVMxemnta6jzq7wQr0igjPVYLCO8xLpwPlrlYTCvOdeeqy/VJ/6Vk/h88zXl
+         l1LoAoIyNz7ljBFkIsL9VzXKO+sseDFQLBf6PzhnBvs4ofZ6JPuIrassGtHsUKVac8AN
+         smMD1oLfWN2s9P6qa6JLgmq7SC1WH1KuGsnULxIkCdiJ5QPLyM4sBHihQ+2SwcD30Nr3
+         Rm5kO+A6kY3IyayvdnN/lO9Wvs13f8pJOc0dK+agLWoF4o909nKS1b+PZsxcQgXG19Zs
+         Rzhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=KGVkUClSLYZCYqVJ3Vb5pZma0B0CMSc9xCimjRrMQV4=;
+        b=ORntF1/EJDufampvTWVe+WVXjQkFfVI9c51BpYB6qFr+MBnxNMozkg/2uKFmkYLQRG
+         Ouz161CNm27GoFGfehWLZgK+4AraIxF5p5ZCVgInHleRmHel1L1uMjY6l+TDlv1K56Hc
+         u4HvEXikBHzwtJ3QxOd7wMcZaXPyUKpfRc7V06+I3ASkOT/HY7YHJi5v0frtJZ/xFPn0
+         /svNqNFFQlsy0lDP2u95UJDy2P67ibRLFaZQZNpkOnyvvc7F8B6iz0DvgNdObEPcvrTp
+         LKRfPMyLnjGdwZkjjAjY0HV/ydKO0zaKWjpA0V6Oc6YMaO1K/UYWfz9NUw6LksX40L3R
+         WftA==
+X-Gm-Message-State: AOAM533LcBZ1/SAyXrnZlKpt5wnGIdO/0qwqE1QtnagPDYfmHNI5XEmu
+        /89UDaAnPB6lLZXUzrhfP1GvmA==
+X-Google-Smtp-Source: ABdhPJwaaQYhjUcbFZBfpiHUoSoUl0ma74EGGoSXAFK2cUprsydh9kP/qRONl5U5tw78WUFI6JGn7w==
+X-Received: by 2002:a17:90a:734b:: with SMTP id j11mr8170570pjs.108.1590022673733;
+        Wed, 20 May 2020 17:57:53 -0700 (PDT)
+Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id e13sm2744584pfh.19.2020.05.20.17.57.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 May 2020 17:57:52 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <5D85188E-34E0-49F0-8A77-0AF4CD0EC3E1@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH V3 7/8] fs/ext4: Introduce DAX inode flag
+Date:   Wed, 20 May 2020 18:57:49 -0600
+In-Reply-To: <20200520205509.GA17615@magnolia>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Li Xi <lixi@ddn.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+References: <20200520055753.3733520-1-ira.weiny@intel.com>
+ <20200520055753.3733520-8-ira.weiny@intel.com>
+ <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
+ <20200520200242.GG3660833@iweiny-DESK2.sc.intel.com>
+ <20200520205509.GA17615@magnolia>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 05:54:53PM -0700, Andy Lutomirski wrote:
-> On Tue, May 19, 2020 at 12:43 PM Ricardo Neri
-> <ricardo.neri-calderon@linux.intel.com> wrote:
-> >
-> > On Tue, May 19, 2020 at 11:56:40AM -0700, Brendan Shanks wrote:
-> > >
-> > > > On May 19, 2020, at 7:38 AM, Andreas Rammhold <andi@notmuch.email> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > I've been running into a weird problem with UMIP on a current Ryzen
-> > > > 3900x with kernel 5.6.11 where a process receives a page fault after the
-> > > > kernel handled the SLDT (or SIDT) instruction (emulation).
-> > > >
-> > > > The program I am running is run through WINE in 32bit mode and tries to
-> > > > figure out if it is running in a VMWare machine by comparing the results
-> > > > of SLDT against well known constants (basically as shown in the
-> > > > [example] linked below).
-> > > >
-> > > > In dmesg I see the following log lines:
-> > > >> [99970.004756] umip: Program.exe[3080] ip:4373fb sp:32f3e0: SIDT instruction cannot be used by applications.
-> > > >> [99970.004757] umip: Program.exe[3080] ip:4373fb sp:32f3e0: For now, expensive software emulation returns the result.
-> > > >> [99970.004758] umip: Program.exe[3080] ip:437415 sp:32f3e0: SLDT instruction cannot be used by applications.
-> > > >
-> > > > Following that the process terminates with a page fault:
-> > > >> Unhandled exception: page fault on read access to 0xffffffff in 32-bit code (0x0000000000437415).
-> > > >
-> > > > Assembly at that address:
-> > > >> 0x0000000000437415: sldt    0xffffffe8(%ebp)
-> > > >
-> > > > Running the same executable on the exact same kernel (and userland) but
-> > > > on a Intel i7-8565U doesn't crash at this point. I am guessing the
-> > > > emulation is supposed to do something different on AMD CPUs?
-> >
-> > I am surprised you don't see it on the Intel processor. Maybe it does
-> > not have UMIP. Do you see umip when you do
-> >
-> > $ grep umip /proc/cpuinfo
-> >
-> > ?
-> > > >
-> > > > On the Ryzen the code executes successfully after setting CONFIG_X86_UMIP=n.
-> > >
-> > > Hi Andreas,
-> > >
-> > > The problem is that the kernel does not emulate/spoof the SLDT instruction, only SGDT, SIDT, and SMSW.
-> > > SLDT and STR weren't thought to be commonly used, so emulation/spoofing wasn’t added.
-> > > In the last few months I have seen reports of one or two (32-bit) Windows games that use SLDT though.
-> > > Can you share more information about the application you’re running?
-> > >
-> > > Maybe the best path is to add kernel emulation/spoofing for SLDT and STR on 32 and 64-bit, just to cover all the cases. It should be a pretty simple patch, I’ll start working on it.
-> >
-> > I have a patch for this already that I wrote for testing purposes:
-> >
-> > https://github.com/ricardon/tip/commit/1692889cb3f8accb523d44b682458e234b93be50
-> >
-> > Perhaps it can be used as a starting point? Not sure what the spoofing
-> > value should be, though. Perhaps 0?
-> 
-> Possibly SLDT should return nonzero if there's an LDT.
 
-I guess the value should be in the same hole of the x86_64 memory map,
-right? Currently sgdt and sidt return 0xfffffffffffe0000 and
-0xffffffffffff0000, respectively.
+--Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Thanks and BR,
-Ricardo
+On May 20, 2020, at 2:55 PM, Darrick J. Wong <darrick.wong@oracle.com> =
+wrote:
+> On Wed, May 20, 2020 at 01:02:42PM -0700, Ira Weiny wrote:
+>> On Wed, May 20, 2020 at 01:26:44PM -0600, Andreas Dilger wrote:
+>>> On May 19, 2020, at 11:57 PM, ira.weiny@intel.com wrote:
+>>>>=20
+>>>> From: Ira Weiny <ira.weiny@intel.com>
+>>>>=20
+>>>> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+>>>>=20
+>>>> Set the flag to be user visible and changeable.  Set the flag to be
+>>>> inherited.  Allow applications to change the flag at any time with =
+the
+>>>> exception of if VERITY or ENCRYPT is set.
+>>>>=20
+>>>> Disallow setting VERITY or ENCRYPT if DAX is set.
+>>>>=20
+>>>> Finally, on regular files, flag the inode to not be cached to =
+facilitate
+>>>> changing S_DAX on the next creation of the inode.
+>>>>=20
+>>>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>>>>=20
+>>>> ---
+>>>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+>>>> index 6235440e4c39..467c30a789b6 100644
+>>>> --- a/fs/ext4/ext4.h
+>>>> +++ b/fs/ext4/ext4.h
+>>>> @@ -415,13 +415,16 @@ struct flex_groups {
+>>>> #define EXT4_VERITY_FL			0x00100000 /* Verity =
+protected inode */
+>>>> #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for =
+large EA */
+>>>> /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
+>>>> +
+>>>> +#define EXT4_DAX_FL			0x01000000 /* Inode is =
+DAX */
+>>>> +
+>>>> #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has =
+inline data. */
+>>>> #define EXT4_PROJINHERIT_FL		0x20000000 /* Create =
+with parents projid */
+>>>> #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
+>>>> #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 =
+lib */
+>>>=20
+>>> Hi Ira,
+>>> This flag value conflicts with the reserved flag in e2fsprogs for =
+snapshots:
+>>>=20
+>>> #define EXT4_SNAPFILE_FL                0x01000000  /* Inode is a =
+snapshot */
+>>=20
+>> Sure NP but is that new?  I'm building off of 5.7-rc4.
+>>=20
+>> Just curious if I completely missed something.
+>=20
+> Yeah, you missed that ... for some reason the kernel ext4 driver is
+> missing flags that are in e2fsprogs.  (huh??)
+
+It's no different than ext2 not having the full set of bits defined or
+in use.
+
+> I would say you could probably just take over the flag because the =
+2010s
+> called and they don't want next3 back.  I guess that leaves 0x02000000
+> as the sole unclaimed bit, but this seriously needs some cleaning.
+
+Darrick,
+we are in the process of updating the snapshot code for ext4, so need to
+keep the 0x01000000 bit for snapshots.  Since 0x02000000 has never been
+used for anything, there is no reason not to use it instead.
+
+If we need to reclaim flags, it would be better to look at "COMPR" =
+flags:
+
+/* Reserved for compression usage... */
+#define FS_COMPR_FL           0x00000004 /* Compress file */
+#define FS_DIRTY_FL           0x00000100
+#define FS_COMPRBLK_FL        0x00000200 /* One or more compressed =
+clusters */
+#define FS_NOCOMP_FL          0x00000400 /* Don't compress */
+
+since I don't think they have ever been used.  I don't think we need 4x
+on-disk state flags for that, especially not as part of the API.  It is
+enough to have FS_COMPR_FL for the API, and then handle internal state
+separately (e.g. compress into a separate on-disk extent and then swap
+extents atomically instead of storing transient state on disk).
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl7F0g0ACgkQcqXauRfM
+H+CWlRAAu3u2+ZaTMjCUV9frowE4dctq6hQJiA8VeuTTKBNRQIZ+kVXOtFtsbASL
+8CaEdjxXsCVyrxFVG1cjCI2GU+90Ae77P52Z5dfzIv0YEA4CC45lCQ/fSHYNfSBd
+z1efesNBiaXnShzidJKR+4J1AtAbTWMVgTIcHPq1Vyim/0ECtv8HHspTZBCHm8R8
+bY3Yjf5+0HYqAdsrqbWOC4eXOt1MchCkUokD8i1awqoNFSmupJedVI7ytZjeEUTW
+oWX+iJCTfvH9rUZd9pJvnR1O3W1awSRueVeG6YXmQmD/PRyu03n5eFEHfo3MEvWm
+XtND5oisszz8/RPI26LLmBLFXZjxziXKyvy90Z6+m9MmT0B/74CGbwYGZ4Y3/wL8
+asC14AYoB6yZhM+wdPDlvHGEVvtQJS8yk/gcFK54D4j8K2jC+loIW4rE02liEGQA
+lEFLCeKqJxS9KpnqMM+s54jjK/3dsLKnUm8i6KL1GWE/9umIURgE68Rd3HCdzb6c
+IOQPcg0/USAjYQLA3TXzlsf126wHvT5DjD+296dDFP9uE7VyKzH5FnU/+gvtYqI8
+JN1srfp7AdhsC/v0DxZn+FYFujF8gf2uCT5e/LuNajzPbUYGiOuv5+CWttMsu3mp
+a1yfBYgR6sgx8ay0+V4tljFQroujSfYNFEAQVKIVL2asV8d4LA0=
+=cMli
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED--
