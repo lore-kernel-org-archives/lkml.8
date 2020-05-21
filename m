@@ -2,217 +2,97 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7488CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E65A20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34FEA20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V0TloVpY"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TD2fDeKC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgEUGsB (ORCPT
+        id S1728000AbgEUGs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 02:48:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
+        Thu, 21 May 2020 02:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728269AbgEUGr4 (ORCPT
+        with ESMTP id S1727003AbgEUGs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 02:47:56 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 011F6C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 23:47:56 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v16so6937031ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 23:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=WyySsXsCG9MIZJ/jWPxqgRjjVutKdSUUpR6QxpSgcX4=;
-        b=V0TloVpYXP1bD/hsGAN4FygY70Z10WXF8RyXqXiDRncUdBTwJx59ccQQiokBtmpdeu
-         jZGSHMEyjjN+DskrvebXPqYGTD8x3xcgy9dlwuo6j5rcTF3tcUkuN111RTcWv9e5r7pK
-         DSer1RFGvh/sEBNScC2KQH8TMrlGaNnHUzMfeMTpzOisNUyP5bwMLpxZJJs5+DsGbKv3
-         nPvcjLsTjnk/Ofkd+DWgyyCyClD1Pj0A7vJIJeNs5DaZg5kKc8mVL7Vvmvo5iiQtmIFh
-         MVWQ7sVFRtiENruXVqQ6oywYRPBGR0dTAepNLvpFmWbNO3CLd2xbfjTA919ggJbNJIHe
-         xa+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=WyySsXsCG9MIZJ/jWPxqgRjjVutKdSUUpR6QxpSgcX4=;
-        b=cAID2JhTulWSWsuZrqNevgKZy4B763TeINUuzXVlLwZHNuaTdvYRHYa5QnPG1296yX
-         fGDdeccx01ggmot3m9FHzbs/Zb35XXZOGloeBeBmZEJX3ohhehsrAEj0LI8mx/tKhHoO
-         7aFaEUxoskEvcHzcVi3PNC7tHGgJCf2r2PeuxL2dvYztrybMXgH+eKzw7PQEp653qhuT
-         gbXqNwcA1Zbnv7mXsjG3cbAYeR2KxVIo+h8XyboX3NyBubXxlKv/wpt+fchmVcwrbcIN
-         t4/nC5JlVKb54NEe506NK9jzQfjDHLj+ztzbMBtQA+Tk48vKIjMofwv8TSeVCCFSfz36
-         o4dg==
-X-Gm-Message-State: AOAM533jvqlIKP81sZ1v57H3AzLUiioLkpsqyf05wneJwRgfi7MjJsLb
-        dbT+H3XbvWV+4K3drpXHxHXuojW/8b4=
-X-Google-Smtp-Source: ABdhPJw9fk0dkqjBiw67XDw5+R1u6y1FF6vogoFFNQ59RVVueMV4QBR6Z2+seXfp0A+gjlvb5Uw/cA==
-X-Received: by 2002:a2e:b5d1:: with SMTP id g17mr4268376ljn.59.1590043673998;
-        Wed, 20 May 2020 23:47:53 -0700 (PDT)
-Received: from localhost.localdomain ([176.59.41.83])
-        by smtp.gmail.com with ESMTPSA id z16sm1807465lfq.18.2020.05.20.23.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 23:47:53 -0700 (PDT)
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
-        linux-integrity@vger.kernel.org, arnd@linaro.org,
-        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
-Subject: [PATCHv2 2/2] tpm_ftpm_tee: register driver on TEE bus
-Date:   Thu, 21 May 2020 09:47:43 +0300
-Message-Id: <20200521064743.4769-4-maxim.uvarov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200521064743.4769-1-maxim.uvarov@linaro.org>
-References: <20200521064743.4769-1-maxim.uvarov@linaro.org>
+        Thu, 21 May 2020 02:48:28 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E72AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 23:48:28 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SKvV6hDcz9sT9;
+        Thu, 21 May 2020 16:48:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1590043704;
+        bh=mylN82RMn5av9mlUtP03Bq7JN7H0txBfw8gjg+ZMQ7s=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=TD2fDeKCARBDrWHY+VsGAe2iNnjSqQg60E3P1g7BHV/e9JoUek2xU6OXtkwdaFBlG
+         aGsN7rfCMbH628gOSdZXEoRypdxmeNdDtrpbG4z8i41l8g31J3EgJqZna48GJKwC2D
+         5bRYia+7Z03muiVkvkWqj3ePOGlgXK0kW3acfngvbgMdQClEMJRRQ5Z8x3nV+qRPyX
+         EraBdtFn9TliOy7sS163c8RGPhBZnu6NStAC3CIu4NHNsMKW+KtIsGQQxbHCcvH6dx
+         4yVgcFUs0HZ2rGH7IcJSH/rK0vExeIUOkgCbyQhjDX2DlL14cZeT9FW4/IsS3D9Hip
+         vvOPM4L7nSzmA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Ira Weiny <ira.weiny@intel.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RESEND PATCH v7 4/5] ndctl/papr_scm,uapi: Add support for PAPR nvdimm specific methods
+In-Reply-To: <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com>
+References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-5-vaibhav@linux.ibm.com> <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com>
+Date:   Thu, 21 May 2020 16:48:40 +1000
+Message-ID: <87367t941j.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register driver on TEE bus. module tee registers bus,
-and module optee calls optee_enumerate_devices() to scan
-all devices on the bus. Trusted Application for this driver
-can be Early TA's (can be compiled into optee-os). In that
-case it will be on OPTEE bus before linux booting. Also
-optee-suplicant application is needed to be loaded between
-OPTEE module and ftpm module to maintain functionality
-for fTPM driver.
+Ira Weiny <ira.weiny@intel.com> writes:
+> On Wed, May 20, 2020 at 12:30:57AM +0530, Vaibhav Jain wrote:
+>> Introduce support for Papr nvDimm Specific Methods (PDSM) in papr_scm
+>> modules and add the command family to the white list of NVDIMM command
+>> sets. Also advertise support for ND_CMD_CALL for the dimm
+>> command mask and implement necessary scaffolding in the module to
+>> handle ND_CMD_CALL ioctl and PDSM requests that we receive.
+...
+>> + *
+>> + * Payload Version:
+>> + *
+>> + * A 'payload_version' field is present in PDSM header that indicates a specific
+>> + * version of the structure present in PDSM Payload for a given PDSM command.
+>> + * This provides backward compatibility in case the PDSM Payload structure
+>> + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
+>> + *
+>> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
+>> + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
+>> + * module when servicing the PDSM envelope checks the 'payload_version' and then
+>> + * uses 'payload struct version' == MIN('payload_version field',
+>> + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
+>> + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
+>> + * struct in returned 'payload_version' field.
+>
+> FWIW many people believe using a size rather than version is more sustainable.
+> It is expected that new payload structures are larger (more features) than the
+> previous payload structure.
+>
+> I can't find references at the moment through.
 
-Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@linaro.org>
----
- drivers/char/tpm/tpm_ftpm_tee.c | 69 ++++++++++++++++++++++++++++-----
- 1 file changed, 59 insertions(+), 10 deletions(-)
+I think clone_args is a good modern example:
 
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-index 22bf553ccf9d..7bb4ce281050 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.c
-+++ b/drivers/char/tpm/tpm_ftpm_tee.c
-@@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
-  * Return:
-  *	On success, 0. On failure, -errno.
-  */
--static int ftpm_tee_probe(struct platform_device *pdev)
-+static int ftpm_tee_probe(struct device *dev)
- {
- 	int rc;
- 	struct tpm_chip *chip;
--	struct device *dev = &pdev->dev;
- 	struct ftpm_tee_private *pvt_data = NULL;
- 	struct tee_ioctl_open_session_arg sess_arg;
- 
-@@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
- 	return rc;
- }
- 
-+static int ftpm_plat_tee_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	return ftpm_tee_probe(dev);
-+}
-+
- /**
-  * ftpm_tee_remove() - remove the TPM device
-  * @pdev: the platform_device description.
-@@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
-  * Return:
-  *	0 always.
-  */
--static int ftpm_tee_remove(struct platform_device *pdev)
-+static int ftpm_tee_remove(struct device *dev)
- {
--	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
-+	struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
- 
- 	/* Release the chip */
- 	tpm_chip_unregister(pvt_data->chip);
-@@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int ftpm_plat_tee_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	return ftpm_tee_remove(dev);
-+}
-+
- /**
-  * ftpm_tee_shutdown() - shutdown the TPM device
-  * @pdev: the platform_device description.
-  */
--static void ftpm_tee_shutdown(struct platform_device *pdev)
-+static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
- {
- 	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
- 
-@@ -347,17 +360,53 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
- 
--static struct platform_driver ftpm_tee_driver = {
-+static struct platform_driver ftpm_tee_plat_driver = {
- 	.driver = {
- 		.name = "ftpm-tee",
- 		.of_match_table = of_match_ptr(of_ftpm_tee_ids),
- 	},
--	.probe = ftpm_tee_probe,
--	.remove = ftpm_tee_remove,
--	.shutdown = ftpm_tee_shutdown,
-+	.shutdown = ftpm_plat_tee_shutdown,
-+	.probe = ftpm_plat_tee_probe,
-+	.remove = ftpm_plat_tee_remove,
-+};
-+
-+static const struct tee_client_device_id optee_ftpm_id_table[] = {
-+	{UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
-+		   0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
-+	{}
- };
- 
--module_platform_driver(ftpm_tee_driver);
-+MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
-+
-+static struct tee_client_driver ftpm_tee_driver = {
-+	.id_table	= optee_ftpm_id_table,
-+	.driver		= {
-+		.name		= "optee-ftpm",
-+		.bus		= &tee_bus_type,
-+		.probe		= ftpm_tee_probe,
-+		.remove		= ftpm_tee_remove,
-+	},
-+};
-+
-+static int __init ftpm_mod_init(void)
-+{
-+	int rc;
-+
-+	rc = platform_driver_register(&ftpm_tee_plat_driver);
-+	if (rc)
-+		return rc;
-+
-+	return driver_register(&ftpm_tee_driver.driver);
-+}
-+
-+static void __exit ftpm_mod_exit(void)
-+{
-+	platform_driver_unregister(&ftpm_tee_plat_driver);
-+	driver_unregister(&ftpm_tee_driver.driver);
-+}
-+
-+module_init(ftpm_mod_init);
-+module_exit(ftpm_mod_exit);
- 
- MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
- MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
--- 
-2.17.1
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/sched.h#n88
 
+cheers
