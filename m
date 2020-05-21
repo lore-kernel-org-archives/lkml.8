@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E797DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0F2207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C372020849
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tLPDt4CX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g6fdg+Nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgEUPX4 (ORCPT
+        id S1730265AbgEUPYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:23:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35200 "EHLO
+        Thu, 21 May 2020 11:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730169AbgEUPXr (ORCPT
+        with ESMTP id S1730232AbgEUPX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:23:47 -0400
+        Thu, 21 May 2020 11:23:59 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D463BC05BD43;
-        Thu, 21 May 2020 08:23:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0280DC061A0E;
+        Thu, 21 May 2020 08:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=fxWOG5hif9vKKfwkrFVmM3NLzLAalQTXvsWxwZiBbb8=; b=tLPDt4CXYSglY3h76YESUhYKt7
-        J7svJNN2VWxKo5fiLN55He0+OYxMwHihpzccA/6pqOIk6QQRZb9GoogD1Bpu4Is9VaqR8zEDC0cBL
-        suVR7wMoiJw/+SyTZTOTr6ocZU+uJOmR8sEZQuFFRTSLjGgWvP9Z52ytdUnOMMTLG2Z9pjZOUVsoR
-        xSp9ZeKjCbRkpyUr2fGcMiaKZxyNKU3jxUVNoSwxusAdbOoCIXEhN1IBBfDnRDEy2bGW2bIHML3AI
-        UH0MnonfWcMF0F7WZcUNh5+bsZPhmwYzF/JZ6Ex+byXTWsNsoM+5KEGXlS8ddrLAQ2PnBd+N9Ysh+
-        kEKX+18g==;
+        bh=wn1HxJCgpiLvDCBYbDQB/iH5UoI+CQf8Al4pbfQUbYs=; b=g6fdg+Nw30crOz7+O+Z0ZQmgag
+        fC3KzSECbhB/C/QyEL3smUXSpGpqk/Q4gJIsppGwU3ml0Cz5AozWfZPe3+GF4xAVUcVptkXyXvjGt
+        c1Iq6cVox/pKhCxpatjr7Fx6btkMTpTL3lR5oWoCqvSJR2p2B3pJddYxw5e6/UMsuhw1/1D3luCTp
+        tANna4OTfACJy1KRiyDc2lzn9AylcI8Rl1wuXT1osoId9jcYzhCSeDmLsGKIH8rQ9nQeNQTrmUYzr
+        o5/tA8Xjp8XzLpWH9SfNotFJxxWlXrC0TPsakvm/RbWqbypxvnNXwGfDJ3Asu18OzUi037rrGqJ+8
+        s9n3ifWg==;
 Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn2v-0004WX-EX; Thu, 21 May 2020 15:23:46 +0000
+        id 1jbn37-0004dA-3G; Thu, 21 May 2020 15:23:57 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -48,9 +48,9 @@ To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
 Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 14/23] tracing/kprobes: handle mixed kernel/userspace probes better
-Date:   Thu, 21 May 2020 17:22:52 +0200
-Message-Id: <20200521152301.2587579-15-hch@lst.de>
+Subject: [PATCH 18/23] maccess: allow architectures to provide kernel probing directly
+Date:   Thu, 21 May 2020 17:22:56 +0200
+Message-Id: <20200521152301.2587579-19-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
 References: <20200521152301.2587579-1-hch@lst.de>
@@ -62,155 +62,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of using the dangerous probe_kernel_read and strncpy_from_unsafe
-helpers, rework probes to try a user probe based on the address if the
-architecture has a common address space for kernel and userspace.
+Provide alternative versions of probe_kernel_read, probe_kernel_write
+and strncpy_from_kernel_unsafe that don't need set_fs magic, but instead
+use arch hooks that are modelled after unsafe_{get,put}_user to access
+kernel memory in an exception safe way.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- kernel/trace/trace_kprobe.c | 72 ++++++++++++++++++++++---------------
- 1 file changed, 43 insertions(+), 29 deletions(-)
+ mm/maccess.c | 76 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 4325f9e7fadaa..4aeaef53ba970 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1200,6 +1200,15 @@ static const struct file_operations kprobe_profile_ops = {
+diff --git a/mm/maccess.c b/mm/maccess.c
+index ffde1ae86ec51..e19d19cd5382c 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -11,6 +11,81 @@ bool __weak probe_kernel_read_allowed(const void *unsafe_src, size_t size)
+ 	return true;
+ }
  
- /* Kprobe specific fetch functions */
- 
-+/* Return the length of string -- including null terminal byte */
-+static nokprobe_inline int
-+fetch_store_strlen_user(unsigned long addr)
-+{
-+	const void __user *uaddr =  (__force const void __user *)addr;
++#ifdef HAVE_GET_KERNEL_NOFAULT
 +
-+	return strnlen_user_nofault(uaddr, MAX_STRING_SIZE);
++#define probe_kernel_read_loop(dst, src, len, type, err_label)		\
++	while (len >= sizeof(type)) {					\
++		__get_kernel_nofault(dst, src, type, err_label);		\
++		dst += sizeof(type);					\
++		src += sizeof(type);					\
++		len -= sizeof(type);					\
++	}
++
++long probe_kernel_read(void *dst, const void *src, size_t size)
++{
++	if (!probe_kernel_read_allowed(src, size))
++		return -EFAULT;
++
++	pagefault_disable();
++	probe_kernel_read_loop(dst, src, size, u64, Efault);
++	probe_kernel_read_loop(dst, src, size, u32, Efault);
++	probe_kernel_read_loop(dst, src, size, u16, Efault);
++	probe_kernel_read_loop(dst, src, size, u8, Efault);
++	pagefault_enable();
++	return 0;
++Efault:
++	pagefault_enable();
++	return -EFAULT;
++}
++EXPORT_SYMBOL_GPL(probe_kernel_read);
++
++#define probe_kernel_write_loop(dst, src, len, type, err_label)		\
++	while (len >= sizeof(type)) {					\
++		__put_kernel_nofault(dst, src, type, err_label);		\
++		dst += sizeof(type);					\
++		src += sizeof(type);					\
++		len -= sizeof(type);					\
++	}
++
++long probe_kernel_write(void *dst, const void *src, size_t size)
++{
++	pagefault_disable();
++	probe_kernel_write_loop(dst, src, size, u64, Efault);
++	probe_kernel_write_loop(dst, src, size, u32, Efault);
++	probe_kernel_write_loop(dst, src, size, u16, Efault);
++	probe_kernel_write_loop(dst, src, size, u8, Efault);
++	pagefault_enable();
++	return 0;
++Efault:
++	pagefault_enable();
++	return -EFAULT;
 +}
 +
- /* Return the length of string -- including null terminal byte */
- static nokprobe_inline int
- fetch_store_strlen(unsigned long addr)
-@@ -1207,30 +1216,27 @@ fetch_store_strlen(unsigned long addr)
- 	int ret, len = 0;
- 	u8 c;
- 
-+#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+	if (addr < TASK_SIZE)
-+		return fetch_store_strlen_user(addr);
-+#endif
-+
- 	do {
--		ret = probe_kernel_read(&c, (u8 *)addr + len, 1);
-+		ret = probe_kernel_read_strict(&c, (u8 *)addr + len, 1);
- 		len++;
- 	} while (c && ret == 0 && len < MAX_STRING_SIZE);
- 
- 	return (ret < 0) ? ret : len;
- }
- 
--/* Return the length of string -- including null terminal byte */
--static nokprobe_inline int
--fetch_store_strlen_user(unsigned long addr)
--{
--	const void __user *uaddr =  (__force const void __user *)addr;
--
--	return strnlen_user_nofault(uaddr, MAX_STRING_SIZE);
--}
--
- /*
-- * Fetch a null-terminated string. Caller MUST set *(u32 *)buf with max
-- * length and relative data location.
-+ * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
-+ * with max length and relative data location.
-  */
- static nokprobe_inline int
--fetch_store_string(unsigned long addr, void *dest, void *base)
-+fetch_store_string_user(unsigned long addr, void *dest, void *base)
- {
-+	const void __user *uaddr =  (__force const void __user *)addr;
- 	int maxlen = get_loc_len(*(u32 *)dest);
- 	void *__dest;
- 	long ret;
-@@ -1240,11 +1246,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 
- 	__dest = get_loc_data(dest, base);
- 
--	/*
--	 * Try to get string again, since the string can be changed while
--	 * probing.
--	 */
--	ret = strncpy_from_unsafe(__dest, (void *)addr, maxlen);
-+	ret = strncpy_from_user_nofault(__dest, uaddr, maxlen);
- 	if (ret >= 0)
- 		*(u32 *)dest = make_data_loc(ret, __dest - base);
- 
-@@ -1252,35 +1254,37 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- }
- 
- /*
-- * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
-- * with max length and relative data location.
-+ * Fetch a null-terminated string. Caller MUST set *(u32 *)buf with max
-+ * length and relative data location.
-  */
- static nokprobe_inline int
--fetch_store_string_user(unsigned long addr, void *dest, void *base)
-+fetch_store_string(unsigned long addr, void *dest, void *base)
- {
--	const void __user *uaddr =  (__force const void __user *)addr;
- 	int maxlen = get_loc_len(*(u32 *)dest);
- 	void *__dest;
- 	long ret;
- 
-+#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+	if ((unsigned long)addr < TASK_SIZE)
-+		return fetch_store_string_user(addr, dest, base);
-+#endif
-+
- 	if (unlikely(!maxlen))
- 		return -ENOMEM;
- 
- 	__dest = get_loc_data(dest, base);
- 
--	ret = strncpy_from_user_nofault(__dest, uaddr, maxlen);
-+	/*
-+	 * Try to get string again, since the string can be changed while
-+	 * probing.
-+	 */
-+	ret = strncpy_from_user_nofault(__dest, (void *)addr, maxlen);
- 	if (ret >= 0)
- 		*(u32 *)dest = make_data_loc(ret, __dest - base);
- 
- 	return ret;
- }
- 
--static nokprobe_inline int
--probe_mem_read(void *dest, void *src, size_t size)
--{
--	return probe_kernel_read(dest, src, size);
--}
--
- static nokprobe_inline int
- probe_mem_read_user(void *dest, void *src, size_t size)
- {
-@@ -1289,6 +1293,16 @@ probe_mem_read_user(void *dest, void *src, size_t size)
- 	return probe_user_read(dest, uaddr, size);
- }
- 
-+static nokprobe_inline int
-+probe_mem_read(void *dest, void *src, size_t size)
++long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
 +{
-+#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+	if ((unsigned long)src < TASK_SIZE)
-+		return probe_mem_read_user(dest, src, size);
-+#endif
-+	return probe_kernel_read_strict(dest, src, size);
-+}
++	const void *src = unsafe_addr;
 +
- /* Note that we don't verify it, since the code does not come from user space */
- static int
- process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
++	if (unlikely(count <= 0))
++		return 0;
++	if (!probe_kernel_read_allowed(unsafe_addr, count))
++		return -EFAULT;
++
++	pagefault_disable();
++	do {
++		__get_kernel_nofault(dst, src, u8, Efault);
++		dst++;
++		src++;
++	} while (dst[-1] && src - unsafe_addr < count);
++	pagefault_enable();
++
++	dst[-1] = '\0';
++	return src - unsafe_addr;
++Efault:
++	pagefault_enable();
++	dst[-1] = '\0';
++	return -EFAULT;
++}
++#else /* HAVE_GET_KERNEL_NOFAULT */
+ /**
+  * probe_kernel_read(): safely attempt to read from kernel-space
+  * @dst: pointer to the buffer that shall take the data
+@@ -113,6 +188,7 @@ long strncpy_from_kernel_nofault(char *dst, const void *unsafe_addr, long count)
+ 
+ 	return ret ? -EFAULT : src - unsafe_addr;
+ }
++#endif /* HAVE_GET_KERNEL_NOFAULT */
+ 
+ /**
+  * probe_user_read(): safely attempt to read from a user-space location
 -- 
 2.26.2
 
