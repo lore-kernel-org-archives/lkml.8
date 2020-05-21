@@ -2,80 +2,99 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08071C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C94420721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E12EA207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbgEUIkz (ORCPT
+        id S1728761AbgEUImb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:40:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59810 "EHLO mx2.suse.de"
+        Thu, 21 May 2020 04:42:31 -0400
+Received: from verein.lst.de ([213.95.11.211]:53697 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbgEUIkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:40:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 5B0F2AE89;
-        Thu, 21 May 2020 08:40:56 +0000 (UTC)
-Date:   Thu, 21 May 2020 10:40:52 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>,
-        Heidi Fahim <heidifahim@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1] Revert "software node: Simplify
- software_node_release() function"
-Message-ID: <20200521084052.GF3464@linux-b0ei>
-References: <20200228000001.240428-1-brendanhiggins@google.com>
- <20200520150227.GA8397@linux-b0ei>
- <20200520164156.GA1634618@smile.fi.intel.com>
- <CAFd5g47Xj6pR=CqXMtYxL6iacqxoZ9PvHxsiG8dfUML24yN1gQ@mail.gmail.com>
+        id S1728389AbgEUIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 04:42:30 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1D9C368BEB; Thu, 21 May 2020 10:42:25 +0200 (CEST)
+Date:   Thu, 21 May 2020 10:42:24 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
+        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 32/33] net: add a new bind_add method
+Message-ID: <20200521084224.GA7859@lst.de>
+References: <20200520195509.2215098-1-hch@lst.de> <20200520195509.2215098-33-hch@lst.de> <20200520230025.GT2491@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFd5g47Xj6pR=CqXMtYxL6iacqxoZ9PvHxsiG8dfUML24yN1gQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520230025.GT2491@localhost.localdomain>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-05-20 11:21:49, Brendan Higgins wrote:
-> On Wed, May 20, 2020 at 9:42 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Wed, May 20, 2020 at 05:02:27PM +0200, Petr Mladek wrote:
-> > > On Thu 2020-02-27 16:00:01, Brendan Higgins wrote:
-> >
-> > > I have found similar report from a test robot, see
-> > > https://lore.kernel.org/lkml/20200303002816.GW6548@shao2-debian/
-> > >
-> > >
-> > > I was staring into it for a while and do not understand it. The revert
-> > > makes sense. I wonder if it somehow changes the order in which
-> > > the release methods are called.
-> > >
-> > > Anyway, reverting the revert makes test_printf working.
-> >
-> > There is a proper fix IIRC from Heikki in driver core (no link at hand, sorry).
+On Wed, May 20, 2020 at 08:00:25PM -0300, Marcelo Ricardo Leitner wrote:
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	lock_sock(sk);
+> > +	err = sctp_do_bind(sk, (union sctp_addr *)addr, af->sockaddr_len);
+> > +	if (!err)
+> > +		err = sctp_send_asconf_add_ip(sk, addr, 1);
 > 
-> The fix for this patch can be found here: https://lkml.org/lkml/2020/5/13/1070
+> Some problems here.
+> - addr may contain a list of addresses
+> - the addresses, then, are not being validated
+> - sctp_do_bind may fail, on which it requires some undoing
+>   (like sctp_bindx_add does)
+> - code duplication with sctp_setsockopt_bindx.
 
-Thanks for hint. This patch helped.
+sctp_do_bind and thus this function only support a single address, as
+that is the only thing that the DLM code requires.  I could move the
+user copy out of sctp_setsockopt_bindx and reuse that, but it is a
+rather rcane API.
 
-Best Regards,
-Petr
+> 
+> This patch will conflict with David's one,
+> [PATCH net-next] sctp: Pull the user copies out of the individual sockopt functions.
+
+Do you have a link?  A quick google search just finds your mail that
+I'm replying to.
+
+> (I'll finish reviewing it in the sequence)
+> 
+> AFAICT, this patch could reuse/build on his work in there. The goal is
+> pretty much the same and would avoid the issues above.
+> 
+> This patch could, then, point the new bind_add proto op to the updated
+> sctp_setsockopt_bindx almost directly.
+> 
+> Question then is: dlm never removes an addr from the bind list. Do we
+> want to add ops for both? Or one that handles both operations?
+> Anyhow, having the add operation but not the del seems very weird to
+> me.
+
+We generally only add operations for things that we actually use.
+bind_del is another logical op, but we can trivially add that when we
+need it.
