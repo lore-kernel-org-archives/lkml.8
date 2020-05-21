@@ -2,133 +2,88 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FF9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86806C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E0420814
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pu4rceYV"
+	by mail.kernel.org (Postfix) with ESMTP id 63BBA207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgEUJ5f (ORCPT
+        id S1728030AbgEUKAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgEUJ5f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:57:35 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B15C061A0E;
-        Thu, 21 May 2020 02:57:33 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id w19so2629291ply.11;
-        Thu, 21 May 2020 02:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ltjPOCU9A538igJqlQC+KDjFjSNLYyghW5XAjlV0EQI=;
-        b=pu4rceYVK6Lihnp83v+yc225cXHJm6lSy6vbEjEHturjUCei0W1hvCJmTDioKSPvJI
-         OSBAM7jlX9gl5xaYxJ5HvCF1SQ6mrm9cN3btWB6BgifgTY4sJZt1TBzgThmwMTl47Zdh
-         AMcraqWfMI02Jt/vFZjYUIaeaeRd5y/OraiOQVFe5NCH3dYK+8+5M1vTL0GUkbWl9muY
-         Elp78zjWwXYcNWzaKdgodX+Zjxf+cnpajpvtR1Uv+eTp8p+73hAqhT0z+8YCeA0MTljf
-         wxROOPCKgug260TPkmD7emTonRwFOBSPqNw2PA9kDuOylV+T4qifM+7zCN83rMt8YPpT
-         fUTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ltjPOCU9A538igJqlQC+KDjFjSNLYyghW5XAjlV0EQI=;
-        b=cXMcZbGUSxO4/G6sz8D94W9kJBILZP2Mzl7Aptrfdi78/N0F3dFaU0bfvE/uz60EEM
-         KA79CIiPtNX1mAb0knZfSjtrwmvo7JbDlWAwGhy2pIweUfKKDNlWgzB0nw45IQFDyq4g
-         28EeEh8hixUuHuSbfVA3tNqH7W3VxD3a9mrCCt1kpOUN7n+G34xr2HDnLWN3NFiZmA29
-         HYWHETlT+6r1RrIPTjkHL9O2XN1ypRgBAGaxcVqRHffoPouU2e/yPd/pB1MqvOnq79HT
-         03eoob7J8PibJjn11I5bzHQCO6q5RAfJVsL4sj0SQTn9u3EQoasF1UQSTwqJH9Vs3R7G
-         reQA==
-X-Gm-Message-State: AOAM533UJH/5N5DQC1KiGGk8lUCOnt4PZZ5uFV9uE2TiA4QsRBG0FHZn
-        kHC6tzskRUF4p0L4vWfdOXuqHmKh3k9O7Ax0a2U=
-X-Google-Smtp-Source: ABdhPJx4ebqcn9Ni6XbCgdV990I5/qzjx21xek5LX0qUfdKIo169E5pSe+gPowt99bXNUOjhLG135va1VeEt5wtiZTc=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr10186753pjd.181.1590055053473;
- Thu, 21 May 2020 02:57:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru> <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 21 May 2020 12:57:17 +0300
-Message-ID: <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Clement Leger <cleger@kalray.eu>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 21 May 2020 06:00:40 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:61998 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbgEUKAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 06:00:39 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app4 (Coremail) with SMTP id cS_KCgCnsD02UcZee57rAQ--.40747S4;
+        Thu, 21 May 2020 18:00:25 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: bdisp: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 18:00:21 +0800
+Message-Id: <20200521100021.12461-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgCnsD02UcZee57rAQ--.40747S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWkWFg_Ww
+        nrZFsrWr1Fkr1qqr1Utw13ZFyxXrZ8WF1rWa1SqFW2qayUZF13XrWUZF9rAws8Za1Fva47
+        trZ0gryIkrZ8ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+        GwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l
+        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWU
+        twCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AK
+        xVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa
+        7VUb8hL5UUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAAhsD
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 4:23 AM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> Having them declared is redundant since each struct dw_dma_chan has
-> the same structure embedded and the structure from the passed dma_chan
-> private pointer will be copied there as a result of the next calls
-> chain:
-> dma_request_channel() -> find_candidate() -> dma_chan_get() ->
-> device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
-> dw_dma_filter().
-> So just remove the static dw_dma_chan structures and use a locally
-> declared data instance with dst_id/src_id set to the same values as
-> the static copies used to have.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-...
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/media/platform/sti/bdisp/bdisp-v4l2.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> - Explicitly initialize the dw_dma_slave members on stack.
-
-Thanks for an update, but that's not what I asked for...
-
-> -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
-> -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
-
->  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
->  {
-> +       struct dw_dma_slave slave = {
-> +               .src_id = 0,
-> +               .dst_id = 0
-> +       };
-
-(It's member, and not memberS)
-
-> -       struct dw_dma_slave *tx = dws->dma_tx;
-> -       struct dw_dma_slave *rx = dws->dma_rx;
-
-May we simple do
-
-struct dw_dma_slave tx = { .dst_id = 1 };
-struct dw_dma_slave rx = { .src_id = 0 };
-
-please?
-
+diff --git a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+index af2d5eb782ce..e1d150584bdc 100644
+--- a/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
++++ b/drivers/media/platform/sti/bdisp/bdisp-v4l2.c
+@@ -1371,7 +1371,7 @@ static int bdisp_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to set PM\n");
+-		goto err_dbg;
++		goto err_pm;
+ 	}
+ 
+ 	/* Filters */
+@@ -1399,7 +1399,6 @@ static int bdisp_probe(struct platform_device *pdev)
+ 	bdisp_hw_free_filters(bdisp->dev);
+ err_pm:
+ 	pm_runtime_put(dev);
+-err_dbg:
+ 	bdisp_debugfs_remove(bdisp);
+ err_v4l2:
+ 	v4l2_device_unregister(&bdisp->v4l2_dev);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
