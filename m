@@ -2,248 +2,226 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6EAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B98BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72CF207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JO3hOK9d"
+	by mail.kernel.org (Postfix) with ESMTP id 014AA20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgEUDau (ORCPT
+        id S1728235AbgEUDbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:30:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44024 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgEUDat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:30:49 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04L3UaIk091192;
-        Wed, 20 May 2020 22:30:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590031836;
-        bh=b6oEC2PB2pjw4Mn+qzNvfqJC+/OpQLwrj1RTuLQtQwQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JO3hOK9dmY6s1gbbvAjsW2uFby9AjDV1qyuNfY03uf01UhQ3Yz7ifb9zZorzxAOt4
-         BTYt45eqipApPucs7R1iMcN9WHmjRunRmlrgWtN3kkg2/bJI7GfuLe/VTRI293EhVy
-         +ZjsRrFUJzEtObV7XGG6KLJ0+2xvELfo3wTdlJQA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04L3UaTi053753
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 May 2020 22:30:36 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 20
- May 2020 22:30:36 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 20 May 2020 22:30:36 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04L3UXwZ121668;
-        Wed, 20 May 2020 22:30:33 -0500
-Subject: Re: [PATCH v3 4/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        PCI <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200508130646.23939-1-kishon@ti.com>
- <20200508130646.23939-5-kishon@ti.com>
- <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <162447e2-ac3b-9523-d404-130b93e0860e@ti.com>
-Date:   Thu, 21 May 2020 09:00:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ1Om2CX5e1y32bzeiuv4fAdyFpZ88a346g4Q+jq_Ldcg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 20 May 2020 23:31:03 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:60938 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728176AbgEUDbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:31:02 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx793d9cVewz03AA--.629S3;
+        Thu, 21 May 2020 11:30:38 +0800 (CST)
+From:   Bibo Mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v5 2/4] mm/memory.c: Update local TLB if PTE entry exists
+Date:   Thu, 21 May 2020 11:30:35 +0800
+Message-Id: <1590031837-9582-2-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1590031837-9582-1-git-send-email-maobibo@loongson.cn>
+References: <1590031837-9582-1-git-send-email-maobibo@loongson.cn>
+X-CM-TRANSID: AQAAf9Dx793d9cVewz03AA--.629S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuFW5Cr43CrW8JF18ZFW3trb_yoW7ZryfpF
+        93Ca9rXF4xXr1kAr4xJw1qvr13Za4rJFWkJr9xKw1FywsIqw1Sgay5G3yFyFWkGr95tanr
+        Jr4jgF4Uua1xuw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUPab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
+        8067AKxVWUGwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF
+        64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcV
+        CY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280
+        aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
+        CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvj
+        eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxw
+        CY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+        x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
+        W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+        7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+        WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+        ygo2UUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+If two threads concurrently fault at the same address, the thread that
+won the race updates the PTE and its local TLB. For now, the other
+thread gives up, simply does nothing, and continues.
 
-On 5/19/2020 10:41 PM, Rob Herring wrote:
-> On Fri, May 8, 2020 at 7:07 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->> property to configure the number of bits passed through from PCIe
->> address to internal address in Inbound Address Translation register.
->> This only used the NO MATCH BAR.
->>
->> However standard PCI dt-binding already defines "dma-ranges" to
->> describe the address ranges accessible by PCIe controller. Add support
->> in Cadence PCIe host driver to parse dma-ranges and configure the
->> inbound regions for BAR0, BAR1 and NO MATCH BAR. Cadence IP specifies
->> maximum size for BAR0 as 256GB, maximum size for BAR1 as 2 GB, so if
->> the dma-ranges specifies a size larger than the maximum allowed, the
->> driver will split and configure the BARs.
-> 
-> Would be useful to know what your dma-ranges contains now.
-> 
-> 
->> Legacy device tree binding compatibility is maintained by retaining
->> support for "cdns,no-bar-match-nbits".
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../controller/cadence/pcie-cadence-host.c    | 141 ++++++++++++++++--
->>  drivers/pci/controller/cadence/pcie-cadence.h |  17 ++-
->>  2 files changed, 141 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 6ecebb79057a..2485ecd8434d 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -11,6 +11,12 @@
->>
->>  #include "pcie-cadence.h"
->>
->> +static u64 cdns_rp_bar_max_size[] = {
->> +       [RP_BAR0] = _ULL(128 * SZ_2G),
->> +       [RP_BAR1] = SZ_2G,
->> +       [RP_NO_BAR] = SZ_64T,
->> +};
->> +
->>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->>                                int where)
->>  {
->> @@ -106,6 +112,117 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->>         return 0;
->>  }
->>
->> +static void cdns_pcie_host_bar_ib_config(struct cdns_pcie_rc *rc,
->> +                                        enum cdns_pcie_rp_bar bar,
->> +                                        u64 cpu_addr, u32 aperture)
->> +{
->> +       struct cdns_pcie *pcie = &rc->pcie;
->> +       u32 addr0, addr1;
->> +
->> +       addr0 = CDNS_PCIE_AT_IB_RP_BAR_ADDR0_NBITS(aperture) |
->> +               (lower_32_bits(cpu_addr) & GENMASK(31, 8));
->> +       addr1 = upper_32_bits(cpu_addr);
->> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), addr0);
->> +       cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), addr1);
->> +}
->> +
->> +static int cdns_pcie_host_bar_config(struct cdns_pcie_rc *rc,
->> +                                    struct resource_entry *entry,
->> +                                    enum cdns_pcie_rp_bar *index)
->> +{
->> +       u64 cpu_addr, pci_addr, size, winsize;
->> +       struct cdns_pcie *pcie = &rc->pcie;
->> +       struct device *dev = pcie->dev;
->> +       enum cdns_pcie_rp_bar bar;
->> +       unsigned long flags;
->> +       u32 aperture;
->> +       u32 value;
->> +
->> +       cpu_addr = entry->res->start;
->> +       flags = entry->res->flags;
->> +       pci_addr = entry->res->start - entry->offset;
->> +       size = resource_size(entry->res);
->> +       bar = *index;
->> +
->> +       if (entry->offset) {
->> +               dev_err(dev, "Cannot map PCI addr: %llx to CPU addr: %llx\n",
->> +                       pci_addr, cpu_addr);
-> 
-> Would be a bit more clear to say PCI addr must equal CPU addr.
-> 
->> +               return -EINVAL;
->> +       }
->> +
->> +       value = cdns_pcie_readl(pcie, CDNS_PCIE_LM_RC_BAR_CFG);
->> +       while (size > 0) {
->> +               if (bar > RP_NO_BAR) {
->> +                       dev_err(dev, "Failed to map inbound regions!\n");
->> +                       return -EINVAL;
->> +               }
->> +
->> +               winsize = size;
->> +               if (size > cdns_rp_bar_max_size[bar])
->> +                       winsize = cdns_rp_bar_max_size[bar];
->> +
->> +               aperture = ilog2(winsize);
->> +
->> +               cdns_pcie_host_bar_ib_config(rc, bar, cpu_addr, aperture);
->> +
->> +               if (bar == RP_NO_BAR)
->> +                       break;
->> +
->> +               if (winsize + cpu_addr >= SZ_4G) {
->> +                       if (!(flags & IORESOURCE_PREFETCH))
->> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar);
->> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar);
->> +               } else {
->> +                       if (!(flags & IORESOURCE_PREFETCH))
->> +                               value |= LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar);
->> +                       value |= LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar);
->> +               }
->> +
->> +               value |= LM_RC_BAR_CFG_APERTURE(bar, aperture);
->> +
->> +               size -= winsize;
->> +               cpu_addr += winsize;
->> +               bar++;
->> +       }
->> +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->> +       *index = bar;
->> +
->> +       return 0;
->> +}
->> +
->> +static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
->> +{
->> +       enum cdns_pcie_rp_bar bar = RP_BAR0;
->> +       struct cdns_pcie *pcie = &rc->pcie;
->> +       struct device *dev = pcie->dev;
->> +       struct device_node *np = dev->of_node;
->> +       struct pci_host_bridge *bridge;
->> +       struct resource_entry *entry;
->> +       u32 no_bar_nbits = 32;
->> +       int err;
->> +
->> +       bridge = pci_host_bridge_from_priv(rc);
->> +       if (!bridge)
->> +               return -ENOMEM;
->> +
->> +       if (list_empty(&bridge->dma_ranges)) {
->> +               of_property_read_u32(np, "cdns,no-bar-match-nbits",
->> +                                    &no_bar_nbits);
->> +               cdns_pcie_host_bar_ib_config(rc, RP_NO_BAR, 0x0, no_bar_nbits);
->> +               return 0;
->> +       }
->> +
->> +       resource_list_for_each_entry(entry, &bridge->dma_ranges) {
->> +               err = cdns_pcie_host_bar_config(rc, entry, &bar);
-> 
-> Seems like this should have some better logic to pick which BAR to
-> use. Something like find the biggest region and then find the smallest
-> BAR that it fits in. Then get the next biggest...
+It could happen that this second thread triggers another fault, whereby
+it only updates its local TLB while handling the fault. Instead of
+triggering another fault, let's directly update the local TLB of the
+second thread.
 
-Okay, I'll change this something like for each region, find the smallest BAR
-that it fits in and if there is no BAR big enough to hold the region, split the
-region to see if can be fitted using multiple BARs. I don't see the purpose of
-finding the biggest region first since at all times we'll only use the smallest
-BAR to fit.
+It is only useful to architectures where software can update TLB, it may
+bring out some negative effect if update_mmu_cache is used for other
+purpose also. It seldom happens where multiple threads access the same
+page at the same time, so the negative effect is limited on other arches.
 
-Thanks
-Kishon
+With specjvm2008 workload, smp-race pgfault counts is about 3% to 4%
+of the total pgfault counts by watching /proc/vmstats information
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/mips/include/asm/pgtable.h | 20 ++++++++++++++++++++
+ mm/memory.c                     | 27 +++++++++++++++++++--------
+ 2 files changed, 39 insertions(+), 8 deletions(-)
+
+diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+index 0d625c2..5f610ec 100644
+--- a/arch/mips/include/asm/pgtable.h
++++ b/arch/mips/include/asm/pgtable.h
+@@ -480,6 +480,26 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+ 
+ #define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
+ 
++#define __HAVE_ARCH_PTE_SAME
++static inline int pte_same(pte_t pte_a, pte_t pte_b)
++{
++	return pte_val(pte_a) == pte_val(pte_b);
++}
++
++#define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
++static inline int ptep_set_access_flags(struct vm_area_struct *vma,
++					unsigned long address, pte_t *ptep,
++					pte_t entry, int dirty)
++{
++	if (!pte_same(*ptep, entry))
++		set_pte_at(vma->vm_mm, address, ptep, entry);
++	/*
++	 * update_mmu_cache will unconditionally execute, handling both
++	 * the case that the PTE changed and the spurious fault case.
++	 */
++	return true;
++}
++
+ /*
+  * Conversion functions: convert a page and protection to a page entry,
+  * and a page entry and page directory to the page they refer to.
+diff --git a/mm/memory.c b/mm/memory.c
+index f703fe8..9e2be4a 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2436,10 +2436,9 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+ 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+ 			/*
+ 			 * Other thread has already handled the fault
+-			 * and we don't need to do anything. If it's
+-			 * not the case, the fault will be triggered
+-			 * again on the same address.
++			 * and update local tlb only
+ 			 */
++			update_mmu_cache(vma, addr, vmf->pte);
+ 			ret = false;
+ 			goto pte_unlock;
+ 		}
+@@ -2463,7 +2462,8 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
+ 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+ 		locked = true;
+ 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+-			/* The PTE changed under us. Retry page fault. */
++			/* The PTE changed under us, update local tlb */
++			update_mmu_cache(vma, addr, vmf->pte);
+ 			ret = false;
+ 			goto pte_unlock;
+ 		}
+@@ -2752,6 +2752,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+ 		new_page = old_page;
+ 		page_copied = 1;
+ 	} else {
++		update_mmu_cache(vma, vmf->address, vmf->pte);
+ 		mem_cgroup_cancel_charge(new_page, memcg, false);
+ 	}
+ 
+@@ -2812,6 +2813,7 @@ vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf)
+ 	 * pte_offset_map_lock.
+ 	 */
+ 	if (!pte_same(*vmf->pte, vmf->orig_pte)) {
++		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 		return VM_FAULT_NOPAGE;
+ 	}
+@@ -2936,6 +2938,7 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+ 			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+ 					vmf->address, &vmf->ptl);
+ 			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
++				update_mmu_cache(vma, vmf->address, vmf->pte);
+ 				unlock_page(vmf->page);
+ 				pte_unmap_unlock(vmf->pte, vmf->ptl);
+ 				put_page(vmf->page);
+@@ -3341,8 +3344,10 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+ 						vma->vm_page_prot));
+ 		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+ 				vmf->address, &vmf->ptl);
+-		if (!pte_none(*vmf->pte))
++		if (!pte_none(*vmf->pte)) {
++			update_mmu_cache(vma, vmf->address, vmf->pte);
+ 			goto unlock;
++		}
+ 		ret = check_stable_address_space(vma->vm_mm);
+ 		if (ret)
+ 			goto unlock;
+@@ -3378,8 +3383,10 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+ 
+ 	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+ 			&vmf->ptl);
+-	if (!pte_none(*vmf->pte))
++	if (!pte_none(*vmf->pte)) {
++		update_mmu_cache(vma, vmf->address, vmf->pte);
+ 		goto release;
++	}
+ 
+ 	ret = check_stable_address_space(vma->vm_mm);
+ 	if (ret)
+@@ -3646,8 +3653,10 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+ 	}
+ 
+ 	/* Re-check under ptl */
+-	if (unlikely(!pte_none(*vmf->pte)))
++	if (unlikely(!pte_none(*vmf->pte))) {
++		update_mmu_cache(vma, vmf->address, vmf->pte);
+ 		return VM_FAULT_NOPAGE;
++	}
+ 
+ 	flush_icache_page(vma, page);
+ 	entry = mk_pte(page, vma->vm_page_prot);
+@@ -4224,8 +4233,10 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
+ 	spin_lock(vmf->ptl);
+ 	entry = vmf->orig_pte;
+-	if (unlikely(!pte_same(*vmf->pte, entry)))
++	if (unlikely(!pte_same(*vmf->pte, entry))) {
++		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
+ 		goto unlock;
++	}
+ 	if (vmf->flags & FAULT_FLAG_WRITE) {
+ 		if (!pte_write(entry))
+ 			return do_wp_page(vmf);
+-- 
+1.8.3.1
+
