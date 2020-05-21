@@ -2,107 +2,369 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF690C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC9512083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590081221;
-	bh=nLt/i15MjrNqsvOy9V+a9DQMHa6geg3s34SazJ34AHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pxl7ob44hEVl5m8Bhnr42xrIe83Kx559zRrrrgeukhHktbC6pCP1Hon5FAFgZ1li5
-	 gZ87+34VBa8usFfIbWjlruJw1KLeDeK/VCzwuPmn/0Jnw5cPvmLhkmBfSLrdv5Zh0e
-	 KmYRsZd1quFbaRegYRfc4li7IiMg5eafxfngkvVU=
+	by mail.kernel.org (Postfix) with ESMTP id B709920759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgEURNl (ORCPT
+        id S1728786AbgEURPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728581AbgEURNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:13:40 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82FE920759;
-        Thu, 21 May 2020 17:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590081220;
-        bh=nLt/i15MjrNqsvOy9V+a9DQMHa6geg3s34SazJ34AHU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q6tZlNf+RLWG225hD6Aw5iF3BpM/yh2Z7VInb6ke+UEVhW2PWK10GYrwFpmlLYW3r
-         fgo+1m6zLsuxqE5m9eDeWuPneOMyC38E/a07Y5Q9DGhN6Qs4kRPX6KBcexADrxD4bB
-         /pxKnzD9iqwZgfr27IAHNiaO85az9soxX/7mWooY=
-Date:   Thu, 21 May 2020 18:13:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: snps,dw-apb-ssi: add optional reset
- property
-Message-ID: <20200521171337.GI4770@sirena.org.uk>
-References: <20200521170359.20430-1-dinguyen@kernel.org>
- <20200521170359.20430-2-dinguyen@kernel.org>
+        Thu, 21 May 2020 13:15:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43194 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728581AbgEURPe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:15:34 -0400
+Received: from 89-64-86-91.dynamic.chello.pl (89.64.86.91) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 0e4a05c61a7d924c; Thu, 21 May 2020 19:15:31 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>,
+        Francisco Jerez <francisco.jerez.plata@intel.com>
+Subject: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with HWP enabled
+Date:   Thu, 21 May 2020 19:15:30 +0200
+Message-ID: <3169564.ZRsPWhXyMD@kreacher>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Az4VpBrmI9+OyhK/"
-Content-Disposition: inline
-In-Reply-To: <20200521170359.20430-2-dinguyen@kernel.org>
-X-Cookie: Keep your laws off my body!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
---Az4VpBrmI9+OyhK/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Allow intel_pstate to work in the passive mode with HWP enabled and
+make it translate the target frequency supplied by the cpufreq
+governor in use into an EPP value to be written to the HWP request
+MSR (high frequencies are mapped to low EPP values that mean more
+performance-oriented HWP operation) as a hint for the HWP algorithm
+in the processor, so as to prevent it and the CPU scheduler from
+working against each other at least when the schedutil governor is
+in use.
 
-On Thu, May 21, 2020 at 12:03:59PM -0500, Dinh Nguyen wrote:
-> Add optional reset property.
->=20
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
->  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/=
-Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> index 3ed08ee9feba..e01c557a9876 100644
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> @@ -37,5 +37,7 @@ Example:
->  		num-cs =3D <2>;
->  		cs-gpios =3D <&gpio0 13 0>,
->  			   <&gpio0 14 0>;
-> +		resets =3D <&rst SPIM0_RST>;
-> +		reset-names =3D "spi";
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-This only adds the example, it doesn't add anything to the actual
-binding documentation.
+This is a prototype not intended for production use (based on linux-next).
 
---Az4VpBrmI9+OyhK/
-Content-Type: application/pgp-signature; name="signature.asc"
+Please test it if you can (on HWP systems, of course) and let me know the
+results.
 
------BEGIN PGP SIGNATURE-----
+The INTEL_CPUFREQ_TRANSITION_DELAY_HWP value has been guessed and it very well
+may turn out to be either too high or too low for the general use, which is one
+reason why getting as much testing coverage as possible is key here.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7GtsAACgkQJNaLcl1U
-h9AnSQf9HejrmAdErVY3ochU0FJ0BN0NFP/F4rzGy344mciEsopTU3UIpdvfyBQj
-AbbZ+UOt1IAaJAKRse7bPAMKDGigZQW+g+9zYAYSidLn85rHwao8UVHmFvTRIECk
-/uWiuDT2YQVHWJgbrlSlt5n1MTffhOL7UrvDgsPIOMo4j0H17LUiDxUNMY59CJ/z
-h1Z4GtBLInhcyopo7gNns/ZYUTmFNyDBuat5pyzbaQJ8bifG2vbxbkmstNw0FO5y
-Jb0jmO/RP45iCWb2mKdu99q7LtpFV7Fkis14c0/PeNTN8ZXH00RqK1xU4KCEJg1P
-8h1KkFl3OBA5PSaefEcvZLk13CRv+Q==
-=VJF0
------END PGP SIGNATURE-----
+If you can play with different INTEL_CPUFREQ_TRANSITION_DELAY_HWP values,
+please do so and let me know the conclusions.
 
---Az4VpBrmI9+OyhK/--
+Cheers,
+Rafael
+
+---
+ drivers/cpufreq/intel_pstate.c |  169 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 131 insertions(+), 38 deletions(-)
+
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
+===================================================================
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -36,6 +36,7 @@
+ #define INTEL_PSTATE_SAMPLING_INTERVAL	(10 * NSEC_PER_MSEC)
+ 
+ #define INTEL_CPUFREQ_TRANSITION_LATENCY	20000
++#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP	5000
+ #define INTEL_CPUFREQ_TRANSITION_DELAY		500
+ 
+ #ifdef CONFIG_ACPI
+@@ -95,6 +96,8 @@ static inline int32_t percent_ext_fp(int
+ 	return div_ext_fp(percent, 100);
+ }
+ 
++#define HWP_EPP_TO_BYTE(x)	(((u64)x >> 24) & 0xFF)
++
+ /**
+  * struct sample -	Store performance sample
+  * @core_avg_perf:	Ratio of APERF/MPERF which is the actual average
+@@ -2175,7 +2178,10 @@ static int intel_pstate_verify_policy(st
+ 
+ static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
+ {
+-	intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
++	if (hwp_active)
++		intel_pstate_hwp_force_min_perf(policy->cpu);
++	else
++		intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+ }
+ 
+ static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+@@ -2183,12 +2189,10 @@ static void intel_pstate_stop_cpu(struct
+ 	pr_debug("CPU %d exiting\n", policy->cpu);
+ 
+ 	intel_pstate_clear_update_util_hook(policy->cpu);
+-	if (hwp_active) {
++	if (hwp_active)
+ 		intel_pstate_hwp_save_state(policy);
+-		intel_pstate_hwp_force_min_perf(policy->cpu);
+-	} else {
+-		intel_cpufreq_stop_cpu(policy);
+-	}
++
++	intel_cpufreq_stop_cpu(policy);
+ }
+ 
+ static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
+@@ -2296,7 +2300,8 @@ static int intel_cpufreq_verify_policy(s
+ #define	INTEL_PSTATE_TRACE_TARGET 10
+ #define	INTEL_PSTATE_TRACE_FAST_SWITCH 90
+ 
+-static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type, int old_pstate)
++static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type,
++				int from, int to)
+ {
+ 	struct sample *sample;
+ 
+@@ -2309,8 +2314,8 @@ static void intel_cpufreq_trace(struct c
+ 	sample = &cpu->sample;
+ 	trace_pstate_sample(trace_type,
+ 		0,
+-		old_pstate,
+-		cpu->pstate.current_pstate,
++		from,
++		to,
+ 		sample->mperf,
+ 		sample->aperf,
+ 		sample->tsc,
+@@ -2318,40 +2323,110 @@ static void intel_cpufreq_trace(struct c
+ 		fp_toint(cpu->iowait_boost * 100));
+ }
+ 
+-static int intel_cpufreq_target(struct cpufreq_policy *policy,
+-				unsigned int target_freq,
+-				unsigned int relation)
++static void intel_cpufreq_update_hwp_request(struct cpudata *cpu, u8 new_epp)
+ {
+-	struct cpudata *cpu = all_cpu_data[policy->cpu];
+-	struct cpufreq_freqs freqs;
+-	int target_pstate, old_pstate;
++	u64 value, prev;
+ 
+-	update_turbo_state();
++	prev = READ_ONCE(cpu->hwp_req_cached);
++	value = prev;
+ 
+-	freqs.old = policy->cur;
+-	freqs.new = target_freq;
++	/*
++	 * The entire MSR needs to be updated in order to update the EPP field
++	 * in it, so opportunistically update the min and max too if needed.
++	 */
++	value &= ~HWP_MIN_PERF(~0L);
++	value |= HWP_MIN_PERF(cpu->min_perf_ratio);
++
++	value &= ~HWP_MAX_PERF(~0L);
++	value |= HWP_MAX_PERF(cpu->max_perf_ratio);
++
++	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
++		intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET,
++				    HWP_EPP_TO_BYTE(prev), new_epp);
++
++		value &= ~GENMASK_ULL(31, 24);
++		value |= HWP_ENERGY_PERF_PREFERENCE(new_epp);
++	}
++
++	if (value != prev) {
++		WRITE_ONCE(cpu->hwp_req_cached, value);
++		wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
++	}
++}
++
++/**
++ * intel_cpufreq_adjust_hwp_request - Adjust the HWP reuqest register.
++ * @cpu: Target CPU.
++ * @max_freq: Maximum frequency to consider.
++ * @target_freq: Target frequency selected by the governor.
++ *
++ * Translate the target frequency into a new EPP value to be written into the
++ * HWP request MSR of @cpu as a hint for the HW-driven P-state selection.
++ *
++ * The purpose of this is to avoid situations in which the kernel and the HWP
++ * algorithm work against each other by giving a hint about the expectations of
++ * the former to the latter.
++ *
++ * The mapping betweeen the target frequencies and the hint values need not be
++ * exact, but it must be monotonic, so that higher target frequencies always
++ * indicate more performance-oriented P-state selection.
++ */
++static void intel_cpufreq_adjust_hwp_request(struct cpudata *cpu, s64 max_freq,
++					     unsigned int target_freq)
++{
++	s64 epp_fp = div_fp(255 * (max_freq - target_freq), max_freq);
++
++	intel_cpufreq_update_hwp_request(cpu, fp_toint(epp_fp));
++}
++
++static int intel_cpufreq_adjust_pstate(struct cpudata *cpu,
++				       unsigned int target_freq,
++				       unsigned int relation)
++{
++	int old_pstate = cpu->pstate.current_pstate;
++	int target_pstate;
+ 
+-	cpufreq_freq_transition_begin(policy, &freqs);
+ 	switch (relation) {
+ 	case CPUFREQ_RELATION_L:
+-		target_pstate = DIV_ROUND_UP(freqs.new, cpu->pstate.scaling);
++		target_pstate = DIV_ROUND_UP(target_freq, cpu->pstate.scaling);
+ 		break;
+ 	case CPUFREQ_RELATION_H:
+-		target_pstate = freqs.new / cpu->pstate.scaling;
++		target_pstate = target_freq / cpu->pstate.scaling;
+ 		break;
+ 	default:
+-		target_pstate = DIV_ROUND_CLOSEST(freqs.new, cpu->pstate.scaling);
++		target_pstate = DIV_ROUND_CLOSEST(target_freq, cpu->pstate.scaling);
+ 		break;
+ 	}
+ 	target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+-	old_pstate = cpu->pstate.current_pstate;
+-	if (target_pstate != cpu->pstate.current_pstate) {
++	if (target_pstate != old_pstate) {
+ 		cpu->pstate.current_pstate = target_pstate;
+-		wrmsrl_on_cpu(policy->cpu, MSR_IA32_PERF_CTL,
++		wrmsrl_on_cpu(cpu->cpu, MSR_IA32_PERF_CTL,
+ 			      pstate_funcs.get_val(cpu, target_pstate));
+ 	}
+-	freqs.new = target_pstate * cpu->pstate.scaling;
+-	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET, old_pstate);
++	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET, old_pstate, target_pstate);
++	return target_pstate * cpu->pstate.scaling;
++}
++
++static int intel_cpufreq_target(struct cpufreq_policy *policy,
++				unsigned int target_freq,
++				unsigned int relation)
++{
++	struct cpudata *cpu = all_cpu_data[policy->cpu];
++	struct cpufreq_freqs freqs;
++
++	update_turbo_state();
++
++	freqs.old = policy->cur;
++	freqs.new = target_freq;
++
++	cpufreq_freq_transition_begin(policy, &freqs);
++
++	if (hwp_active)
++		intel_cpufreq_adjust_hwp_request(cpu, policy->cpuinfo.max_freq,
++						 target_freq);
++	else
++		freqs.new = intel_cpufreq_adjust_pstate(cpu, target_freq, relation);
++
+ 	cpufreq_freq_transition_end(policy, &freqs, false);
+ 
+ 	return 0;
+@@ -2365,11 +2440,18 @@ static unsigned int intel_cpufreq_fast_s
+ 
+ 	update_turbo_state();
+ 
++	if (hwp_active) {
++		intel_cpufreq_adjust_hwp_request(cpu, policy->cpuinfo.max_freq,
++						 target_freq);
++		return target_freq;
++	}
++
+ 	target_pstate = DIV_ROUND_UP(target_freq, cpu->pstate.scaling);
+ 	target_pstate = intel_pstate_prepare_request(cpu, target_pstate);
+ 	old_pstate = cpu->pstate.current_pstate;
+ 	intel_pstate_update_pstate(cpu, target_pstate);
+-	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_FAST_SWITCH, old_pstate);
++	intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_FAST_SWITCH, old_pstate,
++			    target_pstate);
+ 	return target_pstate * cpu->pstate.scaling;
+ }
+ 
+@@ -2389,7 +2471,6 @@ static int intel_cpufreq_cpu_init(struct
+ 		return ret;
+ 
+ 	policy->cpuinfo.transition_latency = INTEL_CPUFREQ_TRANSITION_LATENCY;
+-	policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY;
+ 	/* This reflects the intel_pstate_get_cpu_pstates() setting. */
+ 	policy->cur = policy->cpuinfo.min_freq;
+ 
+@@ -2401,10 +2482,19 @@ static int intel_cpufreq_cpu_init(struct
+ 
+ 	cpu = all_cpu_data[policy->cpu];
+ 
+-	if (hwp_active)
++	if (hwp_active) {
++		u64 value;
++
++		rdmsrl_on_cpu(policy->cpu, MSR_HWP_REQUEST, &value);
++		WRITE_ONCE(cpu->hwp_req_cached, value);
++		cpu->epp_saved = HWP_EPP_TO_BYTE(value);
++
+ 		intel_pstate_get_hwp_max(policy->cpu, &turbo_max, &max_state);
+-	else
++		policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY_HWP;
++	} else {
+ 		turbo_max = cpu->pstate.turbo_pstate;
++		policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY;
++	}
+ 
+ 	min_freq = DIV_ROUND_UP(turbo_max * global.min_perf_pct, 100);
+ 	min_freq *= cpu->pstate.scaling;
+@@ -2449,6 +2539,13 @@ static int intel_cpufreq_cpu_exit(struct
+ 	freq_qos_remove_request(req);
+ 	kfree(req);
+ 
++	if (hwp_active) {
++		struct cpudata *cpu = all_cpu_data[policy->cpu];
++
++		/* Restore the original HWP EPP value. */
++		intel_cpufreq_update_hwp_request(cpu, cpu->epp_saved);
++	}
++
+ 	return intel_pstate_cpu_exit(policy);
+ }
+ 
+@@ -2505,9 +2602,6 @@ static int intel_pstate_register_driver(
+ 
+ static int intel_pstate_unregister_driver(void)
+ {
+-	if (hwp_active)
+-		return -EBUSY;
+-
+ 	cpufreq_unregister_driver(intel_pstate_driver);
+ 	intel_pstate_driver_cleanup();
+ 
+@@ -2815,12 +2909,11 @@ static int __init intel_pstate_setup(cha
+ 	if (!str)
+ 		return -EINVAL;
+ 
+-	if (!strcmp(str, "disable")) {
++	if (!strcmp(str, "disable"))
+ 		no_load = 1;
+-	} else if (!strcmp(str, "passive")) {
++	else if (!strcmp(str, "passive"))
+ 		default_driver = &intel_cpufreq;
+-		no_hwp = 1;
+-	}
++
+ 	if (!strcmp(str, "no_hwp")) {
+ 		pr_info("HWP disabled\n");
+ 		no_hwp = 1;
+
+
+
