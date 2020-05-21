@@ -2,78 +2,129 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B90C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02B22065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 341042070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:47:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqpwnjz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgEUHq5 (ORCPT
+        id S1728494AbgEUHrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:46:57 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:45294 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728343AbgEUHq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:46:57 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgDHP7fkMcZeMwfnAA--.11840S4;
-        Thu, 21 May 2020 15:46:49 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: spi-ti-qspi: Fix runtime PM imbalance on error
-Date:   Thu, 21 May 2020 15:46:43 +0800
-Message-Id: <20200521074643.21088-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgDHP7fkMcZeMwfnAA--.11840S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoW3Wwc_Cr
-        45uFn3WrsIgrsrXF42gw1rZrySvFs8Ww1jgF1vyFy3tws0vayDCr98ZF1DCwsxuw4UCrWv
-        vrsa9as3ArnxCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
-        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
-        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17
-        McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
-        1lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCF
-        04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
-        xVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa
-        7VUjE1v3UUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAALsp
+        Thu, 21 May 2020 03:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728407AbgEUHrW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 03:47:22 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600EBC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:47:22 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e1so5690055wrt.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=scVYFjBGBAzKQ/hMy8PhK3pElGqsrP2y83QVfuiAxH4=;
+        b=vqpwnjz86M45u3Gnp4IxKufT5KEo7fxf+vl36qzM3nHslyhDCEJIEgQAXKyrOkPOzr
+         sxkJdaadCkojgsCryJFV/NsqAGAwrjmBPRNvm9KBnA7Rh2O1j/zY5DwTpPhcFG/rXfkM
+         6S23fM0SLLJ7TiHNbL0XWiLK7+upJ5+t62Ye2cO2Wkc0mHW9D9DAJ/WC/rz68M4FmrLX
+         k27QqVbp3qP4CmlFWSn5xCNh4GWwvUfMdUElIrpD+rHd5Pa/4AMCOHm/zmAtjuENvG0C
+         TUv6XE2S4gfjQ9slqcNHl1ztwdytcQWprTsMRJNpfjLkzetO4LLbY5K/5RpxkGAy8lfS
+         nK7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=scVYFjBGBAzKQ/hMy8PhK3pElGqsrP2y83QVfuiAxH4=;
+        b=NIw6mgeD39kP0nni/No0kiI9l/VVCjyPNvj3SQJod+v+W5Eduo0H8YwGaeJc3McMET
+         bquse8MvwgK2y3RaiQNHqkCyXNJK/abgQst9z9dhXt+bad69S7twpDNBrYYHTJs9gxpl
+         jDFAWHTTXBKX6V7YmEjcj5WGIROz4Qh/WZDQh/ohKygM0w0Rd+FH8MTxhDyF5ZeXJNXj
+         oWP0UlVjfJ5brRGwFO+j0WPLBlVPgtltLPnA9y/ApLupzgQ4QPzDIBV8ElLI3Bvxljku
+         mUPWwdYxDAXLEvAL8B15D/R/Z+eOTCpotUIlCeaye8BgdFjslrfTSBQMkL2bGbfZlVoC
+         M3cw==
+X-Gm-Message-State: AOAM531kHR3MYrXDeJoVxdIzkd/SSeKgSwOVWRdu6yQJXEe7j/knz3pT
+        KiEkDcVqD4qYYvUclREauEQ7/KfTAf8=
+X-Google-Smtp-Source: ABdhPJxcZ6ZWteBLNFuVjrXs9CMtGph22AZeEwlyAM3AdFye7vHS83vjlNDUgEYM0NT1woW4CXf4Zg==
+X-Received: by 2002:adf:9010:: with SMTP id h16mr7329094wrh.412.1590047241123;
+        Thu, 21 May 2020 00:47:21 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id h20sm5542798wma.6.2020.05.21.00.47.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 00:47:20 -0700 (PDT)
+Date:   Thu, 21 May 2020 08:47:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        drinkcat@chromium.org, Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v13 5/6] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+Message-ID: <20200521074718.GN271301@dell>
+References: <1587438012-24832-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1587438012-24832-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <27c107b3-6ea8-e6f9-697c-7c3c4479008c@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <27c107b3-6ea8-e6f9-697c-7c3c4479008c@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Sat, 16 May 2020, Matthias Brugger wrote:
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/spi/spi-ti-qspi.c | 1 +
- 1 file changed, 1 insertion(+)
+> Hi Lee,
+> 
+> On 21/04/2020 05:00, Hsin-Hsiung Wang wrote:
+> > From: Ran Bi <ran.bi@mediatek.com>
+> > 
+> > This add support for the MediaTek MT6358 RTC. Driver using
+> > compatible data to store different RTC_WRTGR address offset.
+> > This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> > driver which only needed by armv7 CPU without ATF.
+> > 
+> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Acked-by: Sebastian Reichel <sre@kernel.org>
+> > Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> 
+> We have Acked-by from rtc and reset drivers maintainers. Are you OK to take them
+> through your mfd branch?
+> 
+> Are you planning to queue them for v5.8?
+> 
+> Just asking because if so I'd queue patch 6 through my tree.
 
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 366a3e5cca6b..6d24cff2693c 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -175,6 +175,7 @@ static int ti_qspi_setup(struct spi_device *spi)
- 	ret = pm_runtime_get_sync(qspi->dev);
- 	if (ret < 0) {
- 		dev_err(qspi->dev, "pm_runtime_get_sync() failed\n");
-+		pm_runtime_put_autosuspend(qspi->dev);
- 		return ret;
- 	}
- 
+Yes, please take patch 6.
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
