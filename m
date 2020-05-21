@@ -2,107 +2,115 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35261C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71334C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 039E72070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:20:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="P3kdIdXR"
+	by mail.kernel.org (Postfix) with ESMTP id 5AF3C20756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgEUUUY (ORCPT
+        id S1729172AbgEUUU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:20:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgEUUUX (ORCPT
+        Thu, 21 May 2020 16:20:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41746 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726814AbgEUUU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:20:23 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F1ADC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:20:22 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id a68so6527920otb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tv5bFwSlR96fvSk6klDReH++Tj6oAHdVjmUeTXqcL5A=;
-        b=P3kdIdXRz4jlhGZbbBstm6oFq+VHAjMwqep/H3KDUi1qaq2QlYiqri8vpd8Ow8Q9RE
-         3JO8MrtIeBn77XQhnUjF3JzTwNJLMPczjh1kf/GDb/cl+zAe9Q0WWQ2MYQIgwI8jehA1
-         NuHY4EmjKV1iyFJpQZGIKWdL8N1UfeL9vi2io=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tv5bFwSlR96fvSk6klDReH++Tj6oAHdVjmUeTXqcL5A=;
-        b=p4aC26nTYeA6bdCrGNWFdvgA+A3IoA2MLVDyzmNBBekmdJCVcz9ZiMgkITKYqJp/sU
-         7I1MwbN7xCbJ4vzHFsDzDzU/kSFfGpxcTsyoI+epu8O0VZSnksVsjpHKDG1nV5jmhl4c
-         izlxZOJWXD1a2VamMgipBSx3+qbv8StjGK4A/GAX9/kJvOfKWfHUJXWiu+095TAyt81Z
-         J93wlzg62cFvh/R+XAUKq1QK7OyA+sA8B8+Nsleaucf30+9yOe1wwmB350KfF1E/1ta9
-         u+OsyyfrQ8nFpdSM8Oo4hO07FjUo8eKo0zvCN+Wh7kxetaTKnburtRPFwUfTdZoTZTyW
-         kQcg==
-X-Gm-Message-State: AOAM531PD4yrufoHflD4FUzdAh7PAFqQTnACH55Tp1+g5ejmr+FVevdz
-        by022QgLS5oNuwF97lzgO0m+oyXmSOES9Zy9u/GiZQ==
-X-Google-Smtp-Source: ABdhPJyDMOFrvrbCYdvMgD2I6hSlRBoSkLIvbFP87rjxkuAryIRBLpQJNf1mpbK5Ylp6/QZxH1Fz7ZMIM81cUB0H9Po=
-X-Received: by 2002:a9d:6f89:: with SMTP id h9mr8657870otq.75.1590092421807;
- Thu, 21 May 2020 13:20:21 -0700 (PDT)
+        Thu, 21 May 2020 16:20:57 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jbrgV-0004jq-5o; Thu, 21 May 2020 21:20:55 +0100
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jbrgU-007KuX-OM; Thu, 21 May 2020 21:20:54 +0100
+Message-ID: <c01feeb17ecceeca18c852008bf0227079fbb38a.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 00/99] 3.16.84-rc1 review
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Thu, 21 May 2020 21:20:50 +0100
+In-Reply-To: <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
+References: <lsq.1589984008.673931885@decadent.org.uk>
+         <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-3czPOrO9sd4hBMHihSv/"
+User-Agent: Evolution 3.36.2-1 
 MIME-Version: 1.0
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <20200520222642.70679-1-joel@joelfernandes.org> <20200521085122.GF325280@hirez.programming.kicks-ass.net>
- <20200521134705.GA140701@google.com>
-In-Reply-To: <20200521134705.GA140701@google.com>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Thu, 21 May 2020 16:20:10 -0400
-Message-ID: <CANaguZCy018R=XPETT4GRBjuUYx-xbxncnYG9Z5LfGmBYHG2=w@mail.gmail.com>
-Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 9:47 AM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> > It doens't allow tasks for form their own groups (by for example setting
-> > the key to that of another task).
->
-> So for this, I was thinking of making the prctl pass in an integer. And 0
-> would mean untagged. Does that sound good to you?
->
-On a similar note, me and Joel were discussing about prctl and it came up
-that, there is no mechanism to set cookie from outside a process using
-prctl(2). So, another option we could consider is to use sched_setattr(2)
-and expand sched_attr to accomodate a u64 cookie. User could pass in a
-cookie to explicitly set it and also use the same cookie for grouping.
 
-Haven't prototyped it yet. Will need to dig deeper and see how it would
-really look like.
+--=-3czPOrO9sd4hBMHihSv/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Vineeth
+On Wed, 2020-05-20 at 14:23 -0700, Guenter Roeck wrote:
+> On 5/20/20 7:13 AM, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.84 release.
+> > There are 99 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >=20
+> > Responses should be made by Fri May 22 20:00:00 UTC 2020.
+> > Anything received after that time might be too late.
+> >=20
+> Build results:
+> 	total: 135 pass: 135 fail: 0
+> Qemu test results:
+> 	total: 230 pass: 227 fail: 3
+> Failed tests:
+> 	arm:cubieboard:multi_v7_defconfig:mem512:sun4i-a10-cubieboard:initrd
+> 	arm:cubieboard:multi_v7_defconfig:usb:mem512:sun4i-a10-cubieboard:rootfs
+> 	arm:cubieboard:multi_v7_defconfig:sata:mem512:sun4i-a10-cubieboard:rootf=
+s
+>=20
+> The arm tests fail due to a compile error.
+>=20
+> drivers/clk/tegra/clk-tegra-periph.c:524:65: error: 'CLK_IS_CRITICAL' und=
+eclared here (not in a function); did you mean 'CLK_IS_BASIC'?
+
+I already looked at your first test results and dropped the patch that
+uses CLK_IS_CRITICAL, so there's something else going wrong there...
+
+Ben.
+
+--=20
+Ben Hutchings
+Reality is just a crutch for people who can't handle science fiction.
+
+
+
+--=-3czPOrO9sd4hBMHihSv/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl7G4qIACgkQ57/I7JWG
+EQn4jhAAjA/dVCc9WU1mkJSYM7H+h92gdVal8UsqNeTQqaZ3vTXIfQPfQhgGa1S2
+W/BpWIC3TO2jtVozG7rFp6C4StG/CE2vQbM7rkWONpMYJ5h3TQSWV3tMMrLeLFuX
+hc1OCqASORL5UD5U80xvFZfxckQv/qaDHsmqWtJDYdi2vgXh+rmLDifFPBVYrIJV
+ee3LEmT5gpZN8NXl4usFdoKhD92+xFVdGgGh56NQ5oxhHsuRf3jrvXVDtq1mEOvy
+SdeIeSgm7vb6uen0+VJc6BHJLCpLZ9vHpOL/sA3NDqk9Y+KqKotJmi6Hid8S4Bhr
+CCjM8fpdktLhAAVxNeZit3mbWz12VKP/VE+wLGmk4r5Q4Yixl6pTXPTY/3vzDnGP
+tfmwjJwrk+nqb3zMhBd7Axs9CIu1gZP76ZOrKV0Rh57Z5zr5LT8kH8QZe7EwzGOh
+OVuC1mSjt0P+/sOSggiMMAbaVyVVQcCMP75d0CvqZcaQzEZ7NE7uI5w8P3Ku5eKG
+uI09bSDL0feuqenDCxQNfmXEpjlc5DTdl45QJjpO4x2i5gOpkd68hxiN9RfM4pcl
+UtID/uJWdQf0pvShTnzMkL1go0uYug7waLm2PoY/QBOJ9zJ0qfyorq5J1oxoCHG1
+hGCz+rQQCYSndo2abk/jIHd+03KBH9//JRUKusfxvbrakiyw2Qo=
+=6J+S
+-----END PGP SIGNATURE-----
+
+--=-3czPOrO9sd4hBMHihSv/--
