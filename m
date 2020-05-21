@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4674EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E8520873
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E14B20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgEUOJL (ORCPT
+        id S1729894AbgEUOIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:09:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:38652 "EHLO
+        Thu, 21 May 2020 10:08:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38506 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbgEUOJG (ORCPT
+        with ESMTP id S1729869AbgEUOIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:09:06 -0400
+        Thu, 21 May 2020 10:08:49 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9D76880005EE;
-        Thu, 21 May 2020 14:09:02 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2A38D80005F0;
+        Thu, 21 May 2020 14:08:47 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id M1UySfoXILvC; Thu, 21 May 2020 17:09:02 +0300 (MSK)
+        with ESMTP id MBbrhrAeT8CE; Thu, 21 May 2020 17:08:46 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -34,14 +34,16 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-mips@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 13/13] mips: cevt-r4k: Update the r4k-clockevent frequency in sync with CPU
-Date:   Thu, 21 May 2020 17:07:24 +0300
-Message-ID: <20200521140725.29571-14-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 08/13] mips: Add CPS_NS16550_WIDTH config
+Date:   Thu, 21 May 2020 17:07:19 +0300
+Message-ID: <20200521140725.29571-9-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200521140725.29571-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,94 +55,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to being embedded into the CPU cores MIPS count/compare timer
-frequency is changed together with the CPU clocks alteration.
-In case if frequency really changes the kernel clockevent framework
-must be notified, otherwise the kernel timers won't work correctly.
-Fix this by calling clockevents_update_freq() for each r4k clockevent
-handlers registered per available CPUs.
-
-Traditionally MIPS r4k-clock are clocked with CPU frequency divided by 2.
-But this isn't true for some of the platforms. Due to this we have to save
-the basic CPU frequency, so then use it to scale the initial timer
-frequency (mips_hpt_frequency) and pass the updated value further to the
-clockevent framework.
+On some platforms IO-memory might require to use a proper load/store
+instructions (like Baikal-T1 IO-memory). To fix the cps-vec UART debug
+printout let's add the CONFIG_CPS_NS16550_WIDTH config to determine which
+instructions lb/sb, lh/sh or lw/sw are required for MMIO operations.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org
 ---
- arch/mips/kernel/cevt-r4k.c | 44 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ arch/mips/Kconfig.debug            | 10 ++++++++++
+ arch/mips/kernel/cps-vec-ns16550.S | 18 ++++++++++++++++--
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/kernel/cevt-r4k.c b/arch/mips/kernel/cevt-r4k.c
-index 17a9cbb8b3df..995ad9e69ded 100644
---- a/arch/mips/kernel/cevt-r4k.c
-+++ b/arch/mips/kernel/cevt-r4k.c
-@@ -8,6 +8,7 @@
-  */
- #include <linux/clockchips.h>
- #include <linux/interrupt.h>
-+#include <linux/cpufreq.h>
- #include <linux/percpu.h>
- #include <linux/smp.h>
- #include <linux/irq.h>
-@@ -250,6 +251,49 @@ unsigned int __weak get_c0_compare_int(void)
- 	return MIPS_CPU_IRQ_BASE + cp0_compare_irq;
- }
+diff --git a/arch/mips/Kconfig.debug b/arch/mips/Kconfig.debug
+index 93a2974d2ab7..7a8d94cdd493 100644
+--- a/arch/mips/Kconfig.debug
++++ b/arch/mips/Kconfig.debug
+@@ -148,4 +148,14 @@ config MIPS_CPS_NS16550_SHIFT
+ 	  form their addresses. That is, log base 2 of the span between
+ 	  adjacent ns16550 registers in the system.
  
-+#ifdef CONFIG_CPU_FREQ
++config MIPS_CPS_NS16550_WIDTH
++	int "UART Register Width"
++	default 1
++	help
++	  ns16550 registers width. UART registers IO access methods will be
++	  selected in accordance with this parameter. By setting it to 1, 2 or
++	  4 UART registers will be accessed by means of lb/sb, lh/sh or lw/sw
++	  instructions respectively. Any value not from that set activates
++	  lb/sb instructions.
 +
-+static unsigned long mips_ref_freq;
+ endif # MIPS_CPS_NS16550_BOOL
+diff --git a/arch/mips/kernel/cps-vec-ns16550.S b/arch/mips/kernel/cps-vec-ns16550.S
+index d5a67b4ce9f6..30725e1df987 100644
+--- a/arch/mips/kernel/cps-vec-ns16550.S
++++ b/arch/mips/kernel/cps-vec-ns16550.S
+@@ -14,16 +14,30 @@
+ #define UART_TX_OFS	(UART_TX << CONFIG_MIPS_CPS_NS16550_SHIFT)
+ #define UART_LSR_OFS	(UART_LSR << CONFIG_MIPS_CPS_NS16550_SHIFT)
+ 
++#if CONFIG_MIPS_CPS_NS16550_WIDTH == 1
++# define UART_L		lb
++# define UART_S		sb
++#elif CONFIG_MIPS_CPS_NS16550_WIDTH == 2
++# define UART_L		lh
++# define UART_S		sh
++#elif CONFIG_MIPS_CPS_NS16550_WIDTH == 4
++# define UART_L		lw
++# define UART_S		sw
++#else
++# define UART_L		lb
++# define UART_S		sb
++#endif
 +
-+static int r4k_cpufreq_callback(struct notifier_block *nb,
-+				unsigned long val, void *data)
-+{
-+	struct cpufreq_freqs *freq = data;
-+	struct clock_event_device *cd;
-+	unsigned long rate;
-+	int cpu;
-+
-+	if (!mips_ref_freq)
-+		mips_ref_freq = freq->old;
-+
-+	if (val == CPUFREQ_POSTCHANGE) {
-+		rate = cpufreq_scale(mips_hpt_frequency, mips_ref_freq,
-+				     freq->new);
-+
-+		for_each_cpu(cpu, freq->policy->cpus) {
-+			cd = &per_cpu(mips_clockevent_device, cpu);
-+
-+			clockevents_update_freq(cd, rate);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct notifier_block r4k_cpufreq_notifier = {
-+	.notifier_call  = r4k_cpufreq_callback,
-+};
-+
-+static int __init r4k_register_cpufreq_notifier(void)
-+{
-+	return cpufreq_register_notifier(&r4k_cpufreq_notifier,
-+					 CPUFREQ_TRANSITION_NOTIFIER);
-+
-+}
-+core_initcall(r4k_register_cpufreq_notifier);
-+
-+#endif /* !CONFIG_CPU_FREQ */
-+
- int r4k_clockevent_init(void)
- {
- 	unsigned long flags = IRQF_PERCPU | IRQF_TIMER | IRQF_SHARED;
+ /**
+  * _mips_cps_putc() - write a character to the UART
+  * @a0: ASCII character to write
+  * @t9: UART base address
+  */
+ LEAF(_mips_cps_putc)
+-1:	lw		t0, UART_LSR_OFS(t9)
++1:	UART_L		t0, UART_LSR_OFS(t9)
+ 	andi		t0, t0, UART_LSR_TEMT
+ 	beqz		t0, 1b
+-	sb		a0, UART_TX_OFS(t9)
++	UART_S		a0, UART_TX_OFS(t9)
+ 	jr		ra
+ 	END(_mips_cps_putc)
+ 
 -- 
 2.25.1
 
