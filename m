@@ -2,221 +2,122 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2196AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EED1620756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B06820756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="EnQnho+d"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ZD0AuMOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgEUA54 (ORCPT
+        id S1727867AbgEUA6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41778 "EHLO
+        Wed, 20 May 2020 20:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgEUA5z (ORCPT
+        with ESMTP id S1726896AbgEUA6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:57:55 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87CE0C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:57:54 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q16so2107595plr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:57:54 -0700 (PDT)
+        Wed, 20 May 2020 20:58:54 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD54FC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:58:54 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 5so2194642pjd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:58:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=KGVkUClSLYZCYqVJ3Vb5pZma0B0CMSc9xCimjRrMQV4=;
-        b=EnQnho+durolBvxcF0rxSWNlK3Jrfd93rhtSLlUIhi9jN+cueOLJafrsVZwBtv+S4T
-         u55ccsGngVMxemnta6jzq7wQr0igjPVYLCO8xLpwPlrlYTCvOdeeqy/VJ/6Vk/h88zXl
-         l1LoAoIyNz7ljBFkIsL9VzXKO+sseDFQLBf6PzhnBvs4ofZ6JPuIrassGtHsUKVac8AN
-         smMD1oLfWN2s9P6qa6JLgmq7SC1WH1KuGsnULxIkCdiJ5QPLyM4sBHihQ+2SwcD30Nr3
-         Rm5kO+A6kY3IyayvdnN/lO9Wvs13f8pJOc0dK+agLWoF4o909nKS1b+PZsxcQgXG19Zs
-         Rzhw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jT9Di9Gytbq5y3irbSRWLGGaMPsV1xwHwqo+qbRkmvA=;
+        b=ZD0AuMOUJeZZYN5K3BnGKSMjdNdT2svIAbct2lS5ofpASdahojBgZugHzq4HXpT6kP
+         lctIj0S7YwAeJytKW+zRgUMlM7zDMhNjSiNz7sLZVMwn8qct4B0+2SyWadqBP9GqFr5S
+         gzBkVVWnHpeXf2KK5jBfSLIV/tmuiHsLQbteUJzBtEhSUiBy8foULBExdkN8NShL5Y2I
+         QvSzsBswo8h1j4qu7QiV8jG1nBqZm6jSC8yCoRLoKzq4tuDC6imeN5iXxvd4KeDgqsnR
+         xVZuC84tr1wAC0daZgJXVi7HSrOc/JWtVf8fEtJFKf5kDmhZmv93SAl01yMTE01g0/gv
+         a63g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=KGVkUClSLYZCYqVJ3Vb5pZma0B0CMSc9xCimjRrMQV4=;
-        b=ORntF1/EJDufampvTWVe+WVXjQkFfVI9c51BpYB6qFr+MBnxNMozkg/2uKFmkYLQRG
-         Ouz161CNm27GoFGfehWLZgK+4AraIxF5p5ZCVgInHleRmHel1L1uMjY6l+TDlv1K56Hc
-         u4HvEXikBHzwtJ3QxOd7wMcZaXPyUKpfRc7V06+I3ASkOT/HY7YHJi5v0frtJZ/xFPn0
-         /svNqNFFQlsy0lDP2u95UJDy2P67ibRLFaZQZNpkOnyvvc7F8B6iz0DvgNdObEPcvrTp
-         LKRfPMyLnjGdwZkjjAjY0HV/ydKO0zaKWjpA0V6Oc6YMaO1K/UYWfz9NUw6LksX40L3R
-         WftA==
-X-Gm-Message-State: AOAM533LcBZ1/SAyXrnZlKpt5wnGIdO/0qwqE1QtnagPDYfmHNI5XEmu
-        /89UDaAnPB6lLZXUzrhfP1GvmA==
-X-Google-Smtp-Source: ABdhPJwaaQYhjUcbFZBfpiHUoSoUl0ma74EGGoSXAFK2cUprsydh9kP/qRONl5U5tw78WUFI6JGn7w==
-X-Received: by 2002:a17:90a:734b:: with SMTP id j11mr8170570pjs.108.1590022673733;
-        Wed, 20 May 2020 17:57:53 -0700 (PDT)
-Received: from [192.168.10.160] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id e13sm2744584pfh.19.2020.05.20.17.57.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 May 2020 17:57:52 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <5D85188E-34E0-49F0-8A77-0AF4CD0EC3E1@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH V3 7/8] fs/ext4: Introduce DAX inode flag
-Date:   Wed, 20 May 2020 18:57:49 -0600
-In-Reply-To: <20200520205509.GA17615@magnolia>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Li Xi <lixi@ddn.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-References: <20200520055753.3733520-1-ira.weiny@intel.com>
- <20200520055753.3733520-8-ira.weiny@intel.com>
- <34ECB1DE-9F2F-4365-BBBC-DFACF703E7D4@dilger.ca>
- <20200520200242.GG3660833@iweiny-DESK2.sc.intel.com>
- <20200520205509.GA17615@magnolia>
-X-Mailer: Apple Mail (2.3273)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jT9Di9Gytbq5y3irbSRWLGGaMPsV1xwHwqo+qbRkmvA=;
+        b=RKwx1p6Vr+t0n6BfBsMygSVjN/j2Zbcba9vkEqzBGY5NJrQFVtKXDiF4fb3880VhIh
+         Tgjw+ZxGtMRDdKzKxFXpF5Q6D5nAgHu57aKIUJ6GfmjU7HtCccWPxvr4m3SA6G4DcjZM
+         WvfhmZtdN2Zq3xy0N8NzfzVGHL7hE0NXF5+nJO8NVP06Ti8sHT64tcELt4ECYFm8T6TV
+         enOptqS2zhSGvm8J9jJTTMxpTjmGOd9Ot5wc7SmcXYwUK1YcmVn5fj1tZnw3MV/22Xpt
+         aNMWXIA2FORBB4/P+d9pTCqqMyCR5oEg3xTFo9ToZCTb4GI673mJfSzFpszI+0z0TBzQ
+         FO4w==
+X-Gm-Message-State: AOAM531lo1nG6EbHxZcozW5f2YBwtTi47sTZ6zyprtDM23ATfdT8BoLp
+        kicSLHizEIh6yTZKwe4IIaHX3vTttbY=
+X-Google-Smtp-Source: ABdhPJyqaheBLcOYU9lOJA35SoEg76xrJC9edD8SKVD3HBDVWnj4x/iACsRGIbmMmP3H4CpvHf7qpQ==
+X-Received: by 2002:a17:90a:930c:: with SMTP id p12mr9212902pjo.64.1590022734334;
+        Wed, 20 May 2020 17:58:54 -0700 (PDT)
+Received: from [192.168.86.156] (cpe-75-85-219-51.dc.res.rr.com. [75.85.219.51])
+        by smtp.gmail.com with ESMTPSA id o201sm3309618pfd.115.2020.05.20.17.58.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2020 17:58:53 -0700 (PDT)
+Subject: Re: [PATCH]: splice fix opipe_prep() full check
+From:   Jens Axboe <axboe@kernel.dk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <cf341c51-ba8c-4f81-fe4e-6bf8190293e3@kernel.dk>
+Message-ID: <cc017cbc-9c28-66bb-8af6-4390b5110aa9@kernel.dk>
+Date:   Wed, 20 May 2020 18:58:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <cf341c51-ba8c-4f81-fe4e-6bf8190293e3@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/20/20 6:42 PM, Jens Axboe wrote:
+> The patch converting pipes to head and tail pointers mistakenly
+> turned the splice pipe-to-pipe opipe check into something
+> nonsensical. It's supposed to check if we have room in the pipe,
+> and return success if we do. If not, wait for room in the pipe.
+> Instead it's now returning success for a full pipe, and entering
+> the slow path for a non-full pipe.
 
---Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+Forgot to CC Linus - Linus, could you pick this up, or do you want
+me to queue it up. Moving to 5.6 internally at FB triggers this
+pretty easily, causing a hard hang as we'll get stuck in an infinite
+busy loop in splice_pipe_to_pipe().
 
-On May 20, 2020, at 2:55 PM, Darrick J. Wong <darrick.wong@oracle.com> =
-wrote:
-> On Wed, May 20, 2020 at 01:02:42PM -0700, Ira Weiny wrote:
->> On Wed, May 20, 2020 at 01:26:44PM -0600, Andreas Dilger wrote:
->>> On May 19, 2020, at 11:57 PM, ira.weiny@intel.com wrote:
->>>>=20
->>>> From: Ira Weiny <ira.weiny@intel.com>
->>>>=20
->>>> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
->>>>=20
->>>> Set the flag to be user visible and changeable.  Set the flag to be
->>>> inherited.  Allow applications to change the flag at any time with =
-the
->>>> exception of if VERITY or ENCRYPT is set.
->>>>=20
->>>> Disallow setting VERITY or ENCRYPT if DAX is set.
->>>>=20
->>>> Finally, on regular files, flag the inode to not be cached to =
-facilitate
->>>> changing S_DAX on the next creation of the inode.
->>>>=20
->>>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->>>>=20
->>>> ---
->>>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
->>>> index 6235440e4c39..467c30a789b6 100644
->>>> --- a/fs/ext4/ext4.h
->>>> +++ b/fs/ext4/ext4.h
->>>> @@ -415,13 +415,16 @@ struct flex_groups {
->>>> #define EXT4_VERITY_FL			0x00100000 /* Verity =
-protected inode */
->>>> #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for =
-large EA */
->>>> /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
->>>> +
->>>> +#define EXT4_DAX_FL			0x01000000 /* Inode is =
-DAX */
->>>> +
->>>> #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has =
-inline data. */
->>>> #define EXT4_PROJINHERIT_FL		0x20000000 /* Create =
-with parents projid */
->>>> #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
->>>> #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 =
-lib */
->>>=20
->>> Hi Ira,
->>> This flag value conflicts with the reserved flag in e2fsprogs for =
-snapshots:
->>>=20
->>> #define EXT4_SNAPFILE_FL                0x01000000  /* Inode is a =
-snapshot */
->>=20
->> Sure NP but is that new?  I'm building off of 5.7-rc4.
->>=20
->> Just curious if I completely missed something.
->=20
-> Yeah, you missed that ... for some reason the kernel ext4 driver is
-> missing flags that are in e2fsprogs.  (huh??)
-
-It's no different than ext2 not having the full set of bits defined or
-in use.
-
-> I would say you could probably just take over the flag because the =
-2010s
-> called and they don't want next3 back.  I guess that leaves 0x02000000
-> as the sole unclaimed bit, but this seriously needs some cleaning.
-
-Darrick,
-we are in the process of updating the snapshot code for ext4, so need to
-keep the 0x01000000 bit for snapshots.  Since 0x02000000 has never been
-used for anything, there is no reason not to use it instead.
-
-If we need to reclaim flags, it would be better to look at "COMPR" =
-flags:
-
-/* Reserved for compression usage... */
-#define FS_COMPR_FL           0x00000004 /* Compress file */
-#define FS_DIRTY_FL           0x00000100
-#define FS_COMPRBLK_FL        0x00000200 /* One or more compressed =
-clusters */
-#define FS_NOCOMP_FL          0x00000400 /* Don't compress */
-
-since I don't think they have ever been used.  I don't think we need 4x
-on-disk state flags for that, especially not as part of the API.  It is
-enough to have FS_COMPR_FL for the API, and then handle internal state
-separately (e.g. compress into a separate on-disk extent and then swap
-extents atomically instead of storing transient state on disk).
-
-Cheers, Andreas
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 8cefc107ca54 ("pipe: Use head and tail pointers for the ring, not cursor and length")
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> ---
+> 
+> I didn't check if the offending commit had other logical fumbles.
+> 
+> diff --git a/fs/splice.c b/fs/splice.c
+> index fd0a1e7e5959..4e53efbd621d 100644
+> --- a/fs/splice.c
+> +++ b/fs/splice.c
+> @@ -1494,7 +1494,7 @@ static int opipe_prep(struct pipe_inode_info *pipe, unsigned int flags)
+>  	 * Check pipe occupancy without the inode lock first. This function
+>  	 * is speculative anyways, so missing one is ok.
+>  	 */
+> -	if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
+> +	if (!pipe_full(pipe->head, pipe->tail, pipe->max_usage))
+>  		return 0;
+>  
+>  	ret = 0;
+> 
 
 
+-- 
+Jens Axboe
 
-
-
-
---Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl7F0g0ACgkQcqXauRfM
-H+CWlRAAu3u2+ZaTMjCUV9frowE4dctq6hQJiA8VeuTTKBNRQIZ+kVXOtFtsbASL
-8CaEdjxXsCVyrxFVG1cjCI2GU+90Ae77P52Z5dfzIv0YEA4CC45lCQ/fSHYNfSBd
-z1efesNBiaXnShzidJKR+4J1AtAbTWMVgTIcHPq1Vyim/0ECtv8HHspTZBCHm8R8
-bY3Yjf5+0HYqAdsrqbWOC4eXOt1MchCkUokD8i1awqoNFSmupJedVI7ytZjeEUTW
-oWX+iJCTfvH9rUZd9pJvnR1O3W1awSRueVeG6YXmQmD/PRyu03n5eFEHfo3MEvWm
-XtND5oisszz8/RPI26LLmBLFXZjxziXKyvy90Z6+m9MmT0B/74CGbwYGZ4Y3/wL8
-asC14AYoB6yZhM+wdPDlvHGEVvtQJS8yk/gcFK54D4j8K2jC+loIW4rE02liEGQA
-lEFLCeKqJxS9KpnqMM+s54jjK/3dsLKnUm8i6KL1GWE/9umIURgE68Rd3HCdzb6c
-IOQPcg0/USAjYQLA3TXzlsf126wHvT5DjD+296dDFP9uE7VyKzH5FnU/+gvtYqI8
-JN1srfp7AdhsC/v0DxZn+FYFujF8gf2uCT5e/LuNajzPbUYGiOuv5+CWttMsu3mp
-a1yfBYgR6sgx8ay0+V4tljFQroujSfYNFEAQVKIVL2asV8d4LA0=
-=cMli
------END PGP SIGNATURE-----
-
---Apple-Mail=_1495D86A-A351-44B7-922D-BABD111013ED--
