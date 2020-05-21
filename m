@@ -2,237 +2,176 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACD1420721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE987206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="OHZQyvdY"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j6FR1biL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbgEUNwT (ORCPT
+        id S1729558AbgEUNxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729443AbgEUNwS (ORCPT
+        Thu, 21 May 2020 09:53:13 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:43618 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729415AbgEUNxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:52:18 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58841C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:52:17 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id m44so5477389qtm.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XwCSng/94legV1mcHYyPkc3NygJbqYU/Ybm4UW2cFnc=;
-        b=OHZQyvdYSZ6JRp9IbgeegeKt0MAL0uQ1xMZdiu/W8+t2rBCnbPXPXeTTd6rilgPfeI
-         6MitxnuvJgQJHL0nZc02kTWc2y1Y3tKgAo/byzu8pyxRj/1TmdU5576IBsGeaL+pj6Zo
-         XgiwudgEWu5tuuF52f01EunkA5dwtvf01Bk7KQiqCzT1qokaRUbJeaOvAe5zS1d+sAsR
-         pm77/NdnmnVcp0gUSp8W9UEZCiTlldMxQ2X6x4bdSWooaxYbIQDzkHtxMc/amYKqmM2J
-         sq/OlTO/bYu8sGELaQLBGs+PXgNZt7ZLTWKlJG3h2IF5rrHwziwPwj2FgJvVc54GUO/X
-         O8eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XwCSng/94legV1mcHYyPkc3NygJbqYU/Ybm4UW2cFnc=;
-        b=dFqhh4DH0o3cxD7nVhJhP2PN+nVroOA0SECfgs+sODqDLb2mnLdODDWefbMB0yL4nR
-         OnKHWdrBRmAc28uBH9N5R1cUEy9lIen2/0OycZ4ReyUHHV0Pgy9HrhUpEvhGLFefCPFX
-         bKQqAMRvA/px113fmvkmzCrXaKjc04NxkbW39ZHQEopqcERjJ7EtKUnu7H3KOS99Xs3H
-         +TutI4/A6A6LgRs02nkeBx5a/jbhTb82T00M8sAF7Z7lw0rtWesPuzYyVvOixoiYyqEg
-         iM0JWN+5azcSr5ODLMbyKhuljJJdCKHwubh2UcCBBscPENcD1UN4YFvpyH//BP+YdPbS
-         6XIg==
-X-Gm-Message-State: AOAM531DJpUbAlSquTqm5CtmTzv+8xMvZFjNcM+wLyBAIs+wz7xshEmm
-        N0eKndUcU1B44QDY1rPs8FBVMw==
-X-Google-Smtp-Source: ABdhPJwyWuHaG3h/02FSLUy8Ov02ogNGjw417gQj1lmrOeJWpAMzblfQU2XIKOljTt2VQlt6nT8Jnw==
-X-Received: by 2002:aed:2b46:: with SMTP id p64mr10975938qtd.40.1590069136411;
-        Thu, 21 May 2020 06:52:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:4708])
-        by smtp.gmail.com with ESMTPSA id r39sm5034489qte.47.2020.05.21.06.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 06:52:15 -0700 (PDT)
-Date:   Thu, 21 May 2020 09:51:52 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200521135152.GA810429@cmpxchg.org>
-References: <20200520143712.GA749486@chrisdown.name>
- <20200520160756.GE6462@dhcp22.suse.cz>
- <20200520165131.GB630613@cmpxchg.org>
- <20200520170430.GG6462@dhcp22.suse.cz>
- <20200520175135.GA793901@cmpxchg.org>
- <20200521073245.GI6462@dhcp22.suse.cz>
+        Thu, 21 May 2020 09:53:13 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200521135310euoutp012ec60fdbed0cda17e2b7d3cad3c9823d~RD4EMlap00262402624euoutp01C;
+        Thu, 21 May 2020 13:53:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200521135310euoutp012ec60fdbed0cda17e2b7d3cad3c9823d~RD4EMlap00262402624euoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590069190;
+        bh=YfRtVo8/rtlJ19IErtdjlJ6JVjpxclDbDa34stjlnO8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j6FR1biLt8D+cfQ+J7u1OupmI2veRnVbgvB+flxRmCCMO1JyKgbMloYzT7+YW6l9B
+         gP7BrtVHJJcohh04Hz//3ZsH1SegnO4Zgr3w8jjREuSQkei53TW03Bqfh52vOTsrtZ
+         9p8F5wIvgeOp/ZbAhnWkAYYfOSdYdJFi9K9JuAyU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200521135310eucas1p21b83ff5816dc51b51e4155298e15dfd5~RD4D-U-pn1391613916eucas1p2l;
+        Thu, 21 May 2020 13:53:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 85.D2.60679.6C786CE5; Thu, 21
+        May 2020 14:53:10 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60~RD4Dp5vXT2496524965eucas1p10;
+        Thu, 21 May 2020 13:53:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200521135309eusmtrp2aa4fddb17d67739dcf9feec5996efb4b~RD4DpNwcT1832118321eusmtrp2K;
+        Thu, 21 May 2020 13:53:09 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-49-5ec687c6951f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E9.A5.07950.5C786CE5; Thu, 21
+        May 2020 14:53:09 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200521135309eusmtip2b27232232bd46d20d6f1afbec6d9c609~RD4DbB-7K0157001570eusmtip2N;
+        Thu, 21 May 2020 13:53:09 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwrng: exynos - fix runtime pm imbalance on error
+Date:   Thu, 21 May 2020 15:52:56 +0200
+In-Reply-To: <20200520131911.16813-1-dinghao.liu@zju.edu.cn> (Dinghao Liu's
+        message of "Wed, 20 May 2020 21:19:10 +0800")
+Message-ID: <dleftjmu61z96v.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521073245.GI6462@dhcp22.suse.cz>
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTURjGOd67e6/D2XEavi2LGArZh1pa3uibpC4RGYgQQdZqN5W2GVtm
+        5R9+ZOXMUpcfJas008R0mcnaVErEViK6orKCUsnM7ywNTGua8yr03+99nue8530PhyGkIyIZ
+        E6s5zWs1CpWcEpNm22T7WttlW1TQ4xGCdRhsNPtkIoVkL5Q8pNgrgz5sVs8Qwb683Uazdns1
+        zdb0dIjYrs5JF/ZNnZFib9ifurBF5mtohxv3Z8qAOHOjH1dToae4Z7cqae7xvSTu2kA14t4V
+        p9LceM1yTl83Qh1wPSTeouRVsWd4beC2o+KY/PcO4lTmorOWtxY6GWVJMpArAzgErji+URlI
+        zEhxOYLCtp+EUPxCcKGvnBSKcQTPLqeIFo7MGK4iwbiP4G++nXYaUtyHwKoPy0AMQ+EAqKo6
+        6JS98Eqo702lnXkC6wkoaxgnnYYn3g0T3wuQk0nsBy3TVsLJrjgRsnO75zISHArTQ5mUkxfj
+        TVDb30ULuge03Pw6lyGwGm7ah+cGAqxnoNRqooVJwyB14M08e8Lgi9p59oEZ6x0X56CAk+C6
+        YaNwNhOB2fibFDKb4VP7FCXwTmjsrSeEvDt8GPEQ7nUHg7lgXpZA+iWpkPYFU1bDfBcZXB0s
+        RwJzUF9gEQnvloUgx5ROZaMVhf+tU/jfOoWzbQnsDw/rAgV5NZQVDxECbwWTaZQsQqIK5M3H
+        69TRvG69hk8I0CnUunhNdMDxOHUNmv14rdMvfllQ3d9jTQgzSO4m6T5ui5KKFGd059RNyHe2
+        05fqB6+QjNTEaXi5l6R40fMoqUSpOHee18Yd0careF0TWsqQcm9J8N2Bw1IcrTjNn+T5U7x2
+        wXVhXGXJyMznVPw4S4d4BIWHIyLQ4h+xPSdt1C/vsF/yBs/SUOPH4f1t1mW1pS3v+8aC80YV
+        31WOye7E8p5lXrtO7O1MSVvCRirz1ktXl3Ss2rMzcE14c0Ra60VT2T5Za3NLztGKhMrUgUna
+        N9241qOrn8lLGgvyfm2OfKQc+3wp18cY+7xBTupiFOtWEVqd4h9uZsX1gAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xe7pH24/FGXy6pGHxd9Ixdovt3xtZ
+        LJoXr2ez6H4lY9H/+DWzxYl5Z9ktzp/fwG6x6fE1Vov7934yWVzeNYfNYsb5fUwWC7b1MTrw
+        ePz+NYnRY9sBVY9NqzrZPPbPXcPusXlJvUffyw2MHlcXNrF7fN4k59G56y1bAGeUnk1RfmlJ
+        qkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsa063+ZC3r4K3Zc
+        2cHewNjP28XIySEhYCLxf1IvYxcjF4eQwFJGiYn/ZgI5HEAJKYmVc9MhaoQl/lzrYoOoecoo
+        ce19LxtIDZuAnsTatREgNSICGhK7nzaxg9QwC/xnkljy8QojSEJYwE3i+7vpYLaQgLXEme5D
+        YDaLgKrEyX87mUFsToFqiQlTHrCA2LwC5hL/XvewgdiiApYSW17cZ4eIC0qcnPkErIZZIFvi
+        6+rnzBMYBWYhSc1CkpoFdB6zgKbE+l36EGFtiWULXzND2LYS69a9Z1nAyLqKUSS1tDg3PbfY
+        SK84Mbe4NC9dLzk/dxMjMFq3Hfu5ZQdj17vgQ4wCHIxKPLwPko/FCbEmlhVX5h5iVAEa82jD
+        6guMUix5+XmpSiK8C/mPxgnxpiRWVqUW5ccXleakFh9iNAX6cyKzlGhyPjDB5JXEG5oamltY
+        GpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYNR+GrfUnHO7adfF19qMc+YsaHG5
+        9/eXyqSnk3Kddp15PeFldIiSqpJLjYTO20lXdxRM//JWbcvZ9jgWQZYVQqwPvzEUaclt6hQX
+        YvQ6vuTmZM3j9Qa1RbFqV59JL9grzNcpVaizx5HFydZ2Tszri6lt9mGT8if9s3S3/vGl3MBW
+        //JihZj2EiWW4oxEQy3mouJEAKZFW3z4AgAA
+X-CMS-MailID: 20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60
+X-Msg-Generator: CA
+X-RootMTR: 20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60
+References: <20200520131911.16813-1-dinghao.liu@zju.edu.cn>
+        <CGME20200521135309eucas1p1c0734570f04660c8b60ea12531f53e60@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 09:32:45AM +0200, Michal Hocko wrote:
-> On Wed 20-05-20 13:51:35, Johannes Weiner wrote:
-> > On Wed, May 20, 2020 at 07:04:30PM +0200, Michal Hocko wrote:
-> > > On Wed 20-05-20 12:51:31, Johannes Weiner wrote:
-> > > > On Wed, May 20, 2020 at 06:07:56PM +0200, Michal Hocko wrote:
-> > > > > On Wed 20-05-20 15:37:12, Chris Down wrote:
-> > > > > > In Facebook production, we've seen cases where cgroups have been put
-> > > > > > into allocator throttling even when they appear to have a lot of slack
-> > > > > > file caches which should be trivially reclaimable.
-> > > > > > 
-> > > > > > Looking more closely, the problem is that we only try a single cgroup
-> > > > > > reclaim walk for each return to usermode before calculating whether or
-> > > > > > not we should throttle. This single attempt doesn't produce enough
-> > > > > > pressure to shrink for cgroups with a rapidly growing amount of file
-> > > > > > caches prior to entering allocator throttling.
-> > > > > > 
-> > > > > > As an example, we see that threads in an affected cgroup are stuck in
-> > > > > > allocator throttling:
-> > > > > > 
-> > > > > >     # for i in $(cat cgroup.threads); do
-> > > > > >     >     grep over_high "/proc/$i/stack"
-> > > > > >     > done
-> > > > > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> > > > > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> > > > > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
-> > > > > > 
-> > > > > > ...however, there is no I/O pressure reported by PSI, despite a lot of
-> > > > > > slack file pages:
-> > > > > > 
-> > > > > >     # cat memory.pressure
-> > > > > >     some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
-> > > > > >     full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
-> > > > > >     # cat io.pressure
-> > > > > >     some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
-> > > > > >     full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
-> > > > > >     # grep _file memory.stat
-> > > > > >     inactive_file 1370939392
-> > > > > >     active_file 661635072
-> > > > > > 
-> > > > > > This patch changes the behaviour to retry reclaim either until the
-> > > > > > current task goes below the 10ms grace period, or we are making no
-> > > > > > reclaim progress at all. In the latter case, we enter reclaim throttling
-> > > > > > as before.
-> > > > > 
-> > > > > Let me try to understand the actual problem. The high memory reclaim has
-> > > > > a target which is proportional to the amount of charged memory. For most
-> > > > > requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
-> > > > > N is the number of memcgs in excess up the hierarchy). I can see to be
-> > > > > insufficient if the memcg is already in a large excess but if the
-> > > > > reclaim can make a forward progress this should just work fine because
-> > > > > each charging context should reclaim at least the contributed amount.
-> > > > > 
-> > > > > Do you have any insight on why this doesn't work in your situation?
-> > > > > Especially with such a large inactive file list I would be really
-> > > > > surprised if the reclaim was not able to make a forward progress.
-> > > > 
-> > > > The workload we observed this in was downloading a large file and
-> > > > writing it to disk, which means that a good chunk of that memory was
-> > > > dirty. The first reclaim pass appears to make little progress because
-> > > > it runs into dirty pages.
-> > > 
-> > > OK, I see but why does the subsequent reclaim attempt makes a forward
-> > > progress? Is this just because dirty pages are flushed in the mean time?
-> > > Because if this is the case then the underlying problem seems to be that
-> > > the reclaim should be throttled on dirty data.
-> > 
-> > That's what I assume. Chris wanted to do more reclaim tracing. But is
-> > this actually important beyond maybe curiosity?
-> 
-> Yes, because it might show that there is a deeper problem. Having an
-> extremely large file list full of dirty data and pre-mature failure for
-> the reclaim sounds like a problem that is worth looking into closely.
-> 
-> > We retry every other reclaim invocation on forward progress. There is
-> > not a single naked call to try_to_free_pages(), and this here is the
-> > only exception where we don't loop on try_to_free_mem_cgroup_pages().
-> 
-> I am not saying the looping over try_to_free_pages is wrong. I do care
-> about the final reclaim target. That shouldn't be arbitrary. We have
-> established a target which is proportional to the requested amount of
-> memory. And there is a good reason for that. If any task tries to
-> reclaim down to the high limit then this might lead to a large
-> unfairness when heavy producers piggy back on the active reclaimer(s).
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Why is that different than any other form of reclaim?
+It was <2020-05-20 =C5=9Bro 21:19>, when Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> the call returns an error code. Thus a pairing decrement is needed
+> on the error handling path to keep the counter balanced.
+>
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/char/hw_random/exynos-trng.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_rando=
+m/exynos-trng.c
+> index 8e1fe3f8dd2d..133e017db577 100644
+> --- a/drivers/char/hw_random/exynos-trng.c
+> +++ b/drivers/char/hw_random/exynos-trng.c
+> @@ -165,9 +165,8 @@ static int exynos_trng_probe(struct platform_device *=
+pdev)
+>  	clk_disable_unprepare(trng->clk);
+>=20=20
+>  err_clock:
+> -	pm_runtime_put_sync(&pdev->dev);
+> -
+>  err_pm_get:
+> +	pm_runtime_put_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+>=20=20
+>  	return ret;
 
-> I wouldn't mind to loop over try_to_free_pages to meet the requested
-> memcg_nr_pages_over_high target.
+You are right. I will accept the patch, when you remove the err_clock
+label and and change goto instructions above to point to
+err_pm_get. There is no point in having two labels.
 
-Should we do the same for global reclaim? Move reclaim to userspace
-resume where there are no GFP_FS, GFP_NOWAIT etc. restrictions and
-then have everybody just reclaim exactly what they asked for, and punt
-interrupts / kthread allocations to a worker/kswapd?
+Thank you.
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
-> > > > > Also if the current high reclaim scaling is insufficient then we should
-> > > > > be handling that via memcg_nr_pages_over_high rather than effectivelly
-> > > > > unbound number of reclaim retries.
-> > > > 
-> > > > ???
-> > > 
-> > > I am not sure what you are asking here.
-> > 
-> > You expressed that some alternate solution B would be preferable,
-> > without any detail on why you think that is the case.
-> > 
-> > And it's certainly not obvious or self-explanatory - in particular
-> > because Chris's proposal *is* obvious and self-explanatory, given how
-> > everybody else is already doing loops around page reclaim.
-> 
-> Sorry, I could have been less cryptic. I hope the above and my response
-> to Chris goes into more details why I do not like this proposal and what
-> is the alternative. But let me summarize. I propose to use memcg_nr_pages_over_high
-> target. If the current calculation of the target is unsufficient - e.g.
-> in situations where the high limit excess is very large then this should
-> be reflected in memcg_nr_pages_over_high.
-> 
-> Is it more clear?
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Well you haven't made a good argument why memory.high is actually
-different than any other form of reclaim, and why it should be the
-only implementation of page reclaim that has special-cased handling
-for the inherent "unfairness" or rather raciness of that operation.
+-----BEGIN PGP SIGNATURE-----
 
-You cut these lines from the quote:
-
-  Under pressure, page reclaim can struggle to satisfy the reclaim
-  goal and may return with less pages reclaimed than asked to.
-
-  Under concurrency, a parallel allocation can invalidate the reclaim
-  progress made by a thread.
-
-Even if we *could* invest more into trying to avoid any unfairness,
-you haven't made a point why we actually should do that here
-specifically, yet not everywhere else.
-
-(And people have tried to do it for global reclaim[1], but clearly
-this isn't a meaningful problem in practice.)
-
-I have a good reason why we shouldn't: because it's special casing
-memory.high from other forms of reclaim, and that is a maintainability
-problem. We've recently been discussing ways to make the memory.high
-implementation stand out less, not make it stand out even more. There
-is no solid reason it should be different from memory.max reclaim,
-except that it should sleep instead of invoke OOM at the end. It's
-already a mess we're trying to get on top of and straighten out, and
-you're proposing to add more kinks that will make this work harder.
-
-I have to admit, I'm baffled by this conversation. I consider this a
-fairly obvious, idiomatic change, and I cannot relate to the
-objections or counter-proposals in the slightest.
-
-[1] http://lkml.iu.edu/hypermail//linux/kernel/0810.0/0169.html
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl7Gh7kACgkQsK4enJil
+gBBm2Af/SrD1GVby/I1q7EfWsefc/fbhflA6BuaxaeBQftAotiqgfdhW4fSiUyjb
+6eG0I7Yq9kppEWBOyUi1qEUypzN9KFvBQ20ey9mqNtj+g+xVXTxmHMjZMrszb41U
+tO7ePEx15hrnjro40NmDMlObuJU1PMVb3EZuZbkoM2qiC9S8ktAar1Cuiw2etyMf
+yFWlwmjb+H+RsjVokVyQxW+UgZ9BgRFBXgifvHixN4ngrVB6ANSZAjjhNE66v0R3
+/8V9R+Z562uWyoqser/x4Nm9ygmBvtB9cKWiHgODK5sycgwuGQYlaFGWWTdZ6P7L
+7pFWPeP4nd73lk8OQwAz7w6E9U7Crw==
+=o590
+-----END PGP SIGNATURE-----
+--=-=-=--
