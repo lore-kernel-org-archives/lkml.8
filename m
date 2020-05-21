@@ -2,168 +2,146 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E636C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E10EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4E3204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:25:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SdN5eLQs"
+	by mail.kernel.org (Postfix) with ESMTP id C4B7C204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590074761;
+	bh=qRG8lbmluipgAY768NW15223dzdqeUdbfiaiiG1Jky4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iwXW9cau+o73R4Zub7pT5Hb4tigH2QGiber9XMZ/lrImBpP2ZqOVQgADofnEKJX4M
+	 i702W30cy1qMM2WT71Ij85HH7LL8bGQJSZOSZ1k4Clm3KgEQcaZUEzJof0PhsHgk2n
+	 yALNVszPjPr94bs1o85JbReQi2kHohTpF3AuVCPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730081AbgEUPX3 (ORCPT
+        id S1730050AbgEUP0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730044AbgEUPXX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:23:23 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36253C061A0F;
-        Thu, 21 May 2020 08:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=mSMXwSYIg6w8Djb8jfs2EjgdqI2tqBJvsH4pyf4a+s4=; b=SdN5eLQsE5p+1g7PTpF1jYpRoM
-        DO7R5ngx5JrKGEnObtTZw9tuX7A2BgZheYionwPg/xTO212u0BV8ZXcJGhkQ82mTWupVNtjgiVbMp
-        OhYuyQM6+o9hFqzSLLJDEux6PCvweNwsPOF/Xvu5UMTei2I7yXHdpK3/Bgtrr6GO7GIH7J/A/psV2
-        Q88exWPFKbLB6QHpxMyDdHEaAAoN27xtTckPt0YHFRfdPWiVoiATiPOpcS9MdR2w9XG8zf3ninTph
-        kEJM3WJrWLP01F3B5xmpe+KMNHbz51Pft23YEULJ5Zi3UeacZXwytPAzyKJbH9xAzLwQYwRaOwVNF
-        7EZvB6YA==;
-Received: from [2001:4bb8:18c:5da7:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jbn2Q-00048H-I5; Thu, 21 May 2020 15:23:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 04/23] maccess: clarify kerneldoc comments
-Date:   Thu, 21 May 2020 17:22:42 +0200
-Message-Id: <20200521152301.2587579-5-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
+        Thu, 21 May 2020 11:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730047AbgEUPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:25:58 -0400
+Received: from localhost.localdomain (unknown [157.51.235.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C8EA204EA;
+        Thu, 21 May 2020 15:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590074757;
+        bh=qRG8lbmluipgAY768NW15223dzdqeUdbfiaiiG1Jky4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eEX+c8ULA4bklVxe9vhjkTy5tOkb54z2mq6pGaSGbzm0CPyi7J5Xm5msCsQVevR3I
+         EFu4VN+F2Ueurx/NoMfscmXa/vcmpQcwtfvVReafAQJaoMtA9FPECsnHEsaZ8kal0E
+         35keX7e1F6FQ38oJahsO3HVWUvI3L4GT9F5d8FOs=
+From:   mani@kernel.org
+To:     gregkh@linuxfoundation.org
+Cc:     hemantk@codeaurora.org, jhugo@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 00/14] MHI patches for v5.8
+Date:   Thu, 21 May 2020 20:55:26 +0530
+Message-Id: <20200521152540.17335-1-mani@kernel.org>
+X-Mailer: git-send-email 2.26.GIT
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add proper kerneldoc comments for probe_kernel_read_strict and
-probe_kernel_read strncpy_from_unsafe_strict and explain the different
-versus the non-strict version.
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- mm/maccess.c | 61 ++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 43 insertions(+), 18 deletions(-)
+Hi Greg,
 
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 4e7f3b6eb05ae..747581ac50dc9 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -31,29 +31,35 @@ probe_write_common(void __user *dst, const void *src, size_t size)
- }
- 
- /**
-- * probe_kernel_read(): safely attempt to read from a kernel-space location
-+ * probe_kernel_read(): safely attempt to read from any location
-  * @dst: pointer to the buffer that shall take the data
-  * @src: address to read from
-  * @size: size of the data chunk
-  *
-- * Safely read from address @src to the buffer at @dst.  If a kernel fault
-- * happens, handle that and return -EFAULT.
-+ * Same as probe_kernel_read_strict() except that for architectures with
-+ * not fully separated user and kernel address spaces this function also works
-+ * for user address tanges.
-+ *
-+ * DO NOT USE THIS FUNCTION - it is broken on architectures with entirely
-+ * separate kernel and user address spaces, and also a bad idea otherwise.
-+ */
-+long __weak probe_kernel_read(void *dst, const void *src, size_t size)
-+    __attribute__((alias("__probe_kernel_read")));
-+
-+/**
-+ * probe_kernel_read_strict(): safely attempt to read from kernel-space
-+ * @dst: pointer to the buffer that shall take the data
-+ * @src: address to read from
-+ * @size: size of the data chunk
-+ *
-+ * Safely read from kernel address @src to the buffer at @dst.  If a kernel
-+ * fault happens, handle that and return -EFAULT.
-  *
-  * We ensure that the copy_from_user is executed in atomic context so that
-  * do_page_fault() doesn't attempt to take mmap_sem.  This makes
-  * probe_kernel_read() suitable for use within regions where the caller
-  * already holds mmap_sem, or other locks which nest inside mmap_sem.
-- *
-- * probe_kernel_read_strict() is the same as probe_kernel_read() except for
-- * the case where architectures have non-overlapping user and kernel address
-- * ranges: probe_kernel_read_strict() will additionally return -EFAULT for
-- * probing memory on a user address range where probe_user_read() is supposed
-- * to be used instead.
-  */
--
--long __weak probe_kernel_read(void *dst, const void *src, size_t size)
--    __attribute__((alias("__probe_kernel_read")));
--
- long __weak probe_kernel_read_strict(void *dst, const void *src, size_t size)
-     __attribute__((alias("__probe_kernel_read")));
- 
-@@ -153,15 +159,34 @@ long probe_user_write(void __user *dst, const void *src, size_t size)
-  * If @count is smaller than the length of the string, copies @count-1 bytes,
-  * sets the last byte of @dst buffer to NUL and returns @count.
-  *
-- * strncpy_from_unsafe_strict() is the same as strncpy_from_unsafe() except
-- * for the case where architectures have non-overlapping user and kernel address
-- * ranges: strncpy_from_unsafe_strict() will additionally return -EFAULT for
-- * probing memory on a user address range where strncpy_from_unsafe_user() is
-- * supposed to be used instead.
-+ * Same as strncpy_from_unsafe_strict() except that for architectures with
-+ * not fully separated user and kernel address spaces this function also works
-+ * for user address tanges.
-+ *
-+ * DO NOT USE THIS FUNCTION - it is broken on architectures with entirely
-+ * separate kernel and user address spaces, and also a bad idea otherwise.
-  */
- long __weak strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
-     __attribute__((alias("__strncpy_from_unsafe")));
- 
-+/**
-+ * strncpy_from_unsafe_strict: - Copy a NUL terminated string from unsafe
-+ *				 address.
-+ * @dst:   Destination address, in kernel space.  This buffer must be at
-+ *         least @count bytes long.
-+ * @unsafe_addr: Unsafe address.
-+ * @count: Maximum number of bytes to copy, including the trailing NUL.
-+ *
-+ * Copies a NUL-terminated string from unsafe address to kernel buffer.
-+ *
-+ * On success, returns the length of the string INCLUDING the trailing NUL.
-+ *
-+ * If access fails, returns -EFAULT (some data may have been copied
-+ * and the trailing NUL added).
-+ *
-+ * If @count is smaller than the length of the string, copies @count-1 bytes,
-+ * sets the last byte of @dst buffer to NUL and returns @count.
-+ */
- long __weak strncpy_from_unsafe_strict(char *dst, const void *unsafe_addr,
- 				       long count)
-     __attribute__((alias("__strncpy_from_unsafe")));
+Here is the set of MHI patches for v5.8. Most of the patches are cleanup and
+refactoring ones. All of them are reviewed by myself and Jeff and also
+verified on x86 and ARM64 architectures for functionality.
+
+Here is the short summary:
+-------------------------------------------------------------
+
+- The firmware download was handled by a worker thread which gets scheduled
+when the device powers up. But this thread waits until the device gets into
+PBL state (notified using PM state worker). Sometimes, there might be delay for
+the device to enter PBL state and due to that the firmware worker thread will
+timeout. So in order to handle this situation effectively, the firmware load
+is now directly called by PM state worker instead of scheduling the thread.
+
+- Return proper error codes incase of error while loading the AMSS firmware
+through BHIE protocol
+
+- The MHI register space of the device accepts only non-zero values for the
+sequence identifier. But there is a possibility that the host might write zero
+(due to the use of prandom_u32() API). Hence, a macro is introduced which
+provides non-zero sequence identifiers and used them in all places.
+
+- Moved all common TRE generation code to mhi_gen_tre() function
+
+- The MHI host reads channel ID from the event ring element of the client
+device. This ID can be of any value between 0 to 255 but the host may not
+support all those IDs. So reject the event ring elements whose channel IDs
+are not within the limits of the controller.
+
+- Limit the transfer length read from the client device. This value should
+be within the size of the MHI host buffer but there are chances this can
+be larger.
+
+- Remove the system worker thread for processing the SYS_ERR condition and
+instead call the function directly from EE worker. This is done to avoid
+any possible race while MHI shutting down.
+
+- Handle MHI power off in the state worker thread as like MISSION_MODE. This
+helps in preventing a possible race condition where a power off is issued by
+the controller while processing mission mode.
+
+- Skip the handling of BHI interrupt when the register access is not allowed
+due to the device in wrong PM state.
+
+- The write_lock of 'mhi_chan->lock' should only protect 'db_mode'. Hence, use
+it properly in places where it is protecting other unwanted regions.
+
+- Reset the client device if it is in SYS_ERR state during power up.
+
+-------------------------------------------------------------
+
+Please consider merging!
+
+Thanks,
+Mani
+
+Bhaumik Bhatt (4):
+  bus: mhi: core: Handle firmware load using state worker
+  bus: mhi: core: Return appropriate error codes for AMSS load failure
+  bus: mhi: core: Improve debug logs for loading firmware
+  bus: mhi: core: Ensure non-zero session or sequence ID values are used
+
+Hemant Kumar (9):
+  bus: mhi: core: Refactor mhi queue APIs
+  bus: mhi: core: Cache intmod from mhi event to mhi channel
+  bus: mhi: core: Add range check for channel id received in event ring
+  bus: mhi: core: Read transfer length from an event properly
+  bus: mhi: core: Remove the system error worker thread
+  bus: mhi: core: Handle disable transitions in state worker
+  bus: mhi: core: Skip handling BHI irq if MHI reg access is not allowed
+  bus: mhi: core: Do not process SYS_ERROR if RDDM is supported
+  bus: mhi: core: Handle write lock properly in mhi_pm_m0_transition
+
+Jeffrey Hugo (1):
+  bus: mhi: core: Handle syserr during power_up
+
+ drivers/bus/mhi/core/boot.c     |  75 ++++++------
+ drivers/bus/mhi/core/init.c     |   8 +-
+ drivers/bus/mhi/core/internal.h |   9 +-
+ drivers/bus/mhi/core/main.c     | 194 ++++++++++++++++++--------------
+ drivers/bus/mhi/core/pm.c       |  86 +++++++++-----
+ include/linux/mhi.h             |   4 -
+ 6 files changed, 217 insertions(+), 159 deletions(-)
+
 -- 
-2.26.2
+2.26.GIT
 
