@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BED1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBFD207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9506620748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nj3j3mJf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hGUqCzpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgEUEuH (ORCPT
+        id S1726893AbgEUEvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 00:50:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49588 "EHLO
+        Thu, 21 May 2020 00:51:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgEUEuG (ORCPT
+        with ESMTP id S1726506AbgEUEvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 00:50:06 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3A3C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:50:06 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id n10so2179324ybn.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:50:06 -0700 (PDT)
+        Thu, 21 May 2020 00:51:24 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E3AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:51:24 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id 67so2146615ybn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 21:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XQovpB62feiM/Flq10ehHmX5/ME+XTdL88yeHCiDnmY=;
-        b=nj3j3mJf5vARfLBXfJfKypDGG/A2zRK+NDoJfYUwuyxm8EV1gdB6JnIZibmqRFYm1D
-         A6qQymfG1rExex4987n50x1aJKl1w635lmRFsakgmYQhuMwbh54qURchHPnmw3OGg1a5
-         TcylK6NKWZe3FoU+ZclvE6UmSBJXck1GQ9hOxo7laDh6sDE/3/UlTa8BvIaxGss2yXEJ
-         DqAwWkLLnwKq0mWOzucFGn+gRaV9uXIQWP/wg2RMY3yQUtsQ1fnX87O0IasAJNzq/ze2
-         VJ3DxOM3OVcnqrB/NRh2r4U/DeS6OqT56dL8qlWYuvHjIYzUVZjov5EsjcqDSyNDITiB
-         +Mew==
+        bh=XTDSy6rQtPM6ksLHsWDHpGE71vgFWJ3nMNjkQ/CXVsc=;
+        b=hGUqCzpGfR+u0MkAe5AX25MsKCkjqfikrQ3WjNa4O7zFIIelSFfn7DX+0N646NurFz
+         Fuu23lzgTNOO+3+4bssM3UW6fnzt4GHCJpy4IZBzQ1/Tpu4Z/Gu23YBg7/IhNRxP+vZ8
+         MIXWFAKygECI9ygSikqb+mO5sD+/v9C3TqC0mDzWOS8SQNOCjyoyaSzGSHsF/k/8eJyI
+         Wa8KfVRNrFbl9+CiLc04tUKYMCixhIeDvs8APaAaEJq3si/TQBBaOgfiIj77C12CPHRK
+         QpvgLXmj30cBw8uBNBlCyGRteapNuIiuS+QOBkFL7sEfwpl4svKLaa3lbG/ojwoTdpM2
+         ucjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XQovpB62feiM/Flq10ehHmX5/ME+XTdL88yeHCiDnmY=;
-        b=EKucvfDiA01V6szvgbWfC6MNzJfxZFQM7KwHlyNjVvbAZ2y/jdJiBl6PyDAWovl+Y6
-         w7tiv8ReRc4c7T/mitVJeuYD1tQA42Ja31ZLk9X7pQeS9uLvCbcYCT2AqkOjaKjSn0+A
-         aHs51BAPyu/klRyfbVwtFSrp94KAs2vxvPl2VSrsm1tcs6QD8JP8N9AtUSRDtYSi2zUq
-         VDzvQikT1FfdfDmogjnzLjWOGfGLo0ycVQSSqY0osCqCpTw/vZr1ezoEsSfwtPm+qxjw
-         RDBk4oLXTdcQQFsRYm1Xnp3LPX846y8d4seXykTRXdvRfEZpAKHW28ynKlFYMu9FMXlU
-         Jz7g==
-X-Gm-Message-State: AOAM531DgVNBRl6gA3Cp8449t3cpcxkaKKBh8zEXZ4weWuSBDujS2czr
-        d4IOnMvOJ4VWmoCumTrBxTGhmRNDjNHbH0D38YCJjUPv
-X-Google-Smtp-Source: ABdhPJzc9raLqo+uzp6IHrNJ/cibn5mp8G0VNZBH3LAufIZ69mRh8AcshotbvDFEzammyToxbH/khRbnOyaf1dMwMcw=
-X-Received: by 2002:a25:3c84:: with SMTP id j126mr12033624yba.287.1590036604956;
- Wed, 20 May 2020 21:50:04 -0700 (PDT)
+        bh=XTDSy6rQtPM6ksLHsWDHpGE71vgFWJ3nMNjkQ/CXVsc=;
+        b=czkrzWtK1EhTKAzwfpJ6WZWEAouRUYDPjEGzNVUUnjxuM2jxL8Y2YBgI/y8VL7B46e
+         850QmmpyLaxinw7bAogiwzWoZjX77TPLgERRyIa7x8ucqbNJnKy3Z1TAVKOKcIYX/agw
+         qKfKLZEPeaSC4Ci1vtPIyBaW2uj7lHg7MuPzz1XDcHBU8lNNXd0QFHTCuO0rdltmh+xS
+         iCaiG4g544I3YO8ZL9VvQlqM2knZu9bN+4+3+nMmkUtRBVvbpDE5rVkhDX2RNfXpiI13
+         nRDchooS7Hp2WNlSsbp6uF4U4ugtK6hAcfOoom80qArBcr/Snnot3yldLEe5wSUbCkox
+         uS2A==
+X-Gm-Message-State: AOAM5319w0zNFR+DIeLTvOGYQn84fH4BzOVEeRkVZJb/xZ5ovUlzQIIL
+        3L8fLtyOImDwklx7nWHq5Mv6B9WaMGxtGxCKssJSGg==
+X-Google-Smtp-Source: ABdhPJyTg+h4Mp9qx20ejrQ1XyNdJKAepDavp8xDV1eNDH0UWEvC7YXBqwff1EqnjJEaElBj2JOy2JdxlbhSs8fFir4=
+X-Received: by 2002:a25:ab4c:: with SMTP id u70mr11640352ybi.298.1590036683550;
+ Wed, 20 May 2020 21:51:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200520052908.204642-1-walken@google.com> <20200520052908.204642-6-walken@google.com>
- <20200520202317.1f7515649dd711b388e40d3f@linux-foundation.org>
-In-Reply-To: <20200520202317.1f7515649dd711b388e40d3f@linux-foundation.org>
+References: <20200520052908.204642-1-walken@google.com> <20200520052908.204642-13-walken@google.com>
+ <20200520202242.dec6b520f0bab4a66a510d73@linux-foundation.org>
+In-Reply-To: <20200520202242.dec6b520f0bab4a66a510d73@linux-foundation.org>
 From:   Michel Lespinasse <walken@google.com>
-Date:   Wed, 20 May 2020 21:49:51 -0700
-Message-ID: <CANN689EcGjzBd+GnzG7ix=OU8EDrHi1xFk8E94_0Aspc+aD-LQ@mail.gmail.com>
-Subject: Re: [PATCH v6 05/12] mmap locking API: convert mmap_sem call sites
- missed by coccinelle
+Date:   Wed, 20 May 2020 21:51:11 -0700
+Message-ID: <CANN689EDRgw=NDFStgubWZLJxssirt-JY80GbjWcmKi6cU4EbA@mail.gmail.com>
+Subject: Re: [PATCH v6 12/12] mmap locking API: convert mmap_sem comments
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -84,34 +83,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good. I'm not sure if you need a review, but just in case:
+Looks good, thanks !
 
-On Wed, May 20, 2020 at 8:23 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Tue, 19 May 2020 22:29:01 -0700 Michel Lespinasse <walken@google.com> wrote:
+On Wed, May 20, 2020 at 8:22 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Tue, 19 May 2020 22:29:08 -0700 Michel Lespinasse <walken@google.com> wrote:
+> > Convert comments that reference mmap_sem to reference mmap_lock instead.
 >
-> > Convert the last few remaining mmap_sem rwsem calls to use the new
-> > mmap locking API. These were missed by coccinelle for some reason
-> > (I think coccinelle does not support some of the preprocessor
-> > constructs in these files ?)
+> This may not be complete..
 >
 > From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: mmap-locking-api-convert-mmap_sem-call-sites-missed-by-coccinelle-fix
+> Subject: mmap-locking-api-convert-mmap_sem-comments-fix
 >
-> convert linux-next leftovers
+> fix up linux-next leftovers
 >
-> Cc: Michel Lespinasse <walken@google.com>
 > Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Cc: Laurent Dufour <ldufour@linux.ibm.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
 > Cc: Davidlohr Bueso <dbueso@suse.de>
 > Cc: David Rientjes <rientjes@google.com>
 > Cc: Hugh Dickins <hughd@google.com>
 > Cc: Jason Gunthorpe <jgg@ziepe.ca>
 > Cc: Jerome Glisse <jglisse@redhat.com>
 > Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Laurent Dufour <ldufour@linux.ibm.com>
 > Cc: Liam Howlett <Liam.Howlett@oracle.com>
 > Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Michel Lespinasse <walken@google.com>
 > Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
 > Cc: Ying Han <yinghan@google.com>
 > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 
