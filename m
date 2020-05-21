@@ -2,156 +2,105 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE93AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E76B207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JQ5+k5fG"
+	by mail.kernel.org (Postfix) with ESMTP id A36A3207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbgEUWsy (ORCPT
+        id S1730740AbgEUWtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:48:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730041AbgEUWsy (ORCPT
+        Thu, 21 May 2020 18:49:12 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59461 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730690AbgEUWtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:48:54 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56336C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:48:54 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t16so3591513plo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GyTf6Xj9P6LVcKZuqtG5D3WfhPVAAS23C/vfOfVmvVo=;
-        b=JQ5+k5fG9g4wICrJVrj+Br5mMHgmfUrY1fz0/Q+Ow5rb2eZ4Bix1+T2xIANfTB4ZFd
-         Y328LIcEeJtuQYMvWdCOldUGLOQX2yLMevOhzN95bRCKS32ODcWOBunRXDnXc3n6JjtR
-         Uz35IGJqcsdhQ7q1JVctK60WwdGIv6BOfFTb0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GyTf6Xj9P6LVcKZuqtG5D3WfhPVAAS23C/vfOfVmvVo=;
-        b=nqhg5eZ/o3vtC12F59kfPLoLDuiCnArbJebgyyZFGTGFdIDUKZxUlm4iYPRyLS9Qrj
-         IxkAnSD/0FUmfRPjxWm955ZGG0Pyit/qCGzcRlB0AlxveiK4kVy9u1ur36OIvEQunPK0
-         aTxPfo9hcvHZZpk0IVHSyeKU9NlfWUWroybWUfUlfkfHFgNKHY7oPTPEk2jjSwiiKdov
-         +9Cj1aGI4AC4m2/L8tW3X6+0JAupsIJaTs8yVPvmZM/u+MKb4InwIw1VZFgE7H6YqqdB
-         NVVatXpghlBKlAcHTHVHu/bR2R4gakE2HdFxKJ/OJIBC1DIIMxDvQ7PaX0qR8LAxq++V
-         ywqQ==
-X-Gm-Message-State: AOAM531BxN2QQy1pt/4RKRU4V8j/XzDjggNh0izIl10b7knr4eXAFAYi
-        6KyTa76f0QOkmR3citGEQQmeXg==
-X-Google-Smtp-Source: ABdhPJy3Q2xXlUY5QDcApxlF/OSND06IZDqLO/7UxztEP9ScV3THnWlBAlZ9dNNqxf+7dp9/go+Z2A==
-X-Received: by 2002:a17:90a:ad49:: with SMTP id w9mr927815pjv.20.1590101333920;
-        Thu, 21 May 2020 15:48:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k1sm5352804pfg.205.2020.05.21.15.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 15:48:53 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:48:52 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [RFC PATCH 3/5] selftest/x86: Fix sigreturn_64 test.
-Message-ID: <202005211547.793B36B@keescook>
-References: <20200521211720.20236-1-yu-cheng.yu@intel.com>
- <20200521211720.20236-4-yu-cheng.yu@intel.com>
+        Thu, 21 May 2020 18:49:11 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 480C282078A;
+        Fri, 22 May 2020 08:49:08 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jbtzu-0000hq-Ta; Fri, 22 May 2020 08:49:06 +1000
+Date:   Fri, 22 May 2020 08:49:06 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/36] Large pages in the page cache
+Message-ID: <20200521224906.GU2005@dread.disaster.area>
+References: <20200515131656.12890-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521211720.20236-4-yu-cheng.yu@intel.com>
+In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
+        a=2DAmyFJ7tbF1Kr5hZtcA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:17:18PM -0700, Yu-cheng Yu wrote:
-> When shadow stack is enabled, selftests/x86/sigreturn_64 triggers a fault
-> when doing sigreturn to 32-bit context but the task's shadow stack pointer
-> is above 32-bit address range.  Fix it by:
+On Fri, May 15, 2020 at 06:16:20AM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> - Allocate a small shadow stack below 32-bit address,
-> - Switch to the new shadow stack,
-> - Run tests,
-> - Switch back to the original 64-bit shadow stack.
+> This patch set does not pass xfstests.  Test at your own risk.  It is
+> based on the readahead rewrite which is in Andrew's tree.  I've fixed a
+> lot of issues in the last two weeks, but generic/013 will still crash it.
 > 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> ---
->  tools/testing/selftests/x86/sigreturn.c | 28 +++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/x86/sigreturn.c b/tools/testing/selftests/x86/sigreturn.c
-> index 57c4f67f16ef..5bcd74d416ff 100644
-> --- a/tools/testing/selftests/x86/sigreturn.c
-> +++ b/tools/testing/selftests/x86/sigreturn.c
-> @@ -45,6 +45,14 @@
->  #include <stdbool.h>
->  #include <sys/ptrace.h>
->  #include <sys/user.h>
-> +#include <x86intrin.h>
-> +#include <asm/prctl.h>
-> +#include <sys/prctl.h>
-> +
-> +#ifdef __x86_64__
-> +int arch_prctl(int code, unsigned long *addr);
-> +#define ARCH_CET_ALLOC_SHSTK 0x3004
-> +#endif
->  
->  /* Pull in AR_xyz defines. */
->  typedef unsigned int u32;
-> @@ -766,6 +774,20 @@ int main()
->  	int total_nerrs = 0;
->  	unsigned short my_cs, my_ss;
->  
-> +#ifdef __x86_64__
-> +	/* Alloc a shadow stack within 32-bit address range */
-> +	unsigned long arg, ssp_64, ssp_32;
-> +	ssp_64 = _get_ssp();
-> +
-> +	if (ssp_64 != 0) {
-> +		arg = 0x1001;
-> +		arch_prctl(ARCH_CET_ALLOC_SHSTK, &arg);
-> +		ssp_32 = arg + 0x1000 - 8;
-> +		asm volatile("RSTORSSP (%0)\n":: "r" (ssp_32));
-> +		asm volatile("SAVEPREVSSP");
-> +	}
-> +#endif
+> The primary idea here is that a large part of the overhead in dealing
+> with individual pages is that there's just so darned many of them.
+> We would be better off dealing with fewer, larger pages, even if they
+> don't get to be the size necessary for the CPU to use a larger TLB entry.
 
-If the headers and code are going to be repeated, I would put that in a
-shared header so they're not copy/pasted between these two tests.
+Ok, so the main issue I have with the filesystem/iomap side of
+things is that it appears to be adding "transparent huge page"
+awareness to the filesysetm code, not "large page support".
 
--Kees
+For people that aren't aware of the difference between the
+transparent huge and and a normal compound page (e.g. I have no idea
+what the difference is), this is likely to cause problems,
+especially as you haven't explained at all in this description why
+transparent huge pages are being used rather than bog standard
+compound pages.
 
+And, really, why should iomap or the filesystems care if the large
+page is a THP or just a high order compound page? The interface
+for operating on these things at the page cache level should be the
+same. We already have page_size() and friends for operating on
+high order compound pages, yet the iomap stuff has this new
+thp_size() function instead of just using page_size(). THis is going
+to lead to confusion and future bugs when people who don't know the
+difference use the wrong page size function in their filesystem
+code.
+
+So, really, the "large page" API presented to the filesystems via
+the page cache needs to be unified. Having to use compound_*() in
+some places, thp_* in others, then page_* and Page*, not to mention
+hpage_* just so that we can correctly support "large pages" is a
+total non-starter.
+
+Hence I'd suggest that this patch set needs to start by "hiding" all
+the differences between different types of pages behind a unified,
+consistent API, then it can introduce large page support into code
+outside the mm/ infrastructure via that unified API. I don't care
+what that API looks like so long as it is clear, consistenti, well
+documented and means filesystem developers don't need to know
+anything about how the page (large or not) is managed by the mm
+subsystem.
+
+Cheers,
+
+Dave.
 -- 
-Kees Cook
+Dave Chinner
+david@fromorbit.com
