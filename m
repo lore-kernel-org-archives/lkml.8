@@ -2,223 +2,146 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA370C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8CA820823
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="y/LvVBBp"
+	by mail.kernel.org (Postfix) with ESMTP id 1504E20823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590101524;
+	bh=0cgjxbgdf1dAlWpOp4qiOnxKy9uvXiWwlhLg2SV0Qzw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=1Wb1dcZjA480lFLxW+o3Ljk79gY3wDMBgL2PlyWokU8YVGnE4E1323nNFjPtFw9vo
+	 k8ABt3STwtgyq5doBbicAC0ymeH7QVH4/+12/YCNyS9Uwbu6RMX3jGb7Pl39+z/HpE
+	 azYQNRQ5ngNeWGP0007CsP8pQv7pM0SqlkFGnVsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgEUWuk (ORCPT
+        id S1730700AbgEUWwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730561AbgEUWuj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:50:39 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F852C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:50:39 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id j145so7711267oib.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tkpx7ftcTUxzBBIrIGDJ77z6AvaFvZxbexQdFNLy018=;
-        b=y/LvVBBpTk9uRJjMiuEEiVdKPdabb8L19o5Zb7T4ugL7BViYxtww76HDY2t7cOJ52k
-         BjHfqw51q6Tgc8tbASdU5vBOZl6dIoQgBik4GvxOsPmsTv6EFMsmuUJdA8Vz3QM3YShS
-         7SRfKzZwCP4GsaBFIgHXUKR86V28mEr6pC9bifacGWVgCi4kSuYGST9QtQraQBqUVwzN
-         XFEj/ezYSdTmhSY+QAjb5Qc0TD5y8zVjsyx7zMSbm7RWsyQWEulaew6qWG2JaFuQRtt/
-         EyywGeK78QOBsrJpLRYPwHrM1PUsaMWXhyEAEa7tlwu9dqY5AjktXov8UyKrIcd6CZbP
-         syJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tkpx7ftcTUxzBBIrIGDJ77z6AvaFvZxbexQdFNLy018=;
-        b=oNfz20gRQipYb6NDP+488fZr/BX3m3vnOpqcbaDFbCB5jxsUeStnVpPvc3RnynVqF1
-         A7hVb9M7Z/VjdrsPTCkSEX6/c1x5DMWnRN5JEnwzFwID6usGWzA0s7XVGvhxfsqpyCFh
-         uH0zuK32WdhnjegAt2ZPdKq8LNd0wL78I1yZDOUUKnrgRS3Dji6eJ02PFz/JQt4qBMzl
-         OU+vgIIj804GLezlok1XU3S7Z64E4jfE6pl/HhedJ/VqAnZzuHo84J1vb6DgAH7HU70D
-         9C8sUpZ86bMzgTgUk0yDu2KoG0zAzu5YdUNJ5m00xbAQixcRBn+lTuAf+77ll3EjSMaV
-         NF8Q==
-X-Gm-Message-State: AOAM530F7yIoCP5oqore523JBMr8RH3OGLos3sTx8FLwOu+hPud+6Xqo
-        xfkWkXt/KSV8wYRjX/9WO/idP/AlPj1Axw==
-X-Google-Smtp-Source: ABdhPJx4fpvv6Zl+NpcN3oR+e4Smxnwp2+3qasu0LOmjkO/s7nhQAh7KlW2rQPDYj9f0KwBp+Gk/NQ==
-X-Received: by 2002:aca:1e02:: with SMTP id m2mr638451oic.107.1590101438936;
-        Thu, 21 May 2020 15:50:38 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id 61sm1968017otp.13.2020.05.21.15.50.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 15:50:38 -0700 (PDT)
-Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
- <adaced72-d757-e3e4-cfeb-5512533d0aa5@landley.net>
- <874ksaioc6.fsf@x220.int.ebiederm.org>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <fc2cf2a7-e1a7-3170-32c9-43e593636799@landley.net>
-Date:   Thu, 21 May 2020 17:50:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 18:52:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730041AbgEUWwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 18:52:03 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F1A820814;
+        Thu, 21 May 2020 22:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590101522;
+        bh=0cgjxbgdf1dAlWpOp4qiOnxKy9uvXiWwlhLg2SV0Qzw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=XdgKGyhvjEg8urysaMMMP921Tr+50/lWKCda8lBBzMe2avEykhyHSOIqm/qdyRYym
+         BrAUz0e3cHXsdUM1X7I/hcI66rBKUpGI0lYuZMUQJhv7OHDcy7G42ZiMe+eK0G/5F3
+         n3kmqkVvxlqd/X6fHUzZtM6qctBDu/qdx5NSldjQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 861C93522FEB; Thu, 21 May 2020 15:52:02 -0700 (PDT)
+Date:   Thu, 21 May 2020 15:52:02 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>
+Subject: Re: [PATCH RFC] sched: Use sched-RCU in core-scheduling balancing
+ logic
+Message-ID: <20200521225202.GD2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520224818.78930-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <874ksaioc6.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520224818.78930-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 11:05 AM, Eric W. Biederman wrote:
-> Rob Landley <rob@landley.net> writes:
+On Wed, May 20, 2020 at 06:48:18PM -0400, Joel Fernandes (Google) wrote:
+> rcu_read_unlock() can incur an infrequent deadlock in
+> sched_core_balance(). Fix this by using sched-RCU instead.
 > 
->> On 5/18/20 7:33 PM, Eric W. Biederman wrote:
->>>
->>> Most of the support for passing the file descriptor of an executable
->>> to an interpreter already lives in the generic code and in binfmt_elf.
->>> Rework the fields in binfmt_elf that deal with executable file
->>> descriptor passing to make executable file descriptor passing a first
->>> class concept.
->>
->> I was reading this to try to figure out how to do execve(NULL, argv[], envp) to
->> re-exec self after a vfork() in a chroot with no /proc, and hit the most trivial
->> quibble ever:
+> This fixes the following spinlock recursion observed when testing the
+> core scheduling patches on PREEMPT=y kernel on ChromeOS:
 > 
-> We have /proc/self/exe today.
+> [    3.240891] BUG: spinlock recursion on CPU#2, swapper/2/0
+> [    3.240900]  lock: 0xffff9cd1eeb28e40, .magic: dead4ead, .owner: swapper/2/0, .owner_cpu: 2
+> [    3.240905] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.4.22htcore #4
+> [    3.240908] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+> [    3.240910] Call Trace:
+> [    3.240919]  dump_stack+0x97/0xdb
+> [    3.240924]  ? spin_bug+0xa4/0xb1
+> [    3.240927]  do_raw_spin_lock+0x79/0x98
+> [    3.240931]  try_to_wake_up+0x367/0x61b
+> [    3.240935]  rcu_read_unlock_special+0xde/0x169
+> [    3.240938]  ? sched_core_balance+0xd9/0x11e
+> [    3.240941]  __rcu_read_unlock+0x48/0x4a
+> [    3.240945]  __balance_callback+0x50/0xa1
+> [    3.240949]  __schedule+0x55a/0x61e
+> [    3.240952]  schedule_idle+0x21/0x2d
+> [    3.240956]  do_idle+0x1d5/0x1f8
+> [    3.240960]  cpu_startup_entry+0x1d/0x1f
+> [    3.240964]  start_secondary+0x159/0x174
+> [    3.240967]  secondary_startup_64+0xa4/0xb0
+> [   14.998590] watchdog: BUG: soft lockup - CPU#0 stuck for 11s! [kworker/0:10:965]
+> 
+> Cc: vpillai <vpillai@digitalocean.com>
+> Cc: Aaron Lu <aaron.lwe@gmail.com>
+> Cc: Aubrey Li <aubrey.intel@gmail.com>
+> Cc: peterz@infradead.org
+> Cc: paulmck@kernel.org
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Change-Id: I1a4bf0cd1426b3c21ad5de44719813ad4ee5805e
 
-Not when you first enter a container that's just created a new namespace, or
-initramfs first launches PID 1 and runs a shell script to set up the environment
-and your (subshell) and background& support only has vfork and not fork, or just
-plain "somebody did a chroot"...
+With some luck, the commit removing the need for this will hit
+mainline during the next merge window.  Fingers firmly crossed...
 
-(Yes a nommu system with range registers can want _security_ without
-_address_translation_. Strange but true! I haven't actually sat down to try to
-implement nommu containers yet, but I've done worse things on many occasions.
-Remember: the S in IoT stands for Security.)
+						Thanx, Paul
 
-> If I understand you correctly you would
-> like to do the equivalent of 'execve("/proc/self/exe", argv[], envp[])'
-> without having proc mounted.
-
-Toybox would _like_ proc mounted, but can't assume it. I'm writing a new
-bash-compatible shell with nommu support, which means in order to do subshell
-and background tasks if (!CONFIG_FORK) I need to create a pipe pair, vfork(),
-have the child exec itself to unblock the parent, and then read the context data
-that just got discarded through the pipe from the parent. ("Wheee." And you can
-quote me on that.)
-
-I've implemented that already
-(https://github.com/landley/toybox/blob/0.8.3/toys/pending/sh.c#L674 and reentry
-is L2516, yeah it's a work in progress), but "exec self" requires /proc/self/exe
-and since I gave up on getting
-http://lkml.iu.edu/hypermail/linux/kernel/2005.1/09399.html in (I should
-apologize to Randy but I just haven't got the spoons to face
-https://landley.net/notes-2017.html#14-09-2017 again; three strikes and the
-patch stays out) I need /init to be a shell script to set up an initramfs that's
-made by pointing CONFIG_INITRAMFS_SOURCE at a directory that was made without
-running the build as root, because there's no /dev/console and you can't mknod
-as a non-root user.
-
-Maybe instead of fixing CONFIG_DEVTMPFS_MOUNT to apply to initramfs I could
-instead add a CONFIG_INITRAMFS_EXTRA=blah.txt to usr/{Kconfig,Makefile} to
-append user-supplied extra lines to the end of the gen_initramfs.sh output and
-make a /dev/console that way (kinda like genext2fs and mksquashfs), but getting
-that in through the linux-kernel bureaucracy means consulting a 27 step
-checklist supplementing the basic 17 step submission procedure (with
-bibliographic references) explaining how to fill out the forms, perform the
-validation steps, go through the proper channels, and get the appropriate series
-of signatures and approvals, and I just haven't got the stomach for it anymore.
-I was participating here as a hobbyist. Linux-kernel has aged into a rigid
-bureaucracy. It's no fun anymore.
-
-Which means any kernel patch I write I have to forward port regularly, sometimes
-for a very long time. Heck, I gave linux-kernel three strikes at miniconfig
-fifteen years ago now:
-
-  http://lkml.iu.edu/hypermail/linux/kernel/0511.2/0479.html
-  https://lwn.net/Articles/161086/
-  https://lkml.org/lkml/2006/7/6/404
-
-And was still maintaining it out of tree a decade later:
-
-  https://landley.net/aboriginal/FAQ.html#dev_miniconfig
-  https://github.com/landley/aboriginal/blob/master/more/miniconfig.sh
-
-These days I've moved on to a microconfig format that mostly fits on one line,
-ala the KCONF= stuff in toybox's built in:
-
-  https://github.com/landley/toybox/blob/master/scripts/mkroot.sh#L136
-
-For example, the User Mode Linux miniconfig from my ancient
-https://landley.net/writing/docs/UML.html would translate to microconfig as:
-
-  BINFMT_ELF,HOSTFS,LBD,BLK_DEV,BLK_DEV_LOOP,STDERR_CONSOLE,UNIX98_PTYS,EXT2_FS
-
-The current kernel also needs "64BIT" because my host toolchain doesn't have the
--m32 headers installed, but then it builds fine ala:
-
-make ARCH=um allnoconfig KCONFIG_ALLCONFIG=<(echo
-BINFMT_ELF,HOSTFS,LBD,BLK_DEV,BLK_DEV_LOOP,STDERR_CONSOLE,UNIX98_PTYS,EXT2_FS,64BIT
-| sed -E 's/([^,]*)(,|$)/CONFIG_\1=y\n/g')
-
-Of course running the resulting ./linux says:
-
-  Checking PROT_EXEC mmap in /dev/shm...Operation not permitted
-  /dev/shm must be not mounted noexec
-
-But *shrug*, Devuan did that not me. I haven't really used UML since QEMU
-started working. Shouldn't the old "create file, map file, delete file" trick
-stop flushing the data to backing store no matter where the file lives? I mean,
-that trick dates back to the VAX, and we argued about it on the UML list a
-decade ago (circa
-https://sourceforge.net/p/user-mode-linux/mailman/message/14000710/) but...
-fixing random things that are wrong with Linux is not my problem anymore. I'm
-only in this thread because I'm cc'd.
-
-Spending five years repeatedly posting perl removal patches and ending up with
-intentional sabotage at the end from the guy who'd added perl in the first place
-when the Gratuitous Build Dependency Removal patches finally got traction
-(https://landley.net/notes-2013.html#28-03-2013) kinda put me off doing that again.
-
-> The file descriptor is stored in mm->exe_file.
-> Probably the most straight forward implementation is to allow
-> execveat(AT_EXE_FILE, ...).
-
-Cool, that works.
-
-> You can look at binfmt_misc for how to reopen an open file descriptor.
-
-Added to the todo heap.
-
-Thanks,
-
-Rob
+> ---
+>  kernel/sched/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 780514d03da47..b8ca6fcaaaf06 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4897,7 +4897,7 @@ static void sched_core_balance(struct rq *rq)
+>  	struct sched_domain *sd;
+>  	int cpu = cpu_of(rq);
+>  
+> -	rcu_read_lock();
+> +	rcu_read_lock_sched();
+>  	raw_spin_unlock_irq(rq_lockp(rq));
+>  	for_each_domain(cpu, sd) {
+>  		if (!(sd->flags & SD_LOAD_BALANCE))
+> @@ -4910,7 +4910,7 @@ static void sched_core_balance(struct rq *rq)
+>  			break;
+>  	}
+>  	raw_spin_lock_irq(rq_lockp(rq));
+> -	rcu_read_unlock();
+> +	rcu_read_unlock_sched();
+>  }
+>  
+>  static DEFINE_PER_CPU(struct callback_head, core_balance_head);
+> -- 
+> 2.26.2.761.g0e0b3e54be-goog
+> 
