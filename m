@@ -2,96 +2,103 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F47C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAFB020709
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2553520756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590029267;
+	bh=b2qaZhDWuub/DIfryS6o+tqYInvj/LtFKeW0hqa6Us0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1aqKpkMJL2n6e0Rx0Q+sHoaGTkemLnEDbSOjE9Xz9MY2sDNWwTGlVVtNItbQ9/zxJ
+	 Z+iH98Z5LB1e59taoMTx3C9CIFJ2P9T906jFfj63z9DuZkqQ3xlff140WKlwl8kcux
+	 6DqDmzgKusdJ32vtQp/LNNSnnqW3GMxTsJRjyxkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgEUCrh (ORCPT
+        id S1727957AbgEUCrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:47:37 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:5686 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726979AbgEUCrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:47:36 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgC3zz6u68VepRblAQ--.49692S4;
-        Thu, 21 May 2020 10:47:15 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] PCI: tegra: Fix runtime PM imbalance on error
-Date:   Thu, 21 May 2020 10:47:09 +0800
-Message-Id: <20200521024709.2368-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgC3zz6u68VepRblAQ--.49692S4
-X-Coremail-Antispam: 1UD129KBjvJXoWrKrW7ZFW3Gr18JF1xZFy5urg_yoW8JrW5pF
-        WDXa4xCF48X3yYkFnIy3WDZFyY9r9Iv34UK3yq9wnrZ3ZxJa4UXr45JFySqF1YqrWvvF1U
-        t3Wj93W7CF45XFUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9q1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r4UMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJV
-        W8JbIYCTnIWIevJa73UjIFyTuYvjfUO_MaUUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwABsj
+        Wed, 20 May 2020 22:47:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbgEUCrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 22:47:45 -0400
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 414332075F;
+        Thu, 21 May 2020 02:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590029265;
+        bh=b2qaZhDWuub/DIfryS6o+tqYInvj/LtFKeW0hqa6Us0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=olWdtJBIIbbZ+a3PAOmII6jLxrcAVNYAqT4qBVnjpX2wJR7tPO+dfN1Zl7eBp2hXC
+         C2eQGeqVYeAJjaG37xSIICswMnMb6sh5/n4QUpOqcqWpJ1l3GXjujEcrC5fxz2IaXV
+         FtA6Y5q/9Mzp8ap3aQLmqRbKxAJNv6jUeuqFKfbI=
+Received: by mail-lj1-f173.google.com with SMTP id u15so6424594ljd.3;
+        Wed, 20 May 2020 19:47:45 -0700 (PDT)
+X-Gm-Message-State: AOAM533kt4Ls31BPlLIC/zqfDtIXhEP662IwjC89DGdN5Bdyh2usBSCc
+        rs9cRllrootC5mWgHbfBxfLyJhI6CpKxCfu2hw8=
+X-Google-Smtp-Source: ABdhPJyitI3a36aCNhRUeiD9xechDH7k8WloQw5lqEfZWuYuKPKujdCilgmgiBQMULx9GqqFzWMsE3oUrk/f4ibKaQM=
+X-Received: by 2002:a2e:b609:: with SMTP id r9mr4082138ljn.125.1590029263392;
+ Wed, 20 May 2020 19:47:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <lsq.1589984008.673931885@decadent.org.uk> <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
+In-Reply-To: <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Thu, 21 May 2020 10:47:33 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65AGb+4=+vRn2OdBx=fYXmZLFqASsyh-xh=ruCgbg92ng@mail.gmail.com>
+Message-ID: <CAGb2v65AGb+4=+vRn2OdBx=fYXmZLFqASsyh-xh=ruCgbg92ng@mail.gmail.com>
+Subject: Re: [PATCH 3.16 00/99] 3.16.84-rc1 review
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, torvalds@linux-foundation.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Thu, May 21, 2020 at 5:23 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 5/20/20 7:13 AM, Ben Hutchings wrote:
+> > This is the start of the stable review cycle for the 3.16.84 release.
+> > There are 99 patches in this series, which will be posted as responses
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Fri May 22 20:00:00 UTC 2020.
+> > Anything received after that time might be too late.
+> >
+> Build results:
+>         total: 135 pass: 135 fail: 0
+> Qemu test results:
+>         total: 230 pass: 227 fail: 3
+> Failed tests:
+>         arm:cubieboard:multi_v7_defconfig:mem512:sun4i-a10-cubieboard:initrd
+>         arm:cubieboard:multi_v7_defconfig:usb:mem512:sun4i-a10-cubieboard:rootfs
+>         arm:cubieboard:multi_v7_defconfig:sata:mem512:sun4i-a10-cubieboard:rootfs
+>
+> The arm tests fail due to a compile error.
+>
+> drivers/clk/tegra/clk-tegra-periph.c:524:65: error: 'CLK_IS_CRITICAL' undeclared here (not in a function); did you mean 'CLK_IS_BASIC'?
 
-Also, call pm_runtime_disable() when pm_runtime_get_sync() returns
-an error code.
+This looks like a result of having
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/pci/controller/pci-tegra.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+      clk: tegra: Mark fuse clock as critical
+         [bf83b96f87ae2abb1e535306ea53608e8de5dfbb]
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 3e64ba6a36a8..00236dd65b5b 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2712,7 +2712,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err < 0) {
- 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
--		goto teardown_msi;
-+		goto pm_runtime_put;
- 	}
- 
- 	host->busnr = bus->start;
-@@ -2746,7 +2746,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- pm_runtime_put:
- 	pm_runtime_put_sync(pcie->dev);
- 	pm_runtime_disable(pcie->dev);
--teardown_msi:
- 	tegra_pcie_msi_teardown(pcie);
- put_resources:
- 	tegra_pcie_put_resources(pcie);
--- 
-2.17.1
+In which case you probably need to add
 
+    32b9b1096186 clk: Allow clocks to be marked as CRITICAL
+
+to the pile.
+
+
+ChenYu
