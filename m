@@ -2,103 +2,106 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82990C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8466320671
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590033525;
-	bh=x51eZowcwKKiPfBwLywVfcZ/cK28r4qUIpFjtqAQPnQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RbQi76XU/XAoeMEOqRchqKwjgOtrtiM9SzsAMAjstfKLHO8lbOvrFl3wcsKxOdw8N
-	 pLqlNwlRs9LrkfEnW+MpLzECbJfWDRxH1XPifGoVbUmk3CQyp1vKwQM0lDqsW26wBA
-	 Ky99xa4aH/mHJF/6eoKu15uLKFOZ6edY1/osg/V8=
+	by mail.kernel.org (Postfix) with ESMTP id 547DA20678
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgEUD6o (ORCPT
+        id S1726808AbgEUEKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:58:44 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:33507 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgEUD6o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:58:44 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 04L3w7WE015180;
-        Thu, 21 May 2020 12:58:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 04L3w7WE015180
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590033488;
-        bh=cdcXcp7GKJaQpoiglOE1SstMA8V7OfLShCEkDd6sbPw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=abdOFj1i0J9pa0dxt1L9GfRe+lMOKG1wZ3CCJCF+SzSFEoaPuc1hJ8bYGoP704Uj7
-         R/gOJmRfaCjwbNnvbgDTpqwyfnK5GvXBum1ba2dZwe2YvJK52dwLS6wFpGKavxCE8j
-         +EhQ1PUju1nA9lCJBHl6LN2WyBLZugw5aJO/Km/zMcfMychRu9rZrnFIhQMD5DiQQy
-         dij8j+BRLGFD+M0uGpHbgW/1DE/fbZLyPRzZL7IG6sQv/gDegR1LJpuuXViuWW+LVU
-         gxXatApVeJwJv/QCXA0bFFua+QHZfD2wZKW6KcgCdrQcSgT/3fu/irvKzi6T3szDbz
-         IOcU+AOvuP7Fw==
-X-Nifty-SrcIP: [209.85.222.45]
-Received: by mail-ua1-f45.google.com with SMTP id c17so2113968uaq.13;
-        Wed, 20 May 2020 20:58:08 -0700 (PDT)
-X-Gm-Message-State: AOAM533JdntVdi1/4nQUYtl3V94YzkkthB9AMrUnrNSht501yPhSfrWN
-        y1wSqdnzgC3kOIPQrORlVzbkxxvE3nowDnXHVZM=
-X-Google-Smtp-Source: ABdhPJzpnqCQGJ4c2bi+MEob+kwmt7nGFJPa9S2qehtmVIvnGWQiwFvzL8eOgt3jRjoUpdjLDDnbTBvWPi4aQIIDzNA=
-X-Received: by 2002:a9f:3e0d:: with SMTP id o13mr5991460uai.25.1590033486833;
- Wed, 20 May 2020 20:58:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200517094859.2376211-1-masahiroy@kernel.org>
- <20200517094859.2376211-10-masahiroy@kernel.org> <fe378a92bba24164a4f901902ab06820@AcuMS.aculab.com>
-In-Reply-To: <fe378a92bba24164a4f901902ab06820@AcuMS.aculab.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 21 May 2020 12:57:31 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQNyD-1-tHkjgc3_cG2XGbLN7rmPM4m371iO2eWAfX55Q@mail.gmail.com>
-Message-ID: <CAK7LNAQNyD-1-tHkjgc3_cG2XGbLN7rmPM4m371iO2eWAfX55Q@mail.gmail.com>
-Subject: Re: [PATCH 09/29] kbuild: disallow multi-word in M= or KBUILD_EXTMOD
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+        Thu, 21 May 2020 00:10:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:39934 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgEUEKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 00:10:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20E7C30E;
+        Wed, 20 May 2020 21:10:46 -0700 (PDT)
+Received: from [10.163.75.69] (unknown [10.163.75.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7D623F68F;
+        Wed, 20 May 2020 21:10:43 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [RFC V2] mm/vmstat: Add events for PMD based THP migration
+ without split
+To:     =?UTF-8?B?SE9SSUdVQ0hJIE5BT1lBKOWggOWPo+OAgOebtOS5nyk=?= 
+        <naoya.horiguchi@nec.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <1589784156-28831-1-git-send-email-anshuman.khandual@arm.com>
+ <20200520071521.GA29616@hori.linux.bs1.fc.nec.co.jp>
+Message-ID: <d20494ac-5039-6956-c70b-f78e51b4f6eb@arm.com>
+Date:   Thu, 21 May 2020 09:40:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200520071521.GA29616@hori.linux.bs1.fc.nec.co.jp>
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 9:33 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Masahiro Yamada
-> > Sent: 17 May 2020 10:49
-> > $(firstword ...) in scripts/Makefile.modpost was added by commit
-> > 3f3fd3c05585 ("[PATCH] kbuild: allow multi-word $M in Makefile.modpost")
-> > to build multiple external module directories.
-> >
-> > This feature has been broken for a while. Remove the bitrotten code, and
-> > stop parsing if M or KBUILD_EXTMOD contains multiple words.
->
-> ISTR that one of the kernel documentation files says that it is possible
-> to build multiple modules together in order to avoid 'faffing' with
-> exported symbol lists.
->
-> So the docs need updating to match.
 
 
-Do you remember which doc mentions it?
+On 05/20/2020 12:45 PM, HORIGUCHI NAOYA(堀口　直也) wrote:
+> On Mon, May 18, 2020 at 12:12:36PM +0530, Anshuman Khandual wrote:
+>> This adds the following two new VM events which will help in validating PMD
+>> based THP migration without split. Statistics reported through these events
+>> will help in performance debugging.
+>>
+>> 1. THP_PMD_MIGRATION_SUCCESS
+>> 2. THP_PMD_MIGRATION_FAILURE
+>>
+>> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+>> Cc: Zi Yan <ziy@nvidia.com>
+>> Cc: John Hubbard <jhubbard@nvidia.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> Hi Anshuman,
 
+Hi Naoya,
 
+> 
+> I'm neutral for additinal lines in /proc/vmstat. It's a classic (so widely
+> used) but inflexible interface. Users disabling thp are not happy with many
+> thp-related lines, but judging from the fact that we already have many
 
->         David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
->
+Right, for similar reason, I am not too keen on enabling these counters
+without migration being enabled with ARCH_ENABLE_THP_MIGRATION.
 
+> thp-related lines some users really need them. So I feel hard to decide to
+> agree or disagree with additional lines.
 
--- 
-Best Regards
-Masahiro Yamada
+Currently these are conditional on ARCH_ENABLE_THP_MIGRATION. So we are
+not adding these new lines unless it migration is available and enabled.
+
+> 
+> I think that tracepoints are the more flexible interfaces for monitoring,
+> so I'm interested more in whether thp migration could be monitorable via
+> tracepoint. Do you have any idea/plan on it?
+
+Sure, we can add some trace points as well which can give more granular
+details regarding THP migration mechanism itself e.g setting and removing
+PMD migration entries etc probably with (vaddr, pmdp, pmd) details.
+
+But we will still need /proc/vmstat entries that will be available right
+away without requiring additional steps. This simplicity is essential for
+folks to consider using these events more often.
+
+Sure, will look into what trace points can be added for THP migration but
+in a subsequent patch.
+
+- Anshuman
