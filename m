@@ -2,133 +2,111 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA05C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5B72065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6712065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:02:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jq6ZJqV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgEUHAn (ORCPT
+        id S1728295AbgEUHCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:00:43 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:37916 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727030AbgEUHAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:00:43 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 15:00:14
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Thu, 21 May 2020 15:00:14 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Steven Price" <steven.price@arm.com>
-Cc:     kjlu@umn.edu, "Rob Herring" <robh@kernel.org>,
-        "Tomeu Vizoso" <tomeu.vizoso@collabora.com>,
-        "Alyssa Rosenzweig" <alyssa.rosenzweig@collabora.com>,
-        "David Airlie" <airlied@linux.ie>,
-        "Daniel Vetter" <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] drm/panfrost: fix runtime pm imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <73a1dc37-f862-f908-4c9f-64e256283857@arm.com>
-References: <20200520110504.24388-1-dinghao.liu@zju.edu.cn>
- <73a1dc37-f862-f908-4c9f-64e256283857@arm.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
-MIME-Version: 1.0
-Message-ID: <1986c141.ba6f5.172360851d6.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCXPxz+JsZex6XoAQ--.30247W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgMHBlZdtOPIGAABsN
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r4j6F4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r4xMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
-        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
-        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
-        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
-        0EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvEx4A2jsIE14v26r4j6F4UMIAIbVCI42IY
-        6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUU==
+        Thu, 21 May 2020 03:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbgEUHCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 03:02:16 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7C8C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:02:14 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c3so1334706wru.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 00:02:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LEMen+xsA6qxMWbCQqco6Cjvh1dtSQNqj0Uunndr3LE=;
+        b=Jq6ZJqV+XpCkC148hfZCiSUkCElFrAoq1soivuhDpjftmmrcsr3t0Dj1jLSN3RE3Gh
+         Ak86lrD8kB2EPPJOs8WNA8x4GJSbSNyo8C8N9Kl1J4n7rUDC5UsznJZ9+RaUQrMYiIm8
+         gjEFy2dz9eHqD07s447Tikzwp1YHjZMl+77E3tcfx4IC6NS4oLAObOQI65IGXB/EkOfY
+         WJ3/386jEXUvGtYvudsL2ZjYh0Hk0VgLmRkdua4hbBFDEdPm73ry7lgFO9ZJwGBQdXWD
+         GXk7WG7g6P1AC9w4yIUq1ND/VXPuQ7fMofe4LoqJYJ7B6SKXqZpFFT0GK4FGd3zBzsTX
+         ZtIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LEMen+xsA6qxMWbCQqco6Cjvh1dtSQNqj0Uunndr3LE=;
+        b=JoL7erDl367fqa2VBlR58ZB/aiVdbLP7Dba99uBU+AJyA42qd2xUBcoGqHrn4bruW0
+         nrym1L8+cmHzKLA6uZpSwwVzJdid7RX7M4eEZQpERRImuT71rPfHiqSOJ6UhudG2cy/h
+         XO4aL2z3UZtSnji2QAJP7ikD2szEk3taBU0B9o8m5KItCeyV2TQU/e9kBydhsqLohcSj
+         gDRxVrm6qXS+a1YDksnCb46qIvI5ltvTDXPo5RQK9PT8d4dGcvkYofZs6UEzNLAEIXuT
+         U+XfH0nyLJVBgFvk8NTx3LbfkWdZuobOaXQ1z36+QdS1Z/Owk0RAUZc8CFaoov7X5ojd
+         FFWw==
+X-Gm-Message-State: AOAM532bZykCT0ue4jwpfQjwJtSxER6JOBT2Nbha7L1k/hBd3jcDwxkk
+        8OpDY/dDGs2dPtShqWgxLnJawU0c
+X-Google-Smtp-Source: ABdhPJyjs6IPVAHaVZL0TryluA6418I2iAWrT1XcIPaUpqzG7Be3OegC8VWJj0QifwWfUOKzN0LOXA==
+X-Received: by 2002:a5d:4d89:: with SMTP id b9mr7789323wru.210.1590044532789;
+        Thu, 21 May 2020 00:02:12 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id w20sm5448205wmk.25.2020.05.21.00.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 00:02:11 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
+Subject: [PATCH 1/4] habanalabs: improve MMU cache invalidation code
+Date:   Thu, 21 May 2020 10:02:02 +0300
+Message-Id: <20200521070205.26673-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RldmUsCgpUaGVyZSBhcmUgdHdvIGJhaWxpbmcgb3V0IHBvaW50cyBpbiBwYW5mcm9zdF9q
-b2JfaHdfc3VibWl0KCk6IG9uZSBpcyAKdGhlIGVycm9yIHBhdGggYmVnaW5uaW5nIGZyb20gcG1f
-cnVudGltZV9nZXRfc3luYygpLCB0aGUgb3RoZXIgb25lIGlzIAp0aGUgZXJyb3IgcGF0aCBiZWdp
-bm5pbmcgZnJvbSBXQVJOX09OKCkgaW4gdGhlIGlmIHN0YXRlbWVudC4gVGhlIHBtIAppbWJhbGFu
-Y2UgZml4ZWQgaW4gdGhpcyBwYXRjaCBpcyBiZXR3ZWVuIHRoZXNlIHR3byBwYXRocy4gSSB0aGlu
-ayB0aGUgCmNhbGxlciBvZiBwYW5mcm9zdF9qb2JfaHdfc3VibWl0KCkgY2Fubm90IGRpc3Rpbmd1
-aXNoIHRoaXMgaW1iYWxhbmNlIApvdXRzaWRlIHRoaXMgZnVuY3Rpb24uIAoKcGFuZnJvc3Rfam9i
-X3RpbWVkb3V0KCkgY2FsbHMgcG1fcnVudGltZV9wdXRfbm9pZGxlKCkgZm9yIGV2ZXJ5IGpvYiBp
-dCAKZmluZHMsIGJ1dCBhbGwgam9icyBhcmUgYWRkZWQgdG8gdGhlIHBmZGV2LT5qb2JzIGp1c3Qg
-YmVmb3JlIGNhbGxpbmcKcGFuZnJvc3Rfam9iX2h3X3N1Ym1pdCgpLiBUaGVyZWZvcmUgSSB0aGlu
-ayB0aGUgaW1iYWxhbmNlIHN0aWxsIGV4aXN0cy4KQnV0IEknbSBub3QgdmVyeSBzdXJlIGlmIHdl
-IHNob3VsZCBhZGQgcG1fcnVudGltZV9wdXQgb24gdGhlIGVycm9yIHBhdGgKYWZ0ZXIgcG1fcnVu
-dGltZV9nZXRfc3luYygpLCBvciByZW1vdmUgcG1fcnVudGltZV9wdXQgb25lIHRoZSBlcnJvciBw
-YXRoCmFmdGVyIFdBUk5fT04oKS4gCgpBcyBmb3IgdGhlIHByb2JsZW0gYWJvdXQgcGFuZnJvc3Rf
-ZGV2ZnJlcV9yZWNvcmRfYnVzeSgpLCB0aGlzIG1heSBiZSBhIApuZXcgYnVnIGFuZCByZXF1aXJl
-cyBpbmRlcGVuZGVudCBwYXRjaCB0byBmaXggaXQuCgpSZWdhcmRzLApEaW5naGFvCgoKPiBPbiAy
-MC8wNS8yMDIwIDEyOjA1LCBEaW5naGFvIExpdSB3cm90ZToKPiA+IHBtX3J1bnRpbWVfZ2V0X3N5
-bmMoKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgZXZlbgo+ID4gdGhl
-IGNhbGwgcmV0dXJucyBhbiBlcnJvciBjb2RlLiBUaHVzIGEgcGFpcmluZyBkZWNyZW1lbnQgaXMg
-bmVlZGVkCj4gPiBvbiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCB0byBrZWVwIHRoZSBjb3VudGVy
-IGJhbGFuY2VkLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8ZGluZ2hhby5s
-aXVAemp1LmVkdS5jbj4KPiAKPiBBY3R1YWxseSBJIHRoaW5rIHdlIGhhdmUgdGhlIG9wcG9zaXRl
-IHByb2JsZW0uIFRvIGJlIGhvbmVzdCB3ZSBkb24ndCAKPiBoYW5kbGUgdGhpcyBzaXR1YXRpb24g
-dmVyeSB3ZWxsLiBCeSB0aGUgdGltZSBwYW5mcm9zdF9qb2JfaHdfc3VibWl0KCkgaXMgCj4gY2Fs
-bGVkIHRoZSBqb2IgaGFzIGFscmVhZHkgYmVlbiBhZGRlZCB0byB0aGUgcGZkZXYtPmpvYnMgYXJy
-YXksIHNvIGl0J3MgCj4gY29uc2lkZXJlZCBzdWJtaXR0ZWQgZXZlbiBpZiBpdCBuZXZlciBhY3R1
-YWxseSBsYW5kcyBvbiB0aGUgaGFyZHdhcmUuIFNvIAo+IGluIHRoZSBjYXNlIG9mIHRoaXMgZnVu
-Y3Rpb24gYmFpbGluZyBvdXQgZWFybHkgd2Ugd2lsbCB0aGVuIChldmVudHVhbGx5KSAKPiBoaXQg
-YSB0aW1lb3V0IGFuZCB0cmlnZ2VyIGEgR1BVIHJlc2V0Lgo+IAo+IHBhbmZyb3N0X2pvYl90aW1l
-ZG91dCgpIGl0ZXJhdGVzIHRocm91Z2ggdGhlIHBmZGV2LT5qb2JzIGFycmF5IGFuZCBjYWxscyAK
-PiBwbV9ydW50aW1lX3B1dF9ub2lkbGUoKSBmb3IgZWFjaCBqb2IgaXQgZmluZHMuIFNvIHRoZXJl
-J3Mgbm8gaW5iYWxhbmNlIAo+IGhlcmUgdGhhdCBJIGNhbiBzZWUuCj4gCj4gSGF2ZSB5b3UgYWN0
-dWFsbHkgb2JzZXJ2ZWQgdGhlIHNpdHVhdGlvbiB3aGVyZSBwbV9ydW50aW1lX2dldF9zeW5jKCkg
-Cj4gcmV0dXJucyBhIGZhaWx1cmU/Cj4gCj4gSE9XRVZFUiwgaXQgYXBwZWFycyB0aGF0IGJ5IGJh
-aWxpbmcgb3V0IGVhcmx5IHRoZSBjYWxsIHRvIAo+IHBhbmZyb3N0X2RldmZyZXFfcmVjb3JkX2J1
-c3koKSBpcyBuZXZlciBtYWRlLCB3aGljaCBhcyBmYXIgYXMgSSBjYW4gc2VlIAo+IG1lYW5zIHRo
-YXQgdGhlcmUgbWF5IGJlIGFuIGV4dHJhIGNhbGwgdG8gcGFuZnJvc3RfZGV2ZnJlcV9yZWNvcmRf
-aWRsZSgpIAo+IHdoZW4gdGhlIGpvYnMgaGF2ZSB0aW1lZCBvdXQuIFdoaWNoIGNvdWxkIHVuZGVy
-ZmxvdyB0aGUgY291bnRlci4KPiAKPiBCdXQgZXF1YWxseSBsb29raW5nIGF0IHBhbmZyb3N0X2pv
-Yl90aW1lZG91dCgpLCB3ZSBvbmx5IGNhbGwgCj4gcGFuZnJvc3RfZGV2ZnJlcV9yZWNvcmRfaWRs
-ZSgpICpvbmNlKiBldmVuIHRob3VnaCBtdWx0aXBsZSBqb2JzIG1pZ2h0IGJlIAo+IHByb2Nlc3Nl
-ZC4KPiAKPiBUaGVyZSdzIGEgY29tcGxldGVseSB1bnRlc3RlZCBwYXRjaCBiZWxvdyB3aGljaCBp
-biB0aGVvcnkgc2hvdWxkIGZpeCB0aGF0Li4uCj4gCj4gU3RldmUKPiAKPiAtLS0tODwtLS0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2pvYi5jIAo+IGIv
-ZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X2pvYi5jCj4gaW5kZXggNzkxNGIxNTcw
-ODQxLi5mOTUxOWFmY2EyOWQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0
-L3BhbmZyb3N0X2pvYi5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0
-X2pvYi5jCj4gQEAgLTE0NSw2ICsxNDUsOCBAQCBzdGF0aWMgdm9pZCBwYW5mcm9zdF9qb2JfaHdf
-c3VibWl0KHN0cnVjdCAKPiBwYW5mcm9zdF9qb2IgKmpvYiwgaW50IGpzKQo+ICAgCXU2NCBqY19o
-ZWFkID0gam9iLT5qYzsKPiAgIAlpbnQgcmV0Owo+IAo+ICsJcGFuZnJvc3RfZGV2ZnJlcV9yZWNv
-cmRfYnVzeShwZmRldik7Cj4gKwo+ICAgCXJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMocGZkZXYt
-PmRldik7Cj4gICAJaWYgKHJldCA8IDApCj4gICAJCXJldHVybjsKPiBAQCAtMTU1LDcgKzE1Nyw2
-IEBAIHN0YXRpYyB2b2lkIHBhbmZyb3N0X2pvYl9od19zdWJtaXQoc3RydWN0IAo+IHBhbmZyb3N0
-X2pvYiAqam9iLCBpbnQganMpCj4gICAJfQo+IAo+ICAgCWNmZyA9IHBhbmZyb3N0X21tdV9hc19n
-ZXQocGZkZXYsICZqb2ItPmZpbGVfcHJpdi0+bW11KTsKPiAtCXBhbmZyb3N0X2RldmZyZXFfcmVj
-b3JkX2J1c3kocGZkZXYpOwo+IAo+ICAgCWpvYl93cml0ZShwZmRldiwgSlNfSEVBRF9ORVhUX0xP
-KGpzKSwgamNfaGVhZCAmIDB4RkZGRkZGRkYpOwo+ICAgCWpvYl93cml0ZShwZmRldiwgSlNfSEVB
-RF9ORVhUX0hJKGpzKSwgamNfaGVhZCA+PiAzMik7Cj4gQEAgLTQxMCwxMiArNDExLDEyIEBAIHN0
-YXRpYyB2b2lkIHBhbmZyb3N0X2pvYl90aW1lZG91dChzdHJ1Y3QgCj4gZHJtX3NjaGVkX2pvYiAq
-c2NoZWRfam9iKQo+ICAgCWZvciAoaSA9IDA7IGkgPCBOVU1fSk9CX1NMT1RTOyBpKyspIHsKPiAg
-IAkJaWYgKHBmZGV2LT5qb2JzW2ldKSB7Cj4gICAJCQlwbV9ydW50aW1lX3B1dF9ub2lkbGUocGZk
-ZXYtPmRldik7Cj4gKwkJCXBhbmZyb3N0X2RldmZyZXFfcmVjb3JkX2lkbGUocGZkZXYpOwo+ICAg
-CQkJcGZkZXYtPmpvYnNbaV0gPSBOVUxMOwo+ICAgCQl9Cj4gICAJfQo+ICAgCXNwaW5fdW5sb2Nr
-X2lycXJlc3RvcmUoJnBmZGV2LT5qcy0+am9iX2xvY2ssIGZsYWdzKTsKPiAKPiAtCXBhbmZyb3N0
-X2RldmZyZXFfcmVjb3JkX2lkbGUocGZkZXYpOwo+ICAgCXBhbmZyb3N0X2RldmljZV9yZXNldChw
-ZmRldik7Cj4gCj4gICAJZm9yIChpID0gMDsgaSA8IE5VTV9KT0JfU0xPVFM7IGkrKykK
+From: Omer Shpigelman <oshpigelman@habana.ai>
+
+A new sequence is introduced to invalidate the MMU cache in order to avoid
+timeouts.
+
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/gaudi/gaudi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index 4cb1f71dd4f1..093384731f0d 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -5982,16 +5982,18 @@ static void gaudi_mmu_invalidate_cache(struct hl_device *hdev, bool is_hard,
+ 		timeout_usec = MMU_CONFIG_TIMEOUT_USEC;
+ 
+ 	/* L0 & L1 invalidation */
+-	WREG32(mmSTLB_INV_ALL_START, 1);
++	WREG32(mmSTLB_INV_PS, 2);
+ 
+ 	rc = hl_poll_timeout(
+ 		hdev,
+-		mmSTLB_INV_ALL_START,
++		mmSTLB_INV_PS,
+ 		status,
+ 		!status,
+ 		1000,
+ 		timeout_usec);
+ 
++	WREG32(mmSTLB_INV_SET, 0);
++
+ 	if (rc)
+ 		dev_notice_ratelimited(hdev->dev,
+ 			"Timeout when waiting for MMU cache invalidation\n");
+-- 
+2.17.1
+
