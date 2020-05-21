@@ -2,93 +2,120 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38740C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355A92072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F94F2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgEUIFz (ORCPT
+        id S1728558AbgEUIGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:05:55 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:47522 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726208AbgEUIFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:05:55 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgC3WQRWNsZeXibnAA--.12357S4;
-        Thu, 21 May 2020 16:05:46 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Thu, 21 May 2020 16:05:41 +0800
-Message-Id: <20200521080541.25229-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgC3WQRWNsZeXibnAA--.12357S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWDCwb_Cr
-        18Zr97ursIkr4qvr13Gr13Zr92qF4qqFWvgr1Iv34Sg347Zwn8ArW5ZFn5Cr43Ww4UCF1q
-        yrZFgFy7ArsxujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F
-        4UJbIYCTnIWIevJa73UjIFyTuYvjfU0yxRDUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAAVs3
+        Thu, 21 May 2020 04:06:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:41986 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbgEUIGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 04:06:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39EADD6E;
+        Thu, 21 May 2020 01:06:00 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.114])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E097D3F52E;
+        Thu, 21 May 2020 01:05:57 -0700 (PDT)
+Date:   Thu, 21 May 2020 09:05:54 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
+ ARCH_SOC_ID support
+Message-ID: <20200521080554.GC1131@bogus>
+References: <20200518091222.27467-1-sudeep.holla@arm.com>
+ <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
+ <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
+ <20200521070629.GB1131@bogus>
+ <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Thu, May 21, 2020 at 09:34:10AM +0200, Arnd Bergmann wrote:
+> On Thu, May 21, 2020 at 9:07 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Wed, May 20, 2020 at 11:54:16PM +0200, Arnd Bergmann wrote:
+> > > On Wed, May 20, 2020 at 11:29 PM Will Deacon <will@kernel.org> wrote:
+> > > >
+> > > > On Mon, 18 May 2020 10:12:15 +0100, Sudeep Holla wrote:
+> > > > > This patch series adds support for SMCCCv1.2 ARCH_SOC_ID.
+> > > > > This doesn't add other changes added in SMCCC v1.2 yet. They will
+> > > > > follow these soon along with its first user SPCI/PSA-FF.
+> > > > >
+> > > > > This is tested using upstream TF-A + the patch[3] fixing the original
+> > > > > implementation there.
+> > > > >
+> > > > > [...]
+> > > >
+> > > > Applied to arm64 (for-next/smccc), thanks!
+> > > >
+> > > > [1/7] firmware: smccc: Add HAVE_ARM_SMCCC_DISCOVERY to identify SMCCC v1.1 and above
+> > > >       https://git.kernel.org/arm64/c/e5bfb21d98b6
+> > > > [2/7] firmware: smccc: Update link to latest SMCCC specification
+> > > >       https://git.kernel.org/arm64/c/15c704ab6244
+> > > > [3/7] firmware: smccc: Add the definition for SMCCCv1.2 version/error codes
+> > > >       https://git.kernel.org/arm64/c/0441bfe7f00a
+> > > > [4/7] firmware: smccc: Drop smccc_version enum and use ARM_SMCCC_VERSION_1_x instead
+> > > >       https://git.kernel.org/arm64/c/ad5a57dfe434
+> > > > [5/7] firmware: smccc: Refactor SMCCC specific bits into separate file
+> > > >       https://git.kernel.org/arm64/c/f2ae97062a48
+> > > > [6/7] firmware: smccc: Add function to fetch SMCCC version
+> > > >       https://git.kernel.org/arm64/c/a4fb17465182
+> > > > [7/7] firmware: smccc: Add ARCH_SOC_ID support
+> > > >       https://git.kernel.org/arm64/c/ce6488f0ce09
+> > > >
+> > > > Arnd -- Sudeep's reply to you about the sysfs groups seemed reasonable to me,
+> > > > but please shout if you'd rather I dropped this in order to pursue an
+> > > > alternative approach.
+> > >
+> > > I missed the reply earlier, thanks for pointing me to it again.
+> > >
+> > > I'm not entirely convinced, but don't revert it for now because of that,
+> > > I assume we can find a solution.
+> > >
+> >
+> > I liked your idea of making this generic and hardcode values if required
+> > for other drivers. I will take a look at that/
+> >
+> > > However, please have a look at the build failure report for patch 5
+> > > and fix it if you can see what went wrong.
+> > >
+> >
+> > Any pointers for that failure ? I seem to have missed them. I pushed
+> > branch couple of times to my tree but got build success both times.
+> > Any specific config or compilers ?
+> 
+> See below for the reply from the 0day build bot to your email. It seems it
+> was not sent to the mailing list, but you were on Cc. Looking at it now,
+> the fix should be trivial.
+> 
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/dma/tegra210-adma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Ah, clang it is. I must start building with clang regularly.
+Thanks for pointing it out. Somehow few of these kbuild-bot emails
+has been marked junk last few days. Sorry for the noise.
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index c4ce5dfb149b..8f5e4949d720 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -870,7 +870,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0)
--		goto rpm_disable;
-+		goto rpm_put;
- 
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
-@@ -921,7 +921,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	dma_async_device_unregister(&tdma->dma_dev);
- rpm_put:
- 	pm_runtime_put_sync(&pdev->dev);
--rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
- irq_dispose:
- 	while (--i >= 0)
 -- 
-2.17.1
-
+Regards,
+Sudeep
