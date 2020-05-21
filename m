@@ -2,104 +2,93 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F79D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzPWx1/v"
+	by mail.kernel.org (Postfix) with ESMTP id 355A92072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgEUIFA (ORCPT
+        id S1728513AbgEUIFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgEUIE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:04:59 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C67C061A0E;
-        Thu, 21 May 2020 01:04:59 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k7so2734312pjs.5;
-        Thu, 21 May 2020 01:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TO1wq6j7PKKwzMDcL3TCdcuBHoeFZLasBqHQKFsvCUg=;
-        b=VzPWx1/v1MYVNfoEQlNcXSyqs/Lelfc0CxX9+hf8vW8JSc3ilWR4neMFzvXQV+UIqz
-         /qNg9t9F/qjCWDxP+QGC8XLBVdSr+QtvLTQLPdaV4nzAVLYqVssUH9Gf094Hdn2P2k+X
-         i8aRAZz/RFAStlkXvQjPJCOp5xwHQi1HNPUkZV9w5vnN1aqN/m4oodMF9aQNkxmYNdSr
-         QAJhJ+7QX1EOw8Tq7pVc+7/B+onMO7sG1UYeFdOAoe/PuTZjESj8k2cbLquLBkESbsnn
-         rEHOCMA9N+2Jq+GXfqbdCQstVRfmovsiXoGpZpt5qHYOit4p9LwHP4xLJ/DkJXSp9YGX
-         OecQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TO1wq6j7PKKwzMDcL3TCdcuBHoeFZLasBqHQKFsvCUg=;
-        b=VbEfEVeMlzzZUFexfl4KVUaCB4J1p2TVQysI0OjofSnTG/b6dW1xz/b/1+GBZOw0Si
-         blvqJ6/VC9c0ppMn0P1k68Azyg2nYUlMNGtTYp+GN2Kg8UbVsa19kvOyxBkG/Llbup9q
-         1zD+UEJxDqsEL5zoq9vQ70/8/z5y5tiCtQw768hW/IH549S+KTEabfeptrndmcVZzmD8
-         jKvZFE8vTvsK2Pa+xv7VBJyYwOvhfJj9ctui7mV+wqAWG7InWPosn5s2zLKNq/gUA+/Y
-         FQ/ntQlcNc4f54N+ixK9Sd1xNNcsjzuI6PHWEL5QwdsxS/rcJXqZxwHuQKmmlsKsHIm0
-         eE1g==
-X-Gm-Message-State: AOAM532okYm172Jmajp/fI9aT5ZidA04SBR4R3Sq7YM7VZVUSOQr3cLM
-        btyrueT/j/d9ZYYb3yb5GKoA+UFt6aUqvjf+n7mrwQb+VDQ=
-X-Google-Smtp-Source: ABdhPJyRqXe3U4NrMcm7j3iaLIce3pW8UMfo66n2vw8qBIEf9n1jtPujxxLiYe+X0XVZj5e4Iz8c0CCB6sGM/zjMufE=
-X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr9697130pjd.181.1590048299087;
- Thu, 21 May 2020 01:04:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 21 May 2020 11:04:41 +0300
-Message-ID: <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com>
-Subject: Re: [PATCH] spi: tegra20-slink: Fix runtime PM imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Kangjie Lu <kjlu@umn.edu>, Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
+        Thu, 21 May 2020 04:05:55 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:47522 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbgEUIFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 04:05:55 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgC3WQRWNsZeXibnAA--.12357S4;
+        Thu, 21 May 2020 16:05:46 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 16:05:41 +0800
+Message-Id: <20200521080541.25229-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgC3WQRWNsZeXibnAA--.12357S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWDCwb_Cr
+        18Zr97ursIkr4qvr13Gr13Zr92qF4qqFWvgr1Iv34Sg347Zwn8ArW5ZFn5Cr43Ww4UCF1q
+        yrZFgFy7ArsxujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
+        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+        Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F
+        4UJbIYCTnIWIevJa73UjIFyTuYvjfU0yxRDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAAVs3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 10:50 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-...
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/dma/tegra210-adma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
->         ret = pm_runtime_get_sync(&pdev->dev);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
-
-> +               pm_runtime_put(&pdev->dev);
-
-For all your patches, please, double check what you are proposing.
-
-Here, I believe, the correct one will be _put_noidle().
-
-AFAIU you are not supposed to actually suspend the device in case of error.
-But I might be mistaken, thus see above.
-
->                 goto exit_pm_disable;
->         }
-
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index c4ce5dfb149b..8f5e4949d720 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -870,7 +870,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0)
+-		goto rpm_disable;
++		goto rpm_put;
+ 
+ 	ret = tegra_adma_init(tdma);
+ 	if (ret)
+@@ -921,7 +921,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	dma_async_device_unregister(&tdma->dma_dev);
+ rpm_put:
+ 	pm_runtime_put_sync(&pdev->dev);
+-rpm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+ irq_dispose:
+ 	while (--i >= 0)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
