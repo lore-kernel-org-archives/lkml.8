@@ -2,129 +2,145 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5149C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9199B20823
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A863E20759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 21:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TlYSTVO/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqIEZpIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbgEUVOf (ORCPT
+        id S1730659AbgEUVOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 17:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
+        Thu, 21 May 2020 17:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgEUVOf (ORCPT
+        with ESMTP id S1726814AbgEUVOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 17:14:35 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D542C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:14:35 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id d69so2641745ybc.22
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 14:14:35 -0700 (PDT)
+        Thu, 21 May 2020 17:14:52 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8745CC061A0E;
+        Thu, 21 May 2020 14:14:52 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so3471556plr.0;
+        Thu, 21 May 2020 14:14:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=semgcmJd0ZZ9q+OBcE/cjzRQcM4RABCN/d9XODlBjRA=;
-        b=TlYSTVO/Y8u4XRBQIPQXsEu5jGML3Ds00FRBHt//Mxa9a2AaScCsqVRxFRWHdU2drB
-         Oc3DmuiIsF0NWvZfGexbksIlGcw3bTNLnB7Dm2vDAvLHR0EzpVD44ZglXDaidxyyv29c
-         imLD0eJU1+IZelhBUQDzp6FhQKefWoXPsjeRjoVeWZMYpuTceYBZXqwe1usyba7Mo5fd
-         lxPYQMiD5umdUV8hOrVNEke3LLE++/LulrbW2iidAoyzCqUm37kUbnc4WgFvpmV98zoy
-         lJZHfQ5EpPOmS9n4KMjq3spWJA07pHcS/UJ6p83Krdx6oi+LWBGpfxXoxwUURqVeV0T5
-         SBKA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=ojdRX3qZp+MZy5LmVQafkaesJV8j+MVGJ1zs3/CG9ps=;
+        b=RqIEZpIWW6wQMMsJlLMYX/UrPUwSfvJa/1f1lD74bLLdNgCbW6p9OnBzJiMCVLh66N
+         rGfmWNArObZ/CpcS2ZTnlFyH6POr51/Zt4N/bzP0itDHDhPnDZde+K0W/dYelgoiN0/t
+         q+28oaP/iE1eidBoli9M/UivgR1JnWdKX05tQjQ36BPaLAr1R+ULHll03othOUkkgszt
+         rKHAJd2Z3b2H4Bv+Vv0L/Wn8r/XajOWa8NS8lyv70AaYKG2GGYj/tu33LtK0QGOHO8/H
+         hv9rzjdun/ce16/1XOctscWWpDTUVE60NzyebF09gwcFWYCIvs3Tb4rBNEzni3cc1CMe
+         PdqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=semgcmJd0ZZ9q+OBcE/cjzRQcM4RABCN/d9XODlBjRA=;
-        b=Du3WQmXTzCaRJBRsECN+wvcP1vUAAoAYmIU7RpQetLUSxDEvcG9oMauOVZnruRkXF5
-         msWwxirbePCQfwFYCTKOVDSCbMbZs3VGz8UauV2BkGtiykeRnWtuQvk78Vj/N5adNmBr
-         O+s+yIrtyI5VoNP7YXVUMLG5aTWevWxVDmZFkgIO/S/hD6Wn6u0QPdJEq78S6FPBdLbD
-         f2DB8i/Akbxxo5MHKCtvjwM7pceXeydhHNI7VrBeeUHOBZ54AzG9JdE2i8oXsJoTG+o2
-         wag1p8wBAlQhOSHGrLh611/N1pUvCVANIfNRK3BsN66kj3uKR4rqQPPJcTp/4642vOZ1
-         qVmA==
-X-Gm-Message-State: AOAM531vGP7JPAt0oorqUUwQtBWYjhgSFaJsGSyux5GjP4kalKvDscor
-        riJJhNsMqoHle+qKAjQH3CDgMyU=
-X-Google-Smtp-Source: ABdhPJw5CN2ei/ClgLNdsSzrKVS4Hgzwn2pYl2BgA0+O1BHrOE25xjmCCA7f/kCtzSd2kWGb8repg8I=
-X-Received: by 2002:a25:cbc9:: with SMTP id b192mr18457440ybg.132.1590095674239;
- Thu, 21 May 2020 14:14:34 -0700 (PDT)
-Date:   Thu, 21 May 2020 14:14:32 -0700
-In-Reply-To: <20200521125247.30178-1-fejes@inf.elte.hu>
-Message-Id: <20200521211432.GC49942@google.com>
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=ojdRX3qZp+MZy5LmVQafkaesJV8j+MVGJ1zs3/CG9ps=;
+        b=NuP5o7ue7iLGTRlTmaKAZ8/SFcJEt5BaSw1FlAJhTLCQGPLsRlsWOot4aXZJC9QdAd
+         PSfJf0vr8OKlGC31ok5VkTpav0a0Ff4onlvMwoGskzM3QlUgN3IaqorTva1f17O1iMjX
+         pYkW6pz8CXu9CNFzextpBMTDpIHX8ZdTzvhahbAe+w1efWP4WN8zJLa/Ev8A24CaQp3a
+         43B3m7Qj76ipshwjPOKP2x4whaSoXxlXfsKExQtNq9I+k+Dncki/IGjSi2vXIKvR/07s
+         dxImvJIcDr92+Wsj0xy9lz8GDvF+H4zgOQa5xdQ83NdjFKhF07DTweXHL4toU6gL4jJx
+         lz0A==
+X-Gm-Message-State: AOAM530QIb1KFjk24hlm7WMt3H6Vqe54Px64LPjJ8W1vJRbL5CNnoQXi
+        /Gcg6Mqtf0pCH13GCFo2v6A=
+X-Google-Smtp-Source: ABdhPJwqvTC+zhXH2hem8mbMqcAo9Mx67T9nysflxxQZxlZcUo4QgeuA/gJxd7R0YO4SLKJZ9+jjMg==
+X-Received: by 2002:a17:90a:3228:: with SMTP id k37mr549777pjb.118.1590095691621;
+        Thu, 21 May 2020 14:14:51 -0700 (PDT)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id l4sm4538214pgo.92.2020.05.21.14.14.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 14:14:50 -0700 (PDT)
+Date:   Thu, 21 May 2020 14:14:43 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan@huawei.com>,
+        ast@kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        yangyingliang <yangyingliang@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        huawei.libin@huawei.com, guofan5@huawei.com,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+Message-ID: <5ec6ef43d98e7_3bbf2ab912c625b4eb@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200509210214.408e847a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <939566f5-abe3-3526-d4ff-ec6bf8e8c138@huawei.com>
+ <2fcd921d-8f42-9d33-951c-899d0bbdd92d@huawei.com>
+ <20200508225829.0880cf8b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200509210214.408e847a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Subject: Re: [PATCH v2] netprio_cgroup: Fix unlimited memory leak of v2
+ cgroups
 Mime-Version: 1.0
-References: <20200521125247.30178-1-fejes@inf.elte.hu>
-Subject: Re: [PATCH net-next] Extending bpf_setsockopt with SO_BINDTODEVICE sockopt
-From:   sdf@google.com
-To:     Ferenc Fejes <fejes@inf.elte.hu>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        "David S . Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/21, Ferenc Fejes wrote:
-> This option makes possible to programatically bind sockets to netdevices.
-> With the help of this option sockets of VRF unaware applications
-> could be distributed between multiple VRFs with eBPF sock_ops program.
-> This let the applications benefit from the multiple possible routes.
+Jakub Kicinski wrote:
+> On Fri, 8 May 2020 22:58:29 -0700 Jakub Kicinski wrote:
+> > On Sat, 9 May 2020 11:32:10 +0800 Zefan Li wrote:
+> > > If systemd is configured to use hybrid mode which enables the use of
+> > > both cgroup v1 and v2, systemd will create new cgroup on both the default
+> > > root (v2) and netprio_cgroup hierarchy (v1) for a new session and attach
+> > > task to the two cgroups. If the task does some network thing then the v2
+> > > cgroup can never be freed after the session exited.
+> > > 
+> > > One of our machines ran into OOM due to this memory leak.
+> > > 
+> > > In the scenario described above when sk_alloc() is called cgroup_sk_alloc()
+> > > thought it's in v2 mode, so it stores the cgroup pointer in sk->sk_cgrp_data
+> > > and increments the cgroup refcnt, but then sock_update_netprioidx() thought
+> > > it's in v1 mode, so it stores netprioidx value in sk->sk_cgrp_data, so the
+> > > cgroup refcnt will never be freed.
+> > > 
+> > > Currently we do the mode switch when someone writes to the ifpriomap cgroup
+> > > control file. The easiest fix is to also do the switch when a task is attached
+> > > to a new cgroup.
+> > > 
+> > > Fixes: bd1060a1d671("sock, cgroup: add sock->sk_cgroup")  
+> > 
+> >                      ^ space missing here
+> > 
+> > > Reported-by: Yang Yingliang <yangyingliang@huawei.com>
+> > > Tested-by: Yang Yingliang <yangyingliang@huawei.com>
+> > > Signed-off-by: Zefan Li <lizefan@huawei.com>
+> 
+> Fixed up the commit message and applied, thank you.
 
-> Signed-off-by: Ferenc Fejes <fejes@inf.elte.hu>
-> ---
->   net/core/filter.c | 39 ++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 38 insertions(+), 1 deletion(-)
+Hi Zefan, Tejun,
 
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 822d662f97ef..25dac75bfc5d 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -4248,6 +4248,9 @@ static const struct bpf_func_proto  
-> bpf_get_socket_uid_proto = {
->   static int _bpf_setsockopt(struct sock *sk, int level, int optname,
->   			   char *optval, int optlen, u32 flags)
->   {
-> +	char devname[IFNAMSIZ];
-> +	struct net *net;
-> +	int ifindex;
->   	int ret = 0;
->   	int val;
+This is causing a regression where previously cgroupv2 bpf sockops programs
+could be attached and would run even if netprio_cgroup was enabled as long
+as  the netprio cgroup had not been configured. After this the bpf sockops
+programs can still be attached but only programs attached to the root cgroup
+will be run. For example I hit this when I ran bpf selftests on a box that
+also happened to have netprio cgroup enabled, tests started failing after
+bumping kernel to rc5.
 
-> @@ -4257,7 +4260,7 @@ static int _bpf_setsockopt(struct sock *sk, int  
-> level, int optname,
->   	sock_owned_by_me(sk);
+I'm a bit on the fence here if it needs to be reverted. For my case its just
+a test box and easy enough to work around. Also all the production cases I
+have already have to be aware of this to avoid the configured error. So it
+may be fine but worth noting at least. Added Alexei to see if he has any
+opinion and/or uses net_prio+cgroubv2. I only looked it over briefly but
+didn't see any simple rc6 worthy fixes that would fix the issue above and
+also keep the original behavior.
 
->   	if (level == SOL_SOCKET) {
-> -		if (optlen != sizeof(int))
-> +		if (optlen != sizeof(int) && optname != SO_BINDTODEVICE)
->   			return -EINVAL;
->   		val = *((int *)optval);
+And then while reviewing I also wonder do we have the same issue described
+here in netclasid_cgroup.c with the cgrp_attach()? It would be best to keep
+netcls and netprio in sync in this regard imo. At least netcls calls
+cgroup_sk_alloc_disable in the write_classid() hook so I suspect it makes
+sense to also add that to the attach hook?
 
-> @@ -4298,6 +4301,40 @@ static int _bpf_setsockopt(struct sock *sk, int  
-> level, int optname,
->   				sk_dst_reset(sk);
->   			}
->   			break;
-> +		case SO_BINDTODEVICE:
-> +			ret = -ENOPROTOOPT;
-> +#ifdef CONFIG_NETDEVICES
-Any specific reason you're not reusing sock_setbindtodevice or at least
-sock_setbindtodevice_locked here? I think, historically, we've
-reimplemented some of the sockopts because they were 'easy' (i.e.
-were just setting a flag in the socket), this one looks more involved.
-
-I'd suggest, add an optional 'lock_sk' argument to sock_setbindtodevice,
-call it with 'true' from real setsockopt, and call it with 'false'
-here.
-
-And, as Andrii pointed out, it would be nice to have a selftest
-that exercises this new option.
+Thanks,
+John
