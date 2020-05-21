@@ -2,109 +2,55 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE18C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B50C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA536207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="r3GMoD4m"
+	by mail.kernel.org (Postfix) with ESMTP id AE03A20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 11:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbgEULtk (ORCPT
+        id S1729154AbgEULvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 07:49:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729002AbgEULtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 07:49:39 -0400
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7350DC061A0E;
-        Thu, 21 May 2020 04:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=pZRZ5ai+2OEtzq7iw7AMDtLjRGWBjulfH6RpHnKhK00=; b=r3GMoD4mo5KpZ3a33cPalZhIJ6
-        NqskAuHX1uJmSveg1HMePMVCrybMUeAV+DoH/9HWxOhqbAOBilM3CUIAnePVHdyqaBJ1O9aJGs/Va
-        I+5dUzHGR0BzAu4AKhkQa5780w/72ufkhS9MjcioIj1oijRp8GRO2GZKxk4erk8uNzZJkHyQa3qTA
-        m6e7pG9hQ8gS6L8bl1qz3slRcRdLJDZbjIgpNcOCRYI/rWrs1016CCORlIcHnvvQGIsQTVZPZ0R2z
-        tuNRZxYTWiaL5964qrZNzbCfTCWWN6aoP2X09/GBo6fQcQG6lP6WXhvwSHUNKuNgKKDQ9iDc/FPKY
-        HOW6GVSA==;
-Received: from noodles by the.earth.li with local (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1jbjhe-0007rJ-UX; Thu, 21 May 2020 12:49:34 +0100
-Date:   Thu, 21 May 2020 12:49:34 +0100
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Sergey Sergeev <adron@yapic.net>,
-        Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH] net: ethernet: stmmac: Enable interface clocks on probe for
- IPQ806x
-Message-ID: <20200521114934.GY311@earth.li>
+        Thu, 21 May 2020 07:51:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35506 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729064AbgEULvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 07:51:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9A5B9B011;
+        Thu, 21 May 2020 11:51:43 +0000 (UTC)
+Date:   Thu, 21 May 2020 13:51:39 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the printk tree
+Message-ID: <20200521115139.GB8397@linux-b0ei>
+References: <20200521080456.49a732be@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200521080456.49a732be@canb.auug.org.au>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ipq806x_gmac_probe() function enables the PTP clock but not the
-appropriate interface clocks. This means that if the bootloader hasn't
-done so attempting to bring up the interface will fail with an error
-like:
+On Thu 2020-05-21 08:04:56, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Commit
+> 
+>   bdb7f0530926 ("printk: Fix a typo in comment "interator"->"iterator"")
+> 
+> is missing a Signed-off-by from its committer.
 
-[   59.028131] ipq806x-gmac-dwmac 37600000.ethernet: Failed to reset the dma
-[   59.028196] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_hw_setup: DMA engine initialization failed
-[   59.034056] ipq806x-gmac-dwmac 37600000.ethernet eth1: stmmac_open: Hw setup failed
+Thanks for catching this. It should be fixed now.
 
-This patch, a slightly cleaned up version of one posted by Sergey
-Sergeev in:
-
-https://forum.openwrt.org/t/support-for-mikrotik-rb3011uias-rm/4064/257
-
-correctly enables the clock; we have already configured the source just
-before this.
-
-Tested on a MikroTik RB3011.
-
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
-
----
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-index 6ae13dc19510..02102c781a8c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-@@ -319,6 +319,19 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
- 	/* Enable PTP clock */
- 	regmap_read(gmac->nss_common, NSS_COMMON_CLK_GATE, &val);
- 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
-+	switch (gmac->phy_mode) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
-+			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
-+		break;
-+	case PHY_INTERFACE_MODE_SGMII:
-+		val |= NSS_COMMON_CLK_GATE_GMII_RX_EN(gmac->id) |
-+				NSS_COMMON_CLK_GATE_GMII_TX_EN(gmac->id);
-+		break;
-+	default:
-+		/* We don't get here; the switch above will have errored out */
-+		unreachable();
-+	}
- 	regmap_write(gmac->nss_common, NSS_COMMON_CLK_GATE, val);
- 
- 	if (gmac->phy_mode == PHY_INTERFACE_MODE_SGMII) {
+Best Regards,
+Petr
