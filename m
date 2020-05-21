@@ -2,145 +2,160 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F59C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71B0C2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590082626;
-	bh=h90fK/th2RJhjJ9HigYTU+HcpnLyuP9jtwiqGD1bGMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JG9GzDk+tA8IeAvq5uS+LfxmM46O1LM6vDMlvgCR1j9lTiFVXsUTtbnXpZREYhTtZ
-	 yVye6TCtYI7IWYl18+8x48mSQjNeK9KGY9d2b3CTSwWMaKcv0Azitm2D2JGnpBX3Tg
-	 x18wR8kJwSzZGjOCW9BH8nK76SWoJ70r8B4ys2GI=
+	by mail.kernel.org (Postfix) with ESMTP id 93FB2207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:37:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oeUOIdLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgEURhF (ORCPT
+        id S1728955AbgEURhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:37:05 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35792 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgEURhF (ORCPT
+        Thu, 21 May 2020 13:37:17 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:47663 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728798AbgEURhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:37:05 -0400
-Received: by mail-ed1-f65.google.com with SMTP id be9so7234055edb.2;
-        Thu, 21 May 2020 10:37:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=16rYke2VtirNB4gM0beG8w5PFV57NvRuYqspSwtCjSg=;
-        b=Taeljh1dC3qu3um7KYkLOJAZGhcsKfAEbku6ImjAjN0ijw0IPAQJk6Mr2DCFC5zHKy
-         cAvq7tr2A0E4/56VBx2QJLgAA3t3FkcTCH4tIX3UQX3nQ/lkhzp01nG8svrrUo2AI3KU
-         UOd08TtEGmAjC0QrR2g9euEJxZUW6MaJjlbvuffymlOGpqSSBG5rnmtP6sxZA7qWvYrb
-         OkmWP5ivdQekwhRk+VJmaiHAzJNWgHQY83Pw+DzHfLh3+5d+KHTLV1NCGAgkh9K+4wRQ
-         E2gV7fyxFTjhxnVTf8+J5AVa/AstRdU8s8pO5cu4NToOvZr8PQg4DRbDcNxjV9BFtFvm
-         qXwA==
-X-Gm-Message-State: AOAM530s2ysX4Cft8bujE4H2eHRdW8NgV9e5BJGjHmRsElETbKC9CH3t
-        mIrORDxKIs3Py+Mjx/8YSrI=
-X-Google-Smtp-Source: ABdhPJxIpAKEHjfSswIXBqOwMluDhwqe6aqxhPJc5pVjLhTX7Zqxuv8zlixxjQkThK5S7DqUFJfFFw==
-X-Received: by 2002:a05:6402:1d2d:: with SMTP id dh13mr8182661edb.169.1590082623404;
-        Thu, 21 May 2020 10:37:03 -0700 (PDT)
-Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
-        by smtp.gmail.com with ESMTPSA id lw27sm5659285ejb.80.2020.05.21.10.37.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 10:37:02 -0700 (PDT)
-Date:   Thu, 21 May 2020 19:37:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200521173701.GX6462@dhcp22.suse.cz>
-References: <20200520143712.GA749486@chrisdown.name>
- <20200520160756.GE6462@dhcp22.suse.cz>
- <20200520165131.GB630613@cmpxchg.org>
- <20200520170430.GG6462@dhcp22.suse.cz>
- <20200520175135.GA793901@cmpxchg.org>
- <20200521073245.GI6462@dhcp22.suse.cz>
- <20200521135152.GA810429@cmpxchg.org>
- <20200521143515.GU6462@dhcp22.suse.cz>
- <20200521163833.GA813446@cmpxchg.org>
+        Thu, 21 May 2020 13:37:16 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590082635; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=F30tIyEfBVh5g5gaTce6ZjrM4vzM0/dihF/CEEqfqwE=; b=oeUOIdLBpIQvnK9WqzYt2m9Y4HvESSykxrdn6G7+wUwO0pXiVZZl/hJ3VX9rTA/v/XOFChWD
+ rE1zwvrZElDdW/Y29jHTf2Xnq2UncOdRnWUfQFkVJvDicRiP2vR2V9B122VOra+yjlqzErPQ
+ Hbn0P27j+h/RZnxKNCTgU0ks2c0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ec6bc497c3c9cd06989ea66 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 17:37:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3E976C433CB; Thu, 21 May 2020 17:37:13 +0000 (UTC)
+Received: from [10.110.95.251] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E707DC433C6;
+        Thu, 21 May 2020 17:37:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E707DC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v2 0/3] Re-introduce TX FIFO resize for larger EP bursting
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org
+References: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <1e2e9c1b-fcd9-9e03-da86-a46e541a1480@codeaurora.org>
+Date:   Thu, 21 May 2020 10:37:10 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521163833.GA813446@cmpxchg.org>
+In-Reply-To: <1590050169-30747-1-git-send-email-wcheng@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 21-05-20 12:38:33, Johannes Weiner wrote:
-> On Thu, May 21, 2020 at 04:35:15PM +0200, Michal Hocko wrote:
-> > On Thu 21-05-20 09:51:52, Johannes Weiner wrote:
-> > > On Thu, May 21, 2020 at 09:32:45AM +0200, Michal Hocko wrote:
-> > [...]
-> > > > I am not saying the looping over try_to_free_pages is wrong. I do care
-> > > > about the final reclaim target. That shouldn't be arbitrary. We have
-> > > > established a target which is proportional to the requested amount of
-> > > > memory. And there is a good reason for that. If any task tries to
-> > > > reclaim down to the high limit then this might lead to a large
-> > > > unfairness when heavy producers piggy back on the active reclaimer(s).
-> > > 
-> > > Why is that different than any other form of reclaim?
-> > 
-> > Because the high limit reclaim is a best effort rather than must to
-> > either get over reclaim watermarks and continue allocation or meet the
-> > hard limit requirement to continue.
+
+
+On 5/21/2020 1:36 AM, Wesley Cheng wrote:
+> Changes in V2:
+>  - Modified TXFIFO resizing logic to ensure that each EP is reserved a
+>    FIFO.
+>  - Removed dev_dbg() prints and fixed typos from patches
+>  - Added some more description on the dt-bindings commit message
+>
+
+
+> Reviewed-by: Felipe Balbi <balbi@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
-> It's not best effort. It's a must-meet or get put to sleep. You are
-> mistaken about what memory.high is.
 
-I do not see anything like that being documented. Let me remind you what
-the documentation says:
-  memory.high
-        A read-write single value file which exists on non-root
-        cgroups.  The default is "max".
+Sorry, please disregard the Reviewed-by tags in the patches.  I added
+those mistakenly.
 
-        Memory usage throttle limit.  This is the main mechanism to
-        control memory usage of a cgroup.  If a cgroup's usage goes
-        over the high boundary, the processes of the cgroup are
-        throttled and put under heavy reclaim pressure.
+> Currently, there is no functionality to allow for resizing the TXFIFOs, and
+> relying on the HW default setting for the TXFIFO depth.  In most cases, the
+> HW default is probably sufficient, but for USB compositions that contain
+> multiple functions that require EP bursting, the default settings
+> might not be enough.  Also to note, the current SW will assign an EP to a
+> function driver w/o checking to see if the TXFIFO size for that particular
+> EP is large enough. (this is a problem if there are multiple HW defined
+> values for the TXFIFO size)
+> 
+> It is mentioned in the SNPS databook that a minimum of TX FIFO depth = 3
+> is required for an EP that supports bursting.  Otherwise, there may be
+> frequent occurences of bursts ending.  For high bandwidth functions,
+> such as data tethering (protocols that support data aggregation), mass
+> storage, and media transfer protocol (over FFS), the bMaxBurst value can be
+> large, and a bigger TXFIFO depth may prove to be beneficial in terms of USB
+> throughput. (which can be associated to system access latency, etc...)  It
+> allows for a more consistent burst of traffic, w/o any interruptions, as
+> data is readily available in the FIFO.
+> 
+> With testing done using the mass storage function driver, the results show
+> that with a larger TXFIFO depth, the bandwidth increased significantly.
+> 
+> Test Parameters:
+>  - Platform: Qualcomm SM8150
+>  - bMaxBurst = 6
+>  - USB req size = 256kB
+>  - Num of USB reqs = 16
+>  - USB Speed = Super-Speed
+>  - Function Driver: Mass Storage (w/ ramdisk)
+>  - Test Application: CrystalDiskMark
+> 
+> Results:
+> 
+> TXFIFO Depth = 3 max packets
+> 
+> Test Case | Data Size | AVG tput (in MB/s)
+> -------------------------------------------
+> Sequential|1 GB x     | 
+> Read      |9 loops    | 193.60
+> 	  |           | 195.86
+>           |           | 184.77
+>           |           | 193.60
+> -------------------------------------------
+> 
+> TXFIFO Depth = 6 max packets
+> 
+> Test Case | Data Size | AVG tput (in MB/s)
+> -------------------------------------------
+> Sequential|1 GB x     | 
+> Read      |9 loops    | 287.35
+> 	  |           | 304.94
+>           |           | 289.64
+>           |           | 293.61
+> -------------------------------------------
+> 
+> Wesley Cheng (3):
+>   usb: dwc3: Resize TX FIFOs to meet EP bursting requirements
+>   arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
+>   dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
+> 
+>  Documentation/devicetree/bindings/usb/dwc3.txt |   2 +-
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi           |   1 +
+>  drivers/usb/dwc3/core.c                        |   2 +
+>  drivers/usb/dwc3/core.h                        |   8 ++
+>  drivers/usb/dwc3/ep0.c                         |  37 ++++++++-
+>  drivers/usb/dwc3/gadget.c                      | 111 +++++++++++++++++++++++++
+>  6 files changed, 159 insertions(+), 2 deletions(-)
+> 
 
-        Going over the high limit never invokes the OOM killer and
-        under extreme conditions the limit may be breached.
-
-My understanding is that breaching the limit is acceptable if the memory
-is not reclaimable after placing a heavy reclaim pressure. We can
-discuss what the heavy reclaim means but the underlying fact is that the
-keeping the consumption under the limit is a best effort.
-
-Please also let me remind you that the best effort implementation has
-been there since the beginning when the memory.high has been introduced.
-Now you seem to be convinced that the semantic is _obviously_ different.
-
-It is not the first time when the high limit behavior has changed.
-Mostly based on "what is currently happening in your fleet". And can see
-why it is reasonable to adopt to a real life usage. That is OK most of
-the time. But I haven't heard why keeping the existing approach and
-enforcing the reclaim target is not working properly so far. All I can
-hear is a generic statement that consistency matters much more than all
-potential problem it might introduce.
-
-Anyway, I do see that you are not really willing to have a
-non-confrontational discussion so I do not bother to reply to the rest
-and participate in the further discussion.
-
-As usual, let me remind you that I haven't nacked the patch. I do not
-plan to do that because "this is not black&white" as already said. But
-if your really want to push this through then let's do it properly at
-least. memcg->memcg_nr_pages_over_high has only very vague meaning if
-the reclaim target is the high limit. The changelog should be also
-explicit about a potentially large stalls so that people debugging such
-a problem have a clue at least.
 -- 
-Michal Hocko
-SUSE Labs
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
