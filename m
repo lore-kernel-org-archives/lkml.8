@@ -2,92 +2,121 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1032BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FAB2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80DE2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590064497;
+	bh=FHL2jEvxOll6vmZM4DX6DqzH90iBYE9p2hBWzKlPxkE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PQjZPYW3ILXVRahyi80WtVpW0o6zC+vD4qat0/rWABSLTqVs3yaimLjSyo2/YR5TJ
+	 FJuANgv1PifX+ceANmk+OxggBNnNfBFVYqPCeDyDwbYK6XXc06RDai2t8NKjabD8JA
+	 +0gICWCaGZIwnzeyQ2b+eByk6LPECAxRnr5NQ4ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgEUMes (ORCPT
+        id S1729344AbgEUMe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:34:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53299 "EHLO mga01.intel.com"
+        Thu, 21 May 2020 08:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728186AbgEUMes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:34:48 -0400
-IronPort-SDR: +ybOD1RMM+pnamZpMlQhx5pyKpDsVA4bUjNqGl93EZ25QOh6KO8kEz6RGw3bpz1ozPFcPFTAMe
- W0yI9yRukN1Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 05:34:47 -0700
-IronPort-SDR: Lctipwjy10ADkgk+KPH2ghdvELhfA1XPXfoH87Hxjm7JiX00WoBPlneW7usHOfpG0ZhBXRw/iV
- xdbRbECBOLwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,417,1583222400"; 
-   d="scan'208";a="268618473"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 21 May 2020 05:34:47 -0700
-Received: from [10.215.164.158] (vramuthx-mobl1.gar.corp.intel.com [10.215.164.158])
-        by linux.intel.com (Postfix) with ESMTP id AA28A580101;
-        Thu, 21 May 2020 05:34:44 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v2 1/1] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     robh@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, vigneshr@ti.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <20200520123612.11797-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200520124329.GF4823@sirena.org.uk>
- <fd086da7-7e18-83bc-d423-56095b0cff96@linux.intel.com>
- <20200521105646.GA4770@sirena.org.uk>
- <24b0297c-5c33-f690-9514-68b76fc2c9ea@linux.intel.com>
- <20200521122035.GB4770@sirena.org.uk>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <463b24a4-0a6a-9fcf-7eb9-8fde602c0c13@linux.intel.com>
-Date:   Thu, 21 May 2020 20:34:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1728160AbgEUMe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:34:56 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F394D2070A;
+        Thu, 21 May 2020 12:34:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590064496;
+        bh=FHL2jEvxOll6vmZM4DX6DqzH90iBYE9p2hBWzKlPxkE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Z3uh7cHNKQpZCISsf6c+gxtdwdCXNbRFeQ0vnkQaA2rGWm7WSWfcTRs+TbArLs7Nt
+         23/qWplkyfMdUlfFIo03HzGrdvHCr9hAwOhEDS9nmBS7ubVszAZA2AKNXBkqf2BLSK
+         vTp2L2NyZzYW0cv9W+IXCGqoBeB4kkbNUaHDJYhU=
+Received: by pali.im (Postfix)
+        id 9332C34B; Thu, 21 May 2020 14:34:53 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mwifiex: Parse all API_VER_ID properties
+Date:   Thu, 21 May 2020 14:34:44 +0200
+Message-Id: <20200521123444.28957-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200521122035.GB4770@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+During initialization of SD8997 wifi chip kernel prints warnings:
 
-On 21/5/2020 8:20 pm, Mark Brown wrote:
-> On Thu, May 21, 2020 at 08:14:04PM +0800, Ramuthevar, Vadivel MuruganX wrote:
->> On 21/5/2020 6:56 pm, Mark Brown wrote:
-> 
->>> That doesn't address either of the issues.  The removal of the old
->>> bindings and addition of the YAML ones needs to be in a single patch
->>> doing that conversion.  What I'm suggesting should be done separately is
->>> whatever changes to the semantics of the bindings you are (according to
->>> your changelog) doing.
-> 
->> You mean semantics of the binding as a single patch you are suggesting me,
->> right? , Thanks!
-> 
-> I mean that any changes to the bindings ought to be split out into
-> separate patches, if there's multiple changes it may make sense for
-> there to be multiple patches.
-Got it, we do not have multiple changes since it is new YAML file.
-in case if we feel anything to be added , we add as separate patches.
-Thanks!
+  mwifiex_sdio mmc0:0001:1: Unknown api_id: 3
+  mwifiex_sdio mmc0:0001:1: Unknown api_id: 4
 
-Regards
-Vadivel
+This patch adds support for parsing all api ids provided by SD8997
+firmware.
 
-> 
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/net/wireless/marvell/mwifiex/cmdevt.c | 17 +++++++++++++++--
+ drivers/net/wireless/marvell/mwifiex/fw.h     |  2 ++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+index 7e4b8cd52..589cc5eb1 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
++++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+@@ -1581,8 +1581,21 @@ int mwifiex_ret_get_hw_spec(struct mwifiex_private *priv,
+ 					adapter->fw_api_ver =
+ 							api_rev->major_ver;
+ 					mwifiex_dbg(adapter, INFO,
+-						    "Firmware api version %d\n",
+-						    adapter->fw_api_ver);
++						    "Firmware api version %d.%d\n",
++						    adapter->fw_api_ver,
++						    api_rev->minor_ver);
++					break;
++				case UAP_FW_API_VER_ID:
++					mwifiex_dbg(adapter, INFO,
++						    "uAP api version %d.%d\n",
++						    api_rev->major_ver,
++						    api_rev->minor_ver);
++					break;
++				case CHANRPT_API_VER_ID:
++					mwifiex_dbg(adapter, INFO,
++						    "channel report api version %d.%d\n",
++						    api_rev->major_ver,
++						    api_rev->minor_ver);
+ 					break;
+ 				default:
+ 					mwifiex_dbg(adapter, FATAL,
+diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+index a415d73a7..6f86f5b96 100644
+--- a/drivers/net/wireless/marvell/mwifiex/fw.h
++++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+@@ -1052,6 +1052,8 @@ struct host_cmd_ds_802_11_ps_mode_enh {
+ enum API_VER_ID {
+ 	KEY_API_VER_ID = 1,
+ 	FW_API_VER_ID = 2,
++	UAP_FW_API_VER_ID = 3,
++	CHANRPT_API_VER_ID = 4,
+ };
+ 
+ struct hw_spec_api_rev {
+-- 
+2.20.1
+
