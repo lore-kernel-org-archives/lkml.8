@@ -2,115 +2,95 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC12C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B34206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0332206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U2H/VWrT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8AydxJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgEUWI4 (ORCPT
+        id S1730658AbgEUWKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
+        Thu, 21 May 2020 18:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbgEUWI4 (ORCPT
+        with ESMTP id S1728701AbgEUWKp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:08:56 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A386C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:08:56 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id n15so4006862pjt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 15:08:56 -0700 (PDT)
+        Thu, 21 May 2020 18:10:45 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22966C061A0E;
+        Thu, 21 May 2020 15:10:45 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id w3so3380544qkb.6;
+        Thu, 21 May 2020 15:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GtfF1PcFRLZRINro9WPSaeOm8Nx91WCKHudobnn5ez4=;
-        b=U2H/VWrTg3ckpsXcrfExBsz4faobo0lqWWAugTNpy4JGANZ5sx6iCTmUzSNhyZeKmR
-         XobQyf9IqamEtDYQULc1263svrHUJ4DJ1pQwgKeMVOm0piGb9T8RZYplp1I1C3snwNjs
-         iz12AxVAZ/3q2XXfMpBuj/DpJsNYBOJ8Q+Imk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fm4JD807X5RrjTwsFUI7w3BEzpMypViAerLd/aB5r74=;
+        b=J8AydxJvTfOLj4SnXaGjYeBAkg2KcbONigWAqFhy28XWe0yoJSm2mqXTvJxPUdz4vn
+         8csb1VJ846w+CN438dl2Kd9l3C73W6h4oKEYXoALOVTin7KbZ/YDlKFLF0AAA4nbJqFp
+         LB1X3Hn5mhIhPavMozO/KMXf6gthpTGbRdfqH9PzmVymTuezcrONofpWVb61Js8EVDpD
+         4pbUlvLX2ye6Sf9Rnhp+0IxPOYwwYikWR57bi9J2cXHzgLs31qHiq+XRCvC7s0Ay6mem
+         07lgQH3Sz3f5gduyy8vQZYJru94h9wd40ax2jSnBP3+ZJ7hlV7fwe7o5DnnsyqeeIJkb
+         nEMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GtfF1PcFRLZRINro9WPSaeOm8Nx91WCKHudobnn5ez4=;
-        b=aEWEaaUBkR7t9EGPWuCpFK49ovvlCb4V5z8Y7dpOArX9Q25u0YSyLlVr0YoYcH0TZK
-         L6yhhqOYZ8VERwCyIuE7KejiuRgcCDfAQQMRGa/f7Y2zpRf5Er+Q2yA4b/Ouc9JWbwiQ
-         xhxY0O7VxDNN53LW4tkalDSHeGwdg3gzbQDBYLf63FstEv6lJaj1L/VnPW+fwycjfa6a
-         2xUuCE1cxU3aiC7AXpLv25EGdJ+cBBjS6/VaLTtP5VU73VxylT7hYRQTxV85U4Ts6zIy
-         1Ni/JOMJyYgh5Yn5c5FueasmYKR2ssAG446x7Ezlmceuu6+WJfbhgtFGct3IEWys9naW
-         UGPw==
-X-Gm-Message-State: AOAM532ULffnhxAiPwVcW6RGd7TkvGOws78Jftthm4Hs0G1MnkS1cYnC
-        rN8Tn8nVIcUI17YXsoNHjy61DGuWmIg3qg==
-X-Google-Smtp-Source: ABdhPJztMyB2N+44/pXohJLaLbkQ4tvVSkv+rL90DrIcJzTW8uDJ1cum87EQ4SM7yIrxuKufV9FZlg==
-X-Received: by 2002:a17:902:bf43:: with SMTP id u3mr11389268pls.240.1590098935533;
-        Thu, 21 May 2020 15:08:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t21sm4790454pgu.39.2020.05.21.15.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 15:08:54 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:08:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
-Message-ID: <202005211506.2700F86@keescook>
-References: <20200521202716.193316-1-samitolvanen@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fm4JD807X5RrjTwsFUI7w3BEzpMypViAerLd/aB5r74=;
+        b=trLDoQZA3ADhbuMd/2smbQqDKd6ueP+2G3POiGSfGX2JdjCZfSuatsz9tV2Dw9B+Bk
+         b5p1YZannR2PD3UYNYgoyVEtQqCv+jEK8EPEY5ZRbru4Rbcasb158P1l4x5BulXjwP99
+         hjreG0e8S8WwJVHukC5Rlp1t+qA2jHUrVhOIehvC9D/dcmOGOldKCW6AJGP2Y7C00gyy
+         fNf97w2se4zGwSXgDJyr46+9emYWA5X1TruYKl0mypf322cbb82SGba1jnbH2IUc3pGz
+         UwLQBMqBmDXEP6q+g+EfQQXG9LezKLhakrGALpOJ/6GTVa9voJ0wlJh2exyyTYTR4ZDb
+         +t4A==
+X-Gm-Message-State: AOAM533DeMymvj67KXQkeH7FUGUoQFiXRJ+YZy717iqOTIR0UnsbDCfl
+        Qj5bqCaoKvpOaxXxoEMv0xhGy90AYwYX+14yfic=
+X-Google-Smtp-Source: ABdhPJxJhqPjBqLqBOYnkHGHiDuGjV6UrwgRBFuNPFyvTMaKJ10aWTqgfPPDhtmPKaNroLARywp1EK7gtepHBmRPz9I=
+X-Received: by 2002:a05:620a:14a1:: with SMTP id x1mr11755356qkj.92.1590099044250;
+ Thu, 21 May 2020 15:10:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521202716.193316-1-samitolvanen@google.com>
+References: <20200521152301.2587579-1-hch@lst.de> <20200521152301.2587579-12-hch@lst.de>
+In-Reply-To: <20200521152301.2587579-12-hch@lst.de>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 21 May 2020 15:10:33 -0700
+Message-ID: <CAEf4BzZWW_8jKWmbth6=i2+JVx9JKKa7o6vBSQwswRd2sNLEkQ@mail.gmail.com>
+Subject: Re: [PATCH 11/23] bpf: factor out a bpf_trace_copy_string helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-mm@kvack.org, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 01:27:16PM -0700, Sami Tolvanen wrote:
-> Instead of linking all compilation units again each time vmlinux_link is
-> called, reuse vmlinux.o from modpost_link.
-> 
-> With x86_64 allyesconfig, vmlinux_link is called three times and reusing
-> vmlinux.o reduces the build time ~38 seconds on my system (59% reduction
-> in the time spent in vmlinux_link).
-
-Nice! Any time savings at final link is a big cumulative win.
-
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Thu, May 21, 2020 at 8:25 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Split out a helper to do the fault free access to the string pointer
+> to get it out of a crazy indentation level.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  scripts/link-vmlinux.sh | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index d09ab4afbda4..c6cc4305950c 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -77,11 +77,8 @@ vmlinux_link()
->  
->  	if [ "${SRCARCH}" != "um" ]; then
->  		objects="--whole-archive			\
-> -			${KBUILD_VMLINUX_OBJS}			\
-> +			vmlinux.o				\
->  			--no-whole-archive			\
-> -			--start-group				\
-> -			${KBUILD_VMLINUX_LIBS}			\
-> -			--end-group				\
->  			${@}"
->  
->  		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}	\
 
-I think the "um" case can be updated as well too, yes?
+LGTM.
 
-Also, I think the comment above modpost_link() needs to be updated now
-to reflect the nature of how vmlinux.o gets used after this patch.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
--- 
-Kees Cook
+>  kernel/trace/bpf_trace.c | 42 +++++++++++++++++++++++-----------------
+>  1 file changed, 24 insertions(+), 18 deletions(-)
+>
+
+[...]
