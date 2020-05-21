@@ -2,122 +2,114 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40EFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1EA9207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F54207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WcR2EviD"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="SPCXhfg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgEUPBp (ORCPT
+        id S1729923AbgEUPCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:01:45 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49650 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbgEUPBo (ORCPT
+        Thu, 21 May 2020 11:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729481AbgEUPCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:01:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LEfPAi102177;
-        Thu, 21 May 2020 15:01:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=zAw1u07pbRDu+xvWXDwgv7P7rAeqqEG3qCROxNYz4Qw=;
- b=WcR2EviD0S8hW4M2rvwjYzJmQw4FXWXPBUrrFqEw1sUnEyiMbxupFvOgeiaqsO35y4jQ
- CPzN4RPWZ6CN7vjd6wBYwrtQUBjUMj9m0EAj6CSAN7hZzaajn1ZSnKnNebi9STjS87+w
- JKL62APs7QzHF9pg28671gwh0ONBuSPHok4+1ywoLlXr3HhK4IfhyKSbOVhikEcTfkxF
- 9stgAB1nQtebaQ/IRHWLcG1ceA7kwj4KhpyGXBYsO9ItnyKUCR3Cg7SuHMkRyzT2Y+Ua
- jnI2GFQJ+lm1iENMft9tc6tPnnqNuUZR+w0R92TuT1D5sfFSWNj5/xpNnLmioaAkH55q Bw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3127krh0yp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 15:01:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LEXEmm064466;
-        Thu, 21 May 2020 14:59:32 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 312t3bdb1a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 May 2020 14:59:32 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04LExUkO015814;
-        Thu, 21 May 2020 14:59:30 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 May 2020 07:59:29 -0700
-Date:   Thu, 21 May 2020 17:59:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+9c6f0f1f8e32223df9a4@syzkaller.appspotmail.com>,
-        bridge@lists.linux-foundation.org,
-        David Miller <davem@davemloft.net>,
-        horatiu.vultur@microchip.com, kuba@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in br_mrp_parse
-Message-ID: <20200521145921.GJ30374@kadam>
-References: <0000000000007b211005a6187dc9@google.com>
- <20200521140803.GI30374@kadam>
- <CACT4Y+bzz-h5vNGH0rDMUiuGZVX01oXawXAPbjtnNHb1KVWSvg@mail.gmail.com>
+        Thu, 21 May 2020 11:02:16 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 075E9C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:02:16 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id j21so9233621ejy.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=L4UDchNoiuDX4tkUCL0dxdfAR6sFJ+v5DRcDTgeiOEA=;
+        b=SPCXhfg+nCTAzglbOSxpGGWlT4LbcyT5ov7iVCRWlOjDg9vw3QGDFNbTOWFcM0RhsX
+         2AiHhCFhMdO1ch6CMvgSCrtXVOLUYItHW4m86skN7YWl+QEHjVJ3hnwozUyrpbPbXJg9
+         3AqRr6E5qlhw697AgVjHizpUyQ1BeM3NRaHuE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L4UDchNoiuDX4tkUCL0dxdfAR6sFJ+v5DRcDTgeiOEA=;
+        b=mP2qggLnLwYnW4xb52talzF1YmgpyOhxhfN9FuqAMzHa8dXbcQUrvD8sTH2IYL/YHY
+         Vi32yboD+ke8ytIAGbpE7Dpcou9JbDhdWZN7bdzRw0EMvpnN7i6DSRidKoZhlGf7xg8q
+         XEnP9ld2P9udcxEnW4TK/o3ZGTk57FiYcTA4b50egdoQIt9WCoDSGuhBUO5ifPowLlU+
+         GmHyrBnnyTh+lLrl5upKqBtEQJcxnWR8MqjD0oHEj0jhv7Tb28vhveK267ZULxwpfamU
+         FlvGMRYyIxXmBH4Gp2kH1kxQBlLAgirocQX7vtg5o9IblU91hd4MtDXdzhKlcJPNfhbn
+         DFzg==
+X-Gm-Message-State: AOAM532/3AigIx8XM6eHHUattnPNoz/1laUUZKCH9K4x+7O3gt0PjFNP
+        XgxyPlCFXSOrihBw22cGFM+oSA==
+X-Google-Smtp-Source: ABdhPJz9snmtL4cGAURMbIiXEL18i41r6OCNFzdUZ/CRozM3v9OQUHLgtHyT9Dr6Nh1pnbBanYWl0w==
+X-Received: by 2002:a17:906:2e0e:: with SMTP id n14mr3803821eji.545.1590073334624;
+        Thu, 21 May 2020 08:02:14 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:4262])
+        by smtp.gmail.com with ESMTPSA id b3sm5198656ejq.52.2020.05.21.08.02.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 08:02:13 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:02:13 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521150213.GH990580@chrisdown.name>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520165131.GB630613@cmpxchg.org>
+ <20200520170430.GG6462@dhcp22.suse.cz>
+ <20200520175135.GA793901@cmpxchg.org>
+ <20200521073245.GI6462@dhcp22.suse.cz>
+ <20200521135152.GA810429@cmpxchg.org>
+ <20200521143515.GU6462@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+bzz-h5vNGH0rDMUiuGZVX01oXawXAPbjtnNHb1KVWSvg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=944
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005210110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9627 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=982 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005210110
+In-Reply-To: <20200521143515.GU6462@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 04:28:05PM +0200, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> On Thu, May 21, 2020 at 4:08 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> >
-> > On Wed, May 20, 2020 at 11:23:18AM -0700, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    dda18a5c selftests/bpf: Convert bpf_iter_test_kern{3, 4}.c..
-> > > git tree:       bpf-next
-> >                   ^^^^^^^^
-> >
-> > I can figure out what this is from reading Next/Trees but it would be
-> > more useful if it were easier to script.
-> 
-> Hi Dan,
-> 
-> Is there a canonical way to refer to a particular branch of a particular tree?
-> >From what I observed on mailing lists people seem to say "linux-next"
-> or "upstream tree" and that seems to mean specific things that
-> everybody understands.
+Michal Hocko writes:
+>> I have a good reason why we shouldn't: because it's special casing
+>> memory.high from other forms of reclaim, and that is a maintainability
+>> problem. We've recently been discussing ways to make the memory.high
+>> implementation stand out less, not make it stand out even more. There
+>> is no solid reason it should be different from memory.max reclaim,
+>> except that it should sleep instead of invoke OOM at the end. It's
+>> already a mess we're trying to get on top of and straighten out, and
+>> you're proposing to add more kinks that will make this work harder.
+>
+>I do see your point of course. But I do not give the code consistency
+>a higher priority than the potential unfairness aspect of the user
+>visible behavior for something that can do better. Really the direct
+>reclaim unfairness is really painfull and hard to explain to users. You
+>can essentially only hand wave that system is struggling so fairness is
+>not really a priority anymore.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git#master
+It's not handwaving. When using cgroup features, including memory.high, the 
+unit for consideration is a cgroup, not a task. That we happen to act on 
+individual tasks in this case is just an implementation detail.
 
-I kind of hate that format because you have to replace the # with a
-space, but it's what everyone uses.
+That one task in that cgroup is may be penalised "unfairly" is well within the 
+specification: we set limits as part of a cgroup, we account as part of a 
+cgroup, and we throttle and reclaim as part of a cgroup. We may make some very 
+rudimentary attempts to "be fair" on a per-task basis where that's trivial, but 
+that's just one-off niceties, not a statement of precedent.
 
-regards,
-dan carpenter
-
+When exceeding memory.high, the contract is "this cgroup must immediately 
+attempt to shrink". Breaking it down per-task in terms of fairness at that 
+point doesn't make sense: all the tasks in one cgroup are in it together.
