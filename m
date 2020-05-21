@@ -2,190 +2,202 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE468C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1C8D20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E6D207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 22:37:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clFpUR4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbgEUWg4 (ORCPT
+        id S1730693AbgEUWhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 18:36:56 -0400
-Received: from mga01.intel.com ([192.55.52.88]:36166 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730041AbgEUWgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 18:36:55 -0400
-IronPort-SDR: YZ5H390kBuzRZ2SklsMhzev8yPBfko+eVLqq+cOvgEAblzE4dkRSjiCOXNkX0nPQAw1fzA84Vx
- bcJ/EMTqburg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 15:36:55 -0700
-IronPort-SDR: SD2zrPDsiP4yIVfkeXJ+qcnvjtyfpBVJ1g3a/mt25nkXtDCoblBTFFnQl+uttuxYUHZVfhzNjN
- id7ElKvB3GEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
-   d="scan'208";a="309196005"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 May 2020 15:36:54 -0700
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 21 May 2020 15:36:54 -0700
-Received: from crsmsx152.amr.corp.intel.com (172.18.7.35) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 21 May 2020 15:36:54 -0700
-Received: from crsmsx101.amr.corp.intel.com ([169.254.1.89]) by
- CRSMSX152.amr.corp.intel.com ([169.254.5.205]) with mapi id 14.03.0439.000;
- Thu, 21 May 2020 16:36:51 -0600
-From:   "Weiny, Ira" <ira.weiny@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Christoph Hellwig" <hch@lst.de>
-Subject: RE: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Thread-Topic: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Thread-Index: AQHWLUT3NMm1eeF/6kS/+5dTGHml8KiwBlUA//+oUICAAIaYgIAAKjCAgAK994D//6XMAIAAxM8A//+duMA=
-Date:   Thu, 21 May 2020 22:36:51 +0000
-Message-ID: <2807E5FD2F6FDA4886F6618EAC48510E92EAB1DE@CRSMSX101.amr.corp.intel.com>
-References: <20200507150004.1423069-8-ira.weiny@intel.com>
- <20200518184843.3029640-1-ira.weiny@intel.com>
- <20200519165422.GA5838@roeck-us.net>
- <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
- <20200519194215.GA71941@roeck-us.net>
- <20200520051315.GA3660833@iweiny-DESK2.sc.intel.com>
- <d86dba19-4f4b-061e-a2c7-4f037e9e2de2@roeck-us.net>
- <20200521174250.GB176262@iweiny-DESK2.sc.intel.com>
- <9088585b-b52f-39ad-1651-53cfc0abd714@roeck-us.net>
-In-Reply-To: <9088585b-b52f-39ad-1651-53cfc0abd714@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.18.205.10]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 21 May 2020 18:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730041AbgEUWhN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 18:37:13 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6950BC061A0E;
+        Thu, 21 May 2020 15:37:12 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p21so3986109pgm.13;
+        Thu, 21 May 2020 15:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=TktCfpoBbx+hVhPvUuOvC8+LEOokXPFcjtfYJHpMmyQ=;
+        b=clFpUR4QFpgUXPI/RwMWQMZnnrzHFpns0B8J52y64rbvUjWx2KnLfgk320LTgFxRNg
+         ldqrwHujWTWGmaqxZqAcgx991c9BMXScbOIpCYsS0u3ZN0jya7pWeTzb0AmNT/Ry5YwV
+         XsZU3ktbtbCUXNYU2SbIfK0bZT1kBzBZQgOf73/p0zH2XUoUYtbU+Gs/MGctNb3DIMBv
+         QXpXO8hUBabWtfOA1FAA66Hw/i0mph1X21ggdUxXvVawgtQb13ds3M2wiH6DvicyTLUr
+         R+mrztCwfPK3QWTped17xkijVCc3qqUwakcIMZsDaO3YFj9XOrVSXxmF/mWeikN+6iKT
+         H86Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=TktCfpoBbx+hVhPvUuOvC8+LEOokXPFcjtfYJHpMmyQ=;
+        b=m41Kac983DpW1Zl4wMGTUyS/SYR6tOWHWZI0FiJKnheoHP+U17FiqUC6fSGNlUlD36
+         Qft34V4auLG6cxQjL1GRW4g0vhWFAzLwbP4WqnTb+HkTzr9Fs3I9betVUUJ2iNr4yu7k
+         PO/QBgnwXibUd1KKL7+k2yXhwL4VIt9UwRrx8g+FceDVgRBUo8UMW6MWSXeAGY5pV0Uu
+         ZqqQVvXrsIRusVO1LvVaXP7Tp/+MCr0NS5YNietDTSXBFjkFVQaPkCEVGdl7I4N8KnPw
+         KQKWIh1zmYlUywyt52z7vH/uVSIc7fOxzVdPiOamvfMGhZJGtc/4Egm1yEHU8oUMmdeq
+         OIXw==
+X-Gm-Message-State: AOAM531372NCeCPfJnrwOFnDO5m4eo10aQE747pbZ09XCkQqSbL6mNh7
+        0wP2WB2E8DU2vtzcIe5dbbNk7RbX
+X-Google-Smtp-Source: ABdhPJznF0BLEkgcfpANehGvF7sOyENswfBQXCsJn7jwooLrcb712CJFFx85gVSfH6zV7ydll/uQkA==
+X-Received: by 2002:a63:4b42:: with SMTP id k2mr10279390pgl.288.1590100631989;
+        Thu, 21 May 2020 15:37:11 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a2sm5282183pfl.12.2020.05.21.15.37.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 15:37:11 -0700 (PDT)
+Subject: Re: [PATCH 3.16 00/99] 3.16.84-rc1 review
+To:     Ben Hutchings <ben@decadent.org.uk>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        Denis Kirjanov <kda@linux-powerpc.org>
+References: <lsq.1589984008.673931885@decadent.org.uk>
+ <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
+ <c01feeb17ecceeca18c852008bf0227079fbb38a.camel@decadent.org.uk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <c170c353-9fe1-a849-d062-74e42f22661c@roeck-us.net>
+Date:   Thu, 21 May 2020 15:37:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <c01feeb17ecceeca18c852008bf0227079fbb38a.camel@decadent.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="GmOKe0I7Sad2AhT2MdbMs9szPM7R4ehsv"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiA1LzIxLzIwIDEwOjQyIEFNLCBJcmEgV2Vpbnkgd3JvdGU6DQo+ID4gT24gVGh1LCBNYXkg
-MjEsIDIwMjAgYXQgMDk6MDU6NDFBTSAtMDcwMCwgR3VlbnRlciBSb2VjayB3cm90ZToNCj4gPj4g
-T24gNS8xOS8yMCAxMDoxMyBQTSwgSXJhIFdlaW55IHdyb3RlOg0KPiA+Pj4gT24gVHVlLCBNYXkg
-MTksIDIwMjAgYXQgMTI6NDI6MTVQTSAtMDcwMCwgR3VlbnRlciBSb2VjayB3cm90ZToNCj4gPj4+
-PiBPbiBUdWUsIE1heSAxOSwgMjAyMCBhdCAxMTo0MDozMkFNIC0wNzAwLCBJcmEgV2Vpbnkgd3Jv
-dGU6DQo+ID4+Pj4+IE9uIFR1ZSwgTWF5IDE5LCAyMDIwIGF0IDA5OjU0OjIyQU0gLTA3MDAsIEd1
-ZW50ZXIgUm9lY2sgd3JvdGU6DQo+ID4+Pj4+PiBPbiBNb24sIE1heSAxOCwgMjAyMCBhdCAxMTo0
-ODo0M0FNIC0wNzAwLCBpcmEud2VpbnlAaW50ZWwuY29tDQo+IHdyb3RlOg0KPiA+Pj4+Pj4+IEZy
-b206IElyYSBXZWlueSA8aXJhLndlaW55QGludGVsLmNvbT4NCj4gPj4+Pj4+Pg0KPiA+Pj4+Pj4+
-IFRoZSBrdW5tYXBfYXRvbWljIGNsZWFuIHVwIGZhaWxlZCB0byByZW1vdmUgb25lIHNldCBvZg0K
-PiA+Pj4+Pj4+IHBhZ2VmYXVsdC9wcmVlbXB0IGVuYWJsZXMgd2hlbiB2YWRkciBpcyBub3QgaW4g
-dGhlIGZpeG1hcC4NCj4gPj4+Pj4+Pg0KPiA+Pj4+Pj4+IEZpeGVzOiBiZWUyMTI4YTA5ZTYgKCJh
-cmNoL2t1bm1hcF9hdG9taWM6IGNvbnNvbGlkYXRlIGR1cGxpY2F0ZQ0KPiA+Pj4+Pj4+IGNvZGUi
-KQ0KPiA+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IElyYSBXZWlueSA8aXJhLndlaW55QGludGVsLmNv
-bT4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBtaWNyb2JsYXplZWwgd29ya3Mgd2l0aCB0aGlzIHBhdGNo
-LA0KPiA+Pj4+Pg0KPiA+Pj4+PiBBd2Vzb21lLi4uICBBbmRyZXcgaW4gbXkgcnVzaCB5ZXN0ZXJk
-YXkgSSBzaG91bGQgaGF2ZSBwdXQgYQ0KPiA+Pj4+PiByZXBvcnRlZCBieSBvbiB0aGUgcGF0Y2gg
-Zm9yIEd1ZW50ZXIgYXMgd2VsbC4NCj4gPj4+Pj4NCj4gPj4+Pj4gU29ycnkgYWJvdXQgdGhhdCBH
-dWVudGVyLA0KPiA+Pj4+DQo+ID4+Pj4gTm8gd29ycmllcy4NCj4gPj4+Pg0KPiA+Pj4+PiBJcmEN
-Cj4gPj4+Pj4NCj4gPj4+Pj4+IGFzIGRvIHRoZSBub3NtcCBzcGFyYzMyIGJvb3QgdGVzdHMsIGJ1
-dCBzcGFyYzMyIGJvb3QgdGVzdHMgd2l0aA0KPiA+Pj4+Pj4gU01QIGVuYWJsZWQgc3RpbGwgZmFp
-bCB3aXRoIGxvdHMgb2YgbWVzc2FnZXMgc3VjaCBhczoNCj4gPj4+Pj4+DQo+ID4+Pj4+PiBCVUc6
-IEJhZCBwYWdlIHN0YXRlIGluIHByb2Nlc3Mgc3dhcHBlci8wICBwZm46MDA2YTENCj4gPj4+Pj4+
-IHBhZ2U6ZjA5MzM0MjAgcmVmY291bnQ6MCBtYXBjb3VudDoxIG1hcHBpbmc6KHB0cnZhbCkgaW5k
-ZXg6MHgxDQo+ID4+Pj4+PiBmbGFnczogMHgwKCkNCj4gPj4+Pj4+IHJhdzogMDAwMDAwMDAgMDAw
-MDAxMDAgMDAwMDAxMjIgMDAwMDAwMDAgMDAwMDAwMDEgMDAwMDAwMDANCj4gPj4+Pj4+IDAwMDAw
-MDAwIDAwMDAwMDAwIHBhZ2UgZHVtcGVkIGJlY2F1c2U6IG5vbnplcm8gbWFwY291bnQNCj4gTW9k
-dWxlcw0KPiA+Pj4+Pj4gbGlua2VkIGluOg0KPiA+Pj4+Pj4gQ1BVOiAwIFBJRDogMSBDb21tOiBz
-d2FwcGVyLzAgVGFpbnRlZDogRyAgICBCICAgICAgICAgICAgIDUuNy4wLXJjNi1uZXh0LQ0KPiAy
-MDIwMDUxOC0wMDAwMi1nYjE3OGQyZDU2ZjI5ICMxDQo+ID4+Pj4+PiBbZjAwZTdhYjggOg0KPiA+
-Pj4+Pj4gYmFkX3BhZ2UrMHhhOC8weDEwOCBdDQo+ID4+Pj4+PiBbZjAwZThiNTQgOg0KPiA+Pj4+
-Pj4gZnJlZV9wY3BwYWdlc19idWxrKzB4MTU0LzB4NTJjIF0NCj4gPj4+Pj4+IFtmMDBlYTAyNCA6
-DQo+ID4+Pj4+PiBmcmVlX3VucmVmX3BhZ2UrMHg1NC8weDZjIF0NCj4gPj4+Pj4+IFtmMDBlZDg2
-NCA6DQo+ID4+Pj4+PiBmcmVlX3Jlc2VydmVkX2FyZWErMHg1OC8weGVjIF0NCj4gPj4+Pj4+IFtm
-MDUyNzEwNCA6DQo+ID4+Pj4+PiBrZXJuZWxfaW5pdCsweDE0LzB4MTEwIF0NCj4gPj4+Pj4+IFtm
-MDAwYjc3YyA6DQo+ID4+Pj4+PiByZXRfZnJvbV9rZXJuZWxfdGhyZWFkKzB4Yy8weDM4IF0NCj4g
-Pj4+Pj4+IFswMDAwMDAwMCA6DQo+ID4+Pj4+PiAweDAgXQ0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IENv
-ZGUgcGF0aCBsZWFkaW5nIHRvIHRoYXQgbWVzc2FnZSBpcyBkaWZmZXJlbnQgYnV0IGFsd2F5cyB0
-aGUNCj4gPj4+Pj4+IHNhbWUgZnJvbSBmcmVlX3VucmVmX3BhZ2UoKS4NCj4gPj4+DQo+ID4+PiBB
-Y3R1YWxseSBpdCBvY2N1cnMgdG8gbWUgdGhhdCB0aGUgcGF0Y2ggY29uc29saWRhdGluZyBrbWFw
-X3Byb3QgaXMNCj4gPj4+IG9kZCBmb3Igc3BhcmMgMzIgYml0Li4uDQo+ID4+Pg0KPiA+Pj4gSXRz
-IGEgbG9uZyBzaG90IGJ1dCBjb3VsZCB5b3UgdHJ5IHJldmVydGluZyB0aGlzIHBhdGNoPw0KPiA+
-Pj4NCj4gPj4+IDRlYTdkMjQxOWUzZiBrbWFwOiBjb25zb2xpZGF0ZSBrbWFwX3Byb3QgZGVmaW5p
-dGlvbnMNCj4gPj4+DQo+ID4+DQo+ID4+IFRoYXQgaXMgbm90IGVhc3kgdG8gcmV2ZXJ0LCB1bmZv
-cnR1bmF0ZWx5LCBkdWUgdG8gc2V2ZXJhbCBmb2xsb3ctdXANCj4gcGF0Y2hlcy4NCj4gPg0KPiA+
-IEkgaGF2ZSBnb3R0ZW4geW91ciBzcGFyYyB0ZXN0cyB0byBydW4gYW5kIHRoZXkgYWxsIHBhc3Mu
-Li4NCj4gPg0KPiA+IDA4OjEwOjM0ID4gLi4vbGludXgtYnVpbGQtdGVzdC9yb290ZnMvc3BhcmMv
-cnVuLXFlbXUtc3BhcmMuc2gNCj4gPiBCdWlsZCByZWZlcmVuY2U6IHY1LjctcmM0LTE3LWc4NTJi
-NmYyZWRjMGYNCj4gPg0KPiANCj4gVGhhdCBkb2Vzbid0IGxvb2sgbGlrZSBpdCBpcyBsaW51eC1u
-ZXh0LCB3aGljaCBJIGd1ZXNzIG1lYW5zIHRoYXQgc29tZXRoaW5nDQo+IGVsc2UgaW4gbGludXgt
-bmV4dCBicmVha3MgaXQuIFdoYXQgaXMgeW91ciBxZW11IHZlcnNpb24gPw0KDQpBaCB5ZWEgdGhh
-dCB3YXMganVzdCA1LjctcmM0IHdpdGggbXkgcGF0Y2ggc2V0IGFwcGxpZWQuICBZZXMgbXVzdCBi
-ZSBzb21ldGhpbmcgZWxzZSBvciBhbiBpbnRlcmFjdGlvbiB3aXRoIG15IHBhdGNoIHNldC4NCg0K
-RGlkIEkgc2VlIGFub3RoZXIgZW1haWwgd2l0aCBNaWtlIHdoaWNoIG1heSBmaXggdGhpcz8NCg0K
-SXJhDQoNCj4gDQo+IFRoYW5rcywNCj4gR3VlbnRlcg0KPiANCj4gPiBCdWlsZGluZyBzcGFyYzMy
-OlNQQVJDQ2xhc3NpYzpub3NtcDpzY3NpOmhkIC4uLiBydW5uaW5nIC4uLi4uLi4uLiBwYXNzZWQN
-Cj4gPiBCdWlsZGluZyBzcGFyYzMyOlNQQVJDYm9vazpub3NtcDpzY3NpOmNkIC4uLiBydW5uaW5n
-IC4uLi4uLi4uLiBwYXNzZWQNCj4gPiBCdWlsZGluZyBzcGFyYzMyOkxYOm5vc21wOm5vYXBjOnNj
-c2k6aGQgLi4uIHJ1bm5pbmcgLi4uLi4uLi4uIHBhc3NlZA0KPiA+IEJ1aWxkaW5nIHNwYXJjMzI6
-U1MtNDpub3NtcDppbml0cmQgLi4uIHJ1bm5pbmcgLi4uLi4uLi4uIHBhc3NlZA0KPiA+IEJ1aWxk
-aW5nIHNwYXJjMzI6U1MtNTpub3NtcDpzY3NpOmhkIC4uLiBydW5uaW5nIC4uLi4uLi4uLiBwYXNz
-ZWQNCj4gPiBCdWlsZGluZyBzcGFyYzMyOlNTLTEwOm5vc21wOnNjc2k6Y2QgLi4uIHJ1bm5pbmcg
-Li4uLi4uLi4uIHBhc3NlZA0KPiA+IEJ1aWxkaW5nIHNwYXJjMzI6U1MtMjA6bm9zbXA6c2NzaTpo
-ZCAuLi4gcnVubmluZyAuLi4uLi4uLi4gcGFzc2VkDQo+ID4gQnVpbGRpbmcgc3BhcmMzMjpTUy02
-MDBNUDpub3NtcDpzY3NpOmhkIC4uLiBydW5uaW5nIC4uLi4uLi4uLiBwYXNzZWQNCj4gPiBCdWls
-ZGluZyBzcGFyYzMyOlZveWFnZXI6bm9zbXA6bm9hcGM6c2NzaTpoZCAuLi4gcnVubmluZyAuLi4u
-Li4uLi4gcGFzc2VkDQo+ID4gQnVpbGRpbmcgc3BhcmMzMjpTUy00OnNtcDpzY3NpOmhkIC4uLiBy
-dW5uaW5nIC4uLi4uLi4uLiBwYXNzZWQNCj4gPiBCdWlsZGluZyBzcGFyYzMyOlNTLTU6c21wOnNj
-c2k6Y2QgLi4uIHJ1bm5pbmcgLi4uLi4uLi4uIHBhc3NlZA0KPiA+IEJ1aWxkaW5nIHNwYXJjMzI6
-U1MtMTA6c21wOnNjc2k6aGQgLi4uIHJ1bm5pbmcgLi4uLi4uLi4uIHBhc3NlZA0KPiA+IEJ1aWxk
-aW5nIHNwYXJjMzI6U1MtMjA6c21wOnNjc2k6aGQgLi4uIHJ1bm5pbmcgLi4uLi4uLi4uIHBhc3Nl
-ZA0KPiA+IEJ1aWxkaW5nIHNwYXJjMzI6U1MtNjAwTVA6c21wOnNjc2k6aGQgLi4uIHJ1bm5pbmcg
-Li4uLi4uLi4uIHBhc3NlZA0KPiA+IEJ1aWxkaW5nIHNwYXJjMzI6Vm95YWdlcjpzbXA6bm9hcGM6
-c2NzaTpoZCAuLi4gcnVubmluZyAuLi4uLi4uLi4gcGFzc2VkDQo+ID4NCj4gPiBJcyB0aGVyZSBh
-bm90aGVyIHRlc3QgSSBuZWVkIHRvIHJ1bj8NCj4gPg0KPiA+IElyYQ0KPiA+DQo+ID4NCj4gPj4N
-Cj4gPj4gR3VlbnRlcg0KPiA+Pg0KPiA+Pj4gQWx0ZXJuYXRlbHkgSSB3aWxsIG5lZWQgdG8gZmln
-dXJlIG91dCBob3cgdG8gcnVuIHRoZSBzcGFyYyBvbiBxZW11IGhlcmUuLi4NCj4gPj4+DQo+ID4+
-PiBUaGFua3MgdmVyeSBtdWNoIGZvciBhbGwgdGhlIHRlc3RpbmcgdGhvdWdoISAgOi1EDQo+ID4+
-Pg0KPiA+Pj4gSXJhDQo+ID4+Pg0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IFN0aWxsIHRlc3RpbmcgcHBj
-IGltYWdlcy4NCj4gPj4+Pj4+DQo+ID4+Pj4NCj4gPj4+PiBwcGMgaW1hZ2UgdGVzdHMgYXJlIHBh
-c3Npbmcgd2l0aCB0aGlzIHBhdGNoLg0KPiA+Pj4+DQo+ID4+Pj4gR3VlbnRlcg0KPiA+Pg0KDQo=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GmOKe0I7Sad2AhT2MdbMs9szPM7R4ehsv
+Content-Type: multipart/mixed; boundary="SfMyJKx4IM0AropXdq0yIzE68nTZZynQ7"
+
+--SfMyJKx4IM0AropXdq0yIzE68nTZZynQ7
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 5/21/20 1:20 PM, Ben Hutchings wrote:
+> On Wed, 2020-05-20 at 14:23 -0700, Guenter Roeck wrote:
+>> On 5/20/20 7:13 AM, Ben Hutchings wrote:
+>>> This is the start of the stable review cycle for the 3.16.84 release.=
+
+>>> There are 99 patches in this series, which will be posted as response=
+s
+>>> to this one.  If anyone has any issues with these being applied, plea=
+se
+>>> let me know.
+>>>
+>>> Responses should be made by Fri May 22 20:00:00 UTC 2020.
+>>> Anything received after that time might be too late.
+>>>
+>> Build results:
+>> 	total: 135 pass: 135 fail: 0
+>> Qemu test results:
+>> 	total: 230 pass: 227 fail: 3
+>> Failed tests:
+>> 	arm:cubieboard:multi_v7_defconfig:mem512:sun4i-a10-cubieboard:initrd
+>> 	arm:cubieboard:multi_v7_defconfig:usb:mem512:sun4i-a10-cubieboard:roo=
+tfs
+>> 	arm:cubieboard:multi_v7_defconfig:sata:mem512:sun4i-a10-cubieboard:ro=
+otfs
+>>
+>> The arm tests fail due to a compile error.
+>>
+>> drivers/clk/tegra/clk-tegra-periph.c:524:65: error: 'CLK_IS_CRITICAL' =
+undeclared here (not in a function); did you mean 'CLK_IS_BASIC'?
+>=20
+> I already looked at your first test results and dropped the patch that
+> uses CLK_IS_CRITICAL, so there's something else going wrong there...
+>=20
+
+Ah yes. Sorry, I didn't notice that there was a rebuild.
+
+Images are fine; the three failing tests should not have been
+tested in the first place (they never did, but I didn't update
+the blacklist when I increased the qemu memory size to 512MB).
+
+Guenter
+
+
+--SfMyJKx4IM0AropXdq0yIzE68nTZZynQ7--
+
+--GmOKe0I7Sad2AhT2MdbMs9szPM7R4ehsv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEiHPvMQj9QTOCiqgVyx8mb86fmYEFAl7HApUACgkQyx8mb86f
+mYGQ1g//WufCdPUeddeTyQe87fYE6zp5K2GeKQ+MG9sjVbdMqRomasBthntNEtVE
+aFll9DjGFUpUd+x875yF3MH8YSXCReIIqh1dkZ+7fjPy4xBgYjN9MOnGjXTCKPAe
+nJ6IhKfm1p3L5X8Isz1WRz3WoC3FaJU2AqQ8K7ZQgyxy6k9/xcga6mN71ww757/B
+s/BiXpO2hutFrNl1k/5b3+6gXFHzm9NnmvZ7PleafO8zbR6VzFFQK75hvbsO16bJ
+UQLYISXqrPSlmxpdpQKQHj4InmVfTp2PKmPaAAvksrsWyBJsBGOBXdUcT3t8UjFK
+VKUvNA8+T2+oRpZCdCb2yG8OsAVYTQk81hAz+XKV8mHqGkFGK8PChzJOB04Hd9K1
+M4GklbNhi8egK748PPrngCghnwJrDvBDWMtzMIU3zmZuFrcjjyh64fE7RrAq9wR3
+7bvR9YAvGuUYTg4G/YftTdqT7wCDhA/lxpQ2pZuWsI8Q8uzT9RVPs+bkBw3rF+mU
+ZvsEkYTXC8X0i1CNUEFWDL/2+mrdPGWk0ZxIZ0xSNapHuaGkEvR3h3ocyTpczyCk
+0oSwbspbiG46YmCKxvt5td8G6nTWvFIdrfvXd+TDARMAOvOj/ORDj9dzMlV1wIrF
+5MSe5r0AsqYyLYnLIls0kBGRvefjk1rtOYl3j70k30UQocfPA78=
+=Ke5d
+-----END PGP SIGNATURE-----
+
+--GmOKe0I7Sad2AhT2MdbMs9szPM7R4ehsv--
