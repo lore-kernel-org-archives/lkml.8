@@ -2,180 +2,274 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B303C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 885ED2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E48D20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgEUU2P (ORCPT
+        id S1729498AbgEUUaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:28:15 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:41830 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728365AbgEUU2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:28:14 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbrnX-0005TN-Id; Thu, 21 May 2020 21:28:11 +0100
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jbrnX-007L2o-4w; Thu, 21 May 2020 21:28:11 +0100
-Message-ID: <8b2623680c557828814dda4602d29c5cc5d889d8.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 35/99] pxa168fb: Fix the function used to release
- some memory in an error handling path
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Date:   Thu, 21 May 2020 21:28:10 +0100
-In-Reply-To: <104d4c9f-48d8-19b1-d529-a34fcc1e5606@wanadoo.fr>
-References: <lsq.1589984008.562400019@decadent.org.uk>
-         <95e4cf2d-5f50-e7bd-6e1e-a1d172eb24b6@wanadoo.fr>
-         <104d4c9f-48d8-19b1-d529-a34fcc1e5606@wanadoo.fr>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-eGPjTjEFzfhK1i4lI6/p"
-User-Agent: Evolution 3.36.2-1 
+        Thu, 21 May 2020 16:30:20 -0400
+Received: from mga11.intel.com ([192.55.52.93]:24606 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728522AbgEUUaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 16:30:20 -0400
+IronPort-SDR: O2qG62BlVsHmEAhQqWYlxyBv0iWzdxnFIAw3yyVjErsg+I8lFXFDfqUq1ZTUOM7neItxg0Luv4
+ WzPUVM7lNLgQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 13:30:20 -0700
+IronPort-SDR: vrWu62i7IiI2h3w5RzQhiCCuZRtx9Biy18qy8lpj+ZTeHsyEwnaLbPTGb0x5Ue0+pGSlco3DgU
+ MNVZ5eSwn9NQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
+   d="scan'208";a="283178490"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.254.97.114])
+  by orsmga002.jf.intel.com with ESMTP; 21 May 2020 13:30:19 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2] ACPI / DPTF: Add additional attributes to power participant driver
+Date:   Thu, 21 May 2020 13:30:15 -0700
+Message-Id: <20200521203015.959915-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add two additional attributes to the existing power participant driver:
+rest_of_platform_power_mw: (RO) Shows the rest of worst case platform
+power in mW outside of S0C. This will help in power distribution to SoC
+and rest of the system. For example on a test system, this value is 2.5W
+with a 15W TDP SoC. Based on the adapter rating (adapter_rating_mw), user
+space software can decide on proper power allocation to SoC to improve
+short term performance via powercap/RAPL interface.
 
---=-eGPjTjEFzfhK1i4lI6/p
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+prochot_confirm: (WO) Confirm EC about a prochot notification.
 
-On Thu, 2020-05-21 at 16:31 +0200, Marion & Christophe JAILLET wrote:
-> Hi,
->=20
-> sorry for the noise, I have messed up my=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/ usage.
-> I thought I was looking at the 3.16.83 branch, but I was not.
->=20
-> The patch looks good to me.
+Also userspace is notified via sysfs_notify(), whenever power source or
+rest of the platform power is changed. So user space can use poll()
+system call on those attributes.
 
-Thanks for reviewing,
+The ACPI methods used in this patch are as follows:
 
-Ben.
+PROP
+This object evaluates to the rest of worst case platform power in mW.
+Bits:
+23:0 Worst case rest of platform power in mW.
 
-> CJ
->=20
-> Le 21/05/2020 =C3=A0 16:09, Marion & Christophe JAILLET a =C3=A9crit :
-> > Hi,
-> >=20
-> > I don't think that this one is applicable to 3.16.x
-> >=20
-> > The remove function and the error handling path of the probe function=
-=20
-> > both use 'dma_free_wc'.
-> > I've not look in details, but it looks consistent and the patch would=
-=20
-> > not apply as-is anyway.
-> >=20
-> > just my 2c.
-> >=20
-> > CJ
-> >=20
-> > Le 20/05/2020 =C3=A0 16:14, Ben Hutchings a =C3=A9crit :
-> > > 3.16.84-rc1 review patch.  If anyone has any objections, please let=
-=20
-> > > me know.
-> > >=20
-> > > ------------------
-> > >=20
-> > > From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > >=20
-> > > commit 3c911fe799d1c338d94b78e7182ad452c37af897 upstream.
-> > >=20
-> > > In the probe function, some resources are allocated using=20
-> > > 'dma_alloc_wc()',
-> > > they should be released with 'dma_free_wc()', not 'dma_free_coherent(=
-)'.
-> > >=20
-> > > We already use 'dma_free_wc()' in the remove function, but not in the
-> > > error handling path of the probe function.
-> > >=20
-> > > Also, remove a useless 'PAGE_ALIGN()'. 'info->fix.smem_len' is alread=
-y
-> > > PAGE_ALIGNed.
-> > >=20
-> > > Fixes: 638772c7553f ("fb: add support of LCD display controller on=
-=20
-> > > pxa168/910 (base layer)")
-> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > > Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > CC: YueHaibing <yuehaibing@huawei.com>
-> > > Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > > Link:=20
-> > > https://patchwork.freedesktop.org/patch/msgid/20190831100024.3248-1-c=
-hristophe.jaillet@wanadoo.fr
-> > > [bwh: Backported to 3.16: Use dma_free_writecombine().]
-> > > Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-> > > ---
-> > >   drivers/video/fbdev/pxa168fb.c | 6 +++---
-> > >   1 file changed, 3 insertions(+), 3 deletions(-)
-> > >=20
-> > > --- a/drivers/video/fbdev/pxa168fb.c
-> > > +++ b/drivers/video/fbdev/pxa168fb.c
-> > > @@ -772,8 +772,8 @@ failed_free_cmap:
-> > >   failed_free_clk:
-> > >       clk_disable(fbi->clk);
-> > >   failed_free_fbmem:
-> > > -    dma_free_coherent(fbi->dev, info->fix.smem_len,
-> > > -            info->screen_base, fbi->fb_start_dma);
-> > > +    dma_free_writecombine(fbi->dev, info->fix.smem_len,
-> > > +                  info->screen_base, fbi->fb_start_dma);
-> > >   failed_free_info:
-> > >       kfree(info);
-> > >   failed_put_clk:
-> > > @@ -809,7 +809,7 @@ static int pxa168fb_remove(struct platfo
-> > >         irq =3D platform_get_irq(pdev, 0);
-> > >   -    dma_free_writecombine(fbi->dev, PAGE_ALIGN(info->fix.smem_len)=
-,
-> > > +    dma_free_writecombine(fbi->dev, info->fix.smem_len,
-> > >                   info->screen_base, info->fix.smem_start);
-> > >         clk_disable(fbi->clk);
-> > >=20
---=20
-Ben Hutchings
-Reality is just a crutch for people who can't handle science fiction.
+PBOK
+PBOK is a method designed to provide a mechanism for OSPM to change power
+setting before EC can de-assert a PROCHOT from a device. The EC may
+receive several PROCHOTs, so it has a sequence number attached to PSRC
+(read via existing attribute "platform_power_source"). Once OSPM takes
+action for a PSRC change notification, it can call PBOK method to confirm
+with the sequence number.
+Bits:
+3:0 Power Delivery State Change Sequence number
+30  Reserved
+31  0 – Not OK to de-assert PROCHOT
+    1 – OK to de-assert PROCHOT
 
+PSRC (Platform Power Source): Not new in this patch but for
+documentation for new bits
+This object evaluates to an integer that represents the system power
+source as well as the power delivery state change sequence number.
+Bits:
+3:0 The current power source as an integer for AC, DC, USB, Wireless.
+0 = DC, 1 = AC, 2 = USB, 3 = Wireless Charging
+7:4 Power Delivery State Change Sequence Number. Default value is 0
 
+Notifications:
+0x81: (Power State Change) Used to notify when the power source has
+changed.
+0x84: (PROP change) Used to notify when the platform rest of power has
+changed.
 
---=-eGPjTjEFzfhK1i4lI6/p
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+v2
+ Change rest_of_platform_power_mw explanation.
+	
+ Documentation/ABI/testing/sysfs-platform-dptf | 24 +++++--
+ drivers/acpi/dptf/dptf_power.c                | 69 ++++++++++++++++++-
+ 2 files changed, 88 insertions(+), 5 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentation/ABI/testing/sysfs-platform-dptf
+index 325dc0667dbb..e83a9d208849 100644
+--- a/Documentation/ABI/testing/sysfs-platform-dptf
++++ b/Documentation/ABI/testing/sysfs-platform-dptf
+@@ -27,10 +27,12 @@ KernelVersion:	v4.10
+ Contact:	linux-acpi@vger.kernel.org
+ Description:
+ 		(RO) Display the platform power source
+-		0x00 = DC
+-		0x01 = AC
+-		0x02 = USB
+-		0x03 = Wireless Charger
++		bits[3:0] Current power source
++			0x00 = DC
++			0x01 = AC
++			0x02 = USB
++			0x03 = Wireless Charger
++		bits[7:4] Power source sequence number
+ 
+ What:		/sys/bus/platform/devices/INT3407:00/dptf_power/battery_steady_power
+ Date:		Jul, 2016
+@@ -38,3 +40,17 @@ KernelVersion:	v4.10
+ Contact:	linux-acpi@vger.kernel.org
+ Description:
+ 		(RO) The maximum sustained power for battery in milliwatts.
++
++What:		/sys/bus/platform/devices/INT3407:00/dptf_power/rest_of_platform_power_mw
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(RO) Shows the rest of worst case platform power outside of SoC.
++
++What:		/sys/bus/platform/devices/INT3407:00/dptf_power/prochot_confirm
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(WO) Confirm embedded controller about a prochot notification.
+diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
+index e4e8b75d39f0..abe99039af74 100644
+--- a/drivers/acpi/dptf/dptf_power.c
++++ b/drivers/acpi/dptf/dptf_power.c
+@@ -16,6 +16,7 @@
+  * ARTG : Adapter rating
+  * CTYP : Charger type
+  * PBSS : Battery steady power
++ * PROP : Rest of worst case platform Power
+  */
+ #define DPTF_POWER_SHOW(name, object) \
+ static ssize_t name##_show(struct device *dev,\
+@@ -39,12 +40,34 @@ DPTF_POWER_SHOW(platform_power_source, PSRC)
+ DPTF_POWER_SHOW(adapter_rating_mw, ARTG)
+ DPTF_POWER_SHOW(battery_steady_power_mw, PBSS)
+ DPTF_POWER_SHOW(charger_type, CTYP)
++DPTF_POWER_SHOW(rest_of_platform_power_mw, PROP)
+ 
+ static DEVICE_ATTR_RO(max_platform_power_mw);
+ static DEVICE_ATTR_RO(platform_power_source);
+ static DEVICE_ATTR_RO(adapter_rating_mw);
+ static DEVICE_ATTR_RO(battery_steady_power_mw);
+ static DEVICE_ATTR_RO(charger_type);
++static DEVICE_ATTR_RO(rest_of_platform_power_mw);
++
++static ssize_t prochot_confirm_store(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t count)
++{
++	struct acpi_device *acpi_dev = dev_get_drvdata(dev);
++	acpi_status status;
++	int seq_no;
++
++	if (kstrtouint(buf, 0, &seq_no) < 0)
++		return -EINVAL;
++
++	status = acpi_execute_simple_method(acpi_dev->handle, "PBOK", seq_no);
++	if (ACPI_SUCCESS(status))
++		return count;
++
++	return -EINVAL;
++}
++
++static DEVICE_ATTR_WO(prochot_confirm);
+ 
+ static struct attribute *dptf_power_attrs[] = {
+ 	&dev_attr_max_platform_power_mw.attr,
+@@ -52,6 +75,8 @@ static struct attribute *dptf_power_attrs[] = {
+ 	&dev_attr_adapter_rating_mw.attr,
+ 	&dev_attr_battery_steady_power_mw.attr,
+ 	&dev_attr_charger_type.attr,
++	&dev_attr_rest_of_platform_power_mw.attr,
++	&dev_attr_prochot_confirm.attr,
+ 	NULL
+ };
+ 
+@@ -60,6 +85,33 @@ static const struct attribute_group dptf_power_attribute_group = {
+ 	.name = "dptf_power"
+ };
+ 
++#define POWER_STATE_CHANGED		0x81
++#define POWER_PROP_CHANGE_EVENT	0x84
++
++static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
++{
++	struct platform_device *pdev = data;
++	char *attr;
++
++	switch (event) {
++	case POWER_STATE_CHANGED:
++		attr = "platform_power_source";
++		break;
++	case POWER_PROP_CHANGE_EVENT:
++		attr = "rest_of_platform_power_mw";
++		break;
++	default:
++		dev_err(&pdev->dev, "Unsupported event [0x%x]\n", event);
++		return;
++	}
++
++	/*
++	 * Notify that an attribute is changed, so that user space can read
++	 * again.
++	 */
++	sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
++}
++
+ static int dptf_power_add(struct platform_device *pdev)
+ {
+ 	struct acpi_device *acpi_dev;
+@@ -78,10 +130,21 @@ static int dptf_power_add(struct platform_device *pdev)
+ 	if (ptype != 0x11)
+ 		return -ENODEV;
+ 
++	result = acpi_install_notify_handler(acpi_dev->handle,
++					     ACPI_DEVICE_NOTIFY,
++					     dptf_power_notify,
++					     (void *)pdev);
++	if (result)
++		return result;
++
+ 	result = sysfs_create_group(&pdev->dev.kobj,
+ 				    &dptf_power_attribute_group);
+-	if (result)
++	if (result) {
++		acpi_remove_notify_handler(acpi_dev->handle,
++					   ACPI_DEVICE_NOTIFY,
++					   dptf_power_notify);
+ 		return result;
++	}
+ 
+ 	platform_set_drvdata(pdev, acpi_dev);
+ 
+@@ -90,7 +153,11 @@ static int dptf_power_add(struct platform_device *pdev)
+ 
+ static int dptf_power_remove(struct platform_device *pdev)
+ {
++	struct acpi_device *acpi_dev = platform_get_drvdata(pdev);
+ 
++	acpi_remove_notify_handler(acpi_dev->handle,
++				   ACPI_DEVICE_NOTIFY,
++				   dptf_power_notify);
+ 	sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
+ 
+ 	return 0;
+-- 
+2.25.4
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl7G5FoACgkQ57/I7JWG
-EQnlIg/8DPBUEQplThVJUI1rGjlEnVGkCtmkzyyIOrIH4eXPi9yVFAob/sClKsC6
-cYQYp1W5q2Mb1wTSB7MqFaL8eA6naX4QAiGY5MuviH34EAR3t/PST1HG1zBrkQzE
-SMNCXzO5tB1tTukEQ9eDhAS0my35LJUpmKXHgXILuChXMt6rabmzEGUtAAMblJuN
-L1szUgfBw43stMq6wM5xpOH2RW1DR5Uklk7D6IDiyvCfXyDTBPUCaHOQhfoMh7pU
-jgN2+Zd3xAK+COeim9HUxsAIuon0IrbjbPBoUR9jI4APNSxLHyVUcbh8YyeATmBK
-o9QDmBNtOZipyWygY5T9R+58K7VMQlcv0H++s6Cx4ucViVjufWN7Fs3iG9JOc6tl
-slRDOVMK3CldbdxpTTj+1GHpwtwGYTbhoMT7Y+JZSFw4FGFmn90vM+TK7VaRy3bH
-T3fDUo1rTboeas4f+15fnbpNScnz2ZEfSY43/3vvz7jpCn5uHoaeysuTrooUp1bn
-b0juvE4XCh6jtokd3Q4KFKP8Dy4NU6E6+J6PhqFVwXftsmYmlXxDueXuTHQu7HUX
-uenwyaz4phkfbj40Ecl7iziaPn8jCUZUjakYaE0nxw/FTAHEheEZsSjKdcqA/aN3
-lH5mFYc0xvuYgkI6heaSzvvqnezNMVk6bsas+TkQu65Qn8J1qR0=
-=fXcE
------END PGP SIGNATURE-----
-
---=-eGPjTjEFzfhK1i4lI6/p--
