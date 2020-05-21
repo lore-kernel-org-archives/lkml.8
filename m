@@ -6,51 +6,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E39BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3010720756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22E820758
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgEUAyM (ORCPT
+        id S1727966AbgEUAyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 20:54:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33508 "EHLO
+        Wed, 20 May 2020 20:54:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33586 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgEUAyK (ORCPT
+        with ESMTP id S1727927AbgEUAyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:54:10 -0400
+        Wed, 20 May 2020 20:54:12 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E8E258030791;
-        Thu, 21 May 2020 00:54:04 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id DCBD280005C9;
+        Thu, 21 May 2020 00:54:07 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pX3vNVgKudjp; Thu, 21 May 2020 03:54:04 +0300 (MSK)
+        with ESMTP id GVLJ1IN06VAq; Thu, 21 May 2020 03:54:07 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Daniel Lezcano <daniel.lezcano@linaro.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Ralf Baechle <ralf@linux-mips.org>,
         Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 4/7] clocksource: dw_apb_timer: Set clockevent any-possible-CPU mask
-Date:   Thu, 21 May 2020 03:53:17 +0300
-Message-ID: <20200521005321.12129-5-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 6/7] clocksource: mips-gic-timer: Register as sched_clock
+Date:   Thu, 21 May 2020 03:53:19 +0300
+Message-ID: <20200521005321.12129-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200521005321.12129-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200521005321.12129-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -62,35 +57,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the DW APB Timer driver binds all clockevent timers to
-CPU #0. This isn't good for multiple reasons. First of all seeing
-the device is placed on APB bus (which makes it accessible from any
-CPU core), accessible over MMIO and having the DYNIRQ flag set we
-can be sure that manually binding the timer to any CPU just isn't
-correct. By doing so we just set an extra limitation on device usage.
-This also doesn't reflect the device actual capability, since by
-setting the IRQ affinity we can make it virtually local to any CPU.
-Secondly imagine if you had a real CPU-local timer with the same
-rating and the same CPU-affinity. In this case if DW APB timer was
-registered first, then due to the clockevent framework tick-timer
-selection procedure we'll end up with the real CPU-local timer being
-left unselected for clock-events tracking. But on most of the platforms
-(MIPS/ARM/etc) such timers are normally embedded into the CPU core and
-are accessible with much better performance then devices placed on APB.
-For instance in MIPS architectures there is r4k-timer, which is
-CPU-local, assigned with the same rating, and normally its
-clockevent device is registered after the platform-specific one.
+From: Paul Burton <paulburton@kernel.org>
 
-So in order to fix all of these issues lets set the DW APB clockevent
-timer cpumask to be 'cpu_possible_mask'. By doing so the clockevent
-framework would prefer to select the real CPU-local timer instead
-of DW APB one. Otherwise if there is no other than DW APB device for
-clockevents tracking then it will be selected.
+The MIPS GIC timer is well suited for use as sched_clock, so register it
+as such.
 
+Whilst the existing gic_read_count() function matches the prototype
+needed by sched_clock_register() already, we split it into 2 functions
+in order to remove the need to evaluate the mips_cm_is64 condition
+within each call since sched_clock should be as fast as possible.
+
+Note the sched clock framework needs the clock source being stable in
+order to rely on it. So we register the MIPS GIC timer as schedule clocks
+only if it's, if either the system doesn't have CPU-frequency enabled or
+the CPU frequency is changed by means of the CPC core clock divider
+available on the platforms with CM3 or newer.
+
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Co-developed-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+[Sergey.Semin@baikalelectronics.ru: Register sched-clock if CM3 or !CPU-freq]
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Alessandro Zummo <a.zummo@towertech.it>
 Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
@@ -99,117 +87,82 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: linux-rtc@vger.kernel.org
 Cc: devicetree@vger.kernel.org
----
- drivers/clocksource/dw_apb_timer.c    | 18 +++++++-----------
- drivers/clocksource/dw_apb_timer_of.c |  3 +--
- include/linux/dw_apb_timer.h          |  2 +-
- 3 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/clocksource/dw_apb_timer.c b/drivers/clocksource/dw_apb_timer.c
-index b207a77b0831..8ebb43916423 100644
---- a/drivers/clocksource/dw_apb_timer.c
-+++ b/drivers/clocksource/dw_apb_timer.c
-@@ -106,6 +106,7 @@ static irqreturn_t dw_apb_clockevent_irq(int irq, void *data)
- 		dw_ced->eoi(&dw_ced->timer);
+---
+
+Changelog v3:
+- Register sched clocks only if MIPS GIC belongs to CM3 or if CPU-freq
+  isn't supported.
+---
+ drivers/clocksource/mips-gic-timer.c | 31 ++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index 8b5f8ae723cb..ef12c12c2432 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -16,6 +16,7 @@
+ #include <linux/notifier.h>
+ #include <linux/of_irq.h>
+ #include <linux/percpu.h>
++#include <linux/sched_clock.h>
+ #include <linux/smp.h>
+ #include <linux/time.h>
+ #include <asm/mips-cps.h>
+@@ -24,13 +25,10 @@ static DEFINE_PER_CPU(struct clock_event_device, gic_clockevent_device);
+ static int gic_timer_irq;
+ static unsigned int gic_frequency;
  
- 	evt->event_handler(evt);
-+
- 	return IRQ_HANDLED;
+-static u64 notrace gic_read_count(void)
++static u64 notrace gic_read_count_2x32(void)
+ {
+ 	unsigned int hi, hi2, lo;
+ 
+-	if (mips_cm_is64)
+-		return read_gic_counter();
+-
+ 	do {
+ 		hi = read_gic_counter_32h();
+ 		lo = read_gic_counter_32l();
+@@ -40,6 +38,19 @@ static u64 notrace gic_read_count(void)
+ 	return (((u64) hi) << 32) + lo;
  }
  
-@@ -123,8 +124,7 @@ static int apbt_shutdown(struct clock_event_device *evt)
- 	struct dw_apb_clock_event_device *dw_ced = ced_to_dw_apb_ced(evt);
- 	u32 ctrl;
- 
--	pr_debug("%s CPU %d state=shutdown\n", __func__,
--		 cpumask_first(evt->cpumask));
-+	pr_debug("%s state=shutdown\n", __func__);
- 
- 	ctrl = apbt_readl(&dw_ced->timer, APBTMR_N_CONTROL);
- 	ctrl &= ~APBTMR_CONTROL_ENABLE;
-@@ -137,8 +137,7 @@ static int apbt_set_oneshot(struct clock_event_device *evt)
- 	struct dw_apb_clock_event_device *dw_ced = ced_to_dw_apb_ced(evt);
- 	u32 ctrl;
- 
--	pr_debug("%s CPU %d state=oneshot\n", __func__,
--		 cpumask_first(evt->cpumask));
-+	pr_debug("%s state=oneshot\n", __func__);
- 
- 	ctrl = apbt_readl(&dw_ced->timer, APBTMR_N_CONTROL);
- 	/*
-@@ -170,8 +169,7 @@ static int apbt_set_periodic(struct clock_event_device *evt)
- 	unsigned long period = DIV_ROUND_UP(dw_ced->timer.freq, HZ);
- 	u32 ctrl;
- 
--	pr_debug("%s CPU %d state=periodic\n", __func__,
--		 cpumask_first(evt->cpumask));
-+	pr_debug("%s state=periodic\n", __func__);
- 
- 	ctrl = apbt_readl(&dw_ced->timer, APBTMR_N_CONTROL);
- 	ctrl |= APBTMR_CONTROL_MODE_PERIODIC;
-@@ -194,8 +192,7 @@ static int apbt_resume(struct clock_event_device *evt)
++static u64 notrace gic_read_count_64(void)
++{
++	return read_gic_counter();
++}
++
++static u64 notrace gic_read_count(void)
++{
++	if (mips_cm_is64)
++		return gic_read_count_64();
++
++	return gic_read_count_2x32();
++}
++
+ static int gic_next_event(unsigned long delta, struct clock_event_device *evt)
  {
- 	struct dw_apb_clock_event_device *dw_ced = ced_to_dw_apb_ced(evt);
+ 	int cpu = cpumask_first(evt->cpumask);
+@@ -228,6 +239,18 @@ static int __init gic_clocksource_of_init(struct device_node *node)
+ 	/* And finally start the counter */
+ 	clear_gic_config(GIC_CONFIG_COUNTSTOP);
  
--	pr_debug("%s CPU %d state=resume\n", __func__,
--		 cpumask_first(evt->cpumask));
-+	pr_debug("%s state=resume\n", __func__);
- 
- 	apbt_enable_int(&dw_ced->timer);
++	/*
++	 * It's safe to use the MIPS GIC timer as a sched clock source only if
++	 * its ticks are stable, which is true on either the platforms with
++	 * stable CPU frequency or on the platforms with CM3 and CPU frequency
++	 * change performed by the CPC core clocks divider.
++	 */
++	if (mips_cm_revision() >= CM_REV_CM3 || !IS_ENABLED(CONFIG_CPU_FREQ)) {
++		sched_clock_register(mips_cm_is64 ?
++				     gic_read_count_64 : gic_read_count_2x32,
++				     64, gic_frequency);
++	}
++
  	return 0;
-@@ -222,7 +219,6 @@ static int apbt_next_event(unsigned long delta,
- /**
-  * dw_apb_clockevent_init() - use an APB timer as a clock_event_device
-  *
-- * @cpu:	The CPU the events will be targeted at.
-  * @name:	The name used for the timer and the IRQ for it.
-  * @rating:	The rating to give the timer.
-  * @base:	I/O base for the timer registers.
-@@ -237,7 +233,7 @@ static int apbt_next_event(unsigned long delta,
-  * releasing the IRQ.
-  */
- struct dw_apb_clock_event_device *
--dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
-+dw_apb_clockevent_init(const char *name, unsigned int rating,
- 		       void __iomem *base, int irq, unsigned long freq)
- {
- 	struct dw_apb_clock_event_device *dw_ced =
-@@ -257,7 +253,7 @@ dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
- 	dw_ced->ced.max_delta_ticks = 0x7fffffff;
- 	dw_ced->ced.min_delta_ns = clockevent_delta2ns(5000, &dw_ced->ced);
- 	dw_ced->ced.min_delta_ticks = 5000;
--	dw_ced->ced.cpumask = cpumask_of(cpu);
-+	dw_ced->ced.cpumask = cpu_possible_mask;
- 	dw_ced->ced.features = CLOCK_EVT_FEAT_PERIODIC |
- 				CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
- 	dw_ced->ced.set_state_shutdown = apbt_shutdown;
-diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
-index 8c28b127759f..0a2505b323d7 100644
---- a/drivers/clocksource/dw_apb_timer_of.c
-+++ b/drivers/clocksource/dw_apb_timer_of.c
-@@ -73,8 +73,7 @@ static void __init add_clockevent(struct device_node *event_timer)
- 
- 	timer_get_base_and_rate(event_timer, &iobase, &rate);
- 
--	ced = dw_apb_clockevent_init(0, event_timer->name, 300, iobase, irq,
--				     rate);
-+	ced = dw_apb_clockevent_init(event_timer->name, 300, iobase, irq, rate);
- 	if (!ced)
- 		panic("Unable to initialise clockevent device");
- 
-diff --git a/include/linux/dw_apb_timer.h b/include/linux/dw_apb_timer.h
-index 82ebf9223948..689022bc8d17 100644
---- a/include/linux/dw_apb_timer.h
-+++ b/include/linux/dw_apb_timer.h
-@@ -39,7 +39,7 @@ void dw_apb_clockevent_resume(struct dw_apb_clock_event_device *dw_ced);
- void dw_apb_clockevent_stop(struct dw_apb_clock_event_device *dw_ced);
- 
- struct dw_apb_clock_event_device *
--dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
-+dw_apb_clockevent_init(const char *name, unsigned int rating,
- 		       void __iomem *base, int irq, unsigned long freq);
- struct dw_apb_clocksource *
- dw_apb_clocksource_init(unsigned rating, const char *name, void __iomem *base,
+ }
+ TIMER_OF_DECLARE(mips_gic_timer, "mti,gic-timer",
 -- 
 2.25.1
 
