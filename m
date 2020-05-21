@@ -7,67 +7,68 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3287CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5625E20756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA6520756
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 00:50:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SeQfB26S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bR8a/ukt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgEUAuC (ORCPT
+        id S1727801AbgEUAuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 20 May 2020 20:50:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40548 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbgEUAt6 (ORCPT
+        with ESMTP id S1727065AbgEUAt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 20:49:58 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB242C05BD43
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:49:56 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l17so5009057wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:49:56 -0700 (PDT)
+        Wed, 20 May 2020 20:49:59 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F0BC08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:49:59 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id e1so5002302wrt.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 17:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T6KiBFrklNFDtd7Hjtt5HuZ2kC5pUp1U1wrXq0Utuf4=;
-        b=SeQfB26SC7fEFLPZyf1wTJC3WJ/vo9u9XJ/iu+jXyEWp73AYgiCa/9bx0/fttc7k6J
-         jY7ijhqlpFkMZykbho83INFv2az4dPTBipvWbqLaUrEN2ums3lCMsO+0wJv8h3+/Nb1g
-         1ydpBVRq4jxoM0AkU1/bkPsoqxOelsvu8zIZKvJHjcBjLX3YlTfrUcnOmUaB7JmFUF9I
-         nozbyaiQZ/37+JV37VkMjTrc1LyPWr3+jqXOKHcycbS80QsZsBjEfRWQLtvEv9b9Xvbe
-         Z/PTSW7Ft2WNIjX15ehsVNYAFx1fdn09eEAzgd82fpRnTOQA+/SH2pmCXf3/078Nrv8g
-         ZZHQ==
+        bh=Ii4T8Uv4R26SSZ01LXBCwc0eFerXbobCedrcPnGif0k=;
+        b=bR8a/ukthLSCmkQBIoxXgEkOb5yAIrwnx2HF5YPmJiyiPr1w3G7UJMVxMqAuoYGHG+
+         GPhMx8jd/TSaOYD6jxLax9dA5ycPf93aX31oE/5dMEywZbcriGcjBWpBvRzXJLr6fzR4
+         yxP3a8F1s1oPRRQa3ZmZyX1FhBfDWS3nadhLZPm06G1bNtjzEa4NgR+jfmwCPnpuhoRC
+         P/xt2cveRHK7ZGv5BPV1LnV7Ix/6l8wyYnYvpfEw72ptO4dDy8B30Y1QqEVJG41tDa38
+         CK3QtAk8zI4YGR69qnpw8xN61vyEavoQ80ISHD2PklKAENLP7D4NqDR30XXcFjRkZeX6
+         Zflw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T6KiBFrklNFDtd7Hjtt5HuZ2kC5pUp1U1wrXq0Utuf4=;
-        b=AL9Sg7VVM+hY+pzYFzrxrcZGi6Mv+ssGjclz14T2Y9um1rKmzrpwd8Dx4V8cBHo/AT
-         KOIudSlaPZYttoXpOoC4LPfzo5KfKdZE5vV9WzCZ1jAqCb8VJxUe6A4y4NAUCwtMijz1
-         7TljSUkMxJrFgy+8MXw6xjb8xivC4ail5G61/XJIYSCMaL5HFQspRqAlVDBqPAQqrztK
-         jHNXpSWKX9YaosWRLLE3soV05RLV88Dac01bSdhk6QqsuNF21Ny3PQqe3dvaIPRsTed2
-         mPyrYTmu8DtfOuY24QjljpRQ1I4u3xYvRpAKj209zNuu6v+Q09VDdsxuejfVFT87OoEK
-         +xjQ==
-X-Gm-Message-State: AOAM531qyFUvlwErLNUsMuLEvaG5F9F5yEmtguWD8xG7PU2CuKFMSdpS
-        rxCUPQcCZb78rA4ZZJ0y9hAliA==
-X-Google-Smtp-Source: ABdhPJw9f6aqi3+o81frESGZXUeNPWrqgx/DU+W1LN1KdORszG8GYl97k5eJzrk2BLMcfDAb9Z6How==
-X-Received: by 2002:adf:e4c2:: with SMTP id v2mr6045967wrm.72.1590022195552;
-        Wed, 20 May 2020 17:49:55 -0700 (PDT)
+        bh=Ii4T8Uv4R26SSZ01LXBCwc0eFerXbobCedrcPnGif0k=;
+        b=XYcGe1OTXDNRWDpd7FR/7Bxh4Pf2c+tzm/VrF+9bWEVqDRnVFegQGxSXVrw7k0nuVV
+         QOwNML6igNH/GCoJVoVdyNYTCrMwqW8tMIa1AsUCsPwoShI6aai6PvCfyHVZEAdgxR2+
+         mLT9mFy27Z492dsGZRV8WzpJbJX9jVt0KRYgz+DIWvI6E5Z01mLot+fqn3UOpmS6ARQk
+         iZh0hYAuKhEu1rJwPv/BPJfEOMUsovZCeh0+sUP3/tRFOuJOt0L82EASnYxeu0cHhYLR
+         GRkX52eg0bf/tMtuNrtNzkRu4CjGjIEzj0txy40zECt5MzC3Riqc62TNWxGgqWKX+vmY
+         2PNg==
+X-Gm-Message-State: AOAM530cn8hCVfgtwEgQNvfcTw8wWgkyXVn0+O2YnceBwWjuCBpUzRZ+
+        uDBIPOnXvHEi87jYk8jsfweDPQ==
+X-Google-Smtp-Source: ABdhPJzvUcWrCQJeWao4kk89B4yBcCeKzAaIv8K6lwOdCdwz8n0mhP0f8bDu1C0qm2zBKnrJZUR2fg==
+X-Received: by 2002:a5d:5105:: with SMTP id s5mr6235016wrt.202.1590022198107;
+        Wed, 20 May 2020 17:49:58 -0700 (PDT)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id s15sm4536798wro.80.2020.05.20.17.49.54
+        by smtp.gmail.com with ESMTPSA id s15sm4536798wro.80.2020.05.20.17.49.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 17:49:55 -0700 (PDT)
+        Wed, 20 May 2020 17:49:57 -0700 (PDT)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
         vkoul@kernel.org, robh+dt@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, bryan.odonoghue@linaro.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 1/2] dt-bindings: phy-qcom-usb-hs-phy: Add qcom,enable-vbus-pullup
-Date:   Thu, 21 May 2020 01:50:30 +0100
-Message-Id: <20200521005031.747162-2-bryan.odonoghue@linaro.org>
+Subject: [PATCH 2/2] phy: qcom-usb-hs: Add qcom,enable-vbus-pullup support
+Date:   Thu, 21 May 2020 01:50:31 +0100
+Message-Id: <20200521005031.747162-3-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200521005031.747162-1-bryan.odonoghue@linaro.org>
 References: <20200521005031.747162-1-bryan.odonoghue@linaro.org>
@@ -78,45 +79,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a dt-binding for qcom,enable-vbus-pullup. The binding
-qcom,enable-vbus-pullup tells the HS USB PHY driver whether it should set
-and unset the internal VBUS pullup bits when starting/stopping the USB PHY.
+Downstream has a flag called qcom,dp-manual-pullup which informs the
+downstream driver if it should toggle ULPI_MISC_A_VBUSVLDEXTSEL and
+ULPI_MISC_A_VBUSVLDEXT.
 
-Setting the pullup bits is something you want to do if you have not routed
-VBUS to a GPIO on the SoC and thus cannot use extcon with the current
-switching logic in the PHY.
+Downstream states:
+
+"qcom,dp-manual-pullup: If present, vbus is not routed to USB
+        controller/phy and controller driver therefore enables pull-up
+        explicitly before starting controller using usbcmd run/stop bit."
+
+Working with a type-c controller which handles VBUS entirely means there's
+a need to replicate similar logic in upstream.
+
+The current PHY code waggles these bits if an extcon associated with VBUS
+exists but, that is not the case when using a full-fat type-c controller
+i.e. there's no VBUS line routed to a SoC pad to sense.
+
+This patch enables and disables the VBUS pullup bits on PHY power_on and
+power_off respectively if the DT has declared the bool
+"qcom,enable-vbus-pullup".
 
 Cc: Andy Gross <agross@kernel.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Kishon Vijay Abraham I <kishon@ti.com>
 Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: linux-arm-msm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Cc: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-usb-hs.c | 36 ++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-index b3b75c1e6285..77e9bf1f8ba2 100644
---- a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-@@ -64,6 +64,12 @@ PROPERTIES
-                 from the ULPI_EXT_VENDOR_SPECIFIC address, for example,
-                 <0x1 0x53> would mean "write the value 0x53 to address 0x81".
+diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs.c b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+index 61054272a7c8..578a4e1fc539 100644
+--- a/drivers/phy/qualcomm/phy-qcom-usb-hs.c
++++ b/drivers/phy/qualcomm/phy-qcom-usb-hs.c
+@@ -37,6 +37,7 @@ struct qcom_usb_hs_phy {
+ 	struct ulpi_seq *init_seq;
+ 	struct extcon_dev *vbus_edev;
+ 	struct notifier_block vbus_notify;
++	u8 enable_vbus_pullup:1;
+ };
  
-+- qcom,enable-vbus-pullup:
-+   Usage: optional
-+   Value type: <bool>
-+   Definition: Flag to indicate if the USB PHY driver should toggle internal
-+               VBUS line pullup bits when powering the PHY on or off.
+ static int qcom_usb_hs_phy_set_mode(struct phy *phy,
+@@ -104,6 +105,23 @@ qcom_usb_hs_phy_vbus_notifier(struct notifier_block *nb, unsigned long event,
+ 	return ulpi_write(uphy->ulpi, addr, ULPI_MISC_A_VBUSVLDEXT);
+ }
+ 
++static int qcom_usb_hs_phy_enable_vbus_pullup(struct ulpi *ulpi, bool enable)
++{
++	u8 addr;
++	int ret;
 +
- EXAMPLE
++	if (enable)
++		addr = ULPI_SET(ULPI_MISC_A);
++	else
++		addr = ULPI_CLR(ULPI_MISC_A);
++
++	ret = ulpi_write(ulpi, addr, ULPI_MISC_A_VBUSVLDEXTSEL);
++	if (ret)
++		return ret;
++
++	return ulpi_write(ulpi, addr, ULPI_MISC_A_VBUSVLDEXT);
++}
++
+ static int qcom_usb_hs_phy_power_on(struct phy *phy)
+ {
+ 	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
+@@ -153,6 +171,12 @@ static int qcom_usb_hs_phy_power_on(struct phy *phy)
+ 			goto err_ulpi;
+ 	}
  
- otg: usb-controller {
++	if (uphy->enable_vbus_pullup) {
++		ret = qcom_usb_hs_phy_enable_vbus_pullup(ulpi, true);
++		if (ret)
++			goto err_ulpi;
++	}
++
+ 	if (uphy->vbus_edev) {
+ 		state = extcon_get_state(uphy->vbus_edev, EXTCON_USB);
+ 		/* setup initial state */
+@@ -179,10 +203,19 @@ static int qcom_usb_hs_phy_power_on(struct phy *phy)
+ static int qcom_usb_hs_phy_power_off(struct phy *phy)
+ {
+ 	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
++	struct ulpi *ulpi = uphy->ulpi;
++	int ret;
+ 
+ 	if (uphy->vbus_edev)
+ 		extcon_unregister_notifier(uphy->vbus_edev, EXTCON_USB,
+ 					   &uphy->vbus_notify);
++
++	if (uphy->enable_vbus_pullup) {
++		ret = qcom_usb_hs_phy_enable_vbus_pullup(ulpi, false);
++		if (ret)
++			return ret;
++	}
++
+ 	regulator_disable(uphy->v3p3);
+ 	regulator_disable(uphy->v1p8);
+ 	clk_disable_unprepare(uphy->sleep_clk);
+@@ -228,6 +261,9 @@ static int qcom_usb_hs_phy_probe(struct ulpi *ulpi)
+ 	/* NUL terminate */
+ 	uphy->init_seq[size / 2].addr = uphy->init_seq[size / 2].val = 0;
+ 
++	if (of_property_read_bool(ulpi->dev.of_node, "qcom,enable-vbus-pullup"))
++		uphy->enable_vbus_pullup = 1;
++
+ 	uphy->ref_clk = clk = devm_clk_get(&ulpi->dev, "ref");
+ 	if (IS_ERR(clk))
+ 		return PTR_ERR(clk);
 -- 
 2.25.1
 
