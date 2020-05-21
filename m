@@ -2,80 +2,132 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA340C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459BE206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980E0206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:54:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="R+635lHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgEUPxD (ORCPT
+        id S1728561AbgEUPyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:53:03 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16692 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgEUPxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:53:03 -0400
-IronPort-SDR: cNuu8YoJPC03MPywHk5NA3gFTOoLkTFFrkqjE2HTmNhmn2NlpD6UTu82kCU9U/LBQRCylo1yRY
- 7RKGskc7vNTA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 08:53:02 -0700
-IronPort-SDR: eKT5YmAuvpOe2jI/yMyUnzaqoYjTO7TXYbeXY5qHz70naTws2owmUuAf0RNZEYcKWyjFZtJ1nj
- 8tESj39lG9wQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
-   d="scan'208";a="466832319"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 21 May 2020 08:53:01 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jbnVI-0083z2-Mt; Thu, 21 May 2020 18:53:04 +0300
-Date:   Thu, 21 May 2020 18:53:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v1 0/2] firmware: dmi_scan: Make it work in kexec'ed
- kernel
-Message-ID: <20200521155304.GA1921871@smile.fi.intel.com>
-References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
- <20200120121645.GI32742@smile.fi.intel.com>
+        Thu, 21 May 2020 11:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgEUPyA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:54:00 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F95C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:53:59 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id p4so3263771qvr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QmEALzhwk7Eo5Ax0b5kpGfmrNonq7wH4jHxYDbMzde8=;
+        b=R+635lHhwNb7hME38+md3gHM+CMhfadHVoL2cPwqZk2EVBed1yM+9HNCUK5dpJ+5N1
+         WTLhIYe1Vjf3Pa+G29u6AsHFK498lLnjDzv3j4N5p5NmgCdJ9GVpLRVL4NUu9ntugvjH
+         bcSoYqNLcRQwKijL/29amOQzu/HHNoqLyFs+4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QmEALzhwk7Eo5Ax0b5kpGfmrNonq7wH4jHxYDbMzde8=;
+        b=VVMScPkS6jV4UOnQbqABH6n+YyWHlztcTnYCNDXZi9pEQrPsI8DUHMIt1sn6Dsg9q6
+         ZsEHQEsFdbAh9hnV//56MlOQUatQOEmic6Pmcst4/CbyWRTckOzRdZhsuww2/C/fNv8I
+         rzpwMRwrjC2D+jOINqsGIQNMVyRd3fI6K3XtebILBFIrDdWVJxOLBl+i7xjdFrFrhF3/
+         s7XpLcoDb/OeELvNVi//7oCLqnrujEwJ4AOBn7AAJhV4JcQ5PRATYrS3HdK3bClbPMwW
+         4QC8XMvrWARIF9rD6LL1YozPRQHOHHOdkSuXPe3TgWOTejX5iP/9RVxHovti1BFnLaur
+         kq+g==
+X-Gm-Message-State: AOAM533dgJqWbbOTlQ6m/AzPrx3a64WsHkLCjWmsP2nqzQoQevZmisVT
+        GTEjd7H0aMhDghZ/iRCmqaMd53S1Smo=
+X-Google-Smtp-Source: ABdhPJyEWi0GkkYhZZQ2Agt0JEoZv4HIT8vhQHuH7WRbGRrGfL5Wk8l2o369RucwAKJcILEpOQVHQg==
+X-Received: by 2002:a0c:fe03:: with SMTP id x3mr10273553qvr.18.1590076438134;
+        Thu, 21 May 2020 08:53:58 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id z185sm5365661qka.79.2020.05.21.08.53.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 08:53:57 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        matthewb@google.com, jsbarnes@google.com, vapier@google.com,
+        christian@brauner.io, vpillai@digitalocean.com,
+        vineethrp@gmail.com, peterz@infradead.org, stable@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: [PATCH RFC] sched/headers: Fix sched_setattr userspace compilation issues
+Date:   Thu, 21 May 2020 11:53:46 -0400
+Message-Id: <20200521155346.168413-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120121645.GI32742@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 02:16:45PM +0200, Andy Shevchenko wrote:
-> On Fri, Dec 02, 2016 at 09:54:14PM +0200, Andy Shevchenko wrote:
-> > Until now DMI information is lost when kexec'ing. Fix this in the same way as
-> > it has been done for ACPI RSDP.
-> > 
-> > Series has been tested on Galileo Gen2 where DMI is used by drivers, in
-> > particular the default I2C host speed is choosen based on DMI system
-> > information and now gets it correct.
-> 
-> Guys, it was quite a long no hear from you.
-> Today I found that Microsoft Surface 3 also affected by this.
-> 
-> Can we apply these patches for now until you will find better solution?
-> 
-> P.S. I may resend them rebased on recent vanilla.
+On a modern Linux distro, compiling the following program fails:
+ #include<stdlib.h>
+ #include<stdint.h>
+ #include<pthread.h>
+ #include<linux/sched/types.h>
 
-Okay, since there is no reply I take it as confirmation that the problem exists
-and needs to be addressed.  So, I'll send a new version of the series with
-updated commit messages (to mention Surface 3 issue).
+ void main() {
+         struct sched_attr sa;
 
+         return;
+ }
+
+with:
+/usr/include/linux/sched/types.h:8:8: \
+			error: redefinition of ‘struct sched_param’
+    8 | struct sched_param {
+      |        ^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
+                 from /usr/include/sched.h:43,
+                 from /usr/include/pthread.h:23,
+                 from /tmp/s.c:4:
+/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
+note: originally defined here
+   23 | struct sched_param
+      |        ^~~~~~~~~~~
+
+This is also causing a problem on using sched_attr Chrome. The issue is
+sched_param is already provided by glibc.
+
+Guard the kernel's UAPI definition of sched_param with __KERNEL__ so
+that userspace can compile.
+
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ include/uapi/linux/sched/types.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
+index c852153ddb0d3..1f10d935a63fe 100644
+--- a/include/uapi/linux/sched/types.h
++++ b/include/uapi/linux/sched/types.h
+@@ -4,9 +4,11 @@
+ 
+ #include <linux/types.h>
+ 
++#if defined(__KERNEL__)
+ struct sched_param {
+ 	int sched_priority;
+ };
++#endif
+ 
+ #define SCHED_ATTR_SIZE_VER0	48	/* sizeof first published struct */
+ #define SCHED_ATTR_SIZE_VER1	56	/* add: util_{min,max} */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.26.2.761.g0e0b3e54be-goog
 
