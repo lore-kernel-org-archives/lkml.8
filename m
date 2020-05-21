@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C66D207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660D3207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgEUQ4X (ORCPT
+        id S1730093AbgEUQ4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 12:56:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:29888 "EHLO pegase1.c-s.fr"
+        Thu, 21 May 2020 12:56:25 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:15435 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728546AbgEUQ4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 12:56:21 -0400
+        id S1729910AbgEUQ4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 12:56:24 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49SbNR4cJjz9v0lZ;
-        Thu, 21 May 2020 18:55:51 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 49SbNX6PCXz9v0ph;
+        Thu, 21 May 2020 18:55:56 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id gwHAqONeztj1; Thu, 21 May 2020 18:55:51 +0200 (CEST)
+        with ESMTP id f62IEtN_fPss; Thu, 21 May 2020 18:55:56 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49SbNR3LbNz9v127;
-        Thu, 21 May 2020 18:55:51 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49SbNX5PDtz9v0pY;
+        Thu, 21 May 2020 18:55:56 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C2ACD8B778;
-        Thu, 21 May 2020 18:55:53 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F38578B7DB;
+        Thu, 21 May 2020 18:55:58 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id E1vWHHw_IGu7; Thu, 21 May 2020 18:55:53 +0200 (CEST)
+        with ESMTP id m_DMgs0_LbRw; Thu, 21 May 2020 18:55:58 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 566B08B7DC;
-        Thu, 21 May 2020 18:55:53 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 79CBA8B778;
+        Thu, 21 May 2020 18:55:58 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 3818465A53; Thu, 21 May 2020 16:55:53 +0000 (UTC)
-Message-Id: <99a0fcd337ef67088140d1647d75fea026a70413.1590079968.git.christophe.leroy@csgroup.eu>
+        id 59F6165A53; Thu, 21 May 2020 16:55:58 +0000 (UTC)
+Message-Id: <e9534caa51f327c841b3db5f48043a47ad70d246.1590079968.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1590079968.git.christophe.leroy@csgroup.eu>
 References: <cover.1590079968.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v5 02/13] powerpc/40x: Rework 40x PTE access and TLB miss
+Subject: [PATCH v5 07/13] powerpc/40x: Remove EP405
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, michal.simek@xilinx.com,
         arnd@arndb.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 21 May 2020 16:55:53 +0000 (UTC)
+Date:   Thu, 21 May 2020 16:55:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,344 +59,599 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Commit 1bc54c03117b ("powerpc: rework 4xx PTE access and TLB miss")
-reworked 44x PTE access to avoid atomic pte updates, and
-left 8xx, 40x and fsl booke with atomic pte updates.
-Commit 6cfd8990e27d ("powerpc: rework FSL Book-E PTE access and TLB
-miss") removed atomic pte updates on fsl booke.
-It went away on 8xx with commit ddfc20a3b9ae ("powerpc/8xx: Remove
-PTE_ATOMIC_UPDATES").
+EP405 is an old type of board based on a 405GP which is obsolete.
 
-40x is the last platform setting PTE_ATOMIC_UPDATES.
+Remove it.
 
-Rework PTE access and TLB miss to remove PTE_ATOMIC_UPDATES for 40x:
-- Always handle DSI as a fault.
-- Bail out of TLB miss handler when CONFIG_SWAP is set and
-_PAGE_ACCESSED is not set.
-- Bail out of ITLB miss handler when _PAGE_EXEC is not set.
-- Only set WR bit when both _PAGE_RW and _PAGE_DIRTY are set.
-- Remove _PAGE_HWWRITE
-- Don't require PTE_ATOMIC_UPDATES anymore
-
-Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
-v4: Fixed build failure (missing ;)
+v4: A few things from previous patch are now here as there are not related to walnut
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/include/asm/nohash/32/pte-40x.h |  23 +--
- arch/powerpc/include/asm/nohash/pgtable.h    |   2 -
- arch/powerpc/kernel/head_40x.S               | 177 +++----------------
- arch/powerpc/mm/nohash/40x.c                 |   4 +-
- 4 files changed, 34 insertions(+), 172 deletions(-)
+ arch/powerpc/boot/Makefile               |   3 +-
+ arch/powerpc/boot/dts/ep405.dts          | 230 -----------------------
+ arch/powerpc/boot/ep405.c                |  71 -------
+ arch/powerpc/configs/40x/ep405_defconfig |  62 ------
+ arch/powerpc/configs/ppc40x_defconfig    |   1 -
+ arch/powerpc/platforms/40x/Kconfig       |   8 -
+ arch/powerpc/platforms/40x/Makefile      |   1 -
+ arch/powerpc/platforms/40x/ep405.c       | 123 ------------
+ 8 files changed, 1 insertion(+), 498 deletions(-)
+ delete mode 100644 arch/powerpc/boot/dts/ep405.dts
+ delete mode 100644 arch/powerpc/boot/ep405.c
+ delete mode 100644 arch/powerpc/configs/40x/ep405_defconfig
+ delete mode 100644 arch/powerpc/platforms/40x/ep405.c
 
-diff --git a/arch/powerpc/include/asm/nohash/32/pte-40x.h b/arch/powerpc/include/asm/nohash/32/pte-40x.h
-index 12c6811e344b..2d3153cfc0d7 100644
---- a/arch/powerpc/include/asm/nohash/32/pte-40x.h
-+++ b/arch/powerpc/include/asm/nohash/32/pte-40x.h
-@@ -44,9 +44,8 @@
- #define	_PAGE_WRITETHRU	0x008	/* W: caching is write-through */
- #define	_PAGE_USER	0x010	/* matches one of the zone permission bits */
- #define	_PAGE_SPECIAL	0x020	/* software: Special page */
--#define	_PAGE_RW	0x040	/* software: Writes permitted */
- #define	_PAGE_DIRTY	0x080	/* software: dirty page */
--#define _PAGE_HWWRITE	0x100	/* hardware: Dirty & RW, set in exception */
-+#define _PAGE_RW	0x100	/* hardware: WR, anded with dirty in exception */
- #define _PAGE_EXEC	0x200	/* hardware: EX permission */
- #define _PAGE_ACCESSED	0x400	/* software: R: page referenced */
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 749c27fcf2d9..63d7456b9518 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -130,7 +130,7 @@ src-wlib-$(CONFIG_EMBEDDED6xx) += ugecon.c fsl-soc.c
+ src-wlib-$(CONFIG_CPM) += cpm-serial.c
  
-@@ -58,8 +57,8 @@
+ src-plat-y := of.c epapr.c
+-src-plat-$(CONFIG_40x) += fixed-head.S ep405.c cuboot-hotfoot.c \
++src-plat-$(CONFIG_40x) += fixed-head.S cuboot-hotfoot.c \
+ 				cuboot-acadia.c \
+ 				cuboot-kilauea.c simpleboot.c
+ src-plat-$(CONFIG_44x) += treeboot-ebony.c cuboot-ebony.c treeboot-bamboo.c \
+@@ -275,7 +275,6 @@ image-$(CONFIG_EPAPR_BOOT)		+= zImage.epapr
+ #
  
- #define _PAGE_KERNEL_RO		0
- #define _PAGE_KERNEL_ROX	_PAGE_EXEC
--#define _PAGE_KERNEL_RW		(_PAGE_DIRTY | _PAGE_RW | _PAGE_HWWRITE)
--#define _PAGE_KERNEL_RWX	(_PAGE_DIRTY | _PAGE_RW | _PAGE_HWWRITE | _PAGE_EXEC)
-+#define _PAGE_KERNEL_RW		(_PAGE_DIRTY | _PAGE_RW)
-+#define _PAGE_KERNEL_RWX	(_PAGE_DIRTY | _PAGE_RW | _PAGE_EXEC)
- 
- #define _PMD_PRESENT	0x400	/* PMD points to page of PTEs */
- #define _PMD_PRESENT_MASK	_PMD_PRESENT
-@@ -85,21 +84,5 @@
- #define PAGE_READONLY	__pgprot(_PAGE_BASE | _PAGE_USER)
- #define PAGE_READONLY_X	__pgprot(_PAGE_BASE | _PAGE_USER | _PAGE_EXEC)
- 
--#ifndef __ASSEMBLY__
--static inline pte_t pte_wrprotect(pte_t pte)
--{
--	return __pte(pte_val(pte) & ~(_PAGE_RW | _PAGE_HWWRITE));
--}
--
--#define pte_wrprotect pte_wrprotect
--
--static inline pte_t pte_mkclean(pte_t pte)
--{
--	return __pte(pte_val(pte) & ~(_PAGE_DIRTY | _PAGE_HWWRITE));
--}
--
--#define pte_mkclean pte_mkclean
--#endif
--
- #endif /* __KERNEL__ */
- #endif /*  _ASM_POWERPC_NOHASH_32_PTE_40x_H */
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index f27c967d9269..50a4b0bb8d16 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -130,12 +130,10 @@ static inline pte_t pte_exprotect(pte_t pte)
- 	return __pte(pte_val(pte) & ~_PAGE_EXEC);
- }
- 
--#ifndef pte_mkclean
- static inline pte_t pte_mkclean(pte_t pte)
- {
- 	return __pte(pte_val(pte) & ~_PAGE_DIRTY);
- }
--#endif
- 
- static inline pte_t pte_mkold(pte_t pte)
- {
-diff --git a/arch/powerpc/kernel/head_40x.S b/arch/powerpc/kernel/head_40x.S
-index 2cec543c38f0..f45d71ada48b 100644
---- a/arch/powerpc/kernel/head_40x.S
-+++ b/arch/powerpc/kernel/head_40x.S
-@@ -176,135 +176,16 @@ _ENTRY(saved_ksp_limit)
-  * 0x0300 - Data Storage Exception
-  * This happens for just a few reasons.  U0 set (but we don't do that),
-  * or zone protection fault (user violation, write to protected page).
-- * If this is just an update of modified status, we do that quickly
-- * and exit.  Otherwise, we call heavywight functions to do the work.
-+ * The other Data TLB exceptions bail out to this point
-+ * if they can't resolve the lightweight TLB fault.
-  */
- 	START_EXCEPTION(0x0300,	DataStorage)
--	mtspr	SPRN_SPRG_SCRATCH0, r10 /* Save some working registers */
--	mtspr	SPRN_SPRG_SCRATCH1, r11
--#ifdef CONFIG_403GCX
--	stw     r12, 0(r0)
--	stw     r9, 4(r0)
--	mfcr    r11
--	mfspr   r12, SPRN_PID
--	stw     r11, 8(r0)
--	stw     r12, 12(r0)
--#else
--	mtspr	SPRN_SPRG_SCRATCH3, r12
--	mtspr	SPRN_SPRG_SCRATCH4, r9
--	mfcr	r11
--	mfspr	r12, SPRN_PID
--	mtspr	SPRN_SPRG_SCRATCH6, r11
--	mtspr	SPRN_SPRG_SCRATCH5, r12
--#endif
--
--	/* First, check if it was a zone fault (which means a user
--	* tried to access a kernel or read-protected page - always
--	* a SEGV).  All other faults here must be stores, so no
--	* need to check ESR_DST as well. */
--	mfspr	r10, SPRN_ESR
--	andis.	r10, r10, ESR_DIZ@h
--	bne	2f
--
--	mfspr	r10, SPRN_DEAR		/* Get faulting address */
--
--	/* If we are faulting a kernel address, we have to use the
--	 * kernel page tables.
--	 */
--	lis	r11, PAGE_OFFSET@h
--	cmplw	r10, r11
--	blt+	3f
--	lis	r11, swapper_pg_dir@h
--	ori	r11, r11, swapper_pg_dir@l
--	li	r9, 0
--	mtspr	SPRN_PID, r9		/* TLB will have 0 TID */
--	b	4f
--
--	/* Get the PGD for the current thread.
--	 */
--3:
--	mfspr	r11,SPRN_SPRG_THREAD
--	lwz	r11,PGDIR(r11)
--4:
--	tophys(r11, r11)
--	rlwimi	r11, r10, 12, 20, 29	/* Create L1 (pgdir/pmd) address */
--	lwz	r11, 0(r11)		/* Get L1 entry */
--	rlwinm.	r12, r11, 0, 0, 19	/* Extract L2 (pte) base address */
--	beq	2f			/* Bail if no table */
--
--	rlwimi	r12, r10, 22, 20, 29	/* Compute PTE address */
--	lwz	r11, 0(r12)		/* Get Linux PTE */
--
--	andi.	r9, r11, _PAGE_RW	/* Is it writeable? */
--	beq	2f			/* Bail if not */
--
--	/* Update 'changed'.
--	*/
--	ori	r11, r11, _PAGE_DIRTY|_PAGE_ACCESSED|_PAGE_HWWRITE
--	stw	r11, 0(r12)		/* Update Linux page table */
--
--	/* Most of the Linux PTE is ready to load into the TLB LO.
--	 * We set ZSEL, where only the LS-bit determines user access.
--	 * We set execute, because we don't have the granularity to
--	 * properly set this at the page level (Linux problem).
--	 * If shared is set, we cause a zero PID->TID load.
--	 * Many of these bits are software only.  Bits we don't set
--	 * here we (properly should) assume have the appropriate value.
--	 */
--	li	r12, 0x0ce2
--	andc	r11, r11, r12		/* Make sure 20, 21 are zero */
--
--	/* find the TLB index that caused the fault.  It has to be here.
--	*/
--	tlbsx	r9, 0, r10
--
--	tlbwe	r11, r9, TLB_DATA		/* Load TLB LO */
--
--	/* Done...restore registers and get out of here.
--	*/
--#ifdef CONFIG_403GCX
--	lwz     r12, 12(r0)
--	lwz     r11, 8(r0)
--	mtspr   SPRN_PID, r12
--	mtcr    r11
--	lwz     r9, 4(r0)
--	lwz     r12, 0(r0)
--#else
--	mfspr	r12, SPRN_SPRG_SCRATCH5
--	mfspr	r11, SPRN_SPRG_SCRATCH6
--	mtspr	SPRN_PID, r12
--	mtcr	r11
--	mfspr	r9, SPRN_SPRG_SCRATCH4
--	mfspr	r12, SPRN_SPRG_SCRATCH3
--#endif
--	mfspr	r11, SPRN_SPRG_SCRATCH1
--	mfspr	r10, SPRN_SPRG_SCRATCH0
--	PPC405_ERR77_SYNC
--	rfi			/* Should sync shadow TLBs */
--	b	.		/* prevent prefetch past rfi */
--
--2:
--	/* The bailout.  Restore registers to pre-exception conditions
--	 * and call the heavyweights to help us out.
--	 */
--#ifdef CONFIG_403GCX
--	lwz     r12, 12(r0)
--	lwz     r11, 8(r0)
--	mtspr   SPRN_PID, r12
--	mtcr    r11
--	lwz     r9, 4(r0)
--	lwz     r12, 0(r0)
--#else
--	mfspr	r12, SPRN_SPRG_SCRATCH5
--	mfspr	r11, SPRN_SPRG_SCRATCH6
--	mtspr	SPRN_PID, r12
--	mtcr	r11
--	mfspr	r9, SPRN_SPRG_SCRATCH4
--	mfspr	r12, SPRN_SPRG_SCRATCH3
--#endif
--	mfspr	r11, SPRN_SPRG_SCRATCH1
--	mfspr	r10, SPRN_SPRG_SCRATCH0
--	b	DataAccess
-+	EXCEPTION_PROLOG
-+	mfspr	r5, SPRN_ESR		/* Grab the ESR, save it, pass arg3 */
-+	stw	r5, _ESR(r11)
-+	mfspr	r4, SPRN_DEAR		/* Grab the DEAR, save it, pass arg2 */
-+	stw	r4, _DEAR(r11)
-+	EXC_XFER_LITE(0x300, handle_page_fault)
- 
- /*
-  * 0x0400 - Instruction Storage Exception
-@@ -415,11 +296,17 @@ _ENTRY(saved_ksp_limit)
- 
- 	rlwimi	r12, r10, 22, 20, 29	/* Compute PTE address */
- 	lwz	r11, 0(r12)		/* Get Linux PTE */
--	andi.	r9, r11, _PAGE_PRESENT
--	beq	5f
-+#ifdef CONFIG_SWAP
-+	li	r9, _PAGE_PRESENT | _PAGE_ACCESSED
-+#else
-+	li	r9, _PAGE_PRESENT
-+#endif
-+	andc.	r9, r9, r11		/* Check permission */
-+	bne	5f
- 
--	ori	r11, r11, _PAGE_ACCESSED
--	stw	r11, 0(r12)
-+	rlwinm	r9, r11, 1, _PAGE_RW	/* dirty => rw */
-+	and	r9, r9, r11		/* hwwrite = dirty & rw */
-+	rlwimi	r11, r9, 0, _PAGE_RW	/* replace rw by hwwrite */
- 
- 	/* Create TLB tag.  This is the faulting address plus a static
- 	 * set of bits.  These are size, valid, E, U0.
-@@ -463,7 +350,7 @@ _ENTRY(saved_ksp_limit)
- #endif
- 	mfspr	r11, SPRN_SPRG_SCRATCH1
- 	mfspr	r10, SPRN_SPRG_SCRATCH0
--	b	DataAccess
-+	b	DataStorage
- 
- /* 0x1200 - Instruction TLB Miss Exception
-  * Nearly the same as above, except we get our information from different
-@@ -515,11 +402,17 @@ _ENTRY(saved_ksp_limit)
- 
- 	rlwimi	r12, r10, 22, 20, 29	/* Compute PTE address */
- 	lwz	r11, 0(r12)		/* Get Linux PTE */
--	andi.	r9, r11, _PAGE_PRESENT
--	beq	5f
-+#ifdef CONFIG_SWAP
-+	li	r9, _PAGE_PRESENT | _PAGE_ACCESSED | _PAGE_EXEC
-+#else
-+	li	r9, _PAGE_PRESENT | _PAGE_EXEC
-+#endif
-+	andc.	r9, r9, r11		/* Check permission */
-+	bne	5f
- 
--	ori	r11, r11, _PAGE_ACCESSED
--	stw	r11, 0(r12)
-+	rlwinm	r9, r11, 1, _PAGE_RW	/* dirty => rw */
-+	and	r9, r9, r11		/* hwwrite = dirty & rw */
-+	rlwimi	r11, r9, 0, _PAGE_RW	/* replace rw by hwwrite */
- 
- 	/* Create TLB tag.  This is the faulting address plus a static
- 	 * set of bits.  These are size, valid, E, U0.
-@@ -669,18 +562,6 @@ WDTException:
- 	                  (MSR_KERNEL & ~(MSR_ME|MSR_DE|MSR_CE)),
- 			  crit_transfer_to_handler, ret_from_crit_exc)
- 
+ # Board ports in arch/powerpc/platform/40x/Kconfig
+-image-$(CONFIG_EP405)			+= dtbImage.ep405
+ image-$(CONFIG_HOTFOOT)			+= cuImage.hotfoot
+ image-$(CONFIG_ACADIA)			+= cuImage.acadia
+ image-$(CONFIG_OBS600)			+= uImage.obs600
+diff --git a/arch/powerpc/boot/dts/ep405.dts b/arch/powerpc/boot/dts/ep405.dts
+deleted file mode 100644
+index 4ac9c5ab6e6b..000000000000
+--- a/arch/powerpc/boot/dts/ep405.dts
++++ /dev/null
+@@ -1,230 +0,0 @@
 -/*
-- * The other Data TLB exceptions bail out to this point
-- * if they can't resolve the lightweight TLB fault.
+- * Device Tree Source for EP405
+- *
+- * Copyright 2007 IBM Corp.
+- * Benjamin Herrenschmidt <benh@kernel.crashing.org>
+- *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2.  This program is licensed "as is" without
+- * any warranty of any kind, whether express or implied.
 - */
--DataAccess:
--	EXCEPTION_PROLOG
--	mfspr	r5,SPRN_ESR		/* Grab the ESR, save it, pass arg3 */
--	stw	r5,_ESR(r11)
--	mfspr	r4,SPRN_DEAR		/* Grab the DEAR, save it, pass arg2 */
--	stw	r4, _DEAR(r11)
--	EXC_XFER_LITE(0x300, handle_page_fault)
 -
- /* Other PowerPC processors, namely those derived from the 6xx-series
-  * have vectors from 0x2100 through 0x2F00 defined, but marked as reserved.
-  * However, for the 4xx-series processors these are neither defined nor
-diff --git a/arch/powerpc/mm/nohash/40x.c b/arch/powerpc/mm/nohash/40x.c
-index 82862723ab42..4eaf462cda30 100644
---- a/arch/powerpc/mm/nohash/40x.c
-+++ b/arch/powerpc/mm/nohash/40x.c
-@@ -102,7 +102,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
+-/dts-v1/;
+-
+-/ {
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-	model = "ep405";
+-	compatible = "ep405";
+-	dcr-parent = <&{/cpus/cpu@0}>;
+-
+-	aliases {
+-		ethernet0 = &EMAC;
+-		serial0 = &UART0;
+-		serial1 = &UART1;
+-	};
+-
+-	cpus {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		cpu@0 {
+-			device_type = "cpu";
+-			model = "PowerPC,405GP";
+-			reg = <0x00000000>;
+-			clock-frequency = <200000000>; /* Filled in by zImage */
+-			timebase-frequency = <0>; /* Filled in by zImage */
+-			i-cache-line-size = <32>;
+-			d-cache-line-size = <32>;
+-			i-cache-size = <16384>;
+-			d-cache-size = <16384>;
+-			dcr-controller;
+-			dcr-access-method = "native";
+-		};
+-	};
+-
+-	memory {
+-		device_type = "memory";
+-		reg = <0x00000000 0x00000000>; /* Filled in by zImage */
+-	};
+-
+-	UIC0: interrupt-controller {
+-		compatible = "ibm,uic";
+-		interrupt-controller;
+-		cell-index = <0>;
+-		dcr-reg = <0x0c0 0x009>;
+-		#address-cells = <0>;
+-		#size-cells = <0>;
+-		#interrupt-cells = <2>;
+-	};
+-
+-	plb {
+-		compatible = "ibm,plb3";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges;
+-		clock-frequency = <0>; /* Filled in by zImage */
+-
+-		SDRAM0: memory-controller {
+-			compatible = "ibm,sdram-405gp";
+-			dcr-reg = <0x010 0x002>;
+-		};
+-
+-		MAL: mcmal {
+-			compatible = "ibm,mcmal-405gp", "ibm,mcmal";
+-			dcr-reg = <0x180 0x062>;
+-			num-tx-chans = <1>;
+-			num-rx-chans = <1>;
+-			interrupt-parent = <&UIC0>;
+-			interrupts = <
+-				0xb 0x4 /* TXEOB */
+-				0xc 0x4 /* RXEOB */
+-				0xa 0x4 /* SERR */
+-				0xd 0x4 /* TXDE */
+-				0xe 0x4 /* RXDE */>;
+-		};
+-
+-		POB0: opb {
+-			compatible = "ibm,opb-405gp", "ibm,opb";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges = <0xef600000 0xef600000 0x00a00000>;
+-			dcr-reg = <0x0a0 0x005>;
+-			clock-frequency = <0>; /* Filled in by zImage */
+-
+-			UART0: serial@ef600300 {
+-				device_type = "serial";
+-				compatible = "ns16550";
+-				reg = <0xef600300 0x00000008>;
+-				virtual-reg = <0xef600300>;
+-				clock-frequency = <0>; /* Filled in by zImage */
+-				current-speed = <9600>;
+-				interrupt-parent = <&UIC0>;
+-				interrupts = <0x0 0x4>;
+-			};
+-
+-			UART1: serial@ef600400 {
+-				device_type = "serial";
+-				compatible = "ns16550";
+-				reg = <0xef600400 0x00000008>;
+-				virtual-reg = <0xef600400>;
+-				clock-frequency = <0>; /* Filled in by zImage */
+-				current-speed = <9600>;
+-				interrupt-parent = <&UIC0>;
+-				interrupts = <0x1 0x4>;
+-			};
+-
+-			IIC: i2c@ef600500 {
+-				compatible = "ibm,iic-405gp", "ibm,iic";
+-				reg = <0xef600500 0x00000011>;
+-				interrupt-parent = <&UIC0>;
+-				interrupts = <0x2 0x4>;
+-			};
+-
+-			GPIO: gpio@ef600700 {
+-				compatible = "ibm,gpio-405gp";
+-				reg = <0xef600700 0x00000020>;
+-			};
+-
+-			EMAC: ethernet@ef600800 {
+-				linux,network-index = <0x0>;
+-				device_type = "network";
+-				compatible = "ibm,emac-405gp", "ibm,emac";
+-				interrupt-parent = <&UIC0>;
+-				interrupts = <
+-					0xf 0x4 /* Ethernet */
+-					0x9 0x4 /* Ethernet Wake Up */>;
+-				local-mac-address = [000000000000]; /* Filled in by zImage */
+-				reg = <0xef600800 0x00000070>;
+-				mal-device = <&MAL>;
+-				mal-tx-channel = <0>;
+-				mal-rx-channel = <0>;
+-				cell-index = <0>;
+-				max-frame-size = <1500>;
+-				rx-fifo-size = <4096>;
+-				tx-fifo-size = <2048>;
+-				phy-mode = "rmii";
+-				phy-map = <0x00000000>;
+-			};
+-
+-		};
+-
+-		EBC0: ebc {
+-			compatible = "ibm,ebc-405gp", "ibm,ebc";
+-			dcr-reg = <0x012 0x002>;
+-			#address-cells = <2>;
+-			#size-cells = <1>;
+-
+-
+-			/* The ranges property is supplied by the bootwrapper
+-			 * and is based on the firmware's configuration of the
+-			 * EBC bridge
+-			 */
+-			clock-frequency = <0>; /* Filled in by zImage */
+-
+-			/* NVRAM and RTC */
+-			nvrtc@4,200000 {
+-				compatible = "ds1742";
+-				reg = <0x00000004 0x00200000 0x00000000>; /* size fixed up by zImage */
+-			};
+-
+-			/* "BCSR" CPLD contains a PCI irq controller */
+-			bcsr@4,0 {
+-				compatible = "ep405-bcsr";
+-				reg = <0x00000004 0x00000000 0x00000010>;
+-				interrupt-controller;
+-				/* Routing table */
+-				irq-routing = [	00	/* SYSERR */
+-						01	/* STTM */
+-						01	/* RTC */
+-						01	/* FENET */
+-						02	/* NB PCIIRQ mux ? */
+-						03	/* SB Winbond 8259 ? */
+-						04	/* Serial Ring */
+-						05	/* USB (ep405pc) */
+-						06	/* XIRQ 0 */
+-						06	/* XIRQ 1 */
+-						06	/* XIRQ 2 */
+-						06	/* XIRQ 3 */
+-						06	/* XIRQ 4 */
+-						06	/* XIRQ 5 */
+-						06	/* XIRQ 6 */
+-						07];	/* Reserved */
+-			};
+-		};
+-
+-		PCI0: pci@ec000000 {
+-			device_type = "pci";
+-			#interrupt-cells = <1>;
+-			#size-cells = <2>;
+-			#address-cells = <3>;
+-			compatible = "ibm,plb405gp-pci", "ibm,plb-pci";
+-			primary;
+-			reg = <0xeec00000 0x00000008	/* Config space access */
+-			       0xeed80000 0x00000004	/* IACK */
+-			       0xeed80000 0x00000004	/* Special cycle */
+-			       0xef480000 0x00000040>;	/* Internal registers */
+-
+-			/* Outbound ranges, one memory and one IO,
+-			 * later cannot be changed. Chip supports a second
+-			 * IO range but we don't use it for now
+-			 */
+-			ranges = <0x02000000 0x00000000 0x80000000 0x80000000 0x00000000 0x20000000
+-				  0x01000000 0x00000000 0x00000000 0xe8000000 0x00000000 0x00010000>;
+-
+-			/* Inbound 2GB range starting at 0 */
+-			dma-ranges = <0x42000000 0x0 0x0 0x0 0x0 0x80000000>;
+-
+-			/* That's all I know about IRQs on that thing ... */
+-			interrupt-map-mask = <0xf800 0x0 0x0 0x0>;
+-			interrupt-map = <
+-				/* USB */
+-				0x7000 0x0 0x0 0x0 &UIC0 0x1e 0x8 /* IRQ5 */
+-			>;
+-		};
+-	};
+-
+-	chosen {
+-		stdout-path = "/plb/opb/serial@ef600300";
+-	};
+-};
+diff --git a/arch/powerpc/boot/ep405.c b/arch/powerpc/boot/ep405.c
+deleted file mode 100644
+index f9ad1e6a844e..000000000000
+--- a/arch/powerpc/boot/ep405.c
++++ /dev/null
+@@ -1,71 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Embedded Planet EP405 with PlanetCore firmware
+- *
+- * (c) Benjamin Herrenschmidt <benh@kernel.crashing.org>, IBM Corp,\
+- *
+- * Based on ep88xc.c by
+- *
+- * Scott Wood <scottwood@freescale.com>
+- *
+- * Copyright (c) 2007 Freescale Semiconductor, Inc.
+- */
+-
+-#include "ops.h"
+-#include "stdio.h"
+-#include "planetcore.h"
+-#include "dcr.h"
+-#include "4xx.h"
+-#include "io.h"
+-
+-static char *table;
+-static u64 mem_size;
+-
+-static void platform_fixups(void)
+-{
+-	u64 val;
+-	void *nvrtc;
+-
+-	dt_fixup_memory(0, mem_size);
+-	planetcore_set_mac_addrs(table);
+-
+-	if (!planetcore_get_decimal(table, PLANETCORE_KEY_CRYSTAL_HZ, &val)) {
+-		printf("No PlanetCore crystal frequency key.\r\n");
+-		return;
+-	}
+-	ibm405gp_fixup_clocks(val, 0xa8c000);
+-	ibm4xx_quiesce_eth((u32 *)0xef600800, NULL);
+-	ibm4xx_fixup_ebc_ranges("/plb/ebc");
+-
+-	if (!planetcore_get_decimal(table, PLANETCORE_KEY_KB_NVRAM, &val)) {
+-		printf("No PlanetCore NVRAM size key.\r\n");
+-		return;
+-	}
+-	nvrtc = finddevice("/plb/ebc/nvrtc@4,200000");
+-	if (nvrtc != NULL) {
+-		u32 reg[3] = { 4, 0x200000, 0};
+-		getprop(nvrtc, "reg", reg, 3);
+-		reg[2] = (val << 10) & 0xffffffff;
+-		setprop(nvrtc, "reg", reg, 3);
+-	}
+-}
+-
+-void platform_init(unsigned long r3, unsigned long r4, unsigned long r5,
+-		   unsigned long r6, unsigned long r7)
+-{
+-	table = (char *)r3;
+-	planetcore_prepare_table(table);
+-
+-	if (!planetcore_get_decimal(table, PLANETCORE_KEY_MB_RAM, &mem_size))
+-		return;
+-
+-	mem_size *= 1024 * 1024;
+-	simple_alloc_init(_end, mem_size - (unsigned long)_end, 32, 64);
+-
+-	fdt_init(_dtb_start);
+-
+-	planetcore_set_stdout_path(table);
+-
+-	serial_console_init();
+-	platform_ops.fixups = platform_fixups;
+-}
+diff --git a/arch/powerpc/configs/40x/ep405_defconfig b/arch/powerpc/configs/40x/ep405_defconfig
+deleted file mode 100644
+index a3854cf65f8d..000000000000
+--- a/arch/powerpc/configs/40x/ep405_defconfig
++++ /dev/null
+@@ -1,62 +0,0 @@
+-CONFIG_40x=y
+-CONFIG_SYSVIPC=y
+-CONFIG_POSIX_MQUEUE=y
+-CONFIG_LOG_BUF_SHIFT=14
+-CONFIG_BLK_DEV_INITRD=y
+-CONFIG_EXPERT=y
+-CONFIG_KALLSYMS_ALL=y
+-CONFIG_MODULES=y
+-CONFIG_MODULE_UNLOAD=y
+-# CONFIG_BLK_DEV_BSG is not set
+-CONFIG_EP405=y
+-# CONFIG_WALNUT is not set
+-CONFIG_NET=y
+-CONFIG_PACKET=y
+-CONFIG_UNIX=y
+-CONFIG_INET=y
+-CONFIG_IP_PNP=y
+-CONFIG_IP_PNP_DHCP=y
+-CONFIG_IP_PNP_BOOTP=y
+-# CONFIG_IPV6 is not set
+-CONFIG_CONNECTOR=y
+-CONFIG_MTD=y
+-CONFIG_MTD_CMDLINE_PARTS=y
+-CONFIG_MTD_BLOCK=m
+-CONFIG_MTD_CFI=y
+-CONFIG_MTD_JEDECPROBE=y
+-CONFIG_MTD_CFI_AMDSTD=y
+-CONFIG_MTD_PHYSMAP_OF=y
+-CONFIG_BLK_DEV_RAM=y
+-CONFIG_BLK_DEV_RAM_SIZE=35000
+-CONFIG_NETDEVICES=y
+-CONFIG_IBM_EMAC=y
+-# CONFIG_INPUT is not set
+-# CONFIG_SERIO is not set
+-# CONFIG_VT is not set
+-CONFIG_SERIAL_8250=y
+-CONFIG_SERIAL_8250_CONSOLE=y
+-CONFIG_SERIAL_8250_EXTENDED=y
+-CONFIG_SERIAL_8250_SHARE_IRQ=y
+-CONFIG_SERIAL_OF_PLATFORM=y
+-# CONFIG_HW_RANDOM is not set
+-# CONFIG_HWMON is not set
+-CONFIG_THERMAL=y
+-CONFIG_USB=y
+-CONFIG_USB_MON=y
+-CONFIG_USB_OHCI_HCD=y
+-CONFIG_USB_OHCI_HCD_PPC_OF_BE=y
+-CONFIG_USB_OHCI_HCD_PPC_OF_LE=y
+-CONFIG_EXT2_FS=y
+-CONFIG_PROC_KCORE=y
+-CONFIG_TMPFS=y
+-CONFIG_CRAMFS=y
+-CONFIG_NFS_FS=y
+-CONFIG_ROOT_NFS=y
+-CONFIG_DEBUG_FS=y
+-CONFIG_MAGIC_SYSRQ=y
+-CONFIG_DETECT_HUNG_TASK=y
+-CONFIG_CRYPTO_CBC=y
+-CONFIG_CRYPTO_ECB=y
+-CONFIG_CRYPTO_PCBC=y
+-CONFIG_CRYPTO_MD5=y
+-CONFIG_CRYPTO_DES=y
+diff --git a/arch/powerpc/configs/ppc40x_defconfig b/arch/powerpc/configs/ppc40x_defconfig
+index 88960a72b525..25f6c91e843a 100644
+--- a/arch/powerpc/configs/ppc40x_defconfig
++++ b/arch/powerpc/configs/ppc40x_defconfig
+@@ -10,7 +10,6 @@ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PPC4xx_GPIO=y
+ CONFIG_ACADIA=y
+-CONFIG_EP405=y
+ CONFIG_HOTFOOT=y
+ CONFIG_KILAUEA=y
+ CONFIG_MAKALU=y
+diff --git a/arch/powerpc/platforms/40x/Kconfig b/arch/powerpc/platforms/40x/Kconfig
+index 7c25be6c21d9..5d9d96e7223a 100644
+--- a/arch/powerpc/platforms/40x/Kconfig
++++ b/arch/powerpc/platforms/40x/Kconfig
+@@ -7,14 +7,6 @@ config ACADIA
+ 	help
+ 	  This option enables support for the AMCC 405EZ Acadia evaluation board.
  
- 	while (s >= LARGE_PAGE_SIZE_16M) {
- 		pmd_t *pmdp;
--		unsigned long val = p | _PMD_SIZE_16M | _PAGE_EXEC | _PAGE_HWWRITE;
-+		unsigned long val = p | _PMD_SIZE_16M | _PAGE_EXEC | _PAGE_RW;
- 
- 		pmdp = pmd_ptr_k(v);
- 		*pmdp++ = __pmd(val);
-@@ -117,7 +117,7 @@ unsigned long __init mmu_mapin_ram(unsigned long base, unsigned long top)
- 
- 	while (s >= LARGE_PAGE_SIZE_4M) {
- 		pmd_t *pmdp;
--		unsigned long val = p | _PMD_SIZE_4M | _PAGE_EXEC | _PAGE_HWWRITE;
-+		unsigned long val = p | _PMD_SIZE_4M | _PAGE_EXEC | _PAGE_RW;
- 
- 		pmdp = pmd_ptr_k(v);
- 		*pmdp = __pmd(val);
+-config EP405
+-	bool "EP405/EP405PC"
+-	depends on 40x
+-	select 405GP
+-	select FORCE_PCI
+-	help
+-	  This option enables support for the EP405/EP405PC boards.
+-
+ config HOTFOOT
+ 	bool "Hotfoot"
+ 	depends on 40x
+diff --git a/arch/powerpc/platforms/40x/Makefile b/arch/powerpc/platforms/40x/Makefile
+index 812f1a5736fb..122de98527c4 100644
+--- a/arch/powerpc/platforms/40x/Makefile
++++ b/arch/powerpc/platforms/40x/Makefile
+@@ -1,3 +1,2 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_EP405)				+= ep405.o
+ obj-$(CONFIG_PPC40x_SIMPLE)		+= ppc40x_simple.o
+diff --git a/arch/powerpc/platforms/40x/ep405.c b/arch/powerpc/platforms/40x/ep405.c
+deleted file mode 100644
+index 1c8aec6e9bb7..000000000000
+--- a/arch/powerpc/platforms/40x/ep405.c
++++ /dev/null
+@@ -1,123 +0,0 @@
+-/*
+- * Architecture- / platform-specific boot-time initialization code for
+- * IBM PowerPC 4xx based boards. Adapted from original
+- * code by Gary Thomas, Cort Dougan <cort@fsmlabs.com>, and Dan Malek
+- * <dan@net4x.com>.
+- *
+- * Copyright(c) 1999-2000 Grant Erickson <grant@lcse.umn.edu>
+- *
+- * Rewritten and ported to the merged powerpc tree:
+- * Copyright 2007 IBM Corporation
+- * Josh Boyer <jwboyer@linux.vnet.ibm.com>
+- *
+- * Adapted to EP405 by Ben. Herrenschmidt <benh@kernel.crashing.org>
+- *
+- * TODO: Wire up the PCI IRQ mux and the southbridge interrupts
+- *
+- * 2002 (c) MontaVista, Software, Inc.  This file is licensed under
+- * the terms of the GNU General Public License version 2.  This program
+- * is licensed "as is" without any warranty of any kind, whether express
+- * or implied.
+- */
+-
+-#include <linux/init.h>
+-#include <linux/of_platform.h>
+-
+-#include <asm/machdep.h>
+-#include <asm/prom.h>
+-#include <asm/udbg.h>
+-#include <asm/time.h>
+-#include <asm/uic.h>
+-#include <asm/pci-bridge.h>
+-#include <asm/ppc4xx.h>
+-
+-static struct device_node *bcsr_node;
+-static void __iomem *bcsr_regs;
+-
+-/* BCSR registers  */
+-#define BCSR_ID			0
+-#define BCSR_PCI_CTRL	       	1
+-#define BCSR_FLASH_NV_POR_CTRL	2
+-#define BCSR_FENET_UART_CTRL	3
+-#define BCSR_PCI_IRQ		4
+-#define BCSR_XIRQ_SELECT	5
+-#define BCSR_XIRQ_ROUTING	6
+-#define BCSR_XIRQ_STATUS	7
+-#define BCSR_XIRQ_STATUS2	8
+-#define BCSR_SW_STAT_LED_CTRL	9
+-#define BCSR_GPIO_IRQ_PAR_CTRL	10
+-/* there's more, can't be bothered typing them tho */
+-
+-
+-static const struct of_device_id ep405_of_bus[] __initconst = {
+-	{ .compatible = "ibm,plb3", },
+-	{ .compatible = "ibm,opb", },
+-	{ .compatible = "ibm,ebc", },
+-	{},
+-};
+-
+-static int __init ep405_device_probe(void)
+-{
+-	of_platform_bus_probe(NULL, ep405_of_bus, NULL);
+-
+-	return 0;
+-}
+-machine_device_initcall(ep405, ep405_device_probe);
+-
+-static void __init ep405_init_bcsr(void)
+-{
+-	const u8 *irq_routing;
+-	int i;
+-
+-	/* Find the bloody thing & map it */
+-	bcsr_node = of_find_compatible_node(NULL, NULL, "ep405-bcsr");
+-	if (bcsr_node == NULL) {
+-		printk(KERN_ERR "EP405 BCSR not found !\n");
+-		return;
+-	}
+-	bcsr_regs = of_iomap(bcsr_node, 0);
+-	if (bcsr_regs == NULL) {
+-		printk(KERN_ERR "EP405 BCSR failed to map !\n");
+-		return;
+-	}
+-
+-	/* Get the irq-routing property and apply the routing to the CPLD */
+-	irq_routing = of_get_property(bcsr_node, "irq-routing", NULL);
+-	if (irq_routing == NULL)
+-		return;
+-	for (i = 0; i < 16; i++) {
+-		u8 irq = irq_routing[i];
+-		out_8(bcsr_regs + BCSR_XIRQ_SELECT, i);
+-		out_8(bcsr_regs + BCSR_XIRQ_ROUTING, irq);
+-	}
+-	in_8(bcsr_regs + BCSR_XIRQ_SELECT);
+-	mb();
+-	out_8(bcsr_regs + BCSR_GPIO_IRQ_PAR_CTRL, 0xfe);
+-}
+-
+-static void __init ep405_setup_arch(void)
+-{
+-	/* Find & init the BCSR CPLD */
+-	ep405_init_bcsr();
+-
+-	pci_set_flags(PCI_REASSIGN_ALL_RSRC);
+-}
+-
+-static int __init ep405_probe(void)
+-{
+-	if (!of_machine_is_compatible("ep405"))
+-		return 0;
+-
+-	return 1;
+-}
+-
+-define_machine(ep405) {
+-	.name			= "EP405",
+-	.probe			= ep405_probe,
+-	.setup_arch		= ep405_setup_arch,
+-	.progress		= udbg_progress,
+-	.init_IRQ		= uic_init_tree,
+-	.get_irq		= uic_get_irq,
+-	.restart		= ppc4xx_reset_system,
+-	.calibrate_decr		= generic_calibrate_decr,
+-};
 -- 
 2.25.0
 
