@@ -2,178 +2,107 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A42C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E11F920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4AA20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:04:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YmQ8IdzE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R4eqdMGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgEUGC2 (ORCPT
+        id S1728115AbgEUGE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 02:02:28 -0400
-Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:14343
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727033AbgEUGC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 02:02:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m+IRgvb98lYSeIqFyAnQw3B4+dgsy/OH5tD7fdUFjKLVssro3dRg/5/egjPnnyr41YGIijmO+QeI1oSzlJFk5eaLVxTxFuhzeCRXZJq2iBv5cRTo8zI42s72v5PQeB44xZN3N9PCyCDtMcGIuCVXj+GgTx76F5hjlCRu1NM/z88JAvCfJoPpazV1o9ZmcPv6n56LXtfJWbeUIpEOTmT3OGB+7WiEX/nb0xUfGuwTq37BDnc8W6V7DJGfZVqoosc6pWT5UhkdTv1diSF8Jlgs8swxcZstNbBG93Fin1SQSK20k2JbrIrpiPXCth387j3D/+VkRorZinkuZVXaod+f4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6HAfyWLXl1LQgvZgM1LwF3z29A5+h+8dEL2+pMl2RZ4=;
- b=ST0queO0f0J3rVzpa+OafOCuubHUksp0IlBZnwDcgqlJ190tQMGlNXnfhao+9U/4VJO51a856tS4Ph9fGaazxeuu1ninG26zt6xCWIvQT2n40iNpaH4wHWdh24em5Bsk4opQH3JQCtwI4IF8fHqRisZtIwL7stl6nWcUSXrwRiJlDHa3q12p39r713A7pqW2xBYT+UlZY01HUkaLBFcjoB/p1ZpdC+p1I4+WA49XaTZcL2AS6ZhLHou6L285R6AqjuO+YmWfGh+me920SOY2A4J3cOwx5YEGaZoGSXdiApnHyEor2FmnhxoPuPY7LTzp3NuPTnGsxdxLpbaSTjGzwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6HAfyWLXl1LQgvZgM1LwF3z29A5+h+8dEL2+pMl2RZ4=;
- b=YmQ8IdzEglmzdnUwlUCDhBjM++NKAhZnOy2mSlSWYLU/Zip7b4oCPpbPCQH47cwhcSPHDp76Zo7Pay46tTG5iwYMo+QlGbh+72FUyBvj75Vzhc53Q2ujzzFRtPaAxWwcHusN65kfbuIkoCBajpMvt4w1obKTWfrXJROeE29TlB4=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB6PR0402MB2710.eurprd04.prod.outlook.com (2603:10a6:4:95::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Thu, 21 May
- 2020 06:02:24 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::d17b:d767:19c3:b871%6]) with mapi id 15.20.3021.020; Thu, 21 May 2020
- 06:02:24 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Anson Huang <anson.huang@nxp.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
- voltage range
-Thread-Topic: [PATCH v1 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
- voltage range
-Thread-Index: AQHWLx+QIxebg2Y/5kmAxIei6CuwCKiyDF8g
-Date:   Thu, 21 May 2020 06:02:24 +0000
-Message-ID: <DB6PR0402MB2760907E5DE55EBA3BE38D9B88B70@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <1590060368-2282-1-git-send-email-yibin.gong@nxp.com>
- <1590060368-2282-2-git-send-email-yibin.gong@nxp.com>
-In-Reply-To: <1590060368-2282-2-git-send-email-yibin.gong@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 352697ec-f1de-4f55-09cf-08d7fd4c8857
-x-ms-traffictypediagnostic: DB6PR0402MB2710:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0402MB27108869A0DB5983E6F84B6A88B70@DB6PR0402MB2710.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 041032FF37
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HOjR2kzYGym0HGmYy9ivT87UIdkUDW7F6p+T2miioUxxzYIrtUCCQCPjPcxo3tdgKKACPcNdbuMWoecI7gFyjfznOahGcut7uQpUm1b0x7nuVT6LB5U0z1Lzwb2K+fjbRaB6+2CR+gVun6A+L1HQCpH+xVZUjTkk04UmM6EVruhP/vuRLGeblYM2nosrq20V8l5hi/I8jpusUaqx+mn0xexAXGxte4s71GH/YOKGzdyWI0cDq+t3Vm3CCcr/J72sjYre80xFTVUHflAw66noBBYdqadMCrWt8AFRxgMoGEVaEVb2iwHpsQhcS1MUdNvxxr8yPcDZrEhBv6PT2T9CZ+Yt2mZTHnjQwC+UUxpWNc+V1LYfD0RokuAGkOSUqqN2lMS/BLmBs09INfr8sqBkE/07oDA3R5RPqU3RmmXXoZIdYGXAihJOU2VpApXqavNS50To/eHQht7N2ZUu3hKyDjz0CvBA5tD+iUeKNuqeyam9ORnmaDRHveUY0F+wYMhU
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(136003)(346002)(39860400002)(86362001)(2906002)(186003)(76116006)(66446008)(66556008)(64756008)(66946007)(33656002)(44832011)(71200400001)(66476007)(4326008)(52536014)(316002)(26005)(5660300002)(6636002)(478600001)(6506007)(54906003)(55016002)(110136005)(7696005)(9686003)(8936002)(8676002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Xv3xPdMgHOUZxaVnbJMDYf53ZE/nHplY9sx8lGwIXcx4YL/XJiF8ySkrVjr4cXPo4IXn/UGSkuQ5ebbtLntN4xmNoX63b3F5Rtn2L4aIrRtXzLJGLGCHcagniGgE7+vW/9077B0QdkGMb/3SbWHKNWktDKdrh3uy3JaeeoIjv+piwSowHkvrzQoy0ykB7EL/2c51SdkUa0XisCoipVqETv52j2i4rFGMIoCKOdNnHeS6bbWtvvYLwzTZMnmRDJWfRL0/MX76Th1fpW71JB2NPiB7vRCzEhFgSHWy/pzjJndObx/oyJ/Wr6MKZx2hakSNNogfLA0saAAzPLqHGJQLapUnn8W8Gle/IEfnkM9tyGQ2ra55yB5Uxy+g1xpkPjXlxfCP5OlCw7eSDzqhlMPUgpHwWpaQ4SXsd4SKDT0dBxA8MTOg6EB/JtoCsWAW3iaBtQAOXR+OGZHXoEDfh7n9SzMQuUSGoVWaxFxCiepgHSzBXmRINM3HJhlIGee1ZwTr
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 May 2020 02:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgEUGE2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 02:04:28 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0D0C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 23:04:28 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k22so2417547pls.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 23:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nqZNNCwraQG3DufLiaAWTHDtBPB7vJAuN049dNeWG7w=;
+        b=R4eqdMGjaw2EyVbaOywCgxYajMNw0NCD3I+k0OdIjoHib6dMg1W7vBSiP83p+cfBcV
+         dJbHRF3eALRT+4pIEAUzf4ItpVkH0YL6bnjWsU6mYBeYY1lf4k5mIOy1I5mG3U8uWDRp
+         vbgKMhcT17954+UB7LGl1OVtxVdxT/GMm43q0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nqZNNCwraQG3DufLiaAWTHDtBPB7vJAuN049dNeWG7w=;
+        b=P+Zv+3S7ht1SKinDwYReWkAZN+C9uZ5pupBD44gAX/HbhnNBe/DmsEuU4l7+j3nR/q
+         9grGqmtXGS+jRs5BKxk45YfTJBBKdY5jMGm8mWLwg11Ppcg/erWH7A00ol8Hb5BHhA3D
+         6QjqfPLdAYUtyq6B53q8FJ1JiywAHVexbpm7BlfNpcSuLsG+R5s4MG9L8RwrYE/VdAod
+         fbNQ5U8d2lM2HmigtFHhzhy6vHP9DZaXcuylE+Sp3/Veaq2YZ8fIlfaPmb9c3W3WSza0
+         MVHafv8X4Tw7g5q2aoi/mBuhGs+6du/GchgSC0OcDQJpbTdYEDjXYLpyk88Ax4IYg/tR
+         JGbQ==
+X-Gm-Message-State: AOAM533aXhAeRncwH/EnpqJiqGhgEOOronWjz8XQpLoBxHxqBTPkWGIx
+        rmkySfAvaupC4jskmwJ7xvCxuA==
+X-Google-Smtp-Source: ABdhPJxEAYeVa9n3nR+7QkogEGUYWOfoC8AAfmkafGH8EBG4lJMs7GwiSqdKleFsw6yoIR1mwzV4uw==
+X-Received: by 2002:a17:90b:238d:: with SMTP id mr13mr8886374pjb.236.1590041068007;
+        Wed, 20 May 2020 23:04:28 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k18sm3590146pfg.217.2020.05.20.23.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 23:04:27 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v3/RESEND 0/3] Even moar rpmh cleanups
+Date:   Wed, 20 May 2020 23:04:22 -0700
+Message-Id: <20200521060425.24285-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 352697ec-f1de-4f55-09cf-08d7fd4c8857
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2020 06:02:24.1992
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KIZvqn57OKTIpDGbJvuI4rB476KHKnCEDiGQ71CnZozF5EXG0IJARp83mJgoECIyA8uZDol3C4OUqc+lhvbOQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2710
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH v1 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
-> voltage range
->=20
-> Correct ldo1 voltage range from wrong high group(3.0v~3.3v) to low group
-> (1.6v~1.9v) because the ldo1 should be 1.8v. Actually, two voltage groups
-> have been supported at bd718x7-regulator driver, hence, just corrrect the
-> voltage range to 1.6v~3.3v. For ldo2@0.8v, correct voltage range too.
-> Otherwise, ldo1 would be kept @3.0v and ldo2@0.9v which violate i.mx8mm
-> datasheet as the below warning log in kernel:
->=20
-> [    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
-> [    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
->=20
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 4 ++--
->  arch/arm64/boot/dts/freescale/imx8mn-evk.dts      | 9 +++++++++
->  2 files changed, 11 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> index d07e0e6..a1e5483 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> @@ -113,7 +113,7 @@
->=20
->  			ldo1_reg: LDO1 {
->  				regulator-name =3D "LDO1";
-> -				regulator-min-microvolt =3D <3000000>;
-> +				regulator-min-microvolt =3D <1600000>;
->  				regulator-max-microvolt =3D <3300000>;
->  				regulator-boot-on;
->  				regulator-always-on;
-> @@ -121,7 +121,7 @@
->=20
->  			ldo2_reg: LDO2 {
->  				regulator-name =3D "LDO2";
-> -				regulator-min-microvolt =3D <900000>;
-> +				regulator-min-microvolt =3D <800000>;
->  				regulator-max-microvolt =3D <900000>;
->  				regulator-boot-on;
->  				regulator-always-on;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-evk.dts
-> b/arch/arm64/boot/dts/freescale/imx8mn-evk.dts
-> index 61f3519..117ff4b 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn-evk.dts
-> @@ -13,6 +13,15 @@
->  	compatible =3D "fsl,imx8mn-evk", "fsl,imx8mn";  };
->=20
-> +&ecspi1 {
-> +	status =3D "okay";
-> +spidev0: spi@0 {
-> +	compatible =3D "ge,achc";
-> +	reg =3D <0>;
-> +	spi-max-frequency =3D <1000000>;
-> +	};
-> +};
-> +
+(Resent with more Ccs and To lines)
 
-This was added by mistake?
+We remove the tcs_is_free() API and then do super micro optimizations on
+the irq handler. I haven't tested anything here so most likely there's a
+bug (again again)!
 
-Regards,
-Peng.
+Changes from v2:
+ * Went back in time and used the v1 patch for the first patch with
+   the fixes to make it not so complicated
 
->  &A53_0 {
->  	/delete-property/operating-points-v2;
->  };
-> --
-> 2.7.4
+Changes from v1:
+ * First patch became even moar complicated because it combines
+   find_free_tcs() with the check for a request in flight
+ * Fixed subject in patch 2
+ * Put back unsigned long for bitmap operation to silence compiler
+   warning
+ * Picked up review tags
+
+Stephen Boyd (3):
+  soc: qcom: rpmh-rsc: Remove tcs_is_free() API
+  soc: qcom: rpmh-rsc: Loop over fewer bits in irq handler
+  soc: qcom: rpmh-rsc: Fold WARN_ON() into if condition
+
+ drivers/soc/qcom/rpmh-rsc.c | 65 +++++++++++++------------------------
+ 1 file changed, 22 insertions(+), 43 deletions(-)
+
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+
+base-commit: 1f7a3eb785e4a4e196729cd3d5ec97bd5f9f2940
+-- 
+Sent by a computer, using git, on the internet
 
