@@ -2,103 +2,59 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B339C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D5F2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:59:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQH3a0FV"
+	by mail.kernel.org (Postfix) with ESMTP id D002F20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgEUP7V (ORCPT
+        id S1729535AbgEUP7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgEUP7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:59:20 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3CDC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:59:20 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so2993620plo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V4UY/iO1dtV0DGmUtTr7wgmLRF9ZbtUeAeGkEQgW2fg=;
-        b=DQH3a0FVeAxUii5Q3eYrIfWEp1bUHCfXNugFzqJ/GUHWCxzXXFTMo0sMT9dy2YP6mZ
-         YmhHn9uRHC3ItJPcSz58ic3G6tvqkS0kQLRBm5jqfgcZfLsC4EYbXAZEUZnjXRD2d0vL
-         c1kWNFWTl7h5yBBWE5xFrlZkZaWThPSte1CGJLA6Av/fli5/lcw0WRNN7hoM9SRIFqSl
-         6Cxs2kPfhEDQ1107nQysWkXJLlyspHC+NWQQjH2kokwcGUxUbsMFkizUlInrnEyG+/tr
-         JOMq4cJ9zRfhBPU9jqjIPl2orHY9tUXCkPehARudbM+1daUlkopRJnMkR7u/piU19x+z
-         LQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V4UY/iO1dtV0DGmUtTr7wgmLRF9ZbtUeAeGkEQgW2fg=;
-        b=DC9qT4TuqI8u3Q31Fg41vFHG7f/hmpeDXjPpwPbkyRrcvpisVUx04rCfrhp1IYwp1w
-         tf5N0Y5XZGOWfPaHbUWwEI//wcDrGx7VFsa2zdJd6lIvnkk/gJ0/UYmoo9G02svJw2s6
-         gHZScIe7u2QPonAJi5+wRr0ANawN3X0+UA0j0uU2+A/jL25UluFP7LhPLLRqvgfXD5qV
-         7j3RDtvtsqJBzecBTzzWkwMA86poHk7OLpZtGQ/S8x/M3/sLCsKJnNFLeCnxIVIvKbVW
-         eAo6qPJ3HoXS2Jx7G1exz1RLCjQLBQTCyue/cyd2ddnHsB9WJAKEQrZf0AD4of+lS97p
-         ddSw==
-X-Gm-Message-State: AOAM531RkkA4YXJWZLnHqsgg8boo9/02FXwcPp4e6mQdyw7x1ismn7uI
-        teIhCFeBi0PCaQW4+qKPsO0FXskLf71pqAvk0F4GBTnJbOQ=
-X-Google-Smtp-Source: ABdhPJzeahkzD0iIJ3NFgMjoUyG+a8GFkuxsdI6o6RB6HB7bhYm1f1p7qWMDlAv1w9DcLt3Ypxp7TJ4j6Khk9ZqObWs=
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr10547431plt.18.1590076760169;
- Thu, 21 May 2020 08:59:20 -0700 (PDT)
+        Thu, 21 May 2020 11:59:25 -0400
+Received: from muru.com ([72.249.23.125]:55472 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726808AbgEUP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:59:24 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 938BA8107;
+        Thu, 21 May 2020 16:00:13 +0000 (UTC)
+Date:   Thu, 21 May 2020 08:59:21 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     dinghao.liu@zju.edu.cn
+Cc:     kjlu@umn.edu, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maital Hahn <maitalm@ti.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] wlcore: fix runtime pm imbalance in wl1271_op_suspend
+Message-ID: <20200521155921.GC37466@atomide.com>
+References: <20200520125724.12832-1-dinghao.liu@zju.edu.cn>
+ <20200520184854.GY37466@atomide.com>
+ <62e69631.b9cff.1723592e191.Coremail.dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
- <20200120121645.GI32742@smile.fi.intel.com> <20200521155304.GA1921871@smile.fi.intel.com>
-In-Reply-To: <20200521155304.GA1921871@smile.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 21 May 2020 18:59:08 +0300
-Message-ID: <CAHp75VfY84FQaw5HF2hLV3gfY3DFgUa2vqtgEER1qXgKkhPdow@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] firmware: dmi_scan: Make it work in kexec'ed kernel
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62e69631.b9cff.1723592e191.Coremail.dinghao.liu@zju.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 6:55 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Mon, Jan 20, 2020 at 02:16:45PM +0200, Andy Shevchenko wrote:
-> > On Fri, Dec 02, 2016 at 09:54:14PM +0200, Andy Shevchenko wrote:
-> > > Until now DMI information is lost when kexec'ing. Fix this in the same way as
-> > > it has been done for ACPI RSDP.
-> > >
-> > > Series has been tested on Galileo Gen2 where DMI is used by drivers, in
-> > > particular the default I2C host speed is choosen based on DMI system
-> > > information and now gets it correct.
-> >
-> > Guys, it was quite a long no hear from you.
-> > Today I found that Microsoft Surface 3 also affected by this.
-> >
-> > Can we apply these patches for now until you will find better solution?
-> >
-> > P.S. I may resend them rebased on recent vanilla.
->
-> Okay, since there is no reply I take it as confirmation that the problem exists
-> and needs to be addressed.  So, I'll send a new version of the series with
-> updated commit messages (to mention Surface 3 issue).
+* dinghao.liu@zju.edu.cn <dinghao.liu@zju.edu.cn> [200521 04:55]:
+> There is a check against ret after out_sleep tag. If wl1271_configure_suspend_ap()
+> returns an error code, ret will be caught by this check and a warning will be issued.
 
-Ah, I found reply from Eric from Jan 21, this year. Somehow it's
-slipped thru my eyes.
-I'll read it carefully and react accordingly.
+OK thanks for checking. In that case this one too:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Tony Lindgren <tony@atomide.com>
