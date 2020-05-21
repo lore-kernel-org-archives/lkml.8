@@ -2,292 +2,198 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87638C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53437C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B232206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:37:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qUG0/EH6"
+	by mail.kernel.org (Postfix) with ESMTP id 359D42053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 01:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgEUBg6 (ORCPT
+        id S1726979AbgEUBki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 21:36:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbgEUBg5 (ORCPT
+        Wed, 20 May 2020 21:40:38 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34324 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgEUBki (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 21:36:57 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77265C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 18:36:56 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id dh1so2348850qvb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 May 2020 18:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oUriGfgjkQX3LYY7wtj+RwTpaaRdDlt+3hTHB1vDTro=;
-        b=qUG0/EH6XgLuxNXbQdJGezJbSQnq0Y0S/9ctlrDqDZzBmDJvsxq7FBzhGpk11Ot+cT
-         UsLryIJ+nLWIYzsIV6Gu/Gb2PxgGUbjh0zqQVnPG4bzFl45QemjVJQaDawNLUKoLvCC9
-         QJ8VqGPOjpv3ayUyQtnOU0LD/9bRdnFGsbRl64BkFPt8mD+QhsPumB/jzYiHyLkVE4B0
-         902XwQS+EUOGGd8kT064L7blhtHZHmZ24U4MraCQJQSV6gr+SfKf9DRh/zaCfYbaRUPl
-         uuGzpzGRkVx78pLUo5Smp49BsBnHwC+RAjbVqMp24UtmQT38yD4UGvKQGeuitvt76b7K
-         MitQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oUriGfgjkQX3LYY7wtj+RwTpaaRdDlt+3hTHB1vDTro=;
-        b=g+6aJ9M4LbCWTAfTl034J9PD1q/jElj29/FV0TFlvWIRM59ctJDem0HNry1mSc0ftM
-         AVl0iY6nrAD8i/D8VSw5f3o9IqsptduYjPnIzlYWl1/EkeVftM5SzkWHl82AWbay+p6M
-         yO5P/xnu+hSo8l4OFqW7NePbbrDXa40EEdmXYi+Fo5AS4qVybQTU9sBU0esTUfwR+Fgy
-         OqMI10OGP89Gm2Z0dMB7j0pbwrdwLhm7uPF7NfkUAOMTmG2RIKMltTpeGF4DViR2FXhU
-         XTaXdVZqj2RndNzVF2iLugbD6z3diJS0Wt30QZiQflFfDJ1QVfvvoNCpQ4oojLYea0Cx
-         1B4g==
-X-Gm-Message-State: AOAM532rxQT2MlNNfdcEV9GzCeHYEpjz1K5hIF8qwBc9gSowZ0MpTzqI
-        zM/kQJ/PkpthzYsvWuRpxhb/wJygXDOoSZvNj1PflA==
-X-Google-Smtp-Source: ABdhPJy4C/+klK8xF4IEwT19w/09g+zR+6lWSkQvG6oshEgv9u7seIlkLrXJWcxPACRQ5P+F/R97+CzyHpQhoOhPB0E=
-X-Received: by 2002:a0c:ed21:: with SMTP id u1mr7831281qvq.206.1590025015219;
- Wed, 20 May 2020 18:36:55 -0700 (PDT)
+        Wed, 20 May 2020 21:40:38 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 74C798030779;
+        Thu, 21 May 2020 01:40:33 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id d9QIbRN94f6e; Thu, 21 May 2020 04:40:32 +0300 (MSK)
+Date:   Thu, 21 May 2020 04:40:31 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200521014031.7r54unsig477csfu@mobilestation>
+References: <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
+ <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
+ <20200511210714.GO185537@smile.fi.intel.com>
+ <20200511210800.GP185537@smile.fi.intel.com>
+ <20200512124206.l3uv5hg2zimi24dq@mobilestation>
+ <20200515063039.GH333670@vkoul-mobl>
+ <20200517192347.h3hiibsifwfyyr7z@mobilestation>
+ <20200519170246.GS374218@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-References: <20200506084039.249977-1-eizan@chromium.org> <20200506184018.v2.2.I87cf35a058328c780bd3b8b2191209a5011b7016@changeid>
- <CAFqH_50_Py7Diu5bwmjLBPGiy3F5J5qNGmtrbH7i7aTUaHif9A@mail.gmail.com>
-In-Reply-To: <CAFqH_50_Py7Diu5bwmjLBPGiy3F5J5qNGmtrbH7i7aTUaHif9A@mail.gmail.com>
-From:   Eizan Miyamoto <eizan@google.com>
-Date:   Thu, 21 May 2020 11:36:43 +1000
-Message-ID: <CAOak1e-U8kxocZWUV=e9zWHzdfLg0=cnvjtX-Wq0G9Cw=Bcq0g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] [media] mtk-mdp: use pm_runtime in MDP component driver
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Eizan Miyamoto <eizan@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200519170246.GS374218@vkoul-mobl.Dlink>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 3:07 AM Enric Balletbo Serra <eballetbo@gmail.com> wrote:
->
-> Hi Eizan,
->
-> Thank you for the patch.
->
-> Missatge de Eizan Miyamoto <eizan@chromium.org> del dia dc., 6 de maig
-> 2020 a les 10:42:
-> >
-> > Without this change, the MDP components are not fully integrated into
-> > the runtime power management subsystem, and the MDP driver does not
-> > work.
-> >
-> > For each of the component device drivers to be able to call
-> > pm_runtime_get/put_sync() a pointer to the component's device struct
-> > had to be added to struct mtk_mdp_comp, set by mtk_mdp_comp_init().
-> >
-> > Note that the dev argument to mtk_mdp_comp_clock_on/off() has been
-> > removed. Those functions used to be called from the "master" mdp driver
-> > in mtk_mdp_core.c, but the component's device pointer no longer
-> > corresponds to the mdp master device pointer, which is not the right
-> > device to pass to pm_runtime_put/get_sync() which we had to add to get
-> > the driver to work properly.
-> >
-> > Signed-off-by: Eizan Miyamoto <eizan@chromium.org>
-> > ---
-> >
-> > Changes in v2:
->
-> Ah, I guess this change log corresponds to the first patch.
->
-> > - remove empty mtk_mdp_comp_init
-> > - update documentation for enum mtk_mdp_comp_type
-> > - remove comma after last element of mtk_mdp_comp_driver_dt_match
-> >
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 22 ++++++++++++++-----
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |  6 +++--
-> >  drivers/media/platform/mtk-mdp/mtk_mdp_core.c |  6 ++---
-> >  3 files changed, 23 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> > index 5b4d482df778..228c58f92c8c 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <soc/mediatek/smi.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> >
-> >  #include "mtk_mdp_comp.h"
-> >  #include "mtk_mdp_core.h"
-> > @@ -53,7 +54,7 @@ static const struct of_device_id mtk_mdp_comp_driver_dt_match[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, mtk_mdp_comp_driver_dt_match);
-> >
-> > -void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
-> > +void mtk_mdp_comp_clock_on(struct mtk_mdp_comp *comp)
-> >  {
-> >         int i, err;
-> >
-> > @@ -62,25 +63,31 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
-> >                 if (err) {
-> >                         enum mtk_mdp_comp_type comp_type =
-> >                                 (enum mtk_mdp_comp_type)
-> > -                               of_device_get_match_data(dev);
-> > -                       dev_err(dev,
-> > +                               of_device_get_match_data(comp->dev);
-> > +                       dev_err(comp->dev,
-> >                                 "failed to get larb, err %d. type:%d\n",
-> >                                 err, comp_type);
-> >                 }
-> >         }
-> >
-> > +       err = pm_runtime_get_sync(comp->dev);
-> > +       if (err < 0)
-> > +               dev_err(comp->dev,
-> > +                       "failed to runtime get, err %d.\n",
-> > +                       err);
->
-> Should you really ignore this error? If that's the case I'd just call
-> pm_runtime_get_sync() without adding the logic to just print an error
-> message.
+On Tue, May 19, 2020 at 10:32:46PM +0530, Vinod Koul wrote:
+> On 17-05-20, 22:23, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 12:00:39PM +0530, Vinod Koul wrote:
+> > > Hi Serge,
+> > > 
+> > > On 12-05-20, 15:42, Serge Semin wrote:
+> > > > Vinod,
+> > > > 
+> > > > Could you join the discussion for a little bit?
+> > > > 
+> > > > In order to properly fix the problem discussed in this topic, we need to
+> > > > introduce an additional capability exported by DMA channel handlers on per-channel
+> > > > basis. It must be a number, which would indicate an upper limitation of the SG list
+> > > > entries amount.
+> > > > Something like this would do it:
+> > > > struct dma_slave_caps {
+> > > > ...
+> > > > 	unsigned int max_sg_nents;
+> > > > ...
+> > > 
+> > > Looking at the discussion, I agree we should can this up in the
+> > > interface. The max_dma_len suggests the length of a descriptor allowed,
+> > > it does not convey the sg_nents supported which in the case of nollp is
+> > > one.
+> > > 
+> > > Btw is this is a real hardware issue, I have found that value of such
+> > > hardware is very less and people did fix it up in subsequent revs to add
+> > > llp support.
+> > 
+> > Yes, it is. My DW DMAC doesn't support LLP and there isn't going to be new SoC
+> > version produced.(
+> 
+> Ouch
+> 
+> > > Also, another question is why this cannot be handled in driver, I agree
+> > > your hardware does not support llp but that does not stop you from
+> > > breaking a multi_sg list into N hardware descriptors and keep submitting
+> > > them (for this to work submission should be done in isr and not in bh,
+> > > unfortunately very few driver take that route).
+> > 
+> > Current DW DMA driver does that, but this isn't enough. The problem is that
+> > in order to fix the issue in the DMA hardware driver we need to introduce
+> > an inter-dependent channels abstraction and synchronously feed both Tx and
+> > Rx DMA channels with hardware descriptors (LLP entries) one-by-one. This hardly
+> > needed by any slave device driver rather than SPI, which Tx and Rx buffers are
+> > inter-dependent. So Andy's idea was to move the fix to the SPI driver (feed
+> > the DMA engine channels with Tx and Rx data buffers synchronously), but DMA
+> > engine would provide an info whether such fix is required. This can be
+> > determined by the maximum SG entries capability.
+> 
+> Okay but having the sw limitation removed would also be a good idea, you
+> can handle any user, I will leave it upto you, either way is okay
+> 
+> > 
+> > (Note max_sg_ents isn't a limitation on the number of SG entries supported by
+> > the DMA driver, but the number of SG entries handled by the DMA engine in a
+> > single DMA transaction.)
+> > 
+> > > TBH the max_sg_nents or
+> > > max_dma_len are HW restrictions and SW *can* deal with then :-)
+> > 
+> > Yes, it can, but it only works for the cases when individual DMA channels are
+> > utilized. DMA hardware driver doesn't know that the target and source slave
+> > device buffers (SPI Tx and Rx FIFOs) are inter-dependent, that writing to one
+> > you will implicitly push data to another. So due to the interrupts handling
+> > latency Tx DMA channel is restarted faster than Rx DMA channel is reinitialized.
+> > This causes the SPI Rx FIFO overflow and data loss.
+> > 
+> > > 
+> > > In an idea world, you should break the sw descriptor submitted into N hw
+> > > descriptors and submit to hardware and let user know when the sw
+> > > descriptor is completed. Of course we do not do that :(
+> > 
+> > Well, the current Dw DMA driver does that. But due to the two slave device
+> > buffers inter-dependency this isn't enough to perform safe DMA transactions.
+> > Due to the interrupts handling latency Tx DMA channel pushes data to the slave
+> > device buffer faster than Rx DMA channel starts to handle incoming data. This
+> > causes the SPI Rx FIFO overflow.
+> > 
+> > > 
+> > > > };
+> > > > As Andy suggested it's value should be interpreted as:
+> > > > 0          - unlimited number of entries,
+> > > > 1:MAX_UINT - actual limit to the number of entries.
+> > > 
+> > 
+> > > Hmm why 0, why not MAX_UINT for unlimited?
+> > 
+> > 0 is much better for many reasons. First of all MAX_UINT is a lot, but it's
+> > still a number. On x64 platform this might be actual limit if for instance
+> > the block-size register is 32-bits wide. Secondly interpreting 0 as unlimited
+> > number of entries would be more suitable since most of the drivers support
+> > LLP functionality and we wouldn't need to update their code to set MAX_UINT.
+> > Thirdly DMA engines, which don't support LLPs would need to set this parameter
+> > as 1. So if we do as you say and interpret unlimited number of LLPs as MAX_UINT,
+> > then 0 would left unused.
+> > 
+> > To sum up I also think that using 0 as unlimited number SG entries supported is
+> > much better.
+> 
+> ok
+> 
+> > > > In addition to that seeing the dma_get_slave_caps() method provide the caps only
+> > > > by getting them from the DMA device descriptor, while we need to have an info on
+> > > > per-channel basis, it would be good to introduce a new DMA-device callback like:
+> > > > struct dma_device {
+> > > > ...
+> > > > 	int (*device_caps)(struct dma_chan *chan,
+> > > > 			   struct dma_slave_caps *caps);
+> > > 
+> > 
+> > > Do you have a controller where channel caps are on per-channel basis?
+> > 
+> > Yes, I do. Our DW DMA controller has got the maximum burst length non-uniformly
+> > distributed per DMA channels. There are eight channels our controller supports,
+> > among which first two channels can burst up to 32 transfer words, but the rest
+> > of the channels support bursting up to 4 transfer words.
+> > 
+> > So having such device_caps() callback to customize the device capabilities on
+> > per-DMA-channel basis would be very useful! What do you think?
+> 
+> Okay looks like per-ch basis is the way forward!
 
-This is mostly consistent with style elsewhere, e.g., in mtk_mdp_m2m.c
-mtk_mdp_m2m_start_streaming and mtk_mdp_m2m_stop_streaming.
+Great! Thanks. I'll send v3 with updates we've come up to in this discussion.
 
->
-> > +
-> >         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
-> >                 if (IS_ERR(comp->clk[i]))
-> >                         continue;
-> >                 err = clk_prepare_enable(comp->clk[i]);
-> >                 if (err)
-> > -                       dev_err(dev,
-> > +                       dev_err(comp->dev,
-> >                                 "failed to enable clock, err %d. i:%d\n",
-> >                                 err, i);
->
-> Although ignoring errors seems to be a common pattern in this file and
-> I know you did not introduce this.
+-Sergey
 
-Maybe the issue is that since no action is taken, logging at the 'error' log
-level is not the right thing? IOW, should it be changed to an informational
-message instead? Nevertheless, I think we should defer these changes to a
-follow-up patch instead.
-
->
-> >         }
-> >  }
-> >
-> > -void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
-> > +void mtk_mdp_comp_clock_off(struct mtk_mdp_comp *comp)
-> >  {
-> >         int i;
-> >
-> > @@ -92,6 +99,8 @@ void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
-> >
-> >         if (comp->larb_dev)
-> >                 mtk_smi_larb_put(comp->larb_dev);
-> > +
-> > +       pm_runtime_put_sync(comp->dev);
-> >  }
-> >
-> >  static int mtk_mdp_comp_bind(struct device *dev, struct device *master,
-> > @@ -101,6 +110,7 @@ static int mtk_mdp_comp_bind(struct device *dev, struct device *master,
-> >         struct mtk_mdp_dev *mdp = data;
-> >
-> >         mtk_mdp_register_component(mdp, comp);
-> > +       pm_runtime_enable(dev);
-> >
-> >         return 0;
-> >  }
-> > @@ -111,6 +121,7 @@ static void mtk_mdp_comp_unbind(struct device *dev, struct device *master,
-> >         struct mtk_mdp_dev *mdp = data;
-> >         struct mtk_mdp_comp *comp = dev_get_drvdata(dev);
-> >
-> > +       pm_runtime_disable(dev);
-> >         mtk_mdp_unregister_component(mdp, comp);
-> >  }
-> >
-> > @@ -129,6 +140,7 @@ int mtk_mdp_comp_init(struct mtk_mdp_comp *comp, struct device *dev)
-> >                  (enum mtk_mdp_comp_type)of_device_get_match_data(dev);
-> >
-> >         INIT_LIST_HEAD(&comp->node);
-> > +       comp->dev = dev;
-> >
-> >         for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
-> >                 comp->clk[i] = of_clk_get(node, i);
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-> > index b5a18fe567aa..de158d3712f6 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-> > @@ -12,17 +12,19 @@
-> >   * @node:      list node to track sibing MDP components
-> >   * @clk:       clocks required for component
-> >   * @larb_dev:  SMI device required for component
-> > + * @dev:       component's device
-> >   */
-> >  struct mtk_mdp_comp {
-> >         struct list_head        node;
-> >         struct clk              *clk[2];
-> >         struct device           *larb_dev;
-> > +       struct device           *dev;
-> >  };
-> >
-> >  int mtk_mdp_comp_init(struct mtk_mdp_comp *comp, struct device *dev);
-> >
-> > -void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp);
-> > -void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp);
-> > +void mtk_mdp_comp_clock_on(struct mtk_mdp_comp *comp);
-> > +void mtk_mdp_comp_clock_off(struct mtk_mdp_comp *comp);
-> >
-> >  extern struct platform_driver mtk_mdp_component_driver;
-> >
-> > diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> > index 539a7942e3cb..133d107aa4e6 100644
-> > --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> > +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> > @@ -52,20 +52,18 @@ MODULE_DEVICE_TABLE(of, mtk_mdp_of_ids);
-> >
-> >  static void mtk_mdp_clock_on(struct mtk_mdp_dev *mdp)
-> >  {
-> > -       struct device *dev = &mdp->pdev->dev;
-> >         struct mtk_mdp_comp *comp_node;
-> >
-> >         list_for_each_entry(comp_node, &mdp->comp_list, node)
-> > -               mtk_mdp_comp_clock_on(dev, comp_node);
-> > +               mtk_mdp_comp_clock_on(comp_node);
-> >  }
-> >
-> >  static void mtk_mdp_clock_off(struct mtk_mdp_dev *mdp)
-> >  {
-> > -       struct device *dev = &mdp->pdev->dev;
-> >         struct mtk_mdp_comp *comp_node;
-> >
-> >         list_for_each_entry(comp_node, &mdp->comp_list, node)
-> > -               mtk_mdp_comp_clock_off(dev, comp_node);
-> > +               mtk_mdp_comp_clock_off(comp_node);
-> >  }
-> >
-> >  static void mtk_mdp_wdt_worker(struct work_struct *work)
-> > --
-> > 2.26.2.526.g744177e7f7-goog
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> -- 
+> ~Vinod
