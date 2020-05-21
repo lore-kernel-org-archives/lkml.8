@@ -7,98 +7,64 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A932E20671
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A6E20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFYhck/A"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="VOSTfDei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgEUOmS (ORCPT
+        id S1729834AbgEUOmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56922 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728256AbgEUOmR (ORCPT
+        Thu, 21 May 2020 10:42:33 -0400
+Received: from mail4.protonmail.ch ([185.70.40.27]:43359 "EHLO
+        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbgEUOmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:42:17 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09C6C061A0E;
-        Thu, 21 May 2020 07:42:16 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id c16so7694836iol.3;
-        Thu, 21 May 2020 07:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uMf5PSS8v7h+lqCLsnwmzDp+h/BmZ4e0wPer6Vr2cGs=;
-        b=NFYhck/AVQ4UWSacJe7ENhzPcbR6sO8iACNZjErSdvwJ9wrqZ9RJFZ6QenBhe562aP
-         KfxW0cYjDNR4FLotUvUydBbfp3XT14Bk4PiwBWPOSV5h3DPQYpMd5VYt5+adDW8P78L/
-         J5y0pJpf1c0Wt+K5URdoBKLM+JlcXXdbM/ZLd935cpJUasiNfXGfxb1rYepad6dYah8p
-         LeTySwVr6Y4japUvkuFylk3x0yGdsHwJv/VVce+PDL/h9F/Xon80FOzJMA23VS1xgS34
-         h/l/ignBWZh7FA2s8tCDV2906hkU9GTarwXvq9AOjun/QP6IKSHPTzUOfpZPpHs5mrEH
-         Si2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uMf5PSS8v7h+lqCLsnwmzDp+h/BmZ4e0wPer6Vr2cGs=;
-        b=g2d/ep2F3OvwVODjoFgxD+I6AST6x7OvWCduUvlWkeAqK7l/mB/V4Ckx8DT7iQrmPT
-         CZCTnK99GljrtHHCVWSJCYfndFRbahyzXcfjxE3OhCel1+AM0QBD2FHU2KccEIUkgsGY
-         NDQky1Wo0SeQ2RI1F5Wfci9ZUggm1C/Y1zcfkiXFO7uX4EM6JeqSlRq2jDK94n47bSIa
-         Dqi2MISJVjQlyBk13KUPrjZwggNSRk2nf3REmpXRWhtkbWyei6wTLLTXPCmuEItE88oz
-         g2JpVG2WG8eUnNpHESg4lkZ5VlxHteP2ZwtHgjOwpaKfwWzTcLoQFr6MZXpABpv/Pzmy
-         Fmpw==
-X-Gm-Message-State: AOAM532ISirrC/IczdVL54BfA535R3blAc5Zb5ib+bvFwLvIl6LCcDuI
-        G2gex+RRu/h5dizPxC2IT/JRAfSes8TWDz9nhVw=
-X-Google-Smtp-Source: ABdhPJzmmoAtqvKiSRzzQdvPOdNku2+q8onAHYeKer64fb+YIN0nrWX+l4VWuyicyEo2/tLD9Pf2CRLDktLkJDnboNE=
-X-Received: by 2002:a05:6638:118c:: with SMTP id f12mr4230733jas.6.1590072135956;
- Thu, 21 May 2020 07:42:15 -0700 (PDT)
+        Thu, 21 May 2020 10:42:32 -0400
+Date:   Thu, 21 May 2020 14:42:22 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1590072151;
+        bh=5QT3ozfWcrDejI0SGJuAQmXXo/lvctQ8f3juXhOhWLc=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=VOSTfDeiTZAhLr1uwY3qopK9+8Po5cvojbSeN5TiLsIQrFQAC4mygWQjt0lMVQxfa
+         b0teiU5S5ySrgdGRsXwAp3xOennTBF+QVO9ck+j/kpxlihB4SD3QSuGpPTKYGy7ys/
+         VI3bc8ouTV/gBOeM9yBzh0iSMGVwZs+YAV1xHJ/A=
+To:     Thomas Gleixner <tglx@linutronix.de>
+From:   Krzysztof Piecuch <piecuch@protonmail.com>
+Cc:     "linux-kernel\\\\\\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo\\\\\\@redhat.com" <mingo@redhat.com>,
+        "bp\\\\\\@alien8.de" <bp@alien8.de>,
+        "hpa\\\\\\@zytor.com" <hpa@zytor.com>,
+        "x86\\\\\\@kernel.org" <x86@kernel.org>,
+        "rafael.j.wysocki\\\\\\@intel.com" <rafael.j.wysocki@intel.com>,
+        "drake\\\\\\@endlessm.com" <drake@endlessm.com>,
+        "viresh.kumar\\\\\\@linaro.org" <viresh.kumar@linaro.org>,
+        "juri.lelli\\\\\\@redhat.com" <juri.lelli@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "mzhivich\\\\\\@akamai.com" <mzhivich@akamai.com>,
+        "malat\\\\\\@debian.org" <malat@debian.org>
+Reply-To: Krzysztof Piecuch <piecuch@protonmail.com>
+Subject: Re: [PATCH] x86/tsc: Add tsc_early_khz command line parameter overriding early TSC calibration
+Message-ID: <lOHOPnM3pobUS8nKbA1uWAJqWkHj3CaQtmiaYCrf-2Bn13RZgsl8FWyKyGSCgLfIQIPeHP71CZT2lGZmUMFJBFhLtIpQeilTINbv54SrRvw=@protonmail.com>
+In-Reply-To: <87h80at4gt.fsf@nanos.tec.linutronix.de>
+References: <O2CpIOrqLZHgNRkfjRpz_LGqnc1ix_seNIiOCvHY4RHoulOVRo6kMXKuLOfBVTi0SMMevg6Go1uZ_cL9fLYtYdTRNH78ChaFaZyG3VAyYz8=@protonmail.com>
+ <WIxfn1FPETITrmzdhnFHwujR0uEbHZ44PWZgmtRAzmj4rJ4wfzQUbcSWMtneOk0p7HkbJubs0z1BSLaBY3IXJarup8Ukw7Kv0WWYNgPk5bo=@protonmail.com>
+ <87h80at4gt.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200520214757.GA362547@x1> <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
-In-Reply-To: <71dbf4e6-e65b-f001-319c-0b354f675568@ti.com>
-From:   Robert Nelson <robertcnelson@gmail.com>
-Date:   Thu, 21 May 2020 09:41:50 -0500
-Message-ID: <CAOCHtYiw2jJuzbnW02FUmPy-xmmtErMmow46QQJUMs0VtX=cKg@mail.gmail.com>
-Subject: Re: [PATCH v2] arm: dts: am33xx-bone-common: add gpio-line-names
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux kernel <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Not sure if it should be in am335x-bone-common.dtsi.
->
-> For example:
-> am335x-boneblack.dts
->   #include "am335x-bone-common.dtsi"
->   #include "am335x-boneblack-common.dtsi" <-- hdmi defined only here
+On Saturday, February 1, 2020 8:52 PM, Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
+> It's in my backlog and todo list
 
-Ah crap, yeah that's a good point.. So if we stick it in...
-am335x-boneblack-common.dtsi
+Hi, I just wanted to check if there's an ETA on this?
 
-Then the Black-Wireless now has Ethernet...
-
-am335x-boneblack-wireless.dts
-#include "am335x-bone-common.dtsi"
-#include "am335x-boneblack-common.dtsi"
-
-It's going to be ugly, copy and paste mess, but i guess we might as
-well stick it in the device " am335x-boneblack.dts"?
-
-Regards,
-
--- 
-Robert Nelson
-https://rcn-ee.com/
+Thanks,
+Krzysztof Piecuch
