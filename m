@@ -2,215 +2,106 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25C1120721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D4B2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:40:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="eyKMrOdN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqbpbKXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgEUMi7 (ORCPT
+        id S1729323AbgEUMkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37566 "EHLO
+        Thu, 21 May 2020 08:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729185AbgEUMi6 (ORCPT
+        with ESMTP id S1728164AbgEUMkg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:38:58 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0842C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:38:58 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p21so3085856pgm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 05:38:58 -0700 (PDT)
+        Thu, 21 May 2020 08:40:36 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A46C061A0E;
+        Thu, 21 May 2020 05:40:34 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z6so8023268ljm.13;
+        Thu, 21 May 2020 05:40:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qrPX9G3+4aBI10o4oEHyWzWzharRDL5aHtWT6C1hV1M=;
-        b=eyKMrOdNlKxE4hK1V2DTniBs10Fv951OeqXz10XdX18R8Rfd3190Or/83oF/SH95bY
-         uvnoW91oDo+l1trvF6bBOB35j8/L8HZZmvjmG1NlbB7/RfHjC6Qww+CTnf65DOzg3gBM
-         HvL2UmtJKcRKuvQQcowlTcflRqqMNLvyknjmz06+5/TuFOyzPVS+J2J4s/NUfI7GyClY
-         2tuimsIj3m0Gka/Vcc7ZhL+KpuB/95rD27Z9FDuCuP0i01ZBVcDWacPM1vImhji8nu+B
-         21Ydvn693kQ1m8d0AN4yRG+H/hJ1YTf7jl1qRgSnMAdAn/XNUWoU3hjjPFQjz00HF60A
-         S11w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Bz9kW9o/9YtdCQhvvB7QDx10N00o+JmEwpJejIQIQC4=;
+        b=sqbpbKXnnY6uMSFqSGEn3a6CxICrJyZqvk65oaAGSlYLP6esz/UkVdoJ2LsTojVQ/z
+         F3mY0HIvY/wzm+zDbYRIfXdktMFD9zXqXQXT4JfkeXUxe3W0Cs443CEmdR1MlnqbiLvz
+         sCwSMTuRvktY2ATbNsLmp0qgnnL71T6aWbCznAKMUaGT0ZuIp9j0NNQA7eoXEo/wH/Bp
+         WSq5daGmq8lRF07dPqfeOG8+ZRrgeVeHa1gmMJ3R0PNOMS2YbBpR/lIg9XaVJD2571uY
+         q7yLIPA6cKu6yujpOcFxI231bGWMTIxV2feb1uuBQheKSt43UleIlU2grjUVGqCzfa1I
+         RUog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qrPX9G3+4aBI10o4oEHyWzWzharRDL5aHtWT6C1hV1M=;
-        b=VpUi4tt8bC9x+R9LmBryKvx4RpVPPdjVbVziebEQ04Lgb58Sbc4zbRD6mg/siBHKEk
-         qg4dVwXinJac70WITNv+HWbUu1sf2OQCnZYWrkhSerzjL2N9NksRbAy1+pSLSv3dfZ/1
-         W8CIg5iVpkXaEX8ycwDtlxTCAg/I6Q/HLzLfZ0VGNSwkcNyE4NCD49DwKCnIW/816Uyt
-         pPb2ofk16K1bNqHYyshZXZvm+R2RUPOcHfgZc1viqDFhJlgtSCj4qRMgwalKM7Hp4gLC
-         5QrmijmpakrtiG2ZNxxnsRvVvxg+RHZklv9n38c1AZrFlzCFJ353ElgKODVIl3gTdNcT
-         0XEA==
-X-Gm-Message-State: AOAM530U08d16/av037W120yVTfZx3HpjODwchoCGMA0anbPKyWXntYd
-        9mpqqs2lAtg593A54ljfj4DY8g==
-X-Google-Smtp-Source: ABdhPJy9gosZTjDkb+FQ3lX5TtFuOdxNa9fPv/j1JyHKILIqEs4RR3/DsnPRh7l5AqHBoL4DlK9LOQ==
-X-Received: by 2002:a62:8241:: with SMTP id w62mr9613358pfd.187.1590064737961;
-        Thu, 21 May 2020 05:38:57 -0700 (PDT)
-Received: from Smcdef-MBP.lan ([103.136.220.73])
-        by smtp.gmail.com with ESMTPSA id w14sm4152316pgi.12.2020.05.21.05.38.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 May 2020 05:38:57 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     adobriyan@gmail.com, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org
-Cc:     ebiederm@xmission.com, bernd.edlinger@hotmail.de,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] files: Use rcu lock to get the file structures for better performance
-Date:   Thu, 21 May 2020 20:38:35 +0800
-Message-Id: <20200521123835.70069-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        bh=Bz9kW9o/9YtdCQhvvB7QDx10N00o+JmEwpJejIQIQC4=;
+        b=nE1Ewlq/01ZOcvuf5vAGXTKCVzbEMdeRcparP8hYg1axXQ3Y2/FHRKekIan+/aAlPT
+         eP7TUeGMPDyL0Qwz0IfmjdUqgx30Yr0MHIga+A+KnOOO5G/WUHyEX78DFhwL2mQKjTtM
+         nMMG7p39UPqjl6R6LNCt681D3LZc16tLX5tnNsJgVSSfeRDNUWmATDPH7KvcjPo9LcuW
+         03MQk8gxNu/7Gqq6vjL1acd2sQ2v6dh+BPiYi8dupo8KA8oRQMY5X0nAU3R6NlmB132N
+         uFjseGKQmk5BiTyxW7mr/PqVdJ7gi0t6gF6Q/rsmEUpJGptXGAzedk/nKhMUK8/szdFP
+         72iA==
+X-Gm-Message-State: AOAM531OXszLU2W0YYy0HW1Jw7I/YHlkLZ/OZJ3tgG6jF/5iWyQsSt8F
+        snM4kTQD2e/rKDW2NUe9na0z1t2F
+X-Google-Smtp-Source: ABdhPJzNyDE6H412DCiAfBDPeBmNqbKsp22MrTsH+gzNfvHqt6hOaJDPP4B9eJy5cVKcOiRlz5Skqg==
+X-Received: by 2002:a2e:9743:: with SMTP id f3mr5151896ljj.205.1590064833179;
+        Thu, 21 May 2020 05:40:33 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id x8sm1700413ljh.97.2020.05.21.05.40.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 05:40:32 -0700 (PDT)
+Subject: Re: [PATCH] sdhci: tegra: Avoid reading autocal timeout values when
+ not applicable
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+References: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <45c290f9-e276-53be-a7a6-23bf81f50bc3@gmail.com>
+Date:   Thu, 21 May 2020 15:40:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is another safe way to get the file structure without
-holding the files->file_lock. That is rcu lock, and this way
-has better performance. So use the rcu lock instead of the
-files->file_lock.
+20.05.2020 23:08, Sowjanya Komatineni пишет:
+> When auto calibration timeouts, calibration is disabled and fail-safe
+> drive strength values are programmed based on the signal voltage.
+> 
+> Different fail-safe drive strength values based on voltage are
+> applicable only for SoCs supporting 3V3 and 1V8 pad controls.
+> 
+> So, this patch avoids reading these properties from the device tree
+> for SoCs not using pad controls and the warning of missing properties
+> will not show up on these SoC platforms.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 57 ++++++++++++++++++++++++------------------
+>  1 file changed, 33 insertions(+), 24 deletions(-)
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- fs/proc/fd.c         | 31 ++++++++++++++++++++++++-------
- kernel/bpf/syscall.c | 17 +++++++++++------
- kernel/kcmp.c        | 15 ++++++++++-----
- 3 files changed, 45 insertions(+), 18 deletions(-)
+Hello Sowjanya,
 
-diff --git a/fs/proc/fd.c b/fs/proc/fd.c
-index 81882a13212d3..5d5b0f091d32a 100644
---- a/fs/proc/fd.c
-+++ b/fs/proc/fd.c
-@@ -34,19 +34,27 @@ static int seq_show(struct seq_file *m, void *v)
- 	if (files) {
- 		unsigned int fd = proc_fd(m->private);
- 
--		spin_lock(&files->file_lock);
-+		rcu_read_lock();
-+again:
- 		file = fcheck_files(files, fd);
- 		if (file) {
--			struct fdtable *fdt = files_fdtable(files);
-+			struct fdtable *fdt;
-+
-+			if (!get_file_rcu(file)) {
-+				/*
-+				 * we loop to catch the new file (or NULL
-+				 * pointer).
-+				 */
-+				goto again;
-+			}
- 
-+			fdt = files_fdtable(files);
- 			f_flags = file->f_flags;
- 			if (close_on_exec(fd, fdt))
- 				f_flags |= O_CLOEXEC;
--
--			get_file(file);
- 			ret = 0;
- 		}
--		spin_unlock(&files->file_lock);
-+		rcu_read_unlock();
- 		put_files_struct(files);
- 	}
- 
-@@ -160,14 +168,23 @@ static int proc_fd_link(struct dentry *dentry, struct path *path)
- 		unsigned int fd = proc_fd(d_inode(dentry));
- 		struct file *fd_file;
- 
--		spin_lock(&files->file_lock);
-+		rcu_read_lock();
-+again:
- 		fd_file = fcheck_files(files, fd);
- 		if (fd_file) {
-+			if (!get_file_rcu(fd_file)) {
-+				/*
-+				 * we loop to catch the new file
-+				 * (or NULL pointer).
-+				 */
-+				goto again;
-+			}
- 			*path = fd_file->f_path;
- 			path_get(&fd_file->f_path);
-+			fput(fd_file);
- 			ret = 0;
- 		}
--		spin_unlock(&files->file_lock);
-+		rcu_read_unlock();
- 		put_files_struct(files);
- 	}
- 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 8608d6e1b0e0e..441c91378a1fc 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -3451,14 +3451,19 @@ static int bpf_task_fd_query(const union bpf_attr *attr,
- 	if (!files)
- 		return -ENOENT;
- 
--	err = 0;
--	spin_lock(&files->file_lock);
-+	rcu_read_lock();
-+again:
- 	file = fcheck_files(files, fd);
--	if (!file)
-+	if (file) {
-+		if (!get_file_rcu(file)) {
-+			/* we loop to catch the new file (or NULL pointer) */
-+			goto again;
-+		}
-+		err = 0;
-+	} else {
- 		err = -EBADF;
--	else
--		get_file(file);
--	spin_unlock(&files->file_lock);
-+	}
-+	rcu_read_unlock();
- 	put_files_struct(files);
- 
- 	if (err)
-diff --git a/kernel/kcmp.c b/kernel/kcmp.c
-index b3ff9288c6cc9..3b4f2a54186f2 100644
---- a/kernel/kcmp.c
-+++ b/kernel/kcmp.c
-@@ -120,13 +120,18 @@ static int kcmp_epoll_target(struct task_struct *task1,
- 	if (!files)
- 		return -EBADF;
- 
--	spin_lock(&files->file_lock);
-+	rcu_read_lock();
-+again:
- 	filp_epoll = fcheck_files(files, slot.efd);
--	if (filp_epoll)
--		get_file(filp_epoll);
--	else
-+	if (filp_epoll) {
-+		if (!get_file_rcu(filp_epoll)) {
-+			/* we loop to catch the new file (or NULL pointer) */
-+			goto again;
-+		}
-+	} else {
- 		filp_tgt = ERR_PTR(-EBADF);
--	spin_unlock(&files->file_lock);
-+	}
-+	rcu_read_unlock();
- 	put_files_struct(files);
- 
- 	if (filp_epoll) {
--- 
-2.11.0
+Thank you for the patch.
 
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
