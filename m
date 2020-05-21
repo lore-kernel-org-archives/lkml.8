@@ -2,97 +2,124 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE13FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93EF720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771F520738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSYhanAz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iiOwP15g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbgEUTKA (ORCPT
+        id S1730120AbgEUTLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:10:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730425AbgEUTJ6 (ORCPT
+        Thu, 21 May 2020 15:11:02 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13876 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729856AbgEUTLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:09:58 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6657C061A0E;
-        Thu, 21 May 2020 12:09:56 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id ee19so3574053qvb.11;
-        Thu, 21 May 2020 12:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4V3QDFKFZsXUI/pfICicsfUOUS9805zC9jDFYXssMow=;
-        b=eSYhanAzQhGZEiY+3dCu1QiaG4ITdyGX6ae1gmfSbsm3f2/HIxaUV0umpnjYORaAAn
-         v2HLmOP2W0saotJcQtTcVtzDo23F/xke6NCmpDfy0+GIffzPzYKR1MBCu4gif1hILRWd
-         sjEh5JgoWf1gCSkR/HhmENEoq1lOzxxv91FPqEsUbVyQXKe7nCRgZi5GLQ1ogb5fZSk/
-         gVgTEiwDjz2u4GbscR/g9oL7upJChTq/RMkKvNV/ohYHCYOtdGIsPfY8u62LUcvjp0W/
-         o3DPzqmiGuaXh+aLthcAnVUp1sHwIY4zMXCzQR6ECGIgzZhqECwt4hXl1LaAaqDc1wK0
-         0BJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4V3QDFKFZsXUI/pfICicsfUOUS9805zC9jDFYXssMow=;
-        b=IC2V62o55hkf2sXrnBcwyhwfSAa4g17ZS+kVJ3yfTg7BrYnjUmcsPUNZgoYMBfWNoN
-         dznX+CXl29/3V84d/s6jwKR5UbOO4qMUXXVcNFqOldSXT3cO7qHtqYtTd2sZ7Fjw3jRG
-         UGfJQsGIsSkhZvPjhE9Eq3I7U6DBW/dSI8RLXyy7nLr5bYo4XLK+sgRknkHiBzYbIw6S
-         0qfU3bpGgRLEaf4RnIqxPfPNLR4jLOfggqJLsFNLfAgfY7jiD5102iMbNCMdjb5NWIJg
-         eFra1cVkDD5bE4BhaR0kyqD8s4tYzTvqdqvSpAuqWR59kEhZSbrUQsx2E9aCjP3oN4f4
-         /sjA==
-X-Gm-Message-State: AOAM530vIA1wi8USXeU1QiYxyCqDQKsHDZUIr4knNjPGPL5UTZH5Kkgl
-        8ia6PZpC2FptFotsjoaYqUpbjEZ2izvtISqxwRg=
-X-Google-Smtp-Source: ABdhPJxwY7wkwdwPPUpUKbQ9KmcRGuP5kLAjHm6RSFl1KIuQK/XEoCOpe7Q4V3p1Q5WeVohxLyfeX3oo1PNWJqCLoaE=
-X-Received: by 2002:a0c:e4d4:: with SMTP id g20mr205248qvm.228.1590088195968;
- Thu, 21 May 2020 12:09:55 -0700 (PDT)
+        Thu, 21 May 2020 15:11:02 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec6d1b50000>; Thu, 21 May 2020 12:08:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 21 May 2020 12:11:02 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 21 May 2020 12:11:02 -0700
+Received: from [10.2.48.182] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 May
+ 2020 19:11:01 +0000
+Subject: Re: [PATCH 0/4] mm/gup, drm/i915: refactor gup_fast, convert to
+ pin_user_pages()
+To:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+References: <20200519002124.2025955-1-jhubbard@nvidia.com>
+ <159008745422.32320.5724805750977048669@build.alporthouse.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <b907c1d5-b95a-3d00-cafa-0a321f0141d8@nvidia.com>
+Date:   Thu, 21 May 2020 12:11:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200521125247.30178-1-fejes@inf.elte.hu>
-In-Reply-To: <20200521125247.30178-1-fejes@inf.elte.hu>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 21 May 2020 12:09:45 -0700
-Message-ID: <CAEf4BzYO-1UsmO6r3x2C95xLj+Lxg73c0hKF8-ZEnA8Bqy=pvg@mail.gmail.com>
-Subject: Re: [PATCH net-next] Extending bpf_setsockopt with SO_BINDTODEVICE sockopt
-To:     Ferenc Fejes <fejes@inf.elte.hu>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        "David S . Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <159008745422.32320.5724805750977048669@build.alporthouse.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590088117; bh=aBRert5zTUjO3CDnuWETRlzl2UkyVdUVUVTCJIf9+7M=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=iiOwP15g5WTdYZsrZXzHQiwkXMR7CF90OctL3JsApwPFGvyE44Gcmf7EM1pO3ECnc
+         OJzF6eau+CefBy6Ad////MwpNwmH4SJPVKtl0VEe+76F45oxwAKJtzJ8P+M48rzcrt
+         Glhwp/ft/bEKWBo8jTcnZFpeUmktlboEh18+FRG9SXBq3i13BoPfkoZth1DvQUXbxq
+         /76ilrAZ0PCTX/QC+7qUQWS5gD0kas/fTD2u8V5E87L1Hk8YABJQXUAGBV8O3IeCND
+         cs6Co7+1vU4sf+4mQ4YJUyMLVkUyLmHFiWoYZFchzbFik7uZTSQfBmjBPVZcb+sE0m
+         qssa/GT7C0RCg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 5:54 AM Ferenc Fejes <fejes@inf.elte.hu> wrote:
->
-> This option makes possible to programatically bind sockets to netdevices.
-> With the help of this option sockets of VRF unaware applications
-> could be distributed between multiple VRFs with eBPF sock_ops program.
-> This let the applications benefit from the multiple possible routes.
->
-> Signed-off-by: Ferenc Fejes <fejes@inf.elte.hu>
-> ---
->  net/core/filter.c | 39 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
->
+On 2020-05-21 11:57, Chris Wilson wrote:
+> Quoting John Hubbard (2020-05-19 01:21:20)
+>> This needs to go through Andrew's -mm tree, due to adding a new gup.c
+>> routine. However, I would really love to have some testing from the
+>> drm/i915 folks, because I haven't been able to run-time test that part
+>> of it.
+> 
+> CI hit
+> 
+> <4> [185.667750] WARNING: CPU: 0 PID: 1387 at mm/gup.c:2699 internal_get_user_pages_fast+0x63a/0xac0
+> <4> [185.667752] Modules linked in: vgem snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic i915 mei_hdcp x86_pkg_temp_thermal coretemp snd_hda_intel snd_intel_dspcfg crct10dif_pclmul snd_hda_codec crc32_pclmul snd_hwdep snd_hda_core ghash_clmulni_intel cdc_ether usbnet mii snd_pcm e1000e mei_me ptp pps_core mei intel_lpss_pci prime_numbers
+> <4> [185.667774] CPU: 0 PID: 1387 Comm: gem_userptr_bli Tainted: G     U            5.7.0-rc5-CI-Patchwork_17704+ #1
+> <4> [185.667777] Hardware name: Intel Corporation Ice Lake Client Platform/IceLake U DDR4 SODIMM PD RVP, BIOS ICLSFWR1.R00.3234.A01.1906141750 06/14/2019
+> <4> [185.667782] RIP: 0010:internal_get_user_pages_fast+0x63a/0xac0
+> <4> [185.667785] Code: 24 40 08 48 39 5c 24 38 49 89 df 0f 85 74 fc ff ff 48 83 44 24 50 08 48 39 5c 24 58 49 89 dc 0f 85 e0 fb ff ff e9 14 fe ff ff <0f> 0b b8 ea ff ff ff e9 36 fb ff ff 4c 89 e8 48 21 e8 48 39 e8 0f
+> <4> [185.667789] RSP: 0018:ffffc90001133c38 EFLAGS: 00010206
+> <4> [185.667792] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff8884999ee800
+> <4> [185.667795] RDX: 00000000000c0001 RSI: 0000000000000100 RDI: 00007f419e774000
+> <4> [185.667798] RBP: ffff888453dbf040 R08: 0000000000000000 R09: 0000000000000001
+> <4> [185.667800] R10: 0000000000000000 R11: 0000000000000000 R12: ffff888453dbf380
+> <4> [185.667803] R13: ffff8884999ee800 R14: ffff888453dbf3e8 R15: 0000000000000040
+> <4> [185.667806] FS:  00007f419e875e40(0000) GS:ffff88849fe00000(0000) knlGS:0000000000000000
+> <4> [185.667808] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> <4> [185.667811] CR2: 00007f419e873000 CR3: 0000000458bd2004 CR4: 0000000000760ef0
+> <4> [185.667814] PKRU: 55555554
+> <4> [185.667816] Call Trace:
+> <4> [185.667912]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
+> <4> [185.667918]  ? mark_held_locks+0x49/0x70
+> <4> [185.667998]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
+> <4> [185.668073]  ? i915_gem_userptr_get_pages+0x1c6/0x290 [i915]
+> 
+> and then panicked, across a range of systems.
+> -Chris
+> 
 
-I'll let more networking-familiar folks to comment on functionality,
-but features like this needs tests in selftest/bpf.
+Thanks for this report! I'm looking into it now.
 
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 822d662f97ef..25dac75bfc5d 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-
-[...]
+thanks,
+-- 
+John Hubbard
+NVIDIA
