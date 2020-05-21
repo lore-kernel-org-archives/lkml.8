@@ -2,397 +2,119 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDED6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16090C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFC6820823
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590084876;
-	bh=1ycJTuwYHLQy1eQqsvLiRiLLLx/3HyjZl62v40TPbeI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mewVjBy2z1ElrNdu8lInlzmFRFvZk/FuS2gqk64LiIChAoh0RCox8Ff4EX6Tiyk5v
-	 /2t2wCc6IOdwdJy7VEJF2fAZItopeAMkLjhnyIdqoPrQGcm5r2i/kLm5PEafnZFxPK
-	 t1DiCn5nxQ7rqX72dygCt0+YxXw0tVUi80XWF3AU=
+	by mail.kernel.org (Postfix) with ESMTP id 0441A20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 18:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgEUSOg (ORCPT
+        id S1729403AbgEUSPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 14:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35708 "EHLO mail.kernel.org"
+        Thu, 21 May 2020 14:15:19 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25637 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgEUSOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 14:14:36 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63537207D3;
-        Thu, 21 May 2020 18:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590084874;
-        bh=1ycJTuwYHLQy1eQqsvLiRiLLLx/3HyjZl62v40TPbeI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=E+4yBw79CFHog9BQyczxnT0khe1VS+Io55gSEVUs6Asc2vUiUy29F9wvemZJAdrxE
-         T69voyC+3Eqh5Gf10zZ0tENNf67HobImlm7t3Co8TTyQAYZCqcI0as09BhOXvsjhFs
-         Gvx3KxwktH1m7PMxy0UKdhLZCwAPGwOMIiJWIjDU=
-Date:   Thu, 21 May 2020 19:14:29 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v14 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-Message-ID: <20200521191419.21be4a1a@archlinux>
-In-Reply-To: <20200510184537.10335-3-i.mikhaylov@yadro.com>
-References: <20200510184537.10335-1-i.mikhaylov@yadro.com>
-        <20200510184537.10335-3-i.mikhaylov@yadro.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728067AbgEUSPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 14:15:18 -0400
+IronPort-SDR: B1OJchEajIHsjVbNLwyPhcmgGSFWSOhF0jVj564tjY5LsaLD/zxzF7fXMEy49wyvi3cY9g7Wi9
+ ukO33mqKpYDg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 11:15:18 -0700
+IronPort-SDR: 467gzIizawwuQPbVCKoikzWzLyd9P3wjCD7F/en4KMNDyW2znS/vZ+lHLLfj0q2V67sqK7L5/W
+ LFxGcqGl7Kbg==
+X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
+   d="scan'208";a="255377912"
+Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.255.230.233]) ([10.255.230.233])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 11:15:16 -0700
+Subject: Re: [PATCH V2 15/19] selftests/resctrl: Change return type of
+ umount_resctrlfs() to void
+To:     "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+        "babu.moger@amd.com" <babu.moger@amd.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "dcb314@hotmail.com" <dcb314@hotmail.com>
+References: <cover.1589835155.git.sai.praneeth.prakhya@intel.com>
+ <3c00e744acbfa67a1988638f1718cd67382a6f59.1589835155.git.sai.praneeth.prakhya@intel.com>
+ <5703181d-832b-27c1-4b32-241f5cc868fd@intel.com>
+ <FFF73D592F13FD46B8700F0A279B802F573B66AE@ORSMSX114.amr.corp.intel.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <2e9ea256-cbf4-8222-c639-74479400fd77@intel.com>
+Date:   Thu, 21 May 2020 11:15:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <FFF73D592F13FD46B8700F0A279B802F573B66AE@ORSMSX114.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 May 2020 21:45:37 +0300
-Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+Hi Sai,
 
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
+On 5/21/2020 10:19 AM, Prakhya, Sai Praneeth wrote:
+> Hi Reinette,
 > 
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+>> -----Original Message-----
+>> From: Reinette Chatre <reinette.chatre@intel.com>
+>> Sent: Wednesday, May 20, 2020 4:52 PM
+>> To: Prakhya, Sai Praneeth <sai.praneeth.prakhya@intel.com>;
+>> shuah@kernel.org; skhan@linuxfoundation.org; linux-kselftest@vger.kernel.org
+>> Cc: tglx@linutronix.de; mingo@redhat.com; bp@alien8.de; Luck, Tony
+>> <tony.luck@intel.com>; babu.moger@amd.com; james.morse@arm.com;
+>> Shankar, Ravi V <ravi.v.shankar@intel.com>; Yu, Fenghua
+>> <fenghua.yu@intel.com>; x86@kernel.org; linux-kernel@vger.kernel;
+>> dan.carpenter@oracle.com; dcb314@hotmail.com
+>> Subject: Re: [PATCH V2 15/19] selftests/resctrl: Change return type of
+>> umount_resctrlfs() to void
+>>
+>> Hi Sai,
+>>
+>> On 5/18/2020 3:08 PM, Sai Praneeth Prakhya wrote:
+>>> umount_resctrlfs() is used only during tear down path and there is
+>>> nothing much to do if unmount of resctrl file system fails, so, all
+>>> the callers of this function are not checking for the return value.
+>>> Hence, change the return type of this function from int to void.
+>>
+>> Should the callers be ignoring the return value? From what I can tell the
+>> filesystem is unmounted between test runs so I wonder if it may help if the
+>> return code is used and the test exits with an appropriate error to user space for
+>> possible investigation instead of attempting to run a new test on top of the
+>> resctrl filesystem that could potentially be having issues at the time.
 > 
-> Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Makes sense to me to check for the return value of umount() and take appropriate
+> action rather than ignoring it. But, since this might happen very rarely (I haven't
+> noticed umount() failing till now), I am thinking to queue this up for cleanup series.
+> What do you think?
 
-Applied to the togreg branch of iio.git and pushed out as testing
-or the autobuilders to play with it.
+That sounds good.
 
-I 'might' manage to sneak a last pull request to Greg tomorrow
-so this might make the coming merge window though we are cutting
-it close so may go either way.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/proximity/Kconfig    |  11 ++
->  drivers/iio/proximity/Makefile   |   1 +
->  drivers/iio/proximity/vcnl3020.c | 258 +++++++++++++++++++++++++++++++
->  3 files changed, 270 insertions(+)
->  create mode 100644 drivers/iio/proximity/vcnl3020.c
 > 
-> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> index d53601447da4..b8d2b17e60ac 100644
-> --- a/drivers/iio/proximity/Kconfig
-> +++ b/drivers/iio/proximity/Kconfig
-> @@ -112,6 +112,17 @@ config SRF08
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called srf08.
->  
-> +config VCNL3020
-> +	tristate "VCNL3020 proximity sensor"
-> +	select REGMAP_I2C
-> +	depends on I2C
-> +	help
-> +	  Say Y here if you want to build a driver for the Vishay VCNL3020
-> +	  proximity sensor.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called vcnl3020.
-> +
->  config VL53L0X_I2C
->  	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
->  	depends on I2C
-> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-> index 0bb5f9de13d6..8245978ced30 100644
-> --- a/drivers/iio/proximity/Makefile
-> +++ b/drivers/iio/proximity/Makefile
-> @@ -12,5 +12,6 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
->  obj-$(CONFIG_SRF04)		+= srf04.o
->  obj-$(CONFIG_SRF08)		+= srf08.o
->  obj-$(CONFIG_SX9500)		+= sx9500.o
-> +obj-$(CONFIG_VCNL3020)		+= vcnl3020.o
->  obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
->  
-> diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
-> new file mode 100644
-> index 000000000000..9ff1a164c2e6
-> --- /dev/null
-> +++ b/drivers/iio/proximity/vcnl3020.c
-> @@ -0,0 +1,258 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Support for Vishay VCNL3020 proximity sensor on i2c bus.
-> + * Based on Vishay VCNL4000 driver code.
-> + *
-> + * TODO: interrupts.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/err.h>
-> +#include <linux/delay.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +#define VCNL3020_PROD_ID	0x21
-> +
-> +#define VCNL_COMMAND		0x80 /* Command register */
-> +#define VCNL_PROD_REV		0x81 /* Product ID and Revision ID */
-> +#define VCNL_PROXIMITY_RATE	0x82 /* Rate of Proximity Measurement */
-> +#define VCNL_LED_CURRENT	0x83 /* IR LED current for proximity mode */
-> +#define VCNL_PS_RESULT_HI	0x87 /* Proximity result register, MSB */
-> +#define VCNL_PS_RESULT_LO	0x88 /* Proximity result register, LSB */
-> +#define VCNL_PS_ICR		0x89 /* Interrupt Control Register */
-> +#define VCNL_PS_LO_THR_HI	0x8a /* High byte of low threshold value */
-> +#define VCNL_PS_LO_THR_LO	0x8b /* Low byte of low threshold value */
-> +#define VCNL_PS_HI_THR_HI	0x8c /* High byte of high threshold value */
-> +#define VCNL_PS_HI_THR_LO	0x8d /* Low byte of high threshold value */
-> +#define VCNL_ISR		0x8e /* Interrupt Status Register */
-> +#define VCNL_PS_MOD_ADJ		0x8f /* Proximity Modulator Timing Adjustment */
-> +
-> +/* Bit masks for COMMAND register */
-> +#define VCNL_PS_RDY		BIT(5) /* proximity data ready? */
-> +#define VCNL_PS_OD		BIT(3) /* start on-demand proximity
-> +					* measurement
-> +					*/
-> +
-> +#define VCNL_ON_DEMAND_TIMEOUT_US	100000
-> +#define VCNL_POLL_US			20000
-> +
-> +/**
-> + * struct vcnl3020_data - vcnl3020 specific data.
-> + * @regmap:	device register map.
-> + * @dev:	vcnl3020 device.
-> + * @rev:	revision id.
-> + * @lock:	lock for protecting access to device hardware registers.
-> + */
-> +struct vcnl3020_data {
-> +	struct regmap *regmap;
-> +	struct device *dev;
-> +	u8 rev;
-> +	struct mutex lock;
-> +};
-> +
-> +/**
-> + * struct vcnl3020_property - vcnl3020 property.
-> + * @name:	property name.
-> + * @reg:	i2c register offset.
-> + * @conversion_func:	conversion function.
-> + */
-> +struct vcnl3020_property {
-> +	const char *name;
-> +	u32 reg;
-> +	u32 (*conversion_func)(u32 *val);
-> +};
-> +
-> +static u32 microamp_to_reg(u32 *val)
-> +{
-> +	/*
-> +	 * An example of conversion from uA to reg val:
-> +	 * 200000 uA == 200 mA == 20
-> +	 */
-> +	return *val /= 10000;
-> +};
-> +
-> +static struct vcnl3020_property vcnl3020_led_current_property = {
-> +	.name = "vishay,led-current-microamp",
-> +	.reg = VCNL_LED_CURRENT,
-> +	.conversion_func = microamp_to_reg,
-> +};
-> +
-> +static int vcnl3020_get_and_apply_property(struct vcnl3020_data *data,
-> +					   struct vcnl3020_property prop)
-> +{
-> +	int rc;
-> +	u32 val;
-> +
-> +	rc = device_property_read_u32(data->dev, prop.name, &val);
-> +	if (rc)
-> +		return 0;
-> +
-> +	if (prop.conversion_func)
-> +		prop.conversion_func(&val);
-> +
-> +	rc = regmap_write(data->regmap, prop.reg, val);
-> +	if (rc) {
-> +		dev_err(data->dev, "Error (%d) setting property (%s)\n",
-> +			rc, prop.name);
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static int vcnl3020_init(struct vcnl3020_data *data)
-> +{
-> +	int rc;
-> +	unsigned int reg;
-> +
-> +	rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
-> +	if (rc) {
-> +		dev_err(data->dev,
-> +			"Error (%d) reading product revision\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	if (reg != VCNL3020_PROD_ID) {
-> +		dev_err(data->dev,
-> +			"Product id (%x) did not match vcnl3020 (%x)\n", reg,
-> +			VCNL3020_PROD_ID);
-> +		return -ENODEV;
-> +	}
-> +
-> +	data->rev = reg;
-> +	mutex_init(&data->lock);
-> +
-> +	return vcnl3020_get_and_apply_property(data,
-> +					       vcnl3020_led_current_property);
-> +};
-> +
-> +static int vcnl3020_measure_proximity(struct vcnl3020_data *data, int *val)
-> +{
-> +	int rc;
-> +	unsigned int reg;
-> +	__be16 res;
-> +
-> +	mutex_lock(&data->lock);
-> +
-> +	rc = regmap_write(data->regmap, VCNL_COMMAND, VCNL_PS_OD);
-> +	if (rc)
-> +		goto err_unlock;
-> +
-> +	/* wait for data to become ready */
-> +	rc = regmap_read_poll_timeout(data->regmap, VCNL_COMMAND, reg,
-> +				      reg & VCNL_PS_RDY, VCNL_POLL_US,
-> +				      VCNL_ON_DEMAND_TIMEOUT_US);
-> +	if (rc) {
-> +		dev_err(data->dev,
-> +			"Error (%d) reading vcnl3020 command register\n", rc);
-> +		goto err_unlock;
-> +	}
-> +
-> +	/* high & low result bytes read */
-> +	rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res,
-> +			      sizeof(res));
-> +	if (rc)
-> +		goto err_unlock;
-> +
-> +	*val = be16_to_cpu(res);
-> +
-> +err_unlock:
-> +	mutex_unlock(&data->lock);
-> +
-> +	return rc;
-> +}
-> +
-> +static const struct iio_chan_spec vcnl3020_channels[] = {
-> +	{
-> +		.type = IIO_PROXIMITY,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +	},
-> +};
-> +
-> +static int vcnl3020_read_raw(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan, int *val,
-> +			     int *val2, long mask)
-> +{
-> +	int rc;
-> +	struct vcnl3020_data *data = iio_priv(indio_dev);
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		rc = vcnl3020_measure_proximity(data, val);
-> +		if (rc)
-> +			return rc;
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info vcnl3020_info = {
-> +	.read_raw = vcnl3020_read_raw,
-> +};
-> +
-> +static const struct regmap_config vcnl3020_regmap_config = {
-> +	.reg_bits	= 8,
-> +	.val_bits	= 8,
-> +	.max_register	= VCNL_PS_MOD_ADJ,
-> +};
-> +
-> +static int vcnl3020_probe(struct i2c_client *client)
-> +{
-> +	struct vcnl3020_data *data;
-> +	struct iio_dev *indio_dev;
-> +	struct regmap *regmap;
-> +	int rc;
-> +
-> +	regmap = devm_regmap_init_i2c(client, &vcnl3020_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(&client->dev, "regmap_init failed\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	data->regmap = regmap;
-> +	data->dev = &client->dev;
-> +
-> +	rc = vcnl3020_init(data);
-> +	if (rc)
-> +		return rc;
-> +
-> +	indio_dev->dev.parent = &client->dev;
-> +	indio_dev->info = &vcnl3020_info;
-> +	indio_dev->channels = vcnl3020_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(vcnl3020_channels);
-> +	indio_dev->name = "vcnl3020";
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	return devm_iio_device_register(&client->dev, indio_dev);
-> +}
-> +
-> +static const struct of_device_id vcnl3020_of_match[] = {
-> +	{
-> +		.compatible = "vishay,vcnl3020",
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, vcnl3020_of_match);
-> +
-> +static struct i2c_driver vcnl3020_driver = {
-> +	.driver = {
-> +		.name   = "vcnl3020",
-> +		.of_match_table = vcnl3020_of_match,
-> +	},
-> +	.probe_new  = vcnl3020_probe,
-> +};
-> +module_i2c_driver(vcnl3020_driver);
-> +
-> +MODULE_AUTHOR("Ivan Mikhaylov <i.mikhaylov@yadro.com>");
-> +MODULE_DESCRIPTION("Vishay VCNL3020 proximity sensor driver");
-> +MODULE_LICENSE("GPL");
+> This bug fixes series will then have patches 16 and 17 because they are fixing a bug
+> that could be easily noticed. Please let me know if you think otherwise.
+
+I don't, dropping this change that makes it easy to ignore an error in
+this round so that any errors could be dealt with better in a later
+patch sounds good to me.
+
+Thank you
+
+Reinette
 
