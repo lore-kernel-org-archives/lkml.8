@@ -2,296 +2,103 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8F62072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 533BC2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ucdqsCgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgEURbJ (ORCPT
+        id S1730050AbgEURb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:31:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15617 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgEURbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:31:08 -0400
-IronPort-SDR: IMux9/kVmQ8NJSq1B1d9KVHan1VRxO6B58vmWtE8JfyBFW+9on8uJj34Ux0yUDe2EUJacA16Ga
- vL1x82tco/aw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 10:31:08 -0700
-IronPort-SDR: F94NVCnpCaNRrEz7m/VNldnTyVNsaF2AbHZr3ceZ7Gm7xTylqL1koadhz58w3uIM8YFw3j8Iuu
- 57MPK5XrutMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
-   d="scan'208";a="466982409"
-Received: from chadcour-mobl.amr.corp.intel.com (HELO ellie) ([10.212.132.196])
-  by fmsmga006.fm.intel.com with ESMTP; 21 May 2020 10:31:07 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Murali Karicheri <m-karicheri2@ti.com>, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        nsekhar@ti.com, grygorii.strashko@ti.com
-Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
-In-Reply-To: <20200506163033.3843-1-m-karicheri2@ti.com>
-References: <20200506163033.3843-1-m-karicheri2@ti.com>
-Date:   Thu, 21 May 2020 10:31:07 -0700
-Message-ID: <87r1vdkxes.fsf@intel.com>
+        Thu, 21 May 2020 13:31:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgEURbZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:31:25 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F9AC061A0E;
+        Thu, 21 May 2020 10:31:25 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Sc9P1j80z9sPF;
+        Fri, 22 May 2020 03:31:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590082282;
+        bh=U2q+9nWVu2OnlzR+r83h0Q4ydB5//CzWr/lK+sJ4gsk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ucdqsCgAg+h50FMDhtJYH8rDSXR7O5vYBCKjBgJQUj0OzMT6ZNB1YI2utxF+JwDVn
+         dN6tyPCwQ/xkZmDhrW0Hv0O0x1L93r+AQnBnyZYX3S2TDyXSy53Y8Ap1sDLi2fZe9e
+         K6ybH1fafBN4Lf27gZ2hjB4r9nSch2UUb2hgO4Qyjc/ys4cBlOLpE3RPtfRzUcZw21
+         nqZTv9uy8LW4cbTyi2yZ5cHpv/rjbPoWj8T4T89J1No3YLv6WDZogFTQGPwaTUaHFv
+         CCHQX3D/A2mpMIEpjQVHeizVZFvziGLRRxHBQUUMRqqJXw1joGeDvW/yoUEh9bk/jv
+         8R3yzJCwQIPLQ==
+Date:   Fri, 22 May 2020 03:31:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20200522033119.1bbd99c5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/wrxL7s9suCEcfFWKJZTtC/p";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Murali Karicheri <m-karicheri2@ti.com> writes:
+--Sig_/wrxL7s9suCEcfFWKJZTtC/p
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> This RFC series add support for Parallel Redundancy Protocol (PRP)
-> as defined in IEC-62439-3 in the kernel networking subsystem. PRP 
-> Uses a Redundancy Control Trailer (RCT) the format of which is
-> similar to HSR Tag. This is used for implementing redundancy.
-> RCT consists of 6 bytes similar to HSR tag and contain following
-> fields:-
->
-> - 16-bit sequence number (SeqNr);
-> - 4-bit LAN identifier (LanId);
-> - 12 bit frame size (LSDUsize);
-> - 16-bit suffix (PRPsuffix). 
->
-> The PRPsuffix identifies PRP frames and distinguishes PRP frames
-> from other protocols that also append a trailer to their useful
-> data. The LSDUsize field allows the receiver to distinguish PRP
-> frames from random, nonredundant frames as an additional check.
-> LSDUsize is the size of the Ethernet payload inclusive of the
-> RCT. Sequence number along with LanId is used for duplicate
-> detection and discard.
->
-> PRP node is also known as Dual Attached Node (DAN-P) since it
-> is typically attached to two different LAN for redundancy.
-> DAN-P duplicates each of L2 frames and send it over the two
-> Ethernet links. Each outgoing frame is appended with RCT.
-> Unlike HSR, these are added to the end of L2 frame and may be
-> treated as padding by bridges and therefore would be work with
-> traditional bridges or switches, where as HSR wouldn't as Tag
-> is prefixed to the Ethenet frame. At the remote end, these are
-> received and the duplicate frame is discarded before the stripped
-> frame is send up the networking stack. Like HSR, PRP also sends
-> periodic Supervision frames to the network. These frames are
-> received and MAC address from the SV frames are populated in a
-> database called Node Table. The above functions are grouped into
-> a block called Link Redundancy Entity (LRE) in the IEC spec.
->
-> As there are many similarities between HSR and PRP protocols,
-> this patch re-use the code from HSR driver to implement PRP
-> driver. As many part of the code can be re-used, this patch
-> introduces a new common API definitions for both protocols and
-> propose to obsolete the existing HSR defines in
-> include/uapi/linux/if_link.h. New definitions are prefixed 
-> with a HSR_PRP prefix. Similarly include/uapi/linux/hsr_netlink.h
-> is proposed to be replaced with include/uapi/linux/hsr_prp_netlink.h
-> which also uses the HSR_PRP prefix. The netlink socket interface
-> code is migrated (as well as the iproute2 being sent as a follow up
-> patch) to use the new API definitions. To re-use the code,
-> following are done as a preparatory patch before adding the PRP
-> functionality:-
->
->   - prefix all common code with hsr_prp
->   - net/hsr -> renamed to net/hsr-prp
->   - All common struct types, constants, functions renamed with
->     hsr{HSR}_prp{PRP} prefix.
+Hi all,
 
-I don't really like these prefixes, I am thinking of when support for
-IEEE 802.1CB is added, do we rename this to "hsr_prp_frer"?
+After merging the tip tree, all my linux-next builds took signficantly
+longer and used much more memory.  In some cases, builds would seg fault
+due to running out of memory :-(
 
-And it gets even more complicated, and using 802.1CB you can configure
-the tagging method and the stream identification function so a system
-can interoperate in a HSR or PRP network.
+I have eventaully bisected it to commit
 
-So, I see this as different methods of achieving the same result, which
-makes me think that the different "methods/types" (HSR and PRP in your
-case) should be basically different implementations of a "struct
-hsr_ops" interface. With this hsr_ops something like this:
+  cdd28ad2d811 ("READ_ONCE: Use data_race() to avoid KCSAN instrumentation")
 
-   struct hsr_ops {
-          int (*handle_frame)()
-          int (*add_port)()
-          int (*remove_port)()
-          int (*setup)()
-          void (*teardown)()
-   };
+For my (e.g.) x86_64 allmodconfig builds (cross compiled on PowerPC le,
+-j80) the elapsed time went from around 9 minutes to over 17 minutes
+and the maximum resident size (as reported by /usr/bin/time) from around
+500M to around 2G (I saw lots of cc1 processes over 2G in size).
 
->
-> Please review this and provide me feedback so that I can work to
-> incorporate them and send a formal patch series for this. As this
-> series impacts user space, I am not sure if this is the right
-> approach to introduce a new definitions and obsolete the old
-> API definitions for HSR. The current approach is choosen
-> to avoid redundant code in iproute2 and in the netlink driver
-> code (hsr_netlink.c). Other approach we discussed internally was
-> to Keep the HSR prefix in the user space and kernel code, but
-> live with the redundant code in the iproute2 and hsr netlink
-> code. Would like to hear from you what is the best way to add
-> this feature to networking core. If there is any other
-> alternative approach possible, I would like to hear about the
-> same.
+For tomorrow's linux-next (well, later today :-() I will revert that
+commit (and its child) when I merge the tip tree.
 
-Why redudant code is needed in the netlink parts and in iproute2 when
-keeping the hsr prefix?
+--=20
+Cheers,
+Stephen Rothwell
 
->
-> The patch was tested using two TI AM57x IDK boards which are
-> connected back to back over two CPSW ports. 
->
-> Script used for creating the hsr/prp interface is given below
-> and uses the ip link command. Also provided logs from the tests
-> I have executed for your reference. 
->
-> iproute2 related patches will follow soon....
->
-> Murali Karicheri
-> Texas Instruments
->
-> ============ setup.sh =================================================
-> #!/bin/sh
-> if [ $# -lt 4 ]
-> then
->        echo "setup-cpsw.sh <hsr/prp> <MAC-Address of slave-A>"
->        echo "  <ip address for hsr/prp interface>"
->        echo "  <if_name of hsr/prp interface>"
->        exit
-> fi
->
-> if [ "$1" != "hsr" ] && [ "$1" != "prp" ]
-> then
->        echo "use hsr or prp as first argument"
->        exit
-> fi
->
-> if_a=eth2
-> if_b=eth3
-> if_name=$4
->
-> ifconfig $if_a down
-> ifconfig $if_b down
-> ifconfig $if_a hw ether $2
-> ifconfig $if_b hw ether $2
-> ifconfig $if_a up
-> ifconfig $if_b up
->
-> echo "Setting up $if_name with MAC address $2 for slaves and IP address $3"
-> echo "          using $if_a and $if_b"
->
-> if [ "$1" = "hsr" ]; then
->        options="version 1"
-> else
->        options=""
-> fi
->
-> ip link add name $if_name type $1 slave1 $if_a slave2 $if_b supervision 0 $options
-> ifconfig $if_name $3 up
-> ==================================================================================
-> PRP Logs:
->
-> DUT-1 : https://pastebin.ubuntu.com/p/hhsRjTQpcr/
-> DUT-2 : https://pastebin.ubuntu.com/p/snPFKhnpk4/
->
-> HSR Logs:
->
-> DUT-1 : https://pastebin.ubuntu.com/p/FZPNc6Nwdm/
-> DUT-2 : https://pastebin.ubuntu.com/p/CtV4ZVS3Yd/
->
-> Murali Karicheri (13):
->   net: hsr: Re-use Kconfig option to support PRP
->   net: hsr: rename hsr directory to hsr-prp to introduce PRP
->   net: hsr: rename files to introduce PRP support
->   net: hsr: rename hsr variable inside struct hsr_port to priv
->   net: hsr: rename hsr_port_get_hsr() to hsr_prp_get_port()
->   net: hsr: some renaming to introduce PRP driver support
->   net: hsr: introduce common uapi include/definitions for HSR and PRP
->   net: hsr: migrate HSR netlink socket code to use new common API
->   net: hsr: move re-usable code for PRP to hsr_prp_netlink.c
->   net: hsr: add netlink socket interface for PRP
->   net: prp: add supervision frame generation and handling support
->   net: prp: add packet handling support
->   net: prp: enhance debugfs to display PRP specific info in node table
->
->  MAINTAINERS                                   |   2 +-
->  include/uapi/linux/hsr_netlink.h              |   3 +
->  include/uapi/linux/hsr_prp_netlink.h          |  50 ++
->  include/uapi/linux/if_link.h                  |  19 +
->  net/Kconfig                                   |   2 +-
->  net/Makefile                                  |   2 +-
->  net/hsr-prp/Kconfig                           |  37 ++
->  net/hsr-prp/Makefile                          |  11 +
->  net/hsr-prp/hsr_netlink.c                     | 202 +++++++
->  net/{hsr => hsr-prp}/hsr_netlink.h            |  15 +-
->  .../hsr_prp_debugfs.c}                        |  82 +--
->  net/hsr-prp/hsr_prp_device.c                  | 562 ++++++++++++++++++
->  net/hsr-prp/hsr_prp_device.h                  |  23 +
->  net/hsr-prp/hsr_prp_forward.c                 | 558 +++++++++++++++++
->  .../hsr_prp_forward.h}                        |  10 +-
->  .../hsr_prp_framereg.c}                       | 323 +++++-----
->  net/hsr-prp/hsr_prp_framereg.h                |  68 +++
->  net/hsr-prp/hsr_prp_main.c                    | 194 ++++++
->  net/hsr-prp/hsr_prp_main.h                    | 289 +++++++++
->  net/hsr-prp/hsr_prp_netlink.c                 | 365 ++++++++++++
->  net/hsr-prp/hsr_prp_netlink.h                 |  28 +
->  net/hsr-prp/hsr_prp_slave.c                   | 222 +++++++
->  net/hsr-prp/hsr_prp_slave.h                   |  37 ++
->  net/hsr-prp/prp_netlink.c                     | 141 +++++
->  net/hsr-prp/prp_netlink.h                     |  27 +
->  net/hsr/Kconfig                               |  29 -
->  net/hsr/Makefile                              |  10 -
->  net/hsr/hsr_device.c                          | 509 ----------------
->  net/hsr/hsr_device.h                          |  22 -
->  net/hsr/hsr_forward.c                         | 379 ------------
->  net/hsr/hsr_framereg.h                        |  62 --
->  net/hsr/hsr_main.c                            | 154 -----
->  net/hsr/hsr_main.h                            | 188 ------
->  net/hsr/hsr_netlink.c                         | 514 ----------------
->  net/hsr/hsr_slave.c                           | 198 ------
->  net/hsr/hsr_slave.h                           |  33 -
->  36 files changed, 3084 insertions(+), 2286 deletions(-)
->  create mode 100644 include/uapi/linux/hsr_prp_netlink.h
->  create mode 100644 net/hsr-prp/Kconfig
->  create mode 100644 net/hsr-prp/Makefile
->  create mode 100644 net/hsr-prp/hsr_netlink.c
->  rename net/{hsr => hsr-prp}/hsr_netlink.h (58%)
->  rename net/{hsr/hsr_debugfs.c => hsr-prp/hsr_prp_debugfs.c} (52%)
->  create mode 100644 net/hsr-prp/hsr_prp_device.c
->  create mode 100644 net/hsr-prp/hsr_prp_device.h
->  create mode 100644 net/hsr-prp/hsr_prp_forward.c
->  rename net/{hsr/hsr_forward.h => hsr-prp/hsr_prp_forward.h} (50%)
->  rename net/{hsr/hsr_framereg.c => hsr-prp/hsr_prp_framereg.c} (56%)
->  create mode 100644 net/hsr-prp/hsr_prp_framereg.h
->  create mode 100644 net/hsr-prp/hsr_prp_main.c
->  create mode 100644 net/hsr-prp/hsr_prp_main.h
->  create mode 100644 net/hsr-prp/hsr_prp_netlink.c
->  create mode 100644 net/hsr-prp/hsr_prp_netlink.h
->  create mode 100644 net/hsr-prp/hsr_prp_slave.c
->  create mode 100644 net/hsr-prp/hsr_prp_slave.h
->  create mode 100644 net/hsr-prp/prp_netlink.c
->  create mode 100644 net/hsr-prp/prp_netlink.h
->  delete mode 100644 net/hsr/Kconfig
->  delete mode 100644 net/hsr/Makefile
->  delete mode 100644 net/hsr/hsr_device.c
->  delete mode 100644 net/hsr/hsr_device.h
->  delete mode 100644 net/hsr/hsr_forward.c
->  delete mode 100644 net/hsr/hsr_framereg.h
->  delete mode 100644 net/hsr/hsr_main.c
->  delete mode 100644 net/hsr/hsr_main.h
->  delete mode 100644 net/hsr/hsr_netlink.c
->  delete mode 100644 net/hsr/hsr_slave.c
->  delete mode 100644 net/hsr/hsr_slave.h
->
-> -- 
-> 2.17.1
->
+--Sig_/wrxL7s9suCEcfFWKJZTtC/p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-Vinicius
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7GuucACgkQAVBC80lX
+0GzOewf/azkhBK6A/fGfOMCMgugNIwuaoC8kaoodaK1hGp1iaXgXcHZvJ4EUOiwj
+lMP8BiS2IxypBpPteksM+hUjO0thTNCQ07PlnmfLXEv4JPezAZF8jCvk/ZxHaUzz
+ZuKA49fsQ5SDRsD10rayvwqyf7OGLTNpsvRA/kd9SxM3tjV1ayLo+4fe1YcrnjcE
+FYHormIYKPWT6/qkpjp60pYmV0DFWzw013dXEM75npvaiErKKrP7H+li8fjWrxJo
+H1Fjhuh3UtWcCkCOGxU/oCbS/EmPyZEghu1l6g9LpJzKfSSPcVs6jywL9PQ+ugZG
+JBqE4uKAgvyzvhAAWIp7UGwe6A7ZxQ==
+=7ehF
+-----END PGP SIGNATURE-----
+
+--Sig_/wrxL7s9suCEcfFWKJZTtC/p--
