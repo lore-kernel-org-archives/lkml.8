@@ -2,107 +2,215 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C4DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B12A120738
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD887206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lvd+cYqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgEUDbC (ORCPT
+        id S1728094AbgEUDh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:31:02 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60932 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728172AbgEUDbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:31:02 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx793d9cVewz03AA--.629S2;
-        Thu, 21 May 2020 11:30:37 +0800 (CST)
-From:   Bibo Mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v5 1/4] MIPS: Do not flush tlb page when updating PTE entry
-Date:   Thu, 21 May 2020 11:30:34 +0800
-Message-Id: <1590031837-9582-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9Dx793d9cVewz03AA--.629S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFW3ZryxtrWktFy7GF43GFg_yoW8GFy5pF
-        ZrArykKw4kG3y0yFy8Ar1v9r43J3yDGrZ8KryDCryqv3ZrXF1kKrs3Ka4Iyry8ZFyak3W8
-        Kr4jqF4DZa12v37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvvb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka
-        0xkIwI1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
-        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
-        xVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
-        8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E
-        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-        IFyTuYvjxU2vPfDUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Wed, 20 May 2020 23:37:56 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:55280 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727972AbgEUDhz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:37:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590032274; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=N88dxo6w+m1Iy0ZY+M850rvrFBSGl0dC9YXAozfAgWY=;
+ b=Lvd+cYqaW/PqSBn+SE6sb1uso0ze48g1WelOVaDCmCA3kUxKdZ+Ji1dtD0+l7d7Qa43EU661
+ ucbdJyxDNvtmhDCZ6Fh++4YRS2gETBo74wRYHMVUHPeYq5Qixwet8qJCad9wLyAmdHFSRJ1Q
+ mX2gbOuJlQmrjVyt1VIUJxR+9cE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ec5f786c60c306cc8dd1060 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 21 May 2020 03:37:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 363CFC433CA; Thu, 21 May 2020 03:37:42 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B802C433C8;
+        Thu, 21 May 2020 03:37:41 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 21 May 2020 09:07:41 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Move mss node to the right
+ place
+In-Reply-To: <20200521010337.229177-1-swboyd@chromium.org>
+References: <20200521010337.229177-1-swboyd@chromium.org>
+Message-ID: <1e88d48ead56a1c75c3355f389fdb6dd@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not necessary to flush tlb page on all CPUs if suitable PTE
-entry exists already during page fault handling, just updating
-TLB is fine.
+On 2020-05-21 06:33, Stephen Boyd wrote:
+> The modem node has an address of 4080000 and thus should come after 
+> tlmm
+> and before gpu. Move the node to the right place to maintainer proper
+> address sort order.
+> 
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Sibi Sankar <sibis@codeaurora.org>
+> Fixes: e14a15eba89a ("arm64: dts: qcom: sc7180: Add Q6V5 MSS node")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
-V5:
-- Define update_mmu_cache function specified on MIPS platform, and
-  add page fault smp-race stats info
-V4:
-- add pte_sw_mkyoung function to implement readable privilege, and
-  this function is  only in effect on MIPS system.
-- add page valid bit judgement in function pte_modify
-V3:
-- add detailed changelog, modify typo issue in patch V2
-v2:
-- split flush_tlb_fix_spurious_fault and tlb update into two patches
-- comments typo modification
-- separate tlb update and add pte readable privilege into two patches
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/mips/include/asm/pgtable.h | 2 ++
- 1 file changed, 2 insertions(+)
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++--------------
+>  1 file changed, 51 insertions(+), 51 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 6b12c60c37fb..1027ef70f8db 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1459,6 +1459,57 @@ pinconf-sd-cd {
+>  			};
+>  		};
+> 
+> +		remoteproc_mpss: remoteproc@4080000 {
+> +			compatible = "qcom,sc7180-mpss-pas";
+> +			reg = <0 0x04080000 0 0x4040>, <0 0x04180000 0 0x48>;
+> +			reg-names = "qdsp6", "rmb";
+> +
+> +			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
+> +					      <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready", "handover",
+> +					  "stop-ack", "shutdown-ack";
+> +
+> +			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
+> +				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
+> +				 <&gcc GCC_MSS_NAV_AXI_CLK>,
+> +				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
+> +				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
+> +				 <&rpmhcc RPMH_CXO_CLK>;
+> +			clock-names = "iface", "bus", "nav", "snoc_axi",
+> +				      "mnoc_axi", "xo";
+> +
+> +			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
+> +					<&rpmhpd SC7180_CX>,
+> +					<&rpmhpd SC7180_MX>,
+> +					<&rpmhpd SC7180_MSS>;
+> +			power-domain-names = "load_state", "cx", "mx", "mss";
+> +
+> +			memory-region = <&mpss_mem>;
+> +
+> +			qcom,smem-states = <&modem_smp2p_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
+> +				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
+> +			reset-names = "mss_restart", "pdc_reset";
+> +
+> +			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
+> +			qcom,spare-regs = <&tcsr_regs 0xb3e4>;
+> +
+> +			status = "disabled";
+> +
+> +			glink-edge {
+> +				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
+> +				label = "modem";
+> +				qcom,remote-pid = <1>;
+> +				mboxes = <&apss_shared 12>;
+> +			};
+> +		};
+> +
+>  		gpu: gpu@5000000 {
+>  			compatible = "qcom,adreno-618.0", "qcom,adreno";
+>  			#stream-id-cells = <16>;
+> @@ -2054,57 +2105,6 @@ apss_merge_funnel_in: endpoint {
+>  			};
+>  		};
+> 
+> -		remoteproc_mpss: remoteproc@4080000 {
+> -			compatible = "qcom,sc7180-mpss-pas";
+> -			reg = <0 0x04080000 0 0x4040>, <0 0x04180000 0 0x48>;
+> -			reg-names = "qdsp6", "rmb";
+> -
+> -			interrupts-extended = <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
+> -					      <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> -					      <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> -					      <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> -					      <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
+> -					      <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
+> -			interrupt-names = "wdog", "fatal", "ready", "handover",
+> -					  "stop-ack", "shutdown-ack";
+> -
+> -			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
+> -				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
+> -				 <&gcc GCC_MSS_NAV_AXI_CLK>,
+> -				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
+> -				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
+> -				 <&rpmhcc RPMH_CXO_CLK>;
+> -			clock-names = "iface", "bus", "nav", "snoc_axi",
+> -				      "mnoc_axi", "xo";
+> -
+> -			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
+> -					<&rpmhpd SC7180_CX>,
+> -					<&rpmhpd SC7180_MX>,
+> -					<&rpmhpd SC7180_MSS>;
+> -			power-domain-names = "load_state", "cx", "mx", "mss";
+> -
+> -			memory-region = <&mpss_mem>;
+> -
+> -			qcom,smem-states = <&modem_smp2p_out 0>;
+> -			qcom,smem-state-names = "stop";
+> -
+> -			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
+> -				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
+> -			reset-names = "mss_restart", "pdc_reset";
+> -
+> -			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
+> -			qcom,spare-regs = <&tcsr_regs 0xb3e4>;
+> -
+> -			status = "disabled";
+> -
+> -			glink-edge {
+> -				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
+> -				label = "modem";
+> -				qcom,remote-pid = <1>;
+> -				mboxes = <&apss_shared 12>;
+> -			};
+> -		};
+> -
+>  		sdhc_2: sdhci@8804000 {
+>  			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+>  			reg = <0 0x08804000 0 0x1000>;
+> 
+> base-commit: d82fade846aa8bb34956120e3792f494058ec35e
 
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index 9b01d2d..0d625c2 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -478,6 +478,8 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
- 	return __pgprot(prot);
- }
- 
-+#define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
-+
- /*
-  * Conversion functions: convert a page and protection to a page entry,
-  * and a page entry and page directory to the page they refer to.
 -- 
-1.8.3.1
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
