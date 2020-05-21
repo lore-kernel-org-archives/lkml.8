@@ -2,93 +2,76 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6747BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE0A20884
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590091247;
-	bh=4m4Nkqu/7SPmf/GkHTKVqS50FGgj6ypmaEq/VrqD7xM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nu11IjQf4vl7P/Qd3SY594rD95Vs1kDg6OMneGVaKBDeDdl37gVF5cr55KHQCz/vP
-	 mEtLCILuL/EgJRbmkw+z0D4IHPGgC3fYa3UMy9cKjpTSgiO1WspW3wSJiel/nN8X3Z
-	 2WzemNPht2KtTxnI0mqxSvhjuKsDUOye8w+BYeJE=
+	by mail.kernel.org (Postfix) with ESMTP id 2929020748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbgEUUAq (ORCPT
+        id S1730352AbgEUUA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:00:46 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33592 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729780AbgEUUAq (ORCPT
+        Thu, 21 May 2020 16:00:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729780AbgEUUA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:00:46 -0400
-Received: by mail-il1-f195.google.com with SMTP id y17so6272213ilg.0;
-        Thu, 21 May 2020 13:00:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZlH5ZMWcJXqsxFCIRSX97tK4Flrr0jYmclOA4NT0Xj8=;
-        b=KLPoyX3YS8pVazb7v4+Yezexg1P9Bb+08Kr9wYr0qvgIG5951jRNQq4AOzzEvk8fBV
-         eyoitcCb0aKYBXQH48qwD57KsQndgxAw1yZBkKkZhS1XepcFhegMayH0lsm3my5T8NRk
-         EFRuwGplPPZ3gw/UCG29EE3GtMaqUUIR+xqYziWFFL5A0gaOg08f+PZgE9hkn5MEiQNw
-         8V6tf2qg8JA1dFQEEnbz0pMHWuQyJRyXPMo4dK05UhaHi49HLdn1FNVUSmhJhjq0x2L4
-         OmK+CCbiAimvG6t7VrpmZ0TmSqPVTJCG9XZSpHuoK1KzdkUY5Ygb3uo/eFoeyotUS7Fx
-         rqhA==
-X-Gm-Message-State: AOAM533xZ3P43A+oNBfD01uY1LSLGWvY8zzNhBvT/zgVQMzs3iAE/n7P
-        6yJLeq5RjujWnwr+4BLcFA==
-X-Google-Smtp-Source: ABdhPJzO+8vNli6MJWPcPhp4AusITCDDAPwhu7cO7WuDbpzKtQj5Ru8KuWfEvku9pagBIN5SJF0Kiw==
-X-Received: by 2002:a05:6e02:544:: with SMTP id i4mr10547846ils.266.1590091245276;
-        Thu, 21 May 2020 13:00:45 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t17sm3353322ilo.60.2020.05.21.13.00.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 13:00:44 -0700 (PDT)
-Received: (nullmailer pid 2802949 invoked by uid 1000);
-        Thu, 21 May 2020 20:00:43 -0000
-Date:   Thu, 21 May 2020 14:00:43 -0600
-From:   robh@kernel.org
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: mfd: Add ENE KB3930 Embedded
- Controller binding
-Message-ID: <20200521200043.GA2802919@bogus>
-References: <20200521115407.2249702-1-lkundrak@v3.sk>
- <20200521115407.2249702-2-lkundrak@v3.sk>
+        Thu, 21 May 2020 16:00:57 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9A1C061A0E;
+        Thu, 21 May 2020 13:00:56 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jbrMP-0008Jj-44; Thu, 21 May 2020 22:00:09 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 57046100C2D; Thu, 21 May 2020 22:00:08 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set data->ctx and data->hctx in blk_mq_alloc_request_hctx
+In-Reply-To: <15f9f975-1baf-dc90-5730-00df08829523@kernel.dk>
+References: <20200520011823.GA415158@T590> <20200520030424.GI416136@T590> <20200520080357.GA4197@lst.de> <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk> <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk> <87tv0av1gu.fsf@nanos.tec.linutronix.de> <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk> <87eereuudh.fsf@nanos.tec.linutronix.de> <20200521022746.GA730422@T590> <87367tvh6g.fsf@nanos.tec.linutronix.de> <20200521092340.GA751297@T590> <87pnaxt9nv.fsf@nanos.tec.linutronix.de> <15f9f975-1baf-dc90-5730-00df08829523@kernel.dk>
+Date:   Thu, 21 May 2020 22:00:08 +0200
+Message-ID: <87k115t5x3.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521115407.2249702-2-lkundrak@v3.sk>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 13:54:06 +0200, Lubomir Rintel wrote:
-> Add binding document for the ENE KB3930 Embedded Controller.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v1:
-> - Addressed binding validation failure
-> ---
->  .../devicetree/bindings/mfd/ene-kb3930.yaml   | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
-> 
+Jens Axboe <axboe@kernel.dk> writes:
+> Again, this is mixing up io_uring and blk-mq. Maybe it's the fact that
+> both use 'ctx' that makes this confusing. On the blk-mq side, the 'ctx'
+> is the per-cpu queue context, for io_uring it's the io_uring instance.
 
+Yes, that got me horribly confused. :)
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+> io_sq_thread() doesn't care about any sort of percpu mappings, it's
+> happy as long as it'll keep running regardless of whether or not the
+> optional pinned CPU is selected and then offlined.
 
-If a tag was not added on purpose, please state why and what changed.
+Fair enough.
 
+So aside of the potential spin forever if the uring thread is lifted to
+an RT scheduling class, this looks all good.
+
+Though I assume that if that thread is pinned and an admin pushs it into
+RT scheduling the spinning live lock can happen independent of cpu
+hotplug.
+
+Thanks,
+
+        tglx
