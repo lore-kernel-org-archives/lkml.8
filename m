@@ -2,283 +2,166 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48423C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35911206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B92020738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 19:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="pdzOstKG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I/yi5K88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgEUTue (ORCPT
+        id S1730074AbgEUTwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 15:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbgEUTue (ORCPT
+        Thu, 21 May 2020 15:52:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42470 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729091AbgEUTwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 15:50:34 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6ADFC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r3so5953120wrn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 12:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
-        b=pdzOstKGZ1qMN+Pt/TsxJHH8iZB55xatp5okzckH9uMnliXxBzJ9d0Dl9uBJ2qEw9R
-         7PTdcGlnFcOu+873UWzw/00aGEtsuyvlAJ7ZFQpy5TP4vD2NyfcKQKtrD9Ck7iQd2NkI
-         6Ng7TcezZa+S8AV4dIUNdC13V8LwS/Vfi4jGHA+K14GOcFaDrGoZDhHZYKyW2U5fLupK
-         ObdGJ7gdJpQwB7rewEDpX+h3vVGjeepFL58TpAGyAJOf5F8CjhUnRqtwFmi3aEy4lD/M
-         LoC1VKlwtJvVcmWpthwx0VwlfA/PwebI1aTE6ljjX7R7Mk+e6inPHbpSTFiu8/My8QCT
-         voxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=W0bmmrcfoMMLY53+q+PM9oHmwAiHFiyVtLVqP+FNgI0=;
-        b=DA0BFfdMWcOOxQ2eyBTOR1LuGFWYfMc1VsMOQb7IhRGhDqO77W81oGpqPFHysyh89W
-         dM8M2hdMhGTPqkVJI3BsndzAhIO3lz8mDNvfY2LM8ixrFNQDURXsdWSzMOVjFCgJZsuI
-         2XqtAVrnPJA9Unyxf9lsJcxASp48XyM9rCMC9eton8RKkH/hdCXkG70Vz8vKSP1RBR3Y
-         7aTkgCXhCSUB4TLGQAsFo1dTRahuS1Yvwt9XCeJ+dLpljSjwrFl4uy/rmpOp9VR3bDta
-         4KaOnG24mvhtoklepoiUEk+sfO0V6kePjF+vatuXcTmKdEj10MyIMHqvn9kMKes1Wwhl
-         ZTKQ==
-X-Gm-Message-State: AOAM530+kYK16WT5PnvjjiPkyBBjffLZvTBjJleBZR/wTeWahZO40u1r
-        uwZdhLsKsGkQF0PtFfA9illYzg==
-X-Google-Smtp-Source: ABdhPJxI5+4zP6A4maoDpeagfmZeWogan+Aicw3eNBXaIjNm2V8HkzqxiSDUki2DMSG365TA15J5jQ==
-X-Received: by 2002:a5d:6806:: with SMTP id w6mr207199wru.324.1590090631449;
-        Thu, 21 May 2020 12:50:31 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id 18sm7329042wmj.19.2020.05.21.12.50.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 12:50:30 -0700 (PDT)
-Date:   Thu, 21 May 2020 21:50:28 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Subject: [PATCH] arm: dts: am335x-boneblack: add gpio-line-names
-Message-ID: <20200521195028.GB429020@x1>
+        Thu, 21 May 2020 15:52:22 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04LJq3rW081620;
+        Thu, 21 May 2020 14:52:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590090723;
+        bh=Vb/5S9ewFa3yrp3KZRQqIR2YgutT5LYsiuL4DYpKPE8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=I/yi5K88+YAIrR3aTAnM80hh9e++JV72R6OISQRJNEQCWBfbw7PKgAtAHkIXQvRCp
+         qZZB7bqz9rN1+fjlAUn+EhskN+VDNzUJLTOFFIN52UU9RykxYqzdtofgrtslyqafPE
+         gfx874K5k8FDDS6F0Fa8SMP5KCsG9Me/zQrx+lcQ=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04LJq35u024370
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 14:52:03 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
+ May 2020 14:52:03 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 21 May 2020 14:52:03 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04LJq3Sc036393;
+        Thu, 21 May 2020 14:52:03 -0500
+Subject: Re: [PATCH 2/4] remoteproc: introduce version element into resource
+ type field
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Clement Leger <cleger@kalray.eu>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200325204701.16862-1-s-anna@ti.com>
+ <20200325204701.16862-3-s-anna@ti.com> <20200521175421.GI408178@builder.lan>
+ <b338480e-c586-f988-f5b6-784551b7beb6@ti.com>
+ <20200521192146.GO408178@builder.lan>
+ <57ae5678-fd0a-07a8-6165-a2cf7ccdef88@ti.com>
+ <20200521194116.GP408178@builder.lan>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <5529e8ff-b5ed-9dd6-e7f6-55a00225c2b9@ti.com>
+Date:   Thu, 21 May 2020 14:52:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200521194116.GP408178@builder.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add gpio-line-names properties to the GPIO controller nodes.
+On 5/21/20 2:41 PM, Bjorn Andersson wrote:
+> On Thu 21 May 12:29 PDT 2020, Suman Anna wrote:
+> 
+>> On 5/21/20 2:21 PM, Bjorn Andersson wrote:
+>>> On Thu 21 May 12:06 PDT 2020, Suman Anna wrote:
+>>>
+>>>> Hi Bjorn,
+>>>>
+>>>> On 5/21/20 12:54 PM, Bjorn Andersson wrote:
+>>>>> On Wed 25 Mar 13:46 PDT 2020, Suman Anna wrote:
+>>>>>
+>>>>>> The current remoteproc core has supported only 32-bit remote
+>>>>>> processors and as such some of the current resource structures
+>>>>>> may not scale well for 64-bit remote processors, and would
+>>>>>> require new versions of resource types. Each resource is currently
+>>>>>> identified by a 32-bit type field. Introduce the concept of version
+>>>>>> for these resource types by overloading this 32-bit type field
+>>>>>> into two 16-bit version and type fields with the existing resources
+>>>>>> behaving as version 0 thereby providing backward compatibility.
+>>>>>>
+>>>>>> The version field is passed as an additional argument to each of
+>>>>>> the handler functions, and all the existing handlers are updated
+>>>>>> accordingly. Each specific handler will be updated on a need basis
+>>>>>> when a new version of the resource type is added.
+>>>>>>
+>>>>>
+>>>>> I really would prefer that we add additional types for the new
+>>>>> structures, neither side will be compatible with new versions without
+>>>>> enhancements to their respective implementations anyways.
+>>>>
+>>>> OK.
+>>>>
+>>>>>
+>>>>>> An alternate way would be to introduce the new types as completely
+>>>>>> new resource types which would require additional customization of
+>>>>>> the resource handlers based on the 32-bit or 64-bit mode of a remote
+>>>>>> processor, and introduction of an additional mode flag to the rproc
+>>>>>> structure.
+>>>>>>
+>>>>>
+>>>>> What would this "mode" indicate? If it's version 0 or 1?
+>>>>
+>>>> No, for indicating if the remoteproc is 32-bit or 64-bit and adjust the
+>>>> loading handlers if the resource types need to be segregated accordingly.
+>>>>
+>>>
+>>> Sorry, I think I'm misunderstanding something. Wouldn't your 64-bit
+>>> remote processor need different firmware from your 32-bit processor
+>>> anyways, if you want to support the wider resource? And you would pack
+>>> your firmware with the appropriate resource types?
+>>
+>> Yes, that's correct.
+>>
+>>>
+>>> Afaict the bit width of your remote processor, busses or memory is
+>>> unrelated to the choice of number of bits used to express things in the
+>>> resource table.
+>>
+>> I would have to add the new resource type to the loading_handlers right, so
+>> it is a question of whether we want to impose any restrictions in remoteproc
+>> core or not from supporting a certain resource type (eg: I don't expect
+>> RSC_TRACE entries on 64-bit processors).
+>>
+> 
+> Right, but either you add support for new resource types to the
+> loading_handlers, or you add the version checks within each handler,
+> either way you will have to do some work to be compatible with new
+> versions.
+> 
+> Regarding what resources would be fit for a 64-bit processor probably
+> relates to many things, in particular the question of what we actually
+> mean when we say that a coprocessor is 64-bit. So I don't really see a
+> need for the remoteproc core to prevent someone to design their
+> system/firmware to have a 64-bit CPU being passed 32-bit addresses.
 
-The BeagleBone Black has P8 and P9 headers [0] which expose many of the
-AM3358 ZCZ SoC balls to stacking expansion boards called "capes", or to
-other external connections like jumper wires connected to a breadboard.
-BeagleBone users will often refer to the "Cape Exanpsion Headers" pin
-diagram [1] as it is in the "Bone101" getting started tutorial. [2]
+OK. In general, I have seen firmware developers get confused w.r.t the 
+resource types, that's why I was inclined to go with the restrictive 
+checking. Anyway, will rework the support as per the comments.
 
-Most of the P8 and P9 header pins can muxed to a GPIO line.  The
-gpio-line-names describe which P8 or P9 pin that line goes to and the
-default mux for that P8 or P9 pin if it is not GPIO.
+regards
+Suman
 
-For example, gpiochip 1 line 0 is connected to P8 header pin 25 (P8_25)
-however the default device tree has the corresponding BGA ball (ZCZ U7)
-muxed to mmc1_dat0 as it is used for the on-board eMMC chip.  For that
-GPIO line to be used, one would need to modify the device tree to
-disable the eMMC and change the pin mux for that ball to GPIO mode.
-
-Some of the AM3358 ZCZ balls corresponding to GPIO lines are not routed
-to a P8 or P9 header, but are instead wired to some peripheral device
-like on-board eMMC, HDMI framer IC, or status LEDs.  Those names are in
-brackets to denote those GPIO lines can not be used.
-
-Some GPIO lines are named "[NC]" as the corresponding balls are not
-routed to anything on the PCB.
-
-The goal for these names is to make it easier for a user viewing the
-output of gpioinfo to determine which P8 or P9 pin is connected to a
-GPIO line.  The output of gpioinfo on a BeagleBone Black would be:
-
-[0] https://git.io/JfgOd
-[1] https://beagleboard.org/capes
-[1] https://beagleboard.org/Support/bone101
-[2] https://beagleboard.org/static/images/cape-headers.png
-
-Reviewed-by: Jason Kridner <jason@beagleboard.org>
-Reviewed-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
-V1 note:
-I had posted a patch with these line names for am335x-bone-common.dtsi
-but Grygorii Strashko pointed out that the names are not applicable to
-all BeagleBone models.  Thus is have created this patch to add these
-names just for the BeagleBone Black.
-
- arch/arm/boot/dts/am335x-boneblack.dts | 144 +++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index d3928662aed4..5f31e832eb82 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -23,3 +23,147 @@ oppnitro-1000000000 {
- 		opp-supported-hw = <0x06 0x0100>;
- 	};
- };
-+
-+&gpio0 {
-+	gpio-line-names =
-+		"[ethernet]",
-+		"[ethernet]",
-+		"P9_22 [spi0_sclk]",
-+		"P9_21 [spi0_d0]",
-+		"P9_18 [spi0_d1]",
-+		"P9_17 [spi0_cs0]",
-+		"[sd card]",
-+		"P9_42A [ecappwm0]",
-+		"P8_35 [hdmi]",
-+		"P8_33 [hdmi]",
-+		"P8_31 [hdmi]",
-+		"P8_32 [hdmi]",
-+		"P9_20 [i2c2_sda]",
-+		"P9_19 [i2c2_scl]",
-+		"P9_26 [uart1_rxd]",
-+		"P9_24 [uart1_txd]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[usb]",
-+		"[hdmi]",
-+		"P9_41B",
-+		"[ethernet]",
-+		"P8_19 [ehrpwm2a]",
-+		"P8_13 [ehrpwm2b]",
-+		"[NC]",
-+		"[NC]",
-+		"P8_14",
-+		"P8_17",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"P9_11 [uart4_rxd]",
-+		"P9_13 [uart4_txd]";
-+};
-+
-+&gpio1 {
-+	gpio-line-names =
-+		"P8_25 [emmc]",
-+		"[emmc]",
-+		"P8_5 [emmc]",
-+		"P8_6 [emmc]",
-+		"P8_23 [emmc]",
-+		"P8_22 [emmc]",
-+		"P8_3 [emmc]",
-+		"P8_4 [emmc]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"P8_12",
-+		"P8_11",
-+		"P8_16",
-+		"P8_15",
-+		"P9_15A",
-+		"P9_23",
-+		"P9_14 [ehrpwm1a]",
-+		"P9_16 [ehrpwm1b]",
-+		"[emmc]",
-+		"[usr0 led]",
-+		"[usr1 led]",
-+		"[usr2 led]",
-+		"[usr3 led]",
-+		"[hdmi]",
-+		"[usb]",
-+		"[hdmi audio]",
-+		"P9_12",
-+		"P8_26",
-+		"P8_21 [emmc]",
-+		"P8_20 [emmc]";
-+};
-+
-+&gpio2 {
-+	gpio-line-names =
-+		"P9_15B",
-+		"P8_18",
-+		"P8_7",
-+		"P8_8",
-+		"P8_10",
-+		"P8_9",
-+		"P8_45 [hdmi]",
-+		"P8_46 [hdmi]",
-+		"P8_43 [hdmi]",
-+		"P8_44 [hdmi]",
-+		"P8_41 [hdmi]",
-+		"P8_42 [hdmi]",
-+		"P8_39 [hdmi]",
-+		"P8_40 [hdmi]",
-+		"P8_37 [hdmi]",
-+		"P8_38 [hdmi]",
-+		"P8_36 [hdmi]",
-+		"P8_34 [hdmi]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"P8_27 [hdmi]",
-+		"P8_29 [hdmi]",
-+		"P8_28 [hdmi]",
-+		"P8_30 [hdmi]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]",
-+		"[emmc]";
-+};
-+
-+&gpio3 {
-+	gpio-line-names =
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[i2c0]",
-+		"[i2c0]",
-+		"[emu]",
-+		"[emu]",
-+		"[ethernet]",
-+		"[ethernet]",
-+		"[NC]",
-+		"[NC]",
-+		"[usb]",
-+		"P9_31 [spi1_sclk]",
-+		"P9_29 [spi1_d0]",
-+		"P9_30 [spi1_d1]",
-+		"P9_28 [spi1_cs0]",
-+		"P9_42B [ecappwm0]",
-+		"P9_27",
-+		"P9_41A",
-+		"P9_25",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]",
-+		"[NC]";
-+};
--- 
-2.25.1
 
