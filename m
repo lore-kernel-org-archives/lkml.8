@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D2F20826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3363D20826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbgEUUc1 (ORCPT
+        id S1730306AbgEUUcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:32:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55570 "EHLO
+        Thu, 21 May 2020 16:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730135AbgEUUcS (ORCPT
+        with ESMTP id S1730078AbgEUUcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:32:18 -0400
+        Thu, 21 May 2020 16:32:15 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEFAC05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:32:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFECC08C5C1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:32:15 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jbrqr-0000ZL-LB; Thu, 21 May 2020 22:31:37 +0200
+        id 1jbrqy-0000gW-VN; Thu, 21 May 2020 22:31:45 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0A3E6100606;
-        Thu, 21 May 2020 22:31:37 +0200 (CEST)
-Message-Id: <20200521202118.611906966@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7DFF6100606;
+        Thu, 21 May 2020 22:31:44 +0200 (CEST)
+Message-Id: <20200521202119.185317067@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 21 May 2020 22:05:32 +0200
+Date:   Thu, 21 May 2020 22:05:38 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Andy Lutomirski <luto@kernel.org>,
@@ -60,7 +60,7 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V9 19/39] x86/entry/32: Remove common_exception
+Subject: [patch V9 25/39] x86/entry: Provide IDTENTRY_SYSVEC
 References: <20200521200513.656533920@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,42 +75,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-No more users.
+Provide IDTENTRY variants for system vectors to consolidate the different
+mechanisms to emit the ASM stubs for 32 an 64 bit.
+
+On 64bit this also moves the stack switching from ASM to C code. 32bit will
+excute the system vectors w/o stack switching as before.
+
+The simple variant is meant for "empty" system vectors like scheduler IPI
+and KVM posted interrupt vectors. These do not need the full glory of irq
+enter/exit handling with softirq processing and more.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Andy Lutomirski <luto@kernel.org>
 ---
- arch/x86/entry/entry_32.S |   21 ---------------------
- 1 file changed, 21 deletions(-)
+V9: Use cond. RCU handling
+---
+ arch/x86/entry/entry_32.S       |    4 ++
+ arch/x86/entry/entry_64.S       |    8 ++++
+ arch/x86/include/asm/idtentry.h |   79 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 91 insertions(+)
 
 --- a/arch/x86/entry/entry_32.S
 +++ b/arch/x86/entry/entry_32.S
-@@ -1394,27 +1394,6 @@ BUILD_INTERRUPT3(hv_stimer0_callback_vec
+@@ -765,6 +765,10 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
+ SYM_CODE_END(asm_\cfunc)
+ .endm
  
- #endif /* CONFIG_HYPERV */
++.macro idtentry_sysvec vector cfunc
++	idtentry \vector asm_\cfunc \cfunc has_error_code=0
++.endm
++
+ /*
+  * Include the defines which emit the idt entries which are shared
+  * shared between 32 and 64 bit.
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -542,6 +542,14 @@ SYM_CODE_END(\asmsym)
+ .endm
  
--SYM_CODE_START_LOCAL_NOALIGN(common_exception)
--	/* the function address is in %gs's slot on the stack */
--	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
--	ENCODE_FRAME_POINTER
--
--	/* fixup %gs */
--	GS_TO_REG %ecx
--	movl	PT_GS(%esp), %edi		# get the function address
--	REG_TO_PTGS %ecx
--	SET_KERNEL_GS %ecx
--
--	/* fixup orig %eax */
--	movl	PT_ORIG_EAX(%esp), %edx		# get the error code
--	movl	$-1, PT_ORIG_EAX(%esp)		# no syscall to restart
--
--	TRACE_IRQS_OFF
--	movl	%esp, %eax			# pt_regs pointer
--	CALL_NOSPEC edi
--	jmp	ret_from_exception
--SYM_CODE_END(common_exception)
--
- SYM_CODE_START_LOCAL_NOALIGN(handle_exception)
- 	/* the function address is in %gs's slot on the stack */
- 	SAVE_ALL switch_stacks=1 skip_gs=1 unwind_espfix=1
+ /*
++ * System vectors which invoke their handlers directly and are not
++ * going through the regular common device interrupt handling code.
++ */
++.macro idtentry_sysvec vector cfunc
++	idtentry \vector asm_\cfunc \cfunc has_error_code=0
++.endm
++
++/*
+  * MCE and DB exceptions
+  */
+ #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -6,6 +6,9 @@
+ #include <asm/trapnr.h>
+ 
+ #ifndef __ASSEMBLY__
++#include <linux/hardirq.h>
++
++#include <asm/irq_stack.h>
+ 
+ void idtentry_enter_user(struct pt_regs *regs);
+ void idtentry_exit_user(struct pt_regs *regs);
+@@ -210,6 +213,78 @@ static __always_inline void __##func(str
+ 									\
+ static __always_inline void __##func(struct pt_regs *regs, u8 vector)
+ 
++/**
++ * DECLARE_IDTENTRY_SYSVEC - Declare functions for system vector entry points
++ * @vector:	Vector number (ignored for C)
++ * @func:	Function name of the entry point
++ *
++ * Declares three functions:
++ * - The ASM entry point: asm_##func
++ * - The XEN PV trap entry point: xen_##func (maybe unused)
++ * - The C handler called from the ASM entry point
++ *
++ * Maps to DECLARE_IDTENTRY().
++ */
++#define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
++	DECLARE_IDTENTRY(vector, func)
++
++/**
++ * DEFINE_IDTENTRY_SYSVEC - Emit code for system vector IDT entry points
++ * @func:	Function name of the entry point
++ *
++ * idtentry_enter/exit() and irq_enter/exit_rcu() are invoked before the
++ * function body. KVM L1D flush request is set.
++ *
++ * Runs the function on the interrupt stack if the entry hit kernel mode
++ */
++#define DEFINE_IDTENTRY_SYSVEC(func)					\
++static void __##func(struct pt_regs *regs);				\
++									\
++__visible noinstr void func(struct pt_regs *regs)			\
++{									\
++	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++									\
++	instrumentation_begin();					\
++	irq_enter_rcu();						\
++	kvm_set_cpu_l1tf_flush_l1d();					\
++	run_on_irqstack_cond(__##func, regs, regs);			\
++	irq_exit_rcu();							\
++	lockdep_hardirq_exit();						\
++	instrumentation_end();						\
++	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++}									\
++									\
++static noinline void __##func(struct pt_regs *regs)
++
++/**
++ * DEFINE_IDTENTRY_SYSVEC_SIMPLE - Emit code for simple system vector IDT
++ *				   entry points
++ * @func:	Function name of the entry point
++ *
++ * Runs the function on the interrupted stack. No switch to IRQ stack and
++ * only the minimal __irq_enter/exit() handling.
++ *
++ * Only use for 'empty' vectors like reschedule IPI and KVM posted
++ * interrupt vectors.
++ */
++#define DEFINE_IDTENTRY_SYSVEC_SIMPLE(func)				\
++static __always_inline void __##func(struct pt_regs *regs);		\
++									\
++__visible noinstr void func(struct pt_regs *regs)			\
++{									\
++	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
++									\
++	instrumentation_begin();					\
++	__irq_enter_raw();						\
++	kvm_set_cpu_l1tf_flush_l1d();					\
++	__##func (regs);						\
++	__irq_exit_raw();						\
++	instrumentation_end();						\
++	idtentry_exit_cond_rcu(regs, rcu_exit);				\
++}									\
++									\
++static __always_inline void __##func(struct pt_regs *regs)
++
+ #ifdef CONFIG_X86_64
+ /**
+  * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
+@@ -345,6 +420,10 @@ static __always_inline void __##func(str
+ #define DECLARE_IDTENTRY_IRQ(vector, func)				\
+ 	idtentry_irq vector func
+ 
++/* System vector entries */
++#define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
++	idtentry_sysvec vector func
++
+ #ifdef CONFIG_X86_64
+ # define DECLARE_IDTENTRY_MCE(vector, func)				\
+ 	idtentry_mce_db vector asm_##func func
 
