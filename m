@@ -2,271 +2,128 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D50C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADAC206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UAumwUH8"
+	by mail.kernel.org (Postfix) with ESMTP id F109C206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 14:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgEUOEc (ORCPT
+        id S1729686AbgEUOE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 10:04:32 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42968 "EHLO vps0.lunn.ch"
+        Thu, 21 May 2020 10:04:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:47504 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbgEUOEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 10:04:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4c1KI5lLVJTMb6lJcGXvj8JYpY0SbtyNOYn13xpdyK8=; b=UAumwUH8lVQyRxrLhLMjfgnC2r
-        r71Gp9+lVeSh75ff89G0cZQNKvHDgpHMfHLtmI2kDasSmcr8yPl/5vdLrvF3EE+mv57LkEwhbmkPz
-        9J1hqB1sT05VB7gIwNv/lw2NH/BS7csGTVQliYiDaaN+cxK2HW3a/BVAYYYuIDOK6aaI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jblo8-002uOK-51; Thu, 21 May 2020 16:04:24 +0200
-Date:   Thu, 21 May 2020 16:04:24 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Roelof Berg <rberg@berg-solutions.de>
-Cc:     Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lan743x: Added fixed link support
-Message-ID: <20200521140424.GD657910@lunn.ch>
-References: <20200520171006.5263-1-rberg@berg-solutions.de>
+        id S1728630AbgEUOE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 10:04:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 218FAD6E;
+        Thu, 21 May 2020 07:04:58 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C67353F305;
+        Thu, 21 May 2020 07:04:56 -0700 (PDT)
+References: <20200519161755.209565-1-maz@kernel.org> <20200519161755.209565-7-maz@kernel.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>, kernel-team@android.com
+Subject: Re: [PATCH 06/11] irqchip/gic-v3: Configure SGIs as standard interrupts
+In-reply-to: <20200519161755.209565-7-maz@kernel.org>
+Date:   Thu, 21 May 2020 15:04:54 +0100
+Message-ID: <jhjimgpxu2h.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520171006.5263-1-rberg@berg-solutions.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 07:10:06PM +0200, Roelof Berg wrote:
 
-Hi Roelof
+On 19/05/20 17:17, Marc Zyngier wrote:
+> Change the way we deal with GICv3 SGIs by turning them into proper
+> IRQs, and calling into the arch code to register the interrupt range
+> instead of a callback.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/irqchip/irq-gic-v3.c | 91 +++++++++++++++++++++---------------
+>  1 file changed, 53 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> index 23d7c87da407..d57289057b75 100644
+> --- a/drivers/irqchip/irq-gic-v3.c
+> +++ b/drivers/irqchip/irq-gic-v3.c
+> @@ -1163,10 +1142,36 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
+>
+>  static void gic_smp_init(void)
+>  {
+> -	set_smp_cross_call(gic_raise_softirq);
+> +	struct irq_fwspec sgi_fwspec = {
+> +		.fwnode		= gic_data.fwnode,
+> +	};
+> +	int base_sgi;
+> +
+>       cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
+>                                 "irqchip/arm/gicv3:starting",
+>                                 gic_starting_cpu, NULL);
+> +
+> +	if (is_of_node(gic_data.fwnode)) {
+> +		/* DT */
+> +		sgi_fwspec.param_count = 3;
+> +		sgi_fwspec.param[0] = GIC_IRQ_TYPE_SGI;
+> +		sgi_fwspec.param[1] = 0;
+> +		sgi_fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
+> +	} else {
+> +		/* ACPI */
+> +		sgi_fwspec.param_count = 2;
+> +		sgi_fwspec.param[0] = 0;
+> +		sgi_fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+> +	}
+> +
+> +	/* Register all 8 non-secure SGIs */
+> +	base_sgi = __irq_domain_alloc_irqs(gic_data.domain, -1, 8,
+> +					   NUMA_NO_NODE, &sgi_fwspec,
+> +					   false, NULL);
 
-Here is how i would do this. I don't like this MII bus snooping. It is
-a microchip propriety's thing, which is not well understood. It adds
-no value over just doing what every other MAC driver does in the
-link_change callback, which lots of people understand.
+So IIUC using irq_reserve_ipi() would require us to have a separate IPI
+domain, so instead here we can use a fwspec + the 'regular' GIC domain.
 
-I also removed all OF handing from within the callback. And i unified
-fixed-link and normal PHY.
+One thing I see is that by not going through irq_reserve_ipi(), we don't set
+data->common->ipi_offset. I think this is all kzalloc'd, and we want an
+offset of 0 so it all works out, but this feels somewhat fragile.
 
-This is compile tested only, so is probably broken...
+> +	if (WARN_ON(base_sgi <= 0))
+> +		return;
+> +
+> +	set_smp_ipi_range(base_sgi, 8);
+>  }
+>
+>  static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
+> @@ -1289,6 +1296,13 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+>
+>       switch (__get_intid_range(hw)) {
+>       case SGI_RANGE:
+> +		irq_set_percpu_devid(irq);
+> +		irq_domain_set_info(d, irq, hw, chip, d->host_data,
+> +				    handle_percpu_devid_fasteoi_ipi,
+> +				    NULL, NULL);
+> +		irq_set_status_flags(irq, IRQ_NOAUTOEN);
 
-     Andrew
+FWIW IRQ_NOAUTOEN is already set by irq_set_percpu_devid_flags(), so that's
+not required. I know we do that for (E)PPIs, I think I already have a small
+patch stashed somewhere regarding that.
 
-
-diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-index 3a0b289d9771..c533d06fbe3a 100644
---- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
-+++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-@@ -2,11 +2,11 @@
- /* Copyright (C) 2018 Microchip Technology Inc. */
- 
- #include <linux/netdevice.h>
--#include "lan743x_main.h"
--#include "lan743x_ethtool.h"
- #include <linux/net_tstamp.h>
- #include <linux/pci.h>
- #include <linux/phy.h>
-+#include "lan743x_main.h"
-+#include "lan743x_ethtool.h"
- 
- /* eeprom */
- #define LAN743X_EEPROM_MAGIC		    (0x74A5)
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index a43140f7b5eb..5aaa0ac96970 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -8,7 +8,10 @@
- #include <linux/crc32.h>
- #include <linux/microchipphy.h>
- #include <linux/net_tstamp.h>
-+#include <linux/of_mdio.h>
-+#include <linux/of_net.h>
- #include <linux/phy.h>
-+#include <linux/phy_fixed.h>
- #include <linux/rtnetlink.h>
- #include <linux/iopoll.h>
- #include <linux/crc16.h>
-@@ -798,9 +801,9 @@ static int lan743x_mac_init(struct lan743x_adapter *adapter)
- 
- 	netdev = adapter->netdev;
- 
--	/* setup auto duplex, and speed detection */
-+	/* disable auto duplex, and speed detection. Phylib does that */
- 	data = lan743x_csr_read(adapter, MAC_CR);
--	data |= MAC_CR_ADD_ | MAC_CR_ASD_;
-+	data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
- 	data |= MAC_CR_CNTR_RST_;
- 	lan743x_csr_write(adapter, MAC_CR, data);
- 
-@@ -946,6 +949,7 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
- {
- 	struct lan743x_adapter *adapter = netdev_priv(netdev);
- 	struct phy_device *phydev = netdev->phydev;
-+	u32 data;
- 
- 	phy_print_status(phydev);
- 	if (phydev->state == PHY_RUNNING) {
-@@ -953,6 +957,39 @@ static void lan743x_phy_link_status_change(struct net_device *netdev)
- 		int remote_advertisement = 0;
- 		int local_advertisement = 0;
- 
-+		data = lan743x_csr_read(adapter, MAC_CR);
-+
-+		/* set interface mode */
-+		if (phy_interface_mode_is_rgmii(adapter->phy_mode))
-+			/* RGMII */
-+			data &= ~MAC_CR_MII_EN_;
-+		else
-+			/* GMII */
-+			data |= MAC_CR_MII_EN_;
-+
-+		/* set fixed duplex mode */
-+		if (phydev->duplex)
-+			data |= MAC_CR_DPX_;
-+		else
-+			data &= ~MAC_CR_DPX_;
-+
-+		/* set fixed bus speed */
-+		switch (phydev->speed) {
-+		case SPEED_10:
-+			data &= ~MAC_CR_CFG_H_;
-+			data &= ~MAC_CR_CFG_L_;
-+			break;
-+		case SPEED_100:
-+			data &= ~MAC_CR_CFG_H_;
-+			data |= MAC_CR_CFG_L_;
-+			break;
-+		case SPEED_1000:
-+			data |= MAC_CR_CFG_H_;
-+			data |= MAC_CR_CFG_L_;
-+			break;
-+		}
-+		lan743x_csr_write(adapter, MAC_CR, data);
-+
- 		memset(&ksettings, 0, sizeof(ksettings));
- 		phy_ethtool_get_link_ksettings(netdev, &ksettings);
- 		local_advertisement =
-@@ -974,26 +1011,53 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
- 
- 	phy_stop(netdev->phydev);
- 	phy_disconnect(netdev->phydev);
-+	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
-+		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
- 	netdev->phydev = NULL;
- }
- 
- static int lan743x_phy_open(struct lan743x_adapter *adapter)
- {
- 	struct lan743x_phy *phy = &adapter->phy;
-+	struct device_node *phynode;
- 	struct phy_device *phydev;
- 	struct net_device *netdev;
- 	int ret = -EIO;
- 
- 	netdev = adapter->netdev;
--	phydev = phy_find_first(adapter->mdiobus);
--	if (!phydev)
--		goto return_error;
- 
--	ret = phy_connect_direct(netdev, phydev,
--				 lan743x_phy_link_status_change,
--				 PHY_INTERFACE_MODE_GMII);
--	if (ret)
--		goto return_error;
-+	phynode = of_node_get(adapter->pdev->dev.of_node);
-+	adapter->phy_mode = PHY_INTERFACE_MODE_GMII;
-+
-+	if (phynode) {
-+		of_get_phy_mode(phynode, &adapter->phy_mode);
-+
-+		if (of_phy_is_fixed_link(phynode)) {
-+			ret = of_phy_register_fixed_link(phynode);
-+			if (ret) {
-+				netdev_err(netdev,
-+					   "cannot register fixed PHY\n");
-+				of_node_put(phynode);
-+				goto return_error;
-+			}
-+		}
-+		phydev = of_phy_connect(netdev, phynode,
-+					lan743x_phy_link_status_change, 0,
-+					adapter->phy_mode);
-+		of_node_put(phynode);
-+		if (!phydev)
-+			goto return_error;
-+	} else {
-+		phydev = phy_find_first(adapter->mdiobus);
-+		if (!phydev)
-+			goto return_error;
-+
-+		ret = phy_connect_direct(netdev, phydev,
-+					 lan743x_phy_link_status_change,
-+					 adapter->phy_mode);
-+		if (ret)
-+			goto return_error;
-+	}
- 
- 	/* MAC doesn't support 1000T Half */
- 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index 3b02eeae5f45..f769903538e4 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -104,10 +104,14 @@
- 	((value << 0) & FCT_FLOW_CTL_ON_THRESHOLD_)
- 
- #define MAC_CR				(0x100)
-+#define MAC_CR_MII_EN_			BIT(19)
- #define MAC_CR_EEE_EN_			BIT(17)
- #define MAC_CR_ADD_			BIT(12)
- #define MAC_CR_ASD_			BIT(11)
- #define MAC_CR_CNTR_RST_		BIT(5)
-+#define MAC_CR_DPX_			BIT(3)
-+#define MAC_CR_CFG_H_			BIT(2)
-+#define MAC_CR_CFG_L_			BIT(1)
- #define MAC_CR_RST_			BIT(0)
- 
- #define MAC_RX				(0x104)
-@@ -698,6 +702,7 @@ struct lan743x_rx {
- struct lan743x_adapter {
- 	struct net_device       *netdev;
- 	struct mii_bus		*mdiobus;
-+	phy_interface_t		phy_mode;
- 	int                     msg_enable;
- #ifdef CONFIG_PM
- 	u32			wolopts;
-diff --git a/drivers/net/ethernet/microchip/lan743x_ptp.c b/drivers/net/ethernet/microchip/lan743x_ptp.c
-index 9399f6a98748..b1df214a6973 100644
---- a/drivers/net/ethernet/microchip/lan743x_ptp.c
-+++ b/drivers/net/ethernet/microchip/lan743x_ptp.c
-@@ -2,12 +2,12 @@
- /* Copyright (C) 2018 Microchip Technology Inc. */
- 
- #include <linux/netdevice.h>
--#include "lan743x_main.h"
--
-+#include <linux/phy.h>
- #include <linux/ptp_clock_kernel.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/net_tstamp.h>
-+#include "lan743x_main.h"
- 
- #include "lan743x_ptp.h"
- 
+> +		break;
+> +
+>       case PPI_RANGE:
+>       case EPPI_RANGE:
+>               irq_set_percpu_devid(irq);
