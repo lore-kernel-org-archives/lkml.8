@@ -2,85 +2,120 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E39C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE3E207F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F16620878
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:53:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DtXt1pBX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TBv65LdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgEUUwm (ORCPT
+        id S1730405AbgEUUxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:52:42 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:33122 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbgEUUwm (ORCPT
+        Thu, 21 May 2020 16:53:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbgEUUxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:52:42 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 57DDE20B717B;
-        Thu, 21 May 2020 13:52:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 57DDE20B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1590094361;
-        bh=+1AzLCrtBMWO9kmppJbH5Z5Mq2KpzrX0FhIXgB9Ixm4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DtXt1pBXWGv1oRLaEreW/zbQI16f4J283YC7QFhxJv9+m/Wx/YJPEzxXi6c9yz5gZ
-         1ZlblXOGW0dj3lmlNvVJy1tVfV7bvbHLNpmJBEKl0lrX2EpXJ8bTRrkaVxRs84GIPd
-         4axLISzWPVAE3YSIoviT2FFYzAzaq2PHHDXDAIdE=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH -next] pstore/ram: Undefine the correct macro after a recent renaming
-Date:   Thu, 21 May 2020 15:52:23 -0500
-Message-Id: <20200521205223.175957-1-tyhicks@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 21 May 2020 16:53:24 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A8CC08C5C2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:53:23 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m12so7613822ljc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+fLCJ2GM93cwoKTZdZ4WFD0IYvwQ9ZS8NpXP6kyN8Oc=;
+        b=TBv65LdWvJKhGaaNuo9NEb78jnL9BrQAOtPhzoDfCosM1uH7i74IqGHCHmYGaJPdHz
+         CWCviqP1kSYaAcJp76r0NmD2UjTYe3MeXRUjZ7Gfj0csgNWpJcH5xbzTOLaFtf8uT5+3
+         /uM6hI+J/Gq/ki4ylpSu3zLN9n1wTEPzv14fLIVPyhMmtfoFCL62Kx4yZeWDBbv/l5w1
+         K39JR/uyz8X+Y20+CXNOcXbl3HbDDa7fsDpPrOTRV9Q5SbBB3Jb/BXIJzdJ9gGDiZkj+
+         XTUH4ek9bRuZIljRPeGI/rG4e1ojQtcnYVTE/xIktlVknSWMIJfaLJsufV1okj576bpp
+         EBuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+fLCJ2GM93cwoKTZdZ4WFD0IYvwQ9ZS8NpXP6kyN8Oc=;
+        b=ABrrrjWgESJ8bKVeRemHRzneM3IhZ790V7Zqqgz/5HDCxk8WzdIkhE86HhCfw23KIl
+         J5qwpi5LbAfE3u/Vuto0mEF21kv8QH8hmUO00hHsm3b444DZ9vAmhpQ2Qx6V3Q1Bseb0
+         PrGqfVCY4DLlDJzMQ8NNq/gVYlbU+N3aHsuAIhUHodwNLgFAssKLX45eLiAuqPyxaHWJ
+         9uVofgbeZjNR60GlqgjQu/3rtd0FpzchYWZC61/HNPt9YaGSN+MVvCukLYXhAkGjysmn
+         Rrew7W4TGlScWw3qOuX9NtD9fYR8pLcXZb0Q10AiXpG3/5phDv7+Uup3za14sl3dfwB2
+         /s0A==
+X-Gm-Message-State: AOAM531sCW+uvFRGPkCejLZJKAKguX78K11NlH7yyhGzCyHD+ZkmvU3e
+        ANjRC7RLQ6ZBh0pAsQeBw7LTiPfz7jQnUE8F4Y2MnA==
+X-Google-Smtp-Source: ABdhPJyTC3xGMKlc4QlHWxkqxT2nu3F9ZLF51sSqylyADWoJHXSTsMzu0bqdTCQsW0drulE/TbXWWznw77y8lomSnQ4=
+X-Received: by 2002:a2e:9684:: with SMTP id q4mr3903462lji.431.1590094401526;
+ Thu, 21 May 2020 13:53:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
+ <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
+ <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+ <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name> <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz> <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
+In-Reply-To: <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 22 May 2020 02:23:09 +0530
+Message-ID: <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+To:     Yafang Shao <laoar.shao@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Chris Down <chris@chrisdown.name>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Undefine parse_u32, instead of parse_size, as the name of the macro
-recently changed but the #undef directive wasn't updated at that time.
+My apology !
+As per the test results history this problem started happening from
+Bad : next-20200430 (still reproducible on next-20200519)
+Good : next-20200429
 
-Fixes: 6b31e99b85b0 ("pstore/ram: Refactor DT size parsing")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
----
+The git tree / tag used for testing is from linux next-20200430 tag and reverted
+following three patches and oom-killer problem fixed.
 
-Hi Kees - Here's a minor fixup that I noticed was needed while reviewing
-your for-next/pstore branch. It is only build-tested but I think that's
-all that's needed here.
+Revert "mm, memcg: avoid stale protection values when cgroup is above
+protection"
+Revert "mm, memcg: decouple e{low,min} state mutations from protectinn checks"
+Revert "mm-memcg-decouple-elowmin-state-mutations-from-protection-checks-fix"
 
-Tyler
+Ref tree:
+https://github.com/roxell/linux/commits/my-next-20200430
 
- fs/pstore/ram.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Build images:
+https://builds.tuxbuild.com/whyTLI1O8s5HiILwpLTLtg/
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index df8965817c7b..ca6d8a867285 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -674,7 +674,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
- 	parse_u32("flags", pdata->flags, 0);
- 	parse_u32("max-reason", pdata->max_reason, pdata->max_reason);
- 
--#undef parse_size
-+#undef parse_u32
- 
- 	/*
- 	 * Some old Chromebooks relied on the kernel setting the
--- 
-2.25.1
+Test log:
+https://lkft.validation.linaro.org/scheduler/job/1444321#L1164
 
+- Naresh
