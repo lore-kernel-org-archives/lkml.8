@@ -2,111 +2,190 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3984C20671
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1208820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 07:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590046373;
+	bh=K70/d0/DH80rsL15oTJb4xmFJIGVJ2uVVOq/4P5yfv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Bn8dCTzlZZAG7jUlDBY8/INu9l0ctcGpGd48e025NZNkbEaUjXu86As3JHJuIJ1k
+	 jDAxj+OQ3TNdceQ8CchHsc5QCEv21CcpDPzRuiJkRDCdLrx533FjaZbxHOvgwS3j42
+	 6e+lgQjD2T/WAPvEQiryEzhnL1YTod84XYFs1KbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgEUHa2 (ORCPT
+        id S1728357AbgEUHcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 03:30:28 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:34467 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728316AbgEUHa2 (ORCPT
+        Thu, 21 May 2020 03:32:52 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39711 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgEUHcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 03:30:28 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MEmpp-1jqlgo3dFL-00GHJO; Thu, 21 May 2020 09:30:26 +0200
-Received: by mail-qt1-f176.google.com with SMTP id c24so4757765qtw.7;
-        Thu, 21 May 2020 00:30:25 -0700 (PDT)
-X-Gm-Message-State: AOAM531XMZgv+q3ZN8K+wb5hpUxL54KCDewzxB5xuzM2b+Ys4b3tla6R
-        Us46VOP8APtHPTHr25tuLn0y1tBiRMxa9/Mb6hg=
-X-Google-Smtp-Source: ABdhPJxb5MQ8kuEO75fNExBq52zxkwucWqTuaAehdsr7lKk/Qfg8lylkr0b4j+C/p9or/isfYY2zvvtfKGWgdvJXJ4w=
-X-Received: by 2002:aed:2441:: with SMTP id s1mr9376585qtc.304.1590046224526;
- Thu, 21 May 2020 00:30:24 -0700 (PDT)
+        Thu, 21 May 2020 03:32:52 -0400
+Received: by mail-ed1-f67.google.com with SMTP id bs4so5954682edb.6;
+        Thu, 21 May 2020 00:32:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CIs2f+9mvt6X0epmC+MlJo55capX2w3vIg9emhYp22E=;
+        b=LX0XVzjwWtVWl46mtpJoXQvCvOaYooz7plewctsHXM2UZ5hyzOQNzvTs5ZkfxevqyH
+         DMFXAelXPerbXYwzn2VUCQ7V6p6CCS+4MKSKb106mh5u8AJTA8+3GU0d7JJ01WkbIQ7u
+         0lAWxiJ/QezHhaUA5DtIH6cepSeG/Lvc6pEyBBYg0PNPkNKTlXm0TSSWEJY96sSy9xH8
+         zTGriW9zvW2gOBlmLmvRYvUc0h3QgaWFKlzuJV25sLUvYSr6nr51k+rrhNzWV2aQxOD6
+         oxhk4P2r9+8M24b1Ve2BK529tPAD0g790t7YNcx7IkBzIfbW1R2EbKQ3Mn6lqxZK9Ri6
+         I5iQ==
+X-Gm-Message-State: AOAM531Rw4b749MM3v18eKkSq7i/3jtQbxxm8CL+z3TzgPQWdzziurlV
+        otcBAn46Xu1xFw3hhjmfh78=
+X-Google-Smtp-Source: ABdhPJxCKk/t2VY13WddHe4RLLp/gX40dcFgqguBcisAcJV20a5GHx4V0pn7ipz9AjzCL9dfxSK6iw==
+X-Received: by 2002:a05:6402:8c1:: with SMTP id d1mr6811027edz.265.1590046368007;
+        Thu, 21 May 2020 00:32:48 -0700 (PDT)
+Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
+        by smtp.gmail.com with ESMTPSA id kq5sm4085647ejb.20.2020.05.21.00.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 00:32:46 -0700 (PDT)
+Date:   Thu, 21 May 2020 09:32:45 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200521073245.GI6462@dhcp22.suse.cz>
+References: <20200520143712.GA749486@chrisdown.name>
+ <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520165131.GB630613@cmpxchg.org>
+ <20200520170430.GG6462@dhcp22.suse.cz>
+ <20200520175135.GA793901@cmpxchg.org>
 MIME-Version: 1.0
-References: <20200521003443.11385-1-Sergey.Semin@baikalelectronics.ru>
- <20200521004217.6gdcpboxaqizreky@mobilestation> <20200521071457.GC7309@alpha.franken.de>
-In-Reply-To: <20200521071457.GC7309@alpha.franken.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 21 May 2020 09:30:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2OYtd9Fa44ufbnpFoW3=G+NUtuueAoAV9CGVRBgOhSGw@mail.gmail.com>
-Message-ID: <CAK8P3a2OYtd9Fa44ufbnpFoW3=G+NUtuueAoAV9CGVRBgOhSGw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/14] mips: Prepare MIPS-arch code for Baikal-T1 SoC support
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Paul Burton <paul.burton@imgtec.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Olof Johansson <olof@lixom.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:BcLrKcPnWA60MbUrQ9m1/wEg+zlclLnUt4s6jdc55n5PTkhjbZL
- JgQ+jIrAuUH53tQy6AJVWAapHq4JN24cYVd4zHakTRcWD2GUalJiJFHV0IQeSOoXJuykKVA
- 4yuy5miOgwEYcUL+r5fAMgv7geU6XWtbNupIwZkFXsgKNfDTko3DxnUs1VpJ4EYSMbBxOlj
- PCAXJ5y7tFUan4YQu+3Gg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0WZ1TGQ04lQ=:NuCiqnLBLVWV/H5RW2GeWA
- 1ZrTFLJQOaNa5ZB0mqoCscEAJdsouplyCjNs621j8hdRt3+qXYKmFIIaWUmht2sPppbJpVwPA
- D8LZG3lJdGpboNIW3etKekHbZH8q9FTljTCMP+tbJCJ4A/3vQVvA6Z8tmpdMcQhqKMK0xBXBb
- YuE94Z5LmdeY7mAVavfDskJGVf2UELX42Q5ogBIXNNx5CHrAKstrWfCMoaVdPh4rzjYjrVe4N
- 6gunuZFFlrsk45oDqhKP1RXgVTQUObgmG+Xnv7N82bEF1ee/46guE3fQfFe62IpWr8gWnakMA
- 7y8tHyCD8eBJKGGk6Y8YPVqghhsqX7rMEhiz1PYdRVxEbeYeE5L5NoVRIrYtvcZuju6QmtBga
- hpzst3ekEVJJubacjpkJHPkN1MeaQjVkinXdOQldPciD55vSZSX4j/XOhlnfkTJWbKtJHZjRp
- vjmJz3NCGf5hcnBXONr6F9z4hqu3duHufBeGMdZ00IgJ8X823ml5ajiZ0JIfxXZqDlHetEZvc
- VnzKEiWC+q90HME8tonwPYZR+g/2ASM1doSwHHXC0gs86XXDbdKZHSJWk157z5+9rWVbh5/pz
- bVKX/02JaMoNMpza0JiKAtTTra7T3q/KAwwZfHAlQ19xrdycVrKm7Yw28Lk84PUdfHyObCt7m
- /ZipSQ9zkScUf1OmSUc9XXEdUPq4MMcuflC+QGXakePevPu+Zr2FSTsqQxJviIE0TqrnUuQyu
- oGImf5AEAuQmq/nP8jNpTCNVvWdCFaVGLR+oxZQZNijxPcy2TQaRSGyGnzC0ehiv7IXdCI4BY
- GN+GGb2Nw8HOAWvPIiynoEnNJIqnh32f8+1JEht32H1WSSPMKs=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520175135.GA793901@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 9:18 AM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
-> On Thu, May 21, 2020 at 03:42:17AM +0300, Serge Semin wrote:
-> > On Thu, May 21, 2020 at 03:34:29AM +0300, Serge Semin wrote:
-> > >
-> > > This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> > > base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-> > > tag: v5.7-rc4
-> >
-> > Thomas,
-> > Please note that this patchset is based on the Linux 5.7-rc4 tree (it most likely
-> > will get cleanly applied on rc6 as well), while mips-next is still at rc1. Due
-> > to that the patchset fails to be applied on mips-next. I think it would be
-> > better first to merge the last Linux tree into the mips-next, then try to merge
-> > this patchset in. Should you have any problem after that, please let me know.
-> > I'll resend the patchset being rebased on top of the new mips-next tree.
->
-> no, that's not how it works. Please rebase your patches on top of
-> mips-next. Thank you.
+On Wed 20-05-20 13:51:35, Johannes Weiner wrote:
+> On Wed, May 20, 2020 at 07:04:30PM +0200, Michal Hocko wrote:
+> > On Wed 20-05-20 12:51:31, Johannes Weiner wrote:
+> > > On Wed, May 20, 2020 at 06:07:56PM +0200, Michal Hocko wrote:
+> > > > On Wed 20-05-20 15:37:12, Chris Down wrote:
+> > > > > In Facebook production, we've seen cases where cgroups have been put
+> > > > > into allocator throttling even when they appear to have a lot of slack
+> > > > > file caches which should be trivially reclaimable.
+> > > > > 
+> > > > > Looking more closely, the problem is that we only try a single cgroup
+> > > > > reclaim walk for each return to usermode before calculating whether or
+> > > > > not we should throttle. This single attempt doesn't produce enough
+> > > > > pressure to shrink for cgroups with a rapidly growing amount of file
+> > > > > caches prior to entering allocator throttling.
+> > > > > 
+> > > > > As an example, we see that threads in an affected cgroup are stuck in
+> > > > > allocator throttling:
+> > > > > 
+> > > > >     # for i in $(cat cgroup.threads); do
+> > > > >     >     grep over_high "/proc/$i/stack"
+> > > > >     > done
+> > > > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> > > > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> > > > >     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
+> > > > > 
+> > > > > ...however, there is no I/O pressure reported by PSI, despite a lot of
+> > > > > slack file pages:
+> > > > > 
+> > > > >     # cat memory.pressure
+> > > > >     some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
+> > > > >     full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
+> > > > >     # cat io.pressure
+> > > > >     some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
+> > > > >     full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
+> > > > >     # grep _file memory.stat
+> > > > >     inactive_file 1370939392
+> > > > >     active_file 661635072
+> > > > > 
+> > > > > This patch changes the behaviour to retry reclaim either until the
+> > > > > current task goes below the 10ms grace period, or we are making no
+> > > > > reclaim progress at all. In the latter case, we enter reclaim throttling
+> > > > > as before.
+> > > > 
+> > > > Let me try to understand the actual problem. The high memory reclaim has
+> > > > a target which is proportional to the amount of charged memory. For most
+> > > > requests that would be SWAP_CLUSTER_MAX though (resp. N times that where
+> > > > N is the number of memcgs in excess up the hierarchy). I can see to be
+> > > > insufficient if the memcg is already in a large excess but if the
+> > > > reclaim can make a forward progress this should just work fine because
+> > > > each charging context should reclaim at least the contributed amount.
+> > > > 
+> > > > Do you have any insight on why this doesn't work in your situation?
+> > > > Especially with such a large inactive file list I would be really
+> > > > surprised if the reclaim was not able to make a forward progress.
+> > > 
+> > > The workload we observed this in was downloading a large file and
+> > > writing it to disk, which means that a good chunk of that memory was
+> > > dirty. The first reclaim pass appears to make little progress because
+> > > it runs into dirty pages.
+> > 
+> > OK, I see but why does the subsequent reclaim attempt makes a forward
+> > progress? Is this just because dirty pages are flushed in the mean time?
+> > Because if this is the case then the underlying problem seems to be that
+> > the reclaim should be throttled on dirty data.
+> 
+> That's what I assume. Chris wanted to do more reclaim tracing. But is
+> this actually important beyond maybe curiosity?
 
-Right, backmerges should generally be avoided. However if something
-between rc1 and rc4 is required to make Baikal-T1 work, rebasing it to
-rc1 would make it non-bisectable, which is also bad.
+Yes, because it might show that there is a deeper problem. Having an
+extremely large file list full of dirty data and pre-mature failure for
+the reclaim sounds like a problem that is worth looking into closely.
 
-Serge, are you aware of something in -rc4 that is needed as a dependency?
+> We retry every other reclaim invocation on forward progress. There is
+> not a single naked call to try_to_free_pages(), and this here is the
+> only exception where we don't loop on try_to_free_mem_cgroup_pages().
 
-       Arnd
+I am not saying the looping over try_to_free_pages is wrong. I do care
+about the final reclaim target. That shouldn't be arbitrary. We have
+established a target which is proportional to the requested amount of
+memory. And there is a good reason for that. If any task tries to
+reclaim down to the high limit then this might lead to a large
+unfairness when heavy producers piggy back on the active reclaimer(s).
+
+I wouldn't mind to loop over try_to_free_pages to meet the requested
+memcg_nr_pages_over_high target.
+
+[...]
+
+> > > > Also if the current high reclaim scaling is insufficient then we should
+> > > > be handling that via memcg_nr_pages_over_high rather than effectivelly
+> > > > unbound number of reclaim retries.
+> > > 
+> > > ???
+> > 
+> > I am not sure what you are asking here.
+> 
+> You expressed that some alternate solution B would be preferable,
+> without any detail on why you think that is the case.
+> 
+> And it's certainly not obvious or self-explanatory - in particular
+> because Chris's proposal *is* obvious and self-explanatory, given how
+> everybody else is already doing loops around page reclaim.
+
+Sorry, I could have been less cryptic. I hope the above and my response
+to Chris goes into more details why I do not like this proposal and what
+is the alternative. But let me summarize. I propose to use memcg_nr_pages_over_high
+target. If the current calculation of the target is unsufficient - e.g.
+in situations where the high limit excess is very large then this should
+be reflected in memcg_nr_pages_over_high.
+
+Is it more clear?
+
+-- 
+Michal Hocko
+SUSE Labs
