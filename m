@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F15C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3363D20826
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0222520874
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 20:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgEUUcZ (ORCPT
+        id S1730482AbgEUUcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 16:32:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
+        Thu, 21 May 2020 16:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730078AbgEUUcP (ORCPT
+        with ESMTP id S1730208AbgEUUcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 16:32:15 -0400
+        Thu, 21 May 2020 16:32:20 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFECC08C5C1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:32:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF8AC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 13:32:20 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jbrqy-0000gW-VN; Thu, 21 May 2020 22:31:45 +0200
+        id 1jbrrE-0000w1-3D; Thu, 21 May 2020 22:32:00 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7DFF6100606;
-        Thu, 21 May 2020 22:31:44 +0200 (CEST)
-Message-Id: <20200521202119.185317067@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6CDF4100606;
+        Thu, 21 May 2020 22:31:59 +0200 (CEST)
+Message-Id: <20200521202120.319418546@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 21 May 2020 22:05:38 +0200
+Date:   Thu, 21 May 2020 22:05:50 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Andy Lutomirski <luto@kernel.org>,
@@ -60,7 +60,7 @@ Cc:     Andy Lutomirski <luto@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V9 25/39] x86/entry: Provide IDTENTRY_SYSVEC
+Subject: [patch V9 37/39] x86/entry/64: Remove TRACE_IRQS_*_DEBUG
 References: <20200521200513.656533920@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,156 +75,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-Provide IDTENTRY variants for system vectors to consolidate the different
-mechanisms to emit the ASM stubs for 32 an 64 bit.
+Since INT3/#BP no longer runs on an IST, this workaround is no longer
+required.
 
-On 64bit this also moves the stack switching from ASM to C code. 32bit will
-excute the system vectors w/o stack switching as before.
+Tested by running lockdep+ftrace as described in the initial commit:
 
-The simple variant is meant for "empty" system vectors like scheduler IPI
-and KVM posted interrupt vectors. These do not need the full glory of irq
-enter/exit handling with softirq processing and more.
+  5963e317b1e9 ("ftrace/x86: Do not change stacks in DEBUG when calling lockdep")
 
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Acked-by: Andy Lutomirski <luto@kernel.org>
----
-V9: Use cond. RCU handling
----
- arch/x86/entry/entry_32.S       |    4 ++
- arch/x86/entry/entry_64.S       |    8 ++++
- arch/x86/include/asm/idtentry.h |   79 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 91 insertions(+)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -765,6 +765,10 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
- SYM_CODE_END(asm_\cfunc)
- .endm
- 
-+.macro idtentry_sysvec vector cfunc
-+	idtentry \vector asm_\cfunc \cfunc has_error_code=0
-+.endm
-+
- /*
-  * Include the defines which emit the idt entries which are shared
-  * shared between 32 and 64 bit.
+---
+ arch/x86/entry/entry_64.S |   48 ++--------------------------------------------
+ 1 file changed, 3 insertions(+), 45 deletions(-)
+
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -542,6 +542,14 @@ SYM_CODE_END(\asmsym)
+@@ -68,44 +68,6 @@ SYM_CODE_END(native_usergs_sysret64)
  .endm
  
  /*
-+ * System vectors which invoke their handlers directly and are not
-+ * going through the regular common device interrupt handling code.
-+ */
-+.macro idtentry_sysvec vector cfunc
-+	idtentry \vector asm_\cfunc \cfunc has_error_code=0
-+.endm
-+
-+/*
-  * MCE and DB exceptions
-  */
- #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -6,6 +6,9 @@
- #include <asm/trapnr.h>
+- * When dynamic function tracer is enabled it will add a breakpoint
+- * to all locations that it is about to modify, sync CPUs, update
+- * all the code, sync CPUs, then remove the breakpoints. In this time
+- * if lockdep is enabled, it might jump back into the debug handler
+- * outside the updating of the IST protection. (TRACE_IRQS_ON/OFF).
+- *
+- * We need to change the IDT table before calling TRACE_IRQS_ON/OFF to
+- * make sure the stack pointer does not get reset back to the top
+- * of the debug stack, and instead just reuses the current stack.
+- */
+-#if defined(CONFIG_DYNAMIC_FTRACE) && defined(CONFIG_TRACE_IRQFLAGS)
+-
+-.macro TRACE_IRQS_OFF_DEBUG
+-	call	debug_stack_set_zero
+-	TRACE_IRQS_OFF
+-	call	debug_stack_reset
+-.endm
+-
+-.macro TRACE_IRQS_ON_DEBUG
+-	call	debug_stack_set_zero
+-	TRACE_IRQS_ON
+-	call	debug_stack_reset
+-.endm
+-
+-.macro TRACE_IRQS_IRETQ_DEBUG
+-	btl	$9, EFLAGS(%rsp)		/* interrupts off? */
+-	jnc	1f
+-	TRACE_IRQS_ON_DEBUG
+-1:
+-.endm
+-
+-#else
+-# define TRACE_IRQS_OFF_DEBUG			TRACE_IRQS_OFF
+-# define TRACE_IRQS_ON_DEBUG			TRACE_IRQS_ON
+-# define TRACE_IRQS_IRETQ_DEBUG			TRACE_IRQS_IRETQ
+-#endif
+-
+-/*
+  * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
+  *
+  * This is the only entry point used for 64-bit system calls.  The
+@@ -500,11 +462,7 @@ SYM_CODE_START(\asmsym)
  
- #ifndef __ASSEMBLY__
-+#include <linux/hardirq.h>
-+
-+#include <asm/irq_stack.h>
+ 	UNWIND_HINT_REGS
  
- void idtentry_enter_user(struct pt_regs *regs);
- void idtentry_exit_user(struct pt_regs *regs);
-@@ -210,6 +213,78 @@ static __always_inline void __##func(str
- 									\
- static __always_inline void __##func(struct pt_regs *regs, u8 vector)
+-	.if \vector == X86_TRAP_DB
+-		TRACE_IRQS_OFF_DEBUG
+-	.else
+-		TRACE_IRQS_OFF
+-	.endif
++	TRACE_IRQS_OFF
  
-+/**
-+ * DECLARE_IDTENTRY_SYSVEC - Declare functions for system vector entry points
-+ * @vector:	Vector number (ignored for C)
-+ * @func:	Function name of the entry point
-+ *
-+ * Declares three functions:
-+ * - The ASM entry point: asm_##func
-+ * - The XEN PV trap entry point: xen_##func (maybe unused)
-+ * - The C handler called from the ASM entry point
-+ *
-+ * Maps to DECLARE_IDTENTRY().
-+ */
-+#define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
-+	DECLARE_IDTENTRY(vector, func)
-+
-+/**
-+ * DEFINE_IDTENTRY_SYSVEC - Emit code for system vector IDT entry points
-+ * @func:	Function name of the entry point
-+ *
-+ * idtentry_enter/exit() and irq_enter/exit_rcu() are invoked before the
-+ * function body. KVM L1D flush request is set.
-+ *
-+ * Runs the function on the interrupt stack if the entry hit kernel mode
-+ */
-+#define DEFINE_IDTENTRY_SYSVEC(func)					\
-+static void __##func(struct pt_regs *regs);				\
-+									\
-+__visible noinstr void func(struct pt_regs *regs)			\
-+{									\
-+	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+									\
-+	instrumentation_begin();					\
-+	irq_enter_rcu();						\
-+	kvm_set_cpu_l1tf_flush_l1d();					\
-+	run_on_irqstack_cond(__##func, regs, regs);			\
-+	irq_exit_rcu();							\
-+	lockdep_hardirq_exit();						\
-+	instrumentation_end();						\
-+	idtentry_exit_cond_rcu(regs, rcu_exit);				\
-+}									\
-+									\
-+static noinline void __##func(struct pt_regs *regs)
-+
-+/**
-+ * DEFINE_IDTENTRY_SYSVEC_SIMPLE - Emit code for simple system vector IDT
-+ *				   entry points
-+ * @func:	Function name of the entry point
-+ *
-+ * Runs the function on the interrupted stack. No switch to IRQ stack and
-+ * only the minimal __irq_enter/exit() handling.
-+ *
-+ * Only use for 'empty' vectors like reschedule IPI and KVM posted
-+ * interrupt vectors.
-+ */
-+#define DEFINE_IDTENTRY_SYSVEC_SIMPLE(func)				\
-+static __always_inline void __##func(struct pt_regs *regs);		\
-+									\
-+__visible noinstr void func(struct pt_regs *regs)			\
-+{									\
-+	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+									\
-+	instrumentation_begin();					\
-+	__irq_enter_raw();						\
-+	kvm_set_cpu_l1tf_flush_l1d();					\
-+	__##func (regs);						\
-+	__irq_exit_raw();						\
-+	instrumentation_end();						\
-+	idtentry_exit_cond_rcu(regs, rcu_exit);				\
-+}									\
-+									\
-+static __always_inline void __##func(struct pt_regs *regs)
-+
- #ifdef CONFIG_X86_64
- /**
-  * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
-@@ -345,6 +420,10 @@ static __always_inline void __##func(str
- #define DECLARE_IDTENTRY_IRQ(vector, func)				\
- 	idtentry_irq vector func
+ 	movq	%rsp, %rdi		/* pt_regs pointer */
  
-+/* System vector entries */
-+#define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
-+	idtentry_sysvec vector func
-+
- #ifdef CONFIG_X86_64
- # define DECLARE_IDTENTRY_MCE(vector, func)				\
- 	idtentry_mce_db vector asm_##func func
+@@ -924,7 +882,7 @@ SYM_CODE_END(paranoid_entry)
+ SYM_CODE_START_LOCAL(paranoid_exit)
+ 	UNWIND_HINT_REGS
+ 	DISABLE_INTERRUPTS(CLBR_ANY)
+-	TRACE_IRQS_OFF_DEBUG
++	TRACE_IRQS_OFF
+ 	testl	%ebx, %ebx			/* swapgs needed? */
+ 	jnz	.Lparanoid_exit_no_swapgs
+ 	TRACE_IRQS_IRETQ
+@@ -933,7 +891,7 @@ SYM_CODE_START_LOCAL(paranoid_exit)
+ 	SWAPGS_UNSAFE_STACK
+ 	jmp	restore_regs_and_return_to_kernel
+ .Lparanoid_exit_no_swapgs:
+-	TRACE_IRQS_IRETQ_DEBUG
++	TRACE_IRQS_IRETQ
+ 	/* Always restore stashed CR3 value (see paranoid_entry) */
+ 	RESTORE_CR3	scratch_reg=%rbx save_reg=%r14
+ 	jmp restore_regs_and_return_to_kernel
 
