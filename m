@@ -2,255 +2,173 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A50C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83F9020721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4389F20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 13:06:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoQvM8t8"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="02JXf8SD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgEUNGZ (ORCPT
+        id S1729431AbgEUNGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 09:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729197AbgEUNGZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 09:06:25 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E23C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:06:23 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id j2so6996755ilr.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 06:06:23 -0700 (PDT)
+        Thu, 21 May 2020 09:06:47 -0400
+Received: from mail-bn8nam12on2044.outbound.protection.outlook.com ([40.107.237.44]:19942
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729197AbgEUNGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 09:06:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LIBP0XoHko7C2Lcrd2fiWw6Or/BoRrJfWhbunKf34aPAPgP1kzWWPqSwjrF6Lv3RZ9n0SnWlDF3Q8O6i8Z2/Nn4UgSJ2AVv9j6H7j4KNqcUS6y03tdU5Zu8xt0NlgqYqEXx7ufD8Kxfxz97WdFhVSi3EduluWogG4sBD5RgrWQKolBBVVHR5EsxnM+DVkeGDPLPJHURU09kHCH2FzXuRWt0+0vCcXEpO50qcfYbh5fdn0GppZdia7yqk+bJUA1q4aeByCxK9oVbEhTaWRgsToBlSX67to1LrE6Yb471gulIionJZAmaQhlOP+FxESj032qYfdNCMkoUjfp/dSHloYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0nF5LJirplyvPETK67zAT1M9HGqWk0iBZwPquYOWwuI=;
+ b=MacPuguAH85xMzGk4hz4ltl6MTDJFg4GGOhdoZJqKcy2Qa8AqON+hC3sehaPfL6Wl7A/CaJY3HNZA9EKnhGQYrv5MtipnPeHdtjSXsxkgMrKdkZa+ymdHVZ/ltqHKm5qjhTBjEa5tx6Urf1UwFGCzXmFKFwgyln0nUPYAJLpD36R0RzKz/f6IXddILuZHuMilDNa+ao/RHeibKa2cjuXK2oD3kiM6nMwz8Txbtn8T6nbLt5cyRq25SCZBifsxWNAWCN7B8NciyM0vjDGmB8FRJlL2aLSAb4k3V02JoIb1ycU+i9bTejnuOjysVFsoUHAszXXP5qdLwmq/iGyirvqWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2Nba/iQzCaQZaoQ9dfuHPIBatK3UepU1/Wzggh2dhaQ=;
-        b=uoQvM8t8pCAi5A7WQf5EuOlVQSD2njRfV5FxYDsNigQBp0J766Cm69DVqjS7jxqNye
-         vRIB7oh/lrU17H37lyC7VJH5xzn7CWhym+x3BgdomzJuMUbv7JyzXN9vEPuEsVvodBKX
-         xUvkDkltprMtoQpMNUkucHJ8/RJ0Hd6GFFgyPMxiSHe1C/w8GVnSrP8Z8/fgabpYFeL8
-         hwlU3aXBvq7k22p4lOvTFulmvEccTUwk5hL6lp1sUcT2CJ9iqnu9wdqHZ5omyUX/D4ad
-         FCPpKud3fqogjtn/NW8rlzq5O2buxGycST2/xBXNm2kx76yL08lh5Lq5sdkUOaJyxGHK
-         L24A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2Nba/iQzCaQZaoQ9dfuHPIBatK3UepU1/Wzggh2dhaQ=;
-        b=HdXoGZDZu2F6d24tUboP295XWCC1MWDQs3lTzCbGDOURKpzZ6EdPaFTZvVJLH1XrWO
-         y4aebJWvHX9U7fwYkUk/Lhh9nUe7ZMO6wgWWAP9zeNgun689VqkJ32HZj0zziIZGJ4Ce
-         5unx1FJpWUcGAwftlsdbsPUmixrAd9q73K/zzC5Fpw9vx6pWXhGUOUJDIk0zAt0EPwDm
-         pHwuQVpK8PeT14mtlWq/iG85z+CmPAKo1n3wTqhOZi8z9gHvmzC1KOfr2JsQk9mnUt8u
-         xJ2CsFR5CM0ta5YwVteQQHsXm2C/LA/CeZSMmJ7ONp3GsZqGN1xJfpdGvEVi3KIiE8rl
-         /KIw==
-X-Gm-Message-State: AOAM532zsk/ko63ldugtn/5JTAPPqiFRlSXTDnOubpWR86LKHKe8UFZo
-        xg3R/ue4sIKbQpM59s2gm/ubXbnFItQsTcAoq2jX6XR66Q==
-X-Google-Smtp-Source: ABdhPJyu3EjZVcNJY1VmFqmg/K4QV9T3untcZqdj8mahG++KI35YWwW2RUhufOJF1tA5DbEO1gfMKZWPtssMRuX8v2g=
-X-Received: by 2002:a92:4a09:: with SMTP id m9mr7897673ilf.27.1590066383167;
- Thu, 21 May 2020 06:06:23 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0nF5LJirplyvPETK67zAT1M9HGqWk0iBZwPquYOWwuI=;
+ b=02JXf8SDp15fSDiLv0J8YTkZdqEuCu9t9Gp1Suc6PsYKxbZ/QxRbK4RnwhzM598ZXT3XDhGefvtn8CUI2WNdZ/zOWtYstOthRcCVAOJvfuK7/hnxI/pmwABBbQV4zeoXlLiO1KG7tv/vmAhDl2JvOTMshIMsivHBLhcQPTiakaY=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from BY5PR12MB4082.namprd12.prod.outlook.com (2603:10b6:a03:212::19)
+ by BY5PR12MB4180.namprd12.prod.outlook.com (2603:10b6:a03:213::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Thu, 21 May
+ 2020 13:06:43 +0000
+Received: from BY5PR12MB4082.namprd12.prod.outlook.com
+ ([fe80::5856:1cff:8a2:7db6]) by BY5PR12MB4082.namprd12.prod.outlook.com
+ ([fe80::5856:1cff:8a2:7db6%6]) with mapi id 15.20.3021.024; Thu, 21 May 2020
+ 13:06:42 +0000
+Date:   Thu, 21 May 2020 09:06:37 -0400
+From:   Aurabindo Pillai <aurabindo.pillai@amd.com>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, daniel@ffwll.ch, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Amber Lin <Amber.Lin@amd.com>
+Subject: Re: [PATCH] drm/amd/amdkfd: Fix large framesize for kfd_smi_ev_read()
+Message-ID: <20200521130637.celg23pnqivdmaei@outlook.office365.com>
+References: <20200520135306.11221-1-aurabindo.pillai@amd.com>
+ <1c09eb78-f2a4-3f20-1bee-2590c35b982e@amd.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7dovo3om5iboyszh"
+Content-Disposition: inline
+In-Reply-To: <1c09eb78-f2a4-3f20-1bee-2590c35b982e@amd.com>
+X-ClientProxiedBy: BN6PR03CA0001.namprd03.prod.outlook.com
+ (2603:10b6:404:23::11) To BY5PR12MB4082.namprd12.prod.outlook.com
+ (2603:10b6:a03:212::19)
 MIME-Version: 1.0
-References: <20200517152916.3146539-1-brgerst@gmail.com> <20200517152916.3146539-3-brgerst@gmail.com>
- <CAKwvOdnCcpS_9A2y9tMqeiAg2NfcVx=gNeA2V=+zHknit7wGkg@mail.gmail.com>
- <CAMzpN2gGbZABjtLQyiTdtaL5LYW-cfVQZqj6w=oZNa9Fw9GdCQ@mail.gmail.com> <CAKwvOdmwh92BP2=-d4Apr07i6uKb21M15MAz-v4S5RfQ16-fPA@mail.gmail.com>
-In-Reply-To: <CAKwvOdmwh92BP2=-d4Apr07i6uKb21M15MAz-v4S5RfQ16-fPA@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Thu, 21 May 2020 09:06:12 -0400
-Message-ID: <CAMzpN2hp3HYKriW6p-m3hLJ8v79Og9emu5xPQvb7aWqXq4wUbA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] x86/percpu: Clean up percpu_to_op()
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from outlook.office365.com (165.204.84.11) by BN6PR03CA0001.namprd03.prod.outlook.com (2603:10b6:404:23::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend Transport; Thu, 21 May 2020 13:06:40 +0000
+X-Originating-IP: [165.204.84.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 1a09ba1f-9178-4282-22fa-08d7fd87ce97
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4180:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BY5PR12MB41800451EF6FEE477D381AFE8BB70@BY5PR12MB4180.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: w3c6+GLy2O7im+fwXaGO4uaCDz7TCr7ZfM4nkuLLtYr/SgNi7ckPrgo4OYK7BrN8kmMcpGIzR11mw4xS5VmVPDopMJKCo/CPN8viV/QAZhXmuSuuZJWdJ0maWD5Lp+RJNC+wMrVh7pZRPhFRHOB27Hl19NfpEwlPdf7XWK6vQyw3cvXhEJLCyU1tGnG1IFKRJXwmncdhZwYopAY811tVsmM82Y7FvKMaBgbhQwhf3GSTknzN7/lMDFRmpr0Zp2fyy9pBT6GaUc/3IC+d36nLJaAoelLTs/d52i7gPVwSRZYrfIRAq5Ju+6RzSydxtLjT5TS5iRlulAMqmxuKItILfwdlkLhk6CHZBPqIYNr4fdgYzrETnTUURU2X7ElWLQN2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4082.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(39860400002)(346002)(396003)(4326008)(6862004)(956004)(44832011)(2906002)(55016002)(9686003)(66556008)(86362001)(66946007)(1076003)(66476007)(6666004)(8676002)(316002)(52116002)(16526019)(186003)(7696005)(5660300002)(44144004)(26005)(21480400003)(8936002)(6506007)(478600001)(6636002)(2700100001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: MWdbhXxWF1Gxz8O/lhN2/aVKgRjcQ4CBZBRilFz4wxrqy2QVXvrwh+C7sJ2Eb0YVs8kHuY7LSgS7L71S+sJ79MUcCGFnCSCrGrblJlUms9T6waTDOVkznMZQTsDz+a7k1VFaTUuGpP4hvfQmgs5sjgP4iVhOJpzer7Yva6gPnYm7otDi7N1r8oe45xgHUFca1HlBjBuALAsSNYDmspuDYopcG3k5zNcqVj6GnIylfUZsCiEo7pmkMp+UgV2xznRlR3tK13IegRVGoOGHawKZiJluOKaZsw+aIXPdSyB0MFSZdSqFXEiKyTJpHy5p80s6XENbMDMMN9j1UAZz+rjOMh1c7tuZbXxE2bu04KrPQp/yYPTj8gKOL8ceSeX+jvrZhiWYiSqgnr+0tI1c+OXWlEIJnXTR7kcOcBqwQ7yyNJ7O1jHcbiib6kprzWKSgQUwaNWRMJeDORTwubTBcMn815sQY6lzgN7rQG3aD8wgmXQ=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a09ba1f-9178-4282-22fa-08d7fd87ce97
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 13:06:42.6305
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cEm+KxIIHb+cQk3M12kTLpA33WxmqTz4G20HOC1R5iu+CDfDBSN6z8YRWhj7MUdcMp8/T79KuilRWXAqxh76WA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 1:26 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, May 18, 2020 at 8:38 PM Brian Gerst <brgerst@gmail.com> wrote:
+--7dovo3om5iboyszh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 05/20, Felix Kuehling wrote:
+> Am 2020-05-20 um 9:53 a.m. schrieb Aurabindo Pillai:
+> > The buffer allocated is of 1024 bytes. Allocate this from
+> > heap instead of stack.
 > >
-> > On Mon, May 18, 2020 at 5:15 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > On Sun, May 17, 2020 at 8:29 AM Brian Gerst <brgerst@gmail.com> wrote=
-:
-> > > >
-> > > > The core percpu macros already have a switch on the data size, so t=
-he switch
-> > > > in the x86 code is redundant and produces more dead code.
-> > > >
-> > > > Also use appropriate types for the width of the instructions.  This=
- avoids
-> > > > errors when compiling with Clang.
-> > > >
-> > > > Signed-off-by: Brian Gerst <brgerst@gmail.com>
-> > > > ---
-> > > >  arch/x86/include/asm/percpu.h | 90 ++++++++++++++-----------------=
-----
-> > > >  1 file changed, 35 insertions(+), 55 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/p=
-ercpu.h
-> > > > index 89f918a3e99b..233c7a78d1a6 100644
-> > > > --- a/arch/x86/include/asm/percpu.h
-> > > > +++ b/arch/x86/include/asm/percpu.h
-> > > > @@ -117,37 +117,17 @@ extern void __bad_percpu_size(void);
-> > > >  #define __pcpu_reg_imm_4(x) "ri" (x)
-> > > >  #define __pcpu_reg_imm_8(x) "re" (x)
-> > > >
-> > > > -#define percpu_to_op(qual, op, var, val)               \
-> > > > -do {                                                   \
-> > > > -       typedef typeof(var) pto_T__;                    \
-> > > > -       if (0) {                                        \
-> > > > -               pto_T__ pto_tmp__;                      \
-> > > > -               pto_tmp__ =3D (val);                      \
-> > > > -               (void)pto_tmp__;                        \
-> > > > -       }                                               \
-> > > > -       switch (sizeof(var)) {                          \
-> > > > -       case 1:                                         \
-> > > > -               asm qual (op "b %1,"__percpu_arg(0)     \
-> > > > -                   : "+m" (var)                        \
-> > > > -                   : "qi" ((pto_T__)(val)));           \
-> > > > -               break;                                  \
-> > > > -       case 2:                                         \
-> > > > -               asm qual (op "w %1,"__percpu_arg(0)     \
-> > > > -                   : "+m" (var)                        \
-> > > > -                   : "ri" ((pto_T__)(val)));           \
-> > > > -               break;                                  \
-> > > > -       case 4:                                         \
-> > > > -               asm qual (op "l %1,"__percpu_arg(0)     \
-> > > > -                   : "+m" (var)                        \
-> > > > -                   : "ri" ((pto_T__)(val)));           \
-> > > > -               break;                                  \
-> > > > -       case 8:                                         \
-> > > > -               asm qual (op "q %1,"__percpu_arg(0)     \
-> > > > -                   : "+m" (var)                        \
-> > > > -                   : "re" ((pto_T__)(val)));           \
-> > > > -               break;                                  \
-> > > > -       default: __bad_percpu_size();                   \
-> > > > -       }                                               \
-> > > > +#define percpu_to_op(size, qual, op, _var, _val)                  =
-     \
-> > > > +do {                                                              =
-     \
-> > > > +       __pcpu_type_##size pto_val__ =3D __pcpu_cast_##size(_val); =
-       \
-> > > > +       if (0) {                                                   =
-     \
-> > > > +               typeof(_var) pto_tmp__;                            =
-     \
-> > > > +               pto_tmp__ =3D (_val);                              =
-       \
-> > > > +               (void)pto_tmp__;                                   =
-     \
-> > > > +       }                                                          =
-     \
-> > >
-> > > Please replace the whole `if (0)` block with:
-> > > ```c
-> > > __same_type(_var, _val);
-> > > ```
-> > > from include/linux/compiler.h.
+> > Also remove check for stack size since we're allocating from heap
 > >
-> > The problem with __builtin_types_compatible_p() is that it considers
-> > unsigned long and u64 (aka unsigned long long) as different types even
-> > though they are the same width on x86-64.  While this may be a good
-> > cleanup to look at in the future, it's not a simple drop-in
-> > replacement.
+> > Signed-off-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+> > Tested-by: Amber Lin <Amber.Lin@amd.com>
+>=20
+> See one comment inline. With that fixed, the patch is
+>=20
+> Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+>=20
+>=20
+> > ---
+> >  drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c | 26 +++++++++++++++------
+> >  1 file changed, 19 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c b/drivers/gpu/=
+drm/amd/amdkfd/kfd_smi_events.c
+> > index f5fd18eacf0d..5aebe169f8c6 100644
+> > --- a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
+> > +++ b/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
+> > @@ -77,9 +77,11 @@ static ssize_t kfd_smi_ev_read(struct file *filep, c=
+har __user *user,
+> >  	int ret;
+> >  	size_t to_copy;
+> >  	struct kfd_smi_client *client =3D filep->private_data;
+> > -	unsigned char buf[MAX_KFIFO_SIZE];
+> > +	unsigned char *buf;
+> > =20
+> > -	BUILD_BUG_ON(MAX_KFIFO_SIZE > 1024);
+> > +	buf =3D kzalloc(MAX_KFIFO_SIZE * sizeof(*buf), GFP_KERNEL);
+>=20
+> kzalloc is not necessary here, you could use kmalloc. The part of that
+> allocation that matters will be overwritten by kfifo_out.
+>=20
+> Regards,
+> =A0 Felix
+>=20
 >
-> Does it trigger errors in this case?
 
-Yes, see boot_init_stack_canary().  That code looks a bit sketchy but
-it's not wrong, for x86-64 at least.
+Thank you Felix, Alex for the review. I shall make that change and submit i=
+t.
 
-It also doesn't seem to like "void *" compared to any other pointer type:
 
-In function =E2=80=98fpregs_deactivate=E2=80=99,
-    inlined from =E2=80=98fpu__drop=E2=80=99 at arch/x86/kernel/fpu/core.c:=
-285:3:
-./include/linux/compiler.h:379:38: error: call to
-=E2=80=98__compiletime_assert_317=E2=80=99 declared with attribute error: B=
-UILD_BUG_ON
-failed: !__same_type((fpu_fpregs_owner_ctx), ((void *)0))
-  379 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-      |                                      ^
-./include/linux/compiler.h:360:4: note: in definition of macro
-=E2=80=98__compiletime_assert=E2=80=99
-  360 |    prefix ## suffix();    \
-      |    ^~~~~~
-./include/linux/compiler.h:379:2: note: in expansion of macro
-=E2=80=98_compiletime_assert=E2=80=99
-  379 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNT=
-ER__)
-      |  ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro
-=E2=80=98compiletime_assert=E2=80=99
-   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg=
-)
-      |                                     ^~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98BUIL=
-D_BUG_ON_MSG=E2=80=99
-   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-      |  ^~~~~~~~~~~~~~~~
-./arch/x86/include/asm/percpu.h:105:2: note: in expansion of macro
-=E2=80=98BUILD_BUG_ON=E2=80=99
-  105 |  BUILD_BUG_ON(!__same_type(_var, _val));    \
-      |  ^~~~~~~~~~~~
-./arch/x86/include/asm/percpu.h:338:37: note: in expansion of macro
-=E2=80=98percpu_to_op=E2=80=99
-  338 | #define this_cpu_write_8(pcp, val)  percpu_to_op(8, volatile,
-"mov", (pcp), val)
-      |                                     ^~~~~~~~~~~~
-./include/linux/percpu-defs.h:380:11: note: in expansion of macro
-=E2=80=98this_cpu_write_8=E2=80=99
-  380 |   case 8: stem##8(variable, __VA_ARGS__);break;  \
-      |           ^~~~
-./include/linux/percpu-defs.h:508:34: note: in expansion of macro
-=E2=80=98__pcpu_size_call=E2=80=99
-  508 | #define this_cpu_write(pcp, val)
-__pcpu_size_call(this_cpu_write_, pcp, val)
-      |                                  ^~~~~~~~~~~~~~~~
-./arch/x86/include/asm/fpu/internal.h:525:2: note: in expansion of
-macro =E2=80=98this_cpu_write=E2=80=99
-  525 |  this_cpu_write(fpu_fpregs_owner_ctx, NULL);
-      |  ^~~~~~~~~~~~~~
+Thanks & Regards,
+Aurabindo
 
->
-> It's interesting to know how this trick differs from
-> __builtin_types_compatible_p().  Might even be helpful to wrap this
-> pattern in a macro with a comment with the pros/cons of this approach
-> vs __same_type.
+--7dovo3om5iboyszh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I think the original code is more to catch a mismatch between pointers
-and integers.  It doesn't seem to care about truncation
+-----BEGIN PGP SIGNATURE-----
 
-> On the other hand, the use of `long` seems tricky in x86 code as x86
-> (32b) is ILP32 but x86_64 (64b) is LP64.  So the use of `long` is
-> ambiguous in the sense that it's a different size depending on the
-> target ABI.  Wouldn't it potentially be a bug for x86 kernel code to
-> use `long` percpu variables (or rather mix `long` and `long long` in
-> the same operation) in that case, since the sizes of the two would be
-> different for i386?
+iQGzBAEBCAAdFiEEQx2/asct60LX/aRkMN9QjD+bPfYFAl7GfN0ACgkQMN9QjD+b
+PfYUvwv9Eho5uw4SuDh1lA1S0DoEOPts49vSWmzyDsvWito2U1/ikcGTzZDO3lng
+sxN1/GMIGowvpFdY4zOspfQ4Jago7TsEJ6NFre13FWUdFvG6y7eD8ppMrh0uW0BB
+F5zw6EbdZFOaPjK2iICQvPdtLO44Ps1ahmk5ozO4t36i3VTwfiSnMcY+26ow5mM6
+TZpys4cjXKrUFUpstMsazA4D+prX2tIRU6m/AdSeIIR2yrhMjpYDgoWo3hkJEh0g
+vik+Dnf2Kq4WzNaQIxyCEpSanvuHox5A1wINt2M3Z4jA/2wmmt7ySzEvZxhdHoZF
+7Cq7g/iEgR3qwq9urco7CyPdV2ClzG1gefdYnBR0oEzLA77n7bBIPmfkdXfL8Hr1
+Id98EX/oIHII5fyKulNIwnGLJiABx1vzPhbJPJxVEVlx7leG6l0VRNkzCy8hxv+j
+fbqR1HWmbpyTPzPZIvZxqgtHMm/ZtGuRLN9CzRpUHxjcTBn4ZGlTnRK/A70RLIjg
+ad7FJFYd
+=2wO/
+-----END PGP SIGNATURE-----
 
-Not necessarily.  Some things like registers are naturally 32-bit on a
-32-bit kernel and 64-bit on a 64-bit kernel, so 'long' is appropriate
-there.
-
---
-Brian Gerst
+--7dovo3om5iboyszh--
