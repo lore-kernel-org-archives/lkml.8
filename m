@@ -2,26 +2,26 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1105C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3912070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F2020849
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgEUJOC (ORCPT
+        id S1728841AbgEUJOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:14:02 -0400
-Received: from v6.sk ([167.172.42.174]:34758 "EHLO v6.sk"
+        Thu, 21 May 2020 05:14:05 -0400
+Received: from v6.sk ([167.172.42.174]:34782 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728671AbgEUJOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:14:02 -0400
+        id S1728671AbgEUJOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:14:04 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 2CF18610A5;
-        Thu, 21 May 2020 09:14:00 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 684AE612FF;
+        Thu, 21 May 2020 09:14:02 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Alessandro Zummo <a.zummo@towertech.it>,
@@ -33,11 +33,14 @@ Cc:     Alessandro Zummo <a.zummo@towertech.it>,
         Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ulf Hansson <ulf.hansson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/9] DT: Improve validation for Marvell SoCs
-Date:   Thu, 21 May 2020 11:13:47 +0200
-Message-Id: <20200521091356.2211020-1-lkundrak@v3.sk>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2 1/9] dt-bindings: mmc: Convert sdhci-pxa to json-schema
+Date:   Thu, 21 May 2020 11:13:48 +0200
+Message-Id: <20200521091356.2211020-2-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200521091356.2211020-1-lkundrak@v3.sk>
+References: <20200521091356.2211020-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,25 +48,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Convert the sdhci-pxa binding to DT schema format using json-schema.
 
-chained to this message is a second version of remaining patches from the
-first spin of the "DT: Improve validation for Marvell SoCs" [1] patch set.
+At the same time, fix a couple of issues with the examples discovered by
+the validation tool -- a semicolon instead of a comma and wrong node names.
 
-[1] https://lore.kernel.org/lkml/20200317093922.20785-1-lkundrak@v3.sk/
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-I've attempted to address the review of the v1, each patch includes a
-detailed change log.
+---
+Changes since v1:
+- move reg-names items: from the conditional to main properties:, only
+  specify maxItems and minItems in conditional branches
+- Specify minItems and maxItems in properties/reg instad of on
+  conditional branchs
+- Add default GPL-2.0-only license tag
+- Fill in maintainers from MAINTAINERS file
 
-Compared to v1, wherever the license or maintainer information was
-missing, I've filled in GPL-2.0-only and people listed in MAINTAINERS
-file. As I've indicated in v1 cover letter, am not sure whether this is
-the optimal course of action. However I've included the relevant people
-in v1 Cc list and asked for clarifications, but didn't really get any
-feedback to that.
+ .../devicetree/bindings/mmc/sdhci-pxa.txt     |  50 ---------
+ .../devicetree/bindings/mmc/sdhci-pxa.yaml    | 103 ++++++++++++++++++
+ 2 files changed, 103 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
 
-Cheers
-Lubo
-
-
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+deleted file mode 100644
+index 3d1b449d6097..000000000000
+--- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-* Marvell sdhci-pxa v2/v3 controller
+-
+-This file documents differences between the core properties in mmc.txt
+-and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
+-
+-Required properties:
+-- compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
+-  "marvell,armada-380-sdhci".
+-- reg:
+-  * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
+-    the SDHCI registers.
+-
+-  * for "marvell,armada-380-sdhci", three register areas. The first
+-    one for the SDHCI registers themselves, the second one for the
+-    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
+-    SDIO3 Configuration register
+-- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
+-  for "marvell,armada-380-sdhci"
+-- clocks: Array of clocks required for SDHCI; requires at least one for
+-    I/O clock.
+-- clock-names: Array of names corresponding to clocks property; shall be
+-    "io" for I/O clock and "core" for optional core clock.
+-
+-Optional properties:
+-- mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
+-
+-Example:
+-
+-sdhci@d4280800 {
+-	compatible = "mrvl,pxav3-mmc";
+-	reg = <0xd4280800 0x800>;
+-	bus-width = <8>;
+-	interrupts = <27>;
+-	clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
+-	clock-names = "io", "core";
+-	non-removable;
+-	mrvl,clk-delay-cycles = <31>;
+-};
+-
+-sdhci@d8000 {
+-	compatible = "marvell,armada-380-sdhci";
+-	reg-names = "sdhci", "mbus", "conf-sdio3";
+-	reg = <0xd8000 0x1000>,
+-		<0xdc000 0x100>;
+-		<0x18454 0x4>;
+-	interrupts = <0 25 0x4>;
+-	clocks = <&gateclk 17>;
+-	clock-names = "io";
+-	mrvl,clk-delay-cycles = <0x1F>;
+-};
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+new file mode 100644
+index 000000000000..27ea069aa5fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+@@ -0,0 +1,103 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell PXA SDHCI v2/v3 bindings
++
++maintainers:
++  - Ulf Hansson <ulf.hansson@linaro.org>
++  - Rob Herring <robh+dt@kernel.org>
++
++allOf:
++  - $ref: mmc-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: marvell,armada-380-sdhci
++    then:
++      properties:
++        regs:
++          minItems: 3
++        reg-names:
++          minItems: 3
++      required:
++        - reg-names
++    else:
++      properties:
++        regs:
++          maxItems: 1
++        reg-names:
++          maxItems: 1
++
++properties:
++  compatible:
++    enum:
++      - mrvl,pxav2-mmc
++      - mrvl,pxav3-mmc
++      - marvell,armada-380-sdhci
++
++  reg:
++    minItems: 1
++    maxItems: 3
++
++  reg-names:
++    items:
++      - const: sdhci
++      - const: mbus
++      - const: conf-sdio3
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: io
++      - const: core
++
++  mrvl,clk-delay-cycles:
++    description: Specify a number of cycles to delay for tuning.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/berlin2.h>
++    mmc@d4280800 {
++        compatible = "mrvl,pxav3-mmc";
++        reg = <0xd4280800 0x800>;
++        bus-width = <8>;
++        interrupts = <27>;
++        clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
++        clock-names = "io", "core";
++        non-removable;
++        mrvl,clk-delay-cycles = <31>;
++    };
++  - |
++    mmc@d8000 {
++        compatible = "marvell,armada-380-sdhci";
++        reg-names = "sdhci", "mbus", "conf-sdio3";
++        reg = <0xd8000 0x1000>,
++              <0xdc000 0x100>,
++              <0x18454 0x4>;
++        interrupts = <0 25 0x4>;
++        clocks = <&gateclk 17>;
++        clock-names = "io";
++        mrvl,clk-delay-cycles = <0x1F>;
++    };
++
++...
+-- 
+2.26.2
 
