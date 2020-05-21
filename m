@@ -6,41 +6,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA11C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC60C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CA9207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FE1207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 16:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbgEUQ5O (ORCPT
+        id S1730170AbgEUQ5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 12:57:14 -0400
+        Thu, 21 May 2020 12:57:20 -0400
 Received: from mga02.intel.com ([134.134.136.20]:46206 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730138AbgEUQ5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 12:57:13 -0400
-IronPort-SDR: 9Dat/G+NoPA+jHDfIwhKpnrQ+7B5eUfLpaKaJFmoF7blU5bVAh6wQf7Q9tbvUNPMniXL6N/0Jn
- AWwDXG4hasxg==
+        id S1730138AbgEUQ5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 12:57:17 -0400
+IronPort-SDR: uaOvOovUZCMvmsQdgb0QkQDSFZUxIow/3EtzWjx6JKIpE9Vy484na15tN8dcBuv6aVK7eb/Unw
+ PtZhEeW+KbMQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 09:57:13 -0700
-IronPort-SDR: KgL5+3LiB678fkrVbNIM5wWyFQbpKLy3nifdCghODahi4pxKbFaFjODkotTb+qwuLsUR/0jd9P
- SfCtZjOQgyxg==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 09:57:16 -0700
+IronPort-SDR: Zw0HlnVb2QXZFYtGqKuEgUBIy0YtUb+Hn9kY1fGHVDXq6bxN8QeBgr2Texd/QYSXXUu4PHMexH
+ gZE6NC5W2mFQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
-   d="scan'208";a="309094705"
+   d="scan'208";a="309094725"
 Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.212.147.236])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 May 2020 09:57:11 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 21 May 2020 09:57:14 -0700
 From:   Kristen Carlson Accardi <kristen@linux.intel.com>
 To:     keescook@chromium.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+        bp@alien8.de, Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
 Cc:     arjan@linux.intel.com, linux-kernel@vger.kernel.org,
         kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        Kristen Carlson Accardi <kristen@linux.intel.com>
-Subject: [PATCH v2 3/9] x86/boot: Allow a "silent" kaslr random byte fetch
-Date:   Thu, 21 May 2020 09:56:34 -0700
-Message-Id: <20200521165641.15940-4-kristen@linux.intel.com>
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kbuild@vger.kernel.org
+Subject: [PATCH v2 4/9] x86: Makefile: Add build and config option for CONFIG_FG_KASLR
+Date:   Thu, 21 May 2020 09:56:35 -0700
+Message-Id: <20200521165641.15940-5-kristen@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200521165641.15940-1-kristen@linux.intel.com>
 References: <20200521165641.15940-1-kristen@linux.intel.com>
@@ -51,71 +54,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+Allow user to select CONFIG_FG_KASLR if dependencies are met. Change
+the make file to build with -ffunction-sections if CONFIG_FG_KASLR
 
-Under earlyprintk, each RNG call produces a debug report line. When
-shuffling hundreds of functions, this is not useful information (each
-line is identical and tells us nothing new). Instead, allow for a NULL
-"purpose" to suppress the debug reporting.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Tested-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/lib/kaslr.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ Makefile         |  4 ++++
+ arch/x86/Kconfig | 13 +++++++++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/arch/x86/lib/kaslr.c b/arch/x86/lib/kaslr.c
-index a53665116458..2b3eb8c948a3 100644
---- a/arch/x86/lib/kaslr.c
-+++ b/arch/x86/lib/kaslr.c
-@@ -56,11 +56,14 @@ unsigned long kaslr_get_random_long(const char *purpose)
- 	unsigned long raw, random = get_boot_seed();
- 	bool use_i8254 = true;
+diff --git a/Makefile b/Makefile
+index 04f5662ae61a..28e515baa824 100644
+--- a/Makefile
++++ b/Makefile
+@@ -862,6 +862,10 @@ ifdef CONFIG_LIVEPATCH
+ KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
+ endif
  
--	debug_putstr(purpose);
--	debug_putstr(" KASLR using");
-+	if (purpose) {
-+		debug_putstr(purpose);
-+		debug_putstr(" KASLR using");
-+	}
++ifdef CONFIG_FG_KASLR
++KBUILD_CFLAGS += -ffunction-sections
++endif
++
+ # arch Makefile may override CC so keep this after arch Makefile is included
+ NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
  
- 	if (has_cpuflag(X86_FEATURE_RDRAND)) {
--		debug_putstr(" RDRAND");
-+		if (purpose)
-+			debug_putstr(" RDRAND");
- 		if (rdrand_long(&raw)) {
- 			random ^= raw;
- 			use_i8254 = false;
-@@ -68,7 +71,8 @@ unsigned long kaslr_get_random_long(const char *purpose)
- 	}
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 2d3f963fd6f1..50e83ea57d70 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2183,6 +2183,19 @@ config RANDOMIZE_BASE
  
- 	if (has_cpuflag(X86_FEATURE_TSC)) {
--		debug_putstr(" RDTSC");
-+		if (purpose)
-+			debug_putstr(" RDTSC");
- 		raw = rdtsc();
+ 	  If unsure, say Y.
  
- 		random ^= raw;
-@@ -76,7 +80,8 @@ unsigned long kaslr_get_random_long(const char *purpose)
- 	}
- 
- 	if (use_i8254) {
--		debug_putstr(" i8254");
-+		if (purpose)
-+			debug_putstr(" i8254");
- 		random ^= i8254();
- 	}
- 
-@@ -86,7 +91,8 @@ unsigned long kaslr_get_random_long(const char *purpose)
- 	    : "a" (random), "rm" (mix_const));
- 	random += raw;
- 
--	debug_putstr("...\n");
-+	if (purpose)
-+		debug_putstr("...\n");
- 
- 	return random;
- }
++config FG_KASLR
++	bool "Function Granular Kernel Address Space Layout Randomization"
++	depends on $(cc-option, -ffunction-sections)
++	depends on RANDOMIZE_BASE && X86_64
++	help
++	  This option improves the randomness of the kernel text
++	  over basic Kernel Address Space Layout Randomization (KASLR)
++	  by reordering the kernel text at boot time. This feature
++	  uses information generated at compile time to re-layout the
++	  kernel text section at boot time at function level granularity.
++
++	  If unsure, say N.
++
+ # Relocation on x86 needs some additional build support
+ config X86_NEED_RELOCS
+ 	def_bool y
 -- 
 2.20.1
 
