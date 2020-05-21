@@ -2,149 +2,127 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC446C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C4F206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QD+yMqR+"
+	by mail.kernel.org (Postfix) with ESMTP id 885E3207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590054921;
+	bh=GWAw7THyJpyHteKTWusLf2m8encXCwwTaWfrz958+Vo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MVeU2xFpLw0dKOH1JdhmABdv5b6ttcKvmUYXP+35lPqClOgYZW+x9vHO7hfolmH8F
+	 hUdkpik+IuOLCJtV/r/MZQhIQbWzDiR2aH8s63mWhmrQhRSmIbY0Htr0JHC9DC+psw
+	 B68hxvqrR0+8co5Wh5c5JcrydcghF7/DMZTDY078=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgEUJvq (ORCPT
+        id S1727890AbgEUJzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:51:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:11839 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728834AbgEUJvq (ORCPT
+        Thu, 21 May 2020 05:55:21 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:37644 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbgEUJzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:51:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590054705; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=VUInLX2WLl7cD+RkohFnAqEctPK4dVI0lt7ZdhVDzps=; b=QD+yMqR+ZGtfyNsRHAP6N/Gi24IMFdc6NX4C/yxF6sJaUWWiJJRlbhB17ITNdqVP2pW6djir
- 49Ud6Bva0UGum5ntJgdLVh04/to+oePHi5YvhK8a7D4HeX5rr4fJb3OR3sujkjyAK1ikvbkD
- GJsNcLbkrNL+DO0tZrXgHNEPmpc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec64f24.7f2addeafa08-smtp-out-n01;
- Thu, 21 May 2020 09:51:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 52DFBC433CA; Thu, 21 May 2020 09:51:32 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2E77C433C6;
-        Thu, 21 May 2020 09:51:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2E77C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Thu, 21 May 2020 15:21:25 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Vinayak Menon <vinmenon@codeaurora.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Liang Chen <cl@rock-chips.com>
-Subject: Re: [PATCH] kthread: Use TASK_IDLE state for newly created kernel
- threads
-Message-ID: <20200521095125.GD31725@codeaurora.org>
-References: <1589975710-9283-1-git-send-email-pkondeti@codeaurora.org>
- <20200520181858.GA343493@kroah.com>
- <20200521013544.GC31725@codeaurora.org>
- <20200521055639.GA2337399@kroah.com>
+        Thu, 21 May 2020 05:55:20 -0400
+Received: by mail-ej1-f66.google.com with SMTP id l21so8068704eji.4;
+        Thu, 21 May 2020 02:55:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3bYIDtSe0AYOWKep27yvyR4GhELIyYbRcGxHnYqpsNk=;
+        b=PRKR26Lz0e+qdIbEKH2d4X5454Hjintqj25qzGCUiD/kEfLjr9IXRWPQRWoHeqGY4u
+         p35iqCdZlU9fz+6AiiCAH49ZFayzQkE7o1cIUvo2Z6V1tcg3kCX80SeTB1ACmSliGte/
+         NDt1ZwiXQO7XqdXGS/4SAH27Y+s1LLrB+hSLWyLqz9J5IyTS7SQ1m8OW+tcfwR3wHeCt
+         1QahWIEuUunpBK8u4m6Z8rWVZ2qMUtZ5YElgF3HEH31I27S6mdFBz6M2JelQ3kpiAwBP
+         ZWmGo8hBxp3UXKykO0j5f1LZh0Fn8mShQJfHTHM0TpYir61E3TH3qqouhmDYHmC9NBls
+         UKEg==
+X-Gm-Message-State: AOAM532tUFI12dY9zTjGxaP6ss43+zPWTJ0Jx3dINb+OPcSaD1N8WaIu
+        fM3j7EMeA8BCevq3siyuroE=
+X-Google-Smtp-Source: ABdhPJwkPKl947oxLKA7srqAfs9xs94g1gTJJERLoHvA+HQQuyirxmJpvQaMulbG/+j+XCDL1aFAmA==
+X-Received: by 2002:a17:906:3a11:: with SMTP id z17mr2778167eje.460.1590054916702;
+        Thu, 21 May 2020 02:55:16 -0700 (PDT)
+Received: from localhost (ip-37-188-180-112.eurotel.cz. [37.188.180.112])
+        by smtp.gmail.com with ESMTPSA id z12sm4507462edk.78.2020.05.21.02.55.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 02:55:15 -0700 (PDT)
+Date:   Thu, 21 May 2020 11:55:15 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Chris Down <chris@chrisdown.name>
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, cgroups@vger.kernel.org
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-ID: <20200521095515.GK6462@dhcp22.suse.cz>
+References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
+ <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
+ <CA+G9fYsiZ81pmawUY62K30B6ue+RXYod854RS91R2+F8ZO7Xvw@mail.gmail.com>
+ <20200519075213.GF32497@dhcp22.suse.cz>
+ <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz>
+ <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521055639.GA2337399@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200520190906.GA558281@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 07:56:39AM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 21, 2020 at 07:05:44AM +0530, Pavan Kondeti wrote:
-> > On Wed, May 20, 2020 at 08:18:58PM +0200, Greg Kroah-Hartman wrote:
-> > > On Wed, May 20, 2020 at 05:25:09PM +0530, Pavankumar Kondeti wrote:
-> > > > When kernel threads are created for later use, they will be in
-> > > > TASK_UNINTERRUPTIBLE state until they are woken up. This results
-> > > > in increased loadavg and false hung task reports. To fix this,
-> > > > use TASK_IDLE state instead of TASK_UNINTERRUPTIBLE when
-> > > > a kernel thread schedules out for the first time.
-> > > > 
-> > > > Signed-off-by: Pavankumar Kondeti <pkondeti@codeaurora.org>
-> > > > ---
-> > > >  kernel/kthread.c | 6 +++---
-> > > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/kernel/kthread.c b/kernel/kthread.c
-> > > > index bfbfa48..b74ed8e 100644
-> > > > --- a/kernel/kthread.c
-> > > > +++ b/kernel/kthread.c
-> > > > @@ -250,7 +250,7 @@ static int kthread(void *_create)
-> > > >  	current->vfork_done = &self->exited;
-> > > >  
-> > > >  	/* OK, tell user we're spawned, wait for stop or wakeup */
-> > > > -	__set_current_state(TASK_UNINTERRUPTIBLE);
-> > > > +	__set_current_state(TASK_IDLE);
-> > > >  	create->result = current;
-> > > >  	/*
-> > > >  	 * Thread is going to call schedule(), do not preempt it,
-> > > > @@ -428,7 +428,7 @@ static void __kthread_bind(struct task_struct *p, unsigned int cpu, long state)
-> > > >  
-> > > >  void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
-> > > >  {
-> > > > -	__kthread_bind_mask(p, mask, TASK_UNINTERRUPTIBLE);
-> > > > +	__kthread_bind_mask(p, mask, TASK_IDLE);
-> > > >  }
-> > > >  
-> > > >  /**
-> > > > @@ -442,7 +442,7 @@ void kthread_bind_mask(struct task_struct *p, const struct cpumask *mask)
-> > > >   */
-> > > >  void kthread_bind(struct task_struct *p, unsigned int cpu)
-> > > >  {
-> > > > -	__kthread_bind(p, cpu, TASK_UNINTERRUPTIBLE);
-> > > > +	__kthread_bind(p, cpu, TASK_IDLE);
-> > > >  }
-> > > >  EXPORT_SYMBOL(kthread_bind);
-> > > 
-> > > It's as if people never read mailing lists:
-> > > 	https://lore.kernel.org/r/DM6PR11MB3531D3B164357B2DC476102DDFC90@DM6PR11MB3531.namprd11.prod.outlook.com
-> > > 
-> > > Given that this is an identical resend of the previous patch, why are
-> > > you doing so, and what has changed since that original rejection?
-> > > 
-> > I did not know that it is attempted before. Thanks for pointing to the
-> > previous discussion. 
+On Wed 20-05-20 20:09:06, Chris Down wrote:
+> Hi Naresh,
+> 
+> Naresh Kamboju writes:
+> > As a part of investigation on this issue LKFT teammate Anders Roxell
+> > git bisected the problem and found bad commit(s) which caused this problem.
 > > 
-> > We have seen hung task reports from customers and it is due to a downstream
-> > change which create bunch of kernel threads for later use.
+> > The following two patches have been reverted on next-20200519 and retested the
+> > reproducible steps and confirmed the test case mkfs -t ext4 got PASS.
+> > ( invoked oom-killer is gone now)
+> > 
+> > Revert "mm, memcg: avoid stale protection values when cgroup is above
+> > protection"
+> >    This reverts commit 23a53e1c02006120f89383270d46cbd040a70bc6.
+> > 
+> > Revert "mm, memcg: decouple e{low,min} state mutations from protection
+> > checks"
+> >    This reverts commit 7b88906ab7399b58bb088c28befe50bcce076d82.
 > 
-> Do you have a pointer to that specific change?
+> Thanks Anders and Naresh for tracking this down and reverting.
 > 
-Here it is
-https://source.codeaurora.org/quic/la/kernel/msm-4.19/commit/drivers/staging/android/ion/ion_system_heap.c?h=LA.UM.8.12.r1-11300-sm8250.0&id=0734b477f1e77cb9f91f5e5c0d7742d3113f2cd3
+> I'll take a look tomorrow. I don't see anything immediately obviously wrong
+> in either of those commits from a (very) cursory glance, but they should
+> only be taking effect if protections are set.
 
-> > From Peter's reply, I understood that one must wake up the kthread
-> > after creation and put it in INTERRUPTIBLE sleep. I will pass on the
-> > message.
-> 
-> Just go fix that code, it sounds like it's in your tree already :)
-> 
-Yes, we will fix it.
+Agreed. If memory.{low,min} is not used then the patch should be
+effectively a nop. Btw. do you see the problem when booting with
+cgroup_disable=memory kernel command line parameter?
 
-Thanks,
-Pavan
+I suspect that something might be initialized for memcg incorrectly and
+the patch just makes it more visible for some reason.
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Michal Hocko
+SUSE Labs
