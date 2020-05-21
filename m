@@ -2,103 +2,171 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B94DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8897020748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E210E20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 06:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590042180;
+	bh=1cDoFhrO3JlVD3tvhSXZOVSF58OQKaORYpnpmjOhqAs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=GOndUOrgT8LorUlUpgoxj3qNNEMzppk/ofQ1GcCu6MonCOn4jzyxFb1nf8DSGJlFm
+	 cioVhcJW7VrA1mMD+/5usBMx36gWiLwi3FLl+VTl/bQW2pm02HiRQSvI56Mcjz7LUG
+	 QY1j+DwR1gOSw+H5jmAEpxfYlwO/7I1xaQBgK2oM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgEUGWK (ORCPT
+        id S1728229AbgEUGXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 02:22:10 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:32566 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726506AbgEUGWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 02:22:10 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 14:21:03
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Thu, 21 May 2020 14:21:03 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
-Cc:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "kjlu@umn.edu" <kjlu@umn.edu>, "mpm@selenic.com" <mpm@selenic.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "rfontana@redhat.com" <rfontana@redhat.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: Re: Re: [PATCH] hwrng: ks-sa - fix runtime pm imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <ab400cba7523e69b15360b0928cb8fa8b9432d86.camel@nokia.com>
-References: <20200520132957.18776-1-dinghao.liu@zju.edu.cn>
- <ab400cba7523e69b15360b0928cb8fa8b9432d86.camel@nokia.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Thu, 21 May 2020 02:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgEUGW7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 02:22:59 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CE7DC061A0E;
+        Wed, 20 May 2020 23:22:58 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z18so6815699lji.12;
+        Wed, 20 May 2020 23:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=1cDoFhrO3JlVD3tvhSXZOVSF58OQKaORYpnpmjOhqAs=;
+        b=PDnu1Q7JRIO6G+SaTh5J1ef0cPUleRFWGKq+NULLVLnVdB2HfpfRQbRkB4AcBfA9W8
+         jR0P0vfxJIFfYRIim8R0aFhSZtlSwn4wOpwc9xwRYXWa/MRje1MXg3wU0gyxasnnwT47
+         ldrlQnckvUoAuPZyDM1s39GWahGyt99Uoq9h7R4LD4hzrHFkZzEiVaAXqd/OhmkIIfZU
+         mEyd1xTzJrYj/tA+JK5UPcKm1+bh7NucrSuu7A3qwj69Xdv2eVWdVFzRyetw985RNcHr
+         Uc387dqPmgyAvLtsGGseVef/jOTJcAnaxahq/tYfZTX/FlfKJUOoLsLRKiuCGpjLb0v5
+         /zkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=1cDoFhrO3JlVD3tvhSXZOVSF58OQKaORYpnpmjOhqAs=;
+        b=eCj1Pj7LUaaDGvYIZ49TmV7HmMWeKrO2HdMCtk9CoxwP71WSRNIbXhMzmcZu+RrRDn
+         At68ssnNDItNd8NZMDOInEt2vphjKs9lVXYrkRaXAK5b0RiMatgac5PHGmlQLp2jLo6Q
+         PInem0h0JMfF9HXMx5O3mcqAupGkzhib/iu7WgbCoDMTuodzRw5OpG9LbSlp/IyM2dKy
+         TVzm9Rjf6amZk7gc2xaGOD8Z6AUWJZNDjVUXmA7Q3wIsSAGZHzELECgWSHlyMh4mXSSa
+         XW8ZAHIPHg44HfruF0jmXvl+7ylV35hPAVc4O/L97T2tVil4Xxmz2Nj3vWURKybmK4aS
+         PmZQ==
+X-Gm-Message-State: AOAM532rQ2smeCqsPbr/IsYIw6LF1nFV1kZTiJhbkdsn9M4RAjyixD27
+        rFK9Hl/MyfQm0G8Y+qtLF60=
+X-Google-Smtp-Source: ABdhPJyMuPbOwO0ZBJt4B4trT6XYOxwNynenEnFe+gwIXnCnca6GrxDBZcsmtwNt+kFBVKcudUiaFw==
+X-Received: by 2002:a2e:9850:: with SMTP id e16mr4096070ljj.163.1590042176833;
+        Wed, 20 May 2020 23:22:56 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id e21sm376688ljj.86.2020.05.20.23.22.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 May 2020 23:22:56 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Jun Li <jun.li@nxp.com>,
+        Jun Li <lijun.kernel@gmail.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>
+Subject: Re: [PATCH v4 3/9] usb: dwc3: Increase timeout for CmdAct cleared by device controller
+In-Reply-To: <87v9kpx0zh.fsf@kernel.org>
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-4-john.stultz@linaro.org> <87mudjj4rc.fsf@gmail.com>
+ <CALAqxLU+9uEcdRVaLfh+eQrDtZbDGod9pRXhBX=prAhg9MXagw@mail.gmail.com>
+ <CAKgpwJVaKpsgMjKcnYyJsfNj0ibkPt=mdn-NxfOkeX1jfL=9iQ@mail.gmail.com>
+ <87h7wqmwrv.fsf@kernel.org>
+ <CAKgpwJXfWv5=MDqBCADhe2iXf6eiP0GQ13Bwo9fkuU5kGO7dsw@mail.gmail.com>
+ <87imgx35pg.fsf@kernel.org>
+ <VE1PR04MB65283F16826D2254128073C589BD0@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <3d757998-56f2-6fff-a724-f713867ae785@synopsys.com>
+ <87ftc0xsig.fsf@kernel.org>
+ <VE1PR04MB6528AB046FD441A5DDD83CD289BA0@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <87d074xfbq.fsf@kernel.org>
+ <VE1PR04MB6528A50EA40BF40E4B09793789B90@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <db7447c2-a39d-361f-8b35-a1d5c2705c89@synopsys.com>
+ <e3b0ff51-70ab-7d16-2c7e-cacac7d97043@synopsys.com>
+ <VE1PR04MB65286728B9546B5FAA818A0A89B90@VE1PR04MB6528.eurprd04.prod.outlook.com>
+ <bbfbd3f7-4908-5529-1a4e-29469e794b27@synopsys.com>
+ <1c16bdb6-8d8d-1e1b-f08b-b3963f905eb0@synopsys.com>
+ <87v9kpx0zh.fsf@kernel.org>
+Date:   Thu, 21 May 2020 09:22:51 +0300
+Message-ID: <87r1vdx0w4.fsf@kernel.org>
 MIME-Version: 1.0
-Message-ID: <945e695.ba3c9.17235e473d9.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCnjwrPHcZeJgjoAQ--.39295W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgQHBlZdtOPFNQABsq
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbt0S07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
-        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
-        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
-        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
-        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r
-        47MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS
-        07vE4x8a6x804xWlV2xY6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14
-        v26r1j6r18MIAIbVC20s026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWU
-        tVW8ZwCS07vEIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I
-        0E14v26r4j6F4UMIAIbVCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-        VjvjDU=
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxleGFuZGVyLAoKVGhlcmUgYXJlIGxhcmdlIGFtb3VudHMgb2YgY2FzZXMgdGhhdCBhc3N1
-bWUgcG1fcnVudGltZV9nZXRfc3luYygpCndpbGwgbW9kaWZ5IHJ1bnRpbWUgUE0gdXNhZ2UgY291
-bnRlciBvbiBlcnJvci4gRml4aW5nIHRoaXMgaW4gUE0gCnN1YnN5c3RlbSB3aWxsIGluZmx1ZW5j
-ZSBhbGwgY2FsbGVycyBvZiBwbV9ydW50aW1lX2dldF9zeW5jKCkgYW5kCmludHJvZHVjZSBuZXcg
-YnVncy4gVGhlcmVmb3JlIEkgdGhpbmsgdGhlIGJldHRlciBzb2x1dGlvbiBpcyB0byBmaXgKbWlz
-dXNlZCBjYXNlcyBpbmRpdmlkdWFsbHkuCgpEaW5naGFvCgo+IEhlbGxvIERpbmdoYW8sCj4gCj4g
-T24gV2VkLCAyMDIwLTA1LTIwIGF0IDIxOjI5ICswODAwLCBEaW5naGFvIExpdSB3cm90ZToKPiA+
-IHBtX3J1bnRpbWVfZ2V0X3N5bmMoKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdlIGNv
-dW50ZXIgZXZlbgo+ID4gdGhlIGNhbGwgcmV0dXJucyBhbiBlcnJvciBjb2RlLiBUaHVzIGEgcGFp
-cmluZyBkZWNyZW1lbnQgaXMgbmVlZGVkCj4gPiBvbiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCB0
-byBrZWVwIHRoZSBjb3VudGVyIGJhbGFuY2VkLgo+IAo+IEkgYmVsaWV2ZSwgdGhpcyBpcyB0aGUg
-d3JvbmcgcGxhY2UgZm9yIHN1Y2gga2luZCBvZiBmaXguCj4gcG1fcnVudGltZV9nZXRfc3luYygp
-IGhhcyBvYnZpb3VzbHkgYSBicm9rZW4gc2VtYW50aWNzIHdpdGggcmVnYXJkcyB0bwo+IHlvdXIg
-b2JzZXJ2YXRpb24gYnV0IG5vIG90aGVyIGRyaXZlciBkb2VzIHdoYXQgeW91IHByb3Bvc2UuCj4g
-SSB0aGluayB0aGUgcHJvcGVyIGZpeCBiZWxvbmcgaW50byBQTSBzdWJzeXN0ZW0sIHBsZWFzZSB0
-YWtlIGEgbG9vawo+IG9udG8gY29tbWl0IDE1YmNiOTFkN2U2MCAiUE0gLyBSdW50aW1lOiBJbXBs
-ZW1lbnQgYXV0b3N1c3BlbmQgc3VwcG9ydCIuCj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBEaW5naGFv
-IExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvY2hhci9o
-d19yYW5kb20va3Mtc2Etcm5nLmMgfCAxICsKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKykKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2hhci9od19yYW5kb20va3Mtc2Et
-cm5nLmMgYi9kcml2ZXJzL2NoYXIvaHdfcmFuZG9tL2tzLXNhLXJuZy5jCj4gPiBpbmRleCBlMjMz
-MGU3NTdmMWYuLjg1YzgxZGE0YThhZiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvY2hhci9od19y
-YW5kb20va3Mtc2Etcm5nLmMKPiA+ICsrKyBiL2RyaXZlcnMvY2hhci9od19yYW5kb20va3Mtc2Et
-cm5nLmMKPiA+IEBAIC0yNDQsNiArMjQ0LDcgQEAgc3RhdGljIGludCBrc19zYV9ybmdfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ICAJcmV0ID0gcG1fcnVudGltZV9nZXRf
-c3luYyhkZXYpOwo+ID4gIAlpZiAocmV0IDwgMCkgewo+ID4gIAkJZGV2X2VycihkZXYsICJGYWls
-ZWQgdG8gZW5hYmxlIFNBIHBvd2VyLWRvbWFpblxuIik7Cj4gPiArCQlwbV9ydW50aW1lX3B1dF9z
-eW5jKGRldik7Cj4gPiAgCQlwbV9ydW50aW1lX2Rpc2FibGUoZGV2KTsKPiA+ICAJCXJldHVybiBy
-ZXQ7Cj4gPiAgCX0KPiAtLSAKPiBBbGV4YW5kZXIgU3ZlcmRsaW4uCj4gCg==
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi Jun,
+
+Felipe Balbi <balbi@kernel.org> writes:
+>> In any case, increasing the timeout should be fine with me. It maybe=20
+>> difficult to determine the max timeout base on the slowest clock rate=20
+>> and number of cycles. Different controller and controller versions=20
+>> behave differently and may have different number of clock cycles to=20
+>> complete a command.
+>>
+>> The RTL engineer recommended timeout to be at least 1ms (which maybe=20
+>> more than the polling rate of this patch). I'm fine with either the rate=
+=20
+>> provided by this tested patch or higher.
+>
+> A whole ms waiting for a command to complete? Wow, that's a lot of time
+> blocking the CPU. It looks like, perhaps, we should move to command
+> completion interrupts. The difficulty here is that we issue commands
+> from within the interrupt handler and, as such, can't
+> wait_for_completion().
+>
+> Meanwhile, we will take the timeout increase I guess, otherwise NXP
+> won't have a working setup.
+
+patch 1 in this series doesn't apply to testing/next. Care to rebase and
+resend?
+
+Thank you
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7GHjsACgkQzL64meEa
+mQZinhAAudYIuvazPxapE687anJuiz/UEVAaqcfJK8dDh/BGT20JtTbI5J+1zwE7
+OVwDBVXEdUNLOsd0Tc84OVeLNKhzbKGXdyter8tVautvcaSGQZm0nqO/ctFfs1N4
+4kZf1LQd7HrA9Xju0Fzy3BIZcOJx39AD5cXFAkcHylfblO8On6OOm8q3zdMN3rPH
+5Rgf3bPQSvt07Ex4uS8zPPEXC5H2EHyPDLMzMXmbDlKRzJcLtZcIMbeKGUuzBdNo
+jobVMFblYbHf6f9gBjQtFfY1V64mnBT0ULDNmhWIKuXvRN7hfmCKmAZiDdDmzEqG
+tVZ9qEwIWIgTF5mWuWvrZ2mqtzBRwSCScjxZwK6GmnktrDxGgi3TPom6e8TNZ0Ee
+mV+UedcuqcFvpQeL58Ru478tl7Hmtw7Io7xMR0nNssXNLyIKKwSOKtbCHmHMC3NM
+kHlK8dLAEnAPJ5AYOqIHvXACEI3vKestgQeWvci2slwWuBcNZFuweS4ASC/fkRzD
++QDE0t0L4AFY9bq1ML4QulL+3/0ogJkORLy1wnHb/QD++DfYDHhayFZ2Q6K9BF9X
+axL5Gqw3tIjW5muwErsMTsLruNaA91/L6hPugtypeBqFigozZGtRJYTyuCGFlazM
+zKtIsU7/wFUCfxhCQ9IcgXlfHk/240h22Gg5X2X+1/nX64WQzTI=
+=y08r
+-----END PGP SIGNATURE-----
+--=-=-=--
