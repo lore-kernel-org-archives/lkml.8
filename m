@@ -2,99 +2,156 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC9102072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB142072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZOv3EFPo";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="49u+LOZm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgEUJbL (ORCPT
+        id S1728810AbgEUJbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:31:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:55829 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728704AbgEUJbK (ORCPT
+        Thu, 21 May 2020 05:31:33 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:28438 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728704AbgEUJbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:31:10 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N9cDF-1ixPAH2wTN-015dNM for <linux-kernel@vger.kernel.org>; Thu, 21 May
- 2020 11:31:08 +0200
-Received: by mail-qk1-f171.google.com with SMTP id y22so6583673qki.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 02:31:08 -0700 (PDT)
-X-Gm-Message-State: AOAM532y3FNcqsntLRaUqXSoNiqDwPKPwbOQju4Osxi9q1xx0BXOx6fb
-        kO+6HkQGwy7bCcCCigxInMZh3BaPpP3Uv/z/JbU=
-X-Google-Smtp-Source: ABdhPJzbgF8kpiHY8jbqJbvHdKF89SdmVVSXNL4nMi/iekVliG7vUiFck8VHCIJH+/J+6YUDtXi2c8Eovdt4IzQ+dlw=
-X-Received: by 2002:a37:434b:: with SMTP id q72mr9455175qka.352.1590053467616;
- Thu, 21 May 2020 02:31:07 -0700 (PDT)
+        Thu, 21 May 2020 05:31:32 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04L9Tf13021553;
+        Thu, 21 May 2020 02:31:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=4/0Bpvf/9l8RH5oOJ89DAbj/B0Cz098KoT009UZr0mk=;
+ b=ZOv3EFPowL2Jata6tmWhauGhvmbZUPH4TnYY94upoNvZGVcpB56nygTj8BKuS0/mflXd
+ ePD1g5v7j0Zj9fn4z0sTME1xd2KLxxZgPiI6XAfeOeL+v7gtFAjhAA5RDAfeRFDHx8iZ
+ /zv2U2BKIWUJ1ulRWGW5FpNq+U22DoYzhGn5y/yvt2fIMzJGMzUJ2rmyEI+TkuW+SV31
+ ZKp0L1WrBNvnjIgJGV7ufUE0M/UDJ5CnDfSopOPYybswnhKyWM77hsJuo2UWkOUcsaV7
+ nmHjxXbrF63bJOncqLl0cFSb5O3XmObnjJltL5E2MTTvg0A+ZvDxxjkcrpYDg+gyi5s/ 0Q== 
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 312bs0myge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 May 2020 02:31:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EiglQC6j8ZxZ8soRUp6n25UWq5zHmu8sroN8RTQxjKHOxIHlPCWDGy8TFOsp1KDmyVTL3rc0+i1n1XBoBsDFBEr4hUaxHw2u1bZK2jMIbLwmXLz36qOviu5VV9wdxaRVD14o508lZPugpZq/SWy2Z6UMCqZ+ueqoX2bJBmBEfQeu4JMh2yZWnOpbMFHgTtRynXiR/juuVNI5jpJBZDzzmWuj8cx/zZPZPB/NLx0XMUjDk1J29ugEIh/88ena4ccZn9OITAT3j6Tb5X1GY3vmDzGJyegJHyc5uFABs/xzwN6e0ZBJNjiyP5awjnqX+joR+M5pSn56hHGZuMxRYe/x5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4/0Bpvf/9l8RH5oOJ89DAbj/B0Cz098KoT009UZr0mk=;
+ b=LTx2gxY2Z2iEt3kJYl9XhmHfpDSdexldXzIDPdlp/dGaBB7Zgkm8TAx/q7bJe6rABtDo/9OR7tM/B7zKo10D8jj9GCT53zn6oEMmkzpk2/f+h1YPA1Sizzt6K/Wd3DvICsbawpP0rj/5znA1lIMfoyy5f559he8fdscJZt4nMUrtxhPPSNfDBncjVEq8OQ6RPAEX1gNFmgB62yekttdUHUrn0qqGVZNyACnkwK8KN87fKOjag/cC8OgIJ6BOQEVhXJTo2Lq/xgVoaMMt10PUhWyHEcAC4NCMOtCJDk2Yi9Nb0DxyBLlpqVr+r89LpCD6Ve4s/OpZeVrjVUFAQ0YPPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 158.140.1.148) smtp.rcpttodomain=synopsys.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4/0Bpvf/9l8RH5oOJ89DAbj/B0Cz098KoT009UZr0mk=;
+ b=49u+LOZmc7hzSM1GlESUOTtq4weOnyQDJsJb/HSGa3w+GmKqNfBE6QSO9ZY2aKiH7ECdRk11S+Fznm0N6nEUcj/cap60PjT8Y5kChXPXOaS5I3UY/kbNomcSMSYwd+ZuKdkGToYiv7cHswCUPk9ZHOCi/Jl27y5O3KVqpaN1yNY=
+Received: from CO2PR04CA0078.namprd04.prod.outlook.com (2603:10b6:102:1::46)
+ by CY4PR0701MB3795.namprd07.prod.outlook.com (2603:10b6:910:92::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Thu, 21 May
+ 2020 09:31:16 +0000
+Received: from MW2NAM12FT061.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:102:1:cafe::1a) by CO2PR04CA0078.outlook.office365.com
+ (2603:10b6:102:1::46) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
+ Transport; Thu, 21 May 2020 09:31:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 158.140.1.148)
+ smtp.mailfrom=cadence.com; synopsys.com; dkim=none (message not signed)
+ header.d=none;synopsys.com; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 158.140.1.148 as permitted sender) receiver=protection.outlook.com;
+ client-ip=158.140.1.148; helo=sjmaillnx2.cadence.com;
+Received: from sjmaillnx2.cadence.com (158.140.1.148) by
+ MW2NAM12FT061.mail.protection.outlook.com (10.13.181.253) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.11 via Frontend Transport; Thu, 21 May 2020 09:31:16 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id 04L9VAXK015774
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Thu, 21 May 2020 02:31:12 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 21 May 2020 11:31:10 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 21 May 2020 11:31:10 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 04L9VATP032159;
+        Thu, 21 May 2020 11:31:10 +0200
+Received: (from pthombar@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 04L9V85X032139;
+        Thu, 21 May 2020 11:31:08 +0200
+From:   Parshuram Thombare <pthombar@cadence.com>
+To:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>
+CC:     <pgaj@cadence.com>, <linux-i3c@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <praneeth@ti.com>, Parshuram Thombare <pthombar@cadence.com>
+Subject: [PATCH v2 0/2] I3C SETDASA and DAA process fix
+Date:   Thu, 21 May 2020 11:31:07 +0200
+Message-ID: <1590053467-32079-1-git-send-email-pthombar@cadence.com>
+X-Mailer: git-send-email 2.2.2
 MIME-Version: 1.0
-References: <20200518091222.27467-1-sudeep.holla@arm.com> <158999823818.135150.13263761266508812198.b4-ty@kernel.org>
- <CAK8P3a0bx2eOFSqM7ihNkJBWU_KKSh0vGJZZdvpkH=1nppingw@mail.gmail.com>
- <20200521070629.GB1131@bogus> <CAK8P3a1h1MR4Mq2sSV_FDUodrfaKRFtyOuOOGPWAbPYbzjc4YQ@mail.gmail.com>
- <20200521075755.GA4668@willie-the-truck> <20200521081055.GD1131@bogus>
- <CAK8P3a3dV0B26XE3oFQGTFf8EWV0AHoLudNtpSSB_t+pCfkOkQ@mail.gmail.com> <20200521091736.GA5091@willie-the-truck>
-In-Reply-To: <20200521091736.GA5091@willie-the-truck>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 21 May 2020 11:30:51 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3+AjykQpVFcyM9ht9T7FwHGcwSOH3GGo2ziaQ1mpesoA@mail.gmail.com>
-Message-ID: <CAK8P3a3+AjykQpVFcyM9ht9T7FwHGcwSOH3GGo2ziaQ1mpesoA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] firmware: smccc: Add basic SMCCC v1.2 +
- ARCH_SOC_ID support
-To:     Will Deacon <will@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>, harb@amperecomputing.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:j5rGUQ73rrDexC1lnHcB1RpiEDo35jQL/y8gAGtBCC9Lbxmxv23
- r5eGf2EsLg5w4cXiQDdz7gHVibZJxtz7uKgmUnA8d+GD7/i+piciZGUfbmuaFHuVZ54h8rv
- pAFqkePGbuVSit3Abkaqps8xtVDUiDLUUzI6avSOA6NP8cWLB13XOZXpOwPIm+so6qkM4pT
- 4vFV2COVGAhiz72Bt0zxg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bRGBE2Z6qFc=:5Rm06osgW0jNoU/v6k9BWf
- s6SUAtcgWJK/Oxn6+jL/lJo3vO7CcyFZTRrfQhNX1be24+tYp6wwIqGC/Ny5AIzBSSKvo29mz
- rUoAFskyYt+hvQR63CjkfyrwkGBQyiGkljRnyRFJAPHfdlvzyboCk8wFpd6tnJf5u7nsaq8jI
- GuHrbwgXPjEItnWXXAYhGjt6mCRowkfykKNpUX8Ha5mHvCYHQrL2FDygjUshqrW33ps1E3VgP
- nDsT3fEn6ggCwCtY2xIRCupA8JgVYOgsS3foJq3QBWmqzhY4TnitjUAF0nICtN05n3SHGXCr/
- +eMY4JDD5fGeNZxPo9eOm21fXh523FlzQ7oPGmjwG/4pTzZ19oaSSy0knN/4wxoesnYxYio8c
- zqOIfzB7QM47aob1/3QWgcoG2TzLQAloAZdkbMZAxC2ITmiKlZkPmT4z1zb0r6m1kes3nZs2B
- 48gN6z6B/VQzxEeTaJtwOo6pPMWqQn05s/yL/OYwhrirKycDUzcccDKbM0SOH9MCo1DJsKNYe
- 6qobyObkVM2YPbdCJrNIOi2NlwnNB8yhRyTjuCMWWFhse9b4X2IjcMVj+GRT4fnW2UDPMqIjo
- 5IP/RdMe5vxrnmr8EkSkLwk7RpHMb/W7zdhlcp8Ah3zTYq798Gaf4fXtjJI7VpZO12G5swmcE
- 3McF+KMh9DKhpEeoZ9qynFPiKHdv4YU+Ub0D8aY7Uz97ip6U2WYrbj2USew2BvwxQbNZsaQTK
- XNcqq7mzkbEA8reGTyRC2RLnhs9LtPx7ZEssNxgVmGaL2EFJDOl40NZGEcunW6KkSwFHHwSQZ
- 0T/GSHNPB/wnHE4vGhKjX76D154VtpQNo9rttdc2PnkZhPTN0o=
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.148;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjmaillnx2.cadence.com;PTR:unknown.Cadence.COM;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(136003)(376002)(346002)(36092001)(46966005)(2616005)(7636003)(426003)(107886003)(36756003)(186003)(336012)(47076004)(8936002)(82310400002)(4326008)(356005)(26005)(2906002)(8676002)(86362001)(82740400003)(5660300002)(478600001)(70586007)(42186006)(54906003)(316002)(70206006)(4744005)(110136005)(36906005);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7b101abb-6b8e-4a5b-4ba2-08d7fd69b5e6
+X-MS-TrafficTypeDiagnostic: CY4PR0701MB3795:
+X-Microsoft-Antispam-PRVS: <CY4PR0701MB379574DF696B685DF5803DB6C1B70@CY4PR0701MB3795.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5GkqODUjarxy0WSmvDsvnhiYd4WksUO9wRKdbHGkDJC5wVMYziId6FiFu+rqqYmlh9TshVQ7zhNysFfSjSnmPwN+lMJjejRmXmEl85Xwj7ZxlRSk5lSajp8RVySvgTd1rasT9KUXrknb56hNG9fu5uImROl8COuI3w7bkJJt/dNiBJtRQwr3p6AZ1ZpTtGTgnSP6SYqmwQ15bIsdlEARmDzi1tTna8EriDVuVIGKOQ4kVtX7zDjtaELdOHbIJni7qd4u6xkaRZc2WQm62KQIKMfM47HacF9C9n8VNfI8wiYXd3knyHTkFqHlzhciLAJ986yg5FNf0pDUy9DWxt+9qsLiJKtDVPXoyVh2p4wZ/qt1XVqaFq/q5qXiS41Z+psjBXeUlied6yv2wsNgSsflx8xgMOKrPVCfc59k6Y1c/RxlitJ2rO35UHNhwrz22YDqJ9YYoObJiQ+XLfEn2fbduG9NnMX57g3OdG1nHqpII25oZJQSlEWvdLOqNZZuhLpN8beap6FlPKagQy7AVTWboKCR77iVf3NJQF6Zgtypsc4=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 09:31:16.0707
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b101abb-6b8e-4a5b-4ba2-08d7fd69b5e6
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.148];Helo=[sjmaillnx2.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0701MB3795
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-21_05:2020-05-20,2020-05-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 mlxlogscore=833
+ cotscore=-2147483648 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 mlxscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:17 AM Will Deacon <will@kernel.org> wrote:
-> On Thu, May 21, 2020 at 11:06:23AM +0200, Arnd Bergmann wrote:
-> > On Thu, May 21, 2020 at 10:11 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > Note that the warning should come up for either W=1 or C=1, and I also
-> > think that
-> > new code should generally be written sparse-clean and have no warnings with
-> > 'make C=1' as a rule.
->
-> Fair enough. Is anybody working on a tree-wide sweep for this, like we've
-> done for other things such as zero-length arrays? If so, I can start
-> enforcing this in the arch code as well (I haven't been so far, even though
-> I do run sparse on every commit).
+Changes between v1 and v2 are:
+1. Added boardinfo attach fix.
+2. Removed reattach issue related fix.
+3. Reserve init_dyn_addr initially, so that it will not
+   be used in DAA and  attempt can be made to set those
+   firmware requested dynamic address after DAA.
 
-I've done some work on that a few years ago, and there are always
-some cleanup patches for C=1 and W=1 warnings, most recently
-with an increase from Huawei's automated build testing + manual
-patching.
+Regards,
+Parshuram Thombare
 
-I have not looked in a while, but it always seemed to be somewhere
-between "too much to do by myself" and "small enough that it should
-really be done" as build warnings go.
+Parshuram Thombare (2):
+  i3c: master add i3c_master_attach_boardinfo to preserve boardinfo
+  i3c: master: fix for SETDASA and DAA process
 
-       Arnd
+ drivers/i3c/master.c | 138 +++++++++++++++++++++++++++----------------
+ 1 file changed, 88 insertions(+), 50 deletions(-)
+
+-- 
+2.17.1
+
