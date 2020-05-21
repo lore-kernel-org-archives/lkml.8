@@ -4,34 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF668C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF05C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A952D20759
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9FC20759
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgEUR7C (ORCPT
+        id S1729325AbgEUR7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:59:02 -0400
-Received: from mga14.intel.com ([192.55.52.115]:28245 "EHLO mga14.intel.com"
+        Thu, 21 May 2020 13:59:11 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24539 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgEUR7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:59:01 -0400
-IronPort-SDR: RInbv4lMcUtgEVxcX8hHsrfYxF89txVykwTNpqs3uQ/FMtjSL9uS5n0DLgp6o5RAWzAyhnPIdw
- fxf5ac0lfVbQ==
+        id S1727883AbgEUR7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:59:10 -0400
+IronPort-SDR: cDoyhMz7SSkSAdW9mkv1QeVUa9UsKJ3D6QQf+tfinivpglRhVeYKQGJDbBZKnKBvKR40ERHEhJ
+ FYM3J1mEpJxw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 10:59:01 -0700
-IronPort-SDR: vfZIJeCGZ+wuj1JpsKcKRlwabLNciBmrm7H/gke8Nz1ctfBKilF6hmUvudflKRDrPWEJVhXROm
- AzdpwRYBsNyA==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 10:59:09 -0700
+IronPort-SDR: sZn8coVk+aGRy6cR7nKyBcK9tldIrd57JjTZ0zG9Tkm1tCPvh5em5kKCCCrKUbC8dxHt+bwZhG
+ 4+djOVlI0+qw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
-   d="scan'208";a="412486010"
+   d="scan'208";a="440543290"
 Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga004.jf.intel.com with ESMTP; 21 May 2020 10:58:55 -0700
+  by orsmga005.jf.intel.com with ESMTP; 21 May 2020 10:59:06 -0700
 From:   Chen Yu <yu.c.chen@intel.com>
 To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -45,9 +46,9 @@ Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
         "Neftin, Sasha" <sasha.neftin@intel.com>,
         "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
         Chen Yu <yu.c.chen@intel.com>, Stable@vger.kernel.org
-Subject: [PATCH 1/2] e1000e: Do not wake up the system via WOL if device wakeup is disabled
-Date:   Fri, 22 May 2020 01:59:00 +0800
-Message-Id: <9f7ede2e2e8152704258fc11ba3755ae93f50741.1590081982.git.yu.c.chen@intel.com>
+Subject: [PATCH 2/2] e1000e: Make WOL info in ethtool consistent with device wake up ability
+Date:   Fri, 22 May 2020 01:59:13 +0800
+Message-Id: <725bad2f3ce7f7b7f1667d53b6527dc059f9e419.1590081982.git.yu.c.chen@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1590081982.git.yu.c.chen@intel.com>
 References: <cover.1590081982.git.yu.c.chen@intel.com>
@@ -56,60 +57,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the system will be woken up via WOL(Wake On Lan) even if the
-device wakeup ability has been disabled via sysfs:
- cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
- disabled
+Currently the ethtool shows that WOL(Wake On Lan) is enabled
+even if the device wakeup ability has been disabled via sysfs:
+  cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
+   disabled
 
-The system should not be woken up if the user has explicitly
-disabled the wake up ability for this device.
+  ethtool eno1
+  ...
+  Wake-on: g
 
-This patch clears the WOL ability of this network device if the
-user has disabled the wake up ability in sysfs.
+Fix this in ethtool to check if the user has explicitly disabled the
+wake up ability for this device.
 
-Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver")
-Reported-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 6ff68026f475 ("e1000e: Use device_set_wakeup_enable")
+Reported-by: Len Brown <len.brown@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/e1000e/ethtool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 177c6da80c57..f6f730388705 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -6516,11 +6516,17 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
- 	struct e1000_hw *hw = &adapter->hw;
--	u32 ctrl, ctrl_ext, rctl, status;
--	/* Runtime suspend should only enable wakeup for link changes */
--	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
-+	u32 ctrl, ctrl_ext, rctl, status, wufc;
- 	int retval = 0;
+diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
+index 1d47e2503072..0cccd823ff24 100644
+--- a/drivers/net/ethernet/intel/e1000e/ethtool.c
++++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+@@ -1891,7 +1891,7 @@ static void e1000_get_wol(struct net_device *netdev,
+ 	wol->wolopts = 0;
  
-+	/* Runtime suspend should only enable wakeup for link changes */
-+	if (runtime)
-+		wufc = E1000_WUFC_LNKC;
-+	else if (device_may_wakeup(&pdev->dev))
-+		wufc = adapter->wol;
-+	else
-+		wufc = 0;
-+
- 	status = er32(STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -6577,7 +6583,7 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
- 	if (adapter->hw.phy.type == e1000_phy_igp_3) {
- 		e1000e_igp3_phy_powerdown_workaround_ich8lan(&adapter->hw);
- 	} else if (hw->mac.type >= e1000_pch_lpt) {
--		if (!(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
-+		if (wufc && !(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
- 			/* ULP does not support wake from unicast, multicast
- 			 * or broadcast.
- 			 */
+ 	if (!(adapter->flags & FLAG_HAS_WOL) ||
+-	    !device_can_wakeup(&adapter->pdev->dev))
++	    !device_may_wakeup(&adapter->pdev->dev))
+ 		return;
+ 
+ 	wol->supported = WAKE_UCAST | WAKE_MCAST |
 -- 
 2.17.1
 
