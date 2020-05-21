@@ -2,174 +2,152 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 663FE2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE882072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:57:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ikelte.onmicrosoft.com header.i=@ikelte.onmicrosoft.com header.b="p7XlRD5c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="baeKJz4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgEUMxY (ORCPT
+        id S1729341AbgEUM5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:53:24 -0400
-Received: from mail-vi1eur05on2061.outbound.protection.outlook.com ([40.107.21.61]:60377
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729296AbgEUMxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:53:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KBF+VgeQpVGLJEG1F3U494jKLy0TqqqS9fCtI+TXrPVWuV7HITgBv37fUeaApTqNt9lbe4dDwGfcD1mXh+3+rTAqQNq7l6ymQnrx7F9W1V1rwUoeBd4vIz2xLLWZvaleEgqYdrzkv/opSoLJKcPpX1Z9WGtt40/oHFx2x/RJxeS3uxyTJo7ISJ2Sft04jSOr0r6ZP3CT1yuI7sazxKhQkYBxrXLKqmE3DwXxgtXIcXDvbtMKFCgQx2gqvBPCmVC0SHekNCBaZCAw6DhRe2OZc8B0jUiBL5sg7+hlvBzh2MHopIuyTHHEudHim3yeDLcosEK9GIyE8KCK8Xl2FCQCIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GzR+SM5Lx9+yNAX25R/nIM0lqOdB2Anylgu2JLBDMQM=;
- b=nWNAJ+smvHyDDv6L5ZxbMd+Z5MItjLSokk+qAFDTP2A6YH8YefrT5IbPxah2E8jvmWSAWFwG3se+9lW7QP6UIXHhRKz5Km2CoydnNTXVNQCMyG/dwhQhek9VQf/JsmYZ7p1/5xldO0hCb+s4575+xjIJTrIiOeEYGxftyzbwqPgKIgqZcUSj/UbAabgXCnMCoc7DsgYxtY0PillbqwZPfh3Cf1nUg3yRVL6WVO3OvCA3ttb1nvGkrcSl78MyKTRV6NHV2Xa0hlausNpd/RCAHFj7WDSyH2yRdfhzYnHJMI9VMgxoPfKCAnfOXFF+daYKlL0+MXRV4PeAecqmdT/YaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=inf.elte.hu; dmarc=pass action=none header.from=inf.elte.hu;
- dkim=pass header.d=inf.elte.hu; arc=none
+        Thu, 21 May 2020 08:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbgEUM5Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:57:24 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B74FC061A0E;
+        Thu, 21 May 2020 05:57:23 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j21so3117868pgb.7;
+        Thu, 21 May 2020 05:57:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=ikelte.onmicrosoft.com; s=selector2-ikelte-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GzR+SM5Lx9+yNAX25R/nIM0lqOdB2Anylgu2JLBDMQM=;
- b=p7XlRD5c7AWIwyhfx1V2tWFUhhkPXck9RI3TZB5T9J0DaRcZIZtiQXzzRkBgZbduUvZaWpBT+dsjhkNa233fwPBtZH92eBqkjsjDmwAbnqY4Y9ZSPqZDHqRXOO46kfZCNo5kTRI49qM8G8G/deS2mEERoRqGAgxOlXbP7dTzoVs=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=inf.elte.hu;
-Received: from DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:ab::20)
- by DB8PR10MB3911.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:16c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
- 2020 12:53:18 +0000
-Received: from DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::285b:6f31:7d11:5c53]) by DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::285b:6f31:7d11:5c53%5]) with mapi id 15.20.3021.024; Thu, 21 May 2020
- 12:53:18 +0000
-From:   Ferenc Fejes <fejes@inf.elte.hu>
-To:     netdev@vger.kernel.org
-Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ferenc Fejes <fejes@inf.elte.hu>
-Subject: [PATCH net-next] Extending bpf_setsockopt with SO_BINDTODEVICE sockopt
-Date:   Thu, 21 May 2020 14:52:47 +0200
-Message-Id: <20200521125247.30178-1-fejes@inf.elte.hu>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: VI1PR04CA0137.eurprd04.prod.outlook.com
- (2603:10a6:803:f0::35) To DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:ab::20)
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WJ2J0c4nx8VwKRs6VsjA2J0n5LxLHAUWuS116Ks5Rxk=;
+        b=baeKJz4Ye6sCcUqw0mYZm3toOvCphLbBet+iXy2gD6hSx0mqks6gXQw5XmWCr3+l1v
+         731E8MF8jJwB7lm+3iL6eZ9UlKvtj9RuLAim/ZMZb8pQOdT2ETuDaVnyG8O19I/T4IBf
+         MiJsHE3mLhekeYRCmEqeoZDJCd5qkZ5i62v4NHZbBSZHObwfQVHf4Pi33X3bsoOGyunc
+         DYimoYpdKz04+JIbDaQZz7OdP+BBaj6IIqMcNixaDZ3kwZ7XBeQba5WOnKf5ZHzjq9w0
+         z7pmwM4GJO/90Lfy0LPOnoiWLWHkQ70l9MhHIvFc1nEbq0N9hB8zkjsaggM8srH7q67C
+         t8Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=WJ2J0c4nx8VwKRs6VsjA2J0n5LxLHAUWuS116Ks5Rxk=;
+        b=dqDvT/FpZnH4XnkS8mTG1+ccV4wkaUXtjBxJayHug5xEwXHG48fNLrzB8wXvLdIXMY
+         7jTm+XT9PkOW2WopesyXdLVnzOSMH0dxnQW1H/lUGdTyCev03AxSvJ4aR3T47hjXkvhE
+         4NLFBmlfpnFmon1bXgWL+MwSui4ATgwYRB8JOf3YN+Y5cbti0RZkIWwhF6KiYg/yjsLj
+         BBp1UYj/xLuqvHCfQuNXGLACuy1qOxCq5JSKWjoFArr0MYpafCQli2G0GR95vClMQ+2N
+         agWIKctcZgabsm+HryXyDMA5jIb6qtq7u3W60WFToDywCu/P/4T4RvnvgAQeBC35lXFz
+         ftRw==
+X-Gm-Message-State: AOAM531RAeYtWTsJy0up7zfNrG9y91OtvCCB4MK+OOdFFPLdprQTsMVf
+        5dVDZxQhmJTGNKVpRCLBAKpA/2Ht
+X-Google-Smtp-Source: ABdhPJzEO1+MVotmNCehwqbZS7wpwLsfnFq+lJ94EZvXDqteSGkWgjKVuIEnnSEhi97Q/08lwuRQRw==
+X-Received: by 2002:a63:d547:: with SMTP id v7mr8713272pgi.413.1590065842630;
+        Thu, 21 May 2020 05:57:22 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l4sm3975682pgo.92.2020.05.21.05.57.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 05:57:21 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: Fix runtime PM imbalance on error
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200521080141.24373-1-dinghao.liu@zju.edu.cn>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <7c20e9da-18df-8476-5029-9441cc7ebccf@roeck-us.net>
+Date:   Thu, 21 May 2020 05:57:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (89.133.95.17) by VI1PR04CA0137.eurprd04.prod.outlook.com (2603:10a6:803:f0::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Thu, 21 May 2020 12:53:18 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [89.133.95.17]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3ae0342e-4328-4557-2c8b-08d7fd85ef77
-X-MS-TrafficTypeDiagnostic: DB8PR10MB3911:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR10MB39116B4F2C53E1E1E479E36CE1B70@DB8PR10MB3911.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-Forefront-PRVS: 041032FF37
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l/KLKiYUrmz1A+CZhNhgWJ6376qyEuq39uds+wW3tk6uJmFiBFTVNFU0eDZn3ILJCeWdr6+CAF7q0+wJtWFzwnIL5Hv8teUnjeSDg2cLNPjCfMSRdYDJ03y0wtsTXVEGzC6KeJYzrwvHJOLy5T1BuN9gWzyaSI63AEkKKnd0t9Jr3z3ybnSGjJFML6QuQ6OKXw4zpS9TXv9BgdozQXOKsujihSzE9JyRRI39LeuWMCK/e8I2b60pk4WVV1bjYhG3Iti7GVAbP02tK5+4gqzQzUTweC6hgXUhttDu4qENPwwJG2iiF5LOcEaTmZpmI2N5S1e0MEzROwXO6zpKB224XYtdnOzf/hrot+NGj8W4dO/0a9qul3R9qeOmIaaQ8INV
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(39850400004)(366004)(136003)(376002)(52116002)(2906002)(26005)(16526019)(786003)(8676002)(8936002)(316002)(478600001)(107886003)(86362001)(6512007)(4326008)(6486002)(54906003)(66476007)(5660300002)(1076003)(6666004)(6506007)(2616005)(186003)(956004)(66556008)(6916009)(69590400007)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: a67dSjW1j464p/Ox0CQL2BHRU9fx3982zGL4rfNrJj5V1fqziAIv5zafy63ibseD16exXHFMUlVd4IQRWo3JF4UBmCJ20GVx1wBNRXS7Q0V+1AnpwQHfieXmfPec122AYgjlDQmqZAJyGJlP7wu1VsefEGnBSKoHcwY9/cDoE5yOEp7FRQsANblcZMaYX4f2cTru+QUOITf493jvjLk5e36WsfbKEXyZUGhVHtXJvi3hN5S/9iOQn/lWgLEV6qz6jtQYXpy+1ICE1bAhufQAwBmnoBHc88h2PJ8/F+HuNEKrx4jAq4odGG8/SAUTzz1VxjQl8yMG28lPsXPGlNq5gx7eqb1o6wvhZDhnSiNJHeWdzI9XBTZjm4/YNs8OvfzErbUkzTuQosgtvH4aNdSe6XU9iPs4Vt5FdCH6lSpzcK1ofSSAvp/IdjYVe55ukYpSacTa5QYyrXuRhnkxN4jSI+v6dqFIAzXqltI3M9UxUQQ=
-X-OriginatorOrg: inf.elte.hu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ae0342e-4328-4557-2c8b-08d7fd85ef77
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 12:53:18.7656
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0133bb48-f790-4560-a64d-ac46a472fbbc
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YyO8sFlsD88UlyvuQJNyeaLEeGP+CA/jCw2HZNBZnFHTvoie7aSXc00qMKU17hvX4MmbzMUq6vC5hEVZlF9a1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3911
+In-Reply-To: <20200521080141.24373-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This option makes possible to programatically bind sockets to netdevices.
-With the help of this option sockets of VRF unaware applications
-could be distributed between multiple VRFs with eBPF sock_ops program.
-This let the applications benefit from the multiple possible routes.
+On 5/21/20 1:01 AM, Dinghao Liu wrote:
+> When watchdog_register_device() returns an error code,
+> a pairing runtime PM usage counter decrement is needed
+> to keep the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-Signed-off-by: Ferenc Fejes <fejes@inf.elte.hu>
----
- net/core/filter.c | 39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 822d662f97ef..25dac75bfc5d 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -4248,6 +4248,9 @@ static const struct bpf_func_proto bpf_get_socket_uid_proto = {
- static int _bpf_setsockopt(struct sock *sk, int level, int optname,
- 			   char *optval, int optlen, u32 flags)
- {
-+	char devname[IFNAMSIZ];
-+	struct net *net;
-+	int ifindex;
- 	int ret = 0;
- 	int val;
- 
-@@ -4257,7 +4260,7 @@ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
- 	sock_owned_by_me(sk);
- 
- 	if (level == SOL_SOCKET) {
--		if (optlen != sizeof(int))
-+		if (optlen != sizeof(int) && optname != SO_BINDTODEVICE)
- 			return -EINVAL;
- 		val = *((int *)optval);
- 
-@@ -4298,6 +4301,40 @@ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
- 				sk_dst_reset(sk);
- 			}
- 			break;
-+		case SO_BINDTODEVICE:
-+			ret = -ENOPROTOOPT;
-+#ifdef CONFIG_NETDEVICES
-+			net = sock_net(sk);
-+			strncpy(devname, optval,
-+				min_t(long, optlen, IFNAMSIZ-1));
-+			devname[IFNAMSIZ-1] = 0;
-+			ifindex = 0;
-+			if (devname[0] != '\0') {
-+				struct net_device *dev;
-+
-+				rcu_read_lock();
-+				dev = dev_get_by_name_rcu(net, devname);
-+				if (dev)
-+					ifindex = dev->ifindex;
-+				rcu_read_unlock();
-+				ret = -ENODEV;
-+				if (!dev)
-+					break;
-+			}
-+			ret = -EPERM;
-+			if (sk->sk_bound_dev_if &&
-+				!ns_capable(net->user_ns, CAP_NET_RAW))
-+				break;
-+			ret = -EINVAL;
-+			if (ifindex < 0)
-+				break;
-+			sk->sk_bound_dev_if = ifindex;
-+			if (sk->sk_prot->rehash)
-+				sk->sk_prot->rehash(sk);
-+			sk_dst_reset(sk);
-+			ret = 0;
-+#endif
-+			break;
- 		default:
- 			ret = -EINVAL;
- 		}
--- 
-2.17.1
+> ---
+>  drivers/watchdog/omap_wdt.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
+> index 9b91882fe3c4..1616f93dfad7 100644
+> --- a/drivers/watchdog/omap_wdt.c
+> +++ b/drivers/watchdog/omap_wdt.c
+> @@ -273,6 +273,7 @@ static int omap_wdt_probe(struct platform_device *pdev)
+>  
+>  	ret = watchdog_register_device(&wdev->wdog);
+>  	if (ret) {
+> +		pm_runtime_put(wdev->dev);
+>  		pm_runtime_disable(wdev->dev);
+>  		return ret;
+>  	}
+> 
 
