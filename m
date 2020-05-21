@@ -2,124 +2,87 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA97C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF132070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A/WHOQ4G"
+	by mail.kernel.org (Postfix) with ESMTP id E90EF2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 04:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgEUEvi (ORCPT
+        id S1728022AbgEUEx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 00:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgEUEvh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 00:51:37 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76185C061A0E;
-        Wed, 20 May 2020 21:51:37 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SHJg6pG4z9sRK;
-        Thu, 21 May 2020 14:51:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590036695;
-        bh=Vvjbw6Q5rxtxSmTSpphFOU/PwAYYBFFB40vqqXq++1c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A/WHOQ4Gh5Q6ACmyswDHgE6Cva2c1JIxTmXl24lnY5DMA/IDX8TAE4q+75ZHcD8Bp
-         KyrX856ksyYk6lEeNko/P3s2ox5fx4QKtHRrbMqEMr63nlvn7jOGMMJsxaAbsVRHXR
-         rXM4BdfdN4Z8QeDyiS3jWr9q0RFO6IX7RSYsQcyPXM5rbRpKcZ3nyB27AuRxiintBf
-         7AGWw1YgDhKwQ/f6yMcnMkNVDabwBJAxmiHhRxX7307OsWrah5sSxCFwYukRGp/Hrf
-         qvdODddKGdEfINH9SX2gRo8PthC2AYkzYkvTlOIXK4+exk6VML7oZBvch/aR2yn4+z
-         JqyiZm/uQhvfQ==
-Date:   Thu, 21 May 2020 14:51:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: linux-next: manual merge of the rcu tree with the powerpc tree
-Message-ID: <20200521145124.48ae408b@canb.auug.org.au>
-In-Reply-To: <20200519172316.3b37cbae@canb.auug.org.au>
-References: <20200519172316.3b37cbae@canb.auug.org.au>
+        Thu, 21 May 2020 00:53:28 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:22798 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726506AbgEUEx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 00:53:27 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 12:51:57
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Thu, 21 May 2020 12:51:57 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Tony Lindgren" <tony@atomide.com>
+Cc:     kjlu@umn.edu, "Kalle Valo" <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Johannes Berg" <johannes.berg@intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Maital Hahn" <maitalm@ti.com>,
+        "Fuqian Huang" <huangfq.daxian@gmail.com>,
+        "Emmanuel Grumbach" <emmanuel.grumbach@intel.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] wlcore: fix runtime pm imbalance in
+ wl1271_op_suspend
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200520184854.GY37466@atomide.com>
+References: <20200520125724.12832-1-dinghao.liu@zju.edu.cn>
+ <20200520184854.GY37466@atomide.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CQMfjLSTVZpJuWvNZ/.x1qE";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Message-ID: <62e69631.b9cff.1723592e191.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgBHf3jtCMZeUM7mAQ--.37495W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwAIsq
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtIS07vEb7Iv0x
+        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY64IIrI8v6xkF7I0E8cxan2IY04v7MIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwV
+        W8XwCS07vEc2IjII80xcxEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l
+        V2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67
+        AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_
+        Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVW8JVWxJwCS07vEIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvE
+        x4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CQMfjLSTVZpJuWvNZ/.x1qE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Tue, 19 May 2020 17:23:16 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the rcu tree got a conflict in:
->=20
->   arch/powerpc/kernel/traps.c
->=20
-> between commit:
->=20
->   116ac378bb3f ("powerpc/64s: machine check interrupt update NMI accounti=
-ng")
->=20
-> from the powerpc tree and commit:
->=20
->   187416eeb388 ("hardirq/nmi: Allow nested nmi_enter()")
->=20
-> from the rcu tree.
->=20
-> I fixed it up (I used the powerpc tree version for now) and can carry the
-> fix as necessary. This is now fixed as far as linux-next is concerned,
-> but any non trivial conflicts should be mentioned to your upstream
-> maintainer when your tree is submitted for merging.  You may also want
-> to consider cooperating with the maintainer of the conflicting tree to
-> minimise any particularly complex conflicts.
-
-This is now a conflict between the powerpc commit and commit
-
-  69ea03b56ed2 ("hardirq/nmi: Allow nested nmi_enter()")
-
-from the tip tree.  I assume that the rcu and tip trees are sharing
-some patches (but not commits) :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CQMfjLSTVZpJuWvNZ/.x1qE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7GCMwACgkQAVBC80lX
-0GxDgAgAjBhkbXjQw6c4H9zUJ/eMzz46ZhGjxATiSVcRL9djbp+Vc/KpQO1tkjif
-bJ0tP19uatDYyD/6eEzPotCk+htDR/rVSJv1kEQlOILCXxWxR6EmccmJryRyIeAc
-ARG/q+iSSPQrCzT8bPRK20ToK6FQEoX0wAE+c9eScTlI2OO6x6LbeYwKPphzLvZj
-FjNiUZffxnOJrCc/ru7++ga/YIhNn8YVXKjdk9dNzlS0G5LH87wz4syI8f4T8Pks
-CK0aH65PfcV+F923TsGDB3+r+GQD5zAZDxhsY2T1moDbVloNx9Cab3EHj1/djDQ6
-Y/EBDv6+GEF5EV/D49ExqoET5sa0XQ==
-=wTU9
------END PGP SIGNATURE-----
-
---Sig_/CQMfjLSTVZpJuWvNZ/.x1qE--
+VGhlcmUgaXMgYSBjaGVjayBhZ2FpbnN0IHJldCBhZnRlciBvdXRfc2xlZXAgdGFnLiBJZiB3bDEy
+NzFfY29uZmlndXJlX3N1c3BlbmRfYXAoKQpyZXR1cm5zIGFuIGVycm9yIGNvZGUsIHJldCB3aWxs
+IGJlIGNhdWdodCBieSB0aGlzIGNoZWNrIGFuZCBhIHdhcm5pbmcgd2lsbCBiZSBpc3N1ZWQuCgoK
+JnF1b3Q7VG9ueSBMaW5kZ3JlbiZxdW90OyAmbHQ7dG9ueUBhdG9taWRlLmNvbSZndDvlhpnpgZPv
+vJoKPiAqIERpbmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPiBbMjAwNTIwIDEyOjU4
+XToNCj4gPiBXaGVuIHdsY29yZV9od19pbnRlcnJ1cHRfbm90aWZ5KCkgcmV0dXJucyBhbiBlcnJv
+ciBjb2RlLA0KPiA+IGEgcGFpcmluZyBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgZGVjcmVtZW50
+IGlzIG5lZWRlZCB0bw0KPiA+IGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuDQo+IA0KPiBXZSBz
+aG91bGQgcHJvYmFibHkga2VlcCB0aGUgd2FybmluZyB0aG91Z2gsIG5vdGhpbmcgd2lsbA0KPiBn
+ZXQgc2hvd24gZm9yIHdsMTI3MV9jb25maWd1cmVfc3VzcGVuZF9hcCgpIGVycm9ycy4NCj4gDQo+
+IE90aGVyd2lzZSBsb29rcyBnb29kIHRvIG1lLg0KPiANCj4gUmVnYXJkcywNCj4gDQo+IFRvbnkN
+Cg==
