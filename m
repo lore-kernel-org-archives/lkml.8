@@ -2,99 +2,67 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08071C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08332C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E12EA207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E80207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 08:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgEUImb (ORCPT
+        id S1728692AbgEUIpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 04:42:31 -0400
-Received: from verein.lst.de ([213.95.11.211]:53697 "EHLO verein.lst.de"
+        Thu, 21 May 2020 04:45:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33374 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728389AbgEUIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 04:42:30 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1D9C368BEB; Thu, 21 May 2020 10:42:25 +0200 (CEST)
-Date:   Thu, 21 May 2020 10:42:24 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
-        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 32/33] net: add a new bind_add method
-Message-ID: <20200521084224.GA7859@lst.de>
-References: <20200520195509.2215098-1-hch@lst.de> <20200520195509.2215098-33-hch@lst.de> <20200520230025.GT2491@localhost.localdomain>
+        id S1728389AbgEUIpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 04:45:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CF1AEACA7;
+        Thu, 21 May 2020 08:45:07 +0000 (UTC)
+Date:   Thu, 21 May 2020 10:45:04 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 0/3] lib/vsprintf: Introduce %ptT for time64_t
+Message-ID: <20200521084504.GG3464@linux-b0ei>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520230025.GT2491@localhost.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200520114333.GC520@jagdpanzerIV.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 08:00:25PM -0300, Marcelo Ricardo Leitner wrote:
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	lock_sock(sk);
-> > +	err = sctp_do_bind(sk, (union sctp_addr *)addr, af->sockaddr_len);
-> > +	if (!err)
-> > +		err = sctp_send_asconf_add_ip(sk, addr, 1);
+On Wed 2020-05-20 20:43:33, Sergey Senozhatsky wrote:
+> On (20/05/15 18:02), Petr Mladek wrote:
+> > On Wed 2020-04-15 20:00:43, Andy Shevchenko wrote:
+> > > It is a logical continuation of previously applied %ptR for struct rtc_time.
+> > > We have few users of time64_t that would like to print it.
+> > 
+> > It seems that everything was explained and the patches look good to
+> > me. If we allowed %ptR then it makes sense to allow %ptT as well.
+> > 
+> > For all three patches:
+> > 
+> > Rewieved-by: Petr Mladek <pmladek@suse.com>
 > 
-> Some problems here.
-> - addr may contain a list of addresses
-> - the addresses, then, are not being validated
-> - sctp_do_bind may fail, on which it requires some undoing
->   (like sctp_bindx_add does)
-> - code duplication with sctp_setsockopt_bindx.
+> Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-sctp_do_bind and thus this function only support a single address, as
-that is the only thing that the DLM code requires.  I could move the
-user copy out of sctp_setsockopt_bindx and reuse that, but it is a
-rather rcane API.
+This patchset has been committed into printk/linux.git,
+branch for-5.8-printf-time64_t.
 
-> 
-> This patch will conflict with David's one,
-> [PATCH net-next] sctp: Pull the user copies out of the individual sockopt functions.
+Note that it is a new git repo with shared write access.
 
-Do you have a link?  A quick google search just finds your mail that
-I'm replying to.
-
-> (I'll finish reviewing it in the sequence)
-> 
-> AFAICT, this patch could reuse/build on his work in there. The goal is
-> pretty much the same and would avoid the issues above.
-> 
-> This patch could, then, point the new bind_add proto op to the updated
-> sctp_setsockopt_bindx almost directly.
-> 
-> Question then is: dlm never removes an addr from the bind list. Do we
-> want to add ops for both? Or one that handles both operations?
-> Anyhow, having the add operation but not the del seems very weird to
-> me.
-
-We generally only add operations for things that we actually use.
-bind_del is another logical op, but we can trivially add that when we
-need it.
+Best Regards,
+Petr
