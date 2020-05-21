@@ -2,106 +2,122 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA651C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237072072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18B32088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:14:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgEUPNH (ORCPT
+        id S1729870AbgEUPOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:13:07 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53284 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbgEUPNH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:13:07 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jbmsX-0004ep-7T; Thu, 21 May 2020 15:13:01 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: lpc32xx_udc: don't dereference ep pointer before null check
-Date:   Thu, 21 May 2020 16:13:00 +0100
-Message-Id: <20200521151300.347496-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 21 May 2020 11:14:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:36332 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728279AbgEUPOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 11:14:36 -0400
+IronPort-SDR: +igdKqTdU9H8yOjU0PHw+IygvAGH5RqYGYH1hIY4JeqfZjDWNgN5BNMAgrS8t0maSy+J6BrDVC
+ pBBLpwe1Z1/w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 08:14:35 -0700
+IronPort-SDR: BwOSx3SLn5hYh7lfJYATkuwRv9Xo1tXSYFTpHS0cfstI4AjJK34k6fviFeZkvn7yH1q1zzDePs
+ kBoQRWM5dS5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,418,1583222400"; 
+   d="scan'208";a="255335714"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga008.fm.intel.com with ESMTP; 21 May 2020 08:14:34 -0700
+Date:   Thu, 21 May 2020 08:14:34 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
+ pagefault/preempt twice
+Message-ID: <20200521151434.GA176262@iweiny-DESK2.sc.intel.com>
+References: <20200507150004.1423069-8-ira.weiny@intel.com>
+ <20200518184843.3029640-1-ira.weiny@intel.com>
+ <20200519165422.GA5838@roeck-us.net>
+ <20200519184031.GB3356843@iweiny-DESK2.sc.intel.com>
+ <20200519194215.GA71941@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200519194215.GA71941@roeck-us.net>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, May 19, 2020 at 12:42:15PM -0700, Guenter Roeck wrote:
+> > On Tue, May 19, 2020 at 09:54:22AM -0700, Guenter Roeck wrote:
+> > > as do the nosmp sparc32 boot tests,
+> > > but sparc32 boot tests with SMP enabled still fail with lots of messages
+> > > such as:
+> > > 
+> > > BUG: Bad page state in process swapper/0  pfn:006a1
+> > > page:f0933420 refcount:0 mapcount:1 mapping:(ptrval) index:0x1
+> > > flags: 0x0()
+> > > raw: 00000000 00000100 00000122 00000000 00000001 00000000 00000000 00000000
+> > > page dumped because: nonzero mapcount
+> > > Modules linked in:
+> > > CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B             5.7.0-rc6-next-20200518-00002-gb178d2d56f29 #1
+> > > [f00e7ab8 :
+> > > bad_page+0xa8/0x108 ]
+> > > [f00e8b54 :
+> > > free_pcppages_bulk+0x154/0x52c ]
+> > > [f00ea024 :
+> > > free_unref_page+0x54/0x6c ]
+> > > [f00ed864 :
+> > > free_reserved_area+0x58/0xec ]
+> > > [f0527104 :
+> > > kernel_init+0x14/0x110 ]
+> > > [f000b77c :
+> > > ret_from_kernel_thread+0xc/0x38 ]
+> > > [00000000 :
+> > > 0x0 ]
+> > > 
+> > > Code path leading to that message is different but always the same
+> > > from free_unref_page().
+> > > 
+> > > Still testing ppc images.
+> > > 
+> 
+> ppc image tests are passing with this patch.
 
-Currently pointer ep is being dereferenced before it is null checked
-leading to a null pointer dereference issue.  Fix this by only assigning
-pointer udc once ep is known to be not null.  Also remove a debug
-message that requires a valid udc which may not be possible at that
-point.
+How about sparc?  I finally got your scripts to run on sparc and everything
+looks to be passing?
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/usb/gadget/udc/lpc32xx_udc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Are we all good now?
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index cb997b82c008..7aefd6b5597b 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -1614,17 +1614,17 @@ static int lpc32xx_ep_enable(struct usb_ep *_ep,
- 			     const struct usb_endpoint_descriptor *desc)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	u16 maxpacket;
- 	u32 tmp;
- 	unsigned long flags;
- 
- 	/* Verify EP data */
- 	if ((!_ep) || (!ep) || (!desc) ||
--	    (desc->bDescriptorType != USB_DT_ENDPOINT)) {
--		dev_dbg(udc->dev, "bad ep or descriptor\n");
-+	    (desc->bDescriptorType != USB_DT_ENDPOINT))
- 		return -EINVAL;
--	}
-+
-+	udc = ep->udc;
- 	maxpacket = usb_endpoint_maxp(desc);
- 	if ((maxpacket == 0) || (maxpacket > ep->maxpacket)) {
- 		dev_dbg(udc->dev, "bad ep descriptor's packet size\n");
-@@ -1872,7 +1872,7 @@ static int lpc32xx_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	unsigned long flags;
- 
- 	if ((!ep) || (ep->hwep_num <= 1))
-@@ -1882,6 +1882,7 @@ static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- 	if (ep->is_in)
- 		return -EAGAIN;
- 
-+	udc = ep->udc;
- 	spin_lock_irqsave(&udc->lock, flags);
- 
- 	if (value == 1) {
--- 
-2.25.1
-
+Thanks again!
+Ira
