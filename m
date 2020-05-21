@@ -2,130 +2,110 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21094C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B21C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E209B2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AlNLna3X"
+	by mail.kernel.org (Postfix) with ESMTP id 8D69C2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgEUJYA (ORCPT
+        id S1728916AbgEUJYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:24:00 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26667 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728686AbgEUJX7 (ORCPT
+        Thu, 21 May 2020 05:24:13 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:57008 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbgEUJYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:23:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590053039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oXqIwCuxexwEMT6sWq3yw4kZ4MgmT2D4JiPVuLqvuPk=;
-        b=AlNLna3X782FM7V8rh+845nfAK57YCBK2stKXVUPMJT9qD+IwvVnC1Jyf3Ng4w8bhaucrU
-        VQ91VjiAwiSQ7rAgB1kwLrnPTpbcMRmzcWQ+94AMSBr9rMcltzIvLOdDl/jabh/BZzY+Ot
-        tnL4ptt+smlwjoLnEQN2pX6nrNY49KM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-417-p2H3ENIzNh-rGh7Us0gPdA-1; Thu, 21 May 2020 05:23:55 -0400
-X-MC-Unique: p2H3ENIzNh-rGh7Us0gPdA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04B4D107BEF5;
-        Thu, 21 May 2020 09:23:53 +0000 (UTC)
-Received: from T590 (ovpn-13-123.pek2.redhat.com [10.72.13.123])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 191865EE0E;
-        Thu, 21 May 2020 09:23:44 +0000 (UTC)
-Date:   Thu, 21 May 2020 17:23:40 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: io_uring vs CPU hotplug, was Re: [PATCH 5/9] blk-mq: don't set
- data->ctx and data->hctx in blk_mq_alloc_request_hctx
-Message-ID: <20200521092340.GA751297@T590>
-References: <20200520011823.GA415158@T590>
- <20200520030424.GI416136@T590>
- <20200520080357.GA4197@lst.de>
- <8f893bb8-66a9-d311-ebd8-d5ccd8302a0d@kernel.dk>
- <448d3660-0d83-889b-001f-a09ea53fa117@kernel.dk>
- <87tv0av1gu.fsf@nanos.tec.linutronix.de>
- <2a12a7aa-c339-1e51-de0d-9bc6ced14c64@kernel.dk>
- <87eereuudh.fsf@nanos.tec.linutronix.de>
- <20200521022746.GA730422@T590>
- <87367tvh6g.fsf@nanos.tec.linutronix.de>
+        Thu, 21 May 2020 05:24:12 -0400
+Received: from twhfmlp1.macronix.com (twhfmlp1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id 04L9O5xV009999;
+        Thu, 21 May 2020 17:24:05 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 625C4A326BAAEB7806BC;
+        Thu, 21 May 2020 17:24:06 +0800 (CST)
+In-Reply-To: <20200519142642.24131-6-p.yadav@ti.com>
+References: <20200519142642.24131-1-p.yadav@ti.com> <20200519142642.24131-6-p.yadav@ti.com>
+To:     "Pratyush Yadav" <p.yadav@ti.com>
+Cc:     "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        "Boris Brezillon" <boris.brezillon@collabora.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org,
+        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        "Nicolas Ferre" <nicolas.ferre@microchip.com>,
+        "Sekhar Nori" <nsekhar@ti.com>, "Pratyush Yadav" <p.yadav@ti.com>,
+        "Richard Weinberger" <richard@nod.at>,
+        "Tudor Ambarus" <tudor.ambarus@microchip.com>,
+        "Vignesh Raghavendra" <vigneshr@ti.com>
+Subject: Re: [PATCH v5 05/19] mtd: spi-nor: add support for DTR protocol
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87367tvh6g.fsf@nanos.tec.linutronix.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-KeepSent: 6C754784:29BF11CD-4825856F:0032D83F;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF6C754784.29BF11CD-ON4825856F.0032D83F-4825856F.0033A4F1@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Thu, 21 May 2020 17:24:05 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/05/21 PM 05:24:06,
+        Serialize complete at 2020/05/21 PM 05:24:06
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com 04L9O5xV009999
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
 
-On Thu, May 21, 2020 at 10:13:59AM +0200, Thomas Gleixner wrote:
-> Ming Lei <ming.lei@redhat.com> writes:
-> > On Thu, May 21, 2020 at 12:14:18AM +0200, Thomas Gleixner wrote:
-> >> When the CPU is finally offlined, i.e. the CPU cleared the online bit in
-> >> the online mask is definitely too late simply because it still runs on
-> >> that outgoing CPU _after_ the hardware queue is shut down and drained.
-> >
-> > IMO, the patch in Christoph's blk-mq-hotplug.2 still works for percpu
-> > kthread.
-> >
-> > It is just not optimal in the retrying, but it should be fine. When the
-> > percpu kthread is scheduled on the CPU to be offlined:
-> >
-> > - if the kthread doesn't observe the INACTIVE flag, the allocated request
-> > will be drained.
-> >
-> > - otherwise, the kthread just retries and retries to allocate & release,
-> > and sooner or later, its time slice is consumed, and migrated out, and the
-> > cpu hotplug handler will get chance to run and move on, then the cpu is
-> > shutdown.
-> 
-> 1) This is based on the assumption that the kthread is in the SCHED_OTHER
->    scheduling class. Is that really a valid assumption?
+Hi Pratyush,
 
-Given it is unlikely path, we can add msleep() before retrying when INACTIVE bit
-is observed by current thread, and this way can avoid spinning and should work
-for other schedulers.
 
-> 
-> 2) What happens in the following scenario:
-> 
->    unplug
-> 
->      mq_offline
->        set_ctx_inactive()
->        drain_io()
->        
->    io_kthread()
->        try_queue()
->        wait_on_ctx()
-> 
->    Can this happen and if so what will wake up that thread?
+> @@ -311,6 +313,7 @@ struct flash_info {
+>                  * BP3 is bit 6 of status register.
+>                  * Must be used with SPI_NOR_4BIT_BP.
+>                  */
+> +#define SPI_NOR_OCTAL_DTR_READ   BIT(19) /* Flash supports octal DTR 
+Read. */
 
-drain_io() releases all tag of this hctx, then wait_on_ctx() will be waken up
-after any tag is released.
+#define SPI_NOR_OCTAL_DTR_RDWR  BIT(19) /* Support Octal DTR Read & Write 
+*/
 
-If wait_on_ctx() waits for other generic resource, it will be waken up
-after this resource is available.
+more precisely and clearly ?
 
 thanks,
-Ming
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
