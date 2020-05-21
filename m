@@ -2,104 +2,133 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8651DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA0A207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E0420814
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 09:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pu4rceYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgEUJ5P (ORCPT
+        id S1728178AbgEUJ5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 05:57:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44010 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbgEUJ5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 05:57:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 39AEEAB76;
-        Thu, 21 May 2020 09:57:16 +0000 (UTC)
-Subject: Re: [PATCH v3 03/19] mm: memcg: convert vmstat slab counters to bytes
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-4-guro@fb.com>
- <b72ff85a-22aa-f55d-41ee-2ddee00674a7@suse.cz>
- <20200520192652.GA278395@carbon.dhcp.thefacebook.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <21975f76-f58f-14ef-9547-7e32afac1681@suse.cz>
-Date:   Thu, 21 May 2020 11:57:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 21 May 2020 05:57:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbgEUJ5f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 05:57:35 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B15C061A0E;
+        Thu, 21 May 2020 02:57:33 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id w19so2629291ply.11;
+        Thu, 21 May 2020 02:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ltjPOCU9A538igJqlQC+KDjFjSNLYyghW5XAjlV0EQI=;
+        b=pu4rceYVK6Lihnp83v+yc225cXHJm6lSy6vbEjEHturjUCei0W1hvCJmTDioKSPvJI
+         OSBAM7jlX9gl5xaYxJ5HvCF1SQ6mrm9cN3btWB6BgifgTY4sJZt1TBzgThmwMTl47Zdh
+         AMcraqWfMI02Jt/vFZjYUIaeaeRd5y/OraiOQVFe5NCH3dYK+8+5M1vTL0GUkbWl9muY
+         Elp78zjWwXYcNWzaKdgodX+Zjxf+cnpajpvtR1Uv+eTp8p+73hAqhT0z+8YCeA0MTljf
+         wxROOPCKgug260TPkmD7emTonRwFOBSPqNw2PA9kDuOylV+T4qifM+7zCN83rMt8YPpT
+         fUTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ltjPOCU9A538igJqlQC+KDjFjSNLYyghW5XAjlV0EQI=;
+        b=cXMcZbGUSxO4/G6sz8D94W9kJBILZP2Mzl7Aptrfdi78/N0F3dFaU0bfvE/uz60EEM
+         KA79CIiPtNX1mAb0knZfSjtrwmvo7JbDlWAwGhy2pIweUfKKDNlWgzB0nw45IQFDyq4g
+         28EeEh8hixUuHuSbfVA3tNqH7W3VxD3a9mrCCt1kpOUN7n+G34xr2HDnLWN3NFiZmA29
+         HYWHETlT+6r1RrIPTjkHL9O2XN1ypRgBAGaxcVqRHffoPouU2e/yPd/pB1MqvOnq79HT
+         03eoob7J8PibJjn11I5bzHQCO6q5RAfJVsL4sj0SQTn9u3EQoasF1UQSTwqJH9Vs3R7G
+         reQA==
+X-Gm-Message-State: AOAM533UJH/5N5DQC1KiGGk8lUCOnt4PZZ5uFV9uE2TiA4QsRBG0FHZn
+        kHC6tzskRUF4p0L4vWfdOXuqHmKh3k9O7Ax0a2U=
+X-Google-Smtp-Source: ABdhPJx4ebqcn9Ni6XbCgdV990I5/qzjx21xek5LX0qUfdKIo169E5pSe+gPowt99bXNUOjhLG135va1VeEt5wtiZTc=
+X-Received: by 2002:a17:90a:1704:: with SMTP id z4mr10186753pjd.181.1590055053473;
+ Thu, 21 May 2020 02:57:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200520192652.GA278395@carbon.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru> <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200521012206.14472-4-Sergey.Semin@baikalelectronics.ru>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 21 May 2020 12:57:17 +0300
+Message-ID: <CAHp75VcOX-hZSxHqro_W2X=KzSShg1V=jAsxdz8L5TZpW0kBYA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/16] spi: dw: Discard static DW DMA slave structures
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Clement Leger <cleger@kalray.eu>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 9:26 PM, Roman Gushchin wrote:
-> On Wed, May 20, 2020 at 02:25:22PM +0200, Vlastimil Babka wrote:
->> 
->> However __mod_node_page_state() and mode_node_state() will now branch always. I
->> wonder if the "API clean" goal is worth it...
-> 
-> You mean just adding a special write-side helper which will perform a conversion
-> and put VM_WARN_ON_ONCE() into generic write-side helpers?
+On Thu, May 21, 2020 at 4:23 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> Having them declared is redundant since each struct dw_dma_chan has
+> the same structure embedded and the structure from the passed dma_chan
+> private pointer will be copied there as a result of the next calls
+> chain:
+> dma_request_channel() -> find_candidate() -> dma_chan_get() ->
+> device_alloc_chan_resources() = dwc_alloc_chan_resources() ->
+> dw_dma_filter().
+> So just remove the static dw_dma_chan structures and use a locally
+> declared data instance with dst_id/src_id set to the same values as
+> the static copies used to have.
 
-What I mean is that maybe node/global helpers should assume page granularity,
-and lruvec/memcg helpers do the check is they should convert from bytes to pages
-when calling node/global helpers. Then there would be no extra branches in
-node/global helpers. But maybe it's not worth saving those branches, dunno.
+...
 
->> 
->> > --- a/mm/memcontrol.c
->> > +++ b/mm/memcontrol.c
->> > @@ -1409,9 +1409,8 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
->> >  		       (u64)memcg_page_state(memcg, MEMCG_KERNEL_STACK_KB) *
->> >  		       1024);
->> >  	seq_buf_printf(&s, "slab %llu\n",
->> > -		       (u64)(memcg_page_state(memcg, NR_SLAB_RECLAIMABLE) +
->> > -			     memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE)) *
->> > -		       PAGE_SIZE);
->> > +		       (u64)(memcg_page_state(memcg, NR_SLAB_RECLAIMABLE_B) +
->> > +			     memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE_B)));
->> >  	seq_buf_printf(&s, "sock %llu\n",
->> >  		       (u64)memcg_page_state(memcg, MEMCG_SOCK) *
->> >  		       PAGE_SIZE);
->> > @@ -1445,11 +1444,9 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
->> >  			       PAGE_SIZE);
->> >  
->> >  	seq_buf_printf(&s, "slab_reclaimable %llu\n",
->> > -		       (u64)memcg_page_state(memcg, NR_SLAB_RECLAIMABLE) *
->> > -		       PAGE_SIZE);
->> > +		       (u64)memcg_page_state(memcg, NR_SLAB_RECLAIMABLE_B));
->> >  	seq_buf_printf(&s, "slab_unreclaimable %llu\n",
->> > -		       (u64)memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE) *
->> > -		       PAGE_SIZE);
->> > +		       (u64)memcg_page_state(memcg, NR_SLAB_UNRECLAIMABLE_B));
->> 
->> So here we are now printing in bytes instead of pages, right? That's fine for
->> OOM report, but in sysfs aren't we breaking existing users?
->> 
-> 
-> Hm, but it was in bytes previously, look at that x * PAGE_SIZE.
+> - Explicitly initialize the dw_dma_slave members on stack.
 
-Yeah, that's what I managed to overlook, sorry.
+Thanks for an update, but that's not what I asked for...
 
-> Or do you mean that now it can be not rounded to PAGE_SIZE?
-> If so, I don't think it breaks any expectations.
-> 
-> Thanks!
-> 
+> -static struct dw_dma_slave mid_dma_tx = { .dst_id = 1 };
+> -static struct dw_dma_slave mid_dma_rx = { .src_id = 0 };
 
+>  static int mid_spi_dma_init_mfld(struct device *dev, struct dw_spi *dws)
+>  {
+> +       struct dw_dma_slave slave = {
+> +               .src_id = 0,
+> +               .dst_id = 0
+> +       };
+
+(It's member, and not memberS)
+
+> -       struct dw_dma_slave *tx = dws->dma_tx;
+> -       struct dw_dma_slave *rx = dws->dma_rx;
+
+May we simple do
+
+struct dw_dma_slave tx = { .dst_id = 1 };
+struct dw_dma_slave rx = { .src_id = 0 };
+
+please?
+
+-- 
+With Best Regards,
+Andy Shevchenko
