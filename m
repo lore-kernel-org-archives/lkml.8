@@ -2,129 +2,145 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BE5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECA620829
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590082790;
-	bh=rZ7OTMNu5T3UCgib1e3eEgYYpyAWOaCd5OohlJnEMDo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=VQS5ntcq91P89KkC1BmIrqfL45ez6msAPvDb+BYppqTpCbRaQ4M9iZdQxuwIuyIyh
-	 4F949cITeJmkbmEW/sr5PWNKR24Z0fWROclyic4K+cnenj3uGlng4KQZ19cvl0xuDZ
-	 nRvZP6Pgvft5JuUmzKSX/a1hGKBFJeVikI3raIRo=
+	by mail.kernel.org (Postfix) with ESMTP id 727FD20826
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 17:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KXrFiR/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgEURjt (ORCPT
+        id S1728917AbgEURlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 13:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgEURjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 13:39:49 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7A27207F7;
-        Thu, 21 May 2020 17:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590082788;
-        bh=rZ7OTMNu5T3UCgib1e3eEgYYpyAWOaCd5OohlJnEMDo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=oEgGuQeONzen71ym3SmfwHbStp6Iv/qiCn0Zlhowk7y9UaPuWTV7/MDErl+ZfoI92
-         hKW2W7RzfGMoHlfcHHFFWSidXGbZ61miQMpUe5ThBpYwJXb506hwMe4IX82saoP6tl
-         9OQNYX8y1p83Kx0VoFMpCjUZprB7ll8BGFkU8EQw=
-Date:   Thu, 21 May 2020 18:39:44 +0100
-From:   Will Deacon <will@kernel.org>
-To:     joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, kernel-team@android.com
-Subject: [GIT PULL] iommu/arm-smmu: Updates for 5.8
-Message-ID: <20200521173944.GM6608@willie-the-truck>
+        Thu, 21 May 2020 13:41:35 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42724 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgEURle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 13:41:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHbUjp196368;
+        Thu, 21 May 2020 17:41:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=gA43wCjQqcJxoz3k/kU6IZwsYpzQYq2m+PwRQ/B3VuI=;
+ b=KXrFiR/REHrzSvFv/SIXpsQFfN3guFg4aqUUlyaEwJhRMZIaeY41DOT6xi2xWZn1VgLH
+ DOUvuKNnw+mcyEfDfOLg8Bf+knoOCwah2Mh47Q/mAmskorEFJ6kS+2vysisdbD5TNWUW
+ MA0+YBpTVhUSTet98TijOcTX9S7qH7oj5XKjgFl3KDmcZIowc+7RNabKIIzXbDZR3H6T
+ JpVH3whqOTuGKzGCFLlrzwMfjuUq/q6oYMtVVPN9R1Iy8lEDIQ1K+iuBacIXG799P1ic
+ gKds2Z/KQwLMd4ajPFxq1AvbrJ0WExNDzVKZ6DR6MxrqVsPUi3MvXt7b8+SrCGrxcain WA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31501rgby4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 May 2020 17:41:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04LHdFtJ105995;
+        Thu, 21 May 2020 17:39:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 315022uevc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 May 2020 17:39:18 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04LHdBli014341;
+        Thu, 21 May 2020 17:39:11 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 May 2020 10:39:10 -0700
+Date:   Thu, 21 May 2020 20:39:02 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     dinghao.liu@zju.edu.cn, devel@driverdev.osuosl.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>, Kangjie Lu <kjlu@umn.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
+ on error
+Message-ID: <20200521173901.GA22310@kadam>
+References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
+ <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
+ <20200520150230.GC30374@kadam>
+ <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
+ <20200521091505.GF30374@kadam>
+ <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 suspectscore=18 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005210127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1011 priorityscore=1501 cotscore=-2147483648
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 suspectscore=18 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005210127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+On Thu, May 21, 2020 at 05:22:05PM +0200, Rafael J. Wysocki wrote:
+> On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
+> > > Hi, Dan,
+> > >
+> > > I agree the best solution is to fix __pm_runtime_resume(). But there are also
+> > > many cases that assume pm_runtime_get_sync() will change PM usage
+> > > counter on error. According to my static analysis results, the number of these
+> > > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
+> > > more new bugs. Therefore I think we should resolve the "bug" cases individually.
+> > >
+> >
+> > That's why I was saying that we may need to introduce a new replacement
+> > function for pm_runtime_get_sync() that works as expected.
+> >
+> > There is no reason why we have to live with the old behavior.
+> 
+> What exactly do you mean by "the old behavior"?
 
-Please pull these Arm SMMU updates for 5.8. The branch is based on your
-'core' branch from a little while ago.
+I'm suggesting we leave pm_runtime_get_sync() alone but we add a new
+function which called pm_runtime_get_sync_resume() which does something
+like this:
 
-Summary in the tag.
+static inline int pm_runtime_get_sync_resume(struct device *dev)
+{
+	int ret;
 
-Cheers,
+	ret = __pm_runtime_resume(dev, RPM_GET_PUT);
+	if (ret < 0) {
+		pm_runtime_put(dev);
+		return ret;
+	}
+	return 0;
+}
 
-Will
+I'm not sure if pm_runtime_put() is the correct thing to do?  The other
+thing is that this always returns zero on success.  I don't know that
+drivers ever care to differentiate between one and zero returns.
 
---->8
+Then if any of the caller expect that behavior we update them to use the
+new function.
 
-The following changes since commit 1b032ec1ecbce6047af7d11c9db432e237cb17d8:
+regards,
+dan carpenter
 
-  iommu: Unexport iommu_group_get_for_dev() (2020-05-05 14:36:14 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git tags/arm-smmu-updates
-
-for you to fetch changes up to 0299a1a81ca056e79c1a7fb751f936ec0d5c7afe:
-
-  iommu/arm-smmu-v3: Manage ASIDs with xarray (2020-05-21 14:54:06 +0100)
-
-----------------------------------------------------------------
-Arm SMMU updates for 5.8
-
-- Avoid mapping reserved MMIO space on SMMUv3, so that it can be claimed
-  by the PMU driver
-
-- Use xarray to manage ASIDs on SMMUv3
-
-- Reword confusing shutdown message
-
-- DT compatible string updates
-
-- Allow implementations to override the default domain type
-
-----------------------------------------------------------------
-Andre Przywara (1):
-      dt-bindings: arm-smmu: Allow mmu-400, smmu-v1 compatible
-
-Chen Zhou (1):
-      iommu/arm-smmu-v3: remove set but not used variable 'smmu'
-
-Jean-Philippe Brucker (2):
-      iommu/arm-smmu-v3: Don't reserve implementation defined register space
-      iommu/arm-smmu-v3: Manage ASIDs with xarray
-
-Jordan Crouse (1):
-      iommu/arm-smmu: Allow client devices to select direct mapping
-
-Sai Prakash Ranjan (3):
-      iommu/arm-smmu: Make remove callback message more informative
-      iommu: arm-smmu-impl: Convert to a generic reset implementation
-      iommu/arm-smmu: Implement iommu_ops->def_domain_type call-back
-
-Sibi Sankar (3):
-      dt-bindings: remoteproc: qcom: Add iommus property
-      arm64: dts: qcom: sdm845-cheza: Add iommus property
-      iommu/arm-smmu-qcom: Request direct mapping for modem device
-
- .../devicetree/bindings/iommu/arm,smmu.yaml        |  4 +-
- .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |  3 +
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi         |  5 ++
- drivers/iommu/arm-smmu-impl.c                      |  8 ++-
- drivers/iommu/arm-smmu-qcom.c                      | 37 ++++++++++++-
- drivers/iommu/arm-smmu-v3.c                        | 64 +++++++++++++++++-----
- drivers/iommu/arm-smmu.c                           | 14 ++++-
- drivers/iommu/arm-smmu.h                           |  1 +
- 8 files changed, 113 insertions(+), 23 deletions(-)
