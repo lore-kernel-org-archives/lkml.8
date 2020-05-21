@@ -2,103 +2,253 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402AEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2553520756
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F413E20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 02:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590029267;
-	bh=b2qaZhDWuub/DIfryS6o+tqYInvj/LtFKeW0hqa6Us0=;
+	s=default; t=1590029346;
+	bh=dwyiAB13D5H/yiKYFw2iYws4/6u+EkgDQ4bGHnDwGfE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1aqKpkMJL2n6e0Rx0Q+sHoaGTkemLnEDbSOjE9Xz9MY2sDNWwTGlVVtNItbQ9/zxJ
-	 Z+iH98Z5LB1e59taoMTx3C9CIFJ2P9T906jFfj63z9DuZkqQ3xlff140WKlwl8kcux
-	 6DqDmzgKusdJ32vtQp/LNNSnnqW3GMxTsJRjyxkA=
+	b=spHhLbOUUMfKiqbIGrvqpj9pHa0+AodetPTZG6BbYLPWh8/4c8rphartCxCjdvIIm
+	 ltUrZup1f6mXirgAa3J/WILj7zv1Zh9BdNbZXWUtEDsUCtNezOs5rIWXAKkNUbf2Pm
+	 nBR3BIZfrue2TL4jL0Lgz+2xz955a2z7jEBtZtxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgEUCrq (ORCPT
+        id S1727987AbgEUCtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 22:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726979AbgEUCrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 22:47:45 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 414332075F;
-        Thu, 21 May 2020 02:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590029265;
-        bh=b2qaZhDWuub/DIfryS6o+tqYInvj/LtFKeW0hqa6Us0=;
+        Wed, 20 May 2020 22:49:05 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:65504 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgEUCtE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 22:49:04 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 04L2maKe001769;
+        Thu, 21 May 2020 11:48:37 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 04L2maKe001769
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590029317;
+        bh=+1pPHahrtwrCs5XxeEk28u3oetsrJ5xJvorudmks/Ak=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=olWdtJBIIbbZ+a3PAOmII6jLxrcAVNYAqT4qBVnjpX2wJR7tPO+dfN1Zl7eBp2hXC
-         C2eQGeqVYeAJjaG37xSIICswMnMb6sh5/n4QUpOqcqWpJ1l3GXjujEcrC5fxz2IaXV
-         FtA6Y5q/9Mzp8ap3aQLmqRbKxAJNv6jUeuqFKfbI=
-Received: by mail-lj1-f173.google.com with SMTP id u15so6424594ljd.3;
-        Wed, 20 May 2020 19:47:45 -0700 (PDT)
-X-Gm-Message-State: AOAM533kt4Ls31BPlLIC/zqfDtIXhEP662IwjC89DGdN5Bdyh2usBSCc
-        rs9cRllrootC5mWgHbfBxfLyJhI6CpKxCfu2hw8=
-X-Google-Smtp-Source: ABdhPJyitI3a36aCNhRUeiD9xechDH7k8WloQw5lqEfZWuYuKPKujdCilgmgiBQMULx9GqqFzWMsE3oUrk/f4ibKaQM=
-X-Received: by 2002:a2e:b609:: with SMTP id r9mr4082138ljn.125.1590029263392;
- Wed, 20 May 2020 19:47:43 -0700 (PDT)
+        b=S+RecnEutDPf3inL8J6th1DrhYnid6Cx5bnXEDEz3x72TL5LwBw2mdS0o/xI03Sna
+         X4tXm95DvdhDY+B153CE8QmimLGX/CTz40dDRiULLQh7dkXQh2jNdj8PpWO3b8ZK1h
+         uUeJcy12XWIQyWqbEJWRkgqEKDL1TNQ9omP5vAbeQbAhwMq2r/5IYohkVjXF9rj4O/
+         BofMLQhsgvM/FvybTw6k7IfNCm904B1HPw/PKaaje7v3svZDANrlRi3vjtZj7XC7bw
+         dkQqj85VP2EsdDjjp8mctdRIUdDUf8o1jWa1tN60oPZ/dJZzvEW8bPMS2oExOyRmZX
+         uN25S7ZkwCl+A==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id k3so2067288ual.8;
+        Wed, 20 May 2020 19:48:36 -0700 (PDT)
+X-Gm-Message-State: AOAM532s8DYirhKlF6+HcBYBYcdSgm5SgsbpsfuIcd/knmwUhk8Of477
+        ZqYExvaAairHgl7t6++oIt4lKZ8T+KeKXNwQd7Y=
+X-Google-Smtp-Source: ABdhPJwWsv11TCsudV79Gv+p//ZclSKqNmbbJYf1sZ0usGUtYQVNNqs2nP8VT9NEOehuGTboP9sS3KN47mmXBw00Qe8=
+X-Received: by 2002:ab0:7298:: with SMTP id w24mr5868586uao.95.1590029315782;
+ Wed, 20 May 2020 19:48:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <lsq.1589984008.673931885@decadent.org.uk> <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
-In-Reply-To: <68f801f8-ceb2-13cf-ad29-b6404e2f1142@roeck-us.net>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Thu, 21 May 2020 10:47:33 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65AGb+4=+vRn2OdBx=fYXmZLFqASsyh-xh=ruCgbg92ng@mail.gmail.com>
-Message-ID: <CAGb2v65AGb+4=+vRn2OdBx=fYXmZLFqASsyh-xh=ruCgbg92ng@mail.gmail.com>
-Subject: Re: [PATCH 3.16 00/99] 3.16.84-rc1 review
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, torvalds@linux-foundation.org,
+References: <10f4fb0b-1012-b0e6-af05-0aa5a906de21@redhat.com> <20200520193637.6015-1-ndesaulniers@google.com>
+In-Reply-To: <20200520193637.6015-1-ndesaulniers@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 21 May 2020 11:47:59 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS_PMz9r3e1UcuM+r18JC2KeM2RqGOms1u3kVzN_N1MmA@mail.gmail.com>
+Message-ID: <CAK7LNAS_PMz9r3e1UcuM+r18JC2KeM2RqGOms1u3kVzN_N1MmA@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile: support compressed debug info
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Nick Clifton <nickc@redhat.com>,
+        David Blaikie <blakie@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        Guenter Roeck <linux@roeck-us.net>
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 5:23 AM Guenter Roeck <linux@roeck-us.net> wrote:
+On Thu, May 21, 2020 at 4:36 AM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
 >
-> On 5/20/20 7:13 AM, Ben Hutchings wrote:
-> > This is the start of the stable review cycle for the 3.16.84 release.
-> > There are 99 patches in this series, which will be posted as responses
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri May 22 20:00:00 UTC 2020.
-> > Anything received after that time might be too late.
-> >
-> Build results:
->         total: 135 pass: 135 fail: 0
-> Qemu test results:
->         total: 230 pass: 227 fail: 3
-> Failed tests:
->         arm:cubieboard:multi_v7_defconfig:mem512:sun4i-a10-cubieboard:initrd
->         arm:cubieboard:multi_v7_defconfig:usb:mem512:sun4i-a10-cubieboard:rootfs
->         arm:cubieboard:multi_v7_defconfig:sata:mem512:sun4i-a10-cubieboard:rootfs
+> As debug information gets larger and larger, it helps significantly save
+> the size of vmlinux images to compress the information in the debug
+> information sections. Note: this debug info is typically split off from
+> the final compressed kernel image, which is why vmlinux is what's used
+> in conjunction with GDB. Minimizing the debug info size should have no
+> impact on boot times, or final compressed kernel image size.
 >
-> The arm tests fail due to a compile error.
+> All of the debug sections will have a `C` flag set.
+> $ readelf -S <object file>
 >
-> drivers/clk/tegra/clk-tegra-periph.c:524:65: error: 'CLK_IS_CRITICAL' undeclared here (not in a function); did you mean 'CLK_IS_BASIC'?
+> $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
+>     vmlinux.gcc75.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +18  [ = ]       0    [Unmapped]
+>  -73.3%  -114Ki  [ = ]       0    .debug_aranges
+>  -76.2% -2.01Mi  [ = ]       0    .debug_frame
+>  -73.6% -2.89Mi  [ = ]       0    .debug_str
+>  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
+>  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
+>  -70.5% -9.04Mi  [ = ]       0    .debug_line
+>  -79.3% -10.9Mi  [ = ]       0    .debug_loc
+>  -39.5% -88.6Mi  [ = ]       0    .debug_info
+>  -18.2%  -123Mi  [ = ]       0    TOTAL
+>
+> $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
+>     vmlinux.clang11.uncompressed.dwarf4
+>
+>     FILE SIZE        VM SIZE
+>  --------------  --------------
+>   +0.0%     +23  [ = ]       0    [Unmapped]
+>  -65.6%    -871  [ = ]       0    .debug_aranges
+>  -77.4% -1.84Mi  [ = ]       0    .debug_frame
+>  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
+>  -73.1% -2.43Mi  [ = ]       0    .debug_str
+>  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
+>  -65.9% -8.62Mi  [ = ]       0    .debug_line
+>  -86.2% -40.0Mi  [ = ]       0    .debug_loc
+>  -42.0% -64.1Mi  [ = ]       0    .debug_info
+>  -22.1%  -122Mi  [ = ]       0    TOTAL
+>
+> For x86_64 defconfig + LLVM=1 (before):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:22.03
+> Maximum resident set size (kbytes): 43856
+>
+> For x86_64 defconfig + LLVM=1 (after):
+> Elapsed (wall clock) time (h:mm:ss or m:ss): 3:32.52
+> Maximum resident set size (kbytes): 1566776
+>
+> Suggested-by: David Blaikie <blakie@google.com>
+> Suggested-by: Fangrui Song <maskray@google.com>
 
-This looks like a result of having
 
-      clk: tegra: Mark fuse clock as critical
-         [bf83b96f87ae2abb1e535306ea53608e8de5dfbb]
+Suggested-by -> Reviewed-by
 
-In which case you probably need to add
-
-    32b9b1096186 clk: Allow clocks to be marked as CRITICAL
-
-to the pile.
+https://patchwork.kernel.org/patch/11524939/#23349551
 
 
-ChenYu
+
+> Suggested-by: Nick Clifton <nickc@redhat.com>
+
+
+I do not know where this tag came from.
+
+Nick Clifton taught us the version rule of binutils,but did not state
+anything about this patch itself.
+
+https://patchwork.kernel.org/patch/11524939/#23355175
+
+
+> Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+
+I do not see the source of this tag, either...
+
+
+
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+
+ snip
+
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -225,6 +225,21 @@ config DEBUG_INFO_REDUCED
+>           DEBUG_INFO build and compile times are reduced too.
+>           Only works with newer gcc versions.
+>
+> +config DEBUG_INFO_COMPRESSED
+> +       bool "Compressed debugging information"
+> +       depends on DEBUG_INFO
+> +       depends on $(cc-option,-gz=zlib)
+> +       depends on $(as-option,-Wa,--compress-debug-sections=zlib)
+
+This does not work. (always false)
+You cannot enable this option.
+
+The comma between -Wa and --compress-debug-sections=zlib
+is eaten by Kconfig parser because commas are delimiters
+of function parameters.
+
+
+Please write like this.
+
+    depends on $(as-option,-Wa$(comma)--compress-debug-sections=zlib)
+
+
+
+
+
+> +       depends on $(ld-option,--compress-debug-sections=zlib)
+> +       help
+> +         Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
+> +         5.0+, binutils 2.26+, and zlib.
+> +
+> +         Users of dpkg-deb via scripts/package/builddeb may
+> +         wish to set the $KDEB_COMPRESS env var to "none" to avoid recompressing
+> +         the debug info again with a different compression scheme, which can
+> +         result in larger binaries.
+
+No. This is not correct.
+
+CONFIG_DEBUG_INFO_COMPRESSED compresses the only debug info part.
+The other parts still get by benefit from the default KDEB_COMPRESS=xz.
+
+
+The numbers are here:
+
+
+CONFIG_DEBUG_INFO_COMPRESSED=y
+-rw-r--r-- 1 masahiro masahiro 209077584 May 21 11:19
+linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-26_amd64.deb
+
+
+CONFIG_DEBUG_INFO_COMPRESSED=y and KDEB_COMPRESS=none
+-rw-r--r-- 1 masahiro masahiro 643051712 May 21 11:22
+linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-27_amd64.deb
+
+
+CONFIG_DEBUG_INFO_COMPRESSED=n
+-rw-r--r-- 1 masahiro masahiro 112200308 May 21 11:40
+linux-image-5.7.0-rc5+-dbg_5.7.0-rc5+-30_amd64.deb
+
+
+
+
+For the deb package size perspective,
+it is better to keep KDEB_COMPRESS as default.
+
+The main motivation for changing KDEB_COMPRESS
+is the build speed.  (see commit 1a7f0a34ea7d05)
+
+
+
+
+CONFIG_DEBUG_INFO_COMPRESSED has a downside
+for the debug deb package, but we need to accept it.
+
+
+
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
