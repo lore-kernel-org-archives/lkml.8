@@ -2,136 +2,107 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F752072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9925920849
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0+hqrHw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPscTpCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbgEUPIW (ORCPT
+        id S1729838AbgEUPJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:08:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32772 "EHLO
+        Thu, 21 May 2020 11:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgEUPIV (ORCPT
+        with ESMTP id S1729633AbgEUPJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:08:21 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FEC5C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:08:21 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id c24so5709269qtw.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:08:21 -0700 (PDT)
+        Thu, 21 May 2020 11:09:10 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815E1C061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:09:10 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id i15so6951023wrx.10
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=LTvEEGeS3AeJSpq4ZVHIXuVyD9+KGHohS7s/D0phJak=;
-        b=W0+hqrHwbUhpCwGT7ted1RVsLGtTjL0p0TEkD3LwLl9GRA2IdpqAWpISKTp4KrWR3G
-         qSqgSG/IpmziIG6tYqE6Cb+i8Nrnhpk5bdKafdHXulONG7HV2EH/ErDqQVc9iHGAzHKv
-         GDEu4sE6lpSfvwwpseoIHMT/oQqN26+4MeDlDSL/ZtkHeXVPCeA0nTGw1tc6ZrwH+WVO
-         LXbksT7gqyfOS7p41+6N9FRDPhuKjzZYqiwnk9VJSzo1meA/2IEPFHPai/Y5SHf1TlFs
-         81zOrny5IBupdmdr8qdu8LxMK0fxQ9HUlICIeNy9iQR8kjZcTuLQX85d1JxJK30c4wAE
-         jiSA==
+        bh=Vwv9YjY9guLjv65YlrZItemJRbw+X/+RvIECQVKRC5I=;
+        b=LPscTpCp2Rda7uIQnN2/xW5SngvxOgSeMI2dHNHzpb86O0isdpj1bGAiEFAj/0a4Di
+         u6euyum93hM9ZN2iGxzaJ56fbo8am92vqPCsUJR5fax/87OeRiA73l247Om6l1IZJrwS
+         ow4tCqDUm2/+hxQElKMw55dk2SYUvHSM++EMn10qjtnEP7HOQzIKOwXzrKtXmb8tMbbw
+         Wf/xeXg5cdl8zTWGmQrnUlvHxC5h44py6Tf4d6l7s4y4lV4fIEAcrrMKtPh0WriEOLv0
+         mhW1OuWMlXxq+svHtaPIOKyx+LpaUcYAZlWkEJ7/s9pJosdzG6KujRA++BvDrwms/Efz
+         46nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=LTvEEGeS3AeJSpq4ZVHIXuVyD9+KGHohS7s/D0phJak=;
-        b=i36kWdh2LD8jWlVYsSSW8aA1u2cjqAWvD8dL7trhaBek7ovz7E68xbRZTA6FIBvBt8
-         u4uwRDQ7gNALU21heBmRuYpjiS4vPqtniZFBdCyaAdklY2uhq8EeR/7AL5P+uX8OP2qg
-         +umcQ19VGujthvRJhNV1idVVOxxwwJ2gAT6tF7FMa2m8SHt7K70sltVfF6CZg96f/x0t
-         0+05IumcV0y5o0w0DTXKLsJr70n3ssK55WSZ2RmznUwXidqqywpW3LAPO/LDUVR4q3Zt
-         1UC9o9me1ox+eUwLH6aIbitXG9FMf2r2i0JGjI28vjAVXNZBdY2ux3O9u/ANo4auHGlX
-         OVVA==
-X-Gm-Message-State: AOAM533o4/rl9v+ALiszmEwKjZD/oNDA9r93hJ3XADF024DlXVSH3bPC
-        Cnq/oWFqnZ4VgxxFpKWlteQ=
-X-Google-Smtp-Source: ABdhPJwxFUfB/1USs4ZGm76wB/m1C0p9RspnffXzZWb+DsqOmJMJPE37vhy4QHPbN/ZavH4BzAhwsQ==
-X-Received: by 2002:ac8:4e06:: with SMTP id c6mr11191079qtw.360.1590073700207;
-        Thu, 21 May 2020 08:08:20 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o2sm5606013qtj.70.2020.05.21.08.08.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Vwv9YjY9guLjv65YlrZItemJRbw+X/+RvIECQVKRC5I=;
+        b=LvofdRwz/MyjDZBYyoy7IXqJ5I51scFJAJBszSl/TCOCJiEo6DgOtbUo0+9Lkc2Utd
+         5W2SfMX0LwRb563ay4qSrrlKEPiejYklqxYwLGBuvNqEmuQL1hZrPZeJ34ayjmOB57nQ
+         vDY8dHaHiXkV6dWduWNyQHMtHne2fnYzyQlduA5HS2nslaYdjuClN4tc0JNlcfXnEMbV
+         XQtyJsOenW1/eRIPRrHa0dob2oyssCHPJdI0DTMROIv0fd6Wa9636BA8TtycDDLqsJg9
+         rjA6zzebBQkDCJSuf3+03MFt9uJpM3oGh5mIFcG3TM1L2mOswXFA1eQBI+h3suoaChH2
+         A1xg==
+X-Gm-Message-State: AOAM532tkBjVvaJSEnSTJ9J1kJqeIscQsOQ3WEAbF/DsxEbItFPvZ9Pa
+        HXOKb8SRwNA2Tw5U1UnH3L7m8Q==
+X-Google-Smtp-Source: ABdhPJzXRn5kvssS7EyvqkEiE2aDDSrDc7EPJsA/kEJ5Mk1y+PyoY2cjR62eT8qVoizMUjT4dQWdjQ==
+X-Received: by 2002:adf:8b47:: with SMTP id v7mr5777961wra.238.1590073749170;
+        Thu, 21 May 2020 08:09:09 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id x22sm6601980wmi.32.2020.05.21.08.09.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 08:08:19 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 21 May 2020 11:08:17 -0400
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Chenggang Wang <wangchenggang@vivo.com>,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC PATCH 2/2] init: Allow multi-line output of kernel command
- line
-Message-ID: <20200521150817.GA502432@rani.riverdale.lan>
-References: <cover.1589916689.git.joe@perches.com>
- <2b3832fed9370f0f8dfd1ea33dddb1d05a36e265.1589916689.git.joe@perches.com>
- <20200520044127.GB938@jagdpanzerIV.localdomain>
- <ae3aff79301c130aa15b3fe0ff801804bb019384.camel@perches.com>
- <20200520121000.GF520@jagdpanzerIV.localdomain>
- <19a8c717f8d9dc76f2b09e6dd19f3fbb71bf29c5.camel@perches.com>
- <20200520180028.8fc1b7890774c6f92a6c2623@linux-foundation.org>
- <20200521043628.GB755@jagdpanzerIV.localdomain>
- <20200520214007.86f36f61e1fc0329b66758ed@linux-foundation.org>
- <20200521123117.GD8397@linux-b0ei>
+        Thu, 21 May 2020 08:09:08 -0700 (PDT)
+Date:   Thu, 21 May 2020 16:09:06 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: linux-next: Tree for May 21
+Message-ID: <20200521150906.u2obtw5qcybkjjxz@holly.lan>
+References: <20200522001209.07c19400@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521123117.GD8397@linux-b0ei>
+In-Reply-To: <20200522001209.07c19400@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:31:17PM +0200, Petr Mladek wrote:
-> On Wed 2020-05-20 21:40:07, Andrew Morton wrote:
-> > On Thu, 21 May 2020 13:36:28 +0900 Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
-> > 
-> > > On (20/05/20 18:00), Andrew Morton wrote:
-> > > [..]
-> > > > I'm wondering if we shold add a kernel puts() (putsk()?  yuk) which can
-> > > > puts() a string of any length.
-> > > > 
-> > > > I'm counting around 150 instances of printk("%s", ...) and pr_foo("%s",
-> > > > ...) which could perhaps be converted, thus saving an argument.
-> > > 
-> > > Can you point me at some examples?
-> > > 
-> > 
-> > ./arch/powerpc/kernel/udbg.c:           printk("%s", s);
-> > ./arch/powerpc/xmon/nonstdio.c:         printk("%s", xmon_outbuf);
-> > ./arch/um/os-Linux/drivers/ethertap_user.c:             printk("%s", output);
-> > ./arch/um/os-Linux/drivers/ethertap_user.c:             printk("%s", output);
-> > ./arch/um/os-Linux/drivers/tuntap_user.c:                       printk("%s", out
-> > 
-> > etc.
-> > 
-> > My point is, if we created a length-unlimited puts() function for printing the
-> > kernel command line, it could be reused in such places, resulting in a
-> > smaller kernel.
+On Fri, May 22, 2020 at 12:12:09AM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Interesting idea. Well, such a generic function would need to be safe
-> and do not modify the original string. We would need to implement
-> printk() variant that would support strigs limited by size instead
-> of the trailing '\0'. I am not sure if it is worth it.
+> Changes since 20200519:
 > 
-> Best Regards,
-> Petr
+> My fixes tree contains:
+> 
+>   cd2b06ec45d6 ("device_cgroup: Fix RCU list debugging warning")
+> 
+> The f2fs tree gained a conflict against the fscrypt tree.
+> 
+> The drm-msm tree still had its build failure so I applied a patch.
+> 
+> The kvm tree gained a semantic conflict against the tip tree.
+> 
+> The usb-gadget tree gained a conflict against the usb tree.
+> 
+> The userns tree gained a build failure so I used ther version from
+> next-20200519.
+> 
+> The kgdb tree still had its build failure so I used the version from
+> next-20200518.
 
-You don't need a printk variant for strings -- you'd only need one if
-you wanted formatted output of unlimited length. Using printk("%.*s",
-chunk_size, str) should print at most chunk_size characters from str.
-The puts could then just be a loop around that.
+Doh... I have updated my pre-push tests, merged the fix and tested.
+Unfortunately I then pushed the results to the wrong git server :-(.
 
-Something like:
+Thanks, and should be all set for tomorrow.
 
-do {
-	printed = printk("%.*s", chunk_size, str);
-	str += printed;
-} while (printed >= chunk_size);
+
+Daniel.
