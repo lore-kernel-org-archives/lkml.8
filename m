@@ -2,106 +2,195 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82601C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7D4B2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:40:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqbpbKXn"
+	by mail.kernel.org (Postfix) with ESMTP id 556AC20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:41:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590064878;
+	bh=igxjKFnhcuPmlFKYMli0yfykVd0eALHpcuoJKGGL0xg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aSgLoIq8NTVor5z5WPiXAzuITFsdshzRBWQWqvyCm6rrh15Mvu3Ih3mAEfLttF5Jw
+	 oS6T8M5fEM+fT/LlGKVq/nDdPoBRoaq0EF5mnDg9V3kjsfiN5CtasHMCmKViE4YQLC
+	 Q/cJ1tKC+eTFBCjm8oskmKlsrhrKzKvuigHPFDJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbgEUMkg (ORCPT
+        id S1729312AbgEUMlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728164AbgEUMkg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:40:36 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A46C061A0E;
-        Thu, 21 May 2020 05:40:34 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id z6so8023268ljm.13;
-        Thu, 21 May 2020 05:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Bz9kW9o/9YtdCQhvvB7QDx10N00o+JmEwpJejIQIQC4=;
-        b=sqbpbKXnnY6uMSFqSGEn3a6CxICrJyZqvk65oaAGSlYLP6esz/UkVdoJ2LsTojVQ/z
-         F3mY0HIvY/wzm+zDbYRIfXdktMFD9zXqXQXT4JfkeXUxe3W0Cs443CEmdR1MlnqbiLvz
-         sCwSMTuRvktY2ATbNsLmp0qgnnL71T6aWbCznAKMUaGT0ZuIp9j0NNQA7eoXEo/wH/Bp
-         WSq5daGmq8lRF07dPqfeOG8+ZRrgeVeHa1gmMJ3R0PNOMS2YbBpR/lIg9XaVJD2571uY
-         q7yLIPA6cKu6yujpOcFxI231bGWMTIxV2feb1uuBQheKSt43UleIlU2grjUVGqCzfa1I
-         RUog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bz9kW9o/9YtdCQhvvB7QDx10N00o+JmEwpJejIQIQC4=;
-        b=nE1Ewlq/01ZOcvuf5vAGXTKCVzbEMdeRcparP8hYg1axXQ3Y2/FHRKekIan+/aAlPT
-         eP7TUeGMPDyL0Qwz0IfmjdUqgx30Yr0MHIga+A+KnOOO5G/WUHyEX78DFhwL2mQKjTtM
-         nMMG7p39UPqjl6R6LNCt681D3LZc16tLX5tnNsJgVSSfeRDNUWmATDPH7KvcjPo9LcuW
-         03MQk8gxNu/7Gqq6vjL1acd2sQ2v6dh+BPiYi8dupo8KA8oRQMY5X0nAU3R6NlmB132N
-         uFjseGKQmk5BiTyxW7mr/PqVdJ7gi0t6gF6Q/rsmEUpJGptXGAzedk/nKhMUK8/szdFP
-         72iA==
-X-Gm-Message-State: AOAM531OXszLU2W0YYy0HW1Jw7I/YHlkLZ/OZJ3tgG6jF/5iWyQsSt8F
-        snM4kTQD2e/rKDW2NUe9na0z1t2F
-X-Google-Smtp-Source: ABdhPJzNyDE6H412DCiAfBDPeBmNqbKsp22MrTsH+gzNfvHqt6hOaJDPP4B9eJy5cVKcOiRlz5Skqg==
-X-Received: by 2002:a2e:9743:: with SMTP id f3mr5151896ljj.205.1590064833179;
-        Thu, 21 May 2020 05:40:33 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id x8sm1700413ljh.97.2020.05.21.05.40.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 05:40:32 -0700 (PDT)
-Subject: Re: [PATCH] sdhci: tegra: Avoid reading autocal timeout values when
- not applicable
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-References: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <45c290f9-e276-53be-a7a6-23bf81f50bc3@gmail.com>
-Date:   Thu, 21 May 2020 15:40:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 08:41:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728164AbgEUMlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:41:17 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12EAA2070A;
+        Thu, 21 May 2020 12:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590064876;
+        bh=igxjKFnhcuPmlFKYMli0yfykVd0eALHpcuoJKGGL0xg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dTw9ChoUj1HRmO17CmilmiPewiK4u2GM1zvZ5VH2Ttspv8+c75/gOAQ+BwEs+zH0v
+         KGAwtvW5j3uPGp+f3zObwtDktr9w3RBkW8K/HeVpEyiW6dTi7MEq6u/M+uDWuj4yQ3
+         aKUdBlgX2q61gCSMhHLXgRjQlawM73EgnAMR0gQ8=
+Date:   Thu, 21 May 2020 14:41:14 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, "Paul E. McKenney" <paulmck@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: Endless soft-lockups for compiling workload since next-20200519
+Message-ID: <20200521124113.GC15455@lenoir>
+References: <CAG=TAF6jUsQrW-fjbS3vpjkMfn8=MUDsuQxjk3NMfvQa250RHA@mail.gmail.com>
+ <20200520125056.GC325280@hirez.programming.kicks-ass.net>
+ <20200521004035.GA15455@lenoir>
+ <20200521093938.GG325280@hirez.programming.kicks-ass.net>
+ <20200521104937.GB325303@hirez.programming.kicks-ass.net>
+ <20200521110027.GC325303@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521110027.GC325303@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-20.05.2020 23:08, Sowjanya Komatineni пишет:
-> When auto calibration timeouts, calibration is disabled and fail-safe
-> drive strength values are programmed based on the signal voltage.
+On Thu, May 21, 2020 at 01:00:27PM +0200, Peter Zijlstra wrote:
+> On Thu, May 21, 2020 at 12:49:37PM +0200, Peter Zijlstra wrote:
+> > On Thu, May 21, 2020 at 11:39:39AM +0200, Peter Zijlstra wrote:
+> > > On Thu, May 21, 2020 at 02:40:36AM +0200, Frederic Weisbecker wrote:
+> > 
+> > > This:
+> > > 
+> > > >         smp_call_function_single_async() {             smp_call_function_single_async() {
+> > > >             // verified csd->flags != CSD_LOCK             // verified csd->flags != CSD_LOCK
+> > > >             csd->flags = CSD_LOCK                          csd->flags = CSD_LOCK
+> > > 
+> > > concurrent smp_call_function_single_async() using the same csd is what
+> > > I'm looking at as well.
+> > 
+> > So something like this ought to cure the fundamental problem and make
+> > smp_call_function_single_async() more user friendly, but also more
+> > expensive.
+> > 
+> > The problem is that while the ILB case is easy to fix, I can't seem to
+> > find an equally nice solution for the ttwu_remote_queue() case; that
+> > would basically require sticking the wake_csd in task_struct, I'll also
+> > post that.
+> > 
+> > So it's either this:
 > 
-> Different fail-safe drive strength values based on voltage are
-> applicable only for SoCs supporting 3V3 and 1V8 pad controls.
+> Or this:
 > 
-> So, this patch avoids reading these properties from the device tree
-> for SoCs not using pad controls and the warning of missing properties
-> will not show up on these SoC platforms.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/mmc/host/sdhci-tegra.c | 57 ++++++++++++++++++++++++------------------
->  1 file changed, 33 insertions(+), 24 deletions(-)
+>  include/linux/sched.h | 4 ++++
+>  kernel/sched/core.c   | 7 ++++---
+>  kernel/sched/fair.c   | 2 +-
+>  kernel/sched/sched.h  | 1 -
+>  4 files changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index f38d62c4632c..136ee400b568 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -696,6 +696,10 @@ struct task_struct {
+>  	struct uclamp_se		uclamp[UCLAMP_CNT];
+>  #endif
+>  
+> +#ifdef CONFIG_SMP
+> +	call_single_data_t		wake_csd;
+> +#endif
+> +
+>  #ifdef CONFIG_PREEMPT_NOTIFIERS
+>  	/* List of struct preempt_notifier: */
+>  	struct hlist_head		preempt_notifiers;
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 5b286469e26e..a7129652e89b 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2320,7 +2320,7 @@ static void ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
+>  
+>  	if (llist_add(&p->wake_entry, &rq->wake_list)) {
+>  		if (!set_nr_if_polling(rq->idle))
+> -			smp_call_function_single_async(cpu, &rq->wake_csd);
+> +			smp_call_function_single_async(cpu, &p->wake_csd);
+>  		else
+>  			trace_sched_wake_idle_without_ipi(cpu);
+>  	}
+> @@ -2921,6 +2921,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
+>  #endif
+>  #if defined(CONFIG_SMP)
+>  	p->on_cpu = 0;
+> +	p->wake_csd = (struct __call_single_data) {
+> +		.func = wake_csd_func,
+> +	};
+>  #endif
+>  	init_task_preempt_count(p);
+>  #ifdef CONFIG_SMP
+> @@ -6723,8 +6726,6 @@ void __init sched_init(void)
+>  		rq->avg_idle = 2*sysctl_sched_migration_cost;
+>  		rq->max_idle_balance_cost = sysctl_sched_migration_cost;
+>  
+> -		rq_csd_init(rq, &rq->wake_csd, wake_csd_func);
+> -
+>  		INIT_LIST_HEAD(&rq->cfs_tasks);
+>  
+>  		rq_attach_root(rq, &def_root_domain);
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 01f94cf52783..b6d8a7b991f0 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10033,7 +10033,7 @@ static void kick_ilb(unsigned int flags)
+>  	 * is idle. And the softirq performing nohz idle load balance
+>  	 * will be run before returning from the IPI.
+>  	 */
+> -	smp_call_function_single_async(ilb_cpu, &cpu_rq(ilb_cpu)->nohz_csd);
+> +	smp_call_function_single_async(ilb_cpu, &this_rq()->nohz_csd);
 
-Hello Sowjanya,
+My fear here is that if a previous call from the the same CPU but to another
+target is still pending, the new one will be spuriously ignored.
 
-Thank you for the patch.
+Namely this could happen:
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+CPU 0                                      CPU 1
+-----                                      -----
+                                           local_irq_disable() or VMEXIT
+kick_ilb() {
+    smp_call_function_single_async(CPU 1,      
+                 &this_rq()->nohz_csd);
+}
+
+kick_ilb() {
+    smp_call_function_single_async(CPU 2,      
+                 &this_rq()->nohz_csd) {
+        // IPI to CPU 2 ignored
+        if (csd->flags == CSD_LOCK)
+            return -EBUSY;
+    }
+}
+
+                                            local_irq_enable();
+
+
+
+
+But I believe we can still keep the remote csd if nohz_flags() are
+strictly only set before the IPI and strictly only cleared from it.
+
+And I still don't understand why trigger_load_balance() raise the
+softirq without setting the current CPU as ilb. run_rebalance_domains()
+thus ignores it most of the time in the end or it spuriously clear the
+nohz_flags set by an IPI sender. Or there is something I misunderstood
+there.
+
+(Haven't checked the wake up case yet).
