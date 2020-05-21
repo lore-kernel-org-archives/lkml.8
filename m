@@ -2,222 +2,141 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F9FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78607C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880C120823
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5245320823
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 23:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590102363;
+	bh=P1jeoOmkuQys8O/5KShp1h4j+v/r/jvzvMQiBaCGXUA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=mqPQmaI/NIFH3KKPO0qH4ycnSeuitNeESSXbu2oHVke5drAbbP8Aku6B2DnbLwdcb
+	 9nUq/XykeZOVIL+q199hm9PpKCuW+gcOwFc71zexs4izx27/cDQMEFZI4GOf2XMHbG
+	 Hi9/+fwRRdEDItKb/U7jHiltg4yLw0rIc4AjGnks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbgEUXEJ (ORCPT
+        id S1730754AbgEUXGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 19:04:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:4802 "EHLO mga02.intel.com"
+        Thu, 21 May 2020 19:06:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730658AbgEUXEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 19:04:07 -0400
-IronPort-SDR: fLJ1j8dp4YQvTRSrI6qZf6s6UZtuEkNOjcQ67m+XZMaPDoi2WYUDdEFuuFefUDQS0nIs5Vgm0x
- GDeNoWsjDjqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 16:04:06 -0700
-IronPort-SDR: 0Ks7DztqBRsmQK36PCIIUEB8W/YCU6eK6LrhDnwP8YBf3/cIrhB74iTnnwdx2ZkfNIOoUTnmVO
- fV2pPLy6Gp9Q==
-X-IronPort-AV: E=Sophos;i="5.73,419,1583222400"; 
-   d="scan'208";a="300483150"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 16:04:05 -0700
-Subject: [PATCH v4 2/2] x86/copy_mc: Introduce copy_mc_generic()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com
-Cc:     x86@kernel.org, stable@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Date:   Thu, 21 May 2020 15:47:53 -0700
-Message-ID: <159010127377.975921.9608345973272408430.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159010126119.975921.6614194205409771984.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159010126119.975921.6614194205409771984.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S1730041AbgEUXGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 19:06:01 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAF88207F9;
+        Thu, 21 May 2020 23:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590102360;
+        bh=P1jeoOmkuQys8O/5KShp1h4j+v/r/jvzvMQiBaCGXUA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kjPULzZ9+vdGSNsCk+ICfxYRoVBIOI+MIGmNveAC203FdJXa8MM2KqRQwPrsB5WTP
+         Hd1WLCThXNMhcz0Aa7ps91f0RAECthDDyO7Q4bHQ9aOLc8gK8aYdifRf1Q3d939mHf
+         1VFgtiIQkJ85EL12T+jWB/tPAznRNsrvIn2eX2io=
+Date:   Thu, 21 May 2020 18:10:49 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] security: integrity: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200521231049.GA28765@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original copy_mc_fragile() implementation had negative performance
-implications since it did not use the fast-string instruction sequence
-to perform copies. For this reason copy_mc_to_kernel() fell back to
-plain memcpy() to preserve performance on platform that did not indicate
-the capability to recover from machine check exceptions. However, that
-capability detection was not architectural and now that some platforms
-can recover from fast-string consumption of memory errors the memcpy()
-fallback now causes these more capable platforms to fail.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Introduce copy_mc_generic() as the fast default implementation of
-copy_mc_to_kernel() and finalize the transition of copy_mc_fragile() to
-be a platform quirk to indicate 'fragility'. With this in place
-copy_mc_to_kernel() is fast and recovery-ready by default regardless of
-hardware capability.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Thanks to Vivek for identifying that copy_user_generic() is not suitable
-as the copy_mc_to_user() backend since the #MC handler explicitly checks
-ex_has_fault_handler().
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Cc: x86@kernel.org
-Cc: <stable@vger.kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Tested-by: Erwin Tsaur <erwin.tsaur@intel.com>
-Fixes: 92b0729c34ca ("x86/mm, x86/mce: Add memcpy_mcsafe()")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- arch/x86/include/asm/uaccess.h |    3 +++
- arch/x86/lib/copy_mc.c         |   12 +++++-------
- arch/x86/lib/copy_mc_64.S      |   40 ++++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.c          |    1 +
- 4 files changed, 49 insertions(+), 7 deletions(-)
+ security/integrity/ima/ima.h   | 2 +-
+ security/integrity/integrity.h | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 6e856e180096..05cf0acd65d1 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -464,6 +464,9 @@ copy_mc_to_user(void *to, const void *from, unsigned len);
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 02796473238b6..3ec963ff3bc19 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -100,7 +100,7 @@ struct ima_template_entry {
+ 	struct tpm_digest *digests;
+ 	struct ima_template_desc *template_desc; /* template descriptor */
+ 	u32 template_data_len;
+-	struct ima_field_data template_data[0];	/* template related data */
++	struct ima_field_data template_data[];	/* template related data */
+ };
  
- unsigned long __must_check
- copy_mc_fragile(void *dst, const void *src, unsigned cnt);
-+
-+unsigned long __must_check
-+copy_mc_generic(void *dst, const void *src, unsigned cnt);
- #else
- static inline void enable_copy_mc_fragile(void)
- {
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index cdb8f5dc403d..9e6fac1ab72e 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -23,7 +23,7 @@ void enable_copy_mc_fragile(void)
-  *
-  * Call into the 'fragile' version on systems that have trouble
-  * actually do machine check recovery. Everyone else can just
-- * use memcpy().
-+ * use copy_mc_generic().
-  *
-  * Return 0 for success, or number of bytes not copied if there was an
-  * exception.
-@@ -33,8 +33,7 @@ copy_mc_to_kernel(void *dst, const void *src, unsigned cnt)
- {
- 	if (static_branch_unlikely(&copy_mc_fragile_key))
- 		return copy_mc_fragile(dst, src, cnt);
--	memcpy(dst, src, cnt);
--	return 0;
-+	return copy_mc_generic(dst, src, cnt);
- }
- EXPORT_SYMBOL_GPL(copy_mc_to_kernel);
+ struct ima_queue_entry {
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index 298b73794d8b1..16c1894c29bb0 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -107,7 +107,7 @@ struct ima_digest_data {
+ 		} ng;
+ 		u8 data[2];
+ 	} xattr;
+-	u8 digest[0];
++	u8 digest[];
+ } __packed;
  
-@@ -56,11 +55,10 @@ copy_mc_to_user(void *to, const void *from, unsigned len)
- {
- 	unsigned long ret;
+ /*
+@@ -119,7 +119,7 @@ struct signature_v2_hdr {
+ 	uint8_t	hash_algo;	/* Digest algorithm [enum hash_algo] */
+ 	__be32 keyid;		/* IMA key identifier - not X509/PGP specific */
+ 	__be16 sig_size;	/* signature size */
+-	uint8_t sig[0];		/* signature payload */
++	uint8_t sig[];		/* signature payload */
+ } __packed;
  
--	if (!static_branch_unlikely(&copy_mc_fragile_key))
--		return copy_user_generic(to, from, len);
--
- 	__uaccess_begin();
--	ret = copy_mc_fragile(to, from, len);
-+	if (static_branch_unlikely(&copy_mc_fragile_key))
-+		ret = copy_mc_fragile(to, from, len);
-+	ret = copy_mc_generic(to, from, len);
- 	__uaccess_end();
- 	return ret;
- }
-diff --git a/arch/x86/lib/copy_mc_64.S b/arch/x86/lib/copy_mc_64.S
-index 35a67c50890b..a08e7a4d9e28 100644
---- a/arch/x86/lib/copy_mc_64.S
-+++ b/arch/x86/lib/copy_mc_64.S
-@@ -2,7 +2,9 @@
- /* Copyright(c) 2016-2020 Intel Corporation. All rights reserved. */
- 
- #include <linux/linkage.h>
-+#include <asm/alternative-asm.h>
- #include <asm/copy_mc_test.h>
-+#include <asm/cpufeatures.h>
- #include <asm/export.h>
- #include <asm/asm.h>
- 
-@@ -122,4 +124,42 @@ EXPORT_SYMBOL_GPL(copy_mc_fragile)
- 	_ASM_EXTABLE(.L_write_leading_bytes, .E_leading_bytes)
- 	_ASM_EXTABLE(.L_write_words, .E_write_words)
- 	_ASM_EXTABLE(.L_write_trailing_bytes, .E_trailing_bytes)
-+
-+/*
-+ * copy_mc_generic - memory copy with exception handling
-+ *
-+ * Fast string copy + fault / exception handling. If the CPU does
-+ * support machine check exception recovery, but does not support
-+ * recovering from fast-string exceptions then this CPU needs to be
-+ * added to the copy_mc_fragile_key set of quirks. Otherwise, absent any
-+ * machine check recovery support this version should be no slower than
-+ * standard memcpy.
-+ */
-+SYM_FUNC_START(copy_mc_generic)
-+	ALTERNATIVE "jmp copy_mc_fragile", "", X86_FEATURE_ERMS
-+	movq %rdi, %rax
-+	movq %rdx, %rcx
-+.L_copy:
-+	rep movsb
-+	/* Copy successful. Return zero */
-+	xorl %eax, %eax
-+	ret
-+SYM_FUNC_END(copy_mc_generic)
-+EXPORT_SYMBOL_GPL(copy_mc_generic)
-+
-+	.section .fixup, "ax"
-+.E_copy:
-+	/*
-+	 * On fault %rcx is updated such that the copy instruction could
-+	 * optionally be restarted at the fault position, i.e. it
-+	 * contains 'bytes remaining'. A non-zero return indicates error
-+	 * to copy_mc_generic() users, or indicate short transfers to
-+	 * user-copy routines.
-+	 */
-+	movq %rcx, %rax
-+	ret
-+
-+	.previous
-+
-+	_ASM_EXTABLE_FAULT(.L_copy, .E_copy)
- #endif
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index b62235004f0b..449a36101385 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -546,6 +546,7 @@ static const char *uaccess_safe_builtin[] = {
- 	"__ubsan_handle_shift_out_of_bounds",
- 	/* misc */
- 	"csum_partial_copy_generic",
-+	"copy_mc_generic",
- 	"copy_mc_fragile",
- 	"copy_mc_fragile_handle_tail",
- 	"ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+ /* integrity data associated with an inode */
+-- 
+2.26.2
 
