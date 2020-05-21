@@ -2,324 +2,174 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50DA52072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663FE2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 12:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ikelte.onmicrosoft.com header.i=@ikelte.onmicrosoft.com header.b="p7XlRD5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgEUMxN (ORCPT
+        id S1729427AbgEUMxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 08:53:13 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48742 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbgEUMxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 08:53:13 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 9F43B2A0807
-Subject: Re: [PATCH v3 2/4] media: v4l2-common: add helper functions to call
- s_stream() callbacks
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, hans.verkuil@cisco.com,
-        skhan@linuxfoundation.org, niklas.soderlund@ragnatech.se,
-        mchehab@kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-References: <20200415013044.1778572-1-helen.koike@collabora.com>
- <20200415013044.1778572-3-helen.koike@collabora.com>
- <31557623-2b8c-6cfe-19f7-7854ed51bc86@collabora.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <8223dc91-6299-8835-c397-74246bd8c54a@collabora.com>
-Date:   Thu, 21 May 2020 09:53:02 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 21 May 2020 08:53:24 -0400
+Received: from mail-vi1eur05on2061.outbound.protection.outlook.com ([40.107.21.61]:60377
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729296AbgEUMxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 08:53:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KBF+VgeQpVGLJEG1F3U494jKLy0TqqqS9fCtI+TXrPVWuV7HITgBv37fUeaApTqNt9lbe4dDwGfcD1mXh+3+rTAqQNq7l6ymQnrx7F9W1V1rwUoeBd4vIz2xLLWZvaleEgqYdrzkv/opSoLJKcPpX1Z9WGtt40/oHFx2x/RJxeS3uxyTJo7ISJ2Sft04jSOr0r6ZP3CT1yuI7sazxKhQkYBxrXLKqmE3DwXxgtXIcXDvbtMKFCgQx2gqvBPCmVC0SHekNCBaZCAw6DhRe2OZc8B0jUiBL5sg7+hlvBzh2MHopIuyTHHEudHim3yeDLcosEK9GIyE8KCK8Xl2FCQCIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GzR+SM5Lx9+yNAX25R/nIM0lqOdB2Anylgu2JLBDMQM=;
+ b=nWNAJ+smvHyDDv6L5ZxbMd+Z5MItjLSokk+qAFDTP2A6YH8YefrT5IbPxah2E8jvmWSAWFwG3se+9lW7QP6UIXHhRKz5Km2CoydnNTXVNQCMyG/dwhQhek9VQf/JsmYZ7p1/5xldO0hCb+s4575+xjIJTrIiOeEYGxftyzbwqPgKIgqZcUSj/UbAabgXCnMCoc7DsgYxtY0PillbqwZPfh3Cf1nUg3yRVL6WVO3OvCA3ttb1nvGkrcSl78MyKTRV6NHV2Xa0hlausNpd/RCAHFj7WDSyH2yRdfhzYnHJMI9VMgxoPfKCAnfOXFF+daYKlL0+MXRV4PeAecqmdT/YaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=inf.elte.hu; dmarc=pass action=none header.from=inf.elte.hu;
+ dkim=pass header.d=inf.elte.hu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=ikelte.onmicrosoft.com; s=selector2-ikelte-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GzR+SM5Lx9+yNAX25R/nIM0lqOdB2Anylgu2JLBDMQM=;
+ b=p7XlRD5c7AWIwyhfx1V2tWFUhhkPXck9RI3TZB5T9J0DaRcZIZtiQXzzRkBgZbduUvZaWpBT+dsjhkNa233fwPBtZH92eBqkjsjDmwAbnqY4Y9ZSPqZDHqRXOO46kfZCNo5kTRI49qM8G8G/deS2mEERoRqGAgxOlXbP7dTzoVs=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=inf.elte.hu;
+Received: from DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:ab::20)
+ by DB8PR10MB3911.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:16c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Thu, 21 May
+ 2020 12:53:18 +0000
+Received: from DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::285b:6f31:7d11:5c53]) by DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::285b:6f31:7d11:5c53%5]) with mapi id 15.20.3021.024; Thu, 21 May 2020
+ 12:53:18 +0000
+From:   Ferenc Fejes <fejes@inf.elte.hu>
+To:     netdev@vger.kernel.org
+Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ferenc Fejes <fejes@inf.elte.hu>
+Subject: [PATCH net-next] Extending bpf_setsockopt with SO_BINDTODEVICE sockopt
+Date:   Thu, 21 May 2020 14:52:47 +0200
+Message-Id: <20200521125247.30178-1-fejes@inf.elte.hu>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: VI1PR04CA0137.eurprd04.prod.outlook.com
+ (2603:10a6:803:f0::35) To DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:ab::20)
 MIME-Version: 1.0
-In-Reply-To: <31557623-2b8c-6cfe-19f7-7854ed51bc86@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (89.133.95.17) by VI1PR04CA0137.eurprd04.prod.outlook.com (2603:10a6:803:f0::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Thu, 21 May 2020 12:53:18 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [89.133.95.17]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3ae0342e-4328-4557-2c8b-08d7fd85ef77
+X-MS-TrafficTypeDiagnostic: DB8PR10MB3911:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR10MB39116B4F2C53E1E1E479E36CE1B70@DB8PR10MB3911.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-Forefront-PRVS: 041032FF37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: l/KLKiYUrmz1A+CZhNhgWJ6376qyEuq39uds+wW3tk6uJmFiBFTVNFU0eDZn3ILJCeWdr6+CAF7q0+wJtWFzwnIL5Hv8teUnjeSDg2cLNPjCfMSRdYDJ03y0wtsTXVEGzC6KeJYzrwvHJOLy5T1BuN9gWzyaSI63AEkKKnd0t9Jr3z3ybnSGjJFML6QuQ6OKXw4zpS9TXv9BgdozQXOKsujihSzE9JyRRI39LeuWMCK/e8I2b60pk4WVV1bjYhG3Iti7GVAbP02tK5+4gqzQzUTweC6hgXUhttDu4qENPwwJG2iiF5LOcEaTmZpmI2N5S1e0MEzROwXO6zpKB224XYtdnOzf/hrot+NGj8W4dO/0a9qul3R9qeOmIaaQ8INV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR10MB2652.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(39850400004)(366004)(136003)(376002)(52116002)(2906002)(26005)(16526019)(786003)(8676002)(8936002)(316002)(478600001)(107886003)(86362001)(6512007)(4326008)(6486002)(54906003)(66476007)(5660300002)(1076003)(6666004)(6506007)(2616005)(186003)(956004)(66556008)(6916009)(69590400007)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: a67dSjW1j464p/Ox0CQL2BHRU9fx3982zGL4rfNrJj5V1fqziAIv5zafy63ibseD16exXHFMUlVd4IQRWo3JF4UBmCJ20GVx1wBNRXS7Q0V+1AnpwQHfieXmfPec122AYgjlDQmqZAJyGJlP7wu1VsefEGnBSKoHcwY9/cDoE5yOEp7FRQsANblcZMaYX4f2cTru+QUOITf493jvjLk5e36WsfbKEXyZUGhVHtXJvi3hN5S/9iOQn/lWgLEV6qz6jtQYXpy+1ICE1bAhufQAwBmnoBHc88h2PJ8/F+HuNEKrx4jAq4odGG8/SAUTzz1VxjQl8yMG28lPsXPGlNq5gx7eqb1o6wvhZDhnSiNJHeWdzI9XBTZjm4/YNs8OvfzErbUkzTuQosgtvH4aNdSe6XU9iPs4Vt5FdCH6lSpzcK1ofSSAvp/IdjYVe55ukYpSacTa5QYyrXuRhnkxN4jSI+v6dqFIAzXqltI3M9UxUQQ=
+X-OriginatorOrg: inf.elte.hu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ae0342e-4328-4557-2c8b-08d7fd85ef77
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2020 12:53:18.7656
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0133bb48-f790-4560-a64d-ac46a472fbbc
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YyO8sFlsD88UlyvuQJNyeaLEeGP+CA/jCw2HZNBZnFHTvoie7aSXc00qMKU17hvX4MmbzMUq6vC5hEVZlF9a1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3911
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dafna,
+This option makes possible to programatically bind sockets to netdevices.
+With the help of this option sockets of VRF unaware applications
+could be distributed between multiple VRFs with eBPF sock_ops program.
+This let the applications benefit from the multiple possible routes.
 
-On 5/21/20 9:03 AM, Dafna Hirschfeld wrote:
-> Hi
-> 
-> On 15.04.20 03:30, Helen Koike wrote:
->> Add v4l2_pipeline_stream_{enable,disable} helper functions to iterate
->> through the subdevices in a given stream (i.e following links from sink
->> to source) and call .s_stream() callback.
->>
->> Add stream_count on the subdevice object for simultaneous streaming from
->> different video devices which shares subdevices.
->>
->> Prevent calling .s_stream(true) if it was already called previously by
->> another stream.
->>
->> Prevent calling .s_stream(false) from one stream when there are still
->> others active.
->>
->> If .s_stream(true) fails, call .s_stream(false) in the reverse order.
->>
->> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->> ---
->>
->> Changes in v3:
->> - re-write helpers to use media walkers as in v1, but with
->> v4l2_pipeline_subdevs_get() to reverse the order we call s_stream(true)
->> in subdevices.
->> - rename size to max_size (and update docs) in v4l2_pipeline_subdevs_get() to
->> reflect the meaning of the argument.
->> - add if defined(CONFIG_MEDIA_CONTROLLER) around helpers
->>
->> Changes in v2:
->> - re-write helpers to not use media walkers
->>
->>   drivers/media/v4l2-core/v4l2-common.c | 125 ++++++++++++++++++++++++++
->>   include/media/v4l2-common.h           |  43 +++++++++
->>   include/media/v4l2-subdev.h           |   2 +
->>   3 files changed, 170 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
->> index 9e8eb45a5b03c..2f991a1a57d7c 100644
->> --- a/drivers/media/v4l2-core/v4l2-common.c
->> +++ b/drivers/media/v4l2-core/v4l2-common.c
->> @@ -442,3 +442,128 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
->>       return 0;
->>   }
->>   EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
->> +
->> +#if defined(CONFIG_MEDIA_CONTROLLER)
->> +
->> +/*
->> + * v4l2_pipeline_subdevs_get - Assemble a list of subdevices in a pipeline
->> + * @subdevs: the array to be filled.
->> + * @max_size: max number of elements that can fit in subdevs array.
->> + *
->> + * Walk from a video node, following links from sink to source and fill the
->> + * array with subdevices in the path.
->> + * The walker performs a depth-first traversal, which means that, in a topology
->> + * sd1->sd2->sd3->vdev, sd1 will be the first element placed in the array.
->> + *
->> + * Return the number of subdevices filled in the array.
->> + */
->> +static int v4l2_pipeline_subdevs_get(struct video_device *vdev,
->> +                     struct media_pipeline *pipe,
->> +                     struct v4l2_subdev **subdevs,
->> +                     unsigned int max_size)
->> +{
->> +    struct media_entity *entity = &vdev->entity;
->> +    struct media_device *mdev = entity->graph_obj.mdev;
->> +    int idx = 0;
->> +    int ret;
->> +
->> +    mutex_lock(&mdev->graph_mutex);
->> +
->> +    if (!pipe->streaming_count) {
->> +        ret = media_graph_walk_init(&pipe->graph, mdev);
->> +        if (ret) {
->> +            mutex_unlock(&mdev->graph_mutex);
->> +            return ret;
->> +        }
->> +    }
->> +
->> +    media_graph_walk_start(&pipe->graph, entity);
->> +
->> +    while ((entity = media_graph_walk_next_stream(&pipe->graph))) {
->> +        if (!is_media_entity_v4l2_subdev(entity))
->> +            continue;
->> +        if (WARN_ON(idx >= max_size)) {
->> +            mutex_unlock(&mdev->graph_mutex);
->> +            return -EINVAL;
->> +        }
->> +        subdevs[idx++] = media_entity_to_v4l2_subdev(entity);
->> +    }
->> +
->> +    if (!pipe->streaming_count)
->> +        media_graph_walk_cleanup(&pipe->graph);
->> +
->> +    mutex_unlock(&mdev->graph_mutex);
->> +
->> +    return idx;
->> +}
->> +
->> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
->> +                         struct media_pipeline *pipe)
->> +{
->> +    struct media_device *mdev = vdev->entity.graph_obj.mdev;
->> +    struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
->> +    struct v4l2_subdev *sd;
->> +    int i, size, ret;
->> +
->> +    size = v4l2_pipeline_subdevs_get(vdev, pipe,
->> +                     subdevs, ARRAY_SIZE(subdevs));
->> +    if (size <= 0)
->> +        return size;
->> +
->> +    /* Call s_stream() in reverse order to enable sensors last */
->> +    for (i = size - 1; i >= 0; i--) {
->> +        sd = subdevs[i];
->> +        if (sd->stream_count++)
->> +            continue;
->> +        dev_dbg(mdev->dev,
->> +            "enabling stream for '%s'\n", sd->entity.name);
->> +        ret = v4l2_subdev_call(sd, video, s_stream, true);
->> +        if (ret && ret != -ENOIOCTLCMD) {
->> +            sd->stream_count = 0;
->> +            goto err_stream_disable;
->> +        }
->> +    }
->> +
->> +    return 0;
->> +
->> +err_stream_disable:
->> +    for (i++; i < size; i++) {
->> +        sd = subdevs[i];
->> +        if (--sd->stream_count)
->> +            continue;
->> +        dev_dbg(mdev->dev,
->> +            "disabling stream for '%s'\n", sd->entity.name);
->> +        v4l2_subdev_call(sd, video, s_stream, false);
->> +    };
->> +
->> +    return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_enable);
->> +
->> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
->> +                  struct media_pipeline *pipe)
->> +{
->> +    struct media_device *mdev = vdev->entity.graph_obj.mdev;
->> +    struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
->> +    unsigned int i;
->> +    int size;
->> +
->> +    size = v4l2_pipeline_subdevs_get(vdev, pipe,
->> +                     subdevs, ARRAY_SIZE(subdevs));
->> +    if (WARN_ON(size < 0))
->> +        return;
->> +
->> +    /* Call s_stream() in order to disable sensors first */
->> +    for (i = 0; i < size; i++) {
->> +        struct v4l2_subdev *sd = subdevs[i];
->> +
->> +        if (--sd->stream_count)
->> +            continue;
->> +        dev_dbg(mdev->dev,
->> +            "disabling stream for '%s'\n", sd->entity.name);
->> +        v4l2_subdev_call(sd, video, s_stream, false);
->> +    }
->> +}
->> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_disable);
->> +
->> +#endif /* CONFIG_MEDIA_CONTROLLER */
->> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
->> index 150ee16ebd811..dc46812120cdc 100644
->> --- a/include/media/v4l2-common.h
->> +++ b/include/media/v4l2-common.h
->> @@ -539,4 +539,47 @@ static inline void v4l2_buffer_set_timestamp(struct v4l2_buffer *buf,
->>       buf->timestamp.tv_usec = ts.tv_nsec / NSEC_PER_USEC;
->>   }
->>   +#if defined(CONFIG_MEDIA_CONTROLLER)
->> +
->> +/**
->> + * v4l2_pipeline_stream_enable - Call .s_stream(true) callbacks in the stream
->> + * @vdev: Starting video device.
->> + * @pipe: Pipeline this entity belongs to.
->> + *
->> + * Call .s_stream(true) callback in all the subdevices participating in the
->> + * stream, i.e. following links from sink to source.
->> + *
->> + * .s_stream(true) is also called from sink to source, i.e. in a topology
->> + * sd1->sd2->sd3->vdev, .s_stream(true) of sd3 is called first.
->> + *
->> + * Calls to this function can be nested, in which case the same number of
->> + * v4l2_pipeline_stream_disable() calls will be required to disable streaming
->> + * through subdevices in the pipeline.
->> + * The  pipeline pointer must be identical for all nested calls to
->> + * v4l2_pipeline_stream_enable().
->> + */
->> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev,
->> +                         struct media_pipeline *pipe);
->> +
->> +/**
->> + * v4l2_pipeline_stream_disable - Call .s_stream(false) callbacks in the stream
->> + * @vdev: Starting video device.
->> + * @pipe: Pipeline this entity belongs to.
->> + *
->> + * Call .s_stream(false) callback in all the subdevices participating in the
->> + * stream, i.e. following links from sink to source.
->> + *
->> + * s_stream(false) is called in a reverse order from
->> + * v4l2_pipeline_stream_enable(), i.e. in a topology sd1->sd2->sd3->vdev,
->> + * .s_stream(false) of sd1 is called first.
->> + *
->> + * If multiple calls to v4l2_pipeline_stream_enable() have been made, the same
->> + * number of calls to this function are required to disable streaming through
->> + * subdevices in the pipeline.
->> + */
->> +void v4l2_pipeline_stream_disable(struct video_device *vdev,
->> +                  struct media_pipeline *pipe);
->> +
->> +#endif /* CONFIG_MEDIA_CONTROLLER */
->> +
->>   #endif /* V4L2_COMMON_H_ */
->> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
->> index a4848de598521..20f913a9f70c5 100644
->> --- a/include/media/v4l2-subdev.h
->> +++ b/include/media/v4l2-subdev.h
->> @@ -838,6 +838,7 @@ struct v4l2_subdev_platform_data {
->>    * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
->>    *             device using v4l2_device_register_sensor_subdev().
->>    * @pdata: common part of subdevice platform data
->> + * @stream_count: Stream count for the subdevice.
->>    *
->>    * Each instance of a subdev driver should create this struct, either
->>    * stand-alone or embedded in a larger struct.
->> @@ -869,6 +870,7 @@ struct v4l2_subdev {
->>       struct v4l2_async_notifier *notifier;
->>       struct v4l2_async_notifier *subdev_notifier;
->>       struct v4l2_subdev_platform_data *pdata;
->> +    unsigned int stream_count;
-> I wonder if it is worth it to add a new field to v4l2_subdev that is used only
-> for the specific case, it seems that except of rkisp1 and vimc, the other drivers you pointed to that
-> could use the helpers don't need this counter and they call s_stream without checking if it was already called.
-> This counter is updated only by the new introduced functions and not when s_stream is called from other places.
+Signed-off-by: Ferenc Fejes <fejes@inf.elte.hu>
+---
+ net/core/filter.c | 39 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-Other drivers implement their own loop that navigates through the pipeline calling .s_stream().
-They are very similar. The only difference from rkisp1/vimc is that they don't support simultaneous streaming from different
-capture nodes.
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 822d662f97ef..25dac75bfc5d 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -4248,6 +4248,9 @@ static const struct bpf_func_proto bpf_get_socket_uid_proto = {
+ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
+ 			   char *optval, int optlen, u32 flags)
+ {
++	char devname[IFNAMSIZ];
++	struct net *net;
++	int ifindex;
+ 	int ret = 0;
+ 	int val;
+ 
+@@ -4257,7 +4260,7 @@ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
+ 	sock_owned_by_me(sk);
+ 
+ 	if (level == SOL_SOCKET) {
+-		if (optlen != sizeof(int))
++		if (optlen != sizeof(int) && optname != SO_BINDTODEVICE)
+ 			return -EINVAL;
+ 		val = *((int *)optval);
+ 
+@@ -4298,6 +4301,40 @@ static int _bpf_setsockopt(struct sock *sk, int level, int optname,
+ 				sk_dst_reset(sk);
+ 			}
+ 			break;
++		case SO_BINDTODEVICE:
++			ret = -ENOPROTOOPT;
++#ifdef CONFIG_NETDEVICES
++			net = sock_net(sk);
++			strncpy(devname, optval,
++				min_t(long, optlen, IFNAMSIZ-1));
++			devname[IFNAMSIZ-1] = 0;
++			ifindex = 0;
++			if (devname[0] != '\0') {
++				struct net_device *dev;
++
++				rcu_read_lock();
++				dev = dev_get_by_name_rcu(net, devname);
++				if (dev)
++					ifindex = dev->ifindex;
++				rcu_read_unlock();
++				ret = -ENODEV;
++				if (!dev)
++					break;
++			}
++			ret = -EPERM;
++			if (sk->sk_bound_dev_if &&
++				!ns_capable(net->user_ns, CAP_NET_RAW))
++				break;
++			ret = -EINVAL;
++			if (ifindex < 0)
++				break;
++			sk->sk_bound_dev_if = ifindex;
++			if (sk->sk_prot->rehash)
++				sk->sk_prot->rehash(sk);
++			sk_dst_reset(sk);
++			ret = 0;
++#endif
++			break;
+ 		default:
+ 			ret = -EINVAL;
+ 		}
+-- 
+2.17.1
 
-Also, drivers usually don't handle errors very well, in cases of failures where .s_stream() should be called in reversed order.
-
-Adding this counter + helpers allows a common generic implementation that can be used for both cases.
-So we re-use a code that should be well tested in the core and avoid re-implementing it.
-
-> Maybe we can add a helper that just return the next subdevice connected to the current entity as a source, and drivers can
-> iterate it and can decide themselves if s_stream should be called or not
-
-Patch 1/4 in the series provides this iterator :)
-Unless if you think we could add helpers to make things easier.
-
-Regards,
-Helen
-
-> 
-> Thanks,
-> Dafna
-> 
->>   };
->>    
