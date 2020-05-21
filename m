@@ -2,44 +2,44 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7590AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3599D2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F10D2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 03:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590031367;
-	bh=CZ1I0nklSnkaDJwauZgG+9Dbgoyu9fZHiW90vV3R5W0=;
+	s=default; t=1590031401;
+	bh=l4LFB2adLL8Fwr8y3Ullwx1wKTu/CijGRZHMau1S3BM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EnJE38kfV9REbCxrq+8DPI+B4bDaY1o6O0yN7tWbKcqGATQtH8dSqOExnLIyjoRx7
-	 keSLkMPnmv5uRm07/nUDhqbu5VgsBfSaC0MfR1hzToQyyncyaKz30SO0J4Yqj1F4pQ
-	 pfytDjdC50adJi72q1L/CzOW02W/jjNhl/e76uPc=
+	b=WwNX0C9ULPL2KQXRs1BY4yAfVi5PYRSBmCTOOvftqZn7ENo1KiT7DgAjZ7yslNPkV
+	 8Juc7AYgl1c2GknL7znmqeZYU8gbQQnZuL5irkZtWJIRv+bOJoRStNBPCbp4v/OCFG
+	 WGhSbTpcfdACw3MjQweeoxRKkyryQqUGtlbXLv6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgEUDWp (ORCPT
+        id S1728115AbgEUDXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 May 2020 23:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60146 "EHLO mail.kernel.org"
+        Wed, 20 May 2020 23:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgEUDWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 May 2020 23:22:44 -0400
+        id S1727825AbgEUDXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 May 2020 23:23:20 -0400
 Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44F7020709;
-        Thu, 21 May 2020 03:22:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B190F20709;
+        Thu, 21 May 2020 03:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590031363;
-        bh=CZ1I0nklSnkaDJwauZgG+9Dbgoyu9fZHiW90vV3R5W0=;
+        s=default; t=1590031398;
+        bh=l4LFB2adLL8Fwr8y3Ullwx1wKTu/CijGRZHMau1S3BM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GmGcqKEXOlWyyxcYWYYL1pBDOUeUPB2f8ABMVVPGP6m2d0fV+ZAcsnUyRPCJvuE5X
-         m0moyJC1vKRetNb30ghtKWYkeLZIZdv5+emYSimOqBAEBcNvn08mDS/Pci13cMkRCD
-         bW2glvtmkRitz82QDNcRFeW/M3vRBUFs6cMUH93k=
-Date:   Wed, 20 May 2020 20:22:42 -0700
+        b=hgkSAmpn3UjiPftlBcqCwQBjtVbcwDRD2pY3YAH3r13ALnBRXu3HEk6GjuSP/tYi6
+         ZQZ60+cglfgcbXqW+f2pWTBF3CaBRHhpvfWD4x1ujadaabEo9PkpVHO9MHBaaTGJEC
+         8c2hMJQX+tCfvZeY8qmfzO5ZmiKc11u2K1AoPtNY=
+Date:   Wed, 20 May 2020 20:23:17 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
 To:     Michel Lespinasse <walken@google.com>
 Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
@@ -55,11 +55,12 @@ Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         Daniel Jordan <daniel.m.jordan@oracle.com>,
         John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v6 12/12] mmap locking API: convert mmap_sem comments
-Message-Id: <20200520202242.dec6b520f0bab4a66a510d73@linux-foundation.org>
-In-Reply-To: <20200520052908.204642-13-walken@google.com>
+Subject: Re: [PATCH v6 05/12] mmap locking API: convert mmap_sem call sites
+ missed by coccinelle
+Message-Id: <20200520202317.1f7515649dd711b388e40d3f@linux-foundation.org>
+In-Reply-To: <20200520052908.204642-6-walken@google.com>
 References: <20200520052908.204642-1-walken@google.com>
-        <20200520052908.204642-13-walken@google.com>
+        <20200520052908.204642-6-walken@google.com>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -69,73 +70,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 May 2020 22:29:08 -0700 Michel Lespinasse <walken@google.com> wrote:
+On Tue, 19 May 2020 22:29:01 -0700 Michel Lespinasse <walken@google.com> wrote:
 
-> Convert comments that reference mmap_sem to reference mmap_lock instead.
+> Convert the last few remaining mmap_sem rwsem calls to use the new
+> mmap locking API. These were missed by coccinelle for some reason
+> (I think coccinelle does not support some of the preprocessor
+> constructs in these files ?)
 
-This may not be complete..
 
 From: Andrew Morton <akpm@linux-foundation.org>
-Subject: mmap-locking-api-convert-mmap_sem-comments-fix
+Subject: mmap-locking-api-convert-mmap_sem-call-sites-missed-by-coccinelle-fix
 
-fix up linux-next leftovers
+convert linux-next leftovers
 
+Cc: Michel Lespinasse <walken@google.com>
 Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Laurent Dufour <ldufour@linux.ibm.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Davidlohr Bueso <dbueso@suse.de>
 Cc: David Rientjes <rientjes@google.com>
 Cc: Hugh Dickins <hughd@google.com>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
 Cc: Jerome Glisse <jglisse@redhat.com>
 Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>
 Cc: Liam Howlett <Liam.Howlett@oracle.com>
 Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Michel Lespinasse <walken@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: Ying Han <yinghan@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
 
- arch/powerpc/mm/fault.c |    2 +-
- include/linux/pgtable.h |    6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/kvm/mmu.c |   14 +++++++-------
+ lib/test_hmm.c       |   14 +++++++-------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
---- a/arch/powerpc/mm/fault.c~mmap-locking-api-convert-mmap_sem-comments-fix
-+++ a/arch/powerpc/mm/fault.c
-@@ -138,7 +138,7 @@ static noinline int bad_access_pkey(stru
- 	 * 2. T1   : set AMR to deny access to pkey=4, touches, page
- 	 * 3. T1   : faults...
- 	 * 4.    T2: mprotect_key(foo, PAGE_SIZE, pkey=5);
--	 * 5. T1   : enters fault handler, takes mmap_sem, etc...
-+	 * 5. T1   : enters fault handler, takes mmap_lock, etc...
- 	 * 6. T1   : reaches here, sees vma_pkey(vma)=5, when we really
- 	 *	     faulted on a pte with its pkey=4.
- 	 */
---- a/include/linux/pgtable.h~mmap-locking-api-convert-mmap_sem-comments-fix
-+++ a/include/linux/pgtable.h
-@@ -1101,11 +1101,11 @@ static inline pmd_t pmd_read_atomic(pmd_
- #endif
- /*
-  * This function is meant to be used by sites walking pagetables with
-- * the mmap_sem hold in read mode to protect against MADV_DONTNEED and
-+ * the mmap_lock held in read mode to protect against MADV_DONTNEED and
-  * transhuge page faults. MADV_DONTNEED can convert a transhuge pmd
-  * into a null pmd and the transhuge page fault can convert a null pmd
-  * into an hugepmd or into a regular pmd (if the hugepage allocation
-- * fails). While holding the mmap_sem in read mode the pmd becomes
-+ * fails). While holding the mmap_lock in read mode the pmd becomes
-  * stable and stops changing under us only if it's not null and not a
-  * transhuge pmd. When those races occurs and this function makes a
-  * difference vs the standard pmd_none_or_clear_bad, the result is
-@@ -1115,7 +1115,7 @@ static inline pmd_t pmd_read_atomic(pmd_
-  *
-  * For 32bit kernels with a 64bit large pmd_t this automatically takes
-  * care of reading the pmd atomically to avoid SMP race conditions
-- * against pmd_populate() when the mmap_sem is hold for reading by the
-+ * against pmd_populate() when the mmap_lock is hold for reading by the
-  * caller (a special atomic read not done by "gcc" as in the generic
-  * version above, is also needed when THP is disabled because the page
-  * fault can populate the pmd from under us).
+--- a/lib/test_hmm.c~mmap-locking-api-convert-mmap_sem-call-sites-missed-by-coccinelle-fix
++++ a/lib/test_hmm.c
+@@ -243,9 +243,9 @@ static int dmirror_range_fault(struct dm
+ 		}
+ 
+ 		range->notifier_seq = mmu_interval_read_begin(range->notifier);
+-		down_read(&mm->mmap_sem);
++		mmap_read_lock(mm);
+ 		ret = hmm_range_fault(range);
+-		up_read(&mm->mmap_sem);
++		mmap_read_unlock(mm);
+ 		if (ret) {
+ 			if (ret == -EBUSY)
+ 				continue;
+@@ -684,7 +684,7 @@ static int dmirror_migrate(struct dmirro
+ 	if (!mmget_not_zero(mm))
+ 		return -EINVAL;
+ 
+-	down_read(&mm->mmap_sem);
++	mmap_read_lock(mm);
+ 	for (addr = start; addr < end; addr = next) {
+ 		vma = find_vma(mm, addr);
+ 		if (!vma || addr < vma->vm_start ||
+@@ -711,7 +711,7 @@ static int dmirror_migrate(struct dmirro
+ 		dmirror_migrate_finalize_and_map(&args, dmirror);
+ 		migrate_vma_finalize(&args);
+ 	}
+-	up_read(&mm->mmap_sem);
++	mmap_read_unlock(mm);
+ 	mmput(mm);
+ 
+ 	/* Return the migrated data for verification. */
+@@ -731,7 +731,7 @@ static int dmirror_migrate(struct dmirro
+ 	return ret;
+ 
+ out:
+-	up_read(&mm->mmap_sem);
++	mmap_read_unlock(mm);
+ 	mmput(mm);
+ 	return ret;
+ }
+@@ -823,9 +823,9 @@ static int dmirror_range_snapshot(struct
+ 
+ 		range->notifier_seq = mmu_interval_read_begin(range->notifier);
+ 
+-		down_read(&mm->mmap_sem);
++		mmap_read_lock(mm);
+ 		ret = hmm_range_fault(range);
+-		up_read(&mm->mmap_sem);
++		mmap_read_unlock(mm);
+ 		if (ret) {
+ 			if (ret == -EBUSY)
+ 				continue;
+--- a/arch/arm64/kvm/mmu.c~mmap-locking-api-convert-mmap_sem-call-sites-missed-by-coccinelle-fix
++++ a/arch/arm64/kvm/mmu.c
+@@ -1084,7 +1084,7 @@ void stage2_unmap_vm(struct kvm *kvm)
+ 	int idx;
+ 
+ 	idx = srcu_read_lock(&kvm->srcu);
+-	down_read(&current->mm->mmap_sem);
++	mmap_read_lock(current->mm);
+ 	spin_lock(&kvm->mmu_lock);
+ 
+ 	slots = kvm_memslots(kvm);
+@@ -1092,7 +1092,7 @@ void stage2_unmap_vm(struct kvm *kvm)
+ 		stage2_unmap_memslot(kvm, memslot);
+ 
+ 	spin_unlock(&kvm->mmu_lock);
+-	up_read(&current->mm->mmap_sem);
++	mmap_read_unlock(current->mm);
+ 	srcu_read_unlock(&kvm->srcu, idx);
+ }
+ 
+@@ -1848,11 +1848,11 @@ static int user_mem_abort(struct kvm_vcp
+ 	}
+ 
+ 	/* Let's check if we will get back a huge page backed by hugetlbfs */
+-	down_read(&current->mm->mmap_sem);
++	mmap_read_lock(current->mm);
+ 	vma = find_vma_intersection(current->mm, hva, hva + 1);
+ 	if (unlikely(!vma)) {
+ 		kvm_err("Failed to find VMA for hva 0x%lx\n", hva);
+-		up_read(&current->mm->mmap_sem);
++		mmap_read_unlock(current->mm);
+ 		return -EFAULT;
+ 	}
+ 
+@@ -1879,7 +1879,7 @@ static int user_mem_abort(struct kvm_vcp
+ 	if (vma_pagesize == PMD_SIZE ||
+ 	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
+ 		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
+-	up_read(&current->mm->mmap_sem);
++	mmap_read_unlock(current->mm);
+ 
+ 	/* We need minimum second+third level pages */
+ 	ret = mmu_topup_memory_cache(memcache, kvm_mmu_cache_min_pages(kvm),
+@@ -2456,7 +2456,7 @@ int kvm_arch_prepare_memory_region(struc
+ 	    (kvm_phys_size(kvm) >> PAGE_SHIFT))
+ 		return -EFAULT;
+ 
+-	down_read(&current->mm->mmap_sem);
++	mmap_read_lock(current->mm);
+ 	/*
+ 	 * A memory region could potentially cover multiple VMAs, and any holes
+ 	 * between them, so iterate over all of them to find out if we can map
+@@ -2515,7 +2515,7 @@ int kvm_arch_prepare_memory_region(struc
+ 		stage2_flush_memslot(kvm, memslot);
+ 	spin_unlock(&kvm->mmu_lock);
+ out:
+-	up_read(&current->mm->mmap_sem);
++	mmap_read_unlock(current->mm);
+ 	return ret;
+ }
+ 
 _
 
