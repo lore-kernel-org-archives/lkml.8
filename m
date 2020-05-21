@@ -2,88 +2,88 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B46C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD38C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B8B204EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB64D204EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 05:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590038869;
+	bh=lt0gpxVtnKWojiQaQODpIem/TXcGV3ie7U1cocBy44k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JKp43DT92WyxkWhZOFsBAY1hq36r+kiMYHp4in5Oiwl/U5XUAPGhptDm3r4WonrdD
+	 n7udYD/qp7fcFC8Rozga5OUW2cvHXK66RaiSgmU31NqVrhEPIsF5b9JOV9WORIV6FV
+	 z2edfaL1xBxcdsfa7rDWWAqnwEOX48rfHDtZGPqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgEUF10 (ORCPT
+        id S1727812AbgEUF1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 01:27:26 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:20499 "HELO
-        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1726790AbgEUF10 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 01:27:26 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 21 May 2020 13:19:01
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Thu, 21 May 2020 13:19:01 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Kangjie Lu" <kjlu@umn.edu>,
-        "Richard Fontana" <rfontana@redhat.com>,
-        "Allison Randal" <allison@lohutok.net>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] Input: omap-keypad - fix runtime pm imbalance on
- error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <CAKdAkRTyVL0uV0dGxHoEgMyB9FP6b0m60CHy7C4QXeR5WTGAJw@mail.gmail.com>
-References: <20200520133432.19738-1-dinghao.liu@zju.edu.cn>
- <CAKdAkRTyVL0uV0dGxHoEgMyB9FP6b0m60CHy7C4QXeR5WTGAJw@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Thu, 21 May 2020 01:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726790AbgEUF1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 01:27:47 -0400
+Received: from localhost.localdomain (unknown [106.200.226.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 761CE204EC;
+        Thu, 21 May 2020 05:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590038867;
+        bh=lt0gpxVtnKWojiQaQODpIem/TXcGV3ie7U1cocBy44k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PD9bs30kqSo+GyXazKTr+hSlcs2oL24652D2CTC83HmCbeuHjvhEApe/ILYDCjgDh
+         uw/qt0QdEFuv7gq/2RWMGuM/d7l2gRUQTQs8Et/Z30wPGDpa14rbbtfULVePyObNlM
+         4ZAaW5MUwCybHO5IOoMnfSpsdSTcXOrFGmXkvKK8=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Deepak Katragadda <dkatraga@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: qcom: gcc: Fix parent for gpll0_out_even
+Date:   Thu, 21 May 2020 10:57:28 +0530
+Message-Id: <20200521052728.2141377-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Message-ID: <99e48fa.b9f12.17235aba7ac.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCnjwpFD8ZefivnAQ--.39208W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUHBlZdtOOvVwAKso
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
-        C_Ar1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8WwCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rml4aW5nIHRoaXMgaW4gdGhlIFBNIGNvcmUgd2lsbCBpbmZsdWVuY2UgYWxsIGNhbGxlcnMgb2Yg
-cG1fcnVudGltZV9nZXRfc3luYygpLgpUaGVyZWZvcmUgSSB0aGluayB0aGUgYmV0dGVyIHNvbHV0
-aW9uIGlzIHRvIGZpeCBpdHMgbWlzdXNlZCBjYWxsZXJzLgoKUmVnYXJkcywKRGluZ2hhbwoKJnF1
-b3Q7RG1pdHJ5IFRvcm9raG92JnF1b3Q7ICZsdDtkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tJmd0
-O+WGmemBk++8mgo+IEhpIERpbmdoYW8sCj4gCj4gT24gV2VkLCBNYXkgMjAsIDIwMjAgYXQgNjoz
-NSBBTSBEaW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4gd3JvdGU6Cj4gPgo+ID4g
-cG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVudHMgdGhlIHJ1bnRpbWUgUE0gdXNhZ2UgY291
-bnRlciBldmVuCj4gPiB0aGUgY2FsbCByZXR1cm5zIGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWly
-aW5nIGRlY3JlbWVudCBpcyBuZWVkZWQKPiA+IG9uIHRoZSBlcnJvciBoYW5kbGluZyBwYXRoIHRv
-IGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4gCj4gVGhpcyBpcyBhIHZlcnkgc3VycHJpc2lu
-ZyBiZWhhdmlvciBhbmQgSSB3b25kZXIgaWYgdGhpcyBzaG91bGQgYmUKPiBmaXhlZCBpbiB0aGUg
-UE0gY29yZSAob3IgdGhlIHJlcXVpcmVkIGNsZWFudXAgc3RlcHMgbmVlZCB0byBiZSBjYWxsZWQK
-PiBvdXQgaW4gdGhlIGZ1bmN0aW9uIGRlc2NyaXB0aW9uKS4gSSBhbHNvIHNlZSB0aGF0IGEgZmV3
-IGRyaXZlcnMgdGhhdAo+IGhhbmRsZSB0aGlzIHNpdHVhdGlvbiBjb3JyZWN0bHkgKD8pIGNhbGwg
-cG1fcnVudGltZV9wdXRfbm9pZGxlKCkKPiBpbnN0ZWFkIG9mIHBtX3J1bnRpbWVfcHV0X3N5bmMo
-KSBpbiB0aGUgZXJyb3IgcGF0aC4KPiAKPiBSYWZhZWwsIGRvIHlvdSBoYXZlIGFueSBndWlkYW5j
-ZSBoZXJlPwo+IAo+IFRoYW5rcy4KPiAKPiAtLSAKPiBEbWl0cnkK
+Documentation says that gpll0 is parent of gpll0_out_even, somehow
+driver coded that as bi_tcxo, so fix it
+
+Fixes: 2a1d7eb854bb ("clk: qcom: gcc: Add global clock controller driver for SM8150")
+Reported-by: Jonathan Marek <jonathan@marek.ca>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/clk/qcom/gcc-sm8150.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index 2bc08e7125bf..72524cf11048 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -76,8 +76,7 @@ static struct clk_alpha_pll_postdiv gpll0_out_even = {
+ 	.clkr.hw.init = &(struct clk_init_data){
+ 		.name = "gpll0_out_even",
+ 		.parent_data = &(const struct clk_parent_data){
+-			.fw_name = "bi_tcxo",
+-			.name = "bi_tcxo",
++			.hw = &gpll0.clkr.hw,
+ 		},
+ 		.num_parents = 1,
+ 		.ops = &clk_trion_pll_postdiv_ops,
+-- 
+2.25.4
+
