@@ -2,173 +2,143 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21548C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E8E204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:33:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C6Qnseph"
+	by mail.kernel.org (Postfix) with ESMTP id 04563204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 15:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgEUPdC (ORCPT
+        id S1729972AbgEUPdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 11:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgEUPdB (ORCPT
+        Thu, 21 May 2020 11:33:24 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39184 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726938AbgEUPdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 11:33:01 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F22C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:33:01 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id n5so6801927wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 08:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a+XGEo7RdRLWXaBT5I1D5SW4Aa/jygWE9YUzvCS9gvI=;
-        b=C6QnsephZ4AXYbZbM1y/Cghfe4u+luUWsgG6OhW+RMXWdsfoZHD3nxlNwa1hYOht3T
-         WTfDVrMB9YUP/UOKUCF8OVzgeCtW2v5g8iWYm18a9M2nlHg/NnB8Ir6MPtJ5w+UhTuNZ
-         xvN1sB6mgklbOCg7LJog22flxrih0eY9gDBhU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a+XGEo7RdRLWXaBT5I1D5SW4Aa/jygWE9YUzvCS9gvI=;
-        b=chTxzlrUXiL1H6C3IJaXmkdEt4Dfqyez2pzrKGyh25eRa9qF2V65drbAaXMnkx8izo
-         JOQ80DN7osV7jWggWcOS8iu1wN26LmEYggXsSHJ+Tuw0/3GrOaoZIWtMgMelaEAelaxH
-         NpxsLPk2z8INQR3BaUW5TMwbRlCeOD00+4uDz1WO8e7SvSIcDhcVvXGZUz8ITiUP9xz/
-         cIxfC9VrGHYclrLfzSuVDU/sXjUHvhI9eQoBzZR/I88KyO0V7aHX6neUpc0AHhmx8Vp7
-         aRLOf0+IUtcZFWu3E9Oc118gI2qrHRz5xNpv7xq6xvMqPSimnKF+jbd83BQQA9MKCtwX
-         gzxw==
-X-Gm-Message-State: AOAM532qQirveFEt6/kATez8kRn1MkXoWzQFvXrMI31+Gb04H9o+OxsN
-        F+Jjjn4jTDae8dW19fo2G1nlKA==
-X-Google-Smtp-Source: ABdhPJx2S+yj9zmPBMi83WiNn64bblaOIC/n37oVO4cTDq4iHNfMT2oRcmN73GTSL9Yc4JsMWCaKAA==
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr9202139wmk.168.1590075179928;
-        Thu, 21 May 2020 08:32:59 -0700 (PDT)
-Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
-        by smtp.gmail.com with ESMTPSA id i11sm7245926wrc.35.2020.05.21.08.32.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 08:32:59 -0700 (PDT)
-Date:   Thu, 21 May 2020 15:32:57 +0000
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
-        mojahsu@chromium.org, drinkcat@chromium.org,
-        maoguang.meng@mediatek.com, sj.huang@mediatek.com
-Subject: Re: [PATCH v8 06/14] media: platform: Improve the implementation of
- the system PM ops
-Message-ID: <20200521153257.GF209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
- <20200403094033.8288-7-xia.jiang@mediatek.com>
+        Thu, 21 May 2020 11:33:23 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9C62C8030791;
+        Thu, 21 May 2020 15:33:20 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 4fygftXCxMmn; Thu, 21 May 2020 18:33:20 +0300 (MSK)
+Date:   Thu, 21 May 2020 18:33:17 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Feng Tang <feng.tang@intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Vinod Koul <vkoul@kernel.org>, Alan Cox <alan@linux.intel.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Clement Leger <cleger@kalray.eu>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200521153317.7wjp2r47q75fm6ge@mobilestation>
+References: <20200521012206.14472-1-Sergey.Semin@baikalelectronics.ru>
+ <20200521012206.14472-2-Sergey.Semin@baikalelectronics.ru>
+ <20200521030924.GA12568@shbuild999.sh.intel.com>
+ <20200521114736.b2azyfvym372vkdl@mobilestation>
+ <20200521145520.GB12568@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200403094033.8288-7-xia.jiang@mediatek.com>
+In-Reply-To: <20200521145520.GB12568@shbuild999.sh.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xia,
+On Thu, May 21, 2020 at 10:55:20PM +0800, Feng Tang wrote:
+> Hi Serge,
+> 
+> On Thu, May 21, 2020 at 02:47:36PM +0300, Serge Semin wrote:
+> > Hello Feng,
+> > 
+> > On Thu, May 21, 2020 at 11:09:24AM +0800, Feng Tang wrote:
+> > > Hi Serge,
+> > > 
+> > > On Thu, May 21, 2020 at 04:21:51AM +0300, Serge Semin wrote:
+> > 
+> > [nip]
+> > 
+> > > >  /*
+> > > >   * dws->dma_chan_busy is set before the dma transfer starts, callback for rx
+> > > >   * channel will clear a corresponding bit.
+> > > > @@ -200,6 +267,8 @@ static void dw_spi_dma_rx_done(void *arg)
+> > > >  {
+> > > >  	struct dw_spi *dws = arg;
+> > > >  
+> > > > +	dw_spi_dma_wait_rx_done(dws);
+> > > 
+> > > I can understand the problem about TX, but I don't see how RX
+> > > will get hurt, can you elaborate more? thanks
+> > > 
+> > > - Feng
+> > 
+> > Your question is correct. You are right with your hypothesis. Ideally upon the
+> > dw_spi_dma_rx_done() execution Rx FIFO must be already empty. That's why the
+> > commit log signifies the error being mostly related with Tx FIFO. But
+> > practically there are many reasons why Rx FIFO might be left with data:
+> > DMA engine failures, incorrect DMA configuration (if DW SPI or DW DMA driver
+> > messed something up), controller hanging up, and so on. It's better to catch
+> > an error at this stage while propagating it up to the SPI device drivers.
+> > Especially seeing the wait-check implementation doesn't gives us much of the
+> > execution overhead in normal conditions. So by calling dw_spi_dma_wait_rx_done()
+> > we make sure that all the data has been fetched and we may freely get the
+> > buffers back to the client driver.
+> 
+> I see your point about checking RX. But I still don't think checking
+> RX FIFO level is the right way to detect error. Some data left in
+> RX FIFO doesn't always mean a error, say for some case if there is
+> 20 words in RX FIFO, and the driver starts a DMA request for 16
+> words, then after a sucessful DMA transaction, there are 4 words
+> left without any error.
 
-On Fri, Apr 03, 2020 at 05:40:25PM +0800, Xia Jiang wrote:
-> Cancel reset hw operation in suspend and resume function because this
-> will be done in device_run().
+Neither Tx nor Rx FIFO should be left with any data after transaction is
+finished. If they are then something has been wrong.
 
-This and...
+See, every SPI transfer starts with FIFO clearance since we disable/enable the
+SPI controller by means of the SSIENR (spi_enable_chip(dws, 0) and
+spi_enable_chip(dws, 1) called in the dw_spi_transfer_one() callback). Here is the
+SSIENR register description: "It enables and disables all SPI Controller operations.
+When disabled, all serial transfers are halted immediately. Transmit and receive
+FIFO buffers are cleared when the device is disabled. It is impossible to program
+some of the SPI Controller control registers when enabled"
 
-> Add spin_lock and unlock operation in irq and resume function to make
-> sure that the current frame is processed completely before suspend.
+No mater whether we start DMA request or perform the normal IRQ-based PIO, we
+request as much data as we need and neither Tx nor Rx FIFO are supposed to
+be left with any data after the request is finished. If data is left, then
+either we didn't push all of the necessary data to the SPI bus, or we didn't
+pull all the data from the FIFO, and this could have happened only due to some
+component mulfunction (drivers, DMA engine, SPI device). In any case the SPI
+device driver should be notified about the problem.
 
-...this are two separate changes. Please split.
+-Sergey
 
 > 
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+> Thanks,
+> Feng
 > 
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index dd5cadd101ef..2fa3711fdc9b 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -911,6 +911,8 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
->  	u32 dec_ret;
->  	int i;
->  
-> +	spin_lock(&jpeg->hw_lock);
-> +
-
-nit: For consistency, it is recommended to always use the same, i.e. the
-strongest, spin_(un)lock_ primitives when operating on the same spinlock.
-In this case it would be the irqsave(restore) variants.
-
->  	dec_ret = mtk_jpeg_dec_get_int_status(jpeg->dec_reg_base);
->  	dec_irq_ret = mtk_jpeg_dec_enum_result(dec_ret);
->  	ctx = v4l2_m2m_get_curr_priv(jpeg->m2m_dev);
-> @@ -941,6 +943,7 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
->  	v4l2_m2m_buf_done(src_buf, buf_state);
->  	v4l2_m2m_buf_done(dst_buf, buf_state);
->  	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
-> +	spin_unlock(&jpeg->hw_lock);
->  	pm_runtime_put_sync(ctx->jpeg->dev);
->  	return IRQ_HANDLED;
->  }
-> @@ -1191,7 +1194,6 @@ static __maybe_unused int mtk_jpeg_pm_suspend(struct device *dev)
->  {
->  	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
->  
-> -	mtk_jpeg_dec_reset(jpeg->dec_reg_base);
->  	mtk_jpeg_clk_off(jpeg);
->  
->  	return 0;
-> @@ -1202,19 +1204,24 @@ static __maybe_unused int mtk_jpeg_pm_resume(struct device *dev)
->  	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
->  
->  	mtk_jpeg_clk_on(jpeg);
-> -	mtk_jpeg_dec_reset(jpeg->dec_reg_base);
->  
->  	return 0;
->  }
->  
->  static __maybe_unused int mtk_jpeg_suspend(struct device *dev)
->  {
-> +	struct mtk_jpeg_dev *jpeg = dev_get_drvdata(dev);
-> +	unsigned long flags;
->  	int ret;
->  
->  	if (pm_runtime_suspended(dev))
->  		return 0;
->  
-> +	spin_lock_irqsave(&jpeg->hw_lock, flags);
-
-What does this spinlock protect us from? I can see that it would prevent
-the interrupt handler from being called, but is it okay to suspend the
-system without handling the interrupt?
-
-> +
->  	ret = mtk_jpeg_pm_suspend(dev);
-> +
-
-Looking at the implementation of mtk_jpeg_pm_suspend(), all it does is
-disabling the clock. How do we make sure that there is no frame currently
-being processed by the hardware?
-
-Best regards,
-Tomasz
+> > 
+> > -Sergey
