@@ -2,119 +2,88 @@ Return-Path: <SRS0=7UTg=7D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03724C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D085320721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590056559;
-	bh=YDVhiTqdw9h91cNgg9IDJt6mrZsY5vOL0/OFq87+awo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eBG+4uFttVKkyPceQZsbhMA/D4GU7v8zgz6+q9407R0DqjFILHkMA/m4VgzDS9OWr
-	 rTr8YivjGxy2vMLkYIdZyghNI5EV/5/e5hQWkd0HDyIjNNPLeHWrUcNkiZF1sZEBSB
-	 Xdxk5H24fjm8d+KTyYMa2D0Eba/VS6/8HXQFr6Bw=
+	by mail.kernel.org (Postfix) with ESMTP id F1E692072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 May 2020 10:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgEUKWg (ORCPT
+        id S1728704AbgEUKWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 06:22:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48534 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727922AbgEUKWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 06:22:20 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AB3720721;
-        Thu, 21 May 2020 10:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590056539;
-        bh=YDVhiTqdw9h91cNgg9IDJt6mrZsY5vOL0/OFq87+awo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sb5C65+dwKXXpHua1CujvupmKZV57PUlQU8D82rqCVCbPvsMumOwdL77sh6IsLMMs
-         v7ll+ydBZUDEV1K09drPV1jseA2v09Q3E3M10VYGZVvgJSUbTZ5Z5mVh/+fBcOF3u1
-         yjUM5U+fEu6uAwzhR/LxMsgjo0lFq/zMdc5GmK4k=
-Date:   Thu, 21 May 2020 11:22:14 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH -tip 08/10] READ_ONCE, WRITE_ONCE: Remove data_race()
- wrapping
-Message-ID: <20200521102214.GC5360@willie-the-truck>
-References: <20200515150338.190344-1-elver@google.com>
- <20200515150338.190344-9-elver@google.com>
- <CANpmjNNdBrO=dJ1gL+y0w2zBFdB7G1E9g4uk7oDDEt_X9FaRVA@mail.gmail.com>
- <CANpmjNPLVMTSUAARL94Pug21ab4+zNikO1HYN2fVO3LfM4aMuQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNPLVMTSUAARL94Pug21ab4+zNikO1HYN2fVO3LfM4aMuQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 21 May 2020 06:22:47 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:63804 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726871AbgEUKWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 06:22:21 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgDX34tOVsZePhnoAA--.5452S4;
+        Thu, 21 May 2020 18:22:10 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: fimc-capture: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 18:22:04 +0800
+Message-Id: <20200521102205.16604-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgDX34tOVsZePhnoAA--.5452S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWDJFg_GF
+        90qF47Xrn8Gws0qr1jkFn8uryIyFZ5Xwn5Wa4SqF9xt390yF4Dtr4Ivr98Zw1xXa12yFy7
+        trZ8WF17ur9rCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
+        67AK6r4DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
+        6Fyj6rWUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJV
+        WxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbHa0JUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAAnsF
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 12:18:14PM +0200, Marco Elver wrote:
-> On Thu, 21 May 2020 at 11:47, Marco Elver <elver@google.com> wrote:
-> > On Fri, 15 May 2020 at 17:04, Marco Elver <elver@google.com> wrote:
-> > > diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> > > index 17c98b215572..fce56402c082 100644
-> > > --- a/include/linux/compiler.h
-> > > +++ b/include/linux/compiler.h
-> > > @@ -229,7 +229,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-> > >  #define __READ_ONCE_SCALAR(x)                                          \
-> > >  ({                                                                     \
-> > >         typeof(x) *__xp = &(x);                                         \
-> > > -       __unqual_scalar_typeof(x) __x = data_race(__READ_ONCE(*__xp));  \
-> > > +       __unqual_scalar_typeof(x) __x = __READ_ONCE(*__xp);             \
-> > >         kcsan_check_atomic_read(__xp, sizeof(*__xp));                   \
-> >
-> > Some self-review: We don't need kcsan_check_atomic anymore, and this
-> > should be removed.
-> >
-> > I'll send v2 to address this (together with fix to data_race()
-> > removing nested statement expressions).
-> 
-> The other thing here is that we no longer require __xp, and can just
-> pass x into __READ_ONCE.
-> 
-> > >         smp_read_barrier_depends();                                     \
-> > >         (typeof(x))__x;                                                 \
-> > > @@ -250,7 +250,7 @@ do {                                                                        \
-> > >  do {                                                                   \
-> > >         typeof(x) *__xp = &(x);                                         \
-> > >         kcsan_check_atomic_write(__xp, sizeof(*__xp));                  \
-> >
-> > Same.
-> 
-> __xp can also be removed.
-> 
-> Note that this effectively aliases __WRITE_ONCE_SCALAR to
-> __WRITE_ONCE. To keep the API consistent with READ_ONCE, I assume we
-> want to keep __WRITE_ONCE_SCALAR, in case it is meant to change in
-> future?
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-Ha! So I think this ends up being very similar to what I had *before* I
-rebased onto KCSAN:
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/media/platform/exynos4-is/fimc-capture.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/tree/include/linux/compiler.h?h=rwonce/cleanup#n202
+diff --git a/drivers/media/platform/exynos4-is/fimc-capture.c b/drivers/media/platform/exynos4-is/fimc-capture.c
+index 705f182330ca..dd33b888971f 100644
+--- a/drivers/media/platform/exynos4-is/fimc-capture.c
++++ b/drivers/media/platform/exynos4-is/fimc-capture.c
+@@ -478,8 +478,10 @@ static int fimc_capture_open(struct file *file)
+ 
+ 	set_bit(ST_CAPT_BUSY, &fimc->state);
+ 	ret = pm_runtime_get_sync(&fimc->pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_sync(&fimc->pdev->dev);
+ 		goto unlock;
++	}
+ 
+ 	ret = v4l2_fh_open(file);
+ 	if (ret) {
+-- 
+2.17.1
 
-in which case you can drop __WRITE_ONCE_SCALAR; the _SCALAR things shouldn't
-be used outside of the implementation anyway.
-
-Will
