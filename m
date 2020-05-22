@@ -2,251 +2,114 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18137C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F212C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB65C206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C332070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:54:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mtbeLiBq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amtXwRdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730930AbgEVSu0 (ORCPT
+        id S1730918AbgEVSyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:50:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48244 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730849AbgEVSuZ (ORCPT
+        Fri, 22 May 2020 14:54:05 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43446 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730849AbgEVSyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:50:25 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MIoIds016862;
-        Fri, 22 May 2020 13:50:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590173418;
-        bh=aYPvxAe4QCajYkLXOBIjCSPbHKlCTfuP5XdxHUSW9sk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mtbeLiBqCtgk/pHdokybvHBzlsvroGzYwwU4w3vgtUxAdcnkASwmb+DuHfMiGAtKY
-         qY0147vvG53YiUWuPwCRE7qQIRWKMjUCcLUNv/hTz9X9grr9q694rWc3BcWdctLcQO
-         9/8QOEDcePQyU7z157lRvV0uEiaPG+udyPVACbdI=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MIoITl115743;
-        Fri, 22 May 2020 13:50:18 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 13:50:18 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 13:50:18 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MIoIPH046270;
-        Fri, 22 May 2020 13:50:18 -0500
-Subject: Re: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200522122534.3353-1-dmurphy@ti.com>
- <20200522122534.3353-5-dmurphy@ti.com>
- <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
-Date:   Fri, 22 May 2020 13:50:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 14:54:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590173643;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=E/NY7atph5yZUS2SuBQhFRnCbvYDVMYgXeB+elMZM6I=;
+        b=amtXwRdYpBAynydkA/N8OtKGpzTze0aeLqO8H8ZvLn0AOhyAxqi2Q7w2Rp6mVpDypywL2d
+        +G/Hpzj8ek5EMUE47fUhR6Jm3HKN8rYHVrOgJIj82B66mLTcxxG6pVom21k6D59dfe9uTA
+        6HUg0F1WqFVKn7AP/kV3Mnb6BkFTnHo=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-56-opvqkVjZPhWoXRI7jSp0cg-1; Fri, 22 May 2020 14:54:01 -0400
+X-MC-Unique: opvqkVjZPhWoXRI7jSp0cg-1
+Received: by mail-qt1-f198.google.com with SMTP id n33so12729851qtd.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:54:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E/NY7atph5yZUS2SuBQhFRnCbvYDVMYgXeB+elMZM6I=;
+        b=Y+L2kB19de7mzchLF/Mi7BIVennb3vgNFKGawpdIh1Ncqcky31QhZf/4PrDsKaJT7/
+         e/jZpN4MjORtrwRpXG4QRIqx54rl0CA/mPrmUR1/HN2nFOnu+UJTlkL4BAyXbqoOsEfh
+         M2/Lt2LPVKuQMBDNUMkr6deF+RLDEGmCV6YSYrrrfxRARwUu1/m0uffOkXIk91hQUP7l
+         NFxgRhExzkdts2A15Vcyn5veTpm6TXZtgEZUxC2ZpQerxQrQMkVESurhkfBis9L6Zui6
+         n9mrb2sO88jK7YDuZjBisb4S0DbSxAdL4NP5aCFO6FnC+ECqI6fGWC2zcNNOwQikOarN
+         GCdQ==
+X-Gm-Message-State: AOAM531pLbmAyaWad/6i4tUuQkPVMgGfPeqVlLKduAlC2j/E94p2ovhj
+        fIrd8pHeywmeBJoWa8scU5Fo/fX3jXrh9PMZeEXfiispqqFzuTbOPg6tzcp7Iaxm7rYvRMgZ4QR
+        Rr3l0kcx5ohQ9EfNC07HVA8Z7nzu65qru0oCGxCm7
+X-Received: by 2002:ac8:6a09:: with SMTP id t9mr17251949qtr.7.1590173641101;
+        Fri, 22 May 2020 11:54:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwbxr6F952pnH66Ybf4aYPRDiPNGnNWNtV2AqqamKyJkx4ekz3DUmjn2w4Ud12SVL+kOWfT5/QtW00UoW0ai/o=
+X-Received: by 2002:ac8:6a09:: with SMTP id t9mr17251936qtr.7.1590173640781;
+ Fri, 22 May 2020 11:54:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200522085723.29007-1-mszeredi@redhat.com> <20200522160815.GT23230@ZenIV.linux.org.uk>
+ <CAOssrKcpQwYh39JpcNmV3JiuH2aPDJxgT5MADQ9cZMboPa9QaQ@mail.gmail.com> <CAOQ4uxi80CFLgeTYbnHvD7GbY_01z0uywP1jF8gZe76_EZYiug@mail.gmail.com>
+In-Reply-To: <CAOQ4uxi80CFLgeTYbnHvD7GbY_01z0uywP1jF8gZe76_EZYiug@mail.gmail.com>
+From:   Miklos Szeredi <mszeredi@redhat.com>
+Date:   Fri, 22 May 2020 20:53:49 +0200
+Message-ID: <CAOssrKfXgpRykVN94EiEy8xT4j+HCedN96i31j9iHomtavFaLA@mail.gmail.com>
+Subject: Re: [PATCH] ovl: make private mounts longterm
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
-
-On 5/22/20 11:13 AM, Florian Fainelli wrote:
+On Fri, May 22, 2020 at 7:02 PM Amir Goldstein <amir73il@gmail.com> wrote:
 >
-> On 5/22/2020 5:25 AM, Dan Murphy wrote:
->> Add RGMII internal delay configuration for Rx and Tx.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/phy/dp83869.c | 101 ++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 101 insertions(+)
->>
->> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
->> index cfb22a21a2e6..a9008d32e2b6 100644
->> --- a/drivers/net/phy/dp83869.c
->> +++ b/drivers/net/phy/dp83869.c
->> @@ -99,6 +99,14 @@
->>   #define DP83869_OP_MODE_MII			BIT(5)
->>   #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
->>   
->> +/* RGMIIDCTL bits */
->> +#define DP83869_RGMII_TX_CLK_DELAY_SHIFT	4
->> +#define DP83869_RGMII_CLK_DELAY_INV		0
->> +
->> +static int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500, 1750,
->> +				       2000, 2250, 2500, 2750, 3000, 3250,
->> +				       3500, 3750, 4000};
->> +
->>   enum {
->>   	DP83869_PORT_MIRRORING_KEEP,
->>   	DP83869_PORT_MIRRORING_EN,
->> @@ -108,6 +116,8 @@ enum {
->>   struct dp83869_private {
->>   	int tx_fifo_depth;
->>   	int rx_fifo_depth;
->> +	u32 rx_id_delay;
->> +	u32 tx_id_delay;
->>   	int io_impedance;
->>   	int port_mirroring;
->>   	bool rxctrl_strap_quirk;
->> @@ -182,6 +192,7 @@ static int dp83869_of_init(struct phy_device *phydev)
->>   	struct dp83869_private *dp83869 = phydev->priv;
->>   	struct device *dev = &phydev->mdio.dev;
->>   	struct device_node *of_node = dev->of_node;
->> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
->>   	int ret;
->>   
->>   	if (!of_node)
->> @@ -232,6 +243,26 @@ static int dp83869_of_init(struct phy_device *phydev)
->>   				 &dp83869->tx_fifo_depth))
->>   		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
->>   
->> +	dp83869->rx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
->> +	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
->> +				   &dp83869->rx_id_delay);
->> +	if (!ret && dp83869->rx_id_delay > dp83869_internal_delay[delay_size]) {
->> +		phydev_err(phydev,
->> +			   "rx-internal-delay value of %u out of range\n",
->> +			   dp83869->rx_id_delay);
->> +		return -EINVAL;
->> +	}
->> +
->> +	dp83869->tx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
->> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
->> +				   &dp83869->tx_id_delay);
->> +	if (!ret && dp83869->tx_id_delay > dp83869_internal_delay[delay_size]) {
->> +		phydev_err(phydev,
->> +			   "tx-internal-delay value of %u out of range\n",
->> +			   dp83869->tx_id_delay);
->> +		return -EINVAL;
->> +	}
-> This is the kind of validation that I would be expecting from the PHY
-> library to do, in fact, since you use Device Tree standard property, I
-> would expect you only need to pass the maximum delay value and some
-> storage for your array of delays.
-
-Actually the PHY library will return either the 0th index if the value 
-is to small or the max index if the value is to large
-
-based on the array passed in so maybe this check is unnecessary.
-
-
->> +
->>   	return ret;
->>   }
->>   #else
->> @@ -270,6 +301,29 @@ static int dp83869_configure_rgmii(struct phy_device *phydev,
->>   	return ret;
->>   }
->>   
->> +static int dp83869_verify_rgmii_cfg(struct phy_device *phydev)
->> +{
->> +	struct dp83869_private *dp83869 = phydev->priv;
->> +
->> +	/* RX delay *must* be specified if internal delay of RX is used. */
->> +	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
->> +	     phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) &&
->> +	     dp83869->rx_id_delay == DP83869_RGMII_CLK_DELAY_INV) {
->> +		phydev_err(phydev, "ti,rx-internal-delay must be specified\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* TX delay *must* be specified if internal delay of TX is used. */
->> +	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
->> +	     phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) &&
->> +	     dp83869->tx_id_delay == DP83869_RGMII_CLK_DELAY_INV) {
->> +		phydev_err(phydev, "ti,tx-internal-delay must be specified\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int dp83869_configure_mode(struct phy_device *phydev,
->>   				  struct dp83869_private *dp83869)
->>   {
->> @@ -371,6 +425,12 @@ static int dp83869_config_init(struct phy_device *phydev)
->>   {
->>   	struct dp83869_private *dp83869 = phydev->priv;
->>   	int ret, val;
->> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
->> +	int delay = 0;
->> +
->> +	ret = dp83869_verify_rgmii_cfg(phydev);
->> +	if (ret)
->> +		return ret;
->>   
->>   	ret = dp83869_configure_mode(phydev, dp83869);
->>   	if (ret)
->> @@ -394,6 +454,47 @@ static int dp83869_config_init(struct phy_device *phydev)
->>   				     dp83869->clk_output_sel <<
->>   				     DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT);
->>   
->> +	if (phy_interface_is_rgmii(phydev)) {
->> +		val = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL);
->> +
->> +		val &= ~(DP83869_RGMII_TX_CLK_DELAY_EN | DP83869_RGMII_RX_CLK_DELAY_EN);
->> +		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
->> +			val |= (DP83869_RGMII_TX_CLK_DELAY_EN | DP83869_RGMII_RX_CLK_DELAY_EN);
->> +
->> +		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
->> +			val |= DP83869_RGMII_TX_CLK_DELAY_EN;
->> +
->> +		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
->> +			val |= DP83869_RGMII_RX_CLK_DELAY_EN;
->> +
->> +		phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL, val);
->> +
->> +		if (dp83869->rx_id_delay) {
->> +			val = phy_get_delay_index(phydev,
->> +						  &dp83869_internal_delay[0],
->> +						  delay_size,
->> +						  dp83869->rx_id_delay);
->> +			if (val < 0)
->> +				return val;
->> +
->> +			delay |= val;
-> Don't you need to do a bitwise AND with the maximum delay value
-> supported by the range since you do a Read/Modify/Write operation here?
-There is not RMW here.  This is a write to the RGMIIDCTL register.
+> > > > -     mntput(ofs->upper_mnt);
+> > > > -     for (i = 1; i < ofs->numlayer; i++) {
+> > > > -             iput(ofs->layers[i].trap);
+> > > > -             mntput(ofs->layers[i].mnt);
+> > > > +
+> > > > +     if (!ofs->layers) {
+> > > > +             /* Deal with partial setup */
+> > > > +             kern_unmount(ofs->upper_mnt);
+> > > > +     } else {
+> > > > +             /* Hack!  Reuse ofs->layers as a mounts array */
+> > > > +             struct vfsmount **mounts = (struct vfsmount **) ofs->layers;
+> > > > +
+> > > > +             for (i = 0; i < ofs->numlayer; i++) {
+> > > > +                     iput(ofs->layers[i].trap);
+> > > > +                     mounts[i] = ofs->layers[i].mnt;
+> > > > +             }
+> > > > +             kern_unmount_many(mounts, ofs->numlayer);
+> > > > +             kfree(ofs->layers);
+> > >
+> > > That's _way_ too subtle.  AFAICS, you rely upon ->upper_mnt == ->layers[0].mnt,
+> > > ->layers[0].trap == NULL, without even mentioning that.  And the hack you do
+> > > mention...  Yecchhh...  How many layers are possible, again?
+> >
+> > 500, mounts array would fit inside a page and a page can be allocated
+> > with __GFP_NOFAIL. But why bother?  It's not all that bad, is it?
 >
->> +		}
->> +
->> +		if (dp83869->tx_id_delay) {
->> +			val = phy_get_delay_index(phydev,
->> +						  &dp83869_internal_delay[0],
->> +						  delay_size,
->> +						  dp83869->tx_id_delay);
->> +			if (val < 0)
->> +				return val;
->> +
->> +			delay |= val << DP83869_RGMII_TX_CLK_DELAY_SHIFT;
-> Likewise.
+> FWIW, it seems fine to me.
+> We can transfer the reference from upperdir_trap to layers[0].trap
+> when initializing layers[0] for the sake of clarity.
 
-Same as above
+Right, we should just get rid of ofs->upper_mnt and ofs->upperdir_trap
+and use ofs->layers[0] to store those.
 
-Dan
+Thanks,
+Miklos
 
