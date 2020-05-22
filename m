@@ -2,147 +2,118 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79239206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590152802;
-	bh=vjTmQw0BEnjuvo3CGKwGmgIAJmzCaayCTiJ5wxYbMsg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=llrQt50Ymc/6LctEzQQR8W+TTpPlno7VI3Uornd3wLr6jnkNcwIDALrc1VakKx+OC
-	 rWnjAdutz/xCe7Z83kWwGtUQSaUU3WE84hXfev7LBMUf+mjBZabPAoVL27XmXhgnqA
-	 BMzBYkXMIRKbrBHFw8Cq6uF29zpGMazh0yM0k73Q=
+	by mail.kernel.org (Postfix) with ESMTP id E13D420723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:06:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bJ2ETP+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgEVNGl (ORCPT
+        id S1729789AbgEVNG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbgEVNGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:06:34 -0400
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 22 May 2020 09:06:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbgEVNGy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 09:06:54 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66EFC061A0E;
+        Fri, 22 May 2020 06:06:51 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0d4900a503efeda57d2ecc.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:4900:a503:efed:a57d:2ecc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46EFA20825;
-        Fri, 22 May 2020 13:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590152793;
-        bh=vjTmQw0BEnjuvo3CGKwGmgIAJmzCaayCTiJ5wxYbMsg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KyI0WSj4naqZfhMsfQ/SRzzEsQPFbfdOphOSoui+TLRiUJ+np9K3bJnN5DdMzWoEM
-         CnOGrIhyLn4x7NAgqdr7SBZGcligzmcnSwKgOkoxEsVY42aSvu/YUO9rp71MNayN6J
-         k+sycbum8ovl7BsceuWSe3PkYKXbLUtbbdVlFOfY=
-Received: by mail-il1-f174.google.com with SMTP id b15so10555141ilq.12;
-        Fri, 22 May 2020 06:06:33 -0700 (PDT)
-X-Gm-Message-State: AOAM530ZggOmiajxMrJ0uZT2OSGC9mO8BqQdE7V+AJtTjzjD1ZSTQfMl
-        Vn4XNOZh89WcYt/wuBtqDdmEtyQhwaf8kwQ71YA=
-X-Google-Smtp-Source: ABdhPJx+t33PpWpnU28e1lAYt0t2+lAZpwZin3BFlts0fUSJB9fnFcamPhk2uejVRy6ikVFS9nsVPMHg+sP9psveAYQ=
-X-Received: by 2002:a92:3556:: with SMTP id c83mr11937439ila.218.1590152792429;
- Fri, 22 May 2020 06:06:32 -0700 (PDT)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2897F1EC02DD;
+        Fri, 22 May 2020 15:06:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590152808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=f1OkI+Vzd1wskJk7/8gnkbFS2SZjRjcQWBV0MrHyvlg=;
+        b=bJ2ETP+3jHY1hqbeNezyvTjFa461+jPOrZry8F9S8xH16sZfFsvcFIHR4ksBQqYeiw+S2+
+        QwhfpseLeEH4DgPNmZaOuxK5/qhQKZmV5EWN7wNcKxZf54FA6/HkFcfoZwM5iM2FqzJBsF
+        Haik+YqW5g+WJyUteTXbhb/9XVBguPo=
+Date:   Fri, 22 May 2020 15:06:41 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 45/75] x86/dumpstack/64: Handle #VC exception stacks
+Message-ID: <20200522130641.GE28750@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-46-joro@8bytes.org>
 MIME-Version: 1.0
-References: <20200517125754.8934-1-ardb@kernel.org>
-In-Reply-To: <20200517125754.8934-1-ardb@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 22 May 2020 15:06:20 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
-Message-ID: <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
-Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
-To:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Lenny Szubowicz <lszubowi@redhat.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Loic Yhuel <loic.yhuel@gmail.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Mike Lothian <mike@fireburn.co.uk>,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-46-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 May 2020 at 14:58, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> The following changes since commit a088b858f16af85e3db359b6c6aaa92dd3bc09=
-21:
->
->   efi/x86: Revert struct layout change to fix kexec boot regression (2020=
--04-14 08:32:17 +0200)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-urge=
-nt
->
-> for you to fetch changes up to b4f1874c62168159fdb419ced4afc77c1b51c475:
->
->   tpm: check event log version before reading final events (2020-05-17 11=
-:46:50 +0200)
->
-> ----------------------------------------------------------------
-> EFI fixes for v5.7-rcX:
-> - fix EFI framebuffer earlycon for wide fonts
-> - avoid filling screen_info with garbage if the EFI framebuffer is not
->   available
-> - fix a potential host tool build error due to a symbol clash on x86
-> - work around a EFI firmware bug regarding the binary format of the TPM
->   final events table
-> - fix a missing memory free by reworking the E820 table sizing routine to
->   not do the allocation in the first place
-> - add CPER parsing for firmware errors
->
-> ----------------------------------------------------------------
-> Arvind Sankar (1):
->       x86/boot: Mark global variables as static
->
-> Benjamin Thiel (1):
->       efi: Pull up arch-specific prototype efi_systab_show_arch()
->
-> Dave Young (1):
->       efi/earlycon: Fix early printk for wider fonts
->
-> Heinrich Schuchardt (1):
->       efi/libstub: Avoid returning uninitialized data from setup_graphics=
-()
->
-> Lenny Szubowicz (1):
->       efi/libstub/x86: Avoid EFI map buffer alloc in allocate_e820()
->
-> Lo=C3=AFc Yhuel (1):
->       tpm: check event log version before reading final events
->
-> Punit Agrawal (1):
->       efi: cper: Add support for printing Firmware Error Record Reference
->
->  arch/x86/boot/tools/build.c             | 16 ++++-----
->  drivers/firmware/efi/cper.c             | 62 +++++++++++++++++++++++++++=
-++++++
->  drivers/firmware/efi/earlycon.c         | 14 ++++----
->  drivers/firmware/efi/efi.c              |  5 +--
->  drivers/firmware/efi/libstub/arm-stub.c |  6 +++-
->  drivers/firmware/efi/libstub/efistub.h  | 13 +++++++
->  drivers/firmware/efi/libstub/mem.c      |  2 --
->  drivers/firmware/efi/libstub/tpm.c      |  5 +--
->  drivers/firmware/efi/libstub/x86-stub.c | 24 +++++--------
->  drivers/firmware/efi/tpm.c              |  5 ++-
->  include/linux/cper.h                    |  9 +++++
->  include/linux/efi.h                     |  2 ++
->  12 files changed, 124 insertions(+), 39 deletions(-)
+On Tue, Apr 28, 2020 at 05:16:55PM +0200, Joerg Roedel wrote:
+> diff --git a/arch/x86/include/asm/stacktrace.h b/arch/x86/include/asm/stacktrace.h
+> index 14db05086bbf..2f3534ef4b5f 100644
+> --- a/arch/x86/include/asm/stacktrace.h
+> +++ b/arch/x86/include/asm/stacktrace.h
+> @@ -21,6 +21,10 @@ enum stack_type {
+>  	STACK_TYPE_ENTRY,
+>  	STACK_TYPE_EXCEPTION,
+>  	STACK_TYPE_EXCEPTION_LAST = STACK_TYPE_EXCEPTION + N_EXCEPTION_STACKS-1,
+> +#ifdef CONFIG_X86_64
 
-Ping?
+CONFIG_AMD_MEM_ENCRYPT
+
+> +	STACK_TYPE_VC,
+> +	STACK_TYPE_VC_LAST = STACK_TYPE_VC + N_VC_STACKS - 1,
+> +#endif
+>  };
+>  
+>  struct stack_info {
+> diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+> index 87b97897a881..2468963c1424 100644
+> --- a/arch/x86/kernel/dumpstack_64.c
+> +++ b/arch/x86/kernel/dumpstack_64.c
+> @@ -18,6 +18,7 @@
+>  
+>  #include <asm/cpu_entry_area.h>
+>  #include <asm/stacktrace.h>
+> +#include <asm/sev-es.h>
+>  
+>  static const char * const exception_stack_names[] = {
+>  		[ ESTACK_DF	]	= "#DF",
+> @@ -47,6 +48,9 @@ const char *stack_type_name(enum stack_type type)
+>  	if (type >= STACK_TYPE_EXCEPTION && type <= STACK_TYPE_EXCEPTION_LAST)
+>  		return exception_stack_names[type - STACK_TYPE_EXCEPTION];
+>  
+> +	if (type >= STACK_TYPE_VC && type <= STACK_TYPE_VC_LAST)
+
+That test can be inside vc_stack_name() so that it gets optimized away
+for !CONFIG_AMD_MEM_ENCRYPT and there's no need for ifdeffery.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
