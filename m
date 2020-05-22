@@ -2,139 +2,278 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A0BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B09820723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A76C206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:40:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fctbeo2r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GP/2uSzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgEVLkq (ORCPT
+        id S1729532AbgEVLk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
+        Fri, 22 May 2020 07:40:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgEVLkp (ORCPT
+        with ESMTP id S1728901AbgEVLk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:40:45 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD40C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 04:40:45 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id r125so6299768lff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 04:40:45 -0700 (PDT)
+        Fri, 22 May 2020 07:40:56 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6127C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 04:40:55 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m12so9837532ljc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 04:40:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Hj2fTCjbxOKsyZP7M3oTIyRA9mJ2Bc+fUg1m8uH2yYk=;
-        b=Fctbeo2rUCXQwGpTpFGVse8+WCb+g1DgkimSxd0aywjWQzd7bhxHHSHfy1FP+QqJ5E
-         HQGcAIndvBPaVq+mvvXrYxa60iZ270cp/hL7v335T389bW5HYMkEi/Mut44zha6NDaG4
-         UCrNm9pJDDi2UNXl+PlD6bv/w4smxNEG9g8AyCyft6tAOApW/apnSn16+WYKI0WwO/LX
-         QygL+8MKePZCy7xTU8Q+o6DXxVRskTBMwRQQsFJ+VR7QHRA9Pic1hmOdE0dfFierlTBM
-         XmumN0HJD7IHx+R0ZAzFlmPROpUU2YmKdDsZd/Q7eTLT58JceLPdRakROdwY5S4uTJxp
-         Cehw==
+        bh=HUwB/tVghw1PL8fq6ymw9A75C4zIH3EAQS0ayEAhcaY=;
+        b=GP/2uSzOJ5Xdhl1GiicY1jD4Ht9ry3PDrBxBNLqGEAahNyk75j/3NtvzIHa+vxd26b
+         Eb6OmYOiFuitsr4hcMhmmV+6pBUzsLzpEDu1XBPVEl+X691d6xJ2p0HMKpP6+NryBVvv
+         x66KssNrQduxm6XixWqeFR+oWK4C7m6lovuZ2jIz6r3H/nVpPaIl2QVF3qKT20mWUpdm
+         SY7HP+YIM7lnfiBxq5hcVmb5Nbyg5rlJeI6dDbkrzT2TjqLO77EdIvbVP34VDQNarp6U
+         UtXXyOB5kSjqUomewz3qOAM0pUczwNmNMRUZcR8A0/I5c5nYCRyNZsXB1qIybsooJkJj
+         LBEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Hj2fTCjbxOKsyZP7M3oTIyRA9mJ2Bc+fUg1m8uH2yYk=;
-        b=ikks4OUmV7o9J6aw0q4UQuKSvYm8ITAsqpFx7/hveNfHqGGNfYNvX0yS4+RUPOvvgT
-         9NttISV+1d4JFWlkAgf7khGgY89fpoYWl62TtEc5V6LBnOA63Uob/Ni7/c5ArCHdV/5D
-         IvOJPt01b0qi1OlhD1a5OMZhFInjCMWR/hOhpeSPOY0kHHggz7dyBMRp4P5ZCWTJLChm
-         Zq4NAbEDoAM2wBvKbv6UC12M3Tbngn5TzuXTD90n85DmtBrMOIdVqlhNfEE4juY7N1iO
-         DKvu2bjKi4zPcOxBIi0H8DDM2B0fiCRxyTv6zIdGmmI/buqyd2lMM3BhE1oTCqeF2m5t
-         A0qA==
-X-Gm-Message-State: AOAM532m4vO1yn2BBhh1ckAvAbxywmZA3cbM+jBZgYW10Si5Q1hmCNGl
-        lRHhXkvEt2EuA3FTU0TrRSv7mXxzkpOTwdCH3zddtI1z
-X-Google-Smtp-Source: ABdhPJyCH6J7CaJtTe9PzunF+afSux/PTZRtv8MDXaAqacG2ZKbC4Y+MdKt3boWpmeIuz1KBImEFTAKzX+qejKOKM8k=
-X-Received: by 2002:ac2:53a2:: with SMTP id j2mr7071822lfh.139.1590147643673;
- Fri, 22 May 2020 04:40:43 -0700 (PDT)
+        bh=HUwB/tVghw1PL8fq6ymw9A75C4zIH3EAQS0ayEAhcaY=;
+        b=lzmsFfSwx4+zwlurpolHmDW/n20KvYggWwUXAF95cN1YR3Nmc1lYRSG+oxRVSvBhSa
+         AWKVAZx7a34g6s7X84ibLR4MqOOrhpMgGM9W4b4/g8lE12iLKQCLW36rbIsfUJsECaHw
+         Usd51h3zjiii44Aq+diSFQwj1LgLYnoPpxGaT0NWk98Sku8dQrYrABlF0jUwGSdFFC2U
+         oOFf9gJn6v25gVCeaX+4AO8OOlCUbS3nA5FEartT5niuillZeS/izouG6a3SlH5Is1lG
+         Xkp3ZhlreSVXqTarsQnKcZxloxhrr4TE82dSnzO2l82qI/JFtQSQLdz1CMAymPeKa4t4
+         UvYg==
+X-Gm-Message-State: AOAM531vjqa8BQfk4Q8pSScVKVxfWBxwMibMUrSGvMGMY5G7/NadD611
+        K+OJzLleyaJSZI7kzkcLr941BcBGTBX/JtDjop0FMw==
+X-Google-Smtp-Source: ABdhPJzBIV47w1ACWmbkYZ508hhcV22uCHwdu61X3pIJ8OKcHkRhzkMSP8t97aAYgWiFB/dzQXagtBbwQvHA3FM5zIk=
+X-Received: by 2002:a2e:9490:: with SMTP id c16mr7788930ljh.110.1590147654044;
+ Fri, 22 May 2020 04:40:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200519002124.2025955-1-jhubbard@nvidia.com>
-In-Reply-To: <20200519002124.2025955-1-jhubbard@nvidia.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Fri, 22 May 2020 17:10:32 +0530
-Message-ID: <CAFqt6zZTZrB=LiGQpcOtZfnr7-CL4tkLHz8eXFvxwCTcfKy4sQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] mm/gup, drm/i915: refactor gup_fast, convert to pin_user_pages()
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
+References: <20200521064743.4769-1-maxim.uvarov@linaro.org> <20200521064743.4769-2-maxim.uvarov@linaro.org>
+In-Reply-To: <20200521064743.4769-2-maxim.uvarov@linaro.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 22 May 2020 17:10:42 +0530
+Message-ID: <CAFA6WYOWj4umG+c7nDxeH-dm+W9uMxQPKvT_hKrYTd81af7HLA@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] optee: do drivers initialization before and after
+ tee-supplicant run
+To:     Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        jgg@ziepe.ca, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+Hi Maxim,
 
+On Thu, 21 May 2020 at 12:17, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>
+> Some drivers (like ftpm) can operate only after tee-supplicant
+> runs becase of tee-supplicant provides things like storage
+> services.  This patch splits probe of non tee-supplicant dependable
+> drivers to early stage, and after tee-supplicant run probe other
+> drivers.
+>
+> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
+> Suggested-by: Arnd Bergmann <arnd@linaro.org>
+> ---
+>  drivers/tee/optee/core.c          | 25 ++++++++++++++++++++++---
+>  drivers/tee/optee/device.c        | 17 +++++++++++------
+>  drivers/tee/optee/optee_private.h |  8 +++++++-
+>  3 files changed, 40 insertions(+), 10 deletions(-)
+>
 
-On Tue, May 19, 2020 at 5:51 AM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> This needs to go through Andrew's -mm tree, due to adding a new gup.c
-> routine. However, I would really love to have some testing from the
-> drm/i915 folks, because I haven't been able to run-time test that part
-> of it.
->
-> Otherwise, though, the series has passed my basic run time testing:
-> some LTP tests, some xfs and etx4 non-destructive xfstests, and an
-> assortment of other smaller ones: vm selftests, io_uring_register, a
-> few more. But that's only on one particular machine. Also, cross-compile
-> tests for half a dozen arches all pass.
->
-> Details:
->
-> In order to convert the drm/i915 driver from get_user_pages() to
-> pin_user_pages(), a FOLL_PIN equivalent of __get_user_pages_fast() was
-> required. That led to refactoring __get_user_pages_fast(), with the
-> following goals:
->
-> 1) As above: provide a pin_user_pages*() routine for drm/i915 to call,
->    in place of __get_user_pages_fast(),
->
-> 2) Get rid of the gup.c duplicate code for walking page tables with
->    interrupts disabled. This duplicate code is a minor maintenance
->    problem anyway.
->
-> 3) Make it easy for an upcoming patch from Souptick, which aims to
->    convert __get_user_pages_fast() to use a gup_flags argument, instead
->    of a bool writeable arg.  Also, if this series looks good, we can
->    ask Souptick to change the name as well, to whatever the consensus
->    is. My initial recommendation is: get_user_pages_fast_only(), to
->    match the new pin_user_pages_only().
+This patch still doesn't seem to address the issue (duplicate devices
+leading to sysfs registration failure) that was pointed during OP-TEE
+patch review [1].
 
-Shall I hold my changes till 5.8-rc1 , when this series will appear upstream ?
+You could reproduce it simply with one TA having TA_FLAG_DEVICE_ENUM
+flag and other TA having TA_FLAG_DEVICE_ENUM_SUPP flag.
+
+[1] https://github.com/OP-TEE/optee_os/pull/3840#discussion_r425144487
+
+-Sumit
+
+> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+> index 99698b8a3a74..dd2265c44907 100644
+> --- a/drivers/tee/optee/core.c
+> +++ b/drivers/tee/optee/core.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/tee_drv.h>
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/workqueue.h>
+>  #include "optee_private.h"
+>  #include "optee_smc.h"
+>  #include "shm_pool.h"
+> @@ -218,6 +219,15 @@ static void optee_get_version(struct tee_device *teedev,
+>         *vers = v;
+>  }
 >
-> John Hubbard (4):
->   mm/gup: move __get_user_pages_fast() down a few lines in gup.c
->   mm/gup: refactor and de-duplicate gup_fast() code
->   mm/gup: introduce pin_user_pages_fast_only()
->   drm/i915: convert get_user_pages() --> pin_user_pages()
+> +static void optee_bus_scan(struct work_struct *work)
+> +{
+> +       int rc;
+> +
+> +       rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP);
+> +       if (rc)
+> +               pr_err("optee_enumerate_devices failed %d\n", rc);
+> +}
+> +
+>  static int optee_open(struct tee_context *ctx)
+>  {
+>         struct optee_context_data *ctxdata;
+> @@ -241,8 +251,15 @@ static int optee_open(struct tee_context *ctx)
+>                         kfree(ctxdata);
+>                         return -EBUSY;
+>                 }
+> -       }
 >
->  drivers/gpu/drm/i915/gem/i915_gem_userptr.c |  22 +--
->  include/linux/mm.h                          |   3 +
->  mm/gup.c                                    | 150 ++++++++++++--------
->  3 files changed, 107 insertions(+), 68 deletions(-)
+> +               INIT_WORK(&optee->scan_bus_work, optee_bus_scan);
+> +               optee->scan_bus_wq = create_workqueue("optee_bus_scan");
+> +               if (!optee->scan_bus_wq) {
+> +                       pr_err("optee: couldn't create workqueue\n");
+> +                       return -ECHILD;
+> +               }
+> +               queue_work(optee->scan_bus_wq, &optee->scan_bus_work);
+> +       }
+>         mutex_init(&ctxdata->mutex);
+>         INIT_LIST_HEAD(&ctxdata->sess_list);
 >
+> @@ -296,8 +313,10 @@ static void optee_release(struct tee_context *ctx)
 >
-> base-commit: 642b151f45dd54809ea00ecd3976a56c1ec9b53d
+>         ctx->data = NULL;
+>
+> -       if (teedev == optee->supp_teedev)
+> +       if (teedev == optee->supp_teedev) {
+> +               destroy_workqueue(optee->scan_bus_wq);
+>                 optee_supp_release(&optee->supp);
+> +       }
+>  }
+>
+>  static const struct tee_driver_ops optee_ops = {
+> @@ -675,7 +694,7 @@ static int optee_probe(struct platform_device *pdev)
+>
+>         platform_set_drvdata(pdev, optee);
+>
+> -       rc = optee_enumerate_devices();
+> +       rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES);
+>         if (rc) {
+>                 optee_remove(pdev);
+>                 return rc;
+> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+> index e3a148521ec1..d4931dad07aa 100644
+> --- a/drivers/tee/optee/device.c
+> +++ b/drivers/tee/optee/device.c
+> @@ -21,7 +21,6 @@
+>   * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
+>   * TEE_ERROR_SHORT_BUFFER - Output buffer size less than required
+>   */
+> -#define PTA_CMD_GET_DEVICES            0x0
+>
+>  static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
+>  {
+> @@ -32,7 +31,8 @@ static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
+>  }
+>
+>  static int get_devices(struct tee_context *ctx, u32 session,
+> -                      struct tee_shm *device_shm, u32 *shm_size)
+> +                      struct tee_shm *device_shm, u32 *shm_size,
+> +                      u32 func)
+>  {
+>         int ret = 0;
+>         struct tee_ioctl_invoke_arg inv_arg;
+> @@ -42,7 +42,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+>         memset(&param, 0, sizeof(param));
+>
+>         /* Invoke PTA_CMD_GET_DEVICES function */
+> -       inv_arg.func = PTA_CMD_GET_DEVICES;
+> +       inv_arg.func = func;
+>         inv_arg.session = session;
+>         inv_arg.num_params = 4;
+>
+> @@ -87,7 +87,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+>         return rc;
+>  }
+>
+> -int optee_enumerate_devices(void)
+> +static int __optee_enumerate_devices(u32 func)
+>  {
+>         const uuid_t pta_uuid =
+>                 UUID_INIT(0x7011a688, 0xddde, 0x4053,
+> @@ -118,7 +118,7 @@ int optee_enumerate_devices(void)
+>                 goto out_ctx;
+>         }
+>
+> -       rc = get_devices(ctx, sess_arg.session, NULL, &shm_size);
+> +       rc = get_devices(ctx, sess_arg.session, NULL, &shm_size, func);
+>         if (rc < 0 || !shm_size)
+>                 goto out_sess;
+>
+> @@ -130,7 +130,7 @@ int optee_enumerate_devices(void)
+>                 goto out_sess;
+>         }
+>
+> -       rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size);
+> +       rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size, func);
+>         if (rc < 0)
+>                 goto out_shm;
+>
+> @@ -158,3 +158,8 @@ int optee_enumerate_devices(void)
+>
+>         return rc;
+>  }
+> +
+> +int optee_enumerate_devices(u32 func)
+> +{
+> +       return  __optee_enumerate_devices(func);
+> +}
+> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
+> index d9c5037b4e03..6cdac4bb7253 100644
+> --- a/drivers/tee/optee/optee_private.h
+> +++ b/drivers/tee/optee/optee_private.h
+> @@ -78,6 +78,8 @@ struct optee_supp {
+>   * @memremaped_shm     virtual address of memory in shared memory pool
+>   * @sec_caps:          secure world capabilities defined by
+>   *                     OPTEE_SMC_SEC_CAP_* in optee_smc.h
+> + * @scan_bus_wq                workqueue to scan optee bus and register optee drivers
+> + * @scan_bus_work      workq to scan optee bus and register optee drivers
+>   */
+>  struct optee {
+>         struct tee_device *supp_teedev;
+> @@ -89,6 +91,8 @@ struct optee {
+>         struct tee_shm_pool *pool;
+>         void *memremaped_shm;
+>         u32 sec_caps;
+> +       struct workqueue_struct *scan_bus_wq;
+> +       struct work_struct scan_bus_work;
+>  };
+>
+>  struct optee_session {
+> @@ -173,7 +177,9 @@ void optee_free_pages_list(void *array, size_t num_entries);
+>  void optee_fill_pages_list(u64 *dst, struct page **pages, int num_pages,
+>                            size_t page_offset);
+>
+> -int optee_enumerate_devices(void);
+> +#define PTA_CMD_GET_DEVICES            0x0
+> +#define PTA_CMD_GET_DEVICES_SUPP       0x1
+> +int optee_enumerate_devices(u32 func);
+>
+>  /*
+>   * Small helpers
 > --
-> 2.26.2
+> 2.17.1
 >
