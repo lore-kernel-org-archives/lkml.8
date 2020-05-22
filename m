@@ -2,131 +2,156 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C18C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052BC20756
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BeLXgfkA"
+	by mail.kernel.org (Postfix) with ESMTP id 12C0D20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590169147;
+	bh=uZktogMIldBXs3EnkclH2OcbwF2xvrt9qAcFBj9JxyA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=RMjMF7BQivd0UG8YFs8eoZIxhSuI/D/wREMC9Jx/is3DX1BJwUD5J2gx6cHmDRnIh
+	 AyCDj3JLA2kBuV9yJPVQJP8enPX54tQaZcpRmgFESV0WeOjrAoAk/aSd1eQgS+Lnuz
+	 yK1jkmf71Dvuh2IwhC2FDoZR+bIMxwcdlm6/tsOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbgEVRgx (ORCPT
+        id S1730747AbgEVRjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:36:53 -0400
-Received: from mout.gmx.net ([212.227.15.19]:35025 "EHLO mout.gmx.net"
+        Fri, 22 May 2020 13:39:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730572AbgEVRgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:36:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590168963;
-        bh=L8OHkKiGCB/f+IXGOvXlrA5dVZpPxKv0KWhPeCEfQiU=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=BeLXgfkAIYebk7dPy/b/dHEAFaJjpOKqtoTzjnKVAW06ogNORfIBepC20GqIxMD4h
-         zFf8XH+aqqUE9rOOAVt7tRhQ8iAzw1u9Fn/jzKYz3gz5wy76dVx5rnFmiyYWgXqG/8
-         zS41n3XBx7P/lOPsGptgJBPdUEv4ekgyuFVGwTos=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MmULr-1jCEVO1rBh-00iRzC; Fri, 22
- May 2020 19:36:03 +0200
-Date:   Fri, 22 May 2020 19:35:49 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>, keescook@chromium.org,
-        mchehab@kernel.org, clemens@ladisch.de, tiwai@suse.de,
-        perex@perex.cz
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        kernel-hardening@lists.openwall.com,
-        linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        levonshe@gmail.com, alsa-devel@alsa-project.org,
-        stefanr@s5r6.in-berlin.de
-Subject: Re: [PATCH 0/2] firewire: obsolete cast of function callback toward
- CFI
-Message-ID: <20200522173549.GA3059@ubuntu>
-References: <20200520064726.31838-1-o-takashi@sakamocchi.jp>
+        id S1730572AbgEVRjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 13:39:05 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89F0F20723;
+        Fri, 22 May 2020 17:39:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590169145;
+        bh=uZktogMIldBXs3EnkclH2OcbwF2xvrt9qAcFBj9JxyA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CVlVu6Tl94Ujfw9k+IunjftvcjK9C0E5co+apqaj98AFWqlF1k/xFfB1D4Tn8Mz1R
+         b+mYAeybR5/5Tk1oGForFgLQgPWPhUFM3BCr3kFzjllepPyv3cM4eHTOVMa1j5ZaDr
+         DGq2QtamnmFGWx9kw7NSfnWlTcOVm1PJBa3r43Jg=
+Date:   Fri, 22 May 2020 12:43:55 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] drm/[radeon|amdgpu]: Replace one-element array and use
+ struct_size() helper
+Message-ID: <20200522174355.GA4406@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520064726.31838-1-o-takashi@sakamocchi.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:FBWJEV1Z+urCsYOxGe/qn+1ueZnIfzXJgXzE4sYXx2E6pTYxzTv
- z+vuWi/c+ugAv7NWN04Ae5Py94IM94abNLP1X0yCKYKEFIpu63slErlj9Fhy71e4OHzYglB
- +lQqRKUx5IjQ07W1dZ28vMOnrvIxckwJzFlxHK/OLsyentYpWqqW6H0z/J+wo+Rho3M4EOR
- yy6Jf31X/2ADUl48LCMBA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qQZnxhBV1OE=:rHKO2Cr/IEWABaxDAPPKV6
- o3uezfePqPg8YTDyafPdmkb+4ckMJPNxVRQkNHKzYeHo+Os6qkNQUSxxTHCmQFDhfBQb0jNHh
- BdBqwZG+aGRrCkMv5CdCwkQ/d4GyQt9bgCR4jlFZ3jv49X5MW7L0b7Dmpbpa8g1BZ6mcyNDVH
- JFRDJGUlEAZFnnpwaHhJCBD3LS5z+DD4ubbcGszKZYshC6FDJERTbifdP0VSzin5thJm4wMLl
- s+Pqk3W+LI/3M2B2Ot5cHoHa2TmxhrYXisqjRtZNNrvr2G9PUbJxPUV2jRf/9MlCz7zvtx7w2
- IhWpaXJbAvi/KoT2F5zMykbYL3rrOmkRqwmvw8cQZmEtJgUUIBZdOEgJU0WVGBTf4IQou6u8y
- yfBXCYXnSXmc7UqZn+Xr+wkFqRiBd4AEjqzDYOIMOOproICCTYf3XOvSuf+jdUXvW8nbbY3M9
- 3lvNG0t8kNHp/P/0p5WO3EsA7AObaFik3wTY32uWwIJH4b8U4h7wbNSR+0TWc76+PLLSZWnnw
- WFpv4AzhWrXeSCXgpeabnNO9lDgc3aDUW3oMeIO8NTErhmEJztO/Md2W3YtHrt4rXPankumz9
- lMAQTUARY+TKYggs6JnZQrfRsmfP4N/6EjPWvVbp4Xi333kuxYEGyoMLu4yHcXZJHi4mAaihJ
- EfJyvM+pNSejc0KDT/mrCEuZ7ODbAXJsIo6FYU83i7jv+2kVtURdOgPdsTv3bgnC/9gU5Wo2p
- qO8l/TM+osXKI7V7SBWWh8XsBndANr8TxGGJ9SS4gFG2ZmV5cXw5KsganYsF0rT/b804BTW/p
- bL0mRLhw5i+gXNVqYUrA7hfSTNq83sw1cJHT6P6L+T+VHC6QLeQo1X+scEuKtTeQIL+A/zibh
- aikX9N2HOSiKma4BOujmTmP2sFZbygP3CmxmYE5oI1eg8fsxyzzT1fsM4MaKQ1VwueAxyPxv/
- QLQUlcvW09MYGaIgN2THxOeQSa8zuDJWMglQ19+o3DqtjSGi/H0BAtvukYx46jFOUu1kwDtTg
- ooprer23ED/ADxKx4B7Ym+/ptHya3yxwKz/9nJ1xPgCMd7p8bbbtKAnowRofqh5PdmFBWuryE
- sIkYM2rpcNAYV4c+6ui8wgVr9kWwnSx8bqUTEKF2biSG45/AE4bEItsUyOXejHsTjvmTSQZ4m
- opPsBqRorwR0fA0Y4Xif41sZWA/dty4A+hdK2FyzhaEC5O4xhBisLmMxCbRO/tAqcGH+ysXFZ
- ZmLIFobfRvFTtpOLP
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The current codebase makes use of one-element arrays in the following
+form:
 
-On Wed, May 20, 2020 at 03:47:24PM +0900, Takashi Sakamoto wrote:
-> Hi,
->
-> Oscar Carter works for Control Flow Integrity build. Any cast
-> of function callback is inconvenient for the work. Unfortunately,
-> current code of firewire-core driver includes the cast[1] and Oscar
-> posted some patches to remove it[2]. The patch is itself good. However,
-> it includes changes existent kernel API and all of drivers as user
-> of the API get affects from the change.
->
-> This patchset is an alternative idea to add a new kernel API specific
-> for multichannel isoc context. The existent kernel API and drivers is
-> left as is.
->
-> Practically, no in-kernel drivers use the additional API. Although the
-> API is exported in the patchset, it's better to discuss about unexportin=
-g
-> the API.
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
-ree/drivers/firewire/core-cdev.c#n985
-> [2] https://lore.kernel.org/lkml/20200519173425.4724-1-oscar.carter@gmx.=
-com/
->
-> Regards
->
-> Takashi Sakamoto (2):
->   firewire-core: add kernel API to construct multichannel isoc context
->   firewire-core: obsolete cast of function callback
->
->  drivers/firewire/core-cdev.c | 44 +++++++++++++++++++-----------------
->  drivers/firewire/core-iso.c  | 17 ++++++++++++++
->  include/linux/firewire.h     |  3 +++
->  3 files changed, 43 insertions(+), 21 deletions(-)
->
-> --
-> 2.25.1
->
-Thanks for your work and new proposal. I've done a test build an it cleans=
- the
--Wcast-function-type warning without the need to change the current API. S=
-o, it
-looks good to me.
+struct something {
+    int length;
+    u8 data[1];
+};
 
-Thanks,
-Oscar Carter
+struct something *instance;
+
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+but the preferred mechanism to declare variable-length types such as
+these ones is a flexible array member[1][2], introduced in C99:
+
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on. So, replace
+the one-element array with a flexible-array member.
+
+Also, make use of the new struct_size() helper to properly calculate the
+size of struct SISLANDS_SMC_SWSTATE.
+
+This issue was found with the help of Coccinelle and, audited and fixed
+_manually_.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/si_dpm.c       | 5 ++---
+ drivers/gpu/drm/amd/amdgpu/sislands_smc.h | 2 +-
+ drivers/gpu/drm/radeon/si_dpm.c           | 5 ++---
+ 3 files changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.c b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+index c00ba4b23c9a6..0fc56c5bac080 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si_dpm.c
++++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.c
+@@ -5715,10 +5715,9 @@ static int si_upload_sw_state(struct amdgpu_device *adev,
+ 	int ret;
+ 	u32 address = si_pi->state_table_start +
+ 		offsetof(SISLANDS_SMC_STATETABLE, driverState);
+-	u32 state_size = sizeof(SISLANDS_SMC_SWSTATE) +
+-		((new_state->performance_level_count - 1) *
+-		 sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
+ 	SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
++	size_t state_size = struct_size(smc_state, levels,
++					new_state->performance_level_count);
+ 
+ 	memset(smc_state, 0, state_size);
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/sislands_smc.h b/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
+index d2930eceaf3c8..a089dbf8f7a93 100644
+--- a/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
++++ b/drivers/gpu/drm/amd/amdgpu/sislands_smc.h
+@@ -186,7 +186,7 @@ struct SISLANDS_SMC_SWSTATE
+     uint8_t                             levelCount;
+     uint8_t                             padding2;
+     uint8_t                             padding3;
+-    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
++    SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+ };
+ 
+ typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
+diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
+index a167e1c36d243..bab01ca864c63 100644
+--- a/drivers/gpu/drm/radeon/si_dpm.c
++++ b/drivers/gpu/drm/radeon/si_dpm.c
+@@ -5253,10 +5253,9 @@ static int si_upload_sw_state(struct radeon_device *rdev,
+ 	int ret;
+ 	u32 address = si_pi->state_table_start +
+ 		offsetof(SISLANDS_SMC_STATETABLE, driverState);
+-	u32 state_size = sizeof(SISLANDS_SMC_SWSTATE) +
+-		((new_state->performance_level_count - 1) *
+-		 sizeof(SISLANDS_SMC_HW_PERFORMANCE_LEVEL));
+ 	SISLANDS_SMC_SWSTATE *smc_state = &si_pi->smc_statetable.driverState;
++	size_t state_size = struct_size(smc_state, levels,
++					new_state->performance_level_count);
+ 
+ 	memset(smc_state, 0, state_size);
+ 
+-- 
+2.26.2
+
