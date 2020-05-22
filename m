@@ -2,143 +2,122 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF17C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84901222B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:39:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CVZmJGW0"
+	by mail.kernel.org (Postfix) with ESMTP id 99F9520DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:41:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgEVOjo (ORCPT
+        id S1730063AbgEVOlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:39:44 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60388 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729868AbgEVOjo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:39:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Q+wlQfoEZBNLKtuvrE+VsWClCngPETJs+hYOYiKjbhU=; b=CVZmJGW0vYxZD0dmWgAVrVlcC6
-        OxTGfTA2htrPPwKStyJK8IPEdzI1eKFHUyoJO8Bb+p1/FvoRhqelkgnpZAgqacgVHT/1e5EiJmRkY
-        BYhMjaEvOlUV0ifDXrX7NACw5hzlV2hpo67tvpLPAChsXJRVTxf4TIE5fahQBDnfx/+OBqG40r1U5
-        hj+9OnRjUeECs+0rViU3e0Cnk+FNI4biae4psOBS6vk5jiLR2UGRzDA+iz4YTUfgOu6RAn5+ryjsD
-        ilZ3naiuwM4eBylf9pT5lWpKo0Xhk/I2XF2I/HyTNEeiXxmG/vJarKf2xf+P8W1ZRyYVpPPHACAJa
-        eJz2dDaQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jc8pE-0003Bp-KA; Fri, 22 May 2020 14:39:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E9AC53011E8;
-        Fri, 22 May 2020 16:38:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B043620BDB12E; Fri, 22 May 2020 16:38:57 +0200 (CEST)
-Date:   Fri, 22 May 2020 16:38:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
-        riel@surriel.com
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200522143857.GU317569@hirez.programming.kicks-ass.net>
-References: <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
- <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
- <20200513153023.GF3758@techsingularity.net>
- <20200514153122.GE2978@hirez.programming.kicks-ass.net>
- <20200515084740.GJ3758@techsingularity.net>
- <20200515111732.GS2957@hirez.programming.kicks-ass.net>
- <20200515142444.GK3001@hirez.programming.kicks-ass.net>
- <20200521103816.GA7167@techsingularity.net>
- <20200521114132.GI325280@hirez.programming.kicks-ass.net>
- <20200522132854.GF7167@techsingularity.net>
+        Fri, 22 May 2020 10:41:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41890 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729868AbgEVOlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:41:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C9FE2B1B6;
+        Fri, 22 May 2020 14:41:03 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 89DC71E126B; Fri, 22 May 2020 16:41:00 +0200 (CEST)
+Date:   Fri, 22 May 2020 16:41:00 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Martijn Coenen <maco@android.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, miklos@szeredi.hu, tj@kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        android-storage-core@google.com, kernel-team@android.com
+Subject: Re: Writeback bug causing writeback stalls
+Message-ID: <20200522144100.GE14199@quack2.suse.cz>
+References: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522132854.GF7167@techsingularity.net>
+In-Reply-To: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 02:28:54PM +0100, Mel Gorman wrote:
+Hi!
 
-> Is something like this on top of your patch what you had in mind?
+On Fri 22-05-20 11:57:42, Martijn Coenen wrote:
+<snip>
 
-All under the assumption that is makes it go faster of course ;-)
+> So, the sequence of events is something like this. Let's assume the inode is
+> already on b_dirty_time for valid reasons. Then:
+> 
+> CPU1                                          CPU2
+> fuse_flush()
+>   write_inode_now()
+>     writeback_single_inode()
+>       sets I_SYNC
+>         __writeback_single_inode()
+>           writes back data
+>           clears inode dirty flags
+>           unlocks inode
+>           calls mark_inode_dirty_sync()
+>             sets I_DIRTY_SYNC, but doesn't
+>             update wb list because I_SYNC is
+>             still set
+>                                               write() // somebody else writes
+>                                               mark_inode_dirty(I_DIRTY_PAGES)
+>                                               sets I_DIRTY_PAGES on i_state
+>                                               doesn't update wb list,
+>                                               because I_SYNC set
+>       locks inode again
+>       sees inode is still dirty,
+>       doesn't touch WB list
+>       clears I_SYNC
+> 
+> So now we have an inode on b_dirty_time with I_DIRTY_PAGES | I_DIRTY_SYNC set,
+> and subsequent calls to mark_inode_dirty() with either I_DIRTY_PAGES or
+> I_DIRTY_SYNC will do nothing to change that. The flusher won't touch
+> the inode either,
+> because it's not on a b_dirty or b_io list.
 
-> ---8<---
+Thanks for the detailed analysis and explanation! I agree that what you
+describe is a bug in the writeback code.
 
-static inline bool ttwu_queue_cond()
-{
-	/*
-	 * If the CPU does not share cache, then queue the task on the
-	 * remote rqs wakelist to avoid accessing remote data.
-	 */
-	if (!cpus_share_cache(smp_processor_id(), cpu))
-		return true;
+> The easiest way to fix this, I think, is to call requeue_inode() at the end of
+> writeback_single_inode(), much like it is called from writeback_sb_inodes().
+> However, requeue_inode() has the following ominous warning:
+> 
+> /*
+>  * Find proper writeback list for the inode depending on its current state and
+>  * possibly also change of its state while we were doing writeback.  Here we
+>  * handle things such as livelock prevention or fairness of writeback among
+>  * inodes. This function can be called only by flusher thread - noone else
+>  * processes all inodes in writeback lists and requeueing inodes behind flusher
+>  * thread's back can have unexpected consequences.
+>  */
+> 
+> Obviously this is very critical code both from a correctness and a performance
+> point of view, so I wanted to run this by the maintainers and folks who have
+> contributed to this code first.
 
-	/*
-	 * If the task is descheduling and the only running task on the
-	 * CPU, ....
-	 */
-	if ((wake_flags & WF_ON_RQ) && cpu_rq(cpu)->nr_running <= 1)
-		return true;
+Sadly, the fix won't be so easy. The main problem with calling
+requeue_inode() from writeback_single_inode() is that if there's parallel
+sync(2) call, inode->i_io_list is used to track all inodes that need writing
+before sync(2) can complete. So requeueing inodes in parallel while sync(2)
+runs can result in breaking data integrity guarantees of it. But I agree
+we need to find some mechanism to safely move inode to appropriate dirty
+list reasonably quickly.
 
-	return false;
-}
+Probably I'd add an inode state flag telling that inode is queued for
+writeback by flush worker and we won't touch dirty lists in that case,
+otherwise we are safe to update current writeback list as needed. I'll work
+on fixing this as when I was reading the code I've noticed there are other
+quirks in the code as well. Thanks for the report!
 
-> -static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-> +static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
->  {
-> -	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-> -		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
-> -		__ttwu_queue_remote(p, cpu, wake_flags);
-> -		return true;
-> +	if (sched_feat(TTWU_QUEUE)) {
-> +		/*
-> +		 * If CPU does not share cache then queue the task on the remote
-> +		 * rqs wakelist to avoid accessing remote data. Alternatively,
-> +		 * if the task is descheduling and the only running task on the
-> +		 * CPU then use the wakelist to offload the task activation to
-> +		 * the CPU that will soon be idle so the waker can continue.
-> +		 * nr_running is checked to avoid unnecessary task stacking.
-> +		 */
-> +		if (!cpus_share_cache(smp_processor_id(), cpu) ||
-> +		    ((wake_flags & WF_ON_RQ) && cpu_rq(cpu)->nr_running <= 1)) {
-> +			sched_clock_cpu(cpu); /* Sync clocks across CPUs */
-> +			__ttwu_queue_wakelist(p, cpu, wake_flags);
-> +			return true;
-> +		}
+								Honza
 
-	if (sched_feat(TTWU_QUEUE) && ttwu_queue_cond(cpu, wake_flags)) {
-		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
-		__ttwu_queue_remote(p, cpu, wake_flags);
-		return true;
-
->  	}
->  
->  	return false;
-
-
-might be easier to read...
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
