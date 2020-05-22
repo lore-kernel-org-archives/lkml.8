@@ -2,389 +2,182 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D02C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A82B20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC572054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Wa5omr10"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="jrBq7QyS";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="jrBq7QyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbgEVPWx (ORCPT
+        id S1730499AbgEVPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:22:53 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4516 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729931AbgEVPWx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:22:53 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec7edf90006>; Fri, 22 May 2020 08:21:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 22 May 2020 08:22:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 22 May 2020 08:22:50 -0700
-Received: from [10.2.164.184] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
+        Fri, 22 May 2020 11:23:02 -0400
+Received: from mail-vi1eur05on2058.outbound.protection.outlook.com ([40.107.21.58]:2528
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729931AbgEVPXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:23:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t0DW6q0BQj1Al1bcvt7pEjZrHD/WQhU3QwJ6YwpTWNg=;
+ b=jrBq7QySEgSXOnJUIx6aXWHOm44ArDO0K+rKY3tyPKwYR4eYCby3VqCrCOUOY5jeX0BwB9rWehuICqJ+iaPcyqUwwcUPZWwt/NmT97mJalxWJnSRCRA9iwKerclc4B+1NwHBTsGKjXeFgRIt+uO4oDlACmDs9Cj0dSnuRJR7cwQ=
+Received: from AM0PR03CA0046.eurprd03.prod.outlook.com (2603:10a6:208::23) by
+ AM6PR08MB4536.eurprd08.prod.outlook.com (2603:10a6:20b:bf::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.23; Fri, 22 May 2020 15:22:56 +0000
+Received: from AM5EUR03FT006.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:208:0:cafe::92) by AM0PR03CA0046.outlook.office365.com
+ (2603:10a6:208::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23 via Frontend
+ Transport; Fri, 22 May 2020 15:22:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT006.mail.protection.outlook.com (10.152.16.122) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.23 via Frontend Transport; Fri, 22 May 2020 15:22:56 +0000
+Received: ("Tessian outbound d078647f4174:v57"); Fri, 22 May 2020 15:22:56 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: ac270bb033927239
+X-CR-MTA-TID: 64aa7808
+Received: from b9ae6336ec08.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id EB87EB3E-DBD1-4082-8075-D5C6AAE5F2FF.1;
+        Fri, 22 May 2020 15:22:51 +0000
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b9ae6336ec08.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 22 May 2020 15:22:51 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O1FzwZGlZKEks3tusHYrAhXumo9V2kROsuFcG58QEOn4KqqIeIOeVeyyerTpsMc2ASk/hrJFgiZMpNGjzp7YxQYgyL0Qan+joCRDJUhLgs5dHgrxkPf/3DYk29i2wbfAzq21Vy8L49HO/8HGyCuEZrzQxn2WfAsNR9w8vU37dpmhoUPliUp53GnnfHeb3wm3b4r6TbN4cP7L7fdvqu4TubotjqVElSJUdmwjqAIeeVBLDrD4wcaXl++SkAJh3QVli97LaP7j7zbW2R3PeoXnROFSgmf59jCJ3iL7gaoY+C/fpArrTuDUA5Phvzfv7aj7gEDTWf8x6FAvhPDx4GbQ5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t0DW6q0BQj1Al1bcvt7pEjZrHD/WQhU3QwJ6YwpTWNg=;
+ b=JNMUjKstBgJb28KFdOzrpZAMZOCG9wuViG1D1vcrUanStTyWHJm/iN/zmPdSRENNJDiISVUiVqI2JtQPenltL9GnKdFrjCQhLtyRL0T6COdF4EWLcW8zeStcvYt6QGmRjLhsfoFeg2SCeZIUTkxOJhwJqOwj1xq0Q1zI4+Si7DpnBmNMSFKNKrTSoeslI1W94TC5arzwlTugEuih2p5ZBmYHfMbuA1NS50957r8ZTC5HZ16GZ+d6iL3yNF4XYF3WsIJIGkfS74ObKm23LyZ+Qjs113BlKmPGJrHClnGqQhQIDp2nqpvi7DeRNNNC3kO5hCSDng2nxv8RJGoghgGaMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t0DW6q0BQj1Al1bcvt7pEjZrHD/WQhU3QwJ6YwpTWNg=;
+ b=jrBq7QySEgSXOnJUIx6aXWHOm44ArDO0K+rKY3tyPKwYR4eYCby3VqCrCOUOY5jeX0BwB9rWehuICqJ+iaPcyqUwwcUPZWwt/NmT97mJalxWJnSRCRA9iwKerclc4B+1NwHBTsGKjXeFgRIt+uO4oDlACmDs9Cj0dSnuRJR7cwQ=
+Received: from DBBPR08MB4661.eurprd08.prod.outlook.com (2603:10a6:10:d6::16)
+ by DBBPR08MB4630.eurprd08.prod.outlook.com (2603:10a6:10:d6::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Fri, 22 May
  2020 15:22:49 +0000
-Subject: Re: [PATCH v1] sdhci: tegra: Remove warnings about missing
- device-tree properties
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <b4eb368e-adc2-7b77-3ae9-fefdcfddaf3d@gmail.com>
- <11c93dac-f5ba-2193-6f44-63af27fdce09@nvidia.com>
- <aed72c87-0e16-6dea-a4e2-7fc6a97cd313@nvidia.com>
- <c7469c16-f6f1-f9c0-566f-3b1d3774f130@nvidia.com>
- <c712de1d-cfa4-2746-ec6b-54f318aeaac2@nvidia.com>
- <d2c71267-e696-c459-fbd6-dbb5fd312ed3@gmail.com>
- <CAPDyKFqdeGyQpXpM+xynd_rWbi0S6hCeQS1Dyiy6Hd2E_yfHpg@mail.gmail.com>
- <96f917a3-d822-1c36-d088-3e4a322c1761@nvidia.com>
- <20200522121357.GD2163848@ulmo>
- <2fa9db46-e310-dbbc-e1f7-f7058435a688@gmail.com>
- <20200522123437.GF2163848@ulmo>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <920b9fdb-4435-b0d1-3f54-08a8ce97946d@nvidia.com>
-Date:   Fri, 22 May 2020 08:22:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from DBBPR08MB4661.eurprd08.prod.outlook.com
+ ([fe80::3591:2343:3c1e:e9f2]) by DBBPR08MB4661.eurprd08.prod.outlook.com
+ ([fe80::3591:2343:3c1e:e9f2%5]) with mapi id 15.20.3021.027; Fri, 22 May 2020
+ 15:22:49 +0000
+From:   Dave Rodgman <dave.rodgman@arm.com>
+To:     "C. Masloch" <pushbx@ulukai.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Willy Tarreau <w@1wt.eu>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/2] docs: lzo: fix incorrect statement about distance
+ zero for EOS
+Thread-Topic: [PATCH 2/2] docs: lzo: fix incorrect statement about distance
+ zero for EOS
+Thread-Index: AQHWMELVEJ9vc13HZ0eHRgw+0ScbE6i0SfKA
+Date:   Fri, 22 May 2020 15:22:49 +0000
+Message-ID: <C3AF092B-2B39-45C9-8FE5-4069B3B34C11@arm.com>
+References: <20200522141040.1353769-1-pushbx@ulukai.org>
+ <20200522141040.1353769-2-pushbx@ulukai.org>
+In-Reply-To: <20200522141040.1353769-2-pushbx@ulukai.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/16.37.20051002
+Authentication-Results-Original: ulukai.org; dkim=none (message not signed)
+ header.d=none;ulukai.org; dmarc=none action=none header.from=arm.com;
+x-originating-ip: [80.5.131.174]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 60491f37-a336-4f56-a001-08d7fe64011c
+x-ms-traffictypediagnostic: DBBPR08MB4630:|AM6PR08MB4536:
+X-Microsoft-Antispam-PRVS: <AM6PR08MB45368B324699E9395DE2ABCC8FB40@AM6PR08MB4536.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:10000;
+x-forefront-prvs: 04111BAC64
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: SelR4x5NgkREQlKNk0Oj3ECrESUcM7ao43rHsKWeEo4nTFUuytzeCT3uZJZWG65qiqI38lQr/3jfsFrUwcxbD5YbOf65lAgn82p6YLeZ0XKgw1CJcOixLhY2sOSt6pBXWXwrzzQvMuQLxKrzabrur9sWJtjIYwtfwE78Y+2Bcz2sUs52ye0JMiPcynqvB8HsXMtosZmYc/L5HiAWvhpsFtJ3pv1kjVAoNF1u/DfsnKMCCbfI2afOjuML0jvoS85zD++kSaommEmGAsawHQil4xZaOOojfijH3RJdRurnTaDUS6juijaFsgpqJJuOrdAVmY0gehPiHJVE3KE4xDwCjohK/6s+5ytiUfF9iz9kPNk+0mfFW+N7QdIcIBzWe0wjPr0/gPR5IE8OA+fx2et1C7Rev/VZp/COohD42/jsV93Lioi1Pk5clwZXrkZi4m8z
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4661.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(39860400002)(136003)(110136005)(4326008)(64756008)(478600001)(66446008)(66946007)(91956017)(2616005)(5660300002)(6506007)(6486002)(8676002)(8936002)(76116006)(316002)(36756003)(2906002)(26005)(44832011)(6512007)(33656002)(66476007)(54906003)(66556008)(71200400001)(86362001)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 9okb5M9k2fcv3MpQSBjID0mBkqY5pI8wylGAVxu1L8rPZ8pk5T352JoHB4fz58XvV0sXt1Fb7HFIyFH85Be/ZSid0esWNj0wOxRROFL5tZzEVd/n1V8mTxFIP4mhdEmx29sfKOzwfHqusOGZdKQg4t561DTQCAjqrSuI6vFBbAz+sMwGsxy3jPueVMEI+yjVW0wxUfnndJeoTW1TDsH2+lDxb7bQJAVmcy0iuoNJZ5b8Bd1e2WT7vg/oj5JlA2/ahritl2PmE9RoVLHAfY7exOdU7e652y1fTnVKDlZZPzpaQeRwJHdY7etp2NSk+Tr+JHEitUUI7uOVfgyB6xpRLuG0nWtYv0H6nh03SZLbHNx21XW+j+J4rdW5zkIqRjuE/paf34AnYvR5UyiH7rZXOCps6t8yS5nzxYupH6my76vZH1syXp0l5qbHgkDw5oDjFd88ouj/OdxMA6fALvO4uESUskBib8WE7bCylWhmC54=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FFDDC4571103E74BB5801ACB44AE5610@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200522123437.GF2163848@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590160890; bh=IaZ9YffEFC3iYJrEkew1x31EbYlZVh1Qx3z9l03lEhg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Wa5omr10c19/wlHL3MOlHFnlPjIjZXK7v3lQ/1RxbzVk3DYBDGG6dPbRtK3fnZ8u3
-         /YNjcea/RV3i2eo3JCJ56hxZlcS/R7h1gzT40T2+KJ/QJ+tzcADbMoqZbleWMZr4kK
-         9gjWn/vyviBQEOiUXstY1Ch1IkcOF23QmiVmgUHrYsuV6xDrNo5rW7nVGH0c8pnEhE
-         thAOqNtODTEAIDvbq7l4uwq69B2NwbLZsJJX8W2TbjR/amrwN998SBI6sDPAFNrdHp
-         GO1zQHhFP7bOM/Ih8yrGHI+nOLE2n3ev3qZCKtmQFUQ4R0W3glI2HhhmSN7sMcWIe9
-         8wmfWDk657PTA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4630
+Original-Authentication-Results: ulukai.org; dkim=none (message not signed)
+ header.d=none;ulukai.org; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT006.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(346002)(376002)(46966005)(2616005)(6512007)(86362001)(70206006)(54906003)(336012)(107886003)(70586007)(8676002)(110136005)(6486002)(44832011)(450100002)(316002)(47076004)(478600001)(186003)(33656002)(81166007)(26005)(2906002)(36756003)(6506007)(4326008)(5660300002)(82740400003)(8936002)(36906005)(356005)(82310400002);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 02bdc718-bc5d-420c-0c68-08d7fe63fd28
+X-Forefront-PRVS: 04111BAC64
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1uaZKoMBrnO4kQ/SaXq6CxECU40DA3I7B5FMiXt1kKJt0R41Yrioqa9tpwDMpKqmNeoZfyi9OO2l4L4P60E4uBboxymYZkDVlzZaIPZ7ZuVu28DRe8cgk7brXf7Iw/AqyhLOlPKW+Yw6YzX6s602W/cHcNrSC/CxYMRxfi1p4+E7qiCdurOhWRTRx0oa3o3NbNtbA8q2yvxq+HMqQQhWXcZ9m6wIW47FHCbwF1/vMhEFTAacRVXGbwxROvvr5aMNtRb577KT4s/SpyaEkllYD+dMro74/l5hVZpXMZjUkONKdZkWHxS9pEtLboBXdEc6cGOR21zW9p9SwsWJ6OFv6uZWRlJXyqmRnLiz9HuC96VrDePUjQ5PGoQdcRZz+yR7HEFq7p0Z4PumRaZe6H2qNA==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2020 15:22:56.4228
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60491f37-a336-4f56-a001-08d7fe64011c
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4536
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/22/20 5:34 AM, Thierry Reding wrote:
-> On Fri, May 22, 2020 at 03:18:40PM +0300, Dmitry Osipenko wrote:
->> 22.05.2020 15:13, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> On Wed, May 20, 2020 at 09:09:33AM -0700, Sowjanya Komatineni wrote:
->>>> On 5/20/20 4:26 AM, Ulf Hansson wrote:
->>>>> On Wed, 20 May 2020 at 04:00, Dmitry Osipenko <digetx@gmail.com> wrot=
-e:
->>>>>> 19.05.2020 23:44, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> On 5/19/20 12:07 PM, Sowjanya Komatineni wrote:
->>>>>>>> On 5/19/20 11:41 AM, Sowjanya Komatineni wrote:
->>>>>>>>> On 5/19/20 11:34 AM, Sowjanya Komatineni wrote:
->>>>>>>>>> On 5/19/20 9:33 AM, Dmitry Osipenko wrote:
->>>>>>>>>>> 19.05.2020 19:24, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>>>>>>> On Tue, May 19, 2020 at 05:05:27PM +0300, Dmitry Osipenko wrot=
-e:
->>>>>>>>>>>>> 19.05.2020 10:28, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>>>>>> On Sat, 16 May 2020 at 17:44, Dmitry Osipenko <digetx@gmail.=
-com>
->>>>>>>>>>>>>> wrote:
->>>>>>>>>>>>>>> Several people asked me about the MMC warnings in the KMSG =
-log and
->>>>>>>>>>>>>>> I had to tell to ignore them because these warning are
->>>>>>>>>>>>>>> irrelevant to
->>>>>>>>>>>>>>> pre-Tegra210 SoCs.
->>>>>>>>>>>>>> Why are the warnings irrelevant?
->>>>>>>>>>>>> That's what the DT binding doc says [1].
->>>>>>>>>>>>>
->>>>>>>>>>>>> [1]
->>>>>>>>>>>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/=
-mmc/nvidia%2Ctegra20-sdhci.txt
->>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> Although, looking at the driver's code and TRM docs, it seems
->>>>>>>>>>>>> that all
->>>>>>>>>>>>> those properties are really irrelevant only to the older Terg=
-a20
->>>>>>>>>>>>> SoC. So
->>>>>>>>>>>>> the binding doc is a bit misleading.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Nevertheless, the binding explicitly says that the properties=
- are
->>>>>>>>>>>>> optional, which is correct.
->>>>>>>>>>>> Optional only means that drivers must not fail if these proper=
-ties
->>>>>>>>>>>> aren't found, it doesn't mean that the driver can't warn that =
-they
->>>>>>>>>>>> are missing.
->>>>>>>>>>>>
->>>>>>>>>>>> Quite possibly the only reason why they were made optional is =
-because
->>>>>>>>>>>> they weren't part of the bindings since the beginning. Anythin=
-g added
->>>>>>>>>>>> to a binding after the first public release has to be optional=
- by
->>>>>>>>>>>> definition, otherwise DT ABI wouldn't be stable.
->>>>>>>>>>>>
->>>>>>>>>>>> I think these warnings were added on purpose, though I also se=
-e that
->>>>>>>>>>>> there are only values for these in device tree for Tegra186 an=
-d
->>>>>>>>>>>> Tegra194
->>>>>>>>>>>> but not Tegra210 where these should also be necessary.
->>>>>>>>>> dt binding doc we have is common for MMC, SD and SDIO of all Teg=
-ras.
->>>>>>>>>> Its not mandatory to have both 3v3 and 1v8 in device tree as bas=
-ed
->>>>>>>>>> on signal mode.
->>>>>>>>>>
->>>>>>>>>> As these driver strengths are SoC specific, they are part of Teg=
-ra
->>>>>>>>>> SoC specific device tree where same values will be applicable to=
- all
->>>>>>>>>> Tegra SoC specific platforms.
->>>>>>>>>>
->>>>>>>>>> Based on interface usage on platform, we use one or both of them
->>>>>>>>>> like sdcard supports dual voltage and we use both 3V3 and 1V8 bu=
-t if
->>>>>>>>>> same interface is used for WIFI SD we use 1V8 only.
->>>>>>>>>>
->>>>>>>>>> So made these dt properties as optional.
->>>>>>>>>>
->>>>>>>>>> Other reason they are optional is, Tegra210 and prior has drive
->>>>>>>>>> strength settings part of apb_misc and Tegra186 and later has dr=
-iver
->>>>>>>>>> strengths part of SDMMC controller. So,
->>>>>>>>>>
->>>>>>>>>> - Pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" for driver streng=
-ths
->>>>>>>>>> are applicable for Tegra210 and prior.
->>>>>>>>>> - dt properties pad-autocal-pull-up/down-offset-1v8/3v3-timeout =
-are
->>>>>>>>>> for T186 onwards for driver strengths
->>>>>>>>>>
->>>>>>>>>> Looks like dt binding doc need fix to clearly document these bas=
-ed
->>>>>>>>>> on SoC or agree with Yaml we can conditionally specify pinctrl o=
-r dt
->>>>>>>>>> properties based on SoC dependent.
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>>> Adding Sowjanya who wrote this code. Perhaps she can clarify w=
-hy the
->>>>>>>>>>>> warnings were added. If these values /should/ be there on a su=
-bset of
->>>>>>>>>>>> Tegra, then I think we should keep them, or add them again, bu=
-t
->>>>>>>>>>>> perhaps
->>>>>>>>>>>> add a better way of identifying when they are necessary and wh=
-en
->>>>>>>>>>>> it is
->>>>>>>>>>>> safe to work without them.
->>>>>>>>>>>>
->>>>>>>>>>>> That said, looking at those checks I wonder if they are perhap=
-s just
->>>>>>>>>>>> wrong. Or at the very least they seem redundant. It looks to m=
-e like
->>>>>>>>>>>> they can just be:
->>>>>>>>>>>>
->>>>>>>>>>>>       if (tegra_host->pinctrl_state_XYZ =3D=3D NULL) {
->>>>>>>>>>>>           ...
->>>>>>>>>>>>       }
->>>>>>>>>>>>
->>>>>>>>>>>> That !IS_ERR(...) doesn't seem to do anything. But in that cas=
-e, it's
->>>>>>>>>>>> also obvious why we're warning about them on platforms where t=
-hese
->>>>>>>>>>>> properties don't exist in DT.
->>>>>>>>>> As drive strengths are through dt properties for T186 and later =
-and
->>>>>>>>>> thru pinctrl for T210 and prior, driver first checks for dt auto=
-cal
->>>>>>>>>> timeout pull-up/down properties and if they are not found, it th=
-en
->>>>>>>>>> checks for presence of pinctrl_state_xyx_drv only when valid
->>>>>>>>>> pinctrl_state_xyz is present.
->>>>>>>>>>
->>>>>>>>>> Driver expects either pinctrl or dt properties and shows warning
->>>>>>>>>> when neither of them are present as its mandatory to use fixed
->>>>>>>>>> driver strengths when auto calibration fails.
->>>>>>>>>>
->>>>>>>>>>       err =3D device_property_read_u32(host->mmc->parent,
->>>>>>>>>>               "nvidia,pad-autocal-pull-down-offset-3v3-timeout",
->>>>>>>>>>               &autocal->pull_down_3v3_timeout);
->>>>>>>>>>       if (err) {
->>>>>>>>>>           if (!IS_ERR(tegra_host->pinctrl_state_3v3) &&
->>>>>>>>>>               (tegra_host->pinctrl_state_3v3_drv =3D=3D NULL))
->>>>>>>>>>               pr_warn("%s: Missing autocal timeout 3v3-pad drvs\=
-n",
->>>>>>>>>>                   mmc_hostname(host->mmc));
->>>>>>>>>>           autocal->pull_down_3v3_timeout =3D 0;
->>>>>>>>>>       }
->>>>>>>>>>
->>>>>>>>>>>> So I think we either need to add those values where appropriat=
-e so
->>>>>>>>>>>> that
->>>>>>>>>>>> the warning doesn't show, or we need to narrow down where they=
- are
->>>>>>>>>>>> really needed and add a corresponding condition.
->>>>>>>>>>>>
->>>>>>>>>>>> But again, perhaps Sowjanya can help clarify if these really a=
-re only
->>>>>>>>>>>> needed on Tegra210 and later or if these also apply to older c=
-hips.
->>>>>>>>>>> Either way will be cleaner to convert the DT binding to YAML ra=
-ther
->>>>>>>>>>> than
->>>>>>>>>>> clutter the driver, IMO.
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>> Auto calibration is present from Tegra30 onward and looking into
->>>>>>>>> change where autocalibration was added to sdhci driver somehow it=
- was
->>>>>>>>> enabled only for T30/T210/T186/T194.
->>>>>>>>>
->>>>>>>>> tegra_sdhci_parse_pad_autocal_dt() was added when auto-calibratio=
-n
->>>>>>>>> was added to driver and I see this dt parse is being done
->>>>>>>>> irrespective of NVQUIRK_HAS_PADCALIB quirk so even on platforms
->>>>>>>>> without auto cal enabled in driver, these messages shows up.
->>>>>>>>>
->>>>>>>>> This should be fixed in driver to allow
->>>>>>>>> tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB=
- is
->>>>>>>>> set to avoid dt parsing to happen on platforms that don't have au=
-to
->>>>>>>>> cal enabled.
->>>>>>>> Warning on missing drive strengths when auto cal is enabled should=
- be
->>>>>>>> present as we should switch to fixed recommended drive strengths w=
-hen
->>>>>>>> auto cal fails.
->>>>>>>>
->>>>>>>> So probably proper fix should be
->>>>>>>>
->>>>>>>> - allow tegra_sdhci_parse_pad_autocal_dt() only when
->>>>>>>> NVQUIRK_HAS_PADCALIB is set
->>>>>>>>
->>>>>>>> - current driver sets NVQUIRK_HAS_PADCALIB for T30 as well so need=
- to
->>>>>>>> add pinctrls "sdmmc-3v3-drv" and "sdmmc-1v8-drv" to Tegra30 device=
- tree.
->>>>>>> [Correction] T30 has same drive strengths to use irrespective of si=
-gnal
->>>>>>> voltage and it doesn't have pad control. So for T3- we can update d=
-evice
->>>>>>> tree to specify "default" pinctrl with drvup/dn settings.
->>>>>>>> - Keep warning message of missing auto cal timeouts as its mandato=
-ry
->>>>>>>> to use fixed recommended driver strengths when auto cal fails.
->>>>>>>>
->>>>>>> Regarding warnings, I guess simpler and easy fix is to remove warni=
-ng
->>>>>>> message on missing 3v3/1v8 drive strengths as pinctrl/dt properties=
- were
->>>>>>> already added for T210/186/194 where we need and old device tree do=
-n't
->>>>>>> have them but the case where auto cal can fail is very rare.
->>>>>>>
->>>>>>> Otherwise should update driver to allow
->>>>>>> tegra_sdhci_parse_pad_autocal_dt() only when NVQUIRK_HAS_PADCALIB i=
-s set
->>>>>>> and also within tegra_sdhci_parse_pad_autocal_dt() show warning of
->>>>>>> missing 3v3/1v8 settings only when NVQUIRK_NEEDS_PAD_CONTROL is set=
-.
->>>>>>>
->>>>>>> Thierry, please suggest if you prefer to removing warnings or fix d=
-river
->>>>>>> to show warning based on PADCALIB and PAD_CONTROL quirks.
->>>>>> The SDIO PINCTRL drive-strengths are usually a part of the board's
->>>>>> default PINCTRL state, which is either preset by bootloader or by
->>>>>> PINCTRL driver early at a boot time.
->>>>>>
->>>>>> The SDIO drive-strengths values should be board-specific and not
->>>>>> SoC-specific because they should depend on the electrical properties=
- of
->>>>>> the board, IIUC.
->>>> Drive strengths we program here when auto calibration fails are recomm=
-ended
->>>> values based on pre-SI circuit analysis and characterized across PVT.
->>>>
->>>> So,=C2=A0 these fail safe values are same for all boards of specific S=
-oC as all
->>>> platform designs follow the design guidelines.
->>>>
->>>>>> If the SDIO PINCTRL states are mandatory for the SDHCI nodes in the
->>>>>> device-trees, then the DT binding is wrong since it says that all
->>>>>> properties are optional. But I think that the current binding is oka=
-y,
->>>>>> since today SDHCI PINCTRL drive-strengths are specified implicitly i=
-n
->>>>>> the device-trees, and thus, there is no real need to emit the noisy
->>>>>> warnings in this case.
->>>>> For now I will keep $subject patch applied, but please tell me if I
->>>>> should drop it so we can start over.
->>>>>
->>>>> In any case, I would appreciate it if someone could have a stab at
->>>>> converting sdhci and tegra DT bindings to yaml.
->>>>>
->>>>> Kind regards
->>>>> Uffe
->>>> HI Uffe,
->>>>
->>>> Please drop $subject patch. Will send patch that allows parsing for th=
-ese
->>>> properties only for SoC where auto cal is enabled as that's where driv=
-er
->>>> needs these properties.
->>>>
->>>> So with this fix, warning will not show up on systems where autocal is=
- not
->>>> enabled.
->>> Yes, I think that's a better option. Have we ensured that on all system=
-s
->>> where autocal is enabled these values are part of the device tree? Just
->>> making sure that we're not going to have some generation still spit out
->>> these warnings because we forgot to update the device tree.
->>>
->>> For example I see that we set NVQUIRK_HAS_PADCALIB but I don't see thes=
-e
->>> properties being set in arch/arm/boot/dts/tegra30.dtsi. Can you add a
->>> patch that also adds the properties for Tegra30?
->> I don't see the warnings on T30 using Sowjanya's patch which checks for
->> NVQUIRK_NEEDS_PAD_CONTROL and not NVQUIRK_HAS_PADCALIB.
-
-Both of these quirks are different.
-
-PADCALIB is for auto calibration support.
-
-NEEDS_PAD_CONTROL is for SoC having separate 3V3 and 1V8 pads where they=20
-have pad state selection and also diff drive strengths apply based on=20
-3V3 and 1V8 which are used only when auto cal is not used/failed.
-
-So, above warnings are applicable only for SoC having separate pad=20
-controls. Other SoC which don't have separate pads use default drive=20
-strengths.
-
-> Yeah, I noticed that too when looking at Sowjanya's patch. The fact that
-> we have two of these quirks is somewhat confusing to me. Perhaps we can
-> add a comment near their definition to clarify what their purpose is?
->
-> Thierry
+TG9va3MgZ29vZCB0byBtZSwgdGhhbmtzDQoNCkRhdmUNCg0K77u/T24gMjIvMDUvMjAyMCwgMTU6
+MTEsICJDLiBNYXNsb2NoIiA8cHVzaGJ4QHVsdWthaS5vcmc+IHdyb3RlOg0KDQogICAgVGhlIGVu
+Y29kZWQgZGlzdGFuY2UgYml0cyBhcmUgemVybywgYnV0IHRoZSBkaXN0YW5jZSB0aGF0IGlzDQog
+ICAgY2FsY3VsYXRlZCBmcm9tIHRoaXMgaXMgYWN0dWFsbHkgZXF1YWwgdG8gMTYzODQuIFNvIGNv
+cnJlY3QNCiAgICB0aGlzIHN0YXRlbWVudCB0byByZWFkIHRoYXQgdGhlIDAwMDFITExMIGluc3Ry
+dWN0aW9uIG1lYW5zDQogICAgRU9TIHdoZW4gYSBkaXN0YW5jZSBvZiAxNjM4NCBpcyBzZWVuLiBU
+aGlzIG1hdGNoZXMgd2l0aCB0aGUNCiAgICBkZXNjcmlwdGlvbiBvZiB0aGUgaW5zdHJ1Y3Rpb24g
+aXRzZWxmIGxhdGVyIG9uLg0KDQogICAgU2lnbmVkLW9mZi1ieTogQy4gTWFzbG9jaCA8cHVzaGJ4
+QHVsdWthaS5vcmc+DQogICAgLS0tDQogICAgIERvY3VtZW50YXRpb24vbHpvLnR4dCB8IDYgKysr
+LS0tDQogICAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0p
+DQoNCiAgICBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9sem8udHh0IGIvRG9jdW1lbnRhdGlv
+bi9sem8udHh0DQogICAgaW5kZXggZjgzOWQxMDRkLi5kYzllODc2Y2IgMTAwNjQ0DQogICAgLS0t
+IGEvRG9jdW1lbnRhdGlvbi9sem8udHh0DQogICAgKysrIGIvRG9jdW1lbnRhdGlvbi9sem8udHh0
+DQogICAgQEAgLTY1LDkgKzY1LDkgQEAgRGVzY3JpcHRpb24NCiAgICAgICBnZW5lcmFsbHkgZW5j
+b2RlZCBpbiB0aGUgbGFzdCB0d28gYml0cyBvZiB0aGUgaW5zdHJ1Y3Rpb24gYnV0IG1heSBhbHNv
+IGJlDQogICAgICAgdGFrZW4gZnJvbSB0aGUgbGFzdCB0d28gYml0cyBvZiBhbiBleHRyYSBvcGVy
+YW5kIChlZzogZGlzdGFuY2UpLg0KDQogICAgLSAgRW5kIG9mIHN0cmVhbSBpcyBkZWNsYXJlZCB3
+aGVuIGEgYmxvY2sgY29weSBvZiBkaXN0YW5jZSAwIGlzIHNlZW4uIE9ubHkgb25lDQogICAgLSAg
+aW5zdHJ1Y3Rpb24gbWF5IGVuY29kZSB0aGlzIGRpc3RhbmNlICgwMDAxSExMTCksIGl0IHRha2Vz
+IG9uZSBMRTE2IG9wZXJhbmQNCiAgICAtICBmb3IgdGhlIGRpc3RhbmNlLCB0aHVzIHJlcXVpcmlu
+ZyAzIGJ5dGVzLg0KICAgICsgIEVuZCBvZiBzdHJlYW0gaXMgZGVjbGFyZWQgd2hlbiBhIGJsb2Nr
+IGNvcHkgb2YgZGlzdGFuY2UgMTYzODQgaXMgc2VlbiwNCiAgICArICBlbmNvZGVkIGluIGEgY2Vy
+dGFpbiBpbnN0cnVjdGlvbiAoMDAwMUhMTEwpIHdpdGggdGhlIEggYW5kIEQgYml0cyBhbGwgemVy
+by4NCiAgICArICBJdCB0YWtlcyBvbmUgTEUxNiBvcGVyYW5kIGZvciB0aGUgZGlzdGFuY2UsIHRo
+dXMgcmVxdWlyaW5nIDMgYnl0ZXMuDQoNCiAgICAgICAuLiBpbXBvcnRhbnQ6Og0KDQogICAgLS0N
+CiAgICAyLjI2LjINCg0KDQpJTVBPUlRBTlQgTk9USUNFOiBUaGUgY29udGVudHMgb2YgdGhpcyBl
+bWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBjb25maWRlbnRpYWwgYW5kIG1heSBhbHNvIGJl
+IHByaXZpbGVnZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFz
+ZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseSBhbmQgZG8gbm90IGRpc2Nsb3NlIHRoZSBj
+b250ZW50cyB0byBhbnkgb3RoZXIgcGVyc29uLCB1c2UgaXQgZm9yIGFueSBwdXJwb3NlLCBvciBz
+dG9yZSBvciBjb3B5IHRoZSBpbmZvcm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBUaGFuayB5b3UuDQo=
