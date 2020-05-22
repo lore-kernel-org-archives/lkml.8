@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F717C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ACCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 243D52072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC312072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159123;
-	bh=yYeTSMmM5FxusSZEIdctCarTpv7x8v6BuKfesZquWXk=;
+	s=default; t=1590159124;
+	bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nnpdi+lOKd+U/RuqoQsHFXNBLtnNtwvEPf4NtX/yhp5QAjfRra3CbhUaMY1wskHqs
-	 hprOcNUPR1S84MTAzIZ2aogbMzd0lXAjQh7gjBK7s6ikzyznZLHweznpGOdNVIafwI
-	 fTlvAgMzHpqemd7AxNraYi9s5MR6nzMUrV8JL54Y=
+	b=mMPTs3qR/MBWdlguh4YtxP/jBzkLk3lyz2XSdBwbfmvviUZkvNjwMlkeE7tQOVJZ1
+	 YqZTuoAx3DO945WuiFrQfpmZP3R8HFRfH+7mOc3fhF/fqceaDDSGOPyVQcHEdJNoau
+	 HtnsFZ/6Fpq4dGmEWBRfEYpay9XAHOSQU5UfXcFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbgEVOwC (ORCPT
+        id S1730559AbgEVOwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:52:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53798 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:52:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgEVOvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:47 -0400
+        id S1731106AbgEVOvs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C40F221FF;
-        Fri, 22 May 2020 14:51:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D61C420756;
+        Fri, 22 May 2020 14:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159106;
-        bh=yYeTSMmM5FxusSZEIdctCarTpv7x8v6BuKfesZquWXk=;
+        s=default; t=1590159108;
+        bh=TG+9HF2alshZxc1Ns252ZMmuUWyXitjY2aWNEIsHztk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RSFBWj5n7NUse2P9yTYHDuAevJuQmk2CgpTCajjS87J78YT3MfBkG3VLGoN5PEUxq
-         2sizEvXbaCcmO8MY/LKc4UfwgzgHl+hIwg5jv0pPiYEneiQPuDKGXEXVMRXUaD1bSZ
-         yGRdqElRvIxLd4CXT6ceqoq0LOZP55Vs+40Yjodc=
+        b=aBSzucjXk27k1m3R4A0O/mTVkpVCANEnbUY16a9hDAAZg3vpww9pQxEypbftFSwv4
+         EXQwqULkQuuZnWqf6PwV5LlbRCiQ/1MpXAWTY8/s7WHddIRARNbRX0hePeNMjvx7Gu
+         SrCUTSVulrOKsAaJPihYQ3fRb2AUwY/5eN/uYmo8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/13] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
-Date:   Fri, 22 May 2020 10:51:32 -0400
-Message-Id: <20200522145142.435086-3-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/13] net: microchip: encx24j600: add missed kthread_stop
+Date:   Fri, 22 May 2020 10:51:34 -0400
+Message-Id: <20200522145142.435086-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145142.435086-1-sashal@kernel.org>
 References: <20200522145142.435086-1-sashal@kernel.org>
@@ -60,59 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
+[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
 
-A test with the command below gives these errors:
+This driver calls kthread_run() in probe, but forgets to call
+kthread_stop() in probe failure and remove.
+Add the missed kthread_stop() to fix it.
 
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
-'#address-cells' is a required property
-
-The $nodename pattern for spi nodes is
-"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
-'spi-0' and 'spi-1' pinctrl sub nodenames to
-'spi0' and 'spi1' in 'rk322x.dtsi'.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index f59f7cc62be6..0c60dbc4b46a 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -950,7 +950,7 @@
- 			};
- 		};
+diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
+index f831238d9793..84b6ad76f5bc 100644
+--- a/drivers/net/ethernet/microchip/encx24j600.c
++++ b/drivers/net/ethernet/microchip/encx24j600.c
+@@ -1075,7 +1075,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
+ 	if (unlikely(ret)) {
+ 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
+ 			  ret);
+-		goto out_free;
++		goto out_stop;
+ 	}
  
--		spi-0 {
-+		spi0 {
- 			spi0_clk: spi0-clk {
- 				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
- 			};
-@@ -968,7 +968,7 @@
- 			};
- 		};
+ 	eidled = encx24j600_read_reg(priv, EIDLED);
+@@ -1093,6 +1093,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
  
--		spi-1 {
-+		spi1 {
- 			spi1_clk: spi1-clk {
- 				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
- 			};
+ out_unregister:
+ 	unregister_netdev(priv->ndev);
++out_stop:
++	kthread_stop(priv->kworker_task);
+ out_free:
+ 	free_netdev(ndev);
+ 
+@@ -1105,6 +1107,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
+ 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
+ 
+ 	unregister_netdev(priv->ndev);
++	kthread_stop(priv->kworker_task);
+ 
+ 	free_netdev(priv->ndev);
+ 
 -- 
 2.25.1
 
