@@ -2,151 +2,85 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C56C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1994CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BC52054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BfXBV3FD"
+	by mail.kernel.org (Postfix) with ESMTP id F15102065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbgEVPVJ (ORCPT
+        id S1730260AbgEVPWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729929AbgEVPVI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:21:08 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01442C061A0E;
-        Fri, 22 May 2020 08:21:07 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id b12so4507208plz.13;
-        Fri, 22 May 2020 08:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XKBewF3F7MBEJ8/HUBV80QTJT/Ts1FvO4EjowDWAM/8=;
-        b=BfXBV3FDM45lgO3wynnM9a2CkNoUgn2Eklfb0WjzC9xpNzPdSzEo+oBRXI4RalRKwM
-         NKYfotgFtlRiPk8Oz2NPNs9Q1327fdqIsfRLxHEYB8H5DPyUMEu33ZT1z3p/5VSXqWBd
-         X8zJoLVEBTQu6+JYy0VKLXjvuvsYwfS7XxYXX7cscyVy5eDS9iYuAGvn7tlOVp+By5xU
-         rI+4nblRzYcj5GC0z6afyoKicDUbw+PjrGiNQGQZIrtzhjADefsIZBlqn66ppQ5Fcmn7
-         VthBUzjRuDXbBNNgwT+uOf8TscmaCkYJX5NXNVPJ+WxHHtDcwyaudlgtbmDHB+srkyNT
-         UAFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XKBewF3F7MBEJ8/HUBV80QTJT/Ts1FvO4EjowDWAM/8=;
-        b=LqUPvOjpuhWnzafVb4CzjYcGkgLSsjDxsg9gHtd4PchEHWMiGDk0V2QJNyLbRKl6wb
-         OHwCldtIkrRCCBP0n4ZtaCreHUJps7TDRP0WJD2DPI9IEN4eOncUZLx+XJ0YZgYrkWLh
-         bFd9Ug0aJgM2szSlq6ZUFt/28ILz9N/OWTtc/52xV7auGOpx0oW4VvscuSf5ms2A3Llm
-         Uokksx6QycY+C7RmzobwmndV+oCITqzeDnqmDxvOln+IrYluinnZi7NuImqh/Wm3D6az
-         ACLO++3eyrqUtgDh05CCGYooxAaQ0q81glr0/EQCZ2Lq6i3RyEeBU1J4XBL0kq6fHudC
-         yywg==
-X-Gm-Message-State: AOAM533VZ1Us5DBnK+grTCgjvI5SxXSAh3mRKNAis0GfTa2ANV4cHPcs
-        XAxSfGuC228BRiHgcA8h0cEKBz/diP/Kv29jh0o=
-X-Google-Smtp-Source: ABdhPJyhKGvA9itVRuhkyF4uWWd0ytz++XDAbLBp9hj87LoBBGusQnr+8HiqmBoKWj4GZvMSlsF1WjkFmh5fZTEoNzc=
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr15639807plt.18.1590160867222;
- Fri, 22 May 2020 08:21:07 -0700 (PDT)
+        Fri, 22 May 2020 11:22:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:37872 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgEVPWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:22:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F4A355D;
+        Fri, 22 May 2020 08:22:18 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B5D73F305;
+        Fri, 22 May 2020 08:22:16 -0700 (PDT)
+Date:   Fri, 22 May 2020 16:22:11 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
+Message-ID: <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
+ <20200522142550.GB15261@alpha.franken.de>
 MIME-Version: 1.0
-References: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
- <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com> <5a8a6e7b.bef25.1723b588c7f.Coremail.dinghao.liu@zju.edu.cn>
-In-Reply-To: <5a8a6e7b.bef25.1723b588c7f.Coremail.dinghao.liu@zju.edu.cn>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 22 May 2020 18:20:55 +0300
-Message-ID: <CAHp75Vem1kQviLrobJ65aVOb_VCmLkAv=5U_iXAdWPNe7n0+Ng@mail.gmail.com>
-Subject: Re: Re: [PATCH] spi: tegra20-slink: Fix runtime PM imbalance on error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Kangjie Lu <kjlu@umn.edu>, Laxman Dewangan <ldewangan@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522142550.GB15261@alpha.franken.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:46 AM <dinghao.liu@zju.edu.cn> wrote:
->
-> Hi Andy,
->
-> Thank you for your advice!
+On Fri, May 22, 2020 at 04:25:50PM +0200, Thomas Bogendoerfer wrote:
+> On Thu, May 14, 2020 at 09:16:41PM +0800, Jiaxun Yang wrote:
+> > We can now enable generic PCI driver in Kconfig, and remove legacy
+> > PCI driver code.
+> > 
+> > Radeon vbios quirk is moved to the platform folder to fit the
+> > new structure.
+> > 
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > --
+> > v9: Fix licenses tag
+> > ---
+> >  arch/mips/Kconfig                  |   1 +
+> >  arch/mips/loongson64/Makefile      |   2 +-
+> >  arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
+> >  arch/mips/pci/Makefile             |   1 -
+> >  arch/mips/pci/fixup-loongson3.c    |  71 ------------------
+> >  arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
+> >  6 files changed, 31 insertions(+), 189 deletions(-)
+> >  create mode 100644 arch/mips/loongson64/vbios_quirk.c
+> >  delete mode 100644 arch/mips/pci/fixup-loongson3.c
+> >  delete mode 100644 arch/mips/pci/ops-loongson3.c
+> 
+> Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-You are welcome, but please, stop top-posting.
+This patch (so the series) does not apply to v5.7-rc1 which is our
+baseline. I reiterate the point, isn't it better to take the whole
+series through the MIPS tree ? Failing that, the series has to
+be rebased (or split differently so that it can be taken through
+different trees), just let me know.
 
-> Your suggestion is to use pm_runtime_put_noidle(), right?
-> The only difference between pm_runtime_put() and this function
-> is that pm_runtime_put() will run an extra pm_request_idle().
->
-> I checked this patched function again and found there is a
-> pm_runtime_put() in the normal branch of pm_runtime_get_sync().
-> Does this mean the original program logic need to execute idle
-> callback?
->
-> According to runtime PM's doc, the pm_runtime_get_sync() call
-> paired with a pm_runtime_put() call will be appropriate to ensure
-> that the device is not put back to sleep during the probe.
-
-Correct.
-
-> Therefore
-> I think pm_runtime_put() is more appropriate here.
-
-How come to wrong conclusion? We are considering error path. What does
-documentation say about this?
-
-> Do you have
-> more detailed suggestion for why we should use _put_noidle()?
-
-Because in error case there is no need to go through all code patch to
-be sure that the device is idling. Moreover, consider below case
-
-CPU1: ...somewhere in the code...
-pm_runtime_get() // with success!
-...see below...
-pm_runtime_put()
-
-CPU2: ...on parallel thread...
-ret = pm_runtime_get_sync() // failed!
-if (ret)
-  pm_runtime_put() // oi vei, we put device into sleep
-
-So, there is a potential issue.
-
-> > > pm_runtime_get_sync() increments the runtime PM usage counter even
-> > > when it returns an error code. Thus a pairing decrement is needed on
-> > > the error handling path to keep the counter balanced.
-> >
-> > ...
-> >
-> > >         ret = pm_runtime_get_sync(&pdev->dev);
-> > >         if (ret < 0) {
-> > >                 dev_err(&pdev->dev, "pm runtime get failed, e = %d\n", ret);
-> >
-> > > +               pm_runtime_put(&pdev->dev);
-> >
-> > For all your patches, please, double check what you are proposing.
-> >
-> > Here, I believe, the correct one will be _put_noidle().
-> >
-> > AFAIU you are not supposed to actually suspend the device in case of error.
-> > But I might be mistaken, thus see above.
-> >
-> > >                 goto exit_pm_disable;
-> > >         }
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Lorenzo
