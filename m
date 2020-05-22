@@ -2,116 +2,125 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C839C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC62C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38901207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590187655;
-	bh=5hfFawpXKpCIutTjpG9U4GCILvuIjBPoHRWtulw0l8c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ouit3DTz8lchC3Xi7MwOvATwa1QlhaFNopehxQbm+orRJ5gOvt8ybjb0TW81nzu8X
-	 zI7TsKJifyfuvS+N+dStszdU+JCp4B+AtY2GceyfLWgT/soxCXaCSntli7hzPBlL10
-	 lvmZA7bgmmJuxDpxlFPoqIiKvPtBKVMIK3n4xZIo=
+	by mail.kernel.org (Postfix) with ESMTP id 465F2206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:47:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="eHp9O03J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731302AbgEVWre (ORCPT
+        id S1731316AbgEVWrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731223AbgEVWre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:47:34 -0400
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 22 May 2020 18:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731223AbgEVWrn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 18:47:43 -0400
+X-Greylist: delayed 14775 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 22 May 2020 15:47:42 PDT
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7A1C061A0E;
+        Fri, 22 May 2020 15:47:42 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73FE720812;
-        Fri, 22 May 2020 22:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590187653;
-        bh=5hfFawpXKpCIutTjpG9U4GCILvuIjBPoHRWtulw0l8c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JuwbAV7rthezSwZ6bubdRj8+FUWIO64x4TTlohWp7xFl/QLYqMtzV6y+BqfagCib8
-         4pbFX2FRyQsWb8qmmtUEgdsAmiWs7cOJkvOrt02J+a9viVUk/kQ7QAvXJKWO74muv8
-         N3ENYsEw/WqnBRjs1DK91rQaiAN+qPgPxbia76FM=
-Received: by mail-oo1-f52.google.com with SMTP id z6so2502429ooz.3;
-        Fri, 22 May 2020 15:47:33 -0700 (PDT)
-X-Gm-Message-State: AOAM531Uzz0kh6dKIB0zm49roaGuhXvX3dc8+8sfjkPVSkaVyBGWhz/T
-        Tz32+3bE9UKXYNTd3pl+P/zmEAIYYhR8qMJONA==
-X-Google-Smtp-Source: ABdhPJxaHHJNI0SXO4KjlnRK9YfXoFEB9IMHVZp7IAtsCVAsNspsWHvXuCKHPqC0HjG6YargWTUGM/jccxuGbhpguqs=
-X-Received: by 2002:a4a:3790:: with SMTP id r138mr4741311oor.81.1590187652677;
- Fri, 22 May 2020 15:47:32 -0700 (PDT)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A09F323058;
+        Sat, 23 May 2020 00:47:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590187659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ro0g+nfdSzpiSpOPcqJ5ROkYdHy3LEOX64jL+fQHoBg=;
+        b=eHp9O03JxajOaJl36Do3Si6ZSb7cH9m87Nzh0+KGeUhvnZM7bULl4v9fkGjzsu56tLmuxt
+        aHafxKZIWK2OoqJiIWyrkHL2nKlua+C7AvG+JrVM8YKKIR9ndOQurHUZgxhtaf8XY01rJ3
+        9D5bZRQSGTIrcZHP2HQb6k08Ww1OT3A=
 MIME-Version: 1.0
-References: <20200522113312.181413-1-tali.perry1@gmail.com>
- <20200522113312.181413-2-tali.perry1@gmail.com> <20200522224217.GA847856@bogus>
-In-Reply-To: <20200522224217.GA847856@bogus>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 22 May 2020 16:47:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
-Message-ID: <CAL_JsqLKaWkSs8vMB4+kBL+AzAU6A4KCVJRNFtvmYfATKR1H=w@mail.gmail.com>
-Subject: Re: [PATCH v13 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kfting@nuvoton.com,
-        Benjamin Fair <benjaminfair@google.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Patrick Venture <venture@google.com>,
-        Ofer Yehielli <ofery@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 23 May 2020 00:47:39 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     stable <stable@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] driver core: Fix SYNC_STATE_ONLY device link
+ implementation
+In-Reply-To: <CAGETcx85trw=rCM1+dmemMGKstFCq=Nn7HR2fyDyV0rTTQYtEQ@mail.gmail.com>
+References: <20200518080327.GA3126260@kroah.com>
+ <20200519063000.128819-1-saravanak@google.com>
+ <20200522204120.3b3c9ed6@apollo>
+ <CAGETcx85trw=rCM1+dmemMGKstFCq=Nn7HR2fyDyV0rTTQYtEQ@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <41760105c011f9382f4d5fdc9feed017@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 4:42 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, 22 May 2020 14:33:10 +0300, Tali Perry wrote:
-> > Added device tree binding documentation for Nuvoton BMC
-> > NPCM I2C controller.
-> >
-> > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> > ---
-> >  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 60 +++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
-> >
->
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> Makefile:1300: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> See https://patchwork.ozlabs.org/patch/1296162
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
->
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
->
-> Please check and re-submit.
+Am 2020-05-23 00:21, schrieb Saravana Kannan:
+> On Fri, May 22, 2020 at 11:41 AM Michael Walle <michael@walle.cc> 
+> wrote:
+>> 
+>> Am Mon, 18 May 2020 23:30:00 -0700
+>> schrieb Saravana Kannan <saravanak@google.com>:
+>> 
+>> > When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+>> > core: Add device link support for SYNC_STATE_ONLY flag"),
+>> > device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
+>> > device link to the supplier's and consumer's "device link" list.
+>> >
+>> > This causes multiple issues:
+>> > - The device link is lost forever from driver core if the caller
+>> >   didn't keep track of it (caller typically isn't expected to). This
+>> > is a memory leak.
+>> > - The device link is also never visible to any other code path after
+>> >   device_link_add() returns.
+>> >
+>> > If we fix the "device link" list handling, that exposes a bunch of
+>> > issues.
+>> >
+>> > 1. The device link "status" state management code rightfully doesn't
+>> > handle the case where a DL_FLAG_MANAGED device link exists between a
+>> > supplier and consumer, but the consumer manages to probe successfully
+>> > before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links
+>> > break this assumption. This causes device_links_driver_bound() to
+>> > throw a warning when this happens.
+>> >
+>> > Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for
+>> > creating proxy device links for child device dependencies and aren't
+>> > useful once the consumer device probes successfully, this patch just
+>> > deletes DL_FLAG_SYNC_STATE_ONLY device links once its consumer device
+>> > probes. This way, we avoid the warning, free up some memory and avoid
+>> > complicating the device links "status" state management code.
+>> >
+>> > 2. Creating a DL_FLAG_STATELESS device link between two devices that
+>> > already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
+>> > DL_FLAG_STATELESS flag not getting set correctly. This patch also
+>> > fixes this.
+>> >
+>> > Lastly, this patch also fixes minor whitespace issues.
+>> 
+>> My board triggers the
+>>   WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
+>> 
+>> Full bootlog:
+[..]
 
-Why do you keep sending new versions with the same problem? It won't
-get reviewed until this is fixed. This isn't a free automated service
-to throw things at to see if they work. I have to review the failures.
+> Thanks for the log and report. I haven't spent too much time thinking
+> about this, but can you give this a shot?
+> https://lore.kernel.org/lkml/20200520043626.181820-1-saravanak@google.com/
 
-Rob
+I've already tried that, as this is already in linux-next. Doesn't fix 
+it,
+though.
+
+-michael
