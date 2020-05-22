@@ -2,171 +2,155 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A01C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84162065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED01205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oy8jYKu6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b+HtBS9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgEVKN1 (ORCPT
+        id S1728709AbgEVKNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:13:27 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21695 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728592AbgEVKN0 (ORCPT
+        Fri, 22 May 2020 06:13:39 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58906 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728592AbgEVKNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:13:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590142404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jmmhgCWLlRr4VrUoOVJYV5wmsB/OPdH6k2kU0IKZExE=;
-        b=Oy8jYKu6jLJRAgEsEs0JF5GvwO0sliwJBGI0poo53izCdWKgyzqWyS7gLIJNfZLQB/9SA1
-        Px+xnMhUK+OLurq5xdUbCf9wKLqDdwIvG9wnW+2Th/iMYiQhP7ZykrzsDBOJKMQzgwZMV9
-        J7gO5MP8Ry68YYPCTg5irg0mXtH/CEE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-kwhSc4EHP92KGJQ6eq9sSg-1; Fri, 22 May 2020 06:13:20 -0400
-X-MC-Unique: kwhSc4EHP92KGJQ6eq9sSg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA24C8015CF;
-        Fri, 22 May 2020 10:13:17 +0000 (UTC)
-Received: from krava (unknown [10.40.195.217])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 55C413420A;
-        Fri, 22 May 2020 10:13:12 +0000 (UTC)
-Date:   Fri, 22 May 2020 12:13:11 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 0/7] Share events between metrics
-Message-ID: <20200522101311.GA404187@krava>
-References: <20200520182011.32236-1-irogers@google.com>
- <20200521114325.GT157452@krava>
- <20200521172235.GD14034@kernel.org>
+        Fri, 22 May 2020 06:13:38 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MADIKv008976;
+        Fri, 22 May 2020 05:13:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590142398;
+        bh=oT/wzRt5tcDLs2tHXZFon7HN6JCAyNcgvVf1sZG+Lus=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=b+HtBS9vWLINtp5CvanMgZAQtDci3udipuzCdtrjOwgSe06CSj4EJar+2rV1lJT48
+         06LgFtUkQrGy/p1TNrPXtShxP77rTnIlK0WjBZsJukC2QsQ8SwOkDkHPEvsKTM5nUb
+         pFlIjZ4qWPJbeTmcKL5qibsqkJLC0gtuc2xyYNwM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MADIOp048226;
+        Fri, 22 May 2020 05:13:18 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 05:13:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 05:13:17 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MAD1a3041179;
+        Fri, 22 May 2020 05:13:13 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v7 02/20] spi: spi-mem: allow specifying a command's extension
+Date:   Fri, 22 May 2020 15:42:43 +0530
+Message-ID: <20200522101301.26909-3-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200522101301.26909-1-p.yadav@ti.com>
+References: <20200522101301.26909-1-p.yadav@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521172235.GD14034@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:22:35PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, May 21, 2020 at 01:43:25PM +0200, Jiri Olsa escreveu:
-> > On Wed, May 20, 2020 at 11:20:04AM -0700, Ian Rogers wrote:
-> > 
-> > SNIP
-> > 
-> > > There are 5 out of 12 metric groups where no events are shared, such
-> > > as Power, however, disabling grouping of events always reduces the
-> > > number of events.
-> > > 
-> > > The result for Memory_BW needs explanation:
-> > > 
-> > > Metric group: Memory_BW
-> > >  - No merging (old default, now --metric-no-merge): 9
-> > >  - Merging over metrics (new default)             : 5
-> > >  - No event groups and merging (--metric-no-group): 11
-> > > 
-> > > Both with and without merging the groups fail to be set up and so the
-> > > event counts here are for broken metrics. The --metric-no-group number
-> > > is accurate as all the events are scheduled. Ideally a constraint
-> > > would be added for these metrics in the json code to avoid grouping.
-> > > 
-> > > v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
-> > > missing comma with metric lists (reported-by Jiri Olsa
-> > > <jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
-> > > (suggested-by Jiri Olsa).
-> > 
-> > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> 
-> Applied and pushed to tmp.perf/core, will move to perf/core as soon as
-> testing finishes,
+In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
+the "command extension". There can be 3 types of extensions in xSPI:
+repeat, invert, and hex. When the extension type is "repeat", the same
+opcode is sent twice. When it is "invert", the second byte is the
+inverse of the opcode. When it is "hex" an additional opcode byte based
+is sent with the command whose value can be anything.
 
-I checked tmp.perf/core and I'm getting segfault for 'perf test expr'
+So, make opcode a 16-bit value and add a 'nbytes', similar to how
+multiple address widths are handled.
 
-	 7: Simple expression parser                              :
-	Program received signal SIGSEGV, Segmentation fault.
-	0x000000000067841e in hashmap_find_entry (map=0x7fffffffd0c0, key=0xc83b30, hash=9893851511679796638, pprev=0x0, entry=0x7fffffffc658) at hashmap.c:131
-	131             for (prev_ptr = &map->buckets[hash], cur = *prev_ptr;
-	(gdb) bt
-	#0  0x000000000067841e in hashmap_find_entry (map=0x7fffffffd0c0, key=0xc83b30, hash=9893851511679796638, pprev=0x0, entry=0x7fffffffc658) at hashmap.c:131
-	#1  0x000000000067853a in hashmap__insert (map=0x7fffffffd0c0, key=0xc83b30, value=0x0, strategy=HASHMAP_SET, old_key=0x7fffffffc718, 
-	    old_value=0x7fffffffc710) at hashmap.c:160
-	#2  0x00000000005d3209 in hashmap__set (map=0x7fffffffd0c0, key=0xc83b30, value=0x0, old_key=0x7fffffffc718, old_value=0x7fffffffc710)
-	    at /home/jolsa/kernel/linux-perf/tools/perf/util/hashmap.h:107
-	#3  0x00000000005d3386 in expr__add_id (ctx=0x7fffffffd0c0, name=0xc83b30 "FOO", val=0) at util/expr.c:45
-	#4  0x00000000005d27ee in expr_parse (final_val=0x0, ctx=0x7fffffffd0c0, scanner=0xc87990) at util/expr.y:63
-	#5  0x00000000005d35b7 in __expr__parse (val=0x0, ctx=0x7fffffffd0c0, expr=0x75a84b "FOO + BAR + BAZ + BOZO", start=259, runtime=1) at util/expr.c:102
-	#6  0x00000000005d36c6 in expr__find_other (expr=0x75a84b "FOO + BAR + BAZ + BOZO", one=0x75a791 "FOO", ctx=0x7fffffffd0c0, runtime=1) at util/expr.c:121
-	#7  0x00000000004e3aaf in test__expr (t=0xa7bd40 <generic_tests+384>, subtest=-1) at tests/expr.c:55
-	#8  0x00000000004b5651 in run_test (test=0xa7bd40 <generic_tests+384>, subtest=-1) at tests/builtin-test.c:393
-	#9  0x00000000004b5787 in test_and_print (t=0xa7bd40 <generic_tests+384>, force_skip=false, subtest=-1) at tests/builtin-test.c:423
-	#10 0x00000000004b61c4 in __cmd_test (argc=1, argv=0x7fffffffd7f0, skiplist=0x0) at tests/builtin-test.c:628
-	#11 0x00000000004b6911 in cmd_test (argc=1, argv=0x7fffffffd7f0) at tests/builtin-test.c:772
-	#12 0x00000000004e977b in run_builtin (p=0xa7eee8 <commands+552>, argc=3, argv=0x7fffffffd7f0) at perf.c:312
-	#13 0x00000000004e99e8 in handle_internal_command (argc=3, argv=0x7fffffffd7f0) at perf.c:364
-	#14 0x00000000004e9b2f in run_argv (argcp=0x7fffffffd64c, argv=0x7fffffffd640) at perf.c:408
-	#15 0x00000000004e9efb in main (argc=3, argv=0x7fffffffd7f0) at perf.c:538
-
-attached patch fixes it for me, but I'm not sure this
-should be necessary
-
-jirka
-
-
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 1cb02ca2b15f..21693fe516c1 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -52,6 +52,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	TEST_ASSERT_VAL("missing operand", ret == -1);
- 
- 	expr__ctx_clear(&ctx);
-+	expr__ctx_init(&ctx);
- 	TEST_ASSERT_VAL("find other",
- 			expr__find_other("FOO + BAR + BAZ + BOZO", "FOO",
- 					 &ctx, 1) == 0);
-@@ -64,6 +65,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 						    (void **)&val_ptr));
- 
- 	expr__ctx_clear(&ctx);
-+	expr__ctx_init(&ctx);
- 	TEST_ASSERT_VAL("find other",
- 			expr__find_other("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@",
- 					 NULL, &ctx, 3) == 0);
+ drivers/spi/spi-mem.c       | 5 ++++-
+ include/linux/spi/spi-mem.h | 6 +++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index 93e255287ab9..29dcd1d62710 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -159,6 +159,9 @@ bool spi_mem_default_supports_op(struct spi_mem *mem,
+ 	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
+ 		return false;
+ 
++	if (op->cmd.nbytes != 1)
++		return false;
++
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+@@ -173,7 +176,7 @@ static bool spi_mem_buswidth_is_valid(u8 buswidth)
+ 
+ static int spi_mem_check_op(const struct spi_mem_op *op)
+ {
+-	if (!op->cmd.buswidth)
++	if (!op->cmd.buswidth || !op->cmd.nbytes)
+ 		return -EINVAL;
+ 
+ 	if ((op->addr.nbytes && !op->addr.buswidth) ||
+diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+index e3dcb956bf61..159463cc659c 100644
+--- a/include/linux/spi/spi-mem.h
++++ b/include/linux/spi/spi-mem.h
+@@ -17,6 +17,7 @@
+ 	{							\
+ 		.buswidth = __buswidth,				\
+ 		.opcode = __opcode,				\
++		.nbytes = 1,					\
+ 	}
+ 
+ #define SPI_MEM_OP_ADDR(__nbytes, __val, __buswidth)		\
+@@ -69,6 +70,8 @@ enum spi_mem_data_dir {
+ 
+ /**
+  * struct spi_mem_op - describes a SPI memory operation
++ * @cmd.nbytes: number of opcode bytes (only 1 or 2 are valid). The opcode is
++ *		sent MSB-first.
+  * @cmd.buswidth: number of IO lines used to transmit the command
+  * @cmd.opcode: operation opcode
+  * @cmd.dtr: whether the command opcode should be sent in DTR mode or not
+@@ -94,9 +97,10 @@ enum spi_mem_data_dir {
+  */
+ struct spi_mem_op {
+ 	struct {
++		u8 nbytes;
+ 		u8 buswidth;
+ 		u8 dtr : 1;
+-		u8 opcode;
++		u16 opcode;
+ 	} cmd;
+ 
+ 	struct {
+-- 
+2.26.2
 
