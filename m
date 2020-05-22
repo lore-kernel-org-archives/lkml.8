@@ -2,95 +2,115 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B22C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0859C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA97206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u7TP4XLc"
+	by mail.kernel.org (Postfix) with ESMTP id 7D62A206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgEVKbE (ORCPT
+        id S1728784AbgEVKcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgEVKbD (ORCPT
+        Fri, 22 May 2020 06:32:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:47005 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728362AbgEVKcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:31:03 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CD7C061A0E;
-        Fri, 22 May 2020 03:31:03 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id x10so4230940plr.4;
-        Fri, 22 May 2020 03:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=H8pDFipnynsk4X9dPZFc4G5VJ+Iod2lTWU7AAQ+F64A=;
-        b=u7TP4XLco+GLRI32lIVLxsUEAEU8GblSNsqpkn0pxa+0NT6VHYCmPVw0ruogBA/hiI
-         W6HWu7FF6igZAwDfCGztzJ++AgTDOhSoCxeVX3ZIK5gx6h+/t917y97o6dgz1ptVGOEm
-         kU4n8AVKU+s2Q2Vs6RtrYVxhNCckWNQp6rjOQm5djgAZQzL66g3H3MKVvys3D1aQ9kf8
-         Oo+QjeL55J4pudwwLbM6f6FC7tXp0IxU9PIorUQ0/9Go3NuYZf5G/2bdZ8rWMupiHBrM
-         DsfDo/hRLvES5ysDT3gVbljvbdNkNOGFmGJ7zaFwU3hMv59jZ1XAtUxlldVXs89T9UzG
-         4qsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H8pDFipnynsk4X9dPZFc4G5VJ+Iod2lTWU7AAQ+F64A=;
-        b=tDaxNfppmDRVeCDhI1BuIH68Zk4mbA//OHkPqigMEAKScKBWRL21wiFUSWcKH4pGVa
-         2LKc0zUcaU1gOeOSHWhID/4r1xQ0MSyWgRm5RwkR7X4f/TTtimNZJzYOEBBBGSlDCwwP
-         ORmJExQHaltyDptR8E4HDb/pBB94sqivTHAmYymfLZBxxl8h3vmbwH6Pi3AY0eG+gJG6
-         nG/Y9rRlHth9xtwCF7PWMr5HWlk8Wo87JUowVIbk0gCgvTdx/nd5o39ZhtH9ucyghw9k
-         MD6jXBOCBqN07gyCfyLasPGgDzf9YIO5RvorPnqrxKFlkpVBtZDy0+3cikHWZIzmkxJx
-         xnFA==
-X-Gm-Message-State: AOAM532c60xeAGZAeQIAPeDLP81+L8q3IL0Cdns5XuF9bhgRIn/3zJfS
-        YdGX55zKaARGekJmWey+va8=
-X-Google-Smtp-Source: ABdhPJwujMCjom57osVJ9fq0ac205yggKIMAusPBKFt0tivdubT9md8eBXPdMbtGkI2xZyApsb8Lmg==
-X-Received: by 2002:a17:902:b706:: with SMTP id d6mr14769254pls.16.1590143462980;
-        Fri, 22 May 2020 03:31:02 -0700 (PDT)
-Received: from localhost.localdomain ([157.51.227.23])
-        by smtp.gmail.com with ESMTPSA id x14sm6488232pfi.60.2020.05.22.03.30.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 03:31:02 -0700 (PDT)
-From:   Hari <harichandrakanthan@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     Hari <harichandrakanthan@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org
-Subject: [PATCH] Fix typo in the comment
-Date:   Fri, 22 May 2020 16:00:24 +0530
-Message-Id: <20200522103024.9697-1-harichandrakanthan@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 May 2020 06:32:42 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MJFpj-1jLujr2a3H-00KhZt for <linux-kernel@vger.kernel.org>; Fri, 22 May
+ 2020 12:32:40 +0200
+Received: by mail-qt1-f182.google.com with SMTP id l1so7867219qtp.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 03:32:40 -0700 (PDT)
+X-Gm-Message-State: AOAM532SQFvQb5Npeooaj/NR2QiPmLkkotBG9MODvJkOCWwNzqOTNK3y
+        uzzFI40i3uBgXkOPnwfF2+xtdqGv0pdHQX4otmI=
+X-Google-Smtp-Source: ABdhPJx3hTz75T2uRAsIR+aHsu7gwQoqja1c5DNkOk1IRLuC7aeyHNKFyXWHA+1jIeu3+InnHhI/3Fa2HJxOhi6YbnU=
+X-Received: by 2002:ac8:6a09:: with SMTP id t9mr14983624qtr.7.1590143559480;
+ Fri, 22 May 2020 03:32:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589875163-3367-1-git-send-email-rui_feng@realsil.com.cn> <20200522091646.GA1201234@kroah.com>
+In-Reply-To: <20200522091646.GA1201234@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 22 May 2020 12:32:23 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3Uk_fmJ3UA1nuChHLC6w3p_wZfkqqRLvB01W0uLEE3-w@mail.gmail.com>
+Message-ID: <CAK8P3a3Uk_fmJ3UA1nuChHLC6w3p_wZfkqqRLvB01W0uLEE3-w@mail.gmail.com>
+Subject: Re: [PATCH] [V2] mmc: rtsx: Add SD Express mode support for RTS5261
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        =?UTF-8?B?5Yav6ZSQ?= <rui_feng@realsil.com.cn>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mj5QO1v09rogAwkUgtqZF9liaU6XrO+Krpm3vvsxolto+Uj8tNO
+ dLDxl1qcjFDlapRFg0HKsFhmZFI5VMsAID1ZoYqleY98VgOkjwIhSMiKIQUyTu3eJnuInsn
+ vu6t7XYVtn6nM8PIR/aXx/ESBor7JsixKbfk570cPcx8pm3+fQkdD4Vm4+LD7d7qmF5wyb8
+ lUdiAXc7lmyxtSIF5lx0Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Jz+blxUtmQU=:cB2SKbLKX2vITmd6yx/non
+ vK9Wcca3pdE+6b85rhkaw0ZRGmU8tTdo1R22W1dqY4bmgJnYCoxGuE4p7b5JwCe2H7tQgRikJ
+ 78Oqd6G7p5vOmZQVNj6THOVoYbag3cXKsWDI9MIsIB/weRYNOJAEbuvS0CuOW2zPSXlmmtemv
+ Cb0RZFEOLsCNb3HkLP7IFqRNh++y3t+STZCqDJ/uHpjTED38DJ9juRnwHcg7jzxOoRbiaJMb2
+ 9z3qfPGPcT9pE++wNQuYfyBtZtI6lwVIyWTI9qyYzyHDgq/k/9aVZnKNH4i26cmJgddwh42Cd
+ uEX9EpatoSTJl9tF1iSrlGvIXGlJPFn2/oqXtY6YpNUkrbhXvqqL+XPUKvc6raC3Owk3w6b8W
+ tBRS/YqQAOrSSdJCcOP9hjuRg7hFZSYditOODcaj/sGmW3KfEG38xNQzAefRi4aqT1cc4bwho
+ SoXoQXuNamqvAtDqlTm2FRthyFmirFWmmFMK0bsA9qRwYR/pN2RyhfCvvgUAyeg12vSpjITVq
+ wdqDDi4FgTDBwhXPXO1+R1sb2umltIZz+acUHJx9tqZUn9gSvP0lyia0a9HqEH2imNrj/Vntp
+ //+2lFKlvjpP9/U6uzjgu/JEkoTihceXKMfIvWV+x7LiSyn1VA7xnDCQ/GPk8z9cQsDMufOtN
+ Js6oRSSVGwlxrXhhq7D6m4Xuepl5zBEWuGuBNttNKheyrgyATjLSb3OZyNicvKa2IvXZY/fG3
+ 8LkgVUZXHLfzqf9x15REsu5vDRBmuT9IuestP45kd8+UoRAJRSIXOy3U9hebgnJCiOFwIu0SZ
+ ngi2Y15p9zNJv6Shxl986XWFc+pDv3G4zJF7biiUU3ZvlKtQFo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Continuous Double "the" in a comment. Changed it to single "the"
+On Fri, May 22, 2020 at 11:16 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, May 19, 2020 at 03:59:23PM +0800, rui_feng@realsil.com.cn wrote:
+> > From: rui_feng <rui_feng@realsil.com.cn>
+> >
+> > RTS5261 support legacy SD mode and SD Express mode.
+> > In SD7.x, SD association introduce SD Express as a new mode.
+> > SD Express mode is distinguished by CMD8.
+> > Therefore, CMD8 has new bit for SD Express.
+> > SD Express is based on PCIe/NVMe.
+> > RTS5261 uses CMD8 to switch to SD Express mode.
+> >
+> > Signed-off-by: rui_feng <rui_feng@realsil.com.cn>
+> > ---
+> > v2: remove config option MISC_RTSX_PCI_SD_EXPRESS
+> > ---
+> >
+> >  drivers/misc/cardreader/rts5261.c  |  5 ++++
+> >  drivers/misc/cardreader/rts5261.h  | 23 ----------------
+> >  drivers/misc/cardreader/rtsx_pcr.c |  5 ++++
+> >  drivers/mmc/core/sd_ops.c          |  9 ++++++-
+> >  drivers/mmc/host/rtsx_pci_sdmmc.c  | 43 ++++++++++++++++++++++++++++++
+> >  include/linux/mmc/host.h           |  1 +
+> >  include/linux/rtsx_pci.h           | 27 +++++++++++++++++++
+> >  7 files changed, 89 insertions(+), 24 deletions(-)
+>
+> If I can get an ack from the MMC maintainer, I can take this in my
+> tree...
+>
+> {hint}
 
-Signed-off-by: Hari <harichandrakanthan@gmail.com>
----
- drivers/net/ethernet/intel/e1000/e1000_hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think this feature needs much more discussion to make sure we
+get a good user experience when it gets added to all mmc controllers.
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_hw.c b/drivers/net/ethernet/intel/e1000/e1000_hw.c
-index 48428d6a00be..623e516a9630 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_hw.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_hw.c
-@@ -3960,7 +3960,7 @@ static s32 e1000_do_read_eeprom(struct e1000_hw *hw, u16 offset, u16 words,
-  * @hw: Struct containing variables accessed by shared code
-  *
-  * Reads the first 64 16 bit words of the EEPROM and sums the values read.
-- * If the the sum of the 64 16 bit words is 0xBABA, the EEPROM's checksum is
-+ * If the sum of the 64 16 bit words is 0xBABA, the EEPROM's checksum is
-  * valid.
-  */
- s32 e1000_validate_eeprom_checksum(struct e1000_hw *hw)
--- 
-2.17.1
+rtsx is a bit of a special case for mmc controllers already, but we will
+likely see the same requirements for a lot more mmc host drivers.
 
+I suspect we need to tie in both the mmc block and nvme device
+drivers to properly do a handover, to ensure that there is a way to
+identify the block device as reliably getting probed as at least one
+of the two (sd or nvme) and to get identified as the same device
+during the handover, in particular across a suspend or hibernate
+event.
+
+I understand that this patch is very desirable for users, but let's
+not rush it.
+
+     Arnd
