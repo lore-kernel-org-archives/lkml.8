@@ -2,84 +2,140 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A37C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20612070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5A2206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:44:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="plNTg+ex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbgEVPnL (ORCPT
+        id S1730352AbgEVPo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:43:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:38248 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729040AbgEVPnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:43:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B4E555D;
-        Fri, 22 May 2020 08:43:08 -0700 (PDT)
-Received: from gaia (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 901663F305;
-        Fri, 22 May 2020 08:43:00 -0700 (PDT)
-Date:   Fri, 22 May 2020 16:42:55 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
-        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
-        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
-        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
-        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
-        broonie@kernel.org, guohanjun@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
-        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
-Subject: Re: [PATCH v2 5/6] mm: tlb: Provide flush_*_tlb_range wrappers
-Message-ID: <20200522154254.GD26492@gaia>
-References: <20200423135656.2712-1-yezhenyu2@huawei.com>
- <20200423135656.2712-6-yezhenyu2@huawei.com>
+        Fri, 22 May 2020 11:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729040AbgEVPo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:44:27 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C106FC061A0E;
+        Fri, 22 May 2020 08:44:26 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id v79so1045015qkb.10;
+        Fri, 22 May 2020 08:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k+FQlGAsd5VwEJukC1oxrls/cl2Y99ctG3ZXp8hKvbs=;
+        b=plNTg+exkS5PfQQDNXUATtwZYGgHoTdkhQZWtd25vuTwvleATu2u0VuG0sGNdt3LTq
+         sG2OZhvz6cGw/LA3RwHGeyoH5h3xVGh55FoK9r6XOBmWtM/mgznK6i2SHUhRt8b5Ek7C
+         JkVOmjfhZ1McUGkaovz3V4nPl/v+ZjqGdw8nW0H0pEhfzW+bblaI8Xcnd9l0DA3Hojfc
+         Qu+As385wBdNTSDY5qm6USyAgOfMxEN2ES7eVYPE7NHSyGjftitcUD8kSObmT5IXWVmh
+         W/HYAixQCLNmp+NnmFITCh0SpQdqCUe70Z+Q3y8b3eli1AHSR5n76m7+kwKKQfdA+SjL
+         Mnnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k+FQlGAsd5VwEJukC1oxrls/cl2Y99ctG3ZXp8hKvbs=;
+        b=JND0030KVvuaO4TSxl5xUEZjbl41sHj04BHXSpYCuDP99nA46Lw/UZXZARvY85USyf
+         65p/E63M/oo4S8oSALhmry8pyuxB2YJEkMuIvPN+ZRARz/v7E4+njfLvPRbzWOx9Ofy4
+         dxykOBinZ0bpktTrPTghT1ybMD9UtRpM72aF/8Ysm3OvzwpvNw8y6Gz7OlMfsd61zQAC
+         E3ZU698il1X/eGqrdERVi590eQ3nM1KIWIz6aN62HhSJJVn7xGztiOkBQmqB9b47GuiB
+         19NGrhE28G/j3/4rz0/ejdHlH+F6NU8N1NqxFumEU7amUYakLmavQTWeSmf8R/UDVhPh
+         kEtw==
+X-Gm-Message-State: AOAM531ZehkMLjHOtNiDOJBFWwN/W5mEAGCbkeo83aScmROjjiC3KLY/
+        l+VeFPVoR6Esu1wdpBSsBm0=
+X-Google-Smtp-Source: ABdhPJwZ0ZdrTAQgQSMVyLAxZPwmco9HBD9BC5MVcgMoLCa24NcJUqNR/TMxCYF6cqdT9TGSotWeGA==
+X-Received: by 2002:a37:644d:: with SMTP id y74mr8288509qkb.477.1590162265826;
+        Fri, 22 May 2020 08:44:25 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id h188sm7692281qke.82.2020.05.22.08.44.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 May 2020 08:44:25 -0700 (PDT)
+Date:   Fri, 22 May 2020 17:44:21 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        linux-kernel@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
+ to yaml
+Message-ID: <20200522154421.GB21655@ict14-OptiPlex-980>
+References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
+ <20200519075111.6356-2-jonathan.albrieux@gmail.com>
+ <20200519184933.00003f00@Huawei.com>
+ <20200520072423.GF3361@ict14-OptiPlex-980>
+ <20200521192736.4818f17b@archlinux>
+ <20200522082208.GB19742@ict14-OptiPlex-980>
+ <134f419f-de85-f14e-0331-49b8bb72625c@nxp.com>
+ <20200522142633.GA21655@ict14-OptiPlex-980>
+ <2cb64245-a3ec-b6c0-5f64-b2fdf6cd3689@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200423135656.2712-6-yezhenyu2@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2cb64245-a3ec-b6c0-5f64-b2fdf6cd3689@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 09:56:55PM +0800, Zhenyu Ye wrote:
-> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
-> index 3d7c01e76efc..3eff199d3507 100644
-> --- a/mm/pgtable-generic.c
-> +++ b/mm/pgtable-generic.c
-> @@ -101,6 +101,28 @@ pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  
-> +#ifndef __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
-> +
-> +#define FLUSH_Pxx_TLB_RANGE(_pxx)					\
-> +void flush_##_pxx##_tlb_range(struct vm_area_struct *vma,		\
-> +			      unsigned long addr, unsigned long end)	\
-> +{									\
-> +		struct mmu_gather tlb;					\
-> +									\
-> +		tlb_gather_mmu(&tlb, vma->vm_mm, addr, end);		\
-> +		tlb_start_vma(&tlb, vma);				\
-> +		tlb_flush_##_pxx##_range(&tlb, addr, end - addr);	\
-> +		tlb_end_vma(&tlb, vma);					\
-> +		tlb_finish_mmu(&tlb, addr, end);			\
-> +}
+On Fri, May 22, 2020 at 05:59:11PM +0300, Daniel Baluta wrote:
+> 
+> On 22.05.2020 17:26, Jonathan Albrieux wrote:
+> > On Fri, May 22, 2020 at 01:47:21PM +0300, Daniel Baluta wrote:
+> > > > > > > > +
+> > > > > > > > +maintainers:
+> > > > > > > > +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>
+> > > > > > > Daniel is still active in the kernel, just not at Intel any more. +CC
+> > > > > > Oh ok thank you! Daniel are you still maintaining this driver?
+> > > I can do reviews if requested but I'm not actively maintaining this driver.
+> > > If anyone wants
+> > > 
+> > > to take this over, will be more than happy.
+> > > 
+> > > 
+> > > Other than that we can add my gmail address: Daniel Baluta
+> > > <daniel.baluta@gmail.com>
+> > > 
+> > > 
+> > > 
+> > Well if you'd like to review this patch I'd really appreciate :-)
+> > Forgive me for not having understood your answer regarding the maintainer
+> > field, can I add you to this binding as maintainer or are you saying to
+> > not add you? Thank you and sorry for the repeated question,
+> > 
+> > 
+> 
+> OK, so I think would be better not to add me as a maintainer because
+> 
+> this would set some expecation from people, and I most likely won't
+> 
+> have time to met them.
+> 
+> 
+> Can you instead add the linux-iio mailing list as a maintainer, not sure
+> 
+> if this is a common practice though.
+> 
+> 
 
-I may have confused myself (flush_p??_tlb_* vs. tlb_flush_p??_*) but do
-actually need this whole tlb_gather thing here? IIUC (by grep'ing),
-flush_p?d_tlb_range() is only called on huge pages, so we should know
-the level already.
+Ok thank you! I don't know, maybe someone else could point out
+the right direction to take, it would be sad to drop yaml documentation
+format just for this.
 
--- 
-Catalin
+Best regards,
+Jonathan Albrieux
