@@ -2,153 +2,105 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1679CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6197CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D999320723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6E3207BC
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590169364;
-	bh=VrW3m86cpBqZEMzzbxxfBBMI2aEf/Clzryoovha+Jy8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OT3h3XzXq9B9Thn7nIlOCOGdXN5qIT2ELz7fPubeXpzfhaJ52kPMAyGISH6HTWo9k
-	 SdiU1WQQ6n9aQfqFktQD8+0X8AVNCZdCQinacunK5bP7ZmK1YY89l68DiKp5bQ8pW5
-	 CA7qcqv9bwkLVwBvdSsteK/AJi5bltlOdFHkEcn4=
+	s=default; t=1590169434;
+	bh=t22SyB9/K0m7E486hZD+8n3eS0aL0e1D5tiaHegV7t4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=mM+gygvAsHR/K8816fdddyz/XUGwaHw4SNx7cL7Th8OFrOejCr764FuSaPcXsPFc5
+	 IOeDfWPbEvwYkZXGA1nGqggDZowSpGDOPhrmH3YsVFYPP4RjcwkxamYmQHlIqRYZW7
+	 HI281d/sCVHM4c0tAfKeQ2QjrvmQ64YA+3zFkyrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbgEVRmo (ORCPT
+        id S1730780AbgEVRnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:42:44 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:49019 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgEVRmn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:42:43 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 04MHgODw032294;
-        Sat, 23 May 2020 02:42:24 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 04MHgODw032294
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590169345;
-        bh=fF465e4cnaQp88xwLbk+1MqPt//D6hFy+PhkCFDvhhc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yXuHRAlVOXd4c42/9sRMSJzWOqAYDtqyQqKvKtB7oC7DpiMTFqy+G6iczr5pe7OXk
-         v0xBcCSIqJPdgZ/tILMgaD8dxy2dIJBr0I/QMuicO6UWRR6S2xZQID3Ma49/brqjrw
-         zAMb3+zNqbXQ+eA8YWFEyO744xm0CUoo6rh+9C0Ro3pNbb9iihO1aKsDcKpU1tLfZZ
-         SRbmauvbdv98OXpwX4dCqqHkjlam+sEb6b5x4CeFHqnSzOsFFvsVFYG9MtMLWQLZq1
-         b9mJ6sDLJB9x0sqYgvmKnV6EXSzvi6yXs30W4OFL7Q0/lmzlBhGJjIyySuncAHyymi
-         amwLbf0Da4z0g==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id b28so4453435vsa.5;
-        Fri, 22 May 2020 10:42:24 -0700 (PDT)
-X-Gm-Message-State: AOAM5336AaOOBoygGgkuh5iwhtTi2klnAMfcook+YoC9Rs5bEata512b
-        UKBmtemcvlXoQdG6bDyH4utLiHzrIXr0uxp8f8M=
-X-Google-Smtp-Source: ABdhPJzCUtZN33PfMU+raPJWrHgIs7KZBwOtCQU4wT6PeRoEs0d1Ss1q8cuN+Ux4nT5e0grUgnwX/9NsJ4NPXpQcbow=
-X-Received: by 2002:a67:e096:: with SMTP id f22mr12084772vsl.54.1590169338595;
- Fri, 22 May 2020 10:42:18 -0700 (PDT)
+        Fri, 22 May 2020 13:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbgEVRnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 13:43:53 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E5620723;
+        Fri, 22 May 2020 17:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590169432;
+        bh=t22SyB9/K0m7E486hZD+8n3eS0aL0e1D5tiaHegV7t4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=FbvkIrVI+T2eCWT0T7gRxnb98/8VdBn4hzMhVK3rF9tB4lYEISVUrrayGEoSOG25L
+         4BK+yKfkU4EyB9swUyvf9VivrR5ydvB7E5qmyVnKp5RM1l4MO88lptxGLiPYSbL1Mm
+         H5mYORDCqyVUzKjzY3buBkk1ShuYVqCYoKDrX78Y=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AFA063522E41; Fri, 22 May 2020 10:43:52 -0700 (PDT)
+Date:   Fri, 22 May 2020 10:43:52 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        andriin@fb.com
+Subject: Re: Some -serious- BPF-related litmus tests
+Message-ID: <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
+ <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu>
 MIME-Version: 1.0
-References: <20200521202716.193316-1-samitolvanen@google.com>
-In-Reply-To: <20200521202716.193316-1-samitolvanen@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 23 May 2020 02:41:42 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
-Message-ID: <CAK7LNARq3g5vA6vy9449SHsKQmbwJrQDSBz4ZbH1pBEvPmusuA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522143201.GB32434@rowland.harvard.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 5:27 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> Instead of linking all compilation units again each time vmlinux_link is
-> called, reuse vmlinux.o from modpost_link.
->
-> With x86_64 allyesconfig, vmlinux_link is called three times and reusing
-> vmlinux.o reduces the build time ~38 seconds on my system (59% reduction
-> in the time spent in vmlinux_link).
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  scripts/link-vmlinux.sh | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index d09ab4afbda4..c6cc4305950c 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -77,11 +77,8 @@ vmlinux_link()
->
->         if [ "${SRCARCH}" != "um" ]; then
->                 objects="--whole-archive                        \
-> -                       ${KBUILD_VMLINUX_OBJS}                  \
-> +                       vmlinux.o                               \
->                         --no-whole-archive                      \
-> -                       --start-group                           \
-> -                       ${KBUILD_VMLINUX_LIBS}                  \
-> -                       --end-group                             \
->                         ${@}"
->
->                 ${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}      \
->
-> base-commit: b85051e755b0e9d6dd8f17ef1da083851b83287d
-> --
-> 2.27.0.rc0.183.gde8f92d652-goog
->
+On Fri, May 22, 2020 at 10:32:01AM -0400, Alan Stern wrote:
+> On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
+> > On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
+> > > Hello!
+> > > 
+> > > Just wanted to call your attention to some pretty cool and pretty serious
+> > > litmus tests that Andrii did as part of his BPF ring-buffer work:
+> > > 
+> > > https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/
+> > > 
+> > > Thoughts?
+> > 
+> > I find:
+> > 
+> > 	smp_wmb()
+> > 	smp_store_release()
+> > 
+> > a _very_ weird construct. What is that supposed to even do?
+> 
+> Indeed, it looks like one or the other of those is redundant (depending 
+> on the context).
 
+Probably.  Peter instead asked what it was supposed to even do.  ;-)
 
-I like this patch irrespective of CLANG_LTO, but
-unfortunately, my build test failed.
+> Also, what use is a spinlock that is accessed in only one thread?
 
+Multiple writers synchronize via the spinlock in this case.  I am
+guessing that his larger 16-hour test contended this spinlock.
 
-ARCH=powerpc failed to build as follows:
+> Finally, I doubt that these tests belong under tools/memory-model.  
+> Shouldn't they go under the new Documentation/ directory for litmus 
+> tests?  And shouldn't the patch update a README file?
 
+Agreed, and I responded to that effect to his original patch:
 
+https://lore.kernel.org/bpf/20200522003433.GG2869@paulmck-ThinkPad-P72/
 
-  MODPOST vmlinux.o
-  MODINFO modules.builtin.modinfo
-  GEN     modules.builtin
-  LD      .tmp_vmlinux.kallsyms1
-vmlinux.o:(__ftr_alt_97+0x20): relocation truncated to fit:
-R_PPC64_REL14 against `.text'+4b1c
-vmlinux.o:(__ftr_alt_97+0x164): relocation truncated to fit:
-R_PPC64_REL14 against `.text'+1cf78
-vmlinux.o:(__ftr_alt_97+0x288): relocation truncated to fit:
-R_PPC64_REL14 against `.text'+1dac4
-vmlinux.o:(__ftr_alt_97+0x2f0): relocation truncated to fit:
-R_PPC64_REL14 against `.text'+1e254
-make: *** [Makefile:1125: vmlinux] Error 1
-
-
-
-I used powerpc-linux-gcc
-available at
-https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/
-
-
-Build command:
-
-make -j24 ARCH=powerpc  CROSS_COMPILE=powerpc-linux-  defconfig all
-
-
-Could you check it please?
-
-
-
-I will apply it to my test branch.
-Perhaps, 0-day bot may find more failure cases.
-
-
---
-Best Regards
-Masahiro Yamada
+							Thanx, Paul
