@@ -2,151 +2,90 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1979CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC1B92072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:11:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen.org header.i=@xen.org header.b="DWY+wdnf"
+	by mail.kernel.org (Postfix) with ESMTP id E3B14206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590171208;
+	bh=990VpNbmnJRTKTRrlUlARO0pDj6MiynA5eE1JHvdWfo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=W91ZdR2c8P/3U1xpZh0zq+QGfZTMq8N6xiralBPvJFwH1YTbdSMmwnl5iUsaEi1c9
+	 daKv4rrRWJw5DKxKahgibjngYo46vbzg86loOomN0qHpBC7BiGmP44wcgTR8PfZ1o9
+	 qPePE5hKpedVwVF/JdfgelsXMx5+ydcfU49PHvhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbgEVSLG (ORCPT
+        id S1730821AbgEVSN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:11:06 -0400
-Received: from mail.xenproject.org ([104.130.215.37]:58792 "EHLO
-        mail.xenproject.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgEVSLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:11:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xen.org;
-        s=20200302mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5VJHe7bH8hAm6eUuJu27AVIfqO1GywinPUVd6f11dDs=; b=DWY+wdnfmcr/84yBeVywBch+ZK
-        fTpXAobGMc4xRDwXBwl6sZrqstYLh9PhmX7hH6BpImIMbDqxH0KwBngIa7FzJ54wfi8+uWb/5s0Lc
-        2zUFol+D+MKCo9/SWg2AWsCLCz2nUacA9ebfwE5fJvSq2hL3jqNbwIifqKzMYPf+uifE=;
-Received: from xenbits.xenproject.org ([104.239.192.120])
-        by mail.xenproject.org with esmtp (Exim 4.92)
-        (envelope-from <julien@xen.org>)
-        id 1jcC8O-0001Aw-A6; Fri, 22 May 2020 18:11:04 +0000
-Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=a483e7b01a66.ant.amazon.com)
-        by xenbits.xenproject.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <julien@xen.org>)
-        id 1jcC8O-00043H-2H; Fri, 22 May 2020 18:11:04 +0000
-Subject: Re: [PATCH 01/10] swiotlb-xen: use vmalloc_to_page on vmalloc virt
- addresses
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     jgross@suse.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>
-References: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
- <20200520234520.22563-1-sstabellini@kernel.org>
- <23e5b6d8-c5d9-b43f-41cd-9d02d8ec0a7f@xen.org>
- <alpine.DEB.2.21.2005211235590.27502@sstabellini-ThinkPad-T480s>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <a7f1d5c1-1ee1-61e3-22be-1db4dced08eb@xen.org>
-Date:   Fri, 22 May 2020 19:11:01 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Fri, 22 May 2020 14:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbgEVSN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 14:13:26 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FCCC206F6;
+        Fri, 22 May 2020 18:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590171206;
+        bh=990VpNbmnJRTKTRrlUlARO0pDj6MiynA5eE1JHvdWfo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=xqeqkVfANeqiwiXzYLYE2CoP+19RFUGgr549v01CAaPqlYAs2GY6NpM5wf0LEcsXN
+         A+MbqJrgKpsrhwaHpaaWFE96ijxeUhICm62vM2/Y0rrflsDVA60nLj0AThqMU033yo
+         JjdEtKinwXv9tt4W0spOirczax9mLclGaSUVNVfg=
+Subject: Re: [PATCH v3 0/3] selftests: vdso: Add a selftest for vDSO getcpu()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200522162139.44380-1-broonie@kernel.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <24b15074-7135-38d7-d491-76087d949498@kernel.org>
+Date:   Fri, 22 May 2020 12:13:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2005211235590.27502@sstabellini-ThinkPad-T480s>
+In-Reply-To: <20200522162139.44380-1-broonie@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stefano,
-
-On 22/05/2020 04:54, Stefano Stabellini wrote:
-> On Thu, 21 May 2020, Julien Grall wrote:
->> Hi,
->>
->> On 21/05/2020 00:45, Stefano Stabellini wrote:
->>> From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->>>
->>> Don't just assume that virt_to_page works on all virtual addresses.
->>> Instead add a is_vmalloc_addr check and use vmalloc_to_page on vmalloc
->>> virt addresses.
->>
->> Can you provide an example where swiotlb is used with vmalloc()?
+On 5/22/20 10:21 AM, Mark Brown wrote:
+> This series does a bit of a cleanup of the existing tests for the vDSO
+> in kselftest and then adds a new test for getcpu().
 > 
-> The issue was reported here happening on the Rasperry Pi 4:
-> https://marc.info/?l=xen-devel&m=158862573216800
-
-Thanks, it would be good if the commit message contains a bit more details.
-
+> v3: Remove some extern keywords.
+> v2: Silence checkpatch
 > 
-> If you are asking where in the Linux codebase the vmalloc is happening
-> specifically, I don't know for sure, my information is limited to the
-> stack trace that you see in the link (I don't have a Rasperry Pi 4 yet
-> but I shall have one soon.)
-
-Looking at the code there is a comment in xen_swiotlb_alloc_coherent() 
-suggesting that xen_alloc_coherent_pages() may return an ioremap'ped 
-region on Arm. So it feels to me that commit 
-b877ac9815a8fe7e5f6d7fdde3dc34652408840a "xen/swiotlb: remember having 
-called xen_create_contiguous_region()" has always been broken on Arm.
-
-As an aside, your commit message also suggests this is an issue for 
-every virtual address used in swiotlb. But only the virt_to_page() call 
-in xen_swiotlb_free_coherent() is modified. Is it intended? If yes, I 
-think you want to update your commit message.
-
+> Mark Brown (3):
+>    selftests: vdso: Rename vdso_test to vdso_test_gettimeofday
+>    selftests: vdso: Use a header file to prototype parse_vdso API
+>    selftests: vdso: Add a selftest for vDSO getcpu()
 > 
+>   tools/testing/selftests/vDSO/.gitignore       |  2 +
+>   tools/testing/selftests/vDSO/Makefile         |  5 +-
+>   tools/testing/selftests/vDSO/parse_vdso.c     | 24 +--------
+>   tools/testing/selftests/vDSO/parse_vdso.h     | 31 +++++++++++
+>   .../selftests/vDSO/vdso_standalone_test_x86.c |  4 +-
+>   .../testing/selftests/vDSO/vdso_test_getcpu.c | 54 +++++++++++++++++++
+>   .../{vdso_test.c => vdso_test_gettimeofday.c} | 10 ++--
+>   7 files changed, 96 insertions(+), 34 deletions(-)
+>   create mode 100644 tools/testing/selftests/vDSO/parse_vdso.h
+>   create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
+>   rename tools/testing/selftests/vDSO/{vdso_test.c => vdso_test_gettimeofday.c} (84%)
 > 
->>> Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->>> Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
->>> ---
->>>    drivers/xen/swiotlb-xen.c | 5 ++++-
->>>    1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
->>> index b6d27762c6f8..a42129cba36e 100644
->>> --- a/drivers/xen/swiotlb-xen.c
->>> +++ b/drivers/xen/swiotlb-xen.c
->>> @@ -335,6 +335,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t
->>> size, void *vaddr,
->>>    	int order = get_order(size);
->>>    	phys_addr_t phys;
->>>    	u64 dma_mask = DMA_BIT_MASK(32);
->>> +	struct page *pg;
->>>      	if (hwdev && hwdev->coherent_dma_mask)
->>>    		dma_mask = hwdev->coherent_dma_mask;
->>> @@ -346,9 +347,11 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t
->>> size, void *vaddr,
->>>    	/* Convert the size to actually allocated. */
->>>    	size = 1UL << (order + XEN_PAGE_SHIFT);
->>>    +	pg = is_vmalloc_addr(vaddr) ? vmalloc_to_page(vaddr) :
->>> +				      virt_to_page(vaddr);
->>
->> Common DMA code seems to protect this check with CONFIG_DMA_REMAP. Is it
->> something we want to do it here as well? Or is there any other condition where
->> vmalloc can happen?
-> 
-> I can see it in dma_direct_free_pages:
-> 
-> 	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
-> 		vunmap(cpu_addr);
-> 
-> I wonder why the common DMA code does that. is_vmalloc_addr should work
-> regardless of CONFIG_DMA_REMAP. Maybe just for efficiency?
-is_vmalloc_addr() doesn't looks very expensive (although it is not an 
-inline function). So I am not sure the reason behind it. It might be 
-worth asking the author of the config.
 
-Cheers,
+Thanks for the cleaning this up and the rework.
 
--- 
-Julien Grall
+Applied to linux-kselftest next for Linux 5.8-rc1
+
+thanks,
+-- Shuah
