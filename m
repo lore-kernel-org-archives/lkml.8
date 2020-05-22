@@ -2,151 +2,244 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE3AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD9420679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4467920679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDzT50X4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YjORt36O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgEVPbT (ORCPT
+        id S1730558AbgEVPcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35196 "EHLO
+        Fri, 22 May 2020 11:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729851AbgEVPbR (ORCPT
+        with ESMTP id S1730469AbgEVPcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:31:17 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDCCC061A0E;
-        Fri, 22 May 2020 08:31:17 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id z26so5338891pfk.12;
-        Fri, 22 May 2020 08:31:17 -0700 (PDT)
+        Fri, 22 May 2020 11:32:08 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CCFC08C5C0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:32:07 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id g14so4634451wme.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:32:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SSLvHrUrUmnP+J7EUaDe7T1ErKWhhTBSuFxFKbP5p2U=;
-        b=BDzT50X4coOikh70Rqyz4HIZVxhBJy6tMg7dg9A0Bg1ifgpbm0V3hjmHvn1rMK3PEd
-         /qMrIu8iNjKTKRWpT8Jbk7dtDxRjGFKboNsPH2O9H11NdshCEZZL4n5czFNxzuorYO2V
-         QGgZuCQpICm2KGwKaoKHbPprG9wGuf+R/XU1p0tLI7QRX9YNCGCfu2gByZRBzIAB1N41
-         avM2FWs/qBUEqeJ+NOhEMOcmPJU1XIy2/Bm5fOOZX2U3qrt+1Q6HyZV9z1Ze6gsaPPDi
-         7CMey5aUjddyc3RXjMykO0TzXs+CznhwuR+9h/sRwVNqGpFkPJzuiucwbiEfeUc9hyYD
-         pslQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=otTjOhB3pQfb5rvNf3iE/1EF+uvqWUVNS9VHLDzOq6I=;
+        b=YjORt36Ol5Z1zqcZJ9PdVDQlWbU2xMv+HuUp2H6cXcxLt9hXl7O4guMpdaJSCxMlk/
+         F0ZgAw2FvlH34VcN4fni2/NgLuZkYmwMItA0MjVGnZ5p9uL6jvhBff0Q4CTl85Yw1pw3
+         rvDo4oOuVmI951FS3NPpy9tLJaA5xxllVZY0spCqdqsRGD2+abdJquNCoJXQpWfgPgGu
+         ZCn9yjxdzIlUYRfFPLW4aL2snRBCG82tP7948zBCVceR9ovXv0brb7+4rimzBnUS+lwv
+         j8ylwDgWE60TyNowyMK8CQRJ2u9gxTZKcsVP1PX2qZIf9VY10WFDjw1Xh8dRTP1Yiq0I
+         zC8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SSLvHrUrUmnP+J7EUaDe7T1ErKWhhTBSuFxFKbP5p2U=;
-        b=WEM+d2qKcQTKiVHLg2BwkV+am5RZaOY0sKaV5Os3v6GiSFQH1T1QEN7VURPuEaV1Jl
-         Nc/Y4g2+giZsag72adS/7YJqRpro3bEDuvrhiDXZWy01gbJ1KgcGnozwcXbLx8k7wAw8
-         kn0/l9R+ONNGfIq/0NssVF+LZiP2rzdGSjb/FEQUNOUpSOKp/r86w22JhydbfE18bJGC
-         aV25wdEbEasxTrSE/lZkbDNkHk+ezilreLNfCJUEHdw3YghVl7YOOUZLD8bhPKhX/qbK
-         tAlsIEMZlpTo/uiOYWif1X1WE5v9mdvUCLuucHihriG4JEQyV/jGxfMuXgHBksUrFrus
-         VxzA==
-X-Gm-Message-State: AOAM533qzoAySc+O+q1j6zqeUjMprx8zwctYjjAax7WMwuYXDrpIIR8E
-        l1qIjK+i2bPnvdHFImLW6xZhr7EfxDJAWg108rs=
-X-Google-Smtp-Source: ABdhPJzHqqj8fLHqrPYt8036814ISRqAPyzCPwkwOwKw/jPrnn09boo9l3HZ9RshYZIyO8CwzN4XLER+NW+Ss0UGdtY=
-X-Received: by 2002:a62:2f43:: with SMTP id v64mr4328523pfv.170.1590161476980;
- Fri, 22 May 2020 08:31:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=otTjOhB3pQfb5rvNf3iE/1EF+uvqWUVNS9VHLDzOq6I=;
+        b=c6MVcydA1Cg744no7qXj4AGt60btKIOif7ydGyNRazvAl2w7Q7jkLaLSdIM2A5irKB
+         l9/XWWDVKs4JRvriqMxYPFgPa+RvOxDqptorbLEB7oVuXmJ2Kis07QetmnvJtD6tIiiR
+         YFQdtd4zCRJyVbPzhqH1CQfpU0ogCBemTee9LtzfO0PycwP1ii4It2JSgEIFKSuCh/hj
+         S6BzMbFCsXRUwcW1Si67LaxLZeycfhC85zbqeoEqObzvqBe7qv+JLafTrWD4SALLp9qg
+         c3cCrxh8ppdhDwtc5SUtOloqbmdXPL5D7A+0y9B3HuQJcZcKCsFwisqaggKoKK5Iwo+m
+         mz9A==
+X-Gm-Message-State: AOAM531aBpuGiDduYIof3NFJqz783BT0cnkVXJQOrao/7QhMVQTjmJvV
+        HQvejihsDyYSDzHwUdGn99RiWg==
+X-Google-Smtp-Source: ABdhPJxZhfb8FvGiHXbP4WIrzNxdJ9R0OJbYjAm99WLd9VjIJX2ehUsAjztVxh8MlTgphwpbBpEHEA==
+X-Received: by 2002:a1c:1983:: with SMTP id 125mr13524236wmz.43.1590161526337;
+        Fri, 22 May 2020 08:32:06 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
+        by smtp.googlemail.com with ESMTPSA id x17sm9694035wrp.71.2020.05.22.08.32.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 08:32:05 -0700 (PDT)
+Subject: Re: [v4,6/7] thermal: mediatek: add another get_temp ops for thermal
+ sensors
+To:     Michael Kao <michael.kao@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
+        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20200323121537.22697-1-michael.kao@mediatek.com>
+ <20200323121537.22697-7-michael.kao@mediatek.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <fa43c55b-96c2-30c8-eb7e-983177dad13d@linaro.org>
+Date:   Fri, 22 May 2020 17:32:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org>
- <1589361736-816-4-git-send-email-jprakash@codeaurora.org> <CAHp75VedM+=+m8WF=zPpUcizgCGareYuBzUfjKwesozVSY_gKg@mail.gmail.com>
- <50ad0f74-22cc-c74f-afa4-df654e29bebb@codeaurora.org>
-In-Reply-To: <50ad0f74-22cc-c74f-afa4-df654e29bebb@codeaurora.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 22 May 2020 18:31:05 +0300
-Message-ID: <CAHp75Vf0srsT6yonxiA1Lc8uP4=17u5E19iWfW7XGivfgJjFNg@mail.gmail.com>
-Subject: Re: [PATCH V4 3/5] iio: adc: Add support for PMIC7 ADC
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200323121537.22697-7-michael.kao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 2:58 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
-> On 5/13/2020 3:18 PM, Andy Shevchenko wrote:
-> > On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+On 23/03/2020 13:15, Michael Kao wrote:
+> Provide thermal zone to read thermal sensor
+> in the SoC. We can read all the thermal sensors
+> value in the SoC by the node /sys/class/thermal/
+> 
+> In mtk_thermal_bank_temperature, return -EAGAIN instead of -EACCESS
+> on the first read of sensor that often are bogus values.
+> This can avoid following warning on boot:
+> 
+>   thermal thermal_zone6: failed to read out thermal zone (-13)
 
-...
+What the source problem of the sensor returning bogus values?
 
-> >> +static int qcom_vadc7_scale_hw_calib_die_temp(
-> >> +                               const struct vadc_prescale_ratio *prescale,
-> >> +                               const struct adc5_data *data,
-> >> +                               u16 adc_code, int *result_mdec)
-> >> +{
-> >> +
-> >> +       int voltage, vtemp0, temp, i = ARRAY_SIZE(adcmap7_die_temp) - 1;
-> > How assignment to i is useful?
->
->
-> I'm using it in adcmap7_die_temp[i] below, to keep it within the
-> character limit per line. I think it's more readable that way.
->
-> >
-> >> +       voltage = qcom_vadc_scale_code_voltage_factor(adc_code,
-> >> +                               prescale, data, 1);
-> >> +
-> >> +       if (adcmap7_die_temp[0].x > voltage) {
-> >> +               *result_mdec = DIE_TEMP_ADC7_SCALE_1;
-> >> +               return 0;
-> >> +       } else if (adcmap7_die_temp[i].x <= voltage) {
 
-I see now i in use, please, replace with direct meaning.
 
-> > Redundant 'else'.
-> The expression is different, it's adcmap7_die_temp[i] here, not
-> adcmap7_die_temp[0].
+> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  drivers/thermal/mtk_thermal.c | 74 +++++++++++++++++++++++++++++++----
+>  1 file changed, 67 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+> index 6b7ef1993d7e..9eaca432920e 100644
+> --- a/drivers/thermal/mtk_thermal.c
+> +++ b/drivers/thermal/mtk_thermal.c
+> @@ -225,6 +225,11 @@ enum {
+>  
+>  struct mtk_thermal;
+>  
+> +struct mtk_thermal_zone {
+> +	struct mtk_thermal *mt;
+> +	int id;
+> +};
+> +
+>  struct thermal_bank_cfg {
+>  	unsigned int num_sensors;
+>  	const int *sensors;
+> @@ -607,7 +612,7 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+>  		 * not immediately shut down.
+>  		 */
+>  		if (temp > 200000)
+> -			temp = 0;
+> +			temp = -EAGAIN;
+>  
+>  		if (temp > max)
+>  			max = temp;
+> @@ -618,7 +623,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
+>  
+>  static int mtk_read_temp(void *data, int *temperature)
+>  {
+> -	struct mtk_thermal *mt = data;
+> +	struct mtk_thermal_zone *tz = data;
+> +	struct mtk_thermal *mt = tz->mt;
+>  	int i;
+>  	int tempmax = INT_MIN;
+>  
+> @@ -637,10 +643,44 @@ static int mtk_read_temp(void *data, int *temperature)
+>  	return 0;
+>  }
+>  
+> +static int mtk_read_sensor_temp(void *data, int *temperature)
+> +{
+> +	struct mtk_thermal_zone *tz = data;
+> +	struct mtk_thermal *mt = tz->mt;
+> +	const struct mtk_thermal_data *conf = mt->conf;
+> +	int id = tz->id - 1;
+> +	int temp = INT_MIN;
+> +	u32 raw;
+> +
+> +	if (id < 0)
+> +		return  -EACCES;
+> +
+> +	raw = readl(mt->thermal_base + conf->msr[id]);
+> +
+> +	temp = raw_to_mcelsius(mt, id, raw);
+> +
+> +	/*
+> +	 * The first read of a sensor often contains very high bogus
+> +	 * temperature value. Filter these out so that the system does
+> +	 * not immediately shut down.
+> +	 */
+> +
+> +	if (temp > 200000)
+> +		return  -EAGAIN;
+> +
+> +	*temperature = temp;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct thermal_zone_of_device_ops mtk_thermal_ops = {
+>  	.get_temp = mtk_read_temp,
+>  };
+>  
+> +static const struct thermal_zone_of_device_ops mtk_thermal_sensor_ops = {
+> +	.get_temp = mtk_read_sensor_temp,
+> +};
+> +
+>  static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
+>  				  u32 apmixed_phys_base, u32 auxadc_phys_base,
+>  				  int ctrl_id)
+> @@ -873,6 +913,7 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>  	struct resource *res;
+>  	u64 auxadc_phys_base, apmixed_phys_base;
+>  	struct thermal_zone_device *tzdev;
+> +	struct mtk_thermal_zone *tz;
+>  
+>  	mt = devm_kzalloc(&pdev->dev, sizeof(*mt), GFP_KERNEL);
+>  	if (!mt)
+> @@ -954,11 +995,30 @@ static int mtk_thermal_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, mt);
+>  
+> -	tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, mt,
+> -						     &mtk_thermal_ops);
+> -	if (IS_ERR(tzdev)) {
+> -		ret = PTR_ERR(tzdev);
+> -		goto err_disable_clk_peri_therm;
+> +	for (i = 0; i < mt->conf->num_sensors + 1; i++) {
+> +		tz = kmalloc(sizeof(*tz), GFP_KERNEL);
+> +		if (!tz)
+> +			return -ENOMEM;
+> +
+> +		tz->mt = mt;
+> +		tz->id = i;
+> +
+> +		tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, i,
+> +							     tz, (i == 0) ?
+> +				&mtk_thermal_ops : &mtk_thermal_sensor_ops);
+> +
+> +		if (IS_ERR(tzdev)) {
+> +			if (PTR_ERR(tzdev) == -ENODEV) {
+> +				dev_warn(&pdev->dev,
+> +					 "sensor %d not registered in thermal zone in dt\n",
+> +					 i);
+> +				continue;
+> +			}
+> +			if (PTR_ERR(tzdev) == -EACCES) {
+> +				ret = PTR_ERR(tzdev);
+> +				goto err_disable_clk_peri_therm;
+> +			}
+> +		}
+>  	}
+>  
+>  	return 0;
+> 
 
-if (a) {
- ...
- return;
-} else if (b) {
- ...
-}
-
-'else' is redundant due to 'return'. Same when it's 'goto'.
-
-> >> +               *result_mdec = DIE_TEMP_ADC7_MAX;
-> >> +               return 0;
-> >> +       }
-> >> +
-> >> +       for (i = 0; i < ARRAY_SIZE(adcmap7_die_temp); i++)
-> >> +               if (adcmap7_die_temp[i].x > voltage)
-> >> +                       break;
-> >> +
-> >> +       vtemp0 = adcmap7_die_temp[i - 1].x;
-> >> +       voltage = voltage - vtemp0;
-> >> +       temp = div64_s64(voltage * DIE_TEMP_ADC7_SCALE_FACTOR,
-> >> +               adcmap7_die_temp[i - 1].y);
-> >> +       temp += DIE_TEMP_ADC7_SCALE_1 + (DIE_TEMP_ADC7_SCALE_2 * (i - 1));
-> >> +       *result_mdec = temp;
-> >> +
-> >> +       return 0;
-> >> +}
 
 -- 
-With Best Regards,
-Andy Shevchenko
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
