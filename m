@@ -2,85 +2,141 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A8FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED6522067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D154206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xMdzvQs2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgEVKPP (ORCPT
+        id S1728988AbgEVKOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:15:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45462 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbgEVKPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:15:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6AA25AC52;
-        Fri, 22 May 2020 10:15:11 +0000 (UTC)
-Date:   Fri, 22 May 2020 12:15:07 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     root <wang.yi59@zte.com.cn>
-Cc:     sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        jiang.xuexin@zte.com.cn,
-        =?utf-8?B?5rGq5YuHMTAyNjk1NjY=?= <wang.yong12@zte.com.cn>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH] [PATCH]Fixed: line break of pr_cont not take effect in
- linux-rt
-Message-ID: <20200522101507.GI3464@linux-b0ei>
-References: <1590025064-14433-1-git-send-email-wang.yi59@zte.com.cn>
+        Fri, 22 May 2020 06:14:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59898 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbgEVKOK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 06:14:10 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MADsGe038027;
+        Fri, 22 May 2020 05:13:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590142434;
+        bh=8U5j3EpmZjALS0efVhhezXkuXnpSFM9S8zpuLAfKQGc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xMdzvQs2QfjIHCDmgvcLSWEbkMvtpoiVM0RHc9rRUwvH5lTBBzEdNiiBfiKnyYrtZ
+         o3LUIuytxS1akCTXy4Md9yaRtjXBp2MM2h82Iblu0GrruhzXZbk7PD9wdHMha11jiK
+         RDdZeIBfp5mVmNgZXA1ErDikY3mS4BBb93suZ2yw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MADsQl081622
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 05:13:54 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 05:13:54 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 05:13:54 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MAD1aA041179;
+        Fri, 22 May 2020 05:13:49 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v7 09/20] mtd: spi-nor: sfdp: get command opcode extension type from BFPT
+Date:   Fri, 22 May 2020 15:42:50 +0530
+Message-ID: <20200522101301.26909-10-p.yadav@ti.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200522101301.26909-1-p.yadav@ti.com>
+References: <20200522101301.26909-1-p.yadav@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1590025064-14433-1-git-send-email-wang.yi59@zte.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-05-21 09:37:44, root wrote:
-> From: 汪勇10269566 <wang.yong12@zte.com.cn>
-> 
-> Line break of pr_cont not take effect.
-> Use several pr_cont to print continuous paragraph, it is expected to
-> have line break when line ends up with  '\n', however the paragraph
-> does not have line break
-> -printk_kthread_func will not print info before log_store insert msg
->  into printk_rb, and pr_cont calls cont_add to keep data in buffer.
->  cont_add only when the following conditions are met insert msg to
->  printk_rb
->  1.cpu != c->cpu_owner || !(flags & LOG_CONT)
->  2.c->len + len > sizeof(c->buf)
-> 
-> Signed-off-by: 汪勇10269566 <wang.yong12@zte.com.cn>
-> ---
->  kernel/printk/printk.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index 0605a74..d898f50 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -1871,6 +1871,7 @@ static void cont_add(int ctx, int cpu, u32 caller_id, int facility, int level,
->  	// but later continuations can add a newline.
->  	if (flags & LOG_NEWLINE) {
->  		c->flags |= LOG_NEWLINE;
-> +		cont_flush(ctx);
+Some devices in DTR mode expect an extra command byte called the
+extension. The extension can either be same as the opcode, bitwise
+inverse of the opcode, or another additional byte forming a 16-byte
+opcode. Get the extension type from the BFPT. For now, only flashes with
+"repeat" and "inverse" extensions are supported.
 
-What kernel sources is this patch against, please?
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+---
+ drivers/mtd/spi-nor/sfdp.c | 17 +++++++++++++++++
+ drivers/mtd/spi-nor/sfdp.h |  6 ++++++
+ 2 files changed, 23 insertions(+)
 
-The console_flush() call is in the current Linus' tree. It does not
-have any parameter there. And there is no printk_kthread_func.
+diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
+index 96960f2f3d7a..ab086aa4746f 100644
+--- a/drivers/mtd/spi-nor/sfdp.c
++++ b/drivers/mtd/spi-nor/sfdp.c
+@@ -609,6 +609,23 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+ 	if (bfpt_header->length == BFPT_DWORD_MAX_JESD216B)
+ 		return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt,
+ 						params);
++	/* 8D-8D-8D command extension. */
++	switch (bfpt.dwords[BFPT_DWORD(18)] & BFPT_DWORD18_CMD_EXT_MASK) {
++	case BFPT_DWORD18_CMD_EXT_REP:
++		nor->cmd_ext_type = SPI_NOR_EXT_REPEAT;
++		break;
++
++	case BFPT_DWORD18_CMD_EXT_INV:
++		nor->cmd_ext_type = SPI_NOR_EXT_INVERT;
++		break;
++
++	case BFPT_DWORD18_CMD_EXT_RES:
++		return -EINVAL;
++
++	case BFPT_DWORD18_CMD_EXT_16B:
++		dev_err(nor->dev, "16-bit opcodes not supported\n");
++		return -ENOTSUPP;
++	}
+ 
+ 	return spi_nor_post_bfpt_fixups(nor, bfpt_header, &bfpt, params);
+ }
+diff --git a/drivers/mtd/spi-nor/sfdp.h b/drivers/mtd/spi-nor/sfdp.h
+index f8198af43a63..e15e30796d62 100644
+--- a/drivers/mtd/spi-nor/sfdp.h
++++ b/drivers/mtd/spi-nor/sfdp.h
+@@ -84,6 +84,12 @@ struct sfdp_bfpt {
+ #define BFPT_DWORD15_QER_SR2_BIT1_NO_RD		(0x4UL << 20)
+ #define BFPT_DWORD15_QER_SR2_BIT1		(0x5UL << 20) /* Spansion */
+ 
++#define BFPT_DWORD18_CMD_EXT_MASK		GENMASK(30, 29)
++#define BFPT_DWORD18_CMD_EXT_REP		(0x0UL << 29) /* Repeat */
++#define BFPT_DWORD18_CMD_EXT_INV		(0x1UL << 29) /* Invert */
++#define BFPT_DWORD18_CMD_EXT_RES		(0x2UL << 29) /* Reserved */
++#define BFPT_DWORD18_CMD_EXT_16B		(0x3UL << 29) /* 16-bit opcode */
++
+ struct sfdp_parameter_header {
+ 	u8		id_lsb;
+ 	u8		minor;
+-- 
+2.26.2
 
-Is this against RT patchset?
-
-Best Regards,
-Petr
