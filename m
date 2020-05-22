@@ -2,167 +2,116 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E668C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D77C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A63B204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swaw1mtp"
+	by mail.kernel.org (Postfix) with ESMTP id 47E5F2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590158744;
+	bh=hRb2VDYaeeagfmMwuXWOO5MTiJ36qdN4nrC0CGCu3qE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EiphzSu7byschwYzG09JUE2SGZVvmvkXjO+YmBfGyqrQOyWsK4lglMVQXW+Ivp9tb
+	 cZk1Px2kEbJsM8JsBDK7N1ym7NI0CYpBsnzukJ6rUV20VXMSUuvEgm8/JOYCvDniUz
+	 UHGYeFFZ3KXc2d/pljbDd2fraunl1kh8tNwRx3nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbgEVOpc (ORCPT
+        id S1730221AbgEVOpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730172AbgEVOpa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:45:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A284C061A0E;
-        Fri, 22 May 2020 07:45:30 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id s69so5019075pjb.4;
-        Fri, 22 May 2020 07:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rrXdaPjifMrf4XwvQWVex8RQCvnU9ofzUU0gXliR/5E=;
-        b=swaw1mtpQgECkgw2Iz/+9mmP15JUnszYKlOMmg86XZ8kzTHq9biLA2qHiPCFXd5Qu+
-         DN9s5gOFC5LD5Yo1hdZ2hopDIofoJjcywYu7jnK+jZQKbbkCfsz/fKiaq7QI/pf41Wrb
-         y1whQD0ptcQDFDKyfU2HPo/oUdb2FjFzKftplCVMGNZzp1I/8L49zJfDh+7yHK+avfNe
-         S+BEe+R8s73fCKUFiD7PcVIouy87a/yV5vnjAXiMQ07ZJzOOSdomJw06DBa6cZl5DTDL
-         tdxb+ndlAaOMbCtqje5s6qU/2tO/03L2iXVxFqinSSX5Haz3B7SRxsOFnyKa8aYsDhFD
-         j/1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rrXdaPjifMrf4XwvQWVex8RQCvnU9ofzUU0gXliR/5E=;
-        b=Kx2aHWErfPHanDMfT3IVgWrIaCd0TqaUvNIM4IstOHB0rJpYQN0/+P6i+oAAMSH8PY
-         T+plxEo9w5DkwTIIVFtECViGZNIE3ZstkCsZWViTq9RhacSfjF/Kfj7P8CwetL5keF21
-         pZ5/RKVJThjkYff0AZISauvVwbmSpo1MLHQWjQhQ0IoYAPM6TAqiRtAouHpe7iPtuzgG
-         GpVC0/KdJtqRz+PSWchhqhXq/b0tPRbhCsvzJRCOcb26kK8EVbpIuuQAlLyeLXhgH0z3
-         Xg2eVw+5QRpzc8mMt3WVYUw4HZwMhjpLBAAungwV8NNrDy+lUWMCCeWFR33buxYJbEw7
-         ciDQ==
-X-Gm-Message-State: AOAM532LbhM9CGLAEw810Y0O1dshmnK2tFyCqxYdGBVysTAy7Lt832Ij
-        ZaQND/45GsEUsFxnoQSuhwY=
-X-Google-Smtp-Source: ABdhPJzdMfDd5MnULGJFuXkjBlAHVDbnewxlMrPCPazeK0Jcg0yY1FZBCYBxdkV3wdi8Y9Y06mcClA==
-X-Received: by 2002:a17:90a:ae0d:: with SMTP id t13mr4684628pjq.1.1590158729390;
-        Fri, 22 May 2020 07:45:29 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f136sm6852659pfa.59.2020.05.22.07.45.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 07:45:28 -0700 (PDT)
-Date:   Fri, 22 May 2020 07:45:27 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Alexander Monakov <amonakov@ispras.ru>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Brian Woods <brian.woods@amd.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH 1/3] x86/amd_nb: add AMD family 17h model 60h PCI IDs
-Message-ID: <20200522144527.GA172805@roeck-us.net>
-References: <20200510204842.2603-1-amonakov@ispras.ru>
- <20200510204842.2603-2-amonakov@ispras.ru>
+        Fri, 22 May 2020 10:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730036AbgEVOpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:45:43 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FCF9204EF;
+        Fri, 22 May 2020 14:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590158742;
+        bh=hRb2VDYaeeagfmMwuXWOO5MTiJ36qdN4nrC0CGCu3qE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LrqjOWo/J/e9nqoi7yNeP3vN8U5uj740diXbXu7bs4TXKUlq/Wfi+mfz8xQW2v7va
+         UE5FWy17VeukuVoiZIHjzYXyVZvElDUFhPCwCXBb0Lnaf1D+85JNr0lkHuTgn2olws
+         Zz2NEZtpFTLaUVIZ0OyqdWrQPDa5G9Esdeu3kbD0=
+Received: by pali.im (Postfix)
+        id CB79251E; Fri, 22 May 2020 16:45:40 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        linux-kernel@vger.kernel.org, ath10k@lists.infradead.org,
+        b43-dev@lists.infradead.org, brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, libertas-dev@lists.infradead.org,
+        linux-wireless@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH 01/11] mmc: sdio: Fix macro name for Marvell device with ID 0x9134
+Date:   Fri, 22 May 2020 16:44:02 +0200
+Message-Id: <20200522144412.19712-2-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200522144412.19712-1-pali@kernel.org>
+References: <20200522144412.19712-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200510204842.2603-2-amonakov@ispras.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 08:48:40PM +0000, Alexander Monakov wrote:
-> Add PCI IDs for AMD Renoir (4000-series Ryzen CPUs). This is necessary
-> to enable support for temperature sensors via the k10temp module.
-> 
-> Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: Yazen Ghannam <yazen.ghannam@amd.com>
-> Cc: Brian Woods <brian.woods@amd.com>
-> Cc: Clemens Ladisch <clemens@ladisch.de>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: linux-edac@vger.kernel.org
-> Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Marvell SDIO device ID 0x9134 is used in SDIO Common CIS (Card Information
+Structure) and not in SDIO wlan function (with ID 1). SDIO Common CIS is
+accessed by function ID 0.
 
-For my own reference:
+So change this misleading macro name to SDIO_DEVICE_ID_MARVELL_8887_F0 as
+it does not refer to wlan function. It refers to function 0.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Wlan module on this SDIO card is available at function ID 1 and is
+identified by different SDIO device ID 0x9135. Kernel quirks for SDIO
+devices are matched against device ID from SDIO Common CIS. Therefore
+device ID used in quirk is correct, just has misleading name.
 
-I didn't see a response from any of the x86 maintainers, so this series may
-not make it into v5.8. No idea what to do about that.
+Signed-off-by: Pali Rohár <pali@kernel.org>
+---
+ drivers/mmc/core/quirks.h    | 2 +-
+ include/linux/mmc/sdio_ids.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Guenter
+diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
+index 3dba15bccce2..472fa2fdcf13 100644
+--- a/drivers/mmc/core/quirks.h
++++ b/drivers/mmc/core/quirks.h
+@@ -139,7 +139,7 @@ static const struct mmc_fixup sdio_fixup_methods[] = {
+ 	SDIO_FIXUP(SDIO_VENDOR_ID_MARVELL, SDIO_DEVICE_ID_MARVELL_8797_F0,
+ 		   add_quirk, MMC_QUIRK_BROKEN_IRQ_POLLING),
+ 
+-	SDIO_FIXUP(SDIO_VENDOR_ID_MARVELL, SDIO_DEVICE_ID_MARVELL_8887WLAN,
++	SDIO_FIXUP(SDIO_VENDOR_ID_MARVELL, SDIO_DEVICE_ID_MARVELL_8887_F0,
+ 		   add_limit_rate_quirk, 150000000),
+ 
+ 	END_FIXUP
+diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
+index 2e9a6e4634eb..96f43e0dc78f 100644
+--- a/include/linux/mmc/sdio_ids.h
++++ b/include/linux/mmc/sdio_ids.h
+@@ -59,7 +59,7 @@
+ #define SDIO_DEVICE_ID_MARVELL_8688WLAN		0x9104
+ #define SDIO_DEVICE_ID_MARVELL_8688BT		0x9105
+ #define SDIO_DEVICE_ID_MARVELL_8797_F0		0x9128
+-#define SDIO_DEVICE_ID_MARVELL_8887WLAN	0x9134
++#define SDIO_DEVICE_ID_MARVELL_8887_F0		0x9134
+ 
+ #define SDIO_VENDOR_ID_MEDIATEK			0x037a
+ 
+-- 
+2.20.1
 
-> ---
->  arch/x86/kernel/amd_nb.c | 5 +++++
->  include/linux/pci_ids.h  | 1 +
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-> index b6b3297851f3..18f6b7c4bd79 100644
-> --- a/arch/x86/kernel/amd_nb.c
-> +++ b/arch/x86/kernel/amd_nb.c
-> @@ -18,9 +18,11 @@
->  #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
->  #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
->  #define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
-> +#define PCI_DEVICE_ID_AMD_17H_M60H_ROOT	0x1630
->  #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
->  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
->  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
-> +#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c
->  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
->  #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
->  
-> @@ -33,6 +35,7 @@ static const struct pci_device_id amd_root_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },
->  	{}
->  };
->  
-> @@ -50,6 +53,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
-> @@ -65,6 +69,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 1dfc4e1dcb94..3155f5ada02e 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -550,6 +550,7 @@
->  #define PCI_DEVICE_ID_AMD_17H_DF_F3	0x1463
->  #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
->  #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
-> +#define PCI_DEVICE_ID_AMD_17H_M60H_DF_F3 0x144b
->  #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
->  #define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
->  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
