@@ -2,178 +2,103 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F520C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04046C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E79920812
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SdBmYwDD"
+	by mail.kernel.org (Postfix) with ESMTP id C015F206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgEVJUa (ORCPT
+        id S1729517AbgEVJVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:20:30 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54212 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbgEVJU3 (ORCPT
+        Fri, 22 May 2020 05:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgEVJVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:20:29 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200522092028euoutp02ba98dd368afddb27359c876cedb905f2~RTzP_9gwR0669006690euoutp02f
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:20:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200522092028euoutp02ba98dd368afddb27359c876cedb905f2~RTzP_9gwR0669006690euoutp02f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590139228;
-        bh=RCHFAQvkY4VQziV9vdbh4p3TEAezsX+N3nHCYcvhwCk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SdBmYwDDDEh3V1Cbbjr5jL6dCC/S0q843kIg7XNyn5VS6tiaVSwxSnmfuKFPG1sRZ
-         W7tjxUA8S5lucBCxj9YlAFTf90YnE+SgUCOdHbrgs+qM7GfVchFg2ICpW03+mM4uoL
-         Zhtf3Sf7y135Y/eQyyqkeQZoLPiLeuHnIWaVmAIo=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200522092027eucas1p2963c309e550357a7809a2109c92d327e~RTzPbstIw1870318703eucas1p2b;
-        Fri, 22 May 2020 09:20:27 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 55.D7.60698.B5997CE5; Fri, 22
-        May 2020 10:20:27 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200522092027eucas1p2376481cd329b8ddbfeb1b03687ed36d3~RTzPDgNQQ0413204132eucas1p20;
-        Fri, 22 May 2020 09:20:27 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200522092027eusmtrp177c6c8ad4ba60fa7ec6948f841a48f56~RTzPC5kfB2127821278eusmtrp17;
-        Fri, 22 May 2020 09:20:27 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-aa-5ec7995be0e1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5E.08.08375.B5997CE5; Fri, 22
-        May 2020 10:20:27 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200522092026eusmtip2d63c06f0c0d54658139682b52ab85818~RTzOgvWKT2880328803eusmtip2U;
-        Fri, 22 May 2020 09:20:26 +0000 (GMT)
-Subject: Re: [PATCH v2 2/3] extcon: max14577: Add proper dt-compatible
- strings
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
+        Fri, 22 May 2020 05:21:53 -0400
+Received: from hera.aquilenet.fr (hera.aquilenet.fr [IPv6:2a0c:e300::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DDAC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:21:53 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 1F7462D2B;
+        Fri, 22 May 2020 11:21:50 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OYOLJKbB0yKe; Fri, 22 May 2020 11:21:48 +0200 (CEST)
+Received: from function (lfbn-bor-1-797-11.w86-234.abo.wanadoo.fr [86.234.239.11])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id 3DEC82C0C;
+        Fri, 22 May 2020 11:21:48 +0200 (CEST)
+Received: from samy by function with local (Exim 4.93)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1jc3sA-00GDlb-Nu; Fri, 22 May 2020 11:21:46 +0200
+Date:   Fri, 22 May 2020 11:21:46 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     MugilRaj <dmugil2000@gmail.com>
+Cc:     William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Message-ID: <e3c55c02-4d9f-f19c-2cd8-42f6a85f348d@samsung.com>
-Date:   Fri, 22 May 2020 11:20:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.0
+Subject: Re: [PATCH] taging: speakup: remove volatile
+Message-ID: <20200522092146.6ijoma4re7ijai7a@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        MugilRaj <dmugil2000@gmail.com>,
+        William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        speakup@linux-speakup.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a1f499fa-1907-93f5-6f57-13187ae10d7e@samsung.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsWy7djP87rRM4/HGTy7LWexccZ6VoupD5+w
-        WVz/8pzV4vz5DewWl3fNYbP43HuE0eJ24wo2i9O7Sxw4PDat6mTz6NuyitHj8ya5AOYoLpuU
-        1JzMstQifbsErow5a1QKVghW/Hrxgb2BcT9fFyMnh4SAicSbQ11sILaQwApGie/9+hD2F0aJ
-        jn72LkYuIPszo8TTrfvZYRo+rpnBCpFYziixdsE8ZgjnPaPEqWsfmUGqhAUCJDqefGACsdkE
-        DCW63kKsEBFIkpi9YysTSAOzwEVGiWe9E8ESvAJ2Ege+rWEFsVkEVCV2rmkFi4sKxEqcXryZ
-        EaJGUOLkzCcsIDangL3E1seXweqZBeQlmrfOZoawxSVuPZkPtkBCYBW7xJwLp6HudpHY/2Er
-        I4QtLPHq+BaouIzE6ck9LBANzYwSD8+tZYdwehglLjfNgOqwlrhz7hfQSRxAKzQl1u/Shwg7
-        Smz9s4sJJCwhwCdx460gxBF8EpO2TWeGCPNKdLQJQVSrScw6vg5u7cELl5gnMCrNQvLaLCTv
-        zELyziyEvQsYWVYxiqeWFuempxYb56WW6xUn5haX5qXrJefnbmIEpp3T/45/3cG470/SIUYB
-        DkYlHl6LtGNxQqyJZcWVuYcYJTiYlUR4F/IfjRPiTUmsrEotyo8vKs1JLT7EKM3BoiTOa7zo
-        ZayQQHpiSWp2ampBahFMlomDU6qBMUKoI4+hw1g4THHKDofbV5dqiRYrJl1K9WKa1PFS9rH/
-        oRWb7upcWthsUSRRVpax2ktrb98ktyWVL3fXP5DfeV/99x7++VPmF6u/P81h9GRz3hS+adEn
-        9DQi34jGTNS5eyf+mfhiJp8VE9jLt8o5zD3c84F9QtLy5E9lymdTb6l3m3Wvnn0sTYmlOCPR
-        UIu5qDgRAMtbYzs3AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsVy+t/xe7rRM4/HGdz5yGyxccZ6VoupD5+w
-        WVz/8pzV4vz5DewWl3fNYbP43HuE0eJ24wo2i9O7Sxw4PDat6mTz6NuyitHj8ya5AOYoPZui
-        /NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYw5a1QKVghW
-        /Hrxgb2BcT9fFyMnh4SAicTHNTNYuxi5OIQEljJKLG/tZIJIyEicnNbACmELS/y51sUGUfSW
-        UWLu7xcsIAlhAT+JPzsOs4HYbAKGEl1vu8BsEYEkiR1TmphBGpgFLjNKbL3ZwwjRvZ5J4tbn
-        RrCxvAJ2Ege+rQGzWQRUJXauaQXrFhWIlVh9rZURokZQ4uTMJ2DbOAXsJbY+vgxWzyxgJjFv
-        80NmCFteonnrbChbXOLWk/lMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy021CtOzC0u
-        zUvXS87P3cQIjLVtx35u3sF4aWPwIUYBDkYlHt4HycfihFgTy4orcw8xSnAwK4nwLuQ/GifE
-        m5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cA0kFcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9
-        sSQ1OzW1ILUIpo+Jg1OqgTH7V+VltYuF+1Yf5bJ/9snJgPNsvPiFaUsnRpkcVk/S/WY/V7Un
-        P9rxrswHE79P8+ef+ZkldZlXTHueC++BjRYet5fzLpJXLbPaJ3Wa8/r8mObzXZOXPo7QM+Ho
-        C0o94LRs1n2Zt5e4lG5Pjp7jmqzdtY/vENPrDduqeT7L9c2PkspfE5d9dJsSS3FGoqEWc1Fx
-        IgB04N8fywIAAA==
-X-CMS-MailID: 20200522092027eucas1p2376481cd329b8ddbfeb1b03687ed36d3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200522064807eucas1p2665d6b3928b2ad515abe54513cbd7fd8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200522064807eucas1p2665d6b3928b2ad515abe54513cbd7fd8
-References: <20200522064801.16822-1-m.szyprowski@samsung.com>
-        <CGME20200522064807eucas1p2665d6b3928b2ad515abe54513cbd7fd8@eucas1p2.samsung.com>
-        <20200522064801.16822-2-m.szyprowski@samsung.com>
-        <8ec0c604-8cdc-04f8-fc5c-fd967f52022b@samsung.com>
-        <a1f499fa-1907-93f5-6f57-13187ae10d7e@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Hello,
 
-On 22.05.2020 10:30, Marek Szyprowski wrote:
-> Hi Chanwoo,
->
-> On 22.05.2020 09:08, Chanwoo Choi wrote:
->> On 5/22/20 3:48 PM, Marek Szyprowski wrote:
->>> Add device tree compatible strings and create proper modalias 
->>> structures
->>> to let this driver load automatically if compiled as module, because
->>> max14577 MFD driver creates MFD cells with such compatible strings.
->>>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> ---
->>> v2:
->>> - added .of_match_table pointer
->>> ---
->>>   drivers/extcon/extcon-max14577.c | 10 ++++++++++
->>>   1 file changed, 10 insertions(+)
->>>
->>> diff --git a/drivers/extcon/extcon-max14577.c 
->>> b/drivers/extcon/extcon-max14577.c
->>> index 32f663436e6e..03af678ddeba 100644
->>> --- a/drivers/extcon/extcon-max14577.c
->>> +++ b/drivers/extcon/extcon-max14577.c
->>> @@ -782,9 +782,19 @@ static const struct platform_device_id 
->>> max14577_muic_id[] = {
->>>   };
->>>   MODULE_DEVICE_TABLE(platform, max14577_muic_id);
->>>   +static const struct of_device_id of_max14577_muic_dt_match[] = {
->>> +    { .compatible = "maxim,max77836-muic",
->>> +      .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
->>> +    { .compatible = "maxim,max14577-muic",
->>> +      .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
->>> +    { },
->> How about changing the order between max77836 and max14577 as already 
->> added structure
->> like platform_device_id if there are no specific reason as following:?
->>
->>
->> static const struct of_device_id of_max14577_muic_dt_match[] = {
->>     { .compatible = "maxim,max14577-muic",
->>       .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
->>     { .compatible = "maxim,max77836-muic",
->>       .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
->>     { },
->
-> Sure. I will swap them and send updated patch. This order comes from 
-> drivers/power/supply/max14577_charger.c, which also lacks 
-> .of_match_table, so I will also fix it.
-It looks that I've checked a wrong tree. I will send v3 with 
-of_match_table sorted. I have no idea why the order is reversed.
+MugilRaj, le ven. 22 mai 2020 14:46:28 +0530, a ecrit:
+> fix checkpatch.pl warning, which is Use of volatile is usually wrong: see
+> Documentation/process/volatile-considered-harmful.rst
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Yes, but the proper fix is usually not to just remove the volatile
+qualifier, which will not fix anything and potentially break things.
 
+Fixing this requires really understanding what is at stake here, between
+the read_buff_add function and the use of synth_full(). That goes
+through interrupt handlers, tty disciplines, and the actual behavior
+expected by speakup. Not a simple task, henceforth :)
+
+> Signed-off-by: MugilRaj <dmugil2000@gmail.com>
+> ---
+>  drivers/staging/speakup/speakup_decext.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/speakup/speakup_decext.c b/drivers/staging/speakup/speakup_decext.c
+> index ddbb7e9..22baaeb 100644
+> --- a/drivers/staging/speakup/speakup_decext.c
+> +++ b/drivers/staging/speakup/speakup_decext.c
+> @@ -21,7 +21,7 @@
+>  #define SYNTH_CLEAR 0x03
+>  #define PROCSPEECH 0x0b
+>  
+> -static volatile unsigned char last_char;
+> +static unsigned char last_char;
+>  
+>  static void read_buff_add(u_char ch)
+>  {
+> -- 
+> 2.7.4
+> 
