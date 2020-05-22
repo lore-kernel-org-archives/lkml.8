@@ -2,196 +2,117 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F4A206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E07B206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="L10nCGuh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Rt+O0AOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgEVMyN (ORCPT
+        id S1730438AbgEVMyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:54:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728717AbgEVMwU (ORCPT
+        Fri, 22 May 2020 08:54:16 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53608 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728853AbgEVMyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:52:20 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715A1C08C5C2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id m18so12478212ljo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S+L43kzTWeV0qBo7/UXpF9mjurVSaJfxkFKdWz5la+8=;
-        b=L10nCGuhKTvFcjopSTmqmu6TMttbOmfpAsWfm6aIGQA6P1R+wcUVFl1kMoxkQpr/Vr
-         T/32LdrA4xVd1SJpudUw2/5zyKsaH51gEL9zXs3gJgSY64iKwW1DR1GtYwt9Ezmenij8
-         o4Nw4HaR4ZIi4zQiZSCGz6Z9BihS+pe9Qheuty0ulaJQdRS4WRQ0ugsPAd+HEbCZF071
-         0VRoI+63GAoIyKDgw3bpM/jwHrWXUmOjrKz+ZyFRAHOyDdMKsJeD93A6kb8lkAofAtAk
-         iQ7AN9JCC8C7qxEFkUS5MqJNkL2O8GLBye8FWmv0Oz3rpZKZ8Ok5N43GLlyqj+zfnLlN
-         P/AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S+L43kzTWeV0qBo7/UXpF9mjurVSaJfxkFKdWz5la+8=;
-        b=N8v64G+6wuBEJvA/M5t968OEmZYtzN4hRHGw0vywDXilXmMnORn/HYoFjXqsYYVIKD
-         /SaNiwG5Ii++rb2R6M21qJ9u+vErcljvw9y4AC+O/6QyB9od+/61N88vLHe0dP5OIsGJ
-         7pvnrly1Q7UD3VBo7gF83NvlvRZot4tc0go3b4YkUWnL9jENeZCye+lUMxvr84lcqtrZ
-         bEcMQUxWnNgge2CHKgF3LlmsM0WVRYz+vfhXLKpyeTjK69PY4wxXyRoRzjtNS8aov0eF
-         kP/nGxR9C/LoQ5cksI++TaWIusAQh0JKku4ie27oQTjWZ3N+CUVUdwBtGlH36eSCUBHw
-         CcZg==
-X-Gm-Message-State: AOAM530niLuEO8DtRqGbW0ENSwq4OtI2omrAe3BtJZ/4iybNYLGZ5gMM
-        8+u9LuH9G9MxM1Uy+AhvIUH/Ug==
-X-Google-Smtp-Source: ABdhPJwBRkFSJRPO5VTttkswQA1+IQChU9KFl1wv2ylCjjjm9j08u45iNHd4WuA3Qe/3uKHyAKklAg==
-X-Received: by 2002:a2e:9bc3:: with SMTP id w3mr7882222ljj.170.1590151938848;
-        Fri, 22 May 2020 05:52:18 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j133sm2404003lfd.58.2020.05.22.05.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 05:52:17 -0700 (PDT)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A96B110204C; Fri, 22 May 2020 15:52:19 +0300 (+03)
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
-Date:   Fri, 22 May 2020 15:52:00 +0300
-Message-Id: <20200522125214.31348-3-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
+        Fri, 22 May 2020 08:54:10 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MCpsF6078482;
+        Fri, 22 May 2020 12:54:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=5EEXd/s1NUgU+bskJiGkekpLD34zTuJsEN8ob6uaeE0=;
+ b=Rt+O0AOth6eEFdLZYAp79MGuWb0FeAN7YI8+QEgQ4lk8Xu/ZO8vdDZaGmh6TewGZWfkA
+ saH7itr1tKKvHiMNSB08r51qJ6TQ9K+iQ2M16BLjbYlqpbFvg9GmfqjfwmGDnh6Xjrp5
+ ivOWdOFyQ1MYpBaaKkWG0ZHrmI6gwYyX9S+49KHC6JWcRTd+vk9j1yzSd/l38M0RuSWO
+ WFtF504XSYCtq7Dup8es7S6UQ4e0Iycbzi3f1Tyve7HoDXQsCsSKdGTfWZUeGQDcgx6G
+ WXZcrEs6wbaIaBPDce32OflSJ/pO5lSLy3s+h8sSaesgfA/Kuk8Li3C/8w3KaW3yXHM0 JQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31284mdjty-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 12:54:00 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MCqYDN099390;
+        Fri, 22 May 2020 12:53:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 314gmb3pfh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 May 2020 12:53:59 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04MCrvbG002429;
+        Fri, 22 May 2020 12:53:57 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 May 2020 05:53:56 -0700
+Date:   Fri, 22 May 2020 15:53:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, jgg@ziepe.ca, dsterba@suse.com,
+        arnd@arndb.de, ira.weiny@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers/virt/fsl_hypervisor: Correcting error handling
+ path
+Message-ID: <20200522125349.GF22511@kadam>
+References: <1589401396-31210-1-git-send-email-jrdr.linux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589401396-31210-1-git-send-email-jrdr.linux@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=2
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005220105
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005220105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide basic helpers, KVM_FEATURE and a hypercall.
+On Thu, May 14, 2020 at 01:53:16AM +0530, Souptick Joarder wrote:
+> First, when memory allocation for sg_list_unaligned failed, there
+> is no point of calling put_pages() as we haven't pinned any pages.
+> 
+> Second, if get_user_pages_fast() failed we should unpinned num_pinned
+> pages, no point of checking till num_pages.
+> 
+> This will address both.
+> 
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 
-Host side doesn't provide the feature yet, so it is a dead code for now.
+If gup_flags were | FOLL_LONGTERM then this patch would fix a double
+free because of the put_page() in __gup_longterm_locked().
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/include/asm/kvm_para.h      |  5 +++++
- arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
- arch/x86/kernel/kvm.c                | 16 ++++++++++++++++
- include/uapi/linux/kvm_para.h        |  3 ++-
- 4 files changed, 25 insertions(+), 2 deletions(-)
+mm/gup.c
+  1786                  if (check_dax_vmas(vmas_tmp, rc)) {
+  1787                          for (i = 0; i < rc; i++)
+  1788                                  put_page(pages[i]);
+                                        ^^^^^^^^^^^^^^^^^^^
+put_page() here and also in the caller.
 
-diff --git a/arch/x86/include/asm/kvm_para.h b/arch/x86/include/asm/kvm_para.h
-index 9b4df6eaa11a..3ce84fc07144 100644
---- a/arch/x86/include/asm/kvm_para.h
-+++ b/arch/x86/include/asm/kvm_para.h
-@@ -10,11 +10,16 @@ extern void kvmclock_init(void);
- 
- #ifdef CONFIG_KVM_GUEST
- bool kvm_check_and_clear_guest_paused(void);
-+bool kvm_mem_protected(void);
- #else
- static inline bool kvm_check_and_clear_guest_paused(void)
- {
- 	return false;
- }
-+static inline bool kvm_mem_protected(void)
-+{
-+	return false;
-+}
- #endif /* CONFIG_KVM_GUEST */
- 
- #define KVM_HYPERCALL \
-diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-index 2a8e0b6b9805..c3b499acc98f 100644
---- a/arch/x86/include/uapi/asm/kvm_para.h
-+++ b/arch/x86/include/uapi/asm/kvm_para.h
-@@ -28,9 +28,10 @@
- #define KVM_FEATURE_PV_UNHALT		7
- #define KVM_FEATURE_PV_TLB_FLUSH	9
- #define KVM_FEATURE_ASYNC_PF_VMEXIT	10
--#define KVM_FEATURE_PV_SEND_IPI	11
-+#define KVM_FEATURE_PV_SEND_IPI		11
- #define KVM_FEATURE_POLL_CONTROL	12
- #define KVM_FEATURE_PV_SCHED_YIELD	13
-+#define KVM_FEATURE_MEM_PROTECTED	14
- 
- #define KVM_HINTS_REALTIME      0
- 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 6efe0410fb72..bda761ca0d26 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -35,6 +35,13 @@
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
- 
-+static bool mem_protected;
-+
-+bool kvm_mem_protected(void)
-+{
-+	return mem_protected;
-+}
-+
- static int kvmapf = 1;
- 
- static int __init parse_no_kvmapf(char *arg)
-@@ -727,6 +734,15 @@ static void __init kvm_init_platform(void)
- {
- 	kvmclock_init();
- 	x86_platform.apic_post_init = kvm_apic_init;
-+
-+	if (kvm_para_has_feature(KVM_FEATURE_MEM_PROTECTED)) {
-+		if (kvm_hypercall0(KVM_HC_ENABLE_MEM_PROTECTED)) {
-+			pr_err("Failed to enable KVM memory protection\n");
-+			return;
-+		}
-+
-+		mem_protected = true;
-+	}
- }
- 
- const __initconst struct hypervisor_x86 x86_hyper_kvm = {
-diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
-index 8b86609849b9..1a216f32e572 100644
---- a/include/uapi/linux/kvm_para.h
-+++ b/include/uapi/linux/kvm_para.h
-@@ -27,8 +27,9 @@
- #define KVM_HC_MIPS_EXIT_VM		7
- #define KVM_HC_MIPS_CONSOLE_OUTPUT	8
- #define KVM_HC_CLOCK_PAIRING		9
--#define KVM_HC_SEND_IPI		10
-+#define KVM_HC_SEND_IPI			10
- #define KVM_HC_SCHED_YIELD		11
-+#define KVM_HC_ENABLE_MEM_PROTECTED	12
- 
- /*
-  * hypercalls use architecture specific
--- 
-2.26.2
+  1789                          rc = -EOPNOTSUPP;
+  1790                          goto out;
+  1791                  }
+
+But since this isn't FOLL_LONGTERM the patch is a nice cleanup which
+doesn't affect run time.
+
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+regards,
+dan carpenter
 
