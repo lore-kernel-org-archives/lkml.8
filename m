@@ -2,141 +2,108 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F09C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2078C2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953822065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YdeY/dYK"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o/MiK8V3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgEVKnV (ORCPT
+        id S1729026AbgEVKoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728657AbgEVKnU (ORCPT
+        Fri, 22 May 2020 06:44:05 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12462 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728640AbgEVKoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:43:20 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64578C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 03:43:18 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id i15so9656841wrx.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 03:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VGoYWtdu5N5u5jqWgNJFmyeBLxTDklq5XGRfQf6qY4Q=;
-        b=YdeY/dYKbHgnjF5Rfbcb+eEpYTqwDn5A1vVV0JJ5zhynRDstj4c9FpHWPMl+epaBKj
-         4+oNruH5nf6kCafoeC8oqKNyZ/Po23OIUoBNbYN9r4/k0SejSAvyGC92UsY58XQLUfsa
-         3JjDrFGsY19YdyfPsHQclmg1uXVg+LMh91ZPjSFXVChXGrVWjG0Ui7eJQGqklE6+5kay
-         g5Uz20ffaV5DdoIjAToXKulBulbkNzxmwxh2KnSMRG7DYDLx1ioPSUF/Sq5icU69Spbb
-         sYt6m5Pg2RyBF7ZlFDkiMCnoSB3EaxfTGXp6TNa8MZWvQOKRiLEeX0kDcZ6ep0ep66E5
-         CPew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VGoYWtdu5N5u5jqWgNJFmyeBLxTDklq5XGRfQf6qY4Q=;
-        b=D4R4fS4Gg1EowHU93XpA3kvD+tihH64Xvu8P7CHzM0GjKI1jxD2piWZHralCCIY1DZ
-         51TLgimWvWVNP4iFT9y+sIbunBXdYoTknBZ8eyridQoIZ/99UIgkQU+6T6eIeqBBp0hw
-         WH3tm1mCiyhQouHSlvObh5S1vHZ5GkJ5gaBvNxxF/+X//3eIr14ylYG399xGdoou9TVB
-         QLqHxmxroDWb2gH7Pe5dtx8SfJXOZL8URoTMlq2a0d/11ukVYcZ6O7KqiRaDXvxqcx0M
-         eBL+OXc7mXFdFAROAUlXRHCzk2SUjpvYvMaGZRGcffDGOQGIW/GpVF/Ge/f/rt6DWWB3
-         GVcQ==
-X-Gm-Message-State: AOAM531mXXmqUhOhQ/kH+q/OcPfEcK3Mp7IK1teN3FQzLtGlBXGpWFRX
-        19WK3kn40aHUP2r+s/yE/3r5Bg==
-X-Google-Smtp-Source: ABdhPJybiYUfjcoyk6EZQDK4C+UEDo86CQQDAJc9f/khvU4Ce7Ww2hRO343VGYU3st9oV83jeHWEKA==
-X-Received: by 2002:a5d:52c6:: with SMTP id r6mr2933510wrv.269.1590144196705;
-        Fri, 22 May 2020 03:43:16 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id h1sm9702407wme.42.2020.05.22.03.43.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 03:43:16 -0700 (PDT)
-Subject: Re: [PATCH v7 00/15] Add support for devices in the Energy Model
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200511111912.3001-1-lukasz.luba@arm.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <abff69b6-b033-18e2-f380-ceccb42c6b01@linaro.org>
-Date:   Fri, 22 May 2020 12:43:13 +0200
+        Fri, 22 May 2020 06:44:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec7ace80001>; Fri, 22 May 2020 03:43:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 22 May 2020 03:44:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 22 May 2020 03:44:04 -0700
+Received: from [10.26.74.233] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
+ 2020 10:44:02 +0000
+Subject: Re: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance on
+ error
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, <kjlu@umn.edu>
+CC:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <967c17d2-6b57-27f0-7762-cd0835caaec9@nvidia.com>
+Date:   Fri, 22 May 2020 11:43:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200511111912.3001-1-lukasz.luba@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590144232; bh=xtgWWsjcP6ZNZENOPLR8tiW6V23Hn5QNs7Y0J6/9PQs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=o/MiK8V3/4ZeX7LaWuBYGUkLdr53KoorpJF8Ga2q0C69t1nVWAQqLNqN5UjFMOgUX
+         NKaMOCHW6XL+0xOPFSNzGI9mAU8VH2LDpq+bdGP3w9s40XMwKf+DELY8Q89KRmNOGI
+         FNqHcRB7ZXGHwpxV2PouIpFCQhu6n/MJ7MvQwhPh4W1zw5ztPYavzYUgJuYWtshpZW
+         vgu3vUmg/W9DMYUMT0kNhEQwsxWrCwCK2VKVeK2JrLLErms5DSBILMpIFxuOszUXiQ
+         XoGP233+Cd65c78w07gZFOctFFpDXEkmFJfEJppSuTS9z6yjqKH7C8VbEHLluJyTsd
+         YZmf4lb8bQW3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Lukasz,
-
-On 11/05/2020 13:18, Lukasz Luba wrote:
-> Hi all,
+On 22/05/2020 08:58, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
 > 
-> This patch set introduces support for devices in the Energy Model (EM)
-> framework. It will unify the power model for thermal subsystem. It will
-> make simpler to add support for new devices willing to use more
-> advanced features (like Intelligent Power Allocation). Now it should
-> require less knowledge and effort for driver developer to add e.g.
-> GPU driver with simple energy model. A more sophisticated energy model
-> in the thermal framework is also possible, driver needs to provide
-> a dedicated callback function. More information can be found in the
-> updated documentation file.
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/dma/tegra210-adma.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> First 7 patches are refactoring Energy Model framework to add support
-> of other devices that CPUs. They change:
-> - naming convention from 'capacity' to 'performance' state,
-> - API arguments adding device pointer and not rely only on cpumask,
-> - change naming when 'cpu' was used, now it's a 'device'
-> - internal structure to maintain registered devices
-> - update users to the new API
-> Patch 8 updates OPP framework helper function to be more generic, not
-> CPU specific.
-> Patches 9-14 change devfreq cooling, dropping part of old power model and
-> adding registration with Energy Model via exported GPL function.
-> The last path is a simple change for Panfrost GPU driver.
+> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> index c4ce5dfb149b..803e1f4d5dac 100644
+> --- a/drivers/dma/tegra210-adma.c
+> +++ b/drivers/dma/tegra210-adma.c
+> @@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+>  
+>  	ret = pm_runtime_get_sync(tdc2dev(tdc));
+>  	if (ret < 0) {
+> +		pm_runtime_put_sync(tdc2dev(tdc));
+>  		free_irq(tdc->irq, tdc);
+>  		return ret;
+>  	}
 > 
-> The patch set is based on linux-next tag next-20200508.
 
-Do you think it is possible to respin against linux-pm next ?
 
-I wanted to try the series but I'm getting non trivial conflicts with
-the devfreq_cooling changes
+There is another place in probe that needs to be fixed as well. Can you
+correct this while you are at it?
 
+Thanks
+Jon
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+nvpublic
