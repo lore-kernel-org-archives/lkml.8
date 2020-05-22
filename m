@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2501C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3AAE206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023B32072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="I7AimdvA"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="VhVGCTS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbgEVMHf (ORCPT
+        id S1729894AbgEVMH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:07:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59760 "EHLO
+        Fri, 22 May 2020 08:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729421AbgEVMHa (ORCPT
+        with ESMTP id S1729668AbgEVMHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:07:30 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2EC6C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:07:28 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u1so8429650wmn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:07:28 -0700 (PDT)
+        Fri, 22 May 2020 08:07:35 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C76EAC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:07:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y17so1534235wrn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 05:07:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=75HMiSxkO2iGkQyQ4GVIN4XRI1pdsKTRs1XUFo380Tg=;
-        b=I7AimdvAZOh1g/UByPwXTG3z06QWyuPRsDF0Y6Dye4Brq8bAXcTR36UrTTrcFRmV0z
-         ApTCDxKUugYCbGqBd6jh4pdAjVZB5LNOe18if99Ec/1JIe97HNEOCfXfXu10oJmV6OmW
-         9t9TvWm6ZFXkqUfNvBW38GHqf+KiIY4Ck6Bq5FNSeB4KhtkBbVYBv+DU7/Q4cvNK6bT2
-         boLjHlkp7E1pzNHDzgB/i418XwGyHKXG/cG9h7nTX2pmZoouvxti476UwfnpJePKI4ng
-         bURCFe9jqs2O8IdxAxqztdqMugBYRUqdY248cJi+D+VgWvkQ0FT0ORMOETRpJjaJitXR
-         6orA==
+        bh=1qePp19LiRiOBXtccpgQ+eI6GUOhz0auoBWQ11adkXY=;
+        b=VhVGCTS4grQt6k3HIErrSSbtbGv1Wb2NV++azMsGdLYYMvxxpy9bDLN55ZLzINOV9k
+         FA4B2MGWBaHYAgatvgf2dGYKrGO8xWsZ4QKI9fTkogQYBe2HwRX4p37rG6SYWT43qr9m
+         rzKobBuagWzGznsZIFsj05iy4OgSMBAR8TGedQokwHS8EPC5GmcC3wXUr9VaTZVsqePl
+         FEcg341dLTGcYR88SzS5d1jPHMbs60ufBgTrfl+nqj5vy+SytnzIR3P34AHGt0pyfmvL
+         djl2y9/l9gHpLihRw3dgb1o44HKCoGq741hEmx2t9uXgkpbm6wlqvo9SaJ7s0OIIeCWx
+         mAIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=75HMiSxkO2iGkQyQ4GVIN4XRI1pdsKTRs1XUFo380Tg=;
-        b=C8WDZVqw8O2MJLWqmtFPXNab6xlyFdPbovEjhCpIl9ozFpKSH3DWiI7D8Q5tzdyH4S
-         6EE/coOb760HNEW2lVu+GNmilO6QpVHU7W8jfvraigy54lZzhJCNPm8JYY5p1Upnr3EM
-         xOLPtf5CORsqybDOAmST8eDx08QoEKH5P2O+aKmGF9I0qWzwBqOxZEQqcoIkW5740uUv
-         q89G/4cHxumG6qWPuI1sN+vK/DUCunA2vE5ihgappyFqed8UXKmpLQrkRPmeIiM+w1sp
-         jebhrmld+HJR3SMOyjK/kkxqUX7BlO2Kmw9s4AJkeEGwuQmVKdE02Q7idzNh/TNS8dQe
-         Bvxw==
-X-Gm-Message-State: AOAM533EfhIdECFdyyxAESh8tDV69rqKXY7If2iyeyl3il6GdkRieMzB
-        1z/0Ge7cfCMjMiL20T13TnfMDA==
-X-Google-Smtp-Source: ABdhPJwEi7VyHt7K7+omiVssnygbzQxiUSCPmAIEWo/ISCAmaztuxM/ZHSeqf8g+5/jkvW5bZaKWMg==
-X-Received: by 2002:a1c:e188:: with SMTP id y130mr14051662wmg.105.1590149247468;
-        Fri, 22 May 2020 05:07:27 -0700 (PDT)
+        bh=1qePp19LiRiOBXtccpgQ+eI6GUOhz0auoBWQ11adkXY=;
+        b=VcgjsqIjY5ab9/8ajw38f9rda88Qzq9xlyIeSjNpo/ys22tD8Szycqd8g6yPN8o/AF
+         Xy7NFolkNGS2AjkcQGJTmT0dQjENMca4pMHpqJmQeBtDhKWoDuCrWXH2naUEqKvbVwSF
+         iJOZtPfYlsCjmVoBGASaz0pC4I4IQvQTPR1qVZE5cVedIkm+8Z0vTZAV/L71d/j5oMwb
+         vGraijwHi3Mr3re+IdR4/gmeJOzhBETD7fo5FuP4dqvyZgburIKm9hJt61nxZgVywLfE
+         QNJEoKsKmwXbfFPcqBY9AWuiQsLItZk8II2pIwWq4MdId3gARVX/BuBiYZVPoIqrhwnD
+         2Q6A==
+X-Gm-Message-State: AOAM531eJwCYVTuFEUOuDPfU0W+kMcQMkPYOCi6q3yUaRsgATmol7d8Y
+        EBAcrr6KKT3nK286R0bfMvHDOw==
+X-Google-Smtp-Source: ABdhPJzG2w/6WApFpPLpfPz5eZ2F69IZCZdA6mR68/WmlVPBV46pTlpI4dGghrWp/qiA5FGADLqR8Q==
+X-Received: by 2002:a5d:4f0d:: with SMTP id c13mr3365938wru.357.1590149253506;
+        Fri, 22 May 2020 05:07:33 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id f128sm9946233wme.1.2020.05.22.05.07.26
+        by smtp.gmail.com with ESMTPSA id f128sm9946233wme.1.2020.05.22.05.07.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 05:07:26 -0700 (PDT)
+        Fri, 22 May 2020 05:07:33 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v5 05/11] net: ethernet: mediatek: remove unnecessary spaces from Makefile
-Date:   Fri, 22 May 2020 14:06:54 +0200
-Message-Id: <20200522120700.838-6-brgl@bgdev.pl>
+Subject: [PATCH v5 09/11] ARM64: dts: mediatek: add an alias for ethernet0 for pumpkin boards
+Date:   Fri, 22 May 2020 14:06:58 +0200
+Message-Id: <20200522120700.838-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200522120700.838-1-brgl@bgdev.pl>
 References: <20200522120700.838-1-brgl@bgdev.pl>
@@ -93,25 +93,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The Makefile formatting in the kernel tree usually doesn't use tabs,
-so remove them before we add a second driver.
+Add the ethernet0 alias for ethernet so that u-boot can find this node
+and fill in the MAC address.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/net/ethernet/mediatek/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mediatek/Makefile b/drivers/net/ethernet/mediatek/Makefile
-index 2d8362f9341b..3362fb7ef859 100644
---- a/drivers/net/ethernet/mediatek/Makefile
-+++ b/drivers/net/ethernet/mediatek/Makefile
-@@ -3,5 +3,5 @@
- # Makefile for the Mediatek SoCs built-in ethernet macs
- #
+diff --git a/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi b/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
+index a31093d7142b..97d9b000c37e 100644
+--- a/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
++++ b/arch/arm64/boot/dts/mediatek/pumpkin-common.dtsi
+@@ -9,6 +9,7 @@
+ / {
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &ethernet;
+ 	};
  
--obj-$(CONFIG_NET_MEDIATEK_SOC)                 += mtk_eth.o
-+obj-$(CONFIG_NET_MEDIATEK_SOC) += mtk_eth.o
- mtk_eth-y := mtk_eth_soc.o mtk_sgmii.o mtk_eth_path.o
+ 	chosen {
 -- 
 2.25.0
 
