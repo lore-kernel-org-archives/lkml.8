@@ -2,85 +2,118 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3984F206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A39206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgEVMui (ORCPT
+        id S1729771AbgEVMwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:50:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:34956 "EHLO foss.arm.com"
+        Fri, 22 May 2020 08:52:14 -0400
+Received: from mga03.intel.com ([134.134.136.65]:60756 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729344AbgEVMuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:50:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CABD55D;
-        Fri, 22 May 2020 05:50:36 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6196F3F68F;
-        Fri, 22 May 2020 05:50:34 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Fix W+X debug feature on x86
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        Jan Beulich <jbeulich@suse.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200521152308.33096-1-steven.price@arm.com>
- <20200521120843.427b7ff33f8ed7f824eb07f9@linux-foundation.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <4e5eefc0-140c-e1d8-93e9-7f52deb434f9@arm.com>
-Date:   Fri, 22 May 2020 13:50:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728853AbgEVMwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:52:14 -0400
+IronPort-SDR: Ka9sX1pRpxj71nTpCA2i07wCmMwENOMSAYowC05JOeCy6Lv12ZxzRaqm+8Fo/Ru3BRlCphHc90
+ 49Ez4fV6lR3Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:52:13 -0700
+IronPort-SDR: mPZJqCPCWWnRl/VU8XjB3NcZOxczurj90S1c4Q5kweewnB64TVcRx4k9x6jnwotSdyglfr6LMy
+ pzCkNu+YhvxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
+   d="scan'208";a="283390068"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 22 May 2020 05:52:12 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jc79r-008EUL-3j; Fri, 22 May 2020 15:52:15 +0300
+Date:   Fri, 22 May 2020 15:52:15 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mircea Caprioru <mircea.caprioru@analog.com>,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
+Cc:     kbuild test robot <lkp@intel.com>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1] mux: adgs1408: Add mod_devicetable.h and remove
+ of_match_ptr
+Message-ID: <20200522125215.GE1634618@smile.fi.intel.com>
+References: <20200520120122.67528-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521120843.427b7ff33f8ed7f824eb07f9@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520120122.67528-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2020 20:08, Andrew Morton wrote:
-> On Thu, 21 May 2020 16:23:06 +0100 Steven Price <steven.price@arm.com> wrote:
+On Wed, May 20, 2020 at 03:01:22PM +0300, Andy Shevchenko wrote:
+> Enables probing via the ACPI PRP0001 route but more is mostly about
+> removing examples of this that might get copied into new drivers.
 > 
->> Jan alert me[1] that the W+X detection debug feature was broken in x86
->> by my change[2] to switch x86 to use the generic ptdump infrastructure.
->>
->> Fundamentally the approach of trying to move the calculation of
->> effective permissions into note_page() was broken because note_page() is
->> only called for 'leaf' entries and the effective permissions are passed
->> down via the internal nodes of the page tree. The solution I've taken
->> here is to create a new (optional) callback which is called for all
->> nodes of the page tree and therefore can calculate the effective
->> permissions.
->>
->> Secondly on some configurations (32 bit with PAE) "unsigned long" is not
->> large enough to store the table entries. The fix here is simple - let's
->> just use a u64.
+> Also fixes
+>   drivers/mux/adgs1408.c:112:34: warning: unused variable 'adgs1408_of_match
+> as has been reported recently.
+
+Maybe Mark or Greg can take this?
+
+I can resend Cc'ing you.
+
 > 
-> I assumed that a cc:stable was appropriate on both of these(?).
-
-Yes thanks.
-
->> I'd welcome testing (and other comments), especially if you have a
->> configuration which previously triggered W+X warnings as I don't have
->> such a setup.
+> Fixes: e9e40543ad5b ("spi: Add generic SPI multiplexer")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mux/adgs1408.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> I'll wait a while for such testing.  If nothing happens then I guess we
-> merge it up and see what then happens.
+> diff --git a/drivers/mux/adgs1408.c b/drivers/mux/adgs1408.c
+> index 89096f10f4c4..12466b06692c 100644
+> --- a/drivers/mux/adgs1408.c
+> +++ b/drivers/mux/adgs1408.c
+> @@ -6,9 +6,9 @@
+>   */
+>  
+>  #include <linux/err.h>
+> +#include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/mux/driver.h>
+> -#include <linux/of_platform.h>
+>  #include <linux/property.h>
+>  #include <linux/spi/spi.h>
+>  
+> @@ -59,7 +59,7 @@ static int adgs1408_probe(struct spi_device *spi)
+>  	s32 idle_state;
+>  	int ret;
+>  
+> -	chip_id = (enum adgs1408_chip_id)of_device_get_match_data(dev);
+> +	chip_id = (enum adgs1408_chip_id)device_get_match_data(dev);
+>  	if (!chip_id)
+>  		chip_id = spi_get_device_id(spi)->driver_data;
+>  
+> @@ -119,7 +119,7 @@ MODULE_DEVICE_TABLE(of, adgs1408_of_match);
+>  static struct spi_driver adgs1408_driver = {
+>  	.driver = {
+>  		.name = "adgs1408",
+> -		.of_match_table = of_match_ptr(adgs1408_of_match),
+> +		.of_match_table = adgs1408_of_match,
+>  	},
+>  	.probe = adgs1408_probe,
+>  	.id_table = adgs1408_spi_id,
+> -- 
+> 2.26.2
 > 
 
-Thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Steve
+
