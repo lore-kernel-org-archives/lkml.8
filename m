@@ -6,90 +6,101 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A08C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA9F520757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9414920757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbgEVT4d (ORCPT
+        id S1731004AbgEVT5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730893AbgEVT4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:56:33 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AC1C061A0E;
-        Fri, 22 May 2020 12:56:32 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jcDmM-00Dfk3-I0; Fri, 22 May 2020 19:56:26 +0000
-Date:   Fri, 22 May 2020 20:56:26 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Miklos Szeredi <mszeredi@redhat.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ovl: make private mounts longterm
-Message-ID: <20200522195626.GV23230@ZenIV.linux.org.uk>
-References: <20200522085723.29007-1-mszeredi@redhat.com>
- <20200522160815.GT23230@ZenIV.linux.org.uk>
- <CAOssrKcpQwYh39JpcNmV3JiuH2aPDJxgT5MADQ9cZMboPa9QaQ@mail.gmail.com>
- <CAOQ4uxi80CFLgeTYbnHvD7GbY_01z0uywP1jF8gZe76_EZYiug@mail.gmail.com>
- <CAOssrKfXgpRykVN94EiEy8xT4j+HCedN96i31j9iHomtavFaLA@mail.gmail.com>
+        Fri, 22 May 2020 15:57:11 -0400
+Received: from mga05.intel.com ([192.55.52.43]:20572 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730893AbgEVT5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 15:57:10 -0400
+IronPort-SDR: tEGCON5OV2wKRVPc/fcO3DdAW43wemNTkjXCheGSGSYLk+EC4OOJhGIk4ir+Vr1CUY0002gxBo
+ LVuobboztU6w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 12:57:10 -0700
+IronPort-SDR: K723Xvg1R3YAg93y5ZDcdwgAuI7bmNZSJTwz3PgoR3DEDLmclGRhsJneZa4b/xPf6A1Va8kFf4
+ +RvPgDSv9Vmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
+   d="scan'208";a="300770364"
+Received: from rpurrx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.58.10])
+  by fmsmga002.fm.intel.com with ESMTP; 22 May 2020 12:57:05 -0700
+Date:   Fri, 22 May 2020 22:57:05 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-mm@kvack.org, Jethro Beekman <jethro@fortanix.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Seth Moore <sethmo@google.com>
+Subject: Re: [PATCH v30 12/20] x86/sgx: Add a page reclaimer
+Message-ID: <20200522195705.GA121599@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-13-jarkko.sakkinen@linux.intel.com>
+ <20200522065802.GC23459@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOssrKfXgpRykVN94EiEy8xT4j+HCedN96i31j9iHomtavFaLA@mail.gmail.com>
+In-Reply-To: <20200522065802.GC23459@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 08:53:49PM +0200, Miklos Szeredi wrote:
-> On Fri, May 22, 2020 at 7:02 PM Amir Goldstein <amir73il@gmail.com> wrote:
-> >
-> > > > > -     mntput(ofs->upper_mnt);
-> > > > > -     for (i = 1; i < ofs->numlayer; i++) {
-> > > > > -             iput(ofs->layers[i].trap);
-> > > > > -             mntput(ofs->layers[i].mnt);
-> > > > > +
-> > > > > +     if (!ofs->layers) {
-> > > > > +             /* Deal with partial setup */
-> > > > > +             kern_unmount(ofs->upper_mnt);
-> > > > > +     } else {
-> > > > > +             /* Hack!  Reuse ofs->layers as a mounts array */
-> > > > > +             struct vfsmount **mounts = (struct vfsmount **) ofs->layers;
-> > > > > +
-> > > > > +             for (i = 0; i < ofs->numlayer; i++) {
-> > > > > +                     iput(ofs->layers[i].trap);
-> > > > > +                     mounts[i] = ofs->layers[i].mnt;
-> > > > > +             }
-> > > > > +             kern_unmount_many(mounts, ofs->numlayer);
-> > > > > +             kfree(ofs->layers);
-> > > >
-> > > > That's _way_ too subtle.  AFAICS, you rely upon ->upper_mnt == ->layers[0].mnt,
-> > > > ->layers[0].trap == NULL, without even mentioning that.  And the hack you do
-> > > > mention...  Yecchhh...  How many layers are possible, again?
-> > >
-> > > 500, mounts array would fit inside a page and a page can be allocated
-> > > with __GFP_NOFAIL. But why bother?  It's not all that bad, is it?
-> >
-> > FWIW, it seems fine to me.
-> > We can transfer the reference from upperdir_trap to layers[0].trap
-> > when initializing layers[0] for the sake of clarity.
+On Thu, May 21, 2020 at 11:58:02PM -0700, Sean Christopherson wrote:
+> > +		kref_put(&encl_page->encl->refcount, sgx_encl_release);
+> > +
+> > +		spin_lock(&sgx_active_page_list_lock);
+> > +		list_add_tail(&epc_page->list, &sgx_active_page_list);
+> > +		spin_unlock(&sgx_active_page_list_lock);
 > 
-> Right, we should just get rid of ofs->upper_mnt and ofs->upperdir_trap
-> and use ofs->layers[0] to store those.
+> Ugh, this is wrong.  If the above kref_put() drops the last reference and
+> releases the enclave, adding the page to the active page list will result
+> in a use-after-free as the enclave will have been freed.  It also leaks the
+> EPC page because sgx_encl_destroy() skips pages that are in the process of
+> being reclaimed (as detected by list_empty()).
+> 
+> The "original" code did the put() after list_add_tail(), but was moved in
+> v15 to fix a bug where the put() could drop a reference to the wrong enclave
+> if the page was freed and reallocated by a different CPU between
+> list_add_tail() and put().  But, that particular bug only occurred because
+> the code at the time was:
+> 
+> 	sgx_encl_page_put(epc_page);
+> 
+> I.e. the backpointer in epc_page was consumed after dropping the spin lock.
+> So long as epc_page->owner (well, epc_page in general) isn't dereferenced,
+> I'm 99% certain this can be fixed simply by doing kref_put() after moving
+> the page back to the active page list.
 
-For that you'd need to allocate ->layers before you get to ovl_get_upper(),
-though.  I'm not saying it's a bad idea - doing plain memory allocations
-before anything else tends to make failure exits cleaner; it's just that
-it'll take some massage.  Basically, do ovl_split_lowerdirs() early,
-then allocate everything you need, then do lookups, etc., filling that
-stuff.
+Yes. It is certainly a regression to not call it after
+sgx_active_page_list. That was a good catch, thanks.
 
-Regarding this series - the points regarding the name choice and the
-need to document the calling conventions change still remain.
+v31:
+* Unset SGX_ENCL_IOCTL in the error path of checking encl->flags in order
+  to prevent leaving it set and thus block any further ioctl calls.
+* Added missing cleanup_srcu_struct() call to sgx_encl_release().
+* Take encl->lock in sgx_encl_add_page() in order to prevent races with
+  the page reclaimer.
+* Fix a use-after-free bug from page reclaimer. Call kref_put() for the
+  encl->refcount only after putting enclave page back to the active page
+  list because it could be the last ref to the enclave.
+
+I'm ready to send a new version of the patch set once there is a
+conclusion with the sigstruct vendor field.
+
+/Jarkko
