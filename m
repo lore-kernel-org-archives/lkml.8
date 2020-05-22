@@ -2,101 +2,101 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1648FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD161C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB51F2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC49A2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="BXbHdLw2"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lG6Lr1pX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgEVUYG (ORCPT
+        id S1731189AbgEVUYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 16:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52558 "EHLO
+        Fri, 22 May 2020 16:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731042AbgEVUXW (ORCPT
+        with ESMTP id S1731056AbgEVUYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 16:23:22 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBA0C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 13:23:21 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q16so4832456plr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 13:23:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TvoN8a3WZmoogVlnFEo2G3/jPQNtfJ5pQXb6VgaLeNI=;
-        b=BXbHdLw2u7+4v2OrPmYOPKCximguO5jiRJZaHaFHSVsvSvWUEzYysWoLSxdtoQAhVk
-         HQyzWIFFRo/mFUpenrzA6F5+44ecTT/9T8gl76XCfW+c2eXcPrv0LOIa2RbwWHAjv/HG
-         LlwUH90hb2MejF0kbDvRktH/1MKI00SlTe1zoChJciTQecxjsyBVAaG5NbzlfHNdSLJo
-         YxLoC+8l2OyrR2oOB0j03phI7j7zHKNXpqoNl19DH0baMd93TstNiHmfuTzQF3eeeuAS
-         2STt80Zor0RzeZK9zZbUp4rN1b+ryCJn37SAdistDxGmOl4mfgIIJQWGyWWE7PTGyUWw
-         nDKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TvoN8a3WZmoogVlnFEo2G3/jPQNtfJ5pQXb6VgaLeNI=;
-        b=UMSEQYTjRgxH17LZZ1UWDIfdNqHFnsyvyn3PzzFLo4s2F258oi3g03xKufGZ+tQmBH
-         JoIr7ZMrxV/IUq1GELE7MFP6eE56Nl8x9a2QcKSw8/0Kz7gMUgxTCLRVkHZw/p8dwJmk
-         80hlTiAZ+JGOUdzk+M/TlUX6aLaPa0lsMFmpYPKgnJlIeFRNYFcT3df9Fw4AdC6Ndm4x
-         v8T1os3IoQM1vDLagMIBVkVCNJrf2lT+OTyPnA0wb1LdNw1liXRJHgLFWeldg96OTR9s
-         OEukhlaZyfIKICcD5jC7S7mONwBPdNeUJqfSBQJxQ8dfcblp57ve94hD8FZiVz63zhxD
-         zdhw==
-X-Gm-Message-State: AOAM5305AFZNIUCy8pxedjHVO8zEjIZ6LNLTQYGfjeo+nLzkis93r+BH
-        vDWvkKAAw6v0KddiYin7ATqrEg==
-X-Google-Smtp-Source: ABdhPJyVyvEl6dSL6IOBsJmpnycz4H0kN8LpN+dJacQOGflvQ6nocjSVsWNNdSmRA8eHxZtEk7xEXQ==
-X-Received: by 2002:a17:90a:6881:: with SMTP id a1mr6499268pjd.153.1590179000778;
-        Fri, 22 May 2020 13:23:20 -0700 (PDT)
-Received: from x1.lan ([2605:e000:100e:8c61:e0db:da55:b0a4:601])
-        by smtp.gmail.com with ESMTPSA id e19sm7295561pfn.17.2020.05.22.13.23.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 13:23:20 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 02/11] mm: allow read-ahead with IOCB_NOWAIT set
-Date:   Fri, 22 May 2020 14:23:02 -0600
-Message-Id: <20200522202311.10959-3-axboe@kernel.dk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522202311.10959-1-axboe@kernel.dk>
-References: <20200522202311.10959-1-axboe@kernel.dk>
+        Fri, 22 May 2020 16:24:04 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8ECC05BD43;
+        Fri, 22 May 2020 13:24:03 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F0390B55;
+        Fri, 22 May 2020 22:24:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590179041;
+        bh=eHYE+NQkQ5F13N+F0zH4qMpO6wi5gp39cWdyPaPGwMc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lG6Lr1pXS+PdX3mO4+MCydqQxgESvaSwVRqZOYRatNHph9oPDsxoUxVNB9ZR0bIXM
+         rKm1pxsciai7SfU65O5Wv6cgey0Xo7pjoLxbKAPrVGuSPWp1FdDeAmPoq2wg2XrvrM
+         +SX/50OE2QwcASuwJjiEXod9Rd7Av1KnlpbZQauk=
+Date:   Fri, 22 May 2020 23:23:49 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Gomez <dagmcr@gmail.com>
+Cc:     daniel@ffwll.ch, airlied@linux.ie,
+        kieran.bingham+renesas@ideasonboard.com,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: rcar-du: Fix build error
+Message-ID: <20200522202349.GF5824@pendragon.ideasonboard.com>
+References: <20200518201646.48312-1-dagmcr@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200518201646.48312-1-dagmcr@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The read-ahead shouldn't block, so allow it to be done even if
-IOCB_NOWAIT is set in the kiocb.
+Hi Daniel,
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- mm/filemap.c | 2 --
- 1 file changed, 2 deletions(-)
+Thank you for the patch.
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 23a051a7ef0f..80747f1377d5 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2031,8 +2031,6 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
- 
- 		page = find_get_page(mapping, index);
- 		if (!page) {
--			if (iocb->ki_flags & IOCB_NOWAIT)
--				goto would_block;
- 			page_cache_sync_readahead(mapping,
- 					ra, filp,
- 					index, last_index - index);
+On Mon, May 18, 2020 at 10:16:46PM +0200, Daniel Gomez wrote:
+> Select DRM_KMS_HELPER dependency.
+> 
+> Build error when DRM_KMS_HELPER is not selected:
+> 
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
+> 
+> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+and taken in my tree for v5.9. If you think it should get in v5.8 as a
+fix, I can do so as well, could you then provide a Fixes: tag ?
+
+> ---
+>  drivers/gpu/drm/rcar-du/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+> index 0919f1f159a4..f65d1489dc50 100644
+> --- a/drivers/gpu/drm/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> @@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
+>  config DRM_RCAR_LVDS
+>  	tristate "R-Car DU LVDS Encoder Support"
+>  	depends on DRM && DRM_BRIDGE && OF
+> +	select DRM_KMS_HELPER
+>  	select DRM_PANEL
+>  	select OF_FLATTREE
+>  	select OF_OVERLAY
+
 -- 
-2.26.2
+Regards,
 
+Laurent Pinchart
