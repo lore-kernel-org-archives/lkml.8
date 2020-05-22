@@ -2,116 +2,115 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF19C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D59207BC
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590167863;
-	bh=JHvmQjCIw6/VvDscVfT+qCoWQLdg5aBrXbxB+sIlVv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZaxeoTia3mVBf+rMgF/2+PEK7JQqbah0Yt9u+3PpPp+eJThJiUDBvbKCSFLmP1BFg
-	 Qn9JzV42fVtDq22qy42j4fewTkvAcvk5WhD3Azo3T55d8ylK8MEp0x3zVyFgIUqgfn
-	 KCfAcP1x5YvPQJxA686xsmA09bDFR9P3LB8eUjN4=
+	by mail.kernel.org (Postfix) with ESMTP id 1876320738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgEVRRm (ORCPT
+        id S1730795AbgEVRSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41812 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 13:18:47 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59514 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730471AbgEVRRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:17:42 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8464720738;
-        Fri, 22 May 2020 17:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590167861;
-        bh=JHvmQjCIw6/VvDscVfT+qCoWQLdg5aBrXbxB+sIlVv0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GWXiRViM+TXrBlInvfPJxiOUc0PtnWfYnR+Kujxt16bktx0kcR2oZWEzGOIuQm1fL
-         r82t5OiPZMiJUTvwWrR1pwArgfPhI6rQ9oGnsHR601aIjzsQ5I+LDFuvPR1kdmqmiO
-         cZkTQP4IInjzhZbjCiGd3ZDDM+Y8IkZ2KIm3oeRE=
-Date:   Fri, 22 May 2020 10:17:38 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     johannes@sipsolutions.net, derosier@gmail.com,
-        greearb@candelatech.com, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, jiri@resnulli.us,
-        briannorris@chromium.org
-Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
-Message-ID: <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200522052046.GY11244@42.do-not-panic.com>
-References: <20200519010530.GS11244@42.do-not-panic.com>
-        <20200519211531.3702593-1-kuba@kernel.org>
-        <20200522052046.GY11244@42.do-not-panic.com>
+        id S1730471AbgEVRSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 13:18:46 -0400
+IronPort-SDR: jO9IP0+y+Oznd/UltpuCkIyMoEeQg/vjvRcVi12o9A2rUYuPFSsuK6edUuUNNhP2ZUG6jeRB9+
+ HBAwiqaGD6jA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 10:18:45 -0700
+IronPort-SDR: NXUfNJ68BjtyRCcOBPmLk8Z0wQMkH7dKhewmdbuP2bGwLxETp4+qAGhtLYXEmKviVPQKYA5ptO
+ aZJA38nl90ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
+   d="scan'208";a="467245771"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by fmsmga005.fm.intel.com with ESMTP; 22 May 2020 10:18:45 -0700
+Message-ID: <c9c9314374c7db0bf9b6e39670855afe5b0d4014.camel@intel.com>
+Subject: Re: [PATCH v10 26/26] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Date:   Fri, 22 May 2020 10:17:43 -0700
+In-Reply-To: <202005211528.A12B4AD@keescook>
+References: <20200429220732.31602-1-yu-cheng.yu@intel.com>
+         <20200429220732.31602-27-yu-cheng.yu@intel.com>
+         <202005211528.A12B4AD@keescook>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 05:20:46 +0000 Luis Chamberlain wrote:
-> > diff --git a/net/core/Makefile b/net/core/Makefile
-> > index 3e2c378e5f31..6f1513781c17 100644
-> > --- a/net/core/Makefile
-> > +++ b/net/core/Makefile
-> > @@ -31,7 +31,7 @@ obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
-> >  obj-$(CONFIG_BPF_STREAM_PARSER) += sock_map.o
-> >  obj-$(CONFIG_DST_CACHE) += dst_cache.o
-> >  obj-$(CONFIG_HWBM) += hwbm.o
-> > -obj-$(CONFIG_NET_DEVLINK) += devlink.o
-> > +obj-$(CONFIG_NET_DEVLINK) += devlink.o devlink_simple_fw_reporter.o  
+On Thu, 2020-05-21 at 15:42 -0700, Kees Cook wrote:
+> On Wed, Apr 29, 2020 at 03:07:32PM -0700, Yu-cheng Yu wrote:
+[...]
+> > +
+> > +int prctl_cet(int option, u64 arg2)
+> > +{
+> > +	struct cet_status *cet;
+> > +
+> > +	if (!IS_ENABLED(CONFIG_X86_INTEL_CET))
+> > +		return -EINVAL;
 > 
-> This was looking super sexy up to here. This is networking specific.
-> We want something generic for *anything* that requests firmware.
+> Using -EINVAL here means userspace can't tell the difference between an
+> old kernel and a kernel not built with CONFIG_X86_INTEL_CET. Perhaps
+> -ENOTSUPP?
 
-You can't be serious. It's network specific because of how the Kconfig
-is named?
+Looked into this.  The kernel and GLIBC are not in sync.  So maybe we still use
+EINVAL here?
 
-Working for a company operating large data centers I would strongly
-prefer if we didn't have ten different ways of reporting firmware
-problems in the fleet.
+Yu-cheng
 
-> I'm afraid this won't work for something generic. I don't think its
-> throw-away work though, the idea to provide a generic interface to
-> dump firmware through netlink might be nice for networking, or other
-> things.
-> 
-> But I have a feeling we'll want something still more generic than this.
 
-Please be specific. Saying generic a lot is not helpful. The code (as
-you can see in this patch) is in no way network specific. Or are you
-saying there are machines out there running without netlink sockets?
 
-> So networking may want to be aware that a firmware crash happened as
-> part of this network device health thing, but firmware crashing is a
-> generic thing.
-> 
-> I have now extended my patch set to include uvents and I am more set on
-> that we need the taint now more than ever.
+In kernel:
+----------
 
-Please expect my nack if you're trying to add this to networking
-drivers.
+#define EOPNOTSUPP	95
+#define ENOTSUPP 	524
 
-The irony is you have a problem with a networking device and all the
-devices your initial set touched are networking. Two of the drivers 
-you touched either have or will soon have devlink health reporters
-implemented.
+In GLIBC:
+---------
+
+printf("ENOTSUP=%d\n", ENOTSUP);
+printf("EOPNOTSUPP=%d\n", EOPNOTSUPP);
+printf("%s=524\n", strerror(524));
+ 
+ENOTSUP=95
+EOPNOTSUPP=95
+Unknown error 524=524
+
