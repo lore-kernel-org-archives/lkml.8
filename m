@@ -2,147 +2,128 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7551BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61360206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1120520723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgEVMhp (ORCPT
+        id S1729668AbgEVMjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728717AbgEVMho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:37:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B400206D5;
-        Fri, 22 May 2020 12:37:43 +0000 (UTC)
-Date:   Fri, 22 May 2020 08:37:41 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     lixinhai.lxh@gmail.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix events.rst section numbering
-Message-ID: <20200522083741.7d489e91@gandalf.local.home>
-In-Reply-To: <90ea854dfb728390b50ddf8a8675238973ee014a.camel@kernel.org>
-References: <90ea854dfb728390b50ddf8a8675238973ee014a.camel@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 22 May 2020 08:39:13 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44662 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728801AbgEVMjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:39:12 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BD1C4D07CA8F9E8D14A0;
+        Fri, 22 May 2020 20:39:09 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.154) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
+ 20:39:05 +0800
+Subject: Re: [PATCH v2] xfrm: policy: Fix xfrm policy match
+To:     Xin Long <lucien.xin@gmail.com>
+References: <20200421143149.45108-1-yuehaibing@huawei.com>
+ <20200422125346.27756-1-yuehaibing@huawei.com>
+ <0015ec4c-0e9c-a9d2-eb03-4d51c5fbbe86@huawei.com>
+ <20200519085353.GE13121@gauss3.secunet.de>
+ <CADvbK_eXW24SkuLUOKkcg4JPa8XLcWpp6RNCrQT+=okaWe+GDA@mail.gmail.com>
+ <550a82f1-9cb3-2392-25c6-b2a84a00ca33@huawei.com>
+ <CADvbK_cpXOxbWzHzonrzzrrb+Vh3q8NhXnapz0yc9h4H4gN02A@mail.gmail.com>
+CC:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        davem <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <1c4c5d40-1e35-f9bb-3f17-01bb4675f3aa@huawei.com>
+Date:   Fri, 22 May 2020 20:39:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CADvbK_cpXOxbWzHzonrzzrrb+Vh3q8NhXnapz0yc9h4H4gN02A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 May 2020 13:29:24 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
-
-> The in-kernel trace event API should have its own section, and the
-> duplicate section numbers need fixing as well.
+On 2020/5/22 13:49, Xin Long wrote:
+> On Fri, May 22, 2020 at 9:45 AM Yuehaibing <yuehaibing@huawei.com> wrote:
+>>
+>> On 2020/5/21 14:49, Xin Long wrote:
+>>> On Tue, May 19, 2020 at 4:53 PM Steffen Klassert
+>>> <steffen.klassert@secunet.com> wrote:
+>>>>
+>>>> On Fri, May 15, 2020 at 04:39:57PM +0800, Yuehaibing wrote:
+>>>>>
+>>>>> Friendly ping...
+>>>>>
+>>>>> Any plan for this issue?
+>>>>
+>>>> There was still no consensus between you and Xin on how
+>>>> to fix this issue. Once this happens, I consider applying
+>>>> a fix.
+>>>>
+>>> Sorry, Yuehaibing, I can't really accept to do: (A->mark.m & A->mark.v)
+>>> I'm thinking to change to:
+>>>
+>>>  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
+>>>                                    struct xfrm_policy *pol)
+>>>  {
+>>> -       u32 mark = policy->mark.v & policy->mark.m;
+>>> -
+>>> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
+>>> -               return true;
+>>> -
+>>> -       if ((mark & pol->mark.m) == pol->mark.v &&
+>>> -           policy->priority == pol->priority)
+>>> +       if (policy->mark.v == pol->mark.v &&
+>>> +           (policy->mark.m == pol->mark.m ||
+>>> +            policy->priority == pol->priority))
+>>>                 return true;
+>>>
+>>>         return false;
+>>>
+>>> which means we consider (the same value and mask) or
+>>> (the same value and priority) as the same one. This will
+>>> cover both problems.
+>>
+>>   policy A (mark.v = 0x1011, mark.m = 0x1011, priority = 1)
+>>   policy B (mark.v = 0x1001, mark.m = 0x1001, priority = 1)
+> I'd think these are 2 different policies.
 > 
-> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
-Jon,
-
-Care to take this in your tree?
-
--- Steve
-
-> Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
-> ---
->  Documentation/trace/events.rst | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
+>>
+>>   when fl->flowi_mark == 0x12341011, in xfrm_policy_match() do check like this:
+>>
+>>         (fl->flowi_mark & pol->mark.m) != pol->mark.v
+>>
+>>         0x12341011 & 0x1011 == 0x00001011
+>>         0x12341011 & 0x1001 == 0x00001001
+>>
+>>  This also match different policy depends on the order of policy inserting.
+> Yes, this may happen when a user adds 2  policies like that.
+> But I think this's a problem that the user doesn't configure it well,
+> 'priority' should be set.
+> and this can not be avoided, also such as:
 > 
-> diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-> index ed79b220bd07..1a3b7762cb0f 100644
-> --- a/Documentation/trace/events.rst
-> +++ b/Documentation/trace/events.rst
-> @@ -526,8 +526,8 @@ The following commands are supported:
->  
->    See Documentation/trace/histogram.rst for details and examples.
->  
-> -6.3 In-kernel trace event API
-> ------------------------------
-> +7. In-kernel trace event API
-> +============================
->  
->  In most cases, the command-line interface to trace events is more than
->  sufficient.  Sometimes, however, applications might find the need for
-> @@ -559,8 +559,8 @@ following:
->    - tracing synthetic events from in-kernel code
->    - the low-level "dynevent_cmd" API
->  
-> -6.3.1 Dyamically creating synthetic event definitions
-> ------------------------------------------------------
-> +7.1 Dyamically creating synthetic event definitions
-> +---------------------------------------------------
->  
->  There are a couple ways to create a new synthetic event from a kernel
->  module or other kernel code.
-> @@ -665,8 +665,8 @@ registered by calling the synth_event_gen_cmd_end() function:
->  At this point, the event object is ready to be used for tracing new
->  events.
->  
-> -6.3.3 Tracing synthetic events from in-kernel code
-> ---------------------------------------------------
-> +7.2 Tracing synthetic events from in-kernel code
-> +------------------------------------------------
->  
->  To trace a synthetic event, there are several options.  The first
->  option is to trace the event in one call, using synth_event_trace()
-> @@ -677,8 +677,8 @@ synth_event_trace_start() and synth_event_trace_end() along with
->  synth_event_add_next_val() or synth_event_add_val() to add the values
->  piecewise.
->  
-> -6.3.3.1 Tracing a synthetic event all at once
-> ----------------------------------------------
-> +7.2.1 Tracing a synthetic event all at once
-> +-------------------------------------------
->  
->  To trace a synthetic event all at once, the synth_event_trace() or
->  synth_event_trace_array() functions can be used.
-> @@ -779,8 +779,8 @@ remove the event:
->  
->         ret = synth_event_delete("schedtest");
->  
-> -6.3.3.1 Tracing a synthetic event piecewise
-> --------------------------------------------
-> +7.2.2 Tracing a synthetic event piecewise
-> +-----------------------------------------
->  
->  To trace a synthetic using the piecewise method described above, the
->  synth_event_trace_start() function is used to 'open' the synthetic
-> @@ -863,8 +863,8 @@ Note that synth_event_trace_end() must be called at the end regardless
->  of whether any of the add calls failed (say due to a bad field name
->  being passed in).
->  
-> -6.3.4 Dyamically creating kprobe and kretprobe event definitions
-> -----------------------------------------------------------------
-> +7.3 Dyamically creating kprobe and kretprobe event definitions
-> +--------------------------------------------------------------
->  
->  To create a kprobe or kretprobe trace event from kernel code, the
->  kprobe_event_gen_cmd_start() or kretprobe_event_gen_cmd_start()
-> @@ -940,8 +940,8 @@ used to give the kprobe event file back and delete the event:
->  
->    ret = kprobe_event_delete("gen_kprobe_test");
->  
-> -6.3.4 The "dynevent_cmd" low-level API
-> ---------------------------------------
-> +7.4 The "dynevent_cmd" low-level API
-> +------------------------------------
->  
->  Both the in-kernel synthetic event and kprobe interfaces are built on
->  top of a lower-level "dynevent_cmd" interface.  This interface is
+>    policy A (mark.v = 0xff00, mark.m = 0x1000, priority = 1)
+>    policy B (mark.v = 0x00ff, mark.m = 0x0011, priority = 1)
+> 
+>    try with 0x12341011
+> 
+> So just be it, let users decide.
+
+Ok, this make sense.
+
+> 
+> .
+> 
 
