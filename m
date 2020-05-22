@@ -2,82 +2,104 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00863C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D59D720825
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C101720884
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:15:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IHgj/s0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgEVEND (ORCPT
+        id S1727026AbgEVEPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 00:13:03 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:56832 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725859AbgEVENC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 00:13:02 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxZuolUcdeFrA3AA--.1237S2;
-        Fri, 22 May 2020 12:12:21 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH 1/3] gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe()
-Date:   Fri, 22 May 2020 12:12:18 +0800
-Message-Id: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9AxZuolUcdeFrA3AA--.1237S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykArW5JFW8Zwb_yoWfGFc_ZF
-        s5Cr4fXryDGr1vqFnFyay3Zry2yF9Y9rn7CFn2vay3twnrXr1I9ry5urn3Xrs8Ww45CryU
-        JFn0qr12vrs3KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gryl
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUnHqcUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Fri, 22 May 2020 00:15:09 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11816 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgEVEPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 00:15:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec7517c0000>; Thu, 21 May 2020 21:13:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 21 May 2020 21:15:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 21 May 2020 21:15:09 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
+ 2020 04:15:08 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 22 May 2020 04:15:08 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.48.182]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ec751cb0005>; Thu, 21 May 2020 21:15:08 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     John Hubbard <jhubbard@nvidia.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>
+Subject: [PATCH 0/2] video: fbdev: fix error handling, convert to pin_user_pages*()
+Date:   Thu, 21 May 2020 21:15:04 -0700
+Message-ID: <20200522041506.39638-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590120829; bh=4CvomaKzVwHB+77SfF7gRmZ5Wb1M+7zo/2BM1L60cTk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=IHgj/s0tM22z621m0z8ePs8Uvb1f01gFZTsmrfC4NWm58+BHqupDe1z8HyohCtUPD
+         xFZERRuzJgbzy3FpFiRVVklOb8j7ry1m6NCgtQd4zmeFQV6RpUQBJyT0rN03kvEEfM
+         PC+lmZGzXxeY00Fn64STilbZm1LqHwjoh7FUXCYSQI899vTRsFTNz6Eo1is8ej5bcu
+         qkMjXjiStDYm7zjLYU02pC3HaWWGRZDsHu9y8zUYxCOsIXERPr2TeQVqpLC17sKoEx
+         cWqserHfltRNnMKtT8v6yZAfBKU9VisFjyQtFj35L4pBOgNVGWdVMgdDdpeq/ohEfM
+         E9o5kJXdzF3XA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+Hi,
 
-Fixes: 72d8cb715477 ("drivers: gpio: bcm-kona: use devm_platform_ioremap_resource()")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/gpio/gpio-bcm-kona.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Note that I have only compile-tested this series, although that does
+also include cross-compiling for a few other arches. I'm hoping that
+this posting will lead to some run-time testing.
 
-diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-index baee8c3..cf3687a 100644
---- a/drivers/gpio/gpio-bcm-kona.c
-+++ b/drivers/gpio/gpio-bcm-kona.c
-@@ -625,7 +625,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
- 
- 	kona_gpio->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(kona_gpio->reg_base)) {
--		ret = -ENXIO;
-+		ret = PTR_ERR(kona_gpio->reg_base);
- 		goto err_irq_domain;
- 	}
- 
--- 
-2.1.0
+Also: the proposed fix does not have a "Fixes:" tag, nor does it
+Cc stable. That's because the issue has been there since the dawn of
+git history for the kernel. If it's gone unnoticed this long, then
+there is clearly no need for the relatively fast track of putting it
+into stable, IMHO. But please correct me if that's wrong.
+
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
+
+John Hubbard (2):
+  video: fbdev: fix error handling for get_user_pages_fast()
+  video: fbdev: convert get_user_pages() --> pin_user_pages()
+
+ drivers/video/fbdev/pvr2fb.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+
+base-commit: 051143e1602d90ea71887d92363edd539d411de5
+--=20
+2.26.2
 
