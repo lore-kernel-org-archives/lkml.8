@@ -2,128 +2,89 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D221207E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:06:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mY8BwFJr"
+	by mail.kernel.org (Postfix) with ESMTP id 68D0C2078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:08:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgEVDGX (ORCPT
+        id S1728015AbgEVDIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 23:06:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38115 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbgEVDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 23:06:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Srwr6QCBz9sT2;
-        Fri, 22 May 2020 13:06:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590116781;
-        bh=vg7OdzOYZ/E6oXtQWwdzM9LqQMPJbWG89AiKb4R9r98=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mY8BwFJrydn7BYW17jU1FgItYfdiKhaB/KAcFMTfynpMV16ExnPEEDo3Jv6BG4l6C
-         /2eJxNY0aPxwFPbIRJV2vY7L+ObCOBXIakTb6R8WRnyMMEjzEEkWTDhIXxJLYX/Ylx
-         A33XsC+/vrkGoMlXcTmEANA7X4CoxgBbL7e6ISWzzhy9la/J7KlfonNKEAcb4Z3bXu
-         Gj/QxfRFn6KSZDHnu4JDHKwWcvmAs2L38/GwWnIPuY+KHVpckKuZ9tdj6iq/4ZMaUg
-         fMuz4OCrRvy8Y2ppNkRl/IMcF62ZXHyXPztlZMT1KUQPAgVZb1Qp+FnG/4v479R/J2
-         TKtdBbjw9e4pQ==
-Date:   Fri, 22 May 2020 13:06:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>, Theodore Ts'o <tytso@mit.edu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the jc_docs tree with the ext4 tree
-Message-ID: <20200522130616.5fd7054c@canb.auug.org.au>
+        Thu, 21 May 2020 23:08:14 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:59167 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727123AbgEVDIN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 23:08:13 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.106233|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0832929-0.000859812-0.915847;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.HbxBGFJ_1590116882;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.HbxBGFJ_1590116882)
+          by smtp.aliyun-inc.com(10.147.41.178);
+          Fri, 22 May 2020 11:08:08 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, p.zabel@pengutronix.de,
+        frank@allwinnertech.com, huangshuosheng@allwinnertech.com,
+        tiny.windzz@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 0/4] Allwinner A100 Initial support
+Date:   Fri, 22 May 2020 11:07:39 +0800
+Message-Id: <20200522030743.10204-1-frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yC1rBzc8PUGH8SFAA_zrQAr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/yC1rBzc8PUGH8SFAA_zrQAr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch set adds initial support for allwinner a100 soc,
+which is a 64-bit tablet chip.
 
-Hi all,
+Frank Lee (4):
+  clk: sunxi-ng: add support for the Allwinner A100 CCU
+  pinctrl: sunxi: add support for the Allwinner A100 pin controller
+  arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
+  arm64: allwinner: A100: add support for Allwinner Perf1 board
 
-Today's linux-next merge of the jc_docs tree got a conflict in:
+ arch/arm64/boot/dts/allwinner/Makefile        |    1 +
+ .../allwinner/sun50i-a100-allwinner-perf1.dts |   27 +
+ .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  173 +++
+ drivers/clk/sunxi-ng/Kconfig                  |   10 +
+ drivers/clk/sunxi-ng/Makefile                 |    2 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  206 +++
+ drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   14 +
+ drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1255 +++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   14 +
+ drivers/pinctrl/sunxi/Kconfig                 |   10 +
+ drivers/pinctrl/sunxi/Makefile                |    2 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  710 ++++++++++
+ include/dt-bindings/clock/sun50i-a100-ccu.h   |  141 ++
+ include/dt-bindings/clock/sun50i-a100-r-ccu.h |   25 +
+ include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
+ include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
+ 17 files changed, 2781 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
+ create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
+ create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
 
-  Documentation/filesystems/fiemap.rst
+-- 
+2.24.0
 
-between commit:
-
-  469581d9e5c9 ("fs: move fiemap range validation into the file systems ins=
-tances")
-
-from the ext4 tree and commit:
-
-  e6f7df74ec1a ("docs: filesystems: convert fiemap.txt to ReST")
-
-from the jc_docs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/filesystems/fiemap.rst
-index 35c8571eccb6,2a572e7edc08..000000000000
---- a/Documentation/filesystems/fiemap.rst
-+++ b/Documentation/filesystems/fiemap.rst
-@@@ -203,10 -206,9 +206,10 @@@ EINTR once fatal signal received
- =20
- =20
-  Flag checking should be done at the beginning of the ->fiemap callback vi=
-a the
-- fiemap_prep() helper:
- -fiemap_check_flags() helper::
-++fiemap_prep() helper::
- =20
-- int fiemap_prep(struct inode *inode, struct fiemap_extent_info *fieinfo,
-- 		u64 start, u64 *len, u32 supported_flags);
- -  int fiemap_check_flags(struct fiemap_extent_info *fieinfo, u32 fs_flags=
-);
-++  int fiemap_prep(struct inode *inode, struct fiemap_extent_info *fieinfo,
-++		  u64 start, u64 *len, u32 supported_flags);
- =20
-  The struct fieinfo should be passed in as received from ioctl_fiemap(). T=
-he
-  set of fiemap flags which the fs understands should be passed via fs_flag=
-s. If
-
---Sig_/yC1rBzc8PUGH8SFAA_zrQAr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HQagACgkQAVBC80lX
-0Gx4XQgAgxHLlooqcAUKDPVQanDE5h82ReFmCdKIjUk/BdlCSja9Yh2O5NfxXGCj
-B/M7AXr1J+UOhPKEho21atYhY8Paomr3oOOE+OFHr1yueZBZ+bs3mNbPdDh2iuBP
-C7V7ZNuJIkrfygLi84AlVxx2k8q9ce1RJg0Xg8hJ9UB26t0vR2fBV3tBMZrGjTBp
-LJBMScv9/sesUuUSDQyW7m9SrNynlE+w5Z2OcMfZfsFiRWVixYA42XfMoaRU9j3H
-vBDg9L8G24NufHqi3uMLgwg+Fc93FGbfC5nwW+tbWXAeqbdyptM1wIDvVshnmvK/
-J9eWVCEWChi91dVyd707XhEKZzPsRA==
-=R4id
------END PGP SIGNATURE-----
-
---Sig_/yC1rBzc8PUGH8SFAA_zrQAr--
