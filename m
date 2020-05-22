@@ -2,112 +2,92 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E86C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE69206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9E42078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590175409;
+	bh=bXZEeDnqQ8pc/bjS8vchYZuh+kFAQrGp2mx12nXsRPg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=DtSuNBgaOyOrfxKGFEf5+GdH8VPllV7b2PKDwFHQFX7KUUW8/ge8r4+sFto2kw/bJ
+	 FrZcg2L9UGFeoCUJ+Mtjuq0LYuS3MjHEf8RHGkmx+tctVip+HhoG4cw3HkTAJFzYMo
+	 +z4cmM5O8lfhsqeHyA8O+0mGVUPVuy6ZBTL9vkGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbgEVTXI (ORCPT
+        id S1730955AbgEVTX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:23:08 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38300 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730689AbgEVTXH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:23:07 -0400
-Received: by mail-il1-f194.google.com with SMTP id j2so11773451ilr.5;
-        Fri, 22 May 2020 12:23:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vn57VCqr9h90wdQTLGEGnujFsrIL8E9uyvK19tk59RM=;
-        b=m7eYvzYdkmBP1R8OISSGhWL3IVxvT7lSHIQiIy2Cg3MlVNF/bFtNZjRka7prcwN33N
-         i1q+CJHiEuEwGHav81y6h34MTFWuUgVGLdwCsl/3j22F6WEzYvXDeaGbyILyGENjp9Cc
-         sSxlhDlEFliNJ5kKIom8J8SVhk/y3zBCpHboEGFQm3eIZV/nkUprNWcRNeUMnK4M3a7J
-         81AfgmP8T63lJsowiXUgr0kNTn0FnkBxtKMQV/4XReW7+scgzp8boH7/XS+vxQ6EVknm
-         c2EYMksbrf5T0nwixPKnZ/f0F0I6o5NTVPruUIKng8A0aiqDfsMQk1PizAztY5knm0jz
-         Uguw==
-X-Gm-Message-State: AOAM5302QTxAbEe9WA7azn/dor6NBcVrCzLWlVc+JMLNMR1mWTl6qwJk
-        h6cWfFhHt4AlP3IY9f9YV3U7lnXW
-X-Google-Smtp-Source: ABdhPJx8uXBKSuwNLanBhbxs1erywt+U3GHqsTXNwSuhOBc31fG/GPsyChipjdwhdmlts/Kdd4DKeQ==
-X-Received: by 2002:a05:6e02:c7:: with SMTP id r7mr15491683ilq.167.1590175384949;
-        Fri, 22 May 2020 12:23:04 -0700 (PDT)
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
-        by smtp.gmail.com with ESMTPSA id g4sm4964235ilj.45.2020.05.22.12.23.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 12:23:04 -0700 (PDT)
-Received: by mail-io1-f53.google.com with SMTP id d5so3017345ios.9;
-        Fri, 22 May 2020 12:23:04 -0700 (PDT)
-X-Received: by 2002:a02:7f42:: with SMTP id r63mr4574513jac.32.1590175384093;
- Fri, 22 May 2020 12:23:04 -0700 (PDT)
+        Fri, 22 May 2020 15:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730689AbgEVTX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 15:23:28 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66765206D5;
+        Fri, 22 May 2020 19:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590175408;
+        bh=bXZEeDnqQ8pc/bjS8vchYZuh+kFAQrGp2mx12nXsRPg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Dsp9uIUWGqanhKiv6bL7aBsBy9OdouDgDo2Rzvz4C1nxxf2B3+ZuHtzjMZHbXQ0RP
+         OvGJV+LOZ3fL+mtlJEE1SsVFUACWpds3uCr454Rd0ngh+hog81q5VtB48LAGIYYhZI
+         xXlIsxt84hAOIbTfweLYuOgaJb6D+LQVVDNPkpfE=
+Subject: Re: [PATCH v3] Kernel selftests: Add check if TPM devices are
+ supported
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+Cc:     linux-kselftest@vger.kernel.org,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        linux-snps-arc@lists.infradead.org, shuah <shuah@kernel.org>
+References: <20200521144344.1886-1-Nikita.Sobolev@synopsys.com>
+ <20200522163714.GA10319@linux.intel.com>
+ <20200522163745.GB10319@linux.intel.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <b433d7c7-38a2-098a-55c9-6f8cc13f7230@kernel.org>
+Date:   Fri, 22 May 2020 13:23:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200520091543.44692-1-biwen.li@oss.nxp.com> <20200520091543.44692-2-biwen.li@oss.nxp.com>
-In-Reply-To: <20200520091543.44692-2-biwen.li@oss.nxp.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 22 May 2020 14:22:40 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTFfUs=YnsfYadp35SyqN4i7JqSPyF3avo=XSBFaLghPQ@mail.gmail.com>
-Message-ID: <CADRPPNTFfUs=YnsfYadp35SyqN4i7JqSPyF3avo=XSBFaLghPQ@mail.gmail.com>
-Subject: Re: [v2 2/2] dts: ppc: t1024rdb: remove interrupts property
-To:     Biwen Li <biwen.li@oss.nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        a.zummo@towertech.it,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org,
-        Biwen Li <biwen.li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200522163745.GB10319@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 4:21 AM Biwen Li <biwen.li@oss.nxp.com> wrote:
->
-> From: Biwen Li <biwen.li@nxp.com>
->
-> This removes interrupts property to drop warning as follows:
->     - $ hwclock.util-linux
->       hwclock.util-linux: select() to /dev/rtc0
->       to wait for clock tick timed out
->
-> My case:
->     - RTC ds1339s INT pin isn't connected to cpus INT pin on T1024RDB,
->       then the RTC cannot inform cpu about alarm interrupt
->
-> How to fix it?
->     - remove IRQ line
+On 5/22/20 10:37 AM, Jarkko Sakkinen wrote:
+> On Fri, May 22, 2020 at 07:37:17PM +0300, Jarkko Sakkinen wrote:
+>> On Thu, May 21, 2020 at 05:43:44PM +0300, Nikita Sobolev wrote:
+>>> TPM2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
+>>> are available. In case, when these devices are not available test
+>>> fails, but expected behaviour is skipped test.
+>>>
+>>> Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
+>>
+>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> Shuah, can you pick this up?
+> 
+> /Jarkko
+> 
 
-This style is not the recommended style for commit message.  Please
-see my comment for the other patch.
+Done. Applied to linux-kselftest next for Linux 5.8-rc1.
 
->
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
->  arch/powerpc/boot/dts/fsl/t1024rdb.dts | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-> index 645caff98ed1..605ceec66af3 100644
-> --- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-> +++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-> @@ -161,7 +161,6 @@
->                         rtc@68 {
->                                 compatible = "dallas,ds1339";
->                                 reg = <0x68>;
-> -                               interrupts = <0x1 0x1 0 0>;
->                         };
->                 };
->
-> --
-> 2.17.1
->
+thanks,
+-- Shuah
