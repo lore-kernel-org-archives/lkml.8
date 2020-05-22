@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F7DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB26C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFFF21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E9322AAB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159161;
-	bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
+	s=default; t=1590159163;
+	bh=bHFNpJmKmHKprftzIGOaRHADYjg7o8+IY4OvdCrstTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ynQNsL48g/0mGriQ418jK5IXqSfDHniAjWZYEnOgvnxBYaT45gUNaGxy/6u5A/7u1
-	 427R+pdrH7q7FtczTjVyZossIH004q1+T/vgaKB74QHCnkYa6nOMwN11RRKe/HyrOI
-	 mVnBfTPgpVngCDsW4OkDQhaG2U2c/rg8t5cqH2OA=
+	b=F6pByp2le2Yzib7IaP66/1MuL7GcxLVTlWK5faHGN+f4X+2tU26udMranehdG75on
+	 oFao1397q4CvHH6xaq9+vzuF28NI+KtHgqmABoBoK+KG3oHysNKeew5B53bo12opao
+	 o2ndQv14txJz8Fl62JPgrl11Bool1tYDne5MMxDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731232AbgEVOwP (ORCPT
+        id S1731225AbgEVOwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:52:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:52:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731143AbgEVOv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:57 -0400
+        id S1731135AbgEVOv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CD58221FF;
-        Fri, 22 May 2020 14:51:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D392072C;
+        Fri, 22 May 2020 14:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159117;
-        bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
+        s=default; t=1590159116;
+        bh=bHFNpJmKmHKprftzIGOaRHADYjg7o8+IY4OvdCrstTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qz7IPwq+xUMh/n8KoWvyycThg8wYtbsDHwHZNiWw2lynhyvy5VTpSVFFrjOpbMdNn
-         sMbAPm3xpBwJFKwNuHaYVtahhn3YqBrPaTZdyW/GMQYamzxJ/biJyTrIZkyKK0/zAO
-         RuIygP6uQZwZIftfzuA+7u0w36GX5znit7Ocd0K0=
+        b=KNXL0oMD9uh+HNJbXQ1nqy09QPQVGiCNgaLlPuSYTUSLJDCVeJx/a8Zuujp0c/E0I
+         eUxTll7y6/VvivYHx52C6blwHyiodcARAnxI2dYc4TjBdZctapz3EKKLo5BmrTsAiy
+         Ex9ZUwOXdLqVDh4zcjduZD1z+llty4CX5US7xUv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matteo Croce <mcroce@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 13/13] samples: bpf: Fix build error
-Date:   Fri, 22 May 2020 10:51:42 -0400
-Message-Id: <20200522145142.435086-13-sashal@kernel.org>
+Cc:     Steve French <stfrench@microsoft.com>,
+        Coverity <scan-admin@coverity.com>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 4.14 12/13] cifs: Fix null pointer check in cifs_read
+Date:   Fri, 22 May 2020 10:51:41 -0400
+Message-Id: <20200522145142.435086-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145142.435086-1-sashal@kernel.org>
 References: <20200522145142.435086-1-sashal@kernel.org>
@@ -59,40 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit 23ad04669f81f958e9a4121b0266228d2eb3c357 ]
+[ Upstream commit 9bd21d4b1a767c3abebec203342f3820dcb84662 ]
 
-GCC 10 is very strict about symbol clash, and lwt_len_hist_user contains
-a symbol which clashes with libbpf:
+Coverity scan noted a redundant null check
 
-/usr/bin/ld: samples/bpf/lwt_len_hist_user.o:(.bss+0x0): multiple definition of `bpf_log_buf'; samples/bpf/bpf_load.o:(.bss+0x8c0): first defined here
-collect2: error: ld returned 1 exit status
-
-bpf_log_buf here seems to be a leftover, so removing it.
-
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200511113234.80722-1-mcroce@redhat.com
+Coverity-id: 728517
+Reported-by: Coverity <scan-admin@coverity.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/lwt_len_hist_user.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/cifs/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/samples/bpf/lwt_len_hist_user.c b/samples/bpf/lwt_len_hist_user.c
-index 7fcb94c09112..965108527a4f 100644
---- a/samples/bpf/lwt_len_hist_user.c
-+++ b/samples/bpf/lwt_len_hist_user.c
-@@ -15,8 +15,6 @@
- #define MAX_INDEX 64
- #define MAX_STARS 38
- 
--char bpf_log_buf[BPF_LOG_BUF_SIZE];
--
- static void stars(char *str, long val, long max, int width)
- {
- 	int i;
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 662977b8d6ae..72e7cbfb325a 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -3496,7 +3496,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
+ 			 * than it negotiated since it will refuse the read
+ 			 * then.
+ 			 */
+-			if ((tcon->ses) && !(tcon->ses->capabilities &
++			if (!(tcon->ses->capabilities &
+ 				tcon->ses->server->vals->cap_large_files)) {
+ 				current_read_size = min_t(uint,
+ 					current_read_size, CIFSMaxBufSize);
 -- 
 2.25.1
 
