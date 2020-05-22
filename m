@@ -2,132 +2,151 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25132206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD9420679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KC2gGbk9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDzT50X4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbgEVPbK (ORCPT
+        id S1730548AbgEVPbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:31:10 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18625 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729851AbgEVPbJ (ORCPT
+        Fri, 22 May 2020 11:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729851AbgEVPbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:31:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec7efab0000>; Fri, 22 May 2020 08:28:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 22 May 2020 08:31:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 22 May 2020 08:31:09 -0700
-Received: from ubuntu.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
- 2020 15:31:07 +0000
-From:   Leon Yu <leoyu@nvidia.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Leon Yu <leoyu@nvidia.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] net: stmmac: don't attach interface until resume finishes
-Date:   Fri, 22 May 2020 23:29:43 +0800
-Message-ID: <1590161383-8141-1-git-send-email-leoyu@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 22 May 2020 11:31:17 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDCCC061A0E;
+        Fri, 22 May 2020 08:31:17 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z26so5338891pfk.12;
+        Fri, 22 May 2020 08:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SSLvHrUrUmnP+J7EUaDe7T1ErKWhhTBSuFxFKbP5p2U=;
+        b=BDzT50X4coOikh70Rqyz4HIZVxhBJy6tMg7dg9A0Bg1ifgpbm0V3hjmHvn1rMK3PEd
+         /qMrIu8iNjKTKRWpT8Jbk7dtDxRjGFKboNsPH2O9H11NdshCEZZL4n5czFNxzuorYO2V
+         QGgZuCQpICm2KGwKaoKHbPprG9wGuf+R/XU1p0tLI7QRX9YNCGCfu2gByZRBzIAB1N41
+         avM2FWs/qBUEqeJ+NOhEMOcmPJU1XIy2/Bm5fOOZX2U3qrt+1Q6HyZV9z1Ze6gsaPPDi
+         7CMey5aUjddyc3RXjMykO0TzXs+CznhwuR+9h/sRwVNqGpFkPJzuiucwbiEfeUc9hyYD
+         pslQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SSLvHrUrUmnP+J7EUaDe7T1ErKWhhTBSuFxFKbP5p2U=;
+        b=WEM+d2qKcQTKiVHLg2BwkV+am5RZaOY0sKaV5Os3v6GiSFQH1T1QEN7VURPuEaV1Jl
+         Nc/Y4g2+giZsag72adS/7YJqRpro3bEDuvrhiDXZWy01gbJ1KgcGnozwcXbLx8k7wAw8
+         kn0/l9R+ONNGfIq/0NssVF+LZiP2rzdGSjb/FEQUNOUpSOKp/r86w22JhydbfE18bJGC
+         aV25wdEbEasxTrSE/lZkbDNkHk+ezilreLNfCJUEHdw3YghVl7YOOUZLD8bhPKhX/qbK
+         tAlsIEMZlpTo/uiOYWif1X1WE5v9mdvUCLuucHihriG4JEQyV/jGxfMuXgHBksUrFrus
+         VxzA==
+X-Gm-Message-State: AOAM533qzoAySc+O+q1j6zqeUjMprx8zwctYjjAax7WMwuYXDrpIIR8E
+        l1qIjK+i2bPnvdHFImLW6xZhr7EfxDJAWg108rs=
+X-Google-Smtp-Source: ABdhPJzHqqj8fLHqrPYt8036814ISRqAPyzCPwkwOwKw/jPrnn09boo9l3HZ9RshYZIyO8CwzN4XLER+NW+Ss0UGdtY=
+X-Received: by 2002:a62:2f43:: with SMTP id v64mr4328523pfv.170.1590161476980;
+ Fri, 22 May 2020 08:31:16 -0700 (PDT)
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590161323; bh=VB2D7nby06TiBHyXC2plrdVwB7fVkP01QEXkGaFMelg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-Originating-IP:X-ClientProxiedBy:Content-Type;
-        b=KC2gGbk9ZS3khsqAoF+ndCxIN315dVmQTwVAH2GCSNs0Ey+jEZC194onuZHApD5/L
-         UrY5ZoBukEz7QGmeJ4jJz3Aqwk1J3low7N+Ql9S+BGlkb9R9iabFMPcCLMe9K5IFxW
-         ZCkgFMMM6FRbNSbpD8ysQYvFzNX0bf7JUwYvtRqMzRwFyI5R/TtGhdxSw8ScrLgpD4
-         DBZLZoAuxrW5UNZ+VjGvGoNruo7qqo3DPvxh6XKDeT8+DrYc5rtyZEhN36gM5iww1j
-         yWOf8kJAyZlSUwgk5gPzQNZjPnZY7Zh5JtAgyZ4kChuGYUxjz6vxU9UeqQ2vRehq/y
-         zkVLI9YL8PiEA==
+References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org>
+ <1589361736-816-4-git-send-email-jprakash@codeaurora.org> <CAHp75VedM+=+m8WF=zPpUcizgCGareYuBzUfjKwesozVSY_gKg@mail.gmail.com>
+ <50ad0f74-22cc-c74f-afa4-df654e29bebb@codeaurora.org>
+In-Reply-To: <50ad0f74-22cc-c74f-afa4-df654e29bebb@codeaurora.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 22 May 2020 18:31:05 +0300
+Message-ID: <CAHp75Vf0srsT6yonxiA1Lc8uP4=17u5E19iWfW7XGivfgJjFNg@mail.gmail.com>
+Subject: Re: [PATCH V4 3/5] iio: adc: Add support for PMIC7 ADC
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 14b41a2959fb ("net: stmmac: Delete txtimer in suspend") was the
-first attempt to fix a race between mod_timer() and setup_timer()
-during stmmac_resume(). However the issue still exists as the commit
-only addressed half of the issue.
+On Fri, May 22, 2020 at 2:58 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+> On 5/13/2020 3:18 PM, Andy Shevchenko wrote:
+> > On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
 
-Same race can still happen as stmmac_resume() re-attaches interface
-way too early - even before hardware is fully initialized.  Worse,
-doing so allows network traffic to restart and stmmac_tx_timer_arm()
-being called in the middle of stmmac_resume(), which re-init tx timers
-in stmmac_init_coalesce().  timer_list will be corrupted and system
-crashes as a result of race between mod_timer() and setup_timer().
+...
 
-  systemd--1995    2.... 552950018us : stmmac_suspend: 4994
-  ksoftirq-9       0..s2 553123133us : stmmac_tx_timer_arm: 2276
-  systemd--1995    0.... 553127896us : stmmac_resume: 5101
-  systemd--320     7...2 553132752us : stmmac_tx_timer_arm: 2276
-  (sd-exec-1999    5...2 553135204us : stmmac_tx_timer_arm: 2276
-  ---------------------------------
-  pc : run_timer_softirq+0x468/0x5e0
-  lr : run_timer_softirq+0x570/0x5e0
-  Call trace:
-   run_timer_softirq+0x468/0x5e0
-   __do_softirq+0x124/0x398
-   irq_exit+0xd8/0xe0
-   __handle_domain_irq+0x6c/0xc0
-   gic_handle_irq+0x60/0xb0
-   el1_irq+0xb8/0x180
-   arch_cpu_idle+0x38/0x230
-   default_idle_call+0x24/0x3c
-   do_idle+0x1e0/0x2b8
-   cpu_startup_entry+0x28/0x48
-   secondary_start_kernel+0x1b4/0x208
+> >> +static int qcom_vadc7_scale_hw_calib_die_temp(
+> >> +                               const struct vadc_prescale_ratio *prescale,
+> >> +                               const struct adc5_data *data,
+> >> +                               u16 adc_code, int *result_mdec)
+> >> +{
+> >> +
+> >> +       int voltage, vtemp0, temp, i = ARRAY_SIZE(adcmap7_die_temp) - 1;
+> > How assignment to i is useful?
+>
+>
+> I'm using it in adcmap7_die_temp[i] below, to keep it within the
+> character limit per line. I think it's more readable that way.
+>
+> >
+> >> +       voltage = qcom_vadc_scale_code_voltage_factor(adc_code,
+> >> +                               prescale, data, 1);
+> >> +
+> >> +       if (adcmap7_die_temp[0].x > voltage) {
+> >> +               *result_mdec = DIE_TEMP_ADC7_SCALE_1;
+> >> +               return 0;
+> >> +       } else if (adcmap7_die_temp[i].x <= voltage) {
 
-Fix this by deferring netif_device_attach() to the end of
-stmmac_resume().
+I see now i in use, please, replace with direct meaning.
 
-Signed-off-by: Leon Yu <leoyu@nvidia.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > Redundant 'else'.
+> The expression is different, it's adcmap7_die_temp[i] here, not
+> adcmap7_die_temp[0].
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index a999d6b33a64..1f319c9cee46 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -5190,8 +5190,6 @@ int stmmac_resume(struct device *dev)
- 			return ret;
- 	}
- 
--	netif_device_attach(ndev);
--
- 	mutex_lock(&priv->lock);
- 
- 	stmmac_reset_queues_param(priv);
-@@ -5218,6 +5216,8 @@ int stmmac_resume(struct device *dev)
- 
- 	phylink_mac_change(priv->phylink, true);
- 
-+	netif_device_attach(ndev);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(stmmac_resume);
+if (a) {
+ ...
+ return;
+} else if (b) {
+ ...
+}
+
+'else' is redundant due to 'return'. Same when it's 'goto'.
+
+> >> +               *result_mdec = DIE_TEMP_ADC7_MAX;
+> >> +               return 0;
+> >> +       }
+> >> +
+> >> +       for (i = 0; i < ARRAY_SIZE(adcmap7_die_temp); i++)
+> >> +               if (adcmap7_die_temp[i].x > voltage)
+> >> +                       break;
+> >> +
+> >> +       vtemp0 = adcmap7_die_temp[i - 1].x;
+> >> +       voltage = voltage - vtemp0;
+> >> +       temp = div64_s64(voltage * DIE_TEMP_ADC7_SCALE_FACTOR,
+> >> +               adcmap7_die_temp[i - 1].y);
+> >> +       temp += DIE_TEMP_ADC7_SCALE_1 + (DIE_TEMP_ADC7_SCALE_2 * (i - 1));
+> >> +       *result_mdec = temp;
+> >> +
+> >> +       return 0;
+> >> +}
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
