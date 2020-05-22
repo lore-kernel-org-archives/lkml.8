@@ -2,109 +2,79 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47807C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A52C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110D920738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cVdUzGKF"
+	by mail.kernel.org (Postfix) with ESMTP id 171E220738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590190979;
+	bh=oahDcicwRFmo7/2GQGTQCHhUqocnHDwRWsWdm6Vbj18=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ecRjf+K3QRAuHTcnvpyzO2xG6e726TAe5Fq8GsPe25x4FZ5YqDUeMDXet2jVO6TYS
+	 qqdnwmwoQyexXIpNoEpYYv3ppqIZ/5CmGAZI8zi/yxTPDsqPaVTqgag2ZEUX8tYBMe
+	 4ZnhNDXRx0XK81SjaRv0M61XKzVYF+Or7Cbih5To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387467AbgEVXm4 (ORCPT
+        id S2387458AbgEVXmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 19:42:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42855 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387450AbgEVXmw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 19:42:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590190971;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wvt4UZgNmiEvzFjT7wOhOAQp8UtUprbYOh2ZRPuINeU=;
-        b=cVdUzGKFIrGpiPdcnkJlFELFcp7UmHhTaCS0YmtNaXnzFyZu03UjsmbIS45LM5arm7BdAX
-        IbH92IuzBMZiH9lpdOdEC6A6aUFfekfh6CBag0hlVeeebzwy91tqhRjFrOpT4aGRhvF/40
-        v7MOXvrJU856GfaNJ1MiDB1BUv7eVMY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-DdEutajJOLmChGIqFI7AUw-1; Fri, 22 May 2020 19:42:49 -0400
-X-MC-Unique: DdEutajJOLmChGIqFI7AUw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 22 May 2020 19:42:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387422AbgEVXms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 19:42:48 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50417460;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AF7920723;
         Fri, 22 May 2020 23:42:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D33F10013C0;
-        Fri, 22 May 2020 23:42:47 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 2/2] rxrpc: Fix a memory leak in rxkad_verify_response()
- [ver #2]
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>,
-        Markus Elfring <Markus.Elfring@web.de>, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Sat, 23 May 2020 00:42:46 +0100
-Message-ID: <159019096638.999797.12399237571817646198.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159019095229.999797.5088700147400532632.stgit@warthog.procyon.org.uk>
-References: <159019095229.999797.5088700147400532632.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.22
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590190968;
+        bh=oahDcicwRFmo7/2GQGTQCHhUqocnHDwRWsWdm6Vbj18=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mwbCPnxSc1pHdTkJMGmdYuU4RRLMPHYzf+jyG6Vu/zjQAPp/1mR5uveeunjxJCkuJ
+         rBrjbgHjBuYtcltp2UqKHcxUBGIEpCbynv5R/0dZR6CdDrGjMmAC2R5lpIKTPGRmM3
+         c2zoIl/7eVgAHc57ZMfGRoJ0R8BsTLQ/e48aaH+c=
+Date:   Fri, 22 May 2020 16:42:47 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Marco Elver <elver@google.com>
+Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        aryabinin@virtuozzo.com, linux-mm@kvack.org, cai@lca.pw,
+        kernel test robot <rong.a.chen@intel.com>
+Subject: Re: [PATCH v2] kasan: Disable branch tracing for core runtime
+Message-Id: <20200522164247.4a88aed496f0feb458d8bca0@linux-foundation.org>
+In-Reply-To: <20200522075207.157349-1-elver@google.com>
+References: <20200522075207.157349-1-elver@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Fri, 22 May 2020 09:52:07 +0200 Marco Elver <elver@google.com> wrote:
 
-A ticket was not released after a call of the function
-"rxkad_decrypt_ticket" failed. Thus replace the jump target
-"temporary_error_free_resp" by "temporary_error_free_ticket".
+> During early boot, while KASAN is not yet initialized, it is possible to
+> enter reporting code-path and end up in kasan_report(). While
+> uninitialized, the branch there prevents generating any reports,
+> however, under certain circumstances when branches are being traced
+> (TRACE_BRANCH_PROFILING), we may recurse deep enough to cause kernel
+> reboots without warning.
+> 
+> To prevent similar issues in future, we should disable branch tracing
+> for the core runtime.
+> 
+> Link: https://lore.kernel.org/lkml/20200517011732.GE24705@shao2-debian/
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-Fixes: 8c2f826dc3631 ("rxrpc: Don't put crypto buffers on the stack")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Markus Elfring <Markus.Elfring@web.de>
----
+I assume this affects 5.6 and perhaps earlier kernels?
 
- net/rxrpc/rxkad.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
-index 098f1f9ec53b..52a24d4ef5d8 100644
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -1148,7 +1148,7 @@ static int rxkad_verify_response(struct rxrpc_connection *conn,
- 	ret = rxkad_decrypt_ticket(conn, skb, ticket, ticket_len, &session_key,
- 				   &expiry, _abort_code);
- 	if (ret < 0)
--		goto temporary_error_free_resp;
-+		goto temporary_error_free_ticket;
- 
- 	/* use the session key from inside the ticket to decrypt the
- 	 * response */
-@@ -1230,7 +1230,6 @@ static int rxkad_verify_response(struct rxrpc_connection *conn,
- 
- temporary_error_free_ticket:
- 	kfree(ticket);
--temporary_error_free_resp:
- 	kfree(response);
- temporary_error:
- 	/* Ignore the response packet if we got a temporary error such as
-
-
+I also assume that a cc:stable is appropriate for this fix?
