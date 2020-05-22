@@ -2,71 +2,166 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 297ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11CEC20823
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56C520757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LCwSPwdX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgEVIiC (ORCPT
+        id S1729770AbgEVIiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:38:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:59324 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbgEVIiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:38:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 925D155D;
-        Fri, 22 May 2020 01:37:59 -0700 (PDT)
-Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 444903F52E;
-        Fri, 22 May 2020 01:37:53 -0700 (PDT)
-From:   Jianyong Wu <jianyong.wu@arm.com>
-To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org,
-        suzuki.poulose@arm.com, steven.price@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        Wei.Chen@arm.com, jianyong.wu@arm.com, nd@arm.com
-Subject: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
-Date:   Fri, 22 May 2020 16:37:16 +0800
-Message-Id: <20200522083724.38182-4-jianyong.wu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200522083724.38182-1-jianyong.wu@arm.com>
-References: <20200522083724.38182-1-jianyong.wu@arm.com>
+        Fri, 22 May 2020 04:38:09 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50460 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729746AbgEVIiD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:38:03 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M8bcmh118407;
+        Fri, 22 May 2020 03:37:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590136658;
+        bh=yF4xwwVycaty1YYtrvz7tn0azR2eb+OYgNKHjKytnkc=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=LCwSPwdXFLyyOmJwtl+CdoShpJ5fp9tEao2X9/zf2kbnHkrfB6daeZc+naZsHvv10
+         kiw+7ivb0aZ9ids8iQc7RtWrDqU/qMfeuR0E1icglIzgqW8EySon+4xkhX8cnKfZl5
+         zCPoF810ubD13ZCtI79ERZZo13Wjwa8lPZlnB+gI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M8bc0U071990
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 03:37:38 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 03:37:38 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 03:37:38 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M8baqV054658;
+        Fri, 22 May 2020 03:37:37 -0500
+Date:   Fri, 22 May 2020 14:07:36 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     <masonccyang@mxic.com.tw>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v5 05/19] mtd: spi-nor: add support for DTR protocol
+Message-ID: <20200522083734.hs4wmfplch7icecv@ti.com>
+References: <20200519142642.24131-1-p.yadav@ti.com>
+ <20200519142642.24131-6-p.yadav@ti.com>
+ <OFAC48157A.F337A12A-ON48258570.0021F23B-48258570.0023CB62@mxic.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <OFAC48157A.F337A12A-ON48258570.0021F23B-48258570.0023CB62@mxic.com.tw>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export arm_smccc_1_1_get_conduit then modules can use smccc helper which
-adopts it.
+On 22/05/20 02:30PM, masonccyang@mxic.com.tw wrote:
+> 
+> Hi Pratyush,
+> 
+> 
+> > +/**
+> > + * spi_nor_spimem_setup_op() - Set up common properties of a spi-mem 
+> op.
+> > + * @nor:      pointer to a 'struct spi_nor'
+> > + * @op:         pointer to the 'struct spi_mem_op' whose properties
+> > + *         need to be initialized.
+> > + * @proto:      the protocol from which the properties need to be set.
+> > + */
+> > +void spi_nor_spimem_setup_op(const struct spi_nor *nor,
+> > +              struct spi_mem_op *op,
+> > +              const enum spi_nor_protocol proto)
+> > +{
+> > +   u8 ext;
+> > +
+> > +   op->cmd.buswidth = spi_nor_get_protocol_inst_nbits(proto);
+> > +
+> > +   if (op->addr.nbytes)
+> > +      op->addr.buswidth = spi_nor_get_protocol_addr_nbits(proto);
+> > +
+> > +   if (op->dummy.nbytes)
+> > +      op->dummy.buswidth = spi_nor_get_protocol_addr_nbits(proto);
+> > +
+> > +   if (op->data.nbytes)
+> > +      op->data.buswidth = spi_nor_get_protocol_data_nbits(proto);
+> > +
+> > +   if (spi_nor_protocol_is_dtr(proto)) {
+> 
+> As mentioned before that I am also patching mx25* which supports 8S-8S-8S 
+> and 
+> 8D-8D-8D mode.
+> 
+> please patch to spi_nor_protocol_is_8_8_8(proto) for 8S-8S-8S mode 
+> support.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
----
- drivers/firmware/psci/psci.c | 1 +
- 1 file changed, 1 insertion(+)
+Like I said before, we should try to avoid creeping up the scope of this 
+series. This series aims to add 8D support. Once this lands, I don't see 
+why you can't 8S support on top. Unless we make a fundamental change 
+that makes it impossible to add 8S support, it should stay as-is.
 
-diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index 2937d44b5df4..fd3c88f21b6a 100644
---- a/drivers/firmware/psci/psci.c
-+++ b/drivers/firmware/psci/psci.c
-@@ -64,6 +64,7 @@ enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
+All that said, I fail to see why 8S would have any problems with this 
+function. We just fill in the buswidths from the protocol, and adjust 
+the op if it is DTR. So in case of 8S mode, this function as it is will 
+fill in the buswidths to 8 for all phases. And it won't hit the if block 
+here so this code is of no concern to 8S mode.
  
- 	return psci_ops.conduit;
- }
-+EXPORT_SYMBOL(arm_smccc_1_1_get_conduit);
+> > +      /*
+> > +       * spi-mem supports mixed DTR modes, but right now we can only
+> > +       * have all phases either DTR or STR. IOW, spi-mem can have
+> > +       * something like 4S-4D-4D, but spi-nor can't. So, set all 4
+> > +       * phases to either DTR or STR.
+> > +       */
+> 
+>         if (spi_nor_protocol_is_8D_8D_8D(proto) {
+
+No. The adjustments below apply to _all_ DTR ops, not just 8D-8D-8D 
+ones. So in case someone wants to use 4D-4D-4D mode, they won't have to 
+touch this code at all.
  
- typedef unsigned long (psci_fn)(unsigned long, unsigned long,
- 				unsigned long, unsigned long);
+> > +      op->cmd.dtr = op->addr.dtr = op->dummy.dtr
+> > +                = op->data.dtr = true;
+> > +
+> > +      /* 2 bytes per clock cycle in DTR mode. */
+> > +      op->dummy.nbytes *= 2;
+> 
+>         }
+> 
+> > +
+> > +      ext = spi_nor_get_cmd_ext(nor, op);
+> > +      op->cmd.opcode = (op->cmd.opcode << 8) | ext;
+> > +      op->cmd.nbytes = 2;
+> > +   }
+> > +}
+> > +
+
 -- 
-2.17.1
-
+Regards,
+Pratyush Yadav
+Texas Instruments India
