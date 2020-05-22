@@ -2,259 +2,124 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A198C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E80206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590146809;
-	bh=HffsPUQV72xCQs16Zb0KzhZezC5HpjM92iOzJX/rQuY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=aJ7yx+IYqERNm7N4KW8oEVlSCjy2AlhnxcIGHs5H492+j0jWfGdmZGAxp7DfBvIzn
-	 4OEW5HBqlxpTa1ltmHnrf8Ytw4yPN+x4g1P7Kh9LL3uaDjNUypn2qSHYpaNYdBOox2
-	 8XtDnTgGNcyD6PyjnoXAlf/wB78ecZySLwzKxSXk=
+	by mail.kernel.org (Postfix) with ESMTP id 5A1F5206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dp9guy33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgEVL0s (ORCPT
+        id S1729644AbgEVL1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgEVL0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:26:48 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9649206BE;
-        Fri, 22 May 2020 11:26:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590146807;
-        bh=HffsPUQV72xCQs16Zb0KzhZezC5HpjM92iOzJX/rQuY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qQbEm9ryVan7BjBF+/jjM9T2zy6S1jtAG5Gjhwxv3k4lAah88e1xbExs/ozNf7APm
-         UcrqlrHUD8AvfIUbKoOLaZzq1TtG/M2Z1Tf8RkNsedvPPK/D9Uo29bXF/Jppza2Vti
-         y2Ari/wR2C3dtcT83vBwhmfuiY+6h+bT9YCTVMDA=
-Message-ID: <29349a65bc94651a96d2e4a8392e1ca4a00bd2d7.camel@kernel.org>
-Subject: Re: [PATCH] ceph: show max caps in debugfs caps file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Yanhu Cao <gmayyyha@gmail.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 22 May 2020 07:26:45 -0400
-In-Reply-To: <CAB9OAC2yxtAciWmJzVSga-pu3ZUjjmsctfj+pQQTr78-W_cfuA@mail.gmail.com>
-References: <20200521093845.15101-1-gmayyyha@gmail.com>
-         <cad949df361b68a1c929f9053bce34d1892c8291.camel@kernel.org>
-         <CAB9OAC0ry=tuYa-uWjGbnPGEpDCaQYhmN7bJFYvkZ1Uszo=Xpw@mail.gmail.com>
-         <d1e221be16e220009f1ca55d4b1eb6728462a279.camel@kernel.org>
-         <CAB9OAC2yxtAciWmJzVSga-pu3ZUjjmsctfj+pQQTr78-W_cfuA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Fri, 22 May 2020 07:27:44 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6393 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728281AbgEVL1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:27:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ec7b69e0001>; Fri, 22 May 2020 04:25:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 22 May 2020 04:27:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 22 May 2020 04:27:43 -0700
+Received: from [10.26.74.233] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
+ 2020 11:27:41 +0000
+Subject: Re: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance on
+ error
+To:     <dinghao.liu@zju.edu.cn>
+CC:     <kjlu@umn.edu>, Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
+ <967c17d2-6b57-27f0-7762-cd0835caaec9@nvidia.com>
+ <45d18e3c.bfdab.1723c07b7d3.Coremail.dinghao.liu@zju.edu.cn>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e2274ef7-2c33-cd3a-319f-45c5c27cff3e@nvidia.com>
+Date:   Fri, 22 May 2020 12:27:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <45d18e3c.bfdab.1723c07b7d3.Coremail.dinghao.liu@zju.edu.cn>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590146718; bh=awjFKuADBFKeWBQk5Eejr9+XYg2Ooxb8LM1Zce3S+ZA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dp9guy335vU9wcknVNoLnC5VrJQrA3qXeTavb5gJxDBje+Q+TWZlsLmwT0pASROWd
+         LnG/cI978LsHwYeNJSHNyWZbHW8pBTTy2okF9b+Ue5IV/p/QhRv2dLCRbswOTXaklF
+         KtZ6M8ZY3ejt4VcvUf2DQ3PciuEZa1njXvVwVvwBTxTfbxNwCFKJqEZ/51HlgfDsUM
+         SHxp94VewqyfX8BPLpdhbyg9wKQ5FTHtOXYaSbPjK5SMMZ27l1gsVrCA0acgndjvtK
+         6J8M0iOuNhd45xlVjMaI7JZH+gLRDdaXf9qZ5QdUEwLDUGdsfk8YKhnx/SnBn7JQSa
+         00cUooeda3bwg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-22 at 16:27 +0800, Yanhu Cao wrote:
-> On Thu, May 21, 2020 at 8:51 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > On Thu, 2020-05-21 at 20:19 +0800, Yanhu Cao wrote:
-> > > On Thu, May 21, 2020 at 7:09 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > > > On Thu, 2020-05-21 at 17:38 +0800, Yanhu Cao wrote:
-> > > > >         before
-> > > > >         ------
-> > > > >         total           1026
-> > > > >         avail           1024
-> > > > >         used            2
-> > > > >         reserved        0
-> > > > >         min             1024
-> > > > > 
-> > > > >         after
-> > > > >         ------
-> > > > >         total           1026
-> > > > >         avail           1024
-> > > > >         used            2
-> > > > >         max             2048
-> > > > >         reserved        0
-> > > > >         min             1024
-> > > > > 
-> > > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
-> > > > > ---
-> > > > >  fs/ceph/caps.c    | 6 ++++--
-> > > > >  fs/ceph/debugfs.c | 7 ++++---
-> > > > >  fs/ceph/super.h   | 2 +-
-> > > > >  3 files changed, 9 insertions(+), 6 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-> > > > > index 5f3aa4d607de..e2c759a2ef35 100644
-> > > > > --- a/fs/ceph/caps.c
-> > > > > +++ b/fs/ceph/caps.c
-> > > > > @@ -404,8 +404,8 @@ void ceph_put_cap(struct ceph_mds_client *mdsc, struct ceph_cap *cap)
-> > > > >  }
-> > > > > 
-> > > > >  void ceph_reservation_status(struct ceph_fs_client *fsc,
-> > > > > -                          int *total, int *avail, int *used, int *reserved,
-> > > > > -                          int *min)
-> > > > > +                          int *total, int *avail, int *used, int *max,
-> > > > > +                          int *reserved, int *min)
-> > > > >  {
-> > > > >       struct ceph_mds_client *mdsc = fsc->mdsc;
-> > > > > 
-> > > > > @@ -417,6 +417,8 @@ void ceph_reservation_status(struct ceph_fs_client *fsc,
-> > > > >               *avail = mdsc->caps_avail_count;
-> > > > >       if (used)
-> > > > >               *used = mdsc->caps_use_count;
-> > > > > +     if (max)
-> > > > > +             *max = mdsc->caps_use_max;
-> > > > 
-> > > > Can you lay out what value this will provide? I'm not convinced that
-> > > > this information is really that helpful:
-> > > > 
-> > > > mdsc->caps_use_max is just set to the value of the "caps_max" mount
-> > > > option, and that information is displayed in /proc/mounts if it's not
-> > > > set to the default.
-> > > > 
-> > > > What might be more interesting is to track the most recent "max_caps"
-> > > > value sent by the MDS (see the CEPH_SESSION_RECALL_STATE message
-> > > > handling). Tracking that would give us a more dynamic view of the
-> > > > current maximum requested by the MDS, which is often going to be less
-> > > > than what "caps_max" was set to at mount time.
-> > > 
-> > > Do you mean the 'mds_recall_max_caps'? which can be set by the MDS.
-> > > Clients use this value every time to trim caps.
-> > > 
-> > > There is an option mds_max_caps_per_client which is a soft limit,
-> > > which is determined by the behavior of the client.
-> > > and we recently encounter a warning '1 MDSs report oversized
-> > > cache'(ceph-v12.2.12: mds_cache_memory_limit=64G, used=100G),
-> > > Therefore, the effect is not good.
-> > > 
-> > > So we want to know whether the caps held by the client exceed caps_max
-> > > through the debugfs caps file (default or mount option).
-> > > 
-> > > 
-> > 
-> > Ok, I doubt this patch is going to tell you what you want to know then.
-> > There are two limits involved here:
-> > 
-> > 1/ the limit set by the caps_max mount option for the client
-> > 2/ a dynamic limit that is managed by the MDS issuing
-> >    CEPH_SESSION_RECALL_STATE messages to the clients (max_caps).
-> > 
-> > This patch is only going to tell you about the first one, but the second
-> > one is more interesting to monitor on a long-term basis.
-> > 
-> > When the mds exceeds its memory limits, it can issue
-> > CEPH_SESSION_RECALL_STATE messages to the clients, to tell them to
-> > reduce their own caches to a particular size. Currently we just take
-> > that value and feed it into ceph_trim_caps and forget about it.
-> > 
-> > It would probably be useful though to keep track of the most recent
-> > value issued by the MDS, and print this value as min(mount_option_max,
-> > max_caps_from_mds). Bonus points if you can help untangle the confusing
-> > naming of all these values in the process.
-> 
-> How about this? Add a new field caps_limit(calculated by
-> session->caps, mds_recall_max_caps,
-> mds_max_caps_per_client, mds_min_caps_per_client) in ceph_mds_client,
-> which can be set by ceph_trim_caps.
-> 
-> struct ceph_mds_client {
-> ...
-> -       int             caps_use_max;        /* max used caps */
-> +      int             caps_use_max;        /* max used caps, limited
-> by client */
-> +      int             caps_limit;                /* limited by mds */
-> ...
-> }
-> 
-> int ceph_trim_caps(...)
-> {
->         int trim_caps = session->s_nr_caps - max_caps;
-> +      mdsc->caps_limit = max_caps;
->    ...
-> }
-> 
-> if client's caps have no limit, we can track caps_limit.
-> Don't use min(caps_use_max, caps_limit) because it shows more clearly
-> whether it is limited by the client or mds.
-> 
-> e.g.
-> ----
-> total 3112
-> avail 1025
-> used 2087
-> limit 2068   => caps_limit
-> max 2048   => caps_use_max(mount_option_caps_max)
-> 
-> trimmed
-> -------
-> total 1943
-> avail 1025
-> used 918
-> limit 918
-> max 2048
-> 
-> 
 
-Sure, that'd be fine. The "max" is somewhat redundant info that you can
-get elsewhere, but printing it here won't hurt anything.
+On 22/05/2020 11:57, dinghao.liu@zju.edu.cn wrote:
+>>
+>> On 22/05/2020 08:58, Dinghao Liu wrote:
+>>> pm_runtime_get_sync() increments the runtime PM usage counter even
+>>> when it returns an error code. Thus a pairing decrement is needed on
+>>> the error handling path to keep the counter balanced.
+>>>
+>>> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+>>> ---
+>>>  drivers/dma/tegra210-adma.c | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+>>> index c4ce5dfb149b..803e1f4d5dac 100644
+>>> --- a/drivers/dma/tegra210-adma.c
+>>> +++ b/drivers/dma/tegra210-adma.c
+>>> @@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+>>>  
+>>>  	ret = pm_runtime_get_sync(tdc2dev(tdc));
+>>>  	if (ret < 0) {
+>>> +		pm_runtime_put_sync(tdc2dev(tdc));
+>>>  		free_irq(tdc->irq, tdc);
+>>>  		return ret;
+>>>  	}
+>>>
+>>
+>>
+>> There is another place in probe that needs to be fixed as well. Can you
+>> correct this while you are at it?
+>>
+>> Thanks
+>> Jon
+>>
+>> -- 
+>> nvpublic
+> 
+> Sure. I have sent a patch to fix PM imbalance in tegra_adma_probe().
 
-> > > > >       if (reserved)
-> > > > >               *reserved = mdsc->caps_reserve_count;
-> > > > >       if (min)
-> > > > > diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
-> > > > > index 481ac97b4d25..942004376588 100644
-> > > > > --- a/fs/ceph/debugfs.c
-> > > > > +++ b/fs/ceph/debugfs.c
-> > > > > @@ -138,16 +138,17 @@ static int caps_show(struct seq_file *s, void *p)
-> > > > >  {
-> > > > >       struct ceph_fs_client *fsc = s->private;
-> > > > >       struct ceph_mds_client *mdsc = fsc->mdsc;
-> > > > > -     int total, avail, used, reserved, min, i;
-> > > > > +     int total, avail, used, max, reserved, min, i;
-> > > > >       struct cap_wait *cw;
-> > > > > 
-> > > > > -     ceph_reservation_status(fsc, &total, &avail, &used, &reserved, &min);
-> > > > > +     ceph_reservation_status(fsc, &total, &avail, &used, &max,
-> > > > > +                             &reserved, &min);
-> > > > >       seq_printf(s, "total\t\t%d\n"
-> > > > >                  "avail\t\t%d\n"
-> > > > >                  "used\t\t%d\n"
-> > > > >                  "reserved\t%d\n"
-> > > > >                  "min\t\t%d\n\n",
-> > > > > -                total, avail, used, reserved, min);
-> > > > > +                total, avail, used, max, reserved, min);
-> > > > >       seq_printf(s, "ino                issued           implemented\n");
-> > > > >       seq_printf(s, "-----------------------------------------------\n");
-> > > > > 
-> > > > > diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-> > > > > index 60aac3aee055..79aa42d9336c 100644
-> > > > > --- a/fs/ceph/super.h
-> > > > > +++ b/fs/ceph/super.h
-> > > > > @@ -700,7 +700,7 @@ extern void ceph_unreserve_caps(struct ceph_mds_client *mdsc,
-> > > > >                              struct ceph_cap_reservation *ctx);
-> > > > >  extern void ceph_reservation_status(struct ceph_fs_client *client,
-> > > > >                                   int *total, int *avail, int *used,
-> > > > > -                                 int *reserved, int *min);
-> > > > > +                                 int *max, int *reserved, int *min);
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > 
-> > > > --
-> > > > Jeff Layton <jlayton@kernel.org>
-> > > > 
-> > 
-> > --
-> > Jeff Layton <jlayton@kernel.org>
-> > 
+
+You should only send one patch to fix both instances as it is the same
+driver. It is impossible to figure out that two patches with the same
+$subject are different.
+
+Jon
 
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+nvpublic
