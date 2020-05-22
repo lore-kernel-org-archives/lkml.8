@@ -2,110 +2,81 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D693C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B5920812
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590139057;
-	bh=HNMgBFDJToK3zbjWXKcZnffRZmJKX11EfdxrUJQVZ+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nFin+7bnG/4V4oinqZfgFFeFrwliXRmyvCyJjfQqpyUpVviPIqW2dS8PNAbjy2roR
-	 RB22MMl4PD71XRi8e3chL0lW6KCe5IxMIhhe/RDxxcdpCk6PBIGdD5JW442qZvwe42
-	 Sshj5VhJ7MS9E1JNIHPZnT4T4Fen5kOuksJSc28k=
+	by mail.kernel.org (Postfix) with ESMTP id 3EF23207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgEVJRg (ORCPT
+        id S1729696AbgEVJSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:17:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36600 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 05:18:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:37261 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgEVJRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:17:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9800F206B6;
-        Fri, 22 May 2020 09:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590139054;
-        bh=HNMgBFDJToK3zbjWXKcZnffRZmJKX11EfdxrUJQVZ+k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ALXMmxWNVRdAjNCssSQVc/aCyaMykegZCH1zG2CEyzJQngkhsO1Y29uPu1QJsKqUk
-         Va1x7rbuVZTiy8uA6On9aCxlWqVvBJ0TCtd76m0uBBkp3mw0sDp3eX1C9M1thT8Kqz
-         59gCS+p+GCEM4CESC9xYJ51C2Ps59hFla3XZTOe8=
-Date:   Fri, 22 May 2020 11:17:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200522091731.GA1203588@kroah.com>
-References: <20200512214713.40501-1-tony@atomide.com>
+        id S1728068AbgEVJSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 05:18:25 -0400
+IronPort-SDR: 4sfRajtSiPTK5pXRhPShMXltCYWnibqHfE/XIczG6OSsOjl3ZWLjI88hgBNJRVt7MXxb1RlKuW
+ TvGQ/VIT7nYA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 02:18:23 -0700
+IronPort-SDR: fliFQp2k0Jegvpud9LRgFiCDLKayCWiBstcC5LyqtT4DFnnULjgmrihisTWEaD49Mtgm9ipdgB
+ guqmZqAI7Low==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
+   d="scan'208";a="309326287"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 May 2020 02:18:21 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jc3ou-008Cho-Ao; Fri, 22 May 2020 12:18:24 +0300
+Date:   Fri, 22 May 2020 12:18:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        linux-pwm@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
+Message-ID: <20200522091824.GR1634618@smile.fi.intel.com>
+References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
+ <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
+ <20200522085613.ktb2ruw2virj337v@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200512214713.40501-1-tony@atomide.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200522085613.ktb2ruw2virj337v@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 02:47:07PM -0700, Tony Lindgren wrote:
-> Hi all,
-> 
-> Here's the updated set of these patches fixed up for Johan's and
-> Pavel's earlier comments.
-> 
-> This series does the following:
-> 
-> 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
-> 
-> 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
->    TTY ports configured in devicetree with help of n_gsm.c
-> 
-> 3. Allows the use of standard Linux device drivers for dedicated
->    TS 27.010 channels for devices like GNSS and ALSA found on some
->    modems for example
-> 
-> 4. Adds a gnss-motmdm consumer driver for the GNSS device found on
->    the Motorola Mapphone MDM6600 modem on devices like droid4
-> 
-> I've placed the serdev-ngsm.c under drivers/tty/serdev as it still
-> seems to make most sense with no better places available. It's no
-> longer an MFD driver as it really does not need to care what channel
-> specific consumer drivers might be configured for the generic driver.
-> Now serdev-ngsm just uses of_platform_populate() to probe whatever
-> child nodes it might find.
-> 
-> I'm not attached having the driver in drivers/tty/serdev. I just
-> don't have any better locations in mind. So using Johan's earlier
-> i2c example, the drivers/tty/serdev/serdev-ngsm.c driver is now a
-> generic protocol and bus driver, so it's getting closer to the
-> the drivers/i2c/busses analogy maybe :) Please do suggest better
-> locations other than MFD and misc if you have better ideas.
-> 
-> Now without the chardev support, the /dev/gsmtty* using apps need
-> to use "U1234AT+CFUN?" format for the packets. The advantage is
-> less kernel code, and we keep the existing /dev/gsmtty* interface.
-> 
-> If we still really need the custom chardev support, that can now
-> be added as needed with the channel specific consumer driver(s),
-> but looks like this won't be needed based on Pavel's ofono work.
+On Fri, May 22, 2020 at 10:56:13AM +0200, Uwe Kleine-König wrote:
+> On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
 
-Johan and Rob, any objection/review of this series?
+> > +	io_base = devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(io_base))
+> 
+> error message here?
 
-thanks,
+platform core provides it. No need to duplicate (esp. taking into consideration
+that it can issue IIRC three different error messages depending on actual error).
 
-greg k-h
+> 
+> > +		return PTR_ERR(io_base);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
