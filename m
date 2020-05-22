@@ -2,84 +2,115 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1859C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5278C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8988A2085B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE17207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XOterxaz"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="O9AFrS5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgEVIcV (ORCPT
+        id S1729424AbgEVIdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:32:21 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59834 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728883AbgEVIcU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:32:20 -0400
-X-UUID: 896b2fc4da5a49cba9ffc87e400a522f-20200522
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ySjpqS2b2+5IV1wMLJ9XawozivexLkd7UOWw5IgdK4A=;
-        b=XOterxazLQFB2zwnlZuZQfv0G52lbAo5yMLA0BG6FIlRfSinKs01TJWqJ/PoEuXoa7wYoWmP5wIyeUrbPYRPd/y1brlRmAI6VAZZJF9lfip6hZXb5PICgVwEjoYBBYUEbzugyOPZ3f4ZhPfFogBcX2ajd16vFYjDYL0scRIDLIw=;
-X-UUID: 896b2fc4da5a49cba9ffc87e400a522f-20200522
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 888027467; Fri, 22 May 2020 16:32:16 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 22 May 2020 16:32:14 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 22 May 2020 16:32:14 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <Virtual_Global_UFS_Upstream@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v4 2/4] scsi: ufs: Allow WriteBooster on UFS 2.2 devices
-Date:   Fri, 22 May 2020 16:32:10 +0800
-Message-ID: <20200522083212.4008-3-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200522083212.4008-1-stanley.chu@mediatek.com>
-References: <20200522083212.4008-1-stanley.chu@mediatek.com>
+        Fri, 22 May 2020 04:33:35 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38344 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729382AbgEVIdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:33:33 -0400
+Received: from zn.tnic (p200300ec2f0d4900b115cc0add6835a7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:4900:b115:cc0a:dd68:35a7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AA2481EC02B3;
+        Fri, 22 May 2020 10:33:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590136411;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=MWGiXlMNmCUQrdL2VMbcT6Bsa2l19TPcZCK5SYOHTQo=;
+        b=O9AFrS5SFc4FVW5LZq+2OvQsE8crvfBABJ6KpFEy5z3reuvsHKsaxuPdeTSNV1SR9Tpc8K
+        8JMk0rMt3O+4UuTn07lpAK8mVm4KNWW57XrXVQNzFsFoxwcCmjNHfhZCOrBpkQWXNqQWHb
+        DOaEnO50y9eDEQvBB3+TP2+26IxN5AM=
+Date:   Fri, 22 May 2020 10:33:21 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 43/75] x86/sev-es: Setup per-cpu GHCBs for the runtime
+ handler
+Message-ID: <20200522083321.GA28750@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-44-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-44-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWNjb3JkaW5nIHRvIHRoZSBVRlMgc3BlY2lmaWNhdGlvbiwgV3JpdGVCb29zdGVyIGlzIG9mZmlj
-aWFsbHkNCnN1cHBvcnRlZCBieSBVRlMgMi4yLg0KDQpTaW5jZSBVRlMgMi4yIHNwZWNpZmljYXRp
-b24gaGFzIGJlZW4gZmluYWxpemVkIGluIEpFREVDIGFuZA0Kc3VjaCBkZXZpY2VzIGhhdmUgYWxz
-byBzaG93ZWQgdXAgaW4gdGhlIG1hcmtldCwgbW9kaWZ5IHRoZQ0KY2hlY2tpbmcgcnVsZSBmb3Ig
-dWZzaGNkX3diX3Byb2JlKCkgdG8gYWxsb3cgdGhlc2UgZGV2aWNlcyB0byBlbmFibGUNCldyaXRl
-Qm9vc3Rlci4NCg0KU2lnbmVkLW9mZi1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlh
-dGVrLmNvbT4NClJldmlld2VkLWJ5OiBBdnJpIEFsdG1hbiA8YXZyaS5hbHRtYW5Ad2RjLmNvbT4N
-Ci0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMg
-Yi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQppbmRleCA5ZTU1YzUyNGYzMzAuLjBkYmQ4YTdh
-NjY0MiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCisrKyBiL2RyaXZl
-cnMvc2NzaS91ZnMvdWZzaGNkLmMNCkBAIC02OTMwLDYgKzY5MzAsNyBAQCBzdGF0aWMgaW50IHVm
-c19nZXRfZGV2aWNlX2Rlc2Moc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJICogVUZTX0RFVklDRV9R
-VUlSS19TVVBQT1JUX0VYVEVOREVEX0ZFQVRVUkVTIGVuYWJsZWQNCiAJICovDQogCWlmIChkZXZf
-aW5mby0+d3NwZWN2ZXJzaW9uID49IDB4MzEwIHx8DQorCSAgICBkZXZfaW5mby0+d3NwZWN2ZXJz
-aW9uID09IDB4MjIwIHx8DQogCSAgICAoaGJhLT5kZXZfcXVpcmtzICYgVUZTX0RFVklDRV9RVUlS
-S19TVVBQT1JUX0VYVEVOREVEX0ZFQVRVUkVTKSkNCiAJCXVmc2hjZF93Yl9wcm9iZShoYmEsIGRl
-c2NfYnVmKTsNCiANCi0tIA0KMi4xOC4wDQo=
+On Tue, Apr 28, 2020 at 05:16:53PM +0200, Joerg Roedel wrote:
+> @@ -198,6 +210,48 @@ static bool __init sev_es_setup_ghcb(void)
+>  	return true;
+>  }
+>  
+> +static void __init sev_es_alloc_runtime_data(int cpu)
+> +{
+> +	struct sev_es_runtime_data *data;
+> +
+> +	data = memblock_alloc(sizeof(*data), PAGE_SIZE);
+> +	if (!data)
+> +		panic("Can't allocate SEV-ES runtime data");
+> +
+> +	per_cpu(runtime_data, cpu) = data;
+> +}
+> +
+> +static void __init sev_es_init_ghcb(int cpu)
 
+Since those are static functions, I'd drop the "sev_es_" prefix from the
+name for better readability. Because otherwise the whole file is a sea
+of "sev_es_"-prefixed identifiers which you need to read until the end
+to know what they are.
+
+> +{
+> +	struct sev_es_runtime_data *data;
+> +	int err;
+> +
+> +	data = per_cpu(runtime_data, cpu);
+> +
+> +	err = early_set_memory_decrypted((unsigned long)&data->ghcb_page,
+> +					 sizeof(data->ghcb_page));
+> +	if (err)
+> +		panic("Can not map GHCBs unencrypted");
+
+			"Error mapping ..."
+
+> +
+> +	memset(&data->ghcb_page, 0, sizeof(data->ghcb_page));
+> +}
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
