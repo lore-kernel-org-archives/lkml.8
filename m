@@ -2,346 +2,136 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66357C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B903FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A91207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9764020776
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IGhRcXvc"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="joZp6nPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgEVGbO (ORCPT
+        id S1728542AbgEVGbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 02:31:14 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:20657 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728439AbgEVGbL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 02:31:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590129070; x=1621665070;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kUqB74ao4cKMBkg75oPcYgcRcd1MtSxGoDTgZYPITEc=;
-  b=IGhRcXvcG6mGftJAezLfuSm4ruiNTvvH4HGsYWmQ1Weo0ErwDBYQZ8oG
-   FYGWfWcp0Oj8Qa4mDoI0DX7vI8IMKtxCY8HPsVsU078ga7TZtekfngSwP
-   MO8cSSffth3490yybtohMoaSpNFS0Zdw3W5JVg1ceBLOsN9B+XXbKmSfR
-   A=;
-IronPort-SDR: B2vOXkIoQT6uiv4Iv7pzn8SU2LmPombwHceIx/pk4IJrtgBCl/ntiML5tTKNWYf8l71QwbuWVh
- 37Fl7/3P5fIw==
-X-IronPort-AV: E=Sophos;i="5.73,420,1583193600"; 
-   d="scan'208";a="31775418"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 22 May 2020 06:31:10 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id EC775A26AC;
-        Fri, 22 May 2020 06:31:07 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 22 May 2020 06:31:07 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.50) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 22 May 2020 06:30:58 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Bjoern Doebel" <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v2 07/18] nitro_enclaves: Init misc device providing the ioctl interface
-Date:   Fri, 22 May 2020 09:29:35 +0300
-Message-ID: <20200522062946.28973-8-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200522062946.28973-1-andraprs@amazon.com>
-References: <20200522062946.28973-1-andraprs@amazon.com>
+        Fri, 22 May 2020 02:31:19 -0400
+Received: from mout.web.de ([212.227.15.14]:36125 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728439AbgEVGbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 02:31:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590129053;
+        bh=splb0+8WO7eITGBItBY2nf0FXUphvqRnGPW6mcoqZRI=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=joZp6nPykM7tQDqcNWz73N+zg3aiT9XPFRIVm8lPB560kluFFjhUWDXDBw/tQFydT
+         lTvBGIBCC/e3stR+pklMedCTzj3A+4HyHqzoKXmiPNR3BjTAUyQRSM26Oo4ysIDCic
+         dxtp/6OJ+yx9iQYpKnywMHHhUEthSHYCO/0eapTA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.165.155]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0M8zRF-1jlcWW00oH-00CUGJ; Fri, 22
+ May 2020 08:30:53 +0200
+To:     Qiushi Wu <wu000273@umn.edu>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Kangjie Lu <kjlu@umn.edu>
+Subject: Re: [PATCH] rxrpc: Fix a memory leak in rxkad_verify_response()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <262bd413-9be4-3abe-9565-ac37a2e2e719@web.de>
+Date:   Fri, 22 May 2020 08:30:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-Originating-IP: [10.43.162.50]
-X-ClientProxiedBy: EX13D06UWC004.ant.amazon.com (10.43.162.97) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GfxxN4lHt6KTDFfauaVELUU1qqXCKh3Ql1yCNUCMrUVTc2lItE/
+ oT4lrOk8IMiiZYozPTefGPkkQ9Ray4VbJWqDXQFydYT1DE3q3ApUBmYVw2JCFENchQX4D+9
+ exb6mtVMiMYFNsPcVR6vOZopL9tL+n83nXbzPAQ9xiXsHBhcd9A3h5pVkOBOozOlZSo+SLa
+ AnVd+MaKMqZyMpBB5bKNQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bGHI3wngxjc=:lzCGparOYED79VHEzmIwrn
+ bgOJc+Ma3LAgokHQGzC75JuwHyTLx96GkKXgy2cVi48QX0Mf9+hEZrsKvI/EkNgh4MubZxL2h
+ vmd+eN4a87YLABiXQ3yQAMIw38O4nPjFF4KOtfj0AjfuUXwzeEp6oNfisssx4ppwZkiYuPXRv
+ PBMpo+R/G4nCvd0X5oqxkU+VjOHUEzPy0DywocvI9KSIYPVwdwKfUl52w0ldcwHdMkr0ZuZg4
+ H3B4w8dh9o2YTpOiZqRqLpNpZ4AHNoJerAVDEmFm30gPmbjcq72efwkg2tEX2+ewGXjk6kMVO
+ u+4ZlT7guNZ8u5FlnvpXXpkYHviGP6vyLg+RF8bq08beOia2oiWl4UiPNyrPGXy3bgs0NO8nC
+ e0HXkBzi9Atp0CiOfvbMPHbFInxyuE3/E61jj+EiJcAAzJY+H+bTwssLlnHr8QNFwtceXe7pt
+ LfJp3fKKY86QGimsl1Xk61xkdcOeyjbtF3jV/eNHL6CBdNQ1vvC1ccn2KWbAa1aqB/Mp8k4aq
+ UJJLVAry+EzoWaN6ajmRNoTh0qmVByTXIo1j6nzmwzMXJsKe48qeWQLReSqn79DaMOANBQexf
+ ADVyAPWNPOD5NZZ1W9iEadK2+k3WEbnfIIv0RNfv+1RVa9Mjgtko2jcUrnSzZU4ImZCXmZ5d+
+ JeDlxW9WNAQwyfkF+epqkLnb0eJRUuXvXzPpzB6PyxKh/Md4HBEtyjFASOeFNDZKQBvqehhvz
+ /9Q38yb2Jj9QrzErt8biHpQWYnbTnc1kpoaxMaO1XHDX8MdmymPap8bgBoQ+bVktrV0s0NMjr
+ pFtTmX5f69GezlH4Fe+OJRTeL/nRntzoVt5A9PTrDgcYoee3qlP9nO5zkW94XRgokoYdoi6i6
+ iRBNymc2o/9JooT94pXSeR0C0xI9NYwPIaeD0bK5b+4HRcr73hVP96mMnWGuYbeOJww00hZsy
+ 28VAF4fdf+icf/VnKUtfVWm93WzrOqG1MnLlaRNza0cXeFgoxzuA5G6Nt/KW9XQRUnBh5VctI
+ vx0aybJLcwfnP+Evp1sAL5uIKqoYEJ2jNF6DRisnng40VQw2EIgPLk1F74MlraVBN4IO5HWVv
+ g5K8vi+7ApTY1fR/ty3V+RCVrqhdmP9ML1Qu8D7W70NuLAwD/LHtPsa0FH3eypLFqGsov5vti
+ WGsj8Kz9EBBjXIrQz7E6fMWb9C8DFSIrNXSQA2A4cEnphLZJuKw6gcM/LXRFkJJaJncAZ6WIO
+ Elob7Om8U43ogf9Ng
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Nitro Enclaves driver provides an ioctl interface to the user space
-for enclave lifetime management e.g. enclave creation / termination and
-setting enclave resources such as memory and CPU.
+> In function rxkad_verify_response(), pointer "ticket" is not released,
+> when function rxkad_decrypt_ticket() returns an error, causing a
+> memory leak bug.
 
-This ioctl interface is mapped to a Nitro Enclaves misc device.
+I suggest to improve also this change description.
+How do you think about a wording variant like the following?
 
-Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
----
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 196 ++++++++++++++++++++++
- drivers/virt/nitro_enclaves/ne_pci_dev.c  |  13 ++
- 2 files changed, 209 insertions(+)
- create mode 100644 drivers/virt/nitro_enclaves/ne_misc_dev.c
-
-diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-new file mode 100644
-index 000000000000..e1866fac8220
---- /dev/null
-+++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/**
-+ * Enclave lifetime management driver for Nitro Enclaves (NE).
-+ * Nitro is a hypervisor that has been developed by Amazon.
-+ */
-+
-+#include <linux/anon_inodes.h>
-+#include <linux/bug.h>
-+#include <linux/cpu.h>
-+#include <linux/device.h>
-+#include <linux/file.h>
-+#include <linux/hugetlb.h>
-+#include <linux/kvm_host.h>
-+#include <linux/list.h>
-+#include <linux/miscdevice.h>
-+#include <linux/mm.h>
-+#include <linux/mman.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/nitro_enclaves.h>
-+#include <linux/pci.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#include "ne_misc_dev.h"
-+#include "ne_pci_dev.h"
-+
-+#define MIN_MEM_REGION_SIZE (2 * 1024UL * 1024UL)
-+
-+#define NE "nitro_enclaves: "
-+
-+#define NE_DEV_NAME "nitro_enclaves"
-+
-+#define NE_IMAGE_LOAD_OFFSET (8 * 1024UL * 1024UL)
-+
-+static char *ne_cpus;
-+module_param(ne_cpus, charp, 0644);
-+MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enclaves");
-+
-+/* CPU pool used for Nitro Enclaves. */
-+struct ne_cpu_pool {
-+	/* Available CPUs in the pool. */
-+	cpumask_var_t avail;
-+	struct mutex mutex;
-+};
-+
-+static struct ne_cpu_pool ne_cpu_pool;
-+
-+static int ne_open(struct inode *node, struct file *file)
-+{
-+	return 0;
-+}
-+
-+static long ne_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	switch (cmd) {
-+
-+	default:
-+		return -ENOTTY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ne_release(struct inode *inode, struct file *file)
-+{
-+	return 0;
-+}
-+
-+static const struct file_operations ne_fops = {
-+	.owner		= THIS_MODULE,
-+	.llseek		= noop_llseek,
-+	.unlocked_ioctl	= ne_ioctl,
-+	.open		= ne_open,
-+	.release	= ne_release,
-+};
-+
-+struct miscdevice ne_miscdevice = {
-+	.minor	= MISC_DYNAMIC_MINOR,
-+	.name	= NE_DEV_NAME,
-+	.fops	= &ne_fops,
-+	.mode	= 0660,
-+};
-+
-+static int __init ne_init(void)
-+{
-+	unsigned int cpu = 0;
-+	unsigned int cpu_sibling = 0;
-+	int rc = -EINVAL;
-+
-+	memset(&ne_cpu_pool, 0, sizeof(ne_cpu_pool));
-+
-+	if (!zalloc_cpumask_var(&ne_cpu_pool.avail, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	mutex_init(&ne_cpu_pool.mutex);
-+
-+	rc = cpulist_parse(ne_cpus, ne_cpu_pool.avail);
-+	if (rc < 0) {
-+		pr_err_ratelimited(NE "Error in cpulist parse [rc=%d]\n", rc);
-+
-+		goto free_cpumask;
-+	}
-+
-+	/*
-+	 * Check if CPU siblings are included in the provided CPU pool. The
-+	 * expectation is that CPU cores are made available in the CPU pool for
-+	 * enclaves.
-+	 */
-+	for_each_cpu(cpu, ne_cpu_pool.avail) {
-+		for_each_cpu(cpu_sibling, topology_sibling_cpumask(cpu)) {
-+			if (!cpumask_test_cpu(cpu_sibling, ne_cpu_pool.avail)) {
-+				pr_err_ratelimited(NE "CPU %d is not in pool\n",
-+						   cpu_sibling);
-+
-+				rc = -EINVAL;
-+
-+				goto free_cpumask;
-+			}
-+		}
-+	}
-+
-+	for_each_cpu(cpu, ne_cpu_pool.avail) {
-+		rc = remove_cpu(cpu);
-+		if (rc != 0) {
-+			pr_err_ratelimited(NE "CPU %d not offlined [rc=%d]\n",
-+					   cpu, rc);
-+
-+			goto online_cpus;
-+		}
-+	}
-+
-+	rc = pci_register_driver(&ne_pci_driver);
-+	if (rc < 0) {
-+		pr_err_ratelimited(NE "Error in pci register driver [rc=%d]\n",
-+				   rc);
-+
-+		goto online_cpus;
-+	}
-+
-+	return 0;
-+
-+online_cpus:
-+	for_each_cpu(cpu, ne_cpu_pool.avail)
-+		add_cpu(cpu);
-+free_cpumask:
-+	free_cpumask_var(ne_cpu_pool.avail);
-+
-+	return rc;
-+}
-+
-+static void __exit ne_exit(void)
-+{
-+	unsigned int cpu = 0;
-+	int rc = -EINVAL;
-+
-+	pci_unregister_driver(&ne_pci_driver);
-+
-+	if (!ne_cpu_pool.avail)
-+		return;
-+
-+	for_each_cpu(cpu, ne_cpu_pool.avail) {
-+		rc = add_cpu(cpu);
-+		if (rc != 0)
-+			pr_err_ratelimited(NE "CPU %d not onlined [rc=%d]\n",
-+					   cpu, rc);
-+	}
-+
-+	free_cpumask_var(ne_cpu_pool.avail);
-+}
-+
-+/* TODO: Handle actions such as reboot, kexec. */
-+
-+module_init(ne_init);
-+module_exit(ne_exit);
-+
-+MODULE_AUTHOR("Amazon.com, Inc. or its affiliates");
-+MODULE_DESCRIPTION("Nitro Enclaves Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitro_enclaves/ne_pci_dev.c
-index cd2012d9b365..7b23262f8c35 100644
---- a/drivers/virt/nitro_enclaves/ne_pci_dev.c
-+++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
-@@ -647,6 +647,15 @@ static int ne_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		goto teardown_msix;
- 	}
- 
-+	rc = misc_register(&ne_miscdevice);
-+	if (rc < 0) {
-+		dev_err_ratelimited(&pdev->dev,
-+				    NE "Error in misc dev register [rc=%d]\n",
-+				    rc);
-+
-+		goto disable_ne_pci_dev;
-+	}
-+
- 	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
- 	init_waitqueue_head(&ne_pci_dev->cmd_reply_wait_q);
- 	INIT_LIST_HEAD(&ne_pci_dev->enclaves_list);
-@@ -655,6 +664,8 @@ static int ne_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	return 0;
- 
-+disable_ne_pci_dev:
-+	ne_pci_dev_disable(pdev);
- teardown_msix:
- 	ne_teardown_msix(pdev);
- iounmap_pci_bar:
-@@ -677,6 +688,8 @@ static void ne_pci_remove(struct pci_dev *pdev)
- 	if (!ne_pci_dev || !ne_pci_dev->iomem_base)
- 		return;
- 
-+	misc_deregister(&ne_miscdevice);
-+
- 	ne_pci_dev_disable(pdev);
- 
- 	ne_teardown_msix(pdev);
--- 
-2.20.1 (Apple Git-117)
+   A ticket was not released after a call of the function =E2=80=9Cplatfor=
+m_get_irq=E2=80=9D failed.
+   Thus replace the jump target =E2=80=9Ctemporary_error_free_resp=E2=80=
+=9D
+   by =E2=80=9Ctemporary_error_free_ticket=E2=80=9D.
 
 
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
-
+Regards,
+Markus
