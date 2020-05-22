@@ -2,152 +2,123 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FCDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A44220849
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA774207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lelQxwbz"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KN5yg70M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgEVCNp (ORCPT
+        id S1727909AbgEVC05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 22:13:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgEVCNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 22:13:44 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA555C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:13:43 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id e11so3492935pfn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=HANfjGaXtL4q1FSiLdXuotCYBYmAdZjgvWQJr0H9YMg=;
-        b=lelQxwbz5KvLR8BmclI8jocAnat7kuQ1eoRzL4S3qO9Am83e3fverb4PWKqs6DEOyV
-         NCdrcMPKKWM2WpSrCYZ8JIgZVhlby1jGUdTgnc5paxcSO+yOhjHZ0waaLltp5qtM79Ir
-         7cVjPp9/qLsXl1tg2uYAOzrV72+cuggHGqg4L3wQxpNUiWn39K2jb05JVfUJ+E/EZ+ad
-         tnxMBzEG/SPmbLbYrXFMbKdRrE9cidfG4wyUFnoPSK0Eyss0/H/7RVn/PUEBUQJcz/Ti
-         /GBlephoJpBLfGqCBvjK2aMoFrvN0D/c7fg7WlMhF+ZE3/QFFcrN31nexgxv+NnNa+Mo
-         Qptg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=HANfjGaXtL4q1FSiLdXuotCYBYmAdZjgvWQJr0H9YMg=;
-        b=K4bHJZDfc5itSdU5GgCvu1gxY/kagAnfRP/lU1asCYVEc/HdR7hqZzR9X20yAcGf+i
-         nplNwJ2cTfzxE7nTqpQ7iT8j8jfaQHq7bGMQfeZpLCDsXopMuYj2D4sdUwl9ZKL5rMTw
-         IQyWHtzWx6knQUklmxQxWJfuSqMAAfKt0GSx++q85OVjPCLs3eRAMwcbCZh+bRyIVqua
-         SW0LOSYoQMXYLiYk2qzCVu9YbBUwn4E0ARRCMS1w92pGjp1Z+zEckIfcLFREkBhw/TMA
-         Ev0oO1BAQ+KD/H5wciV8H6qmW+7NET/jYzXiaRzvaA0GH0RmFxlH/MQSUhnGywMjHVSc
-         7K4A==
-X-Gm-Message-State: AOAM530U6eZw/QcYsslQa5qMftk8K/RXjrKeFBf7ush5mkarOG5V1Hcu
-        AT/ymYJhgtK7IDlnvvEiad0AeQ==
-X-Google-Smtp-Source: ABdhPJxh64wrCE5tLGl7klLmD3mr5bD+4uqj8uhZIjERdP/SqzgqKR0fB/XxlGgIJJR01XokaX+kyA==
-X-Received: by 2002:a63:c58:: with SMTP id 24mr11923950pgm.246.1590113623304;
-        Thu, 21 May 2020 19:13:43 -0700 (PDT)
-Received: from [10.191.1.102] ([45.135.186.71])
-        by smtp.gmail.com with ESMTPSA id y5sm5043843pge.50.2020.05.21.19.13.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 19:13:42 -0700 (PDT)
-Subject: Re: [PATCH 0/2] Let pci_fixup_final access iommu_fwnode
-To:     Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1589256511-12446-1-git-send-email-zhangfei.gao@linaro.org>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <631857df-8e70-88e3-9959-1a750faf4f85@linaro.org>
-Date:   Fri, 22 May 2020 10:13:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <1589256511-12446-1-git-send-email-zhangfei.gao@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 21 May 2020 22:26:57 -0400
+Received: from mail-db8eur05on2076.outbound.protection.outlook.com ([40.107.20.76]:60993
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727080AbgEVC04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 22:26:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jusOtUTWZ3QJXbRBH/PnDD3BjZQgDuGHzPIu+v6JNgCFavRYSpQm2tbtw2QUDz7pEHU3f/2trf+f/yUTnluthvHhUwjdCctYZyip/0tXSLpvnyQ12azMYvlFMgs46SO5rXEigSQR/YiuRkiPElDgXOJue+BLCz/BvQ0irVm61s7c12bpEZxx8QvI1IEo1b+EZyWY26u8+hY0s9PNolHspibloglYjuv41kqKPbzzZfihitbc5aWE5gEc17tZXHxsGrUlglDrckm2CiMhOzyiRLsWAJRyqIBWeHu0z1IPitKBCYqb/eLoOf1NkA0yay8HHahvuOIoK4NvardwB36tmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uTBg3aDNI0TSldielWxWe9MzhxO6B0rW5MAUcitFCKo=;
+ b=cS7/ZDSmKNtanVVE9u7zPqz1T3A/93rEUmcc6XCwqNMxRrZBTBRDCelWiYinzCok9vZt0SspSfePOTvFdOqwu8JWEuRxl8iThuxtoAjHyQJ1efCABA5WsmW1FRHr76KLrB/bt/BCvgS2VRBPffQ6cPkUv0Uqw+VdrCpJLDHHp7gLUo7Pcj5FI97nwDaA4ngWIupjFT28o9sbLjOymUdSHDJY/ttiulBXmk+VzEuQGPh8bBZP/qYKKns24fwoxzw9WRlQqTgAeLYyrhkn/erxkLIsR5jgk1oSRwPIrChANT68AG6iGU4e0A9PrH5zD2DHAiVpj6QP3hAPA/Vb/XbD/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uTBg3aDNI0TSldielWxWe9MzhxO6B0rW5MAUcitFCKo=;
+ b=KN5yg70M9UnEflU8AfdQTBnZHmpQfvNaDCbJKwSeKknpZ8uImx+tUzXEb7ZztNozk/0hllMYgGNjJkL+q7K7mRwfTw+eLG5hhloq/uVRrJJuMa7I3e1YgpBg1V5dryu8VwY0ZoUfkGWacFcLiV8y6SeR+px7yuHjAtpT0SNj9OY=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6493.eurprd04.prod.outlook.com (2603:10a6:803:11f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Fri, 22 May
+ 2020 02:26:53 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3021.020; Fri, 22 May 2020
+ 02:26:52 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH v2 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
+ voltage range
+Thread-Topic: [PATCH v2 2/2] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2
+ voltage range
+Thread-Index: AQHWLzeGwEoS7avMqUe1/PurAPoV06izVHOAgAANc/A=
+Date:   Fri, 22 May 2020 02:26:52 +0000
+Message-ID: <VE1PR04MB66388D5243509C8EBF4DE9EB89B40@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1590070674-23027-1-git-send-email-yibin.gong@nxp.com>
+ <1590070674-23027-2-git-send-email-yibin.gong@nxp.com>
+ <CAOMZO5AsCREw1OT5zzFH+pC6uyw+MOSKJFZ3_-HvDva65A2cKQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5AsCREw1OT5zzFH+pC6uyw+MOSKJFZ3_-HvDva65A2cKQ@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fb35a2d2-ee19-4e85-65e3-08d7fdf79717
+x-ms-traffictypediagnostic: VE1PR04MB6493:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6493257F8CDB03F4A73C686389B40@VE1PR04MB6493.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 04111BAC64
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9/vZ6cvNJi4aZKN4LDFvXl9QvBhYVGj5R45InKqe8xFVQkx92lRbvYyRaSnkl1PAGYKOb8mvPuV0C3w1kPWf8fEfGf8kiJOm7+550hibwck1yGb63/3F7b6JXPOkSiUztgOy3txpr92MmJIAQhL8L7JR1CNgdW5/NPdfvZWCtTod8jjZfUxte3ot/aKKvPvvLRMhTVuckTBkmtxcESJ5OzzrWcvwIxPuGHCKLS4aFdqy5d6pff8lka+BaCYg9YSMOnUgf5ZRAqjJborTa8Dhvv4xlGx8r+AFEYa2Knoi/GRqJtyjnJxALfXjfNWVfTFEBWaHB2nFE2qxqZl7Yv0Fph2VRSGgtK/ASpoiinq7tWStZ1Fd6vBcEe4RR4b4FsI8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(136003)(366004)(396003)(346002)(53546011)(86362001)(4326008)(6916009)(8676002)(8936002)(478600001)(186003)(26005)(6506007)(54906003)(33656002)(55016002)(9686003)(2906002)(316002)(52536014)(5660300002)(7696005)(4744005)(66446008)(66556008)(71200400001)(66946007)(76116006)(66476007)(64756008)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: WYQtOONKgXBSLaWBXRNSKPEdEFaF9Xm/nFMpukHCLO3PB2mcPRNl01rvpbjxp0CnR+m2CNb3GHIlmTdW0xZ0tIdEu7XdBRJByQRq7R1JgLOgjONNzXX6Xsmecs3oEqF+y29Li/I72utfh0E1CcCH8WzIW7Rmi8YFCasjhxe9Q3T7QaAOli4Wcyx9o/97Phny3Xn1FXa48sc4LWnHeoJiJeqVY7JfSc1HWELdBmQXnRfxWx9mPlg3L/8+D86jyNvIcSRx1pbLTsXs+15hBSYFpLwnY8jrInvaLMG0/sHM1q+uUAeEXfPvr+YogahWFsM1wAuVPalaR7RMQAb8vVzCQa8lCZKSJPQyazs2jC0HnIlpJKOzsIuYleRH0QqIKKReRrN5w2mXKajBJTnx5KB9AudXOiRz7zSsezrF1hbDNU3Oll4v9++Cj6BnWJtvNPDnB8X3quglt4zK+vo14bJ5KufiKrvHGzb+AQCu0RI2zgo=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb35a2d2-ee19-4e85-65e3-08d7fdf79717
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2020 02:26:52.8587
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: paRbwBOgiqHZ9ulUj4ryT6eZd1/+pj3ZhyyoGYBhFBvtaAIWyLIxcyTEsMCf/HQWdBXOKNBW+78AwCPzVgf7zA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6493
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Joerg
-
-On 2020/5/12 下午12:08, Zhangfei Gao wrote:
-> Some platform devices appear as PCI but are
-> actually on the AMBA bus, and they need fixup in
-> drivers/pci/quirks.c handling iommu_fwnode.
-> So calling pci_fixup_final after iommu_fwnode is allocated.
->
-> For example:
-> Hisilicon platform device need fixup in
-> drivers/pci/quirks.c
->
-> +static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
-> +{
-> +	struct iommu_fwspec *fwspec;
-> +
-> +	pdev->eetlp_prefix_path = 1;
-> +	fwspec = dev_iommu_fwspec_get(&pdev->dev);
-> +	if (fwspec)
-> +		fwspec->can_stall = 1;
-> +}
-> +
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
->   
->
-> Zhangfei Gao (2):
->    iommu/of: Let pci_fixup_final access iommu_fwnode
->    ACPI/IORT: Let pci_fixup_final access iommu_fwnode
->
->   drivers/acpi/arm64/iort.c | 1 +
->   drivers/iommu/of_iommu.c  | 1 +
->   2 files changed, 2 insertions(+)
->
-Would you mind give any suggestion?
-
-We need access fwspec->can_stall describing the platform device (a fake 
-pcie) can support stall feature.
-can_stall will be used arm_smmu_add_device [1].
-And stall is not a pci feature, so no such member in struct pci_dev.
-
-iommu_fwnode is allocated in iommu_fwspec_init, from of_pci_iommu_init 
-or iort_pci_iommu_init.
-The pci_fixup_device(pci_fixup_final, dev) in pci_bus_add_device is too 
-early that  iommu_fwnode
-is not allocated.
-The pci_fixup_device(pci_fixup_enable, dev) in do_pci_enable_device is 
-too late after
-
-arm_smmu_add_device.
-
-
-So the idea here is calling pci_fixup_device(pci_fixup_final) after
-of_pci_iommu_init and iort_pci_iommu_init, where iommu_fwnode is allocated.
-
-
-
-[1] https://www.spinics.net/lists/linux-pci/msg94559.html
-
-Thanks
-
+T24gMjAyMC8wNS8yMiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+IHdyb3RlOg0K
+PiBIaSBSb2JpbiwNCj4gDQo+IE9uIFRodSwgTWF5IDIxLCAyMDIwIGF0IDM6MTcgQU0gUm9iaW4g
+R29uZyA8eWliaW4uZ29uZ0BueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IENvcnJlY3QgbGRvMSB2
+b2x0YWdlIHJhbmdlIGZyb20gd3JvbmcgaGlnaCBncm91cCgzLjB2fjMuM3YpIHRvIGxvdw0KPiA+
+IGdyb3VwDQo+IA0KPiBQbGVhc2UgdXNlIGNhcGl0YWwgbGV0dGVyIFYgZm9yIFZvbHQuDQo+IA0K
+PiA+ICgxLjZ2fjEuOXYpIGJlY2F1c2UgdGhlIGxkbzEgc2hvdWxkIGJlIDEuOHYuIEFjdHVhbGx5
+LCB0d28gdm9sdGFnZQ0KPiA+IGdyb3VwcyBoYXZlIGJlZW4gc3VwcG9ydGVkIGF0IGJkNzE4eDct
+cmVndWxhdG9yIGRyaXZlciwgaGVuY2UsIGp1c3QNCj4gPiBjb3JycmVjdCB0aGUgdm9sdGFnZSBy
+YW5nZSB0byAxLjZ2fjMuM3YuIEZvciBsZG8yQDAuOHYsIGNvcnJlY3Qgdm9sdGFnZSByYW5nZQ0K
+PiB0b28uDQo+ID4gT3RoZXJ3aXNlLCBsZG8xIHdvdWxkIGJlIGtlcHQgQDMuMHYgYW5kIGxkbzJA
+MC45diB3aGljaCB2aW9sYXRlDQo+ID4gaS5teDhtbiBkYXRhc2hlZXQgYXMgdGhlIGJlbG93IHdh
+cm5pbmcgbG9nIGluIGtlcm5lbDoNCj4gPg0KPiA+IFsgICAgMC45OTU1MjRdIExETzE6IEJyaW5n
+aW5nIDE4MDAwMDB1ViBpbnRvIDMwMDAwMDAtMzAwMDAwMHVWDQo+ID4gWyAgICAwLjk5OTE5Nl0g
+TERPMjogQnJpbmdpbmcgODAwMDAwdVYgaW50byA5MDAwMDAtOTAwMDAwdVYNCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNvbT4NCj4gDQo+IFlvdSBz
+aG91bGQgYWRkIGEgRml4ZXMgdGFnIGFuZCBDYyBzdGFibGUgb24gdGhpcyBvbmUuDQpPa2F5LCB3
+aWxsIGFkZHJlc3MgeW91ciBjb21tZW50cyBpbiB2MywgdGhhbmtzLg0K
