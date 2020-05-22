@@ -2,76 +2,120 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC7AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD820207CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XLRi9by/"
+	by mail.kernel.org (Postfix) with ESMTP id 0A7C8207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590149908;
+	bh=39Z2YC/hT0DLTH/QrHnGkxDnIs+bUNDKpwlJ2UMsj60=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lZT/a5smHEAF6KTt8J331MdUXyKZDVF/wNfcYvxQ5HtZAHGLrNfZgGIG2StPFE43t
+	 gf0pgrfYIbyerTzOAhjYLH6v/yQn/vyJGGCPQrDROpzgc53SSL+h/xsFKTWBiV8ISt
+	 4RJmFKuMtbdIfHl+SlJcVVNtZ3D1gnpFTWbAWK+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgEVMSZ (ORCPT
+        id S1729065AbgEVMSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:18:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42410 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728544AbgEVMSX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728475AbgEVMSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 May 2020 08:18:23 -0400
-X-UUID: e4e428a023904e49a502d2f6531881e9-20200522
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=kQDziwgP0hgrh7T+hQAa+vHSi/RDRfa4EIfd/mEUOpk=;
-        b=XLRi9by/dY/LSjDXfILlZsNEn2E7XYx1Rq+2gfTMocFjLUnlzj7TaJTjOvWoTywM18XGTzyf+P67saTUdDbEpbcSFWj3MKDHvKd/AfZp91uCXINrkeq3sxw/RS48nQfh+YfnkfhIOiMNb6DCY0ZDaErJeDLS3uPX6iloxFrRfAU=;
-X-UUID: e4e428a023904e49a502d2f6531881e9-20200522
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1596963198; Fri, 22 May 2020 20:18:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 22 May 2020 20:18:15 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 22 May 2020 20:18:15 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>
-CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
-        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
-        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <cc.chou@mediatek.com>,
-        <chaotian.jing@mediatek.com>, <pengshun.zhao@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v1 0/3] scsi: ufs-mediatek: Fix clk-gating and introduce low-power mode for vccq2
-Date:   Fri, 22 May 2020 20:18:11 +0800
-Message-ID: <20200522121814.9100-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D30E20756;
+        Fri, 22 May 2020 12:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590149902;
+        bh=39Z2YC/hT0DLTH/QrHnGkxDnIs+bUNDKpwlJ2UMsj60=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u+Ft0HnjgAU98axSOB3qR/6xwnjzxBk9o9hYIlkj4SxFevAgTjyTLw4u6ckl1uXGB
+         21ZP/qJQZNoRyC9/9+CrklTJUFWQ7ec5qhc0FpBM0QwQcTZtAZtJsdYb/vMgdVWfgR
+         5JsYBJz38tYaVElZskAnfIKOkrIMKz3l+CoLbzK4=
+Date:   Fri, 22 May 2020 13:18:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Vinod Koul <vkoul@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Grant Likely <grant.likely@secretlab.ca>,
+        Alan Cox <alan@linux.intel.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>, Clement Leger <cleger@kalray.eu>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/16] spi: dw: Add Tx/Rx finish wait methods to the
+ MID DMA
+Message-ID: <20200522121820.GG5801@sirena.org.uk>
+References: <20200522000806.7381-1-Sergey.Semin@baikalelectronics.ru>
+ <20200522000806.7381-2-Sergey.Semin@baikalelectronics.ru>
+ <20200522111340.GX1634618@smile.fi.intel.com>
+ <20200522115235.rt3ay7lveimrgooa@mobilestation>
+ <20200522121221.GA1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="L+ofChggJdETEG3Y"
+Content-Disposition: inline
+In-Reply-To: <20200522121221.GA1634618@smile.fi.intel.com>
+X-Cookie: C for yourself.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQpUaGlzIHBhdGNoc2V0IGZpeGVzIGEgY2xrLWdhdGluZyBpc3N1ZSBhbmQgaW50cm9kdWNl
-cyBsb3ctcG93ZXIgbW9kZSBmb3IgdmNjcTIgaW4gTWVkaWFUZWsgcGxhdGZvcm1zLg0KDQpTdGFu
-bGV5IENodSAoMyk6DQogIHNjc2k6IHVmcy1tZWRpYXRlazogRml4IGltcHJlY2lzZSB3YWl0aW5n
-IHRpbWUgZm9yIHJlZi1jbGsgY29udHJvbA0KICBzY3NpOiB1ZnMtbWVkaWF0ZWs6IERvIG5vdCBn
-YXRlIGNsb2NrcyBpZiBhdXRvLWhpYmVybjggaXMgbm90IGVudGVyZWQNCiAgICB5ZXQNCiAgc2Nz
-aTogdWZzLW1lZGlhdGVrOiBJbnRyb2R1Y2UgbG93LXBvd2VyIG1vZGUgZm9yIGRldmljZSBwb3dl
-ciBzdXBwbHkNCg0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMgfCA2NCArKysrKysr
-KysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRl
-ay5oIHwgIDIgKy0NCiAyIGZpbGVzIGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKyksIDEzIGRlbGV0
-aW9ucygtKQ0KDQotLSANCjIuMTguMA0K
 
+--L+ofChggJdETEG3Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, May 22, 2020 at 03:12:21PM +0300, Andy Shevchenko wrote:
+> On Fri, May 22, 2020 at 02:52:35PM +0300, Serge Semin wrote:
+
+> > Please, see it's implementation. It does atomic delay when the delay value
+> > is less than 10us. But selectively gets to the usleep_range() if value is
+> > greater than that.
+
+> Oh, than it means we may do a very long busy loop here which is not good at
+> all. If we have 10Hz clock, it might take seconds of doing nothing!
+
+Realistically it seems unlikely that the clock will be even as slow as
+double digit kHz though, and if we do I'd not be surprised to see other
+problems kicking in.  It's definitely good to handle such things if we
+can but so long as everything is OK for realistic use cases I'm not sure
+it should be a blocker.
+
+--L+ofChggJdETEG3Y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7HwwsACgkQJNaLcl1U
+h9DGbQf/aA5931PtrryL4ZW3uh64EHvrtq6HdmmV34g803DbZetKXoSdCysw7oSi
+MdgShpfA9AR9+XVi5XuNVRh9REKm7VB54za86BUEm25d/W1x4G9rQiN5IxBLgwjZ
+HUCMBgd+VG+ql4pm3PmtanE4K33rwAiMJf77Bdw+oKdqvQIdiXUzBkdsOCQ+pluZ
+fOCeS+8ZfmX4nrg8f1Y8d7t633H4eHNbGe+H08iAsfBIGRfb7nmkdopxm6UviMbt
+zOixF+I4sCyeiZAXY/5GeFc27QZyKc6qjd4LAPZIc3/kjIRg8d3CkjFYDDyw6Mgq
+arVmdO3FsjblhLk4QYlHmt/Lc1alSg==
+=H1CF
+-----END PGP SIGNATURE-----
+
+--L+ofChggJdETEG3Y--
