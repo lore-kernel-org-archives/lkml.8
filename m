@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A783C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEE9205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4033E2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159498;
-	bh=HTQXwy4hfn0GnYPnVOAVpxQx4T3zMeWsNO3v/JrvKpU=;
+	s=default; t=1590159502;
+	bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKZaNTogb9jYFfi2pyCoJOma80gcz41P5+gwPA9/hLx48+sXMwpdFyQpU7/xtvCoD
-	 JLJPIHFU5IeR4JCIj01Wt0FgYnwF3o+cfdmUuYb1TTPi2M2qLokISIdhPP2eRouSjo
-	 EuzHwhANxyT4UsEQObhdv3vgRJjnfXJbVIWWkMnM=
+	b=Vkb1sY8Yb7BhMaC04SYcFU7qi3kaXZvg3yG+M5yNMyTet4ETZI0uLwgBm3uC9Ok8X
+	 Q3ejaaqL+NBTAHPIG1m8dqsGb8uBrxCfkJ5XZrQNjtFzQCKm+WpmgLJ91MtzKNbFng
+	 hpj3P+euZ3OukLBFcmjfgaGboKsQKHBx2ZVTfiEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731242AbgEVO6S (ORCPT
+        id S1730681AbgEVOu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730685AbgEVOu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 May 2020 10:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730618AbgEVOuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C7972072C;
-        Fri, 22 May 2020 14:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3560221FF;
+        Fri, 22 May 2020 14:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159029;
-        bh=HTQXwy4hfn0GnYPnVOAVpxQx4T3zMeWsNO3v/JrvKpU=;
+        s=default; t=1590159024;
+        bh=wCEJW245dxBO726etQLlIpRtTbaTWQv+YPDCCDn2mbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W93OvP+tMucRw8WWH8VHgNUKDHnGFPawJMPxb3gr/g2lURa4nslYYwSjM5wuaZrZm
-         ufy88STT//Iac4bagxcuJXDktTxUOATlj+O0nT25btJ8el6MnkaG5FdKhsJdGHL4dX
-         /z9HGGy+zFyaVKfuzORhXWJa0TUTI2ox3FLtaISM=
+        b=WtaPLhSoputyahicOiKvlHr4VPFcR0uOr7H1LwxWerGtlCgseSxC2Q5LPGu5QAL+s
+         14P9o27HrgNKtm9dRUQcMNre8V2sLD7QgbbZgy6iuHgSuD7qbu0DposHdnDMVD1yZr
+         JXQZxd7s2BJNqIhS0br70oPXNYsUxrQWfKswdcl4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Leo (Hanghong) Ma" <hanghong.ma@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.6 26/41] drm/amd/amdgpu: Update update_config() logic
-Date:   Fri, 22 May 2020 10:49:43 -0400
-Message-Id: <20200522144959.434379-26-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 22/41] usb: dwc3: pci: Enable extcon driver for Intel Merrifield
+Date:   Fri, 22 May 2020 10:49:39 -0400
+Message-Id: <20200522144959.434379-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -62,52 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Leo (Hanghong) Ma" <hanghong.ma@amd.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 650e723cecf2738dee828564396f3239829aba83 ]
+[ Upstream commit 066c09593454e89bc605ffdff1c9810061f9b1e1 ]
 
-[Why]
-For MST case: when update_config is called to disable a stream,
-this clears the settings for all the streams on that link.
-We should only clear the settings for the stream that was disabled.
+Intel Merrifield provides a DR support via PMIC which has its own
+extcon driver.
 
-[How]
-Clear the settings after the call to remove display is called.
+Add a property string to link to that driver.
 
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Reviewed-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-Signed-off-by: Leo (Hanghong) Ma <hanghong.ma@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/dwc3/dwc3-pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-index 3abeff7722e3..e80371542622 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c
-@@ -316,15 +316,15 @@ static void update_config(void *handle, struct cp_psp_stream_config *config)
- 	struct mod_hdcp_display *display = &hdcp_work[link_index].display;
- 	struct mod_hdcp_link *link = &hdcp_work[link_index].link;
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 7051611229c9..b67372737dc9 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -114,6 +114,7 @@ static const struct property_entry dwc3_pci_intel_properties[] = {
  
--	memset(display, 0, sizeof(*display));
--	memset(link, 0, sizeof(*link));
--
--	display->index = aconnector->base.index;
--
- 	if (config->dpms_off) {
- 		hdcp_remove_display(hdcp_work, link_index, aconnector);
- 		return;
- 	}
-+
-+	memset(display, 0, sizeof(*display));
-+	memset(link, 0, sizeof(*link));
-+
-+	display->index = aconnector->base.index;
- 	display->state = MOD_HDCP_DISPLAY_ACTIVE;
- 
- 	if (aconnector->dc_sink != NULL)
+ static const struct property_entry dwc3_pci_mrfld_properties[] = {
+ 	PROPERTY_ENTRY_STRING("dr_mode", "otg"),
++	PROPERTY_ENTRY_STRING("linux,extcon-name", "mrfld_bcove_pwrsrc"),
+ 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
+ 	{}
+ };
 -- 
 2.25.1
 
