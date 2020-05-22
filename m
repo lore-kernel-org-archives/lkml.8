@@ -2,131 +2,108 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E212C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C70C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD802073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1E3207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:09:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HciuDFp8"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="BzuSYVIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgEVUFb (ORCPT
+        id S1730968AbgEVUJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 16:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49790 "EHLO
+        Fri, 22 May 2020 16:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730963AbgEVUFa (ORCPT
+        with ESMTP id S1730893AbgEVUJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 16:05:30 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975C4C061A0E;
-        Fri, 22 May 2020 13:05:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=EfYPlaAM0tVJqWDjM23M348UGPgcOmSUMDNAnYQU29U=; b=HciuDFp8SowQPIaUS2biMqz/X/
-        8SHMGvdi6h9nWzfOfxTu00QeHcKY9nmKjJfoYJIppM+ZHVRlx44AUGCwTzHu8srIBta4xPzlKPT9Y
-        gY0/Q0XfAIw9LL8Hu57fYFH6ZPY8xruyxLiZnEYoG7bWydIiqvWX4fYq9rqJuS8he4TBvtrnxgdz5
-        UhbCg1ocxGXB5aBGTBLsT3PcH9/4IfKIZST9pQASCVIEu6PKIEsGVZyMQDWHmodCTAXp4sKGwK+gl
-        CHyC2xAk0vrs/agqi5KMruBuE3zH34zLvtwxxdqyGeDf6cFyXK/o/yQobbKq2rGX8j0Y+eLUTGZhl
-        dtP02Nuw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcDv5-0001ki-Ud; Fri, 22 May 2020 20:05:27 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Yotam Gigi <yotam.gi@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH net-next v2] net: psample: fix build error when CONFIG_INET is
- not enabled
-Message-ID: <ca2be940-4514-4027-13f9-4e6bd99152ab@infradead.org>
-Date:   Fri, 22 May 2020 13:05:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 16:09:25 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0AEC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 13:09:25 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id r2so2339028ioo.4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 13:09:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sargun.me; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kuxuFImJXS+zMVZOoAVroX3dwfGV7HwfDMWssbC5C1A=;
+        b=BzuSYVIpXA7rbNJiFsgqADe+GidjdLuozlif6nBYsRt6MchS6kYsgk18V3kI5F15Dx
+         7VNYp9f9kKkWxdE9juayukb2eICEmxERuBAcGpn8aX1Q1jvanglLeWKvsSVhpJGj1C1i
+         eFAXZDT+sRebaynrWit+kYbtLiiUZNaTpxeZs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kuxuFImJXS+zMVZOoAVroX3dwfGV7HwfDMWssbC5C1A=;
+        b=pn/vYQDAQloCs4MS4AC7MO0yC9lb8yNM9wm0rqJi6Q60Un0iWrGGuWXxCgW6b9npRW
+         D1MGS+gKGYOlXD/okgLRYzKGkmF0+efmDD2hvvFsiaHu5fznxtoXyNxo8F0DBvYIM/VJ
+         8FtIUHOmXcBMOrNFHJqxyb0oa6lG+u74eURhzeM3317h6jx6WTIDb5JRWDGmhSgRtJCD
+         CPZYydN95FfHbDdGXehiZ/qycjE05+VXFIEIlkJGH6ZnRmMxvlxrh4JLsZVbWpBzXdP0
+         hy0eH/CBGtK25t+wYE512mJrNOi7nQgtbyA/AATRbg6hQW9hsIt6DuKcuZV/OrZXO4J7
+         Rukg==
+X-Gm-Message-State: AOAM532y+ihLdT6mavk6DBp8b8F6qAdr2qGUvPAdkU8bWbJ0OJK7oWxa
+        6MoVlU6LC8qYw+egb2VBPeEBxQ==
+X-Google-Smtp-Source: ABdhPJzYYCoJX6l85G6846PNwAdJcv17n8+gt3PxXcY9YhA2VI1NbvUsdUKizD6X1uCV3XLQWunh3w==
+X-Received: by 2002:a02:942a:: with SMTP id a39mr9629370jai.50.1590178164366;
+        Fri, 22 May 2020 13:09:24 -0700 (PDT)
+Received: from ircssh-2.c.rugged-nimbus-611.internal (80.60.198.104.bc.googleusercontent.com. [104.198.60.80])
+        by smtp.gmail.com with ESMTPSA id t22sm4064358iom.49.2020.05.22.13.09.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 May 2020 13:09:23 -0700 (PDT)
+Date:   Fri, 22 May 2020 20:09:22 +0000
+From:   Sargun Dhillon <sargun@sargun.me>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: seccomp feature development
+Message-ID: <20200522200921.GB25319@ircssh-2.c.rugged-nimbus-611.internal>
+References: <202005181120.971232B7B@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202005181120.971232B7B@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Mon, May 18, 2020 at 02:04:57PM -0700, Kees Cook wrote:
+> Hi!
+> 
+> This is my attempt at a brain-dump on my plans for nearish-term seccomp
+> features. Welcome to my TED talk... ;)
+> 
+> These are the things I've been thinking about:
+> 
+> - fd passing
+> - deep argument inspection
+> - changing structure sizes
+> - syscall bitmasks
+> 
+What's your take on enabling multiple filters with listeners being attached,
+so that different seccomp interceptors can operate together. I'm wondering
+how this would work.
 
-Fix psample build error when CONFIG_INET is not set/enabled by
-bracketing the tunnel code in #ifdef CONFIG_NET / #endif.
+One idea that I had is adding a new flag to the seccomp filter
+installation -- something like NEXT_FILTER_COMPATIBLE. When a filter is
+installed with a listener, it will check if all previous filters were
+instaled with NEXT_FILTER_COMPATIBLE.
 
-../net/psample/psample.c: In function ‘__psample_ip_tun_to_nlattr’:
-../net/psample/psample.c:216:25: error: implicit declaration of function ‘ip_tunnel_info_opts’; did you mean ‘ip_tunnel_info_opts_set’? [-Werror=implicit-function-declaration]
+If the call is intercepted by a listener, and the return is overriden,
+then it short-circuits, and the subsequent filters are not evaluated.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Yotam Gigi <yotam.gi@gmail.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
----
-v2: Just bracket the new tunnel support code inside ifdef/endif (Cong Wang).
+On the other hand, if the continue response is send, then the
+subsequent filters are called.
 
- net/psample/psample.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
---- linux-next-20200522.orig/net/psample/psample.c
-+++ linux-next-20200522/net/psample/psample.c
-@@ -209,6 +209,7 @@ void psample_group_put(struct psample_gr
- }
- EXPORT_SYMBOL_GPL(psample_group_put);
- 
-+#ifdef CONFIG_INET
- static int __psample_ip_tun_to_nlattr(struct sk_buff *skb,
- 			      struct ip_tunnel_info *tun_info)
- {
-@@ -352,12 +353,15 @@ static int psample_tunnel_meta_len(struc
- 
- 	return sum;
- }
-+#endif
- 
- void psample_sample_packet(struct psample_group *group, struct sk_buff *skb,
- 			   u32 trunc_size, int in_ifindex, int out_ifindex,
- 			   u32 sample_rate)
- {
-+#ifdef CONFIG_INET
- 	struct ip_tunnel_info *tun_info;
-+#endif
- 	struct sk_buff *nl_skb;
- 	int data_len;
- 	int meta_len;
-@@ -371,9 +375,11 @@ void psample_sample_packet(struct psampl
- 		   nla_total_size(sizeof(u32)) +	/* group_num */
- 		   nla_total_size(sizeof(u32));		/* seq */
- 
-+#ifdef CONFIG_INET
- 	tun_info = skb_tunnel_info(skb);
- 	if (tun_info)
- 		meta_len += psample_tunnel_meta_len(tun_info);
-+#endif
- 
- 	data_len = min(skb->len, trunc_size);
- 	if (meta_len + nla_total_size(data_len) > PSAMPLE_MAX_PACKET_SIZE)
-@@ -429,11 +435,13 @@ void psample_sample_packet(struct psampl
- 			goto error;
- 	}
- 
-+#ifdef CONFIG_INET
- 	if (tun_info) {
- 		ret = psample_ip_tun_to_nlattr(nl_skb, tun_info);
- 		if (unlikely(ret < 0))
- 			goto error;
- 	}
-+#endif
- 
- 	genlmsg_end(nl_skb, data);
- 	genlmsg_multicast_netns(&psample_nl_family, group->net, nl_skb, 0,
-
+What do you think?
