@@ -2,160 +2,197 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C31C20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7215620738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:51:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="YUdG876P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgEVEuK (ORCPT
+        id S1728102AbgEVEvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 00:50:10 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:20408 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726286AbgEVEuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 00:50:09 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgDHz4vEWcdejwXvAA--.20232S4;
-        Fri, 22 May 2020 12:49:11 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Guy Mishol <guym@ti.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Maital Hahn <maitalm@ti.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] wlcore: fix runtime pm imbalance in wlcore_irq_locked
-Date:   Fri, 22 May 2020 12:49:04 +0800
-Message-Id: <20200522044906.29564-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgDHz4vEWcdejwXvAA--.20232S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFW7tr1fur17Kry5CrWkCrg_yoW5Xr1rpa
-        yIvan2yr4kGF1UWFWUAa1kXa4Sg3WxKFZI9F48G34Syrs0y3s8Zr10qasxtFWrK3ykAFW3
-        uF43tFyI9Fyjy37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
-        6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
-        wVAFwVW8XwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
-        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8_MaUUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0IBlZdtOQJOAAAsr
+        Fri, 22 May 2020 00:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbgEVEvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 00:51:18 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A253C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 21:51:18 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id d7so7336210ote.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 21:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=k2vrBoOQ9EETAdJub3TPOSyUEEBeAVV+/1nPCZoKSCA=;
+        b=YUdG876PBuoWeuTwZEzqf5Q4iudaCv0TLlfWhk+qMWvqkLW/cyTPwaPEXSCHnUaRte
+         pqqxOexa01y7orMgoydT8OLYzm6Jnt9aCaPV8ccQw7tonhT5b7nY8saHYgm6Zz7ZaPkS
+         /PGE3v6jfnkEl5WmfW3hCIIXtGxEQfqic8sOmuDnhd0YD+YZtVguqKwslNB7SnFmovzc
+         1C5xC6JE9bu2U3EEQ8dHyqq1y2Pia3vMvx21LLgND67asnZSWqlGfRb2aXSIWAmxvhv0
+         y1yZk+Bu79IaX1jmXOqDkuz1tY+wtwI2TC8pARdarguH2mpqqVcTdOc0qGW7koZkN+MB
+         YuHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k2vrBoOQ9EETAdJub3TPOSyUEEBeAVV+/1nPCZoKSCA=;
+        b=rVcHBEA2JMBLtsGCsVDMieYIl74pekSmh2xQzH3puMxoTPKq/8GWmxnXI5rTI4hrW7
+         qUGXFdSn+e42AZ/OlEXpzxmjO8t9iHCAZucBNrkyKlfmuooyCZcCNZtyVO/TvztlG9so
+         NchOQh41oxUBvnPUiik+lWpALacWMyYsm85uh7v0VueJz+OkhNmPJ3J9WCpCOYfNG32G
+         fAtxWsvkdLgnYv6msHHSFMrF5u2o94lfvIib3VAWtTWdBIQOEOap/pdPZitgZZYBGBiz
+         zK9dJUBFv9feW7EGjHojw3vXYoP2V97ZaMZ6t1iMSpiLHJvYf/YrTjn2Iiq128VeQJRL
+         7p6Q==
+X-Gm-Message-State: AOAM533cj22PafUgtJ4OMtH8/3xUqfip3XWVL80FOhJqQWeRp2AsGFJD
+        W+LboYPiP1gn62zIOQNJ8SSKiA==
+X-Google-Smtp-Source: ABdhPJzkecxfonQTZASI2btg19lTvEFVD3+S1qpuQDgodr0t8yksLVLLZyT9CIvBtnHoK2Ch3kApVQ==
+X-Received: by 2002:a05:6830:100a:: with SMTP id a10mr10480942otp.244.1590123077647;
+        Thu, 21 May 2020 21:51:17 -0700 (PDT)
+Received: from [192.168.86.21] ([136.62.4.88])
+        by smtp.gmail.com with ESMTPSA id f3sm2200191otq.20.2020.05.21.21.51.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 21:51:16 -0700 (PDT)
+Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+ <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+ <877dx822er.fsf_-_@x220.int.ebiederm.org>
+ <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
+ <adaced72-d757-e3e4-cfeb-5512533d0aa5@landley.net>
+ <874ksaioc6.fsf@x220.int.ebiederm.org>
+ <fc2cf2a7-e1a7-3170-32c9-43e593636799@landley.net>
+ <87r1vcd4wo.fsf@x220.int.ebiederm.org>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <6ce125fd-4fb1-8c39-a9a9-098391f2016a@landley.net>
+Date:   Thu, 21 May 2020 23:51:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <87r1vcd4wo.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When wlcore_fw_status() returns an error code, a pairing
-runtime PM usage counter decrement is needed to keep the
-counter balanced. It's the same for all error paths after
-wlcore_fw_status().
+On 5/21/20 10:28 PM, Eric W. Biederman wrote:
+> 
+> Rob Landley <rob@landley.net> writes:
+> 
+>> On 5/20/20 11:05 AM, Eric W. Biederman wrote:
+> 
+>> Toybox would _like_ proc mounted, but can't assume it. I'm writing a new
+>> bash-compatible shell with nommu support, which means in order to do subshell
+>> and background tasks if (!CONFIG_FORK) I need to create a pipe pair, vfork(),
+>> have the child exec itself to unblock the parent, and then read the context data
+>> that just got discarded through the pipe from the parent. ("Wheee." And you can
+>> quote me on that.)
+> 
+> Do you have clone(CLONE_VM) ?  If my quick skim of the kernel sources is
+> correct that should be the same as vfork except without causing the
+> parent to wait for you.  Which I think would remove the need to reexec
+> yourself.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/net/wireless/ti/wlcore/main.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+As with perpetual motion, that only seems like it would work if you don't
+understand what's going on.
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index f140f7d7f553..fd3608223f64 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -548,7 +548,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 
- 		ret = wlcore_fw_status(wl, wl->fw_status);
- 		if (ret < 0)
--			goto out;
-+			goto err_ret;
- 
- 		wlcore_hw_tx_immediate_compl(wl);
- 
-@@ -565,7 +565,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 			ret = -EIO;
- 
- 			/* restarting the chip. ignore any other interrupt. */
--			goto out;
-+			goto err_ret;
- 		}
- 
- 		if (unlikely(intr & WL1271_ACX_SW_INTR_WATCHDOG)) {
-@@ -575,7 +575,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 			ret = -EIO;
- 
- 			/* restarting the chip. ignore any other interrupt. */
--			goto out;
-+			goto err_ret;
- 		}
- 
- 		if (likely(intr & WL1271_ACX_INTR_DATA)) {
-@@ -583,7 +583,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 
- 			ret = wlcore_rx(wl, wl->fw_status);
- 			if (ret < 0)
--				goto out;
-+				goto err_ret;
- 
- 			/* Check if any tx blocks were freed */
- 			spin_lock_irqsave(&wl->wl_lock, flags);
-@@ -596,7 +596,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 				 */
- 				ret = wlcore_tx_work_locked(wl);
- 				if (ret < 0)
--					goto out;
-+					goto err_ret;
- 			} else {
- 				spin_unlock_irqrestore(&wl->wl_lock, flags);
- 			}
-@@ -604,7 +604,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 			/* check for tx results */
- 			ret = wlcore_hw_tx_delayed_compl(wl);
- 			if (ret < 0)
--				goto out;
-+				goto err_ret;
- 
- 			/* Make sure the deferred queues don't get too long */
- 			defer_count = skb_queue_len(&wl->deferred_tx_queue) +
-@@ -617,14 +617,14 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 			wl1271_debug(DEBUG_IRQ, "WL1271_ACX_INTR_EVENT_A");
- 			ret = wl1271_event_handle(wl, 0);
- 			if (ret < 0)
--				goto out;
-+				goto err_ret;
- 		}
- 
- 		if (intr & WL1271_ACX_INTR_EVENT_B) {
- 			wl1271_debug(DEBUG_IRQ, "WL1271_ACX_INTR_EVENT_B");
- 			ret = wl1271_event_handle(wl, 1);
- 			if (ret < 0)
--				goto out;
-+				goto err_ret;
- 		}
- 
- 		if (intr & WL1271_ACX_INTR_INIT_COMPLETE)
-@@ -635,6 +635,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
- 			wl1271_debug(DEBUG_IRQ, "WL1271_ACX_INTR_HW_AVAILABLE");
- 	}
- 
-+err_ret:
- 	pm_runtime_mark_last_busy(wl->dev);
- 	pm_runtime_put_autosuspend(wl->dev);
- 
--- 
-2.17.1
+A nommu system uses physical addresses, not virtual ones, so every process sees
+the same addresses. So if I allocate a new block of memory and memcpy the
+contents of the old one into the new one, any pointers in the copy point back
+into the ORIGINAL block of memory. Trying to adjust the pointers in the copy is
+the exact same problem as trying to do garbage collection in C: it's an AI
+complete problem.
 
+Any attempt to "implement a full fork" on nommu hits this problem: copying an
+existing mapping to a new address range means any address values in the new
+mapping point into the OLD mapping. Things like fdpic fix this up at exec time
+(traversing elf tables and relocating), but not at runtime. If you can solve the
+"relocate at runtime all addresses within an existing mapping, and all other
+mappings that might point to this mapping, including local variables on the
+stack that point to a structure member or halfway into a string rather than the
+start of an allocation, without adjusting unrelated values coincidentally within
+RANGE of a mapping" problem, THEN you can fork on a nommu system.
+
+What vfork() does is pause the parent and have the child continue AS the parent
+for a bit (with the system call returning 0). The child starts with all the same
+memory mappings the parent has (usually not even a new stack). The child has a
+new PID and new resources like its own file descriptor table so close() and
+open() don't affect the parent, but if you change a global that's visible to the
+parent when it resumes (ant often local variables too: don't return from the
+function that called vfork() because if you DON'T have a new stack it'll stomp
+the return address the parent needs when IT does it). If the child calls
+malloc() the parent needs to free it because it's same heap (because same
+mapping of the same physical memory).
+
+Then when the child is ready to discard all those mappings (due to calling
+either execve() or _exit(), those are the only two options), the parent resumes
+from where it left off with the PID of the child as the system call return value.
+
+The reason the child pauses the parent is so only one process is ever using
+those mappings at a given time. Otherwise they're acting like threads without
+locking, and usually both are sharing a stack.
+
+P.S. You can use threads _instead_ of fork for some stuff on nommu, but that's
+its own can of worms. You still need to vfork() when you do create a child
+process you're going to exec, so it doesn't go away, you're just requiring
+multiple techniques simultaneously to handle a special case.
+
+P.P.S. vfork() is useful on mmu systems to solve the "don't fork from a thread"
+problem. You can vfork() from a thread cheaply and reliably and it only pauses
+the one thread you forked from, not every thread in the whole process. If you
+fork() from a heavily threadded process you can cause a multi-milisecond latency
+spike because even with an mmu the copy on write "keep track of what's shared by
+what" generally can't handle the "threads AND processes sharing mappings" case,
+so it just gives up and copies it all at fork time, in one go, holding a big
+lock while doing so. This causes a large latency spike which vfork() avoids.
+(And can cause a large wasteful allocation and memory dirtying which is
+immediately freed.)
+
+>>> The file descriptor is stored in mm->exe_file.
+>>> Probably the most straight forward implementation is to allow
+>>> execveat(AT_EXE_FILE, ...).
+>>
+>> Cool, that works.
+>>
+>>> You can look at binfmt_misc for how to reopen an open file descriptor.
+>>
+>> Added to the todo heap.
+> 
+> Yes I don't think it would be a lot of code.
+> 
+> I think you might be better served with clone(CLONE_VM) as it doesn't
+> block so you don't need to feed yourself your context over a pipe.
+
+Except that doesn't fix it.
+
+Yes I could use threads instead, but the cure is worse than the disease and the
+result is your shell background processes are threads rather than independent
+processes (is $$ reporting PID or TID, I really don't want to go there).
+
+> Eric
+
+Rob
