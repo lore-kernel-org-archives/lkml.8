@@ -2,160 +2,103 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45354C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5BD2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188BA2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgEVQf2 (ORCPT
+        id S1730511AbgEVQgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:35:28 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33664 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbgEVQf1 (ORCPT
+        Fri, 22 May 2020 12:36:09 -0400
+Received: from smtprelay0061.hostedemail.com ([216.40.44.61]:54824 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726762AbgEVQgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:35:27 -0400
-Received: by mail-pj1-f67.google.com with SMTP id z15so2367008pjb.0;
-        Fri, 22 May 2020 09:35:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=FrFECtsWjQl6tf8ykrWng9hvZAmDCDrjdPeRhrm7ht8=;
-        b=AK3HPcv03cTNj5OniSg9AXgBrdm8JYAEvHQrf0pK38gz6pFeRYn049kvvwH+Sq4jKT
-         d0G6DxQsEhgPcFzzvpmJeMFSo93rB/QqUVowbRyCKVtGDP7kngIZv4bNJFQlxiKwL9+0
-         H1WvQq3gJ9GjV+vI/cFGEaHDvDbTh+QnPOqg4eJDbFSj9OS+P7HL66wRbz79z451+GHA
-         UBKF/EX9cMO2QGoWKj7BtH/vmlkkton5lL3aHGRikGthEK/1AtteAcMTEbd872VfIZIw
-         SPKWfKyLr/q3W8bM2xesOpxf+fQtemYbfLjOeF3eBqjsLRXkIEtqggi3DdTQHy01BQLB
-         Vn9A==
-X-Gm-Message-State: AOAM532d3RsAqYFNMFwaEZkhfXavSwxW8MeNsCylM+XPD1+WBiPvWoBN
-        K/FAfIMSxma/mY4hiRzjaPw=
-X-Google-Smtp-Source: ABdhPJyXQgvh/4e4/HGGwIDBAWsyl5WfZZk7uK5Jo8/5fM225m/l8sR/7+kGSH1fMjgsiFE/d4N8vw==
-X-Received: by 2002:a17:90a:21af:: with SMTP id q44mr5827865pjc.50.1590165325521;
-        Fri, 22 May 2020 09:35:25 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:69bd:6780:3ba9:55db? ([2601:647:4000:d7:69bd:6780:3ba9:55db])
-        by smtp.gmail.com with ESMTPSA id s15sm6488500pgv.5.2020.05.22.09.35.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 09:35:24 -0700 (PDT)
-Subject: Re: Another approach of UFSHPB
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Christoph Hellwig <hch@infradead.org>,
-        yongmyung lee <ymhungry.lee@samsung.com>
-Cc:     Avri Altman <Avri.Altman@wdc.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        Daejun Park <daejun7.park@samsung.com>
-References: <835c57b9-f792-2460-c3cc-667031969d63@acm.org>
- <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
- <d10b27f1-49ec-d092-b252-2bb8cdc4c66e@acm.org>
- <SN6PR04MB46408050B71E3A6225D6C495FCBA0@SN6PR04MB4640.namprd04.prod.outlook.com>
- <CGME20200516171420epcas2p108c570904c5117c3654d71e0a2842faa@epcms2p7>
- <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
- <20200520175555.GA27975@infradead.org>
- <e1e81ad1-2681-9dbe-34aa-85f4e5559927@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <224ba721-b80e-f018-a3f9-a2f56ecef8d6@acm.org>
-Date:   Fri, 22 May 2020 09:35:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 12:36:08 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id E613418028231;
+        Fri, 22 May 2020 16:36:07 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: pan16_100eb4426d28
+X-Filterd-Recvd-Size: 3024
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 22 May 2020 16:36:06 +0000 (UTC)
+Message-ID: <6ab4139ec78928961a19e5fdbda139bb8cff9cb5.camel@perches.com>
+Subject: Re: [PATCH] taging: speakup: remove volatile
+From:   Joe Perches <joe@perches.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        MugilRaj <dmugil2000@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Chris Brannon <chris@the-brannons.com>
+Date:   Fri, 22 May 2020 09:36:05 -0700
+In-Reply-To: <20200522103406.GK30374@kadam>
+References: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
+         <20200522103406.GK30374@kadam>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <e1e81ad1-2681-9dbe-34aa-85f4e5559927@acm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-20 14:19, Bart Van Assche wrote:
-> On 2020-05-20 10:55, Christoph Hellwig wrote:
->> HPB is a completely fucked up concept and we shoud not merge it at all.
->> Especially not with a crazy bullshit vendor extension layer that makes
->> it even easier for vendors to implement even worse things than the
->> already horrible spec says.  Just stop this crap and implement sane
->> interfaces for the next generation hardware instead of wasting your
->> time on this idiotic idea.
+On Fri, 2020-05-22 at 13:34 +0300, Dan Carpenter wrote:
+> On Fri, May 22, 2020 at 02:46:28PM +0530, MugilRaj wrote:
+> > fix checkpatch.pl warning, which is Use of volatile is usually wrong: see
+> > Documentation/process/volatile-considered-harmful.rst
+> > Signed-off-by: MugilRaj <dmugil2000@gmail.com>
 > 
-> What exactly is it that you are not happy about? Is it the concept of
-> using host memory to store L2P translation information or how that
-> concept has been translated into SCSI commands (HPB READ BUFFER, HPB
-> READ and HPB WRITE BUFFER)?
+> Please put a blank before the Signed-off-by line.
 > 
-> In the former case: aren't Open-Channel SSDs another example of storage
-> devices for which the L2P translation tables are maintained in host
-> memory? Didn't the driver for Fusion-io SSDs also maintain the L2P
-> mapping in host memory?
+> Probably there should be a space between your first and last name.  It's
+> supposed to your legal name like for signing a legal document so use
+> whatever is appropriate legal documents in your country.
 > 
-> Do you agree that HPB UFS storage devices are already being used widely
-> and hence that not accepting this functionality in the upstream kernel
-> will force users of HPB devices to maintain HPB code outside the kernel
-> tree? Isn't one of the goals of the Linux kernel project to increase its
-> user base?
+> Also the Documentation/process/volatile-considered-harmful.rst explains
+> that people often use "volatile" when they should be using locking for
+> synchronization.  That seems to be the case here.  So the correct fix is
+> to add locking.  That's a little bit complicated to do and requires
+> testing.
+> 
+> If we apply this patch, then we have silenced the warning so now someone
+> will have to look for the bug.  But if we leave it as-is, then everyone
+> will know that the code is buggy.  So let's leave it as-is until we are
+> able to fix the bug.
+> 
+> It's always better to have easy to find bugs, than hidden bugs.
 
-The following quote from
-https://www.anandtech.com/show/13474/the-google-pixel-3-review/2 is
-interesting: "Another big improvement for file I/O is the implementation
-of “Host Performance Booster” in the kernel and UFS controller firmware
-stack. HPB is essentially caching of the NAND chip’s FTL (flash
-translation layer) L2P (logical to physical) mapping tables into the
-hosts (SoCs) main memory. This allows the host driver to look up the
-target L2P entry directly without betting on UFS’s limited SRAM to have
-a cache-hit, reducing latency and greatly increasing random read
-performance. The authors of the feature showcase an improvement of
-59-67% in random I/O read performance due to the new feature. It’s worth
-to mention that traditional Android I/O benchmarks won’t be able to show
-this as as those tend to test read speeds with the files they’ve just
-created."
+And better still to comment known opportunities to
+improve the code so the next time someone tries to
+remove this volatile, there's a comment right there
+showing what's necessary instead.
 
-Given the cost of SRAM in embedded controllers I think there is a strong
-incentive for manufacturers of flash storage devices to reduce the
-amount of SRAM on the storage controller. I think this means that
-proposals to use host memory for caching L2P mappings will keep popping
-up, no matter what we tell the storage controller vendors about what we
-think about such a design.
+Something like:
+---
+ drivers/staging/speakup/speakup_decext.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Bart.
+diff --git a/drivers/staging/speakup/speakup_decext.c b/drivers/staging/speakup/speakup_decext.c
+index 7408eb29cf38..e68e6046bb51 100644
+--- a/drivers/staging/speakup/speakup_decext.c
++++ b/drivers/staging/speakup/speakup_decext.c
+@@ -21,6 +21,7 @@
+ #define SYNTH_CLEAR 0x03
+ #define PROCSPEECH 0x0b
+ 
++/* TODO: Remove volatile, maybe add locks to read_buff_add and synth_full() ? */
+ static volatile unsigned char last_char;
+ 
+ static void read_buff_add(u_char ch)
+
+
