@@ -2,174 +2,184 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBDBC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4509D2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9D920878
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K3Jn+dor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgEVG6D (ORCPT
+        id S1728629AbgEVG6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 02:58:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:42451 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgEVG6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 02:58:03 -0400
-IronPort-SDR: oCM9akwUFKwx6rIyt+qmXcQfF63CBXxz679A3q8tZWNPwE8ASRNL/Y73onzhPo4apWbSs2VZ3V
- 0u+mBgqeg+xg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2020 23:58:02 -0700
-IronPort-SDR: 8415cHuEaH0PHAeVc9B5qr4u66DcLGdB1irTEIoID0pcEQk2DOfsyVivI35zxTv/T88F9xFOII
- KmQT9wO/e2aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,420,1583222400"; 
-   d="scan'208";a="301031849"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga008.jf.intel.com with ESMTP; 21 May 2020 23:58:02 -0700
-Date:   Thu, 21 May 2020 23:58:02 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-mm@kvack.org, Jethro Beekman <jethro@fortanix.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Seth Moore <sethmo@google.com>
-Subject: Re: [PATCH v30 12/20] x86/sgx: Add a page reclaimer
-Message-ID: <20200522065802.GC23459@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-13-jarkko.sakkinen@linux.intel.com>
+        Fri, 22 May 2020 02:58:17 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:22131 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgEVG6Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 02:58:16 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200522065813epoutp03374159014280833d77c62ec32491a3fb~RR3DB6l6t0214302143epoutp03T
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 06:58:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200522065813epoutp03374159014280833d77c62ec32491a3fb~RR3DB6l6t0214302143epoutp03T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590130693;
+        bh=fjkMXe+YmN/5yp/JORsAYIY2lVP6T4CaRaOljPc5+qk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=K3Jn+dorxhnm8bRY66RdVd4z5X7dDFC2vrhB3oa7ZJZ3aYuujz4VnvAzr6LRqsWjx
+         sLT5Vsun2/heynspQ51ZZiQ1ketrzf5LKPLupfgVA4FyOy/kGf/hLgW1XNLcb54txL
+         vNMOrLPQDcCfjNhQdThkXmvdy7yQM+BsqgkK4Hyg=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200522065812epcas1p4f4856a57f16e49db37a98cf996928eed~RR3Cr2n6Q0947709477epcas1p45;
+        Fri, 22 May 2020 06:58:12 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49Sy4K5Jz8zMqYkb; Fri, 22 May
+        2020 06:58:09 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        49.50.04544.10877CE5; Fri, 22 May 2020 15:58:09 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200522065809epcas1p16e7a70dae1754f364f088c0e3ed01bf1~RR2-oviBU2344923449epcas1p1Z;
+        Fri, 22 May 2020 06:58:09 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200522065809epsmtrp2a3b3682de306f22aa9d1d4b352c12728~RR2-n2fet2531325313epsmtrp2T;
+        Fri, 22 May 2020 06:58:09 +0000 (GMT)
+X-AuditID: b6c32a36-7ffff700000011c0-99-5ec778016225
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        60.EC.18461.10877CE5; Fri, 22 May 2020 15:58:09 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200522065809epsmtip232901c459100cf7ee1201e59c30895d5~RR2-VS56P2872028720epsmtip2z;
+        Fri, 22 May 2020 06:58:09 +0000 (GMT)
+Subject: Re: [PATCH v2 2/3] extcon: max14577: Add proper dt-compatible
+ strings
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <8ec0c604-8cdc-04f8-fc5c-fd967f52022b@samsung.com>
+Date:   Fri, 22 May 2020 16:08:20 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515004410.723949-13-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200522064801.16822-2-m.szyprowski@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURSAuzu7s2O4dlstTxalI/3IUHe0tdFVC5ISsrKifoSPBp10c1/u
+        rKFFpCW+ekpJZWZqRLaSlYiapqKtlhVaSCmKUSQWmhbZkyjacZT8991zvsM5595LEepy0ovS
+        m2y81cQZaHKhvOHhGn9/lPkoQdN4di1779IdBVvydpRk+/ruKtn+5jKSnT7tQOxtx4iSHc6p
+        JtmnLbaNVHSdvZCMPlNvR9HTdStjiX1p4ak8l8xbvXlTkjlZb0qJoLfuTtyUqA3RMP5MKLue
+        9jZxRj6CjoqJ9d+sNzgHoL0PcYYMZyiWEwQ6MDLcas6w8d6pZsEWQfOWZIMl1BIgcEYhw5QS
+        kGQ2hjEaTZDWKe5PS32VPyKz/HHL/PH1PcpG1a5FyIUCvA4cNeWyIrSQUuMmBK3TZ5TS4QuC
+        3oJiJFpq/B3B5PENcxVVhbUKSWpF0J9/cbbiE4LHL4uUouWOY6Fg9LNMZA+sB0fv+EwFgV8g
+        GDtdTIoJEvtB+4fBGV6EfeDlz3cz7VQ4Ei48uy0XWY5XQ3/joELkJXgv9DTkzjqLoefyqNOh
+        KBen/8u+WQwT2BOGRq/JJF4FjZNlhDR1CQVdHzUSR0FOy1+5xO4w/qheKbEXTE+1khIfgVs9
+        DlKcGXABgvr25wopEQztN87LxL4EXgN3mgOlsA/c/30VSX3dYOrbKYWoAFZBQZ5aUnyh/82I
+        TOJlcD2/kDyH6NJ5y5TO26B03gal/5tVILkdLeUtgjGFFxhL0PzHrkMzf9MvpAlV9cZ0Ikwh
+        2lXFHuhOUCu4Q0KWsRMBRdAeqspFXQlqVTKXdZi3mhOtGQZe6ERa510XE15LkszOn26yJTLa
+        oODgYHYdE6JlGNpTVTJgSFDjFM7Gp/G8hbfO1ckoF69sVKuL+eLjuXOAsb5Ob2h7Utm3Ma7N
+        Ted7s2Nn+p7mBVf8fM+HwZapsvvxOvKs+z6GqYjXH9z14Prv/GNRTUdrIl1quW1X3IZN7hOX
+        bg4dqI4U2lZ2l+niTqSN/fCIvxuW26G7YFuet715h+/JsYF7de9W2BULXg/uits7ET6FNthX
+        1dByIZVj/AirwP0DY48IcrEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSvC5jxfE4g+fdAhYbZ6xntZj68Amb
+        xfnzG9gtLu+aw2bxufcIo8XaI3fZLW43rmCzOL27xIHDY9OqTjaPvi2rGD0+b5ILYI7isklJ
+        zcksSy3St0vgyrjWfpep4C9fxfcvzxkbGFfwdDFyckgImEgs6lzHCmILCexmlJi2sx4iLikx
+        7eJR5i5GDiBbWOLw4eIuRi6gkreMEi/WTGMGqREW8JP4s+MwG4gtIpApsWP/RSaQImaBy4wS
+        W2/2MEJ0HGWU2PhjL1gHm4CWxP4XN8A6+AUUJa7+eMwIYvMK2ElMObOWBcRmEVCVuLz9BthF
+        ogJhEjuXPGaCqBGUODnzCQvIRZxA9T9XuYGEmQXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRG
+        4VlIumchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGCI0hLcwfj
+        9lUf9A4xMnEwHmKU4GBWEuFdyH80Tog3JbGyKrUoP76oNCe1+BCjNAeLkjjvjcKFcUIC6Ykl
+        qdmpqQWpRTBZJg5OqQamxF22k16xfowyet3D6lj38qGLvrq+3l5WlR/HZA7pOmulsPFd8e7N
+        +HTp27WvMYVtAbN/3hb5uGzLXuG4fVxPShVymVnUDEMPf7A0kO45+kryYaWOVOc03+UBq7in
+        1v5fv32H/tf2yc/833qZrjm+uP2zYcDNCSsEt894VzZl4oSKXbvqeDWDW2KV4294+57L/Z+7
+        Z/nxxXe2+Ry+8suhvOiw/ofKyoCXZ90Mj+u+uKwUdF8p7PWtzJCejbtvrHK37r7IdHrT6TXt
+        Tzp3sH3w/3SXx3iKiGrdEcXFT5waxV7XmRVtztWYdrLI9pDs1F+fb7b8f+7AsVz1mf7Xzprn
+        R8WZkqVtD+8r51l+xe17tBJLcUaioRZzUXEiAHbeXLwPAwAA
+X-CMS-MailID: 20200522065809epcas1p16e7a70dae1754f364f088c0e3ed01bf1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200522064807eucas1p2665d6b3928b2ad515abe54513cbd7fd8
+References: <20200522064801.16822-1-m.szyprowski@samsung.com>
+        <CGME20200522064807eucas1p2665d6b3928b2ad515abe54513cbd7fd8@eucas1p2.samsung.com>
+        <20200522064801.16822-2-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:44:02AM +0300, Jarkko Sakkinen wrote:
-> +/**
-> + * sgx_reclaim_pages() - Reclaim EPC pages from the consumers
-> + *
-> + * Take a fixed number of pages from the head of the active page pool and
-> + * reclaim them to the enclave's private shmem files. Skip the pages, which
-> + * have been accessed since the last scan. Move those pages to the tail of
-> + * active page pool so that the pages get scanned in LRU like fashion.
-> + */
-> +void sgx_reclaim_pages(void)
-> +{
-> +	struct sgx_epc_page *chunk[SGX_NR_TO_SCAN];
-> +	struct sgx_backing backing[SGX_NR_TO_SCAN];
-> +	struct sgx_epc_section *section;
-> +	struct sgx_encl_page *encl_page;
-> +	struct sgx_epc_page *epc_page;
-> +	int cnt = 0;
-> +	int ret;
-> +	int i;
-> +
-> +	spin_lock(&sgx_active_page_list_lock);
-> +	for (i = 0; i < SGX_NR_TO_SCAN; i++) {
-> +		if (list_empty(&sgx_active_page_list))
-> +			break;
-> +
-> +		epc_page = list_first_entry(&sgx_active_page_list,
-> +					    struct sgx_epc_page, list);
-> +		list_del_init(&epc_page->list);
-> +		encl_page = epc_page->owner;
-> +
-> +		if (kref_get_unless_zero(&encl_page->encl->refcount) != 0)
-> +			chunk[cnt++] = epc_page;
-> +		else
-> +			/* The owner is freeing the page. No need to add the
-> +			 * page back to the list of reclaimable pages.
-> +			 */
-> +			epc_page->desc &= ~SGX_EPC_PAGE_RECLAIMABLE;
-> +	}
-> +	spin_unlock(&sgx_active_page_list_lock);
-> +
-> +	for (i = 0; i < cnt; i++) {
-> +		epc_page = chunk[i];
-> +		encl_page = epc_page->owner;
-> +
-> +		if (!sgx_reclaimer_age(epc_page))
-> +			goto skip;
-> +
-> +		ret = sgx_encl_get_backing(encl_page->encl,
-> +					   SGX_ENCL_PAGE_INDEX(encl_page),
-> +					   &backing[i]);
-> +		if (ret)
-> +			goto skip;
-> +
-> +		mutex_lock(&encl_page->encl->lock);
-> +		encl_page->desc |= SGX_ENCL_PAGE_RECLAIMED;
-> +		mutex_unlock(&encl_page->encl->lock);
-> +		continue;
-> +
-> +skip:
-> +		kref_put(&encl_page->encl->refcount, sgx_encl_release);
-> +
-> +		spin_lock(&sgx_active_page_list_lock);
-> +		list_add_tail(&epc_page->list, &sgx_active_page_list);
-> +		spin_unlock(&sgx_active_page_list_lock);
+On 5/22/20 3:48 PM, Marek Szyprowski wrote:
+> Add device tree compatible strings and create proper modalias structures
+> to let this driver load automatically if compiled as module, because
+> max14577 MFD driver creates MFD cells with such compatible strings.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v2:
+> - added .of_match_table pointer
+> ---
+>  drivers/extcon/extcon-max14577.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/extcon/extcon-max14577.c b/drivers/extcon/extcon-max14577.c
+> index 32f663436e6e..03af678ddeba 100644
+> --- a/drivers/extcon/extcon-max14577.c
+> +++ b/drivers/extcon/extcon-max14577.c
+> @@ -782,9 +782,19 @@ static const struct platform_device_id max14577_muic_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(platform, max14577_muic_id);
+>  
+> +static const struct of_device_id of_max14577_muic_dt_match[] = {
+> +	{ .compatible = "maxim,max77836-muic",
+> +	  .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
+> +	{ .compatible = "maxim,max14577-muic",
+> +	  .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
+> +	{ },
 
-Ugh, this is wrong.  If the above kref_put() drops the last reference and
-releases the enclave, adding the page to the active page list will result
-in a use-after-free as the enclave will have been freed.  It also leaks the
-EPC page because sgx_encl_destroy() skips pages that are in the process of
-being reclaimed (as detected by list_empty()).
+How about changing the order between max77836 and max14577 as already added structure
+like platform_device_id if there are no specific reason as following:?
 
-The "original" code did the put() after list_add_tail(), but was moved in
-v15 to fix a bug where the put() could drop a reference to the wrong enclave
-if the page was freed and reallocated by a different CPU between
-list_add_tail() and put().  But, that particular bug only occurred because
-the code at the time was:
 
-	sgx_encl_page_put(epc_page);
+static const struct of_device_id of_max14577_muic_dt_match[] = {
+	{ .compatible = "maxim,max14577-muic",
+	  .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
+	{ .compatible = "maxim,max77836-muic",
+	  .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
+	{ },
 
-I.e. the backpointer in epc_page was consumed after dropping the spin lock.
-So long as epc_page->owner (well, epc_page in general) isn't dereferenced,
-I'm 99% certain this can be fixed simply by doing kref_put() after moving
-the page back to the active page list.
 
+
+> +};
+> +MODULE_DEVICE_TABLE(of, of_max14577_muic_dt_match);
 > +
-> +		chunk[i] = NULL;
-> +	}
-> +
-> +	for (i = 0; i < cnt; i++) {
-> +		epc_page = chunk[i];
-> +		if (epc_page)
-> +			sgx_reclaimer_block(epc_page);
-> +	}
-> +
-> +	for (i = 0; i < cnt; i++) {
-> +		epc_page = chunk[i];
-> +		if (!epc_page)
-> +			continue;
-> +
-> +		encl_page = epc_page->owner;
-> +		sgx_reclaimer_write(epc_page, &backing[i]);
-> +		sgx_encl_put_backing(&backing[i], true);
-> +
-> +		kref_put(&encl_page->encl->refcount, sgx_encl_release);
-> +		epc_page->desc &= ~SGX_EPC_PAGE_RECLAIMABLE;
-> +
-> +		section = sgx_epc_section(epc_page);
-> +		spin_lock(&section->lock);
-> +		list_add_tail(&epc_page->list, &section->page_list);
-> +		section->free_cnt++;
-> +		spin_unlock(&section->lock);
-> +	}
-> +}
+>  static struct platform_driver max14577_muic_driver = {
+>  	.driver		= {
+>  		.name	= "max14577-muic",
+> +		.of_match_table = of_max14577_muic_dt_match,
+>  	},
+>  	.probe		= max14577_muic_probe,
+>  	.remove		= max14577_muic_remove,
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
