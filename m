@@ -2,244 +2,147 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4467920679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:32:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YjORt36O"
+	by mail.kernel.org (Postfix) with ESMTP id DCE0820679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbgEVPcI (ORCPT
+        id S1730572AbgEVPdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35332 "EHLO
+        Fri, 22 May 2020 11:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730469AbgEVPcI (ORCPT
+        with ESMTP id S1726909AbgEVPdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:32:08 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CCFC08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:32:07 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g14so4634451wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:32:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=otTjOhB3pQfb5rvNf3iE/1EF+uvqWUVNS9VHLDzOq6I=;
-        b=YjORt36Ol5Z1zqcZJ9PdVDQlWbU2xMv+HuUp2H6cXcxLt9hXl7O4guMpdaJSCxMlk/
-         F0ZgAw2FvlH34VcN4fni2/NgLuZkYmwMItA0MjVGnZ5p9uL6jvhBff0Q4CTl85Yw1pw3
-         rvDo4oOuVmI951FS3NPpy9tLJaA5xxllVZY0spCqdqsRGD2+abdJquNCoJXQpWfgPgGu
-         ZCn9yjxdzIlUYRfFPLW4aL2snRBCG82tP7948zBCVceR9ovXv0brb7+4rimzBnUS+lwv
-         j8ylwDgWE60TyNowyMK8CQRJ2u9gxTZKcsVP1PX2qZIf9VY10WFDjw1Xh8dRTP1Yiq0I
-         zC8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=otTjOhB3pQfb5rvNf3iE/1EF+uvqWUVNS9VHLDzOq6I=;
-        b=c6MVcydA1Cg744no7qXj4AGt60btKIOif7ydGyNRazvAl2w7Q7jkLaLSdIM2A5irKB
-         l9/XWWDVKs4JRvriqMxYPFgPa+RvOxDqptorbLEB7oVuXmJ2Kis07QetmnvJtD6tIiiR
-         YFQdtd4zCRJyVbPzhqH1CQfpU0ogCBemTee9LtzfO0PycwP1ii4It2JSgEIFKSuCh/hj
-         S6BzMbFCsXRUwcW1Si67LaxLZeycfhC85zbqeoEqObzvqBe7qv+JLafTrWD4SALLp9qg
-         c3cCrxh8ppdhDwtc5SUtOloqbmdXPL5D7A+0y9B3HuQJcZcKCsFwisqaggKoKK5Iwo+m
-         mz9A==
-X-Gm-Message-State: AOAM531aBpuGiDduYIof3NFJqz783BT0cnkVXJQOrao/7QhMVQTjmJvV
-        HQvejihsDyYSDzHwUdGn99RiWg==
-X-Google-Smtp-Source: ABdhPJxZhfb8FvGiHXbP4WIrzNxdJ9R0OJbYjAm99WLd9VjIJX2ehUsAjztVxh8MlTgphwpbBpEHEA==
-X-Received: by 2002:a1c:1983:: with SMTP id 125mr13524236wmz.43.1590161526337;
-        Fri, 22 May 2020 08:32:06 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id x17sm9694035wrp.71.2020.05.22.08.32.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 08:32:05 -0700 (PDT)
-Subject: Re: [v4,6/7] thermal: mediatek: add another get_temp ops for thermal
- sensors
-To:     Michael Kao <michael.kao@mediatek.com>,
+        Fri, 22 May 2020 11:33:00 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E149C061A0E;
+        Fri, 22 May 2020 08:33:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2744D2A3A00;
+        Fri, 22 May 2020 16:32:58 +0100 (BST)
+Date:   Fri, 22 May 2020 17:32:54 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Pratyush Yadav <p.yadav@ti.com>,
+        Richard Weinberger <richard@nod.at>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20200323121537.22697-1-michael.kao@mediatek.com>
- <20200323121537.22697-7-michael.kao@mediatek.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <fa43c55b-96c2-30c8-eb7e-983177dad13d@linaro.org>
-Date:   Fri, 22 May 2020 17:32:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, Sekhar Nori <nsekhar@ti.com>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: Re: [PATCH v7 02/20] spi: spi-mem: allow specifying a command's
+ extension
+Message-ID: <20200522173254.05316d47@collabora.com>
+In-Reply-To: <20200522101301.26909-3-p.yadav@ti.com>
+References: <20200522101301.26909-1-p.yadav@ti.com>
+        <20200522101301.26909-3-p.yadav@ti.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200323121537.22697-7-michael.kao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/03/2020 13:15, Michael Kao wrote:
-> Provide thermal zone to read thermal sensor
-> in the SoC. We can read all the thermal sensors
-> value in the SoC by the node /sys/class/thermal/
+On Fri, 22 May 2020 15:42:43 +0530
+Pratyush Yadav <p.yadav@ti.com> wrote:
+
+> In xSPI mode, flashes expect 2-byte opcodes. The second byte is called
+> the "command extension". There can be 3 types of extensions in xSPI:
+> repeat, invert, and hex. When the extension type is "repeat", the same
+> opcode is sent twice. When it is "invert", the second byte is the
+> inverse of the opcode. When it is "hex" an additional opcode byte based
+> is sent with the command whose value can be anything.
 > 
-> In mtk_thermal_bank_temperature, return -EAGAIN instead of -EACCESS
-> on the first read of sensor that often are bogus values.
-> This can avoid following warning on boot:
+> So, make opcode a 16-bit value and add a 'nbytes', similar to how
+> multiple address widths are handled.
+
+A slightly different version of patch 5 should go before this patch,
+otherwise your series is not bisectable. By slightly different, I mean
+that you should only write one byte, but put this byte in a temporary
+var. Or maybe you can squash patch 5 in this one and mention why you do
+so in your commit message.
+
 > 
->   thermal thermal_zone6: failed to read out thermal zone (-13)
-
-What the source problem of the sensor returning bogus values?
-
-
-
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 > ---
->  drivers/thermal/mtk_thermal.c | 74 +++++++++++++++++++++++++++++++----
->  1 file changed, 67 insertions(+), 7 deletions(-)
+>  drivers/spi/spi-mem.c       | 5 ++++-
+>  include/linux/spi/spi-mem.h | 6 +++++-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-> index 6b7ef1993d7e..9eaca432920e 100644
-> --- a/drivers/thermal/mtk_thermal.c
-> +++ b/drivers/thermal/mtk_thermal.c
-> @@ -225,6 +225,11 @@ enum {
+> diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+> index 93e255287ab9..29dcd1d62710 100644
+> --- a/drivers/spi/spi-mem.c
+> +++ b/drivers/spi/spi-mem.c
+> @@ -159,6 +159,9 @@ bool spi_mem_default_supports_op(struct spi_mem *mem,
+>  	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
+>  		return false;
 >  
->  struct mtk_thermal;
->  
-> +struct mtk_thermal_zone {
-> +	struct mtk_thermal *mt;
-> +	int id;
-> +};
+> +	if (op->cmd.nbytes != 1)
+> +		return false;
 > +
->  struct thermal_bank_cfg {
->  	unsigned int num_sensors;
->  	const int *sensors;
-> @@ -607,7 +612,7 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
->  		 * not immediately shut down.
->  		 */
->  		if (temp > 200000)
-> -			temp = 0;
-> +			temp = -EAGAIN;
->  
->  		if (temp > max)
->  			max = temp;
-> @@ -618,7 +623,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
->  
->  static int mtk_read_temp(void *data, int *temperature)
->  {
-> -	struct mtk_thermal *mt = data;
-> +	struct mtk_thermal_zone *tz = data;
-> +	struct mtk_thermal *mt = tz->mt;
->  	int i;
->  	int tempmax = INT_MIN;
->  
-> @@ -637,10 +643,44 @@ static int mtk_read_temp(void *data, int *temperature)
->  	return 0;
+>  	return true;
 >  }
+>  EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+> @@ -173,7 +176,7 @@ static bool spi_mem_buswidth_is_valid(u8 buswidth)
 >  
-> +static int mtk_read_sensor_temp(void *data, int *temperature)
-> +{
-> +	struct mtk_thermal_zone *tz = data;
-> +	struct mtk_thermal *mt = tz->mt;
-> +	const struct mtk_thermal_data *conf = mt->conf;
-> +	int id = tz->id - 1;
-> +	int temp = INT_MIN;
-> +	u32 raw;
-> +
-> +	if (id < 0)
-> +		return  -EACCES;
-> +
-> +	raw = readl(mt->thermal_base + conf->msr[id]);
-> +
-> +	temp = raw_to_mcelsius(mt, id, raw);
-> +
-> +	/*
-> +	 * The first read of a sensor often contains very high bogus
-> +	 * temperature value. Filter these out so that the system does
-> +	 * not immediately shut down.
-> +	 */
-> +
-> +	if (temp > 200000)
-> +		return  -EAGAIN;
-> +
-> +	*temperature = temp;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct thermal_zone_of_device_ops mtk_thermal_ops = {
->  	.get_temp = mtk_read_temp,
->  };
+>  static int spi_mem_check_op(const struct spi_mem_op *op)
+>  {
+> -	if (!op->cmd.buswidth)
+> +	if (!op->cmd.buswidth || !op->cmd.nbytes)
+>  		return -EINVAL;
 >  
-> +static const struct thermal_zone_of_device_ops mtk_thermal_sensor_ops = {
-> +	.get_temp = mtk_read_sensor_temp,
-> +};
-> +
->  static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
->  				  u32 apmixed_phys_base, u32 auxadc_phys_base,
->  				  int ctrl_id)
-> @@ -873,6 +913,7 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->  	struct resource *res;
->  	u64 auxadc_phys_base, apmixed_phys_base;
->  	struct thermal_zone_device *tzdev;
-> +	struct mtk_thermal_zone *tz;
->  
->  	mt = devm_kzalloc(&pdev->dev, sizeof(*mt), GFP_KERNEL);
->  	if (!mt)
-> @@ -954,11 +995,30 @@ static int mtk_thermal_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, mt);
->  
-> -	tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, mt,
-> -						     &mtk_thermal_ops);
-> -	if (IS_ERR(tzdev)) {
-> -		ret = PTR_ERR(tzdev);
-> -		goto err_disable_clk_peri_therm;
-> +	for (i = 0; i < mt->conf->num_sensors + 1; i++) {
-> +		tz = kmalloc(sizeof(*tz), GFP_KERNEL);
-> +		if (!tz)
-> +			return -ENOMEM;
-> +
-> +		tz->mt = mt;
-> +		tz->id = i;
-> +
-> +		tzdev = devm_thermal_zone_of_sensor_register(&pdev->dev, i,
-> +							     tz, (i == 0) ?
-> +				&mtk_thermal_ops : &mtk_thermal_sensor_ops);
-> +
-> +		if (IS_ERR(tzdev)) {
-> +			if (PTR_ERR(tzdev) == -ENODEV) {
-> +				dev_warn(&pdev->dev,
-> +					 "sensor %d not registered in thermal zone in dt\n",
-> +					 i);
-> +				continue;
-> +			}
-> +			if (PTR_ERR(tzdev) == -EACCES) {
-> +				ret = PTR_ERR(tzdev);
-> +				goto err_disable_clk_peri_therm;
-> +			}
-> +		}
+>  	if ((op->addr.nbytes && !op->addr.buswidth) ||
+> diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+> index e3dcb956bf61..159463cc659c 100644
+> --- a/include/linux/spi/spi-mem.h
+> +++ b/include/linux/spi/spi-mem.h
+> @@ -17,6 +17,7 @@
+>  	{							\
+>  		.buswidth = __buswidth,				\
+>  		.opcode = __opcode,				\
+> +		.nbytes = 1,					\
 >  	}
 >  
->  	return 0;
-> 
+>  #define SPI_MEM_OP_ADDR(__nbytes, __val, __buswidth)		\
+> @@ -69,6 +70,8 @@ enum spi_mem_data_dir {
+>  
+>  /**
+>   * struct spi_mem_op - describes a SPI memory operation
+> + * @cmd.nbytes: number of opcode bytes (only 1 or 2 are valid). The opcode is
+> + *		sent MSB-first.
+>   * @cmd.buswidth: number of IO lines used to transmit the command
+>   * @cmd.opcode: operation opcode
+>   * @cmd.dtr: whether the command opcode should be sent in DTR mode or not
+> @@ -94,9 +97,10 @@ enum spi_mem_data_dir {
+>   */
+>  struct spi_mem_op {
+>  	struct {
+> +		u8 nbytes;
+>  		u8 buswidth;
+>  		u8 dtr : 1;
+> -		u8 opcode;
+> +		u16 opcode;
+>  	} cmd;
+>  
+>  	struct {
 
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
