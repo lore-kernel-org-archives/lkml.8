@@ -2,80 +2,150 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A23FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9988CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC85720812
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AAD120814
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:52:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YyyrLMAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgEVHvl (ORCPT
+        id S1728817AbgEVHwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:51:41 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:36194 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728152AbgEVHvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:51:40 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx72plhMdeCME3AA--.75S4;
-        Fri, 22 May 2020 15:51:03 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH 2/2] MAINTAINERS: Add git tree for NVMEM FRAMEWORK
-Date:   Fri, 22 May 2020 15:51:01 +0800
-Message-Id: <1590133861-25515-3-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1590133861-25515-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1590133861-25515-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dx72plhMdeCME3AA--.75S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7XF18Kw48tr4kKr1UtF43Wrg_yoWxCwbEkF
-        4UXa1fXFyrGr4UK3ykCFsrXFyYqr43GF4Sy3ZFqwsxA34UXrZ8KrnIywn2kw1UCr4fWrsF
-        qFWxJr9a9rW29jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbSAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-        0Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-        vE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8CwCF04k20x
-        vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-        3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIx
-        AIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
-        cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
-        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUx-BiUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Fri, 22 May 2020 03:52:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgEVHwY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:52:24 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131C5C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:52:24 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id p126so10286301qke.8
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:52:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=V3kv+xBmjrIeYzeByZn2jZ0q0fngGgBM343mBftKcUc=;
+        b=YyyrLMAuNFxnPyLpcPTr6sz5EROrTRmWUbKvuXv+P9s7/RgUmBoTYNOBB6CHRgCzwB
+         7dCe/3nenT/OHaMlqB+tioLHT7G9nHkN7WZ95TRdnJ+8JcnhZyzUYuxF760OlxfgQOwr
+         S8SSAgObJcLoQfvFkDMAayvzByzwmlkj11yndgkntXL8dt24bc5wA4CjHFfy+4mtMeRY
+         POp3f/ReqWwACAbLP9Xdqk5l9JS9feCpGkPBEvqRuwaXxRV0hfE93gxXj0LF++CcGBxf
+         xMNcUyxM+5j1kq+iwn7n+dvInijxFPfXhRGl1x6hxyibMnq8tBi75/F7P+JKfFxq9olI
+         w5cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=V3kv+xBmjrIeYzeByZn2jZ0q0fngGgBM343mBftKcUc=;
+        b=O1knA1vPd+yODU7PxjpvbDSiUtFrjwVg9vo+vnDHa5HDI3RlytYkqObxfiKUfuoxQj
+         KSByKmt2Oj2x7R/fjPVzlvZ3YiHN715zLkqkRzJXE2EA9XauhJ5jMuZmLfll4H7IOg2D
+         GR8nqyOyvSX79v9oX8ABj42a7LUmstGC5/OXappwC9ypV3vBxGF3mDoxKcqxiqoAHNTL
+         aUNG/o/ZOFonduYxeXnVgHFrJ7h0T+j1AklhHe/bf2le1PLevf1M+uQOyB1/sVfL/yDP
+         9D8REUi/HMWjHhl+LORCehwAuvfT5SXVWMZsRlLvpykR/6VIEQnt7jb2q/sTlTYMgPg+
+         hGOg==
+X-Gm-Message-State: AOAM5329hPtPV4VtdZgYpJSGjyutXWj1Id26favumpRDwQmmPGUJkF/e
+        FMTxwIMnfFLsBPGF3sMGHkr6jtD6Vw==
+X-Google-Smtp-Source: ABdhPJz7VxJDn9AlnO31BeEfLlm2ECE/+eRq/NBPi9fc3fTjVsc/UN1YsxmsN2WBp9ZDYm2R2cTGMvqPZg==
+X-Received: by 2002:a0c:eac4:: with SMTP id y4mr2480760qvp.39.1590133943257;
+ Fri, 22 May 2020 00:52:23 -0700 (PDT)
+Date:   Fri, 22 May 2020 09:52:07 +0200
+Message-Id: <20200522075207.157349-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH v2] kasan: Disable branch tracing for core runtime
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        aryabinin@virtuozzo.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, cai@lca.pw,
+        kernel test robot <rong.a.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no git tree for NVMEM FRAMEWORK in MAINTAINERS, it is not
-convinent to rebase, add it.
+During early boot, while KASAN is not yet initialized, it is possible to
+enter reporting code-path and end up in kasan_report(). While
+uninitialized, the branch there prevents generating any reports,
+however, under certain circumstances when branches are being traced
+(TRACE_BRANCH_PROFILING), we may recurse deep enough to cause kernel
+reboots without warning.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+To prevent similar issues in future, we should disable branch tracing
+for the core runtime.
+
+Link: https://lore.kernel.org/lkml/20200517011732.GE24705@shao2-debian/
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Marco Elver <elver@google.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+v2:
+* Remove duplicate DISABLE_BRANCH_PROFILING from tags.c as reported by
+  Qian Cai.
+---
+ mm/kasan/Makefile  | 16 ++++++++--------
+ mm/kasan/generic.c |  1 -
+ mm/kasan/tags.c    |  1 -
+ 3 files changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7b58ca2..bd268978 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12100,6 +12100,7 @@ F:	drivers/nvme/target/
- NVMEM FRAMEWORK
- M:	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
- S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/srini/nvmem.git
- F:	Documentation/ABI/stable/sysfs-bus-nvmem
- F:	Documentation/devicetree/bindings/nvmem/
- F:	drivers/nvmem/
+diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
+index 434d503a6525..de3121848ddf 100644
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -15,14 +15,14 @@ CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
+ 
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+ # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
+-CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_init.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_quarantine.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_tags_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_init.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_quarantine.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_tags_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+ 
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+ obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
+diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+index 56ff8885fe2e..098a7dbaced6 100644
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -15,7 +15,6 @@
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-#define DISABLE_BRANCH_PROFILING
+ 
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
+diff --git a/mm/kasan/tags.c b/mm/kasan/tags.c
+index 25b7734e7013..8a959fdd30e3 100644
+--- a/mm/kasan/tags.c
++++ b/mm/kasan/tags.c
+@@ -12,7 +12,6 @@
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-#define DISABLE_BRANCH_PROFILING
+ 
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
 -- 
-2.1.0
+2.27.0.rc0.183.gde8f92d652-goog
 
