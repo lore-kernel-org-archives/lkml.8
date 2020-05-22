@@ -2,108 +2,249 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A94C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E2F2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B042072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:50:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oP4sXPeD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgEVBpO (ORCPT
+        id S1727063AbgEVBuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:45:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46988 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbgEVBpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:45:12 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 51EBBD6F1E1DCA1E71A2;
-        Fri, 22 May 2020 09:45:09 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.154) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 09:45:07 +0800
-Subject: Re: [PATCH v2] xfrm: policy: Fix xfrm policy match
-To:     Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-References: <20200421143149.45108-1-yuehaibing@huawei.com>
- <20200422125346.27756-1-yuehaibing@huawei.com>
- <0015ec4c-0e9c-a9d2-eb03-4d51c5fbbe86@huawei.com>
- <20200519085353.GE13121@gauss3.secunet.de>
- <CADvbK_eXW24SkuLUOKkcg4JPa8XLcWpp6RNCrQT+=okaWe+GDA@mail.gmail.com>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        davem <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <550a82f1-9cb3-2392-25c6-b2a84a00ca33@huawei.com>
-Date:   Fri, 22 May 2020 09:45:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
-MIME-Version: 1.0
-In-Reply-To: <CADvbK_eXW24SkuLUOKkcg4JPa8XLcWpp6RNCrQT+=okaWe+GDA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.154]
-X-CFilter-Loop: Reflected
+        Thu, 21 May 2020 21:50:12 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:40816 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726940AbgEVBuL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 21:50:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590112210; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=NuvH0/XX4SUkUG7dpvDQbID3uIFUKkkCKc2S5KVLPWM=; b=oP4sXPeD1ZEtZQcjPGVb6/wK0UGLH39XfKCwLpdBTJkp5JHjAMn4vWPr15lwisZQKP5jVJmC
+ fk3fvmp7zkSaYouuY7KUmRzAFh0kuTUjJbpawRRGvQ9Je7aSwwsXPqXx+ViFDiDHs5C4wVvf
+ fNIAb7yBOOC8z2+qFF97NTYWjQE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ec72fce4110e147180c7d9e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 01:50:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 22B80C433CA; Fri, 22 May 2020 01:50:06 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D9FE5C433C6;
+        Fri, 22 May 2020 01:50:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D9FE5C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        vkoul@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v2] phy: qcom-snps: Add runtime suspend and resume handlers
+Date:   Thu, 21 May 2020 18:50:00 -0700
+Message-Id: <1590112200-1110-1-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/21 14:49, Xin Long wrote:
-> On Tue, May 19, 2020 at 4:53 PM Steffen Klassert
-> <steffen.klassert@secunet.com> wrote:
->>
->> On Fri, May 15, 2020 at 04:39:57PM +0800, Yuehaibing wrote:
->>>
->>> Friendly ping...
->>>
->>> Any plan for this issue?
->>
->> There was still no consensus between you and Xin on how
->> to fix this issue. Once this happens, I consider applying
->> a fix.
->>
-> Sorry, Yuehaibing, I can't really accept to do: (A->mark.m & A->mark.v)
-> I'm thinking to change to:
-> 
->  static bool xfrm_policy_mark_match(struct xfrm_policy *policy,
->                                    struct xfrm_policy *pol)
->  {
-> -       u32 mark = policy->mark.v & policy->mark.m;
-> -
-> -       if (policy->mark.v == pol->mark.v && policy->mark.m == pol->mark.m)
-> -               return true;
-> -
-> -       if ((mark & pol->mark.m) == pol->mark.v &&
-> -           policy->priority == pol->priority)
-> +       if (policy->mark.v == pol->mark.v &&
-> +           (policy->mark.m == pol->mark.m ||
-> +            policy->priority == pol->priority))
->                 return true;
-> 
->         return false;
-> 
-> which means we consider (the same value and mask) or
-> (the same value and priority) as the same one. This will
-> cover both problems.
+Allow for the PHY to be put into a powered down state when possible.
+Add the required suspend and resume callbacks, which will determine
+what resources can be turned off depending on the cable status.
 
-  policy A (mark.v = 0x1011, mark.m = 0x1011, priority = 1)
-  policy B (mark.v = 0x1001, mark.m = 0x1001, priority = 1)
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 
-  when fl->flowi_mark == 0x12341011, in xfrm_policy_match() do check like this:
+---
+Changes in v2:
+ - Addressed checkpatch alignment/line length warnings.
+ - Removed superfluous init in qcom_snps_hsphy_resume().
 
-	(fl->flowi_mark & pol->mark.m) != pol->mark.v
+ drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 100 ++++++++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-	0x12341011 & 0x1011 == 0x00001011
-	0x12341011 & 0x1001 == 0x00001001
-
- This also match different policy depends on the order of policy inserting.
-
-> 
-> .
-> 
+diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+index 4d74045..0a4e77af 100644
+--- a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
++++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+@@ -76,7 +76,9 @@
+  * @iface_clk: phy interface clock
+  * @phy_reset: phy reset control
+  * @vregs: regulator supplies bulk data
++ * @suspended: PHY is in the suspended state
+  * @phy_initialized: if PHY has been initialized correctly
++ * @mode: contains the current mode the PHY is in
+  */
+ struct qcom_snps_hsphy {
+ 	struct phy *phy;
+@@ -87,7 +89,9 @@ struct qcom_snps_hsphy {
+ 	struct reset_control *phy_reset;
+ 	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
+ 
++	bool suspended;
+ 	bool phy_initialized;
++	enum phy_mode mode;
+ };
+ 
+ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+@@ -104,6 +108,84 @@ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
+ 	readl_relaxed(base + offset);
+ }
+ 
++static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
++{
++	if (hsphy->suspended)
++		return 0;
++
++	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY, mode:%d\n",
++		hsphy->mode);
++
++	if (hsphy->mode == PHY_MODE_USB_HOST) {
++		/* Enable auto-resume to meet remote wakeup timing */
++		qcom_snps_hsphy_write_mask(hsphy->base,
++						USB2_PHY_USB_PHY_HS_PHY_CTRL2,
++						USB2_AUTO_RESUME,
++						USB2_AUTO_RESUME);
++		usleep_range(500, 1000);
++		qcom_snps_hsphy_write_mask(hsphy->base,
++						USB2_PHY_USB_PHY_HS_PHY_CTRL2,
++						0, USB2_AUTO_RESUME);
++	}
++
++	clk_disable_unprepare(hsphy->cfg_ahb_clk);
++	hsphy->suspended = true;
++
++	return 0;
++}
++
++static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
++{
++	int ret;
++
++	if (!hsphy->suspended)
++		return 0;
++
++	dev_dbg(&hsphy->phy->dev, "Resume QCOM SNPS PHY, mode:%d\n",
++		hsphy->mode);
++
++	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
++	if (ret) {
++		dev_err(&hsphy->phy->dev,
++			"failed to enable cfg ahb clock, %d\n", ret);
++		return ret;
++	}
++
++	hsphy->suspended = false;
++	return 0;
++}
++
++static int __maybe_unused qcom_snps_hsphy_runtime_suspend(struct device *dev)
++{
++	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
++
++	if (!hsphy->phy_initialized)
++		return 0;
++
++	qcom_snps_hsphy_suspend(hsphy);
++	return 0;
++}
++
++static int __maybe_unused qcom_snps_hsphy_runtime_resume(struct device *dev)
++{
++	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
++
++	if (!hsphy->phy_initialized)
++		return 0;
++
++	qcom_snps_hsphy_resume(hsphy);
++	return 0;
++}
++
++static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode,
++					int submode)
++{
++	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
++
++	hsphy->mode = mode;
++	return 0;
++}
++
+ static int qcom_snps_hsphy_init(struct phy *phy)
+ {
+ 	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
+@@ -175,6 +257,7 @@ static int qcom_snps_hsphy_init(struct phy *phy)
+ 					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
+ 
+ 	hsphy->phy_initialized = true;
++	hsphy->suspended = false;
+ 
+ 	return 0;
+ 
+@@ -201,6 +284,7 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
+ static const struct phy_ops qcom_snps_hsphy_gen_ops = {
+ 	.init		= qcom_snps_hsphy_init,
+ 	.exit		= qcom_snps_hsphy_exit,
++	.set_mode	= qcom_snps_hsphy_set_mode,
+ 	.owner		= THIS_MODULE,
+ };
+ 
+@@ -212,6 +296,11 @@ static int qcom_snps_hsphy_exit(struct phy *phy)
+ };
+ MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
+ 
++static const struct dev_pm_ops qcom_snps_hsphy_pm_ops = {
++	SET_RUNTIME_PM_OPS(qcom_snps_hsphy_runtime_suspend,
++			   qcom_snps_hsphy_runtime_resume, NULL)
++};
++
+ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -255,6 +344,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++	/*
++	 * Prevent runtime pm from being ON by default. Users can enable
++	 * it using power/control in sysfs.
++	 */
++	pm_runtime_forbid(dev);
++
+ 	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
+ 	if (IS_ERR(generic_phy)) {
+ 		ret = PTR_ERR(generic_phy);
+@@ -269,6 +366,8 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+ 	if (!IS_ERR(phy_provider))
+ 		dev_dbg(dev, "Registered Qcom-SNPS HS phy\n");
++	else
++		pm_runtime_disable(dev);
+ 
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+ }
+@@ -277,6 +376,7 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+ 	.probe		= qcom_snps_hsphy_probe,
+ 	.driver = {
+ 		.name	= "qcom-snps-hs-femto-v2-phy",
++		.pm = &qcom_snps_hsphy_pm_ops,
+ 		.of_match_table = qcom_snps_hsphy_of_match_table,
+ 	},
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
