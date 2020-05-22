@@ -2,233 +2,176 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FCCC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74DA206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E1D206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W+W1vlh8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6yVQ1Kx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgEVM0C (ORCPT
+        id S1729903AbgEVM0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:26:02 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46602 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728587AbgEVMZp (ORCPT
+        Fri, 22 May 2020 08:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729035AbgEVM0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:25:45 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MCPcuW069723;
-        Fri, 22 May 2020 07:25:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590150338;
-        bh=eXBSMpQf3dYh5WskBCPeXjZB//cH+6CVGFfywycbfVc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=W+W1vlh8rBwFzYozp+8gTg6pAqO+4B6sWPuMR/XOahmKRGfI1KGb7w05ML0ODtXfc
-         Te+L5q0TC2g/4sLXy4QgOvWQX63JyAImM7JNddXjuHLslXPXOEBeE80d+cRSA90NAV
-         i35gp3BKsU39aLmdgjKoAYNuaW6Fva00FyZ24UwE=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MCPbHU119223
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 07:25:37 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 07:25:37 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 07:25:37 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MCPbSP008000;
-        Fri, 22 May 2020 07:25:37 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay configuration
-Date:   Fri, 22 May 2020 07:25:34 -0500
-Message-ID: <20200522122534.3353-5-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522122534.3353-1-dmurphy@ti.com>
-References: <20200522122534.3353-1-dmurphy@ti.com>
+        Fri, 22 May 2020 08:26:51 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA369C061A0E;
+        Fri, 22 May 2020 05:26:50 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l21so12810524eji.4;
+        Fri, 22 May 2020 05:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/d/N+iY2vi2oOOegKYz1lfxX7C31LAb0x1+2j8xtYc4=;
+        b=c6yVQ1Kx/FjCjuiE19vDvj+D8R39o2+KtQ6JkkjLiL9+43cajWhiwIZ5LEm3tQoehn
+         TP8bqAyZbbTnBul63cNDGo+JOz5FAbktVU+LAJFii927GwzIylK4ZFdZFKQg6XpyeKhL
+         uXjGvWmRYZDX0gslNgLDj24Vo6AosWSCaX942y0nraMkU3bJs3G4+UsbnQgLVhqG3bTD
+         U3HKloWtZXyTZChF0yYqlh00wVeMsdLm6T1NM4KSxpVp+5UNKtFdFfQij4qpdshuC1b1
+         QGYf9pV+dPCGFdpnmjYbX3ygqZWrGEwb5oBSQbYXKefyZhylJQzLGZfurX4hVkn2h7J4
+         GobQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/d/N+iY2vi2oOOegKYz1lfxX7C31LAb0x1+2j8xtYc4=;
+        b=Xfas6N+nViLm6lavM8n1jGyTl/UFSonFG+STKsFEflvgWtKbb8bYwDt8PfDFsNYlDO
+         FqSh7HOypDfCbcuDGPlZsWRZUySED9RFx9GiK+PIfMRz7w7WpjE4vtoUuynsd6xC5p6u
+         ND305qjGlrsjHer8nePFSPI5IiHNfQ6U8I4r9ax+3BwEvHMfREwAFhumuMWxCXYBPXNo
+         stWIl1E0nNVkK51xIILj2zyFKxdDcXUzjTp/stQcst9TgJxoxT/jMJswA5/bxCuteFeu
+         CNfRe5i54tIhYwDJyEDy8Su//dvmrw2c/Kfqp+CBd7Odaydz/KQKOQ7fbhL32Z0wwxKz
+         /7Fw==
+X-Gm-Message-State: AOAM530xxcKuHZC2hOxXXuStGzca6E/zfsbZsRHm+fZuy3EYvVp9ur1M
+        jj0nBCY43q8OTVUytpm39dGiSQbD
+X-Google-Smtp-Source: ABdhPJwha6Ty5DEDnbwo7UrQnYUXwATtXJwCkl/VPb13J0Kq5MRaAjnSfNDmf1MMKK32s2WekX9j1g==
+X-Received: by 2002:a17:906:2dc8:: with SMTP id h8mr8313224eji.108.1590150409343;
+        Fri, 22 May 2020 05:26:49 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id 93sm7262983edy.49.2020.05.22.05.26.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 05:26:45 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:26:44 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: Re: [PATCH] sdhci: tegra: Avoid reading autocal timeout values when
+ not applicable
+Message-ID: <20200522122644.GE2163848@ulmo>
+References: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SWTRyWv/ijrBap1m"
+Content-Disposition: inline
+In-Reply-To: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add RGMII internal delay configuration for Rx and Tx.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83869.c | 101 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 101 insertions(+)
+--SWTRyWv/ijrBap1m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index cfb22a21a2e6..a9008d32e2b6 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -99,6 +99,14 @@
- #define DP83869_OP_MODE_MII			BIT(5)
- #define DP83869_SGMII_RGMII_BRIDGE		BIT(6)
- 
-+/* RGMIIDCTL bits */
-+#define DP83869_RGMII_TX_CLK_DELAY_SHIFT	4
-+#define DP83869_RGMII_CLK_DELAY_INV		0
-+
-+static int dp83869_internal_delay[] = {250, 500, 750, 1000, 1250, 1500, 1750,
-+				       2000, 2250, 2500, 2750, 3000, 3250,
-+				       3500, 3750, 4000};
-+
- enum {
- 	DP83869_PORT_MIRRORING_KEEP,
- 	DP83869_PORT_MIRRORING_EN,
-@@ -108,6 +116,8 @@ enum {
- struct dp83869_private {
- 	int tx_fifo_depth;
- 	int rx_fifo_depth;
-+	u32 rx_id_delay;
-+	u32 tx_id_delay;
- 	int io_impedance;
- 	int port_mirroring;
- 	bool rxctrl_strap_quirk;
-@@ -182,6 +192,7 @@ static int dp83869_of_init(struct phy_device *phydev)
- 	struct dp83869_private *dp83869 = phydev->priv;
- 	struct device *dev = &phydev->mdio.dev;
- 	struct device_node *of_node = dev->of_node;
-+	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
- 	int ret;
- 
- 	if (!of_node)
-@@ -232,6 +243,26 @@ static int dp83869_of_init(struct phy_device *phydev)
- 				 &dp83869->tx_fifo_depth))
- 		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
- 
-+	dp83869->rx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
-+	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
-+				   &dp83869->rx_id_delay);
-+	if (!ret && dp83869->rx_id_delay > dp83869_internal_delay[delay_size]) {
-+		phydev_err(phydev,
-+			   "rx-internal-delay value of %u out of range\n",
-+			   dp83869->rx_id_delay);
-+		return -EINVAL;
-+	}
-+
-+	dp83869->tx_id_delay = DP83869_RGMII_CLK_DELAY_INV;
-+	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
-+				   &dp83869->tx_id_delay);
-+	if (!ret && dp83869->tx_id_delay > dp83869_internal_delay[delay_size]) {
-+		phydev_err(phydev,
-+			   "tx-internal-delay value of %u out of range\n",
-+			   dp83869->tx_id_delay);
-+		return -EINVAL;
-+	}
-+
- 	return ret;
- }
- #else
-@@ -270,6 +301,29 @@ static int dp83869_configure_rgmii(struct phy_device *phydev,
- 	return ret;
- }
- 
-+static int dp83869_verify_rgmii_cfg(struct phy_device *phydev)
-+{
-+	struct dp83869_private *dp83869 = phydev->priv;
-+
-+	/* RX delay *must* be specified if internal delay of RX is used. */
-+	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	     phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID) &&
-+	     dp83869->rx_id_delay == DP83869_RGMII_CLK_DELAY_INV) {
-+		phydev_err(phydev, "ti,rx-internal-delay must be specified\n");
-+		return -EINVAL;
-+	}
-+
-+	/* TX delay *must* be specified if internal delay of TX is used. */
-+	if ((phydev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+	     phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID) &&
-+	     dp83869->tx_id_delay == DP83869_RGMII_CLK_DELAY_INV) {
-+		phydev_err(phydev, "ti,tx-internal-delay must be specified\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int dp83869_configure_mode(struct phy_device *phydev,
- 				  struct dp83869_private *dp83869)
- {
-@@ -371,6 +425,12 @@ static int dp83869_config_init(struct phy_device *phydev)
- {
- 	struct dp83869_private *dp83869 = phydev->priv;
- 	int ret, val;
-+	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
-+	int delay = 0;
-+
-+	ret = dp83869_verify_rgmii_cfg(phydev);
-+	if (ret)
-+		return ret;
- 
- 	ret = dp83869_configure_mode(phydev, dp83869);
- 	if (ret)
-@@ -394,6 +454,47 @@ static int dp83869_config_init(struct phy_device *phydev)
- 				     dp83869->clk_output_sel <<
- 				     DP83869_IO_MUX_CFG_CLK_O_SEL_SHIFT);
- 
-+	if (phy_interface_is_rgmii(phydev)) {
-+		val = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL);
-+
-+		val &= ~(DP83869_RGMII_TX_CLK_DELAY_EN | DP83869_RGMII_RX_CLK_DELAY_EN);
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
-+			val |= (DP83869_RGMII_TX_CLK_DELAY_EN | DP83869_RGMII_RX_CLK_DELAY_EN);
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+			val |= DP83869_RGMII_TX_CLK_DELAY_EN;
-+
-+		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+			val |= DP83869_RGMII_RX_CLK_DELAY_EN;
-+
-+		phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIICTL, val);
-+
-+		if (dp83869->rx_id_delay) {
-+			val = phy_get_delay_index(phydev,
-+						  &dp83869_internal_delay[0],
-+						  delay_size,
-+						  dp83869->rx_id_delay);
-+			if (val < 0)
-+				return val;
-+
-+			delay |= val;
-+		}
-+
-+		if (dp83869->tx_id_delay) {
-+			val = phy_get_delay_index(phydev,
-+						  &dp83869_internal_delay[0],
-+						  delay_size,
-+						  dp83869->tx_id_delay);
-+			if (val < 0)
-+				return val;
-+
-+			delay |= val << DP83869_RGMII_TX_CLK_DELAY_SHIFT;
-+		}
-+
-+		phy_write_mmd(phydev, DP83869_DEVADDR, DP83869_RGMIIDCTL,
-+			      delay);
-+	}
-+
- 	return ret;
- }
- 
--- 
-2.26.2
+On Wed, May 20, 2020 at 01:08:57PM -0700, Sowjanya Komatineni wrote:
+> When auto calibration timeouts, calibration is disabled and fail-safe
+> drive strength values are programmed based on the signal voltage.
+>=20
+> Different fail-safe drive strength values based on voltage are
+> applicable only for SoCs supporting 3V3 and 1V8 pad controls.
+>=20
+> So, this patch avoids reading these properties from the device tree
+> for SoCs not using pad controls and the warning of missing properties
+> will not show up on these SoC platforms.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 57 ++++++++++++++++++++++++------------=
+------
+>  1 file changed, 33 insertions(+), 24 deletions(-)
+>=20
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegr=
+a.c
+> index 3e2c510..141b49b 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -605,6 +605,39 @@ static void tegra_sdhci_parse_pad_autocal_dt(struct =
+sdhci_host *host)
+>  		autocal->pull_down_1v8 =3D 0;
+> =20
+>  	err =3D device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-up-offset-sdr104",
+> +			&autocal->pull_up_sdr104);
+> +	if (err)
+> +		autocal->pull_up_sdr104 =3D autocal->pull_up_1v8;
+> +
+> +	err =3D device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-down-offset-sdr104",
+> +			&autocal->pull_down_sdr104);
+> +	if (err)
+> +		autocal->pull_down_sdr104 =3D autocal->pull_down_1v8;
+> +
+> +	err =3D device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-up-offset-hs400",
+> +			&autocal->pull_up_hs400);
+> +	if (err)
+> +		autocal->pull_up_hs400 =3D autocal->pull_up_1v8;
+> +
+> +	err =3D device_property_read_u32(host->mmc->parent,
+> +			"nvidia,pad-autocal-pull-down-offset-hs400",
+> +			&autocal->pull_down_hs400);
+> +	if (err)
+> +		autocal->pull_down_hs400 =3D autocal->pull_down_1v8;
+> +
+> +	/*
+> +	 * Different fail-safe drive strength values based on the signaling
+> +	 * voltage are applicable for SoCs supporting 3V3 and 1V8 pad controls.
+> +	 * So, avoid reading below device tree properies for SoCs that don't
+> +	 * have NVQUIRK_NEEDS_PAD_CONTROL.
+> +	 */
+> +	if (!(tegra_host->soc_data->nvquirks & NVQUIRK_NEEDS_PAD_CONTROL))
+> +		return;
 
+Hm... so what exactly is the difference between NVQUIRK_HAS_PADCALIB? I
+think Tegra30 will also end up calling tegra_sdhci_set_padctrl(), but it
+will then write the default (0) value for these drive strength. Is that
+okay?
+
+Thierry
+
+--SWTRyWv/ijrBap1m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7HxQIACgkQ3SOs138+
+s6ECKQ/+MUyZimUTr+GNyYhG0txsozb2smT7J9qvfa3wFzJQt8aO9n84YGm4Hlng
+V6xRd8ZOd96YaY05+gWu9CUiymbHSNQISxCb2K1IghSf+LNJcMxQQMAnEnhgtHHF
+LaAR5bZtaaSxvxE3ToKP9cJkRjMgwYloEEaK+voYD+PPSzltvr3juqJe8SxDQKy/
+1Kc64KUbdYA7xFjMCZzDJ6mdNkZ5P74p7ftp7mfjhI4cTIVy62YGQuaQOmLpb7Sc
+4NthQrnlM64CZyD9okaqpArOw5hthoSQUD+vBGVEUCnyM6SBUmHZegSkxP51YJuF
+x6ehf/ubBhc0YbviwSPW/ErmY1wp/w/FWM6P+j4sryxRoTMPuGcj25Pw7ZQa3VGz
+NPtpMZLedcdftFSfUmqfuAUZ2wVMQEU1acm2lLNZMTtziICudTYfuivu4l6a7tf4
+nm0MGXiqjaGq1V2uafvzBEBGlTapRKLWFUQSb9mlL6xKh3KMQQunrUEg4uJaxk3V
+MAOHVWw8Igp3xC+DDUe9TuF7/RtwNiD1TiRQTiJgM4l0GbCShgP9iOJ2aN7vA2QR
+fUL6aULacD6eoT1HNE78TQjhqNddT5F5zuA6jETEJedUitUPmzHYKy8XITli0hTi
+VtsGGz9DVDvAkUhkQ9eKmsQFkJGYT5je7yRzOjpokZim2xSZg8A=
+=npis
+-----END PGP SIGNATURE-----
+
+--SWTRyWv/ijrBap1m--
