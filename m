@@ -2,77 +2,112 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1835C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60503C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2FDA206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40627206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590125011;
+	bh=3erwWfXhHpydL8QbJqRSSSXRI6IDvqHdCa9320UWjzc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=av7FoRQ+OmSpfA+MgIokcs2e6aaqxkUuHWpAgVHj+rjW4KXzaj4sJ+Q7Pdvc9vOtA
+	 OKMVxgfjs9PMX0NtJa8f5ZowKw6pmdCpp64ArIt04jgt4GChFDLID9T1rXV6Ar6Qf/
+	 C/8+nmaEYcI/E6UuQXApET3b8Zn6u2dALh0dHBOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgEVFWe (ORCPT
+        id S1728137AbgEVFXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:22:34 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:23092 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725894AbgEVFWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 01:22:34 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 13:22:24
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Fri, 22 May 2020 13:22:24 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc:     kjlu@umn.edu, "Bin Liu" <b-liu@ti.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] [v2] usb: musb: Fix runtime PM imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200522051222.GA523130@kroah.com>
-References: <20200522025902.11516-1-dinghao.liu@zju.edu.cn>
- <20200522051222.GA523130@kroah.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Fri, 22 May 2020 01:23:30 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43160 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgEVFXa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 01:23:30 -0400
+Received: by mail-qk1-f193.google.com with SMTP id i14so9620079qka.10;
+        Thu, 21 May 2020 22:23:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2yxPyGEr8MWT1pOhw2naOgT5hnh4gm8Tc6BN4m/HHiM=;
+        b=bCCLyKSeW4SYOYrbtsqw6DILi56i7Uac+owfIoq7gkPlZYMCc5AMLJg6ALFMtt/ZFU
+         85l9AsZlNzsWffhunnDhXHD65+bTavwvK2VKPNJQ7qq8L81cew49XuKFs3kqI1uZbJRY
+         kBCVU9YC67H1A6iwDwaVN2j3RrX3EKheewLbF6fST4c5ptGtOF6JRcRF7/cxYM4rS9vX
+         4iVEVGxzW2oxAUTZVgLc2p3O8HaVDy3IMBxr5Rir8xOk3FC1KFK6n3ilkO1hDY4jdBUm
+         wA2HO/LAdKUil0zkWaMXpqGrw9NLopibbvvJr2IjhUhySQ9/302rNcOggte/kWtM1KvD
+         0VoA==
+X-Gm-Message-State: AOAM5316eoku9k7S8h/fxUdNU2US/aPNNzLmAeqeTVJ2zRCglktpvwxw
+        23o5dnvntJgmPlOy0+YtTnPCzcaUZVA=
+X-Google-Smtp-Source: ABdhPJz2rrQCfIvELxNSTJrc0Tjmiw7rfECQd4FSIecU9g/XagoyPem06C+zwUQD6IymbXzTyvRuQw==
+X-Received: by 2002:a37:a1cb:: with SMTP id k194mr13115064qke.501.1590125008229;
+        Thu, 21 May 2020 22:23:28 -0700 (PDT)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id m7sm6624847qti.6.2020.05.21.22.23.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 22:23:28 -0700 (PDT)
+Received: by mail-qk1-f169.google.com with SMTP id m11so9689569qka.4;
+        Thu, 21 May 2020 22:23:27 -0700 (PDT)
+X-Received: by 2002:a05:620a:6da:: with SMTP id 26mr13060082qky.196.1590125007554;
+ Thu, 21 May 2020 22:23:27 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <2ca9a5fc.be29f.1723ad51c1d.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgBHf3iQYcde6ev7AQ--.39091W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoIBlZdtOQLzwAAsZ
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
-        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_JF0_Jw1lV2xY6cIj6I8E87Iv67AKxVW8JVWxJwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8WwCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_JF0_Jw1lV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUU==
+References: <20200520135708.GA1086370@bjorn-Precision-5520> <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
+In-Reply-To: <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com>
+From:   Paul Burton <paulburton@kernel.org>
+Date:   Thu, 21 May 2020 22:23:14 -0700
+X-Gmail-Original-Message-ID: <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
+Message-ID: <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
+Subject: Re: piix4-poweroff.c I/O BAR usage
+To:     "Maciej W. Rozycki" <macro@wdc.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29ycnksIGl0J3MgbXkgY2FyZWxlc3NuZXNzLiBJbiB2MSBJIGFkZGVkIHBtX3J1bnRpbWVfcHV0
-X2F1dG9zdXNwZW5kKCkKYWZ0ZXIgY29weV9mcm9tX3VzZXIoKSB0byBmaXggdGhpcyBwcm9ibGVt
-LiBTaW5jZSBjb3B5X2Zyb21fdXNlcigpIGlzCm1vdmVkIHRvIHRoZSBiZWdpbm5pbmcgbm93LCB3
-ZSBuZWVkIG5vdCB0byBhZGQgUE0gZGVjcmVtZW50LiAKClJlZ2FyZHMsCkRpbmdoYW8KCj4gT24g
-RnJpLCBNYXkgMjIsIDIwMjAgYXQgMTA6NTk6MDJBTSArMDgwMCwgRGluZ2hhbyBMaXUgd3JvdGU6
-Cj4gPiBXaGVuIGNvcHlfZnJvbV91c2VyKCkgcmV0dXJucyBhbiBlcnJvciBjb2RlLCB0aGVyZQo+
-ID4gaXMgYSBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgaW1iYWxhbmNlLgo+ID4gCj4gPiBGaXgg
-dGhpcyBieSBtb3ZpbmcgY29weV9mcm9tX3VzZXIoKSB0byB0aGUgYmVnaW5uaW5nCj4gPiBvZiB0
-aGlzIGZ1bmN0aW9uLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8ZGluZ2hh
-by5saXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvdXNiL211c2IvbXVzYl9kZWJ1
-Z2ZzLmMgfCAxMCArKysrKy0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
-KSwgNSBkZWxldGlvbnMoLSkKPiAKPiBXaGF0IGNoYW5nZWQgZnJvbSB2MT8gIEFsd2F5cyBzaG93
-IHRoYXQgYmVsb3cgdGhlIC0tLSBsaW5lIGFzIHRoZQo+IGRvY3VtZW50YXRpb24gc2F5cyB0by4K
-PiAKPiB0aGFua3MsCj4gCj4gZ3JlZyBrLWgK
+Hello,
+
+On Thu, May 21, 2020 at 6:04 PM Maciej W. Rozycki <macro@wdc.com> wrote:
+>  Paul may or may not be reachable anymore, so I'll step in.
+
+I'm reachable but lacking free time & with no access to Malta hardware
+I can't claim to be too useful here, so thanks for responding :)
+
+Before being moved to a driver (which was mostly driven by a desire to
+migrate Malta to a multi-platform/generic kernel using DT) this code
+was part of arch/mips/mti-malta/ where I added it in commit
+b6911bba598f ("MIPS: Malta: add suspend state entry code"). My main
+motivation at the time was to make QEMU exit after running poweroff,
+but I did ensure it worked on real Malta boards too (at least Malta-R
+with CoreFPGA6). Over the years since then it shocked a couple of
+hardware people to see software power off a Malta - if the original
+hardware designers had intended that to work then the knowledge had
+been lost over time :)
+
+I suspect the code was based on visws_machine_power_off():
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/platform/visws/visws_quirks.c?h=v3.10#n125
+
+> > pci_request_region() takes a BAR number (0-5), but here we're passing
+> > PCI_BRIDGE_RESOURCES (13 if CONFIG_PCI_IOV, or 7 otherwise), which is
+> > the bridge I/O window.
+> >
+> > I don't think this device ([8086:7113]) is a bridge, so that resource
+> > should be empty.
+>
+>  Hmm, isn't the resource actually set up by `quirk_piix4_acpi' though?
+
+I agree that the region used is meant to match that set up by
+quirk_piix4_acpi(), which also refers to it using the
+PCI_BRIDGE_RESOURCES macro.
+
+Thanks,
+    Paul
