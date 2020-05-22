@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DF1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2C0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7517A20825
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE2E207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jKjykgnL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SK94ZY+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgEVDhA (ORCPT
+        id S1728356AbgEVDhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 23:37:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38392 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgEVDg5 (ORCPT
+        Thu, 21 May 2020 23:37:14 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38234 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728312AbgEVDhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 23:36:57 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M3ak40065178;
-        Thu, 21 May 2020 22:36:46 -0500
+        Thu, 21 May 2020 23:37:12 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04M3b1sF023706;
+        Thu, 21 May 2020 22:37:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590118606;
-        bh=ZG1VUcH+6tOwwV7BnhCzX/gBAhx0Ee8zky2NKNJPpXQ=;
+        s=ti-com-17Q1; t=1590118621;
+        bh=gZlWENmGvofq+Xo+h9S1xDtvJZ+Ww2fpcJ9iY3aMylA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jKjykgnLgukGILn7OHgxjuncX10EEu/jsmoHAQVBzLgV9NlNDm+DyQmUGltWMUFmg
-         cq9do2IIdJeRDq0TlHDjVbT//FQGTxkxpWfE2Y4wUkMVilh4Agf7JTQR/5dXUrjN8W
-         WuXvgon/w9tP2yVoLxwhMWHgWo6h7p37Rh4T1i30=
+        b=SK94ZY+nsRb1gLgCmed3Pjcf1e+ynclgfixI08/WAw+D7GJXwTtgRZXmV7BoAan/V
+         /jotGBC/5U1kw1UQ9CeB/mo9wy5NadA4EMZPCHeusmq36SxYj3oYy0pchZV0zq+GLJ
+         5jhfY+Fp04KByd/26XaB/b+onqvK9m6gg+Fe1YX8=
 Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M3ak2Q026409
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04M3b1X1117660
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 May 2020 22:36:46 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+        Thu, 21 May 2020 22:37:01 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
  (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 21
- May 2020 22:36:45 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 22:37:00 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 21 May 2020 22:36:45 -0500
+ Frontend Transport; Thu, 21 May 2020 22:37:00 -0500
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aYbw062596;
-        Thu, 21 May 2020 22:36:42 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04M3aYc2062596;
+        Thu, 21 May 2020 22:36:57 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -59,9 +59,9 @@ CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v5 02/14] linux/kernel.h: Add PTR_ALIGN_DOWN macro
-Date:   Fri, 22 May 2020 09:06:19 +0530
-Message-ID: <20200522033631.32574-3-kishon@ti.com>
+Subject: [PATCH v5 06/14] dt-bindings: PCI: cadence: Remove "mem" from reg binding
+Date:   Fri, 22 May 2020 09:06:23 +0530
+Message-ID: <20200522033631.32574-7-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200522033631.32574-1-kishon@ti.com>
 References: <20200522033631.32574-1-kishon@ti.com>
@@ -73,28 +73,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a macro for aligning down a pointer. This is useful to get an
-aligned register address when a device allows only word access and
-doesn't allow half word or byte access.
+"mem" is not a memory resource and it overlaps with PCIe config space
+and memory region. Removve "mem" from reg binding.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- include/linux/kernel.h | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/pci/cdns,cdns-pcie-host.yaml      | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 9b7a8d74a9d6..c3b361b5be54 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -34,6 +34,7 @@
- #define ALIGN_DOWN(x, a)	__ALIGN_KERNEL((x) - ((a) - 1), (a))
- #define __ALIGN_MASK(x, mask)	__ALIGN_KERNEL_MASK((x), (mask))
- #define PTR_ALIGN(p, a)		((typeof(p))ALIGN((unsigned long)(p), (a)))
-+#define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
- #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+index 84a8f095d031..6d67067843bf 100644
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+@@ -18,13 +18,12 @@ properties:
+     const: cdns,cdns-pcie-host
  
- /* generic data direction definitions */
+   reg:
+-    maxItems: 3
++    maxItems: 2
+ 
+   reg-names:
+     items:
+       - const: reg
+       - const: cfg
+-      - const: mem
+ 
+   msi-parent: true
+ 
+@@ -49,9 +48,8 @@ examples:
+             device-id = <0x0200>;
+ 
+             reg = <0x0 0xfb000000  0x0 0x01000000>,
+-                  <0x0 0x41000000  0x0 0x00001000>,
+-                  <0x0 0x40000000  0x0 0x04000000>;
+-            reg-names = "reg", "cfg", "mem";
++                  <0x0 0x41000000  0x0 0x00001000>;
++            reg-names = "reg", "cfg";
+ 
+             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
 -- 
 2.17.1
 
