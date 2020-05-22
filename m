@@ -2,126 +2,181 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19411C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF81C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD65020679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CB120723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFNiuief"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tX0SIp0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgEVNWz (ORCPT
+        id S1729923AbgEVNXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:22:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729008AbgEVNWy (ORCPT
+        Fri, 22 May 2020 09:23:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:48006 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729399AbgEVNXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:22:54 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DAEC061A0E;
-        Fri, 22 May 2020 06:22:54 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x13so5186544pfn.11;
-        Fri, 22 May 2020 06:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tvV8H8iaSx8j1KBrvJAPfKvYld57AGXC1GD/IpW0w6M=;
-        b=BFNiuief5Bh/c+aNaqSi4SYxoQXl2ywpjSlCnBd7tgwE36vK6g3KKs00MGc6co3Xft
-         vKbE/emtIclZPGxcwqwMFTxKbF/Pf9dUfOlU+N6dhoQqM66Tz7sFVwLrKnDmA50y1qN4
-         reUePoswLJSkY4DKGa+Vl6pK9xVWedDCJt5cr0jFj7tQH1nW7rMq1lp+CiWU8/GqRJBB
-         NvoHOBICe1KB3Ad7Aw/ovaevvAiVC7yYNTR890vrGnh4qN9yFpE5oQEuwJlMEhRHRM/w
-         +6f0zVNePdImtrIaJRXaK1vvHWng6vZNuJ1fteVv6o6P68xiX/jhGoYMevBTIqlX3U3N
-         onRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tvV8H8iaSx8j1KBrvJAPfKvYld57AGXC1GD/IpW0w6M=;
-        b=lYOyVQUT19IkvMTwVQTgN4mydXmfT3lB0xxPvGoQkmZo06NrNEXydZc4C9WFw7MZAy
-         BWIl7sUg6x4JfPtj4YpfqOJMOZlAeMZU9YCnhqX7K7gQdcjxlHr1V0htp302HbbWDZij
-         jBUp+8oVyjuqg9BQYSbjqzdRnbeh5PVvvDqiax5Xs+pC2Bxv5LB/Glop/iQXaAKu/Yv1
-         kTEeR3WEhXDor/yeU7CzCnqtpQYl1pT3rswMRpGkW39/m+oRLlZj9bboTNQR9InxgS+k
-         nhy65qVDXuG80sawCjP4wi9HRmCubECSNrjTzAsv9QhmrXRqgj2tdkTSM+oJ9/ffxD/Y
-         rBeA==
-X-Gm-Message-State: AOAM531VQipoBr7gvdVnCqYfjtkkudm8z6Wa3mvK+Q8vUIOajMZcQ84X
-        8mfXPavWv2bOBNQQ1eM23xo=
-X-Google-Smtp-Source: ABdhPJzWVBm8e8X1m3Mj9UtD/bZlduYmtuYG2vfyIeErKFBwIvdwOUTOC5NqsY4VR/xcO6Ax4Qf57g==
-X-Received: by 2002:a62:2c8d:: with SMTP id s135mr4009960pfs.231.1590153773791;
-        Fri, 22 May 2020 06:22:53 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z6sm6567130pgu.85.2020.05.22.06.22.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 06:22:52 -0700 (PDT)
-Date:   Fri, 22 May 2020 06:22:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     zhenghaili <hailizheng1993@gmail.com>
-Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        hailizheng <haili.zheng@powercore.com.cn>
-Subject: Re: [PATCH] drivers/hwmon/nct7802: Replace container_of() API
-Message-ID: <20200522132251.GA221470@roeck-us.net>
-References: <1589891119-16508-1-git-send-email-haili.zheng@powercore.com.cn>
+        Fri, 22 May 2020 09:23:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MDMLnF129997;
+        Fri, 22 May 2020 13:23:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=gZnfBrzAvRzx8jUFLTXQ8QllxngxYzmzC5MjjDonJe8=;
+ b=tX0SIp0bVzqD3O0hqKK1fsbNI5KXLBSbmIK3CQsCMzIj7t04LDO17Trpko/fAzkFZ11r
+ kEWAvq/E8fQkiW7vuXl+RbTkRpMJXyauafF0xW6AUTp0kG8uV1rg40/BvUsHc9InYWpD
+ BLkbCPMrXketqBlyfRMexfCSVdVkeBpBxuzVNiQ5Ero86RtvT4mOyx+jwW9+28JrrFfA
+ IfyOd0YDmTeFlJBR7uZY5kancMr02DMQyx//VZatXlSLvrEPVlQEa8mC3laP/zGIdFMx
+ Pz9rIQLJQRhgRyGC8XbqWTlhvcXUb3F6wbOya9sMZ1kWJm7fYr9fvEtwiJ5Pe9xYN+dw Zw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 31284mdq3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 13:23:38 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MDIaNo006519;
+        Fri, 22 May 2020 13:23:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 314gmb52d4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 May 2020 13:23:37 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04MDNS3x025160;
+        Fri, 22 May 2020 13:23:28 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 May 2020 06:23:27 -0700
+Date:   Fri, 22 May 2020 16:23:18 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        dinghao.liu@zju.edu.cn, Kangjie Lu <kjlu@umn.edu>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
+ on error
+Message-ID: <20200522132318.GM30374@kadam>
+References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
+ <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
+ <20200520150230.GC30374@kadam>
+ <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
+ <20200521091505.GF30374@kadam>
+ <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
+ <20200521173901.GA22310@kadam>
+ <20200522131031.GL2163848@ulmo>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589891119-16508-1-git-send-email-haili.zheng@powercore.com.cn>
+In-Reply-To: <20200522131031.GL2163848@ulmo>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=21
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005220109
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=21 mlxscore=0
+ cotscore=-2147483648 impostorscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005220109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:25:19AM -0400, zhenghaili wrote:
-> From: hailizheng <haili.zheng@powercore.com.cn>
+On Fri, May 22, 2020 at 03:10:31PM +0200, Thierry Reding wrote:
+> On Thu, May 21, 2020 at 08:39:02PM +0300, Dan Carpenter wrote:
+> > On Thu, May 21, 2020 at 05:22:05PM +0200, Rafael J. Wysocki wrote:
+> > > On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > > >
+> > > > On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
+> > > > > Hi, Dan,
+> > > > >
+> > > > > I agree the best solution is to fix __pm_runtime_resume(). But there are also
+> > > > > many cases that assume pm_runtime_get_sync() will change PM usage
+> > > > > counter on error. According to my static analysis results, the number of these
+> > > > > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
+> > > > > more new bugs. Therefore I think we should resolve the "bug" cases individually.
+> > > > >
+> > > >
+> > > > That's why I was saying that we may need to introduce a new replacement
+> > > > function for pm_runtime_get_sync() that works as expected.
+> > > >
+> > > > There is no reason why we have to live with the old behavior.
+> > > 
+> > > What exactly do you mean by "the old behavior"?
+> > 
+> > I'm suggesting we leave pm_runtime_get_sync() alone but we add a new
+> > function which called pm_runtime_get_sync_resume() which does something
+> > like this:
+> > 
+> > static inline int pm_runtime_get_sync_resume(struct device *dev)
+> > {
+> > 	int ret;
+> > 
+> > 	ret = __pm_runtime_resume(dev, RPM_GET_PUT);
+> > 	if (ret < 0) {
+> > 		pm_runtime_put(dev);
+> > 		return ret;
+> > 	}
+> > 	return 0;
+> > }
+> > 
+> > I'm not sure if pm_runtime_put() is the correct thing to do?  The other
+> > thing is that this always returns zero on success.  I don't know that
+> > drivers ever care to differentiate between one and zero returns.
+> > 
+> > Then if any of the caller expect that behavior we update them to use the
+> > new function.
 > 
-> Replace container_of() API with kobj_to_dev().
+> Does that really have many benefits, though? I understand that this
+> would perhaps be easier to use because it is more in line with how other
+> functions operate. On the other hand, in some cases you may want to call
+> a different version of pm_runtime_put() on failure, as discussed in
+> other threads.
+
+I wasn't CC'd on the other threads so I don't know.  :/  I have always
+assumed it was something like this but I don't know the details and
+there is no documentation.
+
+http://sweng.the-davies.net/Home/rustys-api-design-manifesto
+You're essentially arguing that it's a #1 on Rusty's scale but ideally
+we would want to be at #7.
+
 > 
-> Signed-off-by: hailizheng <haili.zheng@powercore.com.cn>
+> Even ignoring that issue, any existing callsites that are leaking the
+> reference would have to be updated to call the new function, which would
+> be pretty much the same amount of work as updating the callsites to fix
+> the leak, right?
 
-Applied.
+With the current API we're constantly adding bugs.  I imagine that once
+we add a straight forward default and some documentation then we will
+solve this.
 
-Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/nct7802.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/hwmon/nct7802.c b/drivers/hwmon/nct7802.c
-> index 2e97e56..570df8e 100644
-> --- a/drivers/hwmon/nct7802.c
-> +++ b/drivers/hwmon/nct7802.c
-> @@ -679,7 +679,7 @@ static struct attribute *nct7802_temp_attrs[] = {
->  static umode_t nct7802_temp_is_visible(struct kobject *kobj,
->  				       struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct7802_data *data = dev_get_drvdata(dev);
->  	unsigned int reg;
->  	int err;
-> @@ -778,7 +778,7 @@ static struct attribute *nct7802_in_attrs[] = {
->  static umode_t nct7802_in_is_visible(struct kobject *kobj,
->  				     struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct7802_data *data = dev_get_drvdata(dev);
->  	unsigned int reg;
->  	int err;
-> @@ -853,7 +853,7 @@ static struct attribute *nct7802_fan_attrs[] = {
->  static umode_t nct7802_fan_is_visible(struct kobject *kobj,
->  				      struct attribute *attr, int index)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct nct7802_data *data = dev_get_drvdata(dev);
->  	int fan = index / 4;	/* 4 attributes per fan */
->  	unsigned int reg;
+> So if instead we just fix up the leaks, we might have a case of an API
+> that doesn't work as some of us (myself included) expected it, but at
+> least it would be consistent. If we add another variant things become
+> fragmented and therefore even more complicated to use and review.
+
+That's the approach that we've been trying and it's clearly not working.
+
+regards,
+dan carpenter
+
