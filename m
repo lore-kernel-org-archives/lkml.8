@@ -2,75 +2,44 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C182120757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:42:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cy4Iv1dK"
+	by mail.kernel.org (Postfix) with ESMTP id 3359720759
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731169AbgEVVmY (ORCPT
+        id S1731140AbgEVVpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731109AbgEVVmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:42:17 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17180C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:42:17 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id a13so4939541pls.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2fVUAtXSaWXKY2QT13OooGchGaVr8PVTqlkJIqIUCls=;
-        b=cy4Iv1dKrgmFf8HFHiIihXeT9oWaLOFcX1u1xNS9Unjy3U9g7biDlL4hxe7LkC719J
-         FkNVSCdFQwEML09RQPogyqLJF7hZonYdZrgu15BM52spOiyUe3YyKKRv5wh/hCiPVWMA
-         sRITXFqyl4JxmJQPmbVQk9YiW2pb7BX1K5UxwM+BR9pfgXKlOlFglFW/7aGbqlI7ammv
-         MZWvNtpLIVPyFv5psFYbpRL2iowWwVVe0UUhgs0I90tUqHZsEYFrIk3cosGX9kmhvWos
-         USZpLWnCmaHoNlbyoMPtENvVpECQp7NrVPImq2t0nfV/BxjRrJ5ZKEsw4qOZ/jki0p8u
-         QdWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2fVUAtXSaWXKY2QT13OooGchGaVr8PVTqlkJIqIUCls=;
-        b=TYm4FXYy435zVHPVHoZSFqAeHjDutgyBovKb5DmJMFZU/P7aIpHky4Zc4E0/TcyjIF
-         fnyaWjVcNWwxa2TC1zHUTnq0q7KCgT4/QkOWNGGuXOSLoi6nH7v/WRRGKZ9CMsD8GPNA
-         FIVGHjxUfsId7O/QtECs+qW+LhMMa4nQznWO76Ay5lrn0qN5pdr+qKksJvh2m2RtXe8P
-         ezqP2YFTKsW0a6R02lsvlAnQzg8MNodv3qHn2ciVxQHhOlByyFVuAPAt34lCSgJwu7xi
-         f9O/7j/S7R6GQfMr4iSjmynKzee3MZw6ZBIvtzTdCPCsYCtG+BgZgEb4ASIiZHCceKvV
-         0Ctg==
-X-Gm-Message-State: AOAM531rlonb6AFBjvwazs5A5dXYmBjcf2g5S0OSY9nu5qqPUODxhMM3
-        GJ3H73CETDSdRVXGAsTZwVc=
-X-Google-Smtp-Source: ABdhPJyWoqBNAKwmwX2jgA3ybB8t3HseB65aDPJiYRmvuQhMYa7q3wo6oJvsLtPe9Q8F9aOSJpBfiw==
-X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr6547467pjb.78.1590183736327;
-        Fri, 22 May 2020 14:42:16 -0700 (PDT)
-Received: from octofox.hsd1.ca.comcast.net ([2601:641:400:e00:d0d2:96ff:22ac:b8e6])
-        by smtp.gmail.com with ESMTPSA id 4sm7625098pff.18.2020.05.22.14.42.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 14:42:15 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org
-Cc:     Chris Zankel <chris@zankel.net>, Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 3/3] xtensa: add missing __user annotations to asm/uaccess.h
-Date:   Fri, 22 May 2020 14:41:53 -0700
-Message-Id: <20200522214153.30163-4-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200522214153.30163-1-jcmvbkbc@gmail.com>
-References: <20200522214153.30163-1-jcmvbkbc@gmail.com>
+        Fri, 22 May 2020 17:45:14 -0400
+Received: from mga01.intel.com ([192.55.52.88]:1829 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731036AbgEVVpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 17:45:14 -0400
+IronPort-SDR: wyNlP05v2QZgCvQiL+nDBe4njUr9hZDGH4BFkDyykCRtfx8e/a8KRl+szQHU8J30US+zBqMpU0
+ OvyeH8YiREbg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 14:45:13 -0700
+IronPort-SDR: iQVFDAqkKs0sASnlwzGZJkhDLcy8EYTFt0TNSJj2HV00g62mhL7SHX1Ogh6l+EzTeGLYqg65ko
+ F4TrOwyHdSQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,423,1583222400"; 
+   d="scan'208";a="283523359"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.254.101.173])
+  by orsmga002.jf.intel.com with ESMTP; 22 May 2020 14:45:13 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] ACPI / DPTF: Add DPTF battery participant driver
+Date:   Fri, 22 May 2020 14:45:09 -0700
+Message-Id: <20200522214509.1003362-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,69 +47,287 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clear_user, strncpy_user, strnlen_user and their helpers operate on user
-pointers, but don't have their arguments marked as __user.
-Add __user annotation to userspace pointers of those functions.
-Fix open-coded access check in the strnlen_user while at it.
+This driver adds support for Dynamic Platform and Thermal Framework
+battery participant device support.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+These attributes are presented via sysfs interface under the platform
+device for the battery participant:
+$ls /sys/bus/platform/devices/INT3532:00/dptf_battery
+	current_discharge_capbility_ma
+	max_platform_power_mw
+	no_load_voltage_mv
+	high_freq_impedance_mohm
+	max_steady_state_power_mw
+
+Refer to the documentation at
+Documentation/ABI/testing/sysfs-platform-dptf
+for details.
+
+Here the implementation reuses existing dptf-power.c as the motivation and
+processing is same. It also shares one ACPI method. Here this change is
+using participant type, "PTYP" method to identify and do different
+processing. By using participant type, create/delete either "dptf_power"
+or "dptf_battery" attribute group and send notifications.
+
+The particpant type for for the battery participant is 0x0C.
+
+ACPI methods description:
+
+PMAX (Intel(R) Dynamic Tuning Platform Max Power Supplied by Battery):
+This object evaluates to the maximum platform power that can be supported
+by the battery in milli watts.
+
+PBSS (Intel(R) Dynamic Tuning Power Battery Steady State):
+This object returns the max sustained power for battery in milli watts.
+
+RBHF (Intel(R) Dynamic Tuning High Frequency Impedance):
+This object returns high frequency impedance value that can be obtained
+from battery fuel gauge.
+
+VBNL (Intel(R) Dynamic Tuning No-Load Voltage)
+This object returns battery instantaneous no-load voltage that can be
+obtained from battery fuel gauge in milli volts
+
+CMPP (Intel(R) Dynamic Tuning Current Discharge Capability)
+This object returns battery discharge current capability obtained from
+battery fuel gauge milli amps.
+
+Notifications:
+
+0x80: PMAX change. Used to notify Intel(R)Dynamic Tuning Battery
+participant driver when the PMAX has changed by 250mw.
+0x83: PBSS change. Used to notify Intel(R) Dynamic Tuning Battery
+participant driver when the power source has changed.
+0x85: RBHF change. Used to notify Intel(R)Dynamic Tuning Battery
+participant driver when the RBHF has changed over a threshold by
+5mOhm.
+0x86: Battery Capability change. Used to notify Intel(R)Dynamic Tuning
+Battery participant driver when the battery capability has changed.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- arch/xtensa/include/asm/uaccess.h | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+Comment
+	I know this is close to merge window, so it can be differed to 5.9
+	if this is a problem.
 
-diff --git a/arch/xtensa/include/asm/uaccess.h b/arch/xtensa/include/asm/uaccess.h
-index 445bb4cf3c28..e933ded0d07b 100644
---- a/arch/xtensa/include/asm/uaccess.h
-+++ b/arch/xtensa/include/asm/uaccess.h
-@@ -270,15 +270,15 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n)
-  */
+ Documentation/ABI/testing/sysfs-platform-dptf | 38 +++++++++
+ drivers/acpi/dptf/dptf_power.c                | 82 ++++++++++++++++---
+ 2 files changed, 110 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentation/ABI/testing/sysfs-platform-dptf
+index e83a9d208849..ef923958c750 100644
+--- a/Documentation/ABI/testing/sysfs-platform-dptf
++++ b/Documentation/ABI/testing/sysfs-platform-dptf
+@@ -54,3 +54,41 @@ KernelVersion:	v5.8
+ Contact:	linux-acpi@vger.kernel.org
+ Description:
+ 		(WO) Confirm embedded controller about a prochot notification.
++
++What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/max_platform_power_mw
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(RO) The maximum platform power that can be supported by the battery in milli watts.
++
++What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/max_steady_state_power_mw
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(RO) The maximum sustained power for battery in milli watts.
++
++What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/high_freq_impedance_mohm
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(RO) The high frequency impedance value that can be obtained from battery
++		fuel gauge in milli Ohms.
++
++What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/no_load_voltage_mv
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(RO) The no-load voltage that can be obtained from battery fuel gauge in
++		milli volts.
++
++What:		/sys/bus/platform/devices/INT3532:00/dptf_battery/current_discharge_capbility_ma
++Date:		June, 2020
++KernelVersion:	v5.8
++Contact:	linux-acpi@vger.kernel.org
++Description:
++		(RO) The battery discharge current capability obtained from battery fuel gauge in
++		milli Amps.
+diff --git a/drivers/acpi/dptf/dptf_power.c b/drivers/acpi/dptf/dptf_power.c
+index abe99039af74..5fab7e350db8 100644
+--- a/drivers/acpi/dptf/dptf_power.c
++++ b/drivers/acpi/dptf/dptf_power.c
+@@ -10,13 +10,19 @@
+ #include <linux/platform_device.h>
  
- static inline unsigned long
--__xtensa_clear_user(void *addr, unsigned long size)
-+__xtensa_clear_user(void __user *addr, unsigned long size)
+ /*
+- * Presentation of attributes which are defined for INT3407. They are:
++ * Presentation of attributes which are defined for INT3407 and INT3532.
++ * They are:
+  * PMAX : Maximum platform powe
+  * PSRC : Platform power source
+  * ARTG : Adapter rating
+  * CTYP : Charger type
+  * PBSS : Battery steady power
+  * PROP : Rest of worst case platform Power
++ * PBSS : Power Battery Steady State
++ * PBSS : Power Battery Steady State
++ * RBHF : High Frequency Impedance
++ * VBNL : Instantaneous No-Load Voltage
++ * CMPP : Current Discharge Capability
+  */
+ #define DPTF_POWER_SHOW(name, object) \
+ static ssize_t name##_show(struct device *dev,\
+@@ -41,6 +47,10 @@ DPTF_POWER_SHOW(adapter_rating_mw, ARTG)
+ DPTF_POWER_SHOW(battery_steady_power_mw, PBSS)
+ DPTF_POWER_SHOW(charger_type, CTYP)
+ DPTF_POWER_SHOW(rest_of_platform_power_mw, PROP)
++DPTF_POWER_SHOW(max_steady_state_power_mw, PBSS)
++DPTF_POWER_SHOW(high_freq_impedance_mohm, RBHF)
++DPTF_POWER_SHOW(no_load_voltage_mv, VBNL)
++DPTF_POWER_SHOW(current_discharge_capbility_ma, CMPP);
+ 
+ static DEVICE_ATTR_RO(max_platform_power_mw);
+ static DEVICE_ATTR_RO(platform_power_source);
+@@ -48,6 +58,10 @@ static DEVICE_ATTR_RO(adapter_rating_mw);
+ static DEVICE_ATTR_RO(battery_steady_power_mw);
+ static DEVICE_ATTR_RO(charger_type);
+ static DEVICE_ATTR_RO(rest_of_platform_power_mw);
++static DEVICE_ATTR_RO(max_steady_state_power_mw);
++static DEVICE_ATTR_RO(high_freq_impedance_mohm);
++static DEVICE_ATTR_RO(no_load_voltage_mv);
++static DEVICE_ATTR_RO(current_discharge_capbility_ma);
+ 
+ static ssize_t prochot_confirm_store(struct device *dev,
+ 				     struct device_attribute *attr,
+@@ -85,8 +99,38 @@ static const struct attribute_group dptf_power_attribute_group = {
+ 	.name = "dptf_power"
+ };
+ 
++static struct attribute *dptf_battery_attrs[] = {
++	&dev_attr_max_platform_power_mw.attr,
++	&dev_attr_max_steady_state_power_mw.attr,
++	&dev_attr_high_freq_impedance_mohm.attr,
++	&dev_attr_no_load_voltage_mv.attr,
++	&dev_attr_current_discharge_capbility_ma.attr,
++	NULL
++};
++
++static const struct attribute_group dptf_battery_attribute_group = {
++	.attrs = dptf_battery_attrs,
++	.name = "dptf_battery"
++};
++
++#define MAX_POWER_CHANGED		0x80
+ #define POWER_STATE_CHANGED		0x81
++#define STEADY_STATE_POWER_CHANGED	0x83
+ #define POWER_PROP_CHANGE_EVENT	0x84
++#define IMPEDANCED_CHNGED		0x85
++#define VOLTAGE_CURRENT_CHANGED	0x86
++
++static long long dptf_participant_type(acpi_handle handle)
++{
++	unsigned long long ptype;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(handle, "PTYP", NULL, &ptype);
++	if (ACPI_FAILURE(status))
++		return -ENODEV;
++
++	return ptype;
++}
+ 
+ static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
  {
--	if (!__memset(addr, 0, size))
-+	if (!__memset((void __force *)addr, 0, size))
- 		return size;
+@@ -100,6 +144,15 @@ static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
+ 	case POWER_PROP_CHANGE_EVENT:
+ 		attr = "rest_of_platform_power_mw";
+ 		break;
++	case MAX_POWER_CHANGED:
++		attr = "max_platform_power_mw";
++		break;
++	case STEADY_STATE_POWER_CHANGED:
++		attr = "max_steady_state_power_mw";
++		break;
++	case VOLTAGE_CURRENT_CHANGED:
++		attr = "no_load_voltage_mv";
++		break;
+ 	default:
+ 		dev_err(&pdev->dev, "Unsupported event [0x%x]\n", event);
+ 		return;
+@@ -109,13 +162,16 @@ static void dptf_power_notify(acpi_handle handle, u32 event, void *data)
+ 	 * Notify that an attribute is changed, so that user space can read
+ 	 * again.
+ 	 */
+-	sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
++	if (dptf_participant_type(handle) == 0x0CULL)
++		sysfs_notify(&pdev->dev.kobj, "dptf_battery", attr);
++	else
++		sysfs_notify(&pdev->dev.kobj, "dptf_power", attr);
+ }
+ 
+ static int dptf_power_add(struct platform_device *pdev)
+ {
++	const struct attribute_group *attr_group;
+ 	struct acpi_device *acpi_dev;
+-	acpi_status status;
+ 	unsigned long long ptype;
+ 	int result;
+ 
+@@ -123,11 +179,12 @@ static int dptf_power_add(struct platform_device *pdev)
+ 	if (!acpi_dev)
+ 		return -ENODEV;
+ 
+-	status = acpi_evaluate_integer(acpi_dev->handle, "PTYP", NULL, &ptype);
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
+-
+-	if (ptype != 0x11)
++	ptype = dptf_participant_type(acpi_dev->handle);
++	if (ptype == 0x11)
++		attr_group = &dptf_power_attribute_group;
++	else if (ptype == 0x0C)
++		attr_group = &dptf_battery_attribute_group;
++	else
+ 		return -ENODEV;
+ 
+ 	result = acpi_install_notify_handler(acpi_dev->handle,
+@@ -138,7 +195,7 @@ static int dptf_power_add(struct platform_device *pdev)
+ 		return result;
+ 
+ 	result = sysfs_create_group(&pdev->dev.kobj,
+-				    &dptf_power_attribute_group);
++				    attr_group);
+ 	if (result) {
+ 		acpi_remove_notify_handler(acpi_dev->handle,
+ 					   ACPI_DEVICE_NOTIFY,
+@@ -158,13 +215,18 @@ static int dptf_power_remove(struct platform_device *pdev)
+ 	acpi_remove_notify_handler(acpi_dev->handle,
+ 				   ACPI_DEVICE_NOTIFY,
+ 				   dptf_power_notify);
+-	sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
++
++	if (dptf_participant_type(acpi_dev->handle) == 0x0CULL)
++		sysfs_remove_group(&pdev->dev.kobj, &dptf_battery_attribute_group);
++	else
++		sysfs_remove_group(&pdev->dev.kobj, &dptf_power_attribute_group);
+ 
  	return 0;
  }
  
- static inline unsigned long
--clear_user(void *addr, unsigned long size)
-+clear_user(void __user *addr, unsigned long size)
- {
- 	if (access_ok(addr, size))
- 		return __xtensa_clear_user(addr, size);
-@@ -290,10 +290,10 @@ clear_user(void *addr, unsigned long size)
- 
- #ifndef CONFIG_GENERIC_STRNCPY_FROM_USER
- 
--extern long __strncpy_user(char *, const char *, long);
-+extern long __strncpy_user(char *dst, const char __user *src, long count);
- 
- static inline long
--strncpy_from_user(char *dst, const char *src, long count)
-+strncpy_from_user(char *dst, const char __user *src, long count)
- {
- 	if (access_ok(src, 1))
- 		return __strncpy_user(dst, src, count);
-@@ -306,13 +306,11 @@ long strncpy_from_user(char *dst, const char *src, long count);
- /*
-  * Return the size of a string (including the ending 0!)
-  */
--extern long __strnlen_user(const char *, long);
-+extern long __strnlen_user(const char __user *str, long len);
- 
--static inline long strnlen_user(const char *str, long len)
-+static inline long strnlen_user(const char __user *str, long len)
- {
--	unsigned long top = __kernel_ok ? ~0UL : TASK_SIZE - 1;
--
--	if ((unsigned long)str > top)
-+	if (!access_ok(str, 1))
- 		return 0;
- 	return __strnlen_user(str, len);
- }
+ static const struct acpi_device_id int3407_device_ids[] = {
+ 	{"INT3407", 0},
++	{"INT3532", 0},
+ 	{"INTC1047", 0},
+ 	{"", 0},
+ };
 -- 
-2.20.1
+2.25.4
 
