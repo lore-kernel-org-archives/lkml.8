@@ -2,168 +2,99 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9643CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE58207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ge+b+0kL"
+	by mail.kernel.org (Postfix) with ESMTP id 80B11207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgEVHot (ORCPT
+        id S1728845AbgEVHqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728794AbgEVHoq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:44:46 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5FFC08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:44:45 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a14so9834928ilk.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LCkLyZXcgLXsj7dmJQa9iDLscNMkrkvWsu5Kx85OjLg=;
-        b=ge+b+0kLRvCWW+i7FZpDx3vEx/9YzZzTihd0/kwhJML/57n7AN8tpGRlBKOd+v/Vkq
-         MlxvKA+QiiJgfLN2IMjGjgls4JTBYwCh5dcsZV0voXh1SJfMbIUYGEVZDExaAXMjR3pa
-         CKh1er6geLM8qsCE1e0SxIxJeURG2LJHvzNxit1NXDK1sPbtEhbTGDwYa9nhr9S8RWX2
-         JkvxTxEfzcF8tSYMk40YQL/8EzhgTte5EbE1gvYUFSKrSOWSIszGfPqf7X37cvEcPmiv
-         HtMLTvK3kwmmT4cJ1y/3uuYXGkJ0n7Yt19IT8mO/KAmbN5lRd5Gbl+V1Hb+NVkOed3T5
-         CrEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LCkLyZXcgLXsj7dmJQa9iDLscNMkrkvWsu5Kx85OjLg=;
-        b=nC1Xog94CLPzIyXR1NhtrzCTxnRiKBHXcE2F3tylR7/QSW3yh3MiHOKHARgdJgZcU1
-         nsONthVfofr2pbleRFl371cjRfRg6p4ofkp/8h6P4px8kgNx32rMxa9y+XnOsxBTZioO
-         R6G2KwEjEp9Wsn5grPPS9egXB9Lgb0aPk3POm9bB67zOBBHSBTN5+eu3lCc3g/z27RmE
-         RZ7T0HVQz8tPJ4OUdGciFhNpEQpMBfl4JB47AG4X4H9r7afG6AxCqFEWlIltsCxMZ0jI
-         o8I+bqvxAj+wiBn59T1C8Cqu/kQDAPXXTBg9fadFSJ7yS/4nnHsF5mPQ9TPRnggfZfMk
-         Xshg==
-X-Gm-Message-State: AOAM531smypWDTFLXXD1rRYrhozuOqVhU2YTmfOxYr9jRyTQLBFbk0Vf
-        zzWAU41Yb6V7y03gnyZ54bCYkaWgaio2xQcFbAdsOg==
-X-Google-Smtp-Source: ABdhPJyMFYW+VQGw9RND8F1TlWx6v0Sfg+2mzq6aucXwYl+4J0CTaHFg5jMebQ8YJqZw5nl76kjU2nOYVhi3sG6Wx5A=
-X-Received: by 2002:a92:d946:: with SMTP id l6mr12913271ilq.6.1590133484494;
- Fri, 22 May 2020 00:44:44 -0700 (PDT)
+        Fri, 22 May 2020 03:46:09 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:41942 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728230AbgEVHqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:46:08 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 15:45:58
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Fri, 22 May 2020 15:45:58 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Cc:     "Kangjie Lu" <kjlu@umn.edu>,
+        "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH] spi: tegra20-slink: Fix runtime PM imbalance on
+ error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com>
+References: <20200521074946.21799-1-dinghao.liu@zju.edu.cn>
+ <CAHp75VfOeUaqRW2vRwyWaz3JJw41hX5jTgE+kZ8pB8E_HtHwqw@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-References: <20200520112523.30995-1-brgl@bgdev.pl> <20200520112523.30995-7-brgl@bgdev.pl>
- <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com>
- <CAMRc=MeuQk9rFDFGWK0ijsiM-r296cVz9Rth8hWhW5Aeeti_cA@mail.gmail.com> <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 22 May 2020 09:44:33 +0200
-Message-ID: <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
-Subject: Re: [PATCH v4 06/11] net: ethernet: mtk-eth-mac: new driver
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <5a8a6e7b.bef25.1723b588c7f.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgBHkD42g8dem0b+AQ--.40491W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgAIBlZdtOQZ8wAAs9
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r4j6F4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r4xMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvEx4A2jsIE14v26r4j6F4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 20 maj 2020 o 23:23 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a)=
-:
->
-> On Wed, May 20, 2020 at 7:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> > =C5=9Br., 20 maj 2020 o 16:37 Arnd Bergmann <arnd@arndb.de> napisa=C5=
-=82(a):
->
-> > > I just noticed how the naming of NET_MEDIATEK_MAC and NET_MEDIATEK_SO=
-C
-> > > for two different drivers doing the same thing is really confusing.
-> > >
-> > > Maybe someone can come up with a better name, such as one
-> > > based on the soc it first showed up in.
-> > >
-> >
-> > This has been discussed under one of the previous submissions.
-> > MediaTek wants to use this IP on future designs as well and it's
-> > already used on multiple SoCs so they want the name to be generic. I
-> > also argued that this is a driver strongly tied to a specific
-> > platform(s) so if someone wants to compile it - they probably know
-> > what they're doing.
-> >
-> > That being said: I verified with MediaTek and the name of the IP I can
-> > use is "star" so they proposed "mtk-star-eth". I would personally
-> > maybe go with "mtk-star-mac". How about those two?
->
-> Both seem fine to me. If this was previously discussed, I don't want
-> do further bike-shedding and I'd trust you to pick a sensible name
-> based on the earlier discussions.
->
-> > >  +               /* One of the counters reached 0x8000000 - update st=
-ats and
-> > > > +                * reset all counters.
-> > > > +                */
-> > > > +               if (unlikely(status & MTK_MAC_REG_INT_STS_MIB_CNT_T=
-H)) {
-> > > > +                       mtk_mac_intr_disable_stats(priv);
-> > > > +                       schedule_work(&priv->stats_work);
-> > > > +               }
-> > > > + befor
-> > > > +               mtk_mac_intr_ack_all(priv);
-> > >
-> > > The ack here needs to be dropped, otherwise you can get further
-> > > interrupts before the bottom half has had a chance to run.
-> > >
-> >
-> > My thinking was this: if I mask the relevant interrupt (TX/RX
-> > complete) and ack it right away, the status bit will be asserted on
-> > the next packet received/sent but the process won't get interrupted
-> > and when I unmask it, it will fire right away and I won't have to
-> > recheck the status register. I noticed that if I ack it at the end of
-> > napi poll callback, I end up missing certain TX complete interrupts
-> > and end up seeing a lot of retransmissions even if I reread the status
-> > register. I'm not yet sure where this race happens.
->
-> Right, I see. If you just ack at the end of the poll function, you need
-> to check the rings again to ensure you did not miss an interrupt
-> between checking observing both rings to be empty and the irq-ack.
->
-> I suspect it's still cheaper to check the two rings with an uncached
-> read from memory than to to do the read-modify-write on the mmio,
-> but you'd have to measure that to be sure.
->
-
-Unfortunately the PHY on the board I have is 100Mbps which is the
-limiting factor in benchmarking this driver. :(
-
-If you're fine with this - I'd like to fix the minor issues you
-pointed out and stick with the current approach for now. We can always
-fix the implementation in the future once a board with a Gigabit PHY
-is out. Most ethernet drivers don't use such fine-grained interrupt
-control anyway. I expect the performance differences to be miniscule
-really.
-
-Bart
+SGkgQW5keSwKClRoYW5rIHlvdSBmb3IgeW91ciBhZHZpY2UhCgpZb3VyIHN1Z2dlc3Rpb24gaXMg
+dG8gdXNlIHBtX3J1bnRpbWVfcHV0X25vaWRsZSgpLCByaWdodD8gClRoZSBvbmx5IGRpZmZlcmVu
+Y2UgYmV0d2VlbiBwbV9ydW50aW1lX3B1dCgpIGFuZCB0aGlzIGZ1bmN0aW9uCmlzIHRoYXQgcG1f
+cnVudGltZV9wdXQoKSB3aWxsIHJ1biBhbiBleHRyYSBwbV9yZXF1ZXN0X2lkbGUoKS4KIApJIGNo
+ZWNrZWQgdGhpcyBwYXRjaGVkIGZ1bmN0aW9uIGFnYWluIGFuZCBmb3VuZCB0aGVyZSBpcyBhCnBt
+X3J1bnRpbWVfcHV0KCkgaW4gdGhlIG5vcm1hbCBicmFuY2ggb2YgcG1fcnVudGltZV9nZXRfc3lu
+YygpLgpEb2VzIHRoaXMgbWVhbiB0aGUgb3JpZ2luYWwgcHJvZ3JhbSBsb2dpYyBuZWVkIHRvIGV4
+ZWN1dGUgaWRsZQpjYWxsYmFjaz8KCkFjY29yZGluZyB0byBydW50aW1lIFBNJ3MgZG9jLCB0aGUg
+cG1fcnVudGltZV9nZXRfc3luYygpIGNhbGwKcGFpcmVkIHdpdGggYSBwbV9ydW50aW1lX3B1dCgp
+IGNhbGwgd2lsbCBiZSBhcHByb3ByaWF0ZSB0byBlbnN1cmUKdGhhdCB0aGUgZGV2aWNlIGlzIG5v
+dCBwdXQgYmFjayB0byBzbGVlcCBkdXJpbmcgdGhlIHByb2JlLiBUaGVyZWZvcmUKSSB0aGluayBw
+bV9ydW50aW1lX3B1dCgpIGlzIG1vcmUgYXBwcm9wcmlhdGUgaGVyZS4gRG8geW91IGhhdmUgCm1v
+cmUgZGV0YWlsZWQgc3VnZ2VzdGlvbiBmb3Igd2h5IHdlIHNob3VsZCB1c2UgX3B1dF9ub2lkbGUo
+KT8KClJlZ2FyZHMsCkRpbmdoYW8gCj4gT24gVGh1LCBNYXkgMjEsIDIwMjAgYXQgMTA6NTAgQU0g
+RGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+IHdyb3RlOgo+ID4KPiA+IHBtX3J1
+bnRpbWVfZ2V0X3N5bmMoKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdlIGNvdW50ZXIg
+ZXZlbgo+ID4gd2hlbiBpdCByZXR1cm5zIGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRl
+Y3JlbWVudCBpcyBuZWVkZWQgb24KPiA+IHRoZSBlcnJvciBoYW5kbGluZyBwYXRoIHRvIGtlZXAg
+dGhlIGNvdW50ZXIgYmFsYW5jZWQuCj4gCj4gLi4uCj4gCj4gPiAgICAgICAgIHJldCA9IHBtX3J1
+bnRpbWVfZ2V0X3N5bmMoJnBkZXYtPmRldik7Cj4gPiAgICAgICAgIGlmIChyZXQgPCAwKSB7Cj4g
+PiAgICAgICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAicG0gcnVudGltZSBnZXQgZmFp
+bGVkLCBlID0gJWRcbiIsIHJldCk7Cj4gCj4gPiArICAgICAgICAgICAgICAgcG1fcnVudGltZV9w
+dXQoJnBkZXYtPmRldik7Cj4gCj4gRm9yIGFsbCB5b3VyIHBhdGNoZXMsIHBsZWFzZSwgZG91Ymxl
+IGNoZWNrIHdoYXQgeW91IGFyZSBwcm9wb3NpbmcuCj4gCj4gSGVyZSwgSSBiZWxpZXZlLCB0aGUg
+Y29ycmVjdCBvbmUgd2lsbCBiZSBfcHV0X25vaWRsZSgpLgo+IAo+IEFGQUlVIHlvdSBhcmUgbm90
+IHN1cHBvc2VkIHRvIGFjdHVhbGx5IHN1c3BlbmQgdGhlIGRldmljZSBpbiBjYXNlIG9mIGVycm9y
+Lgo+IEJ1dCBJIG1pZ2h0IGJlIG1pc3Rha2VuLCB0aHVzIHNlZSBhYm92ZS4KPiAKPiA+ICAgICAg
+ICAgICAgICAgICBnb3RvIGV4aXRfcG1fZGlzYWJsZTsKPiA+ICAgICAgICAgfQo+IAo+IC0tIAo+
+IFdpdGggQmVzdCBSZWdhcmRzLAo+IEFuZHkgU2hldmNoZW5rbwo=
