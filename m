@@ -2,105 +2,73 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D663C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55839C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405502242B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590157906;
-	bh=BZ7dmXmIcurudc/NsJj+prqSnYqq0bXTVQfK8aIbtsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EKz5TFHqvNVbtVBXeu04lOUOFIUfX0/BVEjuGfmXzhSlU0VuoUHDVYXcb8OuIe2PB
-	 HrbZz+fScqg2gEqUrkcIuRsd4EsxmXh+KdA7rykge5ObFtQyFsQYeZZQM1e3b9F8rz
-	 iq+8sz1ZH1Tr3DiZchZIzD85knfc7lIaDumv/H/o=
+	by mail.kernel.org (Postfix) with ESMTP id 3539322475
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730072AbgEVObp (ORCPT
+        id S1730119AbgEVOcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729851AbgEVObo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:31:44 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BE5A223D6;
-        Fri, 22 May 2020 14:31:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590157904;
-        bh=BZ7dmXmIcurudc/NsJj+prqSnYqq0bXTVQfK8aIbtsc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ASrSiWIWq8UNgqamwQ+ZfAhy5jiTVzZbswAJcNi3c53bNS91mmyamykCPcbIUThym
-         bBdfw6N0rsYE2NCvIjjbqz4kRaqZ4/6Fr5gy5FsYT+EktXPK0Mu3tXYatXA47C3mij
-         CJSEHox1R/QJneKG13Vzg6H/Yy1CK8Az3gT/DnJs=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1D1340AFD; Fri, 22 May 2020 11:31:41 -0300 (-03)
-Date:   Fri, 22 May 2020 11:31:41 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 0/7] Share events between metrics
-Message-ID: <20200522143141.GG14034@kernel.org>
-References: <20200520182011.32236-1-irogers@google.com>
- <3e8f12d8-0c56-11e9-e557-e384210f15c1@linux.ibm.com>
+        Fri, 22 May 2020 10:32:02 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:41547 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729997AbgEVOcC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:32:02 -0400
+Received: (qmail 1576 invoked by uid 1000); 22 May 2020 10:32:01 -0400
+Date:   Fri, 22 May 2020 10:32:01 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, parri.andrea@gmail.com,
+        will@kernel.org, boqun.feng@gmail.com, npiggin@gmail.com,
+        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+        akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        andriin@fb.com
+Subject: Re: Some -serious- BPF-related litmus tests
+Message-ID: <20200522143201.GB32434@rowland.harvard.edu>
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
+ <20200522094407.GK325280@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3e8f12d8-0c56-11e9-e557-e384210f15c1@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 22, 2020 at 02:55:46PM +0530, kajoljain escreveu:
-> On 5/20/20 11:50 PM, Ian Rogers wrote:
-> > Metric groups contain metrics. Metrics create groups of events to
-> > ideally be scheduled together. Often metrics refer to the same events,
-> > for example, a cache hit and cache miss rate. Using separate event
-> > groups means these metrics are multiplexed at different times and the
-> > counts don't sum to 100%. More multiplexing also decreases the
-> > accuracy of the measurement.
+On Fri, May 22, 2020 at 11:44:07AM +0200, Peter Zijlstra wrote:
+> On Thu, May 21, 2020 at 05:38:50PM -0700, Paul E. McKenney wrote:
+> > Hello!
+> > 
+> > Just wanted to call your attention to some pretty cool and pretty serious
+> > litmus tests that Andrii did as part of his BPF ring-buffer work:
+> > 
+> > https://lore.kernel.org/bpf/20200517195727.279322-3-andriin@fb.com/
+> > 
+> > Thoughts?
+> 
+> I find:
+> 
+> 	smp_wmb()
+> 	smp_store_release()
+> 
+> a _very_ weird construct. What is that supposed to even do?
 
-<SNIP>
- 
-> > Ian Rogers (7):
-> >   perf metricgroup: Always place duration_time last
-> >   perf metricgroup: Use early return in add_metric
-> >   perf metricgroup: Delay events string creation
-> >   perf metricgroup: Order event groups by size
-> >   perf metricgroup: Remove duped metric group events
-> >   perf metricgroup: Add options to not group or merge
-> >   perf metricgroup: Remove unnecessary ',' from events
- 
-> Reviewd-By: Kajol Jain <kjain@linux.ibm.com>
-> Tested-By: Kajol Jain <kjain@linux.ibm.com> ( Tested it to see behavior with some metric groups in both x86 and Power machine)
+Indeed, it looks like one or the other of those is redundant (depending 
+on the context).
 
-Thanks, added to the patches,
+Also, what use is a spinlock that is accessed in only one thread?
 
-- Arnaldo
+Finally, I doubt that these tests belong under tools/memory-model.  
+Shouldn't they go under the new Documentation/ directory for litmus 
+tests?  And shouldn't the patch update a README file?
+
+Alan
