@@ -2,140 +2,79 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B348120723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:12:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k01k/xE1"
+	by mail.kernel.org (Postfix) with ESMTP id EF740207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590185652;
+	bh=dZ2ofCb1NwJTEisd3Gt+KD09zvkyEqg1+EsbaKVb+bo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pkMH8U+xPJvrxbTNxhYkSGUYcYpRxjs8Uf1/e/07gVnkTb+7u7ATElNyFpOGUhd6C
+	 BN+IJEDSIhdEAHJPJJdWVH57GdopypVVJg2KDE7OJ/kL4iB0FvsnSSjF0xSnX+ejfb
+	 Eq7HtZ6XzrzUtLEg8f/GtLiM/MUWb806editWr1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731123AbgEVWMI (ORCPT
+        id S1731133AbgEVWOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:12:08 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:18593 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731051AbgEVWMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:12:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590185527; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=BMLKs2JomZd3TZEWwn5R98bMIQZhgMt6bzYovepD0FU=; b=k01k/xE1es+5rdWq0+HAVEsxpB/nXENi/GAQC71dYt03sHQWUV9BH9YC0OCMKnVR6uNM0bVH
- sfh4V7xW1a74kYkzJ1T2VnxyIRd+zre/eEklZqjfYIbf9Q2p/AGKKvvE9go43dt5miYwkfXV
- Q0CDqlnx2b/x06YVC3stjwPYi5Y=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5ec84e3382c96b5d3bd70acb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 22:12:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 28D76C43391; Fri, 22 May 2020 22:12:03 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        Fri, 22 May 2020 18:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731069AbgEVWOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 18:14:10 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 65FB0C433C6;
-        Fri, 22 May 2020 22:12:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 65FB0C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Fri, 22 May 2020 16:11:59 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm/a6xx: don't try to set GPU frequency when GMU is
- suspended
-Message-ID: <20200522221159.GA20960@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200519030735.24713-1-jonathan@marek.ca>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CC5720757
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:14:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590185650;
+        bh=dZ2ofCb1NwJTEisd3Gt+KD09zvkyEqg1+EsbaKVb+bo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Uxg2at5JwYa8vu1eMsU0iU8rLuHwvV0N4Pvq1l7oUVsM/cxge4KV3pNuiIdd5lt8+
+         JfIfY+LfvzNehIYCo2iTWYBpyIf5bimfINcSeHCQ7s6qIiZnHjPIm+vWuwTd9xhCeI
+         5Tr8Ae+CYInRZ/W0EpluUmFv7uVYkfQw3hKRefJI=
+Received: by mail-wr1-f45.google.com with SMTP id s8so11650956wrt.9
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:14:10 -0700 (PDT)
+X-Gm-Message-State: AOAM530/kjH4L7GAiTP/HNm/k4ldD/332uVEd9axoSvqFOoKvT8nv0gc
+        dyRTOkHJ5XEIlxKEZOpf2ZWr9MMbpx5g6d0ZSgK3ZQ==
+X-Google-Smtp-Source: ABdhPJyQRqTKHMvUQikfAIDsNa4fGOYa2s+WPFIcSr0XxADi8+I4Xe9tC05a92awxIAm1oEJSQfR+mn9fYld6MlVR5A=
+X-Received: by 2002:adf:fe45:: with SMTP id m5mr4813269wrs.257.1590185648719;
+ Fri, 22 May 2020 15:14:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519030735.24713-1-jonathan@marek.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200522204738.645043059@infradead.org>
+In-Reply-To: <20200522204738.645043059@infradead.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 22 May 2020 15:13:57 -0700
+X-Gmail-Original-Message-ID: <CALCETrV7GYg5V5dgM9BToc6RAqpcjRdoZoeXbnrTKTqjBfft6g@mail.gmail.com>
+Message-ID: <CALCETrV7GYg5V5dgM9BToc6RAqpcjRdoZoeXbnrTKTqjBfft6g@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/4] x86/entry: disallow #DB more
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 11:07:33PM -0400, Jonathan Marek wrote:
-> This fixes changing the frequency in sysfs while suspended, for example
-> when doing something like this:
-> 
-> cat devfreq/3d00000.gpu/max_freq > devfreq/3d00000.gpu/min_freq
+On Fri, May 22, 2020 at 1:49 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Hai, this kills #DB during NMI/#MC and with that allows removing all the nasty
+> IST rewrite crud.
+>
 
-A patch landed to fix this [1] but it crossed paths in the night with the
-a640/a650 support. Can you respin this to move the pm_runtime_get_if_in_use()
-check in _a6xx_gmu_set_freq() to the higher level function and then we should
-be covered.
+This is great, except that the unconditional DR7 write is going to
+seriously hurt perf performance.  Fortunately, no one cares about
+perf, right? :)  Even just reading first won't help enough because DR7
+reads are likely to be VM exits.  Can we have a percpu dr7 shadow
+(with careful ordering) or even just a percpu count of dr7 users so we
+can skip this if there are no breakpoints?  We have cpu_dr7, and some
+minor changes would make this work.  Maybe replace all the direct
+cpu_dr7 access with helpers like dr7_set_bits() and dr7_clear_bits()?
 
-Thanks,
-Jordan
-
-[1] https://patchwork.freedesktop.org/patch/364089/?series=76829&rev=3
-
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index aec54cde8534..9498803dcad9 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -151,13 +151,20 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
->  			break;
->  
->  	gmu->current_perf_index = perf_index;
-> +	gmu->freq = gmu->gpu_freqs[perf_index];
-> +
-> +	/*
-> +	 * devfreq may try to change frequency target even when suspended
-> +	 * this can happen when changing frequency through sysfs
-> +	 * don't try to set freq when suspended, it will be set on resume
-> +	 */
-> +	if (!pm_runtime_active(gmu->dev))
-> +		return;
->  
->  	if (gmu->legacy)
->  		__a6xx_gmu_set_freq(gmu, perf_index);
->  	else
->  		a6xx_hfi_set_freq(gmu, perf_index);
-> -
-> -	gmu->freq = gmu->gpu_freqs[perf_index];
->  }
->  
->  unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
-> -- 
-> 2.26.1
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Also, I like raving at DR7 :)
