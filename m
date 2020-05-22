@@ -2,72 +2,80 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC652070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4D220756
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590164504;
+	bh=5niBKoyyo+z1xiBLh9FBJrqEJeoXUYx7FC4/gtluDAU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aFx/32jXgogx11uAWL3oFo86bXCFIL9AlJ6u5Sb0dZBeQDw+77d0pdXMuCDOGKO9K
+	 yKik5ILXndMxnK/Wn/Hh0BTwvVW1p/xmIxZOVH/oXohf81iiZjvsPqWbmhM2FR7h6y
+	 f2HVvmwlVNpnPsG5K5EmFCmQ5qVEcMq1rQHA0G7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbgEVQVT (ORCPT
+        id S1730419AbgEVQVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:21:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37766 "EHLO mx2.suse.de"
+        Fri, 22 May 2020 12:21:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729040AbgEVQVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:21:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 03F0DB27C;
-        Fri, 22 May 2020 16:21:18 +0000 (UTC)
-Date:   Fri, 22 May 2020 18:21:13 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Benson Leung <bleung@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 1/6] printk: Collapse shutdown types into a single
- dump reason
-Message-ID: <20200522162113.GK3464@linux-b0ei>
-References: <20200515184434.8470-1-keescook@chromium.org>
- <20200515184434.8470-2-keescook@chromium.org>
+        id S1729040AbgEVQVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 12:21:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95CBB2070A;
+        Fri, 22 May 2020 16:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590164503;
+        bh=5niBKoyyo+z1xiBLh9FBJrqEJeoXUYx7FC4/gtluDAU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=e8qVOcKaf3OP98hNrtrm97GX9k6tI1PIJbbn/BeAPine0/bGEgmSKBRHFEtGZkWro
+         Uc2xjMSYe0C6yXFCtKKr5YDMx0o0zPFsZBsDQ4kaw7vbh0FiqlZc/oEZiQjnCeqRns
+         goHQ+s7HdblZdIwvaiehjMSruCq5UXBeaz17KCrQ=
+From:   Mark Brown <broonie@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH v3 0/3] selftests: vdso: Add a selftest for vDSO getcpu()
+Date:   Fri, 22 May 2020 17:21:36 +0100
+Message-Id: <20200522162139.44380-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200515184434.8470-2-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-05-15 11:44:29, Kees Cook wrote:
-> To turn the KMSG_DUMP_* reasons into a more ordered list, collapse
-> the redundant KMSG_DUMP_(RESTART|HALT|POWEROFF) reasons into
-> KMSG_DUMP_SHUTDOWN. The current users already don't meaningfully
-> distinguish between them, so there's no need to, as discussed here:
-> https://lore.kernel.org/lkml/CA+CK2bAPv5u1ih5y9t5FUnTyximtFCtDYXJCpuyjOyHNOkRdqw@mail.gmail.com/
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+This series does a bit of a cleanup of the existing tests for the vDSO
+in kselftest and then adds a new test for getcpu().
 
-Looks good to me:
+v3: Remove some extern keywords.
+v2: Silence checkpatch
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Mark Brown (3):
+  selftests: vdso: Rename vdso_test to vdso_test_gettimeofday
+  selftests: vdso: Use a header file to prototype parse_vdso API
+  selftests: vdso: Add a selftest for vDSO getcpu()
 
-Best Regards,
-Petr
+ tools/testing/selftests/vDSO/.gitignore       |  2 +
+ tools/testing/selftests/vDSO/Makefile         |  5 +-
+ tools/testing/selftests/vDSO/parse_vdso.c     | 24 +--------
+ tools/testing/selftests/vDSO/parse_vdso.h     | 31 +++++++++++
+ .../selftests/vDSO/vdso_standalone_test_x86.c |  4 +-
+ .../testing/selftests/vDSO/vdso_test_getcpu.c | 54 +++++++++++++++++++
+ .../{vdso_test.c => vdso_test_gettimeofday.c} | 10 ++--
+ 7 files changed, 96 insertions(+), 34 deletions(-)
+ create mode 100644 tools/testing/selftests/vDSO/parse_vdso.h
+ create mode 100644 tools/testing/selftests/vDSO/vdso_test_getcpu.c
+ rename tools/testing/selftests/vDSO/{vdso_test.c => vdso_test_gettimeofday.c} (84%)
+
+-- 
+2.20.1
+
