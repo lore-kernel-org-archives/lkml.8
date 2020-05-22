@@ -2,271 +2,199 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2A22065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:27:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bV70fEPN"
+	by mail.kernel.org (Postfix) with ESMTP id D482B2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgEVN1o (ORCPT
+        id S1729894AbgEVN3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:27:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:17402 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729563AbgEVN1o (ORCPT
+        Fri, 22 May 2020 09:29:00 -0400
+Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:45140 "EHLO
+        outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728898AbgEVN27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:27:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590154063; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=aVvjVLZCUqbbjgAaWN6mYNWCWBwPMGWumaXLB5ZNMvs=; b=bV70fEPNQXt5uihZujZX0V8bY8bcf1oHWh4BZO1K3ARd4jESghBNS3+jNZnAUG9E2Y0MOwYe
- 1skDT6zxJRZ7gnKNjTvHTGUVrh6N/zjLUeG1rwmKwshWShCTTyQ80UUPm190kPgy2tF0L2XH
- dHmaqbTc7ZcOfgJhyesxBmQJgBw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ec7d34aeb073d5691345570 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 13:27:38
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0DBE5C433CA; Fri, 22 May 2020 13:27:38 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [183.83.65.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5F6D2C433C8;
-        Fri, 22 May 2020 13:27:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5F6D2C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
- <20200521190739.GC1331782@builder.lan>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
-Date:   Fri, 22 May 2020 18:57:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 09:28:59 -0400
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id C095BCCAFB
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:28:56 +0100 (IST)
+Received: (qmail 7197 invoked from network); 22 May 2020 13:28:56 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 22 May 2020 13:28:56 -0000
+Date:   Fri, 22 May 2020 14:28:54 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
+        riel@surriel.com
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200522132854.GF7167@techsingularity.net>
+References: <20200508092212.GE3758@techsingularity.net>
+ <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+ <20200513153023.GF3758@techsingularity.net>
+ <20200514153122.GE2978@hirez.programming.kicks-ass.net>
+ <20200515084740.GJ3758@techsingularity.net>
+ <20200515111732.GS2957@hirez.programming.kicks-ass.net>
+ <20200515142444.GK3001@hirez.programming.kicks-ass.net>
+ <20200521103816.GA7167@techsingularity.net>
+ <20200521114132.GI325280@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200521190739.GC1331782@builder.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200521114132.GI325280@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Thu, May 21, 2020 at 01:41:32PM +0200, Peter Zijlstra wrote:
+> On Thu, May 21, 2020 at 11:38:16AM +0100, Mel Gorman wrote:
+> > IIUC, this patch front-loads as much work as possible before checking if
+> > the task is on_rq and then the waker/wakee shares a cache, queue task on
+> > the wake_list and otherwise do a direct wakeup.
+> > 
+> > The advantage is that spinning is avoided on p->on_rq when p does not
+> > share a cache. The disadvantage is that it may result in tasks being
+> > stacked but this should only happen when the domain is overloaded and
+> > select_task_eq() is unlikely to find an idle CPU. The load balancer would
+> > soon correct the situation anyway.
+> > 
+> > In terms of netperf for my testing, the benefit is marginal because the
+> > wakeups are primarily between tasks that share cache. It does trigger as
+> > perf indicates that some time is spent in ttwu_queue_remote with this
+> > patch, it's just that the overall time spent spinning on p->on_rq is
+> > very similar. I'm still waiting on other workloads to complete to see
+> > what the impact is.
+> 
+> So it might make sense to play with the exact conditions under which
+> we'll attempt this remote queue, if we see a large 'local' p->on_cpu
+> spin time, it might make sense to attempt the queue even in this case.
+> 
+> We could for example change it to:
+> 
+> 	if (REAC_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags | WF_ON_CPU))
+> 		goto unlock;
+> 
+> and then use that in ttwu_queue_remote() to differentiate between these
+> two cases.
+> 
 
-On 5/22/2020 12:37 AM, Bjorn Andersson wrote:
-> On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
->
->> On qcom SD host controllers voltage switching be done after the HW
->> is ready for it. The HW informs its readiness through power irq.
->> The voltage switching should happen only then.
->>
->> Use the internal voltage switching and then control the voltage
->> switching using power irq.
->>
->> Set the regulator load as well so that regulator can be configured
->> in LPM mode when in is not being used.
->>
->> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
->> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
->> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
->> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Looks better, thanks.
->
->> ---
->>   drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 198 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> [..]
->>   static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
->> @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>   		sdhci_msm_hs400(host, &mmc->ios);
->>   }
->>   
->> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->> +{
->> +	int ret;
->> +
->> +	if (IS_ERR(mmc->supply.vmmc))
->> +		return 0;
->> +
->> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
->> +	if (ret)
->> +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
->> +			mmc_hostname(mmc), mmc->ios.vdd, ret);
-> Missed this one on v1, in the event that mmc_regulator_set_ocr() return
-> a non-zero value it has already printed an error message. So please
-> replace the tail with just:
->
-> 	return mmc_regulator_set_ocr(...);
->
->> +
->> +	return ret;
->> +}
->> +
->> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
->> +			      struct mmc_host *mmc, bool level)
->> +{
->> +	int load, ret;
->> +	struct mmc_ios ios;
->> +
->> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
->> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
->> +	    (msm_host->vqmmc_enabled == level))
->> +		return 0;
->> +
->> +	if (msm_host->vqmmc_load) {
->> +		load = level ? msm_host->vqmmc_load : 0;
->> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
-> Sorry for the late reply on v1, but please see my explanation regarding
-> load and always-on regulators there.
+>  #endif /* CONFIG_SMP */
+>  
+>  	ttwu_queue(p, cpu, wake_flags);
 
-<Merging your comment from V1 here>
+Is something like this on top of your patch what you had in mind?
 
- >> You should still call regulator_enable()/regulator_disable() on your
- >> consumer regulator in this driver. When you do this the regulator core
- >> will conclude that the regulator_dev (i.e. the part that represents the
- >> hardware) is marked always_on and will not enable/disable the regulator.
+---8<---
 
- >> But it will still invoke _regulator_handle_consumer_enable() and
- >> _regulator_handle_consumer_disable(), which will aggregate the "load" of
- >> all client regulators and update the regulator's load.
+---
+ kernel/sched/core.c  | 35 ++++++++++++++++++++++++++---------
+ kernel/sched/sched.h |  3 ++-
+ 2 files changed, 28 insertions(+), 10 deletions(-)
 
- >> So this will apply the load as you expect regardless of it being
- >> supplied by a regulator marked as always_on.
-
-Since I'm not turning off this regulator for eMMC, I wanted to keep it 
-in LPM mode
-to save some power.
-When the regulator configured in auto mode (RPMH_REGULATOR_MODE_AUTO) it
-switches to LPM/HPM mode based on the active load.
-So i have to minimize my driver load requirement so that I can let this 
-regulator
-in LPM mode.
-So i need to set load every-time I disable/enable the regulator.
-
->> +		if (ret) {
->> +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
->> +				mmc_hostname(mmc), ret);
->> +			goto out;
->> +		}
->> +	}
->> +
->> +	if (level) {
->> +		/* Set the IO voltage regulator to default voltage level */
->> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
->> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
->> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
->> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
->> +
->> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
->> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
->> +			if (ret < 0) {
->> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
->> +					mmc_hostname(mmc), ret);
->> +				goto out;
->> +			}
->> +		}
->> +		ret = regulator_enable(mmc->supply.vqmmc);
->> +	} else {
->> +		ret = regulator_disable(mmc->supply.vqmmc);
->> +	}
->> +
->> +	if (ret)
->> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
->> +			mmc_hostname(mmc), level ? "en":"dis", ret);
->> +	else
->> +		msm_host->vqmmc_enabled = level;
->> +out:
->> +	return ret;
->> +}
-> [..]
->> +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
->> +				      struct mmc_ios *ios)
->> +{
->> +	struct sdhci_host *host = mmc_priv(mmc);
->> +	u16 ctrl, status;
->> +
->> +	/*
->> +	 * Signal Voltage Switching is only applicable for Host Controllers
->> +	 * v3.00 and above.
->> +	 */
->> +	if (host->version < SDHCI_SPEC_300)
->> +		return 0;
->> +
->> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +
->> +	switch (ios->signal_voltage) {
->> +	case MMC_SIGNAL_VOLTAGE_330:
->> +		if (!(host->flags & SDHCI_SIGNALING_330))
->> +			return -EINVAL;
->> +
->> +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
->> +		ctrl &= ~SDHCI_CTRL_VDD_180;
->> +		break;
->> +	case MMC_SIGNAL_VOLTAGE_180:
->> +		if (!(host->flags & SDHCI_SIGNALING_180))
->> +			return -EINVAL;
->> +
->> +		/*
->> +		 * Enable 1.8V Signal Enable in the Host Control2
->> +		 * register
->> +		 */
->> +		ctrl |= SDHCI_CTRL_VDD_180;
->> +		break;
->> +	case MMC_SIGNAL_VOLTAGE_120:
->> +		if (!(host->flags & SDHCI_SIGNALING_120))
->> +			return -EINVAL;
->> +		return 0;
->> +	default:
->> +		/* No signal voltage switch required */
->> +		return 0;
->> +	}
->> +
->> +	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
->> +
->> +	/* Wait for 5ms */
->> +	usleep_range(5000, 5500);
->> +
->> +	/* regulator output should be stable within 5 ms */
->> +	status = !!(ctrl & SDHCI_CTRL_VDD_180);
->> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
->> +	if (!!(ctrl &  SDHCI_CTRL_VDD_180) == status)
-> You should be able to drop the !! both here and when assigning status.
->
-> Overall this looks neater, thanks for reworking it.
->
-> Regards,
-> Bjorn
-
-
-Thanks
-
-Veera
-
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 987b8ecf2ee9..435ecf5820ee 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2330,13 +2330,19 @@ void scheduler_ipi(void)
+ 	irq_exit();
+ }
+ 
+-static void __ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
++/*
++ * Queue a task on the target CPUs wake_list and wake the CPU via IPI if
++ * necessary. The wakee CPU on receipt of the IPI will queue the task
++ * via sched_ttwu_wakeup() for activation instead of the waking task
++ * activating and queueing the wakee.
++ */
++static void __ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
+ {
+ 	struct rq *rq = cpu_rq(cpu);
+ 
+ 	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
+ 
+-	if (llist_add(&p->wake_entry, &cpu_rq(cpu)->wake_list)) {
++	if (llist_add(&p->wake_entry, &rq->wake_list)) {
+ 		if (!set_nr_if_polling(rq->idle))
+ 			smp_send_reschedule(cpu);
+ 		else
+@@ -2373,12 +2379,23 @@ bool cpus_share_cache(int this_cpu, int that_cpu)
+ 	return per_cpu(sd_llc_id, this_cpu) == per_cpu(sd_llc_id, that_cpu);
+ }
+ 
+-static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
++static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
+ {
+-	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
+-		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
+-		__ttwu_queue_remote(p, cpu, wake_flags);
+-		return true;
++	if (sched_feat(TTWU_QUEUE)) {
++		/*
++		 * If CPU does not share cache then queue the task on the remote
++		 * rqs wakelist to avoid accessing remote data. Alternatively,
++		 * if the task is descheduling and the only running task on the
++		 * CPU then use the wakelist to offload the task activation to
++		 * the CPU that will soon be idle so the waker can continue.
++		 * nr_running is checked to avoid unnecessary task stacking.
++		 */
++		if (!cpus_share_cache(smp_processor_id(), cpu) ||
++		    ((wake_flags & WF_ON_RQ) && cpu_rq(cpu)->nr_running <= 1)) {
++			sched_clock_cpu(cpu); /* Sync clocks across CPUs */
++			__ttwu_queue_wakelist(p, cpu, wake_flags);
++			return true;
++		}
+ 	}
+ 
+ 	return false;
+@@ -2391,7 +2408,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
+ 	struct rq_flags rf;
+ 
+ #if defined(CONFIG_SMP)
+-	if (ttwu_queue_remote(p, cpu, wake_flags))
++	if (ttwu_queue_wakelist(p, cpu, wake_flags))
+ 		return;
+ #endif
+ 
+@@ -2611,7 +2628,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	 * let the waker make forward progress. This is safe because IRQs are
+ 	 * disabled and the IPI will deliver after on_cpu is cleared.
+ 	 */
+-	if (READ_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags))
++	if (READ_ONCE(p->on_cpu) && ttwu_queue_wakelist(p, cpu, wake_flags | WF_ON_RQ))
+ 		goto unlock;
+ 
+ 	/*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index db3a57675ccf..06297d1142a0 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1688,7 +1688,8 @@ static inline int task_on_rq_migrating(struct task_struct *p)
+  */
+ #define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
+ #define WF_FORK			0x02		/* Child wakeup after fork */
+-#define WF_MIGRATED		0x4		/* Internal use, task got migrated */
++#define WF_MIGRATED		0x04		/* Internal use, task got migrated */
++#define WF_ON_RQ		0x08		/* Wakee is on_rq */
+ 
+ /*
+  * To aid in avoiding the subversion of "niceness" due to uneven distribution
