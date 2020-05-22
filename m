@@ -2,113 +2,125 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552E7C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 409F72070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F92206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:58:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+W6ZtH/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgEVM61 (ORCPT
+        id S1729715AbgEVM64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:58:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:35140 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbgEVM61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:58:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 07F76D6E;
-        Fri, 22 May 2020 05:58:26 -0700 (PDT)
-Received: from [10.37.12.7] (unknown [10.37.12.7])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D8533F68F;
-        Fri, 22 May 2020 05:58:13 -0700 (PDT)
-Subject: Re: [PATCH v7 00/15] Add support for devices in the Energy Model
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200511111912.3001-1-lukasz.luba@arm.com>
- <abff69b6-b033-18e2-f380-ceccb42c6b01@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <3f6652a5-ad9b-15cb-08a8-160becd3f912@arm.com>
-Date:   Fri, 22 May 2020 13:58:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 22 May 2020 08:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbgEVM64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:58:56 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A2FC061A0E;
+        Fri, 22 May 2020 05:58:55 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id d7so12917929eja.7;
+        Fri, 22 May 2020 05:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wSr4HyzjLQHJeqg4FXdVwA9taG1tAujGNpZJV/Lp2xA=;
+        b=C+W6ZtH/OmhK136qz25PUTdO8T+zJkzNw6ZdekdKRaw+lWD3gdjDOE4qa3ij5Xm5C2
+         5D53U63XJnTud+61Yl5K3aYr0X8XkMkTh2qnE4fDWg7f6zUgNA0x8z9fDNpDX0RHXyoc
+         2NeTkVNO2BEy1XtAAzhxpd0ehdj+wdJAHi8ASiEwlPqUzJ5He7JxOAdhV2RsGpOeGJ60
+         I4N2T9rlWf6O4pYEY5B/QPzbsao03F+tDdKegOk4YORJrlwK7Os6WGLEY06VaRO1nxDG
+         g2USmgybGdFgG9/vnjC5pmRYLy2IQKPgLbXwp807/iGActrwuWQHOd+teANdUnQ10COv
+         4xFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wSr4HyzjLQHJeqg4FXdVwA9taG1tAujGNpZJV/Lp2xA=;
+        b=VMpy3gxufc5w6tlludx4Af/sk/3jQyqFcvp7BhKKqAoJ7MIPF1NXg4ue5nxdt55Cbu
+         jr89QfvLVlkHzMhWB98DLSulum1emPwCng9JkN1bNiNl5s0LoiukRTAYfte9o67Fiai2
+         dN0AeXtUkiBLfTvJk+34kW0HQQL8AlNmbLFNGvWJ8kMe4t2C/eF6aqHA9fvKOdtdG8VY
+         T1KZErriaISaDoALlLKPh0UDOBPidcUkKmy/3DnBnpMEgzCGoNANBBLRSk/y8lDzHtx1
+         MaoiQ85WN+eTKXMg4bv6TowMaZ/NMvZk6WKYdG8P6pvHXpySHRGszLxZ1ay7aTDs3qEN
+         252A==
+X-Gm-Message-State: AOAM532U3+4SY6kH2xdR3jNci9qj0AZxk1/Oz2NMpxPml7HBP8eB3O4S
+        Z9UDiJi1n2Cnn3KHR/i9mQqx+imu
+X-Google-Smtp-Source: ABdhPJxYxiJCIdeqCxYbxGViLXunGVZrNR70OnewxOb4bmcvtpwxRQFfJ9pUADd3zXcMegCttBuv/w==
+X-Received: by 2002:a17:906:dbd6:: with SMTP id yc22mr7916730ejb.345.1590152334467;
+        Fri, 22 May 2020 05:58:54 -0700 (PDT)
+Received: from localhost (pd9e51079.dip0.t-ipconnect.de. [217.229.16.121])
+        by smtp.gmail.com with ESMTPSA id i4sm7743846eja.92.2020.05.22.05.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 05:58:53 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:58:52 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firmware: tegra: Defer BPMP probe if shared memory not
+ available
+Message-ID: <20200522125852.GJ2163848@ulmo>
+References: <20200520151206.15253-1-jonathanh@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <abff69b6-b033-18e2-f380-ceccb42c6b01@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cDtQGJ/EJIRf/Cpq"
+Content-Disposition: inline
+In-Reply-To: <20200520151206.15253-1-jonathanh@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
 
-On 5/22/20 11:43 AM, Daniel Lezcano wrote:
-> 
-> Hi Lukasz,
-> 
-> On 11/05/2020 13:18, Lukasz Luba wrote:
->> Hi all,
->>
->> This patch set introduces support for devices in the Energy Model (EM)
->> framework. It will unify the power model for thermal subsystem. It will
->> make simpler to add support for new devices willing to use more
->> advanced features (like Intelligent Power Allocation). Now it should
->> require less knowledge and effort for driver developer to add e.g.
->> GPU driver with simple energy model. A more sophisticated energy model
->> in the thermal framework is also possible, driver needs to provide
->> a dedicated callback function. More information can be found in the
->> updated documentation file.
->>
->> First 7 patches are refactoring Energy Model framework to add support
->> of other devices that CPUs. They change:
->> - naming convention from 'capacity' to 'performance' state,
->> - API arguments adding device pointer and not rely only on cpumask,
->> - change naming when 'cpu' was used, now it's a 'device'
->> - internal structure to maintain registered devices
->> - update users to the new API
->> Patch 8 updates OPP framework helper function to be more generic, not
->> CPU specific.
->> Patches 9-14 change devfreq cooling, dropping part of old power model and
->> adding registration with Energy Model via exported GPL function.
->> The last path is a simple change for Panfrost GPU driver.
->>
->> The patch set is based on linux-next tag next-20200508.
-> 
-> Do you think it is possible to respin against linux-pm next ?
+--cDtQGJ/EJIRf/Cpq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I will do it and send the v8.
+On Wed, May 20, 2020 at 04:12:06PM +0100, Jon Hunter wrote:
+> Since commit 93d2e4322aa7 ("of: platform: Batch fwnode parsing when
+> adding all top level devices") was added, the probing of the Tegra
+> SRAM device has occurred later in the boot sequence, after the BPMP
+> has been probed. The BPMP uses sections of the SRAM for shared memory
+> and if the BPMP is probed before the SRAM then it fails to probe and
+> never tries again. This is causing a boot failure on Tegra186 and
+> Tegra194. Fix this by allowing the probe of the BPMP to be deferred if
+> the SRAM is not available yet.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/firmware/tegra/bpmp-tegra186.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> I wanted to try the series but I'm getting non trivial conflicts with
-> the devfreq_cooling changes
-> 
-> 
+Applied, thanks.
 
-Let me take care of this.
+Thierry
 
-Regards,
-Lukasz
+--cDtQGJ/EJIRf/Cpq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl7HzIwACgkQ3SOs138+
+s6F7aw//cbgdSkP2Ni/r+B9R5WWnEoShgUiaq0OGHzyiQPzG93CZFHUiWuO9ZSW6
+qWRXMZkRGZzd2fCra33fVNPZdalCHJ/zPMlNfDC4PKhPO6KUixIv8P3/fDFodLtp
+0hI6lZKkifiqkjIPUgDqHm6T19/cnJjalGkcoAAzu0GdL6/thkdn/SO0SARRaE8M
+9LOsLIcoIhahOYatM/+SMRmJOqLA8NncSKHPQf6AZoGrLJC/QuvyZxKVs4wH5Vl9
+OSR18XfNqy7CSZxioLsOYXqunVu8+NXRvmcdCm3Bi/xmDG5ra8ekdE1AESQvp0FC
+X0+Guo2UcNKGg0ntbe9Rw5vQ1iJBpyHPE8t/2Ij0Y5K1RNjFy52dY9fc1nCb1ZDt
+7hbOCqmu+bNjP/Px9IWiAtsS1DZMukbX4ywHWDlGaBm5flHb30XXeRuUuUkFn5ZO
+dJPKbneJFqmV5xXpTTE76ltZfSBLk8MdWWW6/nSO9OEzODFCJv9I5UQLofI/L6xh
+7yNT64Doq2tSx62Jp7ZjUxdmJ5+ric3oq3SHfiQig8UgNgFkbK3Vf4dMyE98XYq4
+Vgk2kWjkeV3C81BGDJflVwMxiUNjEx1D6w5gXNoJYRfOwSL2D6xw0RUKrnxxV8yX
+dLYx0Aeq0Ys+Y4Hn4klCsk+MuNQ+aEY+qeOGoVOcVe2/2Pn2NRU=
+=Yo2G
+-----END PGP SIGNATURE-----
+
+--cDtQGJ/EJIRf/Cpq--
