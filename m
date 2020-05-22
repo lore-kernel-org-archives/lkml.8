@@ -2,137 +2,94 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D407F20812
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038AD206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgEVItS (ORCPT
+        id S1729366AbgEVIzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:49:18 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:47412 "EHLO loongson.cn"
+        Fri, 22 May 2020 04:55:05 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:50578 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728152AbgEVItS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:49:18 -0400
-Received: from [10.20.42.25] (unknown [10.20.42.25])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf2nskcdex8U3AA--.97S3;
-        Fri, 22 May 2020 16:48:45 +0800 (CST)
-Subject: Re: [PATCH v5 2/4] mm/memory.c: Update local TLB if PTE entry exists
-To:     Andrew Morton <akpm@linux-foundation.org>
-References: <1590031837-9582-1-git-send-email-maobibo@loongson.cn>
- <1590031837-9582-2-git-send-email-maobibo@loongson.cn>
- <20200521122211.7450025a41865a67df6a7303@linux-foundation.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-From:   maobibo <maobibo@loongson.cn>
-Message-ID: <a04b7a67-6e1c-9568-a23e-f033191b5d32@loongson.cn>
-Date:   Fri, 22 May 2020 16:48:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        id S1728424AbgEVIzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:55:04 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 16:54:48
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.77.158]
+Date:   Fri, 22 May 2020 16:54:48 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
+Cc:     "kjlu@umn.edu" <kjlu@umn.edu>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        "Avri Altman" <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        "Can Guo" <cang@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: RE: [EXT] [PATCH] scsi: ufs-bsg: Fix runtime PM imbalance on
+ error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <SN6PR08MB56932A6D579AFB4E28AFD001DBB40@SN6PR08MB5693.namprd08.prod.outlook.com>
+References: <20200522045932.31795-1-dinghao.liu@zju.edu.cn>
+ <SN6PR08MB56932A6D579AFB4E28AFD001DBB40@SN6PR08MB5693.namprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <20200521122211.7450025a41865a67df6a7303@linux-foundation.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxf2nskcdex8U3AA--.97S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWryfKr1rGrWUGF4kCF13twb_yoW5GrWDpF
-        W2ka1fJF4vgryxCF4xXw1jvF4fZ34rKF4DJryFkr90k390gw4SyryUJ3y8Zry5Cwn3ta12
-        vF4jgFZ5WayDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvKb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
-        Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-        17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
-        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-        VjvjDU0xZFpf9x07b5sjbUUUUU=
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+Message-ID: <4a6ba414.bf5c4.1723b9792df.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgBHkD5Yk8decHj_AQ--.40656W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUIBlZdtOQgrAAAse
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtCS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUGVWUXwCS07vEYx0Ex4A2jsIE14v26r4j6F4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY64IIrI8v6xkF7I0E8cxan2IY04v7MIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwV
+        W8ZwCS07vEc2IjII80xcxEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l
+        V2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67
+        AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_
+        Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVW8JVWxJwCS07vEIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY
+        6I8E87Iv67AKxVW8JVWxJwCS07vEIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
+        VFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/22/2020 03:22 AM, Andrew Morton wrote:
-> On Thu, 21 May 2020 11:30:35 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
-> 
->> If two threads concurrently fault at the same address, the thread that
->> won the race updates the PTE and its local TLB. For now, the other
->> thread gives up, simply does nothing, and continues.
->>
->> It could happen that this second thread triggers another fault, whereby
->> it only updates its local TLB while handling the fault. Instead of
->> triggering another fault, let's directly update the local TLB of the
->> second thread.
->>
->> It is only useful to architectures where software can update TLB, it may
->> bring out some negative effect if update_mmu_cache is used for other
->> purpose also. It seldom happens where multiple threads access the same
->> page at the same time, so the negative effect is limited on other arches.
->>
->> With specjvm2008 workload, smp-race pgfault counts is about 3% to 4%
->> of the total pgfault counts by watching /proc/vmstats information
->>
-> 
-> I'm sorry to keep thrashing this for so long, but I'd really prefer not
-> to add any overhead to architectures which don't need it.  However,
-> we're getting somewhere!
-> 
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -2436,10 +2436,9 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
->>  		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
->>  			/*
->>  			 * Other thread has already handled the fault
->> -			 * and we don't need to do anything. If it's
->> -			 * not the case, the fault will be triggered
->> -			 * again on the same address.
->> +			 * and update local tlb only
->>  			 */
->> +			update_mmu_cache(vma, addr, vmf->pte);
-> 
-> Now, all the patch does is to add new calls to update_mmu_cache().
-> 
-> So can we replace all these with a call to a new
-> update_mmu_cache_sw_tlb() (or whatever) which is a no-op on
-> architectures which don't need the additional call?
-> 
-> Also, I wonder about the long-term maintainability.  People who
-> regularly work on this code won't be thinking of this MIPS peculiarity
-> and it's likely that any new calls to update_mmu_cache_sw_tlb() won't
-> be added where they should have been.  Hopefully copy-and-paste from
-> the existing code will serve us well.  Please do ensure that the
-> update_mmu_cache_sw_tlb() implementation is carefully commented so
-> that people can understand where they should (and shouldn't) include
-> this call.
-Well, I will do that. MIPS is actually somewhat different with generic
-architectures, and old MIPS system does not support hardware page walk,
-it requires software to update TLB entry.
-
-regards
-bibo, mao
-
- 
-
+SGksIEJlYW4KClRoYW5rIHlvdSBmb3IgeW91ciBhZHZpY2UhIE1vdmluZyBvcmlnaW5hbCBwbV9y
+dW50aW1lX3B1dF9zeW5jKCkgCnRvIGFmdGVyICJvdXQiIGxhYmVsIHdpbGwgaW5mbHVlbmNlIGFu
+IGVycm9yIHBhdGggYnJhbmNoZWQgZnJvbSAKdXBzX2JzZ192ZXJpZnlfcXVlcnlfc2l6ZSgpLiBT
+byBJIHRoaW5rIGNoYW5naW5nICJnb3RvIG91dCIgdG8KImJyZWFrIiBpcyBhIGdvb2QgaWRlYS4g
+QnV0IGluIHRoaXMgY2FzZSB3ZSBtYXkgZXhlY3V0ZSBhbiBleHRyYQpzZ19jb3B5X2Zyb21fYnVm
+ZmVyKCkgYW5kIGFuIGV4dHJhIGtmcmVlKCkgY29tcGFyZWQgd2l0aCB1bnBhdGNoZWQKdmVyc2lv
+bi4gRG9lcyB0aGlzIG1hdHRlcj8KClJlZ2FyZHMsCkRpbmdoYW8KCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IEhpLCBEaW5naGFvCj4gPiAKPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc19ic2cuYyBiL2RyaXZlcnMvc2NzaS91
+ZnMvdWZzX2JzZy5jIGluZGV4Cj4gPiA1M2RkODc2MjhjYmUuLjUxNmE3ZjU3Mzk0MiAxMDA2NDQK
+PiA+IC0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzX2JzZy5jCj4gPiArKysgYi9kcml2ZXJzL3Nj
+c2kvdWZzL3Vmc19ic2cuYwo+ID4gQEAgLTEwNiw4ICsxMDYsMTAgQEAgc3RhdGljIGludCB1ZnNf
+YnNnX3JlcXVlc3Qoc3RydWN0IGJzZ19qb2IgKmpvYikKPiA+ICAJCWRlc2Nfb3AgPSBic2dfcmVx
+dWVzdC0+dXBpdV9yZXEucXIub3Bjb2RlOwo+ID4gIAkJcmV0ID0gdWZzX2JzZ19hbGxvY19kZXNj
+X2J1ZmZlcihoYmEsIGpvYiwgJmRlc2NfYnVmZiwKPiA+ICAJCQkJCQkmZGVzY19sZW4sIGRlc2Nf
+b3ApOwo+ID4gLQkJaWYgKHJldCkKPiA+ICsJCWlmIChyZXQpIHsKPiA+ICsJCQlwbV9ydW50aW1l
+X3B1dF9zeW5jKGhiYS0+ZGV2KTsKPiAKPiBObyAgbmVlZCB0byBhZGQgcG1fcnVudGltZV9wdXRf
+c3luYygpIGhlcmUsIHlvdSBjYW4gY2hhbmdlICJnb3RvIG91dCIgdG8gImJyZWFrIiwKPiBPciBt
+b3ZlIG9yaWdpbmFsIHBtX3J1bnRpbWVfcHV0X3N5bmMoKSB0byBhZnRlciBnb3RvIGxhYmVsLgo+
+IAo+ID4gIAkJCWdvdG8gb3V0Owo+ID4gKwkJfQo+ID4gCj4gPiAgCQkvKiBmYWxsIHRocm91Z2gg
+Ki8KPiA+ICAJY2FzZSBVUElVX1RSQU5TQUNUSU9OX05PUF9PVVQ6Cj4gPiAtLQo+ID4gMi4xNy4x
+Cg==
