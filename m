@@ -2,170 +2,338 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D85C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D026C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D6420727
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C96C20727
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TOM3TO7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbgEVQy3 (ORCPT
+        id S1730747AbgEVQyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:54:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:39422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbgEVQy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:54:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3C3D55D;
-        Fri, 22 May 2020 09:54:27 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.95])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB58D3F305;
-        Fri, 22 May 2020 09:54:24 -0700 (PDT)
-Date:   Fri, 22 May 2020 17:54:22 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        harb@amperecomputing.com, Jose.Marinho@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Francois Ozog <francois.ozog@linaro.org>
-Subject: Re: [PATCH 2/2] firmware: smccc: Add ARCH_SOC_ID support
-Message-ID: <20200522165422.GA18810@bogus>
-References: <20200522124951.35776-1-sudeep.holla@arm.com>
- <20200522124951.35776-3-sudeep.holla@arm.com>
- <CAK8P3a1t6BrB_Gti138VDRbmaiR_TjwR9d6qMstLBFDWxZ1kjQ@mail.gmail.com>
+        Fri, 22 May 2020 12:54:49 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36018 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730306AbgEVQys (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 12:54:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MGsX4f118967;
+        Fri, 22 May 2020 11:54:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590166473;
+        bh=TxXfcp4NBZuZnip4wrTBwhcuqULHHZ7OaIVZVzP/oTc=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=TOM3TO7FWuQthj/WT7i4tssoY69CjUrlIN7IHpBRxK+VB9EAUKL3/BAD1+1Px8Nu8
+         LmE29ezyzenEOk6Wvj4lSqvcVZH/Nf+5MH3kvZjImOoC6m40faFzryEpKViwIOmLu1
+         YrZlROKaO0mV/TuMJQMAod9uFVrqd37TneLXeWhM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MGsXWi006221
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 11:54:33 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 11:54:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 11:54:32 -0500
+Received: from [10.250.48.148] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MGsWik020018;
+        Fri, 22 May 2020 11:54:32 -0500
+Subject: Re: [PATCH 3/4] remoteproc: add support for a new 64-bit trace
+ version
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Clement Leger <cleger@kalray.eu>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200325204701.16862-1-s-anna@ti.com>
+ <20200325204701.16862-4-s-anna@ti.com> <20200521180417.GJ408178@builder.lan>
+ <997d6f9a-64ba-7a89-e909-9a5a474120b0@ti.com>
+Message-ID: <f15b0c6d-eee8-b839-0c79-a5316dbbfa7b@ti.com>
+Date:   Fri, 22 May 2020 11:54:32 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1t6BrB_Gti138VDRbmaiR_TjwR9d6qMstLBFDWxZ1kjQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <997d6f9a-64ba-7a89-e909-9a5a474120b0@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+ Jose (SMCCC Spec author))
+On 5/21/20 2:42 PM, Suman Anna wrote:
+> Hi Bjorn,
+> 
+> On 5/21/20 1:04 PM, Bjorn Andersson wrote:
+>> On Wed 25 Mar 13:47 PDT 2020, Suman Anna wrote:
+>>
+>>> Introduce a new trace entry resource structure that accommodates
+>>> a 64-bit device address to support 64-bit processors. This is to
+>>> be used using an overloaded version value of 1 in the upper 32-bits
+>>> of the previous resource type field. The new resource still uses
+>>> 32-bits for the length field (followed by a 32-bit reserved field,
+>>> so can be updated in the future), which is a sufficiently large
+>>> trace buffer size. A 32-bit padding field also had to be added
+>>> to align the device address on a 64-bit boundary, and match the
+>>> usage on the firmware side.
+>>>
+>>> The remoteproc debugfs logic also has been adjusted accordingly.
+>>>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> ---
+>>>   drivers/remoteproc/remoteproc_core.c    | 40 ++++++++++++++++++++-----
+>>>   drivers/remoteproc/remoteproc_debugfs.c | 37 ++++++++++++++++++-----
+>>>   include/linux/remoteproc.h              | 26 ++++++++++++++++
+>>>   3 files changed, 87 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_core.c 
+>>> b/drivers/remoteproc/remoteproc_core.c
+>>> index 53bc37c508c6..b9a097990862 100644
+>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>> @@ -609,21 +609,45 @@ void rproc_vdev_release(struct kref *ref)
+>>>    *
+>>>    * Returns 0 on success, or an appropriate error code otherwise
+>>>    */
+>>> -static int rproc_handle_trace(struct rproc *rproc, struct 
+>>> fw_rsc_trace *rsc,
+>>> +static int rproc_handle_trace(struct rproc *rproc, void *rsc,
+>>>                     int offset, int avail, u16 ver)
+>>>   {
+>>>       struct rproc_debug_trace *trace;
+>>>       struct device *dev = &rproc->dev;
+>>> +    struct fw_rsc_trace *rsc1;
+>>> +    struct fw_rsc_trace2 *rsc2;
+>>>       char name[15];
+>>> +    size_t rsc_size;
+>>> +    u32 reserved;
+>>> +    u64 da;
+>>> +    u32 len;
+>>> +
+>>> +    if (!ver) {
+>>
+>> This looks like a switch to me, but I also do think this looks rather
+>> crude, if you spin off the tail of this function and call it from a
+>> rproc_handle_trace() and rproc_handle_trace64() I believe this would be
+>> cleaner.
+> 
+> Yeah, ok. Will refactor for this in v2.
+> 
+>>
+>>> +        rsc1 = (struct fw_rsc_trace *)rsc;
+>>> +        rsc_size = sizeof(*rsc1);
+>>> +        reserved = rsc1->reserved;
+>>> +        da = rsc1->da;
+>>> +        len = rsc1->len;
+>>> +    } else if (ver == 1) {
+>>> +        rsc2 = (struct fw_rsc_trace2 *)rsc;
+>>> +        rsc_size = sizeof(*rsc2);
+>>> +        reserved = rsc2->reserved;
+>>> +        da = rsc2->da;
+>>> +        len = rsc2->len;
+>>> +    } else {
+>>> +        dev_err(dev, "unsupported trace rsc version %d\n", ver);
+>>
+>> If we use "type" to describe your 64-bit-da-trace then this sanity check
+>> would have been taken care of by the core.
+>>
+>>> +        return -EINVAL;
+>>> +    }
+>>> -    if (sizeof(*rsc) > avail) {
+>>> +    if (rsc_size > avail) {
+>>>           dev_err(dev, "trace rsc is truncated\n");
+>>>           return -EINVAL;
+>>>       }
+>>>       /* make sure reserved bytes are zeroes */
+>>> -    if (rsc->reserved) {
+>>> -        dev_err(dev, "trace rsc has non zero reserved bytes\n");
+>>> +    if (reserved) {
+>>> +        dev_err(dev, "trace rsc has non zero reserved bytes, value = 
+>>> 0x%x\n",
+>>> +            reserved);
+>>>           return -EINVAL;
+>>>       }
+>>> @@ -632,8 +656,8 @@ static int rproc_handle_trace(struct rproc 
+>>> *rproc, struct fw_rsc_trace *rsc,
+>>>           return -ENOMEM;
+>>>       /* set the trace buffer dma properties */
+>>> -    trace->trace_mem.len = rsc->len;
+>>> -    trace->trace_mem.da = rsc->da;
+>>> +    trace->trace_mem.len = len;
+>>> +    trace->trace_mem.da = da;
+>>>       /* set pointer on rproc device */
+>>>       trace->rproc = rproc;
+>>> @@ -652,8 +676,8 @@ static int rproc_handle_trace(struct rproc 
+>>> *rproc, struct fw_rsc_trace *rsc,
+>>>       rproc->num_traces++;
+>>> -    dev_dbg(dev, "%s added: da 0x%x, len 0x%x\n",
+>>> -        name, rsc->da, rsc->len);
+>>> +    dev_dbg(dev, "%s added: da 0x%llx, len 0x%x\n",
+>>> +        name, da, len);
+>>>       return 0;
+>>>   }
+>>> diff --git a/drivers/remoteproc/remoteproc_debugfs.c 
+>>> b/drivers/remoteproc/remoteproc_debugfs.c
+>>> index 3560eed7a360..ff43736db45a 100644
+>>> --- a/drivers/remoteproc/remoteproc_debugfs.c
+>>> +++ b/drivers/remoteproc/remoteproc_debugfs.c
+>>> @@ -192,7 +192,8 @@ static int rproc_rsc_table_show(struct seq_file 
+>>> *seq, void *p)
+>>>       struct resource_table *table = rproc->table_ptr;
+>>>       struct fw_rsc_carveout *c;
+>>>       struct fw_rsc_devmem *d;
+>>> -    struct fw_rsc_trace *t;
+>>> +    struct fw_rsc_trace *t1;
+>>> +    struct fw_rsc_trace2 *t2;
+>>>       struct fw_rsc_vdev *v;
+>>>       int i, j;
+>>> @@ -205,6 +206,7 @@ static int rproc_rsc_table_show(struct seq_file 
+>>> *seq, void *p)
+>>>           int offset = table->offset[i];
+>>>           struct fw_rsc_hdr *hdr = (void *)table + offset;
+>>>           void *rsc = (void *)hdr + sizeof(*hdr);
+>>> +        u16 ver = hdr->st.v;
+>>>           switch (hdr->st.t) {
+>>>           case RSC_CARVEOUT:
+>>> @@ -230,13 +232,32 @@ static int rproc_rsc_table_show(struct seq_file 
+>>> *seq, void *p)
+>>>               seq_printf(seq, "  Name %s\n\n", d->name);
+>>>               break;
+>>>           case RSC_TRACE:
+>>> -            t = rsc;
+>>> -            seq_printf(seq, "Entry %d is of type %s\n",
+>>> -                   i, types[hdr->st.t]);
+>>> -            seq_printf(seq, "  Device Address 0x%x\n", t->da);
+>>> -            seq_printf(seq, "  Length 0x%x Bytes\n", t->len);
+>>> -            seq_printf(seq, "  Reserved (should be zero) [%d]\n", 
+>>> t->reserved);
+>>> -            seq_printf(seq, "  Name %s\n\n", t->name);
+>>> +            if (ver == 0) {
+>>
+>> Again, this is a switch, here in a switch. Just defining a new
+>> RSC_TRACE64 type would reduce the amount of code here...
+> 
+> OK.
+> 
+>>
+>>> +                t1 = rsc;
+>>> +                seq_printf(seq, "Entry %d is version %d of type %s\n",
+>>> +                       i, ver, types[hdr->st.t]);
+>>> +                seq_printf(seq, "  Device Address 0x%x\n",
+>>> +                       t1->da);
+>>> +                seq_printf(seq, "  Length 0x%x Bytes\n",
+>>> +                       t1->len);
+>>> +                seq_printf(seq, "  Reserved (should be zero) [%d]\n",
+>>> +                       t1->reserved);
+>>> +                seq_printf(seq, "  Name %s\n\n", t1->name);
+>>> +            } else if (ver == 1) {
+>>> +                t2 = rsc;
+>>> +                seq_printf(seq, "Entry %d is version %d of type %s\n",
+>>> +                       i, ver, types[hdr->st.t]);
+>>> +                seq_printf(seq, "  Device Address 0x%llx\n",
+>>> +                       t2->da);
+>>> +                seq_printf(seq, "  Length 0x%x Bytes\n",
+>>> +                       t2->len);
+>>> +                seq_printf(seq, "  Reserved (should be zero) [%d]\n",
+>>> +                       t2->reserved);
+>>> +                seq_printf(seq, "  Name %s\n\n", t2->name);
+>>> +            } else {
+>>> +                seq_printf(seq, "Entry %d is an unsupported version 
+>>> %d of type %s\n",
+>>> +                       i, ver, types[hdr->st.t]);
+>>> +            }
+>>>               break;
+>>>           case RSC_VDEV:
+>>>               v = rsc;
+>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>> index 526d3cb45e37..3b3bea42f8b1 100644
+>>> --- a/include/linux/remoteproc.h
+>>> +++ b/include/linux/remoteproc.h
+>>> @@ -243,6 +243,32 @@ struct fw_rsc_trace {
+>>>       u8 name[32];
+>>>   } __packed;
+>>> +/**
+>>> + * struct fw_rsc_trace2 - trace buffer declaration supporting 64-bits
+>>> + * @padding: initial padding after type field for aligned 64-bit access
+>>> + * @da: device address (64-bit)
+>>> + * @len: length (in bytes)
+>>> + * @reserved: reserved (must be zero)
+>>> + * @name: human-readable name of the trace buffer
+>>> + *
+>>> + * This resource entry is an enhanced version of the fw_rsc_trace 
+>>> resourec entry
+>>> + * and the provides equivalent functionality but designed for 64-bit 
+>>> remote
+>>> + * processors.
+>>> + *
+>>> + * @da specifies the device address of the buffer, @len specifies
+>>> + * its size, and @name may contain a human readable name of the 
+>>> trace buffer.
+>>> + *
+>>> + * After booting the remote processor, the trace buffers are exposed 
+>>> to the
+>>> + * user via debugfs entries (called trace0, trace1, etc..).
+>>> + */
+>>> +struct fw_rsc_trace2 {
+>>
+>> Sounds more like fw_rsc_trace64 to me - in particular since the version
+>> of trace2 is 1...
+> 
+> Yeah, will rename this.
+> 
+>>
+>>> +    u32 padding;
+>>> +    u64 da;
+>>> +    u32 len;
+>>> +    u32 reserved;
+>>
+>> What's the purpose of this reserved field?
+> 
+> Partly to make sure the entire resource is aligned on an 8-byte, and 
+> partly copied over from fw_rsc_trace entry. I guess 32-bits is already 
+> large enough of a size for trace entries irrespective of 32-bit or 
+> 64-bit traces, so I doubt if we want to make the len field also a u64.
 
-On Fri, May 22, 2020 at 04:46:12PM +0200, Arnd Bergmann wrote:
-> On Fri, May 22, 2020 at 2:50 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > +
-> > +       soc_id_rev = res.a0;
-> > +
-> > +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> > +       if (!soc_dev_attr)
-> > +               return -ENOMEM;
-> > +
-> > +       sprintf(soc_id_str, "0x%04x", IMP_DEF_SOC_ID(soc_id_version));
-> > +       sprintf(soc_id_rev_str, "0x%08x", soc_id_rev);
-> > +       sprintf(soc_id_jep106_id_str, "0x%02x%02x",
-> > +               JEP106_BANK_CONT_CODE(soc_id_version),
-> > +               JEP106_ID_CODE(soc_id_version));
-> > +
-> > +       soc_dev_attr->soc_id = soc_id_str;
-> > +       soc_dev_attr->revision = soc_id_rev_str;
-> > +       soc_dev_attr->jep106_id = soc_id_jep106_id_str;
->
-> Ok, let me try to understand how this maps the 64-bit ID into the
-> six strings in user space:
->
-> For a chip that identifies as
->
-> JEP106_BANK_CONT_CODE = 12
-> JEP106_ID_CODE = 34
-> IMP_DEF_SOC_ID = 5678
-> soc_id_rev = 9abcdef0
->
-> the normal sysfs attributes contain these strings:
->
-> machine = ""
-> family = ""
-> revision = "0x9abcdef0
-> serial_number = ""
-> soc_id = "0x5678"
->
-> and the new attribute is
->
-> jep106_identification_code = "0x1234"
->
-> This still looks like a rather poorly designed interface to me, with a
-> number of downsides:
->
-> - Nothing in those strings identifies the numbers as using jep106
->   numbers rather than some something else that might use strings
->   with hexadecimal numbers.
->
+Looking at this again, I can drop both padding and reserved fields, if I 
+move the len field before da. Any preferences/comments?
 
-Not sure if I understand your concerns completely here.
+regards
+Suman
 
-Anyways I wanted to clarify that the jep106 encoding is applicable only
-for manufacturer's id and not for SoC ID or revision. Not sure if that
-changes anything about your concerns.
+> 
+> regards
+> Suman
+> 
+>>
+>> Regards,
+>> Bjorn
+>>
+>>> +    u8 name[32];
+>>> +} __packed;
+>>> +
+>>>   /**
+>>>    * struct fw_rsc_vdev_vring - vring descriptor entry
+>>>    * @da: device address
+>>> -- 
+>>> 2.23.0
+>>>
+> 
 
-> - I think we should have something unique in "family" just because
->   existing scripts can use that as the primary indentifier
->
-
-I agree with your idea of combining attributes, not sure exactly which
-ones yet.
-
-> - It seems odd that there is no way to read the serial number through
->   the same interface and publish it the usual way.
-
-Valid concern and I will pass this to interface authors.
-
->   Francois Ozog
->   recently asked for a generic way to find out a serial number for
->   inventory management, and this would be the obvious place to have it.
-
-Agreed, but not sure what author(s) have to say. I have cc-ed one of them.
-
->   It can of course be added later when the next revision of the spec
->   is there, it just seems like a surprising omission.
->
-
-Yes, definitely. Good to get feedback.
-
-> How about making the contents:
->
-> machine = "" /* could be a future addition, but board specific */
-> family = "jep106:1234"
-
-But this just indicates manufacturer id and nothing related to SoC family.
-If it is jep106:043b, all it indicates is Arm Ltd and assigning it to
-family doesn't sound right to me.
-
-I had requests for both of the above during the design of interface but
-I was told vendors were happy with the interface. I will let the authors
-speak about that.
-
-> revision = "0x9abcdef0
-> serial_number = "0xfedcba987654321" /* to be implemented later */
-
-Sure.
-
-> soc_id = "jep106:1234:5678" /* duplicates family but makes it unique*/
-
-Not sure again.
->
-> That would work without any new properties, dropping the other patch,
-> and be easier to use for identification from user space.
->
-
-OK, I agree on ease part. But for me, we don't have any property in the
-list to indicate the vendor/manufacturer's name. I don't see issue adding
-one, name can be fixed as jep106_identification_code is too specific.
-
-How about manufacturer with the value in the format "jep106:1234" if
-it is not normal string but jep106 encoding.
-
---
-Regards,
-Sudeep
