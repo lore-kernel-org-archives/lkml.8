@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B87C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D48C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 289B8206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3509620679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xDhgEW7f"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iYcDzeO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgEVNUZ (ORCPT
+        id S1729847AbgEVNU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:20:25 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:59174 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729365AbgEVNUY (ORCPT
+        Fri, 22 May 2020 09:20:29 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49676 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729367AbgEVNU2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:20:24 -0400
+        Fri, 22 May 2020 09:20:28 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590153623; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1590153628; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=+vyp7WpdkrssI5ipocgemiSJlzn1t73u4Zv4js0qqcs=; b=xDhgEW7fg7H894iO+K2FNuiW5aXDHgyf2VHBHmQFNTHCjcjMBzuoc1f+E/VLf7ETRho4hC7H
- WSi1L7dtr6J/TJasHr1pEJu9856XrwfJrDQu6TQKAOHqupwN1QRuHVEreD6Nze9u801lYcHP
- Eam/bVqh592lhgnCkbDIec5Ns0c=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=q0utGiyDt8WT0d1no5dYJq9oKXeMrSH7v6XiMw0CH6w=; b=iYcDzeO4q0ZeZrTyLWUc+R/+btz6Y0bDkmnJjROh1Qs5B+7iGgbidE6z861unelgG3Iry1De
+ Qd7z5WnRj2iYM16Gd1anS9H8QUpEJosiqMvpqlj+rveogeuG1dUpv+W0J/VQONk1KbjuA79T
+ EtYa76mE3Ygmgepr9ZWbcy/UT78=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5ec7d19082c96b5d3bd71d8f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 13:20:16
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5ec7d19b569a62550de4d7ee (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 13:20:27
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B2091C433CA; Fri, 22 May 2020 13:20:16 +0000 (UTC)
+        id 9B9ABC433C8; Fri, 22 May 2020 13:20:27 +0000 (UTC)
 Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9C17C433C6;
-        Fri, 22 May 2020 13:20:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9C17C433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33859C433CB;
+        Fri, 22 May 2020 13:20:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33859C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -57,9 +57,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
         ilina@codeaurora.org, lsrao@codeaurora.org,
         Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-Date:   Fri, 22 May 2020 18:49:26 +0530
-Message-Id: <1590153569-21706-2-git-send-email-mkshah@codeaurora.org>
+Subject: [PATCH 3/4] pinctrl: qcom: Add msmgpio irqchip flags
+Date:   Fri, 22 May 2020 18:49:28 +0530
+Message-Id: <1590153569-21706-4-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
 References: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
@@ -68,137 +68,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
-overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
-callback is implemented then genirq takes unlazy path to disable irq.
+Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+during suspend and mask before setting irq type.
 
-Underlying irqchip may not want to implement irq_disable callback to lazy
-disable irq when client drivers invokes disable_irq(). By overriding
-irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
-
-Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
-if irqchip implemented irq_disable. In cases where irq_disable is not
-implemented irq_mask is overridden. Similarly override irq_enable callback
-only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
-
-Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 ---
- drivers/gpio/gpiolib.c      | 59 +++++++++++++++++++++++++++++----------------
- include/linux/gpio/driver.h | 13 ++++++++++
- 2 files changed, 51 insertions(+), 21 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index eaa0e20..a8fdc74 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2465,33 +2465,38 @@ static void gpiochip_irq_relres(struct irq_data *d)
- 	gpiochip_relres_irq(gc, d->hwirq);
- }
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 2419023..b909ffe 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+ 	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
+ 	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
++	pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
++				| IRQCHIP_SET_TYPE_MASKED;
  
-+static void gpiochip_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-+
-+	if (chip->irq.irq_mask)
-+		chip->irq.irq_mask(d);
-+	gpiochip_disable_irq(chip, d->hwirq);
-+}
-+
-+static void gpiochip_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-+
-+	gpiochip_enable_irq(chip, d->hwirq);
-+	if (chip->irq.irq_unmask)
-+		chip->irq.irq_unmask(d);
-+}
-+
- static void gpiochip_irq_enable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 
--	gpiochip_enable_irq(gc, d->hwirq);
--	if (gc->irq.irq_enable)
--		gc->irq.irq_enable(d);
--	else
--		gc->irq.chip->irq_unmask(d);
-+	gpiochip_enable_irq(chip, d->hwirq);
-+	chip->irq.irq_enable(d);
- }
- 
- static void gpiochip_irq_disable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 
--	/*
--	 * Since we override .irq_disable() we need to mimic the
--	 * behaviour of __irq_disable() in irq/chip.c.
--	 * First call .irq_disable() if it exists, else mimic the
--	 * behaviour of mask_irq() which calls .irq_mask() if
--	 * it exists.
--	 */
--	if (gc->irq.irq_disable)
--		gc->irq.irq_disable(d);
--	else if (gc->irq.chip->irq_mask)
--		gc->irq.chip->irq_mask(d);
--	gpiochip_disable_irq(gc, d->hwirq);
-+	chip->irq.irq_disable(d);
-+	gpiochip_disable_irq(chip, d->hwirq);
- }
- 
- static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
-@@ -2515,10 +2520,22 @@ static void gpiochip_set_irq_hooks(struct gpio_chip *gc)
- 			  "detected irqchip that is shared with multiple gpiochips: please fix the driver.\n");
- 		return;
- 	}
--	gc->irq.irq_enable = irqchip->irq_enable;
--	gc->irq.irq_disable = irqchip->irq_disable;
--	irqchip->irq_enable = gpiochip_irq_enable;
--	irqchip->irq_disable = gpiochip_irq_disable;
-+
-+	if (irqchip->irq_disable) {
-+		gpiochip->irq.irq_disable = irqchip->irq_disable;
-+		irqchip->irq_disable = gpiochip_irq_disable;
-+	} else {
-+		gpiochip->irq.irq_mask = irqchip->irq_mask;
-+		irqchip->irq_mask = gpiochip_irq_mask;
-+	}
-+
-+	if (irqchip->irq_enable) {
-+		gpiochip->irq.irq_enable = irqchip->irq_enable;
-+		irqchip->irq_enable = gpiochip_irq_enable;
-+	} else {
-+		gpiochip->irq.irq_unmask = irqchip->irq_unmask;
-+		irqchip->irq_unmask = gpiochip_irq_unmask;
-+	}
- }
- 
- /**
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 8c41ae4..c8bcaf3 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -253,6 +253,19 @@ struct gpio_irq_chip {
- 	 * Store old irq_chip irq_disable callback
- 	 */
- 	void		(*irq_disable)(struct irq_data *data);
-+	/**
-+	 * @irq_unmask:
-+	 *
-+	 * Store old irq_chip irq_unmask callback
-+	 */
-+	void		(*irq_unmask)(struct irq_data *data);
-+
-+	/**
-+	 * @irq_mask:
-+	 *
-+	 * Store old irq_chip irq_mask callback
-+	 */
-+	void		(*irq_mask)(struct irq_data *data);
- };
- 
- /**
+ 	np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+ 	if (np) {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
