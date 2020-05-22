@@ -2,121 +2,93 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E2EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1EC2067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C81320723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SsWP3Gl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbgEVWES (ORCPT
+        id S1731156AbgEVWJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:04:18 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:32896 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731156AbgEVWER (ORCPT
+        Fri, 22 May 2020 18:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731093AbgEVWJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:04:17 -0400
-Received: by mail-il1-f193.google.com with SMTP id y17so10041686ilg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:04:16 -0700 (PDT)
+        Fri, 22 May 2020 18:09:03 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C751C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:09:02 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id c24so9551160qtw.7
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/iHepWlHzPkoThKK+sxZvuLmz942NkozOITiMDLCLfg=;
+        b=SsWP3Gl3dor7j0epgR7q6l0aTcG1/6LtpX81BdvLzsMx/SADmJaiJ7WE1k5CydEjCA
+         pnPuBZM2mv/a+4grKSRCCTTdbdmNdeqV8dc7GncgMzMLQLg8qkKEBf77ofrwwGUI1wcl
+         qmcvev9OnZOnd1KQ0RoeoNhXFiGrxldEn0ax6IzVM8vek0c9MkKJ1WHcZBGETQwFtTms
+         xBqS4UkhI4zfvcUzOTP6e04vN5vzN9IMJboLXc8fMiOcbJVll92sA2xGwxazmiWl8T6U
+         sgb4cPGZ+AAVrYG5juLUc8yu17IxzBd/THBJyAtbZuxeyKj6x5ZzrMFvlfZW8cSRgTP+
+         /OLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=973NC73pjk2NBifwj8WHpMk/zDWJCDkNGu1zxBkh+HU=;
-        b=pnG398FlhLshHiw329/3Y9eCcycpwia6MAXkwdqqLHXvKTow2CEiwyHiEgD6KkZ5/c
-         ybppnI4tXHxe3FYkRKjibbNfFfMnxOr9rjyqF50smpWIfxuLFRjeqJIaZSZuKdK9Fmdv
-         +5beBjo4/zPX2pGNalul6w3T769mmm39sX5dl3h//VeIlhrGMQk7eVaOul6CQuDR7MhW
-         gHH1MywjKxYRc80+V4IeTLZOKbQBqGlzVo4GfMCwdjuaiHr3Anm76r0lXT9YDrBspI1x
-         WvI9P702rY4kCDRTJHdmCZ6F6azJQoPVImBj6sUS8jXPgmuV61oNlUF/WtVX/bJADsW+
-         YNPg==
-X-Gm-Message-State: AOAM532lnkdmbouMdWCMYBgk+oH450VDjWvgVVzcai2eSgcQIf4y/m0+
-        Z3cP2r+ZTA7hwGiP6FGgb39D4enzrVw=
-X-Google-Smtp-Source: ABdhPJyYMul10MLN8/0RuNemnHlg/7RGIY8JawSioG0PC/DiuKgLRb8q7iIa6Xh80EGbiwbqCzzJ3g==
-X-Received: by 2002:a92:5a5d:: with SMTP id o90mr15265718ilb.206.1590185056059;
-        Fri, 22 May 2020 15:04:16 -0700 (PDT)
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com. [209.85.166.171])
-        by smtp.gmail.com with ESMTPSA id v14sm5090279ilm.66.2020.05.22.15.04.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 15:04:15 -0700 (PDT)
-Received: by mail-il1-f171.google.com with SMTP id c20so12264214ilk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:04:14 -0700 (PDT)
-X-Received: by 2002:a92:c401:: with SMTP id e1mr15993370ilp.134.1590185054260;
- Fri, 22 May 2020 15:04:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/iHepWlHzPkoThKK+sxZvuLmz942NkozOITiMDLCLfg=;
+        b=ntwb3+NbOMkYX11FC/7EzwV4FFlVGWsa/vgpXHcYaPSNVOCpI28xjrZxngdtfbDPKQ
+         pcKvT+5U0eC4O9w1KDYqFiDtZFtuAk80SFEGuW0NSVQ+xKY2YMb8LEsOnN7J5PxqmuKz
+         ckVtylh3CGGF3ea1gmGKJxhptDCIbZbMwR4In9hO+fqcTE83/1oA7cJeu3iqpf/ZdgCE
+         PLNX+H7kf0vjBRxKJL/wovIgNRg8jKCqn3jCItQzI/qEr+n5IVdfFAk7YkYHrn9Rk28x
+         psU/kfyJZc9ckIx2dIzxPh+6BuClg/iaNdr2PKi5LGhLkNl9lYTJU9LOD8nlcMjYDsdD
+         B2rA==
+X-Gm-Message-State: AOAM532R34UADwnitX4IBwJbleV5OViPlUE4C9/lmI7Rv4mTXmnyESXH
+        UVIGJB2MCFqpBbkrLZAa2jYkvg==
+X-Google-Smtp-Source: ABdhPJyvvKpnqixLclW9SLL9hQ6ovKYcUrUanoFOiGH05AztSO5V21liqHYSLrfJzvzy71hKpb6V6g==
+X-Received: by 2002:ac8:d87:: with SMTP id s7mr3686244qti.210.1590185341221;
+        Fri, 22 May 2020 15:09:01 -0700 (PDT)
+Received: from Qians-MacBook-Air.local (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q17sm8581804qkq.111.2020.05.22.15.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 15:09:00 -0700 (PDT)
+Date:   Fri, 22 May 2020 18:08:58 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, jgg@ziepe.ca, peterx@redhat.com
+Subject: Re: [PATCH v3 0/3] vfio-pci: Block user access to disabled device
+ MMIO
+Message-ID: <20200522220858.GE1337@Qians-MacBook-Air.local>
+References: <159017449210.18853.15037950701494323009.stgit@gimli.home>
 MIME-Version: 1.0
-References: <20200427134003.45188-1-max.krummenacher@toradex.com> <20200427134003.45188-5-max.krummenacher@toradex.com>
-In-Reply-To: <20200427134003.45188-5-max.krummenacher@toradex.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 22 May 2020 17:03:50 -0500
-X-Gmail-Original-Message-ID: <CADRPPNT8FQJ4vZUkk-t=o2GnNB=JSxkadjxiH0LZcQhC1e8VMg@mail.gmail.com>
-Message-ID: <CADRPPNT8FQJ4vZUkk-t=o2GnNB=JSxkadjxiH0LZcQhC1e8VMg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] arm64: defconfig: add MEDIA_PLATFORM_SUPPORT
-To:     Max Krummenacher <max.oss.09@gmail.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Max Krummenacher <max.krummenacher@toradex.com>, soc@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159017449210.18853.15037950701494323009.stgit@gimli.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 8:43 AM Max Krummenacher <max.oss.09@gmail.com> wrote:
->
-> Commit 06b93644f4d1 ("media: Kconfig: add an option to filter in/out
-> platform drivers") adds a new Kconfig symbol which now hides drivers
-> currently enabled in the arm64 defconfig. Enable it to get those
-> drivers back.
->
-> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+On Fri, May 22, 2020 at 01:17:09PM -0600, Alex Williamson wrote:
+> v3:
+> 
+> The memory_lock semaphore is only held in the MSI-X path for callouts
+> to functions that may access MSI-X MMIO space of the device, this
+> should resolve the circular locking dependency reported by Qian
+> (re-testing very much appreciated).  I've also incorporated the
+> pci_map_rom() and pci_unmap_rom() calls under the memory_lock.  Commit
+> 0cfd027be1d6 ("vfio_pci: Enable memory accesses before calling
+> pci_map_rom") made sure memory was enabled on the info path, but did
+> not provide locking to protect that state.  The r/w path of the BAR
+> access is expanded to include ROM mapping/unmapping.  Unless there
+> are objections, I'll plan to drop v2 from my next branch and replace
+> it with this.  Thanks,
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
-
-This is pretty important otherwise some of the drivers enabled in
-defconfig will no longer build.
-
->
->
-> ---
->
-> Changes in v3:
-> - new patch: added 'arm64: defconfig: add MEDIA_PLATFORM_SUPPORT' now
->   needed for some enabled drivers or these drivers will silently not
->   be built.
->
-> Changes in v2: None
->
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index b8259814065dc..472aa82b9feee 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -569,6 +569,7 @@ CONFIG_MEDIA_DIGITAL_TV_SUPPORT=y
->  CONFIG_MEDIA_SDR_SUPPORT=y
->  CONFIG_MEDIA_CONTROLLER=y
->  CONFIG_VIDEO_V4L2_SUBDEV_API=y
-> +CONFIG_MEDIA_PLATFORM_SUPPORT=y
->  # CONFIG_DVB_NET is not set
->  CONFIG_MEDIA_USB_SUPPORT=y
->  CONFIG_USB_VIDEO_CLASS=m
-> --
-> 2.20.1
->
+FYI, the lockdep warning is gone.
