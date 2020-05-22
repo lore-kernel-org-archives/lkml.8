@@ -2,145 +2,82 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D8C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1303A207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3328A20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgEVAqf (ORCPT
+        id S1726866AbgEVArf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVAqf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:46:35 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA6EC061A0E;
-        Thu, 21 May 2020 17:46:34 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jbvpK-00DESM-Ds; Fri, 22 May 2020 00:46:18 +0000
-Date:   Fri, 22 May 2020 01:46:18 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] arch/{mips,sparc,microblaze,powerpc}: Don't enable
- pagefault/preempt twice
-Message-ID: <20200522004618.GA3151350@ZenIV.linux.org.uk>
-References: <20200507150004.1423069-8-ira.weiny@intel.com>
- <20200518184843.3029640-1-ira.weiny@intel.com>
- <20200519165422.GA5838@roeck-us.net>
- <20200521172704.GF23230@ZenIV.linux.org.uk>
- <bdc8dc64-622c-3b0d-1ae1-48222cf34358@roeck-us.net>
- <20200521224612.GJ23230@ZenIV.linux.org.uk>
+        Thu, 21 May 2020 20:47:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:55772 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbgEVArf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 20:47:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65CC230E;
+        Thu, 21 May 2020 17:47:34 -0700 (PDT)
+Received: from [10.163.76.230] (unknown [10.163.76.230])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 096B73F52E;
+        Thu, 21 May 2020 17:47:31 -0700 (PDT)
+Subject: Re: [PATCH mmotm] mm/vmstat: Add events for PMD based THP migration
+ without split fix
+To:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Naoya Horiguchi <naoya.horiguchi@nec.com>, Zi Yan <ziy@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <alpine.LSU.2.11.2005210643340.482@eggly.anvils>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f1673e4f-64ca-9cf2-861c-7e8a7deeede1@arm.com>
+Date:   Fri, 22 May 2020 06:16:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521224612.GJ23230@ZenIV.linux.org.uk>
+In-Reply-To: <alpine.LSU.2.11.2005210643340.482@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:46:12PM +0100, Al Viro wrote:
-> On Thu, May 21, 2020 at 03:20:46PM -0700, Guenter Roeck wrote:
-> > On 5/21/20 10:27 AM, Al Viro wrote:
-> > > On Tue, May 19, 2020 at 09:54:22AM -0700, Guenter Roeck wrote:
-> > >> On Mon, May 18, 2020 at 11:48:43AM -0700, ira.weiny@intel.com wrote:
-> > >>> From: Ira Weiny <ira.weiny@intel.com>
-> > >>>
-> > >>> The kunmap_atomic clean up failed to remove one set of pagefault/preempt
-> > >>> enables when vaddr is not in the fixmap.
-> > >>>
-> > >>> Fixes: bee2128a09e6 ("arch/kunmap_atomic: consolidate duplicate code")
-> > >>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > >>
-> > >> microblazeel works with this patch, as do the nosmp sparc32 boot tests,
-> > >> but sparc32 boot tests with SMP enabled still fail with lots of messages
-> > >> such as:
-> > > 
-> > > BTW, what's your setup for sparc32 boot tests?  IOW, how do you manage to
-> > > shrink the damn thing enough to have the loader cope with it?  I hadn't
-> > > been able to do that for the current mainline ;-/
-> > > 
-> > 
-> > defconfig seems to work just fine, even after enabling various debug
-> > and file system options.
+
+
+On 05/21/2020 07:19 PM, Hugh Dickins wrote:
+> Fix 5.7-rc6-mm1 page migration crash in unmap_and_move(): when the
+> page to be migrated has been freed from under us, that is considered 
+> a MIGRATEPAGE_SUCCESS, but no newpage has been allocated (and I don't
+> think it would ever need to be counted as a successful THP migration).
 > 
-> The hell?  How do you manage to get the kernel in?  sparc32_defconfig
-> ends up with 5316876 bytes unpacked...
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> ---
+> Fix to mm-vmstat-add-events-for-pmd-based-thp-migration-without-split.patch
+> 
+>  mm/migrate.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- 5.7-rc6-mm1/mm/migrate.c	2020-05-20 12:21:56.117693827 -0700
+> +++ linux/mm/migrate.c	2020-05-20 15:08:12.319476978 -0700
+> @@ -1248,7 +1248,7 @@ out:
+>  	 * we want to retry.
+>  	 */
+>  	if (rc == MIGRATEPAGE_SUCCESS) {
+> -		if (PageTransHuge(newpage))
+> +		if (newpage && PageTransHuge(newpage))
+>  			thp_migration_success(true);
+>  		put_page(page);
+>  		if (reason == MR_MEMORY_FAILURE) {
+> 
 
-Incidentally, trying to load it via -kernel/-initrd leads to
-Configuration device id QEMU version 1 machine id 64
-Probing SBus slot 0 offset 0
-Probing SBus slot 1 offset 0
-Probing SBus slot 2 offset 0
-Probing SBus slot 3 offset 0
-Probing SBus slot 15 offset 0
-Invalid FCode start byte
-CPUs: 1 x TI,TMS390Z55
-UUID: 00000000-0000-0000-0000-000000000000
-Welcome to OpenBIOS v1.1 built on Dec 27 2018 19:17
-  Type 'help' for detailed information
-[sparc] Kernel already loaded
-switching to new context:
-PROMLIB: obio_ranges 1
-PROMLIB: Sun Boot Prom Version 3 Revision 2
-Linux version 5.7.0-rc1-00002-gcf51e129b968 (al@duke) (gcc version 6.3.0 20170516 (Debian 6.3.0-18), GNU ld (GNU Binutils for Debian) 2.28) #32 Thu May 21 18:36:07 EDT 2020
-printk: bootconsole [earlyprom0] enabled
-ARCH: SUN4M
-TYPE: Sun4m SparcStation10/20
-Ethernet address: 52:54:00:12:34:56
-303MB HIGHMEM available.
-OF stdout device is: /obio/zs@0,100000:a
-PROM: Built device tree with 30051 bytes of memory.
-Booting Linux...
-Power off control detected.
-Kernel panic - not syncing: Failed to allocate memory for percpu areas.
-CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc1-00002-gcf51e129b968 #32
-[f04f92a8 : 
-setup_per_cpu_areas+0x58/0x90 ] 
-[f04edbf4 : 
-start_kernel+0xc0/0x4a0 ] 
-[f04ed43c : 
-continue_boot+0x324/0x334 ] 
-[00000000 : 
-0x0 ] 
+Thanks Hugh. I am preparing to respin the vmstat patch accommodating some
+earlier comments. Wondering if I should also fold these changes here after
+adding your signed-off-by ?
 
-Press Stop-A (L1-A) from sun keyboard or send break
-twice on console to return to the boot prom
----[ end Kernel panic - not syncing: Failed to allocate memory for percpu areas. ]---
-
-Giving guest more RAM doesn't change the outcome (well, the number HIGHMEM line is
-obviously higher, but that's it).
-
-So which sparc32 kernel have you booted with defconfig and how have you done
-that?
+- Anshuman
