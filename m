@@ -2,142 +2,121 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A4820723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FF220723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PmzMc1A3"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="BTy7Qzvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbgEVWPM (ORCPT
+        id S1731123AbgEVWTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:15:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731117AbgEVWPK (ORCPT
+        Fri, 22 May 2020 18:19:06 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:47072 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731062AbgEVWTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:15:10 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CBFC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:15:10 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p21so5632951pgm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:15:10 -0700 (PDT)
+        Fri, 22 May 2020 18:19:05 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49TLVw2FlYz9vYdY
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 22:19:04 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YxPhssXlttNJ for <linux-kernel@vger.kernel.org>;
+        Fri, 22 May 2020 17:19:04 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49TLVw0Yshz9vYdT
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 17:19:04 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49TLVw0Yshz9vYdT
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49TLVw0Yshz9vYdT
+Received: by mail-io1-f70.google.com with SMTP id w4so8310605iol.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=S/stJk0STsDchWWcNppinxUmms4bbqR7NgPSokrOceo=;
-        b=PmzMc1A3bv0cdDO6gy5pV3cfYwofz+ExRxro+KvdU+1AO9aKDU4k2v3ZbsYFNpXYM3
-         ujV76XGl4DZh1QfkTopVsN2B3S1yt3GaKfDHFhNpsz7M+qtRhMm0TGgMlYg4uhcoaT78
-         5rcALuJn/0tGohe2U8KpbkBQAWyAqJssSuTIk=
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xf86DUDR0KCytTZe0PoPEVKJWswyj76Qc8cwS/5pEd8=;
+        b=BTy7Qzvia67Px1tEvWTi8X/NeNB6jPnEST1ETVo7uBwyZ8Wkew6opFNFU8mNZzW21R
+         nNJWn2xhDpBNOD7j3Cqf8M9TKnEA2ESWSydG4JQQoGk92GLN4GiEptxM9qn653V3LfWm
+         zR5YMeRMAhWXAYm6MITvDwZequAwm9QG2kyc1w82icjZ3Epz/qAhABqHLh9SCu83Nnht
+         ky7cXtHlMl0IFuKy3ERdiQqKPI3GxOFe9PbIeujOsk/eetVdQFtkqjF1ZxhM5b0vv6QN
+         cCwKam8UCdajHSyeHNTBnSIWQJzPsZVO4AMp6WGTvZ2GS+ykM4DahQlwnrzZHGVYr66w
+         89MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=S/stJk0STsDchWWcNppinxUmms4bbqR7NgPSokrOceo=;
-        b=jnoiLXXohX+9nqBzE16VeUYw+683b3gRZxq+y18CkNamaUhm5TBcn9QuiDWOJCA36o
-         JPPrLj5O5ca1Rn6fWgz+8vH183t8pbGY9hn1S4+CQ4mw7l2DN5qrUMVeZ8ggWKUTLeln
-         VF7Te/Dwr5GIoON0OPL0ULoSbw2DjtFmWG2AWXOPySXpYQV6W/Oj0heDVsgm/5tj59Y9
-         zifkzs/opXEd4HHfc/hchKL4WA5/R0VFrWCeiqEBtAxRvZAEjCubUNIVzD1050Tr6tnS
-         hzFNNASa2IswyADWdUe8f9uQxp7QZwopoVRdP1cIdZU+RejBCjZlJaqg3PuRQtsdbGAk
-         0Vmw==
-X-Gm-Message-State: AOAM533ttHy9bP2EHRzGFua2grBYkcxN/h3YvP3IVEGmlHW8AGhwyPTY
-        ZZFqst0MsFGkpKutukDN9KNjk/wWJpE/9VNQro4iHUR3ywsVySFhvJKs3h3trZipPt4WUIKuekD
-        n76McO7QUq5jSItrAZi1qSGMZtOPqIdP6byltu4szjDfCso7LiVaxj2KhnpdNtjLBRTbil7bW3p
-        eR8zlxeYIM
-X-Google-Smtp-Source: ABdhPJxhfMeRhg/dgwefdDNDDyQFvPL+rBpUHV3BJJZDZIKfp4q5lWc32CFIo+rbWpfkiSYU/ulskQ==
-X-Received: by 2002:a65:4107:: with SMTP id w7mr11958661pgp.226.1590185709221;
-        Fri, 22 May 2020 15:15:09 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id v2sm7516686pje.52.2020.05.22.15.15.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 15:15:08 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] fs: avoid fdput() after failed fdget() in
- kernel_read_file_from_fd()
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1589311577.git.skhan@linuxfoundation.org>
- <1159d74f88d100521c568037327ebc8ec7ffc6ef.1589311577.git.skhan@linuxfoundation.org>
- <20200513054950.GT23230@ZenIV.linux.org.uk>
- <20200513131335.GN11244@42.do-not-panic.com>
- <CAB=NE6WdYcURTxNLngMk3+JQfNHG2MX1oE_Mv08G5zcw=mPOyw@mail.gmail.com>
- <2d298b41-ab6f-5834-19d2-7d3739470b5f@broadcom.com>
-Message-ID: <075ae77b-000b-c00f-b425-59105dc2584a@broadcom.com>
-Date:   Fri, 22 May 2020 15:14:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xf86DUDR0KCytTZe0PoPEVKJWswyj76Qc8cwS/5pEd8=;
+        b=pDI+0FF7lQchBi0vhZMF0Xw6JB5JCUjDo6Ll3r7gr+DKs3iF/CXT6d53eDql4/pi8b
+         8MTzB3oJFp6V2YwbxEQj3WgJtIuksVjRjMycqIBDMx8MJ4EXHZhM1yAp3aw5H1u4cDtD
+         tUz7M/PpdWkHVcjMXBGjYMFHadpEwrCU/NqDvdrEsjJAwBnnwxiEG0W4c5+IKIyFs/b7
+         qhx74Hz4sUQHZfU1K9qqZSJDr5jRUcpfBI1Ng212WVsvZM8jvKmB0Rf4UEiqdzIr81SG
+         LOQ28+buaAXqKcgFsPOg8xuP8LAyPx3C48eCYoGjvXfSSiSekfKxMcjLyFVEGk+NgSRV
+         8UJA==
+X-Gm-Message-State: AOAM533Aw5VUsViUdpQK9hr6F7/vz+VHDKIdEhTUE88fYieXpr1kaCkk
+        rUX4cEosnzLzGRX/wJpmACRU0VFcCbeWlKoKjHunHGVQUyAXT6NQSwyuKdWbBmanAJhuf9DRbGW
+        LqtzEHmlctRItFVJZhIVg+JnIKqYA
+X-Received: by 2002:a92:c7a4:: with SMTP id f4mr15370411ilk.44.1590185943580;
+        Fri, 22 May 2020 15:19:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw+J0ruAKNhsdIwEN+ydT0VoCKGFWbQcj4ml3xYNL1KOfJyA/BR/ZbR8JROJoT/OQqoIenz1Q==
+X-Received: by 2002:a92:c7a4:: with SMTP id f4mr15370380ilk.44.1590185943240;
+        Fri, 22 May 2020 15:19:03 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id 7sm4210431ion.52.2020.05.22.15.19.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 15:19:02 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     sylvester.nawrocki@gmail.com
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kjlu@umn.edu, wu000273@umn.edu
+Subject: [PATCH] media: s3c-camif: fix missing disable in tegra_adma_probe().
+Date:   Fri, 22 May 2020 17:18:55 -0500
+Message-Id: <20200522221855.7891-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <2d298b41-ab6f-5834-19d2-7d3739470b5f@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Qiushi Wu <wu000273@umn.edu>
 
+"pm_runtime_enable()" was not handled by "pm_runtime_disable()"
+after a call of the function “pm_runtime_get_sync” failed.
+Thus move the jump target “err_pm” before calling pm_runtime_disable().
 
-On 2020-05-22 2:59 p.m., Scott Branden wrote:
-> Hi Luis,
->
-> On 2020-05-13 7:19 a.m., Luis Chamberlain wrote:
->> On Wed, May 13, 2020 at 7:13 AM Luis Chamberlain <mcgrof@kernel.org> 
->> wrote:
->>> On Wed, May 13, 2020 at 06:49:50AM +0100, Al Viro wrote:
->>>> On Tue, May 12, 2020 at 01:43:05PM -0600, Shuah Khan wrote:
->>>>> diff --git a/fs/exec.c b/fs/exec.c
->>>>> index 06b4c550af5d..ea24bdce939d 100644
->>>>> --- a/fs/exec.c
->>>>> +++ b/fs/exec.c
->>>>> @@ -1021,8 +1021,8 @@ int kernel_read_file_from_fd(int fd, void 
->>>>> **buf, loff_t *size, loff_t max_size,
->>>>>              goto out;
->>>>>
->>>>>      ret = kernel_read_file(f.file, buf, size, max_size, id);
->>>>> -out:
->>>>>      fdput(f);
->>>>> +out:
->>>>>      return ret;
->>>> Incidentally, why is that thing exported?
->>> Both kernel_read_file_from_fd() and kernel_read_file() are exported
->>> because they have users, however kernel_read_file() only has security
->>> stuff as a user. Do we want to get rid of the lsm hook for it?
->> Alright, yeah just the export needs to be removed. I have a patch
->> series dealing with these callers so will add it to my queue.
-> When will these changes make it into linux-next?
-> It is difficult for me to complete my patch series without these other 
-> misc. changes in place.
-Sorry, I see the patch series is still being worked on (missing 
-changelog, comments, etc).
-Hopefully the patches stabilize so I can apply my changes on top fairly 
-soon.
->>
->>    Luis
-> Regards,
->  Scott
+Fixes: babde1c243b2 ("[media] V4L: Add driver for S3C24XX/S3C64XX SoC series camera interface")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/media/platform/s3c-camif/camif-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/platform/s3c-camif/camif-core.c b/drivers/media/platform/s3c-camif/camif-core.c
+index c6fbcd7036d6..12ee49638f44 100644
+--- a/drivers/media/platform/s3c-camif/camif-core.c
++++ b/drivers/media/platform/s3c-camif/camif-core.c
+@@ -500,8 +500,8 @@ static int s3c_camif_probe(struct platform_device *pdev)
+ 	camif_unregister_media_entities(camif);
+ err_alloc:
+ 	pm_runtime_put(dev);
+-	pm_runtime_disable(dev);
+ err_pm:
++	pm_runtime_disable(dev);
+ 	camif_clk_put(camif);
+ err_clk:
+ 	s3c_camif_unregister_subdev(camif);
+-- 
+2.17.1
 
