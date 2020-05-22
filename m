@@ -2,258 +2,225 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1166C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1957EC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7951C204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1A020723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dP5vBGcV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tdi/I60E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbgEVUuV (ORCPT
+        id S1731055AbgEVUvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 16:50:21 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60100 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731089AbgEVUuQ (ORCPT
+        Fri, 22 May 2020 16:51:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38122 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731014AbgEVUvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 16:50:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=ECXIFCqzMAsRJ+1Dq9iprTLNShImRuIXIFz/RxLWG5c=; b=dP5vBGcV3cLzZJUAPrKAofsAi/
-        4Aq0iDWkaZMHbueUJ11ju8CfdRTFVnVh31+XCuqXSvVc6sTWJyCKB92u8LjN4Fh9FU1YEnYfqJ5ur
-        8Uw67jEauMud5s8qP3wR06y6PnalTA71Iw+iSFAAyuQKqjmKYLMoYXVMysn86Vdz9t0Xv41M+1iL/
-        oXtRyC5MPRNwLMqN0HwVlLQb58B4aXY/p+WR50i8+knV/fzho/G2sEgbFdErcyd3ajrkA1J1f6xdr
-        g24/GEjP+tBLudJ7HWwXdM2SNJS/3Q/Y61usOzqycbN6gwhSsvkDn90BfVV0gFQCJhT2NEV3sHuz9
-        cJrtdCKg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jcEcJ-0002gS-Hb; Fri, 22 May 2020 20:50:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CD4C5305E45;
-        Fri, 22 May 2020 22:49:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id B2EDB2B7F3D20; Fri, 22 May 2020 22:49:56 +0200 (CEST)
-Message-ID: <20200522204943.350442553@infradead.org>
-User-Agent: quilt/0.66
-Date:   Fri, 22 May 2020 22:47:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, luto@amacapital.net, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [RFC][PATCH 3/4] x86/entry: Remove debug IST frobbing
-References: <20200522204738.645043059@infradead.org>
+        Fri, 22 May 2020 16:51:23 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MKlmDM073415;
+        Fri, 22 May 2020 20:51:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=drP7/HHoal0yXG4Fpu0/xgdYChPYTHuRmSqtgjprTvQ=;
+ b=Tdi/I60EHV+DKN5+Oox6KP0EQZ+C+04CsCribEF/6SS6x5W2ghIyX/B6p0y3SiJLVwqj
+ 9l4uzYx+6/LmxX+YN9vlmJx+mBjb1Vv4oJ9i8Au8tu5FOjarTt6xeobafltGrsVOBq+x
+ CBHACvk8kCoWNCBvk19O5V9eidfAdurCEEUeLCR0qowPSh7/v3xPW2UxlosHhKcSuE3N
+ Ys3lRcnpPG6JV1vpAxclSXrO2JSK91N2zUEb49d6cLTE43WHaNOYSCummJmdKrFRl4BV
+ pmE/qCTuCeGNw0eIkD6WS35lRY9NJiZWioPm80kkzt/CIadwroUchgZpQqYV+3VFhXdQ Bg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 31501rp8tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 May 2020 20:51:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MKmkVe113470;
+        Fri, 22 May 2020 20:51:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 313gj84wbg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 May 2020 20:51:19 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04MKpI6S012489;
+        Fri, 22 May 2020 20:51:18 GMT
+Received: from localhost (/10.159.153.228)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 22 May 2020 13:51:17 -0700
+Date:   Fri, 22 May 2020 13:51:16 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Airlie <airlied@gmail.com>, Dave Chinner <david@fromorbit.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        xfs <linux-xfs@vger.kernel.org>
+Subject: Re: lockdep trace with xfs + mm in it from 5.7.0-rc5
+Message-ID: <20200522205116.GD8230@magnolia>
+References: <CAPM=9tyy5vubggbcj32bGpA_h6yDaBNM3QeJPySTzci-etfBZw@mail.gmail.com>
+ <20200521231312.GJ17635@magnolia>
+ <20200522003027.GC2040@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522003027.GC2040@dread.disaster.area>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 bulkscore=0 suspectscore=1 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005220161
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 cotscore=-2147483648
+ impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005220161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is all unused now.
+OTOH, it didn't take that long to whip up a patch.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Dave, does this fix your problem?
+
+--D
 ---
- arch/x86/include/asm/debugreg.h |   19 -------------------
- arch/x86/include/asm/desc.h     |   32 +-------------------------------
- arch/x86/kernel/cpu/common.c    |   17 -----------------
- arch/x86/kernel/idt.c           |   22 ----------------------
- arch/x86/kernel/traps.c         |    9 ---------
- 5 files changed, 1 insertion(+), 98 deletions(-)
+xfs: more lockdep whackamole with kmem_alloc*
 
---- a/arch/x86/include/asm/debugreg.h
-+++ b/arch/x86/include/asm/debugreg.h
-@@ -94,25 +94,6 @@ extern void aout_dump_debugregs(struct u
+Dave Airlie reported the following lockdep complaint:
+
+>  ======================================================
+>  WARNING: possible circular locking dependency detected
+>  5.7.0-0.rc5.20200515git1ae7efb38854.1.fc33.x86_64 #1 Not tainted
+>  ------------------------------------------------------
+>  kswapd0/159 is trying to acquire lock:
+>  ffff9b38d01a4470 (&xfs_nondir_ilock_class){++++}-{3:3},
+>  at: xfs_ilock+0xde/0x2c0 [xfs]
+> 
+>  but task is already holding lock:
+>  ffffffffbbb8bd00 (fs_reclaim){+.+.}-{0:0}, at:
+>  __fs_reclaim_acquire+0x5/0x30
+> 
+>  which lock already depends on the new lock.
+> 
+> 
+>  the existing dependency chain (in reverse order) is:
+> 
+>  -> #1 (fs_reclaim){+.+.}-{0:0}:
+>         fs_reclaim_acquire+0x34/0x40
+>         __kmalloc+0x4f/0x270
+>         kmem_alloc+0x93/0x1d0 [xfs]
+>         kmem_alloc_large+0x4c/0x130 [xfs]
+>         xfs_attr_copy_value+0x74/0xa0 [xfs]
+>         xfs_attr_get+0x9d/0xc0 [xfs]
+>         xfs_get_acl+0xb6/0x200 [xfs]
+>         get_acl+0x81/0x160
+>         posix_acl_xattr_get+0x3f/0xd0
+>         vfs_getxattr+0x148/0x170
+>         getxattr+0xa7/0x240
+>         path_getxattr+0x52/0x80
+>         do_syscall_64+0x5c/0xa0
+>         entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> 
+>  -> #0 (&xfs_nondir_ilock_class){++++}-{3:3}:
+>         __lock_acquire+0x1257/0x20d0
+>         lock_acquire+0xb0/0x310
+>         down_write_nested+0x49/0x120
+>         xfs_ilock+0xde/0x2c0 [xfs]
+>         xfs_reclaim_inode+0x3f/0x400 [xfs]
+>         xfs_reclaim_inodes_ag+0x20b/0x410 [xfs]
+>         xfs_reclaim_inodes_nr+0x31/0x40 [xfs]
+>         super_cache_scan+0x190/0x1e0
+>         do_shrink_slab+0x184/0x420
+>         shrink_slab+0x182/0x290
+>         shrink_node+0x174/0x680
+>         balance_pgdat+0x2d0/0x5f0
+>         kswapd+0x21f/0x510
+>         kthread+0x131/0x150
+>         ret_from_fork+0x3a/0x50
+> 
+>  other info that might help us debug this:
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(fs_reclaim);
+>                                 lock(&xfs_nondir_ilock_class);
+>                                 lock(fs_reclaim);
+>    lock(&xfs_nondir_ilock_class);
+> 
+>   *** DEADLOCK ***
+> 
+>  4 locks held by kswapd0/159:
+>   #0: ffffffffbbb8bd00 (fs_reclaim){+.+.}-{0:0}, at:
+>  __fs_reclaim_acquire+0x5/0x30
+>   #1: ffffffffbbb7cef8 (shrinker_rwsem){++++}-{3:3}, at:
+>  shrink_slab+0x115/0x290
+>   #2: ffff9b39f07a50e8
+>  (&type->s_umount_key#56){++++}-{3:3}, at: super_cache_scan+0x38/0x1e0
+>   #3: ffff9b39f077f258
+>  (&pag->pag_ici_reclaim_lock){+.+.}-{3:3}, at:
+>  xfs_reclaim_inodes_ag+0x82/0x410 [xfs]
+
+This is a known false positive because inodes cannot simultaneously be
+getting reclaimed and the target of a getxattr operation, but lockdep
+doesn't know that.  We can (selectively) shut up lockdep until either
+it gets smarter or we change inode reclaim not to require the ILOCK by
+applying a stupid GFP_NOLOCKDEP bandaid.
+
+Reported-by: Dave Airlie <airlied@gmail.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/kmem.h                 |    6 +++++-
+ fs/xfs/libxfs/xfs_attr_leaf.c |    2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+index 6143117770e9..11623489b769 100644
+--- a/fs/xfs/kmem.h
++++ b/fs/xfs/kmem.h
+@@ -19,6 +19,7 @@ typedef unsigned __bitwise xfs_km_flags_t;
+ #define KM_NOFS		((__force xfs_km_flags_t)0x0004u)
+ #define KM_MAYFAIL	((__force xfs_km_flags_t)0x0008u)
+ #define KM_ZERO		((__force xfs_km_flags_t)0x0010u)
++#define KM_NOLOCKDEP	((__force xfs_km_flags_t)0x0020u)
  
- extern void hw_breakpoint_restore(void);
- 
--#ifdef CONFIG_X86_64
--DECLARE_PER_CPU(int, debug_stack_usage);
--static inline void debug_stack_usage_inc(void)
--{
--	__this_cpu_inc(debug_stack_usage);
--}
--static inline void debug_stack_usage_dec(void)
--{
--	__this_cpu_dec(debug_stack_usage);
--}
--void debug_stack_set_zero(void);
--void debug_stack_reset(void);
--#else /* !X86_64 */
--static inline void debug_stack_set_zero(void) { }
--static inline void debug_stack_reset(void) { }
--static inline void debug_stack_usage_inc(void) { }
--static inline void debug_stack_usage_dec(void) { }
--#endif /* X86_64 */
--
- static __always_inline void local_db_save(unsigned long *dr7)
- {
- 	get_debugreg(*dr7, 7);
---- a/arch/x86/include/asm/desc.h
-+++ b/arch/x86/include/asm/desc.h
-@@ -390,31 +390,6 @@ void alloc_intr_gate(unsigned int n, con
- 
- extern unsigned long system_vectors[];
- 
--#ifdef CONFIG_X86_64
--DECLARE_PER_CPU(u32, debug_idt_ctr);
--static __always_inline bool is_debug_idt_enabled(void)
--{
--	if (this_cpu_read(debug_idt_ctr))
--		return true;
--
--	return false;
--}
--
--static __always_inline void load_debug_idt(void)
--{
--	load_idt((const struct desc_ptr *)&debug_idt_descr);
--}
--#else
--static inline bool is_debug_idt_enabled(void)
--{
--	return false;
--}
--
--static inline void load_debug_idt(void)
--{
--}
--#endif
--
  /*
-  * The load_current_idt() must be called with interrupts disabled
-  * to avoid races. That way the IDT will always be set back to the expected
-@@ -424,10 +399,7 @@ static inline void load_debug_idt(void)
-  */
- static __always_inline void load_current_idt(void)
+  * We use a special process flag to avoid recursive callbacks into
+@@ -30,7 +31,7 @@ kmem_flags_convert(xfs_km_flags_t flags)
  {
--	if (is_debug_idt_enabled())
--		load_debug_idt();
--	else
--		load_idt((const struct desc_ptr *)&idt_descr);
-+	load_idt((const struct desc_ptr *)&idt_descr);
+ 	gfp_t	lflags;
+ 
+-	BUG_ON(flags & ~(KM_NOFS|KM_MAYFAIL|KM_ZERO));
++	BUG_ON(flags & ~(KM_NOFS | KM_MAYFAIL | KM_ZERO | KM_NOLOCKDEP));
+ 
+ 	lflags = GFP_KERNEL | __GFP_NOWARN;
+ 	if (flags & KM_NOFS)
+@@ -49,6 +50,9 @@ kmem_flags_convert(xfs_km_flags_t flags)
+ 	if (flags & KM_ZERO)
+ 		lflags |= __GFP_ZERO;
+ 
++	if (flags & KM_NOLOCKDEP)
++		lflags |= __GFP_NOLOCKDEP;
++
+ 	return lflags;
  }
  
- extern void idt_setup_early_handler(void);
-@@ -438,11 +410,9 @@ extern void idt_setup_apic_and_irq_gates
- #ifdef CONFIG_X86_64
- extern void idt_setup_early_pf(void);
- extern void idt_setup_ist_traps(void);
--extern void idt_setup_debugidt_traps(void);
- #else
- static inline void idt_setup_early_pf(void) { }
- static inline void idt_setup_ist_traps(void) { }
--static inline void idt_setup_debugidt_traps(void) { }
- #endif
- 
- extern void idt_invalidate(void *addr);
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1689,23 +1689,6 @@ void syscall_init(void)
- 	       X86_EFLAGS_IOPL|X86_EFLAGS_AC|X86_EFLAGS_NT);
- }
- 
--DEFINE_PER_CPU(int, debug_stack_usage);
--DEFINE_PER_CPU(u32, debug_idt_ctr);
--
--noinstr void debug_stack_set_zero(void)
--{
--	this_cpu_inc(debug_idt_ctr);
--	load_current_idt();
--}
--
--noinstr void debug_stack_reset(void)
--{
--	if (WARN_ON(!this_cpu_read(debug_idt_ctr)))
--		return;
--	if (this_cpu_dec_return(debug_idt_ctr) == 0)
--		load_current_idt();
--}
--
- #else	/* CONFIG_X86_64 */
- 
- DEFINE_PER_CPU(struct task_struct *, current_task) = &init_task;
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -177,9 +177,6 @@ struct desc_ptr idt_descr __ro_after_ini
- };
- 
- #ifdef CONFIG_X86_64
--/* No need to be aligned, but done to keep all IDTs defined the same way. */
--gate_desc debug_idt_table[IDT_ENTRIES] __page_aligned_bss;
--
- /*
-  * The exceptions which use Interrupt stacks. They are setup after
-  * cpu_init() when the TSS has been initialized.
-@@ -192,15 +189,6 @@ static const __initconst struct idt_data
- 	ISTG(X86_TRAP_MC,	asm_exc_machine_check,	IST_INDEX_MCE),
- #endif
- };
--
--/*
-- * Override for the debug_idt. Same as the default, but with interrupt
-- * stack set to DEFAULT_STACK (0). Required for NMI trap handling.
-- */
--const struct desc_ptr debug_idt_descr = {
--	.size		= IDT_ENTRIES * 16 - 1,
--	.address	= (unsigned long) debug_idt_table,
--};
- #endif
- 
- static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
-@@ -292,16 +280,6 @@ void __init idt_setup_ist_traps(void)
- {
- 	idt_setup_from_table(idt_table, ist_idts, ARRAY_SIZE(ist_idts), true);
- }
--
--/**
-- * idt_setup_debugidt_traps - Initialize the debug idt table with debug traps
-- */
--void __init idt_setup_debugidt_traps(void)
--{
--	memcpy(&debug_idt_table, &idt_table, IDT_ENTRIES * 16);
--
--	idt_setup_from_table(debug_idt_table, dbg_idts, ARRAY_SIZE(dbg_idts), false);
--}
- #endif
- 
- /**
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -798,12 +798,6 @@ static void noinstr handle_debug(struct
- 		return;
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index 224462b8bf08..55e184722b81 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -489,7 +489,7 @@ xfs_attr_copy_value(
  	}
  
--	/*
--	 * Let others (NMI) know that the debug stack is in use
--	 * as we may switch to the interrupt stack.
--	 */
--	debug_stack_usage_inc();
--
- 	/* It's safe to allow irq's after DR6 has been saved */
- 	cond_local_irq_enable(regs);
- 
-@@ -831,7 +825,6 @@ static void noinstr handle_debug(struct
- 
- out:
- 	cond_local_irq_disable(regs);
--	debug_stack_usage_dec();
- 	instrumentation_end();
- }
- 
-@@ -1077,6 +1070,4 @@ void __init trap_init(void)
- 	cpu_init();
- 
- 	idt_setup_ist_traps();
--
--	idt_setup_debugidt_traps();
- }
-
-
+ 	if (!args->value) {
+-		args->value = kmem_alloc_large(valuelen, 0);
++		args->value = kmem_alloc_large(valuelen, KM_NOLOCKDEP);
+ 		if (!args->value)
+ 			return -ENOMEM;
+ 	}
