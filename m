@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C35F21D6C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFFF21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159159;
-	bh=zh+hjr+eJIQBo26ohfepRYxTdhIc+nP1ysNKviD1wAQ=;
+	s=default; t=1590159161;
+	bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LV6RJnE8zBU4cvk4gIHbooSO4qatTpPp66MnOwXpv/Nr+lMXILWeJ39VC/vI+0kfN
-	 iJ9aRtxyBlYgzSt5gqFoVQnRY6XrlqTPVRiNcIcCgx75AsbOyS/clauvMcgSBtcX+D
-	 awL1rl2YaQetcV0dFkKCyBRFCM5lyMRmlUF8ElZU=
+	b=ynQNsL48g/0mGriQ418jK5IXqSfDHniAjWZYEnOgvnxBYaT45gUNaGxy/6u5A/7u1
+	 427R+pdrH7q7FtczTjVyZossIH004q1+T/vgaKB74QHCnkYa6nOMwN11RRKe/HyrOI
+	 mVnBfTPgpVngCDsW4OkDQhaG2U2c/rg8t5cqH2OA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgEVOwU (ORCPT
+        id S1731232AbgEVOwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54220 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:52:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731162AbgEVOwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:52:00 -0400
+        id S1731143AbgEVOv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A92C4221FF;
-        Fri, 22 May 2020 14:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CD58221FF;
+        Fri, 22 May 2020 14:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159120;
-        bh=zh+hjr+eJIQBo26ohfepRYxTdhIc+nP1ysNKviD1wAQ=;
+        s=default; t=1590159117;
+        bh=q1doY0AB3P8r/4C1MDCRprR7AsXw8tUvmzIu15oKs60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRv0LOwxKNPhSmby2q3rbp2TB2tU2ne32JPuT7bo8BJSyfYXZ7qsYLyqNvIVSd6za
-         qQe1bHSVjwC1/Ay2SsQX5cC6yo263xPoltPBcPXbY4tmoKjyZDdieWjeS6cA0AgeGx
-         E5p5WZvnDDBOHLXc99UhYmovRrXoNQnpwP5ZoJ2M=
+        b=qz7IPwq+xUMh/n8KoWvyycThg8wYtbsDHwHZNiWw2lynhyvy5VTpSVFFrjOpbMdNn
+         sMbAPm3xpBwJFKwNuHaYVtahhn3YqBrPaTZdyW/GMQYamzxJ/biJyTrIZkyKK0/zAO
+         RuIygP6uQZwZIftfzuA+7u0w36GX5znit7Ocd0K0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 2/8] net: microchip: encx24j600: add missed kthread_stop
-Date:   Fri, 22 May 2020 10:51:51 -0400
-Message-Id: <20200522145157.435215-2-sashal@kernel.org>
+Cc:     Matteo Croce <mcroce@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/13] samples: bpf: Fix build error
+Date:   Fri, 22 May 2020 10:51:42 -0400
+Message-Id: <20200522145142.435086-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145157.435215-1-sashal@kernel.org>
-References: <20200522145157.435215-1-sashal@kernel.org>
+In-Reply-To: <20200522145142.435086-1-sashal@kernel.org>
+References: <20200522145142.435086-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,51 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Matteo Croce <mcroce@redhat.com>
 
-[ Upstream commit ff8ce319e9c25e920d994cc35236f0bb32dfc8f3 ]
+[ Upstream commit 23ad04669f81f958e9a4121b0266228d2eb3c357 ]
 
-This driver calls kthread_run() in probe, but forgets to call
-kthread_stop() in probe failure and remove.
-Add the missed kthread_stop() to fix it.
+GCC 10 is very strict about symbol clash, and lwt_len_hist_user contains
+a symbol which clashes with libbpf:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+/usr/bin/ld: samples/bpf/lwt_len_hist_user.o:(.bss+0x0): multiple definition of `bpf_log_buf'; samples/bpf/bpf_load.o:(.bss+0x8c0): first defined here
+collect2: error: ld returned 1 exit status
+
+bpf_log_buf here seems to be a leftover, so removing it.
+
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200511113234.80722-1-mcroce@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/microchip/encx24j600.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ samples/bpf/lwt_len_hist_user.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/microchip/encx24j600.c b/drivers/net/ethernet/microchip/encx24j600.c
-index b14f0305aa31..ad661d1979c7 100644
---- a/drivers/net/ethernet/microchip/encx24j600.c
-+++ b/drivers/net/ethernet/microchip/encx24j600.c
-@@ -1058,7 +1058,7 @@ static int encx24j600_spi_probe(struct spi_device *spi)
- 	if (unlikely(ret)) {
- 		netif_err(priv, probe, ndev, "Error %d initializing card encx24j600 card\n",
- 			  ret);
--		goto out_free;
-+		goto out_stop;
- 	}
+diff --git a/samples/bpf/lwt_len_hist_user.c b/samples/bpf/lwt_len_hist_user.c
+index 7fcb94c09112..965108527a4f 100644
+--- a/samples/bpf/lwt_len_hist_user.c
++++ b/samples/bpf/lwt_len_hist_user.c
+@@ -15,8 +15,6 @@
+ #define MAX_INDEX 64
+ #define MAX_STARS 38
  
- 	eidled = encx24j600_read_reg(priv, EIDLED);
-@@ -1076,6 +1076,8 @@ static int encx24j600_spi_probe(struct spi_device *spi)
- 
- out_unregister:
- 	unregister_netdev(priv->ndev);
-+out_stop:
-+	kthread_stop(priv->kworker_task);
- out_free:
- 	free_netdev(ndev);
- 
-@@ -1088,6 +1090,7 @@ static int encx24j600_spi_remove(struct spi_device *spi)
- 	struct encx24j600_priv *priv = dev_get_drvdata(&spi->dev);
- 
- 	unregister_netdev(priv->ndev);
-+	kthread_stop(priv->kworker_task);
- 
- 	free_netdev(priv->ndev);
- 
+-char bpf_log_buf[BPF_LOG_BUF_SIZE];
+-
+ static void stars(char *str, long val, long max, int width)
+ {
+ 	int i;
 -- 
 2.25.1
 
