@@ -2,173 +2,259 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39968C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ABDF2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="n2KMs04r"
+	by mail.kernel.org (Postfix) with ESMTP id 78E80206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590146809;
+	bh=HffsPUQV72xCQs16Zb0KzhZezC5HpjM92iOzJX/rQuY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=aJ7yx+IYqERNm7N4KW8oEVlSCjy2AlhnxcIGHs5H492+j0jWfGdmZGAxp7DfBvIzn
+	 4OEW5HBqlxpTa1ltmHnrf8Ytw4yPN+x4g1P7Kh9LL3uaDjNUypn2qSHYpaNYdBOox2
+	 8XtDnTgGNcyD6PyjnoXAlf/wB78ecZySLwzKxSXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgEVLZH (ORCPT
+        id S1729617AbgEVL0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:25:07 -0400
-Received: from mail-eopbgr690043.outbound.protection.outlook.com ([40.107.69.43]:42414
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728281AbgEVLZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:25:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lrnFJdmqQ3gGZvzSL1/WKpEp1u+BZDbv09EUzrUMq4QyQMLO8N3ozey08/cDM6ytL2Ha/XM++JWp8Cs3QlJpKG95JpVhjCAnMmlY3pPYIC9f3l8w8QMbL+d9QfRoEJu6VeO1yxrbqJSEMHtLkPSz/885DGBDV3m8oRRTzMuiL8/RTV4Jp8kI5zSu3bzxYc2l97XKR1qQ8VGXqOLULtdcWOFv0/JwsDiW4puHJyDccklyhRjPHZkeQNeFIrivZKpFKfVUa7dMm2845WIKZ2WIKYP3cBKk52JJb3AD53a4wv/vlSV1Qok40B3LVSlaJsPU0t74D8n3+sgrVjg2jfFVwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ra4HqrdzQB2RSWlV1sHNFCuOXsxxzUFvmVwh5UROu14=;
- b=liJ/p/7CsaCNwv8fOaCB6UXJHlfY2/5yr2MubmaGb0c3XS1JBS+K/eC3gXYLbvh42B+wnZ+UuW/sMOL0TEi+zbTvTXtw0SyyJ9rhibQZVjz/B/dSBUFgMbCuzB3KSgxF7V4wgk0bukeVFSaWZNWVUdivrdpr1TsY/KNx8/NM1p0nR3E7VDLvoSkpUhLXSFghyxeEAObn91fGBrPkkMXdHAQAmrMNEP80jlUB6Hwayeffppac1oHD3MvofqN7KYDErrAA/nMKagsfXIh5ADYtFuwLWR9+fKq3hmb0NzDmsD0mz9Hfzi4bmp7YkgciFx2fFP3YZpMSmtRLjm2uZUhNHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ra4HqrdzQB2RSWlV1sHNFCuOXsxxzUFvmVwh5UROu14=;
- b=n2KMs04rDG1XrkIDrqA3HCJ4tW4Ujp9gW4c58IF/nwss29pyluOMBQXW26ruIh6O78VeiWFY5AN/wIWA/+BRn5tgH2/5kd4DhCorsPdHruB8AqQNVAE7ZvnnUAZAzHCRqyX03TyKU/wbJvP7OluQar/jKfCTeHj8xUUQkoQll44=
-Received: from MN2PR05CA0009.namprd05.prod.outlook.com (2603:10b6:208:c0::22)
- by BYAPR02MB4312.namprd02.prod.outlook.com (2603:10b6:a03:5d::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Fri, 22 May
- 2020 11:25:03 +0000
-Received: from BL2NAM02FT035.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:c0:cafe::fc) by MN2PR05CA0009.outlook.office365.com
- (2603:10b6:208:c0::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.7 via Frontend
- Transport; Fri, 22 May 2020 11:25:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT035.mail.protection.outlook.com (10.152.77.157) with Microsoft SMTP
- Server id 15.20.3021.23 via Frontend Transport; Fri, 22 May 2020 11:25:03
- +0000
-Received: from [149.199.38.66] (port=39480 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jc5mz-0001mz-Dp; Fri, 22 May 2020 04:24:33 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1jc5nS-0006tH-TT; Fri, 22 May 2020 04:25:02 -0700
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 04MBOx4U006430;
-        Fri, 22 May 2020 04:24:59 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1jc5nP-0006mv-Fa; Fri, 22 May 2020 04:24:59 -0700
-Subject: Re: [PATCH v2] i2c: cadence: Add an error handling for
- platform_get_irq()
-To:     Dejin Zheng <zhengdejin5@gmail.com>, michal.simek@xilinx.com,
-        wsa@the-dreams.de, harinik@xilinx.com, soren.brinkmann@xilinx.com,
-        linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200520144821.8069-1-zhengdejin5@gmail.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <2d99f043-f854-8975-86ee-2f0ba1382275@xilinx.com>
-Date:   Fri, 22 May 2020 13:24:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 07:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728281AbgEVL0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:26:48 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9649206BE;
+        Fri, 22 May 2020 11:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590146807;
+        bh=HffsPUQV72xCQs16Zb0KzhZezC5HpjM92iOzJX/rQuY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=qQbEm9ryVan7BjBF+/jjM9T2zy6S1jtAG5Gjhwxv3k4lAah88e1xbExs/ozNf7APm
+         UcrqlrHUD8AvfIUbKoOLaZzq1TtG/M2Z1Tf8RkNsedvPPK/D9Uo29bXF/Jppza2Vti
+         y2Ari/wR2C3dtcT83vBwhmfuiY+6h+bT9YCTVMDA=
+Message-ID: <29349a65bc94651a96d2e4a8392e1ca4a00bd2d7.camel@kernel.org>
+Subject: Re: [PATCH] ceph: show max caps in debugfs caps file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Yanhu Cao <gmayyyha@gmail.com>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 May 2020 07:26:45 -0400
+In-Reply-To: <CAB9OAC2yxtAciWmJzVSga-pu3ZUjjmsctfj+pQQTr78-W_cfuA@mail.gmail.com>
+References: <20200521093845.15101-1-gmayyyha@gmail.com>
+         <cad949df361b68a1c929f9053bce34d1892c8291.camel@kernel.org>
+         <CAB9OAC0ry=tuYa-uWjGbnPGEpDCaQYhmN7bJFYvkZ1Uszo=Xpw@mail.gmail.com>
+         <d1e221be16e220009f1ca55d4b1eb6728462a279.camel@kernel.org>
+         <CAB9OAC2yxtAciWmJzVSga-pu3ZUjjmsctfj+pQQTr78-W_cfuA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <20200520144821.8069-1-zhengdejin5@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(346002)(396003)(376002)(46966005)(2906002)(70586007)(81166007)(316002)(9786002)(47076004)(70206006)(336012)(8936002)(44832011)(2616005)(36756003)(82310400002)(356005)(4326008)(5660300002)(186003)(31686004)(82740400003)(31696002)(8676002)(426003)(478600001)(26005)(42866002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 50ca25e3-7031-4ff1-2363-08d7fe42c5a7
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4312:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB4312EF697B5F547510B19AF7C6B40@BYAPR02MB4312.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 04111BAC64
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UIuhwoDpIkfA1vvfUuSgOuR9yqJEFmDaS80dc7ct6kLY92YOBMHsEVdnUDCtmi0AehTNkfN2E9OguKe1Y15zYOJ5r5HlREFzNGulOy4Vph7/bpN7ymwRaAF7Dy3H5pQx7KyX6noKikOYqmzc+j8321JFIg6l28mhYqx/HjnR3LuaVbhLE5KYzz63rAGarlmgc339NNRAFWUX1sdEgN7KnRWGSdFCZYTJp+f4lqP5eVlvJ2W6wlnUSeN0bZYdHUps3E8mcS4oXLiHKV2437qkKRU6KYPboDFXG2OpNuFA+aGWcM3u1r5F4iAo3pa1YmeiX4xI/p+pbu+zKgSNUV0J7sBlhSBDaj07eWgMR2zHRzCMt8tjrSkIdlm5dQuXejWYoR1e/HrfEGu/WeweY3QfXVVGOAf+F7xoZDNdAactZS30/MBkKrzl9RGaCPJQKdpHP9a6culQ8e8baiXeVJtHew==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2020 11:25:03.3446
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50ca25e3-7031-4ff1-2363-08d7fe42c5a7
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4312
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20. 05. 20 16:48, Dejin Zheng wrote:
-> The driver initialization should be end immediately after found
-> the platform_get_irq() function return an error.
+On Fri, 2020-05-22 at 16:27 +0800, Yanhu Cao wrote:
+> On Thu, May 21, 2020 at 8:51 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > On Thu, 2020-05-21 at 20:19 +0800, Yanhu Cao wrote:
+> > > On Thu, May 21, 2020 at 7:09 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > > > On Thu, 2020-05-21 at 17:38 +0800, Yanhu Cao wrote:
+> > > > >         before
+> > > > >         ------
+> > > > >         total           1026
+> > > > >         avail           1024
+> > > > >         used            2
+> > > > >         reserved        0
+> > > > >         min             1024
+> > > > > 
+> > > > >         after
+> > > > >         ------
+> > > > >         total           1026
+> > > > >         avail           1024
+> > > > >         used            2
+> > > > >         max             2048
+> > > > >         reserved        0
+> > > > >         min             1024
+> > > > > 
+> > > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> > > > > ---
+> > > > >  fs/ceph/caps.c    | 6 ++++--
+> > > > >  fs/ceph/debugfs.c | 7 ++++---
+> > > > >  fs/ceph/super.h   | 2 +-
+> > > > >  3 files changed, 9 insertions(+), 6 deletions(-)
+> > > > > 
+> > > > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> > > > > index 5f3aa4d607de..e2c759a2ef35 100644
+> > > > > --- a/fs/ceph/caps.c
+> > > > > +++ b/fs/ceph/caps.c
+> > > > > @@ -404,8 +404,8 @@ void ceph_put_cap(struct ceph_mds_client *mdsc, struct ceph_cap *cap)
+> > > > >  }
+> > > > > 
+> > > > >  void ceph_reservation_status(struct ceph_fs_client *fsc,
+> > > > > -                          int *total, int *avail, int *used, int *reserved,
+> > > > > -                          int *min)
+> > > > > +                          int *total, int *avail, int *used, int *max,
+> > > > > +                          int *reserved, int *min)
+> > > > >  {
+> > > > >       struct ceph_mds_client *mdsc = fsc->mdsc;
+> > > > > 
+> > > > > @@ -417,6 +417,8 @@ void ceph_reservation_status(struct ceph_fs_client *fsc,
+> > > > >               *avail = mdsc->caps_avail_count;
+> > > > >       if (used)
+> > > > >               *used = mdsc->caps_use_count;
+> > > > > +     if (max)
+> > > > > +             *max = mdsc->caps_use_max;
+> > > > 
+> > > > Can you lay out what value this will provide? I'm not convinced that
+> > > > this information is really that helpful:
+> > > > 
+> > > > mdsc->caps_use_max is just set to the value of the "caps_max" mount
+> > > > option, and that information is displayed in /proc/mounts if it's not
+> > > > set to the default.
+> > > > 
+> > > > What might be more interesting is to track the most recent "max_caps"
+> > > > value sent by the MDS (see the CEPH_SESSION_RECALL_STATE message
+> > > > handling). Tracking that would give us a more dynamic view of the
+> > > > current maximum requested by the MDS, which is often going to be less
+> > > > than what "caps_max" was set to at mount time.
+> > > 
+> > > Do you mean the 'mds_recall_max_caps'? which can be set by the MDS.
+> > > Clients use this value every time to trim caps.
+> > > 
+> > > There is an option mds_max_caps_per_client which is a soft limit,
+> > > which is determined by the behavior of the client.
+> > > and we recently encounter a warning '1 MDSs report oversized
+> > > cache'(ceph-v12.2.12: mds_cache_memory_limit=64G, used=100G),
+> > > Therefore, the effect is not good.
+> > > 
+> > > So we want to know whether the caps held by the client exceed caps_max
+> > > through the debugfs caps file (default or mount option).
+> > > 
+> > > 
+> > 
+> > Ok, I doubt this patch is going to tell you what you want to know then.
+> > There are two limits involved here:
+> > 
+> > 1/ the limit set by the caps_max mount option for the client
+> > 2/ a dynamic limit that is managed by the MDS issuing
+> >    CEPH_SESSION_RECALL_STATE messages to the clients (max_caps).
+> > 
+> > This patch is only going to tell you about the first one, but the second
+> > one is more interesting to monitor on a long-term basis.
+> > 
+> > When the mds exceeds its memory limits, it can issue
+> > CEPH_SESSION_RECALL_STATE messages to the clients, to tell them to
+> > reduce their own caches to a particular size. Currently we just take
+> > that value and feed it into ceph_trim_caps and forget about it.
+> > 
+> > It would probably be useful though to keep track of the most recent
+> > value issued by the MDS, and print this value as min(mount_option_max,
+> > max_caps_from_mds). Bonus points if you can help untangle the confusing
+> > naming of all these values in the process.
 > 
-> Fixes: df8eb5691c48d3b0 ("i2c: Add driver for Cadence I2C controller")
-
-I wouldn't really consider this as bug. Driver is likely not failing
-when irq is not defined. It should just fail later on when
-devm_request_irq is called.
-Or is there any other issue with it?
-
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
-> v1 -> v2:
-> 	- add Fixes tag.
+> How about this? Add a new field caps_limit(calculated by
+> session->caps, mds_recall_max_caps,
+> mds_max_caps_per_client, mds_min_caps_per_client) in ceph_mds_client,
+> which can be set by ceph_trim_caps.
 > 
->  drivers/i2c/busses/i2c-cadence.c | 2 ++
->  1 file changed, 2 insertions(+)
+> struct ceph_mds_client {
+> ...
+> -       int             caps_use_max;        /* max used caps */
+> +      int             caps_use_max;        /* max used caps, limited
+> by client */
+> +      int             caps_limit;                /* limited by mds */
+> ...
+> }
 > 
-> diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-> index 89d58f7d2a25..0e8debe32cea 100644
-> --- a/drivers/i2c/busses/i2c-cadence.c
-> +++ b/drivers/i2c/busses/i2c-cadence.c
-> @@ -912,6 +912,8 @@ static int cdns_i2c_probe(struct platform_device *pdev)
->  		return PTR_ERR(id->membase);
->  
->  	id->irq = platform_get_irq(pdev, 0);
-> +	if (id->irq < 0)
-> +		return id->irq;
->  
->  	id->adap.owner = THIS_MODULE;
->  	id->adap.dev.of_node = pdev->dev.of_node;
+> int ceph_trim_caps(...)
+> {
+>         int trim_caps = session->s_nr_caps - max_caps;
+> +      mdsc->caps_limit = max_caps;
+>    ...
+> }
+> 
+> if client's caps have no limit, we can track caps_limit.
+> Don't use min(caps_use_max, caps_limit) because it shows more clearly
+> whether it is limited by the client or mds.
+> 
+> e.g.
+> ----
+> total 3112
+> avail 1025
+> used 2087
+> limit 2068   => caps_limit
+> max 2048   => caps_use_max(mount_option_caps_max)
+> 
+> trimmed
+> -------
+> total 1943
+> avail 1025
+> used 918
+> limit 918
+> max 2048
+> 
 > 
 
-The change is valid but the question is if make sense to do it in this
-way. Some drivers are using devm_request_irq to do do job.
+Sure, that'd be fine. The "max" is somewhat redundant info that you can
+get elsewhere, but printing it here won't hurt anything.
 
-For example:
- 	id->irq = platform_get_irq(pdev, 0);
-        ret = devm_request_irq(&pdev->dev, id->irq, cdns_i2c_isr, 0,
-                                  DRIVER_NAME, id);
-        if (ret)
-		return ret;
+> > > > >       if (reserved)
+> > > > >               *reserved = mdsc->caps_reserve_count;
+> > > > >       if (min)
+> > > > > diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
+> > > > > index 481ac97b4d25..942004376588 100644
+> > > > > --- a/fs/ceph/debugfs.c
+> > > > > +++ b/fs/ceph/debugfs.c
+> > > > > @@ -138,16 +138,17 @@ static int caps_show(struct seq_file *s, void *p)
+> > > > >  {
+> > > > >       struct ceph_fs_client *fsc = s->private;
+> > > > >       struct ceph_mds_client *mdsc = fsc->mdsc;
+> > > > > -     int total, avail, used, reserved, min, i;
+> > > > > +     int total, avail, used, max, reserved, min, i;
+> > > > >       struct cap_wait *cw;
+> > > > > 
+> > > > > -     ceph_reservation_status(fsc, &total, &avail, &used, &reserved, &min);
+> > > > > +     ceph_reservation_status(fsc, &total, &avail, &used, &max,
+> > > > > +                             &reserved, &min);
+> > > > >       seq_printf(s, "total\t\t%d\n"
+> > > > >                  "avail\t\t%d\n"
+> > > > >                  "used\t\t%d\n"
+> > > > >                  "reserved\t%d\n"
+> > > > >                  "min\t\t%d\n\n",
+> > > > > -                total, avail, used, reserved, min);
+> > > > > +                total, avail, used, max, reserved, min);
+> > > > >       seq_printf(s, "ino                issued           implemented\n");
+> > > > >       seq_printf(s, "-----------------------------------------------\n");
+> > > > > 
+> > > > > diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+> > > > > index 60aac3aee055..79aa42d9336c 100644
+> > > > > --- a/fs/ceph/super.h
+> > > > > +++ b/fs/ceph/super.h
+> > > > > @@ -700,7 +700,7 @@ extern void ceph_unreserve_caps(struct ceph_mds_client *mdsc,
+> > > > >                              struct ceph_cap_reservation *ctx);
+> > > > >  extern void ceph_reservation_status(struct ceph_fs_client *client,
+> > > > >                                   int *total, int *avail, int *used,
+> > > > > -                                 int *reserved, int *min);
+> > > > > +                                 int *max, int *reserved, int *min);
+> > > > > 
+> > > > > 
+> > > > > 
+> > > > 
+> > > > --
+> > > > Jeff Layton <jlayton@kernel.org>
+> > > > 
+> > 
+> > --
+> > Jeff Layton <jlayton@kernel.org>
+> > 
 
-But I am also fine with solution above where you fail in quickest way.
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-Without that Fixed tag
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-
-Thanks,
-Michal
