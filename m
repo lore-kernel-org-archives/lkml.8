@@ -2,164 +2,105 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B6A204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590158780;
-	bh=xL0iNQA61zcd+Iy+CRhN4KujKqVvoopu6rrafJslSYk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y7xOUIgpXSkENe8unaTdg/0VQ5otksmD6fzhgfJviSUHtRs33HDz4OpwbwCP4hfk0
-	 sfCa6pPTnfrilV0KOrozcQtegVQEFVda5Fw2gg4fl7aE6SaCzxQkLI/A423RKObbjW
-	 UL0tUtmyfMQbQ3pVZTyEQP8JrwdamSXrjm7ctYlM=
+	by mail.kernel.org (Postfix) with ESMTP id 874BC204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:46:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lxlss0Zn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbgEVOqT (ORCPT
+        id S1730508AbgEVOq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730357AbgEVOqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:46:10 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10128204EF;
-        Fri, 22 May 2020 14:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590158770;
-        bh=xL0iNQA61zcd+Iy+CRhN4KujKqVvoopu6rrafJslSYk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07CBE6yL8mB6BaiAGeIP8E7u9ppDj+LFMIN/lwK1oOqis9HVXDBWiw0o7lfNXmqHr
-         Mx2GhHNv2HSkmgoMWqwlC1uQjSC3ZDKZYHc3LoXCGV1sI14emQwsPiwa1cwjAM/rGf
-         j5NOZPFFqtZBYD1I2MUSa3Of1aRp/BZXdQ9CdSzE=
-Received: by pali.im (Postfix)
-        id 3863B51E; Fri, 22 May 2020 16:46:08 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        linux-kernel@vger.kernel.org, ath10k@lists.infradead.org,
-        b43-dev@lists.infradead.org, brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, libertas-dev@lists.infradead.org,
-        linux-wireless@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 11/11] mmc: sdio: Sort all SDIO IDs in common include file
-Date:   Fri, 22 May 2020 16:44:12 +0200
-Message-Id: <20200522144412.19712-12-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200522144412.19712-1-pali@kernel.org>
-References: <20200522144412.19712-1-pali@kernel.org>
+        Fri, 22 May 2020 10:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730105AbgEVOqZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:46:25 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D8F5C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:46:25 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id j21so5083347pgb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PP3NlRQyU9hVtOdAQG1RX9CTlatqPKoXALMeR0iOkSU=;
+        b=lxlss0ZnfC4Z/AbhW67TOHU6mhwsl1MwL6RchBIVSr/q+I2CV8QoajVGUif9/k/4sk
+         U/t7cSReHxUX/OESlDS5lVyoJVYFtCzkNBSJ8iskjmqqfmuJpp0LSgBFO8YmuJiE4qqu
+         PZsB+Gj7MFYbLow6WLjiKlbkYZJt9cXBYrFOFdV+7HT7H4tyKre3aZalNxIF1wbK6SWo
+         2RQO994KR8W0zBxufyyT3KUGbdwoMkvZoYYcePbIhBHPsqbUIL0wWNNbPf+KWy2ix2WO
+         JSGx86NTWKao51q6tFo82+UH2Hta73TUuqGLCATWgF1MyeynsJfhdtlWnON4Pvs+Lbnh
+         TNDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PP3NlRQyU9hVtOdAQG1RX9CTlatqPKoXALMeR0iOkSU=;
+        b=AO+nNIPU+XbFMkrc9p7+Ff/ukyPXtGu3zsAM9I67bbTB+B+EuJ9HUmtiiXYW1k0CLY
+         UnTiclFb4A6WVZFJiyDt26SIPva0oKTDQMOPyd9U1JRr2gGlHH8FqWDKJGB9kq78bs4U
+         vhpacGxBtuIJSeexKVyEQZLLBxSU3yy+rLfMsHB7xgP5ryPjijx6z+eqVf8X0BtQuv76
+         AZ/jCoOqcZWjcw5CkaXUZbMPTh9tURkAFaVcvTPnIm5rQYT62o6595YwzpfOOBdjwadt
+         +G1M1lLWB7R0qroN40LcRlagrtjHhOwLCB8s6AOzy1VXcGD9/KvGF8njwQXtVbn3lJ+Y
+         kCNg==
+X-Gm-Message-State: AOAM532OmL1Q9oPtAFA3NW87zhVZ1XkMXXrlCGrUl+CYSb/3gKM55a2F
+        w4/mou4FIB8uw+nDWc6aW2qO6YyFzcw=
+X-Google-Smtp-Source: ABdhPJyOskFVbu5Q7jztS/JY+dJEhfz7pdsgkS1G8FHxMjsxcwx7mtvJ/wUGWknKrnr7P9rFJfWeCA==
+X-Received: by 2002:aa7:9510:: with SMTP id b16mr4234538pfp.265.1590158784741;
+        Fri, 22 May 2020 07:46:24 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:892a:d4e5:be12:19f? ([2605:e000:100e:8c61:892a:d4e5:be12:19f])
+        by smtp.gmail.com with ESMTPSA id mn19sm7014158pjb.8.2020.05.22.07.46.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 07:46:24 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200522213202.38ebe825@canb.auug.org.au>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <7bb2cb93-062c-4ef5-4986-5dd82694edfe@kernel.dk>
+Date:   Fri, 22 May 2020 08:46:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200522213202.38ebe825@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix ordering of SDIO IDs to conform to the comment above, which says vendor
-first, device next.
+On 5/22/20 5:32 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the block tree, today's linux-next build (x86_64
+> allnoconfig) failed like this:
+> 
+> fs/libfs.c: In function 'generic_file_fsync':
+> fs/libfs.c:1116:9: error: too few arguments to function 'blkdev_issue_flush'
+>  1116 |  return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL);
+>       |         ^~~~~~~~~~~~~~~~~~
+> In file included from fs/libfs.c:7:
+> include/linux/blkdev.h:1875:19: note: declared here
+>  1875 | static inline int blkdev_issue_flush(struct block_device *bdev, gfp_t gfp_mask,
+>       |                   ^~~~~~~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   c64644ce363b ("block: remove the error_sector argument to blkdev_issue_flush")
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- include/linux/mmc/sdio_ids.h | 43 ++++++++++++++++++------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
+Gah, I'll fold in the fix. Thanks Stephen.
 
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index b19200aea56a..15ed8ce9d394 100644
---- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -25,9 +25,23 @@
-  * Vendors and devices.  Sort key: vendor first, device next.
-  */
- 
-+#define SDIO_VENDOR_ID_STE			0x0020
-+#define SDIO_DEVICE_ID_STE_CW1200		0x2280
-+
-+#define SDIO_VENDOR_ID_INTEL			0x0089
-+#define SDIO_DEVICE_ID_INTEL_IWMC3200WIMAX	0x1402
-+#define SDIO_DEVICE_ID_INTEL_IWMC3200WIFI	0x1403
-+#define SDIO_DEVICE_ID_INTEL_IWMC3200TOP	0x1404
-+#define SDIO_DEVICE_ID_INTEL_IWMC3200GPS	0x1405
-+#define SDIO_DEVICE_ID_INTEL_IWMC3200BT		0x1406
-+#define SDIO_DEVICE_ID_INTEL_IWMC3200WIMAX_2G5	0x1407
-+
- #define SDIO_VENDOR_ID_CGUYS			0x0092
- #define SDIO_DEVICE_ID_CGUYS_EW_CG1102GC	0x0004
- 
-+#define SDIO_VENDOR_ID_TI			0x0097
-+#define SDIO_DEVICE_ID_TI_WL1271		0x4076
-+
- #define SDIO_VENDOR_ID_ATHEROS			0x0271
- #define SDIO_DEVICE_ID_ATHEROS_AR6003_00	0x0300
- #define SDIO_DEVICE_ID_ATHEROS_AR6003_01	0x0301
-@@ -41,34 +55,26 @@
- 
- #define SDIO_VENDOR_ID_BROADCOM			0x02d0
- #define SDIO_DEVICE_ID_BROADCOM_NINTENDO_WII	0x044b
--#define SDIO_DEVICE_ID_BROADCOM_43143		0xa887
- #define SDIO_DEVICE_ID_BROADCOM_43241		0x4324
- #define SDIO_DEVICE_ID_BROADCOM_4329		0x4329
- #define SDIO_DEVICE_ID_BROADCOM_4330		0x4330
- #define SDIO_DEVICE_ID_BROADCOM_4334		0x4334
--#define SDIO_DEVICE_ID_BROADCOM_43340		0xa94c
--#define SDIO_DEVICE_ID_BROADCOM_43341		0xa94d
- #define SDIO_DEVICE_ID_BROADCOM_4335_4339	0x4335
- #define SDIO_DEVICE_ID_BROADCOM_4339		0x4339
--#define SDIO_DEVICE_ID_BROADCOM_43362		0xa962
--#define SDIO_DEVICE_ID_BROADCOM_43364		0xa9a4
--#define SDIO_DEVICE_ID_BROADCOM_43430		0xa9a6
- #define SDIO_DEVICE_ID_BROADCOM_4345		0x4345
--#define SDIO_DEVICE_ID_BROADCOM_43455		0xa9bf
- #define SDIO_DEVICE_ID_BROADCOM_4354		0x4354
-+#define SDIO_DEVICE_ID_BROADCOM_CYPRESS_89359	0x4355
- #define SDIO_DEVICE_ID_BROADCOM_4356		0x4356
- #define SDIO_DEVICE_ID_BROADCOM_4359		0x4359
- #define SDIO_DEVICE_ID_BROADCOM_CYPRESS_4373	0x4373
- #define SDIO_DEVICE_ID_BROADCOM_CYPRESS_43012	0xa804
--#define SDIO_DEVICE_ID_BROADCOM_CYPRESS_89359	0x4355
--
--#define SDIO_VENDOR_ID_INTEL			0x0089
--#define SDIO_DEVICE_ID_INTEL_IWMC3200WIMAX	0x1402
--#define SDIO_DEVICE_ID_INTEL_IWMC3200WIFI	0x1403
--#define SDIO_DEVICE_ID_INTEL_IWMC3200TOP	0x1404
--#define SDIO_DEVICE_ID_INTEL_IWMC3200GPS	0x1405
--#define SDIO_DEVICE_ID_INTEL_IWMC3200BT		0x1406
--#define SDIO_DEVICE_ID_INTEL_IWMC3200WIMAX_2G5	0x1407
-+#define SDIO_DEVICE_ID_BROADCOM_43143		0xa887
-+#define SDIO_DEVICE_ID_BROADCOM_43340		0xa94c
-+#define SDIO_DEVICE_ID_BROADCOM_43341		0xa94d
-+#define SDIO_DEVICE_ID_BROADCOM_43362		0xa962
-+#define SDIO_DEVICE_ID_BROADCOM_43364		0xa9a4
-+#define SDIO_DEVICE_ID_BROADCOM_43430		0xa9a6
-+#define SDIO_DEVICE_ID_BROADCOM_43455		0xa9bf
- 
- #define SDIO_VENDOR_ID_MARVELL			0x02df
- #define SDIO_DEVICE_ID_MARVELL_LIBERTAS		0x9103
-@@ -112,12 +118,7 @@
- #define SDIO_DEVICE_ID_SIANO_NOVA_A0		0x1100
- #define SDIO_DEVICE_ID_SIANO_STELLAR 		0x5347
- 
--#define SDIO_VENDOR_ID_TI			0x0097
--#define SDIO_DEVICE_ID_TI_WL1271		0x4076
- #define SDIO_VENDOR_ID_TI_WL1251		0x104c
- #define SDIO_DEVICE_ID_TI_WL1251		0x9066
- 
--#define SDIO_VENDOR_ID_STE			0x0020
--#define SDIO_DEVICE_ID_STE_CW1200		0x2280
--
- #endif /* LINUX_MMC_SDIO_IDS_H */
 -- 
-2.20.1
+Jens Axboe
 
