@@ -2,126 +2,126 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E28C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE8BF2078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UqZD14cq"
+	by mail.kernel.org (Postfix) with ESMTP id 5A57A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbgEVUnR (ORCPT
+        id S1731033AbgEVUrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 16:43:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42844 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730946AbgEVUnP (ORCPT
+        Fri, 22 May 2020 16:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730946AbgEVUrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 16:43:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MKcXPm149064;
-        Fri, 22 May 2020 20:43:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=quI2zEc1mVlKqo7MOUVtLur/RjisA9Xl2MQru5ETCoQ=;
- b=UqZD14cqanSTf8g5Re/I286sgYOTxi84PYNeT69jEB7z1JkywfnVZRzrnAGjTCVL44zT
- rdoqwiz9BRRD6VEbFnPQUuCVW8T2IPpQw1tZuIKYo+Z4SV+N28GgWZqB5qAwhAqf9KLh
- TojCh0jjuqMxk3f8ppmoTCu0aIGHazQf1mw2VeMcHi8JcgkDxrsoB0olaiiTsF0z/+N5
- BF5mv4NB8/okHBmE2tddImRu4erV8fjh0QfM4NJtMmIISvEpk4w7anDjwqH2CvwYVGKq
- KKKOGEgYI9+qutd/QXZE1O4+mVwT+mt+tYClbloMdGIrQ0QoRcYwvkMAxv2tP3d5jeFG Ug== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 3127krqr9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 20:43:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MKcbp0190645;
-        Fri, 22 May 2020 20:43:10 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 314gmbsn2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 May 2020 20:43:10 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04MKh9We009064;
-        Fri, 22 May 2020 20:43:09 GMT
-Received: from localhost (/10.159.153.228)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 22 May 2020 13:43:09 -0700
-Date:   Fri, 22 May 2020 13:43:08 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: lockdep trace with xfs + mm in it from 5.7.0-rc5
-Message-ID: <20200522204308.GC8230@magnolia>
-References: <CAPM=9tyy5vubggbcj32bGpA_h6yDaBNM3QeJPySTzci-etfBZw@mail.gmail.com>
- <20200521231312.GJ17635@magnolia>
- <20200522003027.GC2040@dread.disaster.area>
+        Fri, 22 May 2020 16:47:23 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73C2C061A0E;
+        Fri, 22 May 2020 13:47:22 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jcEYU-000zou-Ao; Fri, 22 May 2020 22:46:10 +0200
+Message-ID: <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net>
+Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Cc:     derosier@gmail.com, greearb@candelatech.com, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, jiri@resnulli.us,
+        briannorris@chromium.org
+Date:   Fri, 22 May 2020 22:46:07 +0200
+In-Reply-To: <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <20200519010530.GS11244@42.do-not-panic.com>
+         <20200519211531.3702593-1-kuba@kernel.org>
+         <20200522052046.GY11244@42.do-not-panic.com>
+         <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522003027.GC2040@dread.disaster.area>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- adultscore=0 phishscore=0 mlxscore=0 spamscore=0 suspectscore=1
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005220160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9629 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=1 mlxlogscore=999 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005220159
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:30:27AM +1000, Dave Chinner wrote:
-> On Thu, May 21, 2020 at 04:13:12PM -0700, Darrick J. Wong wrote:
-> > [cc linux-xfs]
+On Fri, 2020-05-22 at 10:17 -0700, Jakub Kicinski wrote:
+
+> > > --- a/net/core/Makefile
+> > > +++ b/net/core/Makefile
+> > > @@ -31,7 +31,7 @@ obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
+> > >  obj-$(CONFIG_BPF_STREAM_PARSER) += sock_map.o
+> > >  obj-$(CONFIG_DST_CACHE) += dst_cache.o
+> > >  obj-$(CONFIG_HWBM) += hwbm.o
+> > > -obj-$(CONFIG_NET_DEVLINK) += devlink.o
+> > > +obj-$(CONFIG_NET_DEVLINK) += devlink.o devlink_simple_fw_reporter.o  
 > > 
-> > On Fri, May 22, 2020 at 08:21:50AM +1000, Dave Airlie wrote:
-> > > Hi,
-> > > 
-> > > Just updated a rawhide VM to the Fedora 5.7.0-rc5 kernel, did some
-> > > package building,
-> > > 
-> > > got the below trace, not sure if it's known and fixed or unknown.
+> > This was looking super sexy up to here. This is networking specific.
+> > We want something generic for *anything* that requests firmware.
+> 
+> You can't be serious. It's network specific because of how the Kconfig
+> is named?
+
+Wait, yeah, what?
+
+> Working for a company operating large data centers I would strongly
+> prefer if we didn't have ten different ways of reporting firmware
+> problems in the fleet.
+
+Agree. I don't actually operate anything, but still ...
+
+Thinking about this - maybe there's a way to still combine devcoredump
+and devlink somehow?
+
+Or (optionally) make devlink trigger devcoredump while userspace
+migrates?
+
+> > So networking may want to be aware that a firmware crash happened as
+> > part of this network device health thing, but firmware crashing is a
+> > generic thing.
 > > 
-> > It's a known false-positive.  An inode can't simultaneously be getting
-> > reclaimed due to zero refcount /and/ be the target of a getxattr call.
-> > Unfortunately, lockdep can't tell the difference, and it seems a little
-> > strange to set NOFS on the allocation (which increases the chances of a
-> > runtime error) just to quiet that down.
-> 
-> __GFP_NOLOCKDEP is the intended flag to telling memory allocation
-> that lockdep is stupid.
-> 
-> However, it seems that the patches that were in progress some months
-> ago to convert XFS to kmalloc interfaces and using GFP flags
-> directly stalled - being able to mark locations like this with
-> __GFP_NOLOCKDEP was one of the main reasons for getting rid of all
-> the internal XFS memory allocation wrappers...
+> > I have now extended my patch set to include uvents and I am more set on
+> > that we need the taint now more than ever.
 
-Question is, should I spend time adding a GFP_NOLOCKDEP bandaid to XFS
-or would my time be better spent reviewing your async inode reclaim
-series to make this go away for real?
+FWIW, I still completely disagree on that taint. You (Luis) obviously
+have been running into a bug in that driver, I doubt the firmware
+actually managed to wedge the hardware.
 
-(Dang, now that I phrase it that way, Imma go read that series.)
+But even if it did, that's still not really a kernel taint. The kernel
+itself isn't in any way affected by this.
 
---D
+Yes, the system is in a weird state now. But that's *not* equivalent to
+"kernel tainted".
 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> The irony is you have a problem with a networking device and all the
+> devices your initial set touched are networking. Two of the drivers 
+> you touched either have or will soon have devlink health reporters
+> implemented.
+
+Like I said above, do you think it'd be feasible to make a devcoredump
+out of devlink health reports? And can the report be in a way that we
+control the file format, or are there limits? I guess I should read the
+code to find out, but I figure you probably just know. But feel free to
+tell me to read it :)
+
+The reason I'm asking is that it's starting to sound like we really
+ought to be implementing devlink, but we've got a bunch of
+infrastructure that uses the devcoredump, and it'll take time
+(significantly so) to change all that...
+
+johannes
+
