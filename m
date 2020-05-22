@@ -2,97 +2,79 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7062CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B70C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41A2822CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:27:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ulukai.org header.i=@ulukai.org header.b="joORiURJ"
+	by mail.kernel.org (Postfix) with ESMTP id 73B7D22E02
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgEVO1C (ORCPT
+        id S1730089AbgEVO2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728947AbgEVO1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:27:02 -0400
-X-Greylist: delayed 977 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 22 May 2020 07:27:02 PDT
-Received: from ulukai.org (ulukai.org [IPv6:2a01:488:66:1000:b01c:1258:0:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CCA7C061A0E;
-        Fri, 22 May 2020 07:27:02 -0700 (PDT)
-Received: from arona (unknown [46.114.108.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by ulukai.org (Postfix) with ESMTPSA id 49T7gP4fXhz3GvB;
-        Fri, 22 May 2020 16:10:41 +0200 (CEST)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at ulukai.org
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ulukai.org; s=ulukai;
-        t=1590156641; bh=sWdSGL53EfDwJLVKZKFLd7/vKcGqH4BG8g+uuzQqTLA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=joORiURJ/QVNi7zV97rNXb2YTaVXn/+sjlSISaOdyaNYQRtBT3/3pLwB1W2FrVcVR
-         PBPVPrhoVAbw6hDi9pvdn53lCLzm856ZGNfgscfF8ClZTkmMvXgalSqgl4HC/TBhRV
-         cuPP9sQivpF7aIB15MF9q6FY/VClGcD4P+b68X4E=
-From:   "C. Masloch" <pushbx@ulukai.org>
-To:     linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Dave Rodgman <dave.rodgman@arm.com>, Willy Tarreau <w@1wt.eu>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 1/2] docs: lzo: fix first byte interpretation off-by-one
-Date:   Fri, 22 May 2020 16:10:39 +0200
-Message-Id: <20200522141040.1353769-1-pushbx@ulukai.org>
-X-Mailer: git-send-email 2.26.2
+        Fri, 22 May 2020 10:28:22 -0400
+Received: from elvis.franken.de ([193.175.24.41]:34554 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729971AbgEVO2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:28:20 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jc8ed-0006D2-01; Fri, 22 May 2020 16:28:07 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 55B2FC0175; Fri, 22 May 2020 16:25:50 +0200 (CEST)
+Date:   Fri, 22 May 2020 16:25:50 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
+Message-ID: <20200522142550.GB15261@alpha.franken.de>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was an error in the description of the initial byte's
-interpretation. While "18..21" was listed as  "copy 0..3 literals",
-it should actually be interpreted as "copy 1..4 literals".
+On Thu, May 14, 2020 at 09:16:41PM +0800, Jiaxun Yang wrote:
+> We can now enable generic PCI driver in Kconfig, and remove legacy
+> PCI driver code.
+> 
+> Radeon vbios quirk is moved to the platform folder to fit the
+> new structure.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> --
+> v9: Fix licenses tag
+> ---
+>  arch/mips/Kconfig                  |   1 +
+>  arch/mips/loongson64/Makefile      |   2 +-
+>  arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
+>  arch/mips/pci/Makefile             |   1 -
+>  arch/mips/pci/fixup-loongson3.c    |  71 ------------------
+>  arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
+>  6 files changed, 31 insertions(+), 189 deletions(-)
+>  create mode 100644 arch/mips/loongson64/vbios_quirk.c
+>  delete mode 100644 arch/mips/pci/fixup-loongson3.c
+>  delete mode 100644 arch/mips/pci/ops-loongson3.c
 
-The "byte - 17" part is correct. 17 would encode copying "zero"
-literals, but does not occur. 18 encodes copying 1 literal,
-19 then 2 literals, 20 for 3 literals, 21 for 4 literals.
-The description should read "18..21" as "copy 1..4 literals".
-Likewise, 22 indicates "copying 5 literals", not "4 literals".
-However, the state is indeed always set to "byte - 17" (which
-for 21 results in 4 too).
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-Signed-off-by: C. Masloch <pushbx@ulukai.org>
----
- Documentation/lzo.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thomas.
 
-diff --git a/Documentation/lzo.txt b/Documentation/lzo.txt
-index ca9833289..f839d104d 100644
---- a/Documentation/lzo.txt
-+++ b/Documentation/lzo.txt
-@@ -108,12 +108,12 @@ Byte sequences
-                 (version 1 only).
-                 Otherwise, the bitstream version is 0.
- 
--      18..21  : copy 0..3 literals
--                state = (byte - 17) = 0..3  [ copy <state> literals ]
-+      18..21  : copy 1..4 literals
-+                state = (byte - 17) = 1..4  [ copy <state> literals ]
-                 skip byte
- 
-       22..255 : copy literal string
--                length = (byte - 17) = 4..238
-+                length = (byte - 17) = 5..238
-                 state = 4 [ don't copy extra literals ]
-                 skip byte
- 
 -- 
-2.26.2
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
