@@ -2,169 +2,186 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7078BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B81BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAD120757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63985206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRe1Q0Lp"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="fTK4N1uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387447AbgEVXYe (ORCPT
+        id S2387462AbgEVXZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 19:24:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52326 "EHLO
+        Fri, 22 May 2020 19:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731175AbgEVXYd (ORCPT
+        with ESMTP id S2387451AbgEVXZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 19:24:33 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 051B5C061A0E;
-        Fri, 22 May 2020 16:24:33 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id d1so5531363qvl.6;
-        Fri, 22 May 2020 16:24:32 -0700 (PDT)
+        Fri, 22 May 2020 19:25:17 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDEEC08C5C2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:25:17 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w20so689433pga.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:25:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p3DOwgx50lHaOYH/y9NF0WRQ9Ja31vmsw+vc99//yd8=;
-        b=cRe1Q0LpdKC1fFLtFRt0iy1U8UOw08DyLWTpDvNkZTCMRvCW2MbsPxkBFNnPyOigYP
-         Ri3z371nh3MlGmkEJLxfQo3RNLbznUMwIq+ijREpBh9h+zFrfQZDB8yx9kyL7fpgj9Ni
-         vgGs/M89F8xeUiI1OSgG39x+nHhSLFabisERtnRb6JCIUvtgM/h+1K89DF9f4G5g5C6P
-         kDcwAye3TywnKLYJ46Nwbqj8/tUKWtXDoPd+ktOeGXQQbyAx7VFIt+j3rQdV8SA3VMyU
-         oyBxMJpz+db2N/52oG2pNEYrvp1wfDzgguTwv5LNyfqIik+gSy00RgB5i25uuIaGN+6e
-         s++w==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=xcdARewyTG4POyZ7ltQhfJJu9Qv+Bxm+E+lkKjlpIsE=;
+        b=fTK4N1uv4Kn/dR2zzPbD0jHTR52W93tW49eGy+Fa0Hl+4Be6712kZ/QI6oxwFpFI/a
+         ZHU1PWctlZrqE3qr5XCDpuTkl3C2l7HVsfv5S3tv6i6eNIa81bBVA7dSqbl/5Pq6FUZs
+         ABEWWzVogKKhogjSPk2sGmAiiVj+evSbq4uJE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p3DOwgx50lHaOYH/y9NF0WRQ9Ja31vmsw+vc99//yd8=;
-        b=DQCicihEaQ2AVnWq/oW5oa3oCCVCvND1pOOBK0h6Jg3sxO/fF2mlRTg73vZLh93/DV
-         CIr3Vsmo8rKfr0Ex8tYxR7iszAX98aTGDWAofja2fHkGgaqHPfKE1ajyVfUibDFoo9nn
-         fEGyVNYxyO7n04QDMkGwIrC10h3r0mQxnyPycLrie0M3dHsjyebUNAYmHtuZmowI+gVx
-         ALGGNwfM2eMK25jsM/Yu3f1uhIP0e0uz5KQxMvsIbvPIdqvkyHwed+Q93F4AU8bdyz7S
-         IsdVUBFl19WrRTyRO4U/q4m0HZtpYdFkeNH5TjT0GAyg6G6w1tkKk7jSPDxoheUb3FoM
-         HbDw==
-X-Gm-Message-State: AOAM530SeswPMKbzwFTqAj7Ux48Oroa3zrOlTH2UoyqDnFoG099fnjaA
-        wa3e6XHfrdUNqTJq0OvXh6+/9EqKt24veDIszU0=
-X-Google-Smtp-Source: ABdhPJyONXtwaNSOSYLXwVMotvNgibyETSqzfSzBJG08UQWtvZoltYGqNRcszNvI7/n5dP2gIMR1JKoMcyYH7mDK7Uw=
-X-Received: by 2002:ad4:4b26:: with SMTP id s6mr6198033qvw.146.1590189872044;
- Fri, 22 May 2020 16:24:32 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=xcdARewyTG4POyZ7ltQhfJJu9Qv+Bxm+E+lkKjlpIsE=;
+        b=JpNflmWNlXJzMGJjX9xiixS/8VxguZw/VcQeSvbXp/xs+ZfH8JEwQcevyXhsQC6Zyx
+         UUDIUY5joGtbfQpX5JdFotqQPdElEHYscMQnnZCcRFAKlDQAXy1YU6obC4nZDAq6SRDW
+         FxtMW07yySxMc374aWpm+mHkvKfu3FMxgHTXjtCzgurFyNyBNs0MumMek2tuq2nwfBI3
+         yB/NAUPYNU+qbNFJNrBP0pQw811U8kSrjT8UCDo1oNyiD1QhcRH0Csi1RcGZNmTWKa82
+         bwkP7ZUdxZkW22mFOrDxyiXhXKgdFSDhQGt9EWL1BzTabdk3mdui/mwwpAv78P3AFrrm
+         UHwQ==
+X-Gm-Message-State: AOAM530OMv5tSTw8XhNNn5r0xgOhk550MIttIZSb6LgI5frM9mGPWUGz
+        oal0J8olyEf72hwHEf4kA0o96pdXR61sM3cSyyIiSVSky1fzPfmyzeE1YOBGVAspDsrTVCfwagW
+        NphQkHFkZl1xXIKEoKD9hihAgScXuaNQ5+HLOGppmpFuVBXVwYxqV04Wj/0P/SeA0DtTNYt8FSp
+        UUyEKoFvQh
+X-Google-Smtp-Source: ABdhPJxYA3M7TqBzRS04SzG465as6Jpo33/yu9zFOYOedvseWiYUZylkj5NdgSLEDNI/UVu5rIrHaw==
+X-Received: by 2002:a62:2f45:: with SMTP id v66mr6455014pfv.45.1590189916382;
+        Fri, 22 May 2020 16:25:16 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id m12sm7637602pjs.41.2020.05.22.16.25.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 16:25:15 -0700 (PDT)
+Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        ebiederm@xmission.com, jeyu@kernel.org, jmorris@namei.org,
+        paul@paul-moore.com, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, nayna@linux.ibm.com,
+        dan.carpenter@oracle.com, skhan@linuxfoundation.org,
+        geert@linux-m68k.org, tglx@linutronix.de, bauerman@linux.ibm.com,
+        dhowells@redhat.com, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200513152108.25669-1-mcgrof@kernel.org>
+ <20200513181736.GA24342@infradead.org>
+ <20200515212933.GD11244@42.do-not-panic.com>
+ <20200518062255.GB15641@infradead.org>
+ <1589805462.5111.107.camel@linux.ibm.com>
+ <7525ca03-def7-dfe2-80a9-25270cb0ae05@broadcom.com>
+ <202005221551.5CA1372@keescook>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <c48a80f5-a09c-6747-3db8-be23a260a0cb@broadcom.com>
+Date:   Fri, 22 May 2020 16:25:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200519010530.GS11244@42.do-not-panic.com> <20200519211531.3702593-1-kuba@kernel.org>
- <20200522052046.GY11244@42.do-not-panic.com> <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <2e5199edb433c217c7974ef7408ff8c7253145b6.camel@sipsolutions.net> <20200522215145.GC11244@42.do-not-panic.com>
-In-Reply-To: <20200522215145.GC11244@42.do-not-panic.com>
-From:   Steve deRosier <derosier@gmail.com>
-Date:   Fri, 22 May 2020 16:23:55 -0700
-Message-ID: <CALLGbR+QPcECtJbYmzztV_Qysc5qtwujT_qc785zvhZMCH50fg@mail.gmail.com>
-Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ben Greear <greearb@candelatech.com>, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com,
-        Takashi Iwai <tiwai@suse.de>, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com,
-        Kees Cook <keescook@chromium.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>, will@kernel.org,
-        mchehab+samsung@kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        ath10k@lists.infradead.org, jiri@resnulli.us,
-        briannorris@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202005221551.5CA1372@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 2:51 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+Hi Kees,
+
+On 2020-05-22 4:04 p.m., Kees Cook wrote:
+> On Fri, May 22, 2020 at 03:24:32PM -0700, Scott Branden wrote:
+>> On 2020-05-18 5:37 a.m., Mimi Zohar wrote:
+>>> On Sun, 2020-05-17 at 23:22 -0700, Christoph Hellwig wrote:
+>>>> On Fri, May 15, 2020 at 09:29:33PM +0000, Luis Chamberlain wrote:
+>>>>> On Wed, May 13, 2020 at 11:17:36AM -0700, Christoph Hellwig wrote:
+>>>>>> Can you also move kernel_read_* out of fs.h?  That header gets pulled
+>>>>>> in just about everywhere and doesn't really need function not related
+>>>>>> to the general fs interface.
+>>>>> Sure, where should I dump these?
+>>>> Maybe a new linux/kernel_read_file.h?  Bonus points for a small top
+>>>> of the file comment explaining the point of the interface, which I
+>>>> still don't get :)
+>>> Instead of rolling your own method of having the kernel read a file,
+>>> which requires call specific security hooks, this interface provides a
+>>> single generic set of pre and post security hooks.  The
+>>> kernel_read_file_id enumeration permits the security hook to
+>>> differentiate between callers.
+>>>
+>>> To comply with secure and trusted boot concepts, a file cannot be
+>>> accessible to the caller until after it has been measured and/or the
+>>> integrity (hash/signature) appraised.
+>>>
+>>> In some cases, the file was previously read twice, first to measure
+>>> and/or appraise the file and then read again into a buffer for
+>>> use.  This interface reads the file into a buffer once, calls the
+>>> generic post security hook, before providing the buffer to the caller.
+>>>    (Note using firmware pre-allocated memory might be an issue.)
+>>>
+>>> Partial reading firmware will result in needing to pre-read the entire
+>>> file, most likely on the security pre hook.
+>> The entire file may be very large and not fit into a buffer.
+>> Hence one of the reasons for a partial read of the file.
+>> For security purposes, you need to change your code to limit the amount
+>> of data it reads into a buffer at one time to not consume or run out of much
+>> memory.
+> Hm? That's not how whole-file hashing works. :)
+
 >
-> On Fri, May 22, 2020 at 10:46:07PM +0200, Johannes Berg wrote:
-> > FWIW, I still completely disagree on that taint. You (Luis) obviously
-> > have been running into a bug in that driver, I doubt the firmware
-> > actually managed to wedge the hardware.
+> These hooks need to finish their hashing and policy checking before they
+> can allow the rest of the code to move forward. (That's why it's a
+> security hook.) If kernel memory utilization is the primary concern,
+> then sure, things could be rearranged to do partial read and update the
+> hash incrementally, but the entire file still needs to be locked,
+> entirely hashed by hook, then read by the caller, then unlocked and
+> released.
 >
-> This hasn't happened just once, its happed many times sporadically now,
-> once a week or two weeks I'd say. And the system isn't being moved
-> around.
+> So, if you want to have partial file reads work, you'll need to
+> rearchitect the way this works to avoid regressing the security coverage
+> of these operations.
+I am not familiar with how the security handling code works at all.
+Is the same security check run on files opened from user space?
+A file could be huge.
+
+If it assumes there is there is enough memory available to read the 
+entire file into kernel space
+then the improvement below can be left as a memory optimization to be 
+done in
+an independent (or future) patch series.
+
+> So, probably, the code will look something like:
 >
-> > But even if it did, that's still not really a kernel taint. The kernel
-> > itself isn't in any way affected by this.
 >
-> Of course it is, a full reboot is required.
+> file = kernel_open_file_for_reading(...)
+> 	file = open...
+> 	disallow_writes(file);
+> 	while (processed < size-of-file) {
+> 		buf = read(file, size...)
+> 		security_file_read_partial(buf)
+> 	}
+> 	ret = security_file_read_finished(file);
+> 	if (ret < 0) {
+> 		allow_writes(file);
+> 		return PTR_ERR(ret);
+> 	}
+> 	return file;
 >
-> > Yes, the system is in a weird state now. But that's *not* equivalent to
-> > "kernel tainted".
+> while (processed < size-of-file) {
+> 	buf = read(file, size...)
+> 	firmware_send_partial(buf);
+> }
 >
-> Requiring a full reboot is a dire situation to be in, and loosing
-> connectivity to the point this is not recoverable likewise.
+> kernel_close_file_for_reading(file)
+> 	allow_writes(file);
 >
-> You guys are making out a taint to be the end of the world. We have a
-> taint even for a kernel warning, and as others have mentioned mac80211
-> already produces these.
 >
 
-I had to go RTFM re: kernel taints because it has been a very long
-time since I looked at them. It had always seemed to me that most were
-caused by "kernel-unfriendly" user actions.  The most famous of course
-is loading proprietary modules, out-of-tree modules, forced module
-loads, etc...  Honestly, I had forgotten the large variety of uses of
-the taint flags. For anyone who hasn't looked at taints recently, I
-recommend: https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html
-
-In light of this I don't object to setting a taint on this anymore.
-I'm a little uneasy, but I've softened on it now, and now I feel it
-depends on implementation.
-
-Specifically, I don't think we should set a taint flag when a driver
-easily handles a routine firmware crash and is confident that things
-have come up just fine again. In other words, triggering the taint in
-every driver module where it spits out a log comment that it had a
-firmware crash and had to recover seems too much. Sure, firmware
-shouldn't crash, sure it should be open source so we can fix it,
-whatever... those sort of wishful comments simply ignore reality and
-our ability to affect effective change. A lot of WiFi firmware crashes
-and for well-known cases the drivers handle them well. And in some
-cases, not so well and that should be a place the driver should detect
-and thus raise a red flag.  If a WiFi firmware crash can bring down
-the kernel, there's either a major driver bug or some very funky
-hardware crap going on. That sort of thing we should be able to
-detect, mark with a taint (or something), and fix if within our sphere
-of influence. I guess what it comes down to me is how aggressive we
-are about setting the flag.
-
-I would like there to be a single solution, or a minimized set
-depending on what makes sense for the requirements. I haven't had time
-to look into the alternatives mentioned here so I don't have an
-informed opinion about the solution. I do think Luis is trying to
-solve a real problem though. Can we look at this from the point of
-view of what are the requirements?  What is it we're trying to solve?
-
-I _think_ that the goal of Luis's original proposal is to report up to
-the user, at some future point when the user is interested (because
-something super drastic just occured, but long after the fw crash),
-that there was a firmware crash without the user having to grep
-through all logs on the machine. And then if the user sees that flag
-and suspects it, then they can bother to find it in the logs or do
-more drastic debugging steps like finding the fw crash in the log and
-pulling firmware crash dumps, etc.
-
-I think the various alternate solutions are great but perhaps solving
-a superset of features (like adding in user-space notifications etc)?
-Perhaps different people on these related threads are trying to solve
-different problems?
-
-
-- Steve
