@@ -2,85 +2,112 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C288206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5342F207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:21:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="N0ytCQTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgEVIS1 (ORCPT
+        id S1729334AbgEVIVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:18:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55020 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgEVIS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:18:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BF3A7BE73;
-        Fri, 22 May 2020 08:18:27 +0000 (UTC)
-Subject: Re: [PATCH] xen/events: avoid NULL pointer dereference in
- evtchn_from_irq()
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?= 
-        <marmarek@invisiblethingslab.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org
-References: <20200319071428.12115-1-jgross@suse.com>
- <30719c35-6de7-d400-7bb8-cff4570f8971@oracle.com>
- <20200521184602.GP98582@mail-itl>
- <c36de3eb-c0ad-45e1-e08b-cb7d86d197f6@oracle.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <5839ff92-92e4-667a-8ed1-f5f9f3453299@suse.com>
-Date:   Fri, 22 May 2020 10:18:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 04:21:02 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:29413 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728976AbgEVIVB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:21:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590135661; x=1621671661;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=LWu6AqypUnxnEO7+yo7F6s9apxZuEsZjVsJR8ns2boc=;
+  b=N0ytCQTlcVTHflQOtvMzmqs3mCoO3ndirLHWcWipIFCebMoiXG70l/2m
+   jAu+r45XQ7WrpntgD5PPtSmFRVWxNFNpFXqrbEXtZIRr1ntZW+KGe8znI
+   zYvt+PhIyvnoeZMJr8mgcEEczcMQ+Q6FYf7BvNHiHYnSXrEsZIJrQRs/Z
+   g=;
+IronPort-SDR: d+GIndiAjtTYBqBbiFIYH6KqsOmMn/3NmsdYWLx39MLy7UEpIKRzK4YGhWoCo7TcdUmqF21o6a
+ 4EXKGWGETOGg==
+X-IronPort-AV: E=Sophos;i="5.73,420,1583193600"; 
+   d="scan'208";a="31787155"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 22 May 2020 08:21:00 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id B0E1CA17B7;
+        Fri, 22 May 2020 08:20:58 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 22 May 2020 08:20:58 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.175) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 22 May 2020 08:20:49 +0000
+Subject: Re: [PATCH v2 18/18] MAINTAINERS: Add entry for the Nitro Enclaves
+ driver
+To:     Joe Perches <joe@perches.com>, <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Bjoern Doebel" <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        "Martin Pohlack" <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200522062946.28973-1-andraprs@amazon.com>
+ <20200522062946.28973-19-andraprs@amazon.com>
+ <e4847d1f25a1fd29ea3f8f8930ba5ae5ccc41f30.camel@perches.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <52fcc55d-4007-03e1-2af0-c4d8dd210b22@amazon.com>
+Date:   Fri, 22 May 2020 11:20:45 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <c36de3eb-c0ad-45e1-e08b-cb7d86d197f6@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <e4847d1f25a1fd29ea3f8f8930ba5ae5ccc41f30.camel@perches.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.175]
+X-ClientProxiedBy: EX13D03UWC002.ant.amazon.com (10.43.162.160) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.05.20 23:57, Boris Ostrovsky wrote:
-> On 5/21/20 2:46 PM, Marek Marczykowski-Górecki wrote:
->> On Thu, May 21, 2020 at 01:22:03PM -0400, Boris Ostrovsky wrote:
->>> On 3/19/20 3:14 AM, Juergen Gross wrote:
->>>> There have been reports of races in evtchn_from_irq() where the info
->>>> pointer has been NULL.
->>>>
->>>> Avoid that case by testing info before dereferencing it.
->>>>
->>>> In order to avoid accessing a just freed info structure do the kfree()
->>>> via kfree_rcu().
->>>
->>> Looks like noone ever responded to this.
->>>
->>>
->>> This change looks fine but is there a background on the problem? I
->>> looked in the archives and didn't find the relevant discussion.
->> Here is the original bug report:
->> https://xen.markmail.org/thread/44apwkwzeme4uavo
->>
-> 
-> 
-> Thanks. Do we know what the race is? Is it because an event is being
-> delivered from a dying guest who is in the process of tearing down event
-> channels?
+CgpPbiAyMi8wNS8yMDIwIDEwOjAzLCBKb2UgUGVyY2hlcyB3cm90ZToKPiBPbiBGcmksIDIwMjAt
+MDUtMjIgYXQgMDk6MjkgKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPgo+IHRyaXZpYToK
+Pgo+PiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwo+IFtdCj4+IEBAIC0x
+MTk1Niw2ICsxMTk1NiwxOSBAQCBTOglNYWludGFpbmVkCj4+ICAgVDoJZ2l0IGdpdDovL2dpdC5r
+ZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9sZnRhbi9uaW9zMi5naXQKPj4gICBG
+OglhcmNoL25pb3MyLwo+PiAgIAo+PiArTklUUk8gRU5DTEFWRVMgKE5FKQo+PiArTToJQW5kcmEg
+UGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29tPgo+PiArTToJQWxleGFuZHJ1IFZhc2lsZSA8
+bGV4bnZAYW1hem9uLmNvbT4KPj4gK006CUFsZXhhbmRydSBDaW9ib3RhcnUgPGFsY2lvYUBhbWF6
+b24uY29tPgo+PiArTDoJbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+PiArUzoJU3VwcG9y
+dGVkCj4+ICtXOglodHRwczovL2F3cy5hbWF6b24uY29tL2VjMi9uaXRyby9uaXRyby1lbmNsYXZl
+cy8KPj4gK0Y6CWluY2x1ZGUvbGludXgvbml0cm9fZW5jbGF2ZXMuaAo+PiArRjoJaW5jbHVkZS91
+YXBpL2xpbnV4L25pdHJvX2VuY2xhdmVzLmgKPj4gK0Y6CWRyaXZlcnMvdmlydC9uaXRyb19lbmNs
+YXZlcy8KPj4gK0Y6CXNhbXBsZXMvbml0cm9fZW5jbGF2ZXMvCj4+ICtGOglEb2N1bWVudGF0aW9u
+L25pdHJvX2VuY2xhdmVzLwo+IFBsZWFzZSBrZWVwIHRoZSBGOiBlbnRyaWVzIGluIGNhc2Ugc2Vu
+c2l0aXZlIGFscGhhYmV0aWMgb3JkZXIKPgo+IEY6CURvY3VtZW50YXRpb24vbml0cm9fZW5jbGF2
+ZXMvCj4gRjoJZHJpdmVycy92aXJ0L25pdHJvX2VuY2xhdmVzLwo+IEY6CWluY2x1ZGUvbGludXgv
+bml0cm9fZW5jbGF2ZXMuaAo+IEY6CWluY2x1ZGUvdWFwaS9saW51eC9uaXRyb19lbmNsYXZlcy5o
+Cj4gRjoJc2FtcGxlcy9uaXRyb19lbmNsYXZlcy8KCkRvbmUsIEkgdXBkYXRlZCB0aGUgZW50cnkg
+aW4gdjMuCgpUaGFuayB5b3UsIEpvZS4KCkFuZHJhCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50
+ZXIgKFJvbWFuaWEpIFMuUi5MLiByZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJl
+ZXQsIFVCQzUsIGZsb29yIDIsIElhc2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJl
+Z2lzdGVyZWQgaW4gUm9tYW5pYS4gUmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
 
-Missing synchronization between event channel (de-)allocation and
-handling.
-
-I have a patch sitting here, just didn't have the time to do some proper
-testing and sending it out.
-
-
-Juergen
