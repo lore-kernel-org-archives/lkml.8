@@ -2,108 +2,110 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED8A20823
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:36:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FsB9N5UH"
+	by mail.kernel.org (Postfix) with ESMTP id 99EC920823
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbgEVPgJ (ORCPT
+        id S1730648AbgEVPgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730568AbgEVPgI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:36:08 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFEBC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:36:07 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id fb16so4910282qvb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=61+HQokeJZQ8qkHJ2OEdKbbtcdPY4X5ntDI2ko215XA=;
-        b=FsB9N5UHSBWaHC/PI7gccIUfEYQI9QY2OJ2DpQw6NYmUIu/yS181SpbIsrMxh4tBq2
-         251MX3ARNKmg1PIdHLrIfedovaTFRuT7fr6qAJ0OzP4eZ9kHh5QC9Uqu8z6t+H3RAa5L
-         F060Wo09d4reWusv3yHvuVJT+swTL3Pz0DXKljhhGyA3kFwjN4C8iZYyafihOn7/z3Qg
-         0IuxiDtjd4U1Id+/0zAMVIS4TwL0Ptw3vYEV4ApNhTbJ9HL4cLaRC/CpSTAqYS2lFN8k
-         vztqA+6NvLDs6svcdY+jVjLfyDAKQ9YtsTkPHdPtxR9XEgWCjKhKy8Zuuz0XJ0fQto/0
-         lmIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=61+HQokeJZQ8qkHJ2OEdKbbtcdPY4X5ntDI2ko215XA=;
-        b=dtfn49EARIslgvC7KHDaIEQIgE7W/SXHt6c0k1vSzUPaTCTLXlHkpxyCtMZGZdCWgq
-         N8riM8mqlxjhINr5MzVWZpoTVRsjzA5D1SNL0bajKp8QbiqDhgRu1hGU7mzpD2y4wOCE
-         6i4cRjrWE2yZp294hyDEA/E5r3jsk9nF9OR5M6rGUbqgTO9LUMKgRaQJRIp47ZAtFBmv
-         JwkNRyW7kNsPsp4MSenbvWk39k5jVDUIiZ1KwTi0TKtiDCrgZNsc+X2q6kpDhhPapvkm
-         sJ7KNasfc+srKO/zpZebW0AAWjQ1cgfiBRnIg+cXHbQ5WHFnhsB2T3XkVIAvei8J21jv
-         3mcA==
-X-Gm-Message-State: AOAM5302b3gLImDSaDXNzfVX3cdO5WxSnJsAUAg8wniqLLV+7y9y0HoL
-        a/tFFgDcrpFOSyjvKNprEoeHHAwC5gPX4llaExemzA==
-X-Google-Smtp-Source: ABdhPJxlFh9zM8Njqgrp9/xR4Z1brfdmQPtm73E6Mi4XIQKqvXjo8/lYWwCLTLOHbqsxApeDG9Che+ylwvNrK03MWBo=
-X-Received: by 2002:a0c:be88:: with SMTP id n8mr4247699qvi.134.1590161766309;
- Fri, 22 May 2020 08:36:06 -0700 (PDT)
+        Fri, 22 May 2020 11:36:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44824 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730180AbgEVPgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:36:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 66393B203;
+        Fri, 22 May 2020 15:36:18 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 48B6F1E1270; Fri, 22 May 2020 17:36:15 +0200 (CEST)
+Date:   Fri, 22 May 2020 17:36:15 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Martijn Coenen <maco@android.com>
+Cc:     Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, miklos@szeredi.hu, tj@kernel.org,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com
+Subject: Re: Writeback bug causing writeback stalls
+Message-ID: <20200522153615.GF14199@quack2.suse.cz>
+References: <CAB0TPYGCOZmixbzrV80132X=V5TcyQwD6V7x-8PKg_BqCva8Og@mail.gmail.com>
+ <20200522144100.GE14199@quack2.suse.cz>
+ <CAB0TPYF+Nqd63Xf_JkuepSJV7CzndBw6_MUqcnjusy4ztX24hQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200522120700.838-1-brgl@bgdev.pl> <20200522120700.838-7-brgl@bgdev.pl>
- <5627e304-3463-9229-fa86-d7d31cad7a61@gmail.com>
-In-Reply-To: <5627e304-3463-9229-fa86-d7d31cad7a61@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 22 May 2020 17:35:55 +0200
-Message-ID: <CAMpxmJVg3VPt7Xu0U9Qnt4wYRmT75iryMDu1qaYdoGib1bhdiQ@mail.gmail.com>
-Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAB0TPYF+Nqd63Xf_JkuepSJV7CzndBw6_MUqcnjusy4ztX24hQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 22 maj 2020 o 17:06 Matthias Brugger <matthias.bgg@gmail.com> napisa=
-=C5=82(a):
->
->
->
-> On 22/05/2020 14:06, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri 22-05-20 17:23:30, Martijn Coenen wrote:
+> [ dropped android-storage-core@google.com from CC: since that list
+> can't receive emails from outside google.com - sorry about that ]
+> 
+> Hi Jan,
+> 
+> On Fri, May 22, 2020 at 4:41 PM Jan Kara <jack@suse.cz> wrote:
+> > > The easiest way to fix this, I think, is to call requeue_inode() at the end of
+> > > writeback_single_inode(), much like it is called from writeback_sb_inodes().
+> > > However, requeue_inode() has the following ominous warning:
+> > >
+> > > /*
+> > >  * Find proper writeback list for the inode depending on its current state and
+> > >  * possibly also change of its state while we were doing writeback.  Here we
+> > >  * handle things such as livelock prevention or fairness of writeback among
+> > >  * inodes. This function can be called only by flusher thread - noone else
+> > >  * processes all inodes in writeback lists and requeueing inodes behind flusher
+> > >  * thread's back can have unexpected consequences.
+> > >  */
+> > >
+> > > Obviously this is very critical code both from a correctness and a performance
+> > > point of view, so I wanted to run this by the maintainers and folks who have
+> > > contributed to this code first.
 > >
-> > This adds the driver for the MediaTek STAR Ethernet MAC currently used
-> > on the MT8* SoC family. For now we only support full-duplex.
->
-> MT85** SoC family, AFAIU it's not used on MT81** devices. Correct?
->
+> > Sadly, the fix won't be so easy. The main problem with calling
+> > requeue_inode() from writeback_single_inode() is that if there's parallel
+> > sync(2) call, inode->i_io_list is used to track all inodes that need writing
+> > before sync(2) can complete. So requeueing inodes in parallel while sync(2)
+> > runs can result in breaking data integrity guarantees of it.
+> 
+> Ah, makes sense.
+> 
+> > But I agree
+> > we need to find some mechanism to safely move inode to appropriate dirty
+> > list reasonably quickly.
+> >
+> > Probably I'd add an inode state flag telling that inode is queued for
+> > writeback by flush worker and we won't touch dirty lists in that case,
+> > otherwise we are safe to update current writeback list as needed. I'll work
+> > on fixing this as when I was reading the code I've noticed there are other
+> > quirks in the code as well. Thanks for the report!
+> 
+> Thanks! While looking at the code I also saw some other paths that
+> appeared to be racy, though I haven't worked them out in detail to
+> confirm that - the locking around the inode and writeback lists is
+> tricky. What's the best way to follow up on those? Happy to post them
+> to this same thread after I spend a bit more time looking at the code.
 
-It's used on MT81**, MT83** and MT85**. What's wrong with the
-description anyway?
+Sure, if you are aware some some other problems, just write them to this
+thread. FWIW stuff that I've found so far:
 
-Bart
+1) __I_DIRTY_TIME_EXPIRED setting in move_expired_inodes() can get lost as
+there are other places doing RMW modifications of inode->i_state.
+
+2) sync(2) is prone to livelocks as when we queue inodes from b_dirty_time
+list, we don't take dirtied_when into account (and that's the only thing
+that makes sure aggressive dirtier cannot livelock sync).
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
