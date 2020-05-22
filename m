@@ -2,150 +2,144 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3FCC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E15FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6E8206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8D8206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:17:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DODxib5K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXcmYo7X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730956AbgEVTPP (ORCPT
+        id S1730961AbgEVTRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730840AbgEVTPO (ORCPT
+        Fri, 22 May 2020 15:17:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24361 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730840AbgEVTRX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:15:14 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3549C061A0E;
-        Fri, 22 May 2020 12:15:13 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id s198so10225376oie.6;
-        Fri, 22 May 2020 12:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hVx1XifLiqzcR3aQze/vFy6FED+f9dHS5bmNRNU3BI4=;
-        b=DODxib5KAH/Nd+AyiGl825EhHvcG4yhTievh7rjSrX3My7cKppuNLNm8NxaL3YwXot
-         T/MOQsMI0rDLqClT+6RoK8ZpEIAqzowtQSPxfuBHtkixZbrXKvtz4bAB0LsmB9CPJdPe
-         PSiPJbv/0CXYjS9HuKP29lklEtuQSIP4enu9s40ncQUNJfhEmPoAldw0XuGYYUwtT0kJ
-         C/ZevB8jaweU1tyRwD52p556RsTJHJP3t/vtIFDyF0MmO7YyQpIWkgOMUhuD/giJJzQq
-         YQCn73IsOX8xTjpodE9srWBXvJxmALphyESoL6hMrk4kNeewgof8srdZWBrrmb909EBK
-         t3kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hVx1XifLiqzcR3aQze/vFy6FED+f9dHS5bmNRNU3BI4=;
-        b=G9cBUvcr5d1+oDOJATPZKdvUuDvhC7O4KPhir6kDW8+u4SLl+DU1dK/NET1pu8CHKg
-         o+aHfSkgGnjx+qA5KHyjdwHMVsVlCBTyGDod20h920qK3tTkw+HxBX4+4XfO3raVbGtO
-         XJGa+r0rzlCsk/RmBsmQbgmVIowfKHYgR8x34ixM+tvnX8yTOyFyd96Cqpmz6of17bns
-         9m88lftVAmXxJbjCIM3PosRy0Qcjd74ZRfvIsl0EDyP1vWsjZjt7SLoSGLSri3AInvqq
-         Ort+DQ0zMUiR30te0DNsZXjrbTChF4jVgHMUn6LR0HoK8989qE5YOqvLlrurZ4/QgYiy
-         Ne5A==
-X-Gm-Message-State: AOAM533dsFlP3GJ2vprbxyGkLC+JRM0SAUmv1KyZRJDzfdVwIDgpVzIj
-        KhL3z1nOWUX+ZHHo3f1e7c/hMR0XOny7+YM3RUY=
-X-Google-Smtp-Source: ABdhPJw6Z5oNxrJWWe2Z/VJ2dyoZ1svG+k7EHt8Gg0jkoo++Q6jrBStOvw/KaCbC6YON1Bc8ZAZfRDt4pi6Pp4vKXfo=
-X-Received: by 2002:aca:f550:: with SMTP id t77mr3774172oih.8.1590174913262;
- Fri, 22 May 2020 12:15:13 -0700 (PDT)
+        Fri, 22 May 2020 15:17:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590175041;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Jx7M5hh5OlPJaLkcPE2uUud79NeL6y2HrKLpO8B3VK0=;
+        b=EXcmYo7XKI9xFHruCALmxH3ZbNnsNL3XIekVhFT31sfggLrZUJ+dNWAwjyoipCVT8WENoV
+        38Tpq9hFU+imQk2Ws3VnSL1P4L2SQISfYplsu6u8RwBporRVl8FT4rVUCQaNHprLVtvdek
+        lx4guVW2//QySe9uzG7pbHUl9JZ1gJk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-DkHHKDiBPry1-5yCOZuL_w-1; Fri, 22 May 2020 15:17:16 -0400
+X-MC-Unique: DkHHKDiBPry1-5yCOZuL_w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B158474;
+        Fri, 22 May 2020 19:17:15 +0000 (UTC)
+Received: from gimli.home (ovpn-114-203.phx2.redhat.com [10.3.114.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A0BAC6C77E;
+        Fri, 22 May 2020 19:17:09 +0000 (UTC)
+Subject: [PATCH v3 0/3] vfio-pci: Block user access to disabled device MMIO
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com, jgg@ziepe.ca,
+        peterx@redhat.com, cai@lca.pw
+Date:   Fri, 22 May 2020 13:17:09 -0600
+Message-ID: <159017449210.18853.15037950701494323009.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200515171031.GB19423@ninjato> <CA+V-a8t6rPs4s8uMCpBQEAUvwsVn7Cte-vX3z2atWRhy_RFLQw@mail.gmail.com>
- <20200518092601.GA3268@ninjato> <CAMuHMdVWe1EEAtP64VW+0zXNingM1LiENv_Rfz5qTQ+C0dtGSw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVWe1EEAtP64VW+0zXNingM1LiENv_Rfz5qTQ+C0dtGSw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 22 May 2020 20:14:45 +0100
-Message-ID: <CA+V-a8tVx6D8Vh=rYD2=Z-14GAW0puo009FtjYM++sw8PAtJug@mail.gmail.com>
-Subject: Re: [PATCH 03/17] ARM: dts: r8a7742: Add I2C and IIC support
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
+v3:
 
-On Mon, May 18, 2020 at 11:10 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Wolfram,
->
-> On Mon, May 18, 2020 at 11:26 AM Wolfram Sang
-> <wsa+renesas@sang-engineering.com> wrote:
-> > > > However, both versions (with and without automatic transmission) are
-> > > > described with the same "renesas,iic-r8a7742" compatible. Is it possible
-> > > > to detect the reduced variant at runtime somehow?
-> > > >
-> > > I couldn't find anything the manual that would be useful to detect at runtime.
->
-> Hence if we really need that (see below), we need a quirk based on compatible
-> value + base address.
->
-> > > > My concern is that the peculiarity of this SoC might be forgotten if we
-> > > > describe it like this and ever add "automatic transmissions" somewhen.
-> > > >
-> > > Agreed.
-> >
-> > Well, I guess reading from a register which is supposed to not be there
-> > on the modified IP core is too hackish.
->
-> According to the Hardware User's Manual Rev. 1.00, the registers do exist
-> on all RZ/G1, except for RZ/G1E (see below).
->
->    "(automatic transmission can be used as a hardware function, but this is
->     not meaningful for actual use cases)."
->
-> (whatever that comment may mean?)
->
-> > Leaves us with a seperate compatible entry for it?
->
-> On R-Car E3 and RZ/G2E, which have a single IIC instance, we
-> handled that by:
->
->         The r8a77990 (R-Car E3) and r8a774c0 (RZ/G2E)
->         controllers are not considered compatible with
->         "renesas,rcar-gen3-iic" or "renesas,rmobile-iic"
->         due to the absence of automatic transmission registers.
->
-> On R-Car E2 and RZ/G1E, we forgot, and used both SoC-specific and
-> family-specific compatible values.
->
-What are your thoughts on the above.
+The memory_lock semaphore is only held in the MSI-X path for callouts
+to functions that may access MSI-X MMIO space of the device, this
+should resolve the circular locking dependency reported by Qian
+(re-testing very much appreciated).  I've also incorporated the
+pci_map_rom() and pci_unmap_rom() calls under the memory_lock.  Commit
+0cfd027be1d6 ("vfio_pci: Enable memory accesses before calling
+pci_map_rom") made sure memory was enabled on the info path, but did
+not provide locking to protect that state.  The r/w path of the BAR
+access is expanded to include ROM mapping/unmapping.  Unless there
+are objections, I'll plan to drop v2 from my next branch and replace
+it with this.  Thanks,
 
-Cheers,
---Prabhakar
+Alex
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+v2:
+
+Locking in 3/ is substantially changed to avoid the retry scenario
+within the fault handler, therefore a caller who does not allow retry
+will no longer receive a SIGBUS on contention.  IOMMU invalidations
+are still not included here, I expect that will be a future follow-on
+change as we're not fundamentally changing that issue in this series.
+The 'add to vma list only on fault' behavior is also still included
+here, per the discussion I think it's still a valid approach and has
+some advantages, particularly in a VM scenario where we potentially
+defer the mapping until the MMIO BAR is actually DMA mapped into the
+VM address space (or the guest driver actually accesses the device
+if that DMA mapping is eliminated at some point).  Further discussion
+and review appreciated.  Thanks,
+
+Alex
+
+v1:
+
+Add tracking of the device memory enable bit and block/fault accesses
+to device MMIO space while disabled.  This provides synchronous fault
+handling for CPU accesses to the device and prevents the user from
+triggering platform level error handling present on some systems.
+Device reset and MSI-X vector table accesses are also included such
+that access is blocked across reset and vector table accesses do not
+depend on the user configuration of the device.
+
+This is based on the vfio for-linus branch currently in next, making
+use of follow_pfn() in vaddr_get_pfn() and therefore requiring patch
+1/ to force the user fault in the case that a PFNMAP vma might be
+DMA mapped before user access.  Further PFNMAP iommu invalidation
+tracking is not yet included here.
+
+As noted in the comments, I'm copying quite a bit of the logic from
+rdma code for performing the zap_vma_ptes() calls and I'm also
+attempting to resolve lock ordering issues in the fault handler to
+lockdep's satisfaction.  I appreciate extra eyes on these sections in
+particular.
+
+I expect this to be functionally equivalent for any well behaved
+userspace driver, but obviously there is a potential for the user to
+get -EIO or SIGBUS on device access.  The device is provided to the
+user enabled and device resets will restore the command register, so
+by my evaluation a user would need to explicitly disable the memory
+enable bit to trigger these faults.  We could potentially remap vmas
+to a zero page rather than SIGBUS if we experience regressions, but
+without known code requiring that, SIGBUS seems the appropriate
+response to this condition.  Thanks,
+
+Alex
+
+---
+
+Alex Williamson (3):
+      vfio/type1: Support faulting PFNMAP vmas
+      vfio-pci: Fault mmaps to enable vma tracking
+      vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+
+
+ drivers/vfio/pci/vfio_pci.c         |  349 ++++++++++++++++++++++++++++++++---
+ drivers/vfio/pci/vfio_pci_config.c  |   36 +++-
+ drivers/vfio/pci/vfio_pci_intrs.c   |   14 +
+ drivers/vfio/pci/vfio_pci_private.h |   15 ++
+ drivers/vfio/pci/vfio_pci_rdwr.c    |   24 ++
+ drivers/vfio/vfio_iommu_type1.c     |   36 +++-
+ 6 files changed, 435 insertions(+), 39 deletions(-)
+
