@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97343221FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5796B221FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159240;
-	bh=rh/iTIyXUgQYbWqo2GeJdWBSVP/4pOsnGFMjLcnxaoE=;
+	s=default; t=1590159248;
+	bh=G02uOQXZHAtlp5iiuYiQJAEfyrr+0VCf29HFdP4vK7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q8MmLuHJMx8pmqPIgALMoZUqb8CVsjAGRRwZkvUNrkrrh+bRdd/6TosgSPVx3KCWu
-	 OH2wT46lzPRntxeEPaExcQeD2fEdLb/oJLrKZO+RmS7u9xqiXlcFV6Qd5XY7d/SVwS
-	 bkSOCpdqHum5EcBRW8fAAZ2Wcwp2MdAVfy6P2AzE=
+	b=VhvcYcyhvfIyLiK2Wbwb2bGP7VbxlnO4QeA1Dr93ve2eJfrCG5cGfGZEyEwyifZ2C
+	 3oduAf2vuCB9XAx4qU7QTvz2k4gVy2xL1WxBR2B0aICZEYFvmkZEaXkFjtZo+H/s4f
+	 dHKyY9y4mTCI+X8K3Jpu0BcLxGsCZfLgE8KYVmA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731327AbgEVOx7 (ORCPT
+        id S1730963AbgEVOyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:53:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53618 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731077AbgEVOvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:41 -0400
+        id S1731063AbgEVOvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2495223E0;
-        Fri, 22 May 2020 14:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B342145D;
+        Fri, 22 May 2020 14:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159100;
-        bh=rh/iTIyXUgQYbWqo2GeJdWBSVP/4pOsnGFMjLcnxaoE=;
+        s=default; t=1590159098;
+        bh=G02uOQXZHAtlp5iiuYiQJAEfyrr+0VCf29HFdP4vK7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0reXHiZ5GluEyQjAsibMwJXwVLkwkET2Twjfp/M7CtY3Pi66+iEidoZQodSUnMjSm
-         Eh+BmgHw8yBHeRVh0nYO2Sspy/l5cg41wcg29hf65m7j19Q4ky/bIsfgKcEOn/r/pJ
-         rP6vkCehNbCVw6M8c/aL+BbYu2dt5W8v54hb7+5A=
+        b=oH/g/x0F+9xXU5KDbvawZAJ4G6qhEINOOGgkbzRdOYoHFM6rGoqOB6etG2ko1HISJ
+         J/G3LMkWNAB51UDDaaph2OAw8nFyQqA1yLIbjtA0jfvVl9rSYXM5iYJx2ud2ZaexBU
+         AAo5zp5DOEWpHQX/J/vepqVU82hxs/ZiTYl1S5t0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Coverity <scan-admin@coverity.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.19 18/19] cifs: Fix null pointer check in cifs_read
-Date:   Fri, 22 May 2020 10:51:19 -0400
-Message-Id: <20200522145120.434921-18-sashal@kernel.org>
+Cc:     "Denis V. Lunev" <den@openvz.org>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/19] IB/i40iw: Remove bogus call to netdev_master_upper_dev_get()
+Date:   Fri, 22 May 2020 10:51:17 -0400
+Message-Id: <20200522145120.434921-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145120.434921-1-sashal@kernel.org>
 References: <20200522145120.434921-1-sashal@kernel.org>
@@ -61,34 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: "Denis V. Lunev" <den@openvz.org>
 
-[ Upstream commit 9bd21d4b1a767c3abebec203342f3820dcb84662 ]
+[ Upstream commit 856ec7f64688387b100b7083cdf480ce3ac41227 ]
 
-Coverity scan noted a redundant null check
+Local variable netdev is not used in these calls.
 
-Coverity-id: 728517
-Reported-by: Coverity <scan-admin@coverity.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Shyam Prasad N <nspmangalore@gmail.com>
+It should be noted, that this change is required to work in bonded mode.
+Otherwise we would get the following assert:
+
+ "RTNL: assertion failed at net/core/dev.c (5665)"
+
+With the calltrace as follows:
+	dump_stack+0x19/0x1b
+	netdev_master_upper_dev_get+0x61/0x70
+	i40iw_addr_resolve_neigh+0x1e8/0x220
+	i40iw_make_cm_node+0x296/0x700
+	? i40iw_find_listener.isra.10+0xcc/0x110
+	i40iw_receive_ilq+0x3d4/0x810
+	i40iw_puda_poll_completion+0x341/0x420
+	i40iw_process_ceq+0xa5/0x280
+	i40iw_ceq_dpc+0x1e/0x40
+	tasklet_action+0x83/0x140
+	__do_softirq+0x125/0x2bb
+	call_softirq+0x1c/0x30
+	do_softirq+0x65/0xa0
+	irq_exit+0x105/0x110
+	do_IRQ+0x56/0xf0
+	common_interrupt+0x16a/0x16a
+	? cpuidle_enter_state+0x57/0xd0
+	cpuidle_idle_call+0xde/0x230
+	arch_cpu_idle+0xe/0xc0
+	cpu_startup_entry+0x14a/0x1e0
+	start_secondary+0x1f7/0x270
+	start_cpu+0x5/0x14
+
+Link: https://lore.kernel.org/r/20200428131511.11049-1-den@openvz.org
+Signed-off-by: Denis V. Lunev <den@openvz.org>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/i40iw/i40iw_cm.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index cfb0d91289ec..128cbd69911b 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -3532,7 +3532,7 @@ cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
- 			 * than it negotiated since it will refuse the read
- 			 * then.
- 			 */
--			if ((tcon->ses) && !(tcon->ses->capabilities &
-+			if (!(tcon->ses->capabilities &
- 				tcon->ses->server->vals->cap_large_files)) {
- 				current_read_size = min_t(uint,
- 					current_read_size, CIFSMaxBufSize);
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index 771eb6bd0785..4321b9e3dbb4 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -1984,7 +1984,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
+ 	struct rtable *rt;
+ 	struct neighbour *neigh;
+ 	int rc = arpindex;
+-	struct net_device *netdev = iwdev->netdev;
+ 	__be32 dst_ipaddr = htonl(dst_ip);
+ 	__be32 src_ipaddr = htonl(src_ip);
+ 
+@@ -1994,9 +1993,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
+ 		return rc;
+ 	}
+ 
+-	if (netif_is_bond_slave(netdev))
+-		netdev = netdev_master_upper_dev_get(netdev);
+-
+ 	neigh = dst_neigh_lookup(&rt->dst, &dst_ipaddr);
+ 
+ 	rcu_read_lock();
+@@ -2062,7 +2058,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
+ {
+ 	struct neighbour *neigh;
+ 	int rc = arpindex;
+-	struct net_device *netdev = iwdev->netdev;
+ 	struct dst_entry *dst;
+ 	struct sockaddr_in6 dst_addr;
+ 	struct sockaddr_in6 src_addr;
+@@ -2083,9 +2078,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
+ 		return rc;
+ 	}
+ 
+-	if (netif_is_bond_slave(netdev))
+-		netdev = netdev_master_upper_dev_get(netdev);
+-
+ 	neigh = dst_neigh_lookup(dst, dst_addr.sin6_addr.in6_u.u6_addr32);
+ 
+ 	rcu_read_lock();
 -- 
 2.25.1
 
