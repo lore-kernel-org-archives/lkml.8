@@ -2,158 +2,126 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF32CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE782065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gZG3x5VZ"
+	by mail.kernel.org (Postfix) with ESMTP id AEE332065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgEVKqF (ORCPT
+        id S1729166AbgEVKrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:46:05 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34826 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbgEVKqF (ORCPT
+        Fri, 22 May 2020 06:47:01 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30112 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728606AbgEVKrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:46:05 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MAjcHd017015;
-        Fri, 22 May 2020 05:45:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590144338;
-        bh=+ZG6P8BF3dJ9QHRvqtMY+fgKzn83Sk8LyDmqXrBTqds=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=gZG3x5VZ9tES5/HMESW0XZnj+Gjnop5Bkkzsqrh5ftpSGzE4b//BXjEmxHjCxwZRp
-         MYdmEh8a+w5hDkWhmBRW3VmWA9gqKS5UD9RwFKQYFrZl/b8NXFki0AfeZ83Nqb7OBv
-         KETO8hkfXGbgdvmch/dSPK1FaA/Hdf7a+E/shLOM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MAjcK1091662;
-        Fri, 22 May 2020 05:45:38 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 05:45:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 05:45:37 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MAjbIc013302;
-        Fri, 22 May 2020 05:45:37 -0500
-Date:   Fri, 22 May 2020 16:15:36 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     <masonccyang@mxic.com.tw>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Mark Brown <broonie@kernel.org>,
+        Fri, 22 May 2020 06:47:00 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04MAkjCC023175;
+        Fri, 22 May 2020 06:46:45 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 312a17e5wg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 06:46:45 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04MAki6W064254
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 22 May 2020 06:46:44 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Fri, 22 May
+ 2020 06:46:43 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 22 May 2020 06:46:43 -0400
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04MAkaQq011641;
+        Fri, 22 May 2020 06:46:39 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <juliensu@mxic.com.tw>
-Subject: Re: [PATCH v5 01/19] spi: spi-mem: allow specifying whether an op is
- DTR or not
-Message-ID: <20200522104536.4ikmhiaxg7keahdp@ti.com>
-References: <20200519142642.24131-1-p.yadav@ti.com>
- <20200519142642.24131-2-p.yadav@ti.com>
- <OF1FE36FB9.9FBEFCD6-ON4825856F.002D767F-4825856F.002E7D42@mxic.com.tw>
+        <linux-stm32@st-md-mailman.stormreply.com>
+CC:     <jic23@kernel.org>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linus.walleij@linaro.org>,
+        <lorenzo.bianconi83@gmail.com>, <songqiang1304521@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 2/3] iio: adc: at91-sama5d2_adc: remove predisable/postenable hooks
+Date:   Fri, 22 May 2020 13:46:31 +0300
+Message-ID: <20200522104632.517470-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200522104632.517470-1-alexandru.ardelean@analog.com>
+References: <20200522104632.517470-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <OF1FE36FB9.9FBEFCD6-ON4825856F.002D767F-4825856F.002E7D42@mxic.com.tw>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_05:2020-05-22,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ priorityscore=1501 mlxlogscore=870 spamscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 cotscore=-2147483648
+ suspectscore=0 adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005220088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Seems like I forgot to send this and it stayed in my Drafts folder. 
-Anyway, fixed in v7]
+This should be squashed into the first patch, but it's the more peculiar of
+the changes.
+I am not sure whether this is correct. The touchscreen channels shouldn't
+be enabled by the IIO framework. So, we may need a different way to handle
+those if needed.
 
-Hi Mason,
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/adc/at91-sama5d2_adc.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
-On 21/05/20 04:27PM, masonccyang@mxic.com.tw wrote:
-> 
-> Hi Pratyush,
-> 
-> Given cmd.nbytes a initial value & check it !
-> 
-> > 
-> > [PATCH v5 01/19] spi: spi-mem: allow specifying whether an op is DTR or 
-> not
-> > 
-> > Each phase is given a separate 'dtr' field so mixed protocols like
-> > 4S-4D-4D can be supported.
-> > 
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > ---
-> >  drivers/spi/spi-mem.c       | 3 +++
-> >  include/linux/spi/spi-mem.h | 8 ++++++++
-> >  2 files changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-> > index 9a86cc27fcc0..93e255287ab9 100644
-> > --- a/drivers/spi/spi-mem.c
-> > +++ b/drivers/spi/spi-mem.c
-> > @@ -156,6 +156,9 @@ bool spi_mem_default_supports_op(struct spi_mem 
-> *mem,
-> >                 op->data.dir == SPI_MEM_DATA_OUT))
-> >        return false;
-> > 
-> > +   if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
-> > +      return false;
-> > +
-> 
-> +       if (op->cmd.nbytes != 1)
-> +               return false;
-
-Good catch. Will fix.
+diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
+index 9abbbdcc7420..f71071096392 100644
+--- a/drivers/iio/adc/at91-sama5d2_adc.c
++++ b/drivers/iio/adc/at91-sama5d2_adc.c
+@@ -937,14 +937,6 @@ static int at91_adc_buffer_preenable(struct iio_dev *indio_dev)
+ 	return 0;
+ }
  
-> >     return true;
-> >  }
-> >  EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
-> 
-> 
->  static int spi_mem_check_op(const struct spi_mem_op *op)
->  {
-> -                if (!op->cmd.buswidth)
-> +                if (!op->cmd.buswidth || op->cmd.nbytes < 1 || 
-> op->cmd.nbytes > 2)
->                                  return -EINVAL;
-
-Will fix.
+-static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
+-{
+-	if (at91_adc_current_chan_is_touch(indio_dev))
+-		return 0;
+-
+-	return iio_triggered_buffer_postenable(indio_dev);
+-}
+-
+ static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
+ {
+ 	struct at91_adc_state *st = iio_priv(indio_dev);
+@@ -995,19 +987,9 @@ static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
+ 	return 0;
+ }
  
-> 
-> > diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-> > index af9ff2f0f1b2..e3dcb956bf61 100644
-> > --- a/include/linux/spi/spi-mem.h
-> > +++ b/include/linux/spi/spi-mem.h
-> 
-> #define SPI_MEM_OP_CMD(__opcode, __buswidth)                    \
->          {                                                       \
->                  .buswidth = __buswidth,                         \
->                  .opcode = __opcode,                             \
-> +                .nbytes = 1,                                    \
->          }
-
-Will fix. Thanks.
-
+-static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
+-{
+-	if (at91_adc_current_chan_is_touch(indio_dev))
+-		return 0;
+-
+-	return iio_triggered_buffer_predisable(indio_dev);
+-}
+-
+ static const struct iio_buffer_setup_ops at91_buffer_setup_ops = {
+ 	.preenable = &at91_adc_buffer_preenable,
+ 	.postdisable = &at91_adc_buffer_postdisable,
+-	.postenable = &at91_adc_buffer_postenable,
+-	.predisable = &at91_adc_buffer_predisable,
+ };
+ 
+ static struct iio_trigger *at91_adc_allocate_trigger(struct iio_dev *indio,
 -- 
-Regards,
-Pratyush Yadav
-Texas Instruments India
+2.25.1
+
