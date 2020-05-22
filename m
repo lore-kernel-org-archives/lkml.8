@@ -2,106 +2,126 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8CAD2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61843204EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590158718;
-	bh=jgtLSxW/rFemUDRGqeFehVEu0MdxG9OUPhnEvnFbKXo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vrNE+dNQMi7UAQ3EHSOqqfmoP2OQU3rQsx2OPbXzPON9X63UfA84diQXlqa7xcSdM
-	 GY3zzgV96xCWeVmhLhWAwEJMqwZTj6eJT14/BwHHb4fbfBULMc71EjiN9aTQgLRhC8
-	 D1tUFFmBYZEqbhYsduQvIGHp0cvNOxpbIMMAz6ck=
+	s=default; t=1590158731;
+	bh=JJFT+F3Ml0IsJnlUkyWUziZpN/+xTkSQfeqtW0Lv3ek=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sZg0ag9YPuVlXfQbEYXrP1SVbmZJ/hJ0MAexMym5cKo1H7iKUpaxb4V/TdbqulyGa
+	 3O29ETmC10+DGM+POxmmKZkFGBrQ9hGh+fgz1ogxlXs8vT6NBUWwHhUWrUCh74Wod8
+	 C62SvOIUZvyxrVBNRVW+WjEv+K9hWzs62w+3xM6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgEVOpS (ORCPT
+        id S1730188AbgEVOpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:45:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47562 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbgEVOpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:45:17 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729868AbgEVOpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:45:30 -0400
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9213204EF;
-        Fri, 22 May 2020 14:45:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2200621534;
+        Fri, 22 May 2020 14:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590158716;
-        bh=jgtLSxW/rFemUDRGqeFehVEu0MdxG9OUPhnEvnFbKXo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gfg74FKs4mhp0Qzzg9jCxDSD/GyytTIjGv6siWmpqnDJFXa2okumtbOmzNmz+zRIp
-         an1ToAw01OIlj3XAV2Q1zZ5lP4RCLYtL7fsG/NRIfagePkLDfPXqlqbeyObxr6V5Bs
-         n0bYQOZXUll0jLzVx7TZ012GMiKrng2FUTFfzjPs=
-Received: by pali.im (Postfix)
-        id DA32B51E; Fri, 22 May 2020 16:45:13 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        linux-kernel@vger.kernel.org, ath10k@lists.infradead.org,
-        b43-dev@lists.infradead.org, brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, libertas-dev@lists.infradead.org,
-        linux-wireless@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH 00/11] mmc: sdio: Move SDIO IDs from drivers to common include file
-Date:   Fri, 22 May 2020 16:44:01 +0200
-Message-Id: <20200522144412.19712-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        s=default; t=1590158729;
+        bh=JJFT+F3Ml0IsJnlUkyWUziZpN/+xTkSQfeqtW0Lv3ek=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Lp8ESUFXUWue5ssidflAQSNbp4QO3jmmq4j/PF1vFWw9ND1ZXlOwpk8i+ej8YykFl
+         ixZFC0MY0umf6tR+wHBwpzAjvnrPvsKm9GpIQiS0qcwmpC0vYPK/qsc7pyZipiC5Nd
+         F+Kmc7e0dBlG73Pc5Neja6bc3n6O76iI8eqSyXLc=
+Received: by mail-io1-f42.google.com with SMTP id d7so11608522ioq.5;
+        Fri, 22 May 2020 07:45:29 -0700 (PDT)
+X-Gm-Message-State: AOAM532dn+nPJCJlKeT3eMpE/otlRicunC91oM3Q7xoEhqCTko+ZdSzc
+        ZQ+vmxxEdHgytHqt2nflmv2YOvG3nmjJslx2oww=
+X-Google-Smtp-Source: ABdhPJyhlLvFQ0WQkr3hDN61INpdGsheflZGjozbDLpURWMljOyFHLzvNSXk8utBm7+M4D0JYgdLDCCOjonAHHDaNik=
+X-Received: by 2002:a05:6602:2dcd:: with SMTP id l13mr3392593iow.203.1590158728428;
+ Fri, 22 May 2020 07:45:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200517125754.8934-1-ardb@kernel.org> <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
+ <20200522134004.GF28750@zn.tnic> <CAMj1kXHogO=3wAyZPi9WtHP9++N5KH6OjNgY_CQ_o8nZJ5jjVA@mail.gmail.com>
+ <87mu60rrq2.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87mu60rrq2.fsf@nanos.tec.linutronix.de>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 22 May 2020 16:45:16 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFZhq09MWCMTuN07WqA=PEKtJf5i7feO5pTPRObK-NeQQ@mail.gmail.com>
+Message-ID: <CAMj1kXFZhq09MWCMTuN07WqA=PEKtJf5i7feO5pTPRObK-NeQQ@mail.gmail.com>
+Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Thiel <b.thiel@posteo.de>,
+        Dave Young <dyoung@redhat.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Lenny Szubowicz <lszubowi@redhat.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Loic Yhuel <loic.yhuel@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most SDIO IDs are defined in the common include file linux/mmc/sdio_ids.h.
-But some drivers define IDs locally or do not use existing macros from the
-common include file.
+On Fri, 22 May 2020 at 16:04, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Ard,
+>
+> Ard Biesheuvel <ardb@kernel.org> writes:
+> > On Fri, 22 May 2020 at 15:40, Borislav Petkov <bp@alien8.de> wrote:
+> >>
+> >> On Fri, May 22, 2020 at 03:06:20PM +0200, Ard Biesheuvel wrote:
+> >> > Ping?
+> >>
+> >> Did you want to make your tags unique from the next pull request onwards
+> >> and I were supposed to pull this one as is?
+> >
+> > What usually happens is that Ingo applies the patches piecemeal,
+> > ignoring the tag altogether, so without any coordination between you
+> > as x86 maintainers or communication back to me, that is what i was
+> > expecting to happen this time as well.
+> >
+> > Note that I have another PR pending since two weeks ago [0].
+> >
+> > So if you want to start dealing with the EFI trees in a different way
+> > from now on, that is perfectly fine with me, but please align with
+> > Ingo and Thomas first.
+>
+> /me dons managerial hat
+>
+> Yes, please. Your pull request really do not need any special handling.
+>
+> Please add a unique signed tag to each pull request and stick the
+> description, e.g.
+>
+>  " EFI fixes for v5.7-rcX:
+>    - fix EFI framebuffer earlycon for wide fonts
+>    - avoid filling screen_info with garbage...."
+>
+> into the tag which gives us the merge commit message automagically.
+>
 
-This patch series fixes above inconsistency. It defines missing macro names
-and moves all remaining SDIO IDs from drivers to the common include file.
-Also some macro names are changed to follow existing naming conventions.
+Sure.
 
-Pali Rohár (11):
-  mmc: sdio: Fix macro name for Marvell device with ID 0x9134
-  mmc: sdio: Change macro names for Marvell 8688 modules
-  mmc: sdio: Move SDIO IDs from mwifiex driver to common include file
-  mmc: sdio: Move SDIO IDs from btmrvl driver to common include file
-  mmc: sdio: Move SDIO IDs from btmtksdio driver to common include file
-  mmc: sdio: Move SDIO IDs from smssdio driver to common include file
-  mmc: sdio: Move SDIO IDs from ath6kl driver to common include file
-  mmc: sdio: Move SDIO IDs from ath10k driver to common include file
-  mmc: sdio: Move SDIO IDs from b43-sdio driver to common include file
-  mmc: sdio: Fix Cypress SDIO IDs macros in common include file
-  mmc: sdio: Sort all SDIO IDs in common include file
+In that case, please pull these changes from
 
- drivers/bluetooth/btmrvl_sdio.c               | 18 ++--
- drivers/bluetooth/btmtksdio.c                 |  4 +-
- drivers/media/mmc/siano/smssdio.c             | 10 +-
- drivers/mmc/core/quirks.h                     |  2 +-
- drivers/net/wireless/ath/ath10k/sdio.c        | 25 ++---
- drivers/net/wireless/ath/ath10k/sdio.h        |  8 --
- drivers/net/wireless/ath/ath6kl/hif.h         |  6 --
- drivers/net/wireless/ath/ath6kl/sdio.c        | 17 ++--
- drivers/net/wireless/broadcom/b43/sdio.c      |  4 +-
- .../broadcom/brcm80211/brcmfmac/bcmsdh.c      |  6 +-
- .../broadcom/brcm80211/brcmfmac/sdio.c        |  4 +-
- .../net/wireless/marvell/libertas/if_sdio.c   |  2 +-
- drivers/net/wireless/marvell/mwifiex/sdio.c   | 38 ++------
- include/linux/mmc/sdio_ids.h                  | 94 ++++++++++++++-----
- 14 files changed, 120 insertions(+), 118 deletions(-)
+efi-fixes-for-v5.7-rc6
 
--- 
-2.20.1
-
+instead, and disregard the PR for v5.8. I will respin that, include
+some patches that came in in the mean time, and tag it in the correct
+way before resending the PR.
