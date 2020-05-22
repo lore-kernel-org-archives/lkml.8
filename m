@@ -2,108 +2,69 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB97C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 101FF20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LLmYE0Oh"
+	by mail.kernel.org (Postfix) with ESMTP id 8FD52207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590165604;
+	bh=MjBa/l6oia2TyL/IpwVT69wtKveoOnkRp2gZw5hhoSc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=tC6hmqfHrfGGiquhfUzf0erMS6D121orns0zrzEmoeVosa8ZRxRYJVwsYUg8pmGs1
+	 V+CpQ6TAViH164klXoveNudBIhalWm1bk4AxGxPB2JkKubCwyy00u5Oq3uDX2IZYuL
+	 2nwI/+JVB4x+dN/iA/DnpScugwMHHlZez0qhTfTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730689AbgEVQji (ORCPT
+        id S1730702AbgEVQkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:39:38 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46426 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbgEVQji (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:39:38 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MGdYZ1106602;
-        Fri, 22 May 2020 11:39:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590165574;
-        bh=APo4vDngk4Q9rVcnBFvh0IyPx3YjWm4XhtnBDdeitvc=;
-        h=From:To:CC:Subject:Date;
-        b=LLmYE0OhIM0pby07uWtKVh4Je99n4ZbkaHSOSZpt4ujYCrIow9jpGqfMlyK8nSLmM
-         B3X5hRcFeqP+dJWqmbdM+lRCCilySIAccCfv9iOTMdjaJn3kWtzXKqmGWeLt70umtR
-         REpK5+AR4P1Klc0gAn59P+cbbt4KUx0fzoaxXBw0=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MGdYhh063770;
-        Fri, 22 May 2020 11:39:34 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 11:39:34 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 11:39:34 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MGdXdi074553;
-        Fri, 22 May 2020 11:39:33 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH] net: ethernet: ti: cpsw: fix ASSERT_RTNL() warning during suspend
-Date:   Fri, 22 May 2020 19:39:31 +0300
-Message-ID: <20200522163931.29905-1-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 22 May 2020 12:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726762AbgEVQkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 12:40:03 -0400
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.7-5 tag
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590165602;
+        bh=MjBa/l6oia2TyL/IpwVT69wtKveoOnkRp2gZw5hhoSc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=wsT1Xh0RVq3Ungpv9NgofE+QKQxqgi0Kya+FuX71VLTv7K6P/qa3Ybv7ZG7bonzk6
+         eOr2f8iQPzHD+naGtxUpTz+IDtI3yFVb42zl8/DXzASTI/p897xxYZon9kvRqxT4Lc
+         +ZuNSxw9ejgOmXE/68pfZMUz8J67CtDNo7fquHqc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <87sgfsf4hs.fsf@mpe.ellerman.id.au>
+References: <87sgfsf4hs.fsf@mpe.ellerman.id.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87sgfsf4hs.fsf@mpe.ellerman.id.au>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+ tags/powerpc-5.7-5
+X-PR-Tracked-Commit-Id: 8659a0e0efdd975c73355dbc033f79ba3b31e82c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c8347bbf19f265c1bd254ca148f27caa71e77d61
+Message-Id: <159016560267.11923.6208335789291315259.pr-tracker-bot@kernel.org>
+Date:   Fri, 22 May 2020 16:40:02 +0000
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vlan_for_each() are required to be called with rtnl_lock taken, otherwise
-ASSERT_RTNL() warning will be triggered - which happens now during System
-resume from suspend:
-  cpsw_suspend()
-  |- cpsw_ndo_stop()
-    |- __hw_addr_ref_unsync_dev()
-      |- cpsw_purge_all_mc()
-         |- vlan_for_each()
-            |- ASSERT_RTNL();
+The pull request you sent on Sat, 23 May 2020 00:06:55 +1000:
 
-Hence, fix it by surrounding cpsw_ndo_stop() by rtnl_lock/unlock() calls.
+> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.7-5
 
-Fixes: 15180eca569b net: ethernet: ti: cpsw: fix vlan mcast
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c | 4 ++++
- 1 file changed, 4 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c8347bbf19f265c1bd254ca148f27caa71e77d61
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index c2c5bf87da01..ffeb8633e530 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1753,11 +1753,15 @@ static int cpsw_suspend(struct device *dev)
- 	struct cpsw_common *cpsw = dev_get_drvdata(dev);
- 	int i;
- 
-+	rtnl_lock();
-+
- 	for (i = 0; i < cpsw->data.slaves; i++)
- 		if (cpsw->slaves[i].ndev)
- 			if (netif_running(cpsw->slaves[i].ndev))
- 				cpsw_ndo_stop(cpsw->slaves[i].ndev);
- 
-+	rtnl_unlock();
-+
- 	/* Select sleep pin state */
- 	pinctrl_pm_select_sleep_state(dev);
- 
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
