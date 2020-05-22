@@ -2,102 +2,91 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DC0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E54206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3ABB20723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:45:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P6IvguSq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dIbc4hh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgEVLoJ (ORCPT
+        id S1729729AbgEVLpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728469AbgEVLoI (ORCPT
+        Fri, 22 May 2020 07:45:33 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:15206 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729204AbgEVLpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:44:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C36C061A0E;
-        Fri, 22 May 2020 04:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qixK0Ok5LjJzLtlIqZRWTn3BuaZ1Y97zRlOZ39Oq9js=; b=P6IvguSq9Yegz1CsStKaYYtLo/
-        1Nv8m8rx8orS0RpvYeRQSaGvjP+Qq6si7kfYhVUem1FPjF81j7+k9URLKD8jKdNcgG8CjiPSeJ1MO
-        AkQmBLr/GCusJWG39W44W7lbEJK673nVztf3VxcFwq+eBaybxhsrZNCmE9GEfnapBWVFcRehO9Qbo
-        /AdEbFB4DfiU5nvnQWS6Znpc5zeiPZe9vR+T1GlUlGN1+r73inTsPTMQPFptNRhfnPSV8zfM9uRUj
-        Ecg/Yn2mEZmNqX+mlMY9x+rmuiUkVe6u8sSGGRRfDvFBHFHyrNg5VhpzKurjTi8vA0WM7UZxa/ni0
-        e0CG+Njg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jc65d-0005yy-2M; Fri, 22 May 2020 11:43:49 +0000
-Date:   Fri, 22 May 2020 04:43:48 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     adobriyan@gmail.com, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        ebiederm@xmission.com, bernd.edlinger@hotmail.de,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] files: Use rcu lock to get the file
- structures for better performance
-Message-ID: <20200522114348.GL28818@bombadil.infradead.org>
-References: <20200521123835.70069-1-songmuchun@bytedance.com>
- <20200521164746.GD28818@bombadil.infradead.org>
- <CAMZfGtWn4xa-5-0rN2KJzUYioiOOUYX9BFcUDNZS85H11sYDEA@mail.gmail.com>
+        Fri, 22 May 2020 07:45:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590147931; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=y/tDLDxTaj/n3oOwTrmbLB4Bs+dfP08FE74B3sme6oo=; b=dIbc4hh7BMZ8xXK0mIv6Kj7XyGDJf8YdXLZoFr6T+Jj1sZy+9ZAO3uvzSpsTaQbvYeuy0A0H
+ /Z19MGqysAjCKlc+YAKl6O9Eu/FKzxb0M93LSNmZVgupvN+FL2H8+sxWT4fxjaFw3TG+awPz
+ pYWPY4MrX1zv9aiWApEThp2wl2Q=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec7bb4a.7fbc1b475b90-smtp-out-n03;
+ Fri, 22 May 2020 11:45:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 11212C433C6; Fri, 22 May 2020 11:45:14 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: manafm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 249C7C433C6;
+        Fri, 22 May 2020 11:45:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 249C7C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=manafm@codeaurora.org
+From:   Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Subject: [PATCH v3 0/2] Add cold interrupt support to tsens driver
+Date:   Fri, 22 May 2020 17:14:50 +0530
+Message-Id: <20200522114452.28647-1-manafm@codeaurora.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMZfGtWn4xa-5-0rN2KJzUYioiOOUYX9BFcUDNZS85H11sYDEA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 03:52:39PM +0800, Muchun Song wrote:
-> On Fri, May 22, 2020 at 12:47 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > @@ -160,14 +168,23 @@ static int proc_fd_link(struct dentry *dentry, struct path *path)
-> > >               unsigned int fd = proc_fd(d_inode(dentry));
-> > >               struct file *fd_file;
-> > >
-> > > -             spin_lock(&files->file_lock);
-> > > +             rcu_read_lock();
-> > > +again:
-> > >               fd_file = fcheck_files(files, fd);
-> > >               if (fd_file) {
-> > > +                     if (!get_file_rcu(fd_file)) {
-> > > +                             /*
-> > > +                              * we loop to catch the new file
-> > > +                              * (or NULL pointer).
-> > > +                              */
-> > > +                             goto again;
-> > > +                     }
-> > >                       *path = fd_file->f_path;
-> > >                       path_get(&fd_file->f_path);
-> > > +                     fput(fd_file);
-> > >                       ret = 0;
-> > >               }
-> > > -             spin_unlock(&files->file_lock);
-> > > +             rcu_read_unlock();
-> >
-> > Why is it an improvement to increment/decrement the refcount on the
-> > struct file here, rather than take/release the spinlock?
-> >
-> 
-> lock-free vs spinlock.
+The changes have dependency on merging tsens-common.c into tsens.c [1]
+to merge first.
 
-bananas vs oranges.
+Dependencies:
+[1] https://lkml.org/lkml/2020/4/29/1028
 
-How do you think refcounts work?  How do you think spinlocks work?
+Changes in v3:
+* Add cold interrupt support to tsens driver
+* Update cold interrupt support in yaml
 
-> Do you think spinlock would be better than the lock-free method?
-> Actually I prefer the rcu lock.
 
-Why?  You don't seem to understand the tradeoffs.
+*** BLURB HERE ***
+
+Manaf Meethalavalappu Pallikunhi (2):
+  drivers: thermal: tsens: Add cold interrupt support
+  dt-bindings: thermal: tsens: Add cold interrupt support in yaml
+
+ .../bindings/thermal/qcom-tsens.yaml          |  42 +++++++
+ drivers/thermal/qcom/tsens-v2.c               |   5 +
+ drivers/thermal/qcom/tsens.c                  | 112 +++++++++++++++++-
+ drivers/thermal/qcom/tsens.h                  |  11 ++
+ 4 files changed, 169 insertions(+), 1 deletion(-)
+
+-- 
+2.26.2
