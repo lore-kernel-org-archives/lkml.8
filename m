@@ -2,78 +2,216 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ADFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF457C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22A5D22226
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8738222211
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729929AbgEVONr (ORCPT
+        id S1730007AbgEVOSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:13:47 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:39538 "EHLO fornost.hmeau.com"
+        Fri, 22 May 2020 10:18:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:36348 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729399AbgEVONq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:13:46 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jc8QD-0008Fn-G8; Sat, 23 May 2020 00:13:14 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 23 May 2020 00:13:13 +1000
-Date:   Sat, 23 May 2020 00:13:13 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Nicolas Toromanoff <nicolas.toromanoff@st.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-crypto@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] STM32 CRC update
-Message-ID: <20200522141313.GA859@gondor.apana.org.au>
-References: <20200512141113.18972-1-nicolas.toromanoff@st.com>
+        id S1729399AbgEVOSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:18:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD068D6E;
+        Fri, 22 May 2020 07:18:30 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05A2A3F68F;
+        Fri, 22 May 2020 07:18:27 -0700 (PDT)
+Subject: Re: [RFC PATCH v12 07/11] psci: Add hypercall service for kvm ptp.
+To:     Jianyong Wu <jianyong.wu@arm.com>, netdev@vger.kernel.org,
+        yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        maz@kernel.org, richardcochran@gmail.com, Mark.Rutland@arm.com,
+        will@kernel.org, suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        Wei.Chen@arm.com, nd@arm.com
+References: <20200522083724.38182-1-jianyong.wu@arm.com>
+ <20200522083724.38182-8-jianyong.wu@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <87fce07b-d0f5-47b0-05ce-dd664ce53eec@arm.com>
+Date:   Fri, 22 May 2020 15:18:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512141113.18972-1-nicolas.toromanoff@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200522083724.38182-8-jianyong.wu@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 04:11:08PM +0200, Nicolas Toromanoff wrote:
-> This set of patches update the STM32 CRC driver.
-> It contains bug fix.
+On 22/05/2020 09:37, Jianyong Wu wrote:
+> ptp_kvm modules will get this service through smccc call.
+> The service offers real time and counter cycle of host for guest.
+> Also let caller determine which cycle of virtual counter or physical counter
+> to return.
 > 
-> First fixes issue if we enable STM32 CRC32 hardware accelerator with
-> ext4 (with metadata-chksum enable) and other fs that use same direct
-> access to update crc32 API without previous init.
-> Second fixes some issues raise by the extra self-test.
-> Third fixes wrong hw usage if there is multiple IP on the SOC.
-> Forth fixes "sleep while atomic" in tcrypt test, and some other places
-> (ext4)
-> Last fixes concurrent accesses. As state is saved in the hardware cell
-> and not in stack as other CRC32 drivers, we need to create atomic
-> section to protect concurrent CRC32 calculus.
+> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> ---
+>   include/linux/arm-smccc.h | 14 ++++++++++++
+>   virt/kvm/Kconfig          |  4 ++++
+>   virt/kvm/arm/hypercalls.c | 47 +++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 65 insertions(+)
 > 
-> This patch series applies to cryptodev/master.
-> 
-> Nicolas Toromanoff (5):
->   crypto: stm32/crc: fix ext4 chksum BUG_ON()
->   crypto: stm32/crc: fix run-time self test issue.
->   crypto: stm32/crc: fix multi-instance
->   crypto: stm32/crc: don't sleep in runtime pm
->   crypto: stm32/crc: protect from concurrent accesses
-> 
->  drivers/crypto/stm32/stm32-crc32.c | 230 ++++++++++++++++++++---------
->  1 file changed, 161 insertions(+), 69 deletions(-)
+> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+> index bdc0124a064a..badadc390809 100644
+> --- a/include/linux/arm-smccc.h
+> +++ b/include/linux/arm-smccc.h
+> @@ -94,6 +94,8 @@
+>   
+>   /* KVM "vendor specific" services */
+>   #define ARM_SMCCC_KVM_FUNC_FEATURES		0
+> +#define ARM_SMCCC_KVM_FUNC_KVM_PTP		1
+> +#define ARM_SMCCC_KVM_FUNC_KVM_PTP_PHY		2
+>   #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
+>   #define ARM_SMCCC_KVM_NUM_FUNCS			128
+>   
+> @@ -103,6 +105,18 @@
+>   			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
+>   			   ARM_SMCCC_KVM_FUNC_FEATURES)
+>   
+> +#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID				\
+> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
+> +			   ARM_SMCCC_SMC_32,				\
+> +			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
+> +			   ARM_SMCCC_KVM_FUNC_KVM_PTP)
+> +
+> +#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_PHY_FUNC_ID			\
+> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,				\
+> +			   ARM_SMCCC_SMC_32,				\
+> +			   ARM_SMCCC_OWNER_VENDOR_HYP,			\
+> +			   ARM_SMCCC_KVM_FUNC_KVM_PTP_PHY)
+> +
+>   #ifndef __ASSEMBLY__
+>   
+>   #include <linux/linkage.h>
+> diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+> index aad9284c043a..bf820811e815 100644
+> --- a/virt/kvm/Kconfig
+> +++ b/virt/kvm/Kconfig
+> @@ -60,3 +60,7 @@ config HAVE_KVM_VCPU_RUN_PID_CHANGE
+>   
+>   config HAVE_KVM_NO_POLL
+>          bool
+> +
+> +config ARM64_KVM_PTP_HOST
+> +       def_bool y
+> +       depends on ARM64 && KVM
+> diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
+> index db6dce3d0e23..c964122f8dae 100644
+> --- a/virt/kvm/arm/hypercalls.c
+> +++ b/virt/kvm/arm/hypercalls.c
+> @@ -3,6 +3,7 @@
+>   
+>   #include <linux/arm-smccc.h>
+>   #include <linux/kvm_host.h>
+> +#include <linux/clocksource_ids.h>
+>   
+>   #include <asm/kvm_emulate.h>
+>   
+> @@ -11,6 +12,10 @@
+>   
+>   int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+>   {
+> +#ifdef CONFIG_ARM64_KVM_PTP_HOST
+> +	struct system_time_snapshot systime_snapshot;
+> +	u64 cycles;
+> +#endif
+>   	u32 func_id = smccc_get_function(vcpu);
+>   	u32 val[4] = {SMCCC_RET_NOT_SUPPORTED};
+>   	u32 feature;
+> @@ -70,7 +75,49 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
+>   		break;
+>   	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
+>   		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
+> +
+> +#ifdef CONFIG_ARM64_KVM_PTP_HOST
+> +		val[0] |= BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP);
+> +#endif
+>   		break;
+> +
+> +#ifdef CONFIG_ARM64_KVM_PTP_HOST
+> +	/*
+> +	 * This serves virtual kvm_ptp.
+> +	 * Four values will be passed back.
+> +	 * reg0 stores high 32-bit host ktime;
+> +	 * reg1 stores low 32-bit host ktime;
+> +	 * reg2 stores high 32-bit difference of host cycles and cntvoff;
+> +	 * reg3 stores low 32-bit difference of host cycles and cntvoff.
+> +	 */
+> +	case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
+> +		/*
+> +		 * system time and counter value must captured in the same
+> +		 * time to keep consistency and precision.
+> +		 */
+> +		ktime_get_snapshot(&systime_snapshot);
+> +		if (systime_snapshot.cs_id != CSID_ARM_ARCH_COUNTER)
+> +			break;
+> +		val[0] = upper_32_bits(systime_snapshot.real);
+> +		val[1] = lower_32_bits(systime_snapshot.real);
+> +		/*
+> +		 * which of virtual counter or physical counter being
+> +		 * asked for is decided by the first argument.
+> +		 */
+> +		feature = smccc_get_arg1(vcpu);
+> +		switch (feature) {
+> +		case ARM_SMCCC_VENDOR_HYP_KVM_PTP_PHY_FUNC_ID:
+> +			cycles = systime_snapshot.cycles;
+> +			break;
+> +		default:
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+There's something a bit odd here.
+
+ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID and
+ARM_SMCCC_VENDOR_HYP_KVM_PTP_PHY_FUNC_ID look like they should be names 
+of separate (top-level) functions, but actually the _PHY_ one is a 
+parameter for the first. If the intention is to have a parameter then it 
+would be better to pick a better name for the _PHY_ define and not 
+define it using ARM_SMCCC_CALL_VAL.
+
+Second the use of "default:" means that there's no possibility to later 
+extend this interface for more clocks if needed in the future.
+
+Alternatively you could indeed implement as two top-level functions and 
+change this to a...
+
+	switch (func_id)
+
+... along with multiple case labels as the functions would obviously be 
+mostly the same.
+
+Also a minor style issue - you might want to consider splitting this 
+into it's own function.
+
+Finally I do think it would be useful to add some documentation of the 
+new SMC calls. It would be easier to review the interface based on that 
+documentation rather than trying to reverse-engineer the interface from 
+the code.
+
+Steve
+
+> +			cycles = systime_snapshot.cycles -
+> +				 vcpu_vtimer(vcpu)->cntvoff;
+> +		}
+> +		val[2] = upper_32_bits(cycles);
+> +		val[3] = lower_32_bits(cycles);
+> +		break;
+> +#endif
+> +
+>   	default:
+>   		return kvm_psci_call(vcpu);
+>   	}
+> 
+
