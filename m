@@ -2,151 +2,84 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0978C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8607B206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEC7206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X8Mj+ZUl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCMCJEh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbgEVS1h (ORCPT
+        id S1730903AbgEVS21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:27:37 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45600 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgEVS1g (ORCPT
+        Fri, 22 May 2020 14:28:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21479 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730829AbgEVS20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:27:36 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MIRSlo010672;
-        Fri, 22 May 2020 13:27:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590172048;
-        bh=Boi7UZaC0oSRkkkkdn9ayp2vIPyCQV8M/U0d7Ze06ug=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=X8Mj+ZUl7Jrge0j5RTe2sUpAvCifVeR1Ji7qpmym2iEG7Uz6bXoJmISvbhlhTES0A
-         mh3x7GBdwyaKe/qW4XXd4tmuWWAeFWoZXNjWO9qyrMhbJZ2KHRiv+EFD99UKXGfd/C
-         gFA0lDxUVROQ6pSXg8WWggcbJwaz4YU8YUd3fyR8=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MIRS1A119831
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 13:27:28 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 13:27:28 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 13:27:28 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MIRSeF006844;
-        Fri, 22 May 2020 13:27:28 -0500
-Subject: Re: [PATCH net-next v2 2/4] net: phy: Add a helper to return the
- index for of the internal delay
-To:     Florian Fainelli <f.fainelli@gmail.com>, <andrew@lunn.ch>,
-        <hkallweit1@gmail.com>, <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200522122534.3353-1-dmurphy@ti.com>
- <20200522122534.3353-3-dmurphy@ti.com>
- <da85ecb0-1da1-2ccd-0830-a3ec18ee486c@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <d6c9439e-c83c-9369-a4e1-8af5d9673661@ti.com>
-Date:   Fri, 22 May 2020 13:27:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 14:28:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590172105;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z4chmSB75rF+W6Vhce5T0ZL8XsgMA5Bsyqy3UVYUZsc=;
+        b=XCMCJEh9YiI1RdS8w3gUU2KRxtR7vTFSVAgxTw8g8jg5K8h3Nxp+hJGr90OTpZ2PSrm5d0
+        BuJOcpKbm7rOUrgvdXGwgyWflUGcRY1zSm1QP+QoXvjLusD/ooHuTIKnSX0FeWg7gk74y4
+        a9OZf3BeZv5UXfpUzGgnXa/RumcFIj0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-M1BE3uvePMSB6PMXTwcLKw-1; Fri, 22 May 2020 14:28:21 -0400
+X-MC-Unique: M1BE3uvePMSB6PMXTwcLKw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7C2E1855A00;
+        Fri, 22 May 2020 18:28:19 +0000 (UTC)
+Received: from treble (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D8159CB9;
+        Fri, 22 May 2020 18:28:17 +0000 (UTC)
+Date:   Fri, 22 May 2020 13:28:15 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        bp@alien8.de, hpa@zytor.com, luto@amacapital.net,
+        michal.lkml@markovi.net, mingo@redhat.com, peterz@infradead.org,
+        tglx@linutronix.de, x86@kernel.org, yamada.masahiro@socionext.com
+Subject: Re: [PATCH 0/2] Build ORC fast lookup table in scripts/sorttable tool
+Message-ID: <20200522182815.ezanmvbemhzq2fmm@treble>
+References: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <da85ecb0-1da1-2ccd-0830-a3ec18ee486c@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200429064626.16389-1-changhuaixin@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
+On Wed, Apr 29, 2020 at 02:46:24PM +0800, Huaixin Chang wrote:
+> Move building of fast lookup table from boot to sorttable tool. This saves us
+> 6380us boot time on Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz with cores.
+> 
+> Huaixin Chang (2):
+>   scripts/sorttable: Build orc fast lookup table via sorttable tool
+>   x86/unwind/orc: Remove unwind_init() from x86 boot
+> 
+>  arch/x86/include/asm/unwind.h |  2 -
+>  arch/x86/kernel/setup.c       |  2 -
+>  arch/x86/kernel/unwind_orc.c  | 51 ----------------------
+>  scripts/sorttable.h           | 99 ++++++++++++++++++++++++++++++++++++++++---
+>  4 files changed, 92 insertions(+), 62 deletions(-)
 
-On 5/22/20 11:11 AM, Florian Fainelli wrote:
->
-> On 5/22/2020 5:25 AM, Dan Murphy wrote:
->> Add a helper function that will return the index in the array for the
->> passed in internal delay value.  The helper requires the array, size and
->> delay value.
->>
->> The helper will then return the index for the exact match or return the
->> index for the index to the closest smaller value.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/phy/phy_device.c | 45 ++++++++++++++++++++++++++++++++++++
->>   include/linux/phy.h          |  2 ++
->>   2 files changed, 47 insertions(+)
->>
->> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
->> index 7481135d27ab..40f53b379d2b 100644
->> --- a/drivers/net/phy/phy_device.c
->> +++ b/drivers/net/phy/phy_device.c
->> @@ -2661,6 +2661,51 @@ void phy_get_pause(struct phy_device *phydev, bool *tx_pause, bool *rx_pause)
->>   }
->>   EXPORT_SYMBOL(phy_get_pause);
->>   
->> +/**
->> + * phy_get_delay_index - returns the index of the internal delay
->> + * @phydev: phy_device struct
->> + * @delay_values: array of delays the PHY supports
->> + * @size: the size of the delay array
->> + * @delay: the delay to be looked up
->> + *
->> + * Returns the index within the array of internal delay passed in.
-> Can we consider using s32 for storage that way the various
-> of_read_property_read_u32() are a natural fit (int works too, but I
-> would prefer being explicit).
+I tested this (rebased on tip/master), it seems to break ORC
+completely... e.g. /proc/self/stack is empty.
 
-Ack
-
->
->> + */
->> +int phy_get_delay_index(struct phy_device *phydev, int *delay_values, int size,
->> +			int delay)
->> +{
->> +	int i;
->> +
->> +	if (size <= 0)
->> +		return -EINVAL;
->> +
->> +	if (delay <= delay_values[0])
->> +		return 0;
->> +
->> +	if (delay > delay_values[size - 1])
->> +		return size - 1;
-> Does not that assume that the delays are sorted by ascending order, if
-> so, can you make it clear in the kernel doc?
-
-Yes I guess it does.  I can add this to the k doc
-
-
->
->> +
->> +	for (i = 0; i < size; i++) {
->> +		if (delay == delay_values[i])
->> +			return i;
->> +
->> +		/* Find an approximate index by looking up the table */
->> +		if (delay > delay_values[i - 1] &&
-> && i > 0 so you do not accidentally under-run the array?
-
-Yes and no it maybe better to start the for loop with i being 
-initialized to 1 since the zeroth element is already validated above.
-
-Dan
-
+-- 
+Josh
 
