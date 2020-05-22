@@ -2,215 +2,106 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A37BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058E2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D04620738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D5C207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="mzImS0TX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgEVRPF (ORCPT
+        id S1730823AbgEVRPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:15:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:64859 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbgEVRPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:15:04 -0400
-IronPort-SDR: 28T3tujKi3940NK6es/PDXBlXKY+SjupDjuQlzMx4EX506YA6CmOvo3nYlNruw2QDhMLrc1+Bu
- djqj3U5eZgIg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 10:14:52 -0700
-IronPort-SDR: 6KtMaaIKf3OSwhO1CHA60d8rGhaG7j6u6omYnzsBCYuGXhkMWEHqCe4zh7Chi15nj1s+or54cI
- x2KfgdmmCdkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
-   d="scan'208";a="255641140"
-Received: from omillerx-mobl.ger.corp.intel.com (HELO localhost) ([10.249.43.59])
-  by fmsmga008.fm.intel.com with ESMTP; 22 May 2020 10:14:49 -0700
-Date:   Fri, 22 May 2020 20:14:51 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
-        peterhuewe@gmx.de, jgg@ziepe.ca, gregkh@linuxfoundation.org,
-        jens.wiklander@linaro.org, linux-integrity@vger.kernel.org,
-        arnd@linaro.org, sumit.garg@linaro.org
-Subject: Re: [PATCHv2 2/2] tpm_ftpm_tee: register driver on TEE bus
-Message-ID: <20200522171451.GD10319@linux.intel.com>
-References: <20200521064743.4769-1-maxim.uvarov@linaro.org>
- <20200521064743.4769-4-maxim.uvarov@linaro.org>
+        Fri, 22 May 2020 13:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730728AbgEVRPS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 13:15:18 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BE5C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:15:17 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a25so1895414ljp.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LeM7Gq/64MBHuEtg64n+BDtuTe/p5r/j1B2qVESr88E=;
+        b=mzImS0TXTReSbMWpKcN1vkGpQ8SxUQVlDXsSh5HVc1hcwKMdu0GyRSaaa1fjOZZg5w
+         TYmnJWbzYA+tDj+BcEsstIh66E6fqB5G5HryQJ6z7d59+nQB0xJzryWAH6LOaYNns8PO
+         apeKxryZKUtVIEan1sWKPlWKzpGsi2AUtgEog6KIyVcKIbaWzM5sPuRtlxSHRpNtX+Na
+         yLLkSuXv2v+pjLciZ5I5sWVkK9soA7BPwe1PhsmkeVxUIki42sCR6lb/hFeSSv+90ADg
+         rA6cSV/csy7SBjFRwRHZ0OhpPNoFjWgUxDASmpLSFSiXtbxfQcPp7ghcLQIU8tzKWtW3
+         OlrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LeM7Gq/64MBHuEtg64n+BDtuTe/p5r/j1B2qVESr88E=;
+        b=UGNEVufpMFdSlqE/vt/wnbVjwrpCoE3DPxyuzt4G2i45l3Vm6X2xQjtnZKipBqkGW0
+         BxXMVbuAd2biT+IhDyxXH3YPdtdCvpi/XjD/0CCXBtHNOUEqzb9QK7cXKJntVKlWnp7M
+         fYQbjY4jguWDNqODfngtmnB2C9rGDMNoe/uvD5B/GqeXY0yR0CBwN39bThWOvi1ztQxi
+         Qm4TmI0uKClQUGUrFNtUILl5CkJYUcXCx1x6M29IapD/DY1DJ11GMgKf/zzLOmYnMcN8
+         Uqna42jDF09tlUMxcbs+Vx+IGZq76XT10v7SkF3zbxp04GdoTOPN9QjkAYxGyeb75Kfm
+         I3cw==
+X-Gm-Message-State: AOAM532Q5SFBJD37orm1rhigOkMFaFI9NqKUTu7R07KuKJWIFW3Tldkz
+        2+j+448acIJEUgOth3T3wiRaUQ==
+X-Google-Smtp-Source: ABdhPJxXaqF0fu43lDvtFcjLrw4+SKMwMnQWIDz3RTTU/jBzSj7pSYbO0YuYEhqLNbO542TDkT2n6w==
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr6187412ljp.347.1590167716344;
+        Fri, 22 May 2020 10:15:16 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id z13sm2539557lfd.7.2020.05.22.10.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 10:15:15 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id DA192102046; Fri, 22 May 2020 20:15:17 +0300 (+03)
+Date:   Fri, 22 May 2020 20:15:17 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/36] mm: Introduce offset_in_thp
+Message-ID: <20200522171517.dltsre7vfdvcrd2m@box>
+References: <20200515131656.12890-1-willy@infradead.org>
+ <20200515131656.12890-7-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521064743.4769-4-maxim.uvarov@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200515131656.12890-7-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 09:47:43AM +0300, Maxim Uvarov wrote:
-> Register driver on TEE bus. module tee registers bus,
-
-"on the TEE bus"
-
-"The module tee"
-
-> and module optee calls optee_enumerate_devices() to scan
-> all devices on the bus. Trusted Application for this driver
-
-Looking at drivers/tee, it shows that tee and optee are in fact the same
-module as opposed to what your commit message says.
-
-> can be Early TA's (can be compiled into optee-os). In that
-> case it will be on OPTEE bus before linux booting. Also
-> optee-suplicant application is needed to be loaded between
-> OPTEE module and ftpm module to maintain functionality
-> for fTPM driver.
-
-Why is this needed and why things worked before having this?
-
-> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-> Suggested-by: Arnd Bergmann <arnd@linaro.org>
+On Fri, May 15, 2020 at 06:16:26AM -0700, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Mirroring offset_in_page(), this gives you the offset within this
+> particular page, no matter what size page it is.  It optimises down
+> to offset_in_page() if CONFIG_TRANSPARENT_HUGEPAGE is not set.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
->  drivers/char/tpm/tpm_ftpm_tee.c | 69 ++++++++++++++++++++++++++++-----
->  1 file changed, 59 insertions(+), 10 deletions(-)
+>  include/linux/mm.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-> index 22bf553ccf9d..7bb4ce281050 100644
-> --- a/drivers/char/tpm/tpm_ftpm_tee.c
-> +++ b/drivers/char/tpm/tpm_ftpm_tee.c
-> @@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
->   * Return:
->   *	On success, 0. On failure, -errno.
->   */
-> -static int ftpm_tee_probe(struct platform_device *pdev)
-> +static int ftpm_tee_probe(struct device *dev)
->  {
->  	int rc;
->  	struct tpm_chip *chip;
-> -	struct device *dev = &pdev->dev;
->  	struct ftpm_tee_private *pvt_data = NULL;
->  	struct tee_ioctl_open_session_arg sess_arg;
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 088acbda722d..9a55dce6a535 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -1577,6 +1577,7 @@ static inline void clear_page_pfmemalloc(struct page *page)
+>  extern void pagefault_out_of_memory(void);
 >  
-> @@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
->  	return rc;
->  }
->  
-> +static int ftpm_plat_tee_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +
-> +	return ftpm_tee_probe(dev);
-> +}
-> +
->  /**
->   * ftpm_tee_remove() - remove the TPM device
->   * @pdev: the platform_device description.
-> @@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
->   * Return:
->   *	0 always.
->   */
-> -static int ftpm_tee_remove(struct platform_device *pdev)
-> +static int ftpm_tee_remove(struct device *dev)
->  {
-> -	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
-> +	struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
->  
->  	/* Release the chip */
->  	tpm_chip_unregister(pvt_data->chip);
-> @@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int ftpm_plat_tee_remove(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +
-> +	return ftpm_tee_remove(dev);
-> +}
-> +
->  /**
->   * ftpm_tee_shutdown() - shutdown the TPM device
->   * @pdev: the platform_device description.
->   */
-> -static void ftpm_tee_shutdown(struct platform_device *pdev)
-> +static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
->  {
->  	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
->  
-> @@ -347,17 +360,53 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
->  
-> -static struct platform_driver ftpm_tee_driver = {
-> +static struct platform_driver ftpm_tee_plat_driver = {
->  	.driver = {
->  		.name = "ftpm-tee",
->  		.of_match_table = of_match_ptr(of_ftpm_tee_ids),
->  	},
-> -	.probe = ftpm_tee_probe,
-> -	.remove = ftpm_tee_remove,
-> -	.shutdown = ftpm_tee_shutdown,
-> +	.shutdown = ftpm_plat_tee_shutdown,
-> +	.probe = ftpm_plat_tee_probe,
-> +	.remove = ftpm_plat_tee_remove,
-> +};
-> +
-> +static const struct tee_client_device_id optee_ftpm_id_table[] = {
-> +	{UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
-> +		   0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
-> +	{}
+>  #define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
+> +#define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
 
-Please put a comment describing what this is.
+Looks like thp_mask() would be handy here.
 
->  };
->  
-> -module_platform_driver(ftpm_tee_driver);
-> +MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
-> +
-> +static struct tee_client_driver ftpm_tee_driver = {
-> +	.id_table	= optee_ftpm_id_table,
-> +	.driver		= {
-> +		.name		= "optee-ftpm",
-> +		.bus		= &tee_bus_type,
-> +		.probe		= ftpm_tee_probe,
-> +		.remove		= ftpm_tee_remove,
-> +	},
-> +};
-> +
-> +static int __init ftpm_mod_init(void)
-> +{
-> +	int rc;
-> +
-> +	rc = platform_driver_register(&ftpm_tee_plat_driver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return driver_register(&ftpm_tee_driver.driver);
-> +}
-> +
-> +static void __exit ftpm_mod_exit(void)
-> +{
-> +	platform_driver_unregister(&ftpm_tee_plat_driver);
-> +	driver_unregister(&ftpm_tee_driver.driver);
-> +}
-> +
-> +module_init(ftpm_mod_init);
-> +module_exit(ftpm_mod_exit);
->  
->  MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
->  MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
-> -- 
-> 2.17.1
-> 
-
-Wondering if MODULE_AUTHOR() is still equired given that the GIT log
-has objectively better log of authorship.
-
-/Jarkko
+-- 
+ Kirill A. Shutemov
