@@ -2,94 +2,78 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA803C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ADFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB53321897
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q98veh9b"
+	by mail.kernel.org (Postfix) with ESMTP id 22A5D22226
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgEVOIK (ORCPT
+        id S1729929AbgEVONr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729399AbgEVOIJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:08:09 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8351DC05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:08:09 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x22so6596525lfd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ASpIJRV1LgbYaIn/8sihf9PSqZ7K//HA8oIfV5Jji1U=;
-        b=Q98veh9b1zBp4PWhmCf74WRK0Byrzkwey2rtOIQaXyx1kyEDcG3M6jXlCJOhaNxM5/
-         9sj2TOOYHXEwh0fYzQ9FWMZfc0E8eE1/WZ2qrZajc+2KYj6iyYljfm/4TvkU3jkfOFI3
-         YYUty1xtwI/bERs9jSMcLkRivOd74V0q8VEyy+weMSJJux6/WgAlmVEJMy5S77lYpI6X
-         C4RRVTYaZZ3O6DoGtybBgW13esxeDx7YL6yHgkoJ4xGvMUndKjLCAM0tNGLW0pfCIKJU
-         1RIk/vV7uokJ+qdYAfnkLwrgbKEC2CRiXSL18tpjvsHmOZiGRKjVtgqW4lxZcNme/MRF
-         2niQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ASpIJRV1LgbYaIn/8sihf9PSqZ7K//HA8oIfV5Jji1U=;
-        b=YGpBA7fbXCGyXZRWeQUi8mL0DxEmo45fyNapsVUintq9f4TKICAgiE9yZqYoForOS3
-         Y3tgoiZ1Eu/hXX/nfO+bBRF42SF4TqBF3ezF4Thr2t8Dbnmlf+bAamdVw+EMYJkZd2bs
-         GkNjYAq/58obiNzsrptXMOodQRdg8tpUS5LC+LA2xLA9XzZv0b7zQJRhNr7hHONjmZz1
-         Yz3EpSColCtKlvAwy+anFwky+jS7sJsqdXw3K8n0xPjhwj59o9Tybv2cLTbKZ4848IRr
-         3EpDcr9MzSG7rSJSCQnZn7T/N7E09Q/TnQMQEOLS+x1+am7WVHvMsnq3bfHmlQulzjht
-         ffzA==
-X-Gm-Message-State: AOAM532NCnFGeC1nYkH7ZdDbEhZIGxzIgWt8/ZcEjyQUfU5AYrhlkqUD
-        LWUiCHE5rKmJhvkyjqHUQ/RX/g9yUl7T4cioyZ2PaA==
-X-Google-Smtp-Source: ABdhPJx2ifzFEDI+8FVLUA5dMaNvcKyEcuulaqadgxsGJ+06MBXDJr9QzwzWTQLe7Y3YlQblnOnWWMOrrm/JyeFd854=
-X-Received: by 2002:a19:490d:: with SMTP id w13mr7491640lfa.96.1590156487605;
- Fri, 22 May 2020 07:08:07 -0700 (PDT)
+        Fri, 22 May 2020 10:13:47 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:39538 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729399AbgEVONq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:13:46 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jc8QD-0008Fn-G8; Sat, 23 May 2020 00:13:14 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 23 May 2020 00:13:13 +1000
+Date:   Sat, 23 May 2020 00:13:13 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Nicolas Toromanoff <nicolas.toromanoff@st.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-crypto@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] STM32 CRC update
+Message-ID: <20200522141313.GA859@gondor.apana.org.au>
+References: <20200512141113.18972-1-nicolas.toromanoff@st.com>
 MIME-Version: 1.0
-References: <20200520163142.GA808793@chrisdown.name>
-In-Reply-To: <20200520163142.GA808793@chrisdown.name>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 22 May 2020 07:07:56 -0700
-Message-ID: <CALvZod6ijEUKTXzi1oDV0R2HdU6bcxUn_zDigskuSPtzn-vw0g@mail.gmail.com>
-Subject: Re: [PATCH] mm, memcg: unify reclaim retry limits with page allocator
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512141113.18972-1-nicolas.toromanoff@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 9:32 AM Chris Down <chris@chrisdown.name> wrote:
->
-> Reclaim retries have been set to 5 since the beginning of time in
-> 66e1707bc346 ("Memory controller: add per cgroup LRU and reclaim").
-> However, we now have a generally agreed-upon standard for page reclaim:
-> MAX_RECLAIM_RETRIES (currently 16), added many years later in
-> 0a0337e0d1d1 ("mm, oom: rework oom detection").
->
-> In the absence of a compelling reason to declare an OOM earlier in memcg
-> context than page allocator context, it seems reasonable to supplant
-> MEM_CGROUP_RECLAIM_RETRIES with MAX_RECLAIM_RETRIES, making the page
-> allocator and memcg internals more similar in semantics when reclaim
-> fails to produce results, avoiding premature OOMs or throttling.
->
-> Signed-off-by: Chris Down <chris@chrisdown.name>
+On Tue, May 12, 2020 at 04:11:08PM +0200, Nicolas Toromanoff wrote:
+> This set of patches update the STM32 CRC driver.
+> It contains bug fix.
+> 
+> First fixes issue if we enable STM32 CRC32 hardware accelerator with
+> ext4 (with metadata-chksum enable) and other fs that use same direct
+> access to update crc32 API without previous init.
+> Second fixes some issues raise by the extra self-test.
+> Third fixes wrong hw usage if there is multiple IP on the SOC.
+> Forth fixes "sleep while atomic" in tcrypt test, and some other places
+> (ext4)
+> Last fixes concurrent accesses. As state is saved in the hardware cell
+> and not in stack as other CRC32 drivers, we need to create atomic
+> section to protect concurrent CRC32 calculus.
+> 
+> This patch series applies to cryptodev/master.
+> 
+> Nicolas Toromanoff (5):
+>   crypto: stm32/crc: fix ext4 chksum BUG_ON()
+>   crypto: stm32/crc: fix run-time self test issue.
+>   crypto: stm32/crc: fix multi-instance
+>   crypto: stm32/crc: don't sleep in runtime pm
+>   crypto: stm32/crc: protect from concurrent accesses
+> 
+>  drivers/crypto/stm32/stm32-crc32.c | 230 ++++++++++++++++++++---------
+>  1 file changed, 161 insertions(+), 69 deletions(-)
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
