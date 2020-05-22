@@ -3,88 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8C4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1615AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D35D208A7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A2B206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgEVPkG (ORCPT
+        id S1730505AbgEVPlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:40:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbgEVPkF (ORCPT
+        Fri, 22 May 2020 11:41:14 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45460 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbgEVPlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:40:05 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CC17C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:40:05 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jc9m5-00DZUn-KE; Fri, 22 May 2020 15:39:53 +0000
-Date:   Fri, 22 May 2020 16:39:53 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <bwh@kernel.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org
-Subject: Re: drivers/ide/ide-ioctls.c:15:24: sparse: sparse: incorrect type
- in initializer (different address spaces)
-Message-ID: <20200522153953.GR23230@ZenIV.linux.org.uk>
-References: <202005222050.mkKQBFyc%lkp@intel.com>
- <CAK8P3a3AvVuf6ADizEg6twExf_QwJarJ-1E7BUWUb7=Sw1e0Dw@mail.gmail.com>
+        Fri, 22 May 2020 11:41:13 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 125998029EB7;
+        Fri, 22 May 2020 15:41:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8uWzmiuImIaK; Fri, 22 May 2020 18:41:07 +0300 (MSK)
+Date:   Fri, 22 May 2020 18:41:05 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 0/8] clocksource: Fix MIPS GIC and DW APB Timer for
+ Baikal-T1 SoC support
+Message-ID: <20200522154105.6gkutlgi2hxqjjzc@mobilestation>
+References: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
+ <211ab91d-6085-3073-1cbc-2300abade1b7@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3AvVuf6ADizEg6twExf_QwJarJ-1E7BUWUb7=Sw1e0Dw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <211ab91d-6085-3073-1cbc-2300abade1b7@linaro.org>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 03:40:50PM +0200, Arnd Bergmann wrote:
-> On Fri, May 22, 2020 at 2:24 PM kbuild test robot <lkp@intel.com> wrote:
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   051143e1602d90ea71887d92363edd539d411de5
-> > commit: 1df23c6fe5b0654ece219985a0c32e40b100bd9a compat_ioctl: move HDIO ioctl handling into drivers/ide
-> > date:   5 months ago
-> > config: xtensa-randconfig-s002-20200522 (attached as .config)
-> > compiler: xtensa-linux-gcc (GCC) 9.3.0
-> > reproduce:
-> >         # apt-get install sparse
-> >         # sparse version: v0.6.1-193-gb8fad4bc-dirty
-> >         git checkout 1df23c6fe5b0654ece219985a0c32e40b100bd9a
-> >         # save the attached .config to linux build tree
-> >         make W=1 C=1 ARCH=xtensa CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> >
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> >
-> > sparse warnings: (new ones prefixed by >>)
-> >
-> >    ./arch/xtensa/include/generated/uapi/asm/unistd_32.h:391:41: sparse: sparse: no newline at end of file
-> > >> drivers/ide/ide-ioctls.c:15:24: sparse: sparse: incorrect type in initializer (different address spaces) @@    expected signed int *__pu_addr @@    got signed int [noderef] [usertypsigned int *__pu_addr @@
-> > >> drivers/ide/ide-ioctls.c:15:24: sparse:    expected signed int *__pu_addr
-> > >> drivers/ide/ide-ioctls.c:15:24: sparse:    got signed int [noderef] [usertype] <asn:1> *
-> > >> drivers/ide/ide-ioctls.c:15:24: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void [noderef] <asn:1> *to @@    got f] <asn:1> *to @@
-> >    drivers/ide/ide-ioctls.c:15:24: sparse:    expected void [noderef] <asn:1> *to
-> > >> drivers/ide/ide-ioctls.c:15:24: sparse:    got signed int *__pu_addr
+On Fri, May 22, 2020 at 05:28:42PM +0200, Daniel Lezcano wrote:
+> On 21/05/2020 22:48, Serge Semin wrote:
+> > As for all Baikal-T1 SoC related patchsets, which need this, we replaced
+> > the DW APB Timer legacy plain text-based dt-binding file with DT schema.
+> > Similarly the MIPS GIC bindings file is also converted to DT schema seeing
+> > it also defines the MIPS GIC Timer binding.
+> > 
+> > Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
+> > functionality of two another timers: embedded into the MIPS GIC timer and
+> > three external DW timers available over APB bus. But we can't use them
+> > before the corresponding drivers are properly fixed. First of all DW APB
+> > Timer shouldn't be bound to a single CPU, since as being accessible over
+> > APB they are external with respect to all possible CPUs. Secondly there
+> > might be more than just two DW APB Timers in the system (Baikal-T1 has
+> > three of them), so permit the driver to use one of them as a clocksource
+> > and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
+> > timer as a clocksource so register it in the corresponding subsystem
+> > (the patch has been found in the Paul Burton MIPS repo so I left the
+> > original Signed-off-by attribute). Finally in the same way as r4k timer
+> > the MIPS GIC timer should be used with care when CPUFREQ config is enabled
+> > since in case of CM2 the timer counting depends on the CPU reference clock
+> > frequency while the clocksource subsystem currently doesn't support the
+> > timers with non-stable clock.
+> > 
+> > This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+> > base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+> > tag: v5.7-rc4
+> 
+> Applied patch 1,2,4,5,6,7,8
+> 
+> Thanks!
+
+Great! Thanks. Am I right to expect the series in: git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+at the branch timers/core?
+
+-Sergey
+
+> 
+>   -- Daniel
 > 
 > 
-> I think this is a bug in the xtensa asm/uaccess.h, but I don't know why it
-> only showed up now.
-
-xtensa has no __user annotations in there.  At all.  So until somebody sits
-down and does those, there will be such noise, reported every time somebody
-changes a line with get_user() or put_user() anywhere in the tree.
-
-As far as I'm concerned, __user-related reports on xtensa are to be ignored
-for now.
+> -- 
+> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> 
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
