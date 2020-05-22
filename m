@@ -2,77 +2,105 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71A9F20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F2120757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 05:59:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QnJ+s1NY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgEVF7E (ORCPT
+        id S1728175AbgEVF7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 01:59:04 -0400
-Received: from nautica.notk.org ([91.121.71.147]:38062 "EHLO nautica.notk.org"
+        Fri, 22 May 2020 01:59:05 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50905 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbgEVF7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728070AbgEVF7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 May 2020 01:59:04 -0400
-X-Greylist: delayed 123720 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 May 2020 01:59:03 EDT
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id 8C85FC009; Fri, 22 May 2020 07:59:02 +0200 (CEST)
-Date:   Fri, 22 May 2020 07:58:47 +0200
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     jgross@suse.com, boris.ostrovsky@oracle.com,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, ericvh@gmail.com,
-        lucho@ionkov.net,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>
-Subject: Re: [PATCH v2] 9p/xen: increase XEN_9PFS_RING_ORDER
-Message-ID: <20200522055847.GA2833@nautica>
-References: <20200521193242.15953-1-sstabellini@kernel.org>
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Swm54QCMz9sRW;
+        Fri, 22 May 2020 15:59:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590127142;
+        bh=29NSkmyyyovH3XI7e3fkxFdgNlhvgAXuPgG19MPdxAI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QnJ+s1NYSqehawbXFHhsPnPWGhN2DJuMNwWD+GStGCFOSMdxDD4DZ3DFT4+fpFMk3
+         ZbXNCedbZx2nCBA/GTZED0urnFLh1jy2Ef7a4g8nvhp4jX7feSOF5A8SqkQiV9MibI
+         XiuMt5lXN9thxdXqr7VUm6KEncOr6vRElFXLuPHD9fpnDLD3cOv0e6ds4Su68rWWCO
+         6qxA9RV3JR5khYnr8s90AmW+rzulYbXW0bm/Ocu8zhX7ZFgVZSWMbtuUtRiuIAPTaV
+         5mOOoYCyAQSHSNvK8g+f/Dq3jchNN59mI/HFy0WeZcboJo6fhmHkNfYZ+6FPXZxDTs
+         j89rH5OVPv5WA==
+Date:   Fri, 22 May 2020 15:58:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Rob Herring <robherring2@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: linux-next: manual merge of the devicetree tree with the pci tree
+Message-ID: <20200522155858.3e349e0a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200521193242.15953-1-sstabellini@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: multipart/signed; boundary="Sig_/YGO+ol/n4Puf1ETGgGMLFbm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stefano Stabellini wrote on Thu, May 21, 2020:
-> From: Stefano Stabellini <stefano.stabellini@xilinx.com>
-> 
-> Increase XEN_9PFS_RING_ORDER to 9 for performance reason. Order 9 is the
-> max allowed by the protocol.
-> 
-> We can't assume that all backends will support order 9. The xenstore
-> property max-ring-page-order specifies the max order supported by the
-> backend. We'll use max-ring-page-order for the size of the ring.
-> 
-> This means that the size of the ring is not static
-> (XEN_FLEX_RING_SIZE(9)) anymore. Change XEN_9PFS_RING_SIZE to take an
-> argument and base the calculation on the order chosen at setup time.
-> 
-> Finally, modify p9_xen_trans.maxsize to be divided by 4 compared to the
-> original value. We need to divide it by 2 because we have two rings
-> coming off the same order allocation: the in and out rings. This was a
-> mistake in the original code. Also divide it further by 2 because we
-> don't want a single request/reply to fill up the entire ring. There can
-> be multiple requests/replies outstanding at any given time and if we use
-> the full ring with one, we risk forcing the backend to wait for the
-> client to read back more replies before continuing, which is not
-> performant.
-> 
-> Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+--Sig_/YGO+ol/n4Puf1ETGgGMLFbm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-LGTM, I'll try to find some time to test this by the end of next week or
-will trust you if I can't make it -- ping me around June 1st if I don't
-reply again until then...
+Hi all,
 
+Today's linux-next merge of the devicetree tree got a conflict in:
+
+  Documentation/devicetree/bindings/pci/cdns-pcie.yaml
+
+between commit:
+
+  fb5f8f3ca5f8 ("dt-bindings: PCI: cadence: Deprecate inbound/outbound spec=
+ific bindings")
+
+from the pci tree and commit:
+
+  3d21a4609335 ("dt-bindings: Remove cases of 'allOf' containing a '$ref'")
+
+from the devicetree tree.
+
+I fixed it up (the former removed the section modified by the latter,
+so I just did that) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+--=20
 Cheers,
--- 
-Dominique
+Stephen Rothwell
+
+--Sig_/YGO+ol/n4Puf1ETGgGMLFbm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HaiIACgkQAVBC80lX
+0Gxl8wf9FCneNcAVmx8Hp4Q0zvqFNRfMQxn3xGor9TPPS0snxIGNd5IcauJFHXx9
+DjoG/ux54etloKGO8q5X6wHoWv1WYcDZkAhCIRdxyK/Fn1ikQQ4ZnNqHLgq84oIs
+09OVCDhTKtGUCsVFJ//oiNPMbT+alDufGOotUaoll9niRfwt/T/nNoiLL3OGHVXy
+gJNdWq602kS2/vyf288fbky05zFid0qNLJoW3MBjF0VgxAYnWkcaOb5eoaZWjV3B
+Q0VddWmfEIDdW0qmY7FaWrWr3S9gnfldb3rqSS9zxygDsCDrSAzupyCG/WwNvfPA
+rw6ahc5HCMiWCCRqUHGudbUcMFXpOA==
+=Pz28
+-----END PGP SIGNATURE-----
+
+--Sig_/YGO+ol/n4Puf1ETGgGMLFbm--
