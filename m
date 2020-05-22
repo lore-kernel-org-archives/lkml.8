@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88203C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCA920DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D881205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159422;
-	bh=IXhxczKtqIZE62kYPXGoHl9XrWCOFM6MO3cDOy4QMAg=;
+	s=default; t=1590159427;
+	bh=MWITYB0vR5lA3KxxO0iN6yDsjvP8KH/f4rd52IxEzSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/GFsmW4+8QgYQMCrd26TwgbJCH2ATn5/stHz7RUhzL+7JjeFev8sPWWeL98TkK4o
-	 wAa/CDRaYig/bHBrx3/xahRozvhA1cZL9WNr5kbDmE44uSmiUlXwq+M1K9dk8pryFe
-	 FtTct0wK4MOUO1Wufz7vZfsa8kfTm81vxbnpop9A=
+	b=17GHrv254YiKv+QnyjycQFHlMak22LezlLg6HkE/XlcGw5n3KWM4tKMVOTiRtI5/b
+	 1zatL9NgpFgY9p/xLRwchGtV8JmnXcTq8gBacQw4jv8NCrNDdGdDyp0Wm2lC2KbAo/
+	 tzVRrP21pJXmrpZW1Y6QRzMQLYRHVwqdRp3ZCocI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbgEVO46 (ORCPT
+        id S1730806AbgEVOuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:56:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:50:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730834AbgEVOuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:52 -0400
+        id S1730767AbgEVOuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB1FE22249;
-        Fri, 22 May 2020 14:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58EAD22249;
+        Fri, 22 May 2020 14:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159051;
-        bh=IXhxczKtqIZE62kYPXGoHl9XrWCOFM6MO3cDOy4QMAg=;
+        s=default; t=1590159040;
+        bh=MWITYB0vR5lA3KxxO0iN6yDsjvP8KH/f4rd52IxEzSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ObDlactGKm++VFbIlJd6liPazIY60fxU186jO4ySX11cwqEhDvSGiIgjrFZrNqpMv
-         3a7wN/pV8pz4bT8HFd0JEBiuxprMLathEcA3WvO7YmtgJtxBjSvKAyBvwk+Lu/dWek
-         BgfjkPXMzGl4XuTllPvKIjCF+IBA9bYnmndtUgoo=
+        b=gz74speDsIrhfbnw3pb9c4TKj7Gn5xuMeAp0gC/0Tzv+qQq7YSqSv0LcOeopOa21c
+         CdqZjSaLudvGxGWLxrQLt/gbeHOOPAZtHgm2eNsuqFmambRk/eraqMxiFrA7j/KbLA
+         /j2GdykSxa1IGli5U+VFntLA1lk8fYLpI4fwcrfE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/32] ARM: dts: rockchip: swap clock-names of gpu nodes
-Date:   Fri, 22 May 2020 10:50:17 -0400
-Message-Id: <20200522145044.434677-5-sashal@kernel.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 37/41] riscv: pgtable: Fix __kernel_map_pages build error if NOMMU
+Date:   Fri, 22 May 2020 10:49:54 -0400
+Message-Id: <20200522144959.434379-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
-References: <20200522145044.434677-1-sashal@kernel.org>
+In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
+References: <20200522144959.434379-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,65 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit b14f3898d2c25a9b47a61fb879d0b1f3af92c59b ]
+[ Upstream commit 9a6630aef93394ac54494c7e273e9bc026509375 ]
 
-Dts files with Rockchip 'gpu' nodes were manually verified.
-In order to automate this process arm,mali-utgard.txt
-has been converted to yaml. In the new setup dtbs_check with
-arm,mali-utgard.yaml expects clock-names values
-in the same order, so fix that.
+riscv64-none-linux-gnu-ld: mm/page_alloc.o: in function `.L0 ':
+page_alloc.c:(.text+0xd34): undefined reference to `__kernel_map_pages'
+riscv64-none-linux-gnu-ld: page_alloc.c:(.text+0x104a): undefined reference to `__kernel_map_pages'
+riscv64-none-linux-gnu-ld: mm/page_alloc.o: in function `__pageblock_pfn_to_page':
+page_alloc.c:(.text+0x145e): undefined reference to `__kernel_map_pages'
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200425192500.1808-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3036.dtsi | 2 +-
- arch/arm/boot/dts/rk322x.dtsi | 2 +-
- arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/riscv/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index c776321b2cc4..d282a7b638d8 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -128,7 +128,7 @@
- 		assigned-clocks = <&cru SCLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		clocks = <&cru SCLK_GPU>, <&cru SCLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 340ed6ccb08f..c60784f3aa75 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -561,7 +561,7 @@
- 				  "pp1",
- 				  "ppmmu1";
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		resets = <&cru SRST_GPU_A>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 97307a405e60..bce0b05ef7bf 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -84,7 +84,7 @@
- 		compatible = "arm,mali-400";
- 		reg = <0x10090000 0x10000>;
- 		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
--		clock-names = "core", "bus";
-+		clock-names = "bus", "core";
- 		assigned-clocks = <&cru ACLK_GPU>;
- 		assigned-clock-rates = <100000000>;
- 		resets = <&cru SRST_GPU>;
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 05b92987f500..31d912944d8d 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -467,6 +467,8 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ 
+ #define TASK_SIZE 0xffffffffUL
+ 
++static inline void __kernel_map_pages(struct page *page, int numpages, int enable) {}
++
+ #endif /* !CONFIG_MMU */
+ 
+ #define kern_addr_valid(addr)   (1) /* FIXME */
 -- 
 2.25.1
 
