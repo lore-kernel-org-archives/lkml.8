@@ -2,97 +2,128 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A102078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D221207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 03:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r1TPvPcK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mY8BwFJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgEVDFy (ORCPT
+        id S1727963AbgEVDGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 23:05:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgEVDFx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 23:05:53 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90899C061A0E;
-        Thu, 21 May 2020 20:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ws6mDxugOw83qz5FboXgcXuaCjucqwgfP3Opy1/y+PY=; b=r1TPvPcKm6UjpoPKi+DHen5TkY
-        k+zurUJXCvxxY2EgM5d4d9FupeUVTQgwynYkyz8enzjLl/Y41f8GErtba8gKz65bpYWavA93CFNAv
-        AQUU7Sh1I/37q0MOaI991ahUqolotpfnTG95vjPMA9u1KB9SGaXdwDctjQ98JqGkE1mrvkrM/mKz/
-        kW9JOMO7N99CiJN/mNgDHT828oBacfWCuGU8PtadNymmnhJfWikEy9POSK42Huod1QNl8DkycGvRc
-        KaEhdvfsVDYE6GIg7iCEgByW1Oi+CnzlxY4+UwwR7mMdKp9f5goyWIWIDax3vfH4N5ikgs5BO65Tr
-        sx524syQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jby0P-0005xG-D0; Fri, 22 May 2020 03:05:53 +0000
-Date:   Thu, 21 May 2020 20:05:53 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/36] Large pages in the page cache
-Message-ID: <20200522030553.GK28818@bombadil.infradead.org>
-References: <20200515131656.12890-1-willy@infradead.org>
- <20200521224906.GU2005@dread.disaster.area>
- <20200522000411.GI28818@bombadil.infradead.org>
- <20200522025751.GX2005@dread.disaster.area>
+        Thu, 21 May 2020 23:06:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38115 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727024AbgEVDGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 23:06:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Srwr6QCBz9sT2;
+        Fri, 22 May 2020 13:06:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590116781;
+        bh=vg7OdzOYZ/E6oXtQWwdzM9LqQMPJbWG89AiKb4R9r98=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mY8BwFJrydn7BYW17jU1FgItYfdiKhaB/KAcFMTfynpMV16ExnPEEDo3Jv6BG4l6C
+         /2eJxNY0aPxwFPbIRJV2vY7L+ObCOBXIakTb6R8WRnyMMEjzEEkWTDhIXxJLYX/Ylx
+         A33XsC+/vrkGoMlXcTmEANA7X4CoxgBbL7e6ISWzzhy9la/J7KlfonNKEAcb4Z3bXu
+         Gj/QxfRFn6KSZDHnu4JDHKwWcvmAs2L38/GwWnIPuY+KHVpckKuZ9tdj6iq/4ZMaUg
+         fMuz4OCrRvy8Y2ppNkRl/IMcF62ZXHyXPztlZMT1KUQPAgVZb1Qp+FnG/4v479R/J2
+         TKtdBbjw9e4pQ==
+Date:   Fri, 22 May 2020 13:06:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jonathan Corbet <corbet@lwn.net>, Theodore Ts'o <tytso@mit.edu>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the jc_docs tree with the ext4 tree
+Message-ID: <20200522130616.5fd7054c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522025751.GX2005@dread.disaster.area>
+Content-Type: multipart/signed; boundary="Sig_/yC1rBzc8PUGH8SFAA_zrQAr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 12:57:51PM +1000, Dave Chinner wrote:
-> On Thu, May 21, 2020 at 05:04:11PM -0700, Matthew Wilcox wrote:
-> > On Fri, May 22, 2020 at 08:49:06AM +1000, Dave Chinner wrote:
-> > > Ok, so the main issue I have with the filesystem/iomap side of
-> > > things is that it appears to be adding "transparent huge page"
-> > > awareness to the filesysetm code, not "large page support".
-> > > 
-> > > For people that aren't aware of the difference between the
-> > > transparent huge and and a normal compound page (e.g. I have no idea
-> > > what the difference is), this is likely to cause problems,
-> > > especially as you haven't explained at all in this description why
-> > > transparent huge pages are being used rather than bog standard
-> > > compound pages.
-> > 
-> > The primary reason to use a different name from compound_*
-> > is so that it can be compiled out for systems that don't enable
-> > CONFIG_TRANSPARENT_HUGEPAGE.  So THPs are compound pages, as they always
-> > have been, but for a filesystem, using thp_size() will compile to either
-> > page_size() or PAGE_SIZE depending on CONFIG_TRANSPARENT_HUGEPAGE.
-> 
-> Again, why is this dependent on THP? We can allocate compound pages
-> without using THP, so why only allow the page cache to use larger
-> pages when THP is configured?
+--Sig_/yC1rBzc8PUGH8SFAA_zrQAr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-We have too many CONFIG options.  My brain can't cope with adding
-CONFIG_LARGE_PAGES because then we might have neither THP nor LP, LP and
-not THP, THP and not LP or both THP and LP.  And of course HUGETLBFS,
-which has its own special set of issues that one has to think about when
-dealing with the page cache.
+Hi all,
 
-So, either large pages becomes part of the base kernel and you
-always get them, or there's a CONFIG option to enable them and it's
-CONFIG_TRANSPARENT_HUGEPAGE.  I chose the latter.
+Today's linux-next merge of the jc_docs tree got a conflict in:
 
-I suppose what I'm saying is that a transparent hugepage can now be any
-size [1], not just PMD size.
+  Documentation/filesystems/fiemap.rst
 
-[1] power of two that isn't 1 because we use the third page for
-something-or-other.
+between commit:
+
+  469581d9e5c9 ("fs: move fiemap range validation into the file systems ins=
+tances")
+
+from the ext4 tree and commit:
+
+  e6f7df74ec1a ("docs: filesystems: convert fiemap.txt to ReST")
+
+from the jc_docs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/filesystems/fiemap.rst
+index 35c8571eccb6,2a572e7edc08..000000000000
+--- a/Documentation/filesystems/fiemap.rst
++++ b/Documentation/filesystems/fiemap.rst
+@@@ -203,10 -206,9 +206,10 @@@ EINTR once fatal signal received
+ =20
+ =20
+  Flag checking should be done at the beginning of the ->fiemap callback vi=
+a the
+- fiemap_prep() helper:
+ -fiemap_check_flags() helper::
+++fiemap_prep() helper::
+ =20
+- int fiemap_prep(struct inode *inode, struct fiemap_extent_info *fieinfo,
+- 		u64 start, u64 *len, u32 supported_flags);
+ -  int fiemap_check_flags(struct fiemap_extent_info *fieinfo, u32 fs_flags=
+);
+++  int fiemap_prep(struct inode *inode, struct fiemap_extent_info *fieinfo,
+++		  u64 start, u64 *len, u32 supported_flags);
+ =20
+  The struct fieinfo should be passed in as received from ioctl_fiemap(). T=
+he
+  set of fiemap flags which the fs understands should be passed via fs_flag=
+s. If
+
+--Sig_/yC1rBzc8PUGH8SFAA_zrQAr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HQagACgkQAVBC80lX
+0Gx4XQgAgxHLlooqcAUKDPVQanDE5h82ReFmCdKIjUk/BdlCSja9Yh2O5NfxXGCj
+B/M7AXr1J+UOhPKEho21atYhY8Paomr3oOOE+OFHr1yueZBZ+bs3mNbPdDh2iuBP
+C7V7ZNuJIkrfygLi84AlVxx2k8q9ce1RJg0Xg8hJ9UB26t0vR2fBV3tBMZrGjTBp
+LJBMScv9/sesUuUSDQyW7m9SrNynlE+w5Z2OcMfZfsFiRWVixYA42XfMoaRU9j3H
+vBDg9L8G24NufHqi3uMLgwg+Fc93FGbfC5nwW+tbWXAeqbdyptM1wIDvVshnmvK/
+J9eWVCEWChi91dVyd707XhEKZzPsRA==
+=R4id
+-----END PGP SIGNATURE-----
+
+--Sig_/yC1rBzc8PUGH8SFAA_zrQAr--
