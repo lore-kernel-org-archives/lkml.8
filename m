@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671E1C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 356F222257
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453E1221FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159038;
-	bh=6N2uRjlh/wR1nNEdVNdwFs6zFXOV8xD1YmT4D8/8yAo=;
+	s=default; t=1590159041;
+	bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGDikw84ip4rPfEuIfligrh44++W5sdUYXCRbpO3JPTCFHNSY76Z3cCVGCJSPurBp
-	 b+VDBuIViwk3QmWXWFTi3cIQeBLCNUro4TzD3kJKnjMLixPdNalJ7WaHatUTG3lfdf
-	 bOGQw8gHHcQDUtK9DB3XF2SNzKNRpHJqndLnsXvY=
+	b=Mu6Lx8biBdxZCPZpm2HS6uIZ9nt831OFadAItz84HKEido48F6EnxeA3ieSzx9OLN
+	 noQIkJc+FwxLpP8GvJnmuf2bw3O1NJApeVhj4ei4tc2SIqbzH3t4LZyxjRMW7bE57x
+	 IyyhJhvI5Axaqboa+4xDO72J9dlVCZ27nYWyKr3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730732AbgEVOug (ORCPT
+        id S1730766AbgEVOuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730727AbgEVOud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:33 -0400
+        id S1730747AbgEVOug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80CD0222B9;
-        Fri, 22 May 2020 14:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FFFD221FF;
+        Fri, 22 May 2020 14:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159033;
-        bh=6N2uRjlh/wR1nNEdVNdwFs6zFXOV8xD1YmT4D8/8yAo=;
+        s=default; t=1590159036;
+        bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nTNBrp4P+129ZZy9+hL2feyA1y0e5S2ynvKhPfsBzwFXAD7FEhgy6yx+WXHKtWAxA
-         rYmajRO4PecxUmmGVmrgqs1CDatrU5P+uKaafUXmoy+PfEMnulgUOroyjmJXcPsjqF
-         y2I8PHB6UCzGLFW1g0HnOHwoCiY4o7ZoPYoSAifc=
+        b=RuInJMPTOVF9XznmWYZTCmwTua4Bopplv1N8Jmnfx6MwIKLUN/h6Uv/LM0qOZ8X5X
+         /QdSW+lOXIgDDQelxglismt4vmcCmthlyb/Vf4V8Oll5nr05hDeqRlOUhnitPGAraW
+         hZsCBLE/BWibiyUwXVhYJDhCWg0Yar0QRRkb3zRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+Cc:     Mao Han <han_mao@linux.alibaba.com>,
+        Guo Ren <guoren@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 30/41] riscv: Add pgprot_writecombine/device and PAGE_SHARED defination if NOMMU
-Date:   Fri, 22 May 2020 10:49:47 -0400
-Message-Id: <20200522144959.434379-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 33/41] csky: Fixup perf callchain unwind
+Date:   Fri, 22 May 2020 10:49:50 -0400
+Message-Id: <20200522144959.434379-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -60,47 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Mao Han <han_mao@linux.alibaba.com>
 
-[ Upstream commit fa8174aa225fe3d53b37552e5066e6f0301dbabd ]
+[ Upstream commit 229a0ddee1108a3f82a873e6cbbe35c92c540444 ]
 
-Some drivers use PAGE_SHARED, pgprot_writecombine()/pgprot_device(),
-add the defination to fix build error if NOMMU.
+ [ 5221.974084] Unable to handle kernel paging request at virtual address 0xfffff000, pc: 0x8002c18e
+ [ 5221.985929] Oops: 00000000
+ [ 5221.989488]
+ [ 5221.989488] CURRENT PROCESS:
+ [ 5221.989488]
+ [ 5221.992877] COMM=callchain_test PID=11962
+ [ 5221.995213] TEXT=00008000-000087e0 DATA=00009f1c-0000a018 BSS=0000a018-0000b000
+ [ 5221.999037] USER-STACK=7fc18e20  KERNEL-STACK=be204680
+ [ 5221.999037]
+ [ 5222.003292] PC: 0x8002c18e (perf_callchain_kernel+0x3e/0xd4)
+ [ 5222.007957] LR: 0x8002c198 (perf_callchain_kernel+0x48/0xd4)
+ [ 5222.074873] Call Trace:
+ [ 5222.074873] [<800a248e>] get_perf_callchain+0x20a/0x29c
+ [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
+ [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
+ [ 5222.074873] [<8009de6e>] perf_event_output_forward+0x36/0x98
+ [ 5222.074873] [<800497e0>] search_exception_tables+0x20/0x44
+ [ 5222.074873] [<8002cbb6>] do_page_fault+0x92/0x378
+ [ 5222.074873] [<80098608>] __perf_event_overflow+0x54/0xdc
+ [ 5222.074873] [<80098778>] perf_swevent_hrtimer+0xe8/0x164
+ [ 5222.074873] [<8002ddd0>] update_mmu_cache+0x0/0xd8
+ [ 5222.074873] [<8002c014>] user_backtrace+0x58/0xc4
+ [ 5222.074873] [<8002c0b4>] perf_callchain_user+0x34/0xd0
+ [ 5222.074873] [<800a2442>] get_perf_callchain+0x1be/0x29c
+ [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
+ [ 5222.074873] [<8009d834>] perf_output_sample+0x78c/0x858
+ [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
+ [ 5222.074873] [<8009de94>] perf_event_output_forward+0x5c/0x98
+ [ 5222.097846]
+ [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
+ [ 5222.097846] [<8006c874>] hrtimer_interrupt+0x104/0x2ec
+ [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
+ [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
+ [ 5222.097846] [<8006c770>] hrtimer_interrupt+0x0/0x2ec
+ [ 5222.097846] [<8005f2e4>] __handle_irq_event_percpu+0xac/0x19c
+ [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
+ [ 5222.097846] [<8005f408>] handle_irq_event_percpu+0x34/0x88
+ [ 5222.097846] [<8005f480>] handle_irq_event+0x24/0x64
+ [ 5222.097846] [<8006218c>] handle_level_irq+0x68/0xdc
+ [ 5222.097846] [<8005ec76>] __handle_domain_irq+0x56/0xa8
+ [ 5222.097846] [<80450e90>] ck_irq_handler+0xac/0xe4
+ [ 5222.097846] [<80029012>] csky_do_IRQ+0x12/0x24
+ [ 5222.097846] [<8002a3a0>] csky_irq+0x70/0x80
+ [ 5222.097846] [<800ca612>] alloc_set_pte+0xd2/0x238
+ [ 5222.097846] [<8002ddd0>] update_mmu_cache+0x0/0xd8
+ [ 5222.097846] [<800a0340>] perf_event_exit_task+0x98/0x43c
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+The original fp check doesn't base on the real kernal stack region.
+Invalid fp address may cause kernel panic.
+
+Signed-off-by: Mao Han <han_mao@linux.alibaba.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/mmio.h    | 2 ++
- arch/riscv/include/asm/pgtable.h | 1 +
- 2 files changed, 3 insertions(+)
+ arch/csky/kernel/perf_callchain.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/include/asm/mmio.h b/arch/riscv/include/asm/mmio.h
-index a2c809df2733..56053c9838b2 100644
---- a/arch/riscv/include/asm/mmio.h
-+++ b/arch/riscv/include/asm/mmio.h
-@@ -16,6 +16,8 @@
+diff --git a/arch/csky/kernel/perf_callchain.c b/arch/csky/kernel/perf_callchain.c
+index e68ff375c8f8..ab55e98ee8f6 100644
+--- a/arch/csky/kernel/perf_callchain.c
++++ b/arch/csky/kernel/perf_callchain.c
+@@ -12,12 +12,17 @@ struct stackframe {
  
- #ifndef CONFIG_MMU
- #define pgprot_noncached(x)	(x)
-+#define pgprot_writecombine(x)	(x)
-+#define pgprot_device(x)	(x)
- #endif /* CONFIG_MMU */
+ static int unwind_frame_kernel(struct stackframe *frame)
+ {
+-	if (kstack_end((void *)frame->fp))
++	unsigned long low = (unsigned long)task_stack_page(current);
++	unsigned long high = low + THREAD_SIZE;
++
++	if (unlikely(frame->fp < low || frame->fp > high))
+ 		return -EPERM;
+-	if (frame->fp & 0x3 || frame->fp < TASK_SIZE)
++
++	if (kstack_end((void *)frame->fp) || frame->fp & 0x3)
+ 		return -EPERM;
  
- /* Generic IO read/write.  These perform native-endian accesses. */
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 393f2014dfee..05b92987f500 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -460,6 +460,7 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ 	*frame = *(struct stackframe *)frame->fp;
++
+ 	if (__kernel_text_address(frame->lr)) {
+ 		int graph = 0;
  
- #else /* CONFIG_MMU */
- 
-+#define PAGE_SHARED		__pgprot(0)
- #define PAGE_KERNEL		__pgprot(0)
- #define swapper_pg_dir		NULL
- #define VMALLOC_START		0
 -- 
 2.25.1
 
