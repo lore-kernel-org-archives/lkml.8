@@ -2,305 +2,216 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45569C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2780C2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94606206BE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ofqnPgic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbgEVAJi (ORCPT
+        id S1730731AbgEVAJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:09:38 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41640 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730225AbgEVAJh (ORCPT
+        Thu, 21 May 2020 20:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729771AbgEVAJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:09:37 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1CA898030790;
-        Fri, 22 May 2020 00:09:31 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dqPEJ_MjpqpO; Fri, 22 May 2020 03:09:29 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <linux-mips@vger.kernel.org>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 16/16] dt-bindings: spi: Convert DW SPI binding to DT schema
-Date:   Fri, 22 May 2020 03:08:05 +0300
-Message-ID: <20200522000806.7381-17-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200522000806.7381-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200522000806.7381-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 21 May 2020 20:09:48 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B30C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:09:47 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id be9so8017614edb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ShTiWXhFQZjS5cdCw5c5iEVmkBUXovNZWLuS1Cv7888=;
+        b=ofqnPgic0A6d3snWFaSYqXR6bXBywTUnsOr918T7Vjsau2FfwafBcg2+BvbwupHpnK
+         i8zIqwaU68LuAEvmeeb6p5FBg+YCsKTCxnBQxlTsuV7mdVv0zuDiCF+VHked8F7bTUZK
+         5GiXwg8aW3OJ9v1FQ6LHwhFjFyYNnq6FLKf+o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ShTiWXhFQZjS5cdCw5c5iEVmkBUXovNZWLuS1Cv7888=;
+        b=NStK0H9vpOorJaiGXX7h+KJsHeUZ13SMgVh3LLjHfyDluw5aMIZx5wEV12hSA4nt2E
+         teRLWdiEC4A/iXDfIIEXGmlTvovB5HQc2gGie/KJvCRUyvWn2naXuCxm8lTQYYRqUXDY
+         MP9lOF+JF2Z33s1mB1IKVHtKsvULN96aCUIYaxlSrRo2FR1S5sUyx1dJn1BAqbKLoZvH
+         VTRM8Ko9mOXbCzG3WaBdskjR4NSPie8kcTKrVkpMVQAha8+9e3Cq16wb2KxrPwiDv5BI
+         OfXwVX2RXKZf+yTH1nW20V4TxcgNN8DnQiTQYgAUYpXKgGXxCveNX4fSAoqGtZMdKMu0
+         bShg==
+X-Gm-Message-State: AOAM530K2hfY5RiOgC+FbBgF5htcCLCwNGJVcxhOSRcIslJ7+CVosmyA
+        D4rlOJnfoSzE38guy/uDyX0oEoRJ1CLMTg==
+X-Google-Smtp-Source: ABdhPJzQwbKpAmkePdCoIh6+71cPSreMHTxFDneCeUqF1nFT/jQ1M3nleJLYRJ79I2Su7fVDtbgTKQ==
+X-Received: by 2002:a05:6402:306a:: with SMTP id bs10mr1052559edb.227.1590106184702;
+        Thu, 21 May 2020 17:09:44 -0700 (PDT)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id d22sm6098209ejb.15.2020.05.21.17.09.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 May 2020 17:09:44 -0700 (PDT)
+Received: by mail-wr1-f51.google.com with SMTP id s8so8411477wrt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:09:43 -0700 (PDT)
+X-Received: by 2002:a5d:66c5:: with SMTP id k5mr867242wrw.17.1590106183205;
+ Thu, 21 May 2020 17:09:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <5ec71528.qSD3ljogzEHcLRXO%lkp@intel.com>
+In-Reply-To: <5ec71528.qSD3ljogzEHcLRXO%lkp@intel.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Fri, 22 May 2020 02:09:29 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5C20_iOMaXOF+4MoUAVyzVR4VfD1iiPhFaHkCv16srebg@mail.gmail.com>
+Message-ID: <CAAFQd5C20_iOMaXOF+4MoUAVyzVR4VfD1iiPhFaHkCv16srebg@mail.gmail.com>
+Subject: Re: 6fe12cdbcf ("i2c: core: support bus regulator controlling in
+ .."): BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+To:     kernel test robot <lkp@intel.com>
+Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>, LKP <lkp@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        philip.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modern device tree bindings are supposed to be created as YAML-files
-in accordance with dt-schema. This commit replaces two DW SPI legacy
-bare text bindings with YAML file. As before the bindings file states
-that the corresponding dts node is supposed to be compatible either
-with generic DW APB SSI controller or with Microsemi/Amazon/Renesas/Intel
-vendors-specific controllers, to have registers, interrupts and clocks
-properties. Though in case of Microsemi version of the controller
-there must be two registers resources specified. Properties like
-clock-names, reg-io-width, cs-gpio, num-cs, DMA and slave device
-sub-nodes are optional.
+On Fri, May 22, 2020 at 1:57 AM kernel test robot <lkp@intel.com> wrote:
+>
+> Greetings,
+>
+> 0day kernel testing robot got the below dmesg and the first bad commit is
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+>
+> commit 6fe12cdbcfe35ad4726a619a9546822d34fc934c
+> Author:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+> AuthorDate: Tue May 19 15:27:29 2020 +0800
+> Commit:     Wolfram Sang <wsa@kernel.org>
+> CommitDate: Wed May 20 15:25:55 2020 +0200
+>
+>     i2c: core: support bus regulator controlling in adapter
+>
+>     Although in the most platforms, the bus power of i2c
+>     are alway on, some platforms disable the i2c bus power
+>     in order to meet low power request.
+>
+>     We get and enable bulk regulator in i2c adapter device.
+>
+>     Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+>     Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+>     Signed-off-by: Wolfram Sang <wsa@kernel.org>
+>
+> 6aab46bc52  dt-binding: i2c: add bus-supply property
+> 6fe12cdbcf  i2c: core: support bus regulator controlling in adapter
+> +-----------------------------------------------------------------------------+------------+------------+
+> |                                                                             | 6aab46bc52 | 6fe12cdbcf |
+> +-----------------------------------------------------------------------------+------------+------------+
+> | boot_successes                                                              | 33         | 0          |
+> | boot_failures                                                               | 2          | 16         |
+> | WARNING:at_lib/kobject_uevent.c:#add_uevent_var                             | 1          |            |
+> | EIP:add_uevent_var                                                          | 1          |            |
+> | BUG:kernel_hang_in_boot_stage                                               | 1          |            |
+> | BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c | 0          | 16         |
+> +-----------------------------------------------------------------------------+------------+------------+
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> [  105.730065] ### dt-test ### EXPECT / : OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest13/status
+> [  105.730071] ### dt-test ### EXPECT \ : i2c i2c-1: Added multiplexed i2c bus 3
+> [  105.747587] i2c i2c-3: supply bus not found, using dummy regulator
+> [  105.754529] i2c i2c-1: Added multiplexed i2c bus 3
+> [  105.756092] ### dt-test ### EXPECT / : i2c i2c-1: Added multiplexed i2c bus 3
+> [  105.773831] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
+> [  105.777468] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 189, name: kworker/0:2
+> [  105.778995] 2 locks held by kworker/0:2/189:
+> [  105.779775]  #0: f48249a4 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x3ac/0x1050
+> [  105.781743]  #1: f4145f34 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x3ac/0x1050
+> [  105.783485] Preemption disabled at:
+> [  105.783509] [<cdbb653d>] srcu_invoke_callbacks+0x14d/0x280
+> [  105.785397] CPU: 0 PID: 189 Comm: kworker/0:2 Not tainted 5.7.0-rc1-00058-g6fe12cdbcfe35 #1
+> [  105.786961] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [  105.788608] Workqueue: rcu_gp srcu_invoke_callbacks
+> [  105.789777] Call Trace:
+> [  105.790308]  dump_stack+0x32/0x4a
+> [  105.790914]  ___might_sleep+0x3dc/0x4b0
+> [  105.791659]  ? srcu_invoke_callbacks+0x14d/0x280
+> [  105.792574]  ? srcu_invoke_callbacks+0x14d/0x280
+> [  105.793677]  ? srcu_invoke_callbacks+0x14d/0x280
+> [  105.794480]  __might_sleep+0x10e/0x210
+> [  105.795186]  __mutex_lock+0x34/0x12f0
+> [  105.795838]  ? mark_held_locks+0xb3/0x100
+> [  105.796561]  ? _raw_spin_unlock_irqrestore+0x13b/0x190
+> [  105.797694]  ? _raw_spin_unlock_irqrestore+0x13b/0x190
+> [  105.798653]  ? lockdep_hardirqs_on+0x1bb/0x420
+> [  105.799462]  mutex_lock_nested+0x41/0x60
+> [  105.800155]  ? regulator_put+0x25/0x70
+> [  105.800839]  regulator_put+0x25/0x70
+> [  105.801641]  devm_regulator_release+0x1d/0x30
+> [  105.802415]  release_nodes+0x326/0x500
+> [  105.803126]  devres_release_all+0xb9/0x130
+> [  105.803873]  device_release+0x25/0x1b0
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-mips@vger.kernel.org
----
- .../bindings/spi/snps,dw-apb-ssi.txt          |  44 ------
- .../bindings/spi/snps,dw-apb-ssi.yaml         | 127 ++++++++++++++++++
- .../devicetree/bindings/spi/spi-dw.txt        |  24 ----
- 3 files changed, 127 insertions(+), 68 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-dw.txt
+This is entirely my guess for now, but isn't it suspicious that
+device_release() has been called with interrupts disabled?
 
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-deleted file mode 100644
-index 020e3168ee41..000000000000
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ /dev/null
-@@ -1,44 +0,0 @@
--Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
--
--Required properties:
--- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
--  "jaguar2", or "amazon,alpine-dw-apb-ssi", or "snps,dwc-ssi-1.01a" or
--  "intel,keembay-ssi"
--- reg : The register base for the controller. For "mscc,<soc>-spi", a second
--  register set is required (named ICPU_CFG:SPI_MST)
--- interrupts : One interrupt, used by the controller.
--- #address-cells : <1>, as required by generic SPI binding.
--- #size-cells : <0>, also as required by generic SPI binding.
--- clocks : phandles for the clocks, see the description of clock-names below.
--   The phandle for the "ssi_clk" is required. The phandle for the "pclk" clock
--   is optional. If a single clock is specified but no clock-name, it is the
--   "ssi_clk" clock. If both clocks are listed, the "ssi_clk" must be first.
--
--Optional properties:
--- clock-names : Contains the names of the clocks:
--    "ssi_clk", for the core clock used to generate the external SPI clock.
--    "pclk", the interface clock, required for register access. If a clock domain
--     used to enable this clock then it should be named "pclk_clkdomain".
--- cs-gpios : Specifies the gpio pins to be used for chipselects.
--- num-cs : The number of chipselects. If omitted, this will default to 4.
--- reg-io-width : The I/O register width (in bytes) implemented by this
--  device.  Supported values are 2 or 4 (the default).
--- dmas : Phandle + identifiers of Tx and Rx DMA channels.
--- dma-names : Contains the names of the DMA channels. Must be "tx" and "rx".
--
--Child nodes as per the generic SPI binding.
--
--Example:
--
--	spi@fff00000 {
--		compatible = "snps,dw-apb-ssi";
--		reg = <0xfff00000 0x1000>;
--		interrupts = <0 154 4>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		clocks = <&spi_m_clk>;
--		num-cs = <2>;
--		cs-gpios = <&gpio0 13 0>,
--			   <&gpio0 14 0>;
--	};
--
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-new file mode 100644
-index 000000000000..1fcab6415136
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-@@ -0,0 +1,127 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/snps,dw-apb-ssi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface
-+
-+maintainers:
-+  - Mark Brown <broonie@kernel.org>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mscc,ocelot-spi
-+              - mscc,jaguar2-spi
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - description: Generic DW SPI Controller
-+        enum:
-+          - snps,dw-apb-ssi
-+          - snps,dwc-ssi-1.01a
-+      - description: Microsemi Ocelot/Jaguar2 SoC SPI Controller
-+        items:
-+          - enum:
-+              - mscc,ocelot-spi
-+              - mscc,jaguar2-spi
-+          - const: snps,dw-apb-ssi
-+      - description: Amazon Alpine SPI Controller
-+        const: amazon,alpine-dw-apb-ssi
-+      - description: Renesas RZ/N1 SPI Controller
-+        items:
-+          - const: renesas,rzn1-spi
-+          - const: snps,dw-apb-ssi
-+      - description: Intel Keem Bay SPI Controller
-+        const: intel,keembay-ssi
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description: DW APB SSI controller memory mapped registers
-+      - description: SPI MST region map
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    items:
-+      - description: SPI Controller reference clock source
-+      - description: APB interface clock source
-+
-+  clock-names:
-+    minItems: 1
-+    items:
-+      - const: ssi_clk
-+      - const: pclk
-+
-+  reg-io-width:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: I/O register width (in bytes) implemented by this device
-+    default: 4
-+    enum: [ 2, 4 ]
-+
-+  num-cs:
-+    default: 4
-+    minimum: 1
-+    maximum: 4
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 3
-+
-+      spi-rx-bus-width:
-+        const: 1
-+
-+      spi-tx-bus-width:
-+        const: 1
-+
-+unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    spi@fff00000 {
-+      compatible = "snps,dw-apb-ssi";
-+      reg = <0xfff00000 0x1000>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      interrupts = <0 154 4>;
-+      clocks = <&spi_m_clk>;
-+      num-cs = <2>;
-+      cs-gpios = <&gpio0 13 0>,
-+                 <&gpio0 14 0>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/spi/spi-dw.txt b/Documentation/devicetree/bindings/spi/spi-dw.txt
-deleted file mode 100644
-index 7b63ed601990..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-dw.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Synopsys DesignWare SPI master
--
--Required properties:
--- compatible: should be "snps,designware-spi"
--- #address-cells: see spi-bus.txt
--- #size-cells: see spi-bus.txt
--- reg: address and length of the spi master registers
--- interrupts: should contain one interrupt
--- clocks: spi clock phandle
--- num-cs: see spi-bus.txt
--
--Optional properties:
--- cs-gpios: see spi-bus.txt
--
--Example:
--
--spi: spi@4020a000 {
--	compatible = "snps,designware-spi";
--	interrupts = <11 1>;
--	reg = <0x4020a000 0x1000>;
--	clocks = <&pclk>;
--	num-cs = <2>;
--	cs-gpios = <&banka 0 0>;
--};
--- 
-2.25.1
+Is it possible that something else introduced a bug that causes
+device_release() to be called in an atomic context and it only
+triggered with this patch, because the affected struct device now has
+a mutex lock in the release path?
 
+> [  105.804548]  ? srcu_invoke_callbacks+0xfa/0x280
+> [  105.805591]  kobject_put+0x33e/0x800
+> [  105.806244]  ? refcount_dec_not_one+0x107/0x2f0
+> [  105.807050]  ? srcu_invoke_callbacks+0x14d/0x280
+> [  105.807918]  __device_link_free_srcu+0x79/0xe0
+> [  105.808685]  srcu_invoke_callbacks+0x160/0x280
+> [  105.809729]  process_one_work+0x594/0x1050
+> [  105.810535]  ? process_one_work+0x3ac/0x1050
+> [  105.811314]  ? _raw_spin_lock_irq+0x56/0xe0
+> [  105.812113]  worker_thread+0x4a3/0xc00
+> [  105.812823]  kthread+0x31f/0x3b0
+> [  105.813537]  ? rescuer_thread+0x720/0x720
+> [  105.814227]  ? kthread_bind+0x30/0x30
+> [  105.814920]  ret_from_fork+0x19/0x24
+> [  105.866663] ### dt-test ### EXPECT \ : GPIO line <<int>> (line-B-input) hogged as input
+> [  105.868134] ### dt-test ### EXPECT \ : GPIO line <<int>> (line-A-input) hogged as input
+> [  105.870372] GPIO line 509 (line-B-input) hogged as input
+> [  105.872524] GPIO line 503 (line-A-input) hogged as input
+> [  105.874446] ### dt-test ### EXPECT / : GPIO line <<int>> (line-A-input) hogged as input
+>
+>                                                           # HH:MM RESULT GOOD BAD GOOD_BUT_DIRTY DIRTY_NOT_BAD
+> git bisect start d0edf98c01ebe0790295cf888a2976d2d04377b1 b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce --
+> git bisect  bad 4fde3f7c56e653e1d62102a4a77534f4bfec9689  # 07:04  B      0    17   33   0  Merge 'linux-review/Anson-Huang/ARM-dts-imx-Make-tempmon-node-as-child-of-anatop-node/20200520-230948' into devel-hourly-2020052107
+> git bisect  bad e8344c6f4e6b7a7318fa46dd6fd5418f3e36d010  # 07:04  B      0    17   33   0  Merge 'linux-review/Gabriel-Krisman-Bertazi/iscsi-Fix-deadlock-on-recovery-path-during-GFP_IO-reclaim/20200520-220836' into devel-hourly-2020052107
+> git bisect good 6332b5a106b02909b3ac673832d1e36a901d81fa  # 07:04  G     11     0    0   0  Merge 'stericsson/ux500-dts' into devel-hourly-2020052107
+> git bisect  bad 05c599fa08c02ea883075d05cc544f5e133dad15  # 07:04  B      0    11   27   0  Merge 'ras/edac-misc' into devel-hourly-2020052107
+> git bisect good 25ef63dabd6b9567bd3d7870c5e8595b6b87c678  # 07:05  G     11     0    0   0  Merge 'linux-review/Maulik-Shah/arm64-dts-qcom-sc7180-Correct-the-pdc-interrupt-ranges/20200518-202257' into devel-hourly-2020052107
+> git bisect good 0db2ae8dfea89b3541eb5ffb6e0aed13d921b277  # 07:05  G     11     0    0   0  Merge 'linux-review/Geert-Uytterhoeven/ARM-dts-r9a06g032-Correct-GIC-compatible-value-order/20200519-204708' into devel-hourly-2020052107
+> git bisect good aeee233deb1c06fcf7630402c1f15208aa3d723a  # 07:05  G     11     0    0   0  Merge 'linux-review/Lubomir-Rintel/media-marvell-ccic-Add-support-for-runtime-PM/20200521-053250' into devel-hourly-2020052107
+> git bisect  bad 6872daa8abed0e8bd8447d56cfca80c4d29d6243  # 07:05  B      0    10   27   1  Merge 'linux-review/Dinghao-Liu/i2c-imx-lpi2c-fix-runtime-pm-imbalance-on-error/20200521-033738' into devel-hourly-2020052107
+> git bisect good f23da43a58d09dc6ea58837a45374e15de36537e  # 07:05  G     10     0    0   1  Merge branch 'i2c/for-current' into i2c/for-next
+> git bisect good fadb47fca1f132c123395bca26c69007e816988f  # 07:05  G     11     0    0   0  Merge branch 'i2c/for-5.8' into i2c/for-next
+> git bisect  bad 4f118a7e4686062bd4df4a37e24c22cd71495b5f  # 07:05  B      0    11   27   0  Merge tag 'for-5.8-i2c' of git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux into i2c/for-5.8
+> git bisect good c73178b93754edd8449dccd3faf05baafd4d3f0e  # 07:05  G     11     0    0   0  i2c: tegra: Add support for the VI I2C on Tegra210
+> git bisect good 6aab46bc52a8f579879d491c9d8062e03caa5c61  # 07:05  G     30     0    0   3  dt-binding: i2c: add bus-supply property
+> git bisect  bad f89c326dcaa0cb8c3af7764e75eeed4e3f3c879a  # 07:05  B      0    15   31   0  Merge branch 'i2c/for-current-fixed' into i2c/for-5.8
+> git bisect  bad 6fe12cdbcfe35ad4726a619a9546822d34fc934c  # 07:05  B      0    15   45   0  i2c: core: support bus regulator controlling in adapter
+> # first bad commit: [6fe12cdbcfe35ad4726a619a9546822d34fc934c] i2c: core: support bus regulator controlling in adapter
+> git bisect good 6aab46bc52a8f579879d491c9d8062e03caa5c61  # 07:06  G     30     0    0   3  dt-binding: i2c: add bus-supply property
+> # extra tests with debug options
+> git bisect  bad 6fe12cdbcfe35ad4726a619a9546822d34fc934c  # 07:06  B      0    14   30   0  i2c: core: support bus regulator controlling in adapter
+> # extra tests on revert first bad commit
+> git bisect good 3788bb973ab542fcf623106a1cef5d8b1e237f7c  # 07:56  G     10     0    0   0  Revert "i2c: core: support bus regulator controlling in adapter"
+> # good: [3788bb973ab542fcf623106a1cef5d8b1e237f7c] Revert "i2c: core: support bus regulator controlling in adapter"
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/lkp@lists.01.org
