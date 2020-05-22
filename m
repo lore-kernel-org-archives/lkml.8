@@ -2,85 +2,169 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F26EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40E11207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B13207F7
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KeXNSTZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgEVBXK (ORCPT
+        id S1726948AbgEVB0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:23:10 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:56050 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726335AbgEVBXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:23:10 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Fri, 22 May 2020 09:23:01
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.77.158]
-Date:   Fri, 22 May 2020 09:23:01 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Bin Liu" <b-liu@ti.com>
-Cc:     kjlu@umn.edu, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] usb: musb: Fix runtime PM imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200521203728.GB25575@iaqt7>
-References: <20200521073547.18828-1-dinghao.liu@zju.edu.cn>
- <20200521203728.GB25575@iaqt7>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Thu, 21 May 2020 21:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgEVB0U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 21:26:20 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30555C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:26:20 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id p12so7131542qtn.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8sldq0pMkWDsxQ4+5VF7/Xl+EYi91SNnCVeh6ANVjMA=;
+        b=KeXNSTZQPmytCRtDQ2bBN4aRS4A7Lnla+lbYVhJRu96GSy3NoAEdP2e09RVS91IKS8
+         8647xtQUd4Fu5B3mXQrkoo2d6hTGL6p/1Aj7XTtHeMIUUQD0g6ofMD6R3bHXCRiJll75
+         bw8dvhnz2tqzKf3p+HGcqjuQkWOOzNzpAeygGXUd/kehm3/OI9qfUk9rnggFxi7UkVZK
+         GT4Hj7HGnLSZIzdE+aVjQ5QVGsMso3sNnSK1EasjReTTMxal4JkHgrdwgbDWisSIg5x+
+         A7MLrkQSRVdrfdgiG2S9zW/pYMtysOPV2yovy9Z9WKl7kofjJFHVUIn0+Lm+cvTt/aey
+         60sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8sldq0pMkWDsxQ4+5VF7/Xl+EYi91SNnCVeh6ANVjMA=;
+        b=r7ClYCb9nK43NTzsNHvYYQRwpoID59U7aRcTwBjlxqJi6hxMfE07qIj3YVmWiCwQrI
+         7tME/MuUVTRr55BGMgYj0mBNWQZU8jLIu1WozCtXuxxOzqhZ6l0/YglKfZsi5ATSPep4
+         k1b/xW/DLgzYVidEgI0fj7jkrGR80+HVHyS1aYRK5xeakQtUZzHnr4QtZOV84dctm2tM
+         FOID81GP4KflwRTSHzvLuYfYfW5oFx/c8CUpZ/5cxgyUhLvUNj3Q9q7DlXUGAgde4xo7
+         pauZwI6KFzFgEeF8fDtHPGyhgkyccfWt1MqzWIKNizcgqnu7aaC2c5/ObITsxaGfEem6
+         Lt2w==
+X-Gm-Message-State: AOAM533Tu9XIZpTSxnRtqBWJDZ/WmR0GQcHBG/33IfmQHUBvfu+B3SAI
+        3myozM1oL1kWbLlvw1T0zZ3UqANjoyAmQX8ILhjyfQ==
+X-Google-Smtp-Source: ABdhPJxFgxrb/KqPSe2SjIw5HgVTkYN54u4PTLazRZxD6RstWtydGYuJE8M75QHUR22jaA/ErjKnA6xapmrOjN4YOWs=
+X-Received: by 2002:ac8:1c67:: with SMTP id j36mr13503048qtk.34.1590110778831;
+ Thu, 21 May 2020 18:26:18 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <52fdeb8d.bcf65.17239f9f3a8.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgCXPxx1Kcde2n_4AQ--.31233W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0IBlZdtOP4JAABsA
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUGVWUXwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6w4lV2xY6xkI7II2jI8vz4vEwIxGrwCS07
-        vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC
-        6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14
-        v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r126r1DMIAIbVCI42IY6xIIjxv20xvE14v2
-        6r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lV2xY6IIF0xvE42xK8V
-        AvwI8IcIk0rVWrJr0_WFyUJwCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
-        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520224818.78930-1-joel@joelfernandes.org> <20200521225202.GD2869@paulmck-ThinkPad-P72>
+In-Reply-To: <20200521225202.GD2869@paulmck-ThinkPad-P72>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Thu, 21 May 2020 21:26:05 -0400
+Message-ID: <CAJWu+opfReuX=uEV+2yhor81yjzSe1O0JP9=TxPd2O-mxxFyyw@mail.gmail.com>
+Subject: Re: [PATCH RFC] sched: Use sched-RCU in core-scheduling balancing logic
+To:     paulmck@kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        vpillai <vpillai@digitalocean.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Cc: Frederic Weisbecker" <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U3VyZS4KClJlZ2FyZHMsCkRpbmdoYW8KCj4gSGksCj4gCj4gT24gVGh1LCBNYXkgMjEsIDIwMjAg
-YXQgMDM6MzU6NDdQTSArMDgwMCwgRGluZ2hhbyBMaXUgd3JvdGU6Cj4gPiBXaGVuIGNvcHlfZnJv
-bV91c2VyKCkgcmV0dXJucyBhbiBlcnJvciBjb2RlLCBhIHBhaXJpbmcKPiA+IHJ1bnRpbWUgUE0g
-dXNhZ2UgY291bnRlciBkZWNyZW1lbnQgaXMgbmVlZGVkIHRvIGtlZXAKPiA+IHRoZSBjb3VudGVy
-IGJhbGFuY2VkLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBEaW5naGFvIExpdSA8ZGluZ2hhby5s
-aXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvdXNiL211c2IvbXVzYl9kZWJ1Z2Zz
-LmMgfCA1ICsrKystCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvbXVzYi9tdXNiX2RlYnVn
-ZnMuYyBiL2RyaXZlcnMvdXNiL211c2IvbXVzYl9kZWJ1Z2ZzLmMKPiA+IGluZGV4IDdiNjI4MWFi
-NjJlZC4uODM3YzM4YTVlNGVmIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy91c2IvbXVzYi9tdXNi
-X2RlYnVnZnMuYwo+ID4gKysrIGIvZHJpdmVycy91c2IvbXVzYi9tdXNiX2RlYnVnZnMuYwo+ID4g
-QEAgLTE3OCw4ICsxNzgsMTEgQEAgc3RhdGljIHNzaXplX3QgbXVzYl90ZXN0X21vZGVfd3JpdGUo
-c3RydWN0IGZpbGUgKmZpbGUsCj4gPiAgCj4gPiAgCW1lbXNldChidWYsIDB4MDAsIHNpemVvZihi
-dWYpKTsKPiA+ICAKPiA+IC0JaWYgKGNvcHlfZnJvbV91c2VyKGJ1ZiwgdWJ1ZiwgbWluX3Qoc2l6
-ZV90LCBzaXplb2YoYnVmKSAtIDEsIGNvdW50KSkpCj4gPiArCWlmIChjb3B5X2Zyb21fdXNlcihi
-dWYsIHVidWYsIG1pbl90KHNpemVfdCwgc2l6ZW9mKGJ1ZikgLSAxLCBjb3VudCkpKSB7Cj4gPiAr
-CQlwbV9ydW50aW1lX21hcmtfbGFzdF9idXN5KG11c2ItPmNvbnRyb2xsZXIpOwo+ID4gKwkJcG1f
-cnVudGltZV9wdXRfYXV0b3N1c3BlbmQobXVzYi0+Y29udHJvbGxlcik7Cj4gPiAgCQlyZXR1cm4g
-LUVGQVVMVDsKPiA+ICsJfQo+IAo+IFRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhlIGJ1Zy4gQ2FuIHlv
-dSBwbGVhc2UgaW5zdGVhZCBtb3ZlIHRoZXNlIGxpbmVzIHRvCj4gdGhlIGJlZ2lubmluZyBvZiB0
-aGlzIGZ1bmN0aW9uIHNvIHRoYXQgcG1fcnVudGltZV9nZXRfc3luYygpIGlzIG5vdAo+IGNhbGxl
-ZCBpZiBjb3B5X2Zyb21fdXNlcigpIGZhaWxlZD8KPiAKPiAtQmluLgo=
+On Thu, May 21, 2020 at 6:52 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Wed, May 20, 2020 at 06:48:18PM -0400, Joel Fernandes (Google) wrote:
+> > rcu_read_unlock() can incur an infrequent deadlock in
+> > sched_core_balance(). Fix this by using sched-RCU instead.
+> >
+> > This fixes the following spinlock recursion observed when testing the
+> > core scheduling patches on PREEMPT=y kernel on ChromeOS:
+> >
+> > [    3.240891] BUG: spinlock recursion on CPU#2, swapper/2/0
+> > [    3.240900]  lock: 0xffff9cd1eeb28e40, .magic: dead4ead, .owner: swapper/2/0, .owner_cpu: 2
+> > [    3.240905] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.4.22htcore #4
+> > [    3.240908] Hardware name: Google Eve/Eve, BIOS Google_Eve.9584.174.0 05/29/2018
+> > [    3.240910] Call Trace:
+> > [    3.240919]  dump_stack+0x97/0xdb
+> > [    3.240924]  ? spin_bug+0xa4/0xb1
+> > [    3.240927]  do_raw_spin_lock+0x79/0x98
+> > [    3.240931]  try_to_wake_up+0x367/0x61b
+> > [    3.240935]  rcu_read_unlock_special+0xde/0x169
+> > [    3.240938]  ? sched_core_balance+0xd9/0x11e
+> > [    3.240941]  __rcu_read_unlock+0x48/0x4a
+> > [    3.240945]  __balance_callback+0x50/0xa1
+> > [    3.240949]  __schedule+0x55a/0x61e
+> > [    3.240952]  schedule_idle+0x21/0x2d
+> > [    3.240956]  do_idle+0x1d5/0x1f8
+> > [    3.240960]  cpu_startup_entry+0x1d/0x1f
+> > [    3.240964]  start_secondary+0x159/0x174
+> > [    3.240967]  secondary_startup_64+0xa4/0xb0
+> > [   14.998590] watchdog: BUG: soft lockup - CPU#0 stuck for 11s! [kworker/0:10:965]
+> >
+> > Cc: vpillai <vpillai@digitalocean.com>
+> > Cc: Aaron Lu <aaron.lwe@gmail.com>
+> > Cc: Aubrey Li <aubrey.intel@gmail.com>
+> > Cc: peterz@infradead.org
+> > Cc: paulmck@kernel.org
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Change-Id: I1a4bf0cd1426b3c21ad5de44719813ad4ee5805e
+>
+> With some luck, the commit removing the need for this will hit
+> mainline during the next merge window.  Fingers firmly crossed...
+
+Sounds good, thank you Paul :-)
+
+ - Joel
+
+
+>
+>                                                 Thanx, Paul
+>
+> > ---
+> >  kernel/sched/core.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 780514d03da47..b8ca6fcaaaf06 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -4897,7 +4897,7 @@ static void sched_core_balance(struct rq *rq)
+> >       struct sched_domain *sd;
+> >       int cpu = cpu_of(rq);
+> >
+> > -     rcu_read_lock();
+> > +     rcu_read_lock_sched();
+> >       raw_spin_unlock_irq(rq_lockp(rq));
+> >       for_each_domain(cpu, sd) {
+> >               if (!(sd->flags & SD_LOAD_BALANCE))
+> > @@ -4910,7 +4910,7 @@ static void sched_core_balance(struct rq *rq)
+> >                       break;
+> >       }
+> >       raw_spin_lock_irq(rq_lockp(rq));
+> > -     rcu_read_unlock();
+> > +     rcu_read_unlock_sched();
+> >  }
+> >
+> >  static DEFINE_PER_CPU(struct callback_head, core_balance_head);
+> > --
+> > 2.26.2.761.g0e0b3e54be-goog
+> >
