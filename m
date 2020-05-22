@@ -2,216 +2,204 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF09AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94606206BE
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E962207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ofqnPgic"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTgvXMwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730731AbgEVAJt (ORCPT
+        id S1730547AbgEVAKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:09:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33184 "EHLO
+        Thu, 21 May 2020 20:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbgEVAJs (ORCPT
+        with ESMTP id S1729771AbgEVAKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:09:48 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B30C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:09:47 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id be9so8017614edb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:09:47 -0700 (PDT)
+        Thu, 21 May 2020 20:10:24 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D3AC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:10:24 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id e11so3366463pfn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:10:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ShTiWXhFQZjS5cdCw5c5iEVmkBUXovNZWLuS1Cv7888=;
-        b=ofqnPgic0A6d3snWFaSYqXR6bXBywTUnsOr918T7Vjsau2FfwafBcg2+BvbwupHpnK
-         i8zIqwaU68LuAEvmeeb6p5FBg+YCsKTCxnBQxlTsuV7mdVv0zuDiCF+VHked8F7bTUZK
-         5GiXwg8aW3OJ9v1FQ6LHwhFjFyYNnq6FLKf+o=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LxJBUDh7pIk7wevtghR6V6BanARnmm04Ny6FWkU1Tdk=;
+        b=nTgvXMwV0MVMm4Yul1nXwML0h6r6yP1iDZvpkJ8CUFgS/Liv8JT8huhcVjfpGKWAF4
+         Uh7mTIilvObSbBeNNI9tYYhHV34FSJiHxZ3E5YvZL7/Oyd5vpI/AO5IX34ewdXy9FvzQ
+         BaxSr+O0jY+4XC3T2qFNgJ7cVjt3d9Ztw55O/WPThh1myymkSeqzC6dQa/7QxPw0swfd
+         Y7jd0n2zQbsf+vyyguwQgZ4AsLH6b5KuMM4Zn0zSMyV3viOco70Wd7DJ5vbpU/icvTM6
+         4RGOUBbPvjgV44d3WqdFck5oRgpXnGJ4074EVoEu30G6R3haw7vg7JV3LL6PmIdg4hZb
+         r2cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ShTiWXhFQZjS5cdCw5c5iEVmkBUXovNZWLuS1Cv7888=;
-        b=NStK0H9vpOorJaiGXX7h+KJsHeUZ13SMgVh3LLjHfyDluw5aMIZx5wEV12hSA4nt2E
-         teRLWdiEC4A/iXDfIIEXGmlTvovB5HQc2gGie/KJvCRUyvWn2naXuCxm8lTQYYRqUXDY
-         MP9lOF+JF2Z33s1mB1IKVHtKsvULN96aCUIYaxlSrRo2FR1S5sUyx1dJn1BAqbKLoZvH
-         VTRM8Ko9mOXbCzG3WaBdskjR4NSPie8kcTKrVkpMVQAha8+9e3Cq16wb2KxrPwiDv5BI
-         OfXwVX2RXKZf+yTH1nW20V4TxcgNN8DnQiTQYgAUYpXKgGXxCveNX4fSAoqGtZMdKMu0
-         bShg==
-X-Gm-Message-State: AOAM530K2hfY5RiOgC+FbBgF5htcCLCwNGJVcxhOSRcIslJ7+CVosmyA
-        D4rlOJnfoSzE38guy/uDyX0oEoRJ1CLMTg==
-X-Google-Smtp-Source: ABdhPJzQwbKpAmkePdCoIh6+71cPSreMHTxFDneCeUqF1nFT/jQ1M3nleJLYRJ79I2Su7fVDtbgTKQ==
-X-Received: by 2002:a05:6402:306a:: with SMTP id bs10mr1052559edb.227.1590106184702;
-        Thu, 21 May 2020 17:09:44 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id d22sm6098209ejb.15.2020.05.21.17.09.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 May 2020 17:09:44 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id s8so8411477wrt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 17:09:43 -0700 (PDT)
-X-Received: by 2002:a5d:66c5:: with SMTP id k5mr867242wrw.17.1590106183205;
- Thu, 21 May 2020 17:09:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LxJBUDh7pIk7wevtghR6V6BanARnmm04Ny6FWkU1Tdk=;
+        b=AdsdBjo5UqqcCVyihlL/NdTWl98pNGumS8hvXQBIa6l5eMZBc7+n6y07FYcWuMVD9g
+         D/GXKE4UI197NYEfJTRepEajNpFdMz40CbnmF/ntjzgMRrRFiuUad+bRhlE1L3kRhe0+
+         iquYMCOhpA89SpVvJHlx5aBB6pBH0RbNaxplwAIUFHrHZK60uXcf4BOJ5SoZucRrhsj+
+         cV/g60DUMcNd6O0jsy9qlZd9Bc3U/xJu1hVnCoytcMDOE3MyTqykgaNK7LO3gSyXk575
+         p/t/LNVtUtCw1pR5VmYKNxRbggwWo6XrhGRttpmjWhshsl8QKKlNqMRud/1x6XkTkes/
+         8ITA==
+X-Gm-Message-State: AOAM532XD1bcLVHGaeZh04OkLSJtCq0ittXFqKEKlO0ivMSOcWsQTbOz
+        mfsRM5NY/W6sD1vGP07vluE=
+X-Google-Smtp-Source: ABdhPJzoe65AGyLc6b1ml4flukCZZLYowWbn6SZ26RtXpasGQn9PJbjoNL+fwiBEWarKMavKqq326A==
+X-Received: by 2002:a05:6a00:14d5:: with SMTP id w21mr1192249pfu.53.1590106223610;
+        Thu, 21 May 2020 17:10:23 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id m12sm5267634pjs.41.2020.05.21.17.10.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 17:10:22 -0700 (PDT)
+Date:   Thu, 21 May 2020 17:10:20 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Kyungtae Kim <kt0755@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>,
+        syzkaller <syzkaller@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Tian <dave.jing.tian@gmail.com>
+Subject: Re: [PATCH] vt: keyboard: avoid integer overflow in k_ascii
+Message-ID: <20200522001020.GA89269@dtor-ws>
+References: <20200521013400.GA2240@pizza01>
+ <20200521063602.GZ89269@dtor-ws>
+ <20200521233138.GA5469@pizza01>
 MIME-Version: 1.0
-References: <5ec71528.qSD3ljogzEHcLRXO%lkp@intel.com>
-In-Reply-To: <5ec71528.qSD3ljogzEHcLRXO%lkp@intel.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Fri, 22 May 2020 02:09:29 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5C20_iOMaXOF+4MoUAVyzVR4VfD1iiPhFaHkCv16srebg@mail.gmail.com>
-Message-ID: <CAAFQd5C20_iOMaXOF+4MoUAVyzVR4VfD1iiPhFaHkCv16srebg@mail.gmail.com>
-Subject: Re: 6fe12cdbcf ("i2c: core: support bus regulator controlling in
- .."): BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-To:     kernel test robot <lkp@intel.com>
-Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>, LKP <lkp@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa-dev@sang-engineering.com>,
-        philip.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521233138.GA5469@pizza01>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 1:57 AM kernel test robot <lkp@intel.com> wrote:
->
-> Greetings,
->
-> 0day kernel testing robot got the below dmesg and the first bad commit is
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
->
-> commit 6fe12cdbcfe35ad4726a619a9546822d34fc934c
-> Author:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-> AuthorDate: Tue May 19 15:27:29 2020 +0800
-> Commit:     Wolfram Sang <wsa@kernel.org>
-> CommitDate: Wed May 20 15:25:55 2020 +0200
->
->     i2c: core: support bus regulator controlling in adapter
->
->     Although in the most platforms, the bus power of i2c
->     are alway on, some platforms disable the i2c bus power
->     in order to meet low power request.
->
->     We get and enable bulk regulator in i2c adapter device.
->
->     Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
->     Reviewed-by: Tomasz Figa <tfiga@chromium.org>
->     Signed-off-by: Wolfram Sang <wsa@kernel.org>
->
-> 6aab46bc52  dt-binding: i2c: add bus-supply property
-> 6fe12cdbcf  i2c: core: support bus regulator controlling in adapter
-> +-----------------------------------------------------------------------------+------------+------------+
-> |                                                                             | 6aab46bc52 | 6fe12cdbcf |
-> +-----------------------------------------------------------------------------+------------+------------+
-> | boot_successes                                                              | 33         | 0          |
-> | boot_failures                                                               | 2          | 16         |
-> | WARNING:at_lib/kobject_uevent.c:#add_uevent_var                             | 1          |            |
-> | EIP:add_uevent_var                                                          | 1          |            |
-> | BUG:kernel_hang_in_boot_stage                                               | 1          |            |
-> | BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c | 0          | 16         |
-> +-----------------------------------------------------------------------------+------------+------------+
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> [  105.730065] ### dt-test ### EXPECT / : OF: overlay: WARNING: memory leak will occur if overlay removed, property: /testcase-data/overlay-node/test-bus/i2c-test-bus/test-unittest13/status
-> [  105.730071] ### dt-test ### EXPECT \ : i2c i2c-1: Added multiplexed i2c bus 3
-> [  105.747587] i2c i2c-3: supply bus not found, using dummy regulator
-> [  105.754529] i2c i2c-1: Added multiplexed i2c bus 3
-> [  105.756092] ### dt-test ### EXPECT / : i2c i2c-1: Added multiplexed i2c bus 3
-> [  105.773831] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-> [  105.777468] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 189, name: kworker/0:2
-> [  105.778995] 2 locks held by kworker/0:2/189:
-> [  105.779775]  #0: f48249a4 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x3ac/0x1050
-> [  105.781743]  #1: f4145f34 ((work_completion)(&sdp->work)){+.+.}-{0:0}, at: process_one_work+0x3ac/0x1050
-> [  105.783485] Preemption disabled at:
-> [  105.783509] [<cdbb653d>] srcu_invoke_callbacks+0x14d/0x280
-> [  105.785397] CPU: 0 PID: 189 Comm: kworker/0:2 Not tainted 5.7.0-rc1-00058-g6fe12cdbcfe35 #1
-> [  105.786961] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [  105.788608] Workqueue: rcu_gp srcu_invoke_callbacks
-> [  105.789777] Call Trace:
-> [  105.790308]  dump_stack+0x32/0x4a
-> [  105.790914]  ___might_sleep+0x3dc/0x4b0
-> [  105.791659]  ? srcu_invoke_callbacks+0x14d/0x280
-> [  105.792574]  ? srcu_invoke_callbacks+0x14d/0x280
-> [  105.793677]  ? srcu_invoke_callbacks+0x14d/0x280
-> [  105.794480]  __might_sleep+0x10e/0x210
-> [  105.795186]  __mutex_lock+0x34/0x12f0
-> [  105.795838]  ? mark_held_locks+0xb3/0x100
-> [  105.796561]  ? _raw_spin_unlock_irqrestore+0x13b/0x190
-> [  105.797694]  ? _raw_spin_unlock_irqrestore+0x13b/0x190
-> [  105.798653]  ? lockdep_hardirqs_on+0x1bb/0x420
-> [  105.799462]  mutex_lock_nested+0x41/0x60
-> [  105.800155]  ? regulator_put+0x25/0x70
-> [  105.800839]  regulator_put+0x25/0x70
-> [  105.801641]  devm_regulator_release+0x1d/0x30
-> [  105.802415]  release_nodes+0x326/0x500
-> [  105.803126]  devres_release_all+0xb9/0x130
-> [  105.803873]  device_release+0x25/0x1b0
+On Thu, May 21, 2020 at 11:31:39PM +0000, Kyungtae Kim wrote:
+> On Wed, May 20, 2020 at 11:36:02PM -0700, Dmitry Torokhov wrote:
+> > Hi,
+> > 
+> > On Thu, May 21, 2020 at 01:34:08AM +0000, Kyungtae Kim wrote:
+> > > FuzzUSB (a variant of syzkaller) found an integer overflow 
+> > > while processing keycode value.
+> > > 
+> > > Reference: https://lkml.org/lkml/2020/3/22/482
+> > > 
+> > > This bug occurs because of no validity check when operating keycode values.
+> > > By executing k_ascii() multiple times, npadch can have a large value 
+> > > close to the max of int type e.g., 1111111111. 
+> > > In the following, its muliplication causes an integer overflow.
+> > > 
+> > > This fix prevents the overflow by checking npadch using check_mul_overflow() 
+> > > ahead of its operation.
+> > > 
+> > > 
+> > > UBSAN: Undefined behaviour in drivers/tty/vt/keyboard.c:888:19
+> > > signed integer overflow:
+> > > 10 * 1111111111 cannot be represented in type 'int'
+> > > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.11 #1
+> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+> > > Call Trace:
+> > >  <IRQ>
+> > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > >  dump_stack+0xce/0x128 lib/dump_stack.c:118
+> > >  ubsan_epilogue+0xe/0x30 lib/ubsan.c:154
+> > >  handle_overflow+0xdc/0xf0 lib/ubsan.c:184
+> > >  __ubsan_handle_mul_overflow+0x2a/0x40 lib/ubsan.c:205
+> > >  k_ascii+0xbf/0xd0 drivers/tty/vt/keyboard.c:888
+> > >  kbd_keycode drivers/tty/vt/keyboard.c:1477 [inline]
+> > >  kbd_event+0x888/0x3be0 drivers/tty/vt/keyboard.c:1495
+> > >  input_to_handler+0x3a9/0x4b0 drivers/input/input.c:118
+> > >  input_pass_values.part.8+0x25e/0x690 drivers/input/input.c:145
+> > >  input_pass_values drivers/input/input.c:193 [inline]
+> > >  input_repeat_key+0x1f8/0x2c0 drivers/input/input.c:194
+> > >  call_timer_fn+0x20e/0x770 kernel/time/timer.c:1404
+> > >  expire_timers kernel/time/timer.c:1449 [inline]
+> > >  __run_timers kernel/time/timer.c:1773 [inline]
+> > >  run_timer_softirq+0x63f/0x13c0 kernel/time/timer.c:1786
+> > >  __do_softirq+0x262/0xb46 kernel/softirq.c:292
+> > >  invoke_softirq kernel/softirq.c:373 [inline]
+> > >  irq_exit+0x161/0x1b0 kernel/softirq.c:413
+> > >  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+> > >  smp_apic_timer_interrupt+0x137/0x500 arch/x86/kernel/apic/apic.c:1146
+> > >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+> > >  </IRQ>
+> > > RIP: 0010:default_idle+0x2d/0x2e0 arch/x86/kernel/process.c:696
+> > > Code: e5 41 57 41 56 65 44 8b 35 30 9d 5d 7a 41 55 41 54 53 0f 1f 44 00 00 e8 11 42 a4 fb e9 07 00 00 00 0f 00 2d d5 29 5e 00 fb f4 <65> 44 8b 35 0b 9d 5d 7a 0f 1f 44 00 00 5b 41 5c 41 5d 41 5e 41 5f
+> > > RSP: 0018:ffffffff87007ce8 EFLAGS: 00000292 ORIG_RAX: ffffffffffffff13
+> > > RAX: 0000000000000007 RBX: ffffffff87032900 RCX: 0000000000000000
+> > > RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff87033154
+> > > RBP: ffffffff87007d10 R08: fffffbfff0e06521 R09: 0000000000000000
+> > > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > > R13: ffffffff88c99c00 R14: 0000000000000000 R15: 0000000000000000
+> > >  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:686
+> > >  default_idle_call+0x50/0x70 kernel/sched/idle.c:94
+> > >  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+> > >  do_idle+0x332/0x530 kernel/sched/idle.c:269
+> > >  cpu_startup_entry+0x18/0x20 kernel/sched/idle.c:361
+> > >  rest_init+0x240/0x3d0 init/main.c:660
+> > >  arch_call_rest_init+0xe/0x1b
+> > >  start_kernel+0x7f6/0x81e init/main.c:997
+> > >  x86_64_start_reservations+0x2a/0x2c arch/x86/kernel/head64.c:490
+> > >  x86_64_start_kernel+0x77/0x7a arch/x86/kernel/head64.c:471
+> > >  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+> > > 
+> > > 
+> > > Signed-off-by: Kyungtae Kim <kt0755@gmail.com>
+> > > Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+> > > 
+> > > ---
+> > >  drivers/tty/vt/keyboard.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
+> > > index 15d33fa0c925..f7e1bb21bd9c 100644
+> > > --- a/drivers/tty/vt/keyboard.c
+> > > +++ b/drivers/tty/vt/keyboard.c
+> > > @@ -869,6 +869,7 @@ static void k_meta(struct vc_data *vc, unsigned char value, char up_flag)
+> > >  static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+> > >  {
+> > >  	int base;
+> > > +	int bytes;
+> > >  
+> > >  	if (up_flag)
+> > >  		return;
+> > > @@ -884,6 +885,8 @@ static void k_ascii(struct vc_data *vc, unsigned char value, char up_flag)
+> > >  
+> > >  	if (npadch == -1)
+> > >  		npadch = value;
+> > > +	else if (check_mul_overflow(npadch, base, &bytes) || check_add_overflow(bytes, value, &bytes))
+> > > +		return;
+> > 
+> > Why do we discard the result of calculation and repeat it again below?
+> > Can we say
+> > 
+> > 	else if (check_mul_overflow(npadch, base, &new_npadch) ||
+> > 			check_add_overflow(new_npadch, value, &new_npadch))
 
-This is entirely my guess for now, but isn't it suspicious that
-device_release() has been called with interrupts disabled?
+Sorry, this should have been
 
-Is it possible that something else introduced a bug that causes
-device_release() to be called in an atomic context and it only
-triggered with this patch, because the affected struct device now has
-a mutex lock in the release path?
+	!check...() && !check_(...)
 
-> [  105.804548]  ? srcu_invoke_callbacks+0xfa/0x280
-> [  105.805591]  kobject_put+0x33e/0x800
-> [  105.806244]  ? refcount_dec_not_one+0x107/0x2f0
-> [  105.807050]  ? srcu_invoke_callbacks+0x14d/0x280
-> [  105.807918]  __device_link_free_srcu+0x79/0xe0
-> [  105.808685]  srcu_invoke_callbacks+0x160/0x280
-> [  105.809729]  process_one_work+0x594/0x1050
-> [  105.810535]  ? process_one_work+0x3ac/0x1050
-> [  105.811314]  ? _raw_spin_lock_irq+0x56/0xe0
-> [  105.812113]  worker_thread+0x4a3/0xc00
-> [  105.812823]  kthread+0x31f/0x3b0
-> [  105.813537]  ? rescuer_thread+0x720/0x720
-> [  105.814227]  ? kthread_bind+0x30/0x30
-> [  105.814920]  ret_from_fork+0x19/0x24
-> [  105.866663] ### dt-test ### EXPECT \ : GPIO line <<int>> (line-B-input) hogged as input
-> [  105.868134] ### dt-test ### EXPECT \ : GPIO line <<int>> (line-A-input) hogged as input
-> [  105.870372] GPIO line 509 (line-B-input) hogged as input
-> [  105.872524] GPIO line 503 (line-A-input) hogged as input
-> [  105.874446] ### dt-test ### EXPECT / : GPIO line <<int>> (line-A-input) hogged as input
->
->                                                           # HH:MM RESULT GOOD BAD GOOD_BUT_DIRTY DIRTY_NOT_BAD
-> git bisect start d0edf98c01ebe0790295cf888a2976d2d04377b1 b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce --
-> git bisect  bad 4fde3f7c56e653e1d62102a4a77534f4bfec9689  # 07:04  B      0    17   33   0  Merge 'linux-review/Anson-Huang/ARM-dts-imx-Make-tempmon-node-as-child-of-anatop-node/20200520-230948' into devel-hourly-2020052107
-> git bisect  bad e8344c6f4e6b7a7318fa46dd6fd5418f3e36d010  # 07:04  B      0    17   33   0  Merge 'linux-review/Gabriel-Krisman-Bertazi/iscsi-Fix-deadlock-on-recovery-path-during-GFP_IO-reclaim/20200520-220836' into devel-hourly-2020052107
-> git bisect good 6332b5a106b02909b3ac673832d1e36a901d81fa  # 07:04  G     11     0    0   0  Merge 'stericsson/ux500-dts' into devel-hourly-2020052107
-> git bisect  bad 05c599fa08c02ea883075d05cc544f5e133dad15  # 07:04  B      0    11   27   0  Merge 'ras/edac-misc' into devel-hourly-2020052107
-> git bisect good 25ef63dabd6b9567bd3d7870c5e8595b6b87c678  # 07:05  G     11     0    0   0  Merge 'linux-review/Maulik-Shah/arm64-dts-qcom-sc7180-Correct-the-pdc-interrupt-ranges/20200518-202257' into devel-hourly-2020052107
-> git bisect good 0db2ae8dfea89b3541eb5ffb6e0aed13d921b277  # 07:05  G     11     0    0   0  Merge 'linux-review/Geert-Uytterhoeven/ARM-dts-r9a06g032-Correct-GIC-compatible-value-order/20200519-204708' into devel-hourly-2020052107
-> git bisect good aeee233deb1c06fcf7630402c1f15208aa3d723a  # 07:05  G     11     0    0   0  Merge 'linux-review/Lubomir-Rintel/media-marvell-ccic-Add-support-for-runtime-PM/20200521-053250' into devel-hourly-2020052107
-> git bisect  bad 6872daa8abed0e8bd8447d56cfca80c4d29d6243  # 07:05  B      0    10   27   1  Merge 'linux-review/Dinghao-Liu/i2c-imx-lpi2c-fix-runtime-pm-imbalance-on-error/20200521-033738' into devel-hourly-2020052107
-> git bisect good f23da43a58d09dc6ea58837a45374e15de36537e  # 07:05  G     10     0    0   1  Merge branch 'i2c/for-current' into i2c/for-next
-> git bisect good fadb47fca1f132c123395bca26c69007e816988f  # 07:05  G     11     0    0   0  Merge branch 'i2c/for-5.8' into i2c/for-next
-> git bisect  bad 4f118a7e4686062bd4df4a37e24c22cd71495b5f  # 07:05  B      0    11   27   0  Merge tag 'for-5.8-i2c' of git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux into i2c/for-5.8
-> git bisect good c73178b93754edd8449dccd3faf05baafd4d3f0e  # 07:05  G     11     0    0   0  i2c: tegra: Add support for the VI I2C on Tegra210
-> git bisect good 6aab46bc52a8f579879d491c9d8062e03caa5c61  # 07:05  G     30     0    0   3  dt-binding: i2c: add bus-supply property
-> git bisect  bad f89c326dcaa0cb8c3af7764e75eeed4e3f3c879a  # 07:05  B      0    15   31   0  Merge branch 'i2c/for-current-fixed' into i2c/for-5.8
-> git bisect  bad 6fe12cdbcfe35ad4726a619a9546822d34fc934c  # 07:05  B      0    15   45   0  i2c: core: support bus regulator controlling in adapter
-> # first bad commit: [6fe12cdbcfe35ad4726a619a9546822d34fc934c] i2c: core: support bus regulator controlling in adapter
-> git bisect good 6aab46bc52a8f579879d491c9d8062e03caa5c61  # 07:06  G     30     0    0   3  dt-binding: i2c: add bus-supply property
-> # extra tests with debug options
-> git bisect  bad 6fe12cdbcfe35ad4726a619a9546822d34fc934c  # 07:06  B      0    14   30   0  i2c: core: support bus regulator controlling in adapter
-> # extra tests on revert first bad commit
-> git bisect good 3788bb973ab542fcf623106a1cef5d8b1e237f7c  # 07:56  G     10     0    0   0  Revert "i2c: core: support bus regulator controlling in adapter"
-> # good: [3788bb973ab542fcf623106a1cef5d8b1e237f7c] Revert "i2c: core: support bus regulator controlling in adapter"
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/lkp@lists.01.org
+> > 		npadch = new_npadch;
+> > 
+> > Thanks.
+> > 
+> > -- 
+> > Dmitry
+> 
+> Yes. This looks better. 
+> 
+> Thanks,
+> Kyungtae Kim
+
+Thanks.
+
+-- 
+Dmitry
