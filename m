@@ -2,301 +2,155 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F43C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD377C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9B8620757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MBVTOqMs"
+	by mail.kernel.org (Postfix) with ESMTP id 8B83B207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590184174;
+	bh=3eNvyJwVcneSIJ5vtBM4Dzc9X5BDAvN4RxI6oKjVhWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fYQYd48XIp/KRpKAeoXDpkWYg98fub8LpntnAPBNisSpmmkj9b7yxfCJ97Oxo0TmE
+	 tvDLKXG9Bjv0/84FS5pvQWTnxVObJuQN1zCNtDg41WN+6rGNQKkGQh8zLErjFRHn/P
+	 9a2a5P+nYVUf0V6TYSwRmkctQiBoJ0PC6l2e6Cz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731162AbgEVVrV (ORCPT
+        id S1731147AbgEVVtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731072AbgEVVrU (ORCPT
+        Fri, 22 May 2020 17:49:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44893 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731029AbgEVVtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:47:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21031C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:47:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j21so5606902pgb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=80cOC3Q1C1nh3jgT7bLdfn6QXwRHWrLiSMAc5u1N5Mg=;
-        b=MBVTOqMsRRDOXwqDeh3TlHhCVuQINpecjzEWi2sbZjFC2s+fi8libuvJoKMdyiA93j
-         HjxXahYGwB2EeBTPt5THAGJtXNUS1blvwgSzxXsV7iD7yKk/idl5N09duhj4GIrn1ZiN
-         dFdhnMRbAksUe0m8/f+9BUDtxd165NCjk74ME=
+        Fri, 22 May 2020 17:49:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id p30so5601415pgl.11;
+        Fri, 22 May 2020 14:49:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=80cOC3Q1C1nh3jgT7bLdfn6QXwRHWrLiSMAc5u1N5Mg=;
-        b=qgGej3obtpDaNCn6E7XtFq00Qi32LdRBITn9phVBwdU+YUazm5CKDaarB2a6qb9aKi
-         y0PwS4xUlBuF+WZrufDDTw/k56adIYOf34ViZ02Mvu6kTmQP79CE/hA5BLuEpUXqPuO5
-         w2WnE7WsTPpRtbfPYn5RH8oAtjy97Co+UdZ2cdUMPfYcEZZvpIXd46o0bi7JRSOAR7Ld
-         l8NjZ0g0ncD80QiYtp8nAAj/68UiZ1uZmp0A2o4z3HI9uses31YdvhdSyxLpTEOWCM9h
-         a+6yeMWFket9bcBZfiyHGCX+csoo1wLbW7GlEsXB9kK2vqQOM7g4MjMDAAf+cdAhcxbS
-         EcNw==
-X-Gm-Message-State: AOAM530oBrY6iWGcfnYexQQ/Gz+/+JRhUc58VLho3MG4SoxUyuhBMGUY
-        VEgnQoDYfLcUQ5w9oClSwX+g6w==
-X-Google-Smtp-Source: ABdhPJwCvSRp3cNpgT+cHxazKcMuvzWV+0gormNW+/FlbLyRW0Hkd2BGV2aYYNTI+c6UjR+ZCLaIdA==
-X-Received: by 2002:a63:5864:: with SMTP id i36mr15433327pgm.231.1590184039358;
-        Fri, 22 May 2020 14:47:19 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id w1sm6889502pgh.53.2020.05.22.14.47.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=witZhMJ16Agl4OwIfL5pB8EM3wxhLaftmrS7Z3KmwGo=;
+        b=aPn+uE5LHAcTPt68wbrFmA8vQhr/NQc96OjF4bX0IABr4tpP9PX3ll7N9IvPxGjoWp
+         Ys4bt/wA6mquWUdE/alebaQmJR2Xeyuq7pemGwR32MTjUt/94eXeJlcozITZ3Wh44yx8
+         1SofT/Jp/8+C9mWm1Xawtx3ndew6lCSnnjMLRsk379nRMHWltATmVyyX+W7Dap2TYsEK
+         a+AfnhQcrDV0idjEWn6gebFwwFDzWck3sOLf5RdOSiHDTTOzs+M9wFk6eLxWwsFp5iXm
+         qTuv8IPvDsTqChz8YN0GwBixNOeTermTEYnZmbnciLUs7i/MJpJz3DcwCpPaMDvptIY8
+         UjaA==
+X-Gm-Message-State: AOAM5327knA0ctdImbysQwQxBTrKrLvCPuEWEBKKMczzn6U1/BHfDXEB
+        61dWLEQzbYbe2tXnuKZtRSg=
+X-Google-Smtp-Source: ABdhPJyBq9LZCZJmpi4fQfFbSbNhR4Ql67aNRQjxVYgQP0yBZhIDm5eUIjVEbj0mW3rKV0Gj+0RIIQ==
+X-Received: by 2002:a65:52c3:: with SMTP id z3mr15634431pgp.146.1590184172241;
+        Fri, 22 May 2020 14:49:32 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y7sm7633645pjn.13.2020.05.22.14.49.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 14:47:18 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH] firmware_loader: change enum fw_opt to u32
-Date:   Fri, 22 May 2020 14:46:58 -0700
-Message-Id: <20200522214658.12722-1-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 22 May 2020 14:49:30 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D524C40321; Fri, 22 May 2020 21:49:29 +0000 (UTC)
+Date:   Fri, 22 May 2020 21:49:29 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     johannes@sipsolutions.net, derosier@gmail.com,
+        greearb@candelatech.com, jeyu@kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
+        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, jiri@resnulli.us,
+        briannorris@chromium.org
+Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
+Message-ID: <20200522214929.GB11244@42.do-not-panic.com>
+References: <20200519010530.GS11244@42.do-not-panic.com>
+ <20200519211531.3702593-1-kuba@kernel.org>
+ <20200522052046.GY11244@42.do-not-panic.com>
+ <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"enum fw_opt" is not used as an enum.
-Change fw_opt to a u32 and the FW_OPT_* values inside the enum to defines.
+On Fri, May 22, 2020 at 10:17:38AM -0700, Jakub Kicinski wrote:
+> On Fri, 22 May 2020 05:20:46 +0000 Luis Chamberlain wrote:
+> > > diff --git a/net/core/Makefile b/net/core/Makefile
+> > > index 3e2c378e5f31..6f1513781c17 100644
+> > > --- a/net/core/Makefile
+> > > +++ b/net/core/Makefile
+> > > @@ -31,7 +31,7 @@ obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
+> > >  obj-$(CONFIG_BPF_STREAM_PARSER) += sock_map.o
+> > >  obj-$(CONFIG_DST_CACHE) += dst_cache.o
+> > >  obj-$(CONFIG_HWBM) += hwbm.o
+> > > -obj-$(CONFIG_NET_DEVLINK) += devlink.o
+> > > +obj-$(CONFIG_NET_DEVLINK) += devlink.o devlink_simple_fw_reporter.o  
+> > 
+> > This was looking super sexy up to here. This is networking specific.
+> > We want something generic for *anything* that requests firmware.
+> 
+> You can't be serious. It's network specific because of how the Kconfig
+> is named?
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/base/firmware_loader/fallback.c       | 12 +++++------
- drivers/base/firmware_loader/fallback.h       |  8 +++----
- .../base/firmware_loader/fallback_platform.c  |  2 +-
- drivers/base/firmware_loader/firmware.h       | 21 ++++++++-----------
- drivers/base/firmware_loader/main.c           | 11 +++++-----
- 5 files changed, 25 insertions(+), 29 deletions(-)
+Kconfig? What has that to do with anything? The issue I have is that the
+solution I am looking for is for it to be agnostic to the subsystem. I
+have found similar firmware crashes on gpu, media, scsci.
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index 1e9c96e3ed63..af1aa3d69920 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -460,7 +460,7 @@ static const struct attribute_group *fw_dev_attr_groups[] = {
- 
- static struct fw_sysfs *
- fw_create_instance(struct firmware *firmware, const char *fw_name,
--		   struct device *device, enum fw_opt opt_flags)
-+		   struct device *device, u32 opt_flags)
- {
- 	struct fw_sysfs *fw_sysfs;
- 	struct device *f_dev;
-@@ -493,7 +493,7 @@ fw_create_instance(struct firmware *firmware, const char *fw_name,
-  * In charge of constructing a sysfs fallback interface for firmware loading.
-  **/
- static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
--				  enum fw_opt opt_flags, long timeout)
-+				  u32 opt_flags, long timeout)
- {
- 	int retval = 0;
- 	struct device *f_dev = &fw_sysfs->dev;
-@@ -547,7 +547,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
- 
- static int fw_load_from_user_helper(struct firmware *firmware,
- 				    const char *name, struct device *device,
--				    enum fw_opt opt_flags)
-+				    u32 opt_flags)
- {
- 	struct fw_sysfs *fw_sysfs;
- 	long timeout;
-@@ -588,7 +588,7 @@ static int fw_load_from_user_helper(struct firmware *firmware,
- 	return ret;
- }
- 
--static bool fw_force_sysfs_fallback(enum fw_opt opt_flags)
-+static bool fw_force_sysfs_fallback(u32 opt_flags)
- {
- 	if (fw_fallback_config.force_sysfs_fallback)
- 		return true;
-@@ -597,7 +597,7 @@ static bool fw_force_sysfs_fallback(enum fw_opt opt_flags)
- 	return true;
- }
- 
--static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
-+static bool fw_run_sysfs_fallback(u32 opt_flags)
- {
- 	int ret;
- 
-@@ -640,7 +640,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
-  **/
- int firmware_fallback_sysfs(struct firmware *fw, const char *name,
- 			    struct device *device,
--			    enum fw_opt opt_flags,
-+			    u32 opt_flags,
- 			    int ret)
- {
- 	if (!fw_run_sysfs_fallback(opt_flags))
-diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firmware_loader/fallback.h
-index 06f4577733a8..2afdb6adb23f 100644
---- a/drivers/base/firmware_loader/fallback.h
-+++ b/drivers/base/firmware_loader/fallback.h
-@@ -33,7 +33,7 @@ struct firmware_fallback_config {
- #ifdef CONFIG_FW_LOADER_USER_HELPER
- int firmware_fallback_sysfs(struct firmware *fw, const char *name,
- 			    struct device *device,
--			    enum fw_opt opt_flags,
-+			    u32 opt_flags,
- 			    int ret);
- void kill_pending_fw_fallback_reqs(bool only_kill_custom);
- 
-@@ -45,7 +45,7 @@ void unregister_sysfs_loader(void);
- #else /* CONFIG_FW_LOADER_USER_HELPER */
- static inline int firmware_fallback_sysfs(struct firmware *fw, const char *name,
- 					  struct device *device,
--					  enum fw_opt opt_flags,
-+					  u32 opt_flags,
- 					  int ret)
- {
- 	/* Keep carrying over the same error */
-@@ -67,10 +67,10 @@ static inline void unregister_sysfs_loader(void)
- #endif /* CONFIG_FW_LOADER_USER_HELPER */
- 
- #ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
--int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags);
-+int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags);
- #else
- static inline int firmware_fallback_platform(struct fw_priv *fw_priv,
--					     enum fw_opt opt_flags)
-+					     u32 opt_flags)
- {
- 	return -ENOENT;
- }
-diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
-index c88c745590fe..cdd2c9a9f38a 100644
---- a/drivers/base/firmware_loader/fallback_platform.c
-+++ b/drivers/base/firmware_loader/fallback_platform.c
-@@ -8,7 +8,7 @@
- #include "fallback.h"
- #include "firmware.h"
- 
--int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags)
-+int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
- {
- 	const u8 *data;
- 	size_t size;
-diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
-index 25836a6afc9f..cf6dc96a84a2 100644
---- a/drivers/base/firmware_loader/firmware.h
-+++ b/drivers/base/firmware_loader/firmware.h
-@@ -12,7 +12,7 @@
- #include <generated/utsrelease.h>
- 
- /**
-- * enum fw_opt - options to control firmware loading behaviour
-+ * fw_opt - options to control firmware loading behaviour
-  *
-  * @FW_OPT_UEVENT: Enables the fallback mechanism to send a kobject uevent
-  *	when the firmware is not found. Userspace is in charge to load the
-@@ -33,15 +33,13 @@
-  *	the platform's main firmware. If both this fallback and the sysfs
-  *      fallback are enabled, then this fallback will be tried first.
-  */
--enum fw_opt {
--	FW_OPT_UEVENT			= BIT(0),
--	FW_OPT_NOWAIT			= BIT(1),
--	FW_OPT_USERHELPER		= BIT(2),
--	FW_OPT_NO_WARN			= BIT(3),
--	FW_OPT_NOCACHE			= BIT(4),
--	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
--	FW_OPT_FALLBACK_PLATFORM	= BIT(6),
--};
-+#define FW_OPT_UEVENT			BIT(0)
-+#define FW_OPT_NOWAIT			BIT(1)
-+#define FW_OPT_USERHELPER		BIT(2)
-+#define FW_OPT_NO_WARN			BIT(3)
-+#define FW_OPT_NOCACHE			BIT(4)
-+#define FW_OPT_NOFALLBACK_SYSFS		BIT(5)
-+#define FW_OPT_FALLBACK_PLATFORM	BIT(6)
- 
- enum fw_status {
- 	FW_STATUS_UNKNOWN,
-@@ -136,8 +134,7 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
- 	__fw_state_set(fw_priv, FW_STATUS_DONE);
- }
- 
--int assign_fw(struct firmware *fw, struct device *device,
--	      enum fw_opt opt_flags);
-+int assign_fw(struct firmware *fw, struct device *device, u32 opt_flags);
- 
- #ifdef CONFIG_FW_LOADER_PAGED_BUF
- void fw_free_paged_buf(struct fw_priv *fw_priv);
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 76f79913916d..2ca6b4735979 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -210,7 +210,7 @@ static struct fw_priv *__lookup_fw_priv(const char *fw_name)
- static int alloc_lookup_fw_priv(const char *fw_name,
- 				struct firmware_cache *fwc,
- 				struct fw_priv **fw_priv, void *dbuf,
--				size_t size, enum fw_opt opt_flags)
-+				size_t size, u32 opt_flags)
- {
- 	struct fw_priv *tmp;
- 
-@@ -635,8 +635,7 @@ static int fw_add_devm_name(struct device *dev, const char *name)
- }
- #endif
- 
--int assign_fw(struct firmware *fw, struct device *device,
--	      enum fw_opt opt_flags)
-+int assign_fw(struct firmware *fw, struct device *device, u32 opt_flags)
- {
- 	struct fw_priv *fw_priv = fw->priv;
- 	int ret;
-@@ -687,7 +686,7 @@ int assign_fw(struct firmware *fw, struct device *device,
- static int
- _request_firmware_prepare(struct firmware **firmware_p, const char *name,
- 			  struct device *device, void *dbuf, size_t size,
--			  enum fw_opt opt_flags)
-+			  u32 opt_flags)
- {
- 	struct firmware *firmware;
- 	struct fw_priv *fw_priv;
-@@ -753,7 +752,7 @@ static void fw_abort_batch_reqs(struct firmware *fw)
- static int
- _request_firmware(const struct firmware **firmware_p, const char *name,
- 		  struct device *device, void *buf, size_t size,
--		  enum fw_opt opt_flags)
-+		  u32 opt_flags)
- {
- 	struct firmware *fw = NULL;
- 	int ret;
-@@ -990,7 +989,7 @@ struct firmware_work {
- 	struct device *device;
- 	void *context;
- 	void (*cont)(const struct firmware *fw, void *context);
--	enum fw_opt opt_flags;
-+	u32 opt_flags;
- };
- 
- static void request_firmware_work_func(struct work_struct *work)
--- 
-2.17.1
+> Working for a company operating large data centers I would strongly
+> prefer if we didn't have ten different ways of reporting firmware
+> problems in the fleet.
 
+Indeed.
+
+> > I'm afraid this won't work for something generic. I don't think its
+> > throw-away work though, the idea to provide a generic interface to
+> > dump firmware through netlink might be nice for networking, or other
+> > things.
+> > 
+> > But I have a feeling we'll want something still more generic than this.
+> 
+> Please be specific. Saying generic a lot is not helpful. The code (as
+> you can see in this patch) is in no way network specific. Or are you
+> saying there are machines out there running without netlink sockets?
+
+No, I am saying I want something to work with any struct device.
+
+> > So networking may want to be aware that a firmware crash happened as
+> > part of this network device health thing, but firmware crashing is a
+> > generic thing.
+> > 
+> > I have now extended my patch set to include uvents and I am more set on
+> > that we need the taint now more than ever.
+> 
+> Please expect my nack if you're trying to add this to networking
+> drivers.
+
+The uevent mechanism is not for networking.
+
+The taint however is, and I'd like to undertand how it is you do not see
+that an undesirable requirement for a reboot is a clear case for a taint.
+
+> The irony is you have a problem with a networking device and all the
+> devices your initial set touched are networking. Two of the drivers 
+> you touched either have or will soon have devlink health reporters
+> implemented.
+
+That is all great, and I don't think its a bad idea to add
+infrastructure / extend it to get more information about a firmware
+crash dump. However, suggesting that devlink is the only solution we
+need in the kernel without considering other subsystems is what I am
+suggesting doesn't suit my needs. Networking was just the first
+subsystem I am taclking now but I have patches where similar situations
+happen across the kernel.
+
+  Luis
