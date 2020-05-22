@@ -2,73 +2,91 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F825C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 324DB206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590168266;
-	bh=a7vJfJIAv9McskG7MZDFR7GaC4IPsDA22S6x57C80aw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fAxF1obSxCrz0HRlUnYHlSiaAsSKVb5BZPiHN4uVDjzt24JPA1R2JDQ1k0SDS0DG1
-	 aRu8I9TV5N2GXTGo19JhhxEoH8fJkP3UvER4Ci0CbkyGOU9RIbtql5DSMBOVfTj1fB
-	 zSUSy5YnhJrwoDCiDl/sb8BjxW9qe5DrG5I9x5jo=
+	by mail.kernel.org (Postfix) with ESMTP id 84E6C206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgEVRYZ (ORCPT
+        id S1730701AbgEVRZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730554AbgEVRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:24:24 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99B1E206C3;
-        Fri, 22 May 2020 17:24:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590168264;
-        bh=a7vJfJIAv9McskG7MZDFR7GaC4IPsDA22S6x57C80aw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PDQBVXzM3edo57feQ1Q6kuVojMeW8eF2BksdqpCP5yf9MqcGq8jC67OeHo8z4z/ea
-         1yG61ffQTc0AJlyKEz0Ns1YfcnEhqmuKinv8/8p+ENkrJJeQOiRoJeDVXI1+kc92Rv
-         +ucAsUy4pl/FogwkvUFeSGi+pNBUYN3G0cilZU14=
-Date:   Fri, 22 May 2020 10:24:20 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     wu000273@umn.edu
-Cc:     tariqt@mellanox.com, davem@davemloft.net,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, kjlu@umn.edu
-Subject: Re: [PATCH] net/mlx4_core: fix a memory leak bug.
-Message-ID: <20200522102420.41c9637a@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200522052348.1241-1-wu000273@umn.edu>
-References: <20200522052348.1241-1-wu000273@umn.edu>
+        Fri, 22 May 2020 13:25:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730554AbgEVRZf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 13:25:35 -0400
+Received: from hera.aquilenet.fr (hera.aquilenet.fr [IPv6:2a0c:e300::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3D6C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:25:35 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 9D2733BA9;
+        Fri, 22 May 2020 19:25:33 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id f7N5Eo55GPMW; Fri, 22 May 2020 19:25:32 +0200 (CEST)
+Received: from function (lfbn-bor-1-797-11.w86-234.abo.wanadoo.fr [86.234.239.11])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id 6214F3B89;
+        Fri, 22 May 2020 19:25:32 +0200 (CEST)
+Received: from samy by function with local (Exim 4.93)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1jcBQJ-00HAVN-9Y; Fri, 22 May 2020 19:25:31 +0200
+Date:   Fri, 22 May 2020 19:25:31 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        MugilRaj <dmugil2000@gmail.com>, devel@driverdev.osuosl.org,
+        Kirk Reiser <kirk@reisers.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
+        Chris Brannon <chris@the-brannons.com>
+Subject: Re: [PATCH] taging: speakup: remove volatile
+Message-ID: <20200522172531.va2hi6jqog3a6473@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Joe Perches <joe@perches.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        MugilRaj <dmugil2000@gmail.com>, devel@driverdev.osuosl.org,
+        Kirk Reiser <kirk@reisers.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
+        Chris Brannon <chris@the-brannons.com>
+References: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
+ <20200522103406.GK30374@kadam>
+ <6ab4139ec78928961a19e5fdbda139bb8cff9cb5.camel@perches.com>
+ <20200522171312.s2ciifuxozwav2ym@function>
+ <162676bb69044efadd31daa9ea49fc6fb9664297.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162676bb69044efadd31daa9ea49fc6fb9664297.camel@perches.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 00:23:48 -0500 wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
+Joe Perches, le ven. 22 mai 2020 10:22:03 -0700, a ecrit:
+> > Put another way: I don't think putting any hint here would help, on the
+> > contrary, somebody has to really look at what protection is needed,
+> > without getting influenced by rules-of-thumb.
 > 
-> In function mlx4_opreq_action(), pointer "mailbox" is not released,
-> when mlx4_cmd_box() return and error, causing a memory leak bug.
-> Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
-> free this pointer.
-> 
-> Fixes: fe6f700d6cbb7 ("Respond to operation request by firmware")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> checkpatch newbies/robots will submit this change again otherwise.
 
-Fixes tag: Fixes: fe6f700d6cbb7 ("Respond to operation request by firmware")
-Has these problem(s):
-	- Subject does not match target commit subject
-	  Just use
-		git log -1 --format='Fixes: %h ("%s")'
+Ah, ok, right.
+
+I don't think removing volatiles is a thing for newbies, 
+
+> Comment wording can always be improved.
+
+I'd then suggest
+
+/* TODO: determine what proper synchronization "volatile" should be
+ * replaced with.  */
+
+Samuel
