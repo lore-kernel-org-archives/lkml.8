@@ -2,129 +2,151 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4982072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180D5207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S48PXV5r"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nSlqKGOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgEVGZn (ORCPT
+        id S1728169AbgEVGZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 02:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgEVGZn (ORCPT
+        Fri, 22 May 2020 02:25:56 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38462 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728137AbgEVGZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 02:25:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01ED7C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 23:25:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=QwhmqLhc+bv642fUxaOi43N+DIlQspHRNV2gxfTzFoU=; b=S48PXV5rOEPqzORBMrAaEfqt6d
-        PqxUwtNVO/40WKGpTkyGtkQ+Lj9S4k+xeB5rdn6cVfd5kH1Jk4H5xwXh0Wdgu/Ivi4EXIlg2jLp33
-        402QXoz7zSrgn4jxyl1p0FBp8+0kYKNfo6aG2mCODLu+OVoM/p56MdhKEueTbjTTKABlG84RyxSuH
-        YUOM0TchSmM9Br+gVK70GBYn6b+3qIfr7iD2hPEuRpB9TLxnWxMZjeyXT5Yo9QGggSrthxRCtsP9D
-        9ARPgcT565wEApcQ7QI5dO9Ve/HAlvV9tyjseoc9/Phum011rmIRlmc31XDFVbLrYWGCFQHMJnnf8
-        DTkUD0zQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jc17d-00040o-CK; Fri, 22 May 2020 06:25:33 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] mm: swapfile: fix /proc/swaps heading and Size/Used/Priority
- alignment
-Message-ID: <c0ffb41a-81ac-ddfa-d452-a9229ecc0387@infradead.org>
-Date:   Thu, 21 May 2020 23:25:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 02:25:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590128755; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=H359ESmKnUtSY7Q0hAO68B/54fVOQ0qzAvK2WHo9oz8=;
+ b=nSlqKGOPTSt7Mxkmyc57AI+3wrGgD4yFjTaiNtsMTZ33a2dQEeI0iAugTmiePTEk1lHQuvcu
+ zmTzcmMUjlDSVf5PqVkkLBRyH9ky1+xyFF5FTxfp4AsvTJz3mzSrBm428QYbOwRw6Co9OdsG
+ s1pzRCLZVDYhNo53xw22d8oDa9E=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec77069.7fe5ffd92650-smtp-out-n05;
+ Fri, 22 May 2020 06:25:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CB1F3C433C6; Fri, 22 May 2020 06:25:45 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: guptap)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB428C433C6;
+        Fri, 22 May 2020 06:25:44 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 22 May 2020 11:55:44 +0530
+From:   guptap@codeaurora.org
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     mhocko@suse.com, joro@8bytes.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        owner-linux-mm@kvack.org, stable@vger.kernel.org
+Subject: Re: [PATCH] iommu/dma: limit iova free size to unmmaped iova
+In-Reply-To: <7aaa8dcc-6a47-f256-431d-2a1b034b4076@arm.com>
+References: <20200521113004.12438-1-guptap@codeaurora.org>
+ <7aaa8dcc-6a47-f256-431d-2a1b034b4076@arm.com>
+Message-ID: <90662ef3123dbf2e93f9718ee5cc14a7@codeaurora.org>
+X-Sender: guptap@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On 2020-05-22 01:46, Robin Murphy wrote:
+> On 2020-05-21 12:30, Prakash Gupta wrote:
+>> Limit the iova size while freeing based on unmapped size. In absence 
+>> of
+>> this even with unmap failure, invalid iova is pushed to iova rcache 
+>> and
+>> subsequently can cause panic while rcache magazine is freed.
+> 
+> Can you elaborate on that panic?
+> 
+We have seen couple of stability issues around this.
+Below is one such example:
 
-Fix the heading and Size/Used/Priority field alignments in
-/proc/swaps. If the Size and/or Used value is >= 10000000 (8 bytes),
-then the alignment by using tab characters is broken.
-
-This patch maintains the use of tabs for alignment. If spaces
-are preferred, we can just use a Field Width specifier for the
-bytes and inuse fields. That way those fields don't have to be
-a multiple of 8 bytes in width. E.g., with a field width of 12,
-both Size and Used would always fit on the first line of an
-80-column wide terminal (only Priority would be on the second line).
-
-There are actually 2 problems: heading alignment and field width.
-On an xterm, if Used is 7 bytes in length, the tab does nothing, and
-the display is like this, with no space/tab between the Used and
-Priority fields. (ugh)
-
-Filename				Type		Size	Used	Priority
-/dev/sda8                               partition	16779260	2023012-1
-
-To be clear, if one does 'cat /proc/swaps >/tmp/proc.swaps', it does
-look different, like so:
-
-Filename				Type		Size	Used	Priority
-/dev/sda8                               partition	16779260	2086988	-1
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-mm@kvack.org
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- mm/swapfile.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
---- linux-next-20200521.orig/mm/swapfile.c
-+++ linux-next-20200521/mm/swapfile.c
-@@ -2753,20 +2753,24 @@ static int swap_show(struct seq_file *sw
- 	struct swap_info_struct *si = v;
- 	struct file *file;
- 	int len;
-+	unsigned int bytes, inuse;
- 
- 	if (si == SEQ_START_TOKEN) {
--		seq_puts(swap,"Filename\t\t\t\tType\t\tSize\tUsed\tPriority\n");
-+		seq_puts(swap,"Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n");
- 		return 0;
- 	}
- 
-+	bytes = si->pages << (PAGE_SHIFT - 10);
-+	inuse = si->inuse_pages << (PAGE_SHIFT - 10);
-+
- 	file = si->swap_file;
- 	len = seq_file_path(swap, file, " \t\n\\");
--	seq_printf(swap, "%*s%s\t%u\t%u\t%d\n",
-+	seq_printf(swap, "%*s%s\t%u\t%s%u\t%s%d\n",
- 			len < 40 ? 40 - len : 1, " ",
- 			S_ISBLK(file_inode(file)->i_mode) ?
- 				"partition" : "file\t",
--			si->pages << (PAGE_SHIFT - 10),
--			si->inuse_pages << (PAGE_SHIFT - 10),
-+			bytes, bytes < 10000000 ? "\t" : "",
-+			inuse, inuse < 10000000 ? "\t" : "",
- 			si->prio);
- 	return 0;
- }
+kernel BUG at kernel/msm-4.19/drivers/iommu/iova.c:904!
+iova_magazine_free_pfns
+iova_rcache_insert
+free_iova_fast
+__iommu_unmap_page
+iommu_dma_unmap_page
 
 
+It turned out an iova pfn 0 got into iova_rcache. One possibility I see 
+is
+where client unmap with invalid dma_addr. The unmap call will fail and 
+warn on
+and still try to free iova. This will cause invalid pfn to be inserted 
+into
+rcache. As and when the magazine with invalid pfn will be freed
+private_find_iova() will return NULL for invalid iova and meet bug 
+condition.
+
+>> Signed-off-by: Prakash Gupta <guptap@codeaurora.org>
+>> 
+>> :100644 100644 4959f5df21bd 098f7d377e04 M	drivers/iommu/dma-iommu.c
+>> 
+>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+>> index 4959f5df21bd..098f7d377e04 100644
+>> --- a/drivers/iommu/dma-iommu.c
+>> +++ b/drivers/iommu/dma-iommu.c
+>> @@ -472,7 +472,8 @@ static void __iommu_dma_unmap(struct device *dev, 
+>> dma_addr_t dma_addr,
+>>     	if (!cookie->fq_domain)
+>>   		iommu_tlb_sync(domain, &iotlb_gather);
+>> -	iommu_dma_free_iova(cookie, dma_addr, size);
+>> +	if (unmapped)
+>> +		iommu_dma_free_iova(cookie, dma_addr, unmapped);
+> 
+> Frankly, if any part of the unmap fails then things have gone
+> catastrophically wrong already, but either way this isn't right. The
+> IOVA API doesn't support partial freeing - an IOVA *must* be freed
+> with its original size, or not freed at all, otherwise it will corrupt
+> the state of the rcaches and risk a cascade of further misbehaviour
+> for future callers.
+> 
+I agree, we shouldn't be freeing the partial iova. Instead just making
+sure if unmap was successful should be sufficient before freeing iova. 
+So change
+can instead be something like this:
+
+-	iommu_dma_free_iova(cookie, dma_addr, size);
++	if (unmapped)
++		iommu_dma_free_iova(cookie, dma_addr, size);
+
+> TBH my gut feeling here is that you're really just trying to treat a
+> symptom of another bug elsewhere, namely some driver calling
+> dma_unmap_* or dma_free_* with the wrong address or size in the first
+> place.
+> 
+This condition would arise only if driver calling dma_unmap/free_* with 
+0
+iova_pfn. This will be flagged with a warning during unmap but will 
+trigger
+panic later on while doing unrelated dma_map/unmap_*. If unmapped has 
+already
+failed for invalid iova, there is no reason we should consider this as 
+valid
+iova and free. This part should be fixed.
+
+On 2020-05-22 00:19, Andrew Morton wrote:
+> I think we need a cc:stable here?
+> 
+Added now.
+
+Thanks,
+Prakash
