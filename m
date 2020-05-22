@@ -2,64 +2,85 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8422072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8E320825
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgEVA1M (ORCPT
+        id S1726890AbgEVAau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbgEVA1M (ORCPT
+        Thu, 21 May 2020 20:30:50 -0400
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:40915 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726762AbgEVAat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:27:12 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4623FC061A0E;
-        Thu, 21 May 2020 17:27:11 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A6D31120ED486;
-        Thu, 21 May 2020 17:27:10 -0700 (PDT)
-Date:   Thu, 21 May 2020 17:27:10 -0700 (PDT)
-Message-Id: <20200521.172710.1928946459385558873.davem@davemloft.net>
-To:     tangbin@cmss.chinamobile.com
-Cc:     ralf@linux-mips.org, paulburton@kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhangshengju@cmss.chinamobile.com
-Subject: Re: [PATCH] net: sgi: ioc3-eth: Fix return value check in
- ioc3eth_probe()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200520095532.20780-1-tangbin@cmss.chinamobile.com>
-References: <20200520095532.20780-1-tangbin@cmss.chinamobile.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 21 May 2020 17:27:11 -0700 (PDT)
+        Thu, 21 May 2020 20:30:49 -0400
+Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id D97EED59A4B;
+        Fri, 22 May 2020 10:30:28 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jbvZz-0001P7-UM; Fri, 22 May 2020 10:30:27 +1000
+Date:   Fri, 22 May 2020 10:30:27 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        xfs <linux-xfs@vger.kernel.org>
+Subject: Re: lockdep trace with xfs + mm in it from 5.7.0-rc5
+Message-ID: <20200522003027.GC2040@dread.disaster.area>
+References: <CAPM=9tyy5vubggbcj32bGpA_h6yDaBNM3QeJPySTzci-etfBZw@mail.gmail.com>
+ <20200521231312.GJ17635@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521231312.GJ17635@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
+        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
+        a=nMFCFe5KEfRbL1dfepcA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
-Date: Wed, 20 May 2020 17:55:32 +0800
-
-> In the function devm_platform_ioremap_resource(), if get resource
-> failed, the return value is ERR_PTR() not NULL. Thus it must be
-> replaced by IS_ERR(), or else it may result in crashes if a critical
-> error path is encountered.
+On Thu, May 21, 2020 at 04:13:12PM -0700, Darrick J. Wong wrote:
+> [cc linux-xfs]
 > 
-> Fixes: 0ce5ebd24d25 ("mfd: ioc3: Add driver for SGI IOC3 chip")
-> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> On Fri, May 22, 2020 at 08:21:50AM +1000, Dave Airlie wrote:
+> > Hi,
+> > 
+> > Just updated a rawhide VM to the Fedora 5.7.0-rc5 kernel, did some
+> > package building,
+> > 
+> > got the below trace, not sure if it's known and fixed or unknown.
+> 
+> It's a known false-positive.  An inode can't simultaneously be getting
+> reclaimed due to zero refcount /and/ be the target of a getxattr call.
+> Unfortunately, lockdep can't tell the difference, and it seems a little
+> strange to set NOFS on the allocation (which increases the chances of a
+> runtime error) just to quiet that down.
 
-Applied, thanks.
+__GFP_NOLOCKDEP is the intended flag to telling memory allocation
+that lockdep is stupid.
+
+However, it seems that the patches that were in progress some months
+ago to convert XFS to kmalloc interfaces and using GFP flags
+directly stalled - being able to mark locations like this with
+__GFP_NOLOCKDEP was one of the main reasons for getting rid of all
+the internal XFS memory allocation wrappers...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
