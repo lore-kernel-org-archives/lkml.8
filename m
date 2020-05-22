@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECADC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43FF22072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7522072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159207;
-	bh=aVWBkr/MbZ67KkqkDZdoxyT8qvaVzqO3nHWvC9kgK+w=;
+	s=default; t=1590159216;
+	bh=vcXZuq2+yMbWGoBhZSGMws23faRimjlbcAkjvX3KKms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sP9RfTh3YtIdJ/9eUzy3/55Nx0yQj5o999X6JvdBvuFPPwAt0rTod1QZWWoBF4mH6
-	 Q92KuN+C8d0WbyGmw5YMu1iaRF7cDnYs0S6vrUQlwFAfrkgGTDOHgSO+5gJu4/E/Q8
-	 10mhxBKyjv8gsMDGwmGcwjIpM3xyM2pRY0AZ+wCs=
+	b=KE31W/sXC4asD8XCpXaUpT7QRndwFHGF5p+vQM5I766glr8DKXH/2vdNg6TqdT2V0
+	 MhzVeLigNqLEYBVlSwgB3RZIaA1d9wb65UH9dxZi7FvmZ3/saNBgDAn+lnwqzWWP1y
+	 02VLC1oDJXmbstHC907xF2LpT2Ja4PGIEVaj9IGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbgEVOxZ (ORCPT
+        id S1731301AbgEVOxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731130AbgEVOvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:55 -0400
+        id S1731108AbgEVOvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0921522255;
-        Fri, 22 May 2020 14:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D63822224A;
+        Fri, 22 May 2020 14:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159114;
-        bh=aVWBkr/MbZ67KkqkDZdoxyT8qvaVzqO3nHWvC9kgK+w=;
+        s=default; t=1590159109;
+        bh=vcXZuq2+yMbWGoBhZSGMws23faRimjlbcAkjvX3KKms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5prBhYZcHFqOjkGNUBSIqZoW0sfZwwxHZt+TTv4fjwQ0y1soVJU+WGDPWgIePfqp
-         VXVLWACD/mzCwd16Nz9ly0UPN5JFynHU2QYNV63aDsVjAXcdI+YJ2xtbnQOiL//9wC
-         B9QcZLwotScwWPTRnYZpCWCJ/Yruf+LaWPwykE9o=
+        b=nvHPoESF1eVQpQmOjLcoVjPIt9Xgp7HUl9lRRmwqfs3mMFkbbIiXwT6+xS9NXXf74
+         RE7cCtoPfk2iA8gQ0cDJZDaWGOL2Ro95uUB+7DNYgXI8mTXePXveJZ+0suaIfk5SxK
+         wmT4LzLRlXoksjYjRG5NzqXBeEJZwlLuL9zgkzpw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/13] net: freescale: select CONFIG_FIXED_PHY where needed
-Date:   Fri, 22 May 2020 10:51:40 -0400
-Message-Id: <20200522145142.435086-11-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 4.14 06/13] gfs2: move privileged user check to gfs2_quota_lock_check
+Date:   Fri, 22 May 2020 10:51:35 -0400
+Message-Id: <20200522145142.435086-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145142.435086-1-sashal@kernel.org>
 References: <20200522145142.435086-1-sashal@kernel.org>
@@ -60,64 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 99352c79af3e5f2e4724abf37fa5a2a3299b1c81 ]
+[ Upstream commit 4ed0c30811cb4d30ef89850b787a53a84d5d2bcb ]
 
-I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
-and CONFIG_GIANFAR=y:
+Before this patch, function gfs2_quota_lock checked if it was called
+from a privileged user, and if so, it bypassed the quota check:
+superuser can operate outside the quotas.
+That's the wrong place for the check because the lock/unlock functions
+are separate from the lock_check function, and you can do lock and
+unlock without actually checking the quotas.
 
-x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
+This patch moves the check to gfs2_quota_lock_check.
 
-It seems the same thing can happen with dpaa and ucc_geth, so change
-all three to do an explicit 'select FIXED_PHY'.
-
-The fixed-phy driver actually has an alternative stub function that
-theoretically allows building network drivers when fixed-phy is
-disabled, but I don't see how that would help here, as the drivers
-presumably would not work then.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/Kconfig      | 2 ++
- drivers/net/ethernet/freescale/dpaa/Kconfig | 1 +
- 2 files changed, 3 insertions(+)
+ fs/gfs2/quota.c | 3 +--
+ fs/gfs2/quota.h | 3 ++-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
-index 6e490fd2345d..71f0640200bc 100644
---- a/drivers/net/ethernet/freescale/Kconfig
-+++ b/drivers/net/ethernet/freescale/Kconfig
-@@ -76,6 +76,7 @@ config UCC_GETH
- 	depends on QUICC_ENGINE
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	---help---
- 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
- 	  which is available on some Freescale SOCs.
-@@ -89,6 +90,7 @@ config GIANFAR
- 	depends on HAS_DMA
- 	select FSL_PQ_MDIO
- 	select PHYLIB
-+	select FIXED_PHY
- 	select CRC32
- 	---help---
- 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,
-diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
-index a654736237a9..8fec41e57178 100644
---- a/drivers/net/ethernet/freescale/dpaa/Kconfig
-+++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
-@@ -2,6 +2,7 @@ menuconfig FSL_DPAA_ETH
- 	tristate "DPAA Ethernet"
- 	depends on FSL_DPAA && FSL_FMAN
- 	select PHYLIB
-+	select FIXED_PHY
- 	select FSL_FMAN_MAC
- 	---help---
- 	  Data Path Acceleration Architecture Ethernet driver,
+diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
+index e700fb162664..a833e2e07167 100644
+--- a/fs/gfs2/quota.c
++++ b/fs/gfs2/quota.c
+@@ -1039,8 +1039,7 @@ int gfs2_quota_lock(struct gfs2_inode *ip, kuid_t uid, kgid_t gid)
+ 	u32 x;
+ 	int error = 0;
+ 
+-	if (capable(CAP_SYS_RESOURCE) ||
+-	    sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
++	if (sdp->sd_args.ar_quota != GFS2_QUOTA_ON)
+ 		return 0;
+ 
+ 	error = gfs2_quota_hold(ip, uid, gid);
+diff --git a/fs/gfs2/quota.h b/fs/gfs2/quota.h
+index 836f29480be6..e3a6e2404d11 100644
+--- a/fs/gfs2/quota.h
++++ b/fs/gfs2/quota.h
+@@ -47,7 +47,8 @@ static inline int gfs2_quota_lock_check(struct gfs2_inode *ip,
+ 	int ret;
+ 
+ 	ap->allowed = UINT_MAX; /* Assume we are permitted a whole lot */
+-	if (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
++	if (capable(CAP_SYS_RESOURCE) ||
++	    sdp->sd_args.ar_quota == GFS2_QUOTA_OFF)
+ 		return 0;
+ 	ret = gfs2_quota_lock(ip, NO_UID_QUOTA_CHANGE, NO_GID_QUOTA_CHANGE);
+ 	if (ret)
 -- 
 2.25.1
 
