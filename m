@@ -2,141 +2,117 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B49C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E780C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED80C204EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0127F2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:47:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ujuhda9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgEVOqk (ORCPT
+        id S1730559AbgEVOrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:46:40 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:35851 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730105AbgEVOqd (ORCPT
+        Fri, 22 May 2020 10:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729903AbgEVOrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:46:33 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MplPh-1jGolW1bDB-00qBfc for <linux-kernel@vger.kernel.org>; Fri, 22 May
- 2020 16:46:31 +0200
-Received: by mail-qk1-f169.google.com with SMTP id f13so10955775qkh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:46:31 -0700 (PDT)
-X-Gm-Message-State: AOAM533Xvy54bNuJ2f5pzevaee7ls6/C10KoORXZYTkEIP9dClJddvSc
-        kmip8z+mgeumRHXhKz4qAFdMX0lCYcAPfNsi94Q=
-X-Google-Smtp-Source: ABdhPJwmy6G1wj6rGXkLGjuBlUbBUGagMMbZcrCm8GJrsSSbymy5nqhhK5vv/LW4p6M6tI7x1VRfvM/WVypzvcohCls=
-X-Received: by 2002:a37:434b:: with SMTP id q72mr16186729qka.352.1590158790247;
- Fri, 22 May 2020 07:46:30 -0700 (PDT)
+        Fri, 22 May 2020 10:47:11 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D17C061A0E;
+        Fri, 22 May 2020 07:47:11 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l73so2297354pjb.1;
+        Fri, 22 May 2020 07:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pyI8RXJv0A9qOfUOs7+t5xXq9tBCjrOPiOAhgZoNJGU=;
+        b=Ujuhda9sRCNvYqh00NglKq18LhbkIq8aE4BUcXG3v7wbWcu1ySHA8zIVb+5qyZ5cXW
+         UPnhYOx5gxzweUHjEMfamVI16WBTsGW/NWZNFpC9CEQgX161wxmC4s/WE5Nr6RTQeIaH
+         4b0YabqbO/sH76bBoye3TRdm6o763j0xliAkqVo4UvT1jBaZSTQ2HyKPHfXhhuaOEGov
+         OnPnEuh+Lz3gZcTkTSnw3jkWnBbRhfB3bq6nDxWHwRcrdf+dhjoA/2tWBwEyXr13fZGJ
+         fX40OFWM3EC8WYw3wOseIxV8YbmhcqwcoQNHcF/foWZpegvLrHtAdMB1s4r0DZIG6ixg
+         HPJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pyI8RXJv0A9qOfUOs7+t5xXq9tBCjrOPiOAhgZoNJGU=;
+        b=O/hCP1V0NNJMQZUG+t9Bh5lxdUqVMSr3Qi+spR+8ouILsF45hzs17drHoHlshSpY4U
+         3mUc0WKdF2fu8kwlhsRdftUaJFrahz05moRmmNqv0O1u602gkT0lzGC3KUrsEwA0bay/
+         1wv0eEKLXcctPNITtDP9vcIH7iCzR1nWBaSzKfjdGZNAQYc0CEJamx6qcL4Gg5//PpBm
+         3QV7gGO7UtBHIRKl8UJJfDJ5n42mzywPS8t3rf9ZJx7o9QidtqCkb+c39l2+qA7xQoAD
+         QS4g/N4YwzI95zZBNYTKUUvBF+HWh/BPRHe1N7ebM51DkRl553jNi0vwEyNttL7qFDy5
+         bDow==
+X-Gm-Message-State: AOAM5302slwv5SbSva3ryBEGqn2pmj+qe/qzpqMMwdYBn7itrccZydCA
+        mymHwrCSXGrvwzS3lx2/a0k=
+X-Google-Smtp-Source: ABdhPJwEjkbC0ZRvqsKRNasE1thUYFAv46HEbfQoZ9/iqC+b34JBVlEVMv+91eqFvfq8/THk/tyv3A==
+X-Received: by 2002:a17:902:bd42:: with SMTP id b2mr14491950plx.219.1590158830652;
+        Fri, 22 May 2020 07:47:10 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v127sm7113218pfb.91.2020.05.22.07.47.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 22 May 2020 07:47:08 -0700 (PDT)
+Date:   Fri, 22 May 2020 07:47:07 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 16/17] dt-bindings: watchdog: renesas,wdt: Document
+ r8a7742 support
+Message-ID: <20200522144707.GA173101@roeck-us.net>
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-References: <20200522124951.35776-1-sudeep.holla@arm.com> <20200522124951.35776-3-sudeep.holla@arm.com>
-In-Reply-To: <20200522124951.35776-3-sudeep.holla@arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 May 2020 16:46:12 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1t6BrB_Gti138VDRbmaiR_TjwR9d6qMstLBFDWxZ1kjQ@mail.gmail.com>
-Message-ID: <CAK8P3a1t6BrB_Gti138VDRbmaiR_TjwR9d6qMstLBFDWxZ1kjQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] firmware: smccc: Add ARCH_SOC_ID support
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        harb@amperecomputing.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Francois Ozog <francois.ozog@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:eUgxqSzEZfnXE/1hGmbTVnvsKP2q4WegGufvE2inKA1u4Nkwrz2
- Q0Qi4Jgx90YiqsEQP3fBIPunYbP1JsbKbz0QdIWmQy0tLxgThaWdqmtG0noQL7q4OSj2bvR
- XXouDtPCvz0g8wYVDBsl4obqFjLUGaHEUr0H+jJOYKNbE/kJCjKUE+om3RmmHj37ifWXHZD
- P0fwZagr4k/luCc5H09ow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:R1yk67n4mYc=:91k32ihezTulJxhTAjnkam
- dkjanHvL/foC9H2C+JCdTX5HtDxyj1F7x1/fSPv7J1/PmYMQhX0nrW8grLg3bua7FM+EyX3mS
- j67ESIQbdxhAx0cLlqWDGSJit0Po1RWQ9LfepcSCy9hx68cDsVhuUwStylItkob7DD6RVrQ0K
- q/wIQrq/f49wAJTWbxoTQ8MrexDsMmySxarpdRthVmnOT9hvX0H7Ew2yRohqXiWX3lSZ3KUQe
- oVUzEpOq8+MsKV44Yc1qNiVaiMreiG51NNVsrTCN1ya6nbxpN3IVLkmmIdiJWKUU9b5IG5bQC
- 2HlnSBkDn11Nw0vE1FGlPcKGcVooRberJi3evUchdv+mNR7tqcOYEEHxsf5yLH1dvITIALFO6
- 2dsFIk1ofo54ZO8jUA3WnDunZLMHynLZJLDZvdZAKx1brQi4yRh3nDqUhdXqj7NrwqBsZTmYL
- 95aiKerJcvVK4s0UBi0I/zdnm5F1q5j4SRuBtCK/L4Zk8cbARt5fS/6uBIDlW0ZLQhS8RDcw8
- JEU1IAzA+IbiVejzfU0VbdhnMMDHS7uEaTOkX4IeUCaKopejdzieyQAcqmXoD/II9WKN6OWZ/
- pjndVZ1dideDikugWpTHhTtYdorn9BvXhie/VOdSE4vG+VAxyKsFfPPZJ7YM4EKbK8u6QjdxZ
- Z9zsTscHPb0+GgWNYfxOTJlO3MUVh7S34FlVhLk/zOhzTOHT0k4ziBffOv/s8VbCXPbhrkU9v
- C2FFC1b7qHSZg+Ef9z81E9jbqULaDozwOWhI88pKUiIG95MdvyDop6Ou+joi0lUEc6t2Jtx3j
- KT84NjWvRjBXcGNdwYjKlO/7lfHaLHj64R2pUuS2BYT+IJHTMY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589555337-5498-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 2:50 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> +
-> +       soc_id_rev = res.a0;
-> +
-> +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-> +       if (!soc_dev_attr)
-> +               return -ENOMEM;
-> +
-> +       sprintf(soc_id_str, "0x%04x", IMP_DEF_SOC_ID(soc_id_version));
-> +       sprintf(soc_id_rev_str, "0x%08x", soc_id_rev);
-> +       sprintf(soc_id_jep106_id_str, "0x%02x%02x",
-> +               JEP106_BANK_CONT_CODE(soc_id_version),
-> +               JEP106_ID_CODE(soc_id_version));
-> +
-> +       soc_dev_attr->soc_id = soc_id_str;
-> +       soc_dev_attr->revision = soc_id_rev_str;
-> +       soc_dev_attr->jep106_id = soc_id_jep106_id_str;
+On Fri, May 15, 2020 at 04:08:56PM +0100, Lad Prabhakar wrote:
+> RZ/G1H (R8A7742) watchdog implementation is compatible with R-Car Gen2,
+> therefore add relevant documentation.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Ok, let me try to understand how this maps the 64-bit ID into the
-six strings in user space:
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-For a chip that identifies as
-
-JEP106_BANK_CONT_CODE = 12
-JEP106_ID_CODE = 34
-IMP_DEF_SOC_ID = 5678
-soc_id_rev = 9abcdef0
-
-the normal sysfs attributes contain these strings:
-
-machine = ""
-family = ""
-revision = "0x9abcdef0
-serial_number = ""
-soc_id = "0x5678"
-
-and the new attribute is
-
-jep106_identification_code = "0x1234"
-
-This still looks like a rather poorly designed interface to me, with a
-number of downsides:
-
-- Nothing in those strings identifies the numbers as using jep106
-  numbers rather than some something else that might use strings
-  with hexadecimal numbers.
-
-- I think we should have something unique in "family" just because
-  existing scripts can use that as the primary indentifier
-
-- It seems odd that there is no way to read the serial number through
-  the same interface and publish it the usual way. Francois Ozog
-  recently asked for a generic way to find out a serial number for
-  inventory management, and this would be the obvious place to have it.
-  It can of course be added later when the next revision of the spec
-  is there, it just seems like a surprising omission.
-
-How about making the contents:
-
-machine = "" /* could be a future addition, but board specific */
-family = "jep106:1234"
-revision = "0x9abcdef0
-serial_number = "0xfedcba987654321" /* to be implemented later */
-soc_id = "jep106:1234:5678" /* duplicates family but makes it unique*/
-
-That would work without any new properties, dropping the other patch,
-and be easier to use for identification from user space.
-
-    Arnd
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> index 79b3c62..e42fd30 100644
+> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  		fallback compatible string when compatible with the generic
+>  		version.
+>  	       Examples with soctypes are:
+> +		 - "renesas,r8a7742-wdt" (RZ/G1H)
+>  		 - "renesas,r8a7743-wdt" (RZ/G1M)
+>  		 - "renesas,r8a7744-wdt" (RZ/G1N)
+>  		 - "renesas,r8a7745-wdt" (RZ/G1E)
