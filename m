@@ -4,203 +4,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16170C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F246CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E71A42073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0062073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgEVGyw (ORCPT
+        id S1728468AbgEVG4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 02:54:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:58322 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgEVGyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 02:54:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7896730E;
-        Thu, 21 May 2020 23:54:50 -0700 (PDT)
-Received: from nicgas01-03-arm-vm.shanghai.arm.com (nicgas01-03-arm-vm.shanghai.arm.com [10.169.138.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EED53F52E;
-        Thu, 21 May 2020 23:54:48 -0700 (PDT)
-From:   Nick Gasson <nick.gasson@arm.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>
-Cc:     Nick Gasson <nick.gasson@arm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf jvmti: remove redundant jitdump line table entries
-Date:   Fri, 22 May 2020 14:53:30 +0800
-Message-Id: <20200522065330.34872-1-nick.gasson@arm.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 22 May 2020 02:56:22 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:61248 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728390AbgEVG4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 02:56:18 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04M6lIcE026832;
+        Fri, 22 May 2020 02:56:17 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 312d364vk9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 02:56:17 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04M6uGwp020352
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 22 May 2020 02:56:16 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 22 May 2020 02:56:15 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 22 May 2020 02:56:14 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 22 May 2020 02:56:14 -0400
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04M6uB79024790;
+        Fri, 22 May 2020 02:56:12 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <lorenzo.bianconi83@gmail.com>, <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: humidity: hts221: remove usage of iio_priv_to_dev()
+Date:   Fri, 22 May 2020 09:56:16 +0300
+Message-ID: <20200522065616.10901-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_02:2020-05-21,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 cotscore=-2147483648
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1011 adultscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005220054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For each PC/BCI pair in the JVMTI compiler inlining record table, the
-jitdump plugin emits debug line table entries for every source line in
-the method preceding that BCI. Instead only emit one source line per
-PC/BCI pair. Reported by Ian Rogers. This reduces the .dump size for
-SPECjbb from ~230MB to ~40MB.
+We may want to get rid of the iio_priv_to_dev() helper. That's a bit
+uncertain at this point. The reason is that we will hide some of the
+members of the iio_dev structure (to prevent drivers from accessing them
+directly), and that will also mean hiding the implementation of the
+iio_priv_to_dev() helper inside the IIO core.
 
-Also fix an error in the DWARF line table state machine where addresses
-are incorrectly offset by -0x40 (GEN_ELF_TEXT_OFFSET). This can be seen
-with `objdump -S` on the ELF files after perf inject.
+Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
+may not be fast anymore, so a general idea is to try to get rid of the
+iio_priv_to_dev() altogether.
 
-Signed-off-by: Nick Gasson <nick.gasson@arm.com>
+For this driver, removing the iio_priv_to_dev() helper means passing the
+iio_dev object on hts221_allocate_buffers() & hts221_allocate_trigger().
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- tools/perf/jvmti/libjvmti.c    | 73 +++++++++++++---------------------
- tools/perf/util/genelf_debug.c |  4 +-
- 2 files changed, 30 insertions(+), 47 deletions(-)
+ drivers/iio/humidity/hts221.h        | 4 ++--
+ drivers/iio/humidity/hts221_buffer.c | 7 +++----
+ drivers/iio/humidity/hts221_core.c   | 4 ++--
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
-index a9a056d68416..398e4ba6498d 100644
---- a/tools/perf/jvmti/libjvmti.c
-+++ b/tools/perf/jvmti/libjvmti.c
-@@ -32,38 +32,41 @@ static void print_error(jvmtiEnv *jvmti, const char *msg, jvmtiError ret)
+diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
+index 7d6771f7cf47..569146910885 100644
+--- a/drivers/iio/humidity/hts221.h
++++ b/drivers/iio/humidity/hts221.h
+@@ -46,7 +46,7 @@ extern const struct dev_pm_ops hts221_pm_ops;
+ int hts221_probe(struct device *dev, int irq, const char *name,
+ 		 struct regmap *regmap);
+ int hts221_set_enable(struct hts221_hw *hw, bool enable);
+-int hts221_allocate_buffers(struct hts221_hw *hw);
+-int hts221_allocate_trigger(struct hts221_hw *hw);
++int hts221_allocate_buffers(struct hts221_hw *hw, struct iio_dev *iio_dev);
++int hts221_allocate_trigger(struct hts221_hw *hw, struct iio_dev *iio_dev);
  
- #ifdef HAVE_JVMTI_CMLR
- static jvmtiError
--do_get_line_numbers(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
--		    jvmti_line_info_t *tab, jint *nr)
-+do_get_line_number(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
-+		   jvmti_line_info_t *tab)
- {
--	jint i, lines = 0;
--	jint nr_lines = 0;
-+	jint i, nr_lines = 0;
- 	jvmtiLineNumberEntry *loc_tab = NULL;
- 	jvmtiError ret;
-+	jint src_line = -1;
- 
- 	ret = (*jvmti)->GetLineNumberTable(jvmti, m, &nr_lines, &loc_tab);
- 	if (ret == JVMTI_ERROR_ABSENT_INFORMATION || ret == JVMTI_ERROR_NATIVE_METHOD) {
- 		/* No debug information for this method */
--		*nr = 0;
--		return JVMTI_ERROR_NONE;
-+		return ret;
- 	} else if (ret != JVMTI_ERROR_NONE) {
- 		print_error(jvmti, "GetLineNumberTable", ret);
- 		return ret;
- 	}
- 
--	for (i = 0; i < nr_lines; i++) {
--		if (loc_tab[i].start_location < bci) {
--			tab[lines].pc = (unsigned long)pc;
--			tab[lines].line_number = loc_tab[i].line_number;
--			tab[lines].discrim = 0; /* not yet used */
--			tab[lines].methodID = m;
--			lines++;
--		} else {
--			break;
--		}
-+	for (i = 0; i < nr_lines && loc_tab[i].start_location <= bci; i++) {
-+		src_line = i;
-+	}
-+
-+	if (src_line != -1) {
-+		tab->pc = (unsigned long)pc;
-+		tab->line_number = loc_tab[src_line].line_number;
-+		tab->discrim = 0; /* not yet used */
-+		tab->methodID = m;
-+
-+		ret = JVMTI_ERROR_NONE;
-+	} else {
-+		ret = JVMTI_ERROR_ABSENT_INFORMATION;
- 	}
-+
- 	(*jvmti)->Deallocate(jvmti, (unsigned char *)loc_tab);
--	*nr = lines;
--	return JVMTI_ERROR_NONE;
-+
-+	return ret;
+ #endif /* HTS221_H */
+diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
+index 9fb3f33614d4..48d469eeb0e6 100644
+--- a/drivers/iio/humidity/hts221_buffer.c
++++ b/drivers/iio/humidity/hts221_buffer.c
+@@ -72,10 +72,9 @@ static irqreturn_t hts221_trigger_handler_thread(int irq, void *private)
+ 	return IRQ_HANDLED;
  }
  
- static jvmtiError
-@@ -71,9 +74,8 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
+-int hts221_allocate_trigger(struct hts221_hw *hw)
++int hts221_allocate_trigger(struct hts221_hw *hw, struct iio_dev *iio_dev)
  {
- 	const jvmtiCompiledMethodLoadRecordHeader *hdr;
- 	jvmtiCompiledMethodLoadInlineRecord *rec;
--	jvmtiLineNumberEntry *lne = NULL;
- 	PCStackInfo *c;
--	jint nr, ret;
-+	jint ret;
- 	int nr_total = 0;
- 	int i, lines_total = 0;
+ 	struct st_sensors_platform_data *pdata = dev_get_platdata(hw->dev);
+-	struct iio_dev *iio_dev = iio_priv_to_dev(hw);
+ 	bool irq_active_low = false, open_drain = false;
+ 	unsigned long irq_type;
+ 	int err;
+@@ -190,9 +189,9 @@ static irqreturn_t hts221_buffer_handler_thread(int irq, void *p)
+ 	return IRQ_HANDLED;
+ }
  
-@@ -86,24 +88,7 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
- 	for (hdr = compile_info; hdr != NULL; hdr = hdr->next) {
- 		if (hdr->kind == JVMTI_CMLR_INLINE_INFO) {
- 			rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
--			for (i = 0; i < rec->numpcs; i++) {
--				c = rec->pcinfo + i;
--				nr = 0;
--				/*
--				 * unfortunately, need a tab to get the number of lines!
--				 */
--				ret = (*jvmti)->GetLineNumberTable(jvmti, c->methods[0], &nr, &lne);
--				if (ret == JVMTI_ERROR_NONE) {
--					/* free what was allocated for nothing */
--					(*jvmti)->Deallocate(jvmti, (unsigned char *)lne);
--					nr_total += (int)nr;
--				} else if (ret == JVMTI_ERROR_ABSENT_INFORMATION
--					   || ret == JVMTI_ERROR_NATIVE_METHOD) {
--					/* No debug information for this method */
--				} else {
--					print_error(jvmti, "GetLineNumberTable", ret);
--				}
--			}
-+			nr_total += rec->numpcs;
- 		}
+-int hts221_allocate_buffers(struct hts221_hw *hw)
++int hts221_allocate_buffers(struct hts221_hw *hw, struct iio_dev *iio_dev)
+ {
+-	return devm_iio_triggered_buffer_setup(hw->dev, iio_priv_to_dev(hw),
++	return devm_iio_triggered_buffer_setup(hw->dev, iio_dev,
+ 					NULL, hts221_buffer_handler_thread,
+ 					&hts221_buffer_ops);
+ }
+diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
+index 9003671f14fb..77dfa65df841 100644
+--- a/drivers/iio/humidity/hts221_core.c
++++ b/drivers/iio/humidity/hts221_core.c
+@@ -621,11 +621,11 @@ int hts221_probe(struct device *dev, int irq, const char *name,
  	}
  
-@@ -122,14 +107,12 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
- 			rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
- 			for (i = 0; i < rec->numpcs; i++) {
- 				c = rec->pcinfo + i;
--				nr = 0;
--				ret = do_get_line_numbers(jvmti, c->pc,
--							  c->methods[0],
--							  c->bcis[0],
--							  *tab + lines_total,
--							  &nr);
-+				ret = do_get_line_number(jvmti, c->pc,
-+							 c->methods[0],
-+							 c->bcis[0],
-+							 *tab + lines_total);
- 				if (ret == JVMTI_ERROR_NONE)
--					lines_total += nr;
-+					lines_total++;
- 			}
- 		}
- 	}
-diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
-index 30e9f618f6cd..dd40683bd4c0 100644
---- a/tools/perf/util/genelf_debug.c
-+++ b/tools/perf/util/genelf_debug.c
-@@ -342,7 +342,7 @@ static void emit_lineno_info(struct buffer_ext *be,
- 	 */
+ 	if (hw->irq > 0) {
+-		err = hts221_allocate_buffers(hw);
++		err = hts221_allocate_buffers(hw, iio_dev);
+ 		if (err < 0)
+ 			return err;
  
- 	/* start state of the state machine we take care of */
--	unsigned long last_vma = code_addr;
-+	unsigned long last_vma = 0;
- 	char const  *cur_filename = NULL;
- 	unsigned long cur_file_idx = 0;
- 	int last_line = 1;
-@@ -473,7 +473,7 @@ jit_process_debug_info(uint64_t code_addr,
- 		ent = debug_entry_next(ent);
+-		err = hts221_allocate_trigger(hw);
++		err = hts221_allocate_trigger(hw, iio_dev);
+ 		if (err)
+ 			return err;
  	}
- 	add_compilation_unit(di, buffer_ext_size(dl));
--	add_debug_line(dl, debug, nr_debug_entries, 0);
-+	add_debug_line(dl, debug, nr_debug_entries, GEN_ELF_TEXT_OFFSET);
- 	add_debug_abbrev(da);
- 	if (0) buffer_ext_dump(da, "abbrev");
- 
 -- 
-2.26.2
+2.25.1
 
