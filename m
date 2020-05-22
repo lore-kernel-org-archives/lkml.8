@@ -2,115 +2,82 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41379C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F49C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD1F207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3AFB20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OMXeKQ+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgEVNjB (ORCPT
+        id S1730025AbgEVNkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:39:01 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:34864 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729406AbgEVNjA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:39:00 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jc7sy-0003j6-TB; Fri, 22 May 2020 07:38:53 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jc7sx-0000zH-CV; Fri, 22 May 2020 07:38:52 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Rob Landley <rob@landley.net>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <87y2poyd91.fsf_-_@x220.int.ebiederm.org>
-        <adaced72-d757-e3e4-cfeb-5512533d0aa5@landley.net>
-        <874ksaioc6.fsf@x220.int.ebiederm.org>
-        <fc2cf2a7-e1a7-3170-32c9-43e593636799@landley.net>
-        <87r1vcd4wo.fsf@x220.int.ebiederm.org>
-        <6ce125fd-4fb1-8c39-a9a9-098391f2016a@landley.net>
-Date:   Fri, 22 May 2020 08:35:06 -0500
-In-Reply-To: <6ce125fd-4fb1-8c39-a9a9-098391f2016a@landley.net> (Rob Landley's
-        message of "Thu, 21 May 2020 23:51:20 -0500")
-Message-ID: <871rnccctx.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 22 May 2020 09:40:11 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53156 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729406AbgEVNkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 09:40:11 -0400
+Received: from zn.tnic (p200300ec2f0d4900a503efeda57d2ecc.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:4900:a503:efed:a57d:2ecc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 07B341EC02DD;
+        Fri, 22 May 2020 15:40:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590154810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Pw4qZddkN9GARxEt8dEIB/8bXHBWj3ikGLqk4GalsDI=;
+        b=OMXeKQ+lA5i44nvFQReQLVYF4u5t5YzXL+c9LW740nPyR9rd7bNT752oRFxrmq05fHnm2y
+        A9KklmoK6nbusEHZtzVRcWBa0d3ekTrHXUuDyYWz2tdqkDbspvDnn6VIGQfWFDiyKWoZML
+        Y1XxO57yR1hRM37VQwpeYIjqI92mO5c=
+Date:   Fri, 22 May 2020 15:40:04 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Thiel <b.thiel@posteo.de>,
+        Dave Young <dyoung@redhat.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Lenny Szubowicz <lszubowi@redhat.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Loic Yhuel <loic.yhuel@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Mike Lothian <mike@fireburn.co.uk>,
+        Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+Subject: Re: [GIT PULL 0/7] EFI fixes for v5.7
+Message-ID: <20200522134004.GF28750@zn.tnic>
+References: <20200517125754.8934-1-ardb@kernel.org>
+ <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jc7sx-0000zH-CV;;;mid=<871rnccctx.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+mSrIOE54/VQp+XUfD3u/JlfcpgUct7Ko=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 7/8] exec: Generic execfd support
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGUxPuQCv9KPezqpLf1qLTbJh_j9JeVnnYZ=HbnL65=AQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob Landley <rob@landley.net> writes:
+On Fri, May 22, 2020 at 03:06:20PM +0200, Ard Biesheuvel wrote:
+> Ping?
 
-> On 5/21/20 10:28 PM, Eric W. Biederman wrote:
->> 
->> Rob Landley <rob@landley.net> writes:
->> 
->>> On 5/20/20 11:05 AM, Eric W. Biederman wrote:
->> 
->>>> The file descriptor is stored in mm->exe_file.
->>>> Probably the most straight forward implementation is to allow
->>>> execveat(AT_EXE_FILE, ...).
->>>
->>> Cool, that works.
->>>
->>>> You can look at binfmt_misc for how to reopen an open file descriptor.
->>>
->>> Added to the todo heap.
->> 
->> Yes I don't think it would be a lot of code.
->> 
->> I think you might be better served with clone(CLONE_VM) as it doesn't
->> block so you don't need to feed yourself your context over a pipe.
->
-> Except that doesn't fix it.
->
-> Yes I could use threads instead, but the cure is worse than the disease and the
-> result is your shell background processes are threads rather than independent
-> processes (is $$ reporting PID or TID, I really don't want to go
-> there).
+Did you want to make your tags unique from the next pull request onwards
+and I were supposed to pull this one as is?
 
-I was just suggesting clone(CLONE_VM) because it creates a thread in a
-separate process.  Which on nommu sounds like it could be almost exactly
-what you want.
+Thx.
 
-If you need the separate copies of all of your global variables etc,
-re-exec'ing your self could be the easier way to go.
+-- 
+Regards/Gruss,
+    Boris.
 
-Eric
-
+https://people.kernel.org/tglx/notes-about-netiquette
