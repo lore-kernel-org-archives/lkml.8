@@ -2,96 +2,147 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F70DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB40DC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 639FD205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590160347;
-	bh=nS0h4RozeqQ2zDT71/b8HIMFM/1uZWrd6rex05YnTj4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dQx71fsK4fgGC01vdy45vVlCoiTK245WGMdAzMpWitsp3mD3ExUND4g+4/CVxAm4b
-	 2ssbkUsBZcqWXN+rZusPcv/DJFK+sK1hcdLeX6/MYmv+YOsaPoORmAuXn77O2Z1iDO
-	 MiRZI9mnVZAWJYlEwznrUIx4zX5Q1CyXPtkl1IRY=
+	by mail.kernel.org (Postfix) with ESMTP id D56C5205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgEVPM0 (ORCPT
+        id S1730352AbgEVPNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729929AbgEVPMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:12:25 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A18C4205CB;
-        Fri, 22 May 2020 15:12:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590160345;
-        bh=nS0h4RozeqQ2zDT71/b8HIMFM/1uZWrd6rex05YnTj4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sY558fodh/SGqJTWRlnQq3JYI5dRHMV1MoEJNk/S989jp6HWgrNsREbRSFe2aTuxB
-         bMR7hBan+N2rk4xcNKv7mH/sfCbQXcnBUxUfcPppUYJ1oCrRsU6hv0XkYniQdx3mcZ
-         oKD065rICV/tvZ/KylRYjYy4A1m4yUV+N0O7zcLY=
-Date:   Fri, 22 May 2020 16:12:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 3/3] selftests: vdso: Add a selftest for vDSO getcpu()
-Message-ID: <20200522151222.GJ5801@sirena.org.uk>
-References: <20200505174728.46594-1-broonie@kernel.org>
- <20200505174728.46594-4-broonie@kernel.org>
- <dff4dfbd-f3f1-d683-5dac-4404e9023b2e@kernel.org>
- <20200519174452.GR4611@sirena.org.uk>
- <0f1a7c29-340d-f61b-b102-d300932dc92c@kernel.org>
+        Fri, 22 May 2020 11:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729929AbgEVPNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:13:13 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658BAC061A0E;
+        Fri, 22 May 2020 08:13:13 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jc9Lz-0007Ty-9D; Fri, 22 May 2020 17:12:55 +0200
+Date:   Fri, 22 May 2020 17:12:55 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 3/8] srcu: Use local_lock() for per-CPU struct srcu_data
+ access
+Message-ID: <20200522151255.rtqnuk2cl3dpruou@linutronix.de>
+References: <20200519201912.1564477-1-bigeasy@linutronix.de>
+ <20200519201912.1564477-4-bigeasy@linutronix.de>
+ <20200520102407.GF317569@hirez.programming.kicks-ass.net>
+ <20200520120608.mwros5jurmidxxfv@linutronix.de>
+ <20200520184345.GU2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yr/DzoowOgTDcSCF"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0f1a7c29-340d-f61b-b102-d300932dc92c@kernel.org>
-X-Cookie: C for yourself.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200520184345.GU2869@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-05-20 11:43:45 [-0700], Paul E. McKenney wrote:
+> 
+> Yes, that CPU's rcu_segcblist structure does need mutual exclusion in
+> this case.  This is because rcu_segcblist_pend_cbs() looks not just
+> at the ->tails[] pointer, but also at the pointer referenced by the
+> ->tails[] pointer.  This last pointer is in an rcu_head structure, and
+> not just any rcu_head structure, but one that is ready to be invoked.
+> So this callback could vanish into the freelist (or worse) at any time.
+> But callback invocation runs on the CPU that enqueued the callbacks
+> (as long as that CPU remains online, anyway), so disabling interrupts
+> suffices in mainline.
+> 
+> Now, we could have srcu_might_be_idle() instead acquire the sdp->lock
+> to protect the structure.
 
---yr/DzoowOgTDcSCF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Joel suggested that.
 
-On Fri, May 22, 2020 at 08:55:50AM -0600, shuah wrote:
-> On 5/19/20 11:44 AM, Mark Brown wrote:
+> What would be really nice is a primitive that acquires such a per-CPU
+> lock and remains executing on that CPU, whether by the graces of
+> preempt_disable(), local_irq_save(), migrate_disable(), or what have you.
 
-> > > WARNING: Missing a blank line after declarations
-> > > WARNING: Missing a blank line after declarations
-> > > #135: FILE: tools/testing/selftests/vDSO/vdso_test_getcpu.c:27:
-> > > +	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
+It depends on what is required. migrate_disable() would limit you to
+executing one CPU but would allow preemption. You would need a lock to
+ensure exclusive access to the data structure. preempt_disable() /
+local_irq_save() guarantee more than that.
 
-> A blank line after declarations here just like what checkpatch
-> suggests. It makes it readable.
+Looking at the two call-sites there is no damage there is a CPU
+migration after obtaining the per-CPU pointer. There could be a
+CPU-migration before and after the pointer has been obtained so the code
+before and after this function can not make any assumptions.
 
-That doesn't match the idiom used by any of the surrounding code :(
+Would something like this work: ?
 
---yr/DzoowOgTDcSCF
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -764,14 +764,15 @@ static bool srcu_might_be_idle(struct srcu_struct *ssp)
+ 	unsigned long t;
+ 	unsigned long tlast;
+ 
++	check_init_srcu_struct(ssp);
+ 	/* If the local srcu_data structure has callbacks, not idle.  */
+-	local_irq_save(flags);
+-	sdp = this_cpu_ptr(ssp->sda);
++	sdp = raw_cpu_ptr(ssp->sda);
++	spin_lock_irqsave_rcu_node(sdp, flags);
+ 	if (rcu_segcblist_pend_cbs(&sdp->srcu_cblist)) {
+-		local_irq_restore(flags);
++		spin_unlock_irqrestore_rcu_node(sdp, flags);
+ 		return false; /* Callbacks already present, so not idle. */
+ 	}
+-	local_irq_restore(flags);
++	spin_unlock_irqrestore_rcu_node(sdp, flags);
+ 
+ 	/*
+ 	 * No local callbacks, so probabalistically probe global state.
+@@ -851,9 +852,8 @@ static void __call_srcu(struct srcu_struct *ssp, struct rcu_head *rhp,
+ 	}
+ 	rhp->func = func;
+ 	idx = srcu_read_lock(ssp);
+-	local_irq_save(flags);
+-	sdp = this_cpu_ptr(ssp->sda);
+-	spin_lock_rcu_node(sdp);
++	sdp = raw_cpu_ptr(ssp->sda);
++	spin_lock_irqsave_rcu_node(sdp, flags);
+ 	rcu_segcblist_enqueue(&sdp->srcu_cblist, rhp);
+ 	rcu_segcblist_advance(&sdp->srcu_cblist,
+ 			      rcu_seq_current(&ssp->srcu_gp_seq));
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7H69UACgkQJNaLcl1U
-h9CYvAf+Oop8av99Ht92WyMXd28H0tQSfKAthADXU3g0Gr/J9LiaWJcY0xxlsOQZ
-RkDr5YaYBi2Sy3Hq+W+cIekf52aFNIB/z1f18r8Nlsf4BbhrktPRj/jL7auo90vL
-PckxqeCOTpYxL+Pd+WsjZWj8ow82l76fQGBDFAX1ycNsbLt4xHw6iHqrShKZnYGc
-ZMe/Ky0Y6HqLYAoZA9q+AsDOlSajH+Qx6FnNc6t90tmrmY0WRVHCWgj2f8K7eVlN
-6bQR8ZFiI3uSzMdO9PdUFIWyVEIbAI6jxYNFroALJfxeyz0MIkcQpYQfMwKUgxEs
-U7rCjlgnhEUd5GmTPuIs8OmCZc4mGA==
-=549M
------END PGP SIGNATURE-----
+That check_init_srcu_struct() is needed, because otherwise:
 
---yr/DzoowOgTDcSCF--
+| BUG: spinlock bad magic on CPU#2, swapper/0/1
+|  lock: 0xffff88803ed28ac0, .magic: 00000000, .owner: <none>/-1, .owner_cpu: 0
+| CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc6+ #81
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  do_raw_spin_lock+0x6c/0xb0
+|  _raw_spin_lock_irqsave+0x33/0x40
+|  synchronize_srcu+0x24/0xc9
+|  wakeup_source_remove+0x4d/0x70
+|  wakeup_source_unregister.part.0+0x9/0x40
+|  device_wakeup_enable+0x99/0xc0
+
+I'm not sure if there should be an explicit init of `wakeup_srcu' or if
+an srcu function (like call_srcu()) is supposed to do it.
+
+> 							Thanx, Paul
+
+Sebastian
