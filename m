@@ -2,111 +2,94 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2549EC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBB30205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05B6205CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159360;
-	bh=iGPnBlo8kyfDPRdtZjoXDIN1J6IGdWFa/3J4cMiOiuY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IB05/53XhzCm4JH1ZiJSlDQFwHeOr03QwXzLBKVSjDRGKq1BvdhBHjZA6LAsTSoOf
-	 iBdaizSbnQuA+7x+lEGP68o/QgvVlMFP1ZOc1xJDbcTVgCq7zg64auSk8mMXp8SHPW
-	 9MSHLK3ByUqzRO/o1MKf9Yo/HYUzWUxm12ATCokU=
+	s=default; t=1590159367;
+	bh=0cKEoWpTu+DWnt1dxTx3zYaBzjzi9zNBJ/UJhCY6MEw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HMH/kHBGs3EVSPtXRWPMTGNPFzTLhbSwtqDuWgA2j5uyaJAZnGlUhcqSMvr35ByrE
+	 4cY+0PrhYMR45sYN9d4ABxe4ZPRNIqrA4RaRxOEcC66tpa8VKDnFg/NTBIPBsbw+V3
+	 AFJLjuxz7XXenFV0gGQ1PLgrHjK+JLN8HV1T7bik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbgEVOvI (ORCPT
+        id S1730959AbgEVO4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52678 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:56:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730881AbgEVOvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1730481AbgEVO4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:56:02 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A62022254;
-        Fri, 22 May 2020 14:51:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ADAA205CB;
+        Fri, 22 May 2020 14:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159062;
-        bh=iGPnBlo8kyfDPRdtZjoXDIN1J6IGdWFa/3J4cMiOiuY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xXu952wxgGcvxLtO1xvp1GziSDCDaIKTp+u0guNOyHs2b8t7AQ99rqq7M4yPTNEpG
-         dmWuvFay4563ZVYU4IlLIOjE0WNgHQI2J1z83i7cytlNdekWZgaEaNCNqXqa1juOnY
-         dqF/KXjjmQom2RS416/+a7Zo2I8L5lMKGLV9AMGA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Sierra <alex.sierra@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 15/32] drm/amdgpu: Use GEM obj reference for KFD BOs
-Date:   Fri, 22 May 2020 10:50:27 -0400
-Message-Id: <20200522145044.434677-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
-References: <20200522145044.434677-1-sashal@kernel.org>
+        s=default; t=1590159361;
+        bh=0cKEoWpTu+DWnt1dxTx3zYaBzjzi9zNBJ/UJhCY6MEw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=S2tGsp0elzP5bZPCTi84SjVeZaLlaznv1T5xlzOMg4Y0dF+KyjMmUuge2RGTdWSu2
+         NdXIrSGe2fRhRE0TIIF18GNfbWdGRo2kIaIcwAVDOxMZD1ntv6qO3M0DnHJ3iOth6T
+         0EJiDT9nxF+rFogASJMrv2NEMfke4sBLhm/iKjOQ=
+Subject: Re: [PATCH 3/3] selftests: vdso: Add a selftest for vDSO getcpu()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20200505174728.46594-1-broonie@kernel.org>
+ <20200505174728.46594-4-broonie@kernel.org>
+ <dff4dfbd-f3f1-d683-5dac-4404e9023b2e@kernel.org>
+ <20200519174452.GR4611@sirena.org.uk>
+From:   shuah <shuah@kernel.org>
+Message-ID: <0f1a7c29-340d-f61b-b102-d300932dc92c@kernel.org>
+Date:   Fri, 22 May 2020 08:55:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519174452.GR4611@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+On 5/19/20 11:44 AM, Mark Brown wrote:
+> On Tue, May 19, 2020 at 11:11:28AM -0600, shuah wrote:
+>> On 5/5/20 11:47 AM, Mark Brown wrote:
+> 
+>>> +int main(int argc, char **argv)
+>>> +{
+>>> +	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
+>>
+>> WARNING: Missing a blank line after declarations
+>> WARNING: Missing a blank line after declarations
+>> #135: FILE: tools/testing/selftests/vDSO/vdso_test_getcpu.c:27:
+>> +	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
 
-[ Upstream commit 39b3128d7ffd44e400e581e6f49e88cb42bef9a1 ]
+A blank line after declarations here just like what checkpatch
+suggests. It makes it readable.
 
-Releasing the AMDGPU BO ref directly leads to problems when BOs were
-exported as DMA bufs. Releasing the GEM reference makes sure that the
-AMDGPU/TTM BO is not freed too early.
+>> +	if (!sysinfo_ehdr) {
+> 
+> This is the idiom in use by the existing gettimeofday test:
+> 
+> WARNING: Missing a blank line after declarations
+> #38: FILE: tools/testing/selftests/vDSO/vdso_test_gettimeofday.c:38:
+> +	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
+> +	if (!sysinfo_ehdr) {
+> 
+> so I don't know how you want the code to look here?
+> 
 
-Also take a GEM reference when importing BOs from DMABufs to keep
-references to imported BOs balances properly.
+See above.
 
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Tested-by: Alex Sierra <alex.sierra@amd.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Sierra <alex.sierra@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index 6d021ecc8d59..edb561baf8b9 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -1288,7 +1288,7 @@ int amdgpu_amdkfd_gpuvm_free_memory_of_gpu(
- 	}
- 
- 	/* Free the BO*/
--	amdgpu_bo_unref(&mem->bo);
-+	drm_gem_object_put_unlocked(&mem->bo->tbo.base);
- 	mutex_destroy(&mem->lock);
- 	kfree(mem);
- 
-@@ -1630,7 +1630,8 @@ int amdgpu_amdkfd_gpuvm_import_dmabuf(struct kgd_dev *kgd,
- 		AMDGPU_VM_PAGE_READABLE | AMDGPU_VM_PAGE_WRITEABLE |
- 		AMDGPU_VM_PAGE_EXECUTABLE | AMDGPU_VM_MTYPE_NC;
- 
--	(*mem)->bo = amdgpu_bo_ref(bo);
-+	drm_gem_object_get(&bo->tbo.base);
-+	(*mem)->bo = bo;
- 	(*mem)->va = va;
- 	(*mem)->domain = (bo->preferred_domains & AMDGPU_GEM_DOMAIN_VRAM) ?
- 		AMDGPU_GEM_DOMAIN_VRAM : AMDGPU_GEM_DOMAIN_GTT;
--- 
-2.25.1
-
+thanks,
+-- Shuah
