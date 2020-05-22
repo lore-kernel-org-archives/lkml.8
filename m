@@ -2,62 +2,69 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D49C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD938C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40CE520723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54B620723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731069AbgEVVZE (ORCPT
+        id S1731081AbgEVV2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:25:04 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45927 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730976AbgEVVZD (ORCPT
+        Fri, 22 May 2020 17:28:34 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36632 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731035AbgEVV2e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:25:03 -0400
-Received: by mail-il1-f193.google.com with SMTP id b15so12097803ilq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:25:01 -0700 (PDT)
+        Fri, 22 May 2020 17:28:34 -0400
+Received: by mail-il1-f194.google.com with SMTP id 17so12159149ilj.3;
+        Fri, 22 May 2020 14:28:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CTkSYFeyEICq4BQf/4yKxmOZ5ACYCOJzi1wgxve1pBQ=;
-        b=dBj8Wm2yGF16aXN2JfhkbOds1j3w8eFtTpO4vZ8kTR+tL3b0KvZPsWqw/sYkVdZhSg
-         sagO3u5uBi3vKxR0dRr0xlxJJEXtFlmRcBNMqR85v43Cy4mx7CQgmManiA2jiMlK2XwY
-         cUXWhzg6Ixa1qp+lrSj1H2UEHohbOAWKMZQVAxWvEEeDpZcwp0nHOUZfNNr7gzOGJCDG
-         0+kakvPqvWpyuFEzQvRvAdc4G69nVFF6UAvH6tp2WBIt/pwriRoKnFHz1HfJJoUiu9UB
-         dp3dyORGgsJQCafCe2r9o6PGrWXQUaTh9xktkeu3IBf7Fu/+8RQbbLlOdyxnMn/6ghSv
-         KMEg==
-X-Gm-Message-State: AOAM5309bTrFXdSxAoYja08f5VQjWd3iE481sAYr4CtYM+iPFeucdMKR
-        mWCZUy0w5vBrl/F7fELx9l13n9o8
-X-Google-Smtp-Source: ABdhPJyRblSRaDcvhjtXm0c1XfBEfConje3POtUZgsj8+Z+wnLOjcljYkjJDwMjggId+Vs4HXacI7w==
-X-Received: by 2002:a05:6e02:788:: with SMTP id q8mr15055071ils.56.1590182701163;
-        Fri, 22 May 2020 14:25:01 -0700 (PDT)
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com. [209.85.166.178])
-        by smtp.gmail.com with ESMTPSA id j14sm4121104ioj.26.2020.05.22.14.25.00
-        for <linux-kernel@vger.kernel.org>
+        bh=aeNkqKnvqrQ1R9V6A7mXbyK3G4VemHM61exPIH1obU8=;
+        b=toDixm3r78ob4m1rBDOOq6aEFOX1cMsnnypBr+soAcOLbklCtOcz/y4Q8AJaUNYnFn
+         wcbIHu1EqFqEdfvw820qNELwVJA05OAfCgwWWj0vXqUJVzISsiC0AmaqMTpGkHrwP9WT
+         Ma6hBtNRkir9rLjAEiMiviXc0oDNASGY5RGQTbdW3cFQw5swLBs1n5Gn4zgXgMkuq7aP
+         rqGGB6Ge+Y4+80FOeK8/DQIBIjSW7piLj0CR5M9P1uroj9ZgN8BoVdbvUAdRSBxigiBP
+         l0CZ2L3IT69eX3yUs0d77142YZoSmnb8SSSCFl3Q2dZH3OuluXsOwClTnga9sglyM/N4
+         8HUA==
+X-Gm-Message-State: AOAM533l4ZoILMBigswybeK0pHI3cZE2ImGcFLs8+I54dt9Aofs6QUXZ
+        LgzSmKX8eeU40ONWI84a97DYehVvmWs=
+X-Google-Smtp-Source: ABdhPJxqs7mPKhasfMjw+2Tly2+Y+QUzs6NUQl34JF5bRHWwIbhB/Cbx9lPWfsTZeeLAl+TerA0d1g==
+X-Received: by 2002:a92:914d:: with SMTP id t74mr14383223ild.182.1590182911723;
+        Fri, 22 May 2020 14:28:31 -0700 (PDT)
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com. [209.85.166.52])
+        by smtp.gmail.com with ESMTPSA id y12sm5450562ilk.16.2020.05.22.14.28.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 14:25:00 -0700 (PDT)
-Received: by mail-il1-f178.google.com with SMTP id 18so12159245iln.9
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:25:00 -0700 (PDT)
-X-Received: by 2002:a05:6e02:54b:: with SMTP id i11mr7075081ils.50.1590182700558;
- Fri, 22 May 2020 14:25:00 -0700 (PDT)
+        Fri, 22 May 2020 14:28:31 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id q8so11555333iow.7;
+        Fri, 22 May 2020 14:28:30 -0700 (PDT)
+X-Received: by 2002:a6b:1505:: with SMTP id 5mr4759580iov.198.1590182910435;
+ Fri, 22 May 2020 14:28:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200507185301.GA14333@embeddedor>
-In-Reply-To: <20200507185301.GA14333@embeddedor>
+References: <20200507112955.23520-1-geert+renesas@glider.be> <20200507112955.23520-4-geert+renesas@glider.be>
+In-Reply-To: <20200507112955.23520-4-geert+renesas@glider.be>
 From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 22 May 2020 16:24:37 -0500
-X-Gmail-Original-Message-ID: <CADRPPNQy5PE8vDLCu+XeZpXDab=OnrLcUjWG5F0=uy00QXOQnw@mail.gmail.com>
-Message-ID: <CADRPPNQy5PE8vDLCu+XeZpXDab=OnrLcUjWG5F0=uy00QXOQnw@mail.gmail.com>
-Subject: Re: [PATCH] treewide: Replace zero-length array with flexible-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+Date:   Fri, 22 May 2020 16:28:06 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQxRwa2kQj_5K26RcovBhtfxdKitOxBKF8sgoyu9O+W-Q@mail.gmail.com>
+Message-ID: <CADRPPNQxRwa2kQj_5K26RcovBhtfxdKitOxBKF8sgoyu9O+W-Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] clk: qoriq: Add platform dependencies
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>, linux-pm@vger.kernel.org,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         lkml <linux-kernel@vger.kernel.org>
@@ -67,66 +74,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 1:49 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
+On Thu, May 7, 2020 at 6:31 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 >
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+> The Freescale QorIQ clock controller is only present on Freescale E500MC
+> and Layerscape SoCs.  Add platform dependencies to the CLK_QORIQ config
+> symbol, to avoid asking the user about it when configuring a kernel
+> without E500MC or Layerscape support.
 >
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  include/linux/fsl/bestcomm/bestcomm.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Applied for next.  Thanks.
+Hi Michael/Stephen,
+
+Are you applying this patch?  If not I can apply it with your ACK.
 
 Regards,
 Leo
 
+> ---
+>  drivers/clk/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/include/linux/fsl/bestcomm/bestcomm.h b/include/linux/fsl/bestcomm/bestcomm.h
-> index a0e2e6b19b57..154e541ce57e 100644
-> --- a/include/linux/fsl/bestcomm/bestcomm.h
-> +++ b/include/linux/fsl/bestcomm/bestcomm.h
-> @@ -27,7 +27,7 @@
->   */
->  struct bcom_bd {
->         u32     status;
-> -       u32     data[0];        /* variable payload size */
-> +       u32     data[]; /* variable payload size */
->  };
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index bcb257baed06daa0..22bf015610d1724c 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -232,7 +232,8 @@ config COMMON_CLK_AXI_CLKGEN
 >
->  /* ======================================================================== */
+>  config CLK_QORIQ
+>         bool "Clock driver for Freescale QorIQ platforms"
+> -       depends on (PPC_E500MC || ARM || ARM64 || COMPILE_TEST) && OF
+> +       depends on OF
+> +       depends on PPC_E500MC || SOC_LS1021A || ARCH_LAYERSCAPE || COMPILE_TEST
+>         ---help---
+>           This adds the clock driver support for Freescale QorIQ platforms
+>           using common clock framework.
+> --
+> 2.17.1
 >
