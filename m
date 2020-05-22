@@ -2,247 +2,264 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF214C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECFB20826
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA8120812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WT1eooU+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXNB2w90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgEVIZS (ORCPT
+        id S1729055AbgEVI1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 04:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
+        Fri, 22 May 2020 04:27:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgEVIZR (ORCPT
+        with ESMTP id S1728814AbgEVI1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:25:17 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE79BC061A0E;
-        Fri, 22 May 2020 01:25:15 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v4so7699300qte.3;
-        Fri, 22 May 2020 01:25:15 -0700 (PDT)
+        Fri, 22 May 2020 04:27:19 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A4FC061A0E;
+        Fri, 22 May 2020 01:27:19 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b71so9894713ilg.8;
+        Fri, 22 May 2020 01:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XJsKRH19vB/cGeqHjSkLUZnV1D50ZWfC9CxNYPIMtuY=;
-        b=WT1eooU+uX39YaJnVBfcBwibdNR0GBbXNZ7UxW9dkBnZ6uo3Z8NAuBoJ/KLlGMvLuk
-         /FpXarQmNwRs2mMpODVT5yjKfleiByaCbuVk3bHQHdNMg32aarFM4JJOWuxE7SGS90M5
-         mLeTWV7UI43lbPMp9dRYb6FAyfKbuiB3JF6/akACi71rn9RxBnBFOZlounf58CiAF5Ed
-         DUgBaoMbrbtXyLWJ8iT7DYBK8W/uIoRhmZVdjeWDzgk1+GFpvpjPUCK0PfD7gUbhTarM
-         S5BXV41a0kQpTGaFoLcwppp9NlZLmGVwwliK7RHGlITo9l/DBBhjj/ZquFOjf6wTOEQd
-         aqpA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2fHnNsoNoMFX9tLPfy5oiCEjZiCVfVUk6R5pWP854FY=;
+        b=IXNB2w90qkp5O9n2/puOR7XJPo0HNU2RlHWrHLUThIXg5ct0khkxD1r7d6iUGhQqkE
+         B1Nea/qZewLetxqbhD11Yo5vEl28KATQLxM6wEAZ2bc5bec55IOUMlNH+PvVRH53qQoE
+         NQGlPdK0FmuzFg3t3di9OFQI1ea2jXjIjalJLtgZ+Jhoi8DQU/xTQAY5pRRAch6REQEu
+         Z3bP+5i1jYCnr5M9OTW50kDi1SbGwOb35sAPiOYjSrWaJJHvWxqA9vaTu+AcrH77Vcf2
+         YPsoSBsDncdiLxlVhURGpIPhGcDZWVfrJTLNL8tAsgYhMncN+x2x2zs8+ii1GsrQw7bN
+         QHvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XJsKRH19vB/cGeqHjSkLUZnV1D50ZWfC9CxNYPIMtuY=;
-        b=LqhrpKqIPoMJggEMEeUxtCdXDtgeXDPsC01Mv3d3xYBwYpOyC0a8Ps1xP+YcnPOywj
-         zpgY6dNqtfnbioIymotSaav9+ZkYm6dtUJq5xGyz8jAkZR4Lfmlqjo1Zi1Wo+x1ybnX9
-         i/1Pk/7R8zEZ80jt8Sc2RHBKHNgexkH8WT/7VuKAqM6HxQitD+ZrgtIR3NCa+Q3JYB3J
-         mjDisOqZmYXiknQsU/7fCIo1LFce45BdvSmoNoh7svQgyUCXPu/6N014AUvFfY7Hfjo1
-         +4dNDDpr/Ot+BoP70RPKXI86lBCKbKL6k+thizgiIFNgdwuA6icb0EpzHel+EyIDhYjC
-         CK+Q==
-X-Gm-Message-State: AOAM530/KU+j2SkuFznsLYmcwYC6KpR/Z/oan9iWz72a5bgsWzlSw7FY
-        CaQtWdxo7pNncb6HO9RdH1I=
-X-Google-Smtp-Source: ABdhPJx84n0CAJh5FKdKOS8FIWCGtW9vmaMCZgQjSSdpcVpXYn/dDcrgwzR9SW2EGFoU5Mqmc7LBmA==
-X-Received: by 2002:ac8:6ece:: with SMTP id f14mr14505718qtv.135.1590135914681;
-        Fri, 22 May 2020 01:25:14 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id u16sm3397752qkm.107.2020.05.22.01.25.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 01:25:14 -0700 (PDT)
-Date:   Fri, 22 May 2020 10:25:10 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 3/4] iio: imu: bmi160: added regulator support
-Message-ID: <20200522082510.GC19742@ict14-OptiPlex-980>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-4-jonathan.albrieux@gmail.com>
- <20200519185535.00003cb7@Huawei.com>
- <20200520071751.GD3361@ict14-OptiPlex-980>
- <20200521193055.7ee7cf9c@archlinux>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2fHnNsoNoMFX9tLPfy5oiCEjZiCVfVUk6R5pWP854FY=;
+        b=PXLt4FqSqiBm6BD2kHTBwl4BObeMpHvnbywv1NFr5Uhl6iuIRxtY0WzZ8leA4sNpMh
+         mgV4NNhsLl/zOZe25MMdgvUWMtkbNs+IaFLjt8u41s1mAd9iCz0/3ffpmnHCQRahRlCH
+         1RD3/y7srq1syaZMdglRC09bsfMlZzZePq9jFYeGlowMq3W9kOo08sxUGyyqaYlQTQkv
+         2PvcW5FGVGJ/m/aZYzXPc8qnzwLIfZYtXCLhzEsUMsh7xCBWc2pr1d/fq7xdshIVgwCB
+         rmoOP1jn3f4uD9Yl691drVu/GvH5g5Ve8EFROY8KvwfgMzMK6jhIJYLc+6lMvMP8J/gi
+         jTbw==
+X-Gm-Message-State: AOAM5321mbSHtV3KTZAJ0GbSHRZgdSNOMmN54VGZNUN925r0bZaCSaMQ
+        WAe/0Pbs5PtojEeNK/JNgtJcGxQy+4RNd6pTEQ8=
+X-Google-Smtp-Source: ABdhPJxz2dBPKcBdZUV3EVV3BvItkcFvhZyDqyAmXxQfmODKoqlyeBc1DvSHK68r5Dn55C/iIaNgHyVLuWAaQUSeKeQ=
+X-Received: by 2002:a92:c609:: with SMTP id p9mr12456289ilm.243.1590136038940;
+ Fri, 22 May 2020 01:27:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521193055.7ee7cf9c@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200521093845.15101-1-gmayyyha@gmail.com> <cad949df361b68a1c929f9053bce34d1892c8291.camel@kernel.org>
+ <CAB9OAC0ry=tuYa-uWjGbnPGEpDCaQYhmN7bJFYvkZ1Uszo=Xpw@mail.gmail.com> <d1e221be16e220009f1ca55d4b1eb6728462a279.camel@kernel.org>
+In-Reply-To: <d1e221be16e220009f1ca55d4b1eb6728462a279.camel@kernel.org>
+From:   Yanhu Cao <gmayyyha@gmail.com>
+Date:   Fri, 22 May 2020 16:27:07 +0800
+Message-ID: <CAB9OAC2yxtAciWmJzVSga-pu3ZUjjmsctfj+pQQTr78-W_cfuA@mail.gmail.com>
+Subject: Re: [PATCH] ceph: show max caps in debugfs caps file
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 07:30:55PM +0100, Jonathan Cameron wrote:
-> On Wed, 20 May 2020 09:17:51 +0200
-> Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
-> 
-> > On Tue, May 19, 2020 at 06:55:35PM +0100, Jonathan Cameron wrote:
-> > > On Tue, 19 May 2020 09:50:59 +0200
-> > > Jonathan Albrieux <jonathan.albrieux@gmail.com> wrote:
-> > >   
-> > > > v2: fixed missing description  
-> > > 
-> > > Don't put change log here....  
-> > 
-> > Yep I will put it in the cover letter
-> > 
-> > > > 
-> > > > Add vdd-supply and vddio-supply support. Without this support vdd and vddio
-> > > > should be set to always-on in device tree  
-> > > 
-> > > Kind of the opposite.  If they are always on we don't have to provide them
-> > > in the device tree.
-> > >   
-> > 
-> > I wrote that because, testing on msm8916, without setting the regulators to
-> > always on they were controlled by other components and it happened that
-> > the line wasn't ready during probe causing failure to load the module.
-> > 
-> > I will try to reword based on your comment, thank you.
-> 
-> Ah. Understood.  I'd give that explicit example in the patch description.
-> I'd assumed this was the normal case of they weren't being described
-> at all in DT, whereas you case is more complex.
-> 
-> Jonathan
+On Thu, May 21, 2020 at 8:51 PM Jeff Layton <jlayton@kernel.org> wrote:
 >
-
-Yep, I omitted to describe the case I was in. I'll add it to next patch, thank
-you,
- 
-> > 
-> > > A few trivial things inline.
-> > >   
-> > > > 
-> > > > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > > > ---  
-> > > 
-> > > Change log goes here so we don't end up keeping it in the git log.
-> > >   
-> > > >  drivers/iio/imu/bmi160/bmi160.h      |  2 ++
-> > > >  drivers/iio/imu/bmi160/bmi160_core.c | 27 ++++++++++++++++++++++++++-
-> > > >  2 files changed, 28 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/iio/imu/bmi160/bmi160.h b/drivers/iio/imu/bmi160/bmi160.h
-> > > > index 621f5309d735..923c3b274fde 100644
-> > > > --- a/drivers/iio/imu/bmi160/bmi160.h
-> > > > +++ b/drivers/iio/imu/bmi160/bmi160.h
-> > > > @@ -3,10 +3,12 @@
-> > > >  #define BMI160_H_
-> > > >  
-> > > >  #include <linux/iio/iio.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > >  
-> > > >  struct bmi160_data {
-> > > >  	struct regmap *regmap;
-> > > >  	struct iio_trigger *trig;
-> > > > +	struct regulator_bulk_data supplies[2];
-> > > >  };
-> > > >  
-> > > >  extern const struct regmap_config bmi160_regmap_config;
-> > > > diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-> > > > index 6af65d6f1d28..9bbe0d8e6720 100644
-> > > > --- a/drivers/iio/imu/bmi160/bmi160_core.c
-> > > > +++ b/drivers/iio/imu/bmi160/bmi160_core.c
-> > > > @@ -15,6 +15,7 @@
-> > > >  #include <linux/delay.h>
-> > > >  #include <linux/irq.h>
-> > > >  #include <linux/of_irq.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > >  
-> > > >  #include <linux/iio/iio.h>
-> > > >  #include <linux/iio/triggered_buffer.h>
-> > > > @@ -709,6 +710,12 @@ static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
-> > > >  	unsigned int val;
-> > > >  	struct device *dev = regmap_get_device(data->regmap);
-> > > >  
-> > > > +	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > >  	ret = regmap_write(data->regmap, BMI160_REG_CMD, BMI160_CMD_SOFTRESET);
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > > @@ -793,9 +800,17 @@ int bmi160_probe_trigger(struct iio_dev *indio_dev, int irq, u32 irq_type)
-> > > >  static void bmi160_chip_uninit(void *data)
+> On Thu, 2020-05-21 at 20:19 +0800, Yanhu Cao wrote:
+> > On Thu, May 21, 2020 at 7:09 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > > On Thu, 2020-05-21 at 17:38 +0800, Yanhu Cao wrote:
+> > > >         before
+> > > >         ------
+> > > >         total           1026
+> > > >         avail           1024
+> > > >         used            2
+> > > >         reserved        0
+> > > >         min             1024
+> > > >
+> > > >         after
+> > > >         ------
+> > > >         total           1026
+> > > >         avail           1024
+> > > >         used            2
+> > > >         max             2048
+> > > >         reserved        0
+> > > >         min             1024
+> > > >
+> > > > Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> > > > ---
+> > > >  fs/ceph/caps.c    | 6 ++++--
+> > > >  fs/ceph/debugfs.c | 7 ++++---
+> > > >  fs/ceph/super.h   | 2 +-
+> > > >  3 files changed, 9 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> > > > index 5f3aa4d607de..e2c759a2ef35 100644
+> > > > --- a/fs/ceph/caps.c
+> > > > +++ b/fs/ceph/caps.c
+> > > > @@ -404,8 +404,8 @@ void ceph_put_cap(struct ceph_mds_client *mdsc, struct ceph_cap *cap)
+> > > >  }
+> > > >
+> > > >  void ceph_reservation_status(struct ceph_fs_client *fsc,
+> > > > -                          int *total, int *avail, int *used, int *reserved,
+> > > > -                          int *min)
+> > > > +                          int *total, int *avail, int *used, int *max,
+> > > > +                          int *reserved, int *min)
 > > > >  {
-> > > >  	struct bmi160_data *bmi_data = data;
-> > > > +	struct device *dev = regmap_get_device(bmi_data->regmap);
-> > > > +	int ret;
-> > > >  
-> > > >  	bmi160_set_mode(bmi_data, BMI160_GYRO, false);
-> > > >  	bmi160_set_mode(bmi_data, BMI160_ACCEL, false);
-> > > > +
-> > > > +	ret = regulator_bulk_disable(ARRAY_SIZE(bmi_data->supplies),
-> > > > +				     bmi_data->supplies);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Failed to disable regulators: %d\n", ret);
-> > > > +	}  
-> > > No need for brackets around a 1 line if block
-> > >   
-> > 
-> > Thank you, I didn't noticed that :-)
-> > 
-> > > 	if (ret)
-> > > 		dev_err(dev, "failed to disable regulators: %d\n", ret);
-> > >   
-> > > >  }
-> > > >  
-> > > >  int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> > > > @@ -815,6 +830,16 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> > > >  	dev_set_drvdata(dev, indio_dev);
-> > > >  	data->regmap = regmap;
-> > > >  
-> > > > +	data->supplies[0].supply = "vdd";
-> > > > +	data->supplies[1].supply = "vddio";
-> > > > +	ret = devm_regulator_bulk_get(dev,
-> > > > +				      ARRAY_SIZE(data->supplies),
-> > > > +				      data->supplies);
-> > > > +	if (ret) {
-> > > > +		dev_err(dev, "Failed to get regulators: %d\n", ret);
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > >  	ret = bmi160_chip_init(data, use_spi);
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > > @@ -853,6 +878,6 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(bmi160_core_probe);
-> > > >  
-> > > > -MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com");
-> > > > +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com>");  
-> > > 
-> > > Good fix but shouldn't be in this patch.   Put it a separate patch on it's own.
-> > >   
-> > 
-> > Ok will separate this fix into another patch, thank you!
-> > 
-> > > >  MODULE_DESCRIPTION("Bosch BMI160 driver");
-> > > >  MODULE_LICENSE("GPL v2");  
-> > > 
-> > >   
-> > 
-> > Best regards,
-> > Jonathan Albrieux
-> 
+> > > >       struct ceph_mds_client *mdsc = fsc->mdsc;
+> > > >
+> > > > @@ -417,6 +417,8 @@ void ceph_reservation_status(struct ceph_fs_client *fsc,
+> > > >               *avail = mdsc->caps_avail_count;
+> > > >       if (used)
+> > > >               *used = mdsc->caps_use_count;
+> > > > +     if (max)
+> > > > +             *max = mdsc->caps_use_max;
+> > >
+> > > Can you lay out what value this will provide? I'm not convinced that
+> > > this information is really that helpful:
+> > >
+> > > mdsc->caps_use_max is just set to the value of the "caps_max" mount
+> > > option, and that information is displayed in /proc/mounts if it's not
+> > > set to the default.
+> > >
+> > > What might be more interesting is to track the most recent "max_caps"
+> > > value sent by the MDS (see the CEPH_SESSION_RECALL_STATE message
+> > > handling). Tracking that would give us a more dynamic view of the
+> > > current maximum requested by the MDS, which is often going to be less
+> > > than what "caps_max" was set to at mount time.
+> >
+> > Do you mean the 'mds_recall_max_caps'? which can be set by the MDS.
+> > Clients use this value every time to trim caps.
+> >
+> > There is an option mds_max_caps_per_client which is a soft limit,
+> > which is determined by the behavior of the client.
+> > and we recently encounter a warning '1 MDSs report oversized
+> > cache'(ceph-v12.2.12: mds_cache_memory_limit=64G, used=100G),
+> > Therefore, the effect is not good.
+> >
+> > So we want to know whether the caps held by the client exceed caps_max
+> > through the debugfs caps file (default or mount option).
+> >
+> >
+>
+> Ok, I doubt this patch is going to tell you what you want to know then.
+> There are two limits involved here:
+>
+> 1/ the limit set by the caps_max mount option for the client
+> 2/ a dynamic limit that is managed by the MDS issuing
+>    CEPH_SESSION_RECALL_STATE messages to the clients (max_caps).
+>
+> This patch is only going to tell you about the first one, but the second
+> one is more interesting to monitor on a long-term basis.
+>
+> When the mds exceeds its memory limits, it can issue
+> CEPH_SESSION_RECALL_STATE messages to the clients, to tell them to
+> reduce their own caches to a particular size. Currently we just take
+> that value and feed it into ceph_trim_caps and forget about it.
+>
+> It would probably be useful though to keep track of the most recent
+> value issued by the MDS, and print this value as min(mount_option_max,
+> max_caps_from_mds). Bonus points if you can help untangle the confusing
+> naming of all these values in the process.
 
-Best regards,
-Jonathan Albrieux
+How about this? Add a new field caps_limit(calculated by
+session->caps, mds_recall_max_caps,
+mds_max_caps_per_client, mds_min_caps_per_client) in ceph_mds_client,
+which can be set by ceph_trim_caps.
+
+struct ceph_mds_client {
+...
+-       int             caps_use_max;        /* max used caps */
++      int             caps_use_max;        /* max used caps, limited
+by client */
++      int             caps_limit;                /* limited by mds */
+...
+}
+
+int ceph_trim_caps(...)
+{
+        int trim_caps = session->s_nr_caps - max_caps;
++      mdsc->caps_limit = max_caps;
+   ...
+}
+
+if client's caps have no limit, we can track caps_limit.
+Don't use min(caps_use_max, caps_limit) because it shows more clearly
+whether it is limited by the client or mds.
+
+e.g.
+----
+total 3112
+avail 1025
+used 2087
+limit 2068   => caps_limit
+max 2048   => caps_use_max(mount_option_caps_max)
+
+trimmed
+-------
+total 1943
+avail 1025
+used 918
+limit 918
+max 2048
+
+
+>
+> > > >       if (reserved)
+> > > >               *reserved = mdsc->caps_reserve_count;
+> > > >       if (min)
+> > > > diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
+> > > > index 481ac97b4d25..942004376588 100644
+> > > > --- a/fs/ceph/debugfs.c
+> > > > +++ b/fs/ceph/debugfs.c
+> > > > @@ -138,16 +138,17 @@ static int caps_show(struct seq_file *s, void *p)
+> > > >  {
+> > > >       struct ceph_fs_client *fsc = s->private;
+> > > >       struct ceph_mds_client *mdsc = fsc->mdsc;
+> > > > -     int total, avail, used, reserved, min, i;
+> > > > +     int total, avail, used, max, reserved, min, i;
+> > > >       struct cap_wait *cw;
+> > > >
+> > > > -     ceph_reservation_status(fsc, &total, &avail, &used, &reserved, &min);
+> > > > +     ceph_reservation_status(fsc, &total, &avail, &used, &max,
+> > > > +                             &reserved, &min);
+> > > >       seq_printf(s, "total\t\t%d\n"
+> > > >                  "avail\t\t%d\n"
+> > > >                  "used\t\t%d\n"
+> > > >                  "reserved\t%d\n"
+> > > >                  "min\t\t%d\n\n",
+> > > > -                total, avail, used, reserved, min);
+> > > > +                total, avail, used, max, reserved, min);
+> > > >       seq_printf(s, "ino                issued           implemented\n");
+> > > >       seq_printf(s, "-----------------------------------------------\n");
+> > > >
+> > > > diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+> > > > index 60aac3aee055..79aa42d9336c 100644
+> > > > --- a/fs/ceph/super.h
+> > > > +++ b/fs/ceph/super.h
+> > > > @@ -700,7 +700,7 @@ extern void ceph_unreserve_caps(struct ceph_mds_client *mdsc,
+> > > >                              struct ceph_cap_reservation *ctx);
+> > > >  extern void ceph_reservation_status(struct ceph_fs_client *client,
+> > > >                                   int *total, int *avail, int *used,
+> > > > -                                 int *reserved, int *min);
+> > > > +                                 int *max, int *reserved, int *min);
+> > > >
+> > > >
+> > > >
+> > >
+> > > --
+> > > Jeff Layton <jlayton@kernel.org>
+> > >
+>
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
