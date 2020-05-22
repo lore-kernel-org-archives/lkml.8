@@ -2,110 +2,128 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13824C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A34C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E078E20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716B820738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mJgRhNZU"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="RPyx5VKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730685AbgEVQ5X (ORCPT
+        id S1730644AbgEVRCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730487AbgEVQ5W (ORCPT
+        Fri, 22 May 2020 13:02:01 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:51556 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730469AbgEVRCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:57:22 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAD3C08C5C1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:57:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u1so9265700wmn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:57:22 -0700 (PDT)
+        Fri, 22 May 2020 13:02:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49TCT42jLrz9vcjp
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 17:02:00 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id E6GyK1Vwh4Gd for <linux-kernel@vger.kernel.org>;
+        Fri, 22 May 2020 12:02:00 -0500 (CDT)
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49TCT413kJz9vck1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 12:02:00 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49TCT413kJz9vck1
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49TCT413kJz9vck1
+Received: by mail-il1-f199.google.com with SMTP id h19so9063343ilo.18
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H0fk+YgnvJQdHJy1RoTIxISz+5f4dnnX1kWqMJdIiTs=;
-        b=mJgRhNZUV8CHq1RmFWq7pxbyvsO0FpeEolI6sdLDMYOWVj7bN0R5fgJTzTQh2UAcMf
-         W7g3g4Oi45lMempvhGJgtWGWviaNUQedF2O0PzS+CbjwXpt7q5HpHU5Fb9W/uVFkPd67
-         X9f5FjJczWK80YgE51DwsqlAaMmapRlzlt2jZ2eBvFNCPZS7ouR+YOyc4YAIpS8xk318
-         EXFub2WKjTNwwryAYe6wi8LYvaMb8CpMJgdNc7g3yKPqicUOJACJNLkUDgqS3tUY87PX
-         kM3KUiwSsBRtX4d2YfXKdTZ63ZdlrExIimJuo8wxEGasLH5lrVq9ZoYGyBjjNAmPOCzF
-         czvA==
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jcvktWzuf/YXJY7B0r0fkd4cBPlRZYMazd1bG7Knz0c=;
+        b=RPyx5VKZg01nlilTUwX5Cmiq3CYO1XGWWWpwNXEK7NinUgy+CEPWCAB5Rw0fQ2MW/h
+         v7yt5WyOEyoMtST0NTAnPyD5sZq8NKBky5hEKpu3vgfPED3qBNYzj4oiUl4G6nNihcBC
+         ZWbHrKs/Q6vCDck4adYyE2HOAaxtk926rpEE+Tq/QmCMsY5mF2WJFm1vNwV5IyL2E6ta
+         s9Ldm4IsuP1H+9FLCOeIlLdCTrojz8RMifIsyzprSlJRpRQI0J6ucIVsJqPFigBC5pxM
+         if5hJaBJ7AReU8zY8tiCuZiIosqLxKqu+6mnps6NZBcZU35Rx8/t49wNIcHQSkCbHo/A
+         BvRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=H0fk+YgnvJQdHJy1RoTIxISz+5f4dnnX1kWqMJdIiTs=;
-        b=tYQVsDVev9ZFjxsn/bQjGN1yz/GES47bbpUHHFbbGDERIBvztEaKscWFeJQhC4wSes
-         bC4l01ZsKj8slNXjNc+5YyI6k3lBna73qeFUwo9Fm5P2T9V0Y9XJ77403T6zfsu/QilP
-         g6cFXkWRhvCuGYM8oQjyh0y7V/1tWBSO9MGt3ck9vEMoMQ3iQchnJi1Fvl6r1RKB+TOl
-         z0si9dXHWi+M5rSi/cwp1dTCHsUQBxaHNKwMlsaDhL+AKmMWoTAGY/T3eI21a+EsZx+L
-         V/HGnIOQONA9ESL/qUaF3kCsLNcFK+sboSu2mZ926l0JbYTh9TtUJuMYfi60hF4WHOhY
-         rHFw==
-X-Gm-Message-State: AOAM531/Ke2vNz49sEWilFa3KIzhiPpKfWb1nltf0tLAd5wz/A4OQ6Sc
-        94BBliRr225RAcf/eROLD7PLcHjDBWQMrw==
-X-Google-Smtp-Source: ABdhPJzc7gjWBkYuh9qSlhxc3eMgYPGZvCjw95agKu8mdcnuOAzuJsZb0eW/lo8vLU77CVVsDE60BQ==
-X-Received: by 2002:a1c:5685:: with SMTP id k127mr14863903wmb.50.1590166640540;
-        Fri, 22 May 2020 09:57:20 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id t14sm9673168wrb.56.2020.05.22.09.57.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 09:57:19 -0700 (PDT)
-Subject: Re: [PATCH 4/4] thermal: qoriq: Add platform dependencies
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200507112955.23520-1-geert+renesas@glider.be>
- <20200507112955.23520-5-geert+renesas@glider.be>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <e4a72b09-52e5-d145-2b64-50e5d636527a@linaro.org>
-Date:   Fri, 22 May 2020 18:57:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        bh=jcvktWzuf/YXJY7B0r0fkd4cBPlRZYMazd1bG7Knz0c=;
+        b=F/RMbp6x91glQ65HC0WLTAtMZRFpvxI0USjSQpf2F00j0PAoCFv226rtwEcNfFQtq5
+         17Ywudb1sCBQCqTTiHnjM3OWADifqWDslLADiVIUzRUQZ27mzTVHql7q/BitAVT0U8bK
+         yjKJYqmXJJq8AU3V5hyd/DxeLdlemwQD9NcU0R2e1wc4xJ0mL+BoJexx926oe1xc4iaw
+         dK9DVByQrVhnWRxYdRnziL3pjrCauhwiZbNF6fg8l07U8MEQBsyQY3+PvesV5eT/6gRY
+         i3T6CagOLHh38ce3i/TQbcQ05wGhnS4dtYW/Z+6IFYQgyW71+mshwAd0DnAr6t3cNGQn
+         i4eg==
+X-Gm-Message-State: AOAM530D2LCmR28/0JTTkxayJqDlIYP0D4VpPC/bgUDKoFFK16klZwjq
+        LXGUPw+EBAAVrthQo0vdH3z6Vjc4nz+eYgfuLnrRQQkvFisMjmajlpNfvF2HjgukzogsUOv+nO+
+        FvuZGobGFNHYMWGg6/KuHf5PgcU86
+X-Received: by 2002:a92:5acb:: with SMTP id b72mr14247792ilg.76.1590166918954;
+        Fri, 22 May 2020 10:01:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxKXeudn5JD/jVIbjuH9rx5TwDU+GyZP+kgSPDsbHyJXtF9ElTagjdAhKOHLdsLYAK1IWG6hw==
+X-Received: by 2002:a92:5acb:: with SMTP id b72mr14247737ilg.76.1590166918456;
+        Fri, 22 May 2020 10:01:58 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id o70sm2427477ilb.86.2020.05.22.10.01.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 10:01:57 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     dhowells@redhat.com
+Cc:     davem@davemloft.net, kuba@kernel.org,
+        linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kjlu@umn.edu, wu000273@umn.edu
+Subject: [PATCH v2] rxrpc: fix a memory leak bug.
+Date:   Fri, 22 May 2020 12:01:27 -0500
+Message-Id: <20200522170127.23033-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200507112955.23520-5-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/05/2020 13:29, Geert Uytterhoeven wrote:
-> The QorIQ Thermal Monitoring Unit is only present on Freescale E500MC
-> and Layerscape SoCs, and on NXP i.MX8 SoCs.  Add platform dependencies
-> to the QORIQ_THERMAL config symbol, to avoid asking the user about it
-> when configuring a kernel without support for any of the aforementioned
-> SoCs.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Qiushi Wu <wu000273@umn.edu>
 
-Applied, thanks
+A ticket was not released after a call of the function
+“rxkad_decrypt_ticket” failed. Thus replace the jump target
+“temporary_error_free_resp” by “temporary_error_free_ticket”.
 
+Fixes: 8c2f826dc3631 ("rxrpc: Don't put crypto buffers on the stack")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ net/rxrpc/rxkad.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-
+diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
+index 098f1f9ec53b..52a24d4ef5d8 100644
+--- a/net/rxrpc/rxkad.c
++++ b/net/rxrpc/rxkad.c
+@@ -1148,7 +1148,7 @@ static int rxkad_verify_response(struct rxrpc_connection *conn,
+ 	ret = rxkad_decrypt_ticket(conn, skb, ticket, ticket_len, &session_key,
+ 				   &expiry, _abort_code);
+ 	if (ret < 0)
+-		goto temporary_error_free_resp;
++		goto temporary_error_free_ticket;
+ 
+ 	/* use the session key from inside the ticket to decrypt the
+ 	 * response */
+@@ -1230,7 +1230,6 @@ static int rxkad_verify_response(struct rxrpc_connection *conn,
+ 
+ temporary_error_free_ticket:
+ 	kfree(ticket);
+-temporary_error_free_resp:
+ 	kfree(response);
+ temporary_error:
+ 	/* Ignore the response packet if we got a temporary error such as
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.17.1
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
