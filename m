@@ -2,177 +2,109 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBC5204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rH58hx4T"
+	by mail.kernel.org (Postfix) with ESMTP id C1420204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590187345;
+	bh=lJbj8vsN1yvS81mgR2/rEAdDi+wz/nxWqKAs+XksfGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eX0mZvcF+fzDn1SCfnnnTfQ5DB6wfizfsy4pYixCFcHVdoj30jUPOHKF2lKqK56P/
+	 7HWZBWXYiw1GDQFyj/pxjD4e39PS3KI5q2I7LbtT9C9hTsBaVSW1cLFCWsiNDJAZqt
+	 MTifpnQmSVxYy9fdGROaW9UOh0iERBM2G18O9UdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731401AbgEVWmW (ORCPT
+        id S1731410AbgEVWmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:42:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54476 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731132AbgEVWmT (ORCPT
+        Fri, 22 May 2020 18:42:24 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37358 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731391AbgEVWmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:42:19 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MMg82E061328;
-        Fri, 22 May 2020 17:42:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590187328;
-        bh=ZfUbh82N6QxYzzf9GICZYBFd0OVcUih5gJ0g44AGOsU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=rH58hx4TUaD0QEHEcq4KeBtFtvVrk77eJjVzj5D3HRATq9ljD3Z7JznrKlhVAAVUE
-         eFVItGEtlLHUrTZzMnmRmdim5GRlfqfJ/j6ANnwJfN1CuML5ne1JUyoMib1P0gGyWt
-         2+7VYg8GVlkN5Px+hN3FdCSCX+rVGsx3MZKlxxiI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04MMg8aW044923
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 17:42:08 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 17:42:07 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 17:42:07 -0500
-Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MMeh5m044559;
-        Fri, 22 May 2020 17:42:02 -0500
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v8 15/19] mtd: spi-nor: core: perform a Soft Reset on shutdown
-Date:   Sat, 23 May 2020 04:10:38 +0530
-Message-ID: <20200522224042.29970-16-p.yadav@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200522224042.29970-1-p.yadav@ti.com>
-References: <20200522224042.29970-1-p.yadav@ti.com>
+        Fri, 22 May 2020 18:42:21 -0400
+Received: by mail-il1-f196.google.com with SMTP id r2so1159167ila.4;
+        Fri, 22 May 2020 15:42:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JuCuXLGKu/Cpaze8rVHktM6qeXHp4VtIRO2ypPo4gW0=;
+        b=MwBXZT4VluQgaBM4YTyhs1WPQLrUoC0Y5JISmCV1P/8Yc7s/kN2vZIjJWYQCmqItZa
+         2ievMRPCbuB8UqZb5Si2tFgAMVYoTMriR4D5LAHccy9oafDf9edjYvAVn1kwzqImP3z2
+         d7W0OPTF8csEa6Fbe8IidaTJnAz5PXohNKAXlXQPfUY2wOCBg7g55WUR+5OvxPg9cfOG
+         JaAMmrDYPyS+yLZOZh0Iam9f5KhaLwP07tyCcxEim+IO8N1rvL5QTufGQGdzu2FkUoq/
+         bkjSBuHLKagc1B4zlMeMFo+ABOLS8Eibx8D46q36bGVH2uVWE8ohr3nGxAbDm6sWEAK3
+         RKug==
+X-Gm-Message-State: AOAM5320Yz6j7q1EJZqf7F+BKCYC3flVmv8QRkzZdxnlbYYZGrqAGKAo
+        LftA9f59EWdyjCFz+EOvnodInfc=
+X-Google-Smtp-Source: ABdhPJzavXPf6QraDSSP+C8Cf0zAAigF73AyOksGDL0HvQxYO0MhIQUfBalrWcaf30LuSiDr4uw5bQ==
+X-Received: by 2002:a05:6e02:130e:: with SMTP id g14mr15735257ilr.38.1590187339802;
+        Fri, 22 May 2020 15:42:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e26sm4195065ioe.39.2020.05.22.15.42.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 15:42:19 -0700 (PDT)
+Received: (nullmailer pid 848403 invoked by uid 1000);
+        Fri, 22 May 2020 22:42:17 -0000
+Date:   Fri, 22 May 2020 16:42:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kfting@nuvoton.com, benjaminfair@google.com,
+        avifishman70@gmail.com, yuenn@google.com,
+        andriy.shevchenko@linux.intel.com, openbmc@lists.ozlabs.org,
+        tmaimon77@gmail.com, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, wsa@the-dreams.de,
+        brendanhiggins@google.com, robh+dt@kernel.org, venture@google.com,
+        ofery@google.com
+Subject: Re: [PATCH v13 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C
+ controller
+Message-ID: <20200522224217.GA847856@bogus>
+References: <20200522113312.181413-1-tali.perry1@gmail.com>
+ <20200522113312.181413-2-tali.perry1@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522113312.181413-2-tali.perry1@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Perform a Soft Reset on shutdown on flashes that support it so that the
-flash can be reset to its initial state and any configurations made by
-spi-nor (given that they're only done in volatile registers) will be
-reset. This will hand back the flash in pristine state for any further
-operations on it.
+On Fri, 22 May 2020 14:33:10 +0300, Tali Perry wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM I2C controller.
+> 
+> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> ---
+>  .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+> 
 
-Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
----
- drivers/mtd/spi-nor/core.c  | 42 +++++++++++++++++++++++++++++++++++++
- include/linux/mtd/spi-nor.h |  2 ++
- 2 files changed, 44 insertions(+)
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index a94376344be5..68559386f6f8 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -40,6 +40,9 @@
- 
- #define SPI_NOR_MAX_ADDR_WIDTH	4
- 
-+#define SPI_NOR_SRST_SLEEP_MIN 200
-+#define SPI_NOR_SRST_SLEEP_MAX 400
-+
- /**
-  * spi_nor_get_cmd_ext() - Get the command opcode extension based on the
-  *			   extension type.
-@@ -3201,6 +3204,41 @@ static int spi_nor_init(struct spi_nor *nor)
- 	return 0;
- }
- 
-+static void spi_nor_soft_reset(struct spi_nor *nor)
-+{
-+	struct spi_mem_op op;
-+	int ret;
-+
-+	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_SRSTEN, 8),
-+			SPI_MEM_OP_NO_DUMMY,
-+			SPI_MEM_OP_NO_ADDR,
-+			SPI_MEM_OP_NO_DATA);
-+	spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret) {
-+		dev_warn(nor->dev, "Software reset failed: %d\n", ret);
-+		return;
-+	}
-+
-+	op = (struct spi_mem_op)SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_SRST, 8),
-+			SPI_MEM_OP_NO_DUMMY,
-+			SPI_MEM_OP_NO_ADDR,
-+			SPI_MEM_OP_NO_DATA);
-+	spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret) {
-+		dev_warn(nor->dev, "Software reset failed: %d\n", ret);
-+		return;
-+	}
-+
-+	/*
-+	 * Software Reset is not instant, and the delay varies from flash to
-+	 * flash. Looking at a few flashes, most range somewhere below 100
-+	 * microseconds. So, sleep for a range of 200-400 us.
-+	 */
-+	usleep_range(SPI_NOR_SRST_SLEEP_MIN, SPI_NOR_SRST_SLEEP_MAX);
-+}
-+
- /* mtd resume handler */
- static void spi_nor_resume(struct mtd_info *mtd)
- {
-@@ -3220,6 +3258,10 @@ void spi_nor_restore(struct spi_nor *nor)
- 	if (nor->addr_width == 4 && !(nor->flags & SNOR_F_4B_OPCODES) &&
- 	    nor->flags & SNOR_F_BROKEN_RESET)
- 		nor->params->set_4byte_addr_mode(nor, false);
-+
-+	if (nor->info->flags & SPI_NOR_OCTAL_DTR_READ &&
-+	    nor->flags & SNOR_F_SOFT_RESET)
-+		spi_nor_soft_reset(nor);
- }
- EXPORT_SYMBOL_GPL(spi_nor_restore);
- 
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index d251a5d02be2..06884a188315 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -51,6 +51,8 @@
- #define SPINOR_OP_CLFSR		0x50	/* Clear flag status register */
- #define SPINOR_OP_RDEAR		0xc8	/* Read Extended Address Register */
- #define SPINOR_OP_WREAR		0xc5	/* Write Extended Address Register */
-+#define SPINOR_OP_SRSTEN	0x66	/* Software Reset Enable */
-+#define SPINOR_OP_SRST		0x99	/* Software Reset */
- 
- /* 4-byte address opcodes - used on Spansion and some Macronix flashes. */
- #define SPINOR_OP_READ_4B	0x13	/* Read data bytes (low frequency) */
--- 
-2.26.2
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Error: Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dts:22.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1296162
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 
