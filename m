@@ -2,139 +2,110 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F951C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B422206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5008F20814
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:07:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUw+jloG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgEVIHY (ORCPT
+        id S1728918AbgEVIH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 22 May 2020 04:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgEVIHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 May 2020 04:07:24 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42336 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728152AbgEVIHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 04:07:22 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 03A2323164A41ED81F03;
-        Fri, 22 May 2020 16:07:20 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.93) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 16:07:15 +0800
-Subject: Re: arm64/acpi: NULL dereference reports from UBSAN at boot
-To:     Will Deacon <will@kernel.org>, <lorenzo.pieralisi@arm.com>
-CC:     <rjw@rjwysocki.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>
-References: <20200521100952.GA5360@willie-the-truck>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <ad521a36-c080-f761-e91b-dc38b8af08ee@huawei.com>
-Date:   Fri, 22 May 2020 16:07:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BDAEC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 01:07:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e1so9240455wrt.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 01:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=zppcH1s4Oxd9ORuhue+rbyDT8Mi3Zp/h1C3Ys2rA0bk=;
+        b=DUw+jloGGhc299DIfCy40tPz3gnwkcYQEQKxyHqY+7liR//WJ5twv8oOqLHVGGT/h2
+         nhE3OWCX3YfCCQyfX5bqWQWJ459cXsPhhW6UgbmzIVpvf99rIZyH0Z5o58iCtIh7Zqe3
+         QnpyISth4jD1kx67+Vf1mlwYdrkhFDW7RvhxZ0LD/t8MgQAq1sTHd/tbIc3STDAIoeVY
+         4+K3ztvNxWxSqHPhk0RH1gitNa62JMMxGFfAqS1PJyksLtl6lq2uq8HYSFbs4DOtdxU3
+         VzMLvTU1WuUEvmxtbhWVne0ESHlfo55Jdz8j44QsRAs08h4Upz/hHw1lNeX9PxZCF/ZM
+         BdRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zppcH1s4Oxd9ORuhue+rbyDT8Mi3Zp/h1C3Ys2rA0bk=;
+        b=FlgDEjBLa6HSOV2KjKKuIGFtuM01a+usrMrdtFIzs/WcTd6xyaATNkR17GGRJSfr24
+         CGvDBtSosCEjRHpK0b8ocGz6QtIFdTVEb6TTMkqm/jcEp1WOJGyNNPplKXfZwswk6+85
+         NeY9UD4kWaebbcXaEz4ogvfO5cGDw0q6yakG/DIsJl4ch9seo+SY4igRu1BKsVtHIhhn
+         Y1LEaJbyh2oopbunXxP5wHqBbBsN4lqnXU550sI0SS5d5VS+eRvAUtmvRJA5wCiyBtXy
+         jG2uIud9gWJy3mXUnoGQRRZ7KeAPG7f1BsFxsfYNce4SmuASyvH0zxzJoKUrryX8FGfH
+         eXbg==
+X-Gm-Message-State: AOAM531HEjQ8/OG65rNviZ9T2bMgPKLaRZRi8Bqk5838yYLRY7ablt9s
+        AF2phePZd4v4qgdis77E5/eFnQ==
+X-Google-Smtp-Source: ABdhPJxTRIndbgM1G4xc0xtn0ArdBndodyCpPDChjjPUgMyAMk3EPgXZrXgG0o3HZf2ei4pqk1TCFw==
+X-Received: by 2002:a5d:6ac1:: with SMTP id u1mr2274668wrw.319.1590134842818;
+        Fri, 22 May 2020 01:07:22 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id r11sm7336139wre.25.2020.05.22.01.07.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 01:07:22 -0700 (PDT)
+Date:   Fri, 22 May 2020 09:07:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 2/4] mfd: wm8994: Fix unbalanced calls to
+ regulator_bulk_disable()
+Message-ID: <20200522080720.GS271301@dell>
+References: <20200427074832.22134-1-m.szyprowski@samsung.com>
+ <CGME20200427074842eucas1p2a37c7f854188cccf3b103b221a84e9f2@eucas1p2.samsung.com>
+ <20200427074832.22134-3-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521100952.GA5360@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.213.93]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427074832.22134-3-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+On Mon, 27 Apr 2020, Marek Szyprowski wrote:
 
-On 2020/5/21 18:09, Will Deacon wrote:
-> Hi folks,
+> When runtime PM is enabled, regulators are being controlled by the
+> driver's suspend and resume callbacks. They are also unconditionally
+> enabled at driver's probe(), and disabled in remove() functions. Add
+> more calls to runtime PM framework to ensure that the device's runtime
+> PM state matches the regulators state:
+> 1. at the end of probe() function: set runtime PM state to active, so
+> there will be no spurious call to resume();
+> 2. in remove(), ensure that resume() is called before disabling runtime PM
+> management and unconditionally disabling the regulators.
 > 
-> I just tried booting the arm64 for-kernelci branch under QEMU (version
-> 4.2.50 (v4.2.0-779-g4354edb6dcc7)) with UBSAN enabled, and I see a couple
-> of NULL pointer dereferences reported at boot. I think they're both GIC
-> related (log below). I don't see a panic with UBSAN disabled, so something's
-> fishy here.
-> 
-> Please can you take a look when you get a chance? I haven't had time to see
-> if this is a regression or not, but I don't think it's particularly serious
-> as I have all sorts of horrible stuff enabled in my .config, since I'm
-> trying to chase down another bug:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/plain/arch/arm64/configs/fuzzing.config?h=fuzzing/arm64-kernelci-20200519&id=c149cf6a51aa4f72d53fc681c6661094e93ef660
-> 
-> (on top of defconfig)
-> 
-> CONFIG_FAIL_PAGE_ALLOC may be to blame.
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/mfd/wm8994-core.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-I enabled UBSAN and CONFIG_FAIL_PAGE_ALLOC on top of defconfig,
-testing against the for-kernelci branch on the D06 board, I
-can see some UBSAN warnings from megaraid_sas driver [0], but not
-from any other subsystem including ACPI, I will try all your
-configs above to see if I can get more warnings.
+Applied, thanks.
 
-Thanks
-Hanjun
-
-[0]:
-[   18.244272] 
-================================================================================
-[   18.252673] UBSAN: array-index-out-of-bounds in 
-drivers/scsi/megaraid/megaraid_sas_fp.c:104:32
-[   18.261244] index 1 is out of range for type 'MR_LD_SPAN_MAP [1]'
-[   18.267313] CPU: 0 PID: 656 Comm: kworker/0:1 Not tainted 
-5.7.0-rc6-1-14703-gf4582661223d-dirty #20
-[   18.276314] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 
-2280-V2 CS V3.B210.01 03/12/2020
-[   18.285151] Workqueue: events work_for_cpu_fn
-[   18.289488] Call trace:
-[   18.291925]  dump_backtrace+0x0/0x248
-[   18.295572]  show_stack+0x18/0x28
-[   18.298873]  dump_stack+0xc0/0x10c
-[   18.302261]  ubsan_epilogue+0x10/0x58
-[   18.305905]  __ubsan_handle_out_of_bounds+0x8c/0xa8
-[   18.310763]  mr_update_load_balance_params+0x118/0x120
-[   18.315877]  MR_ValidateMapInfo+0x300/0xb00
-[   18.320040]  megasas_get_map_info+0x134/0x1f8
-[   18.324377]  megasas_init_adapter_fusion+0xba8/0x10a0
-[   18.329403]  megasas_probe_one+0x6e0/0x1b70
-[   18.333569]  local_pci_probe+0x40/0xb0
-[   18.337299]  work_for_cpu_fn+0x1c/0x30
-[   18.341031]  process_one_work+0x1f8/0x378
-[   18.345022]  worker_thread+0x21c/0x4c0
-[   18.348753]  kthread+0x150/0x158
-[   18.351967]  ret_from_fork+0x10/0x18
-[   18.355529] 
-================================================================================
-
-[   18.592274] 
-================================================================================
-[   18.600672] UBSAN: array-index-out-of-bounds in 
-drivers/scsi/megaraid/megaraid_sas_fp.c:141:9
-[   18.609155] index 1 is out of range for type 'MR_LD_SPAN_MAP [1]'
-[   18.615221] CPU: 0 PID: 656 Comm: kworker/0:1 Not tainted 
-5.7.0-rc6-1-14703-gf4582661223d-dirty #20
-[   18.624222] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 
-2280-V2 CS V3.B210.01 03/12/2020
-[   18.633050] Workqueue: events work_for_cpu_fn
-[   18.637387] Call trace:
-[   18.639822]  dump_backtrace+0x0/0x248
-[   18.643467]  show_stack+0x18/0x28
-[   18.646767]  dump_stack+0xc0/0x10c
-[   18.650152]  ubsan_epilogue+0x10/0x58
-[   18.653796]  __ubsan_handle_out_of_bounds+0x8c/0xa8
-[   18.658652]  MR_GetLDTgtId+0x58/0x60
-[   18.662211]  megasas_sync_map_info+0xd0/0x1c0
-[   18.666547]  megasas_init_adapter_fusion+0xd60/0x10a0
-[   18.671574]  megasas_probe_one+0x6e0/0x1b70
-[   18.675736]  local_pci_probe+0x40/0xb0
-[   18.679466]  work_for_cpu_fn+0x1c/0x30
-[   18.683197]  process_one_work+0x1f8/0x378
-[   18.687188]  worker_thread+0x21c/0x4c0
-[   18.690920]  kthread+0x150/0x158
-[   18.694123]  ret_from_fork+0x10/0x18
-[   18.697683] 
-================================================================================
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
