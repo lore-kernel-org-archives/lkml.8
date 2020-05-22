@@ -2,138 +2,139 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28049C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E41220663
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94FA20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MMWImdE/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mg2kS9Pu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730508AbgEVP2s (ORCPT
+        id S1730243AbgEVPag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34800 "EHLO
+        Fri, 22 May 2020 11:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730387AbgEVP2r (ORCPT
+        with ESMTP id S1729851AbgEVPaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:28:47 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1CE0C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:28:46 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i15so10523953wrx.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:28:46 -0700 (PDT)
+        Fri, 22 May 2020 11:30:35 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D2EC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:30:34 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l17so10583535wrr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:30:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RE02VevKPga5GawhGamW95ZE1kXVYxGQzWhCIbMIzNY=;
-        b=MMWImdE/2ZE9LDYQnaGCIARyM962IGLuiw6eGA/jljxOaR7yh5pCQt+3wfvYRSnfOp
-         k5JKNPBeS69Vv4hi1byp7pnaA42f2saUD3rcNGfywZnGGpjwbapkrf/6bKIN53qVqNEO
-         rhdXGWgY4e93wR/0RmGUPVlIalsuTe6sMQE1MZS0cu5t5Qc8ZNM/VRySlOhxfKB+2Gkb
-         wJ4Nf4RndEct8/FO2q4BKzMAbtrRS1/9TtSOs0WiR0qB5mcwBixid/P0ECqitXmzRmOP
-         tkkkcU98mmsZgoNL7ljU3e7uujxzyRprCWUfqgC1FsPs9fl0G122XUrDsBGIZdWSkmqd
-         nT/g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pGeQM1dfUNV6yQ38TOhnl5g6+/IaVOCSaD7SXsj2Qr0=;
+        b=mg2kS9Pu1T9ifwA0mpe05G6x1t3Ppsu6Qa9bXzWW2e6DFx59fezJbsW2NF+OXfSVuC
+         Blu/dzlOcOswC+7Iw8mDznR1oinY/l1z2OI2khb6hZvq4I4YmdUZP2CPUwqDsEaufnyR
+         TMzgi4MvNkrvCwbWY/UagHowidZFgkx+JT8N2ubypvj/d/NlXd13PO3c1cDmOKeyYF2X
+         VCsLocQmET+wvTcAc8fK1tjVUi9HlV+FVExJyheWj/mr1qZ4snmmJHrtj30zfcoHYnEL
+         VA3V+lp2ZccpcgXMGRm9gcGo7HEEJkJIKsWnOz0OZYCegnBIdfRlOXwkScDCaclM3+To
+         YvSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RE02VevKPga5GawhGamW95ZE1kXVYxGQzWhCIbMIzNY=;
-        b=TeYNQEedSqIUTjMb43DTnmtTaXQo4h+7tis0Pd3p+gxIcfJIZaE59pF/xJWzV0OX23
-         yIzRHRB3NSSI4Ow+cmxxbbgyRnm9OdAgeWshxj89Sai9N/3/O41AcwCbfVjL1WaiH9Hg
-         yePCTizlVhfxmQveziLlyb9ARX4J48EuI/IiE8iKvUdq5ofVD1ELUfGyA7pK0ocKcqfN
-         0HBL0pOs/L6i9jQo0cnK+dp2yCiS7774ojkgoofcihqef2Hdje5n+Pmo+2/47KLZ63Dm
-         slvl9m3LsdyybEtBYjol7/7uZotiBInzKk0qDOVlHjpI+J3e4/P/94gomvqaLA72QJQO
-         Zzeg==
-X-Gm-Message-State: AOAM533OT0d01v7eRbczXZxgl4lFEHiXwTWyZzBz/ejzSu+x+GhQwd7v
-        xaCRX2alkGwOaZZmAD4NE/tKm9NyCuQ=
-X-Google-Smtp-Source: ABdhPJxdCf7sw2JHdZ8XQZwe1iL/1ihyu6MfIaO/x8mio0kAv1N7GEStdaiFyyQDolFStnz3Rqs/ew==
-X-Received: by 2002:adf:a3c9:: with SMTP id m9mr1159741wrb.405.1590161325014;
-        Fri, 22 May 2020 08:28:45 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id s19sm6092584wmj.21.2020.05.22.08.28.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 08:28:44 -0700 (PDT)
-Subject: Re: [PATCH v5 0/8] clocksource: Fix MIPS GIC and DW APB Timer for
- Baikal-T1 SoC support
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <211ab91d-6085-3073-1cbc-2300abade1b7@linaro.org>
-Date:   Fri, 22 May 2020 17:28:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pGeQM1dfUNV6yQ38TOhnl5g6+/IaVOCSaD7SXsj2Qr0=;
+        b=U1iYdx1pFRQkrD+mtXHj5gPuBSAfb8PzRNK6iJg2oXNOGk0mPX04i/cWIMyT5edFNi
+         lR3bwqAH67v3UjMMD4/Q9cuOa719sNlqMlY81gRC4DjfbMteA0nVWrpo+hziDiUzOVoj
+         8Uhp0Lxo5N3szrD4baeN5sKrMM0Zp4SN4oaF4+SAqOdVGg7LXEAwkkI7botPCokBt1s8
+         74HpsataHhZniiBN/xIxfDvPdVxf2U5tDjz4UN8hMS5vNfORq5vGAT474HppRtE5yVJt
+         Fx/BVz4i/u/9xu/GDrAFcfy90n9OaKdmM2ulJnw85EL4z6nNtr3Bdo0vhfBRV5NOQyxv
+         /kJw==
+X-Gm-Message-State: AOAM533rfmxT1Idpk6Af0y0G8Kx4MD2IRxtBdxPZeCqls6Ttks8GfkKZ
+        1zVSPXozGGe2eKL6lEEB0RJvJA==
+X-Google-Smtp-Source: ABdhPJykHFJmAf/i5dNkdymoFT6Eq28I067RserzsVvEDrvOVnCQI48w16BcpwS4ezASlB8WW50Iig==
+X-Received: by 2002:adf:dc50:: with SMTP id m16mr3857267wrj.329.1590161433623;
+        Fri, 22 May 2020 08:30:33 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id z132sm10873040wmc.29.2020.05.22.08.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 08:30:32 -0700 (PDT)
+Date:   Fri, 22 May 2020 16:30:31 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Jason Wessel <jason.wessel@windriver.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Patch Tracking <patches@linaro.org>
+Subject: Re: [PATCH v2] serial: kgdboc: Allow earlycon initialization to be
+ deferred
+Message-ID: <20200522153031.2ydgx4k6jl7dsiqn@holly.lan>
+References: <20200429170804.880720-1-daniel.thompson@linaro.org>
+ <20200430161741.1832050-1-daniel.thompson@linaro.org>
+ <CAD=FV=U64XLRFkTyTi1qDZjTYQKJ9WVBf3OoULpw6yncOQURTg@mail.gmail.com>
+ <CAD=FV=Xut=5y-MyJSu+ERdMRkKbSf8SGMhUHg5OP=y8zA1N-xQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200521204818.25436-1-Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Xut=5y-MyJSu+ERdMRkKbSf8SGMhUHg5OP=y8zA1N-xQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/05/2020 22:48, Serge Semin wrote:
-> As for all Baikal-T1 SoC related patchsets, which need this, we replaced
-> the DW APB Timer legacy plain text-based dt-binding file with DT schema.
-> Similarly the MIPS GIC bindings file is also converted to DT schema seeing
-> it also defines the MIPS GIC Timer binding.
+On Thu, May 21, 2020 at 10:18:10AM -0700, Doug Anderson wrote:
+> Hi,
 > 
-> Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
-> functionality of two another timers: embedded into the MIPS GIC timer and
-> three external DW timers available over APB bus. But we can't use them
-> before the corresponding drivers are properly fixed. First of all DW APB
-> Timer shouldn't be bound to a single CPU, since as being accessible over
-> APB they are external with respect to all possible CPUs. Secondly there
-> might be more than just two DW APB Timers in the system (Baikal-T1 has
-> three of them), so permit the driver to use one of them as a clocksource
-> and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
-> timer as a clocksource so register it in the corresponding subsystem
-> (the patch has been found in the Paul Burton MIPS repo so I left the
-> original Signed-off-by attribute). Finally in the same way as r4k timer
-> the MIPS GIC timer should be used with care when CPUFREQ config is enabled
-> since in case of CM2 the timer counting depends on the CPU reference clock
-> frequency while the clocksource subsystem currently doesn't support the
-> timers with non-stable clock.
+> On Thu, Apr 30, 2020 at 9:47 AM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Apr 30, 2020 at 9:18 AM Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > >
+> > > Currently there is no guarantee that an earlycon will be initialized
+> > > before kgdboc tries to adopt it. Almost the opposite: on systems
+> > > with ACPI then if earlycon has no arguments then it is guaranteed that
+> > > earlycon will not be initialized.
+> > >
+> > > This patch mitigates the problem by giving kgdboc_earlycon a second
+> > > chance during console_init(). This isn't quite as good as stopping during
+> > > early parameter parsing but it is still early in the kernel boot.
+> > >
+> > > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > ---
+> > >
+> > > Notes:
+> > >     v2: Simplified, more robust, runs earlier, still has Doug's
+> > >         recent patchset as a prerequisite. What's not to like?
+> > >
+> > >     More specifically, based on feedback from Doug Anderson, I
+> > >     have replaced the initial hacky implementation with a console
+> > >     initcall.
+> > >
+> > >     I also made it defer more aggressively after realizing that both
+> > >     earlycon and kgdboc_earlycon are handled as early parameters
+> > >     (meaning I think the current approach relies on the ordering
+> > >     of drivers/tty/serial/Makefile to ensure the earlycon is enabled
+> > >     before kgdboc tries to adopt it).
+> > >
+> > >     Finally, my apologies to Jason and kgdb ML folks, who are seeing
+> > >     this patch for the first time. I copied the original circulation
+> > >     list from a patch that wasn't kgdb related and forgot to update.
+> > >
+> > >  drivers/tty/serial/kgdboc.c | 41 +++++++++++++++++++++++++++++++++++--
+> > >  1 file changed, 39 insertions(+), 2 deletions(-)
+> >
+> > Thanks, this looks great!
+> >
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
 > 
-> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-> tag: v5.7-rc4
+> Are you planning to rebase this patch atop what landed?  It seems like
+> a useful feature.  If you want me to give a shot a rebasing, let me
+> know!
 
-Applied patch 1,2,4,5,6,7,8
-
-Thanks!
-
-  -- Daniel
+I've got it on it's way...
 
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Daniel.
