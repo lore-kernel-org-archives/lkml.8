@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4297C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98F34206C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7BC206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgEVJdE (ORCPT
+        id S1729667AbgEVJdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
+        Fri, 22 May 2020 05:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729517AbgEVJc7 (ORCPT
+        with ESMTP id S1728068AbgEVJc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 22 May 2020 05:32:59 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D13FC05BD43;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F548C061A0E;
         Fri, 22 May 2020 02:32:59 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jc42x-0001OT-S0; Fri, 22 May 2020 11:32:56 +0200
+        id 1jc42x-0001OP-Bb; Fri, 22 May 2020 11:32:55 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6F2051C0095;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0780D1C0475;
         Fri, 22 May 2020 11:32:55 +0200 (CEST)
-Date:   Fri, 22 May 2020 09:32:55 -0000
+Date:   Fri, 22 May 2020 09:32:54 -0000
 From:   "tip-bot2 for Balbir Singh" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Optionally flush L1D on context switch
+Subject: [tip: x86/mm] prctl: Hook L1D flushing in via prctl
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Balbir Singh <sblbir@amazon.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200516103430.26527-2-sblbir@amazon.com>
-References: <20200516103430.26527-2-sblbir@amazon.com>
+In-Reply-To: <20200516103430.26527-3-sblbir@amazon.com>
+References: <20200516103430.26527-3-sblbir@amazon.com>
 MIME-Version: 1.0
-Message-ID: <159013997534.17951.18218280416222743933.tip-bot2@tip-bot2>
+Message-ID: <159013997492.17951.8240809605276627934.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,171 +59,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     20fc9f6f9f2fefefb694c9e447f80b4772021e0a
-Gitweb:        https://git.kernel.org/tip/20fc9f6f9f2fefefb694c9e447f80b4772021e0a
+Commit-ID:     edf7ce0b231cb6cdc170125588cf71c70358fc74
+Gitweb:        https://git.kernel.org/tip/edf7ce0b231cb6cdc170125588cf71c70358fc74
 Author:        Balbir Singh <sblbir@amazon.com>
-AuthorDate:    Sat, 16 May 2020 20:34:28 +10:00
+AuthorDate:    Sat, 16 May 2020 20:34:29 +10:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Fri, 22 May 2020 10:36:48 +02:00
 
-x86/mm: Optionally flush L1D on context switch
+prctl: Hook L1D flushing in via prctl
 
-Implement a mechanism to selectively flush the L1D cache. The goal is to
-allow tasks that are paranoid due to the recent snoop assisted data sampling
-vulnerabilites, to flush their L1D on being switched out.  This protects
-their data from being snooped or leaked via side channels after the task
-has context switched out.
+Use the existing PR_GET/SET_SPECULATION_CTRL API to expose the L1D
+flush capability. For L1D flushing PR_SPEC_FORCE_DISABLE and
+PR_SPEC_DISABLE_NOEXEC are not supported.
 
-There are two scenarios we might want to protect against, a task leaving
-the CPU with data still in L1D (which is the main concern of this patch),
-the second scenario is a malicious task coming in (not so well trusted)
-for which we want to clean up the cache before it starts. Only the case
-for the former is addressed.
-
-A new thread_info flag TIF_SPEC_L1D_FLUSH is added to track tasks which
-opt-into L1D flushing. cpu_tlbstate.last_user_mm_spec is used to convert
-the TIF flags into mm state (per cpu via last_user_mm_spec) in
-cond_mitigation(), which then used to do decide when to flush the
-L1D cache.
+There is also no seccomp integration for the feature.
 
 Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Balbir Singh <sblbir@amazon.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200516103430.26527-2-sblbir@amazon.com
+Link: https://lkml.kernel.org/r/20200516103430.26527-3-sblbir@amazon.com
 
 ---
- arch/x86/include/asm/thread_info.h |  9 +++++--
- arch/x86/mm/tlb.c                  | 40 ++++++++++++++++++++++++++---
- 2 files changed, 44 insertions(+), 5 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 28 ++++++++++++++++++++++++++++
+ include/uapi/linux/prctl.h |  1 +
+ 2 files changed, 29 insertions(+)
 
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index 8de8cec..1655347 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -84,7 +84,7 @@ struct thread_info {
- #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
- #define TIF_SECCOMP		8	/* secure computing */
- #define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
--#define TIF_SPEC_FORCE_UPDATE	10	/* Force speculation MSR update in context switch */
-+#define TIF_SPEC_L1D_FLUSH	10	/* Flush L1D on mm switches (processes) */
- #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
- #define TIF_UPROBE		12	/* breakpointed or singlestepping */
- #define TIF_PATCH_PENDING	13	/* pending live patching update */
-@@ -96,6 +96,7 @@ struct thread_info {
- #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
- #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
- #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
-+#define TIF_SPEC_FORCE_UPDATE	23	/* Force speculation MSR update in context switch */
- #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
- #define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
- #define TIF_LAZY_MMU_UPDATES	27	/* task is updating the mmu lazily */
-@@ -114,7 +115,7 @@ struct thread_info {
- #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
- #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
- #define _TIF_SPEC_IB		(1 << TIF_SPEC_IB)
--#define _TIF_SPEC_FORCE_UPDATE	(1 << TIF_SPEC_FORCE_UPDATE)
-+#define _TIF_SPEC_L1D_FLUSH	(1 << TIF_SPEC_L1D_FLUSH)
- #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
- #define _TIF_UPROBE		(1 << TIF_UPROBE)
- #define _TIF_PATCH_PENDING	(1 << TIF_PATCH_PENDING)
-@@ -125,6 +126,7 @@ struct thread_info {
- #define _TIF_SLD		(1 << TIF_SLD)
- #define _TIF_POLLING_NRFLAG	(1 << TIF_POLLING_NRFLAG)
- #define _TIF_IO_BITMAP		(1 << TIF_IO_BITMAP)
-+#define _TIF_SPEC_FORCE_UPDATE	(1 << TIF_SPEC_FORCE_UPDATE)
- #define _TIF_FORCED_TF		(1 << TIF_FORCED_TF)
- #define _TIF_BLOCKSTEP		(1 << TIF_BLOCKSTEP)
- #define _TIF_LAZY_MMU_UPDATES	(1 << TIF_LAZY_MMU_UPDATES)
-@@ -235,6 +237,9 @@ static inline int arch_within_stack_frames(const void * const stack,
- 			   current_thread_info()->status & TS_COMPAT)
- #endif
- 
-+extern int enable_l1d_flush_for_task(struct task_struct *tsk);
-+extern int disable_l1d_flush_for_task(struct task_struct *tsk);
-+
- extern void arch_task_cache_init(void);
- extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
- extern void arch_release_task_struct(struct task_struct *tsk);
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 35017a0..c8524c5 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -13,6 +13,7 @@
- #include <asm/mmu_context.h>
- #include <asm/nospec-branch.h>
- #include <asm/cache.h>
-+#include <asm/cacheflush.h>
- #include <asm/apic.h>
- #include <asm/uv/uv.h>
- 
-@@ -43,13 +44,19 @@
-  */
- 
- /*
-- * Bits to mangle the TIF_SPEC_IB state into the mm pointer which is
-+ * Bits to mangle the TIF_SPEC_* state into the mm pointer which is
-  * stored in cpu_tlb_state.last_user_mm_spec.
-  */
- #define LAST_USER_MM_IBPB	0x1UL
--#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB)
-+#define LAST_USER_MM_L1D_FLUSH	0x2UL
-+#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB | LAST_USER_MM_L1D_FLUSH)
- 
--/* Bits to set when tlbstate and flush is (re)initialized */
-+/*
-+ * Bits to set when tlbstate and flush is (re)initialized
-+ *
-+ * Don't add LAST_USER_MM_L1D_FLUSH to the init bits as the initializaion
-+ * is done during early boot and l1d_flush_pages are not yet allocated.
-+ */
- #define LAST_USER_MM_INIT	LAST_USER_MM_IBPB
- 
- /*
-@@ -311,6 +318,23 @@ void leave_mm(int cpu)
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index ed54b3b..3eb9139 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1121,6 +1121,19 @@ static void task_update_spec_tif(struct task_struct *tsk)
+ 		speculation_ctrl_update_current();
  }
- EXPORT_SYMBOL_GPL(leave_mm);
  
-+int enable_l1d_flush_for_task(struct task_struct *tsk)
++static int l1d_flush_out_prctl_set(struct task_struct *task, unsigned long ctrl)
 +{
-+	int ret = l1d_flush_init_once();
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	set_ti_thread_flag(&tsk->thread_info, TIF_SPEC_L1D_FLUSH);
-+	return ret;
-+}
-+
-+int disable_l1d_flush_for_task(struct task_struct *tsk)
-+{
-+	clear_ti_thread_flag(&tsk->thread_info, TIF_SPEC_L1D_FLUSH);
++	switch (ctrl) {
++	case PR_SPEC_ENABLE:
++		return enable_l1d_flush_for_task(task);
++	case PR_SPEC_DISABLE:
++		return disable_l1d_flush_for_task(task);
++	default:
++		return -ERANGE;
++	}
 +	return 0;
 +}
 +
- void switch_mm(struct mm_struct *prev, struct mm_struct *next,
- 	       struct task_struct *tsk)
+ static int ssb_prctl_set(struct task_struct *task, unsigned long ctrl)
  {
-@@ -354,6 +378,8 @@ static inline unsigned long mm_mangle_tif_spec_bits(struct task_struct *next)
- 	unsigned long next_tif = task_thread_info(next)->flags;
- 	unsigned long spec_bits = (next_tif >> TIF_SPEC_IB) & LAST_USER_MM_SPEC_MASK;
- 
-+	BUILD_BUG_ON(TIF_SPEC_L1D_FLUSH != TIF_SPEC_IB + 1);
-+
- 	return (unsigned long)next->mm | spec_bits;
- }
- 
-@@ -431,6 +457,14 @@ static void cond_mitigation(struct task_struct *next)
- 			indirect_branch_prediction_barrier();
+ 	if (ssb_mode != SPEC_STORE_BYPASS_PRCTL &&
+@@ -1206,6 +1219,8 @@ int arch_prctl_spec_ctrl_set(struct task_struct *task, unsigned long which,
+ 		return ssb_prctl_set(task, ctrl);
+ 	case PR_SPEC_INDIRECT_BRANCH:
+ 		return ib_prctl_set(task, ctrl);
++	case PR_SPEC_L1D_FLUSH_OUT:
++		return l1d_flush_out_prctl_set(task, ctrl);
+ 	default:
+ 		return -ENODEV;
  	}
- 
-+	if (prev_mm & LAST_USER_MM_L1D_FLUSH) {
-+		/*
-+		 * Don't populate the TLB for the software fallback flush.
-+		 * Populate TLB is not needed for this use case.
-+		 */
-+		arch_l1d_flush(0);
-+	}
-+
- 	this_cpu_write(cpu_tlbstate.last_user_mm_spec, next_mm);
+@@ -1221,6 +1236,17 @@ void arch_seccomp_spec_mitigate(struct task_struct *task)
  }
+ #endif
  
++static int l1d_flush_out_prctl_get(struct task_struct *task)
++{
++	int ret;
++
++	ret = test_ti_thread_flag(&task->thread_info, TIF_SPEC_L1D_FLUSH);
++	if (ret)
++		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
++	else
++		return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
++}
++
+ static int ssb_prctl_get(struct task_struct *task)
+ {
+ 	switch (ssb_mode) {
+@@ -1272,6 +1298,8 @@ int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
+ 		return ssb_prctl_get(task);
+ 	case PR_SPEC_INDIRECT_BRANCH:
+ 		return ib_prctl_get(task);
++	case PR_SPEC_L1D_FLUSH_OUT:
++		return l1d_flush_out_prctl_get(task);
+ 	default:
+ 		return -ENODEV;
+ 	}
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 07b4f81..1e86486 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -213,6 +213,7 @@ struct prctl_mm_map {
+ /* Speculation control variants */
+ # define PR_SPEC_STORE_BYPASS		0
+ # define PR_SPEC_INDIRECT_BRANCH	1
++# define PR_SPEC_L1D_FLUSH_OUT		2
+ /* Return and control values for PR_SET/GET_SPECULATION_CTRL */
+ # define PR_SPEC_NOT_AFFECTED		0
+ # define PR_SPEC_PRCTL			(1UL << 0)
