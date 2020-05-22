@@ -2,121 +2,182 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD24C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0992C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC758207F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7748420812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnwBD9Yx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXTVhy4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgEVHZp (ORCPT
+        id S1728878AbgEVHZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbgEVHZe (ORCPT
+        Fri, 22 May 2020 03:25:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22245 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728800AbgEVHZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:25:34 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED87C05BD43;
-        Fri, 22 May 2020 00:25:33 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id z4so7728973wmi.2;
-        Fri, 22 May 2020 00:25:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XDvP7skNJs4tKTlKtdt9bUJvJfxMC8gHW2dP050hlR0=;
-        b=rnwBD9Yxv/bc1SSHOCuVjW/0ZvN3Ty/t/Mfk+cHmcAelakXqHg7HQFhklxBkxpo0JJ
-         4dmBdVqVyA3qgd83irkTn/vuX6biNTbWd9trr8Gp6HSnhdSmV9ivc0zLSTaP5WPcZXRw
-         Av+LtYDLRLg/+kFc/DkMI2v/zeDzBk0F4Q4iw2XR18usJstbFFpj+4YGJwx0wcfirhMS
-         cYNWE+Pf+VbegZFTY0jZ5O0BSACeuQz7KWCkyXlMEi/PPhsTkxgXh/q9OrnQtVxpN2l1
-         CX25wHDdS49OV3flVdLBAgWY1NDAzRBDZ9Kjau1IzdLnVpJGQOg3PrLh+cwsapUbL3YH
-         cyVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XDvP7skNJs4tKTlKtdt9bUJvJfxMC8gHW2dP050hlR0=;
-        b=iXNNu3HSDESk5SXI64Erj1J82tOjAKjly86WMcWTTc2FLAi/wz1dP+DAxIj/pUJ5hl
-         4Tv5cDweU6GryhgGMdkylIFjeIqY/hYyoh1QFfsrahVhipHMMNoEMGvTTMifU/6DppVX
-         O/BrAK0/uf1WMqx5WhPnM1LmWkOAmEWTHqBSzejjKHF5WDTmswPZlKC34SDuaW4f1m0Y
-         Tdh+vGwr0Rc4OJAkSmFe7zlrOuIaJngLBT0LpbJitSyvdiT2vFhMgCzV3xQmiItNsOAS
-         FmzNazr/B6KxPo0Iu6uNGKd9T/nMGHKzMR7Vx9rylBdq6hVumhJbn33dIlRV2k/igzWH
-         aOkA==
-X-Gm-Message-State: AOAM530IJoEA6JAyI8hdhuTHT4o09ugnh+dtt8js2VVXsACWG50LbC5u
-        n24dadnhvnLLvhmvFHIWe4A=
-X-Google-Smtp-Source: ABdhPJwLXPwMKkymEIty2nNVw6xiBfgdwwliFlwar3iAAZ9oqW1R/L+QdfQIxeDvNHspsL3mGaOtpg==
-X-Received: by 2002:a05:600c:2146:: with SMTP id v6mr12656827wml.142.1590132331609;
-        Fri, 22 May 2020 00:25:31 -0700 (PDT)
-Received: from skynet.lan (159.red-83-44-12.dynamicip.rima-tde.net. [83.44.12.159])
-        by smtp.gmail.com with ESMTPSA id f128sm9299898wme.1.2020.05.22.00.25.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 00:25:31 -0700 (PDT)
-From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
-        <noltari@gmail.com>
-Subject: [PATCH v3 3/5] mtd: rawnand: brcmnand: rename page sizes
-Date:   Fri, 22 May 2020 09:25:23 +0200
-Message-Id: <20200522072525.3919332-4-noltari@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200522072525.3919332-1-noltari@gmail.com>
-References: <20200512073329.742893-1-noltari@gmail.com>
- <20200522072525.3919332-1-noltari@gmail.com>
+        Fri, 22 May 2020 03:25:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590132343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HrXzaU1D+L/hYoY5vmL3woDQWDBITRObLiwmxim3cFY=;
+        b=RXTVhy4zhUMEAhZHfdD5qEHU386H4tRDZhknBuNP6vq23aZKiG7ixtuIb1a407Lo9l0HoD
+        XaY1HzJ12NL2Txjkw31Z5Nu2LJEkwNSFZJ0b2B6melB11vg9o8bqRoJN11RCDxA3TLPrfU
+        +pe7aggoxCNYfFfhgbn7CKAQDgfigds=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-vOjMLDpBNLCpFG1wfj5FjA-1; Fri, 22 May 2020 03:25:41 -0400
+X-MC-Unique: vOjMLDpBNLCpFG1wfj5FjA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7685E80183C;
+        Fri, 22 May 2020 07:25:39 +0000 (UTC)
+Received: from localhost (ovpn-12-170.pek2.redhat.com [10.72.12.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 64EFA60CCC;
+        Fri, 22 May 2020 07:25:37 +0000 (UTC)
+Date:   Fri, 22 May 2020 15:25:24 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, cai@lca.pw, mhocko@kernel.org
+Subject: Re: [PATCH] mm/compaction: Fix the incorrect hole in
+ fast_isolate_freepages()
+Message-ID: <20200522072524.GF26955@MiWiFi-R3L-srv>
+References: <20200521014407.29690-1-bhe@redhat.com>
+ <20200521092612.GP1059226@linux.ibm.com>
+ <20200521155225.GA20045@MiWiFi-R3L-srv>
+ <20200521171836.GU1059226@linux.ibm.com>
+ <20200522070114.GE26955@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522070114.GE26955@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current pages sizes apply to controllers after v3.4
+On 05/22/20 at 03:01pm, Baoquan He wrote:
+> > > As I said, the unavailable range includes firmware reserved ranges, and
+> > > holes inside one boot memory section, if that boot memory section haves
+> > > useable memory range, and firmware reserved ranges, and holes. Adding
+> > > them all into memblock seems a little unreasonable, since they are never
+> > > used by system in memblock, buddy or high level memory allocator. But I
+> > > can see that adding them into memblock may have the same effect as the
+> > > old code which is beofre your your patchset applied. Let's see if Mel or
+> > > other people have some saying. I pesonally would not suggest doing it
+> > > like this though.
+> > 
+> > Adding reserved regions to memblock.memory will not have the same effect
+> > as the old code. We anyway have to initialize struct page for these
+> > areas, but unlike the old code we don't need to run them by the
+> > early_pfn_in_nid() checks and we still get rid the
+> > CONFIG_NODES_SPAN_OTHER_NODES option.
+> 
+> Hmm, I mean adding them to memblock will let us have the same result,
+> they are added into the node, zone where they should be, and marked as
+> reserved, just as the old code did.
+> 
+> Rethink about this, seems adding them into memblock is doable. But
+> we may not need to add them from e820 reserved range, since that will
+> skip hole range which share the same section with usable range, and may
+> need to change code in different ARCHes. How about this:
+> 
+> We add them into memblock in init_unavailable_range(), memmap_init() will
+> add them into the right node and zone, reserve_bootmem_region() will
+> initialize them and mark them as Reserved.
+> 
+> 
+> From d019d0f9e7c958542dfcb142f93d07fcce6c7c22 Mon Sep 17 00:00:00 2001
+> From: Baoquan He <bhe@redhat.com>
+> Date: Fri, 22 May 2020 14:36:13 +0800
+> Subject: [PATCH] mm/page_alloc.c: Add unavailable ranges into memblock
+> 
+> These unavailable ranges shares the same section with the usable range
+> in boot memory, e.g the firmware reserved ranges, and holes.
+> 
+> Previously, they are added into node 0, zone 0 in function
+> init_unavailable_range(), and marked as Reserved. Later, in function
+> memmap_init(), they will be added to appropriate node and zone, where
+> they are covered.
+> 
+> However, after the patchset ("mm: rework free_area_init*() funcitons")
+> is applied, we change to iterate over memblock regions. These unavailable
+> ranges are skipped, and the node and zone adjustment won't be done any
+> more as the old code did. This cause a crash in compaction which is triggered
+> by VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn)).
+> 
+> So let's add these unavailable ranges into memblock and reserve them
+> in init_unavailable_range() instead. With this change, they will be added
+> into appropriate node and zone in memmap_init(), and initialized in
+> reserve_bootmem_region() just like any other memblock reserved regions.
 
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- v3: no changes.
- v2: add new patch.
+Seems this is not right. They can't get nid in init_unavailable_range().
+Adding e820 ranges may let them get nid. But the hole range won't be
+added to memblock, and still has the issue.
 
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Nack this one for now, still considering.
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 72b268d8e3a4..ef60dbbeac2b 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -571,7 +571,7 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
- {
- 	static const unsigned int block_sizes_v6[] = { 8, 16, 128, 256, 512, 1024, 2048, 0 };
- 	static const unsigned int block_sizes_v4[] = { 16, 128, 8, 512, 256, 1024, 2048, 0 };
--	static const unsigned int page_sizes[] = { 512, 2048, 4096, 8192, 0 };
-+	static const unsigned int page_sizes_v3_4[] = { 512, 2048, 4096, 8192, 0 };
- 
- 	ctrl->nand_version = nand_readreg(ctrl, 0) & 0xffff;
- 
-@@ -618,7 +618,7 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
- 		ctrl->max_page_size = 16 * 1024;
- 		ctrl->max_block_size = 2 * 1024 * 1024;
- 	} else {
--		ctrl->page_sizes = page_sizes;
-+		ctrl->page_sizes = page_sizes_v3_4;
- 		if (ctrl->nand_version >= 0x0600)
- 			ctrl->block_sizes = block_sizes_v6;
- 		else
--- 
-2.26.2
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  mm/page_alloc.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 603187800628..3973b5fdfe3f 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6925,7 +6925,7 @@ static u64 __init init_unavailable_range(unsigned long spfn, unsigned long epfn)
+>  static void __init init_unavailable_mem(void)
+>  {
+>  	phys_addr_t start, end;
+> -	u64 i, pgcnt;
+> +	u64 i, pgcnt, size;
+>  	phys_addr_t next = 0;
+>  
+>  	/*
+> @@ -6934,9 +6934,11 @@ static void __init init_unavailable_mem(void)
+>  	pgcnt = 0;
+>  	for_each_mem_range(i, &memblock.memory, NULL,
+>  			NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL) {
+> -		if (next < start)
+> -			pgcnt += init_unavailable_range(PFN_DOWN(next),
+> -							PFN_UP(start));
+> +		if (next < start) {
+> +			size = PFN_UP(start) - PFN_DOWN(next);
+> +			memblock_add(PFN_DOWN(next), size);
+> +			memblock_reserve(PFN_DOWN(next), size);
+> +		}
+>  		next = end;
+>  	}
+>  
+> @@ -6947,8 +6949,11 @@ static void __init init_unavailable_mem(void)
+>  	 * considered initialized. Make sure that memmap has a well defined
+>  	 * state.
+>  	 */
+> -	pgcnt += init_unavailable_range(PFN_DOWN(next),
+> -					round_up(max_pfn, PAGES_PER_SECTION));
+> +	size = round_up(max_pfn, PAGES_PER_SECTION) - PFN_DOWN(next);
+> +	if (size) {
+> +		memblock_add(PFN_DOWN(next), size);
+> +		memblock_reserve(PFN_DOWN(next), size);
+> +	}
+>  
+>  	/*
+>  	 * Struct pages that do not have backing memory. This could be because
+> -- 
+> 2.17.2
+> 
 
