@@ -2,155 +2,173 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD377C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D326FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B83B207D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590184174;
-	bh=3eNvyJwVcneSIJ5vtBM4Dzc9X5BDAvN4RxI6oKjVhWk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fYQYd48XIp/KRpKAeoXDpkWYg98fub8LpntnAPBNisSpmmkj9b7yxfCJ97Oxo0TmE
-	 tvDLKXG9Bjv0/84FS5pvQWTnxVObJuQN1zCNtDg41WN+6rGNQKkGQh8zLErjFRHn/P
-	 9a2a5P+nYVUf0V6TYSwRmkctQiBoJ0PC6l2e6Cz8=
+	by mail.kernel.org (Postfix) with ESMTP id B153E20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:49:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYsWwZiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbgEVVtd (ORCPT
+        id S1731172AbgEVVtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:49:33 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44893 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731029AbgEVVtd (ORCPT
+        Fri, 22 May 2020 17:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731029AbgEVVtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:49:33 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p30so5601415pgl.11;
-        Fri, 22 May 2020 14:49:32 -0700 (PDT)
+        Fri, 22 May 2020 17:49:39 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 716FAC061A0E;
+        Fri, 22 May 2020 14:49:39 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t11so5628311pgg.2;
+        Fri, 22 May 2020 14:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S0Uzq9mqq+tWip8RdyrRyyQ3hbA1jkIS41+a492a2tI=;
+        b=hYsWwZiSOVrzwJzZ6pAQA1DAFHSzHL7s/is5UbjgAkoFRFIENvPLD9VIUoR1TWfkAz
+         e7IomIOkQTMPvOjIY0uTt1bWEIwC3kCcVDQ22T+wmO48ZmOHGPHyAP35fbG8vffqxKmq
+         +z52yL20CA0QMjjNwb1ZNtlP194amp7Q/RJ61WGZxS8K2Vm633RgI9Y+rAVJT4nw1GDg
+         rcaek0qLyI2fVBkUL3w2LwsxswbfTKkvtzmF3iPROmE9Du51m95U8SYo2E1+0uDiBp6D
+         saYyoU37RkqzYsfB51YMk66v5hchaOrqELx85M/NySL7eIbrpW9igqLrOTPU4wNdmDC/
+         Ts+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=witZhMJ16Agl4OwIfL5pB8EM3wxhLaftmrS7Z3KmwGo=;
-        b=aPn+uE5LHAcTPt68wbrFmA8vQhr/NQc96OjF4bX0IABr4tpP9PX3ll7N9IvPxGjoWp
-         Ys4bt/wA6mquWUdE/alebaQmJR2Xeyuq7pemGwR32MTjUt/94eXeJlcozITZ3Wh44yx8
-         1SofT/Jp/8+C9mWm1Xawtx3ndew6lCSnnjMLRsk379nRMHWltATmVyyX+W7Dap2TYsEK
-         a+AfnhQcrDV0idjEWn6gebFwwFDzWck3sOLf5RdOSiHDTTOzs+M9wFk6eLxWwsFp5iXm
-         qTuv8IPvDsTqChz8YN0GwBixNOeTermTEYnZmbnciLUs7i/MJpJz3DcwCpPaMDvptIY8
-         UjaA==
-X-Gm-Message-State: AOAM5327knA0ctdImbysQwQxBTrKrLvCPuEWEBKKMczzn6U1/BHfDXEB
-        61dWLEQzbYbe2tXnuKZtRSg=
-X-Google-Smtp-Source: ABdhPJyBq9LZCZJmpi4fQfFbSbNhR4Ql67aNRQjxVYgQP0yBZhIDm5eUIjVEbj0mW3rKV0Gj+0RIIQ==
-X-Received: by 2002:a65:52c3:: with SMTP id z3mr15634431pgp.146.1590184172241;
-        Fri, 22 May 2020 14:49:32 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y7sm7633645pjn.13.2020.05.22.14.49.30
+         :mime-version:content-disposition:in-reply-to;
+        bh=S0Uzq9mqq+tWip8RdyrRyyQ3hbA1jkIS41+a492a2tI=;
+        b=CikFcosuhcqyhrVt8RQTKHfnCK9R1I6gXjkps3xw8xOE+BhUPoalYTtH/w1ZANJAmV
+         Zj9ENfTC7WrMQVUa2QwU4eMr873lQGuvciOT226FUjnCwfPO9+zIk1/I4Ag4Wt3b561Z
+         QiP1MfhkIdEG73rRm8HO1a3CTDUUSock1Uym8zfP1KC+d256KkY7NfpH3iczmtgbNhpL
+         DdAdbVg+9+eGyspBl5eKcGV5gLggr4NfB9WYpHxFQJIGC3SFKKokgY1d8HThyabibCd/
+         mk8pBHKDDNvUhSThZarKIA3u6aqnf9w/a18bqmtFxJZLRC3SKgO0Z/QN7eiDs3LfYibI
+         MXIA==
+X-Gm-Message-State: AOAM530r4kDQJhl2c0uFpWpTcMgDsdk4KbbEdMdbY4gshNszu3jc09JK
+        yzBoVVvVoXd+UeNmN5qGco4=
+X-Google-Smtp-Source: ABdhPJxhMx5CxUULMsQDx3J4AHclpvzQl++Sk3lrZR3l1vQoCgTwCVPRcEDKgI9iHrLM9d+BelDMig==
+X-Received: by 2002:a63:1c50:: with SMTP id c16mr15230321pgm.255.1590184178621;
+        Fri, 22 May 2020 14:49:38 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id m13sm7652299pff.9.2020.05.22.14.49.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 14:49:30 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D524C40321; Fri, 22 May 2020 21:49:29 +0000 (UTC)
-Date:   Fri, 22 May 2020 21:49:29 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     johannes@sipsolutions.net, derosier@gmail.com,
-        greearb@candelatech.com, jeyu@kernel.org,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, jiri@resnulli.us,
-        briannorris@chromium.org
-Subject: Re: [RFC 1/2] devlink: add simple fw crash helpers
-Message-ID: <20200522214929.GB11244@42.do-not-panic.com>
-References: <20200519010530.GS11244@42.do-not-panic.com>
- <20200519211531.3702593-1-kuba@kernel.org>
- <20200522052046.GY11244@42.do-not-panic.com>
- <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Fri, 22 May 2020 14:49:38 -0700 (PDT)
+Date:   Fri, 22 May 2020 14:49:35 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jeff LaBundy <jeff@labundy.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: linux-next: Tree for May 18 (input/misc/iqs269a.c & regmap)
+Message-ID: <20200522214935.GB89269@dtor-ws>
+References: <20200518205725.72eb3148@canb.auug.org.au>
+ <60dadc36-daec-2c48-a317-843ce52ae4f5@infradead.org>
+ <20200518162058.GA18713@labundy.com>
+ <e6a56505-b99c-6b22-c35a-3596857fa421@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522101738.1495f4cc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e6a56505-b99c-6b22-c35a-3596857fa421@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:17:38AM -0700, Jakub Kicinski wrote:
-> On Fri, 22 May 2020 05:20:46 +0000 Luis Chamberlain wrote:
-> > > diff --git a/net/core/Makefile b/net/core/Makefile
-> > > index 3e2c378e5f31..6f1513781c17 100644
-> > > --- a/net/core/Makefile
-> > > +++ b/net/core/Makefile
-> > > @@ -31,7 +31,7 @@ obj-$(CONFIG_LWTUNNEL_BPF) += lwt_bpf.o
-> > >  obj-$(CONFIG_BPF_STREAM_PARSER) += sock_map.o
-> > >  obj-$(CONFIG_DST_CACHE) += dst_cache.o
-> > >  obj-$(CONFIG_HWBM) += hwbm.o
-> > > -obj-$(CONFIG_NET_DEVLINK) += devlink.o
-> > > +obj-$(CONFIG_NET_DEVLINK) += devlink.o devlink_simple_fw_reporter.o  
+On Fri, May 22, 2020 at 11:22:39AM -0700, Randy Dunlap wrote:
+> On 5/18/20 9:20 AM, Jeff LaBundy wrote:
+> > Hi Randy et al,
 > > 
-> > This was looking super sexy up to here. This is networking specific.
-> > We want something generic for *anything* that requests firmware.
-> 
-> You can't be serious. It's network specific because of how the Kconfig
-> is named?
-
-Kconfig? What has that to do with anything? The issue I have is that the
-solution I am looking for is for it to be agnostic to the subsystem. I
-have found similar firmware crashes on gpu, media, scsci.
-
-> Working for a company operating large data centers I would strongly
-> prefer if we didn't have ten different ways of reporting firmware
-> problems in the fleet.
-
-Indeed.
-
-> > I'm afraid this won't work for something generic. I don't think its
-> > throw-away work though, the idea to provide a generic interface to
-> > dump firmware through netlink might be nice for networking, or other
-> > things.
+> > On Mon, May 18, 2020 at 08:42:43AM -0700, Randy Dunlap wrote:
+> >> On 5/18/20 3:57 AM, Stephen Rothwell wrote:
+> >>> Hi all,
+> >>>
+> >>> Changes since 20200515:
+> >>>
+> >>
+> >> on i386:
+> >>
+> >>
+> >> CONFIG_REGMAP_I2C=y
+> >> CONFIG_I2C=m
+> >>
+> >> WARNING: unmet direct dependencies detected for REGMAP_I2C
+> >>   Depends on [m]: I2C [=m]
+> >>   Selected by [y]:
+> >>   - INPUT_IQS269A [=y] && !UML && INPUT [=y] && INPUT_MISC [=y]
+> >>
+> >>
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_read':
+> >> regmap-i2c.c:(.text+0x192): undefined reference to `i2c_smbus_read_byte_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_byte_reg_write':
+> >> regmap-i2c.c:(.text+0x1d7): undefined reference to `i2c_smbus_write_byte_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_read':
+> >> regmap-i2c.c:(.text+0x202): undefined reference to `i2c_smbus_read_word_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_read_swapped':
+> >> regmap-i2c.c:(.text+0x242): undefined reference to `i2c_smbus_read_word_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_write_swapped':
+> >> regmap-i2c.c:(.text+0x2a1): undefined reference to `i2c_smbus_write_word_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_smbus_word_reg_write':
+> >> regmap-i2c.c:(.text+0x2d7): undefined reference to `i2c_smbus_write_word_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_read_reg16':
+> >> regmap-i2c.c:(.text+0x310): undefined reference to `i2c_smbus_write_byte_data'
+> >> ld: regmap-i2c.c:(.text+0x323): undefined reference to `i2c_smbus_read_byte'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_write_reg16':
+> >> regmap-i2c.c:(.text+0x39c): undefined reference to `i2c_smbus_write_i2c_block_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_write':
+> >> regmap-i2c.c:(.text+0x3db): undefined reference to `i2c_smbus_write_i2c_block_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_smbus_i2c_read':
+> >> regmap-i2c.c:(.text+0x427): undefined reference to `i2c_smbus_read_i2c_block_data'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_read':
+> >> regmap-i2c.c:(.text+0x49f): undefined reference to `i2c_transfer'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_gather_write':
+> >> regmap-i2c.c:(.text+0x524): undefined reference to `i2c_transfer'
+> >> ld: drivers/base/regmap/regmap-i2c.o: in function `regmap_i2c_write':
+> >> regmap-i2c.c:(.text+0x56c): undefined reference to `i2c_transfer_buffer_flags'
+> >> ld: drivers/input/misc/iqs269a.o: in function `iqs269_i2c_driver_init':
+> >> iqs269a.c:(.init.text+0xb): undefined reference to `i2c_register_driver'
+> >> ld: drivers/input/misc/iqs269a.o: in function `iqs269_i2c_driver_exit':
+> >> iqs269a.c:(.exit.text+0x9): undefined reference to `i2c_del_driver'
+> >>
+> >>
+> >>
+> >> Full randconfig file is attached.
 > > 
-> > But I have a feeling we'll want something still more generic than this.
-> 
-> Please be specific. Saying generic a lot is not helpful. The code (as
-> you can see in this patch) is in no way network specific. Or are you
-> saying there are machines out there running without netlink sockets?
-
-No, I am saying I want something to work with any struct device.
-
-> > So networking may want to be aware that a firmware crash happened as
-> > part of this network device health thing, but firmware crashing is a
-> > generic thing.
+> > A complete oversight on my part; during my testing I did not realize
+> > another module was selecting I2C for me. Valuable lesson learned :)
 > > 
-> > I have now extended my patch set to include uvents and I am more set on
-> > that we need the taint now more than ever.
+> > The kbuild test robot set off the alarm bells earlier today and I've
+> > sent a patch [1] already. Many apologies for all of the noise.
+> > 
+> >>
+> >> -- 
+> >> ~Randy
+> >> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > 
+> > [1] https://patchwork.kernel.org/patch/11555469/
+> > 
+> > Kind regards,
+> > Jeff LaBundy
 > 
-> Please expect my nack if you're trying to add this to networking
-> drivers.
+> 
+> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> 
+> 
+> This build error still happens in linux-next 20200522.
+> Perhaps we can have this patch merged & pushed out so that
+> linux-next can pick it up, please?
 
-The uevent mechanism is not for networking.
+Sorry, I applied it when Jeff posted it, but forgot to push out.
 
-The taint however is, and I'd like to undertand how it is you do not see
-that an undesirable requirement for a reboot is a clear case for a taint.
+Thanks.
 
-> The irony is you have a problem with a networking device and all the
-> devices your initial set touched are networking. Two of the drivers 
-> you touched either have or will soon have devlink health reporters
-> implemented.
-
-That is all great, and I don't think its a bad idea to add
-infrastructure / extend it to get more information about a firmware
-crash dump. However, suggesting that devlink is the only solution we
-need in the kernel without considering other subsystems is what I am
-suggesting doesn't suit my needs. Networking was just the first
-subsystem I am taclking now but I have patches where similar situations
-happen across the kernel.
-
-  Luis
+-- 
+Dmitry
