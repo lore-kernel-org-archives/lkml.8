@@ -2,93 +2,134 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B562C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B70E20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC782072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730883AbgEVRrw (ORCPT
+        id S1730810AbgEVRs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgEVRrv (ORCPT
+        Fri, 22 May 2020 13:48:27 -0400
+Received: from ppsw-31.csi.cam.ac.uk ([131.111.8.131]:59256 "EHLO
+        ppsw-31.csi.cam.ac.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgEVRs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:47:51 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28ACC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:47:51 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jcBlK-00021Q-Ak; Fri, 22 May 2020 19:47:14 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 270C7100F17; Fri, 22 May 2020 19:47:13 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V9 00/39] x86/entry: Rework leftovers (was part V)
-In-Reply-To: <0f9e4601-0d7c-728a-ecaf-a98d1826b5ec@oracle.com>
-References: <20200521200513.656533920@linutronix.de> <0f9e4601-0d7c-728a-ecaf-a98d1826b5ec@oracle.com>
-Date:   Fri, 22 May 2020 19:47:13 +0200
-Message-ID: <878shjsvz2.fsf@nanos.tec.linutronix.de>
+        Fri, 22 May 2020 13:48:26 -0400
+X-Cam-AntiVirus: no malware found
+X-Cam-ScannerInfo: http://help.uis.cam.ac.uk/email-scanner-virus
+Received: from 88-109-182-220.dynamic.dsl.as9105.com ([88.109.182.220]:51732 helo=[192.168.1.219])
+        by ppsw-31.csi.cam.ac.uk (smtp.hermes.cam.ac.uk [131.111.8.157]:465)
+        with esmtpsa (PLAIN:amc96) (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        id 1jcBmD-000an5-M3 (Exim 4.92.3)
+        (return-path <amc96@hermes.cam.ac.uk>); Fri, 22 May 2020 18:48:09 +0100
+Subject: Re: [PATCH v10 01/26] Documentation/x86: Add CET description
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200429220732.31602-2-yu-cheng.yu@intel.com>
+ <b5197a8d-5d8b-e1f7-68d4-58d80261904c@intel.com>
+ <dd5b9bab31ecf247a0b4890e22bfbb486ff52001.camel@intel.com>
+ <5cc163ff9058d1b27778e5f0a016c88a3b1a1598.camel@intel.com>
+ <b0581ddc-0d99-cbcf-278e-0be55ba939a0@intel.com>
+ <44c055342bda4fb4730703f987ae35195d1d0c38.camel@intel.com>
+ <32235ffc-6e6c-fb3d-80c4-a0478e2d0e0f@intel.com>
+ <6272c481-af90-05c5-7231-3ba44ff9bd02@citrix.com>
+ <CAMe9rOqwbxis1xEWbOsftMB9Roxdb3=dp=_MgK8z2pwPP36uRw@mail.gmail.com>
+ <f8ce9863-6ada-2bc4-5141-122f64292aba@citrix.com>
+ <20200522164953.GA411971@hirez.programming.kicks-ass.net>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <ee1b03d8-bb0e-57dc-0a6e-c82622f17067@citrix.com>
+Date:   Fri, 22 May 2020 18:48:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200522164953.GA411971@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Boris Ostrovsky <boris.ostrovsky@oracle.com> writes:
-> On 5/21/20 4:05 PM, Thomas Gleixner wrote:
->>
->> The full series is available from:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v9-the-rest
+On 22/05/2020 17:49, Peter Zijlstra wrote:
+> On Sat, May 16, 2020 at 03:09:22PM +0100, Andrew Cooper wrote:
 >
->
-> Did you mean noinstr-v9-the-rest? I don't see entry-v9-the-rest tag.
+>> Sadly, the same is not true for kernel shadow stacks.
+>>
+>> SSP is 0 after SYSCALL, SYSENTER and CLRSSBSY, and you've got to be
+>> careful to re-establish the shadow stack before a CALL, interrupt or
+>> exception tries pushing a word onto the shadow stack at 0xfffffffffffffff8.
+> Oh man, I can only imagine the joy that brings to #NM and friends :-(
 
-Bah. Yes.
+Establishing a supervisor shadow stack for the first time involves a
+large leap of faith, even by usual x86 standards.
 
-> (Also, this series as posted probably won't build. At least based on
-> definition of get_and_clear_inhcall() in patch 13)
+You need to have prepared MSR_PL0_SSP with correct mappings and
+supervisor tokens, such that when you enable CR4.CET and
+MSR_S_CET.SHSTK_EN, your SETSSBSY instruction succeeds at its atomic
+"check the token and set the busy bit" shadow stack access.  Any failure
+here tends to be a triple fault, and I didn't get around to figuring out
+why #DF wasn't taken cleanly.
 
-Darn. I'm very sure that I built this and then did some final cleanups.
+You also need to have prepared MSR_IST_SSP beforehand with the IST
+shadow stack pointers matching any IST configuration in the IDT, lest a
+NMI ruins your day on the instruction boundary before SETSSBSY.
 
-Lemme fix that.
+A less obvious side effect of these "windows with an SSP of 0" is that
+you're now forced to use IST for all non-maskable interrupts/exceptions,
+even if you choose not to use SYSCALL, and you no longer need IST to
+remove the risks of a userspace privilege escalation, and would prefer
+not to use IST because of its problematic reentrancy characteristics.
 
+For anyone counting the number of IST-necessary vectors across all
+potential configurations in modern hardware, its #DB, NMI, #DF, #MC,
+#VE, #HV, #VC and #SX, and an architectural limit of 7.
 
+There are several other amusing aspects, such as iret-to-self needing to
+use call-oriented-programming to keep itself shadow-stack-safe, or the
+fact that IRET to user mode doesn't fault if it fails to clear the
+supervisor busy bit, instead leaving you to double fault at some point
+in the future at the next syscall/interrupt/exception because the stack
+is still busy.
 
+~Andrew
+
+P.S. For anyone interested,
+https://lore.kernel.org/xen-devel/20200501225838.9866-1-andrew.cooper3@citrix.com/T/#u
+for getting supervisor shadow stacks working on Xen, which is far
+simpler to manage than Linux.  I do not envy whomever has the fun of
+trying to make this work for Linux.
