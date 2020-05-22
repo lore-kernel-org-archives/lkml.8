@@ -2,91 +2,139 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5536CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A0BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22FA6206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B09820723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:40:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d6QGp6Xm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fctbeo2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbgEVLiQ (ORCPT
+        id S1729377AbgEVLkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:38:16 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46478 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbgEVLiP (ORCPT
+        Fri, 22 May 2020 07:40:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgEVLkp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:38:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XH1Yj5aOcR07TnTGoIfuiVoH/MNimUictOSMhtQ2KiY=; b=d6QGp6XmaKNFEj/c8MOhRbc7Nb
-        gE6pY2ftZhVxSAmjrHj4IBZb0jGA8vL8TlrtWe3b3GC8FnQfCob4DPQRbu7+kOrx+c/PmkrfyJKF0
-        8ZmVja26AcPbSozSalm8CS5xdX8gUp+S9auKcN5/tMzGQANGIuqHFHumwazARBiSwsaJwjaBTY3yo
-        hFPlFEoNQbOiwH7hJG9X8sE9v89b1UW31jicK0B0Dpju0EEs0aNxYynZ5DZNgXgK4X/Fr88R2p2pq
-        S+NeJaQlXngxq890AVlcdgdbxeilPkb6uHy2fP1A5TU6gUhnaI9aBEwM2dOSyRhiX5XGcL+4zwGnH
-        PTTMiacw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jc5xy-0007dX-JN; Fri, 22 May 2020 11:35:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2D6EE300478;
-        Fri, 22 May 2020 13:35:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F2D12201479A0; Fri, 22 May 2020 13:35:47 +0200 (CEST)
-Date:   Fri, 22 May 2020 13:35:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
-        will@kernel.org, clang-built-linux@googlegroups.com, bp@alien8.de
-Subject: Re: [PATCH -tip v3 00/11] Fix KCSAN for new ONCE (require Clang 11)
-Message-ID: <20200522113547.GL325280@hirez.programming.kicks-ass.net>
-References: <20200521142047.169334-1-elver@google.com>
+        Fri, 22 May 2020 07:40:45 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD40C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 04:40:45 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id r125so6299768lff.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 04:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hj2fTCjbxOKsyZP7M3oTIyRA9mJ2Bc+fUg1m8uH2yYk=;
+        b=Fctbeo2rUCXQwGpTpFGVse8+WCb+g1DgkimSxd0aywjWQzd7bhxHHSHfy1FP+QqJ5E
+         HQGcAIndvBPaVq+mvvXrYxa60iZ270cp/hL7v335T389bW5HYMkEi/Mut44zha6NDaG4
+         UCrNm9pJDDi2UNXl+PlD6bv/w4smxNEG9g8AyCyft6tAOApW/apnSn16+WYKI0WwO/LX
+         QygL+8MKePZCy7xTU8Q+o6DXxVRskTBMwRQQsFJ+VR7QHRA9Pic1hmOdE0dfFierlTBM
+         XmumN0HJD7IHx+R0ZAzFlmPROpUU2YmKdDsZd/Q7eTLT58JceLPdRakROdwY5S4uTJxp
+         Cehw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hj2fTCjbxOKsyZP7M3oTIyRA9mJ2Bc+fUg1m8uH2yYk=;
+        b=ikks4OUmV7o9J6aw0q4UQuKSvYm8ITAsqpFx7/hveNfHqGGNfYNvX0yS4+RUPOvvgT
+         9NttISV+1d4JFWlkAgf7khGgY89fpoYWl62TtEc5V6LBnOA63Uob/Ni7/c5ArCHdV/5D
+         IvOJPt01b0qi1OlhD1a5OMZhFInjCMWR/hOhpeSPOY0kHHggz7dyBMRp4P5ZCWTJLChm
+         Zq4NAbEDoAM2wBvKbv6UC12M3Tbngn5TzuXTD90n85DmtBrMOIdVqlhNfEE4juY7N1iO
+         DKvu2bjKi4zPcOxBIi0H8DDM2B0fiCRxyTv6zIdGmmI/buqyd2lMM3BhE1oTCqeF2m5t
+         A0qA==
+X-Gm-Message-State: AOAM532m4vO1yn2BBhh1ckAvAbxywmZA3cbM+jBZgYW10Si5Q1hmCNGl
+        lRHhXkvEt2EuA3FTU0TrRSv7mXxzkpOTwdCH3zddtI1z
+X-Google-Smtp-Source: ABdhPJyCH6J7CaJtTe9PzunF+afSux/PTZRtv8MDXaAqacG2ZKbC4Y+MdKt3boWpmeIuz1KBImEFTAKzX+qejKOKM8k=
+X-Received: by 2002:ac2:53a2:: with SMTP id j2mr7071822lfh.139.1590147643673;
+ Fri, 22 May 2020 04:40:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521142047.169334-1-elver@google.com>
+References: <20200519002124.2025955-1-jhubbard@nvidia.com>
+In-Reply-To: <20200519002124.2025955-1-jhubbard@nvidia.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Fri, 22 May 2020 17:10:32 +0530
+Message-ID: <CAFqt6zZTZrB=LiGQpcOtZfnr7-CL4tkLHz8eXFvxwCTcfKy4sQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] mm/gup, drm/i915: refactor gup_fast, convert to pin_user_pages()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 04:20:36PM +0200, Marco Elver wrote:
-> Arnd Bergmann (1):
->   ubsan, kcsan: don't combine sanitizer with kcov on clang
-> 
-> Marco Elver (10):
->   kcsan: Avoid inserting __tsan_func_entry/exit if possible
->   kcsan: Support distinguishing volatile accesses
->   kcsan: Pass option tsan-instrument-read-before-write to Clang
->   kcsan: Remove 'noinline' from __no_kcsan_or_inline
->   kcsan: Restrict supported compilers
->   kcsan: Update Documentation to change supported compilers
->   READ_ONCE, WRITE_ONCE: Remove data_race() and unnecessary checks
->   data_race: Avoid nested statement expression
->   compiler.h: Move function attributes to compiler_types.h
->   compiler_types.h, kasan: Use __SANITIZE_ADDRESS__ instead of
->     CONFIG_KASAN to decide inlining
-> 
->  Documentation/dev-tools/kcsan.rst |  9 +-----
->  include/linux/compiler.h          | 54 ++++---------------------------
->  include/linux/compiler_types.h    | 32 ++++++++++++++++++
->  kernel/kcsan/core.c               | 43 ++++++++++++++++++++++++
->  lib/Kconfig.kcsan                 | 20 +++++++++++-
->  lib/Kconfig.ubsan                 | 11 +++++++
->  scripts/Makefile.kcsan            | 15 ++++++++-
->  7 files changed, 127 insertions(+), 57 deletions(-)
+Hi John,
 
-LTGM
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Tue, May 19, 2020 at 5:51 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> This needs to go through Andrew's -mm tree, due to adding a new gup.c
+> routine. However, I would really love to have some testing from the
+> drm/i915 folks, because I haven't been able to run-time test that part
+> of it.
+>
+> Otherwise, though, the series has passed my basic run time testing:
+> some LTP tests, some xfs and etx4 non-destructive xfstests, and an
+> assortment of other smaller ones: vm selftests, io_uring_register, a
+> few more. But that's only on one particular machine. Also, cross-compile
+> tests for half a dozen arches all pass.
+>
+> Details:
+>
+> In order to convert the drm/i915 driver from get_user_pages() to
+> pin_user_pages(), a FOLL_PIN equivalent of __get_user_pages_fast() was
+> required. That led to refactoring __get_user_pages_fast(), with the
+> following goals:
+>
+> 1) As above: provide a pin_user_pages*() routine for drm/i915 to call,
+>    in place of __get_user_pages_fast(),
+>
+> 2) Get rid of the gup.c duplicate code for walking page tables with
+>    interrupts disabled. This duplicate code is a minor maintenance
+>    problem anyway.
+>
+> 3) Make it easy for an upcoming patch from Souptick, which aims to
+>    convert __get_user_pages_fast() to use a gup_flags argument, instead
+>    of a bool writeable arg.  Also, if this series looks good, we can
+>    ask Souptick to change the name as well, to whatever the consensus
+>    is. My initial recommendation is: get_user_pages_fast_only(), to
+>    match the new pin_user_pages_only().
+
+Shall I hold my changes till 5.8-rc1 , when this series will appear upstream ?
+>
+> John Hubbard (4):
+>   mm/gup: move __get_user_pages_fast() down a few lines in gup.c
+>   mm/gup: refactor and de-duplicate gup_fast() code
+>   mm/gup: introduce pin_user_pages_fast_only()
+>   drm/i915: convert get_user_pages() --> pin_user_pages()
+>
+>  drivers/gpu/drm/i915/gem/i915_gem_userptr.c |  22 +--
+>  include/linux/mm.h                          |   3 +
+>  mm/gup.c                                    | 150 ++++++++++++--------
+>  3 files changed, 107 insertions(+), 68 deletions(-)
+>
+>
+> base-commit: 642b151f45dd54809ea00ecd3976a56c1ec9b53d
+> --
+> 2.26.2
+>
