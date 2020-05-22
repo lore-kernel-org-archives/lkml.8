@@ -4,97 +4,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF16FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4A412073B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92D32073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 06:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgEVGxF (ORCPT
+        id S1728230AbgEVGx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 02:53:05 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:30820 "HELO
-        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1726578AbgEVGxF (ORCPT
+        Fri, 22 May 2020 02:53:27 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:23442 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726578AbgEVGx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 02:53:05 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgCHFAi8dsdeZVr9AQ--.53060S4;
-        Fri, 22 May 2020 14:52:48 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: sprd: Fix runtime PM imbalance on error
-Date:   Fri, 22 May 2020 14:52:43 +0800
-Message-Id: <20200522065243.19590-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgCHFAi8dsdeZVr9AQ--.53060S4
-X-Coremail-Antispam: 1UD129KBjvJXoWrKrW7ZFW3Gr18JF1xZFy5urg_yoW8JryDpa
-        1UWa45urW0vayavryDAF18XF95Ca43t3y3WrWDG3y7ZrWrXFy0qr4rJFyjqF18XFykGF47
-        J3WDJ3y5uF4fCr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUva1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-        14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
-        uYvjfU1uc_DUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggIBlZdtOQP3QABsM
+        Fri, 22 May 2020 02:53:27 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04M6l4aK026754;
+        Fri, 22 May 2020 02:53:22 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 312d364vcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 02:53:22 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 04M6rL3p047498
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 22 May 2020 02:53:21 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 22 May 2020 02:53:20 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 22 May 2020 02:53:20 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 22 May 2020 02:53:20 -0400
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04M6rIfF024722;
+        Fri, 22 May 2020 02:53:18 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jeff@labundy.com>, <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: position: iqs624: remove usage of iio_priv_to_dev()
+Date:   Fri, 22 May 2020 09:53:22 +0300
+Message-ID: <20200522065322.9611-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_02:2020-05-21,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 bulkscore=0 mlxscore=0 phishscore=0 cotscore=-2147483648
+ impostorscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ clxscore=1011 adultscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005220054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+We may want to get rid of the iio_priv_to_dev() helper. That's a bit
+uncertain at this point. The reason is that we will hide some of the
+members of the iio_dev structure (to prevent drivers from accessing them
+directly), and that will also mean hiding the implementation of the
+iio_priv_to_dev() helper inside the IIO core.
 
-Also, call pm_runtime_disable() when pm_runtime_get_sync() returns
-an error code.
+Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
+may not be fast anymore, so a general idea is to try to get rid of the
+iio_priv_to_dev() altogether.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+For this driver, removing iio_priv_to_dev() also means keeping a reference
+on the state struct.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/dma/sprd-dma.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/iio/position/iqs624-pos.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 0ef5ca81ba4d..275d83768d0d 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1210,7 +1210,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
- 	ret = dma_async_device_register(&sdev->dma_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "register dma device failed:%d\n", ret);
--		goto err_register;
-+		goto err_rpm;
- 	}
+diff --git a/drivers/iio/position/iqs624-pos.c b/drivers/iio/position/iqs624-pos.c
+index 77096c31c2ba..520dafbdc48f 100644
+--- a/drivers/iio/position/iqs624-pos.c
++++ b/drivers/iio/position/iqs624-pos.c
+@@ -23,6 +23,7 @@
  
- 	sprd_dma_info.dma_cap = sdev->dma_dev.cap_mask;
-@@ -1224,10 +1224,9 @@ static int sprd_dma_probe(struct platform_device *pdev)
+ struct iqs624_pos_private {
+ 	struct iqs62x_core *iqs62x;
++	struct iio_dev *indio_dev;
+ 	struct notifier_block notifier;
+ 	struct mutex lock;
+ 	bool angle_en;
+@@ -59,7 +60,7 @@ static int iqs624_pos_notifier(struct notifier_block *notifier,
  
- err_of_register:
- 	dma_async_device_unregister(&sdev->dma_dev);
--err_register:
-+err_rpm:
- 	pm_runtime_put_noidle(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
--err_rpm:
- 	sprd_dma_disable(sdev);
- 	return ret;
- }
+ 	iqs624_pos = container_of(notifier, struct iqs624_pos_private,
+ 				  notifier);
+-	indio_dev = iio_priv_to_dev(iqs624_pos);
++	indio_dev = iqs624_pos->indio_dev;
+ 	timestamp = iio_get_time_ns(indio_dev);
+ 
+ 	iqs62x = iqs624_pos->iqs62x;
+@@ -98,7 +99,7 @@ static int iqs624_pos_notifier(struct notifier_block *notifier,
+ static void iqs624_pos_notifier_unregister(void *context)
+ {
+ 	struct iqs624_pos_private *iqs624_pos = context;
+-	struct iio_dev *indio_dev = iio_priv_to_dev(iqs624_pos);
++	struct iio_dev *indio_dev = iqs624_pos->indio_dev;
+ 	int ret;
+ 
+ 	ret = blocking_notifier_chain_unregister(&iqs624_pos->iqs62x->nh,
+@@ -243,6 +244,7 @@ static int iqs624_pos_probe(struct platform_device *pdev)
+ 
+ 	iqs624_pos = iio_priv(indio_dev);
+ 	iqs624_pos->iqs62x = iqs62x;
++	iqs624_pos->indio_dev = indio_dev;
+ 
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->dev.parent = &pdev->dev;
 -- 
-2.17.1
+2.25.1
 
