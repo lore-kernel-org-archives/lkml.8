@@ -2,130 +2,128 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA130C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA144C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45162072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen.org header.i=@xen.org header.b="DyxCae+o"
+	by mail.kernel.org (Postfix) with ESMTP id 72DDC2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 18:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590171465;
+	bh=5sm5AYmWV9mWrN3CXxji+zYrj9CAOWdQtOxPPpby3TQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XTzhC/o7NEiGQWLqJbb4F8HzZGtW+a10bDcG59C7za3kqzYS6CpHkCBVlSCQA0+ck
+	 2hlUl6sW+F8K/ojXkVPK79iKvTIqEaD9Gg9qxKedKf8x3eOKRA9rn1Ph2L7wF82qLT
+	 +JFQq+DJmnnyoPcjO+FOq6koS91e+RhvhHYR9J8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730813AbgEVSQK (ORCPT
+        id S1730849AbgEVSRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 14:16:10 -0400
-Received: from mail.xenproject.org ([104.130.215.37]:58818 "EHLO
-        mail.xenproject.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgEVSQK (ORCPT
+        Fri, 22 May 2020 14:17:44 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:27085 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgEVSRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 14:16:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=xen.org;
-        s=20200302mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hLKSuZTQ4zo02OD599iePD2/rvDfeT9Ihh6Ut+Ss5iQ=; b=DyxCae+oxFpfbkgZWHTM5ZUy30
-        QNvkMcKVhEsiKm65FENKqqRVklyCPJplTthhwbFSX5pNHFWGcMlwchcEd58WvagHoo2/Knwx0WCKi
-        1VCuyhyQtCmyJ7q8REVY+XFLjUDnZloNlsyddVIjeKQZ4GLFweJW5+XnQUD1pO/1+JeU=;
-Received: from xenbits.xenproject.org ([104.239.192.120])
-        by mail.xenproject.org with esmtp (Exim 4.92)
-        (envelope-from <julien@xen.org>)
-        id 1jcCDI-0001HQ-Sg; Fri, 22 May 2020 18:16:08 +0000
-Received: from 54-240-197-238.amazon.com ([54.240.197.238] helo=a483e7b01a66.ant.amazon.com)
-        by xenbits.xenproject.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <julien@xen.org>)
-        id 1jcCDI-0004LV-Ix; Fri, 22 May 2020 18:16:08 +0000
-Subject: Re: [PATCH 02/10] swiotlb-xen: remove start_dma_addr
-To:     Stefano Stabellini <sstabellini@kernel.org>
-Cc:     jgross@suse.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>
-References: <alpine.DEB.2.21.2005201628330.27502@sstabellini-ThinkPad-T480s>
- <20200520234520.22563-2-sstabellini@kernel.org>
- <6241b8f6-5c51-0486-55ae-d571b117a184@xen.org>
- <alpine.DEB.2.21.2005211243060.27502@sstabellini-ThinkPad-T480s>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <ab89bf08-a02f-85af-8f83-6a851d72ccf2@xen.org>
-Date:   Fri, 22 May 2020 19:16:06 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Fri, 22 May 2020 14:17:44 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 04MIHPFT017391;
+        Sat, 23 May 2020 03:17:26 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 04MIHPFT017391
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1590171446;
+        bh=K3rGYVbuX5itC10Uy7MCO78NVqbVQ6AyydvbG4IPunc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dhexHP4r5UqBuJyFcetL7gZMMeLBW26NawGnk14bzmlelLVztkIDN1E0gLMszC8iN
+         LfNAqpZeYKV+IeNfOaLaqZvhSN3mqfXxrGu5xsfzdnHN5Zo6ZCY0xBV+wP/5n2E1JK
+         KjVIkJSMIO8yTKTRjacARUmWXPShANGo/FvPtKiJ45Z/qz/o4G2zqbdaz0hm8NjcDJ
+         lVVgK1Xfu8Kc4G8M12/SabtFxb8ZlMw0eyEF1uNRTe5iT31KoNOJVzAMEgwrt8HPq6
+         p0tfWgoGNNeKesnh5O7g9PBkxtcVthZrEZERBCLHkt+9bpTQmI/mZ1YZxgfQsYwon9
+         hkwaiuS8woBfA==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id w65so6555458vsw.11;
+        Fri, 22 May 2020 11:17:26 -0700 (PDT)
+X-Gm-Message-State: AOAM533oGn99TT1pavUP+Sf44Nf1QwSo/v0bJfEiVd8xSVYQKEH+aBHY
+        40ZrXEb0voCmCwmW+vL/gv+8yvHA00Wnhk1BVtQ=
+X-Google-Smtp-Source: ABdhPJyegX+5hSC8vQtFsfk2gsG8jhLEllAduD0C3D9DpxotRifsVoWTIhA0Kp06+8I7BRCrvI4FLB9S1OKqCcRKAk4=
+X-Received: by 2002:a05:6102:3231:: with SMTP id x17mr250058vsf.181.1590171445169;
+ Fri, 22 May 2020 11:17:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2005211243060.27502@sstabellini-ThinkPad-T480s>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200521202716.193316-1-samitolvanen@google.com> <202005211506.2700F86@keescook>
+In-Reply-To: <202005211506.2700F86@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sat, 23 May 2020 03:16:49 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ1HTTSq-yp0t6Z4V-Z9PHg+O2n=NC89FJJFNQnhaOcSA@mail.gmail.com>
+Message-ID: <CAK7LNAQ1HTTSq-yp0t6Z4V-Z9PHg+O2n=NC89FJJFNQnhaOcSA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: reuse vmlinux.o in vmlinux_link
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, May 22, 2020 at 7:08 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, May 21, 2020 at 01:27:16PM -0700, Sami Tolvanen wrote:
+> > Instead of linking all compilation units again each time vmlinux_link is
+> > called, reuse vmlinux.o from modpost_link.
+> >
+> > With x86_64 allyesconfig, vmlinux_link is called three times and reusing
+> > vmlinux.o reduces the build time ~38 seconds on my system (59% reduction
+> > in the time spent in vmlinux_link).
+>
+> Nice! Any time savings at final link is a big cumulative win.
+>
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  scripts/link-vmlinux.sh | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> >
+> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> > index d09ab4afbda4..c6cc4305950c 100755
+> > --- a/scripts/link-vmlinux.sh
+> > +++ b/scripts/link-vmlinux.sh
+> > @@ -77,11 +77,8 @@ vmlinux_link()
+> >
+> >       if [ "${SRCARCH}" != "um" ]; then
+> >               objects="--whole-archive                        \
+> > -                     ${KBUILD_VMLINUX_OBJS}                  \
+> > +                     vmlinux.o                               \
+> >                       --no-whole-archive                      \
+> > -                     --start-group                           \
+> > -                     ${KBUILD_VMLINUX_LIBS}                  \
+> > -                     --end-group                             \
+> >                       ${@}"
+> >
+> >               ${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}      \
+>
+> I think the "um" case can be updated as well too, yes?
 
-On 22/05/2020 04:55, Stefano Stabellini wrote:
-> On Thu, 21 May 2020, Julien Grall wrote:
->> Hi,
->>
->> On 21/05/2020 00:45, Stefano Stabellini wrote:
->>> From: Stefano Stabellini <stefano.stabellini@xilinx.com>
->>>
->>> It is not strictly needed. Call virt_to_phys on xen_io_tlb_start
->>> instead. It will be useful not to have a start_dma_addr around with the
->>> next patches.
->>>
->>> Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
->>> ---
->>>    drivers/xen/swiotlb-xen.c | 5 +----
->>>    1 file changed, 1 insertion(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
->>> index a42129cba36e..b5e0492b07b9 100644
->>> --- a/drivers/xen/swiotlb-xen.c
->>> +++ b/drivers/xen/swiotlb-xen.c
->>> @@ -52,8 +52,6 @@ static unsigned long xen_io_tlb_nslabs;
->>>     * Quick lookup value of the bus address of the IOTLB.
->>>     */
->>>    -static u64 start_dma_addr;
->>> -
->>>    /*
->>>     * Both of these functions should avoid XEN_PFN_PHYS because phys_addr_t
->>>     * can be 32bit when dma_addr_t is 64bit leading to a loss in
->>> @@ -241,7 +239,6 @@ int __ref xen_swiotlb_init(int verbose, bool early)
->>>    		m_ret = XEN_SWIOTLB_EFIXUP;
->>>    		goto error;
->>>    	}
->>> -	start_dma_addr = xen_virt_to_bus(xen_io_tlb_start);
->>>    	if (early) {
->>>    		if (swiotlb_init_with_tbl(xen_io_tlb_start, xen_io_tlb_nslabs,
->>>    			 verbose))
->>> @@ -389,7 +386,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device
->>> *dev, struct page *page,
->>>    	 */
->>>    	trace_swiotlb_bounced(dev, dev_addr, size, swiotlb_force);
->>>    -	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys,
->>> +	map = swiotlb_tbl_map_single(dev, virt_to_phys(xen_io_tlb_start),
->>> phys,
->>
->> xen_virt_to_bus() is implemented as xen_phys_to_bus(virt_to_phys()). Can you
->> explain how the two are equivalent?
-> 
-> They are not equivalent. Looking at what swiotlb_tbl_map_single expects,
-> and also the implementation of swiotlb_init_with_tbl, I think
-> virt_to_phys is actually the one we want.
-> 
-> swiotlb_tbl_map_single compares the argument with __pa(tlb) which is
-> __pa(xen_io_tlb_start) which is virt_to_phys(xen_io_tlb_start).
+I agree.
 
-I can't find such check in master. What is your baseline? Could you 
-point to the exact line of code?
+I changed the um part, then ARCH=um build is successful.
 
-Cheers,
+
+
+
+
+
+
+> Also, I think the comment above modpost_link() needs to be updated now
+> to reflect the nature of how vmlinux.o gets used after this patch.
+>
+> --
+> Kees Cook
+
+
 
 -- 
-Julien Grall
+Best Regards
+Masahiro Yamada
