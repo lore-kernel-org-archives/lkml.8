@@ -2,142 +2,94 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D364C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F00D92078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGloSf/U"
+	by mail.kernel.org (Postfix) with ESMTP id 47A86206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgEVM2g (ORCPT
+        id S1729334AbgEVMcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEVM2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:28:35 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F6CC061A0E;
-        Fri, 22 May 2020 05:28:35 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id c11so10239897ljn.2;
-        Fri, 22 May 2020 05:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yaJggxw2oIQGUD00rImm8KRBGAMLEQqQBPoYb1Fa4Ck=;
-        b=EGloSf/UXkcsDMqaZec3Xpo3n4+fWfy9h5AHdSyfXZGqdXD7TSQxqSxWhr4BEDq1tx
-         v47DvPaelw68pGvGgRPH/QMhFs27pW4jfbDthNLAo2nzjiAwzR/g5H8IvEAQV8v7x0/F
-         gJgLcq8K7aVqEuMPf4jdmD1DjcLk1s9ctWmIi/PHjobQXFUwQojNcE6544NRkzO1h9vD
-         McI51YamolIvZCXbbA/L/jugPJQC5B8k5z74LeJUn3VgYDn187kiA+bSzgmrgv/qyKoI
-         Hj2vix0I+ZXYhr5OSG5pmi5yJqoexDkZVqCVUT2eWegoR6vzGi+KHmBp2H/9XR4IiEJg
-         PwkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yaJggxw2oIQGUD00rImm8KRBGAMLEQqQBPoYb1Fa4Ck=;
-        b=g5U8E41JhxQmxZQzZQB7q7I3zuts8+bQvYNY0RxXtX1GhVztFhjzCO6P+lYE2fPauS
-         ohwPE/yL1njRXiOQ4lNr5kQBx6ibP9/9uL9NDV0Bf2oSfyMfYZFyNTmrcKA4HcyqFwy6
-         qgnZyzJRwEzrOrvrUzfnYwrfk4K2fgHCbAzw4tCMvAiI/+MVaoVzCV4L1ecbYgrlw8Y5
-         JkzTVkg6ZmG7pSOb64GlWOS39NTypXVac6fej7kB84UHg5SpxKcLaAXEYbkiyTBRUhMm
-         l6Z7sa+pxxtzEIfXEdEBsGmfBD65zuqrh4/YafFZuZ7ngfuh07WLQFddakJqZ5jDdwxV
-         CwLg==
-X-Gm-Message-State: AOAM5337jZpnSSTzp+n5v/JUuSW8ps1gy0vplrBoJ7we2AbGsY5OC4Vo
-        ZI/Hf+LMTr44jzOI9ANxrIwlDdUk
-X-Google-Smtp-Source: ABdhPJxaY4jza3ZNZHABNZueKZfGSk2n7W6UQwcam6yrwTDmNtnh24IG6raE2jyRxPm4rdZfoO8r+w==
-X-Received: by 2002:a2e:88d5:: with SMTP id a21mr4507777ljk.31.1590150513669;
-        Fri, 22 May 2020 05:28:33 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-17-204.pppoe.mtu-net.ru. [91.76.17.204])
-        by smtp.googlemail.com with ESMTPSA id s2sm2303961ljs.39.2020.05.22.05.28.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 05:28:32 -0700 (PDT)
-Subject: Re: [PATCH] sdhci: tegra: Avoid reading autocal timeout values when
- not applicable
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-References: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4ac18003-e855-43d1-91d2-b4fa7904dba4@gmail.com>
-Date:   Fri, 22 May 2020 15:28:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 08:32:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:30730 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgEVMcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:32:50 -0400
+IronPort-SDR: vIum7ldppE2n7O0qXiHPTnJzTQXWSpAf4FB1k3+4f/bmbKyd2mefokXU60mxFpti1e0Q5RQ9CB
+ GsEu4vBMdctg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:32:49 -0700
+IronPort-SDR: gdNOhWPiD26Qwsk/8U/6trhMNaOkd6iMPsw+64KEMYwuMKrff1ja/OqQ3CbSLJRswf4BsofcDC
+ tkglDYyxrfwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,421,1583222400"; 
+   d="scan'208";a="309358979"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 May 2020 05:32:46 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jc6r2-008EIs-Rz; Fri, 22 May 2020 15:32:48 +0300
+Date:   Fri, 22 May 2020 15:32:48 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     ofery@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, wsa@the-dreams.de,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 3/3] i2c: npcm7xx: Add support for slave mode for
+ Nuvoton
+Message-ID: <20200522123248.GC1634618@smile.fi.intel.com>
+References: <20200522113312.181413-1-tali.perry1@gmail.com>
+ <20200522113312.181413-4-tali.perry1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1590005337-1087-1-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522113312.181413-4-tali.perry1@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-20.05.2020 23:08, Sowjanya Komatineni пишет:
-> When auto calibration timeouts, calibration is disabled and fail-safe
-> drive strength values are programmed based on the signal voltage.
-> 
-> Different fail-safe drive strength values based on voltage are
-> applicable only for SoCs supporting 3V3 and 1V8 pad controls.
-> 
-> So, this patch avoids reading these properties from the device tree
-> for SoCs not using pad controls and the warning of missing properties
-> will not show up on these SoC platforms.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/mmc/host/sdhci-tegra.c | 57 ++++++++++++++++++++++++------------------
->  1 file changed, 33 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index 3e2c510..141b49b 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -605,6 +605,39 @@ static void tegra_sdhci_parse_pad_autocal_dt(struct sdhci_host *host)
->  		autocal->pull_down_1v8 = 0;
->  
->  	err = device_property_read_u32(host->mmc->parent,
-> +			"nvidia,pad-autocal-pull-up-offset-sdr104",
-> +			&autocal->pull_up_sdr104);
-> +	if (err)
-> +		autocal->pull_up_sdr104 = autocal->pull_up_1v8;
-> +
-> +	err = device_property_read_u32(host->mmc->parent,
-> +			"nvidia,pad-autocal-pull-down-offset-sdr104",
-> +			&autocal->pull_down_sdr104);
-> +	if (err)
-> +		autocal->pull_down_sdr104 = autocal->pull_down_1v8;
-> +
-> +	err = device_property_read_u32(host->mmc->parent,
-> +			"nvidia,pad-autocal-pull-up-offset-hs400",
-> +			&autocal->pull_up_hs400);
-> +	if (err)
-> +		autocal->pull_up_hs400 = autocal->pull_up_1v8;
-> +
-> +	err = device_property_read_u32(host->mmc->parent,
-> +			"nvidia,pad-autocal-pull-down-offset-hs400",
-> +			&autocal->pull_down_hs400);
-> +	if (err)
-> +		autocal->pull_down_hs400 = autocal->pull_down_1v8;
-> +
-> +	/*
-> +	 * Different fail-safe drive strength values based on the signaling
-> +	 * voltage are applicable for SoCs supporting 3V3 and 1V8 pad controls.
-> +	 * So, avoid reading below device tree properies for SoCs that don't
+On Fri, May 22, 2020 at 02:33:12PM +0300, Tali Perry wrote:
+> Add support for slave mode for Nuvoton
+> NPCM BMC I2C controller driver.
 
-typo s/properies/properties/                      ^^^
+I guess it will require v14, so, few nits below.
 
-> +	 * have NVQUIRK_NEEDS_PAD_CONTROL.
-> +	 */
 ...
+
+> +const int npcm_i2caddr[I2C_NUM_OWN_ADDR] = {
+> +					    NPCM_I2CADDR1, NPCM_I2CADDR2,
+> +					    NPCM_I2CADDR3, NPCM_I2CADDR4,
+> +					    NPCM_I2CADDR5, NPCM_I2CADDR6,
+> +					    NPCM_I2CADDR7, NPCM_I2CADDR8,
+> +					    NPCM_I2CADDR9, NPCM_I2CADDR10,
+
+One TAB is enough.
+
+> +					   };
+
+No need to indent at all.
+
+...
+
+> +	/* Set and enable the address */
+> +	iowrite8(sa_reg, bus->reg + npcm_i2caddr[(int)addr_type]);
+
+I'm wondering why you need a casting here.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
