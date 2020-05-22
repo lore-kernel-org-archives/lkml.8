@@ -2,184 +2,148 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6482BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E84D2067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CmyoV4Da"
+	by mail.kernel.org (Postfix) with ESMTP id 45B5C2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590159332;
+	bh=6kVV4ZMdmQGY7iWp7IKfiscB6QlOrHGowsptdcBnKRA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Wlnk6x76faOg8pnczQeLeNxabBZsRM4w/c2Qh/fim5ePpw2saI//oKG3mo7nRd3tW
+	 KHUC3AN0PsbZQb4krLf10Oy36CWg7IG71ch7RtHJ9LKrUu28mKln6xFcYCdFjw3sDq
+	 BhmaJBhKSA/mAQPf2VQXeJwyqFQu74iSEOfEkluI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbgEVOza (ORCPT
+        id S1730944AbgEVOvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:55:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731360AbgEVOzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:55:18 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D03BC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:55:18 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f5so1844910wmh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 07:55:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kkTz4sTk7s012DbHMp3X0LwsnQSwOjg9lEMirTJ/PWk=;
-        b=CmyoV4DakSUdEOfu7cjPJzdTIPnJ6TKlRfsXiilcn49CqPDcUOzFGX9DBib2tD3/pm
-         QApEtLdvp6Fa4KNTp/oT0fEOwbQWtU5CZ3x2SCCeUD/WspsDejdt5xibpZ3dKW+8N9vd
-         wpMgNvOZId9/GA5XVtZF4Lq5us4bbMV8sDPJ0/XlIQLKxCHSnelKR8n1Ie62Om5LxWUl
-         EQYUU91KChW8wkfIxjdDK6WH+98E07MH6kLCa43YRIb/FcPg4qpXBzBKU46RZRSX/jmR
-         1g6SynQVCCRNNQZhm8gmkXSfMar3NbaV1LuIrwazVbgceNf5GLdXyLQ2URJ4NKjQlMdB
-         t4LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kkTz4sTk7s012DbHMp3X0LwsnQSwOjg9lEMirTJ/PWk=;
-        b=AYHmIh0qK4ui/TFtklMBS+EfINQ1+XhJQ3E7Sj3pKv/prYNNylz140DlWxjFER/Csr
-         MXBNDmo+n9m9wfzPd/2oUIKO0pBefSi72kYSWX9Pk8E2xp9Vwc9deAyHmo2Pnwfny9Ep
-         X05QvarfH0MOf6XYdSbs4x4XoSRFIqLwJW3zX02xuRIE9/nzNz18zlkYUwEnFG61no0F
-         FrIAo0kUrchpHSdS/iPSMpcwb3+xUTyb9w6j/GcNGU+qUMm5xPAxKrwdbDz/GS5IB9jG
-         m8VcHJaDP+lpyS5Bm7eoVfb4ZfVyVFeucvsCyN/6CXFtL1PN04eBHveJTgOWwkSIseQr
-         gIvQ==
-X-Gm-Message-State: AOAM533xUwgNuuqquGhIGG+WVETn40r+B4+A+rneu6S6+v0+zNF6GWCG
-        9V9iJPHJ5T1DQZEQ1rDOhMqtY6UzqdU=
-X-Google-Smtp-Source: ABdhPJxQXqSFq49qzrvg5dJHfbQcmZrcW5ufJyiYOXZjrM7OJFBvSL22Ako9KERokDxGdIZxZR7/nA==
-X-Received: by 2002:a1c:25c3:: with SMTP id l186mr13757890wml.103.1590159316931;
-        Fri, 22 May 2020 07:55:16 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id i21sm9746911wml.5.2020.05.22.07.55.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 07:55:16 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     sumit.garg@linaro.org, jason.wessel@windriver.com,
-        dianders@chromium.org
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Subject: [RFC PATCH 2/2] locking/spinlock/debug: Add checks for kgdb trap safety
-Date:   Fri, 22 May 2020 15:55:10 +0100
-Message-Id: <20200522145510.2109799-3-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200522145510.2109799-1-daniel.thompson@linaro.org>
-References: <20200522145510.2109799-1-daniel.thompson@linaro.org>
+        Fri, 22 May 2020 10:51:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730914AbgEVOvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:10 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE3B6221FF;
+        Fri, 22 May 2020 14:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590159069;
+        bh=6kVV4ZMdmQGY7iWp7IKfiscB6QlOrHGowsptdcBnKRA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pU+Y5ePHr2TqThWHJOyrAayMfAPiUMKCPrWdGLDjaI3haano0MqAUjRBj+Q493N3T
+         OuRuxI6Gp4AF1Hf9zmQ47h4ksFxjPwJ42s4QAyFI958zFZ4t4MMpi8s/1zKDSopKif
+         Iw3jyiCSRddkXRmJokfdQBfQlSy9AHIvZnqgytnk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Denis V. Lunev" <den@openvz.org>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 22/32] IB/i40iw: Remove bogus call to netdev_master_upper_dev_get()
+Date:   Fri, 22 May 2020 10:50:34 -0400
+Message-Id: <20200522145044.434677-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
+References: <20200522145044.434677-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In general it is not safe to call spin_lock() whilst executing in the
-kgdb trap handler. The trap can be entered from all sorts of execution
-context (NMI, IRQ, irqs disabled, etc) and the kgdb/kdb needs to be
-as resillient as possible.
+From: "Denis V. Lunev" <den@openvz.org>
 
-Currently it is difficult to spot mistakes in the kgdb/kdb logic
-(especially so for kdb because it uses more kernel features than
-pure-kgdb). Let's provide a means to bring attention to deadlock
-risks in the debug code.
+[ Upstream commit 856ec7f64688387b100b7083cdf480ce3ac41227 ]
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Local variable netdev is not used in these calls.
+
+It should be noted, that this change is required to work in bonded mode.
+Otherwise we would get the following assert:
+
+ "RTNL: assertion failed at net/core/dev.c (5665)"
+
+With the calltrace as follows:
+	dump_stack+0x19/0x1b
+	netdev_master_upper_dev_get+0x61/0x70
+	i40iw_addr_resolve_neigh+0x1e8/0x220
+	i40iw_make_cm_node+0x296/0x700
+	? i40iw_find_listener.isra.10+0xcc/0x110
+	i40iw_receive_ilq+0x3d4/0x810
+	i40iw_puda_poll_completion+0x341/0x420
+	i40iw_process_ceq+0xa5/0x280
+	i40iw_ceq_dpc+0x1e/0x40
+	tasklet_action+0x83/0x140
+	__do_softirq+0x125/0x2bb
+	call_softirq+0x1c/0x30
+	do_softirq+0x65/0xa0
+	irq_exit+0x105/0x110
+	do_IRQ+0x56/0xf0
+	common_interrupt+0x16a/0x16a
+	? cpuidle_enter_state+0x57/0xd0
+	cpuidle_idle_call+0xde/0x230
+	arch_cpu_idle+0xe/0xc0
+	cpu_startup_entry+0x14a/0x1e0
+	start_secondary+0x1f7/0x270
+	start_cpu+0x5/0x14
+
+Link: https://lore.kernel.org/r/20200428131511.11049-1-den@openvz.org
+Signed-off-by: Denis V. Lunev <den@openvz.org>
+Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/kgdb.h            | 16 ++++++++++++++++
- kernel/locking/spinlock_debug.c |  4 ++++
- lib/Kconfig.kgdb                | 11 +++++++++++
- 3 files changed, 31 insertions(+)
+ drivers/infiniband/hw/i40iw/i40iw_cm.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-index b072aeb1fd78..de30ce8078cf 100644
---- a/include/linux/kgdb.h
-+++ b/include/linux/kgdb.h
-@@ -332,4 +332,20 @@ extern void kgdb_panic(const char *msg);
- #define dbg_late_init()
- static inline void kgdb_panic(const char *msg) {}
- #endif /* ! CONFIG_KGDB */
-+
-+#ifdef CONFIG_KGDB_DEBUG_SPINLOCK
-+/**
-+ * check_kgdb_context_before() - Check whether to issue a spinlock warning
-+ *
-+ * Currently this only reports when the master processor violates the
-+ * locking rules (because we are using the in_dbg_master() macro since
-+ * we are confident that will avoid false positives).
-+ *
-+ * Return: True if we are executing in the debug trap
-+ */
-+static inline int check_kgdb_context_before(void) { return in_dbg_master(); }
-+#else
-+static inline int check_kgdb_context_before(void) { return 0; }
-+#endif
-+
- #endif /* _KGDB_H_ */
-diff --git a/kernel/locking/spinlock_debug.c b/kernel/locking/spinlock_debug.c
-index b9d93087ee66..b49789e0fed8 100644
---- a/kernel/locking/spinlock_debug.c
-+++ b/kernel/locking/spinlock_debug.c
-@@ -12,6 +12,7 @@
- #include <linux/debug_locks.h>
- #include <linux/delay.h>
- #include <linux/export.h>
-+#include <linux/kgdb.h>
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index 2d6a378e8560..b1df93b69df4 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -1987,7 +1987,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
+ 	struct rtable *rt;
+ 	struct neighbour *neigh;
+ 	int rc = arpindex;
+-	struct net_device *netdev = iwdev->netdev;
+ 	__be32 dst_ipaddr = htonl(dst_ip);
+ 	__be32 src_ipaddr = htonl(src_ip);
  
- void __raw_spin_lock_init(raw_spinlock_t *lock, const char *name,
- 			  struct lock_class_key *key, short inner)
-@@ -84,6 +85,7 @@ debug_spin_lock_before(raw_spinlock_t *lock)
- 	SPIN_BUG_ON(READ_ONCE(lock->owner) == current, lock, "recursion");
- 	SPIN_BUG_ON(READ_ONCE(lock->owner_cpu) == raw_smp_processor_id(),
- 							lock, "cpu recursion");
-+	SPIN_BUG_ON(check_kgdb_context_before(), lock, "in debug trap");
- }
+@@ -1997,9 +1996,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
+ 		return rc;
+ 	}
  
- static inline void debug_spin_lock_after(raw_spinlock_t *lock)
-@@ -174,6 +176,7 @@ int do_raw_read_trylock(rwlock_t *lock)
- void do_raw_read_unlock(rwlock_t *lock)
+-	if (netif_is_bond_slave(netdev))
+-		netdev = netdev_master_upper_dev_get(netdev);
+-
+ 	neigh = dst_neigh_lookup(&rt->dst, &dst_ipaddr);
+ 
+ 	rcu_read_lock();
+@@ -2065,7 +2061,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
  {
- 	RWLOCK_BUG_ON(lock->magic != RWLOCK_MAGIC, lock, "bad magic");
-+	RWLOCK_BUG_ON(check_kgdb_context_before(), lock, "in debug trap");
- 	arch_read_unlock(&lock->raw_lock);
- }
+ 	struct neighbour *neigh;
+ 	int rc = arpindex;
+-	struct net_device *netdev = iwdev->netdev;
+ 	struct dst_entry *dst;
+ 	struct sockaddr_in6 dst_addr;
+ 	struct sockaddr_in6 src_addr;
+@@ -2086,9 +2081,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
+ 		return rc;
+ 	}
  
-@@ -183,6 +186,7 @@ static inline void debug_write_lock_before(rwlock_t *lock)
- 	RWLOCK_BUG_ON(lock->owner == current, lock, "recursion");
- 	RWLOCK_BUG_ON(lock->owner_cpu == raw_smp_processor_id(),
- 							lock, "cpu recursion");
-+	RWLOCK_BUG_ON(check_kgdb_context_before(), lock, "in debug trap");
- }
+-	if (netif_is_bond_slave(netdev))
+-		netdev = netdev_master_upper_dev_get(netdev);
+-
+ 	neigh = dst_neigh_lookup(dst, dst_addr.sin6_addr.in6_u.u6_addr32);
  
- static inline void debug_write_lock_after(rwlock_t *lock)
-diff --git a/lib/Kconfig.kgdb b/lib/Kconfig.kgdb
-index 933680b59e2d..4d57900d6c53 100644
---- a/lib/Kconfig.kgdb
-+++ b/lib/Kconfig.kgdb
-@@ -29,6 +29,17 @@ config KGDB_SERIAL_CONSOLE
- 	  Share a serial console with kgdb. Sysrq-g must be used
- 	  to break in initially.
- 
-+config KGDB_DEBUG_SPINLOCK
-+	bool "KGDB: Check for spin lock usage when system is halted"
-+	select DEBUG_SPINLOCK
-+	default n
-+	help
-+	  Say Y here to catch spin lock waiting when we are running
-+	  in the kgdb trap handler and report it. When the trap handler
-+	  is executing all other system activity is halted and spin lock
-+	  contention will lead to deadlock. This makes any spin lock wait
-+	  from this execution context risky.
-+
- config KGDB_TESTS
- 	bool "KGDB: internal test suite"
- 	default n
+ 	rcu_read_lock();
 -- 
-2.25.4
+2.25.1
 
