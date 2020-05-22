@@ -2,232 +2,227 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D52C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D950C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F8720738
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6883D206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 17:57:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aeyxcFKy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nsr6CBlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbgEVR4k (ORCPT
+        id S1730852AbgEVR5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 13:56:40 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64957 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730702AbgEVR4k (ORCPT
+        Fri, 22 May 2020 13:57:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730766AbgEVR5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 13:56:40 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590170198; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=KsXiQmpLIAN5c5M7YvALpjfUVVNpRDHzU1icueEVx0Q=;
- b=aeyxcFKyIzG1lT8ms+oXhCXd3G5tgBBOhRy8vC6tqHsAVOUKjMw0L4N0YTF4nkjYOIrQNn0R
- KBXBE82VwYDGw2hhvUUBDHD46tgJ9l9+X4Y5ssPpAv+OA/mhhApS+o0wDbhnILthTzZI4akj
- DyzVL/kd2Fe7U42HB31jaK2KVK4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec81248.7fe5fac5aa40-smtp-out-n05;
- Fri, 22 May 2020 17:56:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 93622C433C8; Fri, 22 May 2020 17:56:24 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6714C433C6;
-        Fri, 22 May 2020 17:56:23 +0000 (UTC)
+        Fri, 22 May 2020 13:57:12 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A57C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:57:12 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id r128so5023008ybc.6
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 10:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4JgBOHCrrlIpp5ulBwC1iusiFKtvJwsskOjbxuRkjhU=;
+        b=Nsr6CBlvs3jaqVJKqyoA4j9dfcTp9Gw9Fg8W5x4TSmGSxCKMRfLa0B3CTOh7tZz75i
+         x2zBnpAW72alc/u6H1H6eYlIPn9237ct84+sA8AgHUBtd0RdkXWDf3aMyl7gMmU9GK/r
+         NLMUK8Fk7EqZQLxsa+XTm+RwWeNSx483qO9SWQpawF3A1bDFd+0JQpr8NZAx1eUUQuHI
+         DvlgtbUsVpQL7aa48uWsdMSY4A9oFFIA+YM+Kb0Va8h4J4GlaLylHIaBn61PWD7vkMGE
+         lACQ1uMUonEV/+aa4cYm+xLS4HkMfJ75aZzKSc6MjveyzlpvQdQ4nlCXjJPCl07myvWP
+         JRog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4JgBOHCrrlIpp5ulBwC1iusiFKtvJwsskOjbxuRkjhU=;
+        b=Gf4ha4Jnno5HG61OBEnKiVSmItLWH7zOKVY/IzkbbjvF8ke0Ybz3YiHU248n7jToXm
+         5ZlZDDWsQzG+4CBuCXckpmGrMLiJGhEpxhDBgl/w1EL6fuRg9zygsHMr0s9iKeXWmNd4
+         L8AFS6vAMNMIXXSg535H4AH/yuOM7nafA9LC7SKQCiICEEXLdT/i0CHtva2w5SMytKyC
+         kmMoAGv+AslwTw2vVS5EPeJ539OMcNpCyuC0kxSzoU9mQ7n3kKc2ow2yHfSteSVAQADU
+         sS543k74pFnFJd6sOQCYwy0KjM0PMjlpBnItG03PrPWQwwZAYLtaJ2gNxdnBB2x19LBS
+         ppYg==
+X-Gm-Message-State: AOAM530nfwsoGYHl//WPv6ox0hi4MISa/okpqHMd++XZbG3J5wejQ0d9
+        AefpjJJ4Ol6pZzWDBC1ELhNv2No4ePsaXZnkRYQZSw==
+X-Google-Smtp-Source: ABdhPJyk58h/6x5o1ghDPThLhLKhMrMvIgoTa2LZ1WBg1w7hrSdTb6r5vwzUoF+5xbJh0/GEWEVZ0YVnDT9uc6OtDx8=
+X-Received: by 2002:a25:4446:: with SMTP id r67mr24803463yba.41.1590170231345;
+ Fri, 22 May 2020 10:57:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 22 May 2020 23:26:23 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        coresight@lists.linaro.org
-Subject: Re: [PATCHv2 3/4] coresight: replicator: Reset replicator if context
- is lost
-In-Reply-To: <20200522174052.GA3379@xps15>
-References: <cover.1589894597.git.saiprakash.ranjan@codeaurora.org>
- <c2e02d0c92b081c05b91d07ec17e648c40af3897.1589894597.git.saiprakash.ranjan@codeaurora.org>
- <20200522174052.GA3379@xps15>
-Message-ID: <e723febb6f6e794d292423b33efdf3e6@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200520182011.32236-1-irogers@google.com> <20200521114325.GT157452@krava>
+ <20200521172235.GD14034@kernel.org> <20200522101311.GA404187@krava>
+ <20200522144908.GI14034@kernel.org> <CAP-5=fUaaNpi3RZd9-Q-uCaudop0tU5NN8HFek5e2XLoBZqt6w@mail.gmail.com>
+In-Reply-To: <CAP-5=fUaaNpi3RZd9-Q-uCaudop0tU5NN8HFek5e2XLoBZqt6w@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 22 May 2020 10:56:59 -0700
+Message-ID: <CAP-5=fWZYJ2RXeXGGmFXAW9CNnb2S6cGYKc_M=hUQyCng7KJBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Share events between metrics
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+On Fri, May 22, 2020 at 7:59 AM Ian Rogers <irogers@google.com> wrote:
+>
+>
+>
+> On Fri, May 22, 2020, 7:49 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>
+>> Em Fri, May 22, 2020 at 12:13:11PM +0200, Jiri Olsa escreveu:
+>> > On Thu, May 21, 2020 at 02:22:35PM -0300, Arnaldo Carvalho de Melo wrote:
+>> > > Em Thu, May 21, 2020 at 01:43:25PM +0200, Jiri Olsa escreveu:
+>> > > > On Wed, May 20, 2020 at 11:20:04AM -0700, Ian Rogers wrote:
+>> > > >
+>> > > > SNIP
+>> > > >
+>> > > > > There are 5 out of 12 metric groups where no events are shared, such
+>> > > > > as Power, however, disabling grouping of events always reduces the
+>> > > > > number of events.
+>> > > > >
+>> > > > > The result for Memory_BW needs explanation:
+>> > > > >
+>> > > > > Metric group: Memory_BW
+>> > > > >  - No merging (old default, now --metric-no-merge): 9
+>> > > > >  - Merging over metrics (new default)             : 5
+>> > > > >  - No event groups and merging (--metric-no-group): 11
+>> > > > >
+>> > > > > Both with and without merging the groups fail to be set up and so the
+>> > > > > event counts here are for broken metrics. The --metric-no-group number
+>> > > > > is accurate as all the events are scheduled. Ideally a constraint
+>> > > > > would be added for these metrics in the json code to avoid grouping.
+>> > > > >
+>> > > > > v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
+>> > > > > missing comma with metric lists (reported-by Jiri Olsa
+>> > > > > <jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
+>> > > > > (suggested-by Jiri Olsa).
+>> > > >
+>> > > > Acked-by: Jiri Olsa <jolsa@redhat.com>
+>> > >
+>> > > Applied and pushed to tmp.perf/core, will move to perf/core as soon as
+>> > > testing finishes,
+>> >
+>> > I checked tmp.perf/core and I'm getting segfault for 'perf test expr'
+>>
+>> Right, reproduced here and...
+>>
+>> >        7: Simple expression parser                              :
+>> >       Program received signal SIGSEGV, Segmentation fault.
+>> >       0x000000000067841e in hashmap_find_entry (map=0x7fffffffd0c0, key=0xc83b30, hash=9893851511679796638, pprev=0x0, entry=0x7fffffffc658) at hashmap.c:131
+>> >       131             for (prev_ptr = &map->buckets[hash], cur = *prev_ptr;
+>> >       (gdb) bt
+>> >       #0  0x000000000067841e in hashmap_find_entry (map=0x7fffffffd0c0, key=0xc83b30, hash=9893851511679796638, pprev=0x0, entry=0x7fffffffc658) at hashmap.c:131
+>> >       #1  0x000000000067853a in hashmap__insert (map=0x7fffffffd0c0, key=0xc83b30, value=0x0, strategy=HASHMAP_SET, old_key=0x7fffffffc718,
+>> >           old_value=0x7fffffffc710) at hashmap.c:160
+>> >       #2  0x00000000005d3209 in hashmap__set (map=0x7fffffffd0c0, key=0xc83b30, value=0x0, old_key=0x7fffffffc718, old_value=0x7fffffffc710)
+>> >           at /home/jolsa/kernel/linux-perf/tools/perf/util/hashmap.h:107
+>> >       #3  0x00000000005d3386 in expr__add_id (ctx=0x7fffffffd0c0, name=0xc83b30 "FOO", val=0) at util/expr.c:45
+>> >       #4  0x00000000005d27ee in expr_parse (final_val=0x0, ctx=0x7fffffffd0c0, scanner=0xc87990) at util/expr.y:63
+>> >       #5  0x00000000005d35b7 in __expr__parse (val=0x0, ctx=0x7fffffffd0c0, expr=0x75a84b "FOO + BAR + BAZ + BOZO", start=259, runtime=1) at util/expr.c:102
+>> >       #6  0x00000000005d36c6 in expr__find_other (expr=0x75a84b "FOO + BAR + BAZ + BOZO", one=0x75a791 "FOO", ctx=0x7fffffffd0c0, runtime=1) at util/expr.c:121
+>> >       #7  0x00000000004e3aaf in test__expr (t=0xa7bd40 <generic_tests+384>, subtest=-1) at tests/expr.c:55
+>> >       #8  0x00000000004b5651 in run_test (test=0xa7bd40 <generic_tests+384>, subtest=-1) at tests/builtin-test.c:393
+>> >       #9  0x00000000004b5787 in test_and_print (t=0xa7bd40 <generic_tests+384>, force_skip=false, subtest=-1) at tests/builtin-test.c:423
+>> >       #10 0x00000000004b61c4 in __cmd_test (argc=1, argv=0x7fffffffd7f0, skiplist=0x0) at tests/builtin-test.c:628
+>> >       #11 0x00000000004b6911 in cmd_test (argc=1, argv=0x7fffffffd7f0) at tests/builtin-test.c:772
+>> >       #12 0x00000000004e977b in run_builtin (p=0xa7eee8 <commands+552>, argc=3, argv=0x7fffffffd7f0) at perf.c:312
+>> >       #13 0x00000000004e99e8 in handle_internal_command (argc=3, argv=0x7fffffffd7f0) at perf.c:364
+>> >       #14 0x00000000004e9b2f in run_argv (argcp=0x7fffffffd64c, argv=0x7fffffffd640) at perf.c:408
+>> >       #15 0x00000000004e9efb in main (argc=3, argv=0x7fffffffd7f0) at perf.c:538
+>> >
+>> > attached patch fixes it for me, but I'm not sure this
+>> > should be necessary
+>>
+>> ... applying the patch below makes the segfault go away. Ian, Ack? I can
+>> fold it into the patch introducing the problem.
+>
+>
+> I suspect this patch is a memory leak. The underlying issue is likely the outstanding hashmap_clear fix in libbpf. Let me check.
+>
+> Thanks,
+> Ian
 
-On 2020-05-22 23:10, Mathieu Poirier wrote:
-> Hi Sai,
-> 
-> On Tue, May 19, 2020 at 07:06:02PM +0530, Sai Prakash Ranjan wrote:
->> On some QCOM SoCs, replicators in Always-On domain loses its
->> context as soon as the clock is disabled. Currently as a part
->> of pm_runtime workqueue, clock is disabled after the replicator
->> is initialized by amba_pm_runtime_suspend assuming that context
->> is not lost which is not true for replicators with such
->> limitations. So add a new property "qcom,replicator-loses-context"
->> to identify such replicators and reset them.
->> 
->> Suggested-by: Mike Leach <mike.leach@linaro.org>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->> 
->> Added Mike's suggested by for parts other than the DT property.
->> Perhaps I should add Co-developed-by Mike since the full skeletal
->> was given by Mike. I can add that if required on the next version.
-> 
->  I will let Mike decide what he wants to do - I'm fine either way.
-> 
+Tested:
+$ git checkout -b testing acme/tmp.perf/core
+$ make ...
+$ perf test 7
+7: Simple expression parser                              : FAILED!
+$ git cherry-pick 6bca339175bf
+[acme-perf-expr-testing 4614bd252003] libbpf: Fix memory leak and
+possible double-free in hashmap__c
+lear
+Author: Andrii Nakryiko <andriin@fb.com>
+Date: Tue Apr 28 18:21:04 2020 -0700
+1 file changed, 7 insertions(+)
+$ make ...
+$ perf test 7
+7: Simple expression parser                              : Ok
 
-Mike was ok with suggested-by, so I will go with that.
-
->> 
->> ---
->>  .../coresight/coresight-replicator.c          | 53 
->> +++++++++++++------
->>  1 file changed, 36 insertions(+), 17 deletions(-)
->> 
->> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c 
->> b/drivers/hwtracing/coresight/coresight-replicator.c
->> index c619b456f55a..ba66160c8140 100644
->> --- a/drivers/hwtracing/coresight/coresight-replicator.c
->> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
->> @@ -38,6 +38,7 @@ struct replicator_drvdata {
->>  	struct clk		*atclk;
->>  	struct coresight_device	*csdev;
->>  	spinlock_t		spinlock;
->> +	bool			check_idfilter_val;
-> 
-> Please add documentation for the new field, the same way other fields 
-> are
-> documented.
-> 
-
-Sure will add that.
-
->>  };
->> 
->>  static void dynamic_replicator_reset(struct replicator_drvdata 
->> *drvdata)
->> @@ -66,29 +67,43 @@ static int dynamic_replicator_enable(struct 
->> replicator_drvdata *drvdata,
->>  				     int inport, int outport)
->>  {
->>  	int rc = 0;
->> -	u32 reg;
->> -
->> -	switch (outport) {
->> -	case 0:
->> -		reg = REPLICATOR_IDFILTER0;
->> -		break;
->> -	case 1:
->> -		reg = REPLICATOR_IDFILTER1;
->> -		break;
->> -	default:
->> -		WARN_ON(1);
->> -		return -EINVAL;
->> -	}
->> +	u32 id0val, id1val;
->> 
->>  	CS_UNLOCK(drvdata->base);
->> 
->> -	if ((readl_relaxed(drvdata->base + REPLICATOR_IDFILTER0) == 0xff) &&
->> -	    (readl_relaxed(drvdata->base + REPLICATOR_IDFILTER1) == 0xff))
->> +	id0val = readl_relaxed(drvdata->base + REPLICATOR_IDFILTER0);
->> +	id1val = readl_relaxed(drvdata->base + REPLICATOR_IDFILTER1);
->> +
->> +	/*
->> +	 * Some replicator designs lose context when AMBA clocks are 
->> removed,
->> +	 * so have a check for this.
->> +	 */
->> +	if (drvdata->check_idfilter_val && id0val == 0x0 && id1val == 0x0)
->> +		id0val = id1val = 0xff;
->> +
->> +	if (id0val == 0xff && id1val == 0xff)
->>  		rc = coresight_claim_device_unlocked(drvdata->base);
->> 
->> +	if (!rc) {
->> +		switch (outport) {
->> +		case 0:
->> +			id0val = 0x0;
->> +			break;
->> +		case 1:
->> +			id1val = 0x0;
->> +			break;
->> +		default:
->> +			WARN_ON(1);
->> +			rc = -EINVAL;
->> +		}
->> +	}
->> +
->>  	/* Ensure that the outport is enabled. */
->> -	if (!rc)
->> -		writel_relaxed(0x00, drvdata->base + reg);
->> +	if (!rc) {
->> +		writel_relaxed(id0val, drvdata->base + REPLICATOR_IDFILTER0);
->> +		writel_relaxed(id1val, drvdata->base + REPLICATOR_IDFILTER1);
->> +	}
->> +
->>  	CS_LOCK(drvdata->base);
->> 
->>  	return rc;
->> @@ -239,6 +254,10 @@ static int replicator_probe(struct device *dev, 
->> struct resource *res)
->>  		desc.groups = replicator_groups;
->>  	}
->> 
->> +	if (fwnode_property_present(dev_fwnode(dev),
->> +				    "qcom,replicator-loses-context"))
->> +		drvdata->check_idfilter_val = true;
->> +
-> 
-> The header <linux/property.h> needs to be added for function
-> fwnode_property_present().
-> 
-
-Sure will add in next version.
-
-> What is the clock situation with other QC components like funnels?  
-> Have they
-> also been designed the same way?  If so the binding should probably be
-> "qcom,component-loses-context", otherwise what you have suggested will 
-> work just
-> fine.  My goal here is to avoid having "qcom,replicator-loses-context" 
-> and
-> "qcom,funnel-loses-context".
-> 
-
-Yes I understand it is quite ugly, but AFAIK we do not have any SoCs 
-already released
-and coming in near future with such limitations in funnels or other 
-components. So I will
-stick to the replicator specific property.
-
-> Lastly, I have applied patch 1 and 2 of this set to my tree so no need 
-> to resend
-> them again with the next revision.
-> 
-
-Thanks for reviewing these patches.
+I'd prefer we took the libbpf fix as initializing over the top of the
+hashmap will leak. This fix is in the tools/perf/util/hashmap.c.
 
 Thanks,
-Sai
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Ian
+
+>> - Arnaldo
+>>
+>> > jirka
+>> >
+>> >
+>> > ---
+>> > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+>> > index 1cb02ca2b15f..21693fe516c1 100644
+>> > --- a/tools/perf/tests/expr.c
+>> > +++ b/tools/perf/tests/expr.c
+>> > @@ -52,6 +52,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>> >       TEST_ASSERT_VAL("missing operand", ret == -1);
+>> >
+>> >       expr__ctx_clear(&ctx);
+>> > +     expr__ctx_init(&ctx);
+>> >       TEST_ASSERT_VAL("find other",
+>> >                       expr__find_other("FOO + BAR + BAZ + BOZO", "FOO",
+>> >                                        &ctx, 1) == 0);
+>> > @@ -64,6 +65,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>> >                                                   (void **)&val_ptr));
+>> >
+>> >       expr__ctx_clear(&ctx);
+>> > +     expr__ctx_init(&ctx);
+>> >       TEST_ASSERT_VAL("find other",
+>> >                       expr__find_other("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@",
+>> >                                        NULL, &ctx, 3) == 0);
+>> >
+>> >
+>>
+>> --
+>>
+>> - Arnaldo
