@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AECC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8345C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 245F7205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C40AA206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159433;
-	bh=hu3+Cu1mobOMU0osGTqGMIyMafxT7FTy0kESiJ1M/lw=;
+	s=default; t=1590159435;
+	bh=qOxoZU27BS4ecyYbGhcESok/bly/SpCHfZfU+pixZLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZRwjSGTBZY1S5b/4lHqapnqNYwSWdGGf6vXpoZVDSeB6cnhB55Ci1iJhcw8lOmSJs
-	 khfDMBMDItt+xeQ9w1IlcfxqS0l2/t2S3DSu9Rw21qZP3N77KjGBuBm+eU/jA/PJcX
-	 jAzUO1JWQmQOMZOvymEsTSBjzyNULq8uoZdLJnjQ=
+	b=GJcEOmf1QDCE8Odn4fU9NKz2BT763Sm56SJtwWFsNCRq4/jaYw2ojRV9ONjPSLOFU
+	 /qxJ77IuXhqt4gtpNmLZx1mfFNywQCzb0Eyvqurq32vYs9WkVNcUkOokBWfeu/vbO+
+	 yf57ZSkMHSSW7Bvt12/9ULnTf4mz4HDM+/RO9Txw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbgEVOun (ORCPT
+        id S1730939AbgEVO5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52022 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730760AbgEVOuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:39 -0400
+        id S1730520AbgEVOun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DBF72247F;
-        Fri, 22 May 2020 14:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8092B221FF;
+        Fri, 22 May 2020 14:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159039;
-        bh=hu3+Cu1mobOMU0osGTqGMIyMafxT7FTy0kESiJ1M/lw=;
+        s=default; t=1590159042;
+        bh=qOxoZU27BS4ecyYbGhcESok/bly/SpCHfZfU+pixZLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fammMrLirTc5lzIQUGKZo7zLbakTOjFESi8mpYY2Sw+u7cqdNTPIk2zOdElkWOm93
-         M4/EDzFY89lwN0sTABsM/2b43cCBcmaDzba9PhQ4eN6Ofm8N8+K5RkpW3s1UlS5QFL
-         de0JGVz+NGzB9sC6VB+vq2YtYDrYV2IgO7QYG8co=
+        b=KLfKX38LDX05qRn82OHFK9M6FD2tVJQLnurCuoH+COMJXlvtBw8D49qu2k3hMUrbv
+         DVyBpJL3VndjW7giKooY1teDwragnpHKQL2INyW2Ah/R+J4BmIW9ZdWfKpfRE6DRXj
+         TKh9ShdyuIW/AZpuFcAcvJMIgqNwraJpwt2+DrOo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amy Shih <amy.shih@advantech.com.tw>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 36/41] hwmon: (nct7904) Fix incorrect range of temperature limit registers
-Date:   Fri, 22 May 2020 10:49:53 -0400
-Message-Id: <20200522144959.434379-36-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 39/41] csky: Fixup raw_copy_from_user()
+Date:   Fri, 22 May 2020 10:49:56 -0400
+Message-Id: <20200522144959.434379-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,44 +60,232 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amy Shih <amy.shih@advantech.com.tw>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 7b2fd270af27edaf02acb41a7babe805a9441914 ]
+[ Upstream commit 51bb38cb78363fdad1f89e87357b7bc73e39ba88 ]
 
-The format of temperature limitation registers are 8-bit 2's complement
-and the range is -128~127.
-Converts the reading value to signed char to fix the incorrect range
-of temperature limitation registers.
+If raw_copy_from_user(to, from, N) returns K, callers expect
+the first N - K bytes starting at to to have been replaced with
+the contents of corresponding area starting at from and the last
+K bytes of destination *left* *unmodified*.
 
-Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+What arch/sky/lib/usercopy.c is doing is broken - it can lead to e.g.
+data corruption on write(2).
+
+raw_copy_to_user() is inaccurate about return value, which is a bug,
+but consequences are less drastic than for raw_copy_from_user().
+And just what are those access_ok() doing in there?  I mean, look into
+linux/uaccess.h; that's where we do that check (as well as zero tail
+on failure in the callers that need zeroing).
+
+AFAICS, all of that shouldn't be hard to fix; something like a patch
+below might make a useful starting point.
+
+I would suggest moving these macros into usercopy.c (they are never
+used anywhere else) and possibly expanding them there; if you leave
+them alive, please at least rename __copy_user_zeroing(). Again,
+it must not zero anything on failed read.
+
+Said that, I'm not sure we won't be better off simply turning
+usercopy.c into usercopy.S - all that is left there is a couple of
+functions, each consisting only of inline asm.
+
+Guo Ren reply:
+
+Yes, raw_copy_from_user is wrong, it's no need zeroing code.
+
+unsigned long _copy_from_user(void *to, const void __user *from,
+unsigned long n)
+{
+        unsigned long res = n;
+        might_fault();
+        if (likely(access_ok(from, n))) {
+                kasan_check_write(to, n);
+                res = raw_copy_from_user(to, from, n);
+        }
+        if (unlikely(res))
+                memset(to + (n - res), 0, res);
+        return res;
+}
+EXPORT_SYMBOL(_copy_from_user);
+
+You are right and access_ok() should be removed.
+
+but, how about:
+do {
+...
+        "2:     stw     %3, (%1, 0)     \n"             \
++       "       subi    %0, 4          \n"               \
+        "9:     stw     %4, (%1, 4)     \n"             \
++       "       subi    %0, 4          \n"               \
+        "10:    stw     %5, (%1, 8)     \n"             \
++       "       subi    %0, 4          \n"               \
+        "11:    stw     %6, (%1, 12)    \n"             \
++       "       subi    %0, 4          \n"               \
+        "       addi    %2, 16          \n"             \
+        "       addi    %1, 16          \n"             \
+
+Don't expand __ex_table
+
+AI Viro reply:
+
+Hey, I've no idea about the instruction scheduling on csky -
+if that doesn't slow the things down, all the better.  It's just
+that copy_to_user() and friends are on fairly hot codepaths,
+and in quite a few situations they will dominate the speed of
+e.g. read(2).  So I tried to keep the fast path unchanged.
+Up to the architecture maintainers, obviously.  Which would be
+you...
+
+As for the fixups size increase (__ex_table size is unchanged)...
+You have each of those macros expanded exactly once.
+So the size is not a serious argument, IMO - useless complexity
+would be, if it is, in fact, useless; the size... not really,
+especially since those extra subi will at least offset it.
+
+Again, up to you - asm optimizations of (essentially)
+memcpy()-style loops are tricky and can depend upon the
+fairly subtle details of architecture.  So even on something
+I know reasonably well I would resort to direct experiments
+if I can't pass the buck to architecture maintainers.
+
+It *is* worth optimizing - this is where read() from a file
+that is already in page cache spends most of the time, etc.
+
+Guo Ren reply:
+
+Thx, after fixup some typo “sub %0, 4”, apply the patch.
+
+TODO:
+ - user copy/from codes are still need optimizing.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct7904.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/csky/include/asm/uaccess.h | 49 +++++++++++++++++----------------
+ arch/csky/lib/usercopy.c        |  8 ++----
+ 2 files changed, 28 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 281c81edabc6..dfb122b5e1b7 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -356,6 +356,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 	struct nct7904_data *data = dev_get_drvdata(dev);
- 	int ret, temp;
- 	unsigned int reg1, reg2, reg3;
-+	s8 temps;
+diff --git a/arch/csky/include/asm/uaccess.h b/arch/csky/include/asm/uaccess.h
+index eaa1c3403a42..60f8a4112588 100644
+--- a/arch/csky/include/asm/uaccess.h
++++ b/arch/csky/include/asm/uaccess.h
+@@ -254,7 +254,7 @@ do {								\
  
- 	switch (attr) {
- 	case hwmon_temp_input:
-@@ -461,7 +462,8 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+ extern int __get_user_bad(void);
  
- 	if (ret < 0)
- 		return ret;
--	*val = ret * 1000;
-+	temps = ret;
-+	*val = temps * 1000;
- 	return 0;
+-#define __copy_user(to, from, n)			\
++#define ___copy_to_user(to, from, n)			\
+ do {							\
+ 	int w0, w1, w2, w3;				\
+ 	asm volatile(					\
+@@ -289,31 +289,34 @@ do {							\
+ 	"       subi    %0, 4           \n"		\
+ 	"       br      3b              \n"		\
+ 	"5:     cmpnei  %0, 0           \n"  /* 1B */   \
+-	"       bf      8f              \n"		\
++	"       bf      13f             \n"		\
+ 	"       ldb     %3, (%2, 0)     \n"		\
+ 	"6:     stb     %3, (%1, 0)     \n"		\
+ 	"       addi    %2,  1          \n"		\
+ 	"       addi    %1,  1          \n"		\
+ 	"       subi    %0,  1          \n"		\
+ 	"       br      5b              \n"		\
+-	"7:     br      8f              \n"		\
++	"7:     subi	%0,  4          \n"		\
++	"8:     subi	%0,  4          \n"		\
++	"12:    subi	%0,  4          \n"		\
++	"       br      13f             \n"		\
+ 	".section __ex_table, \"a\"     \n"		\
+ 	".align   2                     \n"		\
+-	".long    2b, 7b                \n"		\
+-	".long    9b, 7b                \n"		\
+-	".long   10b, 7b                \n"		\
++	".long    2b, 13f               \n"		\
++	".long    4b, 13f               \n"		\
++	".long    6b, 13f               \n"		\
++	".long    9b, 12b               \n"		\
++	".long   10b, 8b                \n"		\
+ 	".long   11b, 7b                \n"		\
+-	".long    4b, 7b                \n"		\
+-	".long    6b, 7b                \n"		\
+ 	".previous                      \n"		\
+-	"8:                             \n"		\
++	"13:                            \n"		\
+ 	: "=r"(n), "=r"(to), "=r"(from), "=r"(w0),	\
+ 	  "=r"(w1), "=r"(w2), "=r"(w3)			\
+ 	: "0"(n), "1"(to), "2"(from)			\
+ 	: "memory");					\
+ } while (0)
+ 
+-#define __copy_user_zeroing(to, from, n)		\
++#define ___copy_from_user(to, from, n)			\
+ do {							\
+ 	int tmp;					\
+ 	int nsave;					\
+@@ -356,22 +359,22 @@ do {							\
+ 	"       addi    %1,  1          \n"		\
+ 	"       subi    %0,  1          \n"		\
+ 	"       br      5b              \n"		\
+-	"8:     mov     %3, %0          \n"		\
+-	"       movi    %4, 0           \n"		\
+-	"9:     stb     %4, (%1, 0)     \n"		\
+-	"       addi    %1, 1           \n"		\
+-	"       subi    %3, 1           \n"		\
+-	"       cmpnei  %3, 0           \n"		\
+-	"       bt      9b              \n"		\
+-	"       br      7f              \n"		\
++	"8:     stw     %3, (%1, 0)     \n"		\
++	"       subi    %0, 4           \n"		\
++	"       bf      7f              \n"		\
++	"9:     subi    %0, 8           \n"		\
++	"       bf      7f              \n"		\
++	"13:    stw     %3, (%1, 8)     \n"		\
++	"       subi    %0, 12          \n"		\
++	"       bf      7f              \n"		\
+ 	".section __ex_table, \"a\"     \n"		\
+ 	".align   2                     \n"		\
+-	".long    2b, 8b                \n"		\
++	".long    2b, 7f                \n"		\
++	".long    4b, 7f                \n"		\
++	".long    6b, 7f                \n"		\
+ 	".long   10b, 8b                \n"		\
+-	".long   11b, 8b                \n"		\
+-	".long   12b, 8b                \n"		\
+-	".long    4b, 8b                \n"		\
+-	".long    6b, 8b                \n"		\
++	".long   11b, 9b                \n"		\
++	".long   12b,13b                \n"		\
+ 	".previous                      \n"		\
+ 	"7:                             \n"		\
+ 	: "=r"(n), "=r"(to), "=r"(from), "=r"(nsave),	\
+diff --git a/arch/csky/lib/usercopy.c b/arch/csky/lib/usercopy.c
+index 647a23986fb5..3c9bd645e643 100644
+--- a/arch/csky/lib/usercopy.c
++++ b/arch/csky/lib/usercopy.c
+@@ -7,10 +7,7 @@
+ unsigned long raw_copy_from_user(void *to, const void *from,
+ 			unsigned long n)
+ {
+-	if (access_ok(from, n))
+-		__copy_user_zeroing(to, from, n);
+-	else
+-		memset(to, 0, n);
++	___copy_from_user(to, from, n);
+ 	return n;
  }
- 
+ EXPORT_SYMBOL(raw_copy_from_user);
+@@ -18,8 +15,7 @@ EXPORT_SYMBOL(raw_copy_from_user);
+ unsigned long raw_copy_to_user(void *to, const void *from,
+ 			unsigned long n)
+ {
+-	if (access_ok(to, n))
+-		__copy_user(to, from, n);
++	___copy_to_user(to, from, n);
+ 	return n;
+ }
+ EXPORT_SYMBOL(raw_copy_to_user);
 -- 
 2.25.1
 
