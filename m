@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8630BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 453E1221FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D12622228
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159041;
-	bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
+	s=default; t=1590159048;
+	bh=EttFuyWUsVA2+0so7dutokKTLb7us68VFKlExgm5ag4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mu6Lx8biBdxZCPZpm2HS6uIZ9nt831OFadAItz84HKEido48F6EnxeA3ieSzx9OLN
-	 noQIkJc+FwxLpP8GvJnmuf2bw3O1NJApeVhj4ei4tc2SIqbzH3t4LZyxjRMW7bE57x
-	 IyyhJhvI5Axaqboa+4xDO72J9dlVCZ27nYWyKr3Y=
+	b=g6RSo2RnpAQsMno4AY+8uVOucHh12IZNyR05xlQstl8cD157Ttm75bYocPD97ixr/
+	 yTsOyKd8WQpvxagyGQLOAt/b1RX5bseGsbbMGiZmhRezrNIgZiBhcz9KI8lvWcuvNT
+	 8i5lKvgQ6ArtdPY8ODvmxrZmWYO1ZTuWmXnlSjd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730766AbgEVOuj (ORCPT
+        id S1730813AbgEVOur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:50:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730747AbgEVOug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:36 -0400
+        id S1730789AbgEVOuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FFFD221FF;
-        Fri, 22 May 2020 14:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DAD522257;
+        Fri, 22 May 2020 14:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159036;
-        bh=y+OpidB/SxRmVMvmFkNAKPuLpPMPNyxElUHB7xdoPvY=;
+        s=default; t=1590159044;
+        bh=EttFuyWUsVA2+0so7dutokKTLb7us68VFKlExgm5ag4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RuInJMPTOVF9XznmWYZTCmwTua4Bopplv1N8Jmnfx6MwIKLUN/h6Uv/LM0qOZ8X5X
-         /QdSW+lOXIgDDQelxglismt4vmcCmthlyb/Vf4V8Oll5nr05hDeqRlOUhnitPGAraW
-         hZsCBLE/BWibiyUwXVhYJDhCWg0Yar0QRRkb3zRM=
+        b=TkBI0hfwRTwrp2FOBsZqCJAM5+ntnWo4MbvErzr0WbhmuXJ52XH8yz2vTs4KaVc4Z
+         VUlrUjYLKPs0cBI1PP46TeOBsvz0rBmSyUz1O97/NZZ4ATvDKIkc9hZqfS9NeYoWKo
+         HQrfkWiIH9T4XUaMdym6Gb5ncd0guMRGymrFWqiA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Han <han_mao@linux.alibaba.com>,
-        Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 33/41] csky: Fixup perf callchain unwind
-Date:   Fri, 22 May 2020 10:49:50 -0400
-Message-Id: <20200522144959.434379-33-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 41/41] drivers: net: hamradio: Fix suspicious RCU usage warning in bpqether.c
+Date:   Fri, 22 May 2020 10:49:58 -0400
+Message-Id: <20200522144959.434379-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -59,91 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Han <han_mao@linux.alibaba.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 229a0ddee1108a3f82a873e6cbbe35c92c540444 ]
+[ Upstream commit 95f59bf88bb75281cc626e283ecefdd5d5641427 ]
 
- [ 5221.974084] Unable to handle kernel paging request at virtual address 0xfffff000, pc: 0x8002c18e
- [ 5221.985929] Oops: 00000000
- [ 5221.989488]
- [ 5221.989488] CURRENT PROCESS:
- [ 5221.989488]
- [ 5221.992877] COMM=callchain_test PID=11962
- [ 5221.995213] TEXT=00008000-000087e0 DATA=00009f1c-0000a018 BSS=0000a018-0000b000
- [ 5221.999037] USER-STACK=7fc18e20  KERNEL-STACK=be204680
- [ 5221.999037]
- [ 5222.003292] PC: 0x8002c18e (perf_callchain_kernel+0x3e/0xd4)
- [ 5222.007957] LR: 0x8002c198 (perf_callchain_kernel+0x48/0xd4)
- [ 5222.074873] Call Trace:
- [ 5222.074873] [<800a248e>] get_perf_callchain+0x20a/0x29c
- [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
- [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
- [ 5222.074873] [<8009de6e>] perf_event_output_forward+0x36/0x98
- [ 5222.074873] [<800497e0>] search_exception_tables+0x20/0x44
- [ 5222.074873] [<8002cbb6>] do_page_fault+0x92/0x378
- [ 5222.074873] [<80098608>] __perf_event_overflow+0x54/0xdc
- [ 5222.074873] [<80098778>] perf_swevent_hrtimer+0xe8/0x164
- [ 5222.074873] [<8002ddd0>] update_mmu_cache+0x0/0xd8
- [ 5222.074873] [<8002c014>] user_backtrace+0x58/0xc4
- [ 5222.074873] [<8002c0b4>] perf_callchain_user+0x34/0xd0
- [ 5222.074873] [<800a2442>] get_perf_callchain+0x1be/0x29c
- [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
- [ 5222.074873] [<8009d834>] perf_output_sample+0x78c/0x858
- [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
- [ 5222.074873] [<8009de94>] perf_event_output_forward+0x5c/0x98
- [ 5222.097846]
- [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
- [ 5222.097846] [<8006c874>] hrtimer_interrupt+0x104/0x2ec
- [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
- [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
- [ 5222.097846] [<8006c770>] hrtimer_interrupt+0x0/0x2ec
- [ 5222.097846] [<8005f2e4>] __handle_irq_event_percpu+0xac/0x19c
- [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
- [ 5222.097846] [<8005f408>] handle_irq_event_percpu+0x34/0x88
- [ 5222.097846] [<8005f480>] handle_irq_event+0x24/0x64
- [ 5222.097846] [<8006218c>] handle_level_irq+0x68/0xdc
- [ 5222.097846] [<8005ec76>] __handle_domain_irq+0x56/0xa8
- [ 5222.097846] [<80450e90>] ck_irq_handler+0xac/0xe4
- [ 5222.097846] [<80029012>] csky_do_IRQ+0x12/0x24
- [ 5222.097846] [<8002a3a0>] csky_irq+0x70/0x80
- [ 5222.097846] [<800ca612>] alloc_set_pte+0xd2/0x238
- [ 5222.097846] [<8002ddd0>] update_mmu_cache+0x0/0xd8
- [ 5222.097846] [<800a0340>] perf_event_exit_task+0x98/0x43c
+This patch fixes the following warning:
+=============================
+WARNING: suspicious RCU usage
+5.7.0-rc5-next-20200514-syzkaller #0 Not tainted
+-----------------------------
+drivers/net/hamradio/bpqether.c:149 RCU-list traversed in non-reader section!!
 
-The original fp check doesn't base on the real kernal stack region.
-Invalid fp address may cause kernel panic.
+Since rtnl lock is held, pass this cond in list_for_each_entry_rcu().
 
-Signed-off-by: Mao Han <han_mao@linux.alibaba.com>
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Reported-by: syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/kernel/perf_callchain.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/hamradio/bpqether.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/csky/kernel/perf_callchain.c b/arch/csky/kernel/perf_callchain.c
-index e68ff375c8f8..ab55e98ee8f6 100644
---- a/arch/csky/kernel/perf_callchain.c
-+++ b/arch/csky/kernel/perf_callchain.c
-@@ -12,12 +12,17 @@ struct stackframe {
- 
- static int unwind_frame_kernel(struct stackframe *frame)
+diff --git a/drivers/net/hamradio/bpqether.c b/drivers/net/hamradio/bpqether.c
+index fbea6f232819..e2ad3c2e8df5 100644
+--- a/drivers/net/hamradio/bpqether.c
++++ b/drivers/net/hamradio/bpqether.c
+@@ -127,7 +127,8 @@ static inline struct net_device *bpq_get_ax25_dev(struct net_device *dev)
  {
--	if (kstack_end((void *)frame->fp))
-+	unsigned long low = (unsigned long)task_stack_page(current);
-+	unsigned long high = low + THREAD_SIZE;
-+
-+	if (unlikely(frame->fp < low || frame->fp > high))
- 		return -EPERM;
--	if (frame->fp & 0x3 || frame->fp < TASK_SIZE)
-+
-+	if (kstack_end((void *)frame->fp) || frame->fp & 0x3)
- 		return -EPERM;
+ 	struct bpqdev *bpq;
  
- 	*frame = *(struct stackframe *)frame->fp;
-+
- 	if (__kernel_text_address(frame->lr)) {
- 		int graph = 0;
- 
+-	list_for_each_entry_rcu(bpq, &bpq_devices, bpq_list) {
++	list_for_each_entry_rcu(bpq, &bpq_devices, bpq_list,
++				lockdep_rtnl_is_held()) {
+ 		if (bpq->ethdev == dev)
+ 			return bpq->axdev;
+ 	}
 -- 
 2.25.1
 
