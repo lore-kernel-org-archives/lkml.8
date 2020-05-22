@@ -2,99 +2,141 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85574C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D06C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2A5206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590147399;
-	bh=z/6OXOepRElS/C2Gkk6RRZeDF9+60BoN0+lQKMHv4sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G3HZP1l39MI/pzux3jb7+k1qk/wNUcTHtsIwF4pHc3GiGBa7xrF0D0SRqyNsdWS9o
-	 W/T8bqoeM+Dr+KNKbYzlHj2A0DX9aGbRJ/A6UyREfj/b0T31X35NDhAwfYcSdYjPo+
-	 DNgrEBBWXQ5WXB6SQnwYO8wV2iuq70Kc6L0DeKOc=
+	by mail.kernel.org (Postfix) with ESMTP id 2D9B7206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbgEVLgi (ORCPT
+        id S1729929AbgEVLgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbgEVLgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:36:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6CF8206C3;
-        Fri, 22 May 2020 11:36:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590147397;
-        bh=z/6OXOepRElS/C2Gkk6RRZeDF9+60BoN0+lQKMHv4sc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SViwwqlJ87aevdHn4RYwBdrJnJkpk2rgiCE7e168UaD8MlGXvEupOGhOH7ejYfrbJ
-         N3kZOSYajFR+FWCWBWyZDHjCeSTW6pHxtLB0BJj1sTzEGGQE0HGaQz/KalAcMtdjVw
-         a7j7/Lewv8pBtYtgHXcvbty7bFHiOt4Q0y6gEdzA=
-Date:   Fri, 22 May 2020 12:36:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     dillon.minfei@gmail.com
-Cc:     robh+dt@kernel.org, p.zabel@pengutronix.de,
-        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
-        alexandre.torgue@st.com, thierry.reding@gmail.com,
-        sam@ravnborg.org, airlied@linux.ie, daniel@ffwll.ch,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v4 3/8] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
- support for stm32f4
-Message-ID: <20200522113634.GE5801@sirena.org.uk>
-References: <1589800165-3271-1-git-send-email-dillon.minfei@gmail.com>
- <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
+        Fri, 22 May 2020 07:36:45 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:49399 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728465AbgEVLgp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:36:45 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04MBXMmv015022;
+        Fri, 22 May 2020 14:33:22 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
+        id 47111639C0; Fri, 22 May 2020 14:33:22 +0300 (IDT)
+From:   Tali Perry <tali.perry1@gmail.com>
+To:     ofery@google.com, brendanhiggins@google.com,
+        avifishman70@gmail.com, tmaimon77@gmail.com, kfting@nuvoton.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        robh+dt@kernel.org, wsa@the-dreams.de,
+        andriy.shevchenko@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v13 0/3] i2c: npcm7xx: add NPCM i2c controller driver
+Date:   Fri, 22 May 2020 14:33:09 +0300
+Message-Id: <20200522113312.181413-1-tali.perry1@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HeFlAV5LIbMFYYuh"
-Content-Disposition: inline
-In-Reply-To: <1589800165-3271-4-git-send-email-dillon.minfei@gmail.com>
-X-Cookie: C for yourself.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set adds i2c controller support 
+for the Nuvoton NPCM Baseboard Management Controller (BMC).
 
---HeFlAV5LIbMFYYuh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+NPCM7xx includes 16 I2C controllers. This driver operates the controller.
+This module also includes a slave mode.
 
-On Mon, May 18, 2020 at 07:09:20PM +0800, dillon.minfei@gmail.com wrote:
+---
+v13 -> v12:
+	- Fix yaml example. Issue found by an updated dt_binding_check.
+	- remove double spacing. indentation issues.
+	- remove ifdef DEBUG_FS around __init and __exit.
+	- debugfs and counters are always present in bus struct.
+	- Fix npcm_i2c_write_fifo_slave flow.
+	- Remove version number.
+v12 -> v11:
+	- Fix according to maintainer comments.
+	- debugfs simplified (usedebugfs_create_u64).
+	- slave read fifo split from master read fifo.
+v11 -> v10:
+	- Fix according to maintainer comments.
+	- Init clk simplified.
+	- Comments in c99
+	- Split master irq function.
+	- debugfs not mandatory.
+	- yaml file fix.
 
-> 2, use stm32 spi's "In full-duplex (BIDIMODE=0 and RXONLY=0)", as tx_buf is
-> null, we must add dummy data sent out before read data.
-> so, add stm32f4_spi_tx_dummy() to handle this situation.
+v10 -> v9:
+	- Fix according to maintainer comments.
+	- binding file changed to yaml format.
+	- Shorten recovery flow.
+	- Add support for health monitoring counters.
 
-There are flags SPI_CONTROLLER_MUST_TX and SPI_CONTROLLER_MUST_RX flags
-that the driver can set if it needs to, no need to open code this in the
-driver.
+v9 -> v8:
+	- Fix according to maintainer comments.
+	- Split lines of iowrite..(ioread..) to separate lines.
+	- Use readx_poll_timeout_atomic
+	- resolve various style issues.
+	 
+v8 -> v7:
+	- Split to two commits, one for master, one for slave.
+	- Rename smb to i2c.
+	- Remove global vars.
 
---HeFlAV5LIbMFYYuh
-Content-Type: application/pgp-signature; name="signature.asc"
+v7 -> v6:
+	- Rebased on Linux 5.4-rc8  (was Linux 5.4-rc7).
+	- Fix issue found by kbuild test robot (redundant include).
+	- Note: left a warning related to fall through. This fall through is
+	  intentional.
+	
+v6 -> v5:
+	- Update documentation
 
------BEGIN PGP SIGNATURE-----
+v5 -> v4:
+	- support recovery
+	- master-slave switch support needed for IPMB
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7HuUEACgkQJNaLcl1U
-h9DV4Qf/SihsJbdjpA046b8/NxOUN0XzKoBRryG9nf4DC4x3Fpb0tscXdk2/FeTd
-JceAquzFzEEQ49acoXxDA2UQXUMtmlEiGfbWhNHS0Jwo9JVU3XPHLG5d+nX+sudU
-L+O+LPQB61KcC2OQniMIjgApMjvyj2ePQY0lfjl1jnAb3PLHvlpaUt5Mjp8P0iVB
-N2skbxjLqD/nDEDYXV+S0Jp689oOuNDJ/zeNk3ds99vhHEc55yvZxvZB8OcWNuop
-AJ94iVaqJX+b7qak3V7Ts6Hb6GgkNvr/78bWpjGK5eB+a00Ia0l8yP9svyYdczOK
-GS605iD0geP72ehzZUhOjifzaJ7rgg==
-=XMsa
------END PGP SIGNATURE-----
+v4 -> v3:
+	- typo on cover letter.
 
---HeFlAV5LIbMFYYuh--
+v3 -> v2:
+	- fix dt binding: compatible name: omit "bus"
+
+v2 -> v1:
+	- run check patch in strict mode.
+	- use linux crc.
+	- define regs in constant offset without base.
+	- remove debug prints.
+	- no declarations for local functions.
+	
+v1: initial version
+
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+---
+Tali Perry (3):
+  dt-bindings: i2c: npcm7xx: add NPCM I2C controller documentation
+  i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver
+  i2c: npcm7xx: Add support for slave mode for Nuvoton NPCM BMC I2C
+    controller driver.
+
+ .../bindings/i2c/nuvoton,npcm7xx-i2c.yaml     |   60 +
+ drivers/i2c/busses/Kconfig                    |    9 +
+ drivers/i2c/busses/Makefile                   |    1 +
+ drivers/i2c/busses/i2c-npcm7xx.c              | 2411 +++++++++++++++++
+ 4 files changed, 2481 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/nuvoton,npcm7xx-i2c.yaml
+ create mode 100644 drivers/i2c/busses/i2c-npcm7xx.c
+
+
+base-commit: b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce
+-- 
+2.22.0
+
