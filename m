@@ -2,105 +2,171 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 133732065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84162065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rORpKnmy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oy8jYKu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgEVKMe (ORCPT
+        id S1728672AbgEVKN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:12:34 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:25166 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728281AbgEVKMd (ORCPT
+        Fri, 22 May 2020 06:13:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21695 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728592AbgEVKN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:12:33 -0400
-X-UUID: aa7538676fed4a19805128da08b1b442-20200522
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6VbmeS/yrB1shYHBD+b0ArTurRXYrmNDPa81/IwQ/tI=;
-        b=rORpKnmyumfflCfytKRhmTVJuOy37KS2lD8cDOBpUqY+wnPY2vyfA2ykKfT5mf2A+X1gqZnpTFpVToJy2FBBiKVq2Zo71jMj/70kcdFcwmol6zDWei2libtTVIoeHsKl3/oiu96t94bSBQVHcgHCQU2Xcm9n3I3Tzx7Ep5jP0lw=;
-X-UUID: aa7538676fed4a19805128da08b1b442-20200522
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1393466909; Fri, 22 May 2020 18:12:27 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 22 May
- 2020 18:12:25 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Fri, 22 May 2020 18:12:24 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 22 May 2020 06:13:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590142404;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jmmhgCWLlRr4VrUoOVJYV5wmsB/OPdH6k2kU0IKZExE=;
+        b=Oy8jYKu6jLJRAgEsEs0JF5GvwO0sliwJBGI0poo53izCdWKgyzqWyS7gLIJNfZLQB/9SA1
+        Px+xnMhUK+OLurq5xdUbCf9wKLqDdwIvG9wnW+2Th/iMYiQhP7ZykrzsDBOJKMQzgwZMV9
+        J7gO5MP8Ry68YYPCTg5irg0mXtH/CEE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-kwhSc4EHP92KGJQ6eq9sSg-1; Fri, 22 May 2020 06:13:20 -0400
+X-MC-Unique: kwhSc4EHP92KGJQ6eq9sSg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA24C8015CF;
+        Fri, 22 May 2020 10:13:17 +0000 (UTC)
+Received: from krava (unknown [10.40.195.217])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 55C413420A;
+        Fri, 22 May 2020 10:13:12 +0000 (UTC)
+Date:   Fri, 22 May 2020 12:13:11 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH] drm/mediatek: dsi: fix scrolling of panel with small hfp or hbp
-Date:   Fri, 22 May 2020 18:12:25 +0800
-Message-ID: <20200522101225.62571-1-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 0/7] Share events between metrics
+Message-ID: <20200522101311.GA404187@krava>
+References: <20200520182011.32236-1-irogers@google.com>
+ <20200521114325.GT157452@krava>
+ <20200521172235.GD14034@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 9EFD99E22082E0674480556A643F1BD34B12751A45F5F49297FAC1342418AC822000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521172235.GD14034@kernel.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SWYgcGFuZWwgaGFzIHRvbyBzbWFsbCBoZnAgb3IgaGJwLCBob3Jpem9udGFsX2Zyb250cG9yY2hf
-Ynl0ZSBvcg0KaG9yaXpvbnRhbF9iYWNrcG9yY2hfYnl0ZSBtYXkgYmVjb21lIHZlcnkgc21hbGwg
-dmFsdWUgb3IgbmVnYXRpdmUNCnZhbHVlLiBUaGlzIHBhdGNoIGFkanVzdHMgdGhlaXIgdmFsdWVz
-IHNvIHRoYXQgdGhleSBhcmUgZ3JlYXRlcg0KdGhhbiBtaW5pbXVtIHZhbHVlIGFuZCBrZWVwIHRv
-dGFsIG9mIHRoZW0gdW5jaGFuZ2VkLg0KDQpTaWduZWQtb2ZmLWJ5OiBKaXRhbyBTaGkgPGppdGFv
-LnNoaUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rz
-aS5jIHwgMTggKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlv
-bnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jDQppbmRleCAwZWRlNjk4MzBhOWQu
-LmFlYmFhZmQ5MGNlYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHNpLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMNCkBAIC0xNDgs
-NiArMTQ4LDkgQEANCiAJKHR5cGUgPT0gTUlQSV9EU0lfR0VORVJJQ19SRUFEX1JFUVVFU1RfMl9Q
-QVJBTSkgfHwgXA0KIAkodHlwZSA9PSBNSVBJX0RTSV9EQ1NfUkVBRCkpDQogDQorI2RlZmluZSBN
-SU5fSEZQX0JZVEUJCTB4MDINCisjZGVmaW5lIE1JTl9IQlBfQllURQkJMHgwMg0KKw0KIHN0cnVj
-dCBtdGtfcGh5X3RpbWluZyB7DQogCXUzMiBscHg7DQogCXUzMiBkYV9oc19wcmVwYXJlOw0KQEAg
-LTQ1MCw2ICs0NTMsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKHN0
-cnVjdCBtdGtfZHNpICpkc2kpDQogCXUzMiBob3Jpem9udGFsX3N5bmNfYWN0aXZlX2J5dGU7DQog
-CXUzMiBob3Jpem9udGFsX2JhY2twb3JjaF9ieXRlOw0KIAl1MzIgaG9yaXpvbnRhbF9mcm9udHBv
-cmNoX2J5dGU7DQorCXMzMiBzaWduZWRfaGZwX2J5dGUsIHNpZ25lZF9oYnBfYnl0ZTsNCiAJdTMy
-IGRzaV90bXBfYnVmX2JwcCwgZGF0YV9waHlfY3ljbGVzOw0KIAlzdHJ1Y3QgbXRrX3BoeV90aW1p
-bmcgKnRpbWluZyA9ICZkc2ktPnBoeV90aW1pbmc7DQogDQpAQCAtNTE5LDYgKzUyMywyMCBAQCBz
-dGF0aWMgdm9pZCBtdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKHN0cnVjdCBtdGtfZHNpICpkc2kp
-DQogCQl9DQogCX0NCiANCisJc2lnbmVkX2hmcF9ieXRlID0gKHMzMilob3Jpem9udGFsX2Zyb250
-cG9yY2hfYnl0ZTsNCisJc2lnbmVkX2hicF9ieXRlID0gKHMzMilob3Jpem9udGFsX2JhY2twb3Jj
-aF9ieXRlOw0KKw0KKwlpZiAoc2lnbmVkX2hmcF9ieXRlICsgc2lnbmVkX2hicF9ieXRlIDwgTUlO
-X0hGUF9CWVRFICsgTUlOX0hCUF9CWVRFKSB7DQorCQlEUk1fV0FSTigiQ2FsY3VsYXRlZCBoZnBf
-Ynl0ZSBhbmQgaGJwX2J5dGUgYXJlIHRvbyBzbWFsbCwgIg0KKwkJCSAicGFuZWwgbWF5IG5vdCB3
-b3JrIHByb3Blcmx5LlxuIik7DQorCX0gZWxzZSBpZiAoc2lnbmVkX2hmcF9ieXRlIDwgTUlOX0hG
-UF9CWVRFKSB7DQorCQlob3Jpem9udGFsX2Zyb250cG9yY2hfYnl0ZSA9IE1JTl9IRlBfQllURTsN
-CisJCWhvcml6b250YWxfYmFja3BvcmNoX2J5dGUgLT0gTUlOX0hGUF9CWVRFIC0gc2lnbmVkX2hm
-cF9ieXRlOw0KKwl9IGVsc2UgaWYgKHNpZ25lZF9oYnBfYnl0ZSA8IE1JTl9IQlBfQllURSkgew0K
-KwkJaG9yaXpvbnRhbF9mcm9udHBvcmNoX2J5dGUgLT0gTUlOX0hCUF9CWVRFIC0gc2lnbmVkX2hi
-cF9ieXRlOw0KKwkJaG9yaXpvbnRhbF9iYWNrcG9yY2hfYnl0ZSA9IE1JTl9IQlBfQllURTsNCisJ
-fQ0KKw0KIAl3cml0ZWwoaG9yaXpvbnRhbF9zeW5jX2FjdGl2ZV9ieXRlLCBkc2ktPnJlZ3MgKyBE
-U0lfSFNBX1dDKTsNCiAJd3JpdGVsKGhvcml6b250YWxfYmFja3BvcmNoX2J5dGUsIGRzaS0+cmVn
-cyArIERTSV9IQlBfV0MpOw0KIAl3cml0ZWwoaG9yaXpvbnRhbF9mcm9udHBvcmNoX2J5dGUsIGRz
-aS0+cmVncyArIERTSV9IRlBfV0MpOw0KLS0gDQoyLjI1LjENCg==
+On Thu, May 21, 2020 at 02:22:35PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, May 21, 2020 at 01:43:25PM +0200, Jiri Olsa escreveu:
+> > On Wed, May 20, 2020 at 11:20:04AM -0700, Ian Rogers wrote:
+> > 
+> > SNIP
+> > 
+> > > There are 5 out of 12 metric groups where no events are shared, such
+> > > as Power, however, disabling grouping of events always reduces the
+> > > number of events.
+> > > 
+> > > The result for Memory_BW needs explanation:
+> > > 
+> > > Metric group: Memory_BW
+> > >  - No merging (old default, now --metric-no-merge): 9
+> > >  - Merging over metrics (new default)             : 5
+> > >  - No event groups and merging (--metric-no-group): 11
+> > > 
+> > > Both with and without merging the groups fail to be set up and so the
+> > > event counts here are for broken metrics. The --metric-no-group number
+> > > is accurate as all the events are scheduled. Ideally a constraint
+> > > would be added for these metrics in the json code to avoid grouping.
+> > > 
+> > > v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
+> > > missing comma with metric lists (reported-by Jiri Olsa
+> > > <jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
+> > > (suggested-by Jiri Olsa).
+> > 
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
+> Applied and pushed to tmp.perf/core, will move to perf/core as soon as
+> testing finishes,
+
+I checked tmp.perf/core and I'm getting segfault for 'perf test expr'
+
+	 7: Simple expression parser                              :
+	Program received signal SIGSEGV, Segmentation fault.
+	0x000000000067841e in hashmap_find_entry (map=0x7fffffffd0c0, key=0xc83b30, hash=9893851511679796638, pprev=0x0, entry=0x7fffffffc658) at hashmap.c:131
+	131             for (prev_ptr = &map->buckets[hash], cur = *prev_ptr;
+	(gdb) bt
+	#0  0x000000000067841e in hashmap_find_entry (map=0x7fffffffd0c0, key=0xc83b30, hash=9893851511679796638, pprev=0x0, entry=0x7fffffffc658) at hashmap.c:131
+	#1  0x000000000067853a in hashmap__insert (map=0x7fffffffd0c0, key=0xc83b30, value=0x0, strategy=HASHMAP_SET, old_key=0x7fffffffc718, 
+	    old_value=0x7fffffffc710) at hashmap.c:160
+	#2  0x00000000005d3209 in hashmap__set (map=0x7fffffffd0c0, key=0xc83b30, value=0x0, old_key=0x7fffffffc718, old_value=0x7fffffffc710)
+	    at /home/jolsa/kernel/linux-perf/tools/perf/util/hashmap.h:107
+	#3  0x00000000005d3386 in expr__add_id (ctx=0x7fffffffd0c0, name=0xc83b30 "FOO", val=0) at util/expr.c:45
+	#4  0x00000000005d27ee in expr_parse (final_val=0x0, ctx=0x7fffffffd0c0, scanner=0xc87990) at util/expr.y:63
+	#5  0x00000000005d35b7 in __expr__parse (val=0x0, ctx=0x7fffffffd0c0, expr=0x75a84b "FOO + BAR + BAZ + BOZO", start=259, runtime=1) at util/expr.c:102
+	#6  0x00000000005d36c6 in expr__find_other (expr=0x75a84b "FOO + BAR + BAZ + BOZO", one=0x75a791 "FOO", ctx=0x7fffffffd0c0, runtime=1) at util/expr.c:121
+	#7  0x00000000004e3aaf in test__expr (t=0xa7bd40 <generic_tests+384>, subtest=-1) at tests/expr.c:55
+	#8  0x00000000004b5651 in run_test (test=0xa7bd40 <generic_tests+384>, subtest=-1) at tests/builtin-test.c:393
+	#9  0x00000000004b5787 in test_and_print (t=0xa7bd40 <generic_tests+384>, force_skip=false, subtest=-1) at tests/builtin-test.c:423
+	#10 0x00000000004b61c4 in __cmd_test (argc=1, argv=0x7fffffffd7f0, skiplist=0x0) at tests/builtin-test.c:628
+	#11 0x00000000004b6911 in cmd_test (argc=1, argv=0x7fffffffd7f0) at tests/builtin-test.c:772
+	#12 0x00000000004e977b in run_builtin (p=0xa7eee8 <commands+552>, argc=3, argv=0x7fffffffd7f0) at perf.c:312
+	#13 0x00000000004e99e8 in handle_internal_command (argc=3, argv=0x7fffffffd7f0) at perf.c:364
+	#14 0x00000000004e9b2f in run_argv (argcp=0x7fffffffd64c, argv=0x7fffffffd640) at perf.c:408
+	#15 0x00000000004e9efb in main (argc=3, argv=0x7fffffffd7f0) at perf.c:538
+
+attached patch fixes it for me, but I'm not sure this
+should be necessary
+
+jirka
+
+
+---
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 1cb02ca2b15f..21693fe516c1 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -52,6 +52,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	TEST_ASSERT_VAL("missing operand", ret == -1);
+ 
+ 	expr__ctx_clear(&ctx);
++	expr__ctx_init(&ctx);
+ 	TEST_ASSERT_VAL("find other",
+ 			expr__find_other("FOO + BAR + BAZ + BOZO", "FOO",
+ 					 &ctx, 1) == 0);
+@@ -64,6 +65,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 						    (void **)&val_ptr));
+ 
+ 	expr__ctx_clear(&ctx);
++	expr__ctx_init(&ctx);
+ 	TEST_ASSERT_VAL("find other",
+ 			expr__find_other("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@",
+ 					 NULL, &ctx, 3) == 0);
+
 
