@@ -2,129 +2,160 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F4AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D006A20756
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590122406;
-	bh=t23ctuDSgz2OOgMg3dDJXiz8kK2YLj/V3oe4CBnrEqg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=X0F8XYhP6EDNTozgEOI/0y+qUhW1QscMeSFfUelPeDla/j9OSFHJzGLGnLsyBf6Zu
-	 dPC5bTafZXyAZ3qEtnz1twnjtnWQR6yQhokSXWCqF+pkuK346Jv3yKa/RXhOdu/+XP
-	 FiM04xnvfFqcHjM8Qh/brDjAREX0viQfA9Aqe6sg=
+	by mail.kernel.org (Postfix) with ESMTP id 3C31C20663
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 04:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgEVEkG (ORCPT
+        id S1727901AbgEVEuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 00:40:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgEVEkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 00:40:05 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55D32068D;
-        Fri, 22 May 2020 04:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590122405;
-        bh=t23ctuDSgz2OOgMg3dDJXiz8kK2YLj/V3oe4CBnrEqg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hSYLl4INY8Kb9Gacswopf9wkJZjdZLl/1YUqQOZcjjJtVJQwDvhugF53amC9B3zvF
-         5RO11pEuGGCZxDcfDVdFKERGc2DPus7SqENNfXrU+l2oElv8i+6qvO/YOX2J2pzd2i
-         yH/YZQTRyFif02eK8n1rfeqkh13sTIuT9WELXp9M=
-Date:   Fri, 22 May 2020 06:39:58 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh@kernel.org>,
+        Fri, 22 May 2020 00:50:10 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:20408 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726286AbgEVEuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 00:50:09 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgDHz4vEWcdejwXvAA--.20232S4;
+        Fri, 22 May 2020 12:49:11 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH 10/14] docs: move locking-specific documenta to locking/
- directory
-Message-ID: <20200522063958.7e961a98@coco.lan>
-In-Reply-To: <20200515120607.73ee1278@lwn.net>
-References: <cover.1588345503.git.mchehab+huawei@kernel.org>
-        <dd833a10bbd0b2c1461d78913f5ec28a7e27f00b.1588345503.git.mchehab+huawei@kernel.org>
-        <20200515120607.73ee1278@lwn.net>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Jakub Kicinski <kuba@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Guy Mishol <guym@ti.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Maital Hahn <maitalm@ti.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Tony Lindgren <tony@atomide.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] wlcore: fix runtime pm imbalance in wlcore_irq_locked
+Date:   Fri, 22 May 2020 12:49:04 +0800
+Message-Id: <20200522044906.29564-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgDHz4vEWcdejwXvAA--.20232S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFW7tr1fur17Kry5CrWkCrg_yoW5Xr1rpa
+        yIvan2yr4kGF1UWFWUAa1kXa4Sg3WxKFZI9F48G34Syrs0y3s8Zr10qasxtFWrK3ykAFW3
+        uF43tFyI9Fyjy37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y
+        6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW8XwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
+        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8_MaUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0IBlZdtOQJOAAAsr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 15 May 2020 12:06:07 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+When wlcore_fw_status() returns an error code, a pairing
+runtime PM usage counter decrement is needed to keep the
+counter balanced. It's the same for all error paths after
+wlcore_fw_status().
 
-> On Fri,  1 May 2020 17:37:54 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
->=20
-> > Several files under Documentation/*.txt describe some type of
-> > locking API. Move them to locking/ subdir and add to the
-> > locking/index.rst index file.
-> >=20
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org> =20
->=20
-> I've applied this, but it really seems like this belongs in the core-api
-> manual someday.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/net/wireless/ti/wlcore/main.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-Makes sense.
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index f140f7d7f553..fd3608223f64 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -548,7 +548,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 
+ 		ret = wlcore_fw_status(wl, wl->fw_status);
+ 		if (ret < 0)
+-			goto out;
++			goto err_ret;
+ 
+ 		wlcore_hw_tx_immediate_compl(wl);
+ 
+@@ -565,7 +565,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 			ret = -EIO;
+ 
+ 			/* restarting the chip. ignore any other interrupt. */
+-			goto out;
++			goto err_ret;
+ 		}
+ 
+ 		if (unlikely(intr & WL1271_ACX_SW_INTR_WATCHDOG)) {
+@@ -575,7 +575,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 			ret = -EIO;
+ 
+ 			/* restarting the chip. ignore any other interrupt. */
+-			goto out;
++			goto err_ret;
+ 		}
+ 
+ 		if (likely(intr & WL1271_ACX_INTR_DATA)) {
+@@ -583,7 +583,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 
+ 			ret = wlcore_rx(wl, wl->fw_status);
+ 			if (ret < 0)
+-				goto out;
++				goto err_ret;
+ 
+ 			/* Check if any tx blocks were freed */
+ 			spin_lock_irqsave(&wl->wl_lock, flags);
+@@ -596,7 +596,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 				 */
+ 				ret = wlcore_tx_work_locked(wl);
+ 				if (ret < 0)
+-					goto out;
++					goto err_ret;
+ 			} else {
+ 				spin_unlock_irqrestore(&wl->wl_lock, flags);
+ 			}
+@@ -604,7 +604,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 			/* check for tx results */
+ 			ret = wlcore_hw_tx_delayed_compl(wl);
+ 			if (ret < 0)
+-				goto out;
++				goto err_ret;
+ 
+ 			/* Make sure the deferred queues don't get too long */
+ 			defer_count = skb_queue_len(&wl->deferred_tx_queue) +
+@@ -617,14 +617,14 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 			wl1271_debug(DEBUG_IRQ, "WL1271_ACX_INTR_EVENT_A");
+ 			ret = wl1271_event_handle(wl, 0);
+ 			if (ret < 0)
+-				goto out;
++				goto err_ret;
+ 		}
+ 
+ 		if (intr & WL1271_ACX_INTR_EVENT_B) {
+ 			wl1271_debug(DEBUG_IRQ, "WL1271_ACX_INTR_EVENT_B");
+ 			ret = wl1271_event_handle(wl, 1);
+ 			if (ret < 0)
+-				goto out;
++				goto err_ret;
+ 		}
+ 
+ 		if (intr & WL1271_ACX_INTR_INIT_COMPLETE)
+@@ -635,6 +635,7 @@ static int wlcore_irq_locked(struct wl1271 *wl)
+ 			wl1271_debug(DEBUG_IRQ, "WL1271_ACX_INTR_HW_AVAILABLE");
+ 	}
+ 
++err_ret:
+ 	pm_runtime_mark_last_busy(wl->dev);
+ 	pm_runtime_put_autosuspend(wl->dev);
+ 
+-- 
+2.17.1
 
-Well, right now, it is at the same level as core-api, just below it:
-
-	Kernel API documentation
-	------------------------
-
-	These books get into the details of how specific kernel subsystems work
-	from the point of view of a kernel developer.  Much of the information here
-	is taken directly from the kernel source, with supplemental material added
-	as needed (or at least as we managed to add it =E2=80=94 probably *not* al=
-l that is
-	needed).
-=09
-	.. toctree::
-	   :maxdepth: 2
-=09
-	   driver-api/index
-	   core-api/index
-	   locking/index
-
-Not too bad.
-
-Btw, there are other doc sets that could also fit into the core-api, like:
-
-	...
-	   accounting/index
-	...
-	   security/index
-	...
-	   bpf/index
-	...
-	   scheduler/index
-
-while most of the rest should likely be inside driver-api.
-
-Some care should be taken when moving stuff, though: there is a
-reason why they weren't moved to driver-api in the first place:
-they may contain stuff for the admin guide mixed there.
-
-Thanks,
-Mauro
