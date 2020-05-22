@@ -2,132 +2,171 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B088C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AFAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 170E0206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UELXjqvx"
+	by mail.kernel.org (Postfix) with ESMTP id 67731206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590147146;
+	bh=btO8dneIHmfPGOmIgBvqxryNd/NmrdBoDkXLictJqrk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UdfKjP58L7m2zX+O+7BNr9ItZFcnca5HJV0vORs51b9+pHA+DJ01w5FRI6hFcky9d
+	 qYfCrpgvwkqxzQ0GjPRCt2NpQPsInlF64BG9j2aziOvKw40cesQ2ZAAOHSKWoLH5zk
+	 +3Ffv4KXMnwpc2wBOmuIaavnRbEWgipQekA6Z4Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgEVLcH (ORCPT
+        id S1729715AbgEVLcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:32:07 -0400
-Received: from ozlabs.org ([203.11.71.1]:43707 "EHLO ozlabs.org"
+        Fri, 22 May 2020 07:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgEVLcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:32:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728281AbgEVLcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:32:24 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49T48N6qQhz9sSW;
-        Fri, 22 May 2020 21:32:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590147125;
-        bh=urgcefr/YlkmkNAFUGmo68RW1ttwHwPL72RDkV/bRug=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UELXjqvxyjEzBQEmziHCTCjvFZZXw3i1dyiYfnwYTU7HH0c+SjOWJxFKvAthJAIRR
-         sDRhEy+YQ+7+01HOZb8wvlKoWxN7BdV7tR/hTZ102qbSTzMO9xvKL/kKoBFY/y6ObH
-         J64pNUcsOsz8y0tGvCUpwZiql4kXz0x5O8fTFBa32qTpmHkM3cdO+l85CvmigQRTop
-         VYOgfrjKW3qDBBeKAbfN521oG9U0s1wa1NVjj2CcFC3giyyrTZyAjtQj9iGLHfzU0I
-         Pz2PAv+PJYMKhT0QC/qIUhmWx6ungZxtPiZwImGYIlCOu3UJ+JvjsOkNiEgL6D+q8M
-         Yhqxv1qoP4muw==
-Date:   Fri, 22 May 2020 21:32:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: build failure after merge of the block tree
-Message-ID: <20200522213202.38ebe825@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id A756420825;
+        Fri, 22 May 2020 11:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590147143;
+        bh=btO8dneIHmfPGOmIgBvqxryNd/NmrdBoDkXLictJqrk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Rfh4SEbAEPtCnYXpk3OHCC/o+2FL9NyR+ypO4n1PpNFyghj99NyQgvlG0klOuTppN
+         sKe3uLE3Kz5n12u4Ni0xxikCCePD6wLj+NKO76W71TNMm0wbTCJJNdkiGIqjmd9Dr/
+         m0YsyCiXUxEUxbPEDwpSMKbnZ+40SMwiFOPeXDSw=
+Received: by mail-io1-f50.google.com with SMTP id d5so1478475ios.9;
+        Fri, 22 May 2020 04:32:23 -0700 (PDT)
+X-Gm-Message-State: AOAM530FMj5UZFelj7Un0Vlv2tFXurdDubcQlXJ3Z/zgdGNKANG1wLkP
+        EvEiLGYOzRNWU0f6y9gd2OeuQl8/eDxxYZqoxSg=
+X-Google-Smtp-Source: ABdhPJziirz1xLPrEZkdc4B9jJ2JPP+w7tJOZ9gU38sn1sSwxAM61EfRS+w88yUqIIEfub5x40aA+oT5SbrTfmAr6fI=
+X-Received: by 2002:a5d:81d7:: with SMTP id t23mr1676129iol.142.1590147142933;
+ Fri, 22 May 2020 04:32:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UtxBkTtJCi6+=X/EUuCRSf3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
+ <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
+ <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com> <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
+ <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com> <e8850c9b-965a-9ed4-fb22-f41de5f72b60@nvidia.com>
+In-Reply-To: <e8850c9b-965a-9ed4-fb22-f41de5f72b60@nvidia.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 22 May 2020 13:32:11 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGFM020jUTh+D4dcyy2jxoDBB=FHgozRC4R3w_mpHETJQ@mail.gmail.com>
+Message-ID: <CAMj1kXGFM020jUTh+D4dcyy2jxoDBB=FHgozRC4R3w_mpHETJQ@mail.gmail.com>
+Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
+To:     Nikhil Mahale <nmahale@nvidia.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/UtxBkTtJCi6+=X/EUuCRSf3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, 22 May 2020 at 13:15, Nikhil Mahale <nmahale@nvidia.com> wrote:
+>
+> On 5/18/20 6:21 PM, Ard Biesheuvel wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > On Mon, 18 May 2020 at 06:25, Nikhil Mahale <nmahale@nvidia.com> wrote:
+> >>
+> >> On 5/13/20 7:56 PM, Nikhil Mahale wrote:
+> >>> On 3/20/20 3:16 AM, Michael Kelley wrote:
+> >>>> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
+> >>>>>
+> >>>>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
+> >>>>>> From: Arnd Bergmann <arnd@arndb.de>
+> >>>>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+> >>>>>>>>
+> >>>>>>>> The Hyper-V frame buffer driver may be built as a module, and
+> >>>>>>>> it needs access to screen_info. So export screen_info.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> >>>>>>>
+> >>>>>>> Is there any chance of using a more modern KMS based driver for the screen
+> >>>>>>> than the old fbdev subsystem? I had hoped to one day completely remove
+> >>>>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
+> >>>>>>> architectures.
+> >>>>>>>
+> >>>>>>
+> >>>>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
+> >>>>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
+> >>>>>>
+> >>>>>> I'm not knowledgeable about video/graphics drivers, but when you
+> >>>>>> say "a more modern KMS based driver", are you meaning one based on
+> >>>>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
+> >>>>>> Are there any drivers that would be a good pattern to look at?
+> >>>>>
+> >>>>> It used to be a lot harder to write a DRM driver compared to an fbdev
+> >>>>> driver, but this has changed to the opposite over the years.
+> >>>>>
+> >>>>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
+> >>>>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
+> >>>>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
+> >>>>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
+> >>>>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
+> >>>>>
+> >>>>
+> >>>> Thanks for the pointers, especially for the other hypervisors.
+> >>>>
+> >>> Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
+> >>> I had configured by email client incorrectly to reply.
+> >>>
+> >>> screen_info is still useful with a modern KMS-based driver.  It exposes
+> >>> the mode parameters that the GOP driver chose.  This information is
+> >>> needed to implement seamless or glitchless boot, by both ensuring that
+> >>> the scanout parameters don't change and being able to read back the
+> >>> scanout image to populate the initial contents of the new surface.
+> >>>
+> >>> This works today on arches which implement (U)EFI and export
+> >>> screen_info, including x86 and powerpc, but doesn't work on arm or
+> >>> arm64.  As arm64 systems that implement UEFI with real GOP drivers
+> >>> become more prevalent, it would be nice to be have these features there
+> >>> as well.
+> >>
+> >> In addition to this, even if a driver doesn't implement a framebuffer
+> >> console, or if it does but has an option to disable it, the driver still
+> >> needs to know whether the EFI console is using resources on the GPU so
+> >> it can avoid clobbering them. For example screen_info provides information
+> >> like offset and size of EFI console, using this information driver can
+> >> reserve memory used by console and prevent corruption on it.
+> >>
+> >> I think arm64 should export screen_info.
+> >>
+> >
+> > If there are reasons why KMS or fbdev drivers may need to access the
+> > information in screen_info, it should be exported. I don't think that
+> > is under debate here.
+> >
+>
+> Hi Ard, thanks for your feedback. If my understanding is correct,
+> you are agree to export screen_info. Can you provide guidance on how can
+> we proceed here? are you willing to accept this current patch as-is or
+> would you like me to re-submit the patch with the additional rationale
+> provided?
+>
 
-Hi all,
-
-After merging the block tree, today's linux-next build (x86_64
-allnoconfig) failed like this:
-
-fs/libfs.c: In function 'generic_file_fsync':
-fs/libfs.c:1116:9: error: too few arguments to function 'blkdev_issue_flush'
- 1116 |  return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL);
-      |         ^~~~~~~~~~~~~~~~~~
-In file included from fs/libfs.c:7:
-include/linux/blkdev.h:1875:19: note: declared here
- 1875 | static inline int blkdev_issue_flush(struct block_device *bdev, gfp=
-_t gfp_mask,
-      |                   ^~~~~~~~~~~~~~~~~~
-
-Caused by commit
-
-  c64644ce363b ("block: remove the error_sector argument to blkdev_issue_fl=
-ush")
-
-I have applied the following patch.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Fri, 22 May 2020 21:21:54 +1000
-Subject: [PATCH] block: fix for "remove the error_sector argument to
- blkdev_issue_flush"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/linux/blkdev.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 95f1e6db31e2..7d10f4e63232 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1872,8 +1872,7 @@ static inline bool blk_needs_flush_plug(struct task_s=
-truct *tsk)
- 	return false;
- }
-=20
--static inline int blkdev_issue_flush(struct block_device *bdev, gfp_t gfp_=
-mask,
--				     sector_t *error_sector)
-+static inline int blkdev_issue_flush(struct block_device *bdev, gfp_t gfp_=
-mask)
- {
- 	return 0;
- }
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/UtxBkTtJCi6+=X/EUuCRSf3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HuDMACgkQAVBC80lX
-0GytSwf/alxMhLVCRbD9KdpHpaYkX6KYezj3KR2eLqmgHHoSwhzMcORdLy6C8HHE
-kDCggkIeBNgKN4AFUUFg5k6koY/CPEoQVV0hWwrb6hrkLjYnEFuXXq1lVTLbAWzE
-0mBRhxS6EIZffZ+JdRQrGz32b3asxOLQXMObLSm4y0qAGYZOWeCRMSUceUj3ZL6p
-nEMprJflPODk6jA1KmEcuwN3fnkphi5EOhsoscZhlP0cvQokC2Ug9us+Udkkbzj/
-dq/sE1Hx7mk3bKm6Vbyi9PbveEFo1Fzy8j3bPCsNYLd2kRoTI+z3Wny/I3rc3ZV6
-DgyMoFSPbCU4XxCZunKHW0yzWTFjBw==
-=E/X4
------END PGP SIGNATURE-----
-
---Sig_/UtxBkTtJCi6+=X/EUuCRSf3--
+Please (re-)submit it along with the code that actually makes use of it.
