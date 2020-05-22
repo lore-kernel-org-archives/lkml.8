@@ -2,158 +2,115 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43896C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F30D20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="asSTQpz2"
+	by mail.kernel.org (Postfix) with ESMTP id 1625020679
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731025AbgEVUws (ORCPT
+        id S1731038AbgEVU4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 16:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731000AbgEVUwr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 16:52:47 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACFD0C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 13:52:47 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id h10so12783460iob.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 13:52:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=C0w98WNrq8RwJa7xUXc0zE5qi1XnFGyGA8zuRJzv1+A=;
-        b=asSTQpz2RYbFcEsqJeFmmqKAhKE45IdJQkGhkHa4Fs6PX0Zt/OZ3+1UTl1AKx1cn8p
-         bnLiEr97rwt5v4QnmemdE8NnRFnA62tER5n6TPE3gr1/TNcVyY84HZ0mnCyVvSG8MCxW
-         uc7nKZLpkIyl8gjLYSdfkTevCkq7GTChKnVo8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C0w98WNrq8RwJa7xUXc0zE5qi1XnFGyGA8zuRJzv1+A=;
-        b=QwLJyld/FPrLQA4n5aAMx6sT7z8xoAXHGLf0aG7P9oQfZ7Wnn7bT+z2pq54K6EEtpT
-         Ns5Jl9mJ6icQh3JYy/vH/bjGios4wdJ9PDoUX2TBFzCT1KcBaKAMw8yWyaovLSRilomm
-         Rn+h+9lhXzzEy5GSfOdBKIiKzAMH8K5ewHpcuudCbEloNH6171JneoSC29JCwlpb2ODn
-         yVMBZYCOF8dJZr9FLwt8ZY3Qo7GbbZ/0p+X09C3PlsNIhJGRnR+JTDj2BKnWQ4gnncFe
-         xXdp8LCBn/0qo8q0bEyZDf3Cbu3XnboZ1bgGhwqWs0puzsiV/AfLbAekROcxeiyCEvmG
-         3w9Q==
-X-Gm-Message-State: AOAM531owY7BKOLGRyBa/vq7qDas7FHGc4Rwh76BCTIly3BJIcd4FF37
-        2l10JFT4MQrdHZo+41d5QS/g4A==
-X-Google-Smtp-Source: ABdhPJyrnf0qpFDgudB7Bi8na8AGrAjNMadhWgyDInXqAZ+9mGwu0LNs00x6csbFEY4ROgDxIjwocA==
-X-Received: by 2002:a02:4446:: with SMTP id o67mr9770308jaa.25.1590180767044;
-        Fri, 22 May 2020 13:52:47 -0700 (PDT)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id 199sm2519230ilb.11.2020.05.22.13.52.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 13:52:46 -0700 (PDT)
-Subject: Re: [PATCH v2 10/15] soc: qcom: ipa: use new
- module_firmware_crashed()
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     jeyu@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-        rostedt@goodmis.org, mingo@redhat.com, aquini@redhat.com,
-        cai@lca.pw, dyoung@redhat.com, bhe@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, gpiccoli@canonical.com,
-        pmladek@suse.com, tiwai@suse.de, schlad@suse.de,
-        andriy.shevchenko@linux.intel.com, keescook@chromium.org,
-        daniel.vetter@ffwll.ch, will@kernel.org,
-        mchehab+samsung@kernel.org, kvalo@codeaurora.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alex Elder <elder@kernel.org>
-References: <20200515212846.1347-1-mcgrof@kernel.org>
- <20200515212846.1347-11-mcgrof@kernel.org>
- <0b159c53-57a6-b771-04ab-2a76c45d0ef4@ieee.org>
- <20200522052834.GA11244@42.do-not-panic.com>
-From:   Alex Elder <elder@ieee.org>
-Message-ID: <c23b7a5c-5534-b3e5-afa7-f71e097878de@ieee.org>
-Date:   Fri, 22 May 2020 15:52:44 -0500
+        Fri, 22 May 2020 16:56:00 -0400
+Received: from mga12.intel.com ([192.55.52.136]:60476 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730963AbgEVUz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 16:55:59 -0400
+IronPort-SDR: WqJrNj/R5UKwfUNmeMLoRshGKTtkgVXzLGYeAEOEKUzZW6qiaIE0raz0bgTS1iIed4Tb1Q6XYX
+ vRJBtnkTx0BQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 13:55:58 -0700
+IronPort-SDR: dU0Dsd3DvzJmEsj0mYWESgrCPSLAUbtyEtMVvfMM4EiPxTbRoG2wGGxprObvU1D74JGBco+3+Y
+ KrCwr7teug6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,423,1583222400"; 
+   d="scan'208";a="269112787"
+Received: from twilles-mobl.amr.corp.intel.com (HELO [10.255.5.97]) ([10.255.5.97])
+  by orsmga006.jf.intel.com with ESMTP; 22 May 2020 13:55:56 -0700
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+To:     Don Porter <porter@cs.unc.edu>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andi Kleen <ak@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
+        hpa@zytor.com, tony.luck@intel.com, ravi.v.shankar@intel.com,
+        chang.seok.bae@intel.com
+References: <20200511045311.4785-1-sashal@kernel.org>
+ <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
+ <20200515164013.GF29995@sasha-vm>
+ <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
+ <20200518153407.GA499505@tassilo.jf.intel.com>
+ <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
+ <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
+ <20200519164853.GA19706@linux.intel.com>
+ <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <067d58cf-3828-5b94-0f78-682ba2670739@intel.com>
+Date:   Fri, 22 May 2020 13:55:56 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200522052834.GA11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/20 12:28 AM, Luis Chamberlain wrote:
-> On Tue, May 19, 2020 at 05:34:13PM -0500, Alex Elder wrote:
->> On 5/15/20 4:28 PM, Luis Chamberlain wrote:
->>> This makes use of the new module_firmware_crashed() to help
->>> annotate when firmware for device drivers crash. When firmware
->>> crashes devices can sometimes become unresponsive, and recovery
->>> sometimes requires a driver unload / reload and in the worst cases
->>> a reboot.
->>>
->>> Using a taint flag allows us to annotate when this happens clearly.
->>
->> I don't fully understand what this is meant to do, so I can't
->> fully assess whether it's the right thing to do.
-> 
-> It is meant to taint the kernel to ensure it is clear that something
-> critically bad has happened with the device firmware, it crashed, and
-> recovery may or may not happen, we are not 100% certain.
->>
->> But in this particular place in the IPA code, the *modem* has
->> crashed.  And the IPA driver is not responsible for modem
->> firmware, remoteproc is.
-> 
-> Oi vei. So the device it depends on has crashed.
+On 5/22/20 1:14 PM, Don Porter wrote:
+> I wanted to clarify that we never intended the Graphene kernel module
+> you mention for production use, as well as to comment in support of this
+> patch.
 
-Yes, more or less.  It could be considered a little more
-nuanced than even that, but I won't get into it here.
-
->> The IPA driver *can* be responsible for loading some other
->> firmware, but even in that case, it only happens on initial
->> boot, and it's basically assumed to never crash.
-> 
-> OK is this an issue which we can recover from? If for the slightest bit
-> this can affect users it is something we should inform them over.
-
-If the IPA driver successfully loads this firmware, it should
-be assumed to never crash.  So in that respect, there is no
-recovery required.
-
-Again, the modem (with which the IPA hardware and driver
-interacts) can crash, or it can be shut down intentionally.
-And in either case it can recover, automatically or manually.
-But all of that (and the modem's firmware loading) is the
-responsibility of the remoteproc subsystem, not IPA.
-
-> This patch set is missing uevents for these issues, but I just added
-> support for this.
-> 
->> So regardless of whether this module_firmware_crashed() call is
->> appropriate in some places, I believe it should not be used here.
-> 
-> OK thanks. Can the user be affected by this crash? If so how? Can
-> we recover ? Is that always guaranteed?
-
-We can't guarantee anything about recovering from a crash of
-an independent entity.  But by design, recovery from a modem
-crash is possible and is supposed to leave Linux in a
-consistent state.  A modem crash is likely to be observable
-to the user.
-
-I'll repeat that I don't believe the new call you inserted
-in the IPA driver belongs there.
-
-					-Alex
-
-> 
->    Luis
-> 
-
+Could you also clarify: Did you know that the FSGSBASE kernel module
+introduced a root vulnerability?  Where did it come from in the first place?
