@@ -2,170 +2,118 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0199C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778C52065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A076A2067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:11:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JGoJNkrX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgEVKH1 (ORCPT
+        id S1728489AbgEVKLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:07:27 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55298 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728374AbgEVKH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:07:27 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 56EFF1A324F;
-        Fri, 22 May 2020 12:07:23 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A8B21A3239;
-        Fri, 22 May 2020 12:07:18 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0A9A740318;
-        Fri, 22 May 2020 18:07:12 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fsl_asrc: Merge suspend/resume function to runtime_suspend/resume
-Date:   Fri, 22 May 2020 17:57:24 +0800
-Message-Id: <1590141444-28668-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 22 May 2020 06:11:30 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:38765 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728281AbgEVKL3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 06:11:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590142288; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=NW8Jsqkb6pnbBs1zr+nqGOErhbAaUKt/K4f9G+vJyjQ=; b=JGoJNkrX7jZ/a1y46Q8C/C65gVdfyGUiwr6VC/7S+c3tDRFVP3gHOYzv1HN8kjUq+6lK7v2N
+ PFr/LWcwU0pI5CYJWamm2InpsW68U+bEYD+KWOYjL6zAUmoxiJV9mv2Q3sGbj1bDnTON8pBW
+ xWBwykePnv36AAgNtQid7EDAzRg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ec7a55082c96b5d3b84f359 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 22 May 2020 10:11:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F3B0CC433C6; Fri, 22 May 2020 10:11:27 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB89FC433C8;
+        Fri, 22 May 2020 10:11:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB89FC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <nbd@nbd.name>, <lorenzo.bianconi83@gmail.com>,
+        <ryder.lee@mediatek.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <matthias.bgg@gmail.com>, <shayne.chen@mediatek.com>,
+        <chih-min.chen@mediatek.com>, <yf.luo@mediatek.com>,
+        <yiwei.chung@mediatek.com>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] mt76: mt7915: Fix build error
+References: <20200522034533.61716-1-yuehaibing@huawei.com>
+Date:   Fri, 22 May 2020 13:11:16 +0300
+In-Reply-To: <20200522034533.61716-1-yuehaibing@huawei.com>
+        (yuehaibing@huawei.com's message of "Fri, 22 May 2020 11:45:33 +0800")
+Message-ID: <87a720b7p7.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With dedicated power domain for asrc, power can be disabled after
-probe and pm runtime suspend, then the value of all registers need to
-be restored in pm runtime resume. So we can merge suspend/resume function
-to runtime_suspend/resume function and enable regcache only in end of
-probe.
+YueHaibing <yuehaibing@huawei.com> writes:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_asrc.c | 70 ++++++++++++++++------------------------
- 1 file changed, 27 insertions(+), 43 deletions(-)
+> In file included from ./include/linux/firmware.h:6:0,
+>                  from drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:4:
+> In function =E2=80=98__mt7915_mcu_msg_send=E2=80=99,
+>     inlined from =E2=80=98mt7915_mcu_send_message=E2=80=99 at drivers/net=
+/wireless/mediatek/mt76/mt7915/mcu.c:370:6:
+> ./include/linux/compiler.h:396:38: error: call to =E2=80=98__compiletime_=
+assert_545=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: cmd=
+ =3D=3D MCU_EXT_CMD_EFUSE_ACCESS && mcu_txd->set_query !=3D MCU_Q_QUERY
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>                                       ^
+> ./include/linux/compiler.h:377:4: note: in definition of macro =E2=80=98_=
+_compiletime_assert=E2=80=99
+>     prefix ## suffix();    \
+>     ^~~~~~
+> ./include/linux/compiler.h:396:2: note: in expansion of macro =E2=80=98_c=
+ompiletime_assert=E2=80=99
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>   ^~~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:39:37: note: in expansion of macro =E2=80=98c=
+ompiletime_assert=E2=80=99
+>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                      ^~~~~~~~~~~~~~~~~~
+> ./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=98BU=
+ILD_BUG_ON_MSG=E2=80=99
+>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>   ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:280:2: note: in expansion=
+ of macro =E2=80=98BUILD_BUG_ON=E2=80=99
+>   BUILD_BUG_ON(cmd =3D=3D MCU_EXT_CMD_EFUSE_ACCESS &&
+>   ^~~~~~~~~~~~
+>
+> BUILD_BUG_ON is meaningless here, chang it to WARN_ON.
+>
+> Fixes: e57b7901469f ("mt76: add mac80211 driver for MT7915 PCIe-based chi=
+psets")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 432936039de4..3ebbe15ac378 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -1100,6 +1100,7 @@ static int fsl_asrc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, asrc);
- 	pm_runtime_enable(&pdev->dev);
- 	spin_lock_init(&asrc->lock);
-+	regcache_cache_only(asrc->regmap, true);
- 
- 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_asrc_component,
- 					      &fsl_asrc_dai, 1);
-@@ -1117,6 +1118,7 @@ static int fsl_asrc_runtime_resume(struct device *dev)
- 	struct fsl_asrc *asrc = dev_get_drvdata(dev);
- 	struct fsl_asrc_priv *asrc_priv = asrc->private;
- 	int i, ret;
-+	u32 asrctr;
- 
- 	ret = clk_prepare_enable(asrc->mem_clk);
- 	if (ret)
-@@ -1135,6 +1137,24 @@ static int fsl_asrc_runtime_resume(struct device *dev)
- 			goto disable_asrck_clk;
- 	}
- 
-+	/* Stop all pairs provisionally */
-+	regmap_read(asrc->regmap, REG_ASRCTR, &asrctr);
-+	regmap_update_bits(asrc->regmap, REG_ASRCTR,
-+			   ASRCTR_ASRCEi_ALL_MASK, 0);
-+
-+	/* Restore all registers */
-+	regcache_cache_only(asrc->regmap, false);
-+	regcache_mark_dirty(asrc->regmap);
-+	regcache_sync(asrc->regmap);
-+
-+	regmap_update_bits(asrc->regmap, REG_ASRCFG,
-+			   ASRCFG_NDPRi_ALL_MASK | ASRCFG_POSTMODi_ALL_MASK |
-+			   ASRCFG_PREMODi_ALL_MASK, asrc_priv->regcache_cfg);
-+
-+	/* Restart enabled pairs */
-+	regmap_update_bits(asrc->regmap, REG_ASRCTR,
-+			   ASRCTR_ASRCEi_ALL_MASK, asrctr);
-+
- 	return 0;
- 
- disable_asrck_clk:
-@@ -1155,6 +1175,11 @@ static int fsl_asrc_runtime_suspend(struct device *dev)
- 	struct fsl_asrc_priv *asrc_priv = asrc->private;
- 	int i;
- 
-+	regmap_read(asrc->regmap, REG_ASRCFG,
-+		    &asrc_priv->regcache_cfg);
-+
-+	regcache_cache_only(asrc->regmap, true);
-+
- 	for (i = 0; i < ASRC_CLK_MAX_NUM; i++)
- 		clk_disable_unprepare(asrc_priv->asrck_clk[i]);
- 	if (!IS_ERR(asrc->spba_clk))
-@@ -1166,51 +1191,10 @@ static int fsl_asrc_runtime_suspend(struct device *dev)
- }
- #endif /* CONFIG_PM */
- 
--#ifdef CONFIG_PM_SLEEP
--static int fsl_asrc_suspend(struct device *dev)
--{
--	struct fsl_asrc *asrc = dev_get_drvdata(dev);
--	struct fsl_asrc_priv *asrc_priv = asrc->private;
--
--	regmap_read(asrc->regmap, REG_ASRCFG,
--		    &asrc_priv->regcache_cfg);
--
--	regcache_cache_only(asrc->regmap, true);
--	regcache_mark_dirty(asrc->regmap);
--
--	return 0;
--}
--
--static int fsl_asrc_resume(struct device *dev)
--{
--	struct fsl_asrc *asrc = dev_get_drvdata(dev);
--	struct fsl_asrc_priv *asrc_priv = asrc->private;
--	u32 asrctr;
--
--	/* Stop all pairs provisionally */
--	regmap_read(asrc->regmap, REG_ASRCTR, &asrctr);
--	regmap_update_bits(asrc->regmap, REG_ASRCTR,
--			   ASRCTR_ASRCEi_ALL_MASK, 0);
--
--	/* Restore all registers */
--	regcache_cache_only(asrc->regmap, false);
--	regcache_sync(asrc->regmap);
--
--	regmap_update_bits(asrc->regmap, REG_ASRCFG,
--			   ASRCFG_NDPRi_ALL_MASK | ASRCFG_POSTMODi_ALL_MASK |
--			   ASRCFG_PREMODi_ALL_MASK, asrc_priv->regcache_cfg);
--
--	/* Restart enabled pairs */
--	regmap_update_bits(asrc->regmap, REG_ASRCTR,
--			   ASRCTR_ASRCEi_ALL_MASK, asrctr);
--
--	return 0;
--}
--#endif /* CONFIG_PM_SLEEP */
--
- static const struct dev_pm_ops fsl_asrc_pm = {
- 	SET_RUNTIME_PM_OPS(fsl_asrc_runtime_suspend, fsl_asrc_runtime_resume, NULL)
--	SET_SYSTEM_SLEEP_PM_OPS(fsl_asrc_suspend, fsl_asrc_resume)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static const struct fsl_asrc_soc_data fsl_asrc_imx35_data = {
--- 
-2.21.0
+I'm curious why I don't see this build error? I was about to send a pull
+request to Dave, should I hold off the pull request due to this problem?
 
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
