@@ -2,92 +2,86 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E86C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F42C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA9E42078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590175409;
-	bh=bXZEeDnqQ8pc/bjS8vchYZuh+kFAQrGp2mx12nXsRPg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=DtSuNBgaOyOrfxKGFEf5+GdH8VPllV7b2PKDwFHQFX7KUUW8/ge8r4+sFto2kw/bJ
-	 FrZcg2L9UGFeoCUJ+Mtjuq0LYuS3MjHEf8RHGkmx+tctVip+HhoG4cw3HkTAJFzYMo
-	 +z4cmM5O8lfhsqeHyA8O+0mGVUPVuy6ZBTL9vkGE=
+	by mail.kernel.org (Postfix) with ESMTP id A186C206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730955AbgEVTX3 (ORCPT
+        id S1730929AbgEVT0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:23:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 15:26:17 -0400
+Received: from mga03.intel.com ([134.134.136.65]:19921 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730689AbgEVTX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:23:28 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66765206D5;
-        Fri, 22 May 2020 19:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590175408;
-        bh=bXZEeDnqQ8pc/bjS8vchYZuh+kFAQrGp2mx12nXsRPg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Dsp9uIUWGqanhKiv6bL7aBsBy9OdouDgDo2Rzvz4C1nxxf2B3+ZuHtzjMZHbXQ0RP
-         OvGJV+LOZ3fL+mtlJEE1SsVFUACWpds3uCr454Rd0ngh+hog81q5VtB48LAGIYYhZI
-         xXlIsxt84hAOIbTfweLYuOgaJb6D+LQVVDNPkpfE=
-Subject: Re: [PATCH v3] Kernel selftests: Add check if TPM devices are
- supported
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nikita Sobolev <Nikita.Sobolev@synopsys.com>
-Cc:     linux-kselftest@vger.kernel.org,
-        Tadeusz Struk <tadeusz.struk@intel.com>,
-        Joey Pabalinas <joeypabalinas@gmail.com>,
-        Petr Vorel <petr.vorel@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org, shuah <shuah@kernel.org>
-References: <20200521144344.1886-1-Nikita.Sobolev@synopsys.com>
- <20200522163714.GA10319@linux.intel.com>
- <20200522163745.GB10319@linux.intel.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <b433d7c7-38a2-098a-55c9-6f8cc13f7230@kernel.org>
-Date:   Fri, 22 May 2020 13:23:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1730689AbgEVT0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 15:26:16 -0400
+IronPort-SDR: X5L2zUcyoPXFR6heNei79v1IiZYSU5ZZXTScWyzcdBq2qPe469IuwRpLYBcrMZbKX6+uigRX51
+ 5yZGr25e+qbw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 12:26:15 -0700
+IronPort-SDR: byZjjo03dLCqvP6zTjKxKcmePMihPj+c61mrPmnwykVcBKNwMfmTQJrnKOPRqZTk0ZxpJEi6WO
+ ec3hAJilTBtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
+   d="scan'208";a="412848366"
+Received: from rpurrx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.58.10])
+  by orsmga004.jf.intel.com with ESMTP; 22 May 2020 12:26:09 -0700
+Date:   Fri, 22 May 2020 22:26:09 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Seth Moore <sethmo@google.com>
+Subject: Re: [PATCH v30 10/20] x86/sgx: Linux Enclave Driver
+Message-ID: <20200522192609.GE10319@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-11-jarkko.sakkinen@linux.intel.com>
+ <20200521191236.GA23043@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200522163745.GB10319@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521191236.GA23043@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/22/20 10:37 AM, Jarkko Sakkinen wrote:
-> On Fri, May 22, 2020 at 07:37:17PM +0300, Jarkko Sakkinen wrote:
->> On Thu, May 21, 2020 at 05:43:44PM +0300, Nikita Sobolev wrote:
->>> TPM2 tests set uses /dev/tpm0 and /dev/tpmrm0 without check if they
->>> are available. In case, when these devices are not available test
->>> fails, but expected behaviour is skipped test.
->>>
->>> Signed-off-by: Nikita Sobolev <Nikita.Sobolev@synopsys.com>
->>
->> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Thu, May 21, 2020 at 12:12:36PM -0700, Sean Christopherson wrote:
+> On Fri, May 15, 2020 at 03:44:00AM +0300, Jarkko Sakkinen wrote:
+> > +long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+> > +{
+> > +	struct sgx_encl *encl = filep->private_data;
+> > +	int ret, encl_flags;
+> > +
+> > +	encl_flags = atomic_fetch_or(SGX_ENCL_IOCTL, &encl->flags);
+> > +	if (encl_flags & SGX_ENCL_IOCTL)
+> > +		return -EBUSY;
+> > +
+> > +	if (encl_flags & SGX_ENCL_DEAD)
+> > +		return -EFAULT;
 > 
-> Shuah, can you pick this up?
-> 
-> /Jarkko
-> 
+> Returning immediately is wrong as it leaves SGX_ENCL_IOCTL set.  This results
+> in the application seeing -EBUSY on future ioctls() instead of -EFAULT.  Can be
+> fixed as below.  Do you want me to send a formal patch on linux-sgx?
 
-Done. Applied to linux-kselftest next for Linux 5.8-rc1.
+I just rewrote the same thing.
 
-thanks,
--- Shuah
+/Jarkko
