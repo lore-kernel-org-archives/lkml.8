@@ -2,119 +2,89 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA274C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3289622BEA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC7122CBE
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKb/u6Cq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ulukai.org header.i=@ulukai.org header.b="jDcoSxwn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgEVO0t (ORCPT
+        id S1730229AbgEVO1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:26:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53312 "EHLO
+        Fri, 22 May 2020 10:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728947AbgEVO0t (ORCPT
+        with ESMTP id S1729868AbgEVO1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:26:49 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE46C061A0E;
-        Fri, 22 May 2020 07:26:48 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f189so10846223qkd.5;
-        Fri, 22 May 2020 07:26:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EBkBNqP4rcatLlGUJoFCCwVojRrJT2D3HEctGKEmr6Q=;
-        b=gKb/u6Cq1DZYEYo68zKdl6ZxeTJbRecwKaNjg/fHM3oEACOTTcYV+DZSz6FNfraXbq
-         V4Urq3zWMYWRdVw/UxOpuqfAm4Q5JSH7AZ0e3S3IngK5xDQofVcs+vQ16iNw4427M2Om
-         AGe6faqTV0L3+iWj8PK9zF6rO/S0QL31UxRwjigjAK3lsgi/fu0TnHPQ0VW6ol1tCVmw
-         jT+Kk3J2Q0y0GSFgQ67IUDn0M+F6IT9gR8NGbQmJPKt7NpdgMABCSt+BDyfRL10jSls5
-         RcjhKr9fqsHesY/BRDtlbed/jPX+A1ryn983Sc8wBgbux52n5/5CzlURXs5JCwj1HyyD
-         gTPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EBkBNqP4rcatLlGUJoFCCwVojRrJT2D3HEctGKEmr6Q=;
-        b=pLrnt0gNV+DrzO7fOBt13zlUdeiJm7V71uPMPqz5AAyy3cHeMJYhhFil1Ng4IZM+SS
-         DhOpKi631p46R8+rakegseneXWx+/zGVba77GVGyKD/KlvU8aQwNvd6/AcgyQdg/vvFD
-         WFAS7gclY+beYuPixHCcEv2iBjH/43kermv11IF/z9GsTWUgA6u7AFNqoAMYswyXETne
-         kGus1qaSw5rdRbJ4nxziLBWj9KWmiZv+oFNKraAz6t7M7krJKUxzSm4/PFMrcCl7yC7B
-         7qcwWedAPV7jl3xJxnkPujprtLkolf9biB0iFMmOCKaZ+0M2g/8uNwefaWgEbFoSYrMI
-         wfqw==
-X-Gm-Message-State: AOAM531IEbBOyYLo0VRLXrAYhURx3JmDXHnF4mTYLEzxeOFpPYr4ChtE
-        HJgIhkKMKPCp7klPzkJyhtU=
-X-Google-Smtp-Source: ABdhPJzkIM1JIdnV0nmVjysHRfQdWMphjrkCjmZA5BIADG8VwOO7Eowztz0DDyvVaEsDnShAQtBcXw==
-X-Received: by 2002:a37:bd82:: with SMTP id n124mr15499338qkf.168.1590157607896;
-        Fri, 22 May 2020 07:26:47 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id w49sm3628329qth.74.2020.05.22.07.26.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 22 May 2020 07:26:44 -0700 (PDT)
-Date:   Fri, 22 May 2020 16:26:33 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-kernel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: imu: bmi160: convert txt format
- to yaml
-Message-ID: <20200522142633.GA21655@ict14-OptiPlex-980>
-References: <20200519075111.6356-1-jonathan.albrieux@gmail.com>
- <20200519075111.6356-2-jonathan.albrieux@gmail.com>
- <20200519184933.00003f00@Huawei.com>
- <20200520072423.GF3361@ict14-OptiPlex-980>
- <20200521192736.4818f17b@archlinux>
- <20200522082208.GB19742@ict14-OptiPlex-980>
- <134f419f-de85-f14e-0331-49b8bb72625c@nxp.com>
+        Fri, 22 May 2020 10:27:02 -0400
+Received: from ulukai.org (ulukai.org [IPv6:2a01:488:66:1000:b01c:1258:0:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59590C05BD43;
+        Fri, 22 May 2020 07:27:02 -0700 (PDT)
+Received: from arona (unknown [46.114.108.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by ulukai.org (Postfix) with ESMTPSA id 49T7gQ32QHz3SFk;
+        Fri, 22 May 2020 16:10:42 +0200 (CEST)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at ulukai.org
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ulukai.org; s=ulukai;
+        t=1590156642; bh=tw8TnTeS4qB/O5fLk0d0rRvpp5aVqL7Gv1uP8XO0ZhM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jDcoSxwnVWXIn/u04pLmYI17o93VYgm0dSecx5kLsejCp0q5h9GUbEh/y8SXAB+2h
+         6BT9Dd7vRdqAie93TrTTBLg9Nfg8JSGSJBmhERn7oA9pcTnyR33nthvvPHWXDVWVzt
+         F7/fqIm+gLXIhG3xYv5Z5e/ZT0uVAd1Zsg++9kUE=
+From:   "C. Masloch" <pushbx@ulukai.org>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Dave Rodgman <dave.rodgman@arm.com>, Willy Tarreau <w@1wt.eu>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 2/2] docs: lzo: fix incorrect statement about distance zero for EOS
+Date:   Fri, 22 May 2020 16:10:40 +0200
+Message-Id: <20200522141040.1353769-2-pushbx@ulukai.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200522141040.1353769-1-pushbx@ulukai.org>
+References: <20200522141040.1353769-1-pushbx@ulukai.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <134f419f-de85-f14e-0331-49b8bb72625c@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 01:47:21PM +0300, Daniel Baluta wrote:
-> 
-> > > > > > +
-> > > > > > +maintainers:
-> > > > > > +  - can't find a mantainer, author is Daniel Baluta <daniel.baluta@intel.com>
-> > > > > Daniel is still active in the kernel, just not at Intel any more. +CC
-> > > > Oh ok thank you! Daniel are you still maintaining this driver?
-> 
-> I can do reviews if requested but I'm not actively maintaining this driver.
-> If anyone wants
-> 
-> to take this over, will be more than happy.
-> 
-> 
-> Other than that we can add my gmail address: Daniel Baluta
-> <daniel.baluta@gmail.com>
-> 
-> 
-> 
+The encoded distance bits are zero, but the distance that is
+calculated from this is actually equal to 16384. So correct
+this statement to read that the 0001HLLL instruction means
+EOS when a distance of 16384 is seen. This matches with the
+description of the instruction itself later on.
 
-Well if you'd like to review this patch I'd really appreciate :-)
-Forgive me for not having understood your answer regarding the maintainer
-field, can I add you to this binding as maintainer or are you saying to
-not add you? Thank you and sorry for the repeated question,
+Signed-off-by: C. Masloch <pushbx@ulukai.org>
+---
+ Documentation/lzo.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Best regards,
-Jonathan Albrieux
+diff --git a/Documentation/lzo.txt b/Documentation/lzo.txt
+index f839d104d..dc9e876cb 100644
+--- a/Documentation/lzo.txt
++++ b/Documentation/lzo.txt
+@@ -65,9 +65,9 @@ Description
+   generally encoded in the last two bits of the instruction but may also be
+   taken from the last two bits of an extra operand (eg: distance).
+ 
+-  End of stream is declared when a block copy of distance 0 is seen. Only one
+-  instruction may encode this distance (0001HLLL), it takes one LE16 operand
+-  for the distance, thus requiring 3 bytes.
++  End of stream is declared when a block copy of distance 16384 is seen,
++  encoded in a certain instruction (0001HLLL) with the H and D bits all zero.
++  It takes one LE16 operand for the distance, thus requiring 3 bytes.
+ 
+   .. important::
+ 
+-- 
+2.26.2
+
