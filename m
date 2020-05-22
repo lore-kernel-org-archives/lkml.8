@@ -2,84 +2,158 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD26C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1B6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B78F0206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE782065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:46:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gZG3x5VZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgEVKpv (ORCPT
+        id S1729047AbgEVKqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:45:51 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:61460 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728371AbgEVKpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:45:50 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app3 (Coremail) with SMTP id cC_KCgD3_4tCrcdesc_xAA--.30237S4;
-        Fri, 22 May 2020 18:45:26 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: sh: usb-dmac: Fix runtime PM imbalance on error
-Date:   Fri, 22 May 2020 18:45:19 +0800
-Message-Id: <20200522104521.29409-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgD3_4tCrcdesc_xAA--.30237S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoW3Zwc_Kr
-        n8uay2gwnYgF4vvw1DCF4YvryS9ryDXw1kWr10qa4fK390vFZ8J3yUXr95Zw4fX3y7uryU
-        tFsrWF93ArW5ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbs8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxG
-        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43
-        ZEXa7VU8jFAJUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUIBlZdtOQgrAAPsR
+        Fri, 22 May 2020 06:46:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34826 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbgEVKqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 06:46:05 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MAjcHd017015;
+        Fri, 22 May 2020 05:45:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590144338;
+        bh=+ZG6P8BF3dJ9QHRvqtMY+fgKzn83Sk8LyDmqXrBTqds=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=gZG3x5VZ9tES5/HMESW0XZnj+Gjnop5Bkkzsqrh5ftpSGzE4b//BXjEmxHjCxwZRp
+         MYdmEh8a+w5hDkWhmBRW3VmWA9gqKS5UD9RwFKQYFrZl/b8NXFki0AfeZ83Nqb7OBv
+         KETO8hkfXGbgdvmch/dSPK1FaA/Hdf7a+E/shLOM=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MAjcK1091662;
+        Fri, 22 May 2020 05:45:38 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ May 2020 05:45:38 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 May 2020 05:45:37 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MAjbIc013302;
+        Fri, 22 May 2020 05:45:37 -0500
+Date:   Fri, 22 May 2020 16:15:36 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     <masonccyang@mxic.com.tw>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <juliensu@mxic.com.tw>
+Subject: Re: [PATCH v5 01/19] spi: spi-mem: allow specifying whether an op is
+ DTR or not
+Message-ID: <20200522104536.4ikmhiaxg7keahdp@ti.com>
+References: <20200519142642.24131-1-p.yadav@ti.com>
+ <20200519142642.24131-2-p.yadav@ti.com>
+ <OF1FE36FB9.9FBEFCD6-ON4825856F.002D767F-4825856F.002E7D42@mxic.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <OF1FE36FB9.9FBEFCD6-ON4825856F.002D767F-4825856F.002E7D42@mxic.com.tw>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+[Seems like I forgot to send this and it stayed in my Drafts folder. 
+Anyway, fixed in v7]
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/dma/sh/usb-dmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Mason,
 
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index b218a013c260..1485c2fd7c85 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -853,8 +853,8 @@ static int usb_dmac_probe(struct platform_device *pdev)
+On 21/05/20 04:27PM, masonccyang@mxic.com.tw wrote:
+> 
+> Hi Pratyush,
+> 
+> Given cmd.nbytes a initial value & check it !
+> 
+> > 
+> > [PATCH v5 01/19] spi: spi-mem: allow specifying whether an op is DTR or 
+> not
+> > 
+> > Each phase is given a separate 'dtr' field so mixed protocols like
+> > 4S-4D-4D can be supported.
+> > 
+> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > ---
+> >  drivers/spi/spi-mem.c       | 3 +++
+> >  include/linux/spi/spi-mem.h | 8 ++++++++
+> >  2 files changed, 11 insertions(+)
+> > 
+> > diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+> > index 9a86cc27fcc0..93e255287ab9 100644
+> > --- a/drivers/spi/spi-mem.c
+> > +++ b/drivers/spi/spi-mem.c
+> > @@ -156,6 +156,9 @@ bool spi_mem_default_supports_op(struct spi_mem 
+> *mem,
+> >                 op->data.dir == SPI_MEM_DATA_OUT))
+> >        return false;
+> > 
+> > +   if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
+> > +      return false;
+> > +
+> 
+> +       if (op->cmd.nbytes != 1)
+> +               return false;
+
+Good catch. Will fix.
  
- error:
- 	of_dma_controller_free(pdev->dev.of_node);
--	pm_runtime_put(&pdev->dev);
- error_pm:
-+	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 	return ret;
- }
--- 
-2.17.1
+> >     return true;
+> >  }
+> >  EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+> 
+> 
+>  static int spi_mem_check_op(const struct spi_mem_op *op)
+>  {
+> -                if (!op->cmd.buswidth)
+> +                if (!op->cmd.buswidth || op->cmd.nbytes < 1 || 
+> op->cmd.nbytes > 2)
+>                                  return -EINVAL;
 
+Will fix.
+ 
+> 
+> > diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
+> > index af9ff2f0f1b2..e3dcb956bf61 100644
+> > --- a/include/linux/spi/spi-mem.h
+> > +++ b/include/linux/spi/spi-mem.h
+> 
+> #define SPI_MEM_OP_CMD(__opcode, __buswidth)                    \
+>          {                                                       \
+>                  .buswidth = __buswidth,                         \
+>                  .opcode = __opcode,                             \
+> +                .nbytes = 1,                                    \
+>          }
+
+Will fix. Thanks.
+
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments India
