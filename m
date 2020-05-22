@@ -2,235 +2,269 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A9FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4732AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC38F206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2026D206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="GBkI9Cu9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ai7DHhpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbgEVT2w (ORCPT
+        id S1730967AbgEVT35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:28:52 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:59952 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730866AbgEVT2v (ORCPT
+        Fri, 22 May 2020 15:29:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730866AbgEVT34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:28:51 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 4885527E06AA;
-        Fri, 22 May 2020 21:28:49 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id b6iUs8aZ7XqK; Fri, 22 May 2020 21:28:48 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 7AA1127E0840;
-        Fri, 22 May 2020 21:28:48 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 7AA1127E0840
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1590175728;
-        bh=QDZ1ILKwvaxO0MLvkYfaYFAn8N9kLymelXTd+ycIlxE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=GBkI9Cu9fLJj52109XeakQoWI0EY29WAtHeKR3w7/2/GaQNq1yP5MftEo2SCvbnrt
-         AERtuM/cjxdn/r3X8ID78iDNK3hUt0493g2/vswLS/1ZDZE+vYDM609p/WSV87sxaf
-         8DzYEOw9eNjxWIzkGYA6EvHj6lan1jHYwrQJ2bY0=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lBlZkvKX9U9Q; Fri, 22 May 2020 21:28:48 +0200 (CEST)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 54F3C27E06AA;
-        Fri, 22 May 2020 21:28:48 +0200 (CEST)
-Date:   Fri, 22 May 2020 21:28:47 +0200 (CEST)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     s-anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <811755772.4219337.1590175727911.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <4fab212b-a9d2-927e-d3d7-e591912fd6cf@ti.com>
-References: <20200325204701.16862-1-s-anna@ti.com> <20200521180417.GJ408178@builder.lan> <997d6f9a-64ba-7a89-e909-9a5a474120b0@ti.com> <f15b0c6d-eee8-b839-0c79-a5316dbbfa7b@ti.com> <20200522173346.GJ11847@yoga> <1739080680.4218297.1590170621467.JavaMail.zimbra@kalray.eu> <1334263091.4218509.1590171014972.JavaMail.zimbra@kalray.eu> <4fab212b-a9d2-927e-d3d7-e591912fd6cf@ti.com>
-Subject: Re: [PATCH 3/4] remoteproc: add support for a new 64-bit trace
- version
+        Fri, 22 May 2020 15:29:56 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E97C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 12:29:56 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id a10so5160787ybc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 12:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JxyDI4KhsqdDlPkuSmkhUHOJKiG6K9Cqyhd9HAyDtUY=;
+        b=Ai7DHhpie7RQugUd57wRx/wM4CE24dLCXDX6vSinkbgPGRZ1iRkg56WJ59+7Lf5q7s
+         47+7CVGsUoJrwJYBHC2UkcGz2VXmUYNCU59OYg4HdWifIyLSZ1YIrq5io/DJjv0S0JO/
+         O3tq3pcFLg42X8AXWbpA8Dz5qfsJbADa/XlCzTCbeQ+hw7srne74lQyUu4N7ruEGemMg
+         i1er2cLnV76zGpQD2X/cXN9zerh2Ow4ojTl4GdFWnnawqREKt4aeSihpE/dgqtQ8OJQQ
+         Ywr5qWk7bgML66b2EnxJi7Zt9KHzga1thrw2ghVl+ctb6ngtEAjys97At035Vyh/OM8I
+         +wwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JxyDI4KhsqdDlPkuSmkhUHOJKiG6K9Cqyhd9HAyDtUY=;
+        b=QRiSmbgFYtn2T/FZ693R+T22DrqJ63C0BTbOhM4D7vORBTxH0fhe92G1ycFgYKdeoG
+         71t2OrZKF1W14hNzqp/mX+xW5p+UbFfaKzV+8mVYZiAzTDfB8we1XclWdYrjhvY250ug
+         3VZVS0RvgZCBH2SHeN7+J5wNq6JwC+dCCttLhxWNRD4xWu0tQb8JR+xnghDwJeyQxXwu
+         FDw3lsYOwurC8bp56E7SptB9n2lbHUus4Vyw8Nr/a1y1k+XKcU9aXjGt3hPIS/bsCFi+
+         QKIa3P9awcE1IazLzDIzCjkvQ+GepK+mh4KiyaHp22VWeHLt2+W0RzoFLwob2Dbxj6M9
+         yPAQ==
+X-Gm-Message-State: AOAM532gtE4MTVxpc6CkRP0D+KE7/nSn12WfxDX9MpQXL+f6Cvj9xs/b
+        nPhaeCmJIwVzCU5/lJKUidrYMPwq2kjUmLl3p9BWhQ==
+X-Google-Smtp-Source: ABdhPJzWUTzw0sVh/Mb6whsHSjzKB3O2GIvhjGBp/VzxEYiC+6oFh6e5LBIivl5m60HZj+xADahn4zl9QqXPV+QrEjE=
+X-Received: by 2002:a5b:345:: with SMTP id q5mr25316283ybp.494.1590175795569;
+ Fri, 22 May 2020 12:29:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC81 (Linux)/8.8.15_GA_3895)
-Thread-Topic: remoteproc: add support for a new 64-bit trace version
-Thread-Index: EKz8Ma+TkCvCS/nH+JoP9C9wZLySvg==
+References: <20200521064743.4769-1-maxim.uvarov@linaro.org>
+ <20200521064743.4769-4-maxim.uvarov@linaro.org> <20200522171451.GD10319@linux.intel.com>
+In-Reply-To: <20200522171451.GD10319@linux.intel.com>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Fri, 22 May 2020 22:29:44 +0300
+Message-ID: <CAD8XO3bA0oTqwQOU9byb-Vk73S4uP7dTUaOZyEmUJmj6rk3UuQ@mail.gmail.com>
+Subject: Re: [PATCHv2 2/2] tpm_ftpm_tee: register driver on TEE bus
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        peterhuewe@gmx.de, jgg@ziepe.ca,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suman,
+On Fri, 22 May 2020 at 20:15, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Thu, May 21, 2020 at 09:47:43AM +0300, Maxim Uvarov wrote:
+> > Register driver on TEE bus. module tee registers bus,
+>
+> "on the TEE bus"
+>
+> "The module tee"
+>
+> > and module optee calls optee_enumerate_devices() to scan
+> > all devices on the bus. Trusted Application for this driver
+>
+> Looking at drivers/tee, it shows that tee and optee are in fact the same
+> module as opposed to what your commit message says.
+>
 
------ On 22 May, 2020, at 20:59, s-anna s-anna@ti.com wrote:
+In the current kernel it's 2 different modules.
 
-> Hi Clement,
->=20
->>  > ----- On 22 May, 2020, at 20:03, Cl=C3=A9ment Leger cleger@kalray.eu =
-wrote:>
->>> Hi Suman,
->>>
->>> ----- On 22 May, 2020, at 19:33, Bjorn Andersson bjorn.andersson@linaro=
-.org
->>> wrote:
->>>
->>>> On Fri 22 May 09:54 PDT 2020, Suman Anna wrote:
->>>>
->>>>> On 5/21/20 2:42 PM, Suman Anna wrote:
->>>>>> Hi Bjorn,
->>>>>>
->>>>>> On 5/21/20 1:04 PM, Bjorn Andersson wrote:
->>>>>>> On Wed 25 Mar 13:47 PDT 2020, Suman Anna wrote:
->>>> [..]
->>>>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc=
-.h
->>>> [..]
->>>>>>>> +struct fw_rsc_trace2 {
->>>>>>>
->>>>>>> Sounds more like fw_rsc_trace64 to me - in particular since the ver=
-sion
->>>>>>> of trace2 is 1...
->>>>>>
->>>>>> Yeah, will rename this.
->>>>>>
->>>>>>>
->>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 padding;
->>>>>>>> +=C2=A0=C2=A0=C2=A0 u64 da;
->>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 len;
->>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 reserved;
->>>>>>>
->>>>>>> What's the purpose of this reserved field?
->>>>>>
->>>>>> Partly to make sure the entire resource is aligned on an 8-byte, and
->>>>>> partly copied over from fw_rsc_trace entry. I guess 32-bits is alrea=
-dy
->>>>>> large enough of a size for trace entries irrespective of 32-bit or
->>>>>> 64-bit traces, so I doubt if we want to make the len field also a u6=
-4.
->>>>>
->>>>> Looking at this again, I can drop both padding and reserved fields, i=
-f I
->>>>> move the len field before da. Any preferences/comments?
->>>
->> Sorry, my message went a bit too fast... So as I was saying:
->>=20
->> Not only the in-structure alignment matters but also in the resource tab=
-le.
->> Since the resource table is often packed (see [1] for instance), if a tr=
-ace
->> resource is embedded in the resource table after another resource aligne=
-d
->> on 32 bits only, your 64 bits trace field will potentially end up
->> misaligned.
->=20
-> Right. Since one can mix and match the resources of different sizes and
-> include them in any order, the onus is going to be on the resource table
-> constructors to ensure the inter-resource alignments, if any are
-> required. The resource table format allows you to add padding fields in
-> between if needed, and the remoteproc core relies on the offsets.
+> > can be Early TA's (can be compiled into optee-os). In that
+> > case it will be on OPTEE bus before linux booting. Also
+> > optee-suplicant application is needed to be loaded between
+> > OPTEE module and ftpm module to maintain functionality
+> > for fTPM driver.
+>
+> Why is this needed and why things worked before having this?
+>
 
-Agreed
+Before these changes user space has to drive boot sequence. I.e.  tee
+and optee modules loads, then application tee-supplicant has to start
+and only then module ftpm can be loaded. The reason for that is
+storage services are implemented in userspace and driver needs them.
+To make it work needed some tricky systemd scenario with black list
+driver mode.  That really  did not look well. From the over side ftpm
+might be used by uboot so it can be compiled inside firmware
+(bl32/optee-os). On the other hand there are drivers like tee-rng
+which do not need tee-supplicant and can run immediately after tee and
+optee modules. So the solution as I described in the commit is to make
+tee bus work for both types of drivers.
 
->=20
-> I can only ensure the alignment within this resource structure with
-> ready-available access and conversion to/from a 64-bit type, as long as
-> the resource is starting on a 64-bit boundary.
->=20
->>=20
->> To overcome this, there is multiple solutions:
->>=20
->> - Split the 64 bits fields into 32bits low and high parts:
->> Since all resources are aligned on 32bits, it will be ok
->=20
-> Yes, this is one solution. At the same time, this means you need
-> additional conversion logic for converting to and from 64-bit field. In
-> this particular case, da is the address of the trace buffer pointer on a
-> 64-bit processor, so we can directly use the address of the trace
-> buffer. Guess it is a question of easier translation vs packing the
-> resource table as tight as possible.
+Also in this driver I specially did not remove the old way of
+registration using DT entry. To not break existence things.  And added
+new registration from the platform driver.
 
-You simply have to add two wrapper such as the following:
 
-static inline void rproc_rsc_set_addr(u32 *low, u32 *hi, u64 val)
-{
-=09*low =3D lower_32_bits(val);
-=09*hi =3D upper_32_bits(val);
-}
+> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> > Suggested-by: Sumit Garg <sumit.garg@linaro.org>
+> > Suggested-by: Arnd Bergmann <arnd@linaro.org>
+> > ---
+> >  drivers/char/tpm/tpm_ftpm_tee.c | 69 ++++++++++++++++++++++++++++-----
+> >  1 file changed, 59 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+> > index 22bf553ccf9d..7bb4ce281050 100644
+> > --- a/drivers/char/tpm/tpm_ftpm_tee.c
+> > +++ b/drivers/char/tpm/tpm_ftpm_tee.c
+> > @@ -214,11 +214,10 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+> >   * Return:
+> >   *   On success, 0. On failure, -errno.
+> >   */
+> > -static int ftpm_tee_probe(struct platform_device *pdev)
+> > +static int ftpm_tee_probe(struct device *dev)
+> >  {
+> >       int rc;
+> >       struct tpm_chip *chip;
+> > -     struct device *dev = &pdev->dev;
+> >       struct ftpm_tee_private *pvt_data = NULL;
+> >       struct tee_ioctl_open_session_arg sess_arg;
+> >
+> > @@ -297,6 +296,13 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+> >       return rc;
+> >  }
+> >
+> > +static int ftpm_plat_tee_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +
+> > +     return ftpm_tee_probe(dev);
+> > +}
+> > +
+> >  /**
+> >   * ftpm_tee_remove() - remove the TPM device
+> >   * @pdev: the platform_device description.
+> > @@ -304,9 +310,9 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+> >   * Return:
+> >   *   0 always.
+> >   */
+> > -static int ftpm_tee_remove(struct platform_device *pdev)
+> > +static int ftpm_tee_remove(struct device *dev)
+> >  {
+> > -     struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
+> > +     struct ftpm_tee_private *pvt_data = dev_get_drvdata(dev);
+> >
+> >       /* Release the chip */
+> >       tpm_chip_unregister(pvt_data->chip);
+> > @@ -328,11 +334,18 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+> >       return 0;
+> >  }
+> >
+> > +static int ftpm_plat_tee_remove(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +
+> > +     return ftpm_tee_remove(dev);
+> > +}
+> > +
+> >  /**
+> >   * ftpm_tee_shutdown() - shutdown the TPM device
+> >   * @pdev: the platform_device description.
+> >   */
+> > -static void ftpm_tee_shutdown(struct platform_device *pdev)
+> > +static void ftpm_plat_tee_shutdown(struct platform_device *pdev)
+> >  {
+> >       struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
+> >
+> > @@ -347,17 +360,53 @@ static const struct of_device_id of_ftpm_tee_ids[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(of, of_ftpm_tee_ids);
+> >
+> > -static struct platform_driver ftpm_tee_driver = {
+> > +static struct platform_driver ftpm_tee_plat_driver = {
+> >       .driver = {
+> >               .name = "ftpm-tee",
+> >               .of_match_table = of_match_ptr(of_ftpm_tee_ids),
+> >       },
+> > -     .probe = ftpm_tee_probe,
+> > -     .remove = ftpm_tee_remove,
+> > -     .shutdown = ftpm_tee_shutdown,
+> > +     .shutdown = ftpm_plat_tee_shutdown,
+> > +     .probe = ftpm_plat_tee_probe,
+> > +     .remove = ftpm_plat_tee_remove,
+> > +};
+> > +
+> > +static const struct tee_client_device_id optee_ftpm_id_table[] = {
+> > +     {UUID_INIT(0xbc50d971, 0xd4c9, 0x42c4,
+> > +                0x82, 0xcb, 0x34, 0x3f, 0xb7, 0xf3, 0x78, 0x96)},
+> > +     {}
+>
+> Please put a comment describing what this is.
+>
+> >  };
+> >
+> > -module_platform_driver(ftpm_tee_driver);
+> > +MODULE_DEVICE_TABLE(tee, optee_ftpm_id_table);
+> > +
+> > +static struct tee_client_driver ftpm_tee_driver = {
+> > +     .id_table       = optee_ftpm_id_table,
+> > +     .driver         = {
+> > +             .name           = "optee-ftpm",
+> > +             .bus            = &tee_bus_type,
+> > +             .probe          = ftpm_tee_probe,
+> > +             .remove         = ftpm_tee_remove,
+> > +     },
+> > +};
+> > +
+> > +static int __init ftpm_mod_init(void)
+> > +{
+> > +     int rc;
+> > +
+> > +     rc = platform_driver_register(&ftpm_tee_plat_driver);
+> > +     if (rc)
+> > +             return rc;
+> > +
+> > +     return driver_register(&ftpm_tee_driver.driver);
+> > +}
+> > +
+> > +static void __exit ftpm_mod_exit(void)
+> > +{
+> > +     platform_driver_unregister(&ftpm_tee_plat_driver);
+> > +     driver_unregister(&ftpm_tee_driver.driver);
+> > +}
+> > +
+> > +module_init(ftpm_mod_init);
+> > +module_exit(ftpm_mod_exit);
+> >
+> >  MODULE_AUTHOR("Thirupathaiah Annapureddy <thiruan@microsoft.com>");
+> >  MODULE_DESCRIPTION("TPM Driver for fTPM TA in TEE");
+> > --
+> > 2.17.1
+> >
+>
+> Wondering if MODULE_AUTHOR() is still equired given that the GIT log
+> has objectively better log of authorship.
+>
+> /Jarkko
 
-static inline u64 rproc_rsc_get_addr(u32 low, u32 hi)
-{
-=09return ((u64) hi << 32) | low;
-}
+Yea, but I prefer to not touch such lines. It's up to maintainers how
+they support the driver.
 
-This is not really difficult to use and will ensure your new trace
-resource can be used easily without breaking 32 bits alignment.
-Breaking compatibility is an option also and it is probably needed
-to document it clearly if it is chosen to do so.
-
->=20
->>=20
->> - Use memcpy_from/to_io when reading/writing such fields
->> As I said in a previous message this should probably be used since
->> the memories that are accessed by rproc are io mem (ioremap in almost
->> all drivers).
->=20
-> Anything running out of DDR actually doesn't need the io mem semantics,
-> so we actually need to be fixing the drivers. Blindly changing the
-> current memcpy to memcpy_to_io in the core loader is also not right. Any
-> internal memories properties will actually depend on the processor and
-> SoC. Eg: The R5 TCM interfaces in general can be treated as normal memori=
-es.
-
-Agreed, this is most of the case indeed where the memories are actually
-accessible directly. But using ioremap potentially creates a mapping that
-does not support misaligned accesses and so accesses should be always align=
-ed.
-memcpy_from/to_io ensures that.
-IMHO, there is probably something to be rework since the drivers are mappin=
-g
-the memories but the core is accessing this memory, knowing nothing about
-how it was mapped.
-
-Regards,
-
-Cl=C3=A9ment
-
->=20
-> regards
-> Suman
->=20
->>=20
->> Regards,
->>=20
->> Cl=C3=A9ment
->>=20
->> [1]
->> https://github.com/OpenAMP/open-amp/blob/master/apps/machine/zynqmp_r5/r=
-sc_table.h
->>>
->>>
->>>
->>>
->>>>>
->>>>
->>>> Sounds good to me.
->>>>
->>>> Thanks,
-> >>> Bjorn
+Best regards,
+Maxim.
