@@ -2,331 +2,241 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A335C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED939C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B522072C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B192083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Gus1Vba7"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lhBGTBW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgEVCgA (ORCPT
+        id S1727836AbgEVCjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 22:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55776 "EHLO
+        Thu, 21 May 2020 22:39:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgEVCgA (ORCPT
+        with ESMTP id S1727004AbgEVCjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 22:36:00 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA360C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:35:58 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x12so7232296qts.9
-        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:35:58 -0700 (PDT)
+        Thu, 21 May 2020 22:39:17 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B77C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:39:17 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id z18so7300999qto.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 19:39:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=lca.pw; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=W6j7To5aFqU165eD2dpI9gS0Sq4hB8ltmc/WMSYcomI=;
-        b=Gus1Vba7CPAvZgLTYPedaje7s1aN5WY+c6jwsSEZqY1j2YppjDgbj7hKp/UUrjMEkH
-         DJXm65KHujL8A8K83iLnzazwZLfar0VMx5ODPaGUFQT5gbo/tRGlyPStX/znZD7fefZ7
-         YRHblqCDOFbbyHBwhoPFJ7VQ7nIxUFCaB/WtA=
+        bh=VGfZyDb4rtYU2EbQOp1mVugB2T8F3YSTVsAVGe7Ovo8=;
+        b=lhBGTBW8TEB2GPylriwczSZuGgch37qATzQYoUbEIhb6eWAPwEDCzhkphkJOJs9qwF
+         XbyTeHod5KFSQfhSYiE8yAf3tzHZXeC3XkMC/M8Ef+00kD75l2941BXoYQKewyl9WVrX
+         XOh/SD/kGBWOXupBarM39a0RK5it9WpVqz+3AbHQzA+B5VTn376FiZMeod8qTD5RDdbX
+         6h4NL5IMNBIehmhCV0XyzX+tsZUkNgSUcboynAaCRAJmHsPfT0ikr8irHDHNL0cWMt+1
+         GHkLOy2Z4Q5wQXtMqc+B4Si/IH47PmXl/ZGa5n30F03gmiPjLySBTsPjp6UbUdYJqIVk
+         u6Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=W6j7To5aFqU165eD2dpI9gS0Sq4hB8ltmc/WMSYcomI=;
-        b=NbTiH4Fk2mpcTQMMXNZ/m0rsAqriGig/T+MNivhWc4WB2QA+KC0x7Cv9WekNZ9JMW9
-         japFCMneWzeoSC7o/lqr6BImaQ8qOCe7+EEKRA+7kkcVPuLIwBe1pIvrIuvJFfoA9LQa
-         8lVBE0rTBFtL4yzfh08keHTz6fyC6oJYG8m/04ZnrtyYVR0rJUWDU79+AqfEku7NbsXX
-         UWOtmh0PP5eDDlJb1kJ4U0cfs1fM0oqrN0j44asEYc4iAmgUq5xgYZ88xEDBe8kSFrOq
-         A13PQc6j2xjBcqZqDlCX8HGwUkHRTXTr6a9yEUOxPlkUzluNuFxrtpVNOE2W9u01jqkv
-         XqFg==
-X-Gm-Message-State: AOAM530wN3M8UNUsNmAQ6wZAbV1pKKx0YTAYBMbpCUk7HPkmcWKpGaVD
-        3BTDnw+kU8mX/zx7bNXQZr2fDw==
-X-Google-Smtp-Source: ABdhPJzD0AHrGtmYwcQsFb2nPHXQU2ZFGg/y/J/Yo2GQ6eU76V9QADJzURcy3AlzkcpBF/vV5jqjWw==
-X-Received: by 2002:ac8:4b5a:: with SMTP id e26mr13849611qts.166.1590114957178;
-        Thu, 21 May 2020 19:35:57 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 23sm6189906qkf.68.2020.05.21.19.35.56
+        bh=VGfZyDb4rtYU2EbQOp1mVugB2T8F3YSTVsAVGe7Ovo8=;
+        b=Hv4rYrScRnTQFlp8pqaGOKqcAFz68Eljmei8+ky0mosX4IotdeTWUilMVu08o/GLTM
+         ocGqKzCEka1eMK7jo5BBOVdme1G0A1PkuvSjtkUaRQmllmkKQBfR9peDH4ogKCH7RAQG
+         ILKpb+SGRdo3ysCP8k4pz8tPbqNQyTEnn58EvNLkpskefo6ekEc4uaEpdbsPxVTmZatR
+         lv96HarRnX+DNpNphk4B29TndHa6DtT1CHsC+EXCz/2AexRuY+JJeVs9zR72SD0nXn9X
+         xpADdXed2axzQ5zPVjM6DCKBd+mXj9vnklI2vM/AKA9gubIQfyU8SUjsTJmTS0iJS/HP
+         pteg==
+X-Gm-Message-State: AOAM530V/eg61zHzN4m7xFxU54PnB27om7t6h/PYaUfZ6ASJi7byYtXW
+        3j7OiLisdeyhnTTk8kuIBNIjVw==
+X-Google-Smtp-Source: ABdhPJxF85bicZk/Jf7ZPUHqV6BX7sgtTGjKtL9roq9knQMil7yhye69NDSiUNVzOVMezQamVPRgag==
+X-Received: by 2002:aed:37ca:: with SMTP id j68mr13796074qtb.276.1590115156174;
+        Thu, 21 May 2020 19:39:16 -0700 (PDT)
+Received: from ovpn-112-192.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q54sm6936206qtj.38.2020.05.21.19.39.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 19:35:56 -0700 (PDT)
-Date:   Thu, 21 May 2020 22:35:56 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     vpillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>
-Subject: Re: [RFC PATCH 07/13] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20200522023556.GE140701@google.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <e942da7fd881977923463f19648085c1bfaa37f8.1583332765.git.vpillai@digitalocean.com>
- <20200521231426.GA246288@google.com>
+        Thu, 21 May 2020 19:39:15 -0700 (PDT)
+Date:   Thu, 21 May 2020 22:39:06 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, jgg@ziepe.ca
+Subject: Re: [PATCH v2 3/3] vfio-pci: Invalidate mmaps and block MMIO access
+ on disabled memory
+Message-ID: <20200522023906.GA17414@ovpn-112-192.phx2.redhat.com>
+References: <158871401328.15589.17598154478222071285.stgit@gimli.home>
+ <158871570274.15589.10563806532874116326.stgit@gimli.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521231426.GA246288@google.com>
+In-Reply-To: <158871570274.15589.10563806532874116326.stgit@gimli.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 07:14:26PM -0400, Joel Fernandes wrote:
-> On Wed, Mar 04, 2020 at 04:59:57PM +0000, vpillai wrote:
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > Instead of only selecting a local task, select a task for all SMT
-> > siblings for every reschedule on the core (irrespective which logical
-> > CPU does the reschedule).
-> > 
-> > There could be races in core scheduler where a CPU is trying to pick
-> > a task for its sibling in core scheduler, when that CPU has just been
-> > offlined.  We should not schedule any tasks on the CPU in this case.
-> > Return an idle task in pick_next_task for this situation.
-> > 
-> > NOTE: there is still potential for siblings rivalry.
-> > NOTE: this is far too complicated; but thus far I've failed to
-> >       simplify it further.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
-> > Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
-> > Signed-off-by: Aaron Lu <aaron.lu@linux.alibaba.com>
-> > Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> > ---
-> >  kernel/sched/core.c  | 274 ++++++++++++++++++++++++++++++++++++++++++-
-> >  kernel/sched/fair.c  |  40 +++++++
-> >  kernel/sched/sched.h |   6 +-
-> >  3 files changed, 318 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 445f0d519336..9a1bd236044e 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -4253,7 +4253,7 @@ static inline void schedule_debug(struct task_struct *prev, bool preempt)
-> >   * Pick up the highest-prio task:
-> >   */
-> >  static inline struct task_struct *
-> > -pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> > +__pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> >  {
-> >  	const struct sched_class *class;
-> >  	struct task_struct *p;
-> > @@ -4309,6 +4309,273 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
-> >  	BUG();
-> >  }
-> >  
-> > +#ifdef CONFIG_SCHED_CORE
-> > +
-> > +static inline bool cookie_equals(struct task_struct *a, unsigned long cookie)
-> > +{
-> > +	return is_idle_task(a) || (a->core_cookie == cookie);
-> > +}
-> > +
-> > +static inline bool cookie_match(struct task_struct *a, struct task_struct *b)
-> > +{
-> > +	if (is_idle_task(a) || is_idle_task(b))
-> > +		return true;
-> > +
-> > +	return a->core_cookie == b->core_cookie;
-> > +}
-> > +
-> > +// XXX fairness/fwd progress conditions
-> > +/*
-> > + * Returns
-> > + * - NULL if there is no runnable task for this class.
-> > + * - the highest priority task for this runqueue if it matches
-> > + *   rq->core->core_cookie or its priority is greater than max.
-> > + * - Else returns idle_task.
-> > + */
-> > +static struct task_struct *
-> > +pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
-> > +{
-> > +	struct task_struct *class_pick, *cookie_pick;
-> > +	unsigned long cookie = rq->core->core_cookie;
-> > +
-> > +	class_pick = class->pick_task(rq);
-> > +	if (!class_pick)
-> > +		return NULL;
-> > +
-> > +	if (!cookie) {
-> > +		/*
-> > +		 * If class_pick is tagged, return it only if it has
-> > +		 * higher priority than max.
-> > +		 */
-> > +		if (max && class_pick->core_cookie &&
-> > +		    prio_less(class_pick, max))
-> > +			return idle_sched_class.pick_task(rq);
-> > +
-> > +		return class_pick;
-> > +	}
-> > +
-> > +	/*
-> > +	 * If class_pick is idle or matches cookie, return early.
-> > +	 */
-> > +	if (cookie_equals(class_pick, cookie))
-> > +		return class_pick;
-> > +
-> > +	cookie_pick = sched_core_find(rq, cookie);
-> > +
-> > +	/*
-> > +	 * If class > max && class > cookie, it is the highest priority task on
-> > +	 * the core (so far) and it must be selected, otherwise we must go with
-> > +	 * the cookie pick in order to satisfy the constraint.
-> > +	 */
-> > +	if (prio_less(cookie_pick, class_pick) &&
-> > +	    (!max || prio_less(max, class_pick)))
-> > +		return class_pick;
-> > +
-> > +	return cookie_pick;
-> > +}
-> 
-> I've been hating on this pick_task() routine for a while now :-). If we add
-> the task to the tag tree as Peter suggested at OSPM for that other issue
-> Vineeth found, it seems it could be simpler.
-> 
-> This has just been near a compiler so far but how about:
+On Tue, May 05, 2020 at 03:55:02PM -0600, Alex Williamson wrote:
+[]
+vfio_pci_mmap_fault(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct vfio_pci_device *vdev = vma->vm_private_data;
+> +	vm_fault_t ret = VM_FAULT_NOPAGE;
+>  
+> -	if (vfio_pci_add_vma(vdev, vma))
+> -		return VM_FAULT_OOM;
+> +	mutex_lock(&vdev->vma_lock);
+> +	down_read(&vdev->memory_lock);
 
-Discussed a lot with Vineeth. Below is an improved version of the pick_task()
-similification.
+This lock here will trigger,
 
-It also handles the following "bug" in the existing code as well that Vineeth
-brought up in OSPM: Suppose 2 siblings of a core: rq 1 and rq 2.
+[17368.321363][T3614103] ======================================================
+[17368.321375][T3614103] WARNING: possible circular locking dependency detected
+[17368.321399][T3614103] 5.7.0-rc6-next-20200521+ #116 Tainted: G        W        
+[17368.321410][T3614103] ------------------------------------------------------
+[17368.321433][T3614103] qemu-kvm/3614103 is trying to acquire lock:
+[17368.321443][T3614103] c000200fb2328968 (&kvm->lock){+.+.}-{3:3}, at: kvmppc_irq_bypass_add_producer_hv+0xd4/0x3b0 [kvm_hv]
+[17368.321488][T3614103] 
+[17368.321488][T3614103] but task is already holding lock:
+[17368.321533][T3614103] c0000000016f4dc8 (lock#7){+.+.}-{3:3}, at: irq_bypass_register_producer+0x80/0x1d0
+[17368.321564][T3614103] 
+[17368.321564][T3614103] which lock already depends on the new lock.
+[17368.321564][T3614103] 
+[17368.321590][T3614103] 
+[17368.321590][T3614103] the existing dependency chain (in reverse order) is:
+[17368.321625][T3614103] 
+[17368.321625][T3614103] -> #4 (lock#7){+.+.}-{3:3}:
+[17368.321662][T3614103]        __mutex_lock+0xdc/0xb80
+[17368.321683][T3614103]        irq_bypass_register_producer+0x80/0x1d0
+[17368.321706][T3614103]        vfio_msi_set_vector_signal+0x1d8/0x350 [vfio_pci]
+[17368.321719][T3614103]        vfio_msi_set_block+0xb0/0x1e0 [vfio_pci]
+[17368.321752][T3614103]        vfio_pci_set_msi_trigger+0x13c/0x3e0 [vfio_pci]
+[17368.321787][T3614103]        vfio_pci_set_irqs_ioctl+0x134/0x2c0 [vfio_pci]
+[17368.321821][T3614103]        vfio_pci_ioctl+0xe10/0x1460 [vfio_pci]
+[17368.321855][T3614103]        vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
+[17368.321879][T3614103]        ksys_ioctl+0xd8/0x130
+[17368.321888][T3614103]        sys_ioctl+0x28/0x40
+[17368.321910][T3614103]        system_call_exception+0x108/0x1d0
+[17368.321932][T3614103]        system_call_common+0xf0/0x278
+[17368.321951][T3614103] 
+[17368.321951][T3614103] -> #3 (&vdev->memory_lock){++++}-{3:3}:
+[17368.321988][T3614103]        lock_release+0x190/0x5e0
+[17368.322009][T3614103]        __mutex_unlock_slowpath+0x68/0x410
+[17368.322042][T3614103]        vfio_pci_mmap_fault+0xe8/0x1f0 [vfio_pci]
+vfio_pci_mmap_fault at drivers/vfio/pci/vfio_pci.c:1534
+[17368.322066][T3614103]        __do_fault+0x64/0x220
+[17368.322086][T3614103]        handle_mm_fault+0x12f0/0x19e0
+[17368.322107][T3614103]        __do_page_fault+0x284/0xf70
+[17368.322116][T3614103]        handle_page_fault+0x10/0x2c
+[17368.322136][T3614103] 
+[17368.322136][T3614103] -> #2 (&mm->mmap_sem){++++}-{3:3}:
+[17368.322160][T3614103]        __might_fault+0x84/0xe0
+[17368.322182][T3614103]        _copy_to_user+0x3c/0x120
+[17368.322206][T3614103]        kvm_vcpu_ioctl+0x1ec/0xac0 [kvm]
+[17368.322239][T3614103]        ksys_ioctl+0xd8/0x130
+[17368.322270][T3614103]        sys_ioctl+0x28/0x40
+[17368.322301][T3614103]        system_call_exception+0x108/0x1d0
+[17368.322334][T3614103]        system_call_common+0xf0/0x278
+[17368.322375][T3614103] 
+[17368.322375][T3614103] -> #1 (&vcpu->mutex){+.+.}-{3:3}:
+[17368.322411][T3614103]        __mutex_lock+0xdc/0xb80
+[17368.322446][T3614103]        kvmppc_xive_release+0xd8/0x260 [kvm]
+[17368.322484][T3614103]        kvm_device_release+0xc4/0x110 [kvm]
+[17368.322518][T3614103]        __fput+0x154/0x3b0
+[17368.322562][T3614103]        task_work_run+0xd8/0x170
+[17368.322583][T3614103]        do_exit+0x4f8/0xeb0
+[17368.322604][T3614103]        do_group_exit+0x78/0x160
+[17368.322625][T3614103]        get_signal+0x230/0x1440
+[17368.322657][T3614103]        do_notify_resume+0x130/0x3e0
+[17368.322677][T3614103]        syscall_exit_prepare+0x1a4/0x280
+[17368.322687][T3614103]        system_call_common+0xf8/0x278
+[17368.322718][T3614103] 
+[17368.322718][T3614103] -> #0 (&kvm->lock){+.+.}-{3:3}:
+[17368.322753][T3614103]        __lock_acquire+0x1fe4/0x3190
+[17368.322774][T3614103]        lock_acquire+0x140/0x9a0
+[17368.322805][T3614103]        __mutex_lock+0xdc/0xb80
+[17368.322838][T3614103]        kvmppc_irq_bypass_add_producer_hv+0xd4/0x3b0 [kvm_hv]
+[17368.322888][T3614103]        kvm_arch_irq_bypass_add_producer+0x40/0x70 [kvm]
+[17368.322925][T3614103]        __connect+0x118/0x150
+[17368.322956][T3614103]        irq_bypass_register_producer+0x198/0x1d0
+[17368.322989][T3614103]        vfio_msi_set_vector_signal+0x1d8/0x350 [vfio_pci]
+[17368.323024][T3614103]        vfio_msi_set_block+0xb0/0x1e0 [vfio_pci]
+[17368.323057][T3614103]        vfio_pci_set_irqs_ioctl+0x134/0x2c0 [vfio_pci]
+[17368.323091][T3614103]        vfio_pci_ioctl+0xe10/0x1460 [vfio_pci]
+[17368.323124][T3614103]        vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
+[17368.323156][T3614103]        ksys_ioctl+0xd8/0x130
+[17368.323176][T3614103]        sys_ioctl+0x28/0x40
+[17368.323208][T3614103]        system_call_exception+0x108/0x1d0
+[17368.323229][T3614103]        system_call_common+0xf0/0x278
+[17368.323259][T3614103] 
+[17368.323259][T3614103] other info that might help us debug this:
+[17368.323259][T3614103] 
+[17368.323295][T3614103] Chain exists of:
+[17368.323295][T3614103]   &kvm->lock --> &vdev->memory_lock --> lock#7
+[17368.323295][T3614103] 
+[17368.323335][T3614103]  Possible unsafe locking scenario:
+[17368.323335][T3614103] 
+[17368.323368][T3614103]        CPU0                    CPU1
+[17368.323410][T3614103]        ----                    ----
+[17368.323429][T3614103]   lock(lock#7);
+[17368.323447][T3614103]                                lock(&vdev->memory_lock);
+[17368.323503][T3614103]                                lock(lock#7);
+[17368.323535][T3614103]   lock(&kvm->lock);
+[17368.323554][T3614103] 
+[17368.323554][T3614103]  *** DEADLOCK ***
+[17368.323554][T3614103] 
+[17368.323590][T3614103] 3 locks held by qemu-kvm/3614103:
+[17368.323609][T3614103]  #0: c000001f8daa2900 (&vdev->igate){+.+.}-{3:3}, at: vfio_pci_ioctl+0xdf0/0x1460 [vfio_pci]
+[17368.323626][T3614103]  #1: c000001f8daa2b88 (&vdev->memory_lock){++++}-{3:3}, at: vfio_pci_set_irqs_ioctl+0xe8/0x2c0 [vfio_pci]
+[17368.323646][T3614103]  #2: c0000000016f4dc8 (lock#7){+.+.}-{3:3}, at: irq_bypass_register_producer+0x80/0x1d0
+[17368.323779][T3614103] 
+[17368.323779][T3614103] stack backtrace:
+[17368.323835][T3614103] CPU: 84 PID: 3614103 Comm: qemu-kvm Tainted: G        W         5.7.0-rc6-next-20200521+ #116
+[17368.323963][T3614103] Call Trace:
+[17368.324012][T3614103] [c000200d4260f380] [c00000000079cb38] dump_stack+0xfc/0x174 (unreliable)
+[17368.324147][T3614103] [c000200d4260f3d0] [c0000000001ed958] print_circular_bug+0x2d8/0x350
+[17368.324231][T3614103] [c000200d4260f470] [c0000000001edc40] check_noncircular+0x270/0x330
+[17368.324328][T3614103] [c000200d4260f570] [c0000000001f4ce4] __lock_acquire+0x1fe4/0x3190
+[17368.324427][T3614103] [c000200d4260f710] [c0000000001f0ec0] lock_acquire+0x140/0x9a0
+[17368.324513][T3614103] [c000200d4260f840] [c000000000ad643c] __mutex_lock+0xdc/0xb80
+[17368.324620][T3614103] [c000200d4260f960] [c0080000101e952c] kvmppc_irq_bypass_add_producer_hv+0xd4/0x3b0 [kvm_hv]
+[17368.324747][T3614103] [c000200d4260fa10] [c0080000103ec698] kvm_arch_irq_bypass_add_producer+0x40/0x70 [kvm]
+[17368.324845][T3614103] [c000200d4260fa30] [c000000000ad0558] __connect+0x118/0x150
+[17368.324943][T3614103] [c000200d4260fa70] [c000000000ad0838] irq_bypass_register_producer+0x198/0x1d0
+[17368.325048][T3614103] [c000200d4260fab0] [c00800000ffc5460] vfio_msi_set_vector_signal+0x1d8/0x350 [vfio_pci]
+[17368.325178][T3614103] [c000200d4260fb70] [c00800000ffc5688] vfio_msi_set_block+0xb0/0x1e0 [vfio_pci]
+[17368.325273][T3614103] [c000200d4260fbe0] [c00800000ffc6f2c] vfio_pci_set_irqs_ioctl+0x134/0x2c0 [vfio_pci]
+[17368.325389][T3614103] [c000200d4260fc40] [c00800000ffc4be8] vfio_pci_ioctl+0xe10/0x1460 [vfio_pci]
+[17368.325487][T3614103] [c000200d4260fd30] [c00800000fc805ec] vfio_device_fops_unl_ioctl+0x44/0x70 [vfio]
+[17368.325598][T3614103] [c000200d4260fd50] [c0000000005a30b8] ksys_ioctl+0xd8/0x130
+[17368.325681][T3614103] [c000200d4260fda0] [c0000000005a3138] sys_ioctl+0x28/0x40
+[17368.325787][T3614103] [c000200d4260fdc0] [c000000000039e78] system_call_exception+0x108/0x1d0
+[17368.325872][T3614103] [c000200d4260fe20] [c00000000000c9f0] system_call_common+0xf0/0x278
 
-In priority order (high to low), say we have the tasks:
-A - untagged  (rq 1)
-B - tagged    (rq 2)
-C - untagged  (rq 2)
-
-Say, B and C are in the same scheduling class.
-
-When the pick_next_task() loop runs, it looks at rq 1 and max is A, A is
-tenantively selected for rq 1. Then it looks at rq 2 and the class_pick is B.
-But that's not compatible with A. So rq 2 gets forced idle.
-
-In reality, rq 2 could have run C instead of idle. The fix is to add C to the
-tag tree as Peter suggested in OSPM.
-
-Updated diff below:
-
----8<-----------------------
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 005d7f7323e2d..625377f393ed3 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -182,9 +182,6 @@ static void sched_core_enqueue(struct rq *rq, struct task_struct *p)
- 
- 	rq->core->core_task_seq++;
- 
--	if (!p->core_cookie)
--		return;
--
- 	node = &rq->core_tree.rb_node;
- 	parent = *node;
- 
-@@ -215,7 +212,7 @@ static void sched_core_dequeue(struct rq *rq, struct task_struct *p)
- 
- void sched_core_add(struct rq *rq, struct task_struct *p)
- {
--	if (p->core_cookie && task_on_rq_queued(p))
-+	if (task_on_rq_queued(p))
- 		sched_core_enqueue(rq, p);
- }
- 
-@@ -4556,43 +4553,57 @@ void sched_core_irq_exit(void)
- static struct task_struct *
- pick_task(struct rq *rq, const struct sched_class *class, struct task_struct *max)
- {
--	struct task_struct *class_pick, *cookie_pick;
-+	struct task_struct *class_pick, *cookie_pick, *rq_pick;
- 	unsigned long cookie = rq->core->core_cookie;
- 
- 	class_pick = class->pick_task(rq);
- 	if (!class_pick)
- 		return NULL;
- 
--	if (!cookie) {
--		/*
--		 * If class_pick is tagged, return it only if it has
--		 * higher priority than max.
--		 */
--		if (max && class_pick->core_cookie &&
--		    prio_less(class_pick, max))
--			return idle_sched_class.pick_task(rq);
-+	if (!max)
-+		return class_pick;
-+
-+	/* Make sure the current max's cookie is core->core_cookie */
-+	WARN_ON_ONCE(max->core_cookie != cookie);
- 
-+	/* Try to play really nice: see if the class's cookie works. */
-+	if (cookie_equals(class_pick, cookie))
- 		return class_pick;
--	}
- 
- 	/*
--	 * If class_pick is idle or matches cookie, return early.
-+	 * From here on, we must return class_pick, cookie_pick or idle.
-+	 * Following are the cases:
-+	 * 1 - lowest prio.
-+	 * 3 - highest prio.
-+	 *
-+	 * max	class	cookie	outcome
-+	 * 1	2	3	cookie
-+	 * 1	3	2	class
-+	 * 2	1	3	cookie
-+	 * 2	3	1	class
-+	 * 3	1	2	cookie
-+	 * 3	2	1	cookie
-+	 * 3	2	-	return idle (when no cookie task).
- 	 */
--	if (cookie_equals(class_pick, cookie))
--		return class_pick;
- 
-+	/* First try to find the highest prio of (cookie, class and max). */
- 	cookie_pick = sched_core_find(rq, cookie);
-+	if (cookie_pick && prio_less(class_pick, cookie_pick))
-+		rq_pick = cookie_pick;
-+	else
-+		rq_pick = class_pick;
-+	if (prio_less(max, rq_pick))
-+		return rq_pick;
-+
-+	/* If we max was greatest, then see if there was a cookie. */
-+	if (cookie_pick)
-+		return cookie_pick;
- 
- 	/*
--	 * If class > max && class > cookie, it is the highest priority task on
--	 * the core (so far) and it must be selected, otherwise we must go with
--	 * the cookie pick in order to satisfy the constraint.
-+	 * We get here with if class_pick was incompatible with max
-+	 * and lower prio than max. So we have nothing.
- 	 */
--	if (prio_less(cookie_pick, class_pick) &&
--	    (!max || prio_less(max, class_pick)))
--		return class_pick;
--
--	return cookie_pick;
-+	return idle_sched_class.pick_task(rq);
- }
- 
- static struct task_struct *
+> +
+> +	if (!__vfio_pci_memory_enabled(vdev)) {
+> +		ret = VM_FAULT_SIGBUS;
+> +		mutex_unlock(&vdev->vma_lock);
+> +		goto up_out;
+> +	}
+> +
+> +	if (__vfio_pci_add_vma(vdev, vma)) {
+> +		ret = VM_FAULT_OOM;
+> +		mutex_unlock(&vdev->vma_lock);
+> +		goto up_out;
+> +	}
+> +
+> +	mutex_unlock(&vdev->vma_lock);
+>  
+>  	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+>  			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
+> -		return VM_FAULT_SIGBUS;
+> +		ret = VM_FAULT_SIGBUS;
+>  
+> -	return VM_FAULT_NOPAGE;
+> +up_out:
+> +	up_read(&vdev->memory_lock);
+> +	return ret;
+>  }
