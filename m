@@ -2,149 +2,73 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DF8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19586C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44AA5206DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GS7WZ35r"
+	by mail.kernel.org (Postfix) with ESMTP id DC138207CB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590140264;
+	bh=35cJRmTh058RiER0D+CYZkhMXu//HtQ3orgCY5xtYP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a53/01QLaraaiCSHj8Y8NBySf0RicRSQbsmYs+KjT4WOrdWQIKTlTCbJWssbmsyIH
+	 eh9as8md0XVJyL0SU1Q1XRtgkwCDlrnYwlO4VU7/SmyIoylrBZ0bN0lHAwwrpXRUXH
+	 XCLRtOfwmQvpHOj7MUMGoVj6WxJzbzofe0ywfr6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgEVJgp (ORCPT
+        id S1729582AbgEVJho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:36:45 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:40164 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgEVJgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:36:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=c7wce+6/DBIYjkCyqWElBhrfpiCn+9+Nidad9WAJ8xQ=; b=GS7WZ35rrw0FFrzlc9tBdIUrEc
-        AC2C2hlrz0cbztdEX4e2704LmbeAVy9pVGEPBw33HfOWw08qBCBsFN0bCz8z+oo2ai1Q4hju/u5kC
-        tw+XLZ4f0z0bp/Kjy+0wnCvH/76psO0MEjhDNjeeRD2lrS00xG8UJzaByqHXOhfh5KN+DsoVq6Dd2
-        s1fM00t3BMT8n1ZTxUZVwC7wzHtxDNL7RT9cy7pE1wzgY/alhkhOLrT4mRCQLSfjr90gEwqGb7Plc
-        7JebFJB3UubdvwK8Zw34xPkJJ3vNBbm/yr1X2BeCRF8NYlRwlnDLHMgOP6bZZJIJ85kgE9dGQVfg2
-        v3FyyN+A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jc3z8-0004uu-Qs; Fri, 22 May 2020 09:28:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 22 May 2020 05:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728338AbgEVJhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 05:37:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C481530018B;
-        Fri, 22 May 2020 11:28:48 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B428D212820ED; Fri, 22 May 2020 11:28:48 +0200 (CEST)
-Date:   Fri, 22 May 2020 11:28:48 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [RFC PATCH 5/5] selftest/x86: Add CET quick test
-Message-ID: <20200522092848.GJ325280@hirez.programming.kicks-ass.net>
-References: <20200521211720.20236-1-yu-cheng.yu@intel.com>
- <20200521211720.20236-6-yu-cheng.yu@intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7753206DD;
+        Fri, 22 May 2020 09:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590140262;
+        bh=35cJRmTh058RiER0D+CYZkhMXu//HtQ3orgCY5xtYP8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZcfJm0kE2vSf7EEvq3kgSsrOTYMGhxJC4lfhzQfB4x3kuCS0sitncoxxiZRJyNtQT
+         DhhU1IdrLLNy+OaJN6HHOBI0A/swZ5e9WDAerOZoaGxPkYeF1bZQ2gbeRcJos11IQ+
+         1SORWP5ncr9j4Sf4ubcCcFpZoDe6Ury/yb8kpPHs=
+Date:   Fri, 22 May 2020 11:37:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     MugilRaj <dmugil2000@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
+        speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Chris Brannon <chris@the-brannons.com>
+Subject: Re: [PATCH] taging: speakup: remove volatile
+Message-ID: <20200522093738.GA1231689@kroah.com>
+References: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521211720.20236-6-yu-cheng.yu@intel.com>
+In-Reply-To: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:17:20PM -0700, Yu-cheng Yu wrote:
+On Fri, May 22, 2020 at 02:46:28PM +0530, MugilRaj wrote:
+> fix checkpatch.pl warning, which is Use of volatile is usually wrong: see
+> Documentation/process/volatile-considered-harmful.rst
+> Signed-off-by: MugilRaj <dmugil2000@gmail.com>
 
-> +#pragma GCC push_options
-> +#pragma GCC optimize ("O0")
-> +void ibt_violation(void)
-> +{
-> +#ifdef __i386__
-> +	asm volatile("lea 1f, %eax");
-> +	asm volatile("jmp *%eax");
-> +#else
-> +	asm volatile("lea 1f, %rax");
-> +	asm volatile("jmp *%rax");
-> +#endif
-> +	asm volatile("1:");
-> +	result[test_id] = -1;
-> +	test_id++;
-> +	setcontext(&ucp);
-> +}
-> +
-> +void shstk_violation(void)
-> +{
-> +#ifdef __i386__
-> +	unsigned long x = 0;
-> +
-> +	((unsigned long *)&x)[2] = (unsigned long)stack_hacked;
-> +#else
-> +	unsigned long long x = 0;
-> +
-> +	((unsigned long long *)&x)[2] = (unsigned long)stack_hacked;
-> +#endif
-> +}
-> +#pragma GCC pop_options
+As Samuel said, you can't "just remove this", otherwise it would have
+been done a long time ago, don't you think?
 
-This is absolutely atrocious.
+But for your next patch, you need to have a blank line before the
+signed-off-by: line in order for it to be in a format the patch could be
+merged in.
 
-The #pragma like Kees already said just need to go. Also, there's
-absolutely no clue what so ever what it attempts to achieve.
+thanks,
 
-The __i386__ ifdeffery is horrible crap. Splitting an asm with #ifdef
-like that is also horrible crap.
-
-This is not how you write code.
-
-Get asm/asm.h into userspace and then write something like:
-
-
-void ibt_violation(void)
-{
-	asm volatile("lea  1f, %" _ASM_AX "\n\t"
-		     "jmp  *%" _ASM_AX "\n\t"
-		     "1:\n\t" ::: "a");
-
-	WRITE_ONCE(result[test_id], -1);
-	WRITE_ONCE(test_id, test_id+1);
-
-	setcontext(&ucp);
-}
-
-void shstk_violation(void)
-{
-	unsigned long x = 0;
-
-	WRITE_ONCE(x[2], stack_hacked);
-}
-
-
+greg k-h
