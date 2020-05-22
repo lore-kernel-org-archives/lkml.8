@@ -2,104 +2,64 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5303EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC4A20874
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590106939;
-	bh=UQBu9s+09ZRXhgbAFPY56Fnwnv0wKwGiaFArpYa/goQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r4550FwkAZLh22r9PM2++ntrKTRgfVyHHyt6fau9ADEfik0smoa4tRMPPE6FVK/3T
-	 aONpohnMgxdNFnDXjz3v2XPEl7aEX0IvhN2drrvZ3kGgWWGqWWdAgRUpu99bu2I6UK
-	 IiSjQF69659L2l2lVMJib3mPaw6VlUncjDthK+Z8=
+	by mail.kernel.org (Postfix) with ESMTP id 2D8422072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 00:27:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgEVAWS (ORCPT
+        id S1726933AbgEVA1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 20:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726693AbgEVAWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 20:22:18 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BF7A20825;
-        Fri, 22 May 2020 00:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590106937;
-        bh=UQBu9s+09ZRXhgbAFPY56Fnwnv0wKwGiaFArpYa/goQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CoNgODwuHX4WaU/4wf7BBMTIy5y5apCsVJb/nk5LzA7PjS9dtkTxf+x23sRxmB19K
-         Nm8y7bAP+SetbndPW4bAnJO6ogntIKnO13z394/LWPcP8zcpAQ28nfqnNTM4OIhfYc
-         Z2D014SfbcQR1RDa6rypeFF5ViJGPZWCWIeNXLME=
-Date:   Fri, 22 May 2020 09:22:11 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: clean up and streamline probe_kernel_* and friends v4
-Message-Id: <20200522092211.dd45d126b7598c4bf2182859@kernel.org>
-In-Reply-To: <20200521152301.2587579-1-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 21 May 2020 20:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbgEVA1M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 20:27:12 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4623FC061A0E;
+        Thu, 21 May 2020 17:27:11 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A6D31120ED486;
+        Thu, 21 May 2020 17:27:10 -0700 (PDT)
+Date:   Thu, 21 May 2020 17:27:10 -0700 (PDT)
+Message-Id: <20200521.172710.1928946459385558873.davem@davemloft.net>
+To:     tangbin@cmss.chinamobile.com
+Cc:     ralf@linux-mips.org, paulburton@kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhangshengju@cmss.chinamobile.com
+Subject: Re: [PATCH] net: sgi: ioc3-eth: Fix return value check in
+ ioc3eth_probe()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200520095532.20780-1-tangbin@cmss.chinamobile.com>
+References: <20200520095532.20780-1-tangbin@cmss.chinamobile.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 21 May 2020 17:27:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 17:22:38 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+From: Tang Bin <tangbin@cmss.chinamobile.com>
+Date: Wed, 20 May 2020 17:55:32 +0800
 
-> Hi all,
+> In the function devm_platform_ioremap_resource(), if get resource
+> failed, the return value is ERR_PTR() not NULL. Thus it must be
+> replaced by IS_ERR(), or else it may result in crashes if a critical
+> error path is encountered.
 > 
-> this series start cleaning up the safe kernel and user memory probing
-> helpers in mm/maccess.c, and then allows architectures to implement
-> the kernel probing without overriding the address space limit and
-> temporarily allowing access to user memory.  It then switches x86
-> over to this new mechanism by reusing the unsafe_* uaccess logic.
-> 
-> This version also switches to the saner copy_{from,to}_kernel_nofault
-> naming suggested by Linus.
-> 
-> I kept the x86 helpers as-is without calling unsage_{get,put}_user as
-> that avoids a number of hard to trace casts, and it will still work
-> with the asm-goto based version easily.
-> 
-> Changes since v3:
->  - cleanup how bpf and trace_kprobe perform the TASK_SIZE checks
->  - remove the unused dst argument to probe_kernel_read_allowed
->  - document the -ERANGE return value
+> Fixes: 0ce5ebd24d25 ("mfd: ioc3: Add driver for SGI IOC3 chip")
+> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-This series looks good to me.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-for this series.
-
-Thank you!
-
-> 
-> Changes since v2:
->  - rebased on 5.7-rc6 with the bpf trace format string changes
->  - rename arch_kernel_read to __get_kernel_nofault and arch_kernel_write
->    to __put_kernel_nofault
->  - clean up the tracers to only allowd "mixed" reads when the kernel
->    has non-overlapping address spaces
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Applied, thanks.
