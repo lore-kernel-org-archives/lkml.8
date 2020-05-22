@@ -2,111 +2,269 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6BB3206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17389206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ePsHrOaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731286AbgEVXLs (ORCPT
+        id S1731323AbgEVXM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 19:11:48 -0400
-Received: from mail-il1-f175.google.com ([209.85.166.175]:46683 "EHLO
-        mail-il1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731161AbgEVXLr (ORCPT
+        Fri, 22 May 2020 19:12:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731175AbgEVXMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 19:11:47 -0400
-Received: by mail-il1-f175.google.com with SMTP id w18so12358106ilm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:11:46 -0700 (PDT)
+        Fri, 22 May 2020 19:12:25 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF3FC08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:12:25 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id v2so800034pfv.7
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=z6aQFoiGEpQXdDjyCS+j9sTsZn2fNsE4BnMRV9DRgrU=;
+        b=ePsHrOazMItOER3zR8QN/yANIr1uyVLIlkCErL8PmLzd20C3RFZZLdh8Rf4pnOidQ0
+         Hlxj0HEfZWFB0ITcZDzsAuYf8h7sWkEFIPlBr+DllHPbz3AHZuXsNwjy64giBGuyD68s
+         pcNv9MhYC0XJ7P7GrIFIo+YIP1/nzTqtfUa4k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TtCZ0bOQ8dVl/wcwOWZuf6hM21Yr4PMWRA6hQoilBR4=;
-        b=ssKCViwGI10xMFimejxaLm2JwV6AocTCVbzRTJ0QFSBgxSJF9udN23Ax5MH4f5XTS5
-         5UH8LdzYojpfdrM0emN0rD8RrW+WNnx4OFFVXhU4SNJQo3tMYU/+i3V4wMA9byQlsD06
-         UPK21Orx/syhLmbjk1zMV76gkkhqXNe3ZoTcInz4fioca25QnXOODo0IJsv5B3aQrV1B
-         corWD4JE0n4SrkFDaESYxkia0hNnqWoopD/31qNrezQ7GnpuMGE1g0FyfAEvclSErWAO
-         9x54mRoVkeuPkzkbUEyFddiWpVIGr28MVDOjCaxJOBHvuKL2uNknSXIFEPxgx/Qjx0qn
-         rXqg==
-X-Gm-Message-State: AOAM531vqLbj4yA1z0KyLQHf/3J1g8eoBRgM2mJbGAWWSe4mnAB7hkuA
-        1n1ELsLTw9ZfAbCiWxAp+slxaqao6bs=
-X-Google-Smtp-Source: ABdhPJxmPpgG43M6EuaNhJAGmDeek45laGM9UoGXlEwRvSw1vk/2cqdxuTIQab8X0DKV8GeMTtSXfQ==
-X-Received: by 2002:a92:b001:: with SMTP id x1mr14298920ilh.18.1590189105903;
-        Fri, 22 May 2020 16:11:45 -0700 (PDT)
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
-        by smtp.gmail.com with ESMTPSA id v13sm5377183ili.15.2020.05.22.16.11.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 16:11:45 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id r2so2925316ioo.4
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 16:11:45 -0700 (PDT)
-X-Received: by 2002:a6b:1505:: with SMTP id 5mr5062071iov.198.1590189105156;
- Fri, 22 May 2020 16:11:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508140947.28712-1-yuehaibing@huawei.com>
-In-Reply-To: <20200508140947.28712-1-yuehaibing@huawei.com>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 22 May 2020 18:11:21 -0500
-X-Gmail-Original-Message-ID: <CADRPPNRfS1LTeCPtyfMzDUBvf871v=Vs2rpYGCevvX08OuN-Mw@mail.gmail.com>
-Message-ID: <CADRPPNRfS1LTeCPtyfMzDUBvf871v=Vs2rpYGCevvX08OuN-Mw@mail.gmail.com>
-Subject: Re: [PATCH -next] soc: fsl: dpio: Remove unused inline function qbman_write_eqcr_am_rt_register
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Roy Pledge <Roy.Pledge@nxp.com>,
-        Youri Querry <youri.querry_1@nxp.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z6aQFoiGEpQXdDjyCS+j9sTsZn2fNsE4BnMRV9DRgrU=;
+        b=YuD/5m1QFvx14nNpBD33e0/yryAnOLPgvrcOZLtDJfiI2Qx+BfjWE49epFYRRH/r3g
+         i9u30RkX/DvykvmjLzfpVcCEkmcQVybH4mWc/fD0rHH0K0J/wj3lh5BZ2hQ2FkE41Qh8
+         NxnO0JU7LY9mB0/ZVOXjmZpRypBjHTJ2YLJ5FKt8ZFw5ZGT1GsQXsYD3TbFSBrU4Asdt
+         rLeh1ImBoH8xXngCrvGCo+dp9sPRypBlU5k9pgHOEEGn2GGPSj5IJuhKLHIdD4oSI1QH
+         EykohaNIL+gV5us2jgpPLGV/2MXYiPWBfGhi29rPWT3EGFST07Dmbep48V/KuPle7Jew
+         LMvQ==
+X-Gm-Message-State: AOAM532HB+xoxv7xVff4nzf5RLilDTM+Gp4FkuZhH28A7kQpWBHkx1dm
+        I/FzPbCYh89LUVAx6F3Cy7TMAw==
+X-Google-Smtp-Source: ABdhPJxbhnGYMbebANFJZbps6Qbs6bcRF0/4tlksxMBeGGhwnQVbRr/y0IYkJlIeEaccN+35ejhjFg==
+X-Received: by 2002:a65:498f:: with SMTP id r15mr15827831pgs.345.1590189144505;
+        Fri, 22 May 2020 16:12:24 -0700 (PDT)
+Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id q12sm6815178pfn.129.2020.05.22.16.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 16:12:23 -0700 (PDT)
+From:   Scott Branden <scott.branden@broadcom.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH v2] firmware_loader: change enum fw_opt to u32
+Date:   Fri, 22 May 2020 16:12:02 -0700
+Message-Id: <20200522231202.13681-1-scott.branden@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 9:13 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> There's no callers in-tree anymore since commit
-> 3b2abda7d28c ("soc: fsl: dpio: Replace QMAN array mode with ring mode enqueue")
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+"enum fw_opt" is not used as an enum.
+Change fw_opt to u32 as FW_OPT_* values are OR'd together.
 
-Applied to next.  Thanks.
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+---
+ drivers/base/firmware_loader/fallback.c          | 12 ++++++------
+ drivers/base/firmware_loader/fallback.h          |  8 ++++----
+ drivers/base/firmware_loader/fallback_platform.c |  2 +-
+ drivers/base/firmware_loader/firmware.h          |  3 +--
+ drivers/base/firmware_loader/main.c              | 11 +++++------
+ 5 files changed, 17 insertions(+), 19 deletions(-)
 
-Regards,
-Leo
-> ---
->  drivers/soc/fsl/dpio/qbman-portal.c | 12 ------------
->  1 file changed, 12 deletions(-)
->
-> diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
-> index 804b8ba9bf5c..e2e9fbb58a72 100644
-> --- a/drivers/soc/fsl/dpio/qbman-portal.c
-> +++ b/drivers/soc/fsl/dpio/qbman-portal.c
-> @@ -572,18 +572,6 @@ void qbman_eq_desc_set_qd(struct qbman_eq_desc *d, u32 qdid,
->  #define EQAR_VB(eqar)      ((eqar) & 0x80)
->  #define EQAR_SUCCESS(eqar) ((eqar) & 0x100)
->
-> -static inline void qbman_write_eqcr_am_rt_register(struct qbman_swp *p,
-> -                                                  u8 idx)
-> -{
-> -       if (idx < 16)
-> -               qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT + idx * 4,
-> -                                    QMAN_RT_MODE);
-> -       else
-> -               qbman_write_register(p, QBMAN_CINH_SWP_EQCR_AM_RT2 +
-> -                                    (idx - 16) * 4,
-> -                                    QMAN_RT_MODE);
-> -}
-> -
->  #define QB_RT_BIT ((u32)0x100)
->  /**
->   * qbman_swp_enqueue_direct() - Issue an enqueue command
-> --
-> 2.17.1
->
->
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 1e9c96e3ed63..af1aa3d69920 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -460,7 +460,7 @@ static const struct attribute_group *fw_dev_attr_groups[] = {
+ 
+ static struct fw_sysfs *
+ fw_create_instance(struct firmware *firmware, const char *fw_name,
+-		   struct device *device, enum fw_opt opt_flags)
++		   struct device *device, u32 opt_flags)
+ {
+ 	struct fw_sysfs *fw_sysfs;
+ 	struct device *f_dev;
+@@ -493,7 +493,7 @@ fw_create_instance(struct firmware *firmware, const char *fw_name,
+  * In charge of constructing a sysfs fallback interface for firmware loading.
+  **/
+ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+-				  enum fw_opt opt_flags, long timeout)
++				  u32 opt_flags, long timeout)
+ {
+ 	int retval = 0;
+ 	struct device *f_dev = &fw_sysfs->dev;
+@@ -547,7 +547,7 @@ static int fw_load_sysfs_fallback(struct fw_sysfs *fw_sysfs,
+ 
+ static int fw_load_from_user_helper(struct firmware *firmware,
+ 				    const char *name, struct device *device,
+-				    enum fw_opt opt_flags)
++				    u32 opt_flags)
+ {
+ 	struct fw_sysfs *fw_sysfs;
+ 	long timeout;
+@@ -588,7 +588,7 @@ static int fw_load_from_user_helper(struct firmware *firmware,
+ 	return ret;
+ }
+ 
+-static bool fw_force_sysfs_fallback(enum fw_opt opt_flags)
++static bool fw_force_sysfs_fallback(u32 opt_flags)
+ {
+ 	if (fw_fallback_config.force_sysfs_fallback)
+ 		return true;
+@@ -597,7 +597,7 @@ static bool fw_force_sysfs_fallback(enum fw_opt opt_flags)
+ 	return true;
+ }
+ 
+-static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
++static bool fw_run_sysfs_fallback(u32 opt_flags)
+ {
+ 	int ret;
+ 
+@@ -640,7 +640,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
+  **/
+ int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+ 			    struct device *device,
+-			    enum fw_opt opt_flags,
++			    u32 opt_flags,
+ 			    int ret)
+ {
+ 	if (!fw_run_sysfs_fallback(opt_flags))
+diff --git a/drivers/base/firmware_loader/fallback.h b/drivers/base/firmware_loader/fallback.h
+index 06f4577733a8..2afdb6adb23f 100644
+--- a/drivers/base/firmware_loader/fallback.h
++++ b/drivers/base/firmware_loader/fallback.h
+@@ -33,7 +33,7 @@ struct firmware_fallback_config {
+ #ifdef CONFIG_FW_LOADER_USER_HELPER
+ int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+ 			    struct device *device,
+-			    enum fw_opt opt_flags,
++			    u32 opt_flags,
+ 			    int ret);
+ void kill_pending_fw_fallback_reqs(bool only_kill_custom);
+ 
+@@ -45,7 +45,7 @@ void unregister_sysfs_loader(void);
+ #else /* CONFIG_FW_LOADER_USER_HELPER */
+ static inline int firmware_fallback_sysfs(struct firmware *fw, const char *name,
+ 					  struct device *device,
+-					  enum fw_opt opt_flags,
++					  u32 opt_flags,
+ 					  int ret)
+ {
+ 	/* Keep carrying over the same error */
+@@ -67,10 +67,10 @@ static inline void unregister_sysfs_loader(void)
+ #endif /* CONFIG_FW_LOADER_USER_HELPER */
+ 
+ #ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+-int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags);
++int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags);
+ #else
+ static inline int firmware_fallback_platform(struct fw_priv *fw_priv,
+-					     enum fw_opt opt_flags)
++					     u32 opt_flags)
+ {
+ 	return -ENOENT;
+ }
+diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
+index c88c745590fe..cdd2c9a9f38a 100644
+--- a/drivers/base/firmware_loader/fallback_platform.c
++++ b/drivers/base/firmware_loader/fallback_platform.c
+@@ -8,7 +8,7 @@
+ #include "fallback.h"
+ #include "firmware.h"
+ 
+-int firmware_fallback_platform(struct fw_priv *fw_priv, enum fw_opt opt_flags)
++int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
+ {
+ 	const u8 *data;
+ 	size_t size;
+diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
+index 25836a6afc9f..933e2192fbe8 100644
+--- a/drivers/base/firmware_loader/firmware.h
++++ b/drivers/base/firmware_loader/firmware.h
+@@ -136,8 +136,7 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
+ 	__fw_state_set(fw_priv, FW_STATUS_DONE);
+ }
+ 
+-int assign_fw(struct firmware *fw, struct device *device,
+-	      enum fw_opt opt_flags);
++int assign_fw(struct firmware *fw, struct device *device, u32 opt_flags);
+ 
+ #ifdef CONFIG_FW_LOADER_PAGED_BUF
+ void fw_free_paged_buf(struct fw_priv *fw_priv);
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 76f79913916d..2ca6b4735979 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -210,7 +210,7 @@ static struct fw_priv *__lookup_fw_priv(const char *fw_name)
+ static int alloc_lookup_fw_priv(const char *fw_name,
+ 				struct firmware_cache *fwc,
+ 				struct fw_priv **fw_priv, void *dbuf,
+-				size_t size, enum fw_opt opt_flags)
++				size_t size, u32 opt_flags)
+ {
+ 	struct fw_priv *tmp;
+ 
+@@ -635,8 +635,7 @@ static int fw_add_devm_name(struct device *dev, const char *name)
+ }
+ #endif
+ 
+-int assign_fw(struct firmware *fw, struct device *device,
+-	      enum fw_opt opt_flags)
++int assign_fw(struct firmware *fw, struct device *device, u32 opt_flags)
+ {
+ 	struct fw_priv *fw_priv = fw->priv;
+ 	int ret;
+@@ -687,7 +686,7 @@ int assign_fw(struct firmware *fw, struct device *device,
+ static int
+ _request_firmware_prepare(struct firmware **firmware_p, const char *name,
+ 			  struct device *device, void *dbuf, size_t size,
+-			  enum fw_opt opt_flags)
++			  u32 opt_flags)
+ {
+ 	struct firmware *firmware;
+ 	struct fw_priv *fw_priv;
+@@ -753,7 +752,7 @@ static void fw_abort_batch_reqs(struct firmware *fw)
+ static int
+ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 		  struct device *device, void *buf, size_t size,
+-		  enum fw_opt opt_flags)
++		  u32 opt_flags)
+ {
+ 	struct firmware *fw = NULL;
+ 	int ret;
+@@ -990,7 +989,7 @@ struct firmware_work {
+ 	struct device *device;
+ 	void *context;
+ 	void (*cont)(const struct firmware *fw, void *context);
+-	enum fw_opt opt_flags;
++	u32 opt_flags;
+ };
+ 
+ static void request_firmware_work_func(struct work_struct *work)
+-- 
+2.17.1
+
