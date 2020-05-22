@@ -2,141 +2,100 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74CE320825
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79830206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ACyRCIzc"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="xos9xnl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgEVJJY (ORCPT
+        id S1729537AbgEVJKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:09:24 -0400
-Received: from mout.web.de ([212.227.15.4]:51537 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728424AbgEVJJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:09:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590138548;
-        bh=nBwsoM4qHYCtDnO8ZRhtCYIcZPMj93WTDzYumOpqh3k=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=ACyRCIzcsM8D7SQCp/xkgYlbb/W0LmNevQV/tj14h4wNgq2SexGGBSNTCmux23Y+x
-         I3jl38PiN39FFz9gC3OM77X/oo7q/NUTFaT5wvKaBB4yIcPRhCYYjjPEmOJPTvhxeL
-         hctZKOBTxUmbVM6rMHGMIHuaSOAfwp6HdOyrdeDs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.165.155]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lm4jx-1j2RsL2Og5-00Zgkr; Fri, 22
- May 2020 11:09:08 +0200
-To:     Peng Hao <richard.peng@oppo.com>, linux-mmc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: Fix use after free in mmc_rpmb_chrdev_release()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e5af0076-7386-c6d9-960a-1b6b29141bfe@web.de>
-Date:   Fri, 22 May 2020 11:08:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Fri, 22 May 2020 05:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728368AbgEVJKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 05:10:48 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69807C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:10:47 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id m18so11747530ljo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9ofTQmEmfXkUcuVidw/3/uTdX1nNZlN27Kc/a5adlBE=;
+        b=xos9xnl9YZMdIx1d5mCEq3WAxSwvc5UCDqkmUO2+7x7I2+vGVPF21hwGBtxoXZCbzN
+         BfTzYnkM3jf1GNsGMpQwEhZJU19G76BgsR6WIkEl8q8ipZmtiT3LJZ5dylbF6sPZvy/g
+         iPD32Jwa+lXfjf9Z+JcRgthh+JjV/VaPn5w8qYW4qmZxbnjKhEaS6EVD1kwklB7PIOrU
+         VVV3ngvcL9YBwXPHqqtmnNfpJC+FTzpzuGe4RsqkkeXWDTqNFR6M3t10HoO2emoGSdv8
+         tR623mcE5V6xS7Em0K0KHrKx8XzwmkbnL6Aek+bllgxrfNKJZ7HYyZyZ/80/A7wWMmJx
+         UXww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9ofTQmEmfXkUcuVidw/3/uTdX1nNZlN27Kc/a5adlBE=;
+        b=UXVr5cXeGTHQpiaCnof/LsdVtWN4Eg/VtDbIYVTlWL5ueBtiouuGh5ewUUfqJV7Lyx
+         RrTqDRaeJaucLDCQJ4QY8vn85CaZ+7YOspFNeZlfg1fSl9pakbHea7PQ9YQzo0Do+Fm8
+         WwYf4q8KQEbc1J8NKrg0kmxuFSLrTANZ4SKY8O+JvSAj5lbS9zVgRr7OBmEnnP0EnWXw
+         DmPV29kpyFFiFZjhOh0Ey2ks3eUoFq1rcoLb3Z00Oi9YEP4v1dEoXfuCNOQs0j+fcRiP
+         Q3JSbkI1nclqUrQRWusgUz83VJB4fhLj6v8n7FyVGXTSUsGq+Ewwv47jcrEPr0gpOwtJ
+         4IQQ==
+X-Gm-Message-State: AOAM531YcGp0n7tVfaH3dciWwi1QN39CnSNmJnq0zCZX3h4mDXKOkE00
+        DV6R/e3q6HRx3X9Hh/z9K3YwKQ==
+X-Google-Smtp-Source: ABdhPJwx2PlbH43Qr+B81OY6kvWskKdV/Ban2ix6W7cw/0cV2HmXGusEjLn7mThOr7LFWA4sajYdwA==
+X-Received: by 2002:a2e:851a:: with SMTP id j26mr6763722lji.287.1590138644148;
+        Fri, 22 May 2020 02:10:44 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:469e:f842:7427:5f3b:8fe0:cf58? ([2a00:1fa0:469e:f842:7427:5f3b:8fe0:cf58])
+        by smtp.gmail.com with ESMTPSA id u3sm2297273lfq.59.2020.05.22.02.10.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 02:10:43 -0700 (PDT)
+Subject: Re: [PATCH] usb: bdc: Fix return value of bdc_probe()
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+References: <1590135456-11176-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <94e58d73-0691-ddbc-3c75-1c7ee87d1216@cogentembedded.com>
+Date:   Fri, 22 May 2020 12:10:29 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LrwXE7KQ7dbO2laMuBn/doDZ4NK42EEdVqBcyA60kDZbzNdeQjT
- udv+rvVPVPuYVjBl42PLir7oW7Xh7xuZJH6IfI5SybsaT+e0W5NEYEcxyh/FXlQjmb1aR2X
- Qm3KIYJkImF2uOPUk2Sdj8DS7DSQBRkFivjUyA1cCaPQmpL3khUmVA8tL/ku00Rw7D/OYEP
- CxSC/Zmly3I0rNi8qgwPw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K3ogYrHgq88=:Iuhir0DOgtlq0bNgAxERKV
- GP06VZQI67CJNb/nd0yKShEbws7zMQDzZ703dBK+jY/VdRRQPSV2M7lIlUKqeKXCwLlB2PJHp
- 6RD5AwhNp3u8SbMZlIDyJd58/iZ245UAulVKbFzwv9vkNyo6PakgrU+/8vn/Fb5PLPQMo7Azy
- wb2gQBNTlj8D3l2Ip1RbVue3s7Z/jJDfgEKDfIUZJaYFO7KuOEB9RNlk7Z0XlHd8b5DSZxVb0
- 2i+wnWbIvHUoEDrwSWdA+gLdxrz+QiNfkv5fmRCdP/tioHly2nLix9A57M2Hh+3oarto/bvJX
- NQYwK4/P6syx+2I59zUm+FsrN28Oty4s7h5KjSJd5NYHE2h97n2FwBkYOeGsvUuxGO7l9Zlml
- 6f2BrWHNrKOdiWdh4SmfM08YoM2fj98BJHis6mXQ9e+jXwYq6YHrUtaVLhDm2n9BDAu7vFgfv
- KoLxDl7jIo2MxyMiqZJ18StUuMcrVDv/Vb0ZSAqpawSFG19UYPWg8W2e1a2xw89Ojlgzatlvg
- x6hna1O4fMMWFWfVOI873PrQDcVu1bZNQSt033La4tir8uHz0faxsAzCmWkkX2J2rJlItu7qX
- 6Yhkc0NaTZFcXWq9X1CSBZM1pBLlXEK3CdAVBHytd3NUGs/e1f8f38WcG9APHSOwBoWfbbdYw
- MCoLcq88gWzI9y0QqrzfD1mk4eSReeeNMjkE8lLrspuMnK98MAo/EDzsnibNASgh8yP8bZBet
- jGl1h48kk3FpNdxXRIPw2k5VJUVYwqufhxfN/FDmmBIkDr1e+86tUbYkzgwM/bugHdmoxRMvd
- z3H9sKIiiTaYcQjJ/7UVh8AmWJ+oCxeO3CKOoDYludUx9GfoC/SLjcbyAQuU484Y/+l4zjqxu
- lPB2pRIBAcszpBLoclJgqj9tlJaadp8IFfexSh1uRFNIq4VM721Gk9U8JJXdk5LrQRuORxM4f
- klyewf8KNgehoar+DCFTTlsi2isCnNLCcXIVIErDzg4BMC5DYEz6j1m9LxijIbKwfr2p2A4kS
- lx7/YDPOBQEyE70AW+eCO6r0iqZo/X9JJtBR4V23dJV6D7bU/loRCWGiUnjFEnt0SLdinN3LU
- zs7okgZxD7i/ABLIQ8yii5avdw8JqU2Cog/4GQh5OqwggYeabsoWJ44PaqPncUb6iu2F8RrxY
- yCO4tWYdAv+6DJHA9m4AuyDdTgTikkHWoHjgB0OE8+V7SWK7/USpk7k1c1Nmu02MJuBSDOvbZ
- /sUi736t2AvXRpbla
+In-Reply-To: <1590135456-11176-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This is caused by dereferencing 'rpmb' after put_device().
+Hello!
 
-I suggest to improve also this change description.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D051143e1602d90ea71887d9236=
-3edd539d411de5#n151
+On 22.05.2020 11:17, Tiezhu Yang wrote:
 
-How do you think about a wording variant like the following?
+> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+> to check the return value
 
-   The data structure member =E2=80=9Crpmb->md=E2=80=9D was passed to a ca=
-ll of
-   the function =E2=80=9Cmmc_blk_put=E2=80=9D after a call of the function=
- =E2=80=9Cput_device=E2=80=9D.
-   Reorder these function calls to keep the data accesses consistent.
+    Already done.
 
+> and return PTR_ERR() if failed.
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
+   Yes, else the deferred probing doesn't work.
 
-Regards,
-Markus
+> Fixes: 893a66d34298 ("usb: bdc: use devm_platform_ioremap_resource() to simplify code")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+[...]
+
+MBR, Sergei
