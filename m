@@ -2,98 +2,131 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E212C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 525942078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD802073B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 20:05:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HciuDFp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbgEVUDx (ORCPT
+        id S1731007AbgEVUFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 16:03:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20425 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730893AbgEVUDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 16:03:52 -0400
-IronPort-SDR: +gDlE+e81/whp9+O3/bQlgy1q1MIJTOAcC8JCP1Hz0FOwK0yv/RguEYre6KPyuzRDWDVV2fGID
- F/kxuBhFVlFg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 13:03:48 -0700
-IronPort-SDR: UMxqP361Z5IU1SbIPlTOY0/kGZzClrkRm2tcgFjt2ftgo2VBoWiQ/jJLxFFMgoU5ThQTW2lPDS
- V1wHC6cYp+Sg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
-   d="scan'208";a="412856691"
-Received: from rpurrx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.58.10])
-  by orsmga004.jf.intel.com with ESMTP; 22 May 2020 13:03:45 -0700
-Date:   Fri, 22 May 2020 23:03:46 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        peterhuewe@gmx.de, jgg@ziepe.ca,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        linux-integrity@vger.kernel.org, Arnd Bergmann <arnd@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>
-Subject: Re: [PATCHv2 2/2] tpm_ftpm_tee: register driver on TEE bus
-Message-ID: <20200522200346.GB150221@linux.intel.com>
-References: <20200521064743.4769-1-maxim.uvarov@linaro.org>
- <20200521064743.4769-4-maxim.uvarov@linaro.org>
- <20200522171451.GD10319@linux.intel.com>
- <CAD8XO3bA0oTqwQOU9byb-Vk73S4uP7dTUaOZyEmUJmj6rk3UuQ@mail.gmail.com>
+        Fri, 22 May 2020 16:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730963AbgEVUFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 16:05:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975C4C061A0E;
+        Fri, 22 May 2020 13:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=EfYPlaAM0tVJqWDjM23M348UGPgcOmSUMDNAnYQU29U=; b=HciuDFp8SowQPIaUS2biMqz/X/
+        8SHMGvdi6h9nWzfOfxTu00QeHcKY9nmKjJfoYJIppM+ZHVRlx44AUGCwTzHu8srIBta4xPzlKPT9Y
+        gY0/Q0XfAIw9LL8Hu57fYFH6ZPY8xruyxLiZnEYoG7bWydIiqvWX4fYq9rqJuS8he4TBvtrnxgdz5
+        UhbCg1ocxGXB5aBGTBLsT3PcH9/4IfKIZST9pQASCVIEu6PKIEsGVZyMQDWHmodCTAXp4sKGwK+gl
+        CHyC2xAk0vrs/agqi5KMruBuE3zH34zLvtwxxdqyGeDf6cFyXK/o/yQobbKq2rGX8j0Y+eLUTGZhl
+        dtP02Nuw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jcDv5-0001ki-Ud; Fri, 22 May 2020 20:05:27 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Yotam Gigi <yotam.gi@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH net-next v2] net: psample: fix build error when CONFIG_INET is
+ not enabled
+Message-ID: <ca2be940-4514-4027-13f9-4e6bd99152ab@infradead.org>
+Date:   Fri, 22 May 2020 13:05:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD8XO3bA0oTqwQOU9byb-Vk73S4uP7dTUaOZyEmUJmj6rk3UuQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 10:29:44PM +0300, Maxim Uvarov wrote:
-> On Fri, 22 May 2020 at 20:15, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Thu, May 21, 2020 at 09:47:43AM +0300, Maxim Uvarov wrote:
-> > > Register driver on TEE bus. module tee registers bus,
-> >
-> > "on the TEE bus"
-> >
-> > "The module tee"
-> >
-> > > and module optee calls optee_enumerate_devices() to scan
-> > > all devices on the bus. Trusted Application for this driver
-> >
-> > Looking at drivers/tee, it shows that tee and optee are in fact the same
-> > module as opposed to what your commit message says.
-> >
-> 
-> In the current kernel it's 2 different modules.
-> 
-> > > can be Early TA's (can be compiled into optee-os). In that
-> > > case it will be on OPTEE bus before linux booting. Also
-> > > optee-suplicant application is needed to be loaded between
-> > > OPTEE module and ftpm module to maintain functionality
-> > > for fTPM driver.
-> >
-> > Why is this needed and why things worked before having this?
-> >
-> 
-> Before these changes user space has to drive boot sequence. I.e.  tee
-> and optee modules loads, then application tee-supplicant has to start
-> and only then module ftpm can be loaded. The reason for that is
-> storage services are implemented in userspace and driver needs them.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Is the TPM implementation uploaded to TEE from user space and or what
-storage are we talking about? Not sure how these storage services
-connect to the TPM.
+Fix psample build error when CONFIG_INET is not set/enabled by
+bracketing the tunnel code in #ifdef CONFIG_NET / #endif.
 
-/Jarkko
+../net/psample/psample.c: In function ‘__psample_ip_tun_to_nlattr’:
+../net/psample/psample.c:216:25: error: implicit declaration of function ‘ip_tunnel_info_opts’; did you mean ‘ip_tunnel_info_opts_set’? [-Werror=implicit-function-declaration]
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Yotam Gigi <yotam.gi@gmail.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+---
+v2: Just bracket the new tunnel support code inside ifdef/endif (Cong Wang).
+
+ net/psample/psample.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--- linux-next-20200522.orig/net/psample/psample.c
++++ linux-next-20200522/net/psample/psample.c
+@@ -209,6 +209,7 @@ void psample_group_put(struct psample_gr
+ }
+ EXPORT_SYMBOL_GPL(psample_group_put);
+ 
++#ifdef CONFIG_INET
+ static int __psample_ip_tun_to_nlattr(struct sk_buff *skb,
+ 			      struct ip_tunnel_info *tun_info)
+ {
+@@ -352,12 +353,15 @@ static int psample_tunnel_meta_len(struc
+ 
+ 	return sum;
+ }
++#endif
+ 
+ void psample_sample_packet(struct psample_group *group, struct sk_buff *skb,
+ 			   u32 trunc_size, int in_ifindex, int out_ifindex,
+ 			   u32 sample_rate)
+ {
++#ifdef CONFIG_INET
+ 	struct ip_tunnel_info *tun_info;
++#endif
+ 	struct sk_buff *nl_skb;
+ 	int data_len;
+ 	int meta_len;
+@@ -371,9 +375,11 @@ void psample_sample_packet(struct psampl
+ 		   nla_total_size(sizeof(u32)) +	/* group_num */
+ 		   nla_total_size(sizeof(u32));		/* seq */
+ 
++#ifdef CONFIG_INET
+ 	tun_info = skb_tunnel_info(skb);
+ 	if (tun_info)
+ 		meta_len += psample_tunnel_meta_len(tun_info);
++#endif
+ 
+ 	data_len = min(skb->len, trunc_size);
+ 	if (meta_len + nla_total_size(data_len) > PSAMPLE_MAX_PACKET_SIZE)
+@@ -429,11 +435,13 @@ void psample_sample_packet(struct psampl
+ 			goto error;
+ 	}
+ 
++#ifdef CONFIG_INET
+ 	if (tun_info) {
+ 		ret = psample_ip_tun_to_nlattr(nl_skb, tun_info);
+ 		if (unlikely(ret < 0))
+ 			goto error;
+ 	}
++#endif
+ 
+ 	genlmsg_end(nl_skb, data);
+ 	genlmsg_multicast_netns(&psample_nl_family, group->net, nl_skb, 0,
+
