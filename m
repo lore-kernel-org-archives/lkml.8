@@ -2,129 +2,68 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A372EC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCABC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4CC207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C22D20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:39:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590133142;
+	bh=kOTVJN33RbLq+dCiyPpPOkyEfVodS3Xtrj9FKnn322g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LOcifHILvV8jaJlTBmZgdFvuUUiO6QnEaD/18Jj65Px0nt/MgItinOZiJ1VRtIpob
+	 2x9/K5oL2c/lwQ9ENv1uMvvMg4vdZXKQwTzfwsshq5PYfM/rvF1QIusaCeeFNpT+Aw
+	 Av+QWdCL5Q0HDuOKztaaWHl4Gy2kl+VQJhLVojz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgEVHiy (ORCPT
+        id S1728783AbgEVHjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:38:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32996 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727839AbgEVHiy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:38:54 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04M7V8Vw046770;
-        Fri, 22 May 2020 03:38:14 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31659tfr9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 May 2020 03:38:14 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04M7adhL007546;
-        Fri, 22 May 2020 07:38:12 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 313xas755h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 May 2020 07:38:12 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04M7cAwO6619602
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 May 2020 07:38:10 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C48F4C04A;
-        Fri, 22 May 2020 07:38:10 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F20FC4C062;
-        Fri, 22 May 2020 07:38:06 +0000 (GMT)
-Received: from vajain21-in-ibm-com (unknown [9.85.80.144])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 22 May 2020 07:38:06 +0000 (GMT)
-Received: by vajain21-in-ibm-com (sSMTP sendmail emulation); Fri, 22 May 2020 13:08:05 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Ira Weiny <ira.weiny@intel.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>, linux-nvdimm@lists.01.org
-Subject: Re: [RESEND PATCH v7 4/5] ndctl/papr_scm, uapi: Add support for PAPR nvdimm specific methods
-In-Reply-To: <87367t941j.fsf@mpe.ellerman.id.au>
-References: <20200519190058.257981-1-vaibhav@linux.ibm.com> <20200519190058.257981-5-vaibhav@linux.ibm.com> <20200520153209.GC3660833@iweiny-DESK2.sc.intel.com> <87367t941j.fsf@mpe.ellerman.id.au>
-Date:   Fri, 22 May 2020 13:08:05 +0530
-Message-ID: <87ftbswhb6.fsf@linux.ibm.com>
+        Fri, 22 May 2020 03:39:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727839AbgEVHjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:39:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662F7207FB;
+        Fri, 22 May 2020 07:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590133140;
+        bh=kOTVJN33RbLq+dCiyPpPOkyEfVodS3Xtrj9FKnn322g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Uha+7iMKNRKO6FeHjhe7z4druchqqq4fhd3fh7IQ5HavzXmpc0Vr6x+mQCskCNOdz
+         vOqb2nvThO21TRRXzWgwEIiCPxpg3rUJ0CsmuLeqIxcHjl86cjVbqYcmhtl3qVASwC
+         yRZNHlE7Acg7ylxItE5SZPs4iKEz08l8UHIeZI5M=
+Date:   Fri, 22 May 2020 09:38:58 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Klaus Doth <kdlnx@doth.eu>,
+        Rui Feng <rui_feng@realsil.com.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/6] misc: rtsx: Clean up Realtek card reader driver
+Message-ID: <20200522073858.GA981016@kroah.com>
+References: <20200521180545.1159896-1-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-22_04:2020-05-21,2020-05-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 phishscore=0 mlxlogscore=974 impostorscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015 spamscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005220052
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521180545.1159896-1-helgaas@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> writes:
+On Thu, May 21, 2020 at 01:05:39PM -0500, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> These are minor cleanups of the Realtek card reader driver.  They shouldn't
+> fix or break anything by themselves; they're just to make it slightly more
+> readable and maintainable.
 
-> Ira Weiny <ira.weiny@intel.com> writes:
->> On Wed, May 20, 2020 at 12:30:57AM +0530, Vaibhav Jain wrote:
->>> Introduce support for Papr nvDimm Specific Methods (PDSM) in papr_scm
->>> modules and add the command family to the white list of NVDIMM command
->>> sets. Also advertise support for ND_CMD_CALL for the dimm
->>> command mask and implement necessary scaffolding in the module to
->>> handle ND_CMD_CALL ioctl and PDSM requests that we receive.
-> ...
->>> + *
->>> + * Payload Version:
->>> + *
->>> + * A 'payload_version' field is present in PDSM header that indicates a specific
->>> + * version of the structure present in PDSM Payload for a given PDSM command.
->>> + * This provides backward compatibility in case the PDSM Payload structure
->>> + * evolves and different structures are supported by 'papr_scm' and 'libndctl'.
->>> + *
->>> + * When sending a PDSM Payload to 'papr_scm', 'libndctl' should send the version
->>> + * of the payload struct it supports via 'payload_version' field. The 'papr_scm'
->>> + * module when servicing the PDSM envelope checks the 'payload_version' and then
->>> + * uses 'payload struct version' == MIN('payload_version field',
->>> + * 'max payload-struct-version supported by papr_scm') to service the PDSM.
->>> + * After servicing the PDSM, 'papr_scm' put the negotiated version of payload
->>> + * struct in returned 'payload_version' field.
->>
->> FWIW many people believe using a size rather than version is more sustainable.
->> It is expected that new payload structures are larger (more features) than the
->> previous payload structure.
->>
->> I can't find references at the moment through.
->
-> I think clone_args is a good modern example:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/uapi/linux/sched.h#n88
->
-> cheers
+Thanks for these, they all look sane and I've queued them up in my tree
+now.
 
-Thank Ira and Mpe for pointing this out. I looked into how clone3 sycall
-handles clone_args and few differences came out:
-
-* Unlike clone_args that are always transferred in one direction from
-  user-space to kernel, payload contents of pdsms are transferred in both
-  directions. Having a single version number makes it easier for
-  user-space and kernel to determine what data will be exchanged.
-
-* For PDSMs, the version number is negotiated between libndctl and
-  kernel. For example in case kernel only supports an older version of
-  a structure, its free to send a lower version number back to
-  libndctl. Such negotiations doesnt happen with clone3 syscall.
-  
--- 
-Cheers
-~ Vaibhav
+greg k-h
