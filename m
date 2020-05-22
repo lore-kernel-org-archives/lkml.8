@@ -2,141 +2,199 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE03220759
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D0420849
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 19:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590176781;
+	bh=nNCFcYACwCSu4fKr5BGI1yJKdfR5D/VN27SU3hdUJyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=o1gZ3OslvLZ4Tf2dM/mVEaAiUqk8gsIjRhvOIX5I+x2KiBszJvKY/fHLITaB774R6
+	 vYsHRyjKn+j9kTl8NeWOIix0Fqt1VpnI7AOvKjpNxW+yWeAzpFlCNjlTIvsqZ3+5Cx
+	 oBsFPvUuseCRIJbvPWPyODQDKh3KZkE7eXb6ST28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730995AbgEVTjW (ORCPT
+        id S1730959AbgEVTqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 15:39:22 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9245 "EHLO mga17.intel.com"
+        Fri, 22 May 2020 15:46:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730894AbgEVTjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 15:39:21 -0400
-IronPort-SDR: P2Y0hb8PPAMIyFWVmjBjH/RiAjYEW2AmMogTRKNyRHa7o93+TWWF0j4LJIQYD1Uk7YFbWxkNeI
- a7CCLmW8a7Qg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 12:39:20 -0700
-IronPort-SDR: Fd3haaiMcR6epj6Lwf0RAO7Vcu6h11rUPXWFv2XUJk3PogUpO/jRlywthEyJ5C35P2jd0uuh/G
- 2Z4tRHj71yAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,422,1583222400"; 
-   d="scan'208";a="440966479"
-Received: from rpurrx-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.58.10])
-  by orsmga005.jf.intel.com with ESMTP; 22 May 2020 12:39:14 -0700
-Date:   Fri, 22 May 2020 22:39:14 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Seth Moore <sethmo@google.com>
-Subject: Re: [PATCH v30 10/20] x86/sgx: Linux Enclave Driver
-Message-ID: <20200522193914.GF10319@linux.intel.com>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-11-jarkko.sakkinen@linux.intel.com>
- <20200521191236.GA23043@linux.intel.com>
+        id S1730689AbgEVTqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 15:46:19 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77A0D20723;
+        Fri, 22 May 2020 19:46:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590176778;
+        bh=nNCFcYACwCSu4fKr5BGI1yJKdfR5D/VN27SU3hdUJyQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=c/R9tPF/s0Nkh49OEjuIjKhMeCF5IrEegdfShqbyKQlZL0WCpO39YTblYAwJfLMvK
+         ayapjbR9S5W/kqv3oJM45DrtkJB4dVqCY9YH+sa50oSkZBCwYudQJAhSrKKWSpr2eC
+         yU3hnMfkcKRl0OaBWfLdoqIfLLHBlF6IbVlrllYA=
+Date:   Fri, 22 May 2020 14:46:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        "rajatja@google.com" <rajatja@google.com>,
+        "fred@fredlawl.com" <fred@fredlawl.com>,
+        "ruscur@russell.cc" <ruscur@russell.cc>,
+        "oohall@gmail.com" <oohall@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "sbobroff@linux.ibm.com" <sbobroff@linux.ibm.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
+Message-ID: <20200522194616.GA11359@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200521191236.GA23043@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <bbd1e71fc069389b96351490881fe43c4a5cb25f.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 12:12:36PM -0700, Sean Christopherson wrote:
-> On Fri, May 15, 2020 at 03:44:00AM +0300, Jarkko Sakkinen wrote:
-> > +long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-> > +{
-> > +	struct sgx_encl *encl = filep->private_data;
-> > +	int ret, encl_flags;
-> > +
-> > +	encl_flags = atomic_fetch_or(SGX_ENCL_IOCTL, &encl->flags);
-> > +	if (encl_flags & SGX_ENCL_IOCTL)
-> > +		return -EBUSY;
-> > +
-> > +	if (encl_flags & SGX_ENCL_DEAD)
-> > +		return -EFAULT;
+On Fri, May 22, 2020 at 05:23:31PM +0000, Derrick, Jonathan wrote:
+> On Fri, 2020-05-01 at 11:35 -0600, Jonathan Derrick wrote:
+> > On Fri, 2020-05-01 at 12:16 -0500, Bjorn Helgaas wrote:
+> > > On Thu, Apr 30, 2020 at 12:46:07PM -0600, Jon Derrick wrote:
+> > > > Hi Bjorn & Kuppuswamy,
+> > > > 
+> > > > I see a problem in the DPC ECN [1] to _OSC in that it doesn't
+> > > > give us a way to determine if firmware supports _OSC DPC
+> > > > negotation, and therefore how to handle DPC.
+> > > > 
+> > > > Here is the wording of the ECN that implies that Firmware
+> > > > without _OSC DPC negotiation support should have the OSPM rely
+> > > > on _OSC AER negotiation when determining DPC control:
+> > > > 
+> > > >   PCIe Base Specification suggests that Downstream Port
+> > > >   Containment may be controlled either by the Firmware or the
+> > > >   Operating System. It also suggests that the Firmware retain
+> > > >   ownership of Downstream Port Containment if it also owns
+> > > >   AER. When the Firmware owns Downstream Port Containment, it
+> > > >   is expected to use the new "Error Disconnect Recover"
+> > > >   notification to alert OSPM of a Downstream Port Containment
+> > > >   event.
+> > > > 
+> > > > In legacy platforms, as bits in _OSC are reserved prior to
+> > > > implementation, ACPI Root Bus enumeration will mark these Host
+> > > > Bridges as without Native DPC support, even though the
+> > > > specification implies it's expected that AER _OSC negotiation
+> > > > determines DPC control for these platforms. There seems to be
+> > > > a need for a way to determine if the DPC control bit in _OSC
+> > > > is supported and fallback on AER otherwise.
+> > > > 
+> > > > 
+> > > > Currently portdrv assumes DPC control if the port has Native
+> > > > AER services:
+> > > > 
+> > > > static int get_port_device_capability(struct pci_dev *dev)
+> > > > ...
+> > > > 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> > > > 	    pci_aer_available() &&
+> > > > 	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+> > > > 		services |= PCIE_PORT_SERVICE_DPC;
+> > > > 
+> > > > Newer firmware may not grant OSPM DPC control, if for
+> > > > instance, it expects to use Error Disconnect Recovery. However
+> > > > it looks like ACPI will use DPC services via the EDR driver,
+> > > > without binding the full DPC port service driver.
+> > > > 
+> > > > 
+> > > > If we change portdrv to probe based on host->native_dpc and
+> > > > not AER, then we break instances with legacy firmware where
+> > > > OSPM will clear host->native_dpc solely due to _OSC bits being
+> > > > reserved:
+> > > > 
+> > > > struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+> > > > ...
+> > > > 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> > > > 		host_bridge->native_dpc = 0;
+> > > > 
+> > > > 
+> > > > 
+> > > > So my assumption instead is that host->native_dpc can be 0 and
+> > > > expect Native DPC services if AER is used. In other words, if
+> > > > and only if DPC probe is invoked from portdrv, then it needs
+> > > > to rely on the AER dependency. Otherwise it should be assumed
+> > > > that ACPI set up DPC via EDR. This covers legacy firmware.
+> > > > 
+> > > > However it seems like that could be trouble with newer
+> > > > firmware that might give OSPM control of AER but not DPC, and
+> > > > would result in both Native DPC and EDR being in effect.
+> > > > 
+> > > > 
+> > > > Anyways here are two patches that give control of AER and DPC
+> > > > on the results of _OSC. They don't mess with the HEST parser
+> > > > as I expect those to be removed at some point. I need these
+> > > > for VMD support which doesn't even rely on _OSC, but I suspect
+> > > > this won't be the last effort as we detangle Firmware First.
+> > > > 
+> > > > [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
+> > > 
+> > > Hi Jon, I think we need to sort out the _OSC/FIRMWARE_FIRST patches
+> > > from Alex and Sathy first, then see what needs to be done on top of
+> > > those, so I'm going to push these off for a few days and they'll
+> > > probably need a refresh.
+> > > 
+> > > Bjorn
+> > 
+> > Agreed, no need to merge now. Just wanted to bring up the DPC
+> > ambiguity, which I think was first addressed by dpc-native:
+> > 
+> > commit 35a0b2378c199d4f26e458b2ca38ea56aaf2d9b8
+> > Author: Olof Johansson <olof@lixom.net>
+> > Date:   Wed Oct 23 12:22:05 2019 -0700
+> > 
+> >     PCI/DPC: Add "pcie_ports=dpc-native" to allow DPC without AER control
+> >     
+> >     Prior to eed85ff4c0da7 ("PCI/DPC: Enable DPC only if AER is available"),
+> >     Linux handled DPC events regardless of whether firmware had granted it
+> >     ownership of AER or DPC, e.g., via _OSC.
+> >     
+> >     PCIe r5.0, sec 6.2.10, recommends that the OS link control of DPC to
+> >     control of AER, so after eed85ff4c0da7, Linux handles DPC events only if it
+> >     has control of AER.
+> >     
+> >     On platforms that do not grant OS control of AER via _OSC, Linux DPC
+> >     handling worked before eed85ff4c0da7 but not after.
+> >     
+> >     To make Linux DPC handling work on those platforms the same way they did
+> >     before, add a "pcie_ports=dpc-native" kernel parameter that makes Linux
+> >     handle DPC events regardless of whether it has control of AER.
+> >     
+> >     [bhelgaas: commit log, move pcie_ports_dpc_native to drivers/pci/]
+> >     Link: https://lore.kernel.org/r/20191023192205.97024-1-olof@lixom.net
+> >     Signed-off-by: Olof Johansson <olof@lixom.net>
+> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Returning immediately is wrong as it leaves SGX_ENCL_IOCTL set.  This results
-> in the application seeing -EBUSY on future ioctls() instead of -EFAULT.  Can be
-> fixed as below.  Do you want me to send a formal patch on linux-sgx?
+> Are you still thinking about removing the HEST parser?
 > 
-> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
-> index 77757a74644d..df35a79e915c 100644
-> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
-> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-> @@ -751,8 +751,10 @@ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
->         if (encl_flags & SGX_ENCL_IOCTL)
->                 return -EBUSY;
-> 
-> -       if (encl_flags & SGX_ENCL_DEAD)
-> -               return -EFAULT;
-> +       if (encl_flags & SGX_ENCL_DEAD) {
-> +               ret = -EFAULT;
-> +               goto out;
-> +       }
-> 
->         switch (cmd) {
->         case SGX_IOC_ENCLAVE_CREATE:
-> @@ -772,6 +774,7 @@ long sgx_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
->                 break;
->         }
-> 
-> +out:
->         atomic_andnot(SGX_ENCL_IOCTL, &encl->flags);
-> 
->         return ret;
-> 
-> 
-> > +
-> > +	switch (cmd) {
-> > +	case SGX_IOC_ENCLAVE_CREATE:
-> > +		ret = sgx_ioc_enclave_create(encl, (void __user *)arg);
-> > +		break;
-> > +	case SGX_IOC_ENCLAVE_ADD_PAGES:
-> > +		ret = sgx_ioc_enclave_add_pages(encl, (void __user *)arg);
-> > +		break;
-> > +	case SGX_IOC_ENCLAVE_INIT:
-> > +		ret = sgx_ioc_enclave_init(encl, (void __user *)arg);
-> > +		break;
-> > +	default:
-> > +		ret = -ENOIOCTLCMD;
-> > +		break;
-> > +	}
-> > +
-> > +	atomic_andnot(SGX_ENCL_IOCTL, &encl->flags);
-> > +
-> > +	return ret;
-> > +}
+> For VMD we still need the ability to bind DPC if native_dpc==1.
+> I think if we can do that, this set should still pretty much still
+> apply with a modification to patch 2 to allow matching
+> pcie_ports_dpc_native in dpc_probe.
 
-Thanks. Fixed in my tree:
+Yes, I think we should remove the HEST firmware-first parsing, because
+IIRC the spec really doesn't specify any action the OS should take
+based on it.  I was thinking Sathy might update the patch, and it fell
+off my radar.
 
-v31:
-* Unset SGX_ENCL_IOCTL in the error path of checking encl->flags in order
-  to prevent leaving it set, and thus block any further ioctl calls.
-* Added missing cleanup_srcu_struct() call to sgx_encl_release().
-* Take encl->lock in sgx_encl_add_page() in order to prevent races with
-  the page reclaimer.
-
- /Jarkko
+Bjorn
