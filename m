@@ -2,182 +2,191 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11389C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F323C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69AA20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2EF2070A
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="vSUfxM0M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pdmt9jvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbgEVQCi (ORCPT
+        id S1730686AbgEVQDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:02:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40118 "EHLO
+        Fri, 22 May 2020 12:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730031AbgEVQCh (ORCPT
+        with ESMTP id S1730434AbgEVQDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:02:37 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7B6C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:02:37 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f13so9102625wmc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:02:37 -0700 (PDT)
+        Fri, 22 May 2020 12:03:02 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DFD3C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:03:02 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l17so10686209wrr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:03:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=auDBBRDeoQ7ncKxn2sVDb90pJtkYniz0ggmBqoHliMg=;
-        b=vSUfxM0My7gYZ6kxNlK2KkGUr36aupmG5w7xaWQQ/14HqGVv2n8ecDrBEtgTep8Mlp
-         pyIt2YbAu4FuYbMTCC4uK+1Ji2yHPxdppsJvOzty1En3uOKh+UQ6c+71yogAnKmNIlW8
-         kfy8/Fc6BUIewtu3DeNDPM5OlaYqjvJLeU6Ko=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=v7wWb7qz1S/4lL8SzUygns1tNzo6SO+dGchGg8zLr9M=;
+        b=pdmt9jvSDpqc8VKxRM6ywNws6EyfZ67QtvF5KUqSkObbIgXcqhf0pYqSji8iOn8wQ8
+         rU62omd9QZzYnv0h34TdkeRL09Mpgdg4IkTLQOBm1sLhwj+gbl2oKLfFvy7ce0oijm8V
+         I/ZtkWI0RbSw8rfaiSKOEoGBDtZKM0JjjDJzisQ4JwxF1zM72dqqxb7/IUTFKUkYSaEY
+         t12b5VowqgPLJelJ/1PHZNO9vzM/IwdBY7qU/qzOk5oHUzLNmzj5IErvaNGnQbq1hSi6
+         obORDL0EH4eMh9H5EQuR2E1ESTS7zWZ09YuwTlPZRlgKrKSiM4IlXe3KhHTNpj5MfAfU
+         lX+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=auDBBRDeoQ7ncKxn2sVDb90pJtkYniz0ggmBqoHliMg=;
-        b=GNe5wYjrwnGm27dF1q/rpwowl1YND55IwRsXqy6TJ76DCZj1ndQ2hKg8XPlg/QE4Ag
-         0Cfag34EZPDD2cKzCvamoT53kKj9Vq3uYFBb+kfrj3WxhNtMEj36Ockw2vWlQMI6k2xz
-         wHWQoANBrNClELsVZVR3VN58KHKBYZBM0Ue3x9PLCRA1NQoShFCWYwlw5DQH6arWV6Ft
-         Tn0ALYhuc47aiBaVShoCI0+zPWyCIfg6A8SC+no+4YS65bQT6ImxiCQh3LvxSTycaXuQ
-         9FDUL0+rlYaFTVVxDEv3XZE54O9yDA+dKTKpsesyRv0OUMGs8JixWJnC4/rON0nmNXip
-         dZBQ==
-X-Gm-Message-State: AOAM532qjVjeWstJ7uhU0TNmN5MKWFo1ZZWjhMl3H2Pi9o43pZBpoV0b
-        FoUbJcEg4m0o4LpJrEwkdid/uQ==
-X-Google-Smtp-Source: ABdhPJwqQ/GpClq47yzcuBRsd+d0w1MnbPWVdAjS9zI6cftkXS4iQBZ0uHDXYO127vwVdVc4gWIZkg==
-X-Received: by 2002:a7b:cb86:: with SMTP id m6mr14490141wmi.41.1590163355730;
-        Fri, 22 May 2020 09:02:35 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
-        by smtp.gmail.com with ESMTPSA id s67sm10078440wmf.3.2020.05.22.09.02.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=v7wWb7qz1S/4lL8SzUygns1tNzo6SO+dGchGg8zLr9M=;
+        b=LkMcsUBsCc0g8Pp4PxBKyBkBnxOPEhWvVppZYE1QKQWl2F+aCy6PaNYV+HNSieeqTc
+         cPXkoeoP6vS8Lg/0XZnt7zsY73u5xUG0dvtpt6WDOp9Uxz3VwaNqDX5pXmO0uI58I+l8
+         q0XEvDi7EVDAdwBeC7AOVX7sreLyiCfZScfokTb3VE1vY0mGkd/g9k/li6lHtTZv/Mpp
+         nY1rnKmKcri6O/flthViHVq8YsVLONLVQ0ZvaHsL8lhqeqgjy1wvzfyI8juSXKUJi9a7
+         QRizDyc/PMB096/E0vvtr2BBGHzQccuJN5zPqk4hNWlNZlIL1Q5WSSeAzkYiTh1wo8LH
+         emIA==
+X-Gm-Message-State: AOAM530aJp7iI588/EXYvpyVfpBQaGe+Xws9z9eyZUYs0nLXY/oqeTpa
+        JVdT7RWBHfvO3qg1lppCXyCtjA==
+X-Google-Smtp-Source: ABdhPJwU51KpmkS467wd2YMDKD0z34ZlqcGlXENl9FRlqREBHGZ+7bsCCEAi8bTDtYZlmauzrcd5QQ==
+X-Received: by 2002:adf:e84e:: with SMTP id d14mr3802982wrn.31.1590163381322;
+        Fri, 22 May 2020 09:03:01 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id v205sm9818955wmg.11.2020.05.22.09.03.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 09:02:35 -0700 (PDT)
-Date:   Fri, 22 May 2020 17:02:34 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH] init: Allow distribution configuration of default init
-Message-ID: <20200522160234.GA1487022@chrisdown.name>
+        Fri, 22 May 2020 09:03:00 -0700 (PDT)
+Date:   Fri, 22 May 2020 17:02:58 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, jason.wessel@windriver.com,
+        dianders@chromium.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] kdb: Switch kdb_printf to use safer console poll APIs
+Message-ID: <20200522160258.yq63iigp74u3ngtn@holly.lan>
+References: <1590158071-15325-1-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.14.1 (2020-05-03)
+In-Reply-To: <1590158071-15325-1-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some init systems (eg. systemd) have init at their own paths, for
-example, /usr/lib/systemd/systemd. A compatibility symlink to one of the
-hardcoded init paths is provided by another package, usually named
-something like systemd-sysvcompat or similar.
+On Fri, May 22, 2020 at 08:04:31PM +0530, Sumit Garg wrote:
+> In kgdb NMI context, polling driver APIs are more safer to use instead
+> of console APIs since the polling drivers know they will execute from
+> all sorts of crazy places. And for the most common use cases this would
+> also result in no console handler ever being called. So switch to use
+> polling driver APIs in case a particular console supports polling mode.
 
-Currently distro maintainers who are hands-off on the bootloader are
-more or less required to include those compatibility links as part of
-their base distribution, because it's hard to migrate away from them
-since there's a risk some users will not get the message to set init= on
-the kernel command line appropriately.
+This comment seems rather half hearted, not least because it doesn't
+explain what the current problem is nor why using the polling API is
+safer.
 
-Moreover, for distributions where the init system is something the
-distribution itself is opinionated about (eg. Arch, which has systemd in
-the required `base` package), we could usually reasonably configure this
-ahead of time when building the distribution kernel. However, we
-currently simply don't have any way to configure the kernel to do this.
-Here's an example discussion where removing sysvcompat was discussed by
-distro maintainers[0].
+Compare the above against the advice in
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+and I think it comes up short. Perhaps also consider Ingo Molnar's much
+more concise suggestion on describing changes:
 
-This patch adds a new Kconfig tunable, CONFIG_DEFAULT_INIT, which if set
-is tried before the hardcoded fallback list. So the order of precedence
-is now thus:
+: Please use the customary changelog style we use in the kernel:
+:   " Current code does (A), this has a problem when (B).
+:   We can improve this doing (C), because (D)."
+-- http://lkml.iu.edu/hypermail//linux/kernel/1311.1/01157.html
 
-1. init= on command line (on failure: panic)
-2. CONFIG_DEFAULT_INIT (on failure: try #3)
-3. Hardcoded fallback list (on failure: panic)
 
-This new config parameter will allow distribution maintainers to move
-away from these compatibility links safely, without having to worry that
-their users might not have the right init=.
+> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  kernel/debug/kdb/kdb_io.c | 39 +++++++++++++++++++++++++++++++++------
+>  1 file changed, 33 insertions(+), 6 deletions(-)
+> 
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 3a5a068..8e0d581 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/kgdb.h>
+>  #include <linux/kdb.h>
+>  #include <linux/kallsyms.h>
+> +#include <linux/tty_driver.h>
+>  #include "kdb_private.h"
+>  
+>  #define CMD_BUFLEN 256
+> @@ -699,11 +700,24 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
+>  			}
+>  		}
+>  		for_each_console(c) {
+> +			int line;
+> +			struct tty_driver *p;
+> +
+>  			if (!(c->flags & CON_ENABLED))
+>  				continue;
+> -			++oops_in_progress;
+> -			c->write(c, cp, retlen - (cp - kdb_buffer));
+> -			--oops_in_progress;
+> +			p = c->device ? c->device(c, &line) : NULL;
+> +			if (p && p->ops && p->ops->poll_put_char) {
 
-There are also two other benefits of this over having the distribution
-maintain a symlink:
+What prevents this logic from matching an active console that hasn't
+been selected as the polling driver?
 
-1. One of the value propositions over simply having distributions
-   maintain a /sbin/init symlink via a package is that it also frees
-   distributions which have a preferred default, but not mandatory, init
-   system from having their package manager fight with their users for
-   control of /{s,}bin/init.  Instead, the distribution simply makes
-   their preference known in CONFIG_DEFAULT_INIT, and if the user
-   installs another init system and uninstalls the default one they can
-   still make use of /{s,}bin/init and friends for their own uses. This
-   makes more cases Just Work(tm) without the user having to perform
-   extra configuration via init=.
-2. Since before this we don't know which path the distribution actually
-   _intends_ to serve init from, we don't pr_err if it is simply
-   missing, and usually will just silently put the user in a /bin/sh
-   shell. Now that the distribution can make a declaration of intent, we
-   can be more vocal when this init system fails to launch for any
-   reason, even if it's simply because no file exists at that location,
-   speeding up the palaver of init/mount dependency/etc debugging a bit.
 
-0: https://lists.archlinux.org/pipermail/arch-dev-public/2019-January/029435.html
+> +				len = retlen - (cp - kdb_buffer);
+> +				cp2 = cp;
+> +				while (len--) {
+> +					p->ops->poll_put_char(p, line, *cp2);
+> +					cp2++;
+> +				}
 
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
----
- init/Kconfig | 10 ++++++++++
- init/main.c  | 10 ++++++++++
- 2 files changed, 20 insertions(+)
+Assuming it is possible to identify the console that matches the
+currently selected polling driver can't we just drop the
+is_console test and get rid of this branch entirely.
 
-diff --git a/init/Kconfig b/init/Kconfig
-index bff51e542353..a8136131c108 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -284,6 +284,16 @@ config KERNEL_UNCOMPRESSED
- 
- endchoice
- 
-+config DEFAULT_INIT
-+	string "Default init path"
-+	default ""
-+	help
-+	  This option determines the default init for the system if no init=
-+	  option is passed on the kernel command line. If the requested path is
-+	  not present, we will still then move on to attempting further
-+	  locations (e.g. /sbin/init, etc). If this is empty, we will just use
-+	  the fallback list when init= is not passed.
-+
- config DEFAULT_HOSTNAME
- 	string "Default hostname"
- 	default "(none)"
-diff --git a/init/main.c b/init/main.c
-index eb7e0d16e958..0ead83e86b5a 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1437,6 +1437,16 @@ static int __ref kernel_init(void *unused)
- 		panic("Requested init %s failed (error %d).",
- 		      execute_command, ret);
- 	}
-+
-+	if (CONFIG_DEFAULT_INIT[0] != '\0') {
-+		ret = run_init_process(CONFIG_DEFAULT_INIT);
-+		if (ret)
-+			pr_err("Default init %s failed (error %d)\n",
-+			       CONFIG_DEFAULT_INIT, ret);
-+		else
-+			return 0;
-+	}
-+
- 	if (!try_to_run_init_process("/sbin/init") ||
- 	    !try_to_run_init_process("/etc/init") ||
- 	    !try_to_run_init_process("/bin/init") ||
--- 
-2.26.2
+The only reason for the is_console test is to avoid issuing messages
+twice so if we are able to suppress the c->write() for the same UART
+then is_console check becomes pointless and can go.
 
+
+> +			} else {
+> +				++oops_in_progress;
+> +				c->write(c, cp, retlen - (cp - kdb_buffer));
+> +				--oops_in_progress;
+> +			}
+>  			touch_nmi_watchdog();
+>  		}
+>  	}
+> @@ -765,11 +779,24 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
+>  			}
+>  		}
+>  		for_each_console(c) {
+> +			int line;
+> +			struct tty_driver *p;
+> +
+>  			if (!(c->flags & CON_ENABLED))
+>  				continue;
+> -			++oops_in_progress;
+> -			c->write(c, moreprompt, strlen(moreprompt));
+> -			--oops_in_progress;
+> +			p = c->device ? c->device(c, &line) : NULL;
+> +			if (p && p->ops && p->ops->poll_put_char) {
+> +				len = strlen(moreprompt);
+> +				cp = moreprompt;
+> +				while (len--) {
+> +					p->ops->poll_put_char(p, line, *cp);
+> +					cp++;
+> +				}
+> +			} else {
+> +				++oops_in_progress;
+> +				c->write(c, moreprompt, strlen(moreprompt));
+> +				--oops_in_progress;
+> +			}
+
+Maybe also consider pulling the string emit to a separate function.
+
+
+Daniel.
