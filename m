@@ -2,64 +2,99 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E57C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F845C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6097D206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD9D206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 23:24:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UipmzuhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgEVXUJ (ORCPT
+        id S2387424AbgEVXYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 19:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731223AbgEVXUJ (ORCPT
+        Fri, 22 May 2020 19:24:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60977 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731307AbgEVXXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 19:20:09 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAA0C061A0E;
-        Fri, 22 May 2020 16:20:08 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E9D5A12751C31;
-        Fri, 22 May 2020 16:20:07 -0700 (PDT)
-Date:   Fri, 22 May 2020 16:20:07 -0700 (PDT)
-Message-Id: <20200522.162007.703955779701480867.davem@davemloft.net>
-To:     wu000273@umn.edu
-Cc:     kuba@kernel.org, hkallweit1@gmail.com, jonathan.lemon@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kjlu@umn.edu
-Subject: Re: [PATCH] net: sun: fix missing release regions in
- cas_init_one().
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200522215027.4217-1-wu000273@umn.edu>
-References: <20200522215027.4217-1-wu000273@umn.edu>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-2022-jp
+        Fri, 22 May 2020 19:23:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590189814;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xd7Kn/lno3L3olRbHEyTUX5d4LEKh+MuYsgRNc5tlak=;
+        b=UipmzuhLAhBchzJ2pJySCY2DxwuaBbZf2JbrZhuvaFfrYJfHp8FcaAq1rgHw8k42i3aCyT
+        6g5+0N9wTNyqm4ZKEt3YsDJGO3AVo6Lk+gKrWAWlAKU1izYg1VGjFlfpQMu/5yCW8HhErv
+        N6KsO6pF5L5yUeySzz/enPhg1g0LufM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-pc7PmLKPNhCGOfV4Fu8Bmg-1; Fri, 22 May 2020 19:23:30 -0400
+X-MC-Unique: pc7PmLKPNhCGOfV4Fu8Bmg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C585A8005AA;
+        Fri, 22 May 2020 23:23:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-138.rdu2.redhat.com [10.10.112.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 104C75C1D0;
+        Fri, 22 May 2020 23:23:28 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net 1/2] rxrpc: Fix a warning
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Sat, 23 May 2020 00:23:28 +0100
+Message-ID: <159018980824.996784.6587719373730272639.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159018980141.996784.14747585629466633699.stgit@warthog.procyon.org.uk>
+References: <159018980141.996784.14747585629466633699.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.22
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 22 May 2020 16:20:08 -0700 (PDT)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wu000273@umn.edu
-Date: Fri, 22 May 2020 16:50:27 -0500
+Fix a warning due to an uninitialised variable.
 
-> From: Qiushi Wu <wu000273@umn.edu>
-> 
-> In cas_init_one(), "pdev" is requested by "pci_request_regions", but it
-> was not released after a call of the function “pci_write_config_byte” 
-> failed. Thus replace the jump target “err_write_cacheline” by 
-> "err_out_free_res".
-> 
-> Fixes: 1f26dac32057 ("[NET]: Add Sun Cassini driver.")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+le included from ../fs/afs/fs_probe.c:11:
+../fs/afs/fs_probe.c: In function 'afs_fileserver_probe_result':
+../fs/afs/internal.h:1453:2: warning: 'rtt_us' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1453 |  printk("[%-6.6s] "FMT"\n", current->comm ,##__VA_ARGS__)
+      |  ^~~~~~
+../fs/afs/fs_probe.c:35:15: note: 'rtt_us' was declared here
 
-Applied, thank you.
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/afs/fs_probe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/afs/fs_probe.c b/fs/afs/fs_probe.c
+index 237352d3cb53..37d1bba57b00 100644
+--- a/fs/afs/fs_probe.c
++++ b/fs/afs/fs_probe.c
+@@ -32,7 +32,7 @@ void afs_fileserver_probe_result(struct afs_call *call)
+ 	struct afs_server *server = call->server;
+ 	unsigned int server_index = call->server_index;
+ 	unsigned int index = call->addr_ix;
+-	unsigned int rtt_us;
++	unsigned int rtt_us = 0;
+ 	bool have_result = false;
+ 	int ret = call->error;
+ 
+
+
