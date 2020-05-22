@@ -2,107 +2,170 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE7BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D85C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1FA20727
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RCmMVi9D"
+	by mail.kernel.org (Postfix) with ESMTP id 17D6420727
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgEVQyP (ORCPT
+        id S1730709AbgEVQy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730306AbgEVQyP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:54:15 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93F2C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:54:13 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u1so9257116wmn.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D41fWNXM4E76M8otqHIMLX5Q3+yBUTACTvwrcVZCAHI=;
-        b=RCmMVi9Dz1XooKApIlmF1/8QpJLXFt3vqBRHE/xJ1+/s2cZoiFtvpRnyTQr+QZ1J+J
-         sslyEgIpgGpjhaf/POsxjPOa8ei054v1mVkZfJ034n3zpg3kejPKw6y4Qf/sD+sgQrhQ
-         oYw5SHFNTvGu/qnstCoHrCChbfIFsour/n1ea68GTuMX0pEZteNP1PJ3Qtn5Vp23Rgfg
-         Ij7VM+y0GKXM+uGgP60c6jU7xBGlbfMVbRlrNMFMB1cWxHmwuqB7i1/FxMbJjlfIoWPQ
-         UocIw6nMYeMb11YIIz2wLh/lQjZK5+Kb2EShXKAyo/RUEcpnLmdujqwj3Vq+p1b42Dxt
-         1yiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D41fWNXM4E76M8otqHIMLX5Q3+yBUTACTvwrcVZCAHI=;
-        b=JVoyUIoUC+YRe259qCTQP3v8jU/sV1HGvCFxOn5iZv1+1/usNrlwCNpDkR86HbTpN+
-         s/WXrLKEKTNNH2OxnJV/mT+5cuMM4YeaT8YVDwhKguHQeFme3hnSF1DGdLNZd7g0DXWa
-         Mkj5vnLWXYnaI7/RMr8GtYsJG6ZzGtBk74212Nvl0fLssnNnvfbt+xGWQTK5RcRnETFy
-         844TOk/5TqZedDTDOs9Yilfb2mc/U8+ItIxlv1cQHqTeLHq62pPDLjclJ9ldzLXd8cTI
-         7SC/kLQnxmxELjn3EzWF0quLCyuxzFfkPu6loT9YjLbU+vymxrC+WAsDjfLw3SFZ9n1c
-         b3FA==
-X-Gm-Message-State: AOAM532cMP879rZTypWpeUmdEUY7CN5XhPtb7/T9rcG4EzHCbIytfY0p
-        Qgy2jGSRdns/r7u4LvA4X7Mipg==
-X-Google-Smtp-Source: ABdhPJyLfvpzWF8i9mPj++40s7RpjPi9tUhZKsxcKcAaVR76luGftMkDcwTSHTC4eWCULe3ztCEQ/Q==
-X-Received: by 2002:a1c:2b46:: with SMTP id r67mr14881888wmr.160.1590166452302;
-        Fri, 22 May 2020 09:54:12 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
-        by smtp.googlemail.com with ESMTPSA id z10sm9985907wmi.2.2020.05.22.09.54.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 09:54:11 -0700 (PDT)
-Subject: Re: [PATCH] drivers: thermal: tsens: Merge tsens-common.c into
- tsens.c
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org
-References: <e30e2ba6fa5c007983afd4d7d4e0311c0b57917a.1588183879.git.amit.kucheria@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <4e0660a7-4603-ca85-3c16-703f7343b7e3@linaro.org>
-Date:   Fri, 22 May 2020 18:54:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 22 May 2020 12:54:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:39422 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730306AbgEVQy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 12:54:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3C3D55D;
+        Fri, 22 May 2020 09:54:27 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.95])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB58D3F305;
+        Fri, 22 May 2020 09:54:24 -0700 (PDT)
+Date:   Fri, 22 May 2020 17:54:22 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        harb@amperecomputing.com, Jose.Marinho@arm.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Francois Ozog <francois.ozog@linaro.org>
+Subject: Re: [PATCH 2/2] firmware: smccc: Add ARCH_SOC_ID support
+Message-ID: <20200522165422.GA18810@bogus>
+References: <20200522124951.35776-1-sudeep.holla@arm.com>
+ <20200522124951.35776-3-sudeep.holla@arm.com>
+ <CAK8P3a1t6BrB_Gti138VDRbmaiR_TjwR9d6qMstLBFDWxZ1kjQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e30e2ba6fa5c007983afd4d7d4e0311c0b57917a.1588183879.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1t6BrB_Gti138VDRbmaiR_TjwR9d6qMstLBFDWxZ1kjQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 20:14, Amit Kucheria wrote:
-> tsens-common.c has outlived its usefuless. It was created expecting lots
-> of custom routines per version of the TSENS IP. We haven't needed those,
-> there is now only data in the version-specific files.
-> 
-> Merge the code for tsens-common.c into tsens.c. As a result,
-> - Remove any unnecessary forward declarations in tsens.h.
-> - Add a Linaro copyright to tsens.c.
-> - Fixup the Makefile to remove tsens-common.c.
-> - Where it made sense, fix some 80-column alignments in the
->   tsens-common.c code being copied over.
-> 
-> There is no functional change with this patch.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Applied, thanks
+(+ Jose (SMCCC Spec author))
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+On Fri, May 22, 2020 at 04:46:12PM +0200, Arnd Bergmann wrote:
+> On Fri, May 22, 2020 at 2:50 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > +
+> > +       soc_id_rev = res.a0;
+> > +
+> > +       soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> > +       if (!soc_dev_attr)
+> > +               return -ENOMEM;
+> > +
+> > +       sprintf(soc_id_str, "0x%04x", IMP_DEF_SOC_ID(soc_id_version));
+> > +       sprintf(soc_id_rev_str, "0x%08x", soc_id_rev);
+> > +       sprintf(soc_id_jep106_id_str, "0x%02x%02x",
+> > +               JEP106_BANK_CONT_CODE(soc_id_version),
+> > +               JEP106_ID_CODE(soc_id_version));
+> > +
+> > +       soc_dev_attr->soc_id = soc_id_str;
+> > +       soc_dev_attr->revision = soc_id_rev_str;
+> > +       soc_dev_attr->jep106_id = soc_id_jep106_id_str;
+>
+> Ok, let me try to understand how this maps the 64-bit ID into the
+> six strings in user space:
+>
+> For a chip that identifies as
+>
+> JEP106_BANK_CONT_CODE = 12
+> JEP106_ID_CODE = 34
+> IMP_DEF_SOC_ID = 5678
+> soc_id_rev = 9abcdef0
+>
+> the normal sysfs attributes contain these strings:
+>
+> machine = ""
+> family = ""
+> revision = "0x9abcdef0
+> serial_number = ""
+> soc_id = "0x5678"
+>
+> and the new attribute is
+>
+> jep106_identification_code = "0x1234"
+>
+> This still looks like a rather poorly designed interface to me, with a
+> number of downsides:
+>
+> - Nothing in those strings identifies the numbers as using jep106
+>   numbers rather than some something else that might use strings
+>   with hexadecimal numbers.
+>
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Not sure if I understand your concerns completely here.
+
+Anyways I wanted to clarify that the jep106 encoding is applicable only
+for manufacturer's id and not for SoC ID or revision. Not sure if that
+changes anything about your concerns.
+
+> - I think we should have something unique in "family" just because
+>   existing scripts can use that as the primary indentifier
+>
+
+I agree with your idea of combining attributes, not sure exactly which
+ones yet.
+
+> - It seems odd that there is no way to read the serial number through
+>   the same interface and publish it the usual way.
+
+Valid concern and I will pass this to interface authors.
+
+>   Francois Ozog
+>   recently asked for a generic way to find out a serial number for
+>   inventory management, and this would be the obvious place to have it.
+
+Agreed, but not sure what author(s) have to say. I have cc-ed one of them.
+
+>   It can of course be added later when the next revision of the spec
+>   is there, it just seems like a surprising omission.
+>
+
+Yes, definitely. Good to get feedback.
+
+> How about making the contents:
+>
+> machine = "" /* could be a future addition, but board specific */
+> family = "jep106:1234"
+
+But this just indicates manufacturer id and nothing related to SoC family.
+If it is jep106:043b, all it indicates is Arm Ltd and assigning it to
+family doesn't sound right to me.
+
+I had requests for both of the above during the design of interface but
+I was told vendors were happy with the interface. I will let the authors
+speak about that.
+
+> revision = "0x9abcdef0
+> serial_number = "0xfedcba987654321" /* to be implemented later */
+
+Sure.
+
+> soc_id = "jep106:1234:5678" /* duplicates family but makes it unique*/
+
+Not sure again.
+>
+> That would work without any new properties, dropping the other patch,
+> and be easier to use for identification from user space.
+>
+
+OK, I agree on ease part. But for me, we don't have any property in the
+list to indicate the vendor/manufacturer's name. I don't see issue adding
+one, name can be fixed as jep106_identification_code is too specific.
+
+How about manufacturer with the value in the format "jep106:1234" if
+it is not normal string but jep106 encoding.
+
+--
+Regards,
+Sudeep
