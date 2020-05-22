@@ -2,104 +2,66 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E26EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31957C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3B02206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:32:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="YJFXzry9"
+	by mail.kernel.org (Postfix) with ESMTP id 1B9A9206C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 12:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgEVMc5 (ORCPT
+        id S1729570AbgEVMdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 08:32:57 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:65433 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEVMc4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 08:32:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590150775; x=1621686775;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jxpIcUQcFnD1p6i5FtXCqzY/ZBVzyH8VSD5KQpS2Dv4=;
-  b=YJFXzry9FtKA1A4X0muJJ29ab8k1dsQrA9rAVH4IokavErGjk5aMzx/g
-   Obr+eb44p5X4vPYpwQEpm6+5JrzQ+nTNf0zPTrfU/d0CI33mW0gpn5kkB
-   kGz/qlEDlM8YP3FH3fMxIwSJy9WxV27VfSU5eYrUxTNDnL82PrCB1C42b
-   +cGbK+05hZaRwKvKAF6tMSnJPn+TVAqjknFHWzxu0WLlk+X8aFRFY3PeH
-   aN/PRJVg0Q4Rq+RfpSoTayza9quuQ9b0KjmBNOEtMcr6XfZMBzrocXfyT
-   2Gjkir4g3pQoVwIJUpUBLcG6fMVT/yBWTtDVQDR75N6G4JWkteKVprQEM
-   Q==;
-IronPort-SDR: 8ZK7dF8XNyTVqcmAlieJNGc8ljWKTyZ86GajqAeHAD/M66C/8vrpRdodVajKVxcBkEM50NECXu
- YBTMSqFe48JXgTzgSQSyLrJmj9wfu2YRv5hBNuf4050KcPgOXelT7A7rvuA01zi4F2poQm0tqd
- +9XCEGEbSmDlxpODFm1UAAA/TFn12r8VbpTFKuWm/zzPj3sKk05Mc5NqQmxODS+16g6CzBrzxn
- ZQLnS69slGKl0TyJ3Z1hNwIPxOIy1B5i2tA4bQgJNBHP1lqO4f+7ChQDDqssvamLHvoGdm+TiM
- TYI=
-X-IronPort-AV: E=Sophos;i="5.73,421,1583164800"; 
-   d="scan'208";a="138635476"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 22 May 2020 20:32:55 +0800
-IronPort-SDR: WScRrQ8r1mHxw/nvSIXGkw9RkTs67dwGCoVQv4yu+90OHXk+HHwiMxBw7UF6IJIYihvjXK+fbo
- dwvyNPLGBY+Cnctpa/GaE7VYL1p90VLKI=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:22:54 -0700
-IronPort-SDR: OHwPvCphzfHlZfMUYqYjBYkAg+mjt1HpcboZgR02qCCB+C6sN2IL/1+cRCfEupoL/XD+oM1Iz8
- uL5wRqbiGh3g==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2020 05:32:55 -0700
-Date:   Fri, 22 May 2020 13:32:50 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Paul Burton <paulburton@kernel.org>
-cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: piix4-poweroff.c I/O BAR usage
-In-Reply-To: <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
-Message-ID: <alpine.LFD.2.21.2005221315360.21168@redsun52.ssa.fujisawa.hgst.com>
-References: <20200520135708.GA1086370@bjorn-Precision-5520> <alpine.LFD.2.21.2005220144230.21168@redsun52.ssa.fujisawa.hgst.com> <CAG0y8xkAqscKC0qpx+zkBsmxtZFRaHdSgNLA78eGJUsQEtxQSA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Fri, 22 May 2020 08:33:35 -0400
+Received: from mail.astralinux.ru ([217.74.38.120]:52373 "EHLO astralinux.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729446AbgEVMdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 08:33:35 -0400
+X-Greylist: delayed 3603 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 May 2020 08:33:34 EDT
+Received: from [46.148.196.138] (HELO mastykin.cct.rbt)
+  by astralinux.ru (CommuniGate Pro SMTP 6.2.7)
+  with ESMTPS id 1973379; Fri, 22 May 2020 14:33:14 +0300
+From:   Dmitry Mastykin <dmastykin@astralinux.ru>
+Cc:     dmastykin@astralinux.ru, Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] commoncap: Make cap_inode_killpriv ignore other LSM xattr
+Date:   Fri, 22 May 2020 14:32:25 +0300
+Message-Id: <20200522113225.29980-1-dmastykin@astralinux.ru>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020, Paul Burton wrote:
+Other LSM may set own capabilities to files. But its inode_killpriv
+hook may not be called because cap_inode_killpriv breaks
+the chain returning -ENODATA on remove xattr other than
+XATTR_NAME_CAPS.
 
-> I'm reachable but lacking free time & with no access to Malta hardware
-> I can't claim to be too useful here, so thanks for responding :)
+Signed-off-by: Dmitry Mastykin <dmastykin@astralinux.ru>
+---
+ security/commoncap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- Great you're still around!  I hope you're doing good in this difficult 
-time, and overall.  I have recently learnt WaveComp is no more. :(
+diff --git a/security/commoncap.c b/security/commoncap.c
+index f4ee0ae106b2..0c12ecf5676f 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -314,7 +314,7 @@ int cap_inode_killpriv(struct dentry *dentry)
+ 	int error;
+ 
+ 	error = __vfs_removexattr(dentry, XATTR_NAME_CAPS);
+-	if (error == -EOPNOTSUPP)
++	if (error == -ENODATA || error == -EOPNOTSUPP)
+ 		error = 0;
+ 	return error;
+ }
+-- 
+2.23.0
 
-> Before being moved to a driver (which was mostly driven by a desire to
-> migrate Malta to a multi-platform/generic kernel using DT) this code
-> was part of arch/mips/mti-malta/ where I added it in commit
-> b6911bba598f ("MIPS: Malta: add suspend state entry code"). My main
-> motivation at the time was to make QEMU exit after running poweroff,
-> but I did ensure it worked on real Malta boards too (at least Malta-R
-> with CoreFPGA6). Over the years since then it shocked a couple of
-> hardware people to see software power off a Malta - if the original
-> hardware designers had intended that to work then the knowledge had
-> been lost over time :)
-
- Well, the Malta was designed by the Copenhagen team, which was dissolved 
-IIRC back in 2003, so indeed the intent may have been lost in the mist of 
-time.  I did know powering off is possible (same with the Atlas CompactPCI 
-board if you ever came across one, not supported by Linux anymore) as it 
-was inherent to the southbridge, and I remember discussing it once with 
-Chris Shaw back in the MIPS UK days.  I guess the further it went, the 
-more it became forgotten.
-
- Thanks for confirming it has been verified, though I was sure you did it 
-anyway.
-
-  Maciej
