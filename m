@@ -2,181 +2,227 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D06C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC53206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:07:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeI4ofqc"
+	by mail.kernel.org (Postfix) with ESMTP id 15732206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbgEVNHX (ORCPT
+        id S1729894AbgEVNHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:07:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729740AbgEVNHW (ORCPT
+        Fri, 22 May 2020 09:07:45 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:34476 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729384AbgEVNHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:07:22 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A01AC061A0E;
-        Fri, 22 May 2020 06:07:22 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 82so6497624lfh.2;
-        Fri, 22 May 2020 06:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T3YLmShsXHzYS+SwxvGmWk40fJ/Ku1cYbc0CTeNJEyY=;
-        b=SeI4ofqcvKBWBQLeol3QjOhY8LDNHEE3pUkAVpZFjLvvKGYDLuroE4XLupIWS568qv
-         D+jDVeq50I/hTYnKWdzqoflote3stbpFnMUcvJxgTpB7jNRb6utRBGuY5RZZRSD0L/4Q
-         5pRFMD1h/2Yv3NYjThbgZRJZgjCtqrpdWg/foPsXULhPXvxfR8+wDSfF9RDNOjRRLuiC
-         jgRiPc/92Iu6YkOc/SvA0XK3z9GQDwJkYfc2mwXvy4xEc3ht/ZNdw60JZh3BvB4LDTK5
-         Qk8q6eJBMkXQMzC/KqTf6vB67GRN5ZtoOiqgHoekgcdn3C914wt9rqH8VqdiV/dta+gP
-         Zo0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T3YLmShsXHzYS+SwxvGmWk40fJ/Ku1cYbc0CTeNJEyY=;
-        b=R1oQ5AWcfNfaTRn4nd+wax4o2/RZSbcMiAy0e8ZfZJJfGa54dJnPt8UKA46q5CdGaf
-         JE1ubKhEisEeA80Xe11ymDD/VmbD32hS5proQYgEQBs6gq6XKgv/qHV6FvVt0BrA1xHr
-         15qdtnT9T/MTj+568rH4Jp7XhuYNoeRENRYyqaLqfKkQ77OCBPKohmBl24kODwXBi3cp
-         58jHUiltI9cmKze0DINHlRqSokSnxKituge82gsATr3i0O1SplTaws5k9fFilopa18yx
-         khdpS5NDsr43zxYNFbqvkHLv2YH5lMcYoXpQmcyLG0W0Otk4D39LEZMmlMhCDS6wpO1F
-         zGeA==
-X-Gm-Message-State: AOAM532Vv3aDmaFqECL9q/EbYYcNJK+CpPVG7dfaoYFljqgxE2U+o91v
-        zSgJwc/uL4vI95DC6P2GRW4+Sp3URiPIku2Ho4/Ogw==
-X-Google-Smtp-Source: ABdhPJygiVyf31phO5FaXHWu7V1/HU83xSM42R6UMC74ptWXQTYVhkNLA5OcsYN4QeCh2XAvhcbeVPsBqUgqMbfmDfc=
-X-Received: by 2002:a05:6512:10cd:: with SMTP id k13mr7529609lfg.153.1590152841031;
- Fri, 22 May 2020 06:07:21 -0700 (PDT)
+        Fri, 22 May 2020 09:07:44 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04MD4a7I023330;
+        Fri, 22 May 2020 09:07:35 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 312a17ejh8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 May 2020 09:07:34 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04MD7XlK028479
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Fri, 22 May 2020 09:07:33 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 22 May 2020 06:07:32 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Fri, 22 May 2020 06:07:31 -0700
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04MD7Rhm012558;
+        Fri, 22 May 2020 09:07:27 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: stm32-adc: keep a reference to the iio device on the state struct
+Date:   Fri, 22 May 2020 16:07:19 +0300
+Message-ID: <20200522130719.630714-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
- <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
- <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
- <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com>
- <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
- <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com>
- <CADBw62oFDrruSq+Rm=hXHZYn0qDrr47cNK4Wj0_A-jG1dOT+kw@mail.gmail.com>
- <CADBw62rZuhaeSEppy+AhSkv1uNgaj9qrHFf7pz9nwKm8q3OrTA@mail.gmail.com> <CABb+yY244ZCOk5kDtOR0oEYajwUVbXoSZdNiid__UuYbU=yB-Q@mail.gmail.com>
-In-Reply-To: <CABb+yY244ZCOk5kDtOR0oEYajwUVbXoSZdNiid__UuYbU=yB-Q@mail.gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Fri, 22 May 2020 21:07:04 +0800
-Message-ID: <CADBw62p_tB1izMnwQgLHcN-uwQCDDyigQ=pcA3+43C6uww2NsA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-22_05:2020-05-22,2020-05-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 cotscore=-2147483648
+ suspectscore=0 adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005220107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 11:48 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
->
-> On Thu, May 21, 2020 at 7:24 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > Hi Jassi,
-> >
-> > On Wed, May 13, 2020 at 2:32 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > >
-> > > On Wed, May 13, 2020 at 2:05 PM Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> > > >
-> > > > On Tue, May 12, 2020 at 11:14 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > >
-> > > > > Hi Jassi,
-> > > > >
-> > > > > On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > >
-> > > > > > Hi Jassi,
-> > > > > >
-> > > > > > On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> > > > > > >
-> > > > > > > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > Hi Jassi,
-> > > > > > > >
-> > > > > > > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > > > > > >
-> > > > > > > > > From: Baolin Wang <baolin.wang@unisoc.com>
-> > > > > > > > >
-> > > > > > > > > The Spreadtrum mailbox controller supports 8 channels to communicate
-> > > > > > > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
-> > > > > > > > > are used to send and receive messages by IRQ mode.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> > > > > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > > > > > > > > ---
-> > > > > > > > > Changes from v3:
-> > > > > > > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
-> > > > > > > > >
-> > > > > > > > > Changes from v2:
-> > > > > > > > >  - None.
-> > > > > > > > >
-> > > > > > > > > Changes from v1:
-> > > > > > > > >  - None
-> > > > > > > >
-> > > > > > > > Gentle ping, do you have any other comments? Thanks.
-> > > > > > > >
-> > > > > > > Yea, I am still not sure about the error returned in send_data().  It
-> > > > > > > will either never hit or there will be no easy recovery from it. The
-> > > > > > > api expects the driver to tell it the last-tx was done only when it
-> > > > > > > can send the next message. (There may be case like sending depend on
-> > > > > > > remote, which can't be ensured before hand).
-> > > > > >
-> > > > > > Actually this is an unusual case, suppose the remote target did not
-> > > > > > fetch the message as soon as possile, which will cause the FIFO
-> > > > > > overflow, so in this case we  can not send messages to the remote
-> > > > > > target any more, otherwise messages will be lost. Thus we can return
-> > > > > > errors to users to indicate that something wrong with the remote
-> > > > > > target need to be checked.
-> > > > > >
-> > > > > > So this validation in send_data() is mostly for debugging for this
-> > > > > > abnormal case and we will not trigger this issue if the remote target
-> > > > > > works well. So I think it is useful to keep this validation in
-> > > > > > send_data(). Thanks.
-> > > > >
-> > > > > Any comments? Thanks.
-> > > > >
-> > > > Same as my last post.
-> > >
-> > > I think I've explained the reason why we need add this validation in
-> > > my previous email, I am not sure how do you think? You still want to
-> > > remove this validation?
-> >
-> > Gentle ping.
-> >
-> > As I explained in previous email, this validation is for an unusual
-> > case, suppose the remote target did not fetch the message as soon as
-> > possile, which will cause the FIFO overflow, so in this case we  can
-> > not send messages to the remote
-> > target any more, otherwise messages will be lost. Thus we can return
-> > errors to users to indicate that something wrong with the remote
-> > target need to be checked.
-> >
-> > So this validation in send_data() is mostly for debugging for this
-> > abnormal case and we will not trigger this issue if the remote target
-> > works well. So I think it is useful to keep this validation in
-> > send_data(). What do you think? Thanks.
-> >
-> I still think the same as before.
-> You should do this check before you call mbox_chan_txdone() and wait
-> if busy ... which is exactly the purpose of txdone().
-> It seems harmless to be paranoid and place a block of code in
-> practically "if 0", but that sets bad precedence for other drivers. So
-> please move the check before txdone().
+We may want to get rid of the iio_priv_to_dev() helper. The reason is that
+we will hide some of the members of the iio_dev structure (to prevent
+drivers from accessing them directly), and that will also mean hiding the
+implementation of the iio_priv_to_dev() helper inside the IIO core.
 
-OK. I realized I can implement the flush() to make sure the
-transmission has been completed. Thanks.
+Hiding the implementation of iio_priv_to_dev() implies that some fast-paths
+may not be fast anymore, so a general idea is to try to get rid of the
+iio_priv_to_dev() altogether.
+The iio_priv() helper won't be affected by the rework.
 
---
-Baolin Wang
+For this driver, not using iio_priv_to_dev(), means keeping a reference to
+the IIO device on the state struct.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/adc/stm32-adc.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index ae622ee6d08c..7e58c4443e3f 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -171,6 +171,7 @@ struct stm32_adc_cfg {
+ 
+ /**
+  * struct stm32_adc - private data of each ADC IIO instance
++ * @indio_dev:		back-reference to the IIO device object
+  * @common:		reference to ADC block common data
+  * @offset:		ADC instance register offset in ADC block
+  * @cfg:		compatible configuration data
+@@ -194,6 +195,7 @@ struct stm32_adc_cfg {
+  * @chan_name:		channel name array
+  */
+ struct stm32_adc {
++	struct iio_dev		*indio_dev;
+ 	struct stm32_adc_common	*common;
+ 	u32			offset;
+ 	const struct stm32_adc_cfg	*cfg;
+@@ -637,7 +639,7 @@ static void stm32h7_adc_start_conv(struct stm32_adc *adc, bool dma)
+ 
+ static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int ret;
+ 	u32 val;
+ 
+@@ -654,7 +656,7 @@ static void stm32h7_adc_stop_conv(struct stm32_adc *adc)
+ 
+ static int stm32h7_adc_exit_pwr_down(struct stm32_adc *adc)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int ret;
+ 	u32 val;
+ 
+@@ -692,7 +694,7 @@ static void stm32h7_adc_enter_pwr_down(struct stm32_adc *adc)
+ 
+ static int stm32h7_adc_enable(struct stm32_adc *adc)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int ret;
+ 	u32 val;
+ 
+@@ -715,7 +717,7 @@ static int stm32h7_adc_enable(struct stm32_adc *adc)
+ 
+ static void stm32h7_adc_disable(struct stm32_adc *adc)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int ret;
+ 	u32 val;
+ 
+@@ -735,7 +737,7 @@ static void stm32h7_adc_disable(struct stm32_adc *adc)
+  */
+ static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int i, ret;
+ 	u32 lincalrdyw_mask, val;
+ 
+@@ -779,7 +781,7 @@ static int stm32h7_adc_read_selfcalib(struct stm32_adc *adc)
+  */
+ static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int i, ret;
+ 	u32 lincalrdyw_mask, val;
+ 
+@@ -852,7 +854,7 @@ static int stm32h7_adc_restore_selfcalib(struct stm32_adc *adc)
+  */
+ static int stm32h7_adc_selfcalib(struct stm32_adc *adc)
+ {
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int ret;
+ 	u32 val;
+ 
+@@ -1228,7 +1230,7 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
+ static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
+ {
+ 	struct stm32_adc *adc = data;
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+ 	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
+ 
+@@ -1241,7 +1243,7 @@ static irqreturn_t stm32_adc_threaded_isr(int irq, void *data)
+ static irqreturn_t stm32_adc_isr(int irq, void *data)
+ {
+ 	struct stm32_adc *adc = data;
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	const struct stm32_adc_regspec *regs = adc->cfg->regs;
+ 	u32 status = stm32_adc_readl(adc, regs->isr_eoc.reg);
+ 
+@@ -1879,6 +1881,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	adc = iio_priv(indio_dev);
++	adc->indio_dev = indio_dev;
+ 	adc->common = dev_get_drvdata(pdev->dev.parent);
+ 	spin_lock_init(&adc->lock);
+ 	init_completion(&adc->completion);
+@@ -1990,7 +1993,7 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ static int stm32_adc_remove(struct platform_device *pdev)
+ {
+ 	struct stm32_adc *adc = platform_get_drvdata(pdev);
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 
+ 	pm_runtime_get_sync(&pdev->dev);
+ 	iio_device_unregister(indio_dev);
+@@ -2013,7 +2016,7 @@ static int stm32_adc_remove(struct platform_device *pdev)
+ static int stm32_adc_suspend(struct device *dev)
+ {
+ 	struct stm32_adc *adc = dev_get_drvdata(dev);
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 
+ 	if (iio_buffer_enabled(indio_dev))
+ 		__stm32_adc_buffer_predisable(indio_dev);
+@@ -2024,7 +2027,7 @@ static int stm32_adc_suspend(struct device *dev)
+ static int stm32_adc_resume(struct device *dev)
+ {
+ 	struct stm32_adc *adc = dev_get_drvdata(dev);
+-	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
++	struct iio_dev *indio_dev = adc->indio_dev;
+ 	int ret;
+ 
+ 	ret = pm_runtime_force_resume(dev);
+-- 
+2.25.1
+
