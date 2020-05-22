@@ -2,199 +2,285 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D482B2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB85C206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgEVN3A (ORCPT
+        id S1729863AbgEVNba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:29:00 -0400
-Received: from outbound-smtp05.blacknight.com ([81.17.249.38]:45140 "EHLO
-        outbound-smtp05.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728898AbgEVN27 (ORCPT
+        Fri, 22 May 2020 09:31:30 -0400
+Received: from 4.mo177.mail-out.ovh.net ([46.105.37.72]:34282 "EHLO
+        4.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729367AbgEVNba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:28:59 -0400
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-        by outbound-smtp05.blacknight.com (Postfix) with ESMTPS id C095BCCAFB
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 14:28:56 +0100 (IST)
-Received: (qmail 7197 invoked from network); 22 May 2020 13:28:56 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 22 May 2020 13:28:56 -0000
-Date:   Fri, 22 May 2020 14:28:54 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
-        riel@surriel.com
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200522132854.GF7167@techsingularity.net>
-References: <20200508092212.GE3758@techsingularity.net>
- <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
- <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
- <20200513153023.GF3758@techsingularity.net>
- <20200514153122.GE2978@hirez.programming.kicks-ass.net>
- <20200515084740.GJ3758@techsingularity.net>
- <20200515111732.GS2957@hirez.programming.kicks-ass.net>
- <20200515142444.GK3001@hirez.programming.kicks-ass.net>
- <20200521103816.GA7167@techsingularity.net>
- <20200521114132.GI325280@hirez.programming.kicks-ass.net>
+        Fri, 22 May 2020 09:31:30 -0400
+X-Greylist: delayed 419 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 May 2020 09:31:27 EDT
+Received: from player756.ha.ovh.net (unknown [10.110.115.182])
+        by mo177.mail-out.ovh.net (Postfix) with ESMTP id B92A612FE56
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:24:26 +0200 (CEST)
+Received: from 3mdeb.com (85-222-117-222.dynamic.chello.pl [85.222.117.222])
+        (Authenticated sender: krystian.hebel@3mdeb.com)
+        by player756.ha.ovh.net (Postfix) with ESMTPSA id 8ADB811C7B1D3;
+        Fri, 22 May 2020 13:24:02 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-97G002d4487a8e-2fca-4765-9259-b8e2fabc2189,FCEDB92AD14E9058E5246D4C75F3ACF5DAAC6A74) smtp.auth=krystian.hebel@3mdeb.com
+Subject: Re: [GRUB PATCH RFC 15/18] i386/txt: Add Intel TXT core
+ implementation
+To:     Daniel Kiper <daniel.kiper@oracle.com>, grub-devel@gnu.org,
+        linux-kernel@vger.kernel.org, trenchboot-devel@googlegroups.com,
+        x86@kernel.org
+Cc:     alexander.burmashev@oracle.com, andrew.cooper3@citrix.com,
+        ard.biesheuvel@linaro.org, dpsmith@apertussolutions.com,
+        eric.snowberg@oracle.com, javierm@redhat.com,
+        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
+        lukasz.hawrylko@linux.intel.com, michal.zygowski@3mdeb.com,
+        mjg59@google.com, phcoder@gmail.com, pirot.krol@3mdeb.com,
+        pjones@redhat.com, ross.philipson@oracle.com
+References: <20200504232132.23570-1-daniel.kiper@oracle.com>
+ <20200504232132.23570-16-daniel.kiper@oracle.com>
+From:   Krystian Hebel <krystian.hebel@3mdeb.com>
+Message-ID: <7056a782-714a-c3e9-7c5b-9659c67e9949@3mdeb.com>
+Date:   Fri, 22 May 2020 15:24:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200521114132.GI325280@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200504232132.23570-16-daniel.kiper@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Ovh-Tracer-Id: 15170938297460448174
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduhedruddufedgieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepmfhrhihsthhirghnucfjvggsvghluceokhhrhihsthhirghnrdhhvggsvghlseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpedvieeuhfegvdfhhfeiveeltdelieeuteeljeffteefgeeuleefhfdvudegleelueenucffohhmrghinhepfehmuggvsgdrtghomhenucfkpheptddrtddrtddrtddpkeehrddvvddvrdduudejrddvvddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeehiedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehkrhihshhtihgrnhdrhhgvsggvlhesfehmuggvsgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 01:41:32PM +0200, Peter Zijlstra wrote:
-> On Thu, May 21, 2020 at 11:38:16AM +0100, Mel Gorman wrote:
-> > IIUC, this patch front-loads as much work as possible before checking if
-> > the task is on_rq and then the waker/wakee shares a cache, queue task on
-> > the wake_list and otherwise do a direct wakeup.
-> > 
-> > The advantage is that spinning is avoided on p->on_rq when p does not
-> > share a cache. The disadvantage is that it may result in tasks being
-> > stacked but this should only happen when the domain is overloaded and
-> > select_task_eq() is unlikely to find an idle CPU. The load balancer would
-> > soon correct the situation anyway.
-> > 
-> > In terms of netperf for my testing, the benefit is marginal because the
-> > wakeups are primarily between tasks that share cache. It does trigger as
-> > perf indicates that some time is spent in ttwu_queue_remote with this
-> > patch, it's just that the overall time spent spinning on p->on_rq is
-> > very similar. I'm still waiting on other workloads to complete to see
-> > what the impact is.
-> 
-> So it might make sense to play with the exact conditions under which
-> we'll attempt this remote queue, if we see a large 'local' p->on_cpu
-> spin time, it might make sense to attempt the queue even in this case.
-> 
-> We could for example change it to:
-> 
-> 	if (REAC_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags | WF_ON_CPU))
-> 		goto unlock;
-> 
-> and then use that in ttwu_queue_remote() to differentiate between these
-> two cases.
-> 
 
->  #endif /* CONFIG_SMP */
->  
->  	ttwu_queue(p, cpu, wake_flags);
+On 05.05.2020 01:21, Daniel Kiper wrote:
+> +static grub_err_t
+> +init_txt_heap (struct grub_slaunch_params *slparams, struct grub_txt_acm_header *sinit)
+> +{
+> +  grub_uint8_t *txt_heap;
+> +  grub_uint32_t os_sinit_data_ver, sinit_caps;
+> +  grub_uint64_t *size;
+> +  struct grub_txt_os_mle_data *os_mle_data;
+> +  struct grub_txt_os_sinit_data *os_sinit_data;
+> +  struct grub_txt_heap_end_element *heap_end_element;
+> +  struct grub_txt_heap_event_log_pointer2_1_element *heap_event_log_pointer2_1_element;
+> +#ifdef GRUB_MACHINE_EFI
+> +  struct grub_acpi_rsdp_v20 *rsdp;
+> +#endif
+> +
+> +  /* BIOS data already verified in grub_txt_verify_platform(). */
+> +
+> +  txt_heap = grub_txt_get_heap ();
+> +
+> +  /* OS/loader to MLE data. */
+> +
+> +  os_mle_data = grub_txt_os_mle_data_start (txt_heap);
+> +  size = (grub_uint64_t *) ((grub_addr_t) os_mle_data - sizeof (grub_uint64_t));
+There is 'grub_txt_os_mle_data_size()' in previous patch, it would look 
+better.
+> +  *size = sizeof (*os_mle_data) + sizeof (grub_uint64_t);
+> +
+> +  grub_memset (os_mle_data, 0, sizeof (*os_mle_data));
+> +
+> +  os_mle_data->version = GRUB_SL_OS_MLE_STRUCT_VERSION;
+> +  os_mle_data->zero_page_addr = (grub_uint32_t)(grub_addr_t) slparams->params;
+> +  os_mle_data->saved_misc_enable_msr = grub_rdmsr (GRUB_MSR_X86_MISC_ENABLE);
+> +
+> +  os_mle_data->ap_wake_block = slparams->ap_wake_block;
+> +
+> +  save_mtrrs (os_mle_data);
+> +
+> +  /* OS/loader to SINIT data. */
+> +
+> +  os_sinit_data_ver = grub_txt_supported_os_sinit_data_ver (sinit);
+> +
+> +  if (os_sinit_data_ver < OS_SINIT_DATA_MIN_VER)
+> +    return grub_error (GRUB_ERR_BAD_DEVICE,
+> +		       N_("unsupported OS to SINIT data version in SINIT ACM: %d"
+> +		       " expected >= %d"), os_sinit_data_ver, OS_SINIT_DATA_MIN_VER);
+> +
+> +  os_sinit_data = grub_txt_os_sinit_data_start (txt_heap);
+> +  size = (grub_uint64_t *) ((grub_addr_t) os_sinit_data - sizeof (grub_uint64_t));
+Ditto
+> +
+> +  *size = sizeof(grub_uint64_t) + sizeof (struct grub_txt_os_sinit_data) +
+> +	  sizeof (struct grub_txt_heap_end_element);
+> +
+> +  if (grub_get_tpm_ver () == GRUB_TPM_12)
+> +    *size += sizeof (struct grub_txt_heap_tpm_event_log_element);
+> +  else if (grub_get_tpm_ver () == GRUB_TPM_20)
+> +    *size += sizeof (struct grub_txt_heap_event_log_pointer2_1_element);
+> +  else
+> +    return grub_error (GRUB_ERR_BAD_DEVICE, N_("unsupported TPM version"));
+> +
+> +  grub_memset (os_sinit_data, 0, *size);
+> +
+> +#ifdef GRUB_MACHINE_EFI
+> +  rsdp = grub_acpi_get_rsdpv2 ();
+> +
+> +  if (rsdp == NULL)
+> +    return grub_printf ("WARNING: ACPI RSDP 2.0 missing\n");
+> +
+> +  os_sinit_data->efi_rsdt_ptr = (grub_uint64_t)(grub_addr_t) rsdp;
+> +#endif
+> +
+> +  os_sinit_data->mle_ptab = slparams->mle_ptab_target;
+> +  os_sinit_data->mle_size = slparams->mle_size;
+> +
+> +  os_sinit_data->mle_hdr_base = slparams->mle_header_offset;
+> +
+> +  /* TODO: Check low PMR with RMRR. Look at relevant tboot code too. */
+> +  /* TODO: Kernel should not allocate any memory outside of PMRs regions!!! */
+> +  os_sinit_data->vtd_pmr_lo_base = 0;
+> +  os_sinit_data->vtd_pmr_lo_size = ALIGN_DOWN (grub_mmap_get_highest (0x100000000),
+> +					       GRUB_TXT_PMR_ALIGN);
+> +
+> +  os_sinit_data->vtd_pmr_hi_base = ALIGN_UP (grub_mmap_get_lowest (0x100000000),
+> +					     GRUB_TXT_PMR_ALIGN);
+> +  os_sinit_data->vtd_pmr_hi_size = ALIGN_DOWN (grub_mmap_get_highest (0xffffffffffffffff),
+> +					       GRUB_TXT_PMR_ALIGN);
+> +  os_sinit_data->vtd_pmr_hi_size -= os_sinit_data->vtd_pmr_hi_base;
+Could it be done with just one PMR, from 0 to top of memory, or would 
+TXT complain?
+> +
+> +  grub_dprintf ("slaunch",
+> +		"vtd_pmr_lo_base: 0x%" PRIxGRUB_UINT64_T " vtd_pmr_lo_size: 0x%"
+> +		PRIxGRUB_UINT64_T " vtd_pmr_hi_base: 0x%" PRIxGRUB_UINT64_T
+> +		" vtd_pmr_hi_size: 0x%" PRIxGRUB_UINT64_T "\n",
+> +		os_sinit_data->vtd_pmr_lo_base, os_sinit_data->vtd_pmr_lo_size,
+> +		os_sinit_data->vtd_pmr_hi_base, os_sinit_data->vtd_pmr_hi_size);
+> +
+>
+> <snip>
+>
+> +/*
+> + * The MLE page tables have to be below the MLE and have no special regions in
+> + * between them and the MLE (this is a bit of an unwritten rule).
+> + * 20 pages are carved out of memory below the MLE. That leave 18 page table
+> + * pages that can cover up to 36M .
+> + * can only contain 4k pages
+> + *
+> + * TODO: TXT Spec p.32; List section name and number with PT MLE requirments here.
+> + *
+> + * TODO: This function is not able to cover MLEs larger than 1 GiB. Fix it!!!
+> + * After fixing inrease GRUB_TXT_MLE_MAX_SIZE too.
+> + */
 
-Is something like this on top of your patch what you had in mind?
+What do you mean by "special regions"? In TXT spec it is written that 
+there may be no holes
+in the virtual address space:
 
----8<---
+"There may not be any invalid (not-present) page table entries after the 
+first valid
+entry (i.e. there may not be any gaps in the MLE’s linear address space)."
 
----
- kernel/sched/core.c  | 35 ++++++++++++++++++++++++++---------
- kernel/sched/sched.h |  3 ++-
- 2 files changed, 28 insertions(+), 10 deletions(-)
+Also that spec:
+"A breadth-first search of page tables must produce increasing physical 
+addresses."
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 987b8ecf2ee9..435ecf5820ee 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2330,13 +2330,19 @@ void scheduler_ipi(void)
- 	irq_exit();
- }
- 
--static void __ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-+/*
-+ * Queue a task on the target CPUs wake_list and wake the CPU via IPI if
-+ * necessary. The wakee CPU on receipt of the IPI will queue the task
-+ * via sched_ttwu_wakeup() for activation instead of the waking task
-+ * activating and queueing the wakee.
-+ */
-+static void __ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
- {
- 	struct rq *rq = cpu_rq(cpu);
- 
- 	p->sched_remote_wakeup = !!(wake_flags & WF_MIGRATED);
- 
--	if (llist_add(&p->wake_entry, &cpu_rq(cpu)->wake_list)) {
-+	if (llist_add(&p->wake_entry, &rq->wake_list)) {
- 		if (!set_nr_if_polling(rq->idle))
- 			smp_send_reschedule(cpu);
- 		else
-@@ -2373,12 +2379,23 @@ bool cpus_share_cache(int this_cpu, int that_cpu)
- 	return per_cpu(sd_llc_id, this_cpu) == per_cpu(sd_llc_id, that_cpu);
- }
- 
--static bool ttwu_queue_remote(struct task_struct *p, int cpu, int wake_flags)
-+static bool ttwu_queue_wakelist(struct task_struct *p, int cpu, int wake_flags)
- {
--	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
--		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
--		__ttwu_queue_remote(p, cpu, wake_flags);
--		return true;
-+	if (sched_feat(TTWU_QUEUE)) {
-+		/*
-+		 * If CPU does not share cache then queue the task on the remote
-+		 * rqs wakelist to avoid accessing remote data. Alternatively,
-+		 * if the task is descheduling and the only running task on the
-+		 * CPU then use the wakelist to offload the task activation to
-+		 * the CPU that will soon be idle so the waker can continue.
-+		 * nr_running is checked to avoid unnecessary task stacking.
-+		 */
-+		if (!cpus_share_cache(smp_processor_id(), cpu) ||
-+		    ((wake_flags & WF_ON_RQ) && cpu_rq(cpu)->nr_running <= 1)) {
-+			sched_clock_cpu(cpu); /* Sync clocks across CPUs */
-+			__ttwu_queue_wakelist(p, cpu, wake_flags);
-+			return true;
-+		}
- 	}
- 
- 	return false;
-@@ -2391,7 +2408,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
- 	struct rq_flags rf;
- 
- #if defined(CONFIG_SMP)
--	if (ttwu_queue_remote(p, cpu, wake_flags))
-+	if (ttwu_queue_wakelist(p, cpu, wake_flags))
- 		return;
- #endif
- 
-@@ -2611,7 +2628,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	 * let the waker make forward progress. This is safe because IRQs are
- 	 * disabled and the IPI will deliver after on_cpu is cleared.
- 	 */
--	if (READ_ONCE(p->on_cpu) && ttwu_queue_remote(p, cpu, wake_flags))
-+	if (READ_ONCE(p->on_cpu) && ttwu_queue_wakelist(p, cpu, wake_flags | WF_ON_RQ))
- 		goto unlock;
- 
- 	/*
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index db3a57675ccf..06297d1142a0 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1688,7 +1688,8 @@ static inline int task_on_rq_migrating(struct task_struct *p)
-  */
- #define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
- #define WF_FORK			0x02		/* Child wakeup after fork */
--#define WF_MIGRATED		0x4		/* Internal use, task got migrated */
-+#define WF_MIGRATED		0x04		/* Internal use, task got migrated */
-+#define WF_ON_RQ		0x08		/* Wakee is on_rq */
- 
- /*
-  * To aid in avoiding the subversion of "niceness" due to uneven distribution
+Maybe I misunderstood, but does it mean that the paging structures 
+themselves cannot
+be mapped? Or does it apply to the page tables only, not to the 
+addresses of pages in PTEs?
+
+> +void
+> +grub_txt_setup_mle_ptab (struct grub_slaunch_params *slparams)
+> +{
+> +  grub_uint8_t *pg_dir, *pg_dir_ptr_tab = slparams->mle_ptab_mem, *pg_tab;
+IMHO using 'grub_uint64_t' would result in less type casting and cleaner 
+code below.
+> +  grub_uint32_t mle_off = 0, pd_off = 0;
+> +  grub_uint64_t *pde, *pte;
+> +
+> +  grub_memset (pg_dir_ptr_tab, 0, slparams->mle_ptab_size);
+> +
+> +  pg_dir         = pg_dir_ptr_tab + GRUB_PAGE_SIZE;
+> +  pg_tab         = pg_dir + GRUB_PAGE_SIZE;
+> +
+> +  /* Only use first entry in page dir ptr table */
+> +  *(grub_uint64_t *)pg_dir_ptr_tab = MAKE_PT_MLE_ENTRY(pg_dir);
+> +
+> +  /* Start with first entry in page dir */
+> +  *(grub_uint64_t *)pg_dir = MAKE_PT_MLE_ENTRY(pg_tab);
+> +
+> +  pte = (grub_uint64_t *)pg_tab;
+> +  pde = (grub_uint64_t *)pg_dir;
+> +
+> +  do
+> +    {
+> +      *pte = MAKE_PT_MLE_ENTRY(slparams->mle_start + mle_off);
+> +
+> +      pte++;
+> +      mle_off += GRUB_PAGE_SIZE;
+> +
+> +      if (!(++pd_off % 512))
+> +        {
+> +          /* Break if we don't need any additional page entries */
+> +          if (mle_off >= slparams->mle_size)
+> +            break;
+> +          pde++;
+> +          *pde = MAKE_PT_MLE_ENTRY(pte);
+> +        }
+> +    } while (mle_off < slparams->mle_size);
+> +}
+>
+> <snip>
+>
+> +grub_err_t
+> +grub_txt_boot_prepare (struct grub_slaunch_params *slparams)
+> +{
+> +  grub_err_t err;
+> +  struct grub_txt_mle_header *mle_header;
+> +  struct grub_txt_acm_header *sinit_base;
+> +
+> +  sinit_base = grub_txt_sinit_select (grub_slaunch_module ());
+> +
+> +  if (sinit_base == NULL)
+> +    return grub_errno;
+> +
+> +  err = init_txt_heap (slparams, sinit_base);
+> +
+> +  if (err != GRUB_ERR_NONE)
+> +    return err;
+> +
+> +  /* Update the MLE header. */
+> +  mle_header = (struct grub_txt_mle_header *)(grub_addr_t) (slparams->mle_start + slparams->mle_header_offset);
+> +  mle_header->first_valid_page = 0;
+> +  mle_header->mle_end = slparams->mle_size;
+> +
+> +  slparams->sinit_acm_base = (grub_uint32_t)(grub_addr_t) sinit_base;
+> +  slparams->sinit_acm_size = sinit_base->size * 4;
+> +
+> +  grub_tpm_relinquish_lcl (0);
+> +
+> +  err = set_mtrrs_for_acmod (sinit_base);
+> +  if (err)
+> +    return grub_error (err, N_("secure launch failed to set MTRRs for ACM"));
+> +
+> +  err = grub_txt_prepare_cpu ();
+> +  if ( err )
+> +    return err;
+> +
+> +  if (!(grub_rdmsr (GRUB_MSR_X86_APICBASE) & GRUB_MSR_X86_APICBASE_BSP))
+> +    return grub_error (GRUB_ERR_BAD_DEVICE, N_("secure launch must run on BSP"));
+This test should be the first one, before messing with TPM and MTTRs.
+> +
+> +  return GRUB_ERR_NONE;
+> +}
+Best regards,
+
+-- 
+Krystian Hebel
+Firmware Engineer
+https://3mdeb.com | @3mdeb_com
+
