@@ -2,112 +2,155 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF53C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AE3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6CB2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78065204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 10:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BCpOf+BK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vd4VYINY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgEVKgm (ORCPT
+        id S1728966AbgEVKg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 06:36:42 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48602 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgEVKgm (ORCPT
+        Fri, 22 May 2020 06:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728362AbgEVKg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 06:36:42 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MAXNnw065360;
-        Fri, 22 May 2020 10:36:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=K27L96mmV4GmzDbNladkq7oBFSKsiC4OG9GSzTfY0Ak=;
- b=BCpOf+BKx5AqZuHLlQvpkhfyOOlTJ2mOxlBW1TFVIzh3GdXhVWby1IxuqOq2J6Cgikvc
- 1nHdQ4FRh1opqD1mtvnxyWpkK/lazqvA81Szytq3Ifor6fXs8He485Rnc8G6DHdX2nKb
- 1Ak9x9YzyG5Zp9q+SFPzcYI1UJJIBPgAEmebcDCO+s9KyKjGqHf9oZJsVMXLbfUEAydH
- k3iOGswe2xdTMG6Rw3yq1wfRz2y741cauIcTPbLUg7yUA/27cMssCgL+KzkZxn6sD5Q2
- T6LsQgjKIkTUhHh+m+NKIxbJer/YFT4t+/dqxfp6FBbj9pgj/Gqh628O/TpAJMRo2it2 +Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 3127krn4hb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 May 2020 10:36:21 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04MAXGkp165946;
-        Fri, 22 May 2020 10:34:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 312t3e55g5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 May 2020 10:34:20 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04MAYEBO031342;
-        Fri, 22 May 2020 10:34:17 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 22 May 2020 03:34:13 -0700
-Date:   Fri, 22 May 2020 13:34:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     MugilRaj <dmugil2000@gmail.com>
-Cc:     devel@driverdev.osuosl.org, Kirk Reiser <kirk@reisers.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Chris Brannon <chris@the-brannons.com>
-Subject: Re: [PATCH] taging: speakup: remove volatile
-Message-ID: <20200522103406.GK30374@kadam>
-References: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
+        Fri, 22 May 2020 06:36:56 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3292C061A0E;
+        Fri, 22 May 2020 03:36:55 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id m6so10206038ilq.7;
+        Fri, 22 May 2020 03:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S9mNXQGxYRI6qULQw9Ylvem2CGTTDqLbr/fEXVEpF4U=;
+        b=vd4VYINYuEVdmUQvHlTA9KXdDm9DE/zeNAYpOQv75fwt4OmH/SIAObjGaEBV4RxvZz
+         q6i66VQgCbwB2DJnpkEs3CNS44zpx0/PzCDxw+TMIy0QqPe/1Vb9Qtz+UKk3APYhG57W
+         0iTd/hJBqukptHPRhJKJwFSc7T8wM0FpEmbg6I6kTzq+aeXPRSzbG/9VmyhLf821lJYv
+         r3xmT/IG4xyoBXd8AFUfyLhmGkOuqCvdk90pwWNRlm08GL4a15VsChynvxCw55pjfyQo
+         wbiCGX/jvpdtkVcZHfD2F6GQ+KJBLXyqJ7b3XSsKGprTz+kBwt26Bme5bvOjKtZPhW2q
+         gqZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S9mNXQGxYRI6qULQw9Ylvem2CGTTDqLbr/fEXVEpF4U=;
+        b=b7GjcjFB72QqWBYVJyLpGixUwi7R7wY604c+wrCfUFm56HL4HV3tzdZ94D/pQ2Dbg/
+         3mN/vVlsaS+jG8JLdr2TtVfYmy7AWVQztZuQ+ooj4BKT5cwpH2CrV3fND9cxENnIlq0W
+         oezIOPDcUEO/YIm8tgoULpGM9+loiB9A66ctMCcwQ38Kdh1ZJUT7+TrUMi2cRvf0qYX6
+         kfCPeW9iPe6/bcglQwxSRzwpOP3LoPNGzyvjgcUweW2t9AdCYNp0u0esWTuoOqC2pTgt
+         hEehaverP17cKYeIuGBBMYarObujkQv/jOzorRvJ9Ifs+yx3kbS22pLAPigLe8QN2gUP
+         pVug==
+X-Gm-Message-State: AOAM533Gb4MxEnYmqSZBxVeBKR8z3YJMS8sNE2JAn8ruaghYGbICo4wH
+        Ix+3tIrt/kCMfjjfMZSyPVxJtk3pJP9G3wjtJYzIdkRL
+X-Google-Smtp-Source: ABdhPJx0XAiW7gALipTyOEYHcUb8snFaOYG31JH89mxDkIvzBtiW7XAO+lC0bUVICWp15csuijP3fwq29n6skZcb3/g=
+X-Received: by 2002:a92:ca84:: with SMTP id t4mr10176899ilo.276.1590143815240;
+ Fri, 22 May 2020 03:36:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590138989-6091-1-git-send-email-dmugil2000@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=788
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005220086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9628 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 clxscore=1011 priorityscore=1501 mlxscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=822 malwarescore=0 cotscore=-2147483648
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005220086
+References: <20200518201646.48312-1-dagmcr@gmail.com> <73d98905-930d-3549-1a85-293f4d213716@ideasonboard.com>
+In-Reply-To: <73d98905-930d-3549-1a85-293f4d213716@ideasonboard.com>
+From:   Daniel G <dagmcr@gmail.com>
+Date:   Fri, 22 May 2020 12:36:44 +0200
+Message-ID: <CAPsT6hk=3Z2nwGW=WdxB7UVwvOVMdiZ1oVdR_Xb4kqXpQ8jC5w@mail.gmail.com>
+Subject: Re: [PATCH] drm: rcar-du: Fix build error
+To:     kieran.bingham+renesas@ideasonboard.com
+Cc:     Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
+        laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 02:46:28PM +0530, MugilRaj wrote:
-> fix checkpatch.pl warning, which is Use of volatile is usually wrong: see
-> Documentation/process/volatile-considered-harmful.rst
-> Signed-off-by: MugilRaj <dmugil2000@gmail.com>
+Hi Kieran and Emil,
 
-Please put a blank before the Signed-off-by line.
+On Fri, 22 May 2020 at 11:43, Kieran Bingham
+<kieran.bingham+renesas@ideasonboard.com> wrote:
+>
+> Hi Daniel,
+>
+> On 18/05/2020 21:16, Daniel Gomez wrote:
+> > Select DRM_KMS_HELPER dependency.
+> >
+> > Build error when DRM_KMS_HELPER is not selected:
+> >
+> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
+> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
+> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
+> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
+> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
+> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+> > drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
+> >
+>
+> Looking at the files in rcar_du that utilise drm_atomic_helpers...
+>
+> git grep -l drm_atomic_helper_ drivers/gpu/drm/rcar-du/
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c
+>  drivers/gpu/drm/rcar-du/rcar_du_plane.c
+>  drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+>  drivers/gpu/drm/rcar-du/rcar_du_writeback.c
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c
+>
+> of those, these are configurable:
+>
+>  rcar_du_vsp.c          # DRM_RCAR_VSP
+>  rcar_du_writeback.c    # DRM_RCAR_WRITEBACK
+>  rcar_lvds.c            # DRM_RCAR_LVDS
+>
+> But VSP and WRITEBACK are already implicitly dependant upon DRM_RCAR_DU
+> because they get built into the DU module.
+>
+> So indeed, only the RCAR_LVDS is a separate module, using those helpers,
+> so I think a select is a reasonable fix.
+>
+> I would also ask whether DRM_RCAR_LVDS should depend upon DRM_RCAR_DU
+> though as well.
+>
+> There is no linkage requirement, as it's a standalone bridge driver from
+> what I can see, but I don't think it serves much purpose without the DU?
 
-Probably there should be a space between your first and last name.  It's
-supposed to your legal name like for signing a legal document so use
-whatever is appropriate legal documents in your country.
+I have actually spotted when using arch/arm/configs/multi_v7_defconfig where
+DRM_RCAR_DU is built as module. But when I was reviewing it I was able to
+compile RCAR_LVDS=y with DRM_RCAR_DU=n. Also, according to
+https://patchwork.kernel.org/patch/10159063/, the LVDS encoders used to be
+described as part of the DU but not after the patch. So, I assume it can
+be used without the DU but not completely sure.
 
-Also the Documentation/process/volatile-considered-harmful.rst explains
-that people often use "volatile" when they should be using locking for
-synchronization.  That seems to be the case here.  So the correct fix is
-to add locking.  That's a little bit complicated to do and requires
-testing.
-
-If we apply this patch, then we have silenced the warning so now someone
-will have to look for the bug.  But if we leave it as-is, then everyone
-will know that the code is buggy.  So let's leave it as-is until we are
-able to fix the bug.
-
-It's always better to have easy to find bugs, than hidden bugs.
-
-regards,
-dan carpenter
-
+>
+> Anyway, even if it's just for compile testing maybe, the select here
+> should be fine.
+>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>
+> > Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+> > ---
+> >  drivers/gpu/drm/rcar-du/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+> > index 0919f1f159a4..f65d1489dc50 100644
+> > --- a/drivers/gpu/drm/rcar-du/Kconfig
+> > +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> > @@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
+> >  config DRM_RCAR_LVDS
+> >       tristate "R-Car DU LVDS Encoder Support"
+> >       depends on DRM && DRM_BRIDGE && OF
+> > +     select DRM_KMS_HELPER
+> >       select DRM_PANEL
+> >       select OF_FLATTREE
+> >       select OF_OVERLAY
+> >
+>
