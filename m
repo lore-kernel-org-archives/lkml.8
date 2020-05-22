@@ -2,121 +2,149 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A251FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4589C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82E5D20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905DC2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U91qoqgO"
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Stz0XkL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgEVHRQ (ORCPT
+        id S1728590AbgEVHS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:17:16 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46605 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgEVHRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:17:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SyVH73Dgz9sRW;
-        Fri, 22 May 2020 17:17:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590131833;
-        bh=WRFFq309nmz8Sedh5dWML/EAXQtJZNpjpGHkdUPM9BY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U91qoqgONGqPaKNSgI981uraL6BGuTRFRIxH6cxAM/5Vx4wBTjnFSxq85JqOphBaY
-         qpvOTB7kg47SJKN+pRw9dD/Ded10uGDcnmxyPCfuG6nXsoMjtr+TdqykK5qNbZ79+h
-         t3Ba0viCKx+xNeoXfgE98blzX9jbZbblETQ6IZBq/epocuLLY3u0tW45IOtHrSfx0Z
-         gbqerGUMZb8Vh9aeBC/VyXn4gb1phoWFwHeEoeBOketADvpJgGcUZi+Nyr/ACD8WaO
-         2j/YEnm8LE5ALWe15l64vOosyHCa++bRS4yfEG9Rlu9pix7NZxy28EViYTXyJbAB/B
-         GbaLFgQEF47TA==
-Date:   Fri, 22 May 2020 17:17:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        elver@google.com, bp@alien8.de
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200522171708.5f392fde@canb.auug.org.au>
-In-Reply-To: <20200521173520.GL6608@willie-the-truck>
-References: <20200522033119.1bbd99c5@canb.auug.org.au>
-        <20200521173520.GL6608@willie-the-truck>
+        Fri, 22 May 2020 03:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbgEVHS2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:18:28 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79321C05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:18:28 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id s19so8526933edt.12
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:18:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=in51jJA8Mu7oKCkIWNSeQ3E1a6Z3kXtKg8VzNNTy0UQ=;
+        b=Stz0XkL6PSXCeCJfuF0oo7byMaaO9yT+tf4sJuvMiUsis37y81xDk/LYrW3dx0Z1sG
+         h+3UapferdC9mSB0rINgG7eoHVTZYp8fzBXJVq2gcSIZURTdLQ/cBt4z2CEMCuHctoiX
+         Km6YufoqUkb2XMfyjuG7zn9xXaq8pfXT6icmsNrgZgN6kKTHUft9ax5Af4CvRCX4JA7N
+         5c1dbsk9zh2Vu0R0b4A7Ql5Gbp0+bjoR3u3kwzxjYk3CqmR0fqLCMVRO+8nnl3jjkXMj
+         aZuPKW6p6btOUy/2vZAJ9TdW4PiQD4KW011EyAsvkktKm/SFH4YYN6kdhu5vjWPdOHwz
+         j6KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=in51jJA8Mu7oKCkIWNSeQ3E1a6Z3kXtKg8VzNNTy0UQ=;
+        b=Xi81yYCnLoOVkp03XIfX1tod83PdykDf4Dl6GRg6sgvtKVq9O2Q/9ToAZDh0HEj7lu
+         Ya+EXYk/vZZ15RlRVVEPfAgvMZFH4gNrvk+D4V9ERyQJM16MpBodr3L7toyU3bvLLLT4
+         u7fnOCf4HSTXKh+o4aTN0ubDKafLHeJ0zOMMjfmX29wXkelm2tATcstlSyiNbpYfa4Y2
+         S13RSdUR4AS6DzDqFRx7Bcv92MhvXQZJu+qDB3Tp6uFphZteGd8KRA88ErHeY14mkVOC
+         EeOtEALGtf9xww/gRBVtbadWWIBPZKUV/8wseIFksOu2ZkIXdOPmwFzB0aNR7DUqRIyq
+         TUew==
+X-Gm-Message-State: AOAM533hG6Euk2k/5mj3XjNZfxrdlDBO3WhpqmN48lgreTCMzuCwC1Ig
+        asa577MzB/4D5Eiry2F1W5FgFw==
+X-Google-Smtp-Source: ABdhPJyOFvm9l7pay4ySoW0TUkuluuWMUy4ykcwXScy8L4/1d/ztFNvLImjtm+nK2E1xJ3AtQsakRA==
+X-Received: by 2002:a05:6402:b2c:: with SMTP id bo12mr2012716edb.274.1590131907016;
+        Fri, 22 May 2020 00:18:27 -0700 (PDT)
+Received: from ?IPv6:2001:16b8:4891:d900:e80e:f5df:f780:7d57? ([2001:16b8:4891:d900:e80e:f5df:f780:7d57])
+        by smtp.gmail.com with ESMTPSA id lw27sm7293270ejb.80.2020.05.22.00.18.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 00:18:26 -0700 (PDT)
+Subject: Re: [PATCH 10/10] mm/migrate.c: call detach_page_private to cleanup
+ code
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     akpm@linux-foundation.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, willy@infradead.org
+References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com>
+ <20200517214718.468-11-guoqing.jiang@cloud.ionos.com>
+ <20200521225220.GV2005@dread.disaster.area>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <906f7469-492d-febc-c7ed-b01830ae900d@cloud.ionos.com>
+Date:   Fri, 22 May 2020 09:18:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5cnXdl5i2Y9RM89ny88Xbbq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200521225220.GV2005@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5cnXdl5i2Y9RM89ny88Xbbq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Dave,
 
-Hi Will,
+On 5/22/20 12:52 AM, Dave Chinner wrote:
+> On Sun, May 17, 2020 at 11:47:18PM +0200, Guoqing Jiang wrote:
+>> We can cleanup code a little by call detach_page_private here.
+>>
+>> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+>> ---
+>> No change since RFC V3.
+>>
+>>   mm/migrate.c | 5 +----
+>>   1 file changed, 1 insertion(+), 4 deletions(-)
+>>
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 5fed0305d2ec..f99502bc113c 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -804,10 +804,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
+>>   	if (rc != MIGRATEPAGE_SUCCESS)
+>>   		goto unlock_buffers;
+>>   
+>> -	ClearPagePrivate(page);
+>> -	set_page_private(newpage, page_private(page));
+>> -	set_page_private(page, 0);
+>> -	put_page(page);
+>> +	set_page_private(newpage, detach_page_private(page));
+> attach_page_private(newpage, detach_page_private(page));
 
-On Thu, 21 May 2020 18:35:22 +0100 Will Deacon <will@kernel.org> wrote:
->
-> [+Marco and Boris]
->=20
-> On Fri, May 22, 2020 at 03:31:19AM +1000, Stephen Rothwell wrote:
-> > After merging the tip tree, all my linux-next builds took signficantly
-> > longer and used much more memory.  In some cases, builds would seg fault
-> > due to running out of memory :-(
-> >=20
-> > I have eventaully bisected it to commit
-> >=20
-> >   cdd28ad2d811 ("READ_ONCE: Use data_race() to avoid KCSAN instrumentat=
-ion")
-> >=20
-> > For my (e.g.) x86_64 allmodconfig builds (cross compiled on PowerPC le,
-> > -j80) the elapsed time went from around 9 minutes to over 17 minutes
-> > and the maximum resident size (as reported by /usr/bin/time) from around
-> > 500M to around 2G (I saw lots of cc1 processes over 2G in size).
-> >=20
-> > For tomorrow's linux-next (well, later today :-() I will revert that
-> > commit (and its child) when I merge the tip tree. =20
->=20
-> Sorry about that, seems we can't avoid running into compiler problems with
-> this lot. The good news is that there's a series to fix this here:
->=20
-> https://lore.kernel.org/r/20200521142047.169334-1-elver@google.com
->=20
-> so hopefully this be fixed in -tip soon (but I agree that reverting the
-> thing in -next in the meantime makes sense).
+Mattew had suggested it as follows, but not sure if we can reorder of 
+the setup of
+the bh and setting PagePrivate, so I didn't want to break the original 
+syntax.
 
-Unfortunately, the revert didn't work, so instead I have used the tip
-tree from next-20200518 for today (hopefully this will all be sorted
-out by Monday).
+@@ -797,11 +797,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
+         if (rc != MIGRATEPAGE_SUCCESS)
+                 goto unlock_buffers;
+  
+-       ClearPagePrivate(page);
+-       set_page_private(newpage, page_private(page));
+-       set_page_private(page, 0);
+-       put_page(page);
+-       get_page(newpage);
++       attach_page_private(newpage, detach_page_private(page));
+  
+         bh = head;
+         do {
+@@ -810,8 +806,6 @@ static int __buffer_migrate_page(struct address_space *mapping,
+  
+         } while (bh != head);
+  
+-       SetPagePrivate(newpage);
+-
+         if (mode != MIGRATE_SYNC_NO_COPY)
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/5cnXdl5i2Y9RM89ny88Xbbq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+[1]. 
+https://lore.kernel.org/lkml/20200502004158.GD29705@bombadil.infradead.org/
+[2]. 
+https://lore.kernel.org/lkml/e4d5ddc0-877f-6499-f697-2b7c0ddbf386@cloud.ionos.com/
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HfHQACgkQAVBC80lX
-0GzgUAf7BhSPU+lbnmCZeib2AupQi3nfpW5EjDpuOz+B49t5Fho/XPaWMbHoQobu
-LLn7chJXRAaJXUTYkYD5xvQGx1Eg61mwHFgaJSdwe5FwQfYn4yqUUK7aqsZAtCR7
-dQt4e6gmMmn4nhyF5GPzyf5nB/tbB/IDrK1Hgc9oSFd/lYctpTFz+rNnZYJ5d+cK
-5lwtvlIJOxImT2ffh6F8jXzRKaPEaiTrgeOurRLCEfHvu0UIHWaZ4aJlYCcKWIRB
-rn9tYFfDHBL9zaJ7TcdLdiBtE7XvOQ2+vvO1uxLFOcMohCRVTDMe4j+vWWeXbJct
-1iHzE59JRFSnVNau93bZS5vrvVlWog==
-=nEyJ
------END PGP SIGNATURE-----
+Thanks,
+Guoqing
 
---Sig_/5cnXdl5i2Y9RM89ny88Xbbq--
