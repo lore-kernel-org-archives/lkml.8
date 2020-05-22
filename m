@@ -2,123 +2,110 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16104C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13824C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD9A220756
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E078E20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 16:57:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ALlj+W21"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mJgRhNZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgEVQzo (ORCPT
+        id S1730685AbgEVQ5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 12:55:44 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:60420 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730306AbgEVQzn (ORCPT
+        Fri, 22 May 2020 12:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730487AbgEVQ5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 12:55:43 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04MGnfhZ002268;
-        Fri, 22 May 2020 11:55:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=bWWdOf71DtZlvCAAxkPNTXnAH8vqYy+Ku/DszCAGbUk=;
- b=ALlj+W212CIqS1OzXH/LZPqi5RbUmk6ruPKe5g61hRm69msmtzU8bn9ZB+tgImY3PQNP
- 0GLUslufWuZz1zeQPbkXAl2KI9VvGVZKanVJzQKKhhZ1WqK+fUofVkcP5VVPcVZvooJ4
- Q8PRIPBCgYIDASiuB8qM0SkGSx5RmiD8nx72DuEOHeUC+FLSgAy3SHxFy+BFLcqiMe+0
- +05Gx//41rZOnadP4OZDd5+H85Tzdbg2DweFVsOaC5pkjqkXWtbMKbdPlEKMnraZmbJn
- 4Vsj4ZtU8d/g6e+/buWyoGTxu5UHfTR1L2ZFXaOBCP7Rw2kIlQbsWgxi6I70yZOqStc7 9g== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 315ejkuf5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 22 May 2020 11:55:33 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 22 May
- 2020 17:55:30 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Fri, 22 May 2020 17:55:31 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 9CA352AB;
-        Fri, 22 May 2020 16:55:30 +0000 (UTC)
-Date:   Fri, 22 May 2020 16:55:30 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-CC:     <kjlu@umn.edu>, MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] extcon: arizona: Fix runtime PM imbalance on error
-Message-ID: <20200522165530.GH71940@ediswmail.ad.cirrus.com>
-References: <20200522110732.874-1-dinghao.liu@zju.edu.cn>
+        Fri, 22 May 2020 12:57:22 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAD3C08C5C1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:57:22 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u1so9265700wmn.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 09:57:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H0fk+YgnvJQdHJy1RoTIxISz+5f4dnnX1kWqMJdIiTs=;
+        b=mJgRhNZUV8CHq1RmFWq7pxbyvsO0FpeEolI6sdLDMYOWVj7bN0R5fgJTzTQh2UAcMf
+         W7g3g4Oi45lMempvhGJgtWGWviaNUQedF2O0PzS+CbjwXpt7q5HpHU5Fb9W/uVFkPd67
+         X9f5FjJczWK80YgE51DwsqlAaMmapRlzlt2jZ2eBvFNCPZS7ouR+YOyc4YAIpS8xk318
+         EXFub2WKjTNwwryAYe6wi8LYvaMb8CpMJgdNc7g3yKPqicUOJACJNLkUDgqS3tUY87PX
+         kM3KUiwSsBRtX4d2YfXKdTZ63ZdlrExIimJuo8wxEGasLH5lrVq9ZoYGyBjjNAmPOCzF
+         czvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H0fk+YgnvJQdHJy1RoTIxISz+5f4dnnX1kWqMJdIiTs=;
+        b=tYQVsDVev9ZFjxsn/bQjGN1yz/GES47bbpUHHFbbGDERIBvztEaKscWFeJQhC4wSes
+         bC4l01ZsKj8slNXjNc+5YyI6k3lBna73qeFUwo9Fm5P2T9V0Y9XJ77403T6zfsu/QilP
+         g6cFXkWRhvCuGYM8oQjyh0y7V/1tWBSO9MGt3ck9vEMoMQ3iQchnJi1Fvl6r1RKB+TOl
+         z0si9dXHWi+M5rSi/cwp1dTCHsUQBxaHNKwMlsaDhL+AKmMWoTAGY/T3eI21a+EsZx+L
+         V/HGnIOQONA9ESL/qUaF3kCsLNcFK+sboSu2mZ926l0JbYTh9TtUJuMYfi60hF4WHOhY
+         rHFw==
+X-Gm-Message-State: AOAM531/Ke2vNz49sEWilFa3KIzhiPpKfWb1nltf0tLAd5wz/A4OQ6Sc
+        94BBliRr225RAcf/eROLD7PLcHjDBWQMrw==
+X-Google-Smtp-Source: ABdhPJzc7gjWBkYuh9qSlhxc3eMgYPGZvCjw95agKu8mdcnuOAzuJsZb0eW/lo8vLU77CVVsDE60BQ==
+X-Received: by 2002:a1c:5685:: with SMTP id k127mr14863903wmb.50.1590166640540;
+        Fri, 22 May 2020 09:57:20 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:a82f:eaec:3c49:875a? ([2a01:e34:ed2f:f020:a82f:eaec:3c49:875a])
+        by smtp.googlemail.com with ESMTPSA id t14sm9673168wrb.56.2020.05.22.09.57.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 09:57:19 -0700 (PDT)
+Subject: Re: [PATCH 4/4] thermal: qoriq: Add platform dependencies
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200507112955.23520-1-geert+renesas@glider.be>
+ <20200507112955.23520-5-geert+renesas@glider.be>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <e4a72b09-52e5-d145-2b64-50e5d636527a@linaro.org>
+Date:   Fri, 22 May 2020 18:57:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200522110732.874-1-dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 cotscore=-2147483648
- clxscore=1011 adultscore=0 mlxlogscore=999 phishscore=0 bulkscore=0
- suspectscore=48 lowpriorityscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005220136
+In-Reply-To: <20200507112955.23520-5-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 07:07:31PM +0800, Dinghao Liu wrote:
-> When arizona_request_irq() returns an error code, a
-> pairing runtime PM usage counter decrement is needed
-> to keep the counter balanced. For error paths after
-> this function, things are the same.
+On 07/05/2020 13:29, Geert Uytterhoeven wrote:
+> The QorIQ Thermal Monitoring Unit is only present on Freescale E500MC
+> and Layerscape SoCs, and on NXP i.MX8 SoCs.  Add platform dependencies
+> to the QORIQ_THERMAL config symbol, to avoid asking the user about it
+> when configuring a kernel without support for any of the aforementioned
+> SoCs.
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Good spot on the bug thank you.
+Applied, thanks
 
->  drivers/extcon/extcon-arizona.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/extcon/extcon-arizona.c b/drivers/extcon/extcon-arizona.c
-> index 7401733db08b..470bbc8e5089 100644
-> --- a/drivers/extcon/extcon-arizona.c
-> +++ b/drivers/extcon/extcon-arizona.c
-> @@ -1744,6 +1744,7 @@ static int arizona_extcon_probe(struct platform_device *pdev)
->  err_rise:
->  	arizona_free_irq(arizona, jack_irq_rise, info);
->  err_gpio:
-> +	pm_runtime_put(&pdev->dev);
 
-However, I don't think this works as a fix. Firstly, the err_gpio
-label is used before the call to pm_runtime_get_sync, this might
-be ok since pm_runtime_enable hasn't been called yet but probably
-better to add a new label for it.
 
-Secondly, following the err_hpdet error path will also result in
-a double put. In that case I don't think there is any reason why
-we need to put before calling input_device_register so it might
-just be simplest to move that put until after registering the
-input device.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Thanks,
-Charles
-
->  	gpiod_put(info->micd_pol_gpio);
->  err_register:
->  	pm_runtime_disable(&pdev->dev);
-> -- 
-> 2.17.1
-> 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
