@@ -2,131 +2,141 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E59C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53823C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11EE42068D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149462067B
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XLH11UJO"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KYd0PX4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbgEVWAM (ORCPT
+        id S1731142AbgEVWBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
+        Fri, 22 May 2020 18:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731074AbgEVWAJ (ORCPT
+        with ESMTP id S1731051AbgEVWBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:00:09 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77806C08C5C0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:00:09 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id a13so4953489pls.8
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:00:09 -0700 (PDT)
+        Fri, 22 May 2020 18:01:00 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31844C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:01:00 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id i68so9551712qtb.5
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:01:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=+R2PmX2GuncA9li2cFF1oFkmpDyEHWXLGTSivDcpNJU=;
-        b=XLH11UJOh/L9Rl5FkPR5BqxDsMzqlH+S7zE1uz0zGHDAtRCNTICnmgbYz/8nUUylNr
-         LKqrpsPFT8+TgcTkRKhMVk34mTmI9RwD22c6+fXPQHWZ1iSxtEw8y9DHhEgsEZdckCAr
-         BWw6ztHmgIuOU5I8xXQeY+urp4ky/qUrwdq/k=
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=10xIm5fncIXTs+8aKLuQ1M1AKRKIiBtDH2Kwrtxe3vk=;
+        b=KYd0PX4BCgPJBoMn5rg6a6JKfTSr5tMioYWB4m+DyUPzsNlwtVBHeTUq+/PnrpNr+H
+         hAeMviNhJYleT/l2iVlSNIgDs+NEebH6Jj5Xc5XTHXSCqNcKi1CDIpUzL4XRdZkBBtq3
+         Mu1QtgvP87d5nURzQyJzeGFGsR9LWHGRAd4/Y4RwUEszqnvoP6qv26Lb+s023Xit3Du2
+         kJtybt81QGK+xBjTaQ1vnfWHX5C/c5Q6B7FIwYZXJAAlUmc+U7qKsbNXk/Ftj2NLl0Sq
+         z/aG3s3ibjomOEphQhtLX100S4BxGDSaAT/iuBnSAG8W6SjSxk9/Kb6ZxkftzKttoWa6
+         3iKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=+R2PmX2GuncA9li2cFF1oFkmpDyEHWXLGTSivDcpNJU=;
-        b=QPKRhwwzA6J3oyVzfDS/mLmSBh8KYWkjpzbYTZwvWT0OTieIAJ5EHXFUgdyhfCxZKF
-         IDRtrRSNZdhsSUcm2SK6WHXOUGSiYlUj/F1IJTNA8V7jfFg5DXXk+YIKNfDKhj+KFYsu
-         CTK98E7l1FftuPfebUE5b4PWoO+FBEv+gR9u/KQPaQAlJt5fcCMxdGbuMuUfakyMN4m8
-         q9YFeCijUI8mj988FJhsxAMxN0E9cqe++E7rHxZD/9XDN9lCCgEH4G4VEg+zfA4qk1Mc
-         QIgFnSQkLtyDTGz+e0bdamjadtOKPDwTqTkJrblI2Rqjd50SEMNcpuAq5BLsOrJOKoCR
-         sf+Q==
-X-Gm-Message-State: AOAM531x2bKjYusv9PrArxtJmEoxJc8RONMiqjhMZ7WZx1vdSmKFUKHP
-        NChTf71UBiQqUhFyEwU1xKoY80o4PplKKE+q/4sGFTbCSaIf+N45ZBLkM1r8fA7ue25IYCxdW3a
-        zyOkdYyPj/3n3ZKUCJoFGRGH7KFWnSgt3R/y2rMW/onWLG0UxTfaMTAzw7X27Ij/m5f5EKGBwnB
-        SkdEzleePz
-X-Google-Smtp-Source: ABdhPJyAnUWjr21DTPYYoWeHjtEjEM/8f/D8/pBMaUUC/JONxInxo1KkaZn4ABnAVkw7vlhk3x4i+A==
-X-Received: by 2002:a17:90a:da05:: with SMTP id e5mr7216725pjv.140.1590184808410;
-        Fri, 22 May 2020 15:00:08 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id q12sm6752584pfn.129.2020.05.22.15.00.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 15:00:07 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] fs: avoid fdput() after failed fdget() in
- kernel_read_file_from_fd()
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1589311577.git.skhan@linuxfoundation.org>
- <1159d74f88d100521c568037327ebc8ec7ffc6ef.1589311577.git.skhan@linuxfoundation.org>
- <20200513054950.GT23230@ZenIV.linux.org.uk>
- <20200513131335.GN11244@42.do-not-panic.com>
- <CAB=NE6WdYcURTxNLngMk3+JQfNHG2MX1oE_Mv08G5zcw=mPOyw@mail.gmail.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <2d298b41-ab6f-5834-19d2-7d3739470b5f@broadcom.com>
-Date:   Fri, 22 May 2020 14:59:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAB=NE6WdYcURTxNLngMk3+JQfNHG2MX1oE_Mv08G5zcw=mPOyw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=10xIm5fncIXTs+8aKLuQ1M1AKRKIiBtDH2Kwrtxe3vk=;
+        b=Xd4kMuqc+Aub+k0eL4KLY4JyIyQoo7wmdGD+s8rsnpJ2YF6QOxO61w5YqGLECrO3ds
+         qrQZDSioOe9uOg8Onj91RvgQTpM+11uIfxwmtAYM1X6kh5bvsiSAVvR9nbDAOTI2rKyN
+         ukVd1lyRCkqzexAHMucWRFgwup/fuHJEHn09IWz8tCwHgl/6PiHPPxlUpuA26j6G1fLr
+         8oyUhPial4WvvQWZ+xQIp7lzCv2BK5yXmOKI3/3M7cY+KBc1do4dB5VRqYdYi9RSaWmz
+         ImmULwkGpTA4ziirBunh4WK4fD1RA5b87H7kiUClmp6/Gw66kN9a9YNwYHXOs+LG1Gmw
+         tFEg==
+X-Gm-Message-State: AOAM533HddGLF7HU9Fk8wTXKRK6BZ8IpcyiZ4IQpDHORjr8FaJb+tBpR
+        c1yfOyXKSrRTl1eJ0dD03u662w==
+X-Google-Smtp-Source: ABdhPJwoaiRms7NFGc/UnbOLVezIN+LVSc/v90svlD+scJT9r+MwzwIx6csJs9jfgAd0mDtjcYgAEw==
+X-Received: by 2002:aed:37ca:: with SMTP id j68mr18080791qtb.276.1590184858499;
+        Fri, 22 May 2020 15:00:58 -0700 (PDT)
+Received: from localhost.localdomain (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x2sm4315313qke.42.2020.05.22.15.00.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 22 May 2020 15:00:57 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     vitaly.wool@konsulko.com, catalin.marinas@arm.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/z3fold: silence kmemleak false positives of slots
+Date:   Fri, 22 May 2020 18:00:52 -0400
+Message-Id: <20200522220052.2225-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+Kmemleak reported many leaks while under memory pressue in,
 
-On 2020-05-13 7:19 a.m., Luis Chamberlain wrote:
-> On Wed, May 13, 2020 at 7:13 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
->> On Wed, May 13, 2020 at 06:49:50AM +0100, Al Viro wrote:
->>> On Tue, May 12, 2020 at 01:43:05PM -0600, Shuah Khan wrote:
->>>> diff --git a/fs/exec.c b/fs/exec.c
->>>> index 06b4c550af5d..ea24bdce939d 100644
->>>> --- a/fs/exec.c
->>>> +++ b/fs/exec.c
->>>> @@ -1021,8 +1021,8 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
->>>>              goto out;
->>>>
->>>>      ret = kernel_read_file(f.file, buf, size, max_size, id);
->>>> -out:
->>>>      fdput(f);
->>>> +out:
->>>>      return ret;
->>> Incidentally, why is that thing exported?
->> Both kernel_read_file_from_fd() and kernel_read_file() are exported
->> because they have users, however kernel_read_file() only has security
->> stuff as a user. Do we want to get rid of the lsm hook for it?
-> Alright, yeah just the export needs to be removed. I have a patch
-> series dealing with these callers so will add it to my queue.
-When will these changes make it into linux-next?
-It is difficult for me to complete my patch series without these other 
-misc. changes in place.
->
->    Luis
-Regards,
-  Scott
+slots = alloc_slots(pool, gfp);
+
+which is referenced by "zhdr" in init_z3fold_page(),
+
+zhdr->slots = slots;
+
+However, "zhdr" could be gone without freeing slots as the later will be
+freed separately when the last "handle" off of "handles" array is freed. It
+will be within "slots" which is always aligned.
+
+unreferenced object 0xc000000fdadc1040 (size 104):
+  comm "oom04", pid 140476, jiffies 4295359280 (age 3454.970s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d1f0f5eb>] z3fold_zpool_malloc+0x7b0/0xe10
+    alloc_slots at mm/z3fold.c:214
+    (inlined by) init_z3fold_page at mm/z3fold.c:412
+    (inlined by) z3fold_alloc at mm/z3fold.c:1161
+    (inlined by) z3fold_zpool_malloc at mm/z3fold.c:1735
+    [<0000000064a2e969>] zpool_malloc+0x34/0x50
+    [<00000000af63e491>] zswap_frontswap_store+0x60c/0xda0
+    zswap_frontswap_store at mm/zswap.c:1093
+    [<00000000af5e07e0>] __frontswap_store+0x128/0x330
+    [<00000000de2f582b>] swap_writepage+0x58/0x110
+    [<000000000120885f>] pageout+0x16c/0xa40
+    [<00000000444c1f68>] shrink_page_list+0x1ac8/0x25c0
+    [<00000000d19e8610>] shrink_inactive_list+0x270/0x730
+    [<00000000e17df726>] shrink_lruvec+0x444/0xf30
+    [<000000005f02ab35>] shrink_node+0x2a4/0x9c0
+    [<00000000014cabbd>] do_try_to_free_pages+0x158/0x640
+    [<00000000dcfaba07>] try_to_free_pages+0x1bc/0x5f0
+    [<00000000fa207ab8>] __alloc_pages_slowpath.constprop.60+0x4dc/0x15a0
+    [<000000003669f1d2>] __alloc_pages_nodemask+0x520/0x650
+    [<0000000011fa4168>] alloc_pages_vma+0xc0/0x420
+    [<0000000098b376f2>] handle_mm_fault+0x1174/0x1bf0
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/z3fold.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 8c3bb5e508b8..460b0feced26 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -43,6 +43,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/zpool.h>
+ #include <linux/magic.h>
++#include <linux/kmemleak.h>
+ 
+ /*
+  * NCHUNKS_ORDER determines the internal allocation granularity, effectively
+@@ -215,6 +216,8 @@ static inline struct z3fold_buddy_slots *alloc_slots(struct z3fold_pool *pool,
+ 				 (gfp & ~(__GFP_HIGHMEM | __GFP_MOVABLE)));
+ 
+ 	if (slots) {
++		/* It will be freed separately in free_handle(). */
++		kmemleak_not_leak(slots);
+ 		memset(slots->slot, 0, sizeof(slots->slot));
+ 		slots->pool = (unsigned long)pool;
+ 		rwlock_init(&slots->lock);
+-- 
+2.17.2 (Apple Git-113)
+
