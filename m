@@ -2,110 +2,103 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D8EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D49920723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D91820723
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:31:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbgEVV3f (ORCPT
+        id S1731127AbgEVVbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:29:35 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40104 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731027AbgEVV3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:29:34 -0400
-Received: by mail-il1-f194.google.com with SMTP id m6so12131460ilq.7;
-        Fri, 22 May 2020 14:29:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/FEKPVDTqZYdkry/gHcCWAwnNiWnV8DNS7HV5f1GoQI=;
-        b=TPJIde6dEdsLcs1LdhvEyhOySzeUOZ1CiNJG4he1j98yAbJ8gV8W+ArPh8Ipnd37Vz
-         pXZi1nqHmj4C550599w3TQs77ZV4/Xwl79pxGSHNv8lwI3IAKVzpR2cql4Znyt+C+mFB
-         Imnk7SQFcQFg8vX+Y8+0Q8Pkszu6NF27mazBbP/K50ws/A3rkAfXBJK2XRN42qCSxRDD
-         M+2S3vDO2ATKV9vYtb7LHdpQtdx5zXfkcH6hdwwj1ePj17F0Ua8EECTQZwt93FjQcotY
-         uFBjYJR8DsUE6c5uUYffGoWVMc7zLkMAHENqhtwjMAdCKUIZIj7CUa7SroRjphJNProC
-         C1Cg==
-X-Gm-Message-State: AOAM533ODoUo1KGWCL203aK17phDpKpoay+y02m8aT0FSAyOvkrZwKit
-        /wvc5ByijjaWv7k8A7wlK3s5+4SRUks=
-X-Google-Smtp-Source: ABdhPJzgfC3yWWqO9UdDXOUNAhppP8mwrfKJ+jxYsbjhm0H4TYVYNN8ckWDxtItweG5bQSkvVk7kvQ==
-X-Received: by 2002:a92:4909:: with SMTP id w9mr15370034ila.302.1590182973671;
-        Fri, 22 May 2020 14:29:33 -0700 (PDT)
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
-        by smtp.gmail.com with ESMTPSA id f15sm5252270ill.58.2020.05.22.14.29.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 14:29:32 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id r2so2621462ioo.4;
-        Fri, 22 May 2020 14:29:32 -0700 (PDT)
-X-Received: by 2002:a5e:8b4b:: with SMTP id z11mr4708967iom.78.1590182972502;
- Fri, 22 May 2020 14:29:32 -0700 (PDT)
+        Fri, 22 May 2020 17:31:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:42296 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730976AbgEVVbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 17:31:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EAB61FB;
+        Fri, 22 May 2020 14:31:06 -0700 (PDT)
+Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.28.62])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 45C573F68F;
+        Fri, 22 May 2020 14:31:06 -0700 (PDT)
+From:   Jeremy Linton <jeremy.linton@arm.com>
+To:     netdev@vger.kernel.org
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
+        linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>
+Subject: [RFC 00/11] Make C45 autoprobe more robust
+Date:   Fri, 22 May 2020 16:30:48 -0500
+Message-Id: <20200522213059.1535892-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200507112955.23520-1-geert+renesas@glider.be> <20200507112955.23520-2-geert+renesas@glider.be>
-In-Reply-To: <20200507112955.23520-2-geert+renesas@glider.be>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Fri, 22 May 2020 16:29:09 -0500
-X-Gmail-Original-Message-ID: <CADRPPNSwEv_SV4jQk-gOj6+WhAX1jVQk2szgPN=o2JVqV0yjLw@mail.gmail.com>
-Message-ID: <CADRPPNSwEv_SV4jQk-gOj6+WhAX1jVQk2szgPN=o2JVqV0yjLw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] ahci: qoriq: Add platform dependencies
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-ide@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>, linux-pm@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 7, 2020 at 6:30 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> The Freescale QorIQ AHCI SATA controller is only present on Freescale
-> Layerscape SoCs.  Add platform dependencies to the AHCI_QORIQ config
-> symbol, to avoid asking the user about it when configuring a kernel
-> without Layerscape support.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+It would be nice if we could depend on the c45 scanner
+to identify standards complaint phys or fail cleanly
+enough that we can turn around and continue probing the
+bus for c22 devices.
 
-Hi Jens,
+In order to pull this off we should be looking at a larger
+range of MMD addresses, as well as doing a better job of judging
+if a phy appears to be responding correctly. Once that is in
+place we then allow a MDIO bus to report that its c45 capable
+with a c22 fallback.
 
-Are you applying this patches?  I can also apply it with your ACK.
+So this set is really a heavy RFC, and I have my own set of
+questions about it.
 
-Regards,
-Leo
-> ---
->  drivers/ata/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-> index 05ecdce1b702cf8b..d9e66b37acd1862a 100644
-> --- a/drivers/ata/Kconfig
-> +++ b/drivers/ata/Kconfig
-> @@ -264,6 +264,7 @@ config AHCI_XGENE
->  config AHCI_QORIQ
->         tristate "Freescale QorIQ AHCI SATA support"
->         depends on OF
-> +       depends on SOC_LS1021A || ARCH_LAYERSCAPE || COMPILE_TEST
->         select SATA_HOST
->         help
->           This option enables support for the Freescale QorIQ AHCI SoC's
-> --
-> 2.17.1
->
+First, it seems like its ok to scan reserved parts of the MMD space,
+given the existing code is scanning MMD 0. Should we do a better
+job of blocking out the reserved areas? Or was this really what
+the commit to sanitize the c22 capability was fixing (avoid a
+probe at location 0).
+
+Secondly, are there parts of the system that are depending on
+"stub" MDIO devices being created?The DT code looks ok, but I
+think the existing code path left open a number possibilities
+where devices are created without valid IDs. The commit which
+cleared the c22 capability registers from the device id list
+doesn't make much sense to me except to create bugus devices
+by avoiding breaking out of the devices loop early. There were
+a couple other cases (all 0 device lists, device lists
+reporting devices that respond as 0xFFFFFFFF to the id registers).
+
+Do we want to probe some of the additional package id registers?
+
+Do we want a more "strict" flag for fully compliant MDIO/PHY
+combinations or are we ok with extra stub devices? The 3rd to last
+set is just using the C45_FIRST flag for it.
+
+What have I missed?
+
+Jeremy Linton (11):
+  net: phy: Don't report success if devices weren't found
+  net: phy: Simplify MMD device list termination
+  net: phy: refactor c45 phy identification sequence
+  net: phy: Handle c22 regs presence better
+  net: phy: Scan the entire MMD device space
+  net: phy: Hoist no phy detected state
+  net: phy: reset invalid phy reads of 0 back to 0xffffffff
+  net: phy: Allow mdio buses to auto-probe c45 devices
+  net: phy: Refuse to consider phy_id=0 a valid phy
+  net: example acpize xgmac_mdio
+  net: example xgmac enable extended scanning
+
+ drivers/net/ethernet/freescale/xgmac_mdio.c |  28 +++--
+ drivers/net/phy/mdio_bus.c                  |   9 +-
+ drivers/net/phy/phy_device.c                | 112 ++++++++++++--------
+ include/linux/phy.h                         |   7 +-
+ 4 files changed, 100 insertions(+), 56 deletions(-)
+
+-- 
+2.26.2
+
