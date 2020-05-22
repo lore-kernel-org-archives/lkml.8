@@ -2,125 +2,65 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D74C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2210C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E6020878
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AB120812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgEVHuK convert rfc822-to-8bit (ORCPT
+        id S1728793AbgEVHvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:50:10 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:34053 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgEVHuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:50:09 -0400
-Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mofst-1jHtAc11eD-00p4mN; Fri, 22 May 2020 09:50:07 +0200
-Received: by mail-qv1-f45.google.com with SMTP id ee19so4306718qvb.11;
-        Fri, 22 May 2020 00:50:06 -0700 (PDT)
-X-Gm-Message-State: AOAM533tVL5/Oy8+3fIyAqAzY9JniazxXoQZRYjLgo7kJ7flAZmAsZ+P
-        2iYMb1jId4hvKgGz5ov5DkWkPfTAC1s7vOHZD40=
-X-Google-Smtp-Source: ABdhPJzTX2r7xydKqbJAwhK2+QTpPNnz3LZTzzTI94w3ZoU1ZULE1GyhxQ/7OzXgkRXqp42O1WffI9SLJ6KlmPBCdgc=
-X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr2340434qvz.210.1590133805879;
- Fri, 22 May 2020 00:50:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200520112523.30995-1-brgl@bgdev.pl> <20200520112523.30995-7-brgl@bgdev.pl>
- <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com>
- <CAMRc=MeuQk9rFDFGWK0ijsiM-r296cVz9Rth8hWhW5Aeeti_cA@mail.gmail.com>
- <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com> <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 22 May 2020 09:49:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3qXf2NSDEoMHOQnChZmqQdVF--f_PFFHCyOKPhA=iW_w@mail.gmail.com>
-Message-ID: <CAK8P3a3qXf2NSDEoMHOQnChZmqQdVF--f_PFFHCyOKPhA=iW_w@mail.gmail.com>
-Subject: Re: [PATCH v4 06/11] net: ethernet: mtk-eth-mac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:NcI0FmX/A+Z6gFWkHmUV9bJwebgW/Sy51Vi1J4RqmHkyFCkcGus
- S9coRpEFv4tqgpmjzXqMHjenqs1I44f3KhmXK3AmI+c/rqsg6spGWX2j2w6nkwE3lF1gWPL
- MOWGB6fkY17nBHu0aUkyuYb/iAUgczTEnV13KvbKg9GRTmRwE0ovOYrSNMnnjhnIZH88tZv
- 6H0YAYT/6oplycgU9yQuw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:j+gUOz8bguc=:8Qf7PGky0zEogM8TxWn8DW
- Ne1pNtwtITOkvJDG6CwPIzbpTViXp7SHgWmkL4eXG2hy8T1ialg2ye16tVEYXgfL2Gq8B9E1o
- 30VDY2/q7HCoVUJOnbCzwlBYqCZmyQU15uo3ufJUnmjvTxH4ww7NaZD/EOIh5+2DlTeiEQiD1
- wlFWBqporbp0llQz5OMZ+qsQocZlXGclq6a4nYyqy+mYgYqy4DDTes2FrA4VKbd6+wY7CtSV9
- X8BqgJCwyZWjp1O7BpJhqvsy+vV9ZlT3muNT9v3+ojCNRp5WFKnj6ifcisXlqeSczA0BC6vTQ
- 69kc5XtR/dInQC3/MKLh//CVVjgZwF7GKklL/No9viS/zABMB8qSoPLaJunprJjNC/blQA6nr
- /LGBGgO6r830hVS6TwMWHZYamrm6VApOwhh03+jA8G3HRX1t4TiRQlhGPMWZ9/93XulZ+1mgk
- xTaUGf9sqRC0y3emK8kcdiT/Or2/Jz7lg4YXwRqCr/+8wogo59b6chnYWxMihexAz/oik9ymT
- tHIyV+E+96FJvda3tM8h2yMVKAbnwob7mkSUpz6+1sQE8qz6kFjfIat96JYcx9ctYzWMlnNN3
- s3IVUuxhnnn+4DaDs1ksJfkXQCT8D9TrH+hhxmqUpMm6hgjQwW6VPHoTZv0TlqKR4qGyn+Iwl
- sl7YGyZf1hwVruyP3bp8E4EM/0Oi11jiOnppnK/1tXjiIgqkKZtbOutgg/OhM10cHOQfayfjH
- 6fBmk9YvPGG66TMaIyLrWgwirCE9ms7VQbw8ywx0SuUF8Wz3QewdB/1sckNU2iM2G19444g1W
- Kl4tr7kRTaRu7FPgkR/92PHjqX3bUdPaCTJYzfsxhOFLe3m1Ys=
+        Fri, 22 May 2020 03:51:08 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36062 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728125AbgEVHvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 03:51:08 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx72plhMdeCME3AA--.75S2;
+        Fri, 22 May 2020 15:51:02 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH 0/2] Fix some issues about NVMEM
+Date:   Fri, 22 May 2020 15:50:59 +0800
+Message-Id: <1590133861-25515-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx72plhMdeCME3AA--.75S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYY7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87
+        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72
+        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+        MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+        JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20x
+        vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv
+        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+        uYvjfU0OJeDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> śr., 20 maj 2020 o 23:23 Arnd Bergmann <arnd@arndb.de> napisał(a):
-> > On Wed, May 20, 2020 at 7:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > śr., 20 maj 2020 o 16:37 Arnd Bergmann <arnd@arndb.de> napisał(a):
+This patch series is based on the latest Linus' tree.
 
-> > > My thinking was this: if I mask the relevant interrupt (TX/RX
-> > > complete) and ack it right away, the status bit will be asserted on
-> > > the next packet received/sent but the process won't get interrupted
-> > > and when I unmask it, it will fire right away and I won't have to
-> > > recheck the status register. I noticed that if I ack it at the end of
-> > > napi poll callback, I end up missing certain TX complete interrupts
-> > > and end up seeing a lot of retransmissions even if I reread the status
-> > > register. I'm not yet sure where this race happens.
-> >
-> > Right, I see. If you just ack at the end of the poll function, you need
-> > to check the rings again to ensure you did not miss an interrupt
-> > between checking observing both rings to be empty and the irq-ack.
-> >
-> > I suspect it's still cheaper to check the two rings with an uncached
-> > read from memory than to to do the read-modify-write on the mmio,
-> > but you'd have to measure that to be sure.
-> >
->
-> Unfortunately the PHY on the board I have is 100Mbps which is the
-> limiting factor in benchmarking this driver. :(
->
-> If you're fine with this - I'd like to fix the minor issues you
-> pointed out and stick with the current approach for now. We can always
-> fix the implementation in the future once a board with a Gigabit PHY
-> is out. Most ethernet drivers don't use such fine-grained interrupt
-> control anyway. I expect the performance differences to be miniscule
-> really.
+Tiezhu Yang (2):
+  nvmem: sprd: Fix return value of sprd_efuse_probe()
+  MAINTAINERS: Add git tree for NVMEM FRAMEWORK
 
-Ok, fair enough. The BQL limiting is the part that matters the most
-for performance on slow lines (preventing long latencies from
-buffer bloat), and  you have that now.
+ MAINTAINERS                | 1 +
+ drivers/nvmem/sprd-efuse.c | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-       Arnd
+-- 
+2.1.0
+
