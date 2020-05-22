@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD84C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80FC2222E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356F222257
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159032;
-	bh=uB/nrNTc33V1p9MjKZ2UT3WMBnL+IeRKZpIjZGkr7aQ=;
+	s=default; t=1590159038;
+	bh=6N2uRjlh/wR1nNEdVNdwFs6zFXOV8xD1YmT4D8/8yAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qY+Z6GUYrObw9UWf0IGsT/RvmkN7Al5002U7kqrcV1GO/LVh6hTlHNf6MKgeGwcoD
-	 9btO9cckaeHLw6pUmdoML45KFG/D5AwZxP/wiTshOsuP8LItZMkP4h5kGL6BJvnLCK
-	 rgAAPOKub2Sd358mH/ivduVtQV3VGbXe8kd1/1Gg=
+	b=vGDikw84ip4rPfEuIfligrh44++W5sdUYXCRbpO3JPTCFHNSY76Z3cCVGCJSPurBp
+	 b+VDBuIViwk3QmWXWFTi3cIQeBLCNUro4TzD3kJKnjMLixPdNalJ7WaHatUTG3lfdf
+	 bOGQw8gHHcQDUtK9DB3XF2SNzKNRpHJqndLnsXvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbgEVOuc (ORCPT
+        id S1730732AbgEVOug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51596 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730663AbgEVOu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:50:26 -0400
+        id S1730727AbgEVOud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:50:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAAB22145D;
-        Fri, 22 May 2020 14:50:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80CD0222B9;
+        Fri, 22 May 2020 14:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159025;
-        bh=uB/nrNTc33V1p9MjKZ2UT3WMBnL+IeRKZpIjZGkr7aQ=;
+        s=default; t=1590159033;
+        bh=6N2uRjlh/wR1nNEdVNdwFs6zFXOV8xD1YmT4D8/8yAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K4Mx2Ui0UURwwV4IW/clbhLgK0q6SIMmlqQOqatwu1qmW5qSyoSAa3ZZvgGYCNR1A
-         dP0L2bAjScVrHIzSk29TXYK+sKabZ0EZm5pGBUAFqPfcDBe5alzVMaIU6TzBcVci9T
-         kQpl8pfBp+TOIJZ9MdKAOev/gOW9xaGj81qHbXcY=
+        b=nTNBrp4P+129ZZy9+hL2feyA1y0e5S2ynvKhPfsBzwFXAD7FEhgy6yx+WXHKtWAxA
+         rYmajRO4PecxUmmGVmrgqs1CDatrU5P+uKaafUXmoy+PfEMnulgUOroyjmJXcPsjqF
+         y2I8PHB6UCzGLFW1g0HnOHwoCiY4o7ZoPYoSAifc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 23/41] usb: phy: twl6030-usb: Fix a resource leak in an error handling path in 'twl6030_usb_probe()'
-Date:   Fri, 22 May 2020 10:49:40 -0400
-Message-Id: <20200522144959.434379-23-sashal@kernel.org>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 30/41] riscv: Add pgprot_writecombine/device and PAGE_SHARED defination if NOMMU
+Date:   Fri, 22 May 2020 10:49:47 -0400
+Message-Id: <20200522144959.434379-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522144959.434379-1-sashal@kernel.org>
 References: <20200522144959.434379-1-sashal@kernel.org>
@@ -60,62 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit f058764d19000d98aef72010468db1f69faf9fa0 ]
+[ Upstream commit fa8174aa225fe3d53b37552e5066e6f0301dbabd ]
 
-A call to 'regulator_get()' is hidden in 'twl6030_usb_ldo_init()'. A
-corresponding put must be performed in the error handling path, as
-already done in the remove function.
+Some drivers use PAGE_SHARED, pgprot_writecombine()/pgprot_device(),
+add the defination to fix build error if NOMMU.
 
-While at it, also move a 'free_irq()' call in the error handling path in
-order to be consistent.
-
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/phy/phy-twl6030-usb.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/riscv/include/asm/mmio.h    | 2 ++
+ arch/riscv/include/asm/pgtable.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
-index bfebf1f2e991..9a7e655d5280 100644
---- a/drivers/usb/phy/phy-twl6030-usb.c
-+++ b/drivers/usb/phy/phy-twl6030-usb.c
-@@ -377,7 +377,7 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 			twl->irq1, status);
--		return status;
-+		goto err_put_regulator;
- 	}
+diff --git a/arch/riscv/include/asm/mmio.h b/arch/riscv/include/asm/mmio.h
+index a2c809df2733..56053c9838b2 100644
+--- a/arch/riscv/include/asm/mmio.h
++++ b/arch/riscv/include/asm/mmio.h
+@@ -16,6 +16,8 @@
  
- 	status = request_threaded_irq(twl->irq2, NULL, twl6030_usb_irq,
-@@ -386,8 +386,7 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 			twl->irq2, status);
--		free_irq(twl->irq1, twl);
--		return status;
-+		goto err_free_irq1;
- 	}
+ #ifndef CONFIG_MMU
+ #define pgprot_noncached(x)	(x)
++#define pgprot_writecombine(x)	(x)
++#define pgprot_device(x)	(x)
+ #endif /* CONFIG_MMU */
  
- 	twl->asleep = 0;
-@@ -396,6 +395,13 @@ static int twl6030_usb_probe(struct platform_device *pdev)
- 	dev_info(&pdev->dev, "Initialized TWL6030 USB module\n");
+ /* Generic IO read/write.  These perform native-endian accesses. */
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 393f2014dfee..05b92987f500 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -460,6 +460,7 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
  
- 	return 0;
-+
-+err_free_irq1:
-+	free_irq(twl->irq1, twl);
-+err_put_regulator:
-+	regulator_put(twl->usb3v3);
-+
-+	return status;
- }
+ #else /* CONFIG_MMU */
  
- static int twl6030_usb_remove(struct platform_device *pdev)
++#define PAGE_SHARED		__pgprot(0)
+ #define PAGE_KERNEL		__pgprot(0)
+ #define swapper_pg_dir		NULL
+ #define VMALLOC_START		0
 -- 
 2.25.1
 
