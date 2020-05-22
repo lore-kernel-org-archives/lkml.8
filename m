@@ -2,126 +2,172 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9157C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6482070A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E096206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgEVLD2 (ORCPT
+        id S1729072AbgEVLFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:03:28 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:44048 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728371AbgEVLD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:03:27 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH995scdeQtI3AA--.86S2;
-        Fri, 22 May 2020 19:03:23 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     "'David S. Miller'" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH] net: Fix return value about devm_platform_ioremap_resource()
-Date:   Fri, 22 May 2020 19:03:21 +0800
-Message-Id: <1590145401-27763-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxH995scdeQtI3AA--.86S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr4rtF1Utry5CF1Uuw1fXrb_yoW8Kw4Upa
-        1vyFWxur1jgF45t34kta1kZFy5A3W2q3y7Kr95Z3Z3u34DJr4DCryrCFyjyrn5trW0kFyY
-        qr4ayrWUZFZ0q3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4k
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXTm3UUUU
-        U==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Fri, 22 May 2020 07:05:09 -0400
+Received: from outbound-smtp49.blacknight.com ([46.22.136.233]:35969 "EHLO
+        outbound-smtp49.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728371AbgEVLFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 07:05:07 -0400
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp49.blacknight.com (Postfix) with ESMTPS id A65B1FAE8A
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 12:05:02 +0100 (IST)
+Received: (qmail 6893 invoked from network); 22 May 2020 11:05:02 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 22 May 2020 11:05:02 -0000
+Date:   Fri, 22 May 2020 12:05:00 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Jirka Hladky <jhladky@redhat.com>, Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>,
+        "aokuliar@redhat.com" <aokuliar@redhat.com>,
+        "kkolakow@redhat.com" <kkolakow@redhat.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+Message-ID: <20200522110500.GD7167@techsingularity.net>
+References: <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
+ <20200507155422.GD3758@techsingularity.net>
+ <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200507174934.GD19331@lorien.usersys.redhat.com>
+ <20200508034741.13036-1-hdanton@sina.com>
+ <CAE4VaGDBAquxbBjuzzyaT1WPR95wiaiHsrEPs-eOP2W+r=fQFg@mail.gmail.com>
+ <20200519043154.10876-1-hdanton@sina.com>
+ <CAE4VaGAxqK_gr7gstk1S8z3vx+9c6rG-Xo_kUiAzuOWpqOR4cQ@mail.gmail.com>
+ <20200521140931.15232-1-hdanton@sina.com>
+ <20200522010950.3336-1-hdanton@sina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200522010950.3336-1-hdanton@sina.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+On Fri, May 22, 2020 at 09:09:50AM +0800, Hillf Danton wrote:
+> 
+> On Thu, 21 May 2020 17:04:08 +0100 Mel Gorman wrote:
+> > On Thu, May 21, 2020 at 10:09:31PM +0800, Hillf Danton wrote:
+> > > > I'm ignoring the coding style of c++ comments but minimally that should
+> > > > be fixed. More importantly, node_type can be one of node_overloaded,
+> > > > node_has_spare or node_fully busy and this is checking if there is a
+> > > > mismatch. However, it's not taking into account whether the dst_node
+> > > > is more or less loaded than the src and does not appear to be actually
+> > > > checking spare capacity like the comment suggests.
+> > > > 
+> > >
+> > > Type other than node_has_spare is not considered because node is not
+> > > possible to be so idle that two communicating tasks would better
+> > > "stay local."
+> > > 
+> > 
+> > You hardcode an imbalance of 2 at the start without computing any
+> > imbalance.
+> 
+> Same result comes up if it's a bool.
+> 
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/net/can/ifi_canfd/ifi_canfd.c     | 5 ++++-
- drivers/net/can/sun4i_can.c               | 2 +-
- drivers/net/dsa/b53/b53_srab.c            | 2 +-
- drivers/net/ethernet/marvell/pxa168_eth.c | 2 +-
- 4 files changed, 7 insertions(+), 4 deletions(-)
+Then the magic number is simply confusing. The patch needs to be
+a lot clearer about what the intent is if my patch that adds a "if
+(env->src_stats.node_type == node_has_spare)" check is not what you were
+aiming for.
 
-diff --git a/drivers/net/can/ifi_canfd/ifi_canfd.c b/drivers/net/can/ifi_canfd/ifi_canfd.c
-index 04d59be..74503ca 100644
---- a/drivers/net/can/ifi_canfd/ifi_canfd.c
-+++ b/drivers/net/can/ifi_canfd/ifi_canfd.c
-@@ -947,8 +947,11 @@ static int ifi_canfd_plat_probe(struct platform_device *pdev)
- 	u32 id, rev;
- 
- 	addr = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+
- 	irq = platform_get_irq(pdev, 0);
--	if (IS_ERR(addr) || irq < 0)
-+	if (irq < 0)
- 		return -EINVAL;
- 
- 	id = readl(addr + IFI_CANFD_IP_ID);
-diff --git a/drivers/net/can/sun4i_can.c b/drivers/net/can/sun4i_can.c
-index e3ba8ab..e2c6cf4 100644
---- a/drivers/net/can/sun4i_can.c
-+++ b/drivers/net/can/sun4i_can.c
-@@ -792,7 +792,7 @@ static int sun4ican_probe(struct platform_device *pdev)
- 
- 	addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(addr)) {
--		err = -EBUSY;
-+		err = PTR_ERR(addr);
- 		goto exit;
- 	}
- 
-diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
-index 1207c30..aaa12d7 100644
---- a/drivers/net/dsa/b53/b53_srab.c
-+++ b/drivers/net/dsa/b53/b53_srab.c
-@@ -609,7 +609,7 @@ static int b53_srab_probe(struct platform_device *pdev)
- 
- 	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
--		return -ENOMEM;
-+		return PTR_ERR(priv->regs);
- 
- 	dev = b53_switch_alloc(&pdev->dev, &b53_srab_ops, priv);
- 	if (!dev)
-diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
-index 7a0d785..17243bb 100644
---- a/drivers/net/ethernet/marvell/pxa168_eth.c
-+++ b/drivers/net/ethernet/marvell/pxa168_eth.c
-@@ -1418,7 +1418,7 @@ static int pxa168_eth_probe(struct platform_device *pdev)
- 
- 	pep->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pep->base)) {
--		err = -ENOMEM;
-+		err = PTR_ERR(pep->base);
- 		goto err_netdev;
- 	}
- 
+> > Then if the source is fully_busy or overloaded while the
+> > dst is idle, a task can move but that is based on an imaginary hard-coded
+> > imbalance of 2.
+> 
+> This is the potpit I walked around by checking spare capacity first. As
+> for overloaded, I see it as a signal that a glitch is not idle somewhere
+> else, and I prefer to push it in to ICU before it's too late.
+> 
+
+The domain could be overloaded simply due to CPU bindings. I cannot
+parse the ICU comment (Intensive Care Unit?!?) :(
+
+> > Finally, it appears that that the load balancer and
+> > NUMA balancer are again using separate logic again when one part of the
+> > objective of the series is that the load balancer and NUMA balancer would
+> > not override each other.
+> 
+> This explains 80% of why it is a choppy road ahead.
+> 
+
+And I don't think we should go back to the load balancer and NUMA balancer
+taking different actions. It ends up doing useless CPU migrations and
+can lead to higher NUMA scanning activity. It's partially why I changed
+task_numa_compare to prefer swapping with tasks that move to their
+preferred node when using an idle CPU would cause an imbalance.
+
+> > As the imbalance is never computed, the patch
+> > can create one which the load balancer then overrides. What am I missing?
+> 
+> LB would give a green light if things move in the direction in favor of
+> cutting imb.
+> 
+
+Load balancing primarily cares about balancing the number of idle CPUs
+between domains when there is spare capacity. While it tries to avoid
+balancing by moving tasks from their preferred node, it will do so if
+there are no other candidates.
+
+> > > > <SNIP>
+> > > >
+> > > > Then there is this part
+> > > > 
+> > > > +               imbalance = adjust_numa_imbalance(imbalance,
+> > > > +                                               env->src_stats.nr_running);
+> > > > +
+> > > > +               //Do nothing without imbalance
+> > > > +               if (!imbalance) {
+> > > > +                       imbalance = 2;
+> > > > +                       goto check_imb;
+> > > > +               }
+> > > > 
+> > > > So... if there is no imbalance, assume there is an imbalance of 2, jump to
+> > > > a branch that will always be false and fall through to code that ignores
+> > > > the value of imbalance ...... it's hard to see exactly why that code flow
+> > > > is ideal.
+> > > > 
+> > > With spare capacity be certain, then lets see how idle the node is.
+> > 
+> > But you no longer check how idle it is or what it's relative idleness of
+> > the destination is relative to the source. adjust_numa_imbalance does
+> > not calculate an imbalance, it only decides whether it should be
+> > ignored.
+> 
+> Then the idle CPU is no longer so tempting.
+> 
+
+True. While it's prefectly possible to ignore imbalance and use an idle
+CPU if it exists, the load balancer will simply override it later and we
+go back to the NUMA balancer and load balancer fighting each other with
+the NUMA balancer retrying migrations based on p->numa_migrate_retry.
+Whatever logic is used to allow imbalances (be they based on communicating
+tasks or preferred locality), it needs to be the same in both balancers.
+
 -- 
-2.1.0
-
+Mel Gorman
+SUSE Labs
