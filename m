@@ -2,123 +2,111 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD22C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDA622078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4BF2072C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KMBRLvBL"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ROVHPn8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgEVBEt (ORCPT
+        id S1726933AbgEVBIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:04:49 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2925 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgEVBEs (ORCPT
+        Thu, 21 May 2020 21:08:46 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:16520 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726762AbgEVBIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:04:48 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec724e00000>; Thu, 21 May 2020 18:03:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 21 May 2020 18:04:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 21 May 2020 18:04:48 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
- 2020 01:04:48 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 22 May 2020 01:04:47 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.48.182]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ec7252e0002>; Thu, 21 May 2020 18:04:47 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>, <jgg@ziepe.ca>
-CC:     <Liam.Howlett@oracle.com>, <daniel.m.jordan@oracle.com>,
-        <dave@stgolabs.net>, <hughd@google.com>, <jglisse@redhat.com>,
-        <jhubbard@nvidia.com>, <ldufour@linux.ibm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <peterz@infradead.org>, <rientjes@google.com>, <vbabka@suse.cz>,
-        <walken@google.com>, <willy@infradead.org>, <yinghan@google.com>
-Subject: [PATCH] mm/gup: might_lock_read(mmap_sem) in get_user_pages_fast()
-Date:   Thu, 21 May 2020 18:04:43 -0700
-Message-ID: <20200522010443.1290485-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 21 May 2020 21:08:46 -0400
+X-UUID: dfc4e360bb65418eabff719be51640cd-20200522
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=oO4SaPPTxCTE7bONxyRSPlLMv4RJZyUeyjDZC6W1AEY=;
+        b=ROVHPn8iwca7HZzyKWs2KF9hhqwvvnFRObwGofNd4GBJJfcYd1Q2tSlaUYJIVI1P31DREcOb+bwmVKI2M1jh8bhiXMPnPg9nzhmHSur3L4SFkD7aI8DjWoofPPqIwdPXga+KWwx3LWDqxKP9O3c/1j8epjyPIImdGQc7NtbHYi8=;
+X-UUID: dfc4e360bb65418eabff719be51640cd-20200522
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1844598716; Fri, 22 May 2020 09:08:38 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 22 May
+ 2020 09:08:31 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 22 May 2020 09:08:34 +0800
+Message-ID: <1590109620.5899.18.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 0/7] add support USB for MT8183
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 May 2020 09:07:00 +0800
+In-Reply-To: <2e98982b-ab8a-9fa9-0903-881ebce916a5@gmail.com>
+References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1567562067.7317.52.camel@mhfsdcap03>
+         <2e98982b-ab8a-9fa9-0903-881ebce916a5@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590109408; bh=orFrUSfsuRLARmy9U5y3S0SO6hDyarPkvJhx+oK/0Hs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=KMBRLvBLyYyTvaxnVcV1qu9rFMZ92Jbco7/6QV/Z/phN5ZTLDHOGl9Ki3m6a2DcSD
-         BpKmHS6l2KQY8LakU8ItjBIyfIaInKVAaqH5FwPdk7TKjpu7o8L1SANr+YDWBmwOyS
-         lcxd4dM7iMfyPp77XEwOOh4/I9EA4SJ2eAo5nuReCE/PYstFfoaoIMdZK060pjQsty
-         Rkljf7hCsLVq9Cky/GdawmLzJt/3w9D5ImKkECpevqNFbylyEP6TWumchnsHZ+DLc9
-         Z0c+kwjayDs8wrvy1wtXGy4VRQspw27xGF89S5+NRdeGxPFAt67RVu3XGlLH9J/eE0
-         wL6Nt0UeiR8Zw==
+X-TM-SNTS-SMTP: D722D1425AC6E7F67072680642C70D142CB6E1803E9F058E532825CF51FE18462000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of scattering these assertions across the drivers,
-do this assertion inside the core of get_user_pages_fast*()
-functions. That also includes pin_user_pages_fast*()
-routines.
-
-Add a might_lock_read(mmap_sem) call to internal_get_user_pages_fast().
-
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Cc: Michel Lespinasse <walken@google.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-
-Hi Andrew,
-
-This applies on top of [1], which in turn applies to
-today's (20200521) linux-next.
-
-As noted in the discussion [2], this will need changing from
-mmap_sem to mmap_lock, after Michel Lespinasse's patchset
-arrives.
-
-[1]
-https://lore.kernel.org/r/20200521233841.1279742-1-jhubbard@nvidia.com
-
-[2] https://lore.kernel.org/linux-mm/20200520124817.GG31189@ziepe.ca/
-
-thanks,
-John Hubbard
-NVIDIA
-
- mm/gup.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index ada6aa79576dc..3462c076e8ecf 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2728,6 +2728,9 @@ static int internal_get_user_pages_fast(unsigned long=
- start, int nr_pages,
- 				       FOLL_FAST_ONLY)))
- 		return -EINVAL;
-=20
-+	if (!(gup_flags & FOLL_FAST_ONLY))
-+		might_lock_read(&current->mm->mmap_sem);
-+
- 	start =3D untagged_addr(start) & PAGE_MASK;
- 	addr =3D start;
- 	len =3D (unsigned long) nr_pages << PAGE_SHIFT;
---=20
-2.26.2
+SGkgTWF0dGhpYXMsDQoNCk9uIFRodSwgMjAyMC0wNS0yMSBhdCAxNDo0MSArMDIwMCwgTWF0dGhp
+YXMgQnJ1Z2dlciB3cm90ZToNCj4gSGkgQ2h1bmdmZW5nLA0KPiANCj4gT24gMDQvMDkvMjAxOSAw
+Mzo1NCwgQ2h1bmZlbmcgWXVuIHdyb3RlOg0KPiA+IEhpIEdyZWcsDQo+ID4gDQo+ID4gDQo+ID4g
+ICBQbGVhc2UgZG9uJ3QgdHJ5IHRvIHBpY2sgdXAgdGhpcyBzZXJpZXMsIHRoZSBkZXBlbmRlbnQg
+b25lcyBhcmUgc3RpbGwNCj4gPiB1bmRlciBwdWJsaWMgcmV2aWV3LCBJJ2xsIGZpeCBidWlsZCB3
+YXJuaW5nIGFuZCBzZW5kIG91dCBuZXcgdmVyc2lvbg0KPiA+IGFmdGVyIHRoZSBkZXBlbmRlbnQg
+b25lcyBhcmUgYXBwbGllZA0KPiA+ICAgU29ycnkgZm9yIGluY29udmVuaWVuY2UNCj4gPiANCj4g
+DQo+IEkgdGhpbmsgdGhlIHBtaWMgZHJpdmVyIGlzIHVwc3RyZWFtIG5vdyBhbmQgc2hvdyB1cCBp
+biBsaW51eC1uZXh0IHNvb24uDQo+IA0KPiBJIHByb3Bvc2UgdG8gcmViYXNlIHRoZSBzZXJpZXMg
+YW5kIHNlbmQgaXQgYWdhaW4uDQpPaywgSSdsbCByZXNlbmQgdGhpcyBzZXJpZXMsIHRoYW5rcyBh
+IGxvdA0KDQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiANCj4gPiBUaGFua3MNCj4gPiAN
+Cj4gPiBPbiBGcmksIDIwMTktMDgtMzAgYXQgMTU6NDAgKzA4MDAsIENodW5mZW5nIFl1biB3cm90
+ZToNCj4gPj4gVGhpcyBzZXJpZXMgc3VwcG9ydCBVU0IgRFJEIGNvbnRyb2xsZXIgYW5kIGVuYWJs
+ZSBpdCdzIHJlbW90ZQ0KPiA+PiB3YWtldXAgZnVuY3RvaW4gZm9yIE1UODE4MywgdGhleSBkZXBl
+bmQgb24gdGhlIGZvbGxvd2luZw0KPiA+PiBzZXJpZXMgcGF0Y2hlczoNCj4gPj4NCj4gPj4gMS4g
+dGhpcyBzZXJpZXMgYWRkIHN1cHBvcnQgTVQ2MzU4IFBNSUMNCj4gPj4gICBbdjUsMDEvMTBdIG1m
+ZDogbXQ2Mzk3OiBjbGVhbiB1cCBjb2RlDQo+ID4+ICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMTExMDQ4Ny8NCj4gPj4NCj4gPj4gMi4gdGhpcyBzZXJpZXMgYWRkIHN1cHBv
+cnQgcGVyaWNmZyBzeXNjb24NCj4gPj4gICBbdjIsMS8yXSBkdC1iaW5kaW5nczogY2xvY2s6IG1l
+ZGlhdGVrOiBhZGQgcGVyaWNmZyBmb3IgTVQ4MTgzDQo+ID4+ICAgaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wYXRjaC8xMTExODE4My8NCj4gPj4NCj4gPj4gMy4gYWRkIHByb3BlcnR5IG1l
+ZGlhdGVrLGRpc2N0aCBmb3IgdHBoeQ0KPiA+PiAgIFswNi8xMV0gcGh5OiBwaHktbXRrLXRwaHk6
+IGFkZCBhIHByb3BlcnR5IGZvciBkaXNjb25uZWN0IHRocmVzaG9sZA0KPiA+PiAgIGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExMTA2OTUvDQo+ID4+DQo+ID4+IHYzIGNoYW5n
+ZXM6DQo+ID4+ICAgMS4gY2hhbmdlcyBtaWNyb3MgZGVmaW5lDQo+ID4+ICAgMi4gcmVtb3ZlICNy
+ZXNldC1jZWxsDQo+ID4+ICAgMy4gdXBkYXRlIGRlcGVuZGVudCBzZXJpZXMNCj4gPj4NCj4gPj4g
+djIgY2hhbmdlczoNCj4gPj4gICBhZGQgcGF0Y2ggWzcvN10NCj4gPj4NCj4gPj4gQ2h1bmZlbmcg
+WXVuICg3KToNCj4gPj4gICBkdC1iaW5kaW5nczogdXNiOiBtdHUzOiBzdXBwb3J0IFVTQiB3YWtl
+dXAgZm9yIE1UODE4Mw0KPiA+PiAgIGR0LWJpbmRpbmdzOiB1c2I6IG10ay14aGNpOiBzdXBwb3J0
+IFVTQiB3YWtldXAgZm9yIE1UODE4Mw0KPiA+PiAgIHVzYjogbXR1Mzogc3VwcG9ydCBpcC1zbGVl
+cCB3YWtldXAgZm9yIE1UODE4Mw0KPiA+PiAgIHVzYjogbXRrLXhoY2k6IHN1cHBvcnQgaXAtc2xl
+ZXAgd2FrZXVwIGZvciBNVDgxODMNCj4gPj4gICBhcm02NDogZHRzOiBtdDgxODM6IGFkZCB1c2Ig
+YW5kIHBoeSBub2Rlcw0KPiA+PiAgIGFybTY0OiBkdHM6IG10ODE4MzogZW5hYmxlIFVTQiByZW1v
+dGUgd2FrZXVwDQo+ID4+ICAgYXJtNjQ6IGR0czogbXQ4MTgzOiB0dW5lIGRpc2Nvbm5lY3QgdGhy
+ZXNob2xkIG9mIHUycGh5DQo+ID4+DQo+ID4+ICAuLi4vYmluZGluZ3MvdXNiL21lZGlhdGVrLG10
+ay14aGNpLnR4dCAgICAgICAgfCAgMSArDQo+ID4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy91
+c2IvbWVkaWF0ZWssbXR1My50eHQgfCAgMSArDQo+ID4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210ODE4My1ldmIuZHRzICAgfCAyMyArKysrKysrDQo+ID4+ICBhcmNoL2FybTY0L2Jv
+b3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpICAgICAgfCA2MyArKysrKysrKysrKysrKysrKysr
+DQo+ID4+ICBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXRrLmMgICAgICAgICAgICAgICAgICAgfCAx
+NCArKysrLQ0KPiA+PiAgZHJpdmVycy91c2IvbXR1My9tdHUzX2hvc3QuYyAgICAgICAgICAgICAg
+ICAgIHwgMTQgKysrKy0NCj4gPj4gIDYgZmlsZXMgY2hhbmdlZCwgMTE0IGluc2VydGlvbnMoKyks
+IDIgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4gDQo+ID4gDQoNCg==
 
