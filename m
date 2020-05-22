@@ -2,137 +2,125 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB703C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D74C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65FA207FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lYXoHpwb"
+	by mail.kernel.org (Postfix) with ESMTP id 59E6020878
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgEVHtv (ORCPT
+        id S1728752AbgEVHuK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgEVHtu (ORCPT
+        Fri, 22 May 2020 03:50:10 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:34053 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbgEVHuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:49:50 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71485C061A0E;
-        Fri, 22 May 2020 00:49:50 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49SzCt48Xqz9sSW;
-        Fri, 22 May 2020 17:49:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590133787;
-        bh=vq9L6SID6J7jzdJ5f+G1Nl4QAlI00mXh+3ZjRT0D/MQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lYXoHpwbHRC5wZ1X4aTm2nIhxp2rvY9+ZlQN7X/HxPPDS20Yn7lUULZ/9BTMFk9WW
-         dPZuU/2cgpJNC8Tj4FSd/V4AEvy24DUk1s0Mr9LhBGJJxfVrHMQbRf/sEsa19KM+Qc
-         W+L/20DwitIFmRir+aBjJKmfcqyrHxGE0XTlyAWEAyMW08eIA4vJoqx6cQXdKMfUax
-         xQxpGF0aciJ4bZyUpmAgGs3gIX8dIwY2ZXpt3TWu1loxBHNIAfEuTMc9e7IGYZF8kc
-         c3XBF9oODsHFzb+OxWNOGyj31LKwIEF2d0A7DOwVg2S29O5D3L3+yn2/h6vdk0HBpY
-         WNaDzzOmRLOwg==
-Date:   Fri, 22 May 2020 17:49:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        elver@google.com, bp@alien8.de,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200522174944.1a1732fa@canb.auug.org.au>
-In-Reply-To: <20200522171708.5f392fde@canb.auug.org.au>
-References: <20200522033119.1bbd99c5@canb.auug.org.au>
-        <20200521173520.GL6608@willie-the-truck>
-        <20200522171708.5f392fde@canb.auug.org.au>
+        Fri, 22 May 2020 03:50:09 -0400
+Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mofst-1jHtAc11eD-00p4mN; Fri, 22 May 2020 09:50:07 +0200
+Received: by mail-qv1-f45.google.com with SMTP id ee19so4306718qvb.11;
+        Fri, 22 May 2020 00:50:06 -0700 (PDT)
+X-Gm-Message-State: AOAM533tVL5/Oy8+3fIyAqAzY9JniazxXoQZRYjLgo7kJ7flAZmAsZ+P
+        2iYMb1jId4hvKgGz5ov5DkWkPfTAC1s7vOHZD40=
+X-Google-Smtp-Source: ABdhPJzTX2r7xydKqbJAwhK2+QTpPNnz3LZTzzTI94w3ZoU1ZULE1GyhxQ/7OzXgkRXqp42O1WffI9SLJ6KlmPBCdgc=
+X-Received: by 2002:a05:6214:1392:: with SMTP id g18mr2340434qvz.210.1590133805879;
+ Fri, 22 May 2020 00:50:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eh=D+yNo=dsM9t+J0nOsqNZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200520112523.30995-1-brgl@bgdev.pl> <20200520112523.30995-7-brgl@bgdev.pl>
+ <CAK8P3a3jhrQ3p1JsqMNMOOnfo9t=rAPWaOAwAdDuFMh7wUtZQw@mail.gmail.com>
+ <CAMRc=MeuQk9rFDFGWK0ijsiM-r296cVz9Rth8hWhW5Aeeti_cA@mail.gmail.com>
+ <CAK8P3a1nhPj6kRhwyXzDK3BGbh66XG6Fmp44QuM1NhFPPBTtPQ@mail.gmail.com> <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MfVkbDSfEV71SD57dpYthdx5epD0FOvjRx8qQGT+SgsTQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 22 May 2020 09:49:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3qXf2NSDEoMHOQnChZmqQdVF--f_PFFHCyOKPhA=iW_w@mail.gmail.com>
+Message-ID: <CAK8P3a3qXf2NSDEoMHOQnChZmqQdVF--f_PFFHCyOKPhA=iW_w@mail.gmail.com>
+Subject: Re: [PATCH v4 06/11] net: ethernet: mtk-eth-mac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:NcI0FmX/A+Z6gFWkHmUV9bJwebgW/Sy51Vi1J4RqmHkyFCkcGus
+ S9coRpEFv4tqgpmjzXqMHjenqs1I44f3KhmXK3AmI+c/rqsg6spGWX2j2w6nkwE3lF1gWPL
+ MOWGB6fkY17nBHu0aUkyuYb/iAUgczTEnV13KvbKg9GRTmRwE0ovOYrSNMnnjhnIZH88tZv
+ 6H0YAYT/6oplycgU9yQuw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:j+gUOz8bguc=:8Qf7PGky0zEogM8TxWn8DW
+ Ne1pNtwtITOkvJDG6CwPIzbpTViXp7SHgWmkL4eXG2hy8T1ialg2ye16tVEYXgfL2Gq8B9E1o
+ 30VDY2/q7HCoVUJOnbCzwlBYqCZmyQU15uo3ufJUnmjvTxH4ww7NaZD/EOIh5+2DlTeiEQiD1
+ wlFWBqporbp0llQz5OMZ+qsQocZlXGclq6a4nYyqy+mYgYqy4DDTes2FrA4VKbd6+wY7CtSV9
+ X8BqgJCwyZWjp1O7BpJhqvsy+vV9ZlT3muNT9v3+ojCNRp5WFKnj6ifcisXlqeSczA0BC6vTQ
+ 69kc5XtR/dInQC3/MKLh//CVVjgZwF7GKklL/No9viS/zABMB8qSoPLaJunprJjNC/blQA6nr
+ /LGBGgO6r830hVS6TwMWHZYamrm6VApOwhh03+jA8G3HRX1t4TiRQlhGPMWZ9/93XulZ+1mgk
+ xTaUGf9sqRC0y3emK8kcdiT/Or2/Jz7lg4YXwRqCr/+8wogo59b6chnYWxMihexAz/oik9ymT
+ tHIyV+E+96FJvda3tM8h2yMVKAbnwob7mkSUpz6+1sQE8qz6kFjfIat96JYcx9ctYzWMlnNN3
+ s3IVUuxhnnn+4DaDs1ksJfkXQCT8D9TrH+hhxmqUpMm6hgjQwW6VPHoTZv0TlqKR4qGyn+Iwl
+ sl7YGyZf1hwVruyP3bp8E4EM/0Oi11jiOnppnK/1tXjiIgqkKZtbOutgg/OhM10cHOQfayfjH
+ 6fBmk9YvPGG66TMaIyLrWgwirCE9ms7VQbw8ywx0SuUF8Wz3QewdB/1sckNU2iM2G19444g1W
+ Kl4tr7kRTaRu7FPgkR/92PHjqX3bUdPaCTJYzfsxhOFLe3m1Ys=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eh=D+yNo=dsM9t+J0nOsqNZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 22, 2020 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> śr., 20 maj 2020 o 23:23 Arnd Bergmann <arnd@arndb.de> napisał(a):
+> > On Wed, May 20, 2020 at 7:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > śr., 20 maj 2020 o 16:37 Arnd Bergmann <arnd@arndb.de> napisał(a):
 
-Hi all,
-
-On Fri, 22 May 2020 17:17:08 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Thu, 21 May 2020 18:35:22 +0100 Will Deacon <will@kernel.org> wrote:
+> > > My thinking was this: if I mask the relevant interrupt (TX/RX
+> > > complete) and ack it right away, the status bit will be asserted on
+> > > the next packet received/sent but the process won't get interrupted
+> > > and when I unmask it, it will fire right away and I won't have to
+> > > recheck the status register. I noticed that if I ack it at the end of
+> > > napi poll callback, I end up missing certain TX complete interrupts
+> > > and end up seeing a lot of retransmissions even if I reread the status
+> > > register. I'm not yet sure where this race happens.
 > >
-> > [+Marco and Boris]
-> >=20
-> > On Fri, May 22, 2020 at 03:31:19AM +1000, Stephen Rothwell wrote: =20
-> > > After merging the tip tree, all my linux-next builds took signficantly
-> > > longer and used much more memory.  In some cases, builds would seg fa=
-ult
-> > > due to running out of memory :-(
-> > >=20
-> > > I have eventaully bisected it to commit
-> > >=20
-> > >   cdd28ad2d811 ("READ_ONCE: Use data_race() to avoid KCSAN instrument=
-ation")
-> > >=20
-> > > For my (e.g.) x86_64 allmodconfig builds (cross compiled on PowerPC l=
-e,
-> > > -j80) the elapsed time went from around 9 minutes to over 17 minutes
-> > > and the maximum resident size (as reported by /usr/bin/time) from aro=
-und
-> > > 500M to around 2G (I saw lots of cc1 processes over 2G in size).
-> > >=20
-> > > For tomorrow's linux-next (well, later today :-() I will revert that
-> > > commit (and its child) when I merge the tip tree.   =20
-> >=20
-> > Sorry about that, seems we can't avoid running into compiler problems w=
-ith
-> > this lot. The good news is that there's a series to fix this here:
-> >=20
-> > https://lore.kernel.org/r/20200521142047.169334-1-elver@google.com
-> >=20
-> > so hopefully this be fixed in -tip soon (but I agree that reverting the
-> > thing in -next in the meantime makes sense). =20
->=20
-> Unfortunately, the revert didn't work, so instead I have used the tip
-> tree from next-20200518 for today (hopefully this will all be sorted
-> out by Monday).
+> > Right, I see. If you just ack at the end of the poll function, you need
+> > to check the rings again to ensure you did not miss an interrupt
+> > between checking observing both rings to be empty and the irq-ack.
+> >
+> > I suspect it's still cheaper to check the two rings with an uncached
+> > read from memory than to to do the read-modify-write on the mmio,
+> > but you'd have to measure that to be sure.
+> >
+>
+> Unfortunately the PHY on the board I have is 100Mbps which is the
+> limiting factor in benchmarking this driver. :(
+>
+> If you're fine with this - I'd like to fix the minor issues you
+> pointed out and stick with the current approach for now. We can always
+> fix the implementation in the future once a board with a Gigabit PHY
+> is out. Most ethernet drivers don't use such fine-grained interrupt
+> control anyway. I expect the performance differences to be miniscule
+> really.
 
-And the rcu tree has merged part of the tip tree that contains the
-offending commits, so I have used the version fo the rcu tree from
-next-20200519 for today.
---=20
-Cheers,
-Stephen Rothwell
+Ok, fair enough. The BQL limiting is the part that matters the most
+for performance on slow lines (preventing long latencies from
+buffer bloat), and  you have that now.
 
---Sig_/eh=D+yNo=dsM9t+J0nOsqNZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7HhBkACgkQAVBC80lX
-0GyBZwf/eP5pmzk52tkvFe6/zdU2wiaUPFpW9VQgO3X8cug27JSUGiBVj/vDEA0a
-W/SrpF0X7TPgbI7/PAEXFQ7qBH1C+33BE0jxHHVtvDhkoK1URM4naTs5/bGsQ1Cv
-XvswxAyz4U4TDsgg37JbcA93AJvk9qTv6wXC+I0dRKo+fT42HGT0HgquFEpIaaUu
-C4sAxZ4ruE5DRbXrrBpy2mNvCyyBVucWoBon78GauaNDeeS5SRhJuR7BjSNKf2kY
-F+uZMtlxDmU/QiAwRFsP2KfClftmtmxjzwee3TxDeqjdLBzPfDD1jQ34xr3Fi30p
-wNEPym+6hrHFzfWCKWFMR4ZMfoy2QA==
-=2LQB
------END PGP SIGNATURE-----
-
---Sig_/eh=D+yNo=dsM9t+J0nOsqNZ--
+       Arnd
