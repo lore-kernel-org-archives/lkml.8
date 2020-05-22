@@ -2,177 +2,145 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED63DC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA670206B6
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BD8206B6
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 11:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="muq4rwqx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Un+f+jIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbgEVLPg (ORCPT
+        id S1729578AbgEVLQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 07:15:36 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5935 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728657AbgEVLPE (ORCPT
+        Fri, 22 May 2020 07:16:22 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:51524 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728800AbgEVLPQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 07:15:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec7b3a50001>; Fri, 22 May 2020 04:12:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 22 May 2020 04:15:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 22 May 2020 04:15:03 -0700
-Received: from [10.40.101.63] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
- 2020 11:14:56 +0000
-From:   Nikhil Mahale <nmahale@nvidia.com>
-Subject: Re: [PATCH v6 09/10] arm64: efi: Export screen_info
-To:     Ard Biesheuvel <ardb@kernel.org>
-CC:     Michael Kelley <mikelley@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
- <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
- <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com>
- <4202ea20-6e51-31d3-44b1-3861798a8158@nvidia.com>
- <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com>
-X-Nvconfidentiality: Public
-Message-ID: <e8850c9b-965a-9ed4-fb22-f41de5f72b60@nvidia.com>
-Date:   Fri, 22 May 2020 16:44:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Fri, 22 May 2020 07:15:16 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200522111512euoutp0107b61a564fff31b9aaaf46f04886d891~RVXbtWG5F1178811788euoutp01e
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 11:15:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200522111512euoutp0107b61a564fff31b9aaaf46f04886d891~RVXbtWG5F1178811788euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590146112;
+        bh=g7lofStAEXI4rDBNDclmyeYgluSumM2150lwAjjqFGM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Un+f+jIUmk8Z5599psC7Yb7eNknrtoyvtxiHz3/YuXympaCqIfxzfyDVLpFI/EzRZ
+         QliYDYN+TKL/RN29YC/d9n+Dt0IgE5ZpaNBqDqP3duySJ7VFllF14lzaKwPd2owl87
+         1u/5iuV8BzPloamQ+sxGSenMdjLt71hchHTIoNu0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200522111512eucas1p23793e88546caa1e9bbd836fcfa32eedb~RVXbZe0le1441014410eucas1p2J;
+        Fri, 22 May 2020 11:15:12 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id F9.96.60698.044B7CE5; Fri, 22
+        May 2020 12:15:12 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200522111512eucas1p17edeeea548dd59170c84c49ec650bd8a~RVXbFw97l0775607756eucas1p1Z;
+        Fri, 22 May 2020 11:15:12 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200522111512eusmtrp27b43e87159fec26f306e1ffa4579c921~RVXbFEdvK1476214762eusmtrp2k;
+        Fri, 22 May 2020 11:15:12 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-fa-5ec7b440f52a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3D.92.07950.F34B7CE5; Fri, 22
+        May 2020 12:15:11 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200522111511eusmtip1251a3e0431392af017466d40c4deba33~RVXadmGHQ2677026770eusmtip1W;
+        Fri, 22 May 2020 11:15:11 +0000 (GMT)
+Subject: Re: [PATCH] i2c: core: fix NULL pointer dereference in
+ suspend/resume callbacks
+To:     linux-pm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        srv_heupstream@mediatek.com,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <34736047-3fc8-385b-cdea-79b061deb7b4@samsung.com>
+Date:   Fri, 22 May 2020 13:15:12 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXEpryfqk5eKxB5NrDcriEBRQKEHnDVZNBMfB4DY=708fw@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200522101327.13456-1-m.szyprowski@samsung.com>
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590145957; bh=D+sxm7QyezSTd/6mnrR3Kj9TgO+UsRoNxeWl9ewZiu0=;
-        h=X-PGP-Universal:From:Subject:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=muq4rwqxalZ5FKQF8c5wHjaw5/TQNGBmGja2Z1j0zLORzHkTBISY23J0YG3XtuyWx
-         MQAJmBVqg2minxlYHkoTNvpFjWrgHyD8kwsOijHKn8G+Zb7MyZ0kBd93JRl8GmlDth
-         mSaFINv8vXykIucTchvY/pX3jSH7jYJ4Sa4WSDgEFNsGseuw/0N0llHdhgU/GChvrC
-         /c2hJ0ZDtIZb9YvKGSQMB7r0miF0B7/yU1CSUccms3VAEjyrpuf/iDmPbnq3YC2Nl2
-         siZbZH6yCSWCs+yo8rzhX3EmxitkFm+9l1cEcliR8+tf3McMwuU1LYnMIYMwWO8xbf
-         CN3IVXKH0GvHQ==
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjl3b3eXYfT16n5tKJolGGQJhpe+xCVgkERkVEh6Fp5U8tN29Rl
+        IfmdrGw1DHVqZVGm5WdDS0JzTZdKfmaIWiBZoGRim0EfWs6r5b/znHOe9zkHXpoQvXAQ03HK
+        JFallMdLKAHZ2PGjZ3uI0RK1w/jBg6kvqnVgbGVdJFNcV0QyefM2xAw2l1KMNd+MmKLeFh5T
+        +F7EWHMWKKbytYEIEUhnhnP40pL0flKa3dlKSq8bq5C0s2uClFobNhymIgR7otn4uBRW5Rt8
+        UhCbYSkkE4eoC7daX5HpqMFBixxpwAEw0p9BapGAFuFHCD625iMtohcHGwIDj+OtCPJ6p4iV
+        BZO2nc8JFQjq+mwEN8wgeDM3SNm33XAEmGed7Qvu+DjYhkcpu4fAZTxoG5hBdoHCfqCd1lJ2
+        LMTB0P9Jx7NjEm+Br7pc0o49cCR033+KOI8rdBZPLPGOi/5fZQVLiQi8EZqmS5exJ4xM3FmK
+        DbiDDzfND3j2QID3QXY/cA3cYMpi5HN4Pfx5vuLPQjDeU83nhmsIBjOLEOfaDWM9P5eaEdgb
+        apt9OToUGubfEtz7zjA87cplcAZ9Y+EyLYS8XBHn9gKDpebf2ba+AeIGkhhWNTOsamNY1cbw
+        /+5dRFYhTzZZrYhh1f5KVuOjlivUycoYn9MJiga0+Ke6Fyxzz1DL71MmhGkkcRIyZzqiRA7y
+        FHWqwoSAJiTuwnKX9iiRMFqeepFVJchUyfGs2oTW0aTEU+h/bzJShGPkSew5lk1kVSsqj3YU
+        p6MCL75VH47FYfsfBycqdDUxcsUh2execU181eiVte/Kn5wN/7z5YGCKo/hy7CDrplwTMJ4G
+        wqA0vyZ+tm6niyyMNzk/9vBIp/Kq3mJgv/DaS445nTdfkh3VDAVpd5V/q7+t1M8cqJ5zzjyx
+        KQBrFgr0FZrvgcGhlS+js7yJrRkSUh0r99tGqNTyv1/9JB1PAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xu7r2W47HGRyYaWmxccZ6Vosvc0+x
+        WMzcMIPFouPvF0aLy7vmsFl87j3CaDHj/D4mi+l3hSw+t/5js1h5YhazA5fH+xut7B6zGy6y
+        eLSc3M/i0bdlFaPHyVNPWDw+b5ILYIvSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
+        tTIyVdK3s0lJzcksSy3St0vQy2g8Pp2l4CpbxdT9h1kaGDexdjFyckgImEgc6jrK3sXIxSEk
+        sJRRYuGJC2wQCRmJk9MaoIqEJf5c6wKLCwm8ZZQ4sDEWxBYWiJKYfuAAO4gtIhAucfXca0YQ
+        m1lgPpNEx99siKETGSWmTP0PVsQmYCjR9RZiEK+AncTFp/1MIDaLgKrEu/42FhBbVCBWYvW1
+        VkaIGkGJkzOfgMU5gep/z53CDLHATGLe5odQtrzE9rdzoGxxiVtP5jNNYBSahaR9FpKWWUha
+        ZiFpWcDIsopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwNrcd+7llB2PXu+BDjAIcjEo8vA+S
+        j8UJsSaWFVfmHmKU4GBWEuFdyH80Tog3JbGyKrUoP76oNCe1+BCjKdBzE5mlRJPzgWkjryTe
+        0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QD4z7jKDvFz/Fl6xUeO6lM
+        fvF169ll68SezjhTPue/XPD2Pa8XLpg4yeR6VauY35THxUpmMoV1nW+/nFttZ+QQe5xHsO2V
+        b6rQwZX3XmjGsrNnrjkxfYYgZ2GkY7Nos9VzX89zH4Xllou9iCt5+kw2admLpU1OpjybSyQz
+        OnJzTaov9e8q7mT3UmIpzkg01GIuKk4EAIlRpMnjAgAA
+X-CMS-MailID: 20200522111512eucas1p17edeeea548dd59170c84c49ec650bd8a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7
+References: <CGME20200522101524eucas1p1aeef4a054a80b5d822ed3dc4b16139d7@eucas1p1.samsung.com>
+        <20200522101327.13456-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/18/20 6:21 PM, Ard Biesheuvel wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Mon, 18 May 2020 at 06:25, Nikhil Mahale <nmahale@nvidia.com> wrote:
->>
->> On 5/13/20 7:56 PM, Nikhil Mahale wrote:
->>> On 3/20/20 3:16 AM, Michael Kelley wrote:
->>>> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
->>>>>
->>>>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
->>>>>> From: Arnd Bergmann <arnd@arndb.de>
->>>>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
->>>>>>>>
->>>>>>>> The Hyper-V frame buffer driver may be built as a module, and
->>>>>>>> it needs access to screen_info. So export screen_info.
->>>>>>>>
->>>>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
->>>>>>>
->>>>>>> Is there any chance of using a more modern KMS based driver for the screen
->>>>>>> than the old fbdev subsystem? I had hoped to one day completely remove
->>>>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
->>>>>>> architectures.
->>>>>>>
->>>>>>
->>>>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
->>>>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
->>>>>>
->>>>>> I'm not knowledgeable about video/graphics drivers, but when you
->>>>>> say "a more modern KMS based driver", are you meaning one based on
->>>>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
->>>>>> Are there any drivers that would be a good pattern to look at?
->>>>>
->>>>> It used to be a lot harder to write a DRM driver compared to an fbdev
->>>>> driver, but this has changed to the opposite over the years.
->>>>>
->>>>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
->>>>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
->>>>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
->>>>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
->>>>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
->>>>>
->>>>
->>>> Thanks for the pointers, especially for the other hypervisors.
->>>>
->>> Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
->>> I had configured by email client incorrectly to reply.
->>>
->>> screen_info is still useful with a modern KMS-based driver.  It exposes
->>> the mode parameters that the GOP driver chose.  This information is
->>> needed to implement seamless or glitchless boot, by both ensuring that
->>> the scanout parameters don't change and being able to read back the
->>> scanout image to populate the initial contents of the new surface.
->>>
->>> This works today on arches which implement (U)EFI and export
->>> screen_info, including x86 and powerpc, but doesn't work on arm or
->>> arm64.  As arm64 systems that implement UEFI with real GOP drivers
->>> become more prevalent, it would be nice to be have these features there
->>> as well.
->>
->> In addition to this, even if a driver doesn't implement a framebuffer
->> console, or if it does but has an option to disable it, the driver still
->> needs to know whether the EFI console is using resources on the GPU so
->> it can avoid clobbering them. For example screen_info provides information
->> like offset and size of EFI console, using this information driver can
->> reserve memory used by console and prevent corruption on it.
->>
->> I think arm64 should export screen_info.
->>
-> 
-> If there are reasons why KMS or fbdev drivers may need to access the
-> information in screen_info, it should be exported. I don't think that
-> is under debate here.
-> 
+Hi All,
 
-Hi Ard, thanks for your feedback. If my understanding is correct,
-you are agree to export screen_info. Can you provide guidance on how can
-we proceed here? are you willing to accept this current patch as-is or
-would you like me to re-submit the patch with the additional rationale
-provided?
+On 22.05.2020 12:13, Marek Szyprowski wrote:
+> Commit 6fe12cdbcfe3 ("i2c: core: support bus regulator controlling in
+> adapter") added generic suspend and resume functions for i2c devices.
+> Those functions unconditionally access an i2c_client structure assigned
+> to the given i2c device. However, there exist i2c devices in the system
+> without a valid i2c_client. Add the needed check before accessing the
+> i2c_client.
 
-Thanks,
-Nikhil Mahale
+Just one more comment. The devices without i2c_client structure are the 
+i2c 'devices' associated with the respective i2c bus. They are visible 
+in /sys:
+
+ls -l /sys/bus/i2c/devices/i2c-*
+
+I wonder if this patch has been ever tested with system suspend/resume, 
+as those devices are always available in the system...
+
+> ...
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
