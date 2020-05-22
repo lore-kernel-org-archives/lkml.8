@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0495C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D692067B
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF98207FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159341;
-	bh=9WfN8TrM9dUs8IFLzvFT0ojQuTob51q7V/MhlfmIgPM=;
+	s=default; t=1590159347;
+	bh=tirxYBNn+X1HyFht4y1bGde11FRf1xyzvDbSwH9iKUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbOJzyf5/0h0pT2f4gPrfHHxDATlYFu/opMjU5OFptSQFwmTKiI02tJbQnW+5UpUP
-	 kgwXfU36eULlr7jLqBZVODNC8Y/3bqMrlqyvX9cAkUVOmZtLcQBGPLDxlimtqQ2DSp
-	 LSAHxESOEbGZYhYeyWE5DMP1UQ/eqYbuXvoAoxpY=
+	b=OBGG8qMKBWB18g0ZlMgznBb9hmvePPNJOjISbgY4gSH0HxlmjFZUzXAvwbZwWZ3JI
+	 1lXYiEfajKb1j3uMmpnoLcgBhnxUdIlRWUEKK3xPxjDuMX3bZLfncMgl8qtFAfiX6d
+	 vII4sNhY8JnRHAtpaKpRvMlPg90Tgnb4drbhCtRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbgEVOvK (ORCPT
+        id S1731367AbgEVOzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:51:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52728 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730868AbgEVOvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:03 -0400
+        id S1730902AbgEVOvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 741DD221FF;
-        Fri, 22 May 2020 14:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC7D22256;
+        Fri, 22 May 2020 14:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159063;
-        bh=9WfN8TrM9dUs8IFLzvFT0ojQuTob51q7V/MhlfmIgPM=;
+        s=default; t=1590159068;
+        bh=tirxYBNn+X1HyFht4y1bGde11FRf1xyzvDbSwH9iKUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x6LPc+BgU5EIqg4sUcW4yMhMzOOuSr/50xZ5kiZgXXzY2wNMs8L1UjVRi0EgtGdiT
-         aPariT1DpJzSlfNIQSHTUEyCEYN9aihE868Te0ARvqoeBc8FGL4rBDVk1ev6WsbgzW
-         NU6dLAT3ihpS1vrz3xqBGw7tW/EobE1WBU0JNh74=
+        b=w5c9g1y4nImR6bO01doEDi3nkQrBg2z7tencWk6Kto45hMaHLlx9AjbJUwNgSVtGx
+         HDFGlA1IcTgPUN7w6jYre5WhXACDZSx5F55JYj7EoST9zumR7eLsAcwuh+v/ONVcfc
+         CCaNo49bQ+WNeiQuhk9e7+Bz9q/kJ6XiVSySxV+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.4 16/32] Revert "gfs2: Don't demote a glock until its revokes are written"
-Date:   Fri, 22 May 2020 10:50:28 -0400
-Message-Id: <20200522145044.434677-16-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 21/32] net: freescale: select CONFIG_FIXED_PHY where needed
+Date:   Fri, 22 May 2020 10:50:33 -0400
+Message-Id: <20200522145044.434677-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
 References: <20200522145044.434677-1-sashal@kernel.org>
@@ -58,46 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
+[ Upstream commit 99352c79af3e5f2e4724abf37fa5a2a3299b1c81 ]
 
-This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
+I ran into a randconfig build failure with CONFIG_FIXED_PHY=m
+and CONFIG_GIANFAR=y:
 
-This patch fixes a regression: patch df5db5f9ee112 allowed function
-run_queue() to bypass its call to do_xmote() if revokes were queued for
-the glock. That's wrong because its call to do_xmote() is what is
-responsible for calling the go_sync() glops functions to sync both
-the ail list and any revokes queued for it. By bypassing the call,
-gfs2 could get into a stand-off where the glock could not be demoted
-until its revokes are written back, but the revokes would not be
-written back because do_xmote() was never called.
+x86_64-linux-ld: drivers/net/ethernet/freescale/gianfar.o:(.rodata+0x418): undefined reference to `fixed_phy_change_carrier'
 
-It "sort of" works, however, because there are other mechanisms like
-the log flush daemon (logd) that can sync the ail items and revokes,
-if it deems it necessary. The problem is: without file system pressure,
-it might never deem it necessary.
+It seems the same thing can happen with dpaa and ucc_geth, so change
+all three to do an explicit 'select FIXED_PHY'.
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+The fixed-phy driver actually has an alternative stub function that
+theoretically allows building network drivers when fixed-phy is
+disabled, but I don't see how that would help here, as the drivers
+presumably would not work then.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/net/ethernet/freescale/Kconfig      | 2 ++
+ drivers/net/ethernet/freescale/dpaa/Kconfig | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 21820a5b388f..0290a22ebccf 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -639,9 +639,6 @@ __acquires(&gl->gl_lockref.lock)
- 			goto out_unlock;
- 		if (nonblock)
- 			goto out_sched;
--		smp_mb();
--		if (atomic_read(&gl->gl_revokes) != 0)
--			goto out_sched;
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
+diff --git a/drivers/net/ethernet/freescale/Kconfig b/drivers/net/ethernet/freescale/Kconfig
+index 6a7e8993119f..941c7e667afc 100644
+--- a/drivers/net/ethernet/freescale/Kconfig
++++ b/drivers/net/ethernet/freescale/Kconfig
+@@ -77,6 +77,7 @@ config UCC_GETH
+ 	depends on QUICC_ENGINE
+ 	select FSL_PQ_MDIO
+ 	select PHYLIB
++	select FIXED_PHY
+ 	---help---
+ 	  This driver supports the Gigabit Ethernet mode of the QUICC Engine,
+ 	  which is available on some Freescale SOCs.
+@@ -90,6 +91,7 @@ config GIANFAR
+ 	depends on HAS_DMA
+ 	select FSL_PQ_MDIO
+ 	select PHYLIB
++	select FIXED_PHY
+ 	select CRC32
+ 	---help---
+ 	  This driver supports the Gigabit TSEC on the MPC83xx, MPC85xx,
+diff --git a/drivers/net/ethernet/freescale/dpaa/Kconfig b/drivers/net/ethernet/freescale/dpaa/Kconfig
+index 3b325733a4f8..0a54c7e0e4ae 100644
+--- a/drivers/net/ethernet/freescale/dpaa/Kconfig
++++ b/drivers/net/ethernet/freescale/dpaa/Kconfig
+@@ -3,6 +3,7 @@ menuconfig FSL_DPAA_ETH
+ 	tristate "DPAA Ethernet"
+ 	depends on FSL_DPAA && FSL_FMAN
+ 	select PHYLIB
++	select FIXED_PHY
+ 	select FSL_FMAN_MAC
+ 	---help---
+ 	  Data Path Acceleration Architecture Ethernet driver,
 -- 
 2.25.1
 
