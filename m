@@ -2,141 +2,120 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA08C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D30A207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590110460;
-	bh=2+PPWtAtIWrXh8GHaxR6UZHkYVkCWucHPcLYyfkfZjg=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=xLoWd/0bW2EqlD5EheNnKYKr3IEfPhDegazAX+3eX+U0kczH/8klRiUDmoAqoAUqR
-	 AkWnjZP6HOPuQ2lEE9UugLzPYXTg9TY8dTKUS2AqV4DVRo9kQe4cCf0olUE4AG3nnQ
-	 JvwlzTEi6VML8x7Nw4UHlZHPK3LTG4zcRYFJDaIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 03F00207D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 01:22:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Eo7lQGKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgEVBU7 (ORCPT
+        id S1727084AbgEVBWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 21:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726737AbgEVBU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 21:20:59 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C568207D8;
-        Fri, 22 May 2020 01:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590110458;
-        bh=2+PPWtAtIWrXh8GHaxR6UZHkYVkCWucHPcLYyfkfZjg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=xG3o7F2/P+VdCTnXo4QWqPyFSMVI8Fy2R3lkyvwLIfDCWDd318uMpZrIHpMXDenuj
-         2Rs1PL0DBHzCHn3vjzwbPtGCVi9OVhImQqdORChYY3pnhrOPASQl7OApA7tC3yBsdY
-         S7l4Oumx61oWHzX7Nk6mHHXg+AmWDna992KeSVTg=
-Date:   Thu, 21 May 2020 20:25:47 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] drm/radeon/dpm: Replace one-element array and use
- struct_size() helper
-Message-ID: <20200522012547.GA6783@embeddedor>
+        Thu, 21 May 2020 21:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbgEVBWA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 May 2020 21:22:00 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DF0C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:21:59 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id d191so7921518oib.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 May 2020 18:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=QyvoWyLbSuP/CE36awIf5BB51IMB409+51eWDRrnj+o=;
+        b=Eo7lQGKOHDF30A7GNcKV32v4KA/gw8VRNtfwaqUHbU//l8VFzYd4AL6nlOvXafYo1J
+         oGmiOu1nIw4u/UXYm/HIxmDLIT24DDR16SLM0VxYqPNGEkqiwzuWZG7MvXYnrMYxIM5p
+         bj2tbLMJlKqusuKH8oIIgEEoZOl7Ku9uDuUtdg6iXHphIOZw12qUfviX9cVVJTFUrx6W
+         8ezZYEAbkJVvy9zoCHi5QtkVxwfCJQRgFDJIFFIM5ZGYPuDtXA7fnHPuh6EZ59IC4zhV
+         wA9BonHZEeM9/QHiPJh6qE3xG65XMUpTnUJeCMybdL0a8B+Qy+qZ0Y677bR6Q92cr4Bh
+         RpBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=QyvoWyLbSuP/CE36awIf5BB51IMB409+51eWDRrnj+o=;
+        b=NzGzDT28os5PWZ9r0teyZ2ucINmByN/36aVqdjFbSp1awTZs9+PdzrilbX+/cuHhOT
+         0pjxLcsLHY9uFkdh1CFspj/iloRCbjlDJyTVMBXnk87dLdelzTkCPogx1CA160jDuxfU
+         K6CxpsL3iC0xLTK2ei5YKEIEs9Bm2MpY+VO2zBfO7pn2pOax6lUHyw57MsZ+N+jRcA0B
+         uhzvyeOueJ2vgjzrES4Hbekao9Thyq5Snvn2pQvcXzDQRFzeKBszt6txVCh5O5fN0s0K
+         uZ6cf04zVRJbWWmgTSqINOiUKzgbTSyyPw+Oup2n/aL+sXQG8gejjKIc2pq8disOqn7p
+         kElQ==
+X-Gm-Message-State: AOAM532JIFMWatKHTNDfqqcciKxTGTMU1jB8ZB8luFBQ/38pFGaH0G5z
+        ELBmy1pOe4DCQDE9uAOqv3NDxA==
+X-Google-Smtp-Source: ABdhPJzyjC58A+oSo8vkohjD8TJiMy24fhHGzlIv/bIFMwS15PjCYp3lfL/QwYU03q+/SI2A4S/kVQ==
+X-Received: by 2002:aca:ad45:: with SMTP id w66mr1001114oie.59.1590110518857;
+        Thu, 21 May 2020 18:21:58 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id p26sm2103753ood.28.2020.05.21.18.21.57
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Thu, 21 May 2020 18:21:57 -0700 (PDT)
+Date:   Thu, 21 May 2020 18:21:42 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Zi Yan <ziy@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH mmotm] mm/vmstat: Add events for PMD based THP migration
+ without split fix
+In-Reply-To: <f1673e4f-64ca-9cf2-861c-7e8a7deeede1@arm.com>
+Message-ID: <alpine.LSU.2.11.2005211812400.1524@eggly.anvils>
+References: <alpine.LSU.2.11.2005210643340.482@eggly.anvils> <f1673e4f-64ca-9cf2-861c-7e8a7deeede1@arm.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of one-element arrays in the following
-form:
+On Fri, 22 May 2020, Anshuman Khandual wrote:
+> On 05/21/2020 07:19 PM, Hugh Dickins wrote:
+> > Fix 5.7-rc6-mm1 page migration crash in unmap_and_move(): when the
+> > page to be migrated has been freed from under us, that is considered 
+> > a MIGRATEPAGE_SUCCESS, but no newpage has been allocated (and I don't
+> > think it would ever need to be counted as a successful THP migration).
+> > 
+> > Signed-off-by: Hugh Dickins <hughd@google.com>
+> > ---
+> > Fix to mm-vmstat-add-events-for-pmd-based-thp-migration-without-split.patch
+> > 
+> >  mm/migrate.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > --- 5.7-rc6-mm1/mm/migrate.c	2020-05-20 12:21:56.117693827 -0700
+> > +++ linux/mm/migrate.c	2020-05-20 15:08:12.319476978 -0700
+> > @@ -1248,7 +1248,7 @@ out:
+> >  	 * we want to retry.
+> >  	 */
+> >  	if (rc == MIGRATEPAGE_SUCCESS) {
+> > -		if (PageTransHuge(newpage))
+> > +		if (newpage && PageTransHuge(newpage))
+> >  			thp_migration_success(true);
+> >  		put_page(page);
+> >  		if (reason == MR_MEMORY_FAILURE) {
+> > 
+> 
+> Thanks Hugh. I am preparing to respin the vmstat patch accommodating some
+> earlier comments. Wondering if I should also fold these changes here after
+> adding your signed-off-by ?
 
-struct something {
-    int length;
-    u8 data[1];
-};
+Thanks for asking, but please just fold this one-line fixup into your
+respin without my signed-off-by: I'm not heavily invested in these stats,
+just want to avoid the crash; and don't know if I would want to sign the
+result.  You could add something like [hughd: fixed oops on NULL newpage]
+to confirm that the fix is on board, but the fix is what matters.
 
-struct something *instance;
-
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
-
-but the preferred mechanism to declare variable-length types such as
-these ones is a flexible array member[1][2], introduced in C99:
-
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on. So, replace
-the one-element array with a flexible-array member.
-
-Also, make use of the new struct_size() helper to properly calculate the
-size of struct NISLANDS_SMC_SWSTATE.
-
-This issue was found with the help of Coccinelle and, audited and fixed
-_manually_.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/si_dpm.h | 2 +-
- drivers/gpu/drm/radeon/ni_dpm.c     | 7 ++++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/si_dpm.h b/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-index 6b7d292b919f3..bc0be6818e218 100644
---- a/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-+++ b/drivers/gpu/drm/amd/amdgpu/si_dpm.h
-@@ -781,7 +781,7 @@ struct NISLANDS_SMC_SWSTATE
-     uint8_t                             levelCount;
-     uint8_t                             padding2;
-     uint8_t                             padding3;
--    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[1];
-+    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
- };
- 
- typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
-diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
-index b57c37ddd164c..7d81dde509dc9 100644
---- a/drivers/gpu/drm/radeon/ni_dpm.c
-+++ b/drivers/gpu/drm/radeon/ni_dpm.c
-@@ -2685,11 +2685,12 @@ static int ni_upload_sw_state(struct radeon_device *rdev,
- 	struct rv7xx_power_info *pi = rv770_get_pi(rdev);
- 	u16 address = pi->state_table_start +
- 		offsetof(NISLANDS_SMC_STATETABLE, driverState);
--	u16 state_size = sizeof(NISLANDS_SMC_SWSTATE) +
--		((NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE - 1) * sizeof(NISLANDS_SMC_HW_PERFORMANCE_LEVEL));
-+	NISLANDS_SMC_SWSTATE *smc_state;
-+	u16 state_size = struct_size(smc_state, levels,
-+			NISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE);
- 	int ret;
--	NISLANDS_SMC_SWSTATE *smc_state = kzalloc(state_size, GFP_KERNEL);
- 
-+	smc_state = kzalloc(state_size, GFP_KERNEL);
- 	if (smc_state == NULL)
- 		return -ENOMEM;
- 
--- 
-2.26.2
-
+Hugh
