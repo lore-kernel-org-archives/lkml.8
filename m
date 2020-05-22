@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D12C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C80C433DF
 	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95A3C2088E
+	by mail.kernel.org (Postfix) with ESMTP id B475320849
 	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 02:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1590112832;
-	bh=Y3P+dM0vde7SETgnVBpoe+YAhi4T5RpYnBP5lMtPM1w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Gw54W46D7UJoKLvlOy3Mpd/njtZjV5mVDxveFJwOjz8mO20V6VAa387BcD+F3Pk0W
-	 Z9mVL/VKi2Ub4PsUw/fk32OvdUxvp8wkB8BO5EMtA74AvgYlpho7SgwtlUeH6/wCCz
-	 rU/8mU8OJ0xwOKaRJL8lifljyNorHOOdEQmOUHGk=
+	bh=uWz6LrHlZzcOscVDL1TvfihqQLUxn6MqNvgiN9ab3D0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mzhNKuAwwvW//VyL4y+GbspOtEn/yqTpMLcooIYWAx6YMW7rtqzlqYCoh3zdmA3UC
+	 31gT8Z9lRc4prPM7DEJETuY7NiN+4j1K/WrhvYXi9iLmiTt6RgpV30NP2Eec63Mz3z
+	 nkjvAT6aewX2FlXi2SV4aU95bgiyamxisIhM/egY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgEVCA3 (ORCPT
+        id S1727882AbgEVCAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 May 2020 22:00:29 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:37241 "EHLO
+        Thu, 21 May 2020 22:00:31 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:37247 "EHLO
         conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgEVCA1 (ORCPT
+        with ESMTP id S1727084AbgEVCA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 May 2020 22:00:27 -0400
+        Thu, 21 May 2020 22:00:28 -0400
 Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 04M205UX009585;
-        Fri, 22 May 2020 11:00:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 04M205UX009585
+        by conuserg-10.nifty.com with ESMTP id 04M205UZ009585;
+        Fri, 22 May 2020 11:00:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 04M205UZ009585
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1590112808;
-        bh=p68P5aztaSnVFKazuy1uvMsF2Jqe9k7v6DqDJgghFkw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=xvfyE3QrXaukpL6qiDqUhwERD0uByfY7b4QEhBM0hOxuB3az0SVFKds9IEi+D3sYY
-         nT3Tjt0F6eP3cK95/umJQye0pwczlNer+teeF2XGVLDDTIzeGeQQ5MJV4jCeEcdriA
-         QXZOC8+l65LD5ocQVJzHRqZOK/LfxEAuySXwCZ+DyX4LxjV1WlUhRuuSZs3r0fU8OW
-         3lZPybxoO1ntBETAyUW2b5aHaPL7WY2zslzQrJewiC4fuU66RJRJg1rf/dvgcgaUYf
-         /5n7zUb4g9dJM007ifmz7uodeVX0XiDCElMmc28qAd7M+qsA6HgYKch0dXOlgdnq0R
-         9fZ9lBjtAukMA==
+        s=dec2015msa; t=1590112811;
+        bh=eAVYzp2qo7mR9QsAot69dvdfW1xfxnf150PWTQtQKAM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hu49JF02RKIrGrDIo8TjQv1YBzNoVA40iBGPiB+KDSvhxHIPwQB1sX9+8bwOaCLAF
+         V98Zf4w1ni744haIWqkAuJojJ8bvP+Ubs/icMh02rr8v1T/G+Qi5QUnrktrulQ1XHq
+         wKnm80ZgDY91yD8f0qh6ev/GzWBiZXu6fwZPCp6gudJUs2v/QB2i3/apj2a7I86tXS
+         N7coM1KliTqTEdbdfaCpbkasNAkRPHoX/rWHPGSX+bosaFd1zE4stl4z3h3gQiBPMG
+         pTLBcZml1nXND2bHQF1U3sghf99LIq1mLy6obmuO0ljyDWwPEIu8vbI1n223WG9a+e
+         HpmVt/hbJl3vg==
 X-Nifty-SrcIP: [126.90.202.47]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] kbuild: remove ifdef builtin-target / lib-target
-Date:   Fri, 22 May 2020 10:59:58 +0900
-Message-Id: <20200522020002.504506-1-masahiroy@kernel.org>
+Subject: [PATCH 3/5] kbuild: move subdir-obj-y to scripts/Makefile.build
+Date:   Fri, 22 May 2020 11:00:00 +0900
+Message-Id: <20200522020002.504506-3-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200522020002.504506-1-masahiroy@kernel.org>
+References: <20200522020002.504506-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,53 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I do not see a good reason to add ifdef here.
+Save $(addprefix ...) for subdir-obj-y.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/Makefile.build | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ scripts/Makefile.build | 2 ++
+ scripts/Makefile.lib   | 5 -----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 3665b1a0bc8e..9af88f4cacb8 100644
+index f46d25441804..ee283efc1b45 100644
 --- a/scripts/Makefile.build
 +++ b/scripts/Makefile.build
-@@ -384,16 +384,14 @@ $(obj)/%/built-in.a: $(obj)/% ;
- #
- # Rule to compile a set of .o files into one .a file (without symbol table)
- #
--ifdef builtin-target
+@@ -69,6 +69,8 @@ endif
  
- quiet_cmd_ar_builtin = AR      $@
-       cmd_ar_builtin = rm -f $@; $(AR) cDPrST $@ $(real-prereqs)
+ # ===========================================================================
  
--$(builtin-target): $(real-obj-y) FORCE
-+$(obj)/built-in.a: $(real-obj-y) FORCE
- 	$(call if_changed,ar_builtin)
++subdir-obj-y := $(filter %/built-in.a, $(real-obj-y))
++
+ ifneq ($(strip $(lib-y) $(lib-m) $(lib-)),)
+ lib-target := $(obj)/lib.a
+ endif
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 52299d5dba28..a41a4bbd20e2 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -62,10 +62,6 @@ multi-used-y := $(sort $(foreach m,$(obj-y), $(if $(strip $($(m:.o=-objs)) $($(m
+ multi-used-m := $(sort $(foreach m,$(obj-m), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y)) $($(m:.o=-m)) $($(m:.o=-))), $(m))))
+ multi-used   := $(multi-used-y) $(multi-used-m)
  
- targets += $(builtin-target)
--endif # builtin-target
- 
- #
- # Rule to create modules.order file
-@@ -408,15 +406,11 @@ $(modorder-target): $(subdir-ym) FORCE
- #
- # Rule to compile a set of .o files into one .a file (with symbol table)
- #
--ifdef lib-target
+-# $(subdir-obj-y) is the list of objects in $(obj-y) which uses dir/ to
+-# tell kbuild to descend
+-subdir-obj-y := $(filter %/built-in.a, $(obj-y))
 -
--$(lib-target): $(lib-y) FORCE
-+$(obj)/lib.a: $(lib-y) FORCE
- 	$(call if_changed,ar)
- 
- targets += $(lib-target)
- 
--endif
--
- # NOTE:
- # Do not replace $(filter %.o,^) with $(real-prereqs). When a single object
- # module is turned into a multi object module, $^ will contain header file
+ # Replace multi-part objects by their individual parts,
+ # including built-in.a from subdirectories
+ real-obj-y := $(foreach m, $(obj-y), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y)) $($(m:.o=-))),$($(m:.o=-objs)) $($(m:.o=-y)),$(m)))
+@@ -91,7 +87,6 @@ targets		:= $(addprefix $(obj)/,$(targets))
+ modorder	:= $(addprefix $(obj)/,$(modorder))
+ obj-m		:= $(addprefix $(obj)/,$(obj-m))
+ lib-y		:= $(addprefix $(obj)/,$(lib-y))
+-subdir-obj-y	:= $(addprefix $(obj)/,$(subdir-obj-y))
+ real-obj-y	:= $(addprefix $(obj)/,$(real-obj-y))
+ real-obj-m	:= $(addprefix $(obj)/,$(real-obj-m))
+ multi-used-m	:= $(addprefix $(obj)/,$(multi-used-m))
 -- 
 2.25.1
 
