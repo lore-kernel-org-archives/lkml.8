@@ -2,117 +2,138 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DCFC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88847C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA4E32078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B81D20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 13:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="f02BWUr3"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="DmsE28c0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgEVNdL (ORCPT
+        id S1729931AbgEVNfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 09:33:11 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17781 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729687AbgEVNdK (ORCPT
+        Fri, 22 May 2020 09:35:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729406AbgEVNfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 09:33:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1590154347; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=XcDdY9Zc9ZmGNHYn8DDKG/qswRbhJf7UbSJ/WkTRc7hkcBHTmVuT1I5KhoRWDFzvtyFAlVocxNzHTsd6urd13pZaBF22/gJCtB8yHK4OM/auxX4woV+nNqhhK/fzVWbYCjD1JEarvK0TFpbKtrwmKxuptkmRfCehvqaojFNpC8I=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1590154347; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=QH/C/5Ek7w4bweX9MpQ6D+9TlcFLdZIHbRzPiOGCnFU=; 
-        b=anPQGV0fv2E4kBdQhM02ly6dggpbrDpL8EhN741l+ds2dp4ulhZHsnGkvqrr8HPPQUP6b49jwppfN3xQEdW/LVWUJxGIFntaXnc8uwp/skX5oFr4bJBaPgHTgHRteFru+pvWBL93D2uwmH1xmjJ+rFKLKqt07pg/pUbCjfaxHqc=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1590154347;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=QH/C/5Ek7w4bweX9MpQ6D+9TlcFLdZIHbRzPiOGCnFU=;
-        b=f02BWUr3Nv9d8cWlDdbkuabT/lGVKR9c/cCdZZPLqOgUKEGmdogSkXX4SPWe18rh
-        iLWASU03V3THKoSbpJPPMTRWaUdGyazovcG1QHeTc2SgFXSiBpGM6afGwWuxtzmQcvk
-        iZvHYtTwNBswG1aQdD44R5S6Q7SUKTzG9x7/2Tso=
-Received: from [127.0.0.1] (112.17.236.196 [112.17.236.196]) by mx.zoho.com.cn
-        with SMTPS id 1590154343201742.4200289775523; Fri, 22 May 2020 21:32:23 +0800 (CST)
-Date:   Fri, 22 May 2020 21:32:10 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v10 2/5] PCI: Add Loongson PCI Controller support
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <20200522131018.GE11785@e121166-lin.cambridge.arm.com>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com> <20200514131650.3587281-1-jiaxun.yang@flygoat.com> <20200514131650.3587281-2-jiaxun.yang@flygoat.com> <AC29D474-D846-41AF-9900-759CE430A744@flygoat.com> <20200522131018.GE11785@e121166-lin.cambridge.arm.com>
-Message-ID: <7FE3D498-D293-407C-A70C-5E763151477C@flygoat.com>
+        Fri, 22 May 2020 09:35:31 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC4CC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 06:35:30 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id p12so8217331qtn.13
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 06:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=654C6HMAJavjEr0S4/IKvBvbc+mHWyzBMrpEJYlc/nQ=;
+        b=DmsE28c0J4Ygt6MtPOMJu6De7QbehaWK0RU3Yt0kC42y6Vc7yki+njWWBM7fLypkG/
+         UEXTDSBaYM3HFOvM8cVvl53RjaU6IhdSf0zLQ0DUHW4aXXe5/znsiuC1r0m6VIenhnt/
+         8+yupTCx847h5bTOXDYzsIAHc6vXTr9aNLSGE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=654C6HMAJavjEr0S4/IKvBvbc+mHWyzBMrpEJYlc/nQ=;
+        b=HYQAhqHVdD8dGPuGTDW+uPIuU1LNvskqINO0fbWOkSJ+mpReMp6lXc/5J7go9eAGDV
+         w8h77Ml2+bVZJZfNNl9a3AmQlUBU640y2LRCM8SUVZgS/kfxC7Ugbuo8d00/38Rajgq4
+         xIlUM61H0/er1dxU9SlvVxsWwXaCcW1F5ZAEmBcRItHBluwofdWrOQ/+8GbsckUhr2Jv
+         IghftLm5GHijo+nZhP2gWUDwULKIz2wHQ57K2lPMESNR4Lt5rwmC+ZSeBN6CoeWrl7/r
+         JvqDAcCd7139kzAlOe8q2iqeEh/WQXkccN/kD5mAd7pbQo4pDbLhhZjicJ2LgncGw3Ui
+         wLZw==
+X-Gm-Message-State: AOAM532Y3waJi3+c4baLnU5DUMHksPfCAwqRYDS/SvAZfZwxhrQoxSgS
+        ++3TX013oC720L/RUT1oKg7dL9sb24s=
+X-Google-Smtp-Source: ABdhPJz1FUSjDoLtfHJN/Zeql66rPIzcdUtptDSzo52IvftehA3efMQx/T0H8ocig9sAnzaM1pbAfQ==
+X-Received: by 2002:ac8:71c1:: with SMTP id i1mr7363784qtp.320.1590154529140;
+        Fri, 22 May 2020 06:35:29 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q46sm2013046qta.79.2020.05.22.06.35.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 06:35:28 -0700 (PDT)
+Date:   Fri, 22 May 2020 09:35:28 -0400
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        matthewb@google.com, jsbarnes@google.com, vapier@google.com,
+        christian@brauner.io, vpillai@digitalocean.com,
+        vineethrp@gmail.com, peterz@infradead.org, stable@vger.kernel.org,
+        gregkh@linuxfoundation.org, libc-alpha@sourceware.org
+Subject: [PATCH RFC v2] sched/headers: Fix sched_setattr userspace
+ compilation issues
+Message-ID: <20200522133528.GA210175@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On a modern Linux distro, compiling the following program fails:
+ #include<stdlib.h>
+ #include<stdint.h>
+ #include<pthread.h>
+ #include<linux/sched/types.h>
 
+ void main() {
+         struct sched_attr sa;
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8822=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=889=
-:10:18, Lorenzo Pieralisi <lorenzo=2Epieralisi@arm=2Ecom> =E5=86=99=E5=88=
-=B0:
->On Wed, May 20, 2020 at 07:57:29PM +0800, Jiaxun Yang wrote:
->>=20
->>=20
->> =E4=BA=8E 2020=E5=B9=B45=E6=9C=8814=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=889:16:38, Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom> =E5=86=99=E5=88=B0:
->> >This controller can be found on Loongson-2K SoC, Loongson-3
->> >systems with RS780E/LS7A PCH=2E
->> >
->> >The RS780E part of code was previously located at
->> >arch/mips/pci/ops-loongson3=2Ec and now it can use generic PCI
->> >driver implementation=2E
->> >
->> >Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> >Reviewed-by: Rob Herring <robh@kernel=2Eorg>
->> >
->>=20
->> Hi there,
->>=20
->> Is it possible to let this series go into next tree soon?
->>=20
->> As LS7A dts patch would depend on this series, and I want to
->> make the whole LS7A basic support as a part of 5=2E8 release=2E
->
->I think you have all necessary tags to take this in the MIPS
->tree, please let me know if that's the way we want this to go
->upstream - I would not pull MIPS/dts changes into the PCI tree
->and I don't think it is needed for this series=2E
+         return;
+ }
 
-Please pull all PCI changes [1~3] into PCI tree=2E
+with:
+/usr/include/linux/sched/types.h:8:8: \
+			error: redefinition of ‘struct sched_param’
+    8 | struct sched_param {
+      |        ^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
+                 from /usr/include/sched.h:43,
+                 from /usr/include/pthread.h:23,
+                 from /tmp/s.c:4:
+/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
+note: originally defined here
+   23 | struct sched_param
+      |        ^~~~~~~~~~~
 
-And Thomas,
-Could you please apply rest changes into MIPS Tree?
+This is also causing a problem with using sched_attr in Chrome. The issue is
+struct sched_param is already provided by glibc and is in POSIX.
 
-Thanks a lot!
+Guard the kernel's UAPI definition of sched_param with __KERNEL__ so
+that userspace and the kernel can both compile.
 
->
->Thanks,
->Lorenzo
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+v1->v2:
+With the chance that libc needs resolving something, I'm resending with
+libc-alpha added as suggested by Christian, and minor commit message fixes.
 
---=20
-Jiaxun Yang
+ include/uapi/linux/sched/types.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
+index c852153ddb0d3..1f10d935a63fe 100644
+--- a/include/uapi/linux/sched/types.h
++++ b/include/uapi/linux/sched/types.h
+@@ -4,9 +4,11 @@
+ 
+ #include <linux/types.h>
+ 
++#if defined(__KERNEL__)
+ struct sched_param {
+ 	int sched_priority;
+ };
++#endif
+ 
+ #define SCHED_ATTR_SIZE_VER0	48	/* sizeof first published struct */
+ #define SCHED_ATTR_SIZE_VER1	56	/* add: util_{min,max} */
+-- 
+2.26.2.761.g0e0b3e54be-goog
+
