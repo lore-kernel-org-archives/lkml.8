@@ -2,92 +2,128 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE81C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3C7207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1BC20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:43:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gmp/auXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgEVJnl (ORCPT
+        id S1729035AbgEVJns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:43:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46410 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728210AbgEVJnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:43:40 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CA04AC95D7E41B77ACF4;
-        Fri, 22 May 2020 17:43:38 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.93) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Fri, 22 May 2020
- 17:43:37 +0800
-Subject: Re: arm64/acpi: NULL dereference reports from UBSAN at boot
-From:   Hanjun Guo <guohanjun@huawei.com>
-To:     Will Deacon <will@kernel.org>, <lorenzo.pieralisi@arm.com>
-CC:     <rjw@rjwysocki.net>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mark.rutland@arm.com>
-References: <20200521100952.GA5360@willie-the-truck>
- <ad521a36-c080-f761-e91b-dc38b8af08ee@huawei.com>
-Message-ID: <381deefd-db48-7884-8335-fb9e8f5c96dd@huawei.com>
-Date:   Fri, 22 May 2020 17:43:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 22 May 2020 05:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728210AbgEVJnr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 05:43:47 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910FBC061A0E;
+        Fri, 22 May 2020 02:43:47 -0700 (PDT)
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 90B6824D;
+        Fri, 22 May 2020 11:43:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590140622;
+        bh=EkHjxtlh1KP3U50OHeGsUjNHBBOhkFleoo6/23Q62n8=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gmp/auXve1lV5ElNd608Z05rQUVyqOlwtkILQzd29qG+vgUbdIWz3Bw0TFW085w29
+         +HO7h1JxsOnfhMDd00y+mW8pFj2SSZIeFlvbcVXJBj1qfs0h03ZbnSN+Yjj8LICXqj
+         dBn7ckx6I3sPkGR/STzPEU8XeYmgvYc85YYRjLaI=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH] drm: rcar-du: Fix build error
+To:     Daniel Gomez <dagmcr@gmail.com>, daniel@ffwll.ch, airlied@linux.ie,
+        laurent.pinchart@ideasonboard.com
+Cc:     dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200518201646.48312-1-dagmcr@gmail.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <73d98905-930d-3549-1a85-293f4d213716@ideasonboard.com>
+Date:   Fri, 22 May 2020 10:43:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <ad521a36-c080-f761-e91b-dc38b8af08ee@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200518201646.48312-1-dagmcr@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.213.93]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/22 16:07, Hanjun Guo wrote:
-> Hi Will,
+Hi Daniel,
+
+On 18/05/2020 21:16, Daniel Gomez wrote:
+> Select DRM_KMS_HELPER dependency.
 > 
-> On 2020/5/21 18:09, Will Deacon wrote:
->> Hi folks,
->>
->> I just tried booting the arm64 for-kernelci branch under QEMU (version
->> 4.2.50 (v4.2.0-779-g4354edb6dcc7)) with UBSAN enabled, and I see a couple
->> of NULL pointer dereferences reported at boot. I think they're both GIC
->> related (log below). I don't see a panic with UBSAN disabled, so 
->> something's
->> fishy here.
->>
->> Please can you take a look when you get a chance? I haven't had time 
->> to see
->> if this is a regression or not, but I don't think it's particularly 
->> serious
->> as I have all sorts of horrible stuff enabled in my .config, since I'm
->> trying to chase down another bug:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/plain/arch/arm64/configs/fuzzing.config?h=fuzzing/arm64-kernelci-20200519&id=c149cf6a51aa4f72d53fc681c6661094e93ef660 
->>
->>
->> (on top of defconfig)
->>
->> CONFIG_FAIL_PAGE_ALLOC may be to blame.
+> Build error when DRM_KMS_HELPER is not selected:
 > 
-> I enabled UBSAN and CONFIG_FAIL_PAGE_ALLOC on top of defconfig,
-> testing against the for-kernelci branch on the D06 board, I
-> can see some UBSAN warnings from megaraid_sas driver [0], but not
-> from any other subsystem including ACPI, I will try all your
-> configs above to see if I can get more warnings.
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd48): undefined reference to `drm_atomic_helper_bridge_duplicate_state'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd50): undefined reference to `drm_atomic_helper_bridge_destroy_state'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xd70): undefined reference to `drm_atomic_helper_bridge_reset'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xdc8): undefined reference to `drm_atomic_helper_connector_reset'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xde0): undefined reference to `drm_helper_probe_single_connector_modes'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe08): undefined reference to `drm_atomic_helper_connector_duplicate_state'
+> drivers/gpu/drm/rcar-du/rcar_lvds.o:(.rodata+0xe10): undefined reference to `drm_atomic_helper_connector_destroy_state'
+> 
 
-Enabled all the configs except "CONFIG_MODULES=n" and
-"CONFIG_SHADOW_CALL_STACK=y" (can't do that via make menuconfig,
-do it manually?) in the link, but still got the same warnings and
-no other warnings as before, the system is in good function, please
-let me know I can do anything more to help the debug.
+Looking at the files in rcar_du that utilise drm_atomic_helpers...
 
-Thanks
-Hanjun
+git grep -l drm_atomic_helper_ drivers/gpu/drm/rcar-du/
+ drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c
+ drivers/gpu/drm/rcar-du/rcar_du_plane.c
+ drivers/gpu/drm/rcar-du/rcar_du_vsp.c
+ drivers/gpu/drm/rcar-du/rcar_du_writeback.c
+ drivers/gpu/drm/rcar-du/rcar_lvds.c
 
+of those, these are configurable:
+
+ rcar_du_vsp.c		# DRM_RCAR_VSP
+ rcar_du_writeback.c	# DRM_RCAR_WRITEBACK
+ rcar_lvds.c		# DRM_RCAR_LVDS
+
+But VSP and WRITEBACK are already implicitly dependant upon DRM_RCAR_DU
+because they get built into the DU module.
+
+So indeed, only the RCAR_LVDS is a separate module, using those helpers,
+so I think a select is a reasonable fix.
+
+I would also ask whether DRM_RCAR_LVDS should depend upon DRM_RCAR_DU
+though as well.
+
+There is no linkage requirement, as it's a standalone bridge driver from
+what I can see, but I don't think it serves much purpose without the DU?
+
+Anyway, even if it's just for compile testing maybe, the select here
+should be fine.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+> ---
+>  drivers/gpu/drm/rcar-du/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+> index 0919f1f159a4..f65d1489dc50 100644
+> --- a/drivers/gpu/drm/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> @@ -31,6 +31,7 @@ config DRM_RCAR_DW_HDMI
+>  config DRM_RCAR_LVDS
+>  	tristate "R-Car DU LVDS Encoder Support"
+>  	depends on DRM && DRM_BRIDGE && OF
+> +	select DRM_KMS_HELPER
+>  	select DRM_PANEL
+>  	select OF_FLATTREE
+>  	select OF_OVERLAY
+> 
 
