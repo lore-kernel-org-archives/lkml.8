@@ -4,112 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6952DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED11CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4908520757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF3220812
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s2XwS2bD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QWQc1utn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgEVHh2 (ORCPT
+        id S1728724AbgEVHhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46174 "EHLO
+        Fri, 22 May 2020 03:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgEVHh2 (ORCPT
+        with ESMTP id S1728152AbgEVHhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:37:28 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4F6C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:26 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u188so8881819wmu.1
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:26 -0700 (PDT)
+        Fri, 22 May 2020 03:37:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06DEAC05BD43
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:52 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g12so7968130wrw.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 00:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=FxhyYotOdsb3Prsxlw/PCmLh9cDfCT3MjS19m7K8Q5o=;
-        b=s2XwS2bDg3iy2QFTSYYUp2zSt1XfNkCltyHI70cuooryTjTrmQxbyoYtC7EKyK4J/A
-         CMELJ8ZUfGTSxOg6AYlN57glArOF+Ly3LjBs501uqsGcZR+l5Ibxqj5DBoVL8XlApo+b
-         atG2eMn0WIvN4x1PzdTxcIHXw7mmI8zyZgEqdH4lRMCpbTWYzhSglv9A05yWl0+Rvm4o
-         a1TeQChSuAktfp1bMBydXDruT0T7jEQlllRF0IEpKC1x+j4OCj2MCcDtMbvOQOrfVMww
-         V3l5bx0/GQmy7oWXfKlljrEXIicKaJzqGjj0q/1VOv2DQAj2EGtyTx5RDElE8IrTsPbQ
-         hSlg==
+        bh=OoldvHVpRxJWz04Wv0lGmaRnV3/coogwvzF6ciZCusk=;
+        b=QWQc1utngkxkmgE3Q2u4PTwJqopYWiCbwEsGAWquR85cj0X8RjK1xI8yGXqbI7jcyZ
+         A7I2kbn65YVRKjJSF/AFeyA4vxnoWX09E1TmCoJFPJnDI1loZx5j4NMh70Df8bXEz0ue
+         vTJx15lf1ZYaGAvc4aMYciz4SovxxdQAWHTuEm2oHIXADiPVf3cSpVfQGhuoA5CDtx/S
+         OgsJgjynh6wi3beJ5Oa85dFoie+UnAIF5cMSTj2A3m8d5UTVPLX/Od6NZ47RLKMKD49l
+         be+/5eFuDjHwPfJ4doYfPk/M5s6VjxS1iBiYXGnfc85uZIUTLhi+4N/SNM+uWfGAe8rj
+         geyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=FxhyYotOdsb3Prsxlw/PCmLh9cDfCT3MjS19m7K8Q5o=;
-        b=YSl9yMPo6I8SSlfsF8D9xGjId4lk46YzwlSVu8ePfNhMm7u1O/YmN88krY8MdnZtmu
-         eovmTQ5KHs7rd69BrC5CtV12WldE/mENJ6U5hp1E2IPDdk+qLLti995tIk9bcwYGzwdz
-         zmaMiIbFbjaVsceIsIDkfhvL1ls5pUTuMV/xDD33+Hfcq4IFr2923g+Tf4IyRy5/gdGm
-         EbcJwY6OErnRLLOvqiNw28xH5WJp9zpquDOhegy+pXLms6Z3X0Y2ODJqWAOEiZ/AuGls
-         InrOaRk9BJg3H1U9pp82RwEv2hfJ2VwpwriAdSA7ghzorjjFIYI8H1efISlmSQ1aBZUE
-         jzrg==
-X-Gm-Message-State: AOAM532NGqW8SO4oC1xe8lw/lVL6bBT4d4P0DOvFZ17PDCbh7TMTqZuE
-        /ws/fmmeMEkrV4tU0EG4RxtXQg==
-X-Google-Smtp-Source: ABdhPJxs2hJYnfDm6N4+o9/p+SF/UJ8IDcPxC+ZnYoNz7e9Bj+uhDyIZoQpHZd769I0Jckb0UavO0Q==
-X-Received: by 2002:a1c:6042:: with SMTP id u63mr12028802wmb.65.1590133045474;
-        Fri, 22 May 2020 00:37:25 -0700 (PDT)
+        bh=OoldvHVpRxJWz04Wv0lGmaRnV3/coogwvzF6ciZCusk=;
+        b=lacpbDpVkYx+FlH1H92Ru0Hnrvm1qMOAMP3OTx9mFTxEHK69J4NuXmKlr5aVdI0e1d
+         oXTDGbGXT3E9+ZFrHXk40bmy4zUwW443jCHFA8BsxNzgNl6LMEUzxesTfJcerAVNAb9S
+         0SoEnb9xYlM8kOHuCcv7Dk/w+2gs/UeJDRSd/WwiKPi53Nxxy7bz1hulxmqrgJ9S/SU1
+         Sz2NHp5Ryb/L3gxYHXH0UBEhQFlukfI0CwIlcwI/bTevpuoOjWHLti/tt705bvaQ+ZEz
+         RXTQAqZ8gfkEKLVbGb/Bbb/n0FTgIFhXV9HgI43nwKydCsmNg2cQPxbFrLlBEFXCp7GC
+         dNOw==
+X-Gm-Message-State: AOAM531zI7LOCNxC5MlW1Gfm/3u03gAkz7PCf96IpMO//dCwHWr4ajYy
+        6Nzu2982EnU3IuBzrVV5F/xkHuY4E5Q=
+X-Google-Smtp-Source: ABdhPJy+uDhQ+H8wIBCHXhrT0yMPXls7Yet6TUSGGzWvvHeOOpFgwvBPP6gqkrxYEzHQ+kF+ppxoFA==
+X-Received: by 2002:adf:e441:: with SMTP id t1mr2452196wrm.347.1590133070748;
+        Fri, 22 May 2020 00:37:50 -0700 (PDT)
 Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id l19sm9221775wmj.14.2020.05.22.00.37.23
+        by smtp.gmail.com with ESMTPSA id y8sm82930wmc.37.2020.05.22.00.37.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 00:37:24 -0700 (PDT)
-Date:   Fri, 22 May 2020 08:37:22 +0100
+        Fri, 22 May 2020 00:37:50 -0700 (PDT)
+Date:   Fri, 22 May 2020 08:37:48 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     matthias.bgg@kernel.org, Rob Herring <robh@kernel.org>,
+To:     matthias.bgg@kernel.org
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
 Subject: Re: [PATCH] dt-bindings: mfd: mediatek: Add MT6397 Pin Controller
-Message-ID: <20200522073722.GP271301@dell>
+Message-ID: <20200522073748.GQ271301@dell>
 References: <20200110145952.9720-1-matthias.bgg@kernel.org>
- <20200115151938.GA8182@bogus>
- <ce3747e5-41db-a168-0602-37337d8530f2@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce3747e5-41db-a168-0602-37337d8530f2@gmail.com>
+In-Reply-To: <20200110145952.9720-1-matthias.bgg@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020, Matthias Brugger wrote:
+On Fri, 10 Jan 2020, matthias.bgg@kernel.org wrote:
 
-> Hi Lee,
+> From: Matthias Brugger <matthias.bgg@gmail.com>
 > 
-> On 15/01/2020 16:19, Rob Herring wrote:
-> > On Fri, 10 Jan 2020 15:59:51 +0100, matthias.bgg@kernel.org wrote:
-> >> From: Matthias Brugger <matthias.bgg@gmail.com>
-> >>
-> >> The MT6397 mfd includes a pin controller. Add binding
-> >> a description for it.
-> >>
-> >> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> >>
-> >> ---
-> >>
-> >>  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > 
+> The MT6397 mfd includes a pin controller. Add binding
+> a description for it.
 > 
-> It looks like this fall through the cracks.
-> Would you consider to queue it or do you have further comments?
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> 
+> ---
+> 
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-There is a current issue where Rob and I are both taking patches.
-Sometimes we both assume the other will take the patch.
-
-Apologies.
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
