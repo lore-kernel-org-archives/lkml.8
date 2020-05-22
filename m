@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAABCC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F100C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 914B12224A
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E24221FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159285;
-	bh=MbeZa4VffzmxWAR8MGy0BeRxIsWisBaIT8gBRIYAzuI=;
+	s=default; t=1590159289;
+	bh=AXktdaq6qusCwkIlE8IbXlzDBcusFAALLlJY+OqpiM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1PUliLVWFpe/dlkktgyIA+5yc1JUqnkAOQceTk2ZB+WqkxOBhqeTusYZ/3WPdvT6a
-	 vQlXgLpbuW2otBXjdSYD9qjrLKgDifWYe7y/fqemiWskbabz5CEBRZRPTvgEPDfyIx
-	 MteausW4x/j7cji2eDJnBsY+/heFasIoHI2X1q/E=
+	b=K6/iyftQeS9nxRWHqfXG4wycQm70Htao/Z1ZK/5fC2c4j6unfsf/WTs4Oi44LohgV
+	 jrUxSf6d/BKA4d/g6CCfzkp3w0qRCbsxsP1F5QCu/quoHPnSf7paJFthqECmD78FWy
+	 IHXWej3hZbJXE0NaV8y+VFvl3KjZ8IEbPt7S0gKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgEVOva (ORCPT
+        id S1730951AbgEVOys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53118 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:54:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730964AbgEVOvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:18 -0400
+        id S1731005AbgEVOv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E067722256;
-        Fri, 22 May 2020 14:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EBDA2247F;
+        Fri, 22 May 2020 14:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159078;
-        bh=MbeZa4VffzmxWAR8MGy0BeRxIsWisBaIT8gBRIYAzuI=;
+        s=default; t=1590159086;
+        bh=AXktdaq6qusCwkIlE8IbXlzDBcusFAALLlJY+OqpiM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SeIiUvJ1KobQn0S1oHnB6icf3koUG+9AdzVtjyXKqqvy6NrrhVI9QTvLhElgbBIMw
-         sHgOFsa5+sSsqLf8y/Ef6ky146+BjTTf7tcufGSyp0L1QbZhzO4NBtLq+hx6FxNqds
-         q/6Y7+LUH02z5hyU66B/Pwax3MaOvuL32iBsRrjc=
+        b=cD1jtg/QhIH6mfGQHEtFEbtHCtUbFAz4na5IsOK3wQ6C0xIhUpY9mIpMiTdJsvDzo
+         yFWk+S3CStPWN/gDCwn4ot6240EppFZwZyy2aDfXOOiImTAT7UgZwLavVx2kqBGgpO
+         Eb3tshhuNtiLATr3ZMc2cLShQTJajyl6gY3LzIno=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matteo Croce <mcroce@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 31/32] samples: bpf: Fix build error
-Date:   Fri, 22 May 2020 10:50:43 -0400
-Message-Id: <20200522145044.434677-31-sashal@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/19] ARM: dts: rockchip: fix pinctrl sub nodename for spi in rk322x.dtsi
+Date:   Fri, 22 May 2020 10:51:06 -0400
+Message-Id: <20200522145120.434921-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200522145044.434677-1-sashal@kernel.org>
-References: <20200522145044.434677-1-sashal@kernel.org>
+In-Reply-To: <20200522145120.434921-1-sashal@kernel.org>
+References: <20200522145120.434921-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,40 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Johan Jonker <jbx6244@gmail.com>
 
-[ Upstream commit 23ad04669f81f958e9a4121b0266228d2eb3c357 ]
+[ Upstream commit 855bdca1781c79eb661f89c8944c4a719ce720e8 ]
 
-GCC 10 is very strict about symbol clash, and lwt_len_hist_user contains
-a symbol which clashes with libbpf:
+A test with the command below gives these errors:
 
-/usr/bin/ld: samples/bpf/lwt_len_hist_user.o:(.bss+0x0): multiple definition of `bpf_log_buf'; samples/bpf/bpf_load.o:(.bss+0x8c0): first defined here
-collect2: error: ld returned 1 exit status
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-evb.dt.yaml: spi-1:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-0:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3229-xms6.dt.yaml: spi-1:
+'#address-cells' is a required property
 
-bpf_log_buf here seems to be a leftover, so removing it.
+The $nodename pattern for spi nodes is
+"^spi(@.*|-[0-9a-f])*$". To prevent warnings rename
+'spi-0' and 'spi-1' pinctrl sub nodenames to
+'spi0' and 'spi1' in 'rk322x.dtsi'.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200511113234.80722-1-mcroce@redhat.com
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/spi-controller.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Link: https://lore.kernel.org/r/20200424123923.8192-1-jbx6244@gmail.com
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/lwt_len_hist_user.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/rk322x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/samples/bpf/lwt_len_hist_user.c b/samples/bpf/lwt_len_hist_user.c
-index 587b68b1f8dd..430a4b7e353e 100644
---- a/samples/bpf/lwt_len_hist_user.c
-+++ b/samples/bpf/lwt_len_hist_user.c
-@@ -15,8 +15,6 @@
- #define MAX_INDEX 64
- #define MAX_STARS 38
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index bada942ef38d..2aa74267ae51 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -944,7 +944,7 @@
+ 			};
+ 		};
  
--char bpf_log_buf[BPF_LOG_BUF_SIZE];
--
- static void stars(char *str, long val, long max, int width)
- {
- 	int i;
+-		spi-0 {
++		spi0 {
+ 			spi0_clk: spi0-clk {
+ 				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
+ 			};
+@@ -962,7 +962,7 @@
+ 			};
+ 		};
+ 
+-		spi-1 {
++		spi1 {
+ 			spi1_clk: spi1-clk {
+ 				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
+ 			};
 -- 
 2.25.1
 
