@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5816C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C81F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE7E920723
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A9120757
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 21:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731239AbgEVVbe (ORCPT
+        id S1731161AbgEVVbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 17:31:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:42338 "EHLO foss.arm.com"
+        Fri, 22 May 2020 17:31:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:42324 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731167AbgEVVbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 17:31:14 -0400
+        id S1731128AbgEVVbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 17:31:10 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CACD51435;
-        Fri, 22 May 2020 14:31:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E850E106F;
+        Fri, 22 May 2020 14:31:09 -0700 (PDT)
 Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.28.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C39033F68F;
-        Fri, 22 May 2020 14:31:13 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0C5D3F68F;
+        Fri, 22 May 2020 14:31:09 -0700 (PDT)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     netdev@vger.kernel.org
 Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, linux@armlinux.org.uk,
         madalin.bucur@oss.nxp.com, calvin.johnson@oss.nxp.com,
         linux-kernel@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>
-Subject: [RFC 08/11] net: phy: Allow mdio buses to auto-probe c45 devices
-Date:   Fri, 22 May 2020 16:30:56 -0500
-Message-Id: <20200522213059.1535892-9-jeremy.linton@arm.com>
+Subject: [RFC 02/11] net: phy: Simplify MMD device list termination
+Date:   Fri, 22 May 2020 16:30:50 -0500
+Message-Id: <20200522213059.1535892-3-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200522213059.1535892-1-jeremy.linton@arm.com>
 References: <20200522213059.1535892-1-jeremy.linton@arm.com>
@@ -45,68 +45,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mdiobus_scan logic is currently hardcoded to only
-work with c22 devices. This works fairly well in most
-cases, but its possible a c45 device doesn't respond
-despite being a standard phy. If the parent hardware
-is capable, it makes sense to scan for c45 devices before
-falling back to c22.
+Since we are already checking for *devs == 0 after
+the loop terminates, we can add a mostly F's check
+as well. With that change we can simplify the return/break
+sequence inside the loop.
 
-As we want this to reflect the capabilities of the STA,
-lets add a field to the mii_bus structure to represent
-the capability. That way devices can opt into the extended
-scanning. Existing users should continue to default to c22
-only scanning as long as they are zero'ing the structure
-before use.
-
-At the moment its a yes/no option, but in the future
-it may be useful to extend this to c45 only policy, or
-add additional classes and policies.
+Add a valid_phy_id() macro for this, since we will be using it
+in a couple other places.
 
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 ---
- drivers/net/phy/mdio_bus.c | 9 +++++++--
- include/linux/phy.h        | 5 +++++
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ drivers/net/phy/phy_device.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 7a4eb3f2cb74..3ab618e15f2c 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -732,10 +732,15 @@ EXPORT_SYMBOL(mdiobus_free);
-  */
- struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr)
- {
--	struct phy_device *phydev;
-+	struct phy_device *phydev = ERR_PTR(-ENODEV);
- 	int err;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 245899b58a7d..7746c07b97fe 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -695,6 +695,11 @@ static int get_phy_c45_devs_in_pkg(struct mii_bus *bus, int addr, int dev_addr,
+ 	return 0;
+ }
  
--	phydev = get_phy_device(bus, addr, false);
-+	if (bus->probe_capabilities == MDIOBUS_C45_FIRST)
-+		phydev = get_phy_device(bus, addr, true);
++static bool valid_phy_id(int val)
++{
++	return (val > 0 && ((val & 0x1fffffff) != 0x1fffffff));
++}
 +
-+	if (IS_ERR(phydev))
-+		phydev = get_phy_device(bus, addr, false);
-+
- 	if (IS_ERR(phydev))
- 		return phydev;
+ /**
+  * get_phy_c45_ids - reads the specified addr for its 802.3-c45 IDs.
+  * @bus: the target MII bus
+@@ -732,18 +737,12 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+ 			phy_reg = get_phy_c45_devs_in_pkg(bus, addr, 0, devs);
+ 			if (phy_reg < 0)
+ 				return -EIO;
+-			/* no device there, let's get out of here */
+-			if ((*devs & 0x1fffffff) == 0x1fffffff) {
+-				*phy_id = 0xffffffff;
+-				return 0;
+-			} else {
+-				break;
+-			}
++			break;
+ 		}
+ 	}
  
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 480a6b153227..d68e1ebab484 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -275,6 +275,11 @@ struct mii_bus {
- 	int reset_delay_us;
- 	/* RESET GPIO descriptor pointer */
- 	struct gpio_desc *reset_gpiod;
-+	/* bus capabilities, used for probing */
-+	enum {
-+		MDIOBUS_C22_ONLY = 0,
-+		MDIOBUS_C45_FIRST,
-+	} probe_capabilities;
- };
- #define to_mii_bus(d) container_of(d, struct mii_bus, dev)
- 
+ 	/* no reported devices */
+-	if (*devs == 0) {
++	if (!valid_phy_id(*devs)) {
+ 		*phy_id = 0xffffffff;
+ 		return 0;
+ 	}
 -- 
 2.26.2
 
