@@ -2,136 +2,160 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEB4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D87C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD9207F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NDE9gcYy"
+	by mail.kernel.org (Postfix) with ESMTP id BA90A20829
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 09:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgEVJhq (ORCPT
+        id S1729851AbgEVJht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 05:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbgEVJho (ORCPT
+        Fri, 22 May 2020 05:37:49 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:46402 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728068AbgEVJhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 05:37:44 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE628C05BD43
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:37:42 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id i15so9469960wrx.10
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 02:37:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+JaGmfrUHhcQkFEPqWe0bVFYz2Arc5TLSoXsPeih+bY=;
-        b=NDE9gcYyqD5IEt9rXJkmi/wEyz9UCuTNGRlh7pxa3vfQZLtnrb0Yh6gbJ7K6nO2Kbz
-         c8NLy66N6aIhVAMZ2J3zCgJdhK7UhUWk9L5TDQgwBIqSRGfqXc4vnv0QPE17Mbq7BJHA
-         JSgLgqn/MxflMn9nvVXvv6xtxhn7uGAXsmEXNSqaSte/pQtBqJWAexAp4asgLGlwA8++
-         SWWkv9B8ybyPTREFSvSpyERKSYj7WfhANiXUaEx0o6zPF+PPc+pcLDQa8r2+SDEfMUPL
-         sTvz5RTqFljDfVi1YilfsOw8kY0yIwFeJ1KuotodP28/DK7TfAaYGU70lvBCsraWTuUP
-         3/7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+JaGmfrUHhcQkFEPqWe0bVFYz2Arc5TLSoXsPeih+bY=;
-        b=pI3Aq9/ErZLCIM/zRLmp5S3OoVBj4FEc54hVwlEdTZNV6PJpsO6snrkQuiHM0AwcRf
-         1K5mw7acmlo+8gcPVCyHWs4TJC0nKiJI22lHjGQL7T4wDpd5x03mCXsqlNTB91IYV4L7
-         nDRBF2U5vyjqn0mbrJUbM0Zo1le7xvqEyqrZDL0xDw3MLaA4S3pMYB2Tm05Yh9eTU55N
-         UE8CMyUSH+HV4TKycOFN/xjql79LY5L7HMVcLnX3XstXpX13b9+yKN/VqdlOd2AInE4N
-         nZZEqSEtOojzH0JFLPa6tf2ltbM3Ylzpj5UL9bB67J1UuLDvUXTp/Eo4j1/tDHsQkENa
-         8kCQ==
-X-Gm-Message-State: AOAM533GMXeMgCi+ppcFwvYSJjAZU0fQUItaJ9FnPm41/QzIUi8yy7aL
-        qmiGdNVnVW7meFQRf1rKW/yc4A==
-X-Google-Smtp-Source: ABdhPJzoncU+lNgmINUvGoMOt+KFP+k6Tci7J6tYcLGnKlR7Ymv0eheScbKLeM/5XEl62TSRKym5IQ==
-X-Received: by 2002:a5d:4cd1:: with SMTP id c17mr870054wrt.199.1590140261310;
-        Fri, 22 May 2020 02:37:41 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id c140sm9479234wmd.18.2020.05.22.02.37.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2020 02:37:40 -0700 (PDT)
-Date:   Fri, 22 May 2020 10:37:38 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RESEND PATCH v14 04/11] pwm: clps711x: Cast period to u32
- before use as divisor
-Message-ID: <20200522093738.cko5rj4wrxfd4hxu@holly.lan>
-References: <cover.1589330178.git.gurus@codeaurora.org>
- <1d6918c3fc2976bdbdb687bf54a2ef09fc1558db.1589330178.git.gurus@codeaurora.org>
- <20200521101934.j5ivjky4e6byveut@holly.lan>
- <20200521202525.GA24026@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200521202525.GA24026@codeaurora.org>
+        Fri, 22 May 2020 05:37:46 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 22 May 2020 15:07:42 +0530
+Received: from minint-dvc2thc.qualcomm.com (HELO sartgarg-linux.qualcomm.com) ([10.206.24.245])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 22 May 2020 15:07:39 +0530
+Received: by sartgarg-linux.qualcomm.com (Postfix, from userid 2339771)
+        id 41351179E; Fri, 22 May 2020 15:07:38 +0530 (IST)
+From:   Sarthak Garg <sartgarg@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     vbadigan@codeaurora.org, stummala@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sarthak Garg <sartgarg@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH V2 3/8] mmc: host: sdhci-msm: Configure dll-user-control in dll init sequence
+Date:   Fri, 22 May 2020 15:02:25 +0530
+Message-Id: <1590139950-7288-4-git-send-email-sartgarg@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1590139950-7288-1-git-send-email-sartgarg@codeaurora.org>
+References: <1588838535-6050-1-git-send-email-sartgarg@codeaurora.org>
+ <1590139950-7288-1-git-send-email-sartgarg@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 01:25:25PM -0700, Guru Das Srinagesh wrote:
-> On Thu, May 21, 2020 at 11:19:34AM +0100, Daniel Thompson wrote:
-> > On Wed, May 20, 2020 at 03:55:57PM -0700, Guru Das Srinagesh wrote:
-> > > Since the PWM framework is switching struct pwm_args.period's datatype
-> > > to u64, prepare for this transition by typecasting it to u32.
-> > > 
-> > > Also, since the dividend is still a 32-bit number, any divisor greater
-> > > than the numerator will cause the quotient to be zero, so return 0 in
-> > > that case to efficiently skip the division.
-> > > 
-> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > ---
-> > >  drivers/pwm/pwm-clps711x.c | 5 ++++-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)> > > 
-> > > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-> > > index 924d39a..da771b1 100644
-> > > --- a/drivers/pwm/pwm-clps711x.c
-> > > +++ b/drivers/pwm/pwm-clps711x.c
-> > > @@ -43,7 +43,10 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
-> > >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
-> > >  {
-> > >  	/* Duty cycle 0..15 max */
-> > > -	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> > > +	if (pwm->args.period > (v * 0xf))
-> > > +		return 0;
-> > 
-> > This doesn't look right to me.
-> > 
-> > DIV_ROUND_CLOSEST() does rounded division and the short circuit doesn't
-> > implement that.
-> 
-> My initial patch [1] was to simply use DIV64_U64_ROUND_CLOSEST(), but I
-> got review feedback to add a short-circuit (same thread, [2]). I feel
-> like I should skip the short-circuiting and type casting and simply just
-> use DIV64_U64_ROUND_CLOSEST() - what do you think?
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-A trivial review of pwm-clps711x.c suggests that the period is always
-32-bit anyway so why not just throw away the short circuit entirely and
-replace with a comment saying that CLPS711X has a hard coded period
-that is always >1000000000 ?
+With SDCC v5.1.0, additional setting needed for enabling DLL output.
+The dll-user-control register need to be configured during dll
+initialization for getting proper dll output.
 
+Without this configuration, we don't get the DLL lock status properly.
+Also update the DLL register settings according to the SDCC Hardware
+Programming Guide.
 
-Daniel.
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ drivers/mmc/host/sdhci-msm.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 97758fa..6588077 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -57,6 +57,11 @@
+ #define CORE_FLL_CYCLE_CNT	BIT(18)
+ #define CORE_DLL_CLOCK_DISABLE	BIT(21)
+ 
++#define DLL_USR_CTL_POR_VAL	0x10800
++#define ENABLE_DLL_LOCK_STATUS	BIT(26)
++#define FINE_TUNE_MODE_EN	BIT(27)
++#define BIAS_OK_SIGNAL		BIT(29)
++
+ #define CORE_VENDOR_SPEC_POR_VAL 0xa9c
+ #define CORE_CLK_PWRSAVE	BIT(1)
+ #define CORE_HC_MCLK_SEL_DFLT	(2 << 8)
+@@ -157,6 +162,7 @@ struct sdhci_msm_offset {
+ 	u32 core_dll_config_3;
+ 	u32 core_ddr_config_old; /* Applicable to sdcc minor ver < 0x49 */
+ 	u32 core_ddr_config;
++	u32 core_dll_usr_ctl; /* Present on SDCC5.1 onwards */
+ };
+ 
+ static const struct sdhci_msm_offset sdhci_msm_v5_offset = {
+@@ -186,6 +192,7 @@ static const struct sdhci_msm_offset sdhci_msm_v5_offset = {
+ 	.core_dll_config_2 = 0x254,
+ 	.core_dll_config_3 = 0x258,
+ 	.core_ddr_config = 0x25c,
++	.core_dll_usr_ctl = 0x388,
+ };
+ 
+ static const struct sdhci_msm_offset sdhci_msm_mci_offset = {
+@@ -231,6 +238,7 @@ struct sdhci_msm_variant_ops {
+ struct sdhci_msm_variant_info {
+ 	bool mci_removed;
+ 	bool restore_dll_config;
++	bool uses_tassadar_dll;
+ 	const struct sdhci_msm_variant_ops *var_ops;
+ 	const struct sdhci_msm_offset *offset;
+ };
+@@ -263,6 +271,7 @@ struct sdhci_msm_host {
+ 	bool use_cdr;
+ 	u32 transfer_mode;
+ 	bool updated_ddr_cfg;
++	bool uses_tassadar_dll;
+ };
+ 
+ static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+@@ -677,6 +686,17 @@ static int msm_init_cm_dll(struct sdhci_host *host)
+ 				msm_offset->core_dll_config_2);
+ 	}
+ 
++	/*
++	 * Configure DLL user control register to enable DLL status.
++	 * This setting is applicable to SDCC v5.1 onwards only.
++	 */
++	if (msm_host->uses_tassadar_dll) {
++		config = DLL_USR_CTL_POR_VAL | FINE_TUNE_MODE_EN |
++			ENABLE_DLL_LOCK_STATUS | BIAS_OK_SIGNAL;
++		writel_relaxed(config, host->ioaddr +
++				msm_offset->core_dll_usr_ctl);
++	}
++
+ 	config = readl_relaxed(host->ioaddr +
+ 			msm_offset->core_dll_config);
+ 	config |= CORE_DLL_EN;
+@@ -1861,10 +1881,18 @@ static const struct sdhci_msm_variant_info sdm845_sdhci_var = {
+ 	.offset = &sdhci_msm_v5_offset,
+ };
+ 
++static const struct sdhci_msm_variant_info sm8250_sdhci_var = {
++	.mci_removed = true,
++	.uses_tassadar_dll = true,
++	.var_ops = &v5_var_ops,
++	.offset = &sdhci_msm_v5_offset,
++};
++
+ static const struct of_device_id sdhci_msm_dt_match[] = {
+ 	{.compatible = "qcom,sdhci-msm-v4", .data = &sdhci_msm_mci_var},
+ 	{.compatible = "qcom,sdhci-msm-v5", .data = &sdhci_msm_v5_var},
+ 	{.compatible = "qcom,sdm845-sdhci", .data = &sdm845_sdhci_var},
++	{.compatible = "qcom,sm8250-sdhci", .data = &sm8250_sdhci_var},
+ 	{},
+ };
+ 
+@@ -1930,6 +1958,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+ 	msm_host->restore_dll_config = var_info->restore_dll_config;
+ 	msm_host->var_ops = var_info->var_ops;
+ 	msm_host->offset = var_info->offset;
++	msm_host->uses_tassadar_dll = var_info->uses_tassadar_dll;
+ 
+ 	msm_offset = msm_host->offset;
+ 
+-- 
+2.7.4
+
