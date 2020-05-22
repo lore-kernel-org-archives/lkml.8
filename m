@@ -2,112 +2,119 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C76C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C730204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:43:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="xq+rr9Nh"
+	by mail.kernel.org (Postfix) with ESMTP id 2AE55204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590187514;
+	bh=qP7vHtUzkedfvh5yvJtf5gmYK08qkZSmMgZHBbH3m3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2sZF0S9vlzXOA9Tvjwvi2dCmpKxL/hHO+V2T1d64KcNpgq9hXPuTM9yoTl9nJEXaO
+	 qEqL/qcp8q6v2yzmFXJlQRdb3Es4OjJFD3o1VPCbFci7kT/qCv7zkpf+906fGwebif
+	 IEHQQGmPR3AN7XzpV/YXyUIHPYbL0+xsfZrVAVxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731209AbgEVWnm (ORCPT
+        id S1731229AbgEVWpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:43:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731122AbgEVWnl (ORCPT
+        Fri, 22 May 2020 18:45:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40279 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731029AbgEVWpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:43:41 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA984C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:43:41 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id z15so2576097pjb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=EU5e/l95lnHmNp8beRxDwq3G8lD1LFgouw11x+VJMvM=;
-        b=xq+rr9NhyM1ZgqTrmiGV4vdmnQTujwwHsg3dF5aeifUH4u6DfowA+gqRTLm3ocRwO/
-         P8YHcMh6du4+wHtz4n29FBF6keDnjFVcZPaARuWX6nL7zBnRabH4zvU5RLH6SfRcPDCj
-         fMfJYVKGZlN48oHAc2jIzqNO9hl8JGaDwwAzyv4HCNdGOdA6DS8dBVtuNzV+muc3Ju47
-         ZjGm3agrWIA84ZCwDeCPXgdagTXGj83HpISN7Ihid+gFO5DN+Ppwkuh9jrsjKpFhxNWB
-         y/tgKzs0K7KY9EanaMEFo9wtAWs9MAHPF3Hmf9H6u1RR97GZpDOSY+BWwWLzZb0SpIk3
-         1FTA==
+        Fri, 22 May 2020 18:45:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t16so4993484plo.7;
+        Fri, 22 May 2020 15:45:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=EU5e/l95lnHmNp8beRxDwq3G8lD1LFgouw11x+VJMvM=;
-        b=ZCVdWHBf8E1KeTgSZ6o8HMsfHEtjkvN1QiQBJHHo3WiDrDBCenq5js2cXnS0/q9idW
-         hidd6HIVeE1KCqtfCqbBbQfVJcKTfjMi2+vLEGOlf7bd8YfqHKzX68GRT+AY1FPFCDXe
-         iA9ZXX7+f7t19XQFa4AOBZl9QYZLymm8cobMzYXTdt5ppznsX6o3d7bpwEIQcN05oYWE
-         Uuwop/Zl8YMe8QsE9LhU3FEU5LM7ZqH0vQx8okHVkDiPFaNv1x1NnNPYnJxfajPrzZ4e
-         zhR+X/yTJIOrDyGrsAMhooRw499rv95CiaDV3smDI0hTGUJ2kVnBYu+/b/mPhKyMetU/
-         dq0A==
-X-Gm-Message-State: AOAM532W6niqLLq92fXw7E6WU/dvuOKWnXXNCnSu96hIbpISw/vO4oG6
-        hAs8+wnY3So2r27kv3jauGjkhq/qkrI=
-X-Google-Smtp-Source: ABdhPJyoTSra4X3zw/UGq89aJPKVz7w/MFz+PbHbZufPD5Y9Cc8R0iOnVNGiShdXCUom5TVcDY/vgQ==
-X-Received: by 2002:a17:90b:3705:: with SMTP id mg5mr6651553pjb.24.1590187420961;
-        Fri, 22 May 2020 15:43:40 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b008:3b8f:1dea:762f:4d89:de4d? ([2600:1010:b008:3b8f:1dea:762f:4d89:de4d])
-        by smtp.gmail.com with ESMTPSA id s36sm6923408pgl.35.2020.05.22.15.43.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 May 2020 15:43:40 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC][PATCH 0/4] x86/entry: disallow #DB more
-Date:   Fri, 22 May 2020 15:43:35 -0700
-Message-Id: <692612FC-4599-4774-857C-7E20CD99A832@amacapital.net>
-References: <20200522222055.GE25128@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
-In-Reply-To: <20200522222055.GE25128@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-X-Mailer: iPhone Mail (17E262)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8g5iMWxUv50Vq/9o6YUA17pf5mu6Tfr8Vt6J3G1KMjw=;
+        b=A48DfZACU6Vqs1oq6gaNH3JqB6pRStANuGrdXRKhBDkbSBJhSuLYH8vI7q5hxayJj7
+         FpiFv8kWpoDnDVCSR4SF3SW0+meGSh90Wucd9F75eB/+8Wydmj8VOVUtAxTYy1PAzW+c
+         ue8Eepi5aqdat7ZhoNX+BCWeYjiepKmPYVT721x1Z9W4HRKe5MnGTWf+tIvdT7lHH9k/
+         aLcZB+8JZyP+sMe88ZKeda6uu5tqGziKTdX/fXfqvuDHf8iO+4rj+8EIG/a3xyYOwIeA
+         OkPPcUgXO29I1GWi8kn8YuQe/9TzbSSGiKNvp9rmGitCuJasK3HWHaK5YnzqR9vi5xC9
+         3Ezg==
+X-Gm-Message-State: AOAM530pric/CTYV5GTprqRUXmuvadwZiEySlABAPm4TVRdrAibeblrh
+        M/JIynqAvydEeibOgcG40+s=
+X-Google-Smtp-Source: ABdhPJxPnLaXKZi6piF1gumOCdvZvC04BxRzx6RSexsCidM2Ze9jl64zKzSemvH8XBSCIcZQgl3Jng==
+X-Received: by 2002:a17:90a:4f42:: with SMTP id w2mr7268999pjl.74.1590187510516;
+        Fri, 22 May 2020 15:45:10 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x191sm3798942pfd.37.2020.05.22.15.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 15:45:09 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4908B40321; Fri, 22 May 2020 22:45:08 +0000 (UTC)
+Date:   Fri, 22 May 2020 22:45:08 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH] firmware_loader: change enum fw_opt to u32
+Message-ID: <20200522224508.GE11244@42.do-not-panic.com>
+References: <20200522214658.12722-1-scott.branden@broadcom.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522214658.12722-1-scott.branden@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 22, 2020 at 02:46:58PM -0700, Scott Branden wrote:
+>  
+>  /**
+> - * enum fw_opt - options to control firmware loading behaviour
+> + * fw_opt - options to control firmware loading behaviour
+>   *
+>   * @FW_OPT_UEVENT: Enables the fallback mechanism to send a kobject uevent
+>   *	when the firmware is not found. Userspace is in charge to load the
+> @@ -33,15 +33,13 @@
+>   *	the platform's main firmware. If both this fallback and the sysfs
+>   *      fallback are enabled, then this fallback will be tried first.
+>   */
+> -enum fw_opt {
+> -	FW_OPT_UEVENT			= BIT(0),
+> -	FW_OPT_NOWAIT			= BIT(1),
+> -	FW_OPT_USERHELPER		= BIT(2),
+> -	FW_OPT_NO_WARN			= BIT(3),
+> -	FW_OPT_NOCACHE			= BIT(4),
+> -	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
+> -	FW_OPT_FALLBACK_PLATFORM	= BIT(6),
+> -};
+> +#define FW_OPT_UEVENT			BIT(0)
+> +#define FW_OPT_NOWAIT			BIT(1)
+> +#define FW_OPT_USERHELPER		BIT(2)
+> +#define FW_OPT_NO_WARN			BIT(3)
+> +#define FW_OPT_NOCACHE			BIT(4)
+> +#define FW_OPT_NOFALLBACK_SYSFS		BIT(5)
+> +#define FW_OPT_FALLBACK_PLATFORM	BIT(6)
 
-> On May 22, 2020, at 3:20 PM, Sean Christopherson <sean.j.christopherson@in=
-tel.com> wrote:
->=20
-> =EF=BB=BFOn Fri, May 22, 2020 at 03:13:57PM -0700, Andy Lutomirski wrote:
->>> On Fri, May 22, 2020 at 1:49 PM Peter Zijlstra <peterz@infradead.org> wr=
-ote:
->>>=20
->>> Hai, this kills #DB during NMI/#MC and with that allows removing all the=
- nasty
->>> IST rewrite crud.
->>>=20
->>=20
->> This is great, except that the unconditional DR7 write is going to
->> seriously hurt perf performance.  Fortunately, no one cares about
->> perf, right? :)  Even just reading first won't help enough because DR7
->> reads are likely to be VM exits.  Can we have a percpu dr7 shadow
->> (with careful ordering) or even just a percpu count of dr7 users so we
->> can skip this if there are no breakpoints?
->=20
-> Hmm, I believe hw_breakpoint_active() is what you're looking for, KVM uses=
+Everything looked good up to here. The enum defines each flag.
+We just want to use an enum for *one* flag represetnation, not
+a bundle.
 
-> it to avoid unnecessary restoration of host DR7 after VM-Exit.
->=20
-> Amusingly, checking that in the NMI handler could give a false positive if=
-
-> an NMI occurs in guest as DR7 is cleared on exit and KVM invokes the NMI
-> handler prior to restoring host DR7.  I doubt that's common enough to care=
-
-> about though.
-
-False positives are unavoidable: there=E2=80=99s no way we can set a percpu v=
-ariable and set DR7 without risking an NMI in between.=
+  Luis
