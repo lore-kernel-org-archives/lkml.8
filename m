@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D54AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5796B221FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2161822225
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590159248;
-	bh=G02uOQXZHAtlp5iiuYiQJAEfyrr+0VCf29HFdP4vK7Q=;
+	s=default; t=1590159255;
+	bh=w5I/bCvhdOOgccWeAkoMqO+L/IVr9RQ8dbnPQfmCt/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VhvcYcyhvfIyLiK2Wbwb2bGP7VbxlnO4QeA1Dr93ve2eJfrCG5cGfGZEyEwyifZ2C
-	 3oduAf2vuCB9XAx4qU7QTvz2k4gVy2xL1WxBR2B0aICZEYFvmkZEaXkFjtZo+H/s4f
-	 dHKyY9y4mTCI+X8K3Jpu0BcLxGsCZfLgE8KYVmA8=
+	b=KEC6HuGapPMco9UGod5/3thmfK3EJKRoSBGL9P6bfmA0Cv9BvoKuAjFXdiM8/8W4w
+	 mvvTINvGuMaW4HMbwm9af8AwoiLK2LxBn60khdd1KKqcyDO2n7r6fsp58aPQIQrqSL
+	 Zz70ol+8MiSoQr779BaSlNslyBv1sb78jBzreQAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730963AbgEVOyH (ORCPT
+        id S1731124AbgEVOyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:54:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53550 "EHLO mail.kernel.org"
+        Fri, 22 May 2020 10:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731063AbgEVOvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:39 -0400
+        id S1731052AbgEVOvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:51:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2B342145D;
-        Fri, 22 May 2020 14:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B4E2145D;
+        Fri, 22 May 2020 14:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159098;
-        bh=G02uOQXZHAtlp5iiuYiQJAEfyrr+0VCf29HFdP4vK7Q=;
+        s=default; t=1590159096;
+        bh=w5I/bCvhdOOgccWeAkoMqO+L/IVr9RQ8dbnPQfmCt/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oH/g/x0F+9xXU5KDbvawZAJ4G6qhEINOOGgkbzRdOYoHFM6rGoqOB6etG2ko1HISJ
-         J/G3LMkWNAB51UDDaaph2OAw8nFyQqA1yLIbjtA0jfvVl9rSYXM5iYJx2ud2ZaexBU
-         AAo5zp5DOEWpHQX/J/vepqVU82hxs/ZiTYl1S5t0=
+        b=so0YO0aJhJhoLI20OwfjQBmwmLtj3jDKvINuC/VUcleLjvGCTeK0HlzXznnwzAkCu
+         XN/lu6WailZCZE/8YW+M9EHKZqRPnwSOc2bPD/Ey8kCOhlEQ7s7IIkb9N2sfP0qs1B
+         188UiEgOezkU06nqhk8V5AZt8p3iUr0fQqqIZcK0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Denis V. Lunev" <den@openvz.org>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/19] IB/i40iw: Remove bogus call to netdev_master_upper_dev_get()
-Date:   Fri, 22 May 2020 10:51:17 -0400
-Message-Id: <20200522145120.434921-16-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        kbuild test robot <lkp@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/19] usb: gadget: legacy: fix redundant initialization warnings
+Date:   Fri, 22 May 2020 10:51:15 -0400
+Message-Id: <20200522145120.434921-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200522145120.434921-1-sashal@kernel.org>
 References: <20200522145120.434921-1-sashal@kernel.org>
@@ -60,90 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Denis V. Lunev" <den@openvz.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 856ec7f64688387b100b7083cdf480ce3ac41227 ]
+[ Upstream commit d13cce757954fa663c69845611957396843ed87a ]
 
-Local variable netdev is not used in these calls.
+Fix the following cppcheck warnings:
 
-It should be noted, that this change is required to work in bonded mode.
-Otherwise we would get the following assert:
+drivers/usb/gadget/legacy/inode.c:1364:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1331:15: note: value is initialized
+ int    value = -EOPNOTSUPP;
+              ^
+drivers/usb/gadget/legacy/inode.c:1364:8: note: value is overwritten
+ value = -EOPNOTSUPP;
+       ^
+drivers/usb/gadget/legacy/inode.c:1817:8: style: Redundant initialization for 'value'. The initialized value is overwritten$
+ value = -EINVAL;
+       ^
+drivers/usb/gadget/legacy/inode.c:1787:18: note: value is initialized
+ ssize_t   value = len, length = len;
+                 ^
+drivers/usb/gadget/legacy/inode.c:1817:8: note: value is overwritten
+ value = -EINVAL;
+       ^
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 
- "RTNL: assertion failed at net/core/dev.c (5665)"
-
-With the calltrace as follows:
-	dump_stack+0x19/0x1b
-	netdev_master_upper_dev_get+0x61/0x70
-	i40iw_addr_resolve_neigh+0x1e8/0x220
-	i40iw_make_cm_node+0x296/0x700
-	? i40iw_find_listener.isra.10+0xcc/0x110
-	i40iw_receive_ilq+0x3d4/0x810
-	i40iw_puda_poll_completion+0x341/0x420
-	i40iw_process_ceq+0xa5/0x280
-	i40iw_ceq_dpc+0x1e/0x40
-	tasklet_action+0x83/0x140
-	__do_softirq+0x125/0x2bb
-	call_softirq+0x1c/0x30
-	do_softirq+0x65/0xa0
-	irq_exit+0x105/0x110
-	do_IRQ+0x56/0xf0
-	common_interrupt+0x16a/0x16a
-	? cpuidle_enter_state+0x57/0xd0
-	cpuidle_idle_call+0xde/0x230
-	arch_cpu_idle+0xe/0xc0
-	cpu_startup_entry+0x14a/0x1e0
-	start_secondary+0x1f7/0x270
-	start_cpu+0x5/0x14
-
-Link: https://lore.kernel.org/r/20200428131511.11049-1-den@openvz.org
-Signed-off-by: Denis V. Lunev <den@openvz.org>
-Acked-by: Shiraz Saleem <shiraz.saleem@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/i40iw/i40iw_cm.c | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/usb/gadget/legacy/inode.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-index 771eb6bd0785..4321b9e3dbb4 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-@@ -1984,7 +1984,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
- 	struct rtable *rt;
- 	struct neighbour *neigh;
- 	int rc = arpindex;
--	struct net_device *netdev = iwdev->netdev;
- 	__be32 dst_ipaddr = htonl(dst_ip);
- 	__be32 src_ipaddr = htonl(src_ip);
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index 37ca0e669bd8..25d417ad9000 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -1360,7 +1360,6 @@ gadgetfs_setup (struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
  
-@@ -1994,9 +1993,6 @@ static int i40iw_addr_resolve_neigh(struct i40iw_device *iwdev,
- 		return rc;
- 	}
+ 	req->buf = dev->rbuf;
+ 	req->context = NULL;
+-	value = -EOPNOTSUPP;
+ 	switch (ctrl->bRequest) {
  
--	if (netif_is_bond_slave(netdev))
--		netdev = netdev_master_upper_dev_get(netdev);
--
- 	neigh = dst_neigh_lookup(&rt->dst, &dst_ipaddr);
- 
- 	rcu_read_lock();
-@@ -2062,7 +2058,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
+ 	case USB_REQ_GET_DESCRIPTOR:
+@@ -1783,7 +1782,7 @@ static ssize_t
+ dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
  {
- 	struct neighbour *neigh;
- 	int rc = arpindex;
--	struct net_device *netdev = iwdev->netdev;
- 	struct dst_entry *dst;
- 	struct sockaddr_in6 dst_addr;
- 	struct sockaddr_in6 src_addr;
-@@ -2083,9 +2078,6 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
- 		return rc;
- 	}
- 
--	if (netif_is_bond_slave(netdev))
--		netdev = netdev_master_upper_dev_get(netdev);
--
- 	neigh = dst_neigh_lookup(dst, dst_addr.sin6_addr.in6_u.u6_addr32);
- 
- 	rcu_read_lock();
+ 	struct dev_data		*dev = fd->private_data;
+-	ssize_t			value = len, length = len;
++	ssize_t			value, length = len;
+ 	unsigned		total;
+ 	u32			tag;
+ 	char			*kbuf;
 -- 
 2.25.1
 
