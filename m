@@ -2,116 +2,114 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C13CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 185AF21475
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:02:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZevlVQBr"
+	by mail.kernel.org (Postfix) with ESMTP id 8D05821534
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 14:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgEVOCh (ORCPT
+        id S1729955AbgEVOEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 10:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729399AbgEVOCg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 10:02:36 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CB3C061A0E;
-        Fri, 22 May 2020 07:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=OUXZvRPeiF/mojQsg9lMgwxM9yFtvY/919qhkqwilpw=; b=ZevlVQBr2F5sB8UdiKCzXAiinB
-        wEz/2F3iQMF2ciSBjS6tDwa4wePtukgC3MZqR9w8H0XUTZiSy06U9Nx5uCAqsRVZGdcEF4uG8jwVP
-        csbM6cPoiEmFdvkTNKmV5qFA3nDOaauvBQLB78jeUM3dBs31SQ/KUmcsbkcwu/8xTzx1qGT++dO4J
-        x4ZbgV67lJxdRunmCONBsv26kwRUBDlB/rx6lPD6hZ1qKsjbIrLrEfNHGsp45zpAFcpnvepkOwnqA
-        vOcXs4/ydGKCm8id2RB0x6i04c3++kAH2+gDIfUTTMlvjGxjCR0HK4qEbUN2akfkVj2aIwF6ukuMd
-        BUxtmygw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jc8Fo-0000eh-RL; Fri, 22 May 2020 14:02:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7CD2F3011E8;
-        Fri, 22 May 2020 16:02:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 43B9C236DF5BA; Fri, 22 May 2020 16:02:26 +0200 (CEST)
-Date:   Fri, 22 May 2020 16:02:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Matthew Blecker <matthewb@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Mike Frysinger <vapier@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        vineethrp@gmail.com, stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH RFC] sched/headers: Fix sched_setattr userspace
- compilation issues
-Message-ID: <20200522140226.GT317569@hirez.programming.kicks-ass.net>
-References: <20200521155346.168413-1-joel@joelfernandes.org>
- <CAEXW_YTj83gO0STovrOuL9zgDwEYWRJusUZ3ebVw_jOG6yJxTg@mail.gmail.com>
+        Fri, 22 May 2020 10:04:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:36140 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729399AbgEVOEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 10:04:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94A22D6E;
+        Fri, 22 May 2020 07:04:13 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F8B13F68F;
+        Fri, 22 May 2020 07:04:10 -0700 (PDT)
+Date:   Fri, 22 May 2020 15:04:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Alan Mikhak <alanmikhak@gmail.com>
+Cc:     gustavo.pimentel@synopsys.com, alan.mikhak@sifive.com,
+        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
+        helgaas@kernel.org, jingoohan1@gmail.com, jonathanh@nvidia.com,
+        kthota@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, mmaddireddy@nvidia.com,
+        sagar.tv@gmail.com, thierry.reding@gmail.com, vidyas@nvidia.com,
+        Alan Mikhak <amikhak@wirelessfabric.com>
+Subject: Re: PCI: dwc: Warn only for non-prefetchable memory resource size
+ >4GB
+Message-ID: <20200522140406.GH11785@e121166-lin.cambridge.arm.com>
+References: <DM5PR12MB1276C836FEE46B113112FA92DAB90@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <20200520023304.14348-1-amikhak@wirelessfabric.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEXW_YTj83gO0STovrOuL9zgDwEYWRJusUZ3ebVw_jOG6yJxTg@mail.gmail.com>
+In-Reply-To: <20200520023304.14348-1-amikhak@wirelessfabric.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:55:21AM -0400, Joel Fernandes wrote:
-> On Thu, May 21, 2020 at 11:53 AM Joel Fernandes (Google)
-> <joel@joelfernandes.org> wrote:
-> >
-> > On a modern Linux distro, compiling the following program fails:
-> >  #include<stdlib.h>
-> >  #include<stdint.h>
-> >  #include<pthread.h>
-> >  #include<linux/sched/types.h>
-> >
-> >  void main() {
-> >          struct sched_attr sa;
-> >
-> >          return;
-> >  }
-> >
-> > with:
-> > /usr/include/linux/sched/types.h:8:8: \
-> >                         error: redefinition of ‘struct sched_param’
-> >     8 | struct sched_param {
-> >       |        ^~~~~~~~~~~
-> > In file included from /usr/include/x86_64-linux-gnu/bits/sched.h:74,
-> >                  from /usr/include/sched.h:43,
-> >                  from /usr/include/pthread.h:23,
-> >                  from /tmp/s.c:4:
-> > /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:23:8:
-> > note: originally defined here
-> >    23 | struct sched_param
-> >       |        ^~~~~~~~~~~
-> >
-> > This is also causing a problem on using sched_attr Chrome. The issue is
-> > sched_param is already provided by glibc.
-> >
-> > Guard the kernel's UAPI definition of sched_param with __KERNEL__ so
-> > that userspace can compile.
-> >
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+On Tue, May 19, 2020 at 07:33:04PM -0700, Alan Mikhak wrote:
+> Hi Lorenzo,
 > 
-> If it is more preferable, another option is to move sched_param to
-> include/linux/sched/types.h
+> I came across this issue when implementing a Linux NVMe endpoint function
+> driver under the Linux PCI Endpoint Framework:
+> https://lwn.net/Articles/804369/
+> 
+> I needed to map up to 128GB of host memory using a single ATU window
+> from the endpoint side because NVMe PRPs can be scattered all over host
+> memory. In the process, I came across this 4GB limitation where the
+> maximum size of memory that can be mapped is limited by what a u32 value
+> can represent.
+> 
+> I submitted a separate patch to fix an undefined behavior that may also
+> happen in dw_pcie_prog_outbound_atu_unroll() under some circumstances
+> when the size of the memory being mapped is greater than what a u32 value
+> can represent.
+> https://patchwork.kernel.org/patch/11469701/
+> 
+> The above patch has been accepted. However, the variable pp->mem_size
+> in dw_pcie_host_init() is still a u32 whereas the value returned by
+> resource_size() is u64. If the resource size has non-zero upper 32-bits,
+> those upper 32-bits will be lost when assigning:
+>  pp->mem_size = resource_size(pp->mem).
+> 
+> Since current callers seem happy with the existing 4GB implementation
+> and fixing the u32 limit is beyond my available resources and has a long
+> high-impact tail, a warning seemed to be a good choice to highlight
+> this issue in case someone else decides to map a MEM region that is
+> greater than 4GB.
+> 
+> Removing the warning will avoid such discussions. Without this warning,
+> this limitation will go unnoticed and will only impact whoever has to
+> deal with it. It cost me time to figure it out when I had an application
+> that needed a region larger than 4GB. I figured the most I could do about
+> it is to raise the issue by adding a warning.
 
-Yeah, not sure. Ingo, you got a preference?
+You did the right thing (and you helped me unearth some major
+deficiencies in current DWC code). Unfortunately I have to drop:
 
-Also, this very much misses a Fixes tag.
+9e73fa02aa00 ("PCI: dwc: Warn if MEM resource size exceeds max for 32-bits")
+
+because it triggers regressions (and it is still not in the mainline,
+IMO there would be more if we send it upstream).
+
+I will keep:
+
+e1fc129219a8 ("PCI: dwc: Program outbound ATU upper limit register")
+
+because it is a step in the right direction and makes sense on its own.
+
+Thanks for all the effort you put into this.
+
+Lorenzo
+
+> Regards,
+> Alan
+> 
+> 
+> 
+> 
+> 
+> 
