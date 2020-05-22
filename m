@@ -2,83 +2,109 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CAEC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD9820757
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 07:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BED3206DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 08:06:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s/xaQv5g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgEVH67 (ORCPT
+        id S1728793AbgEVIG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 03:58:59 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:43560 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728371AbgEVH66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 03:58:58 -0400
-Received: from localhost.localdomain (unknown [222.205.77.158])
-        by mail-app4 (Coremail) with SMTP id cS_KCgC3nwo3hsdebIL+AQ--.55292S4;
-        Fri, 22 May 2020 15:58:50 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Fri, 22 May 2020 15:58:46 +0800
-Message-Id: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgC3nwo3hsdebIL+AQ--.55292S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoW3WFc_Gr
-        4kXr1xuan8KFWqvrW3tr13ZrySvFn8WrZYgF10yFyfG3y3ZrnrJrykZF98Ar17Xw47ZF1q
-        v39FgF9rZrs8ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GF4l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F
-        4UJbIYCTnIWIevJa73UjIFyTuYvjfUeAwIDUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEIBlZdtOQbggABsO
+        Fri, 22 May 2020 04:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgEVIG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 04:06:57 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E09C7C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 01:06:55 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id i15so9207649wrx.10
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 01:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=eYZ+JqAlYOgHXPOJCTtuz0GyTZH5GxzAjW2qDHscMoI=;
+        b=s/xaQv5gx2QZodgkEgraSKx6LKxVuErDsWOmIGFJqCi7RbAlAAf2IRD7bLRK3BNX+U
+         9AAqXmLYsIzY+eqSywvLWdQK4vlZKqCSGaKrMLaVFBGNjD3IlwYni4fvYJRki0WmP/G5
+         JkGHMATLsjlN7UbGBmzQNme4Mr49vmnIaSJEmvwmqx2W7HEzHI2lppGMGoVBMO4CD8da
+         4hDgiv4yYBICc0pCHlOTru+XXmnhmtSVD5jhDe9tBKx3SDQHgFnne0HvPfrtKtqkp+l8
+         5xJWpLcyGHMHDPVpq02LQcPXuqteNUybnAKDX9jm7GsKtV1bbvNoYLq+keXP2TpqUy6H
+         L9Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=eYZ+JqAlYOgHXPOJCTtuz0GyTZH5GxzAjW2qDHscMoI=;
+        b=JEofbh+1X/pGVPgUwsQRAQEJTTZ2HlCJceB+AMc+WgjEOFcbQ7DxxBAt3nVMNGOmYN
+         ho4uRmnBlFBJu/IMaOwD/fu5qrBZl1bEXV5hHOMno4c/Zzm3tSsW5MQWuBe+MDWQPim9
+         3m/kbJjzDeGk7sZzTJqjAeOSaMPFC7/x9e1Tw4XojL3B+Sop+lYbHF0o/jPk/qXQoxUw
+         GLPfY1jL4Y9vAKCOMox9Pw1dkIE7dX4kbrwHxjadUOtxDgNvxAAyjHWari1Y6EgauapS
+         NJXhwciAme1rhR7Tj5pjKJNhGmmACiRURiwVRn+5egTl7SsRxx1z00Ph/6qeYP1TSRLO
+         V/5Q==
+X-Gm-Message-State: AOAM533S3crCm2HHxJm85GhMU8EMlruZEcwbLodiDjTh8xC5WIZ24vXq
+        mkPDk4TlxTxYoli/AsUAcVrnsw==
+X-Google-Smtp-Source: ABdhPJys1hWyXl3jHtzATMUKReeozUyk1CGPsBMj6QlrMYrp7cQPEUT5Drui5+A7TU3k3HbQDtX/pA==
+X-Received: by 2002:a05:6000:1083:: with SMTP id y3mr2227792wrw.425.1590134814513;
+        Fri, 22 May 2020 01:06:54 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id p1sm363971wrx.44.2020.05.22.01.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2020 01:06:53 -0700 (PDT)
+Date:   Fri, 22 May 2020 09:06:52 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 1/4] mfd: wm8994: Fix driver operation if loaded as
+ modules
+Message-ID: <20200522080652.GR271301@dell>
+References: <20200427074832.22134-1-m.szyprowski@samsung.com>
+ <CGME20200427074842eucas1p1abfb9af74f0d898ba381700f37820318@eucas1p1.samsung.com>
+ <20200427074832.22134-2-m.szyprowski@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200427074832.22134-2-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+On Mon, 27 Apr 2020, Marek Szyprowski wrote:
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/dma/tegra210-adma.c | 1 +
- 1 file changed, 1 insertion(+)
+> WM8994 chip has built-in regulators, which might be used for chip
+> operation. They are controlled by a separate wm8994-regulator driver,
+> which should be loaded before this driver calls regulator_get(), because
+> that driver also provides consumer-supply mapping for the them. If that
+> driver is not yet loaded, regulator core substitute them with dummy
+> regulator, what breaks chip operation, because the built-in regulators are
+> never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+> "pre" dependency to "wm8994_regulator" module.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+>  drivers/mfd/wm8994-core.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index c4ce5dfb149b..803e1f4d5dac 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
- 
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_sync(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
+Applied, thanks.
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
