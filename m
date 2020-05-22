@@ -2,225 +2,112 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C76C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEC42204EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C730204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 22:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sXnAHnZz"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="xq+rr9Nh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbgEVWmn (ORCPT
+        id S1731209AbgEVWnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 18:42:43 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54518 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731122AbgEVWml (ORCPT
+        Fri, 22 May 2020 18:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731122AbgEVWnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 18:42:41 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04MMgTRH061415;
-        Fri, 22 May 2020 17:42:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590187349;
-        bh=kv17vzIbbuAt+RZqE4vM8KTFUmvobKYZHpLC7UN2u9I=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=sXnAHnZzU8ssnhgNkz6JWSDz/vtJJEgdQjyTsNG9K4X9Is48m262+a1XSVQh3dWLk
-         06h9nyP3yff0FHn8kFCO4MTw3rkFk1t/I+vYK79YyZl3pwIzDE0IBGRuoZPOufFypp
-         65dhnFmnQihnfPoGheV4mbMAab7unONg63c5sl5c=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MMgSOR036886;
-        Fri, 22 May 2020 17:42:29 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- May 2020 17:42:28 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 May 2020 17:42:28 -0500
-Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04MMeh5q044559;
-        Fri, 22 May 2020 17:42:23 -0500
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     Pratyush Yadav <p.yadav@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v8 19/19] mtd: spi-nor: micron-st: allow using MT35XU512ABA in Octal DTR mode
-Date:   Sat, 23 May 2020 04:10:42 +0530
-Message-ID: <20200522224042.29970-20-p.yadav@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200522224042.29970-1-p.yadav@ti.com>
-References: <20200522224042.29970-1-p.yadav@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 22 May 2020 18:43:41 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA984C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:43:41 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id z15so2576097pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 15:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=EU5e/l95lnHmNp8beRxDwq3G8lD1LFgouw11x+VJMvM=;
+        b=xq+rr9NhyM1ZgqTrmiGV4vdmnQTujwwHsg3dF5aeifUH4u6DfowA+gqRTLm3ocRwO/
+         P8YHcMh6du4+wHtz4n29FBF6keDnjFVcZPaARuWX6nL7zBnRabH4zvU5RLH6SfRcPDCj
+         fMfJYVKGZlN48oHAc2jIzqNO9hl8JGaDwwAzyv4HCNdGOdA6DS8dBVtuNzV+muc3Ju47
+         ZjGm3agrWIA84ZCwDeCPXgdagTXGj83HpISN7Ihid+gFO5DN+Ppwkuh9jrsjKpFhxNWB
+         y/tgKzs0K7KY9EanaMEFo9wtAWs9MAHPF3Hmf9H6u1RR97GZpDOSY+BWwWLzZb0SpIk3
+         1FTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=EU5e/l95lnHmNp8beRxDwq3G8lD1LFgouw11x+VJMvM=;
+        b=ZCVdWHBf8E1KeTgSZ6o8HMsfHEtjkvN1QiQBJHHo3WiDrDBCenq5js2cXnS0/q9idW
+         hidd6HIVeE1KCqtfCqbBbQfVJcKTfjMi2+vLEGOlf7bd8YfqHKzX68GRT+AY1FPFCDXe
+         iA9ZXX7+f7t19XQFa4AOBZl9QYZLymm8cobMzYXTdt5ppznsX6o3d7bpwEIQcN05oYWE
+         Uuwop/Zl8YMe8QsE9LhU3FEU5LM7ZqH0vQx8okHVkDiPFaNv1x1NnNPYnJxfajPrzZ4e
+         zhR+X/yTJIOrDyGrsAMhooRw499rv95CiaDV3smDI0hTGUJ2kVnBYu+/b/mPhKyMetU/
+         dq0A==
+X-Gm-Message-State: AOAM532W6niqLLq92fXw7E6WU/dvuOKWnXXNCnSu96hIbpISw/vO4oG6
+        hAs8+wnY3So2r27kv3jauGjkhq/qkrI=
+X-Google-Smtp-Source: ABdhPJyoTSra4X3zw/UGq89aJPKVz7w/MFz+PbHbZufPD5Y9Cc8R0iOnVNGiShdXCUom5TVcDY/vgQ==
+X-Received: by 2002:a17:90b:3705:: with SMTP id mg5mr6651553pjb.24.1590187420961;
+        Fri, 22 May 2020 15:43:40 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b008:3b8f:1dea:762f:4d89:de4d? ([2600:1010:b008:3b8f:1dea:762f:4d89:de4d])
+        by smtp.gmail.com with ESMTPSA id s36sm6923408pgl.35.2020.05.22.15.43.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 May 2020 15:43:40 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC][PATCH 0/4] x86/entry: disallow #DB more
+Date:   Fri, 22 May 2020 15:43:35 -0700
+Message-Id: <692612FC-4599-4774-857C-7E20CD99A832@amacapital.net>
+References: <20200522222055.GE25128@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>
+In-Reply-To: <20200522222055.GE25128@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since this flash doesn't have a Profile 1.0 table, the Octal DTR
-capabilities are enabled in the post SFDP fixup, along with the 8D-8D-8D
-fast read settings.
 
-Enable Octal DTR mode with 20 dummy cycles to allow running at the
-maximum supported frequency of 200Mhz.
+> On May 22, 2020, at 3:20 PM, Sean Christopherson <sean.j.christopherson@in=
+tel.com> wrote:
+>=20
+> =EF=BB=BFOn Fri, May 22, 2020 at 03:13:57PM -0700, Andy Lutomirski wrote:
+>>> On Fri, May 22, 2020 at 1:49 PM Peter Zijlstra <peterz@infradead.org> wr=
+ote:
+>>>=20
+>>> Hai, this kills #DB during NMI/#MC and with that allows removing all the=
+ nasty
+>>> IST rewrite crud.
+>>>=20
+>>=20
+>> This is great, except that the unconditional DR7 write is going to
+>> seriously hurt perf performance.  Fortunately, no one cares about
+>> perf, right? :)  Even just reading first won't help enough because DR7
+>> reads are likely to be VM exits.  Can we have a percpu dr7 shadow
+>> (with careful ordering) or even just a percpu count of dr7 users so we
+>> can skip this if there are no breakpoints?
+>=20
+> Hmm, I believe hw_breakpoint_active() is what you're looking for, KVM uses=
 
-The flash supports the soft reset sequence. So, add the flag in the
-flash's info.
+> it to avoid unnecessary restoration of host DR7 after VM-Exit.
+>=20
+> Amusingly, checking that in the NMI handler could give a false positive if=
 
-Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
----
- drivers/mtd/spi-nor/micron-st.c | 112 +++++++++++++++++++++++++++++++-
- 1 file changed, 111 insertions(+), 1 deletion(-)
+> an NMI occurs in guest as DR7 is cleared on exit and KVM invokes the NMI
+> handler prior to restoring host DR7.  I doubt that's common enough to care=
 
-diff --git a/drivers/mtd/spi-nor/micron-st.c b/drivers/mtd/spi-nor/micron-st.c
-index 3dca5b9af3b6..3414c44a5c96 100644
---- a/drivers/mtd/spi-nor/micron-st.c
-+++ b/drivers/mtd/spi-nor/micron-st.c
-@@ -8,10 +8,120 @@
- 
- #include "core.h"
- 
-+#define SPINOR_OP_MT_DTR_RD	0xfd	/* Fast Read opcode in DTR mode */
-+#define SPINOR_OP_MT_RD_ANY_REG	0x85	/* Read volatile register */
-+#define SPINOR_OP_MT_WR_ANY_REG	0x81	/* Write volatile register */
-+#define SPINOR_REG_MT_CFR0V	0x00	/* For setting octal DTR mode */
-+#define SPINOR_REG_MT_CFR1V	0x01	/* For setting dummy cycles */
-+#define SPINOR_MT_DTR_NO_DQS	0xc7	/* Enable Octal DTR without DQS. */
-+#define SPINOR_MT_EXSPI		0xff	/* Enable Extended SPI (default) */
-+
-+static int spi_nor_micron_octal_dtr_enable(struct spi_nor *nor, bool enable)
-+{
-+	struct spi_mem_op op;
-+	u8 *buf = nor->bouncebuf;
-+	u8 addr_width;
-+	int ret;
-+
-+	if (enable)
-+		addr_width = 3;
-+	else
-+		addr_width = 4;
-+
-+	ret = spi_nor_write_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		*buf = SPINOR_MT_DTR_NO_DQS;
-+	else
-+		*buf = SPINOR_MT_EXSPI;
-+	op = (struct spi_mem_op)
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_MT_WR_ANY_REG, 1),
-+			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_MT_CFR0V, 1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+
-+	if (!enable)
-+		spi_nor_spimem_setup_op(nor, &op, SNOR_PROTO_8_8_8_DTR);
-+
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret) {
-+		dev_err(nor->dev, "Failed to enable octal DTR mode\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mt35xu512aba_setup(struct spi_nor *nor,
-+			      const struct spi_nor_hwcaps *hwcaps)
-+{
-+	struct spi_mem_op op;
-+	u8 *buf = nor->bouncebuf;
-+	u8 addr_width = 3;
-+	int ret;
-+
-+	if (!nor->spimem) {
-+		dev_err(nor->dev,
-+			"operation not supported for non-spimem drivers\n");
-+		return -ENOTSUPP;
-+	}
-+
-+	/* Set dummy cycles for Fast Read to the default of 20. */
-+	ret = spi_nor_write_enable(nor);
-+	if (ret)
-+		return ret;
-+
-+	*buf = 20;
-+	op = (struct spi_mem_op)
-+		SPI_MEM_OP(SPI_MEM_OP_CMD(SPINOR_OP_MT_WR_ANY_REG, 1),
-+			   SPI_MEM_OP_ADDR(addr_width, SPINOR_REG_MT_CFR1V, 1),
-+			   SPI_MEM_OP_NO_DUMMY,
-+			   SPI_MEM_OP_DATA_OUT(1, buf, 1));
-+	ret = spi_mem_exec_op(nor->spimem, &op);
-+	if (ret)
-+		return ret;
-+
-+	ret = spi_nor_wait_till_ready(nor);
-+	if (ret)
-+		return ret;
-+
-+
-+	return spi_nor_default_setup(nor, hwcaps);
-+}
-+
-+static void mt35xu512aba_default_init(struct spi_nor *nor)
-+{
-+	nor->params->octal_dtr_enable = spi_nor_micron_octal_dtr_enable;
-+	nor->params->setup = mt35xu512aba_setup;
-+}
-+
-+static void mt35xu512aba_post_sfdp_fixup(struct spi_nor *nor)
-+{
-+	/* Set the Fast Read settings. */
-+	nor->params->hwcaps.mask |= SNOR_HWCAPS_READ_8_8_8_DTR;
-+	spi_nor_set_read_settings(&nor->params->reads[SNOR_CMD_READ_8_8_8_DTR],
-+				  0, 20, SPINOR_OP_MT_DTR_RD,
-+				  SNOR_PROTO_8_8_8_DTR);
-+
-+	nor->params->hwcaps.mask |= SNOR_HWCAPS_PP_8_8_8_DTR;
-+
-+	nor->cmd_ext_type = SPI_NOR_EXT_REPEAT;
-+	nor->params->rdsr_dummy = 8;
-+	nor->params->rdsr_addr_nbytes = 0;
-+}
-+
-+static struct spi_nor_fixups mt35xu512aba_fixups = {
-+	.default_init = mt35xu512aba_default_init,
-+	.post_sfdp = mt35xu512aba_post_sfdp_fixup,
-+};
-+
- static const struct flash_info micron_parts[] = {
- 	{ "mt35xu512aba", INFO(0x2c5b1a, 0, 128 * 1024, 512,
- 			       SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
--			       SPI_NOR_4B_OPCODES) },
-+			       SPI_NOR_4B_OPCODES | SPI_NOR_OCTAL_DTR_READ)
-+		.fixups = &mt35xu512aba_fixups},
- 	{ "mt35xu02g", INFO(0x2c5b1c, 0, 128 * 1024, 2048,
- 			    SECT_4K | USE_FSR | SPI_NOR_OCTAL_READ |
- 			    SPI_NOR_4B_OPCODES) },
--- 
-2.26.2
+> about though.
 
+False positives are unavoidable: there=E2=80=99s no way we can set a percpu v=
+ariable and set DR7 without risking an NMI in between.=
