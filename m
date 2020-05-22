@@ -2,83 +2,123 @@ Return-Path: <SRS0=AA2M=7E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D89DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FB62065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EECE2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 May 2020 15:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590160637;
+	bh=OSAiuH/ltMwuwK+9Fk2bcyYZOPSo8Z3O972mx+bTBjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hJMXlRH1k6HHj99nw5Fidtv9Y62dGbMgucfZrKwQI12BN5I4UjAqXe2Wx1oTd2VPf
+	 WiXBBbn5dotusETmJeUcTYX3HDA04YxDnwlkv0U/iUZO1z0y/eOJicO0d+KGIJeenI
+	 c8CKfBG3nhh+CyTZ5N4BzSoF5DHsqfLw+1YcUpS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgEVPRM (ORCPT
+        id S1730419AbgEVPRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 May 2020 11:17:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729929AbgEVPRM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 May 2020 11:17:12 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88F7C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri, 22 May 2020 08:17:11 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jc9Q1-0007ZR-HW; Fri, 22 May 2020 17:17:05 +0200
-Date:   Fri, 22 May 2020 17:17:05 +0200
-From:   "Sebastian A. Siewior" <bigeasy@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v1 02/25] mm/swap: Don't abuse the seqcount latching API
-Message-ID: <20200522151705.vwfua5a4lhzcagea@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200519214547.352050-3-a.darwish@linutronix.de>
- <20200522145707.GO325280@hirez.programming.kicks-ass.net>
+        Fri, 22 May 2020 11:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730243AbgEVPRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 May 2020 11:17:14 -0400
+Received: from localhost (p5486cea4.dip0.t-ipconnect.de [84.134.206.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A91DB205CB;
+        Fri, 22 May 2020 15:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590160633;
+        bh=OSAiuH/ltMwuwK+9Fk2bcyYZOPSo8Z3O972mx+bTBjc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HM1hY9e/VlAz9831LjvNbqYC+AlRn+FQUXfSY0nCMnOaAupxW/6xQRDHUmYfarHDu
+         MNF1i3y/bKPsQ4CuUXldhVrAkogXnRW5pBfL6mZdc5bij0j72E+mR0UnAyFixiTKQ2
+         wj0RakOAUWmrSQ79dEkWvmfuGpeB1EMN3jrSIEqc=
+Date:   Fri, 22 May 2020 17:17:10 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Cc:     Ajay Gupta <ajayg@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: nvidia-gpu: Use PTR_ERR_OR_ZERO() to simplify code
+Message-ID: <20200522151710.GL5670@ninjato>
+References: <20200505145230.17251-1-aishwaryarj100@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qo7zVO9a9OQ5oQtr"
 Content-Disposition: inline
-In-Reply-To: <20200522145707.GO325280@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200505145230.17251-1-aishwaryarj100@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-22 16:57:07 [+0200], Peter Zijlstra wrote:
-> > @@ -725,21 +735,48 @@ void lru_add_drain_all(void)
-> >  	if (WARN_ON(!mm_percpu_wq))
-> >  		return;
-> >  
-> 
-> > +	this_gen = READ_ONCE(lru_drain_gen);
-> > +	smp_rmb();
-> 
-> 	this_gen = smp_load_acquire(&lru_drain_gen);
-> >  
-> >  	mutex_lock(&lock);
-> >  
-> >  	/*
-> > +	 * (C) Exit the draining operation if a newer generation, from another
-> > +	 * lru_add_drain_all(), was already scheduled for draining. Check (A).
-> >  	 */
-> > +	if (unlikely(this_gen != lru_drain_gen))
-> >  		goto done;
-> >  
-> 
-> > +	WRITE_ONCE(lru_drain_gen, lru_drain_gen + 1);
-> > +	smp_wmb();
-> 
-> You can leave this smp_wmb() out and rely on the smp_mb() implied by
-> queue_work_on()'s test_and_set_bit().
 
-This is to avoid smp_store_release() ?
+--qo7zVO9a9OQ5oQtr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sebastian
+On Tue, May 05, 2020 at 08:22:30PM +0530, Aishwarya Ramakrishnan wrote:
+> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR.
+>=20
+> Generated by: scripts/coccinelle/api/ptr_ret.cocci
+>=20
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+
+Waiting for the Rev-by from Ajay (driver maintainer).
+
+> ---
+>  drivers/i2c/busses/i2c-nvidia-gpu.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c=
+-nvidia-gpu.c
+> index f5d25ce00f03..f480105000b8 100644
+> --- a/drivers/i2c/busses/i2c-nvidia-gpu.c
+> +++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
+> @@ -277,10 +277,7 @@ static int gpu_populate_client(struct gpu_i2c_dev *i=
+2cd, int irq)
+>  	i2cd->gpu_ccgx_ucsi->irq =3D irq;
+>  	i2cd->gpu_ccgx_ucsi->properties =3D ccgx_props;
+>  	i2cd->ccgx_client =3D i2c_new_client_device(&i2cd->adapter, i2cd->gpu_c=
+cgx_ucsi);
+> -	if (IS_ERR(i2cd->ccgx_client))
+> -		return PTR_ERR(i2cd->ccgx_client);
+> -
+> -	return 0;
+> +	return PTR_ERR_OR_ZERO(i2cd->ccgx_client);
+>  }
+> =20
+>  static int gpu_i2c_probe(struct pci_dev *pdev, const struct pci_device_i=
+d *id)
+> --=20
+> 2.17.1
+>=20
+
+--qo7zVO9a9OQ5oQtr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7H7PYACgkQFA3kzBSg
+Kbb02xAAqw5yE3PD2uDXw4UCsq8wYIx0jsn98zARm06rV+I+G0x2PkgvL04ylS+h
+IS+iee7cOD4O+RQ2UphiFHEufuZlSclyWS82EQ4tceauFAIthIKOxOSm6HcBfzhC
+oKK6mQAk92ZMobR1ejAZk+wCHqk6PVcSCiAZbQEHU1OQwwXwqXHDyCn01BtOvymJ
+EX6ZP+m26jBLM3hl/SyuILz8pScwWYY2RgTchmQZuKgod8OJoO1lfn+/dGP+pms3
+CX2u79xSF2a4W5Tw/HeRf1p7VcVI+5qbMvKUZYmjkg0Im3ybq3IhdpHrhSZrmrAt
+2g+dc72F5lqMHtYzxPif3jcHo1udVFHFPuYOpOJbd8LCHGHq3k79RxisYEjO51yx
+/8zNwZYDPvrY2e/zfj9nrPqmrbpkNVWWRfMCUBaGSYuPJxwph9/KI8nYYrQI3VtO
+VhXCcWN1n4ibOLOKYdQZMBjGGq+vvIZrgxNeMbBUA8Ua1jAmCCsFBBwlXsvPlGNK
+KoNh3ZeD/v47VIh/h12O9tRqT74VbdaltxngfRst2Yirw4+X/zXaYJJYtDREfU/S
+b7wRQtwTp7kyOww1GN9vk9Rrj8n311Nb2vTmX1vgr6Fje6SNr2OIILCRoOWP4gUx
+yg2yELWnuTpR5fJmlU8nzwPuzDosUJDLMMknTe4bGuqw4Df9mfA=
+=uAFd
+-----END PGP SIGNATURE-----
+
+--qo7zVO9a9OQ5oQtr--
